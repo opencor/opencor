@@ -81,7 +81,7 @@ public:
     const QString addWorkspaceFolder(const QString &pFolder);
     void refreshWorkspace(const QString &pUrl);
     void refreshWorkspaceFile(const QString &pPath);
-    void reloadWorkspaces();
+    void requestWorkspaces();
 
 protected:
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);

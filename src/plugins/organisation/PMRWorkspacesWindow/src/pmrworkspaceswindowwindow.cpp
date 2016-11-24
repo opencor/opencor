@@ -280,7 +280,7 @@ void PmrWorkspacesWindowWindow::retrieveWorkspaces(const bool &pVisible)
 
 void PmrWorkspacesWindowWindow::updateGui()
 {
-    // Update our GUI based on whether we are authenticated with PMR
+    // Update our GUI
 
     mAuthenticated = mPmrWebService->isAuthenticated();
 
@@ -291,8 +291,12 @@ void PmrWorkspacesWindowWindow::updateGui()
 
     retranslateActionPmr();
 
+    // Ask our widget to get the list of workspaces from PMR, if we are
+    // authenticated, or simply show a message asking us to authenticate
+    // ourselves
+
     if (mAuthenticated)
-        mPmrWorkspacesWindowWidget->reloadWorkspaces();
+        mPmrWorkspacesWindowWidget->requestWorkspaces();
     else
         mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), QString(), false);
 }
@@ -351,9 +355,9 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
 
 void PmrWorkspacesWindowWindow::on_actionReload_triggered()
 {
-    // Ask the workspaces widget to refresh itself
+    // Ask our widget to get the list of workspaces from PMR
 
-    mPmrWorkspacesWindowWidget->reloadWorkspaces();
+    mPmrWorkspacesWindowWidget->requestWorkspaces();
 }
 
 //==============================================================================

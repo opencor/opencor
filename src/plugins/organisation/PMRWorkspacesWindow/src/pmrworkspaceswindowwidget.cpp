@@ -1291,10 +1291,10 @@ void PmrWorkspacesWindowWidget::refreshWorkspaceFile(const QString &pPath)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::reloadWorkspaces()
+void PmrWorkspacesWindowWidget::requestWorkspaces()
 {
-    // Reload our workspaces after making sure that we have cleared existing
-    // workspaces
+    // Get the list of workspaces from our PMR web service, after making sure
+    // that we have cleared existing workspaces
     // Note: initialize() will be called when the list of workspaces has been
     //       received...
 
