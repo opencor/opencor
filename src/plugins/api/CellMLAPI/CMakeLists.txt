@@ -109,8 +109,6 @@ ELSE()
     )
 ENDIF()
 
-SET(CELLML_API_EXTERNAL_BINARIES ${EXTERNAL_BINARIES} PARENT_SCOPE)
-
 # Ignore some warnings on Windows
 
 IF(WIN32)
