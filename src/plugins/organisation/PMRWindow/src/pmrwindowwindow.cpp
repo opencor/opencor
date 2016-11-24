@@ -246,7 +246,7 @@ void PmrWindowWindow::showWarning(const QString &pMessage)
 void PmrWindowWindow::showError(const QString &pMessage)
 {
     // Either show the given message as an error message box or tell our PMR
-    // widget that we have a problem, this based on whether we tried to retrieve
+    // widget that we have a problem, this based on whether we already retrieved
     // the list of exposures
     // Note: indeed, the idea is not to break the user's workflow, should an
     //       error occur when trying to retrieve the list of exposures at

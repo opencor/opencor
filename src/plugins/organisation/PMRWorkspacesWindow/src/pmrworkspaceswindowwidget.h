@@ -149,6 +149,7 @@ private:
 
 signals:
     void openFileRequested(const QString &pFile);
+
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
 

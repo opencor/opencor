@@ -93,17 +93,14 @@ private slots:
     void on_actionPmr_triggered();
 
     void busy(const bool &pBusy);
-    void showError(const QString &pMessage);
+
     void showInformation(const QString &pMessage);
     void showWarning(const QString &pMessage);
+    void showError(const QString &pMessage);
 
     void updateGui();
 
     void retrieveWorkspaces(const bool &pVisible);
-
-    void fileCreated(const QString &pFileName, const QString &pUrl);
-    void fileDeleted(const QString &pFileName);
-    void fileDuplicated(const QString &pFileName);
 };
 
 //==============================================================================

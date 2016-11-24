@@ -59,20 +59,15 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
-    // Create an instance of PMR
-
-    mPmrWebService = new PMRSupport::PmrWebService(this);
-
     // Create a tool bar widget with different actions
+    // Note: we right-align our PMR-related action and make it ready for
+    //       colorisation effect...
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
 
     toolBarWidget->addAction(mGui->actionNew);
     toolBarWidget->addSeparator();
     toolBarWidget->addAction(mGui->actionReload);
-
-    // Right align our PMR-related action and get it ready for colorisation
-    // effect
 
     QWidget *spacer = new QWidget(toolBarWidget);
 
@@ -85,7 +80,11 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     mGui->layout->addWidget(toolBarWidget);
 
-    // Create and add the workspaces widget
+    // Create an instance of our PMR web service
+
+    mPmrWebService = new PMRSupport::PmrWebService(this);
+
+    // Create and add our workspaces widget
 
     mPmrWorkspacesWindowWidget = new PmrWorkspacesWindowWidget(mPmrWebService, this);
 
@@ -102,49 +101,40 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 #endif
 
     // Keep track of the window's visibility, so that we can request the list of
-    // exposures, if necessary
+    // workspaces, if necessary
 
     connect(this, SIGNAL(visibilityChanged(bool)),
             this, SLOT(retrieveWorkspaces(const bool &)));
 
-    // Watch for changes to managed files
-
-    Core::FileManager * fileManagerInstance = Core::FileManager::instance();
-
-    connect(fileManagerInstance, SIGNAL(fileCreated(const QString &, const QString &)),
-            this, SLOT(fileCreated(const QString &, const QString &)));
-    connect(fileManagerInstance, SIGNAL(fileDuplicated(const QString &)),
-            this, SLOT(fileDuplicated(const QString &)));
-    connect(fileManagerInstance, SIGNAL(fileDeleted(const QString &)),
-            this, SLOT(fileDeleted(const QString &)));
-
-    // Some connections to process responses from the PMR web service
+    // Some connections to process responses from our PMR web service
 
     connect(mPmrWebService, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
 
-    connect(mPmrWebService, SIGNAL(error(const QString &)),
-            this, SLOT(showError(const QString &)));
     connect(mPmrWebService, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));
     connect(mPmrWebService, SIGNAL(warning(const QString &)),
             this, SLOT(showWarning(const QString &)));
+    connect(mPmrWebService, SIGNAL(error(const QString &)),
+            this, SLOT(showError(const QString &)));
 
     connect(mPmrWebService, SIGNAL(authenticated(const bool &)),
             this, SLOT(updateGui()));
+
     connect(mPmrWebService, SIGNAL(workspaces(const PMRSupport::PmrWorkspaces &)),
             mPmrWorkspacesWindowWidget, SLOT(initialiseWorkspaceWidget(const PMRSupport::PmrWorkspaces &)));
 
-    // Connections to process requests from our widget
+    // Connections to process requests from our workspaces widget
+
+    connect(mPmrWorkspacesWindowWidget, SIGNAL(openFileRequested(const QString &)),
+            this, SLOT(openFile(const QString &)));
 
     connect(mPmrWorkspacesWindowWidget, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));
-    connect(mPmrWorkspacesWindowWidget, SIGNAL(openFileRequested(const QString &)),
-            this, SLOT(openFile(const QString &)));
     connect(mPmrWorkspacesWindowWidget, SIGNAL(warning(const QString &)),
             this, SLOT(showWarning(const QString &)));
 
-    // Retranslate the GUI
+    // Retranslate our GUI
 
     retranslateUi();
 }
@@ -162,28 +152,15 @@ PmrWorkspacesWindowWindow::~PmrWorkspacesWindowWindow()
 
 void PmrWorkspacesWindowWindow::retranslateUi()
 {
-    // Retranslate the whole window
+    // Retranslate our whole window
 
     mGui->retranslateUi(this);
 
     retranslateActionPmr();
 
-    // Retranslate the workspaces widget
+    // Retranslate our workspaces widget
 
     mPmrWorkspacesWindowWidget->retranslateUi();
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWindow::resizeEvent(QResizeEvent *pEvent)
-{
-    // Default handling of the event
-
-    Core::OrganisationWidget::resizeEvent(pEvent);
-
-    // Resize our busy widget
-
-    mPmrWorkspacesWindowWidget->resizeBusyWidget();
 }
 
 //==============================================================================
@@ -206,6 +183,19 @@ void PmrWorkspacesWindowWindow::saveSettings(QSettings *pSettings) const
     pSettings->beginGroup(mPmrWorkspacesWindowWidget->objectName());
         mPmrWorkspacesWindowWidget->saveSettings(pSettings);
     pSettings->endGroup();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWindow::resizeEvent(QResizeEvent *pEvent)
+{
+    // Default handling of the event
+
+    Core::OrganisationWidget::resizeEvent(pEvent);
+
+    // Resize our busy widget
+
+    mPmrWorkspacesWindowWidget->resizeBusyWidget();
 }
 
 //==============================================================================
@@ -233,18 +223,9 @@ void PmrWorkspacesWindowWindow::busy(const bool &pBusy)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::showError(const QString &pMessage)
-{
-    // Show the given message as an error
-
-    Core::criticalMessageBox(Core::mainWindow(), windowTitle(), pMessage);
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWindow::showInformation(const QString &pMessage)
 {
-    // Show the given message as informative text
+    // Show the given message as an information message box
 
     Core::informationMessageBox(Core::mainWindow(), windowTitle(), pMessage);
 }
@@ -253,9 +234,27 @@ void PmrWorkspacesWindowWindow::showInformation(const QString &pMessage)
 
 void PmrWorkspacesWindowWindow::showWarning(const QString &pMessage)
 {
-    // Show the given message as a warning
+    // Show the given message as a warning message box
 
     Core::warningMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWindow::showError(const QString &pMessage)
+{
+    // Either show the given message as an error message box or tell our
+    // workspaces widget that we have a problem, this based on whether we
+    // already retrieved the list of workspaces
+    // Note: indeed, the idea is not to break the user's workflow, should an
+    //       error occur when trying to retrieve the list of workspaces at
+    //       startup...
+
+//---GRY--- TO BE DONE...
+//    if (mPmrWorkspacesWindowWidget->hasWorkspaces())
+        Core::criticalMessageBox(Core::mainWindow(), windowTitle(), pMessage);
+//    else
+//        mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrExposures(), QString(), pMessage);
 }
 
 //==============================================================================
@@ -370,29 +369,6 @@ void PmrWorkspacesWindowWindow::on_actionPmr_triggered()
     } else {
         mPmrWebService->authenticate();
     }
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWindow::fileCreated(const QString &pFileName,
-                                            const QString &pUrl)
-{
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pUrl);
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWindow::fileDeleted(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWindow::fileDuplicated(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
 }
 
 //==============================================================================
