@@ -136,6 +136,9 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     mGui->setupUi(this);
 
+    connect(mGui->buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+            this, SLOT(reject()));
+
     // Customise our GUI's button box by having both a reset plugin settings and
     // reset all settings buttons
 
@@ -295,15 +298,6 @@ void PreferencesDialog::on_buttonBox_accepted()
     // Confirm that we accepted the changes
 
     accept();
-}
-
-//==============================================================================
-
-void PreferencesDialog::on_buttonBox_rejected()
-{
-    // Simply cancel whatever was done here
-
-    reject();
 }
 
 //==============================================================================

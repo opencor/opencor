@@ -91,6 +91,9 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 
     mGui->setupUi(this);
 
+    connect(mGui->buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+            this, SLOT(reject()));
+
     // Make sure that all the widgets in our form layout can be resized, if
     // necessary and if possible
     // Note: indeed, it's not the case on macOS since the field growth policy is
@@ -533,15 +536,6 @@ void PluginsDialog::on_buttonBox_accepted()
     // Confirm that we accepted the changes
 
     accept();
-}
-
-//==============================================================================
-
-void PluginsDialog::on_buttonBox_rejected()
-{
-    // Simply cancel whatever was done here
-
-    reject();
 }
 
 //==============================================================================

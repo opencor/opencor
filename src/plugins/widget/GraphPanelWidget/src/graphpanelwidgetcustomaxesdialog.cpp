@@ -29,6 +29,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QPushButton>
 #include <QRegularExpressionValidator>
 
 //==============================================================================
@@ -49,6 +50,9 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(const double 
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    connect(mGui->buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+            this, SLOT(reject()));
 
     // Only allow double numbers
 
@@ -197,15 +201,6 @@ void GraphPanelWidgetCustomAxesDialog::on_buttonBox_accepted()
 
         accept();
     }
-}
-
-//==============================================================================
-
-void GraphPanelWidgetCustomAxesDialog::on_buttonBox_rejected()
-{
-    // Simply cancel whatever was done here
-
-    reject();
 }
 
 //==============================================================================
