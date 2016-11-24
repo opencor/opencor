@@ -618,11 +618,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                 )
-                IF(APPLE)
-                    EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
-                                    WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-                    )
-                ENDIF()
+            ENDIF()
+
+            # On macOS, ensure that @rpath is set in the external library's id
+
+            IF(APPLE)
+                EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
+                                WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                )
             ENDIF()
 
             # Package the external library, if needed
@@ -839,7 +842,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                                                      ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
-    # On macOS ensure that @rpath is set in the library's id.
+    # On macOS, ensure that @rpath is set in the plugin binary's id
 
     IF(APPLE)
         EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${PLUGIN_FILENAME} ${PLUGIN_FILENAME}
