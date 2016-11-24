@@ -119,7 +119,6 @@ private slots:
     void on_treeView_collapsed(const QModelIndex &pIndex);
 
     void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
 
     void updatePreferencesWidget(const QModelIndex &pNewIndex,
                                  const QModelIndex &pOldIndex);

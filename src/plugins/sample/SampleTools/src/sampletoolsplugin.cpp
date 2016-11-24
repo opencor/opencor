@@ -250,7 +250,7 @@ void SampleToolsPlugin::addTwoNumbers()
                                       0, -2147483647, 2147483647, 1, &ok);
 
         if (ok) {
-            Core::informationMessageBox(Core::mainWindow(), tr("Add Two Numbers"),
+            Core::informationMessageBox(tr("Add Two Numbers"),
                                         QString::number(nb1)+" + "+QString::number(nb2)+" = "+QString::number(Sample::add(nb1, nb2)));
         }
     }
