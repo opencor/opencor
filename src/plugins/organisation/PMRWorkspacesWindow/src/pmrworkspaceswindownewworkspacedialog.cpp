@@ -20,6 +20,7 @@ limitations under the License.
 // PMR Workspaces window new workspace dialog
 //==============================================================================
 
+#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "pmrwebservice.h"
 #include "pmrworkspace.h"
@@ -124,10 +125,11 @@ const QString PmrWorkspacesWindowNewWorkspaceDialog::path() const
 
 void PmrWorkspacesWindowNewWorkspaceDialog::updateOkButton()
 {
-    // Enable the Ok button only if we have both a title and a folder
+    // Enable the Ok button, but only if we have a title and a folder that both
+    // exists and is empty
 
     mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(   !mGui->titleValue->text().trimmed().isEmpty()
-                                                              && !mGui->folderValue->text().trimmed().isEmpty());
+                                                              &&  Core::isEmptyDirectory(mGui->folderValue->text().trimmed()));
 }
 
 //==============================================================================

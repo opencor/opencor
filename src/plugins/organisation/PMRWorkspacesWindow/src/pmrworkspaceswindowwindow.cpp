@@ -325,23 +325,6 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
     PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(Core::mainWindow());
 
     if (newWorkspaceDialog.exec() == QDialog::Accepted) {
-        // Create the folder for the new workspace
-
-        QDir workspaceFolder(newWorkspaceDialog.path());
-
-        if (!workspaceFolder.exists()) {
-            workspaceFolder.mkpath(".");
-        } else {
-            // TODO Need to check the folder is empty and if not, give
-            // an error and return.
-            //
-            // However folder selection in the new workspace dialog
-            // should ensure we have an empty folder.
-            //
-            // What error message do we see from git if the folder
-            // isn't empty??
-        }
-
         // Ask the PMR web service to create a new workspace, resulting in the
         // (empty) workspace being cloned into its folder
 
@@ -380,13 +363,18 @@ void PmrWorkspacesWindowWindow::on_actionPmr_triggered()
 
 void PmrWorkspacesWindowWindow::fileReloaded(const QString &pFileName)
 {
+    // The given file has been reloaded, so let our widget know about it
+
     mPmrWorkspacesWindowWidget->refreshWorkspaceFile(pFileName);
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::fileRenamed(const QString &pOldFileName, const QString &pNewFileName)
+void PmrWorkspacesWindowWindow::fileRenamed(const QString &pOldFileName,
+                                            const QString &pNewFileName)
 {
+    // The given file has been renamed, so let our widget know about it
+
     mPmrWorkspacesWindowWidget->refreshWorkspaceFile(pOldFileName);
     mPmrWorkspacesWindowWidget->refreshWorkspaceFile(pNewFileName);
 }
