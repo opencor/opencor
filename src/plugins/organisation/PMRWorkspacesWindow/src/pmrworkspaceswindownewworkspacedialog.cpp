@@ -44,27 +44,30 @@ namespace PMRWorkspacesWindow {
 
 PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QWidget *pParent) :
     QDialog(pParent),
-    mGui(new Ui::PmrWorkspacesWindowNewWorkspaceDialog),
-    mPathChosen(false)
+    mGui(new Ui::PmrWorkspacesWindowNewWorkspaceDialog)
 {
     // Set up the GUI
 
     mGui->setupUi(this);
 
-    // The save button is disabled until we have a title
+#ifdef Q_OS_MAC
+    mGui->titleValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+    mGui->folderValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+#endif
+
+    // The Ok button is disabled to start with
 
     mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 
     // Connect some signals
 
-    connect(mGui->choosePath, SIGNAL(clicked(bool)),
-            this, SLOT(choosePath(const bool &)));
+    connect(mGui->titleValue, SIGNAL(textChanged(const QString &)),
+            this, SLOT(updateOkButton()));
+    connect(mGui->folderValue, SIGNAL(textChanged(const QString &)),
+            this, SLOT(updateOkButton()));
 
-    connect(mGui->path, SIGNAL(textChanged(const QString &)),
-            this, SLOT(setPathToolTip(const QString &)));
-
-    connect(mGui->title, SIGNAL(textChanged(const QString &)),
-            this, SLOT(titleTextChanged(const QString &)));
+    connect(mGui->folderToolButton, SIGNAL(clicked()),
+            this, SLOT(choosePath()));
 
     connect(mGui->buttonBox, SIGNAL(accepted()),
             this, SLOT(accept()));
@@ -92,11 +95,20 @@ void PmrWorkspacesWindowNewWorkspaceDialog::retranslateUi()
 
 //==============================================================================
 
+const QString PmrWorkspacesWindowNewWorkspaceDialog::title() const
+{
+    // Return our title
+
+    return mGui->titleValue->text().trimmed();
+}
+
+//==============================================================================
+
 const QString PmrWorkspacesWindowNewWorkspaceDialog::description() const
 {
     // Return our description
 
-    return mGui->description->toPlainText().trimmed();
+    return mGui->descriptionValue->toPlainText().trimmed();
 }
 
 //==============================================================================
@@ -105,62 +117,34 @@ const QString PmrWorkspacesWindowNewWorkspaceDialog::path() const
 {
     // Return our path
 
-    return mGui->path->text();
+    return mGui->folderValue->text();
 }
 
 //==============================================================================
 
-const QString PmrWorkspacesWindowNewWorkspaceDialog::title() const
+void PmrWorkspacesWindowNewWorkspaceDialog::updateOkButton()
 {
-    // Return our title
+    // Enable the Ok button only if we have both a title and a folder
 
-    return mGui->title->text().trimmed();
+    mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(   !mGui->titleValue->text().trimmed().isEmpty()
+                                                              && !mGui->folderValue->text().trimmed().isEmpty());
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowNewWorkspaceDialog::titleTextChanged(const QString &pText)
+void PmrWorkspacesWindowNewWorkspaceDialog::choosePath()
 {
-    // Only save if there is a title
-
-    mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(   !pText.trimmed().isEmpty()
-                                                              &&  mPathChosen);
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowNewWorkspaceDialog::choosePath(const bool &pChecked)
-{
-    Q_UNUSED(pChecked);
+    // Choose an empty path for our new workspace
 
     QString dirName = PMRSupport::PmrWebService::getEmptyDirectory();
 
     if (!dirName.isEmpty()) {
-        mGui->path->setText(dirName);
-
-        mPathChosen = true;
+        mGui->folderValue->setText(dirName);
 
         mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!title().isEmpty());
     } else {
         mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     }
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowNewWorkspaceDialog::setPathToolTip(const QString &pText)
-{
-    // Show the full path as a tooltip if its display field is too short
-
-    QFont font = mGui->path->font();
-    QFontMetrics metrics(font);
-
-    int width = mGui->path->width();
-
-    if(metrics.width(pText) > width)
-        mGui->path->setToolTip(pText);
-    else
-        mGui->path->setToolTip("");
 }
 
 //==============================================================================

@@ -148,10 +148,6 @@
 <context>
     <name>PmrWorkspacesWindowNewWorkspaceDialog</name>
     <message>
-        <source>Create a New Workspace</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Title:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -165,6 +161,10 @@
     </message>
     <message>
         <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Workspace</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

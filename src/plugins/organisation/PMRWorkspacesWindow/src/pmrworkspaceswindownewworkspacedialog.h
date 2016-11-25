@@ -49,20 +49,17 @@ public:
 
     virtual void retranslateUi();
 
+    const QString title() const;
     const QString description() const;
     const QString path() const;
-    const QString title() const;
-
-private slots:
-    void titleTextChanged(const QString &pText);
-
-    void choosePath(const bool &pChecked);
-    void setPathToolTip(const QString &pText);
 
 private:
     Ui::PmrWorkspacesWindowNewWorkspaceDialog *mGui;
 
-    bool mPathChosen;
+private slots:
+    void updateOkButton();
+
+    void choosePath();
 };
 
 //==============================================================================
