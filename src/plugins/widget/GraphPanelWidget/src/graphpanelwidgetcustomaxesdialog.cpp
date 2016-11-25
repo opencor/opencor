@@ -51,7 +51,7 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(const double 
 
     mGui->setupUi(this);
 
-    connect(mGui->buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+    connect(mGui->buttonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
 
     // Only allow double numbers
