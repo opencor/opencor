@@ -625,6 +625,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ${IMPORT_EXTERNAL_BINARY}
                 )
             ELSEIF(${COPY_TARGET} STREQUAL "DIRECT")
+                IF(APPLE)
+                    EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
+                                    WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                    )
+                ENDIF()
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                 )
