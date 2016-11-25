@@ -61,6 +61,7 @@ private slots:
 
 private:
     Ui::PmrWorkspacesWindowNewWorkspaceDialog *mGui;
+
     bool mPathChosen;
 };
 

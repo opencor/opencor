@@ -53,7 +53,7 @@ PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QWi
 
     // The save button is disabled until we have a title
 
-    mGui->cancel_save->button(QDialogButtonBox::Save)->setEnabled(false);
+    mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 
     // Connect some signals
 
@@ -66,9 +66,9 @@ PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QWi
     connect(mGui->title, SIGNAL(textChanged(const QString &)),
             this, SLOT(titleTextChanged(const QString &)));
 
-    connect(mGui->cancel_save, SIGNAL(accepted()),
+    connect(mGui->buttonBox, SIGNAL(accepted()),
             this, SLOT(accept()));
-    connect(mGui->cancel_save, SIGNAL(rejected()),
+    connect(mGui->buttonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
 }
 
@@ -94,6 +94,8 @@ void PmrWorkspacesWindowNewWorkspaceDialog::retranslateUi()
 
 const QString PmrWorkspacesWindowNewWorkspaceDialog::description() const
 {
+    // Return our description
+
     return mGui->description->toPlainText().trimmed();
 }
 
@@ -101,6 +103,8 @@ const QString PmrWorkspacesWindowNewWorkspaceDialog::description() const
 
 const QString PmrWorkspacesWindowNewWorkspaceDialog::path() const
 {
+    // Return our path
+
     return mGui->path->text();
 }
 
@@ -108,6 +112,8 @@ const QString PmrWorkspacesWindowNewWorkspaceDialog::path() const
 
 const QString PmrWorkspacesWindowNewWorkspaceDialog::title() const
 {
+    // Return our title
+
     return mGui->title->text().trimmed();
 }
 
@@ -117,8 +123,8 @@ void PmrWorkspacesWindowNewWorkspaceDialog::titleTextChanged(const QString &pTex
 {
     // Only save if there is a title
 
-    mGui->cancel_save->button(QDialogButtonBox::Save)->setEnabled(   !pText.trimmed().isEmpty()
-                                                                  &&  mPathChosen);
+    mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(   !pText.trimmed().isEmpty()
+                                                              &&  mPathChosen);
 }
 
 //==============================================================================
@@ -134,9 +140,9 @@ void PmrWorkspacesWindowNewWorkspaceDialog::choosePath(const bool &pChecked)
 
         mPathChosen = true;
 
-        mGui->cancel_save->button(QDialogButtonBox::Save)->setEnabled(!title().isEmpty());
+        mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!title().isEmpty());
     } else {
-        mGui->cancel_save->button(QDialogButtonBox::Save)->setEnabled(false);
+        mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     }
 }
 
