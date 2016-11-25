@@ -7,20 +7,20 @@ ADD_PLUGIN(PMRWorkspacesWindow
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/pmrworkspaceswindowcommit.cpp
-        src/pmrworkspaceswindownewworkspace.cpp
+        src/pmrworkspaceswindowcommitdialog.cpp
+        src/pmrworkspaceswindownewworkspacedialog.cpp
         src/pmrworkspaceswindowplugin.cpp
         src/pmrworkspaceswindowwidget.cpp
         src/pmrworkspaceswindowwindow.cpp
     HEADERS_MOC
-        src/pmrworkspaceswindowcommit.h
-        src/pmrworkspaceswindownewworkspace.h
+        src/pmrworkspaceswindowcommitdialog.h
+        src/pmrworkspaceswindownewworkspacedialog.h
         src/pmrworkspaceswindowplugin.h
         src/pmrworkspaceswindowwidget.h
         src/pmrworkspaceswindowwindow.h
     UIS
-        src/pmrworkspaceswindowcommit.ui
-        src/pmrworkspaceswindownewworkspace.ui
+        src/pmrworkspaceswindowcommitdialog.ui
+        src/pmrworkspaceswindownewworkspacedialog.ui
         src/pmrworkspaceswindowwindow.ui
     INCLUDE_DIRS
         src

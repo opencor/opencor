@@ -22,7 +22,7 @@ limitations under the License.
 
 #include "coreguiutils.h"
 #include "pmrworkspace.h"
-#include "pmrworkspaceswindowcommit.h"
+#include "pmrworkspaceswindowcommitdialog.h"
 
 //==============================================================================
 

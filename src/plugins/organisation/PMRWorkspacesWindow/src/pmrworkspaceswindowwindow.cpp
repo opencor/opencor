@@ -26,7 +26,7 @@ limitations under the License.
 #include "i18ninterface.h"
 #include "toolbarwidget.h"
 #include "pmrwebservice.h"
-#include "pmrworkspaceswindownewworkspace.h"
+#include "pmrworkspaceswindownewworkspacedialog.h"
 #include "pmrworkspaceswindowwidget.h"
 #include "pmrworkspaceswindowwindow.h"
 

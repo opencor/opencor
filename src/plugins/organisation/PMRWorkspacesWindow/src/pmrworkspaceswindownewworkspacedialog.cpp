@@ -23,7 +23,7 @@ limitations under the License.
 #include "coreguiutils.h"
 #include "pmrwebservice.h"
 #include "pmrworkspace.h"
-#include "pmrworkspaceswindownewworkspace.h"
+#include "pmrworkspaceswindownewworkspacedialog.h"
 
 //==============================================================================
 

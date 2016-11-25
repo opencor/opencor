@@ -25,7 +25,7 @@ limitations under the License.
 #include "pmrworkspace.h"
 #include "pmrworkspacefilenode.h"
 #include "pmrworkspacemanager.h"
-#include "pmrworkspaceswindowcommit.h"
+#include "pmrworkspaceswindowcommitdialog.h"
 #include "pmrworkspaceswindowwidget.h"
 
 //==============================================================================
