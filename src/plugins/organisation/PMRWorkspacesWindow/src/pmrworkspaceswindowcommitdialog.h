@@ -30,7 +30,7 @@ limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class PmrWorkspacesWindowCommit;
+    class PmrWorkspacesWindowCommitDialog;
 }
 
 //==============================================================================
@@ -40,21 +40,21 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-class PmrWorkspacesWindowCommit : public QDialog
+class PmrWorkspacesWindowCommitDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowCommit(const QStringList &pStagedFiles,
-                                       QWidget *pParent);
-    ~PmrWorkspacesWindowCommit();
+    explicit PmrWorkspacesWindowCommitDialog(const QStringList &pStagedFiles,
+                                             QWidget *pParent);
+    ~PmrWorkspacesWindowCommitDialog();
 
     virtual void retranslateUi();
 
     const QString message() const;
 
 private:
-    Ui::PmrWorkspacesWindowCommit *mGui;
+    Ui::PmrWorkspacesWindowCommitDialog *mGui;
 };
 
 //==============================================================================

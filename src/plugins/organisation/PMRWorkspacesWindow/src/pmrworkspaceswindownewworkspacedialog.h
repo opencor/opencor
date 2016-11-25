@@ -29,7 +29,7 @@ limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class PmrWorkspacesWindowNewWorkspace;
+    class PmrWorkspacesWindowNewWorkspaceDialog;
 }
 
 //==============================================================================
@@ -39,13 +39,13 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-class PmrWorkspacesWindowNewWorkspace : public QDialog
+class PmrWorkspacesWindowNewWorkspaceDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowNewWorkspace(QWidget *pParent);
-    ~PmrWorkspacesWindowNewWorkspace();
+    explicit PmrWorkspacesWindowNewWorkspaceDialog(QWidget *pParent);
+    ~PmrWorkspacesWindowNewWorkspaceDialog();
 
     virtual void retranslateUi();
 
@@ -60,7 +60,7 @@ private slots:
     void setPathToolTip(const QString &pText);
 
 private:
-    Ui::PmrWorkspacesWindowNewWorkspace *mGui;
+    Ui::PmrWorkspacesWindowNewWorkspaceDialog *mGui;
     bool mPathChosen;
 };
 

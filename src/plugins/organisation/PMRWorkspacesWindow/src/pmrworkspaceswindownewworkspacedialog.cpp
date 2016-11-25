@@ -33,7 +33,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include "ui_pmrworkspaceswindownewworkspace.h"
+#include "ui_pmrworkspaceswindownewworkspacedialog.h"
 
 //==============================================================================
 
@@ -42,9 +42,9 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowNewWorkspace::PmrWorkspacesWindowNewWorkspace(QWidget *pParent) :
+PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QWidget *pParent) :
     QDialog(pParent),
-    mGui(new Ui::PmrWorkspacesWindowNewWorkspace),
+    mGui(new Ui::PmrWorkspacesWindowNewWorkspaceDialog),
     mPathChosen(false)
 {
     // Set up the GUI
@@ -74,7 +74,7 @@ PmrWorkspacesWindowNewWorkspace::PmrWorkspacesWindowNewWorkspace(QWidget *pParen
 
 //==============================================================================
 
-PmrWorkspacesWindowNewWorkspace::~PmrWorkspacesWindowNewWorkspace()
+PmrWorkspacesWindowNewWorkspaceDialog::~PmrWorkspacesWindowNewWorkspaceDialog()
 {
     // Delete the GUI
 
@@ -83,7 +83,7 @@ PmrWorkspacesWindowNewWorkspace::~PmrWorkspacesWindowNewWorkspace()
 
 //==============================================================================
 
-void PmrWorkspacesWindowNewWorkspace::retranslateUi()
+void PmrWorkspacesWindowNewWorkspaceDialog::retranslateUi()
 {
     // Retranslate our GUI
 
@@ -92,28 +92,28 @@ void PmrWorkspacesWindowNewWorkspace::retranslateUi()
 
 //==============================================================================
 
-const QString PmrWorkspacesWindowNewWorkspace::description() const
+const QString PmrWorkspacesWindowNewWorkspaceDialog::description() const
 {
     return mGui->description->toPlainText().trimmed();
 }
 
 //==============================================================================
 
-const QString PmrWorkspacesWindowNewWorkspace::path() const
+const QString PmrWorkspacesWindowNewWorkspaceDialog::path() const
 {
     return mGui->path->text();
 }
 
 //==============================================================================
 
-const QString PmrWorkspacesWindowNewWorkspace::title() const
+const QString PmrWorkspacesWindowNewWorkspaceDialog::title() const
 {
     return mGui->title->text().trimmed();
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowNewWorkspace::titleTextChanged(const QString &pText)
+void PmrWorkspacesWindowNewWorkspaceDialog::titleTextChanged(const QString &pText)
 {
     // Only save if there is a title
 
@@ -123,7 +123,7 @@ void PmrWorkspacesWindowNewWorkspace::titleTextChanged(const QString &pText)
 
 //==============================================================================
 
-void PmrWorkspacesWindowNewWorkspace::choosePath(const bool &pChecked)
+void PmrWorkspacesWindowNewWorkspaceDialog::choosePath(const bool &pChecked)
 {
     Q_UNUSED(pChecked);
 
@@ -142,7 +142,7 @@ void PmrWorkspacesWindowNewWorkspace::choosePath(const bool &pChecked)
 
 //==============================================================================
 
-void PmrWorkspacesWindowNewWorkspace::setPathToolTip(const QString &pText)
+void PmrWorkspacesWindowNewWorkspaceDialog::setPathToolTip(const QString &pText)
 {
     // Show the full path as a tooltip if its display field is too short
 

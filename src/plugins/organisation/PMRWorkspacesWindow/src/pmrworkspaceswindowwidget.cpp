@@ -1223,8 +1223,8 @@ void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
         if (workspace->isMerging()) {
             workspace->commitMerge();
         } else {
-            PmrWorkspacesWindowCommit commitDialog(workspace->stagedFiles(),
-                                                   Core::mainWindow());
+            PmrWorkspacesWindowCommitDialog commitDialog(workspace->stagedFiles(),
+                                                         Core::mainWindow());
 
             if (commitDialog.exec() == QDialog::Accepted)
                 workspace->commit(commitDialog.message());

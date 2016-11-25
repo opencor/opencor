@@ -322,7 +322,7 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
 {
     // Create a new workspace
 
-    PmrWorkspacesWindowNewWorkspace newWorkspaceDialog(Core::mainWindow());
+    PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(Core::mainWindow());
 
     if (newWorkspaceDialog.exec() == QDialog::Accepted) {
         // Create the folder for the new workspace

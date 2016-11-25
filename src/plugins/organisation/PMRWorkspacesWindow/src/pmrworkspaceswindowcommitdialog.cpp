@@ -30,7 +30,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include "ui_pmrworkspaceswindowcommit.h"
+#include "ui_pmrworkspaceswindowcommitdialog.h"
 
 //==============================================================================
 
@@ -39,10 +39,10 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowCommit::PmrWorkspacesWindowCommit(const QStringList &pStagedFiles,
-                                                     QWidget *pParent) :
+PmrWorkspacesWindowCommitDialog::PmrWorkspacesWindowCommitDialog(const QStringList &pStagedFiles,
+                                                                 QWidget *pParent) :
     QDialog(pParent),
-    mGui(new Ui::PmrWorkspacesWindowCommit)
+    mGui(new Ui::PmrWorkspacesWindowCommitDialog)
 {
     // Set up the GUI
 
@@ -67,7 +67,7 @@ PmrWorkspacesWindowCommit::PmrWorkspacesWindowCommit(const QStringList &pStagedF
 
 //==============================================================================
 
-PmrWorkspacesWindowCommit::~PmrWorkspacesWindowCommit()
+PmrWorkspacesWindowCommitDialog::~PmrWorkspacesWindowCommitDialog()
 {
     // Delete the GUI
 
@@ -76,7 +76,7 @@ PmrWorkspacesWindowCommit::~PmrWorkspacesWindowCommit()
 
 //==============================================================================
 
-void PmrWorkspacesWindowCommit::retranslateUi()
+void PmrWorkspacesWindowCommitDialog::retranslateUi()
 {
     // Retranslate our GUI
 
@@ -85,7 +85,7 @@ void PmrWorkspacesWindowCommit::retranslateUi()
 
 //==============================================================================
 
-const QString PmrWorkspacesWindowCommit::message() const
+const QString PmrWorkspacesWindowCommitDialog::message() const
 {
     return mGui->message->toPlainText().trimmed();
 }

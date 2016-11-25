@@ -135,7 +135,7 @@
     </message>
 </context>
 <context>
-    <name>PmrWorkspacesWindowCommit</name>
+    <name>PmrWorkspacesWindowCommitDialog</name>
     <message>
         <source>Commit staged files</source>
         <translation type="unfinished"></translation>
@@ -146,7 +146,7 @@
     </message>
 </context>
 <context>
-    <name>PmrWorkspacesWindowNewWorkspace</name>
+    <name>PmrWorkspacesWindowNewWorkspaceDialog</name>
     <message>
         <source>Create a New Workspace</source>
         <translation type="unfinished"></translation>
