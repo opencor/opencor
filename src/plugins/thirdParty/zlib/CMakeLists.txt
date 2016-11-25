@@ -4,11 +4,15 @@ SET(ZLIB_VERSION "1")
 SET(ZLIB_GIT_TAG "v1.2.8")
 
 IF(WIN32)
-#    SET(ZLIB_LIBRARY zlib${ZLIB_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(ZLIB_LIBRARY zlibd${CMAKE_SHARED_LIBRARY_SUFFIX})
+    IF(RELEASE_MODE)
+        SET(ZLIB_LIBRARY zlib${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ELSE()
+        SET(ZLIB_LIBRARY zlibd${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ENDIF()
 ELSE()
     SET(ZLIB_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}z.${ZLIB_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
 ENDIF()
+
 SET(EXTERNAL_BINARIES ${ZLIB_LIBRARY})
 
 SET(INSTALL_BASE bin/${REMOTE_EXTERNAL_BINARIES_DIR})
@@ -71,11 +75,10 @@ ELSE()
     )
 
     IF(WIN32)
-#        # the zlib library should be named zlib1.lib not zlib.lib
+		# Our plugin code expects the DLL in the same directory as the import library.
         ExternalProject_Add_Step(zlibBuild CopyDLL
-            COMMAND ${CMAKE_COMMAND} -E copy ${FULL_INSTALL_DIR}/bin/zlibd.dll
+            COMMAND ${CMAKE_COMMAND} -E copy ${FULL_INSTALL_DIR}/bin/${ZLIB_LIBRARY}
                                              ${FULL_INSTALL_DIR}/lib
-#            BYPRODUCTS ${FULL_INSTALL_DIR}/lib/zlib${ZLIB_VERSION}.lib
             DEPENDEES install)
     ENDIF()
 
