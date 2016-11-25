@@ -1,1 +1,3 @@
-/src/zconf.h
+bin/
+build/
+zlib/
