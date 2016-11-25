@@ -91,7 +91,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 
     mGui->setupUi(this);
 
-    connect(mGui->buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+    connect(mGui->buttonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
 
     // Make sure that all the widgets in our form layout can be resized, if
