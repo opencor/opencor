@@ -322,12 +322,12 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
 {
     // Create a new workspace
 
-    PmrWorkspacesWindowNewWorkspace *newWorkspaceDialog = new PmrWorkspacesWindowNewWorkspace(Core::mainWindow());
+    PmrWorkspacesWindowNewWorkspace newWorkspaceDialog(Core::mainWindow());
 
-    if (newWorkspaceDialog->exec() == QDialog::Accepted) {
+    if (newWorkspaceDialog.exec() == QDialog::Accepted) {
         // Create the folder for the new workspace
 
-        QDir workspaceFolder(newWorkspaceDialog->path());
+        QDir workspaceFolder(newWorkspaceDialog.path());
 
         if (!workspaceFolder.exists()) {
             workspaceFolder.mkpath(".");
@@ -345,9 +345,9 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
         // Ask the PMR web service to create a new workspace, resulting in the
         // (empty) workspace being cloned into its folder
 
-        mPmrWebService->requestNewWorkspace(newWorkspaceDialog->title(),
-                                            newWorkspaceDialog->description(),
-                                            newWorkspaceDialog->path());
+        mPmrWebService->requestNewWorkspace(newWorkspaceDialog.title(),
+                                            newWorkspaceDialog.description(),
+                                            newWorkspaceDialog.path());
     }
 }
 
