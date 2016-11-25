@@ -6,75 +6,71 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>495</width>
-    <height>270</height>
+    <width>360</width>
+    <height>240</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Create a New Workspace</string>
+   <string>New Workspace</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_title">
-         <property name="text">
-          <string>Title:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="title"/>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_description">
-         <property name="text">
-          <string>Description:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QPlainTextEdit" name="description"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_path">
-         <property name="text">
-          <string>Folder:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="path">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="readOnly">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QToolButton" name="choosePath">
-         <property name="text">
-          <string>...</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_title">
+       <property name="text">
+        <string>Title:</string>
+       </property>
+      </widget>
      </item>
-     <item>
-      <widget class="QDialogButtonBox" name="buttonBox">
-       <property name="standardButtons">
-        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="title"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_description">
+       <property name="text">
+        <string>Description:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPlainTextEdit" name="description"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_path">
+       <property name="text">
+        <string>Folder:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="path">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="readOnly">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QToolButton" name="choosePath">
+       <property name="text">
+        <string>...</string>
        </property>
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
