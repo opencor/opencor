@@ -211,7 +211,7 @@ bool CombineArchive::load()
         return false;
     }
 
-    // Our file is effectively a ZIP file, so extract all of our contents
+    // Our file is effectively a ZIP file, so extract all of its contents
 
     zipReader.device()->reset();
 
