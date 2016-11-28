@@ -5,10 +5,10 @@
        * [Perl 5.22](http://www.activestate.com/activeperl/);
        * [Python 2.7](https://www.python.org/);
        * [Ruby >= 1.9](http://rubyinstaller.org/);
-       * [Bison and Flex](https://sourceforge.net/projects/winflexbison/) (you will need to make a copy of win_flex.exe and name it flex.exe);
+       * [Bison and Flex](https://sourceforge.net/projects/winflexbison/) (you will need to make a copy of `win_flex.exe` and name it `flex.exe`);
        * [gperf](http://gnuwin32.sourceforge.net/packages/gperf.htm); and
-       * [ICU](http://www.npcglib.org/~stathis/blog/precompiled-icu/) (uncompress the binaries in `C:\icu`).<br/>
-         **Note:** the GnuWin32 version of Flex is not suitable, hence we use [Win flex-bison](https://sourceforge.net/projects/winflexbison/) instead.
+       * [ICU](http://www.npcglib.org/~stathis/blog/precompiled-icu/) (uncompress the binaries to `C:\icu`).<br/>
+         **Note:** the [GnuWin32](http://gnuwin32.sourceforge.net/) version of [Flex](http://gnuwin32.sourceforge.net/packages/flex.htm) is not suitable, hence we use [Win flex-bison](https://sourceforge.net/projects/winflexbison/) instead.
     * **Linux**, i.e. running the following command from the terminal:
 
       ```
@@ -23,7 +23,7 @@
       cd build
       ../source/runConfigureICU Linux --prefix=[ICU]/install
       make
-      make install
+      sudo make install
       ```
 
 From there, do the following from the command prompt or terminal:
@@ -86,7 +86,7 @@ Once [QtWebKit](https://wiki.qt.io/QtWebKit) is fully built:
 
       in `[OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir]/Qt5WebKitWidgets/Qt5WebKitWidgetsConfig.cmake`.
  * Copy the **macOS** contents of `[QtWebKit]/lib/QtWebKit.framework/Headers` to `[OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKit` and the **macOS** contents of `[QtWebKit]/lib/QtWebKitWidgets.framework/Headers` to `[OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKitWidgets`; and
- * For **each supported platform**, create and upload to the [OpenCOR website](http://www.opencor.ws/) (under [OpenCOR]/binaries/src/3rdparty/QtWebKit/[PlatformDir]) a file called `QtWebKit.tar.gz` that contains:
+ * For **each supported platform**, create and upload to the OpenCOR website (under [OpenCOR]/binaries/src/3rdparty/QtWebKit/[PlatformDir]) a file called `QtWebKit.tar.gz` that contains:
     * **Windows:**
        * `[QtWebKit]/bin` containing the `.dll` files from `[QtWebKit]/lib`, and `icudt57.dll`, `icuin57.dll` and `icuuc57.dll` from the ICU library; and
        * `[QtWebKit]/lib` containing only the original `.lib` files;
