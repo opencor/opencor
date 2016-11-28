@@ -1238,69 +1238,112 @@ ENDMACRO()
 MACRO(CREATE_PACKAGE_FILE DIRNAME PACKAGE_NAME VERSION)
 
     SET(OPTIONS "")
-    SET(ONE_VALUE_KEYWORDS "")
+    SET(ONE_VALUE_KEYWORDS
+        DEPENDENCY
+        )
     SET(MULTI_VALUE_KEYWORDS
         PACKAGED_FILES
         CHECKED_FILES
-        DEPENDENCIES
-        )
+    )
 
     CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
 
-    # The full path to the package's files
+    # The full path to the package's files.
 
     SET(FULL_DIRNAME "${PROJECT_SOURCE_DIR}/${DIRNAME}")
 
-    # What we are going to create
+    # The package name in uppercase.
+
+    STRING(TOUPPER ${PACKAGE_NAME} UC_PACKAGE_NAME)
+
+    # The name of the package's archive.
 
     SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${VERSION}.tar.gz)
     SET(REAL_COMPRESSED_FILENAME ${FULL_DIRNAME}/${COMPRESSED_FILENAME})
-    SET(PACKAGE_CMAKE_FILE "${FULL_DIRNAME}/${PACKAGE_NAME}.cmake")
 
-    # Clean up any historical packaging
+    # Remove any historical package archive
 
     FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
-    FILE(REMOVE ${PACKAGE_CMAKE_FILE})
 
-    # Calculate SHA1 values for specified files
+    # Where we put CMake code to retrieve the archived package.
 
-    SET(CHECKED_FILES)
-    SET(SHA1_VALUES)
-    FOREACH(FILENAME IN LISTS ARG_CHECKED_FILES)
-        SET(REAL_FILENAME ${FULL_DIRNAME}/${FILENAME})
-        IF(NOT EXISTS ${REAL_FILENAME})
-            MESSAGE(FATAL_ERROR "The file '${REAL_FILENAME}` is missing from '${PACKAGE_NAME}'...")
-        ENDIF()
-        FILE(SHA1 ${REAL_FILENAME} SHA1_VALUE)
-        LIST(APPEND CHECKED_FILES ${FILENAME})
-        LIST(APPEND SHA1_VALUES ${SHA1_VALUE})
+    SET(RETRIEVAL_SCRIPT "${FULL_DIRNAME}/${PACKAGE_NAME}.cmake")
+
+    # The actual packaging code goes into a separate CMake script file
+    # that is run as a POST_BUILD step.
+
+    SET(PACKAGING_SCRIPT "${PROJECT_BINARY_DIR}/package_${PACKAGE_NAME}.cmake")
+    FILE(WRITE ${PACKAGING_SCRIPT} "# Package ${PACKAGE_NAME} files
+
+CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+
+# The files and directories to package
+SET(PACKAGED_FILES_LIST)
+")
+
+    FOREACH(FILENAME IN LISTS ARG_PACKAGED_FILES)
+        FILE(APPEND ${PACKAGING_SCRIPT} "LIST(APPEND PACKAGED_FILES_LIST ${FILENAME})
+")
     ENDFOREACH()
 
-    MESSAGE("Packaging '${PACKAGE_NAME}' into '${REAL_COMPRESSED_FILENAME}'...")
-    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -czf ${REAL_COMPRESSED_FILENAME} ${ARG_PACKAGED_FILES}
-                    WORKING_DIRECTORY ${FULL_DIRNAME} OUTPUT_QUIET)
+    FILE(APPEND ${PACKAGING_SCRIPT} "
+# The files to have SHA1 values checked
+SET(CHECKED_FILES_LIST)
+")
 
-    IF(EXISTS ${REAL_COMPRESSED_FILENAME})
-        FILE(SHA1 ${REAL_COMPRESSED_FILENAME} SHA1_VALUE)
-        IF(CHECKED_FILES)
-            STRING(REPLACE ";" "\n        " CHECKED_FILES "${CHECKED_FILES}")
-            STRING(REPLACE ";" "\n        " SHA1_VALUES "${SHA1_VALUES}")
-        ENDIF()
+    FOREACH(FILENAME IN LISTS ARG_CHECKED_FILES)
+        FILE(APPEND ${PACKAGING_SCRIPT} "LIST(APPEND CHECKED_FILES_LIST ${FILENAME})
+")
+    ENDFOREACH()
 
-        STRING(TOUPPER ${PACKAGE_NAME} UC_NAME)
+    FILE(APPEND ${PACKAGING_SCRIPT} "
 
-        FILE(WRITE ${PACKAGE_CMAKE_FILE} "# Retrieve ${REAL_COMPRESSED_FILENAME}
+# Calculate SHA1 values for specified files
 
-RETRIEVE_PACKAGE_FILE(\$\{RELATIVE_ROOT_DIR\}
-    ${PACKAGE_NAME} \$\{${UC_NAME}_VERSION\} ${SHA1_VALUE}
-    CHECKED_FILES ${CHECKED_FILES}
-    SHA1_VALUES ${SHA1_VALUES}
-    )")
-        MESSAGE("Use '${PACKAGE_CMAKE_FILE}' to load '${PACKAGE_NAME}'...")
-    ELSE()
-        MESSAGE(FATAL_ERROR "Unable to build a package for '${PACKAGE_NAME}'...")
+SET(CHECKED_FILES)
+SET(SHA1_VALUES)
+FOREACH(FILENAME IN LISTS CHECKED_FILES_LIST)
+    SET(REAL_FILENAME \"${FULL_DIRNAME}/\$\{FILENAME\}\")
+
+    IF(NOT EXISTS \$\{REAL_FILENAME\})
+        MESSAGE(FATAL_ERROR \"The file '\$\{REAL_FILENAME\}` is missing from '${PACKAGE_NAME}'.\")
     ENDIF()
 
+    FILE(SHA1 \$\{REAL_FILENAME\} SHA1_VALUE)
+
+    LIST(APPEND CHECKED_FILES \$\{FILENAME\})
+    LIST(APPEND SHA1_VALUES \$\{SHA1_VALUE\})
+ENDFOREACH()
+
+MESSAGE(\"Packaging '${PACKAGE_NAME}' into '${REAL_COMPRESSED_FILENAME}'.\")
+
+EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -czf ${REAL_COMPRESSED_FILENAME} \$\{PACKAGED_FILES_LIST\}
+                WORKING_DIRECTORY ${FULL_DIRNAME} OUTPUT_QUIET)
+
+IF(EXISTS ${REAL_COMPRESSED_FILENAME})
+    FILE(SHA1 ${REAL_COMPRESSED_FILENAME} SHA1_VALUE)
+    IF(SHA1_VALUES)
+        STRING(REPLACE \";\" \"\\n        \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
+    ENDIF()
+
+    FILE(WRITE ${RETRIEVAL_SCRIPT} \"# Archive is at ${REAL_COMPRESSED_FILENAME}
+
+RETRIEVE_PACKAGE_FILE(\\$\\{RELATIVE_INSTALL_DIR\\}
+    ${PACKAGE_NAME} \\$\\{${UC_PACKAGE_NAME}_VERSION\\} \$\{SHA1_VALUE\}
+    CHECKED_FILES \\$\\{CHECKED_FILES\\}
+    SHA1_VALUES \$\{SHA1_VALUES\}
+)\")
+        MESSAGE(\"Use '${RETRIEVAL_SCRIPT}' to load '${PACKAGE_NAME}'.\")
+    ELSE()
+        MESSAGE(FATAL_ERROR \"Unable to build a package for '${PACKAGE_NAME}'.\")
+    ENDIF()
+")
+
+    # Run the packaging script once the dependency target has been satisfied
+
+    ADD_CUSTOM_COMMAND(TARGET ${ARG_DEPENDENCY} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -P ${PACKAGING_SCRIPT}
+                       VERBATIM)
 ENDMACRO()
 
 #===============================================================================
