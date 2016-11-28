@@ -1403,7 +1403,7 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION DIRNAME PACKAGE_NAME VERSION SHA1_VALU
 
     # The full path to the package's files
 
-    SET(FULL_DIRNAME "${PROJECT_SOURCE_DIR}/${DIRNAME}")
+    SET(FULL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
 
     # Create the destination folder, if needed
 
