@@ -1,7 +1,10 @@
 PROJECT(zlibPlugin)
 
-SET(ZLIB_VERSION "1")
-SET(ZLIB_GIT_TAG "v1.2.8")
+SET(ZLIB_FULL_VERSION "1.2.8")
+SET(ZLIB_SHORT_VERSION "1")
+
+SET(ZLIB_GIT_TAG v${ZLIB_FULL_VERSION})
+
 
 IF(WIN32)
     IF(RELEASE_MODE)
@@ -10,44 +13,50 @@ IF(WIN32)
         SET(ZLIB_LIBRARY zlibd${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDIF()
 ELSE()
-    SET(ZLIB_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}z.${ZLIB_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(ZLIB_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}z.${ZLIB_SHORT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
 ENDIF()
 
 SET(EXTERNAL_BINARIES ${ZLIB_LIBRARY})
 
-SET(INSTALL_BASE bin/${REMOTE_EXTERNAL_BINARIES_DIR})
-SET(FULL_INSTALL_DIR ${PROJECT_SOURCE_DIR}/${INSTALL_BASE})
+SET(RELATIVE_INSTALL_DIR external/${REMOTE_EXTERNAL_BINARIES_DIR})
+SET(FULL_INSTALL_DIR ${PROJECT_SOURCE_DIR}/${RELATIVE_INSTALL_DIR})
 
-#####
-set(USE_PREBUILT_ZLIB_PLUGIN OFF)
-#####
+SET(CHECKED_FILES lib/${ZLIB_LIBRARY})
+IF(WIN32)
+    IF(RELEASE_MODE)
+        LIST(APPEND CHECKED_FILES lib/zlib.lib)
+    ELSE()
+        LIST(APPEND CHECKED_FILES lib/zlibd.lib)
+    ENDIF()
+ENDIF()
 
 # Use our pre-built version unless instructed otherwise
 
 IF(USE_PREBUILT_ZLIB_PLUGIN)
-    # Retrieve the plugin's binary file(s)
+    # Retrieve the plugin's file(s)
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_BINARIES_DIR}")
-
+           RELATIVE_PROJECT_SOURCE_DIR "${FULL_INSTALL_DIR}")
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} zlib.dll 771a0784eec54a7f107a26ed93e336a92186f89a)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} zlib.lib d70666043587cf1a6a77f64ee2d3b73f7afe7e59)
+            RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
+                zlib ${ZLIB_SHORT_VERSION} f527db0389671fff19eb459b3201045bdd01e215
+                CHECKED_FILES ${CHECKED_FILES}
+                SHA1_VALUES 752ffc9f68a4dd7a7d922603f901941ec7d56a62
+                    cf9af3753108556adb3c3e2eb4744d7f516cb1d2
+                )
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} zlib.dll 9c7637797bafdcdeaf6414115023adb7ca4b1782)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} zlib.lib 382ca1b8f5ee26b3b21cf988ee9f87d09da5dd56)
+            RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR})
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libzlib.dylib 0cef02c11f578bc62003b0a2ba0d26e10b6dc229)
+        RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
+            zlib ${ZLIB_SHORT_VERSION} 179b0b794a6f216f789f8593e0ce5f848fd5c82b
+            CHECKED_FILES ${CHECKED_FILES}
+            SHA1_VALUES 49e9f0fabc7b5a7ebaa77491a27ba5d18cb3b328
+        )
     ELSE()
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libzlib.so 909cdf712c7c5490588c7b770d1241356181d3bf)
+        RETRIEVE_PACKAGE_FILE(${RELATIVE_INSTALL_DIR})
     ENDIF()
-
-    # Add the plugin as a binary
-    # Note: in the case of Windows, we must refer to the distribution directory
-    #       as opposed to the plugins directory since we need the .lib file and
-    #       it's only there...
 
 ELSE()
     INCLUDE(ExternalProject)
@@ -71,18 +80,36 @@ ELSE()
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DCMAKE_MACOSX_RPATH=1
-        BUILD_BYPRODUCTS <INSTALL_DIR>/lib/zlibd.lib
+        BUILD_BYPRODUCTS <INSTALL_DIR>/lib/${ZLIB_LIBRARY}
     )
 
     IF(WIN32)
-		# Our plugin code expects the DLL in the same directory as the import library.
+        # Our plugin code expects the DLL in the same directory as the import library.
         ExternalProject_Add_Step(zlibBuild CopyDLL
             COMMAND ${CMAKE_COMMAND} -E copy ${FULL_INSTALL_DIR}/bin/${ZLIB_LIBRARY}
                                              ${FULL_INSTALL_DIR}/lib
             DEPENDEES install)
+    ELSE()
+        # We need to dereference the symbolic link to the library as CMake's `tar`
+        # can't do this...
+        SET(ACTUAL_ZLIB_LIBRARY
+            ${CMAKE_SHARED_LIBRARY_PREFIX}z.${ZLIB_FULL_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}
+            )
+        ExternalProject_Add_Step(zlibBuild CopyLibrary
+            COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_INSTALL_DIR}/lib/${ZLIB_LIBRARY}
+            COMMAND ${CMAKE_COMMAND} -E copy ${FULL_INSTALL_DIR}/lib/${ACTUAL_ZLIB_LIBRARY}
+                                             ${FULL_INSTALL_DIR}/lib/${ZLIB_LIBRARY}
+            DEPENDEES install)
     ENDIF()
 
-##    ExternalProject_Add_StepDependencies(zlibBuild install ${EXTERNAL_BINARIES})
+    # Package zlib's include files and library
+
+    CREATE_PACKAGE_FILE(${RELATIVE_INSTALL_DIR}
+        zlib ${ZLIB_SHORT_VERSION}
+        PACKAGED_FILES include ${CHECKED_FILES}
+        CHECKED_FILES ${CHECKED_FILES}
+        DEPENDENCY zlibBuild
+        )
 ENDIF()
 
 # Add the plugin
@@ -96,7 +123,7 @@ ADD_PLUGIN(zlib
     HEADERS_MOC
         src/zlibplugin.h
     INCLUDE_DIRS
-        ${INSTALL_BASE}/include
+        ${RELATIVE_INSTALL_DIR}/include
         src
     QT_MODULES
         Core
