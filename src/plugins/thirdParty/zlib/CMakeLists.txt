@@ -1,10 +1,13 @@
 PROJECT(zlibPlugin)
 
+# Specify the version of zlib we want to build
+
 SET(ZLIB_FULL_VERSION "1.2.8")
 SET(ZLIB_SHORT_VERSION "1")
 
 SET(ZLIB_GIT_TAG v${ZLIB_FULL_VERSION})
 
+# The names of the libraries built by zlib's build process
 
 IF(WIN32)
     IF(RELEASE_MODE)
@@ -23,8 +26,12 @@ ELSE()
 ENDIF()
 SET(EXTERNAL_BINARIES ${ZLIB_LIBRARY})
 
+# Specify where our local zlib will be installed
+
 SET(RELATIVE_INSTALL_DIR external/${REMOTE_EXTERNAL_BINARIES_DIR})
 SET(FULL_INSTALL_DIR ${PROJECT_SOURCE_DIR}/${RELATIVE_INSTALL_DIR})
+
+# Specify the files that will have their SHA1 checked when packaged
 
 SET(CHECKED_FILES lib/${ZLIB_LIBRARY})
 IF(WIN32)
@@ -77,6 +84,8 @@ ELSE()
     IF(WIN32)
         SET(ZLIB_C_FLAGS "${CMAKE_C_FLAGS} /wd4996")
     ENDIF()
+
+    # Build zlib as an external project
 
     ExternalProject_Add(
         zlibBuild
@@ -150,6 +159,8 @@ ADD_PLUGIN(zlib
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
 )
+
+# We depend on zlib being built if we are not using the prebuilt version
 
 IF(NOT USE_PREBUILT_ZLIB_PLUGIN)
     ADD_DEPENDENCIES(zlibPlugin zlibBuild)
