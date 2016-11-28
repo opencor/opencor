@@ -887,7 +887,7 @@ SET(FORMAT_FILES
     F77.xml
     MATLAB.xml
     Python.xml
-    README.txt
+    README.md
 )
 
 FOREACH(FORMAT_FILE ${FORMAT_FILES})
