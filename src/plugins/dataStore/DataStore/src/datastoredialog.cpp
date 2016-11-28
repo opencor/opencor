@@ -83,9 +83,9 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
     connect(mGui->allDataCheckBox, SIGNAL(toggled(bool)),
             mGui->buttonBox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
 
-    connect(mGui->buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()),
+    connect(mGui->buttonBox, SIGNAL(accepted()),
             this, SLOT(accept()));
-    connect(mGui->buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+    connect(mGui->buttonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
 
     // Populate our tree view with the data store's variables and, or not, the
