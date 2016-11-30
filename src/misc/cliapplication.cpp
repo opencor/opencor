@@ -311,8 +311,12 @@ void CliApplication::status() const
             pluginInfo += QString("the plugin could not be loaded due to the following problem: %1.").arg(formatMessage(plugin->statusErrors()));
 
             break;
-        case Plugin::Invalid:
-            pluginInfo += "the plugin is not valid.";
+        case Plugin::NotPlugin:
+            pluginInfo += "this is not a plugin.";
+
+            break;
+        case Plugin::OldPlugin:
+            pluginInfo += "the plugin is too old.";
 
             break;
         case Plugin::NotCorePlugin:
