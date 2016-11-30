@@ -38,7 +38,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-extern "C" Q_DECL_EXPORT int pluginInfoVersion();
+extern "C" Q_DECL_EXPORT int pluginVersion();
 
 //==============================================================================
 

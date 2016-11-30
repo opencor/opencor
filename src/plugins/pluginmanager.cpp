@@ -73,7 +73,7 @@ PluginManager::PluginManager(const bool &pGuiMode) :
     foreach (const QString &fileName, fileNames) {
         QString pluginName = Plugin::name(fileName);
         QString pluginError = QString();
-        PluginInfo *pluginInfo = (Plugin::pluginInfoVersion(fileName) == pluginInfoVersion())?
+        PluginInfo *pluginInfo = (Plugin::pluginVersion(fileName) == pluginVersion())?
                                      Plugin::info(fileName, &pluginError):
                                      0;
 
