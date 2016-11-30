@@ -157,10 +157,19 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                 mStatus = NotNeeded;
         }
     } else {
-       // What we thought was a plugin is not actually a plugin, so consider it
-        // as invalid...
+        // What we thought was a plugin is not actually a plugin or it is a
+        // plugin that uses an old version of PluginInfo, so consider it as
+        // invalid...
+        // Note: to call Plugin::pluginInfoVersion() to distinguish between the
+        //       two cases is not good enough since an old plugin may or not
+        //       implement the pluginInfoVersion() method, which means that
+        //       Plugin::pluginInfoVersion() would return 0 whether it's a
+        //       library that is not a plugin or a plugin that uses an old
+        //       version of PluginInfo. So, instead, we call Plugin::info()
+        //       since we know it will only work for a plugin that uses an old
+        //       version of PluginInfo...
 
-       mStatus = Invalid;
+        mStatus = Plugin::info(pFileName)?OldPlugin:NotPlugin;
     }
 }
 
@@ -270,6 +279,31 @@ QString Plugin::fileName(const QString &pPluginsDir, const QString &pName)
 
     return pPluginsDir+QDir::separator()+PluginPrefix+pName+PluginExtension;
     // Note: we must add the plugin prefix part to the plugin file name...
+}
+
+//==============================================================================
+
+int Plugin::pluginInfoVersion(const QString &pFileName)
+{
+    // Return the version of PluginInfo used by the plugin
+
+    typedef int (*PluginVersionFunc)();
+
+#ifdef Q_OS_WIN
+    QString origPath = QDir::currentPath();
+
+    QDir::setCurrent(QFileInfo(pFileName).absolutePath());
+#endif
+
+    QLibrary plugin(pFileName);
+
+    PluginVersionFunc pluginVersionFunc = (PluginVersionFunc) plugin.resolve("pluginInfoVersion");
+
+#ifdef Q_OS_WIN
+    QDir::setCurrent(origPath);
+#endif
+
+    return pluginVersionFunc?pluginVersionFunc():0;
 }
 
 //==============================================================================

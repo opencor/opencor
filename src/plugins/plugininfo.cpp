@@ -28,6 +28,15 @@ namespace OpenCOR {
 
 //==============================================================================
 
+extern "C" Q_DECL_EXPORT int pluginInfoVersion()
+{
+    // Version of PluginInfo
+
+    return 1;
+}
+
+//==============================================================================
+
 PluginInfo::PluginInfo(const Category &pCategory, const bool &pSelectable,
                        const bool &pCliSupport,
                        const QStringList &pDependencies,
