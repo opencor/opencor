@@ -236,6 +236,14 @@
         <translation>l&apos;extension n&apos;a pas pu être installée à cause du problème suivant : %1.</translation>
     </message>
     <message>
+        <source>this is not a plugin.</source>
+        <translation>ce n&apos;est pas une extension.</translation>
+    </message>
+    <message>
+        <source>the plugin is too old.</source>
+        <translation>l&apos;extension est trop vieille.</translation>
+    </message>
+    <message>
         <source>the plugin claims to be the core plugin, but it is not.</source>
         <translation>l&apos;extension prétend être l&apos;extension de base, mais elle ne l&apos;est pas.</translation>
     </message>
@@ -277,10 +285,6 @@
         <translation>Description :</translation>
     </message>
     <message>
-        <source>%1.</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Status:</source>
         <translation>Statut :</translation>
     </message>
@@ -289,16 +293,12 @@
         <translation>Catégorie :</translation>
     </message>
     <message>
+        <source>%1.</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to take effect. Do you want to proceed?</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; doit etre relancé pour que vos changements puissent prendre effet. Voulez-vous continuer ?</translation>
-    </message>
-    <message>
-        <source>this is not a plugin.</source>
-        <translation>ce n&apos;est pas une extension.</translation>
-    </message>
-    <message>
-        <source>the plugin is too old.</source>
-        <translation>l&apos;extension est trop vieille.</translation>
     </message>
 </context>
 <context>
