@@ -89,7 +89,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
             if (statusErrorsCount() == 1) {
                 // There is only one error, so remove the leading " - "
 
-                mStatusErrors = mStatusErrors.remove(0, 3);
+                mStatusErrors = mStatusErrors.remove(0, pPluginManager->guiMode()?3:6);
             }
 
             // Check whether all of the plugin's dependencies, if any, were
