@@ -81,7 +81,8 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                     if (!mStatusErrors.isEmpty())
                         mStatusErrors += "\n";
 
-                    mStatusErrors += " - "+dependency;
+                    mStatusErrors +=  (pPluginManager->guiMode()?QString():QString("   "))
+                                     +" - "+dependency;
                 }
             }
 

@@ -40,6 +40,7 @@ namespace OpenCOR {
 //==============================================================================
 
 PluginManager::PluginManager(const bool &pGuiMode) :
+    mGuiMode(pGuiMode),
     mPlugins(Plugins()),
     mLoadedPlugins(Plugins()),
     mCorePlugin(0)
@@ -198,6 +199,15 @@ PluginManager::~PluginManager()
 #else
     Core::resetList(mPlugins);
 #endif
+}
+
+//==============================================================================
+
+bool PluginManager::guiMode() const
+{
+    // Return whether we are in GUI mode
+
+    return mGuiMode;
 }
 
 //==============================================================================
