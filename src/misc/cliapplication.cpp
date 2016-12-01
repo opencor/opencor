@@ -316,7 +316,7 @@ void CliApplication::status() const
 
             break;
         case Plugin::OldPlugin:
-            pluginInfo += "the plugin is too old.";
+            pluginInfo += "the plugin could not be loaded due to it being too old.";
 
             break;
         case Plugin::NotCorePlugin:

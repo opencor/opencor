@@ -240,8 +240,8 @@
         <translation>ce n&apos;est pas une extension.</translation>
     </message>
     <message>
-        <source>the plugin is too old.</source>
-        <translation>l&apos;extension est trop vieille.</translation>
+        <source>the plugin could not be loaded due to it being too old.</source>
+        <translation>l&apos;extension n&apos;a pas pu être installée car elle est trop vieille.</translation>
     </message>
     <message>
         <source>the plugin claims to be the core plugin, but it is not.</source>
