@@ -160,14 +160,14 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
         // What we thought was a plugin is not actually a plugin or it is a
         // plugin that uses an old version of PluginInfo, so consider it as
         // invalid...
-        // Note: to call Plugin::pluginVersion() to distinguish between the two
-        //       cases is not good enough since an old plugin may or not
-        //       implement the pluginVersion() method, which means that
-        //       Plugin::pluginVersion() would return 0 whether it's a library
-        //       that is not a plugin or a plugin that uses an old version of
-        //       PluginInfo. So, instead, we call Plugin::info() since we know
-        //       it will only work for a plugin that uses an old version of
-        //       PluginInfo...
+        // Note: to call Plugin::pluginInfoVersion() to distinguish between the
+        //       two cases is not good enough since an old plugin may or not
+        //       implement the pluginInfoVersion() method, which means that
+        //       Plugin::pluginInfoVersion() would return 0 whether it's a
+        //       library that is not a plugin or a plugin that uses an old
+        //       version of PluginInfo. So, instead, we call Plugin::info()
+        //       since we know it will only work for a plugin that uses an old
+        //       version of PluginInfo...
 
         mStatus = Plugin::info(pFileName)?OldPlugin:NotPlugin;
     }
@@ -283,11 +283,11 @@ QString Plugin::fileName(const QString &pPluginsDir, const QString &pName)
 
 //==============================================================================
 
-int Plugin::pluginVersion(const QString &pFileName)
+int Plugin::pluginInfoVersion(const QString &pFileName)
 {
     // Return the version of PluginInfo used by the plugin
 
-    typedef int (*PluginVersionFunc)();
+    typedef int (*PluginInfoVersionFunc)();
 
 #ifdef Q_OS_WIN
     QString origPath = QDir::currentPath();
@@ -297,13 +297,13 @@ int Plugin::pluginVersion(const QString &pFileName)
 
     QLibrary plugin(pFileName);
 
-    PluginVersionFunc pluginVersionFunc = (PluginVersionFunc) plugin.resolve("pluginVersion");
+    PluginInfoVersionFunc pluginInfoVersionFunc = (PluginInfoVersionFunc) plugin.resolve("pluginInfoVersion");
 
 #ifdef Q_OS_WIN
     QDir::setCurrent(origPath);
 #endif
 
-    return pluginVersionFunc?pluginVersionFunc():0;
+    return pluginInfoVersionFunc?pluginInfoVersionFunc():0;
 }
 
 //==============================================================================
