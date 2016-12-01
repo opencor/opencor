@@ -143,6 +143,15 @@ void SEDMLSupportPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool SEDMLSupportPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void SEDMLSupportPlugin::initializePlugin()
 {
     // Create our different actions

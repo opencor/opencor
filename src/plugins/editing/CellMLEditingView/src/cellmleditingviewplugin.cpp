@@ -241,6 +241,15 @@ void CellMLEditingViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool CellMLEditingViewPlugin::definesInterfaces()
+{
+    // We define the CellML editing view interface
+
+    return true;
+}
+
+//==============================================================================
+
 void CellMLEditingViewPlugin::initializePlugin()
 {
     // Create our different actions

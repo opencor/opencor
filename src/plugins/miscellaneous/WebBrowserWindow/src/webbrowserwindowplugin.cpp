@@ -69,6 +69,15 @@ void WebBrowserWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool WebBrowserWindowPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void WebBrowserWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our web browser window

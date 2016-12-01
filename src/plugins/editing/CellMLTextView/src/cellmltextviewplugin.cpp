@@ -236,6 +236,15 @@ void CellMLTextViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool CellMLTextViewPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void CellMLTextViewPlugin::initializePlugin()
 {
     // Create our CellML text view widget

@@ -241,6 +241,15 @@ void SEDMLEditingViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool SEDMLEditingViewPlugin::definesInterfaces()
+{
+    // We define the SED-ML editing view interface
+
+    return true;
+}
+
+//==============================================================================
+
 void SEDMLEditingViewPlugin::initializePlugin()
 {
     // Create our different actions

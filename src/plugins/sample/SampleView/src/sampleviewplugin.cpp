@@ -165,6 +165,15 @@ void SampleViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool SampleViewPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void SampleViewPlugin::initializePlugin()
 {
     // Create our sample view widget

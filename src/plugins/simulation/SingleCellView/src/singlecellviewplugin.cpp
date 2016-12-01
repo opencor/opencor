@@ -165,6 +165,15 @@ void SingleCellViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool SingleCellViewPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void SingleCellViewPlugin::initializePlugin()
 {
     // Create our single cell view widget

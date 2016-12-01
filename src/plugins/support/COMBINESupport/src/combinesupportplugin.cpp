@@ -105,6 +105,15 @@ void COMBINESupportPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool COMBINESupportPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void COMBINESupportPlugin::initializePlugin()
 {
     // We don't handle this interface...

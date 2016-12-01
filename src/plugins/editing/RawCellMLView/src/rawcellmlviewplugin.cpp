@@ -215,6 +215,15 @@ void RawCellMLViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool RawCellMLViewPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void RawCellMLViewPlugin::initializePlugin()
 {
     // Create our raw CellML view widget

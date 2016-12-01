@@ -190,6 +190,15 @@ void RawSEDMLViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool RawSEDMLViewPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void RawSEDMLViewPlugin::initializePlugin()
 {
     // Create our raw SED-ML view widget

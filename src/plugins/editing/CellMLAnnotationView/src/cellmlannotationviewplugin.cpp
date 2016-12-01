@@ -149,6 +149,15 @@ void CellMLAnnotationViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool CellMLAnnotationViewPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void CellMLAnnotationViewPlugin::initializePlugin()
 {
     // Create our CellML annotation view widget

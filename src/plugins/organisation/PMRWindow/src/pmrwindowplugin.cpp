@@ -69,6 +69,15 @@ void PMRWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool PMRWindowPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void PMRWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our PMR window

@@ -29,6 +29,8 @@ limitations under the License.
     // Note: changes to this interface must result in pluginVersion() being
     //       updated (see [OpenCOR]/src/plugins/pluginInfo.cpp)...
 
+    virtual bool definesInterfaces() PURE;
+
     virtual void initializePlugin() PURE;
     virtual void finalizePlugin() PURE;
 

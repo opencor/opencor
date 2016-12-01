@@ -64,6 +64,15 @@ void SampleWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool SampleWindowPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void SampleWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our sample window

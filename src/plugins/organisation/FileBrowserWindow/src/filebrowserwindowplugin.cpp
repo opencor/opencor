@@ -68,6 +68,15 @@ void FileBrowserWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool FileBrowserWindowPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void FileBrowserWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our file browser window

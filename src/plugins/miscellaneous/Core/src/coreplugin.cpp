@@ -340,6 +340,15 @@ void CorePlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool CorePlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void CorePlugin::initializePlugin()
 {
     // Create our central widget

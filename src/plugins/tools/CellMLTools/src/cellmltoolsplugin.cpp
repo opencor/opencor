@@ -164,6 +164,15 @@ void CellMLToolsPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool CellMLToolsPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void CellMLToolsPlugin::initializePlugin()
 {
     // Create our Tools | Export To menu

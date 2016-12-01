@@ -68,6 +68,15 @@ void HelpWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool HelpWindowPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void HelpWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our help window

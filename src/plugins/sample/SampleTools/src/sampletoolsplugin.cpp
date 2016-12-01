@@ -127,6 +127,15 @@ void SampleToolsPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool SampleToolsPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void SampleToolsPlugin::initializePlugin()
 {
     // Create our Add Two Numbers action

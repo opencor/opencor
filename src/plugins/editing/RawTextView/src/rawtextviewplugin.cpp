@@ -188,6 +188,15 @@ void RawTextViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool RawTextViewPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void RawTextViewPlugin::initializePlugin()
 {
     // Create our raw text view widget

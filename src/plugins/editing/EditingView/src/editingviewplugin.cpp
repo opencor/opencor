@@ -309,6 +309,15 @@ void EditingViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool EditingViewPlugin::definesInterfaces()
+{
+    // We define the editing view interface
+
+    return true;
+}
+
+//==============================================================================
+
 void EditingViewPlugin::initializePlugin()
 {
     // Create our Edit menu

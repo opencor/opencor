@@ -143,6 +143,15 @@ void CellMLSupportPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool CellMLSupportPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void CellMLSupportPlugin::initializePlugin()
 {
     // Create our different actions

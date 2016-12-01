@@ -68,6 +68,15 @@ void FileOrganiserWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool FileOrganiserWindowPlugin::definesInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void FileOrganiserWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our file organiser window
