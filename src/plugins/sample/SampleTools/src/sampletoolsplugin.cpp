@@ -73,7 +73,7 @@ int SampleToolsPlugin::executeCommand(const QString &pCommand,
 
         return runAddCommand(pArguments);
     } else {
-        // Not a CLI command that we support, so...
+        // Not a CLI command that we support, so show our help and leave
 
         runHelpCommand();
 
