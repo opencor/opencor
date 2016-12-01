@@ -26,8 +26,8 @@ limitations under the License.
     #define PURE
 #endif
 
-    // Note: changes to this interface must result in pluginVersion() being
-    //       updated (see [OpenCOR]/src/plugins/pluginInfo.cpp)...
+    // Note: make sure to update fileTypeInterfaceVersion() whenever you update
+    //       this interface...
 
     virtual bool isFile(const QString &pFileName) const PURE;
 
