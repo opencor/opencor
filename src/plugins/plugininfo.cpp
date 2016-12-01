@@ -37,6 +37,114 @@ extern "C" Q_DECL_EXPORT int pluginInfoVersion()
 
 //==============================================================================
 
+extern "C" Q_DECL_EXPORT int cliInterfaceVersion()
+{
+    // Version of the CLI interface
+
+    return 1;
+}
+
+//==============================================================================
+
+extern "C" Q_DECL_EXPORT int coreInterfaceVersion()
+{
+    // Version of the core interface
+
+    return 1;
+}
+
+//==============================================================================
+
+extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion()
+{
+    // Version of the data store interface
+
+    return 1;
+}
+
+//==============================================================================
+
+extern "C" Q_DECL_EXPORT int fileHandlingInterfaceVersion()
+{
+    // Version of the file handling interface
+
+    return 1;
+}
+
+//==============================================================================
+
+extern "C" Q_DECL_EXPORT int fileTypeInterfaceVersion()
+{
+    // Version of the file type interface
+
+    return 1;
+}
+
+//==============================================================================
+
+extern "C" Q_DECL_EXPORT int guiInterfaceVersion()
+{
+    // Version of the GUI interface
+
+    return 1;
+}
+
+//==============================================================================
+
+extern "C" Q_DECL_EXPORT int i18nInterfaceVersion()
+{
+    // Version of the internationalisation interface
+
+    return 1;
+}
+
+//==============================================================================
+
+extern "C" Q_DECL_EXPORT int pluginInterfaceVersion()
+{
+    // Version of the plugin interface
+
+    return 1;
+}
+
+//==============================================================================
+
+extern "C" Q_DECL_EXPORT int preferencesInterfaceVersion()
+{
+    // Version of the preferences interface
+
+    return 1;
+}
+
+//==============================================================================
+
+extern "C" Q_DECL_EXPORT int solverInterfaceVersion()
+{
+    // Version of the solver interface
+
+    return 1;
+}
+
+//==============================================================================
+
+extern "C" Q_DECL_EXPORT int viewInterfaceVersion()
+{
+    // Version of the view interface
+
+    return 1;
+}
+
+//==============================================================================
+
+extern "C" Q_DECL_EXPORT int windowInterfaceVersion()
+{
+    // Version of the window interface
+
+    return 1;
+}
+
+//==============================================================================
+
 PluginInfo::PluginInfo(const Category &pCategory, const bool &pSelectable,
                        const bool &pCliSupport,
                        const QStringList &pDependencies,
