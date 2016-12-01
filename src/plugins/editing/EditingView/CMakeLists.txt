@@ -10,6 +10,7 @@ ADD_PLUGIN(EditingView
         ../../plugininfo.cpp
         ../../pluginmanager.cpp
 
+        src/editingviewinterface.cpp
         src/editingviewplugin.cpp
     HEADERS_MOC
         ../../plugin.h

@@ -17,14 +17,10 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML editing interface
+// Editing view interface
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include <QObject>
+#include "editingviewinterface.h"
 
 //==============================================================================
 
@@ -32,25 +28,16 @@ namespace OpenCOR {
 
 //==============================================================================
 
-extern "C" Q_DECL_EXPORT int sedmlEditingViewInterfaceVersion();
-
-//==============================================================================
-
-class SedmlEditingViewInterface
+extern "C" Q_DECL_EXPORT int editingViewInterfaceVersion()
 {
-public:
-#define INTERFACE_DEFINITION
-    #include "sedmleditingviewinterface.inl"
-#undef INTERFACE_DEFINITION
-};
+    // Version of the editing view interface
+
+    return 1;
+}
 
 //==============================================================================
 
 }   // namespace OpenCOR
-
-//==============================================================================
-
-Q_DECLARE_INTERFACE(OpenCOR::SedmlEditingViewInterface, "OpenCOR::SedmlEditingViewInterface")
 
 //==============================================================================
 // End of file

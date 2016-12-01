@@ -10,6 +10,7 @@ ADD_PLUGIN(CellMLEditingView
         ../../plugininfo.cpp
         ../../pluginmanager.cpp
 
+        src/cellmleditingviewinterface.cpp
         src/cellmleditingviewplugin.cpp
         src/cellmleditingviewwidget.cpp
     HEADERS_MOC

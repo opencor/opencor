@@ -10,6 +10,7 @@ ADD_PLUGIN(SEDMLEditingView
         ../../plugininfo.cpp
         ../../pluginmanager.cpp
 
+        src/sedmleditingviewinterface.cpp
         src/sedmleditingviewplugin.cpp
         src/sedmleditingviewwidget.cpp
     HEADERS_MOC
