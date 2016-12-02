@@ -154,11 +154,15 @@ IF(WIN32)
 ENDIF()
 
 # Various include directories
+# Note: access to the Core plugin's source folder is needed so that we can build
+#       OpenCOR on its own, i.e. without any plugins (due to the global CLI/GUI
+#       utilities needing access to some features that are in common with the
+#       Core CLI/GUI utilities)...
 
 INCLUDE_DIRECTORIES(
     src/misc
     src/plugins
-    src/preferences
+    src/plugins/miscellaneous/Core/src
 )
 
 # Update the translation (.ts) files and generate the language (.qm) files
@@ -172,8 +176,8 @@ UPDATE_LANGUAGE_FILES(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
 INCLUDE(src/3rdparty/QtSingleApplication/QtSingleApplication.cmake)
 
 # Set the application icon, but only for Windows and macOS, since in the case of
-# Linux, it's done through the use of app_icon (see res/ui.qrc) in
-# src/mainwindow.ui
+# Linux, it's done through the use of app_icon (see res/ui.qrc) when we register
+# our URL scheme (see MainWindow::registerOpencorUrlScheme())
 # Note: on Windows, we set a bit more than just the application icon. We also
 #       set its product name, version, copyright, etc.
 
@@ -572,6 +576,30 @@ ELSE()
             )
         ENDIF()
 
+        SET(WINDOWS_KIT_DIRNAME "C:/Program Files (x86)/Windows Kits/10/Redist/ucrt/DLLs/x64")
+
+        LIST(APPEND ADDITIONAL_FILES
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-core-file-l1-2-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-core-file-l2-1-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-core-localization-l1-2-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-core-processthreads-l1-1-1.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-core-synch-l1-2-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-core-timezone-l1-1-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-convert-l1-1-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-environment-l1-1-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-filesystem-l1-1-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-heap-l1-1-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-locale-l1-1-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-math-l1-1-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-multibyte-l1-1-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-runtime-l1-1-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-stdio-l1-1-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-string-l1-1-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-time-l1-1-0.dll
+            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-utility-l1-1-0.dll
+            ${WINDOWS_KIT_DIRNAME}/ucrtbase.dll
+        )
+
         RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll 58f3cc096cfc002f575fb9041de757da8af6fd8d)
         RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll beca4818b830b2d9a0727b12df4794a1dfdb8cfd)
 
@@ -867,7 +895,7 @@ SET(FORMAT_FILES
     F77.xml
     MATLAB.xml
     Python.xml
-    README.txt
+    README.md
 )
 
 FOREACH(FORMAT_FILE ${FORMAT_FILES})

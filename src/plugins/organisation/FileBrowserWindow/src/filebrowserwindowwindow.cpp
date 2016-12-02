@@ -30,10 +30,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QFileInfo>
 #include <QMenu>
 #include <QPoint>
@@ -69,11 +65,11 @@ FileBrowserWindowWindow::FileBrowserWindowWindow(QWidget *pParent) :
 
     // Create and add the file browser widget
 
-    mFileBrowserWidget = new FileBrowserWindowWidget(this);
+    mFileBrowserWindowWidget = new FileBrowserWindowWidget(this);
 
-    mFileBrowserWidget->setObjectName("FileBrowserWindowWidget");
+    mFileBrowserWindowWidget->setObjectName("FileBrowserWindowWidget");
 
-    mGui->layout->addWidget(mFileBrowserWidget);
+    mGui->layout->addWidget(mFileBrowserWindowWidget);
 
     // Create and populate our context menu
 
@@ -83,28 +79,28 @@ FileBrowserWindowWindow::FileBrowserWindowWindow(QWidget *pParent) :
 
     // We want our own context menu for the file organiser widget
 
-    mFileBrowserWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    mFileBrowserWindowWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     // Some connections
 
-    connect(mFileBrowserWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+    connect(mFileBrowserWindowWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu()));
-    connect(mFileBrowserWidget, SIGNAL(doubleClicked(const QModelIndex &)),
+    connect(mFileBrowserWindowWidget, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(itemDoubleClicked()));
-    connect(mFileBrowserWidget, SIGNAL(filesOpenRequested(const QStringList &)),
+    connect(mFileBrowserWindowWidget, SIGNAL(filesOpenRequested(const QStringList &)),
             this, SLOT(openFiles(const QStringList &)));
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mFileBrowserWidget, SIGNAL(notHomeFolder(const bool &)),
+    connect(mFileBrowserWindowWidget, SIGNAL(notHomeFolder(const bool &)),
             mGui->actionHome, SLOT(setEnabled(bool)));
 
-    connect(mFileBrowserWidget, SIGNAL(goToParentFolderEnabled(const bool &)),
+    connect(mFileBrowserWindowWidget, SIGNAL(goToParentFolderEnabled(const bool &)),
             mGui->actionParent, SLOT(setEnabled(bool)));
 
-    connect(mFileBrowserWidget, SIGNAL(goToPreviousFileOrFolderEnabled(const bool &)),
+    connect(mFileBrowserWindowWidget, SIGNAL(goToPreviousFileOrFolderEnabled(const bool &)),
             mGui->actionPrevious, SLOT(setEnabled(bool)));
-    connect(mFileBrowserWidget, SIGNAL(goToNextFileOrFolderEnabled(const bool &)),
+    connect(mFileBrowserWindowWidget, SIGNAL(goToNextFileOrFolderEnabled(const bool &)),
             mGui->actionNext, SLOT(setEnabled(bool)));
 }
 
@@ -127,7 +123,7 @@ void FileBrowserWindowWindow::retranslateUi()
 
     // Retranslate the file browser widget
 
-    mFileBrowserWidget->retranslateUi();
+    mFileBrowserWindowWidget->retranslateUi();
 }
 
 //==============================================================================
@@ -136,8 +132,8 @@ void FileBrowserWindowWindow::loadSettings(QSettings *pSettings)
 {
     // Retrieve the settings of the file browser widget
 
-    pSettings->beginGroup(mFileBrowserWidget->objectName());
-        mFileBrowserWidget->loadSettings(pSettings);
+    pSettings->beginGroup(mFileBrowserWindowWidget->objectName());
+        mFileBrowserWindowWidget->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -147,8 +143,8 @@ void FileBrowserWindowWindow::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the settings of the file browser widget
 
-    pSettings->beginGroup(mFileBrowserWidget->objectName());
-        mFileBrowserWidget->saveSettings(pSettings);
+    pSettings->beginGroup(mFileBrowserWindowWidget->objectName());
+        mFileBrowserWindowWidget->saveSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -158,7 +154,7 @@ void FileBrowserWindowWindow::on_actionHome_triggered()
 {
     // Go to the home folder
 
-    mFileBrowserWidget->goToHomeFolder();
+    mFileBrowserWindowWidget->goToHomeFolder();
 }
 
 //==============================================================================
@@ -167,7 +163,7 @@ void FileBrowserWindowWindow::on_actionParent_triggered()
 {
     // Go to the parent item
 
-    mFileBrowserWidget->goToParentFolder();
+    mFileBrowserWindowWidget->goToParentFolder();
 }
 
 //==============================================================================
@@ -176,7 +172,7 @@ void FileBrowserWindowWindow::on_actionPrevious_triggered()
 {
     // Go to the previous file/folder
 
-    mFileBrowserWidget->goToPreviousFileOrFolder();
+    mFileBrowserWindowWidget->goToPreviousFileOrFolder();
 }
 
 //==============================================================================
@@ -185,7 +181,7 @@ void FileBrowserWindowWindow::on_actionNext_triggered()
 {
     // Go to the next file/folder
 
-    mFileBrowserWidget->goToNextFileOrFolder();
+    mFileBrowserWindowWidget->goToNextFileOrFolder();
 }
 
 //==============================================================================
@@ -205,7 +201,7 @@ void FileBrowserWindowWindow::itemDoubleClicked()
     // Check what kind of item has been double clicked and if it is a file, then
     // open it
 
-    QString fileName = mFileBrowserWidget->currentPath();
+    QString fileName = mFileBrowserWindowWidget->currentPath();
     QFileInfo fileInfo = fileName;
 
     if (fileInfo.isFile()) {

@@ -45,7 +45,6 @@ namespace PMRWindow {
 
 PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     WebViewerWidget::WebViewerWidget(pParent),
-    Core::CommonWidget(this),
     mExposureNames(QStringList()),
     mExposureDisplayed(QBoolList()),
     mExposureUrlId(QMap<QString, int>()),
@@ -67,6 +66,10 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
             this, SLOT(copy()));
 
     mContextMenu->addAction(mCopyAction);
+
+    // Prevent zooming in/out
+
+    setZoomingEnabled(false);
 
     // We want our own context menu
 
@@ -189,10 +192,10 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposureList &pExposureLis
                      "                        </ul>\n"
                      "                    </td>\n"
                      "                    <td class=\"button\">\n"
-                     "                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"\"><img class=\"button clone\"/></a>\n"
+                     "                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"\"><img class=\"button clone\"></a>\n"
                      "                    </td>\n"
                      "                    <td class=\"button\">\n"
-                     "                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"\"><img id=\"exposureFilesButton_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
+                     "                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"\"><img id=\"exposureFilesButton_"+QString::number(i)+"\" class=\"button open\"></a>\n"
                      "                    </td>\n"
                      "                </tr>\n"
                      "            </tbody>\n"

@@ -28,6 +28,7 @@ limitations under the License.
 
 //==============================================================================
 
+class QLineEdit;
 class QMenu;
 
 //==============================================================================
@@ -42,13 +43,17 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace WebViewerWidget {
-    class WebViewerWidget;
-}   // namespace WebViewerWidget
+namespace Core {
+    class ProgressBarWidget;
+}   // namespace Core
 
 //==============================================================================
 
 namespace WebBrowserWindow {
+
+//==============================================================================
+
+class WebBrowserWindowWidget;
 
 //==============================================================================
 
@@ -61,24 +66,27 @@ public:
     ~WebBrowserWindowWindow();
 
     virtual void retranslateUi();
+
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
 protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
     Ui::WebBrowserWindowWindow *mGui;
 
-    WebViewerWidget::WebViewerWidget *mWebBrowserWidget;
+    WebBrowserWindowWidget *mWebBrowserWindowWidget;
 
     QMenu *mContextMenu;
 
-    int mZoomLevel;
+    QLineEdit *mUrlValue;
 
-    void setZoomLevel(const int &pZoomLevel);
+    QString mUrl;
+
+    Core::ProgressBarWidget *mProgressBarWidget;
 
 private slots:
-    void on_urlValue_returnPressed();
-    void on_refreshButton_clicked();
-
     void on_actionClear_triggered();
     void on_actionBack_triggered();
     void on_actionForward_triggered();
@@ -87,11 +95,16 @@ private slots:
     void on_actionZoomIn_triggered();
     void on_actionZoomOut_triggered();
     void on_actionPrint_triggered();
+    void on_actionInspect_triggered();
+    void on_actionReload_triggered();
 
-    void updateActions();
+    void returnPressed();
+
     void urlChanged(const QUrl &pUrl);
-    void documentChanged();
     void showCustomContextMenu() const;
+    void loadProgress(const int &pProgress);
+    void loadFinished();
+    void resetProgressBar();
 };
 
 //==============================================================================

@@ -33,10 +33,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QDesktopServices>
 #include <QDialogButtonBox>
 #include <QModelIndex>
@@ -94,6 +90,9 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    connect(mGui->buttonBox, SIGNAL(rejected()),
+            this, SLOT(reject()));
 
     // Make sure that all the widgets in our form layout can be resized, if
     // necessary and if possible
@@ -163,8 +162,8 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 
             pluginCategoryItem(pluginInfo->category())->appendRow(pluginItem);
         } else {
-            // We are not actually dealing with a plugin, so simply add it to
-            // the Invalid category
+            // We are either dealing with a library that is not a plugin or with
+            // a plugin that is too old, so add it to the Invalid category
 
             pluginCategoryItem(PluginInfo::Invalid)->appendRow(pluginItem);
         }
@@ -270,8 +269,10 @@ QString PluginsDialog::statusDescription(Plugin *pPlugin) const
         return tr("the plugin is loaded and fully functional.");
     case Plugin::NotLoaded:
         return tr("the plugin could not be loaded due to the following problem: %1.").arg(formatMessage(pPlugin->statusErrors()));
-    case Plugin::Invalid:
-        return tr("the plugin is not valid.");
+    case Plugin::NotPlugin:
+        return tr("this is not a plugin.");
+    case Plugin::OldPlugin:
+        return tr("the plugin is too old.");
     case Plugin::NotCorePlugin:
         return tr("the plugin claims to be the core plugin, but it is not.");
     case Plugin::InvalidCorePlugin:
@@ -304,24 +305,28 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
     //       only want to see selectable plugins) that no categories/plugins are
     //       shown...
 
-    bool atLeastOneItem = pNewIndex.isValid();
     bool pluginItem = false;
-    bool validItem = true;
+    bool libraryItem = false;
+    bool oldPluginItem = false;
+    bool categoryItem = false;
 
     // Update the information view with the category's or plugin's information
 
-    QStandardItem *item = atLeastOneItem?mModel->itemFromIndex(pNewIndex):0;
+    QStandardItem *item = pNewIndex.isValid()?mModel->itemFromIndex(pNewIndex):0;
     QString itemText = item?item->text():QString();
     Plugin *plugin = (item && item->parent())?mPluginManager->plugin(itemText):0;
 
     if (plugin) {
-        // We are dealing with a plugin, so retrieve its information
-
-        pluginItem = true;
+        // We are supposedly dealing with a plugin, so retrieve its information,
+        // if possible
 
         PluginInfo *pluginInfo = plugin->info();
 
         if (pluginInfo) {
+            // We are indeed dealing with a plugin
+
+            pluginItem = true;
+
             // The plugin's name
 
             mGui->fieldOneLabel->setText(tr("Plugin:"));
@@ -352,25 +357,34 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
 
             mGui->fieldFourLabel->setText(tr("Status:"));
             mGui->fieldFourValue->setText(statusDescription(plugin));
-        } else {
-            // We are not dealing with a plugin
+        } else if (plugin->status() == Plugin::NotPlugin) {
+            // We are not dealing with a plugin, but a simple library
 
-            validItem = false;
+            libraryItem = true;
 
             // The plugin's status
 
             mGui->fieldOneLabel->setText(tr("Status:"));
             mGui->fieldOneValue->setText(statusDescription(plugin));
+        } else {
+            // We are dealing with a plugin that is too old
 
-            // The plugin's error
+            oldPluginItem = true;
 
-            mGui->fieldTwoLabel->setText(tr("Error:"));
-            mGui->fieldTwoValue->setText(plugin->errorMessage());
+            // The plugin's name
+
+            mGui->fieldOneLabel->setText(tr("Plugin:"));
+            mGui->fieldOneValue->setText(plugin->name());
+
+            // The plugin's status
+
+            mGui->fieldTwoLabel->setText(tr("Status:"));
+            mGui->fieldTwoValue->setText(statusDescription(plugin));
         }
-    } else if (atLeastOneItem) {
-        // We are not dealing with a plugin, but a plugin category
+    } else if (pNewIndex.isValid()) {
+        // We are dealing with a category
 
-        validItem = true;
+        categoryItem = true;
 
         // The category's name
 
@@ -385,17 +399,17 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
 
     // Show/hide the different fields
 
-    mGui->fieldOneLabel->setVisible(atLeastOneItem);
-    mGui->fieldOneValue->setVisible(atLeastOneItem);
+    mGui->fieldOneLabel->setVisible(pluginItem || libraryItem || oldPluginItem || categoryItem);
+    mGui->fieldOneValue->setVisible(pluginItem || libraryItem || oldPluginItem || categoryItem);
 
-    mGui->fieldTwoLabel->setVisible(atLeastOneItem);
-    mGui->fieldTwoValue->setVisible(atLeastOneItem);
+    mGui->fieldTwoLabel->setVisible(pluginItem || oldPluginItem || categoryItem);
+    mGui->fieldTwoValue->setVisible(pluginItem || oldPluginItem || categoryItem);
 
-    mGui->fieldThreeLabel->setVisible(atLeastOneItem && validItem && pluginItem);
-    mGui->fieldThreeValue->setVisible(atLeastOneItem && validItem && pluginItem);
+    mGui->fieldThreeLabel->setVisible(pluginItem);
+    mGui->fieldThreeValue->setVisible(pluginItem);
 
-    mGui->fieldFourLabel->setVisible(atLeastOneItem && validItem && pluginItem);
-    mGui->fieldFourValue->setVisible(atLeastOneItem && validItem && pluginItem);
+    mGui->fieldFourLabel->setVisible(pluginItem);
+    mGui->fieldFourValue->setVisible(pluginItem);
 
     // Make sure that we are big enough to show our contents
 
@@ -541,21 +555,10 @@ void PluginsDialog::on_buttonBox_accepted()
 
 //==============================================================================
 
-void PluginsDialog::on_buttonBox_rejected()
-{
-    // Simply cancel whatever was done here
-
-    reject();
-}
-
-//==============================================================================
-
 void PluginsDialog::apply()
 {
-    if (questionMessageBox(mainWindow(), qAppName(),
-                           tr("<strong>%1</strong> must be restarted for your changes to take effect. Do you wish to proceed?").arg(qAppName()),
-                           QMessageBox::Yes|QMessageBox::No,
-                           QMessageBox::Yes) == QMessageBox::Yes ) {
+    if (questionMessageBox(qAppName(),
+                           tr("<strong>%1</strong> must be restarted for your changes to take effect. Do you want to proceed?").arg(qAppName())) == QMessageBox::Yes ) {
         // Do what is done when clicking on the OK button
 
         on_buttonBox_accepted();

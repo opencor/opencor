@@ -223,7 +223,7 @@ int main(int pArgC, char *pArgV[])
             qtXmlPatternsTranslator.load(QString(":/translations/qtxmlpatterns_%1.qm").arg(locale));
             guiApp->installTranslator(&qtXmlPatternsTranslator);
 
-            appTranslator.load(":app_"+locale);
+            appTranslator.load(":/app_"+locale);
             guiApp->installTranslator(&appTranslator);
 
             // Show the check for updates window

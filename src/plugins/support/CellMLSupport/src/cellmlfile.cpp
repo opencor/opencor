@@ -111,10 +111,7 @@ void CellmlFile::reset()
     mRdfApiRepresentation = 0;
     mRdfDataSource = 0;
 
-    foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
-        delete rdfTriple;
-
-    mRdfTriples.clear();
+    Core::resetList(mRdfTriples);
 
     mIssues.clear();
 
@@ -676,9 +673,10 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
                                    importedFile);
     }
 
-    // Sort our issues
+    // Sort our issues (since the CellML API may generate them in a non-ordered
+    // manner)
 
-    std::sort(pIssues.begin(), pIssues.end());
+    std::sort(pIssues.begin(), pIssues.end(), CellmlFileIssue::compare);
 
     return !cellmlErrorsCount;
 }

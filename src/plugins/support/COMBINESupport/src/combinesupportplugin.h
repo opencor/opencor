@@ -57,8 +57,6 @@ class COMBINESupportPlugin : public QObject, public FileTypeInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
-    explicit COMBINESupportPlugin();
-
 #include "filetypeinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"

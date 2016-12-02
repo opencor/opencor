@@ -1,10 +1,25 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 0, "month": 0, "year": 0,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 17, "month": 11, "year": 2016,
                      "categories": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "Preferences dialog." },
+                           { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Linux\">Linux</a>." },
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a>." }
+                         ]
+                       },
+                       { "name": "Data store",
+                         "entries": [
+                           { "type": "Improved", "description": "Selection of data." }
+                         ]
+                       },
+                       { "name": "Editing",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML Text view",
+                             "entries": [
+                               { "type": "Fixed", "description": "Saving of a new file." }
+                             ]
+                           }
                          ]
                        },
                        { "name": "Miscellaneous",
@@ -82,7 +97,7 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "Syntax highlighting." },
                                { "type": "Improved", "description": "Support for comments." },
                                { "type": "Improved", "description": "Support for <code>cmeta:id</code>'s." },
-                               { "type": "Improved", "description": "Saving of <a href=\"https://www.cellml.org/\">CellML</a> file." },
+                               { "type": "Improved", "description": "Saving of a <a href=\"https://www.cellml.org/\">CellML</a> file." },
                                { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." },
                                { "type": "Fixed", "description": "Serialisation of numbers that have an exponent." },
                                { "type": "Fixed", "description": "Serialisation of metadata." }

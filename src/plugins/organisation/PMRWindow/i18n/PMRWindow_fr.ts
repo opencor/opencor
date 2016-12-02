@@ -4,12 +4,12 @@
 <context>
     <name>OpenCOR::PMRWindow::PMRWindowPlugin</name>
     <message>
-        <source>Physiome Model Repository</source>
-        <translation>Répertoire De Modèles Physiome</translation>
+        <source>PMR</source>
+        <translation></translation>
     </message>
     <message>
-        <source>Show/hide the Physiome Model Repository window</source>
-        <translation>Montrer/cacher la fenêtre du Répertoire De Modèles Physiome</translation>
+        <source>Show/hide the PMR window</source>
+        <translation>Montrer/cacher la fenêtre PMR</translation>
     </message>
 </context>
 <context>
@@ -60,14 +60,21 @@
     </message>
 </context>
 <context>
-    <name>PmrWindowWindow</name>
+    <name>OpenCOR::PMRWindow::PmrWindowWindow</name>
     <message>
-        <source>Physiome Model Repository</source>
-        <translation>Répertoire De Modèles Physiome</translation>
+        <source>Select Empty Directory</source>
+        <translation>Sélectionner Répertoire Vide</translation>
     </message>
     <message>
         <source>Filter:</source>
         <translation>Filtre :</translation>
+    </message>
+</context>
+<context>
+    <name>PmrWindowWindow</name>
+    <message>
+        <source>PMR</source>
+        <translation></translation>
     </message>
     <message>
         <source>Reload</source>

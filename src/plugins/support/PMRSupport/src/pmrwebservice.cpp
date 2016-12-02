@@ -28,7 +28,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QFuture>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QtConcurrent/QtConcurrent>
@@ -42,11 +41,19 @@ namespace PMRSupport {
 
 const QString PmrWebService::Url()
 {
-#if PMR_PRODUCTION
-    return "https://models.physiomeproject.org";
-#else
-    return "http://staging.physiomeproject.org";
-#endif
+    // Create a network access manager so that we can then retrieve various
+    // things from PMR
+
+    mNetworkAccessManager = new QNetworkAccessManager(this);
+
+    // Make sure that we get told when our PMR requests are finished, as well as
+    // if there are SSL errors (which would happen if the website's certificate
+    // is invalid, e.g. it has expired)
+
+    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
+            this, SLOT(finished(QNetworkReply *)));
+    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
+            this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
 }
 
 //==============================================================================
@@ -71,7 +78,8 @@ PmrWebService::PmrWebService(QObject *parent) : QObject(parent),
     // Create a network access manager so that we can then retrieve various
     // things from the PMR
 
-    mPmrWebServiceManager = new PmrWebServiceManager(this);
+    // Send our request to PMR, asking for the response to be compressed, but
+    // only if we are connected to the Internet
 
     // Pass network manager signals directly to ourselves
 
@@ -618,7 +626,8 @@ void PmrWebService::getWorkspaceCredentials(PmrWorkspace *pWorkspace)
 
 void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocument)
 {
-    QVariantMap jsonResponse = pJsonDocument.object().toVariantMap();
+    // Get the list of exposures from PMR after making sure that our internal
+    // data has been reset
 
     auto workspace = (PmrWorkspace *)sender()->property(WorkspaceProperty).value<void *>();
 

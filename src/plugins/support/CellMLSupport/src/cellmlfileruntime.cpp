@@ -29,10 +29,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QRegularExpression>
 #include <QStringList>
 
@@ -69,6 +65,28 @@ CellmlFileRuntimeParameter::CellmlFileRuntimeParameter(const QString &pName,
     mType(pType),
     mIndex(pIndex)
 {
+}
+
+//==============================================================================
+
+bool CellmlFileRuntimeParameter::compare(CellmlFileRuntimeParameter *pParameter1,
+                                         CellmlFileRuntimeParameter *pParameter2)
+{
+    // Determine which of the two parameters should be first
+    // Note: the two comparisons are case insensitive, so that it's easier for
+    //       people to find a parameter...
+
+    QString componentHierarchy1 = pParameter1->formattedComponentHierarchy();
+    QString componentHierarchy2 = pParameter2->formattedComponentHierarchy();
+
+    if (!componentHierarchy1.compare(componentHierarchy2)) {
+        if (!pParameter1->name().compare(pParameter2->name()))
+            return pParameter1->degree() < pParameter2->degree();
+        else
+            return pParameter1->name().compare(pParameter2->name(), Qt::CaseInsensitive) < 0;
+    } else {
+        return componentHierarchy1.compare(componentHierarchy2, Qt::CaseInsensitive) < 0;
+    }
 }
 
 //==============================================================================
@@ -186,7 +204,7 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
 {
     // Reset (initialise, here) our properties
 
-    reset(true, true);
+    reset(true, false);
 }
 
 //==============================================================================
@@ -195,7 +213,7 @@ CellmlFileRuntime::~CellmlFileRuntime()
 {
     // Reset our properties
 
-    reset(false, false);
+    reset(false, true);
 }
 
 //==============================================================================
@@ -632,28 +650,6 @@ QString CellmlFileRuntime::functionCode(const QString &pFunctionSignature,
 
 //==============================================================================
 
-bool sortParameters(CellmlFileRuntimeParameter *pParameter1,
-                    CellmlFileRuntimeParameter *pParameter2)
-{
-    // Determine which of the two parameters should be first
-    // Note: the two comparisons are case insensitive, so that it's easier for
-    //       people to find a parameter...
-
-    QString componentHierarchy1 = pParameter1->formattedComponentHierarchy();
-    QString componentHierarchy2 = pParameter2->formattedComponentHierarchy();
-
-    if (!componentHierarchy1.compare(componentHierarchy2)) {
-        if (!pParameter1->name().compare(pParameter2->name()))
-            return pParameter1->degree() < pParameter2->degree();
-        else
-            return pParameter1->name().compare(pParameter2->name(), Qt::CaseInsensitive) < 0;
-    } else {
-        return componentHierarchy1.compare(componentHierarchy2, Qt::CaseInsensitive) < 0;
-    }
-}
-
-//==============================================================================
-
 QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLElement *pElement)
 {
     // Make sure that we have a given element
@@ -920,7 +916,7 @@ void CellmlFileRuntime::update()
         }
     }
 
-    std::sort(mParameters.begin(), mParameters.end(), sortParameters);
+    std::sort(mParameters.begin(), mParameters.end(), CellmlFileRuntimeParameter::compare);
 
     // Generate the model code
 

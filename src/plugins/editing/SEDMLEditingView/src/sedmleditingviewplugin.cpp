@@ -326,8 +326,7 @@ void SEDMLEditingViewPlugin::sedmlValidation()
         if (mSedmlEditingViewInterface->validSedml(mFileName, extra)) {
             // There are no SED-ML issues, so the SED-ML file is valid
 
-            Core::informationMessageBox( Core::mainWindow(),
-                                         tr("SED-ML Validation"),
+            Core::informationMessageBox( tr("SED-ML Validation"),
                                          tr("The SED-ML file is valid.")
                                         +(extra.isEmpty()?
                                              QString():

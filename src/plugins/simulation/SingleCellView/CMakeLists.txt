@@ -5,7 +5,6 @@ PROJECT(SingleCellViewPlugin)
 ADD_PLUGIN(SingleCellView
     SOURCES
         ../../datastoreinterface.cpp
-        ../../filetypeinterface.cpp
         ../../i18ninterface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp
@@ -62,8 +61,4 @@ ADD_PLUGIN(SingleCellView
         ${LLVM_PLUGIN_BINARY}
         ${QWT_PLUGIN_BINARY}
         ${ZLIB_PLUGIN_BINARY}
-    EXTERNAL_BINARIES
-        ${CELLML_API_EXTERNAL_BINARIES}
-        ${SBML_API_EXTERNAL_BINARIES}
-        ${SEDML_API_EXTERNAL_BINARIES}
 )

@@ -29,10 +29,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QDialog>
 #include <QStyledItemDelegate>
 
@@ -98,8 +94,6 @@ private slots:
     void updateDataSelectedState(QStandardItem *pItem = 0);
 
     void on_allDataCheckBox_clicked();
-    void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
 };
 
 //==============================================================================

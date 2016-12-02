@@ -590,7 +590,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             COPY_FILE_TO_BUILD_DIR(DIRECT ${ARG_EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
 
-            # Strip the library of all its local symbols, if possible
+            # Strip the external library of all its local symbols, if possible
 
             IF(NOT WIN32 AND RELEASE_MODE)
                 ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
@@ -609,6 +609,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ELSE()
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
+                )
+            ENDIF()
+
+            # On macOS, ensure that @rpath is set in the external library's id
+
+            IF(APPLE)
+                EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
+                                WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
                 )
             ENDIF()
 
@@ -656,28 +664,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         # Clean up our plugin
 
         MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
-
-        # Make sure that the plugin refers to our embedded version of the
-        # binary plugins on which it depends
-
-        FOREACH(ARG_PLUGIN_BINARY ${ARG_PLUGIN_BINARIES})
-            STRING(REGEX REPLACE "^.*/" "" ARG_PLUGIN_BINARY "${ARG_PLUGIN_BINARY}")
-
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${ARG_PLUGIN_BINARY}
-                                                                 @rpath/${ARG_PLUGIN_BINARY}
-                                                                 ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-        ENDFOREACH()
-
-        # Make sure that the plugin refers to our embedded version of the
-        # external binaries on which it depends
-
-        FOREACH(ARG_EXTERNAL_BINARY ${ARG_EXTERNAL_BINARIES})
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${ARG_EXTERNAL_BINARY}
-                                                                 @rpath/${ARG_EXTERNAL_BINARY}
-                                                                 ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-        ENDFOREACH()
     ENDIF()
 
     # Package the plugin, but only if we are not on macOS since it will have
@@ -806,28 +792,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     # Clean up our plugin's tests
 
                     MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
-
-                    # Make sure that the plugin's tests refer to our embedded
-                    # version of the binary plugins on which they depend
-
-                    FOREACH(ARG_PLUGIN_BINARY ${ARG_PLUGIN_BINARIES})
-                        STRING(REGEX REPLACE "^.*/" "" ARG_PLUGIN_BINARY "${ARG_PLUGIN_BINARY}")
-
-                        ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                           COMMAND install_name_tool -change ${ARG_PLUGIN_BINARY}
-                                                                             @rpath/${ARG_PLUGIN_BINARY}
-                                                                             ${DEST_TESTS_DIR}/${TEST_FILENAME})
-                    ENDFOREACH()
-
-                    # Make sure that the plugin's tests refer to our embedded
-                    # version of the external binaries on which they depend
-
-                    FOREACH(ARG_EXTERNAL_BINARY ${ARG_EXTERNAL_BINARIES})
-                        ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                           COMMAND install_name_tool -change ${ARG_EXTERNAL_BINARY}
-                                                                             @rpath/${ARG_EXTERNAL_BINARY}
-                                                                             ${DEST_TESTS_DIR}/${TEST_FILENAME})
-                    ENDFOREACH()
                 ENDIF()
             ELSE()
                 MESSAGE(AUTHOR_WARNING "The '${ARG_TEST}' test for the '${PLUGIN_NAME}' plugin does not exist...")
@@ -869,6 +833,14 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
     EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                                                      ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+
+    # On macOS, ensure that @rpath is set in the plugin binary's id
+
+    IF(APPLE)
+        EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${PLUGIN_FILENAME} ${PLUGIN_FILENAME}
+                        WORKING_DIRECTORY ${DEST_PLUGINS_DIR}
+        )
+    ENDIF()
 
     # Package the plugin, but only if we are not on macOS since it will have
     # already been copied
@@ -1097,10 +1069,10 @@ MACRO(MACOS_CLEAN_UP_FILE PROJECT_TARGET DIRNAME FILENAME)
     # Clean up the file's id
 
     IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
-        EXECUTE_PROCESS(COMMAND install_name_tool -id ${FILENAME} ${FULL_FILENAME})
+        EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${FILENAME} ${FULL_FILENAME})
     ELSE()
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND install_name_tool -id ${FILENAME} ${FULL_FILENAME})
+                           COMMAND install_name_tool -id @rpath/${FILENAME} ${FULL_FILENAME})
     ENDIF()
 
     # Make sure that the file refers to our embedded copy of OpenSSL

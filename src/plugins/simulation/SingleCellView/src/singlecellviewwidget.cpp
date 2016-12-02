@@ -1019,11 +1019,11 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
             repeatedTask = static_cast<libsedml::SedRepeatedTask *>(task);
 
             if (    repeatedTask->getResetModel()
-                && (repeatedTask->getNumRanges() == 1)
-                && (repeatedTask->getNumTaskChanges() == 0)
-                && (repeatedTask->getNumSubTasks() == totalNbOfTasks-1)) {
+                &&  (repeatedTask->getNumRanges() == 1)
+                && !repeatedTask->getNumTaskChanges()
+                &&  (repeatedTask->getNumSubTasks() == totalNbOfTasks-1)) {
                 // Make sure that the range is a vector range and that it's the
-                // the one referenced in the repeated task
+                // one referenced in the repeated task
 
                 libsedml::SedRange *range = repeatedTask->getRange(0);
 
@@ -1087,8 +1087,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
     for (uint i = 0, iMax = sedmlDocument->getNumDataGenerators(); i < iMax; ++i) {
         libsedml::SedDataGenerator *dataGenerator = sedmlDocument->getDataGenerator(i);
 
-        if (   (dataGenerator->getNumVariables() != 1)
-            || (dataGenerator->getNumParameters() != 0)) {
+        if ((dataGenerator->getNumVariables() != 1) || dataGenerator->getNumParameters()) {
             pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
                                                              tr("only SED-ML files with data generators for one variable are supported"));
 
@@ -1232,9 +1231,8 @@ bool SingleCellViewWidget::combineArchiveSupported(COMBINESupport::CombineArchiv
 {
     // Load and make sure that our COMBINE archive is valid
 
-    if (!pCombineArchive->load() || !pCombineArchive->isValid()) {
-        pCombineArchiveIssues = pCombineArchive->issues();
-
+    if (   !pCombineArchive->load()
+        || !pCombineArchive->isValid(pCombineArchiveIssues)) {
         return false;
     }
 
@@ -1402,8 +1400,8 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
     // SED-ML file while, in the case of a SED-ML file, we need to retrieve the
     // corresponding CellML file
 
-    pSedmlFileIssues = SEDMLSupport::SedmlFileIssues();
-    pCombineArchiveIssues = COMBINESupport::CombineArchiveIssues();
+    pSedmlFileIssues.clear();
+    pCombineArchiveIssues.clear();
 
     if (pCombineArchive)
         retrieveSedmlFile(pSedmlFile, pCombineArchive, pCombineArchiveIssues);

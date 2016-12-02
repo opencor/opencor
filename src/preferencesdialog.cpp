@@ -136,6 +136,9 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     mGui->setupUi(this);
 
+    connect(mGui->buttonBox, SIGNAL(rejected()),
+            this, SLOT(reject()));
+
     // Customise our GUI's button box by having both a reset plugin settings and
     // reset all settings buttons
 
@@ -299,15 +302,6 @@ void PreferencesDialog::on_buttonBox_accepted()
 
 //==============================================================================
 
-void PreferencesDialog::on_buttonBox_rejected()
-{
-    // Simply cancel whatever was done here
-
-    reject();
-}
-
-//==============================================================================
-
 void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
                                                 const QModelIndex &pOldIndex)
 {
@@ -342,7 +336,7 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
     QLayout *widgetLayout = mGui->stackedWidget->currentWidget()->layout();
 
     if (widgetLayout)
-        widgetLayout->setMargin(0);
+        widgetLayout->setContentsMargins(QMargins());
 
     // Make sure that we are big enough to show our contents
 

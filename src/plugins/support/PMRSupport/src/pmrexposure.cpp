@@ -49,12 +49,12 @@ PmrExposure::PmrExposure(const QString &pUrl, const QString &pName, QObject *par
 
 //==============================================================================
 
-bool PmrExposure::compare(const PmrExposure *pFirst, const PmrExposure *pSecond)
+bool PmrExposure::compare(const PmrExposure *pFirst, const PmrExposure *pExposure2)
 {
     // Return whether the first exposure is lower than the second one (without
     // worrying about casing)
 
-    return pFirst->name().compare(pSecond->name(), Qt::CaseInsensitive) < 0;
+    return pFirst->name().compare(pExposure2->name(), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
@@ -159,7 +159,7 @@ void PmrExposureList::add(const QString &pUrl, const QString &pName, QObject *pa
 {
     // Add a new exposure to the list
 
-    QList::append(new PmrExposure(pUrl, pName, parent));
+    *this << new PmrExposure(pUrl, pName);
 }
 
 //==============================================================================

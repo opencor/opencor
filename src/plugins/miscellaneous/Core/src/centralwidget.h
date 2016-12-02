@@ -39,6 +39,7 @@ limitations under the License.
 //==============================================================================
 
 class QDialog;
+class QDialogButtonBox;
 class QLabel;
 class QLineEdit;
 class QStackedWidget;
@@ -102,7 +103,7 @@ public:
 
     virtual void retranslateUi();
 
-    void setSupportedFileTypes(const FileTypes &pSupportedFileTypes);
+    void setFileTypeInterfaces(const FileTypeInterfaces &pFileTypeInterfaces);
 
     void addView(Plugin *pPlugin);
 
@@ -153,7 +154,7 @@ private:
     QMap<QString, int> mFileModeTabIndexes;
     QMap<QString, QMap<int, int>> mFileModeViewTabIndexes;
 
-    FileTypes mSupportedFileTypes;
+    FileTypeInterfaces mFileTypeInterfaces;
 
     QStringList mFileNames;
 
@@ -168,12 +169,11 @@ private:
     QDialog *mRemoteFileDialog;
     QLabel *mRemoteFileDialogUrlLabel;
     QLineEdit *mRemoteFileDialogUrlValue;
+    QDialogButtonBox *mRemoteFileDialogButtonBox;
 
     QMap<QString, QString> mRemoteLocalFileNames;
 
     QMap<QString, QWidget *> mViews;
-
-    QStringList mDefaultViews;
 
     Plugin * viewPlugin(const int &pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
@@ -208,6 +208,7 @@ private slots:
 
     void openFile();
 
+    void openRemoteFileChanged();
     void doOpenRemoteFile();
     void cancelOpenRemoteFile();
     void openRemoteFile();

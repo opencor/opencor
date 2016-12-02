@@ -43,7 +43,7 @@ PLUGININFO_FUNC WebBrowserWindowPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to browse the Web."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour naviguer sur le Web."));
 
-    return new PluginInfo(PluginInfo::Organisation, true, false,
+    return new PluginInfo(PluginInfo::Miscellaneous, true, false,
                           QStringList() << "Core" << "WebViewerWidget",
                           descriptions);
 }
@@ -100,18 +100,22 @@ void WebBrowserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void WebBrowserWindowPlugin::loadSettings(QSettings *pSettings)
 {
-    Q_UNUSED(pSettings);
+    // Retrieve our Web browser window settings
 
-    // We don't handle this interface...
+    pSettings->beginGroup(mWebBrowserWindowWindow->objectName());
+        mWebBrowserWindowWindow->loadSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
 
 void WebBrowserWindowPlugin::saveSettings(QSettings *pSettings) const
 {
-    Q_UNUSED(pSettings);
+    // Keep track of our Web browser window settings
 
-    // We don't handle this interface...
+    pSettings->beginGroup(mWebBrowserWindowWindow->objectName());
+        mWebBrowserWindowWindow->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================

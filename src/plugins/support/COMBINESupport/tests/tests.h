@@ -24,6 +24,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include "combinearchiveissue.h"
+
+//==============================================================================
+
 #include <QObject>
 
 //==============================================================================
@@ -42,6 +46,7 @@ class Tests : public QObject
 
 private:
     OpenCOR::COMBINESupport::CombineArchive *mCombineArchive;
+    OpenCOR::COMBINESupport::CombineArchiveIssues mIssues;
 
     void doBasicTests(const QString &pFileName = QString());
 

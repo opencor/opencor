@@ -61,6 +61,7 @@ PLUGININFO_FUNC CorePluginInfo()
 //==============================================================================
 
 CorePlugin::CorePlugin() :
+    mFileTypeInterfaces(FileTypeInterfaces()),
     mRecentFileNamesOrUrls(QStringList())
 {
 }
@@ -345,6 +346,8 @@ void CorePlugin::initializePlugin()
 
     mCentralWidget = new CentralWidget(Core::mainWindow());
 
+    mCentralWidget->setObjectName("CentralWidget");
+
     // Create our different File actions
 
     mFileNewFileAction = Core::newAction(QIcon(":/oxygen/actions/document-new.png"),
@@ -521,27 +524,21 @@ void CorePlugin::finalizePlugin()
 
 void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    // Retrieve the different file types supported by our various plugins and
+    // Retrieve the file type interfaces supported by our various plugins and
     // make our central widget aware of them
-
-    FileTypes supportedFileTypes = FileTypes();
 
     foreach (Plugin *plugin, pLoadedPlugins) {
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
 
         if (fileTypeInterface) {
-            // The plugin implements our file type interface, so add the
-            // supported file types, but only if they are not already in our
+            // The plugin implements our file type interface, so add it to our
             // list
 
-            foreach (FileType *fileType, fileTypeInterface->fileTypes()) {
-                if (!supportedFileTypes.contains(fileType))
-                    supportedFileTypes << fileType;
-            }
+            mFileTypeInterfaces << fileTypeInterface;
         }
     }
 
-    mCentralWidget->setSupportedFileTypes(supportedFileTypes);
+    mCentralWidget->setFileTypeInterfaces(mFileTypeInterfaces);
 
     // Check, based on the loaded plugins, which views, if any, our central
     // widget should support
@@ -740,7 +737,7 @@ void CorePlugin::reopenFile(const QString &pFileName)
         } else {
             // The file doesn't exist anymore, so let the user know about it
 
-            warningMessageBox(mainWindow(), tr("Reopen File"),
+            warningMessageBox(tr("Reopen File"),
                               tr("<strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
         }
     } else {

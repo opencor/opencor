@@ -20,10 +20,10 @@ limitations under the License.
 // Plugin manager
 //==============================================================================
 
-#ifndef OpenCOR_MAIN
-    #include "corecliutils.h"
-#else
+#ifdef OpenCOR_MAIN
     #include "cliutils.h"
+#else
+    #include "corecliutils.h"
 #endif
 #include "plugin.h"
 #include "pluginmanager.h"
@@ -39,18 +39,8 @@ namespace OpenCOR {
 
 //==============================================================================
 
-bool sortPlugins(Plugin *pPlugin1, Plugin *pPlugin2)
-{
-    // Determine which of the two plugins should be first based on their name
-    // Note: the comparison is case insensitive, so that it's easier for people
-    //       to find a plugin (when we list them)...
-
-    return pPlugin1->name().compare(pPlugin2->name(), Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
 PluginManager::PluginManager(const bool &pGuiMode) :
+    mGuiMode(pGuiMode),
     mPlugins(Plugins()),
     mLoadedPlugins(Plugins()),
     mCorePlugin(0)
@@ -68,10 +58,10 @@ PluginManager::PluginManager(const bool &pGuiMode) :
     QStringList fileNames = QStringList();
 
     foreach (const QFileInfo &fileInfo, fileInfoList) {
-#ifndef OpenCOR_MAIN
-        fileNames << Core::nativeCanonicalFileName(fileInfo.canonicalFilePath());
-#else
+#ifdef OpenCOR_MAIN
         fileNames << nativeCanonicalFileName(fileInfo.canonicalFilePath());
+#else
+        fileNames << Core::nativeCanonicalFileName(fileInfo.canonicalFilePath());
 #endif
     }
 
@@ -81,17 +71,19 @@ PluginManager::PluginManager(const bool &pGuiMode) :
     QMap<QString, QString> pluginsError = QMap<QString, QString>();
 
     foreach (const QString &fileName, fileNames) {
-        QString pluginError;
-        PluginInfo *pluginInfo = Plugin::info(fileName, &pluginError);
-        // Note: if there is some plugin information, then it will get owned by
-        //       the plugin itself. So, it's the plugin's responsibility to
-        //       delete it (see Plugin::~Plugin())...
         QString pluginName = Plugin::name(fileName);
+        QString pluginError = QString();
+        PluginInfo *pluginInfo = (Plugin::pluginVersion(fileName) == pluginVersion())?
+                                     Plugin::info(fileName, &pluginError):
+                                     0;
 
         pluginsInfo.insert(pluginName, pluginInfo);
         pluginsError.insert(pluginName, pluginError);
 
         // Keep track of the plugin's full dependencies, if possible
+        // Note: if there is some plugin information, then it will get owned by
+        //       the plugin itself. So, it will be the plugin's responsibility
+        //       to delete it (see Plugin::~Plugin())...
 
         if (pluginInfo)
             pluginInfo->setFullDependencies(Plugin::fullDependencies(mPluginsDir, pluginName));
@@ -202,10 +194,22 @@ PluginManager::PluginManager(const bool &pGuiMode) :
 
 PluginManager::~PluginManager()
 {
-    // Delete all our plugins
+    // Delete some internal objects
 
-    foreach (Plugin *plugin, mPlugins)
-        delete plugin;
+#ifdef OpenCOR_MAIN
+    resetList(mPlugins);
+#else
+    Core::resetList(mPlugins);
+#endif
+}
+
+//==============================================================================
+
+bool PluginManager::guiMode() const
+{
+    // Return whether we are in GUI mode
+
+    return mGuiMode;
 }
 
 //==============================================================================
@@ -225,7 +229,7 @@ Plugins PluginManager::sortedPlugins() const
 
     Plugins res = mPlugins;
 
-    std::sort(res.begin(), res.end(), sortPlugins);
+    std::sort(res.begin(), res.end(), Plugin::compare);
 
     return res;
 }
@@ -247,7 +251,7 @@ Plugins PluginManager::sortedLoadedPlugins() const
 
     Plugins res = mLoadedPlugins;
 
-    std::sort(res.begin(), res.end(), sortPlugins);
+    std::sort(res.begin(), res.end(), Plugin::compare);
 
     return res;
 }

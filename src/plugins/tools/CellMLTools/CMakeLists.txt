@@ -6,7 +6,6 @@ ADD_PLUGIN(CellMLTools
     SOURCES
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
-        ../../filetypeinterface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp
         ../../pluginmanager.cpp
@@ -27,8 +26,6 @@ ADD_PLUGIN(CellMLTools
         ${LLVM_PLUGIN}
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
-    EXTERNAL_BINARIES
-        ${CELLML_API_EXTERNAL_BINARIES}
     TESTS
         tests
 )

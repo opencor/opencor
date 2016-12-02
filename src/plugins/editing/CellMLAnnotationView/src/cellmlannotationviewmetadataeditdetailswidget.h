@@ -80,12 +80,12 @@ public:
                                                          const QString &pResource = QString(),
                                                          const QString &pId = QString());
 
+    static bool compare(const CellmlAnnotationViewMetadataEditDetailsItem &pItem1,
+                        const CellmlAnnotationViewMetadataEditDetailsItem &pItem2);
+
     QString name() const;
     QString resource() const;
     QString id() const;
-
-    bool operator==(const CellmlAnnotationViewMetadataEditDetailsItem &pItem) const;
-    bool operator<(const CellmlAnnotationViewMetadataEditDetailsItem &pItem) const;
 
 private:
     QString mName;
@@ -137,7 +137,7 @@ private:
     QString mTerm;
     QStringList mTerms;
 
-    int mItemsCount;
+    CellmlAnnotationViewMetadataEditDetailsItems mItems;
 
     bool mLookUpTerm;
     QString mErrorMessage;

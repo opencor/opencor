@@ -64,6 +64,9 @@ CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
     mEditorWidget = new EditorWidget::EditorWidget(pContents, pReadOnly, pLexer, this);
     mEditorListWidget = new EditorWidget::EditorListWidget(this);
 
+    mMathmlViewerWidget->setObjectName("MathmlViewerWidget");
+    mEditorWidget->setObjectName("mEditorWidget");
+
     connect(mEditorListWidget, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
             this, SLOT(itemRequested(OpenCOR::EditorWidget::EditorListItem *)));
 
@@ -107,8 +110,13 @@ void CellmlEditingViewWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve our MathML viewer and editor widgets' settings
 
-    mMathmlViewerWidget->loadSettings(pSettings);
-    mEditorWidget->loadSettings(pSettings);
+    pSettings->beginGroup(mMathmlViewerWidget->objectName());
+        mMathmlViewerWidget->loadSettings(pSettings);
+    pSettings->endGroup();
+
+    pSettings->beginGroup(mEditorWidget->objectName());
+        mEditorWidget->loadSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================

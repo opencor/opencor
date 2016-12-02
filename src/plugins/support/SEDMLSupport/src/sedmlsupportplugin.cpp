@@ -51,19 +51,6 @@ PLUGININFO_FUNC SEDMLSupportPluginInfo()
 }
 
 //==============================================================================
-
-SEDMLSupportPlugin::SEDMLSupportPlugin()
-{
-    // The file types that we support
-    // Note: they will get deleted by FileTypeInterface...
-
-    mFileTypes = FileTypes() << new FileType(qobject_cast<FileTypeInterface *>(this),
-                                             SedmlMimeType, SedmlFileExtension);
-
-    mDefaultViews = QStringList() << "SingleCellView" << "RawSEDMLView" << "RawTextView";
-}
-
-//==============================================================================
 // File interface
 //==============================================================================
 
@@ -76,18 +63,38 @@ bool SEDMLSupportPlugin::isFile(const QString &pFileName) const
 
 //==============================================================================
 
-QString SEDMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
+QString SEDMLSupportPlugin::mimeType() const
 {
-    // Return the description for the requested MIME type, that is as long as it
-    // is for the MIME type that we support
+    // Return the MIME type we support
 
-    if (!pMimeType.compare(SedmlMimeType)) {
-        return tr("SED-ML File");
-    } else {
-        // Not a MIME type that we can recognise
+    return SedmlMimeType;
+}
 
-        return QString();
-    }
+//==============================================================================
+
+QString SEDMLSupportPlugin::fileExtension() const
+{
+    // Return the extension of the type of file we support
+
+    return SedmlFileExtension;
+}
+
+//==============================================================================
+
+QString SEDMLSupportPlugin::fileTypeDescription() const
+{
+    // Return the description of the type of file we support
+
+    return tr("SED-ML File");
+}
+
+//==============================================================================
+
+QStringList SEDMLSupportPlugin::fileTypeDefaultViews() const
+{
+    // Return the default views to use for the type of file we support
+
+    return QStringList() << "SingleCellView" << "RawSEDMLView" << "RawTextView";
 }
 
 //==============================================================================

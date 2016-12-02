@@ -67,7 +67,7 @@ public:
 private:
     Ui::FileOrganiserWindowWindow *mGui;
 
-    FileOrganiserWindowWidget *mFileOrganiserWidget;
+    FileOrganiserWindowWidget *mFileOrganiserWindowWidget;
 
     QMenu *mContextMenu;
 

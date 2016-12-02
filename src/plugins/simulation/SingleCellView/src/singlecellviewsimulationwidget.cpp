@@ -97,6 +97,13 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
+    mCellmlFile(0),
+    mSedmlFile(0),
+    mCombineArchive(0),
+    mFileType(SingleCellViewWidget::CellmlFile),
+    mSedmlFileIssues(SEDMLSupport::SedmlFileIssues()),
+    mCombineArchiveIssues(COMBINESupport::CombineArchiveIssues()),
+    mErrorType(General),
     mPlots(GraphPanelWidget::GraphPanelPlotWidgets()),
     mUpdatablePlotViewports(QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool>()),
     mCanUpdatePlotsForUpdatedGraphs(true),
@@ -396,7 +403,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     QWidget *simulationOutputWidget = new QWidget(this);
     QVBoxLayout *simulationOutputLayout= new QVBoxLayout(simulationOutputWidget);
 
-    simulationOutputLayout->setMargin(0);
+    simulationOutputLayout->setContentsMargins(QMargins());
     simulationOutputLayout->setSpacing(0);
 
     simulationOutputWidget->setLayout(simulationOutputLayout);
@@ -1114,7 +1121,7 @@ bool SingleCellViewSimulationWidget::save(const QString &pFileName)
                             mCombineArchive->fileName();
 
         if (!importedParameters.isEmpty()) {
-            Core::informationMessageBox(Core::mainWindow(), tr("Save File"),
+            Core::informationMessageBox(tr("Save File"),
                                         tr("The following parameters are imported and cannot therefore be saved:")+importedParameters);
         }
     }
@@ -1300,7 +1307,7 @@ void SingleCellViewSimulationWidget::runPauseResumeSimulation()
             double requiredMemory = mSimulation->requiredMemory();
 
             if (requiredMemory > freeMemory) {
-                Core::warningMessageBox(Core::mainWindow(), tr("Run Simulation"),
+                Core::warningMessageBox(tr("Run Simulation"),
                                         tr("The simulation requires %1 of memory and you have only %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
             } else {
                 // Theoretically speaking, we have enough memory to run the
@@ -1318,7 +1325,7 @@ void SingleCellViewSimulationWidget::runPauseResumeSimulation()
                 if (runSimulation) {
                     mSimulation->run();
                 } else {
-                    Core::warningMessageBox(Core::mainWindow(), tr("Run Simulation"),
+                    Core::warningMessageBox(tr("Run Simulation"),
                                             tr("We could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
                 }
             }
@@ -1716,7 +1723,7 @@ void SingleCellViewSimulationWidget::sedmlExportSedmlFile()
     QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString sedmlFileName = cellmlFileName;
-    QStringList sedmlFilters = Core::filters(mPlugin->sedmlFileTypes());
+    QStringList sedmlFilters = Core::filters(FileTypeInterfaces() << mPlugin->sedmlFileTypeInterface());
     QString firstSedmlFilter = sedmlFilters.first();
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {
@@ -1752,7 +1759,7 @@ void SingleCellViewSimulationWidget::sedmlExportSedmlFile()
         }
 
         if (!createSedmlFile(sedmlFileName, modelSource)) {
-            Core::warningMessageBox(Core::mainWindow(), tr("Export To SED-ML File"),
+            Core::warningMessageBox(tr("Export To SED-ML File"),
                                     tr("The simulation could not be exported to <strong>%1</strong>.").arg(sedmlFileName));
         }
     }
@@ -1770,7 +1777,7 @@ void SingleCellViewSimulationWidget::sedmlExportCombineArchive()
     QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString combineArchiveName = cellmlFileName;
-    QStringList combineFilters = Core::filters(mPlugin->combineFileTypes());
+    QStringList combineFilters = Core::filters(FileTypeInterfaces() << mPlugin->combineFileTypeInterface());
     QString firstCombineFilter = combineFilters.first();
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {
@@ -1901,7 +1908,7 @@ void SingleCellViewSimulationWidget::sedmlExportCombineArchive()
         // Let the user know about any error that may have occurred
 
         if (!errorMessage.isEmpty()) {
-            Core::warningMessageBox(Core::mainWindow(), tr("Export To COMBINE Archive"),
+            Core::warningMessageBox(tr("Export To COMBINE Archive"),
                                     errorMessage);
         }
     }
@@ -2442,7 +2449,7 @@ void SingleCellViewSimulationWidget::updateDelayValue(const double &pDelayValue)
     for (int i = 0, iMax = pDelayValue; i < iMax; ++i) {
         delay += increment;
 
-        if (delay % multiple == 0) {
+        if (!(delay % multiple)) {
             increment *= 10;
             multiple *= 10;
         }
@@ -3275,7 +3282,7 @@ void SingleCellViewSimulationWidget::dataStoreExportDone(const QString &pErrorMe
     // Display the given error message, if any
 
     if (!pErrorMessage.isEmpty()) {
-        Core::warningMessageBox(Core::mainWindow(), tr("Simulation Data Export"),
+        Core::warningMessageBox(tr("Simulation Data Export"),
                                 pErrorMessage);
     }
 }

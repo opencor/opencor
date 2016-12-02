@@ -29,6 +29,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QPushButton>
 #include <QRegularExpressionValidator>
 
 //==============================================================================
@@ -49,6 +50,9 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(const double 
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    connect(mGui->buttonBox, SIGNAL(rejected()),
+            this, SLOT(reject()));
 
     // Only allow double numbers
 
@@ -184,28 +188,19 @@ void GraphPanelWidgetCustomAxesDialog::on_buttonBox_accepted()
     bool yProblem = minY() >= maxY();
 
     if (xProblem && yProblem) {
-        Core::warningMessageBox(this, tr("Custom Axes"),
+        Core::warningMessageBox(tr("Custom Axes"),
                                 tr("X-min and Y-min must be lower than X-max and Y-max, respectively."));
     } else if (xProblem) {
-        Core::warningMessageBox(this, tr("Custom Axes"),
+        Core::warningMessageBox(tr("Custom Axes"),
                                 tr("X-min must be lower than X-max."));
     } else if (yProblem) {
-        Core::warningMessageBox(this, tr("Custom Axes"),
+        Core::warningMessageBox(tr("Custom Axes"),
                                 tr("Y-min must be lower than Y-max."));
     } else {
         // Confirm that we accepted the changes
 
         accept();
     }
-}
-
-//==============================================================================
-
-void GraphPanelWidgetCustomAxesDialog::on_buttonBox_rejected()
-{
-    // Simply cancel whatever was done here
-
-    reject();
 }
 
 //==============================================================================

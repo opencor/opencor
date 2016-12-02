@@ -221,6 +221,8 @@ void RawCellMLViewPlugin::initializePlugin()
 
     mViewWidget = new RawCellmlViewWidget(Core::mainWindow());
 
+    mViewWidget->setObjectName("RawCellmlViewWidget");
+
     // Hide our raw CellML view widget since it may not initially be shown in
     // our central widget
 

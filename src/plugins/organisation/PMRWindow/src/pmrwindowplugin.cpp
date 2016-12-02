@@ -26,10 +26,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QMainWindow>
 #include <QSettings>
 
@@ -44,8 +40,8 @@ PLUGININFO_FUNC PMRWindowPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder le <a href=\"https://models.physiomeproject.org/\">Répertoire de Modèles Physiome</a>."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
 
     return new PluginInfo(PluginInfo::Organisation, true, false,
                           QStringList() << "PMRSupport" << "PMRWorkspaces" << "WebViewerWidget",
@@ -61,9 +57,8 @@ void PMRWindowPlugin::retranslateUi()
 {
     // Retranslate our PMR window action
 
-    retranslateAction(mPmrWindowAction,
-                      tr("Physiome Model Repository"),
-                      tr("Show/hide the Physiome Model Repository window"));
+    retranslateAction(mPmrWindowAction, tr("PMR"),
+                      tr("Show/hide the PMR window"));
 
     // Retranslate our PMR window
 

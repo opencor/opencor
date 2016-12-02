@@ -151,6 +151,7 @@ void CombineArchive::reset()
     mLoadingNeeded = true;
 
     mFiles.clear();
+
     mIssues.clear();
 }
 
@@ -210,7 +211,7 @@ bool CombineArchive::load()
         return false;
     }
 
-    // Our file is effectively a ZIP file, so extract all of our contents
+    // Our file is effectively a ZIP file, so extract all of its contents
 
     zipReader.device()->reset();
 
@@ -302,14 +303,14 @@ bool CombineArchive::save(const QString &pFileName)
 
 //==============================================================================
 
-bool CombineArchive::isValid()
+bool CombineArchive::isValid(CombineArchiveIssues &pIssues)
 {
     // Make sure that we are loaded and fine
 
     if (!load())
         return false;
     else
-        mIssues.clear();
+        pIssues.clear();
 
     // Consider ourselves valid if new
 
@@ -321,7 +322,7 @@ bool CombineArchive::isValid()
     QString manifestFileName = mDirName+QDir::separator()+ManifestFileName;
 
     if (!QFile::exists(manifestFileName)) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+        pIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
                                        QObject::tr("the archive does not have a manifest"));
 
         return false;
@@ -336,7 +337,7 @@ bool CombineArchive::isValid()
     Core::readFileContentsFromFile(":/COMBINESupport/omex.xsd", schemaContents);
 
     if (!Core::validXml(manifestContents, schemaContents)) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+        pIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
                                        QObject::tr("the manifest is not a valid OMEX file"));
 
         return false;
@@ -357,7 +358,7 @@ bool CombineArchive::isValid()
         QString fileName = mDirName+QDir::separator()+location;
 
         if (!QFile::exists(fileName)) {
-            mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+            pIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
                                            QObject::tr("<strong>%1</strong> could not be found").arg(location));
 
             mFiles.clear();
@@ -391,7 +392,7 @@ bool CombineArchive::isValid()
     }
 
     if (!combineArchiveReferenceFound) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+        pIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
                                        QObject::tr("no reference to the COMBINE archive itself could be found"));
 
         mFiles.clear();

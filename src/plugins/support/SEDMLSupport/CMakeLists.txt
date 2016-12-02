@@ -4,7 +4,6 @@ PROJECT(SEDMLSupportPlugin)
 
 ADD_PLUGIN(SEDMLSupport
     SOURCES
-        ../../filetypeinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
@@ -29,8 +28,4 @@ ADD_PLUGIN(SEDMLSupport
         StandardSupport
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
-    EXTERNAL_BINARIES
-        ${CELLML_API_EXTERNAL_BINARIES}
-        ${SBML_API_EXTERNAL_BINARIES}
-        ${SEDML_API_EXTERNAL_BINARIES}
 )

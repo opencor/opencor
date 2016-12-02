@@ -51,19 +51,6 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
 }
 
 //==============================================================================
-
-CellMLSupportPlugin::CellMLSupportPlugin()
-{
-    // The file types that we support
-    // Note: they will get deleted by FileTypeInterface...
-
-    mFileTypes = FileTypes() << new FileType(qobject_cast<FileTypeInterface *>(this),
-                                             CellmlMimeType, CellmlFileExtension);
-
-    mDefaultViews = QStringList() << "CellMLTextView" << "RawCellMLView" << "RawTextView";
-}
-
-//==============================================================================
 // File interface
 //==============================================================================
 
@@ -76,18 +63,38 @@ bool CellMLSupportPlugin::isFile(const QString &pFileName) const
 
 //==============================================================================
 
-QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
+QString CellMLSupportPlugin::mimeType() const
 {
-    // Return the description for the requested MIME type, that is as long as it
-    // is for the MIME type that we support
+    // Return the MIME type we support
 
-    if (!pMimeType.compare(CellmlMimeType)) {
-        return tr("CellML File");
-    } else {
-        // Not a MIME type that we can recognise
+    return CellmlMimeType;
+}
 
-        return QString();
-    }
+//==============================================================================
+
+QString CellMLSupportPlugin::fileExtension() const
+{
+    // Return the extension of the type of file we support
+
+    return CellmlFileExtension;
+}
+
+//==============================================================================
+
+QString CellMLSupportPlugin::fileTypeDescription() const
+{
+    // Return the description of the type of file we support
+
+    return tr("CellML File");
+}
+
+//==============================================================================
+
+QStringList CellMLSupportPlugin::fileTypeDefaultViews() const
+{
+    // Return the default views to use for the type of file we support
+
+    return QStringList() << "CellMLTextView" << "RawCellMLView" << "RawTextView";
 }
 
 //==============================================================================

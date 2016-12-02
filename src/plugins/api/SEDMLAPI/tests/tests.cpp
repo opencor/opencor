@@ -49,11 +49,11 @@ void Tests::basicTests()
     libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
     libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
 
-    static const std::string modelName = "myModel";
+    static const std::string ModelName = "myModel";
 
-    sedmlModel->setName(modelName);
+    sedmlModel->setName(ModelName);
 
-    QCOMPARE(sedmlModel->getName(), modelName);
+    QCOMPARE(sedmlModel->getName(), ModelName);
 
     delete sedmlDocument;
 }

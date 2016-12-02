@@ -213,7 +213,7 @@
         <translation>À Propos</translation>
     </message>
     <message>
-        <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your settings. Do you wish to proceed?</source>
+        <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your settings. Do you want to proceed?</source>
         <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres. Voulez-vous continuer ?</translation>
     </message>
 </context>
@@ -236,8 +236,12 @@
         <translation>l&apos;extension n&apos;a pas pu être installée à cause du problème suivant : %1.</translation>
     </message>
     <message>
-        <source>the plugin is not valid.</source>
-        <translation>l&apos;extension n&apos;est pas valide.</translation>
+        <source>this is not a plugin.</source>
+        <translation>ce n&apos;est pas une extension.</translation>
+    </message>
+    <message>
+        <source>the plugin is too old.</source>
+        <translation>l&apos;extension est trop vieille.</translation>
     </message>
     <message>
         <source>the plugin claims to be the core plugin, but it is not.</source>
@@ -281,23 +285,19 @@
         <translation>Description :</translation>
     </message>
     <message>
-        <source>%1.</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Status:</source>
         <translation>Statut :</translation>
-    </message>
-    <message>
-        <source>Error:</source>
-        <translation>Erreur :</translation>
     </message>
     <message>
         <source>Category:</source>
         <translation>Catégorie :</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to take effect. Do you wish to proceed?</source>
+        <source>%1.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to take effect. Do you want to proceed?</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; doit etre relancé pour que vos changements puissent prendre effet. Voulez-vous continuer ?</translation>
     </message>
 </context>

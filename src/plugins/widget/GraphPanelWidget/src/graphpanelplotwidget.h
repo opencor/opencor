@@ -284,7 +284,7 @@ private:
                    const double &pScalingFactorY);
 
     QPointF canvasPoint(const QPoint &pPoint,
-                        const bool pNeedOffset = true) const;
+                        const bool &pNeedOffset = true) const;
 
 signals:
     void axesChanged(const double &pMinX, const double &pMaxX,

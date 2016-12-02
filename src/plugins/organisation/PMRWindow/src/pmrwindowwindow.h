@@ -36,6 +36,8 @@ namespace Ui {
 
 //==============================================================================
 
+class QLabel;
+class QLineEdit;
 class QNetworkAccessManager;
 class QNetworkReply;
 
@@ -75,13 +77,17 @@ protected:
 private:
     Ui::PmrWindowWindow *mGui;
 
+    QLabel *mFilterLabel;
+    QLineEdit *mFilterValue;
+
     PMRSupport::PmrWebService *mPmrWebService;
 
-    PmrWindowWidget *mPmrWidget;
+    PmrWindowWidget *mPmrWindowWidget;
 
 private slots:
-    void on_filterValue_textChanged(const QString &pText);
-    void on_refreshButton_clicked();
+    void on_actionReload_triggered();
+
+    void filterValueChanged(const QString &pText);
 
     void busy(const bool &pBusy);
     void showProgress(const double &pProgress);

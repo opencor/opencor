@@ -28,17 +28,12 @@ limitations under the License.
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilerdftriple.h"
-#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "i18ninterface.h"
 #include "treeviewwidget.h"
 #include "usermessagewidget.h"
 #include "webviewerwidget.h"
-
-//==============================================================================
-
-#include <Qt>
 
 //==============================================================================
 
@@ -86,6 +81,23 @@ CellmlAnnotationViewMetadataEditDetailsItem::CellmlAnnotationViewMetadataEditDet
 
 //==============================================================================
 
+bool CellmlAnnotationViewMetadataEditDetailsItem::compare(const CellmlAnnotationViewMetadataEditDetailsItem &pItem1,
+                                                          const CellmlAnnotationViewMetadataEditDetailsItem &pItem2)
+{
+    // Determine which of the two items should be first
+
+    int nameComparison = pItem1.name().compare(pItem2.name());
+    int resourceComparison = pItem1.resource().compare(pItem2.resource());
+
+    return !nameComparison?
+                !resourceComparison?
+                    pItem1.id().compare(pItem2.id()) < 0:
+                    resourceComparison < 0:
+                nameComparison < 0;
+}
+
+//==============================================================================
+
 QString CellmlAnnotationViewMetadataEditDetailsItem::name() const
 {
     // Return our name
@@ -113,40 +125,6 @@ QString CellmlAnnotationViewMetadataEditDetailsItem::id() const
 
 //==============================================================================
 
-bool CellmlAnnotationViewMetadataEditDetailsItem::operator==(const CellmlAnnotationViewMetadataEditDetailsItem &pItem) const
-{
-    // Return whether the current item is the same as the given one
-
-    return    !mName.compare(pItem.name())
-           && !mResource.compare(pItem.resource())
-           && !mId.compare(pItem.id());
-}
-
-//==============================================================================
-
-bool CellmlAnnotationViewMetadataEditDetailsItem::operator<(const CellmlAnnotationViewMetadataEditDetailsItem &pItem) const
-{
-    // Return whether the current item is lower than the given one
-
-    int nameComparison = mName.compare(pItem.name());
-    int resourceComparison = mResource.compare(pItem.resource());
-    int idComparison = mId.compare(pItem.id());
-
-    return (nameComparison < 0)?
-               true:
-               (nameComparison > 0)?
-                   false:
-                   (resourceComparison < 0)?
-                       true:
-                       (resourceComparison > 0)?
-                           false:
-                           (idComparison < 0)?
-                               true:
-                               false;
-}
-
-//==============================================================================
-
 CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pViewWidget,
                                                                                              CellmlAnnotationViewEditingWidget *pViewEditingWidget,
                                                                                              CellMLSupport::CellmlFile *pCellmlFile,
@@ -158,7 +136,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mAddTermButton(0),
     mTerm(QString()),
     mTerms(QStringList()),
-    mItemsCount(0),
+    mItems(CellmlAnnotationViewMetadataEditDetailsItems()),
     mLookUpTerm(false),
     mErrorMessage(QString()),
     mInternetConnectionAvailable(true),
@@ -176,7 +154,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mNetworkReply(0)
 {
     // Create a network access manager so that we can then retrieve a list of
-    // ontological terms models from the PMR
+    // ontological terms models from PMR
 
     mNetworkAccessManager = new QNetworkAccessManager(this);
 
@@ -213,7 +191,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     QWidget *qualifierWidget = new QWidget(formWidget);
     QHBoxLayout *qualifierWidgetLayout = new QHBoxLayout(qualifierWidget);
 
-    qualifierWidgetLayout->setMargin(0);
+    qualifierWidgetLayout->setContentsMargins(QMargins());
 
     qualifierWidget->setLayout(qualifierWidgetLayout);
 
@@ -254,7 +232,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     QWidget *termWidget = new QWidget(formWidget);
     QHBoxLayout *termWidgetLayout = new QHBoxLayout(termWidget);
 
-    termWidgetLayout->setMargin(0);
+    termWidgetLayout->setContentsMargins(QMargins());
 
     termWidget->setLayout(termWidgetLayout);
 
@@ -339,6 +317,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mOutputOntologicalTerms = new WebViewerWidget::WebViewerWidget(mOutput);
 
+    mOutputOntologicalTerms->setZoomingEnabled(false);
     mOutputOntologicalTerms->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(mOutputOntologicalTerms, SIGNAL(customContextMenuRequested(const QPoint &)),
@@ -544,10 +523,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputHeaders()
 
     QWebElement countElement = documentElement.findFirst("th[id=count]");
 
-    if (mItemsCount == 1)
+    if (mItems.count() == 1)
         countElement.setInnerXml(tr("(1 term)"));
     else
-        countElement.setInnerXml(tr("(%1 terms)").arg(QLocale().toString(mItemsCount)));
+        countElement.setInnerXml(tr("(%1 terms)").arg(QLocale().toString(mItems.count())));
 }
 
 //==============================================================================
@@ -620,10 +599,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
                                 "        <a href=\""+itemInformation+"\">"+item.id()+"</a>\n"
                                 "    </td>\n"
                                 "    <td id=\"button_"+itemInformationSha1+"\">\n"
-                                "        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\"/></a>\n"
+                                "        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\"></a>\n"
                                 "    </td>\n"
                                 "    <td id=\"disabledButton_"+itemInformationSha1+"\" style=\"display: none;\">\n"
-                                "        <img class=\"disabledButton\"/>\n"
+                                "        <img class=\"disabledButton\">\n"
                                 "    </td>\n"
                                 "</tr>\n";
         }
@@ -976,9 +955,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpTerm()
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *pNetworkReply)
 {
+    // Clear our items
+
+    mItems.clear();
+
     // Retrieve the list of terms, should there be a network reply
 
-    CellmlAnnotationViewMetadataEditDetailsItems items = CellmlAnnotationViewMetadataEditDetailsItems();
     QString errorMessage = QString();
     bool internetConnectionAvailable = true;
 
@@ -1013,19 +995,16 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
                 QString resource;
                 QString id;
 
-                foreach (const QVariant &termsVariant, jsonDocument.object().toVariantMap()["results"].toList()) {
-                    termMap = termsVariant.toMap();
+                foreach (const QVariant &terms, jsonDocument.object().toVariantMap()["results"].toList()) {
+                    termMap = terms.toMap();
                     name = termMap["name"].toString();
 
                     if (   !name.isEmpty()
                         &&  CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["identifiers_org_uri"].toString(), resource, id)) {
                         // We have a name and we could decode the term, so add
-                        // the item to our list, should it not already be in it
+                        // the item to our list
 
-                        CellmlAnnotationViewMetadataEditDetailsItem newItem = CellmlAnnotationViewMetadataEditDetailsItem(name, resource, id);
-
-                        if (!items.contains(newItem))
-                            items << newItem;
+                        mItems << CellmlAnnotationViewMetadataEditDetailsItem(name, resource, id);
                     }
                 }
             } else {
@@ -1041,11 +1020,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
     // Update our GUI with the results of the look up after having sorted them
     // and kept track of it size
 
-    std::sort(items.begin(), items.end());
+    std::sort(mItems.begin(), mItems.end(), CellmlAnnotationViewMetadataEditDetailsItem::compare);
 
-    mItemsCount = items.count();
-
-    updateItemsGui(items, false, errorMessage, internetConnectionAvailable);
+    updateItemsGui(mItems, false, errorMessage, internetConnectionAvailable);
 
     // Update our GUI (incl. its enabled state)
 
@@ -1135,7 +1112,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::filePermissionsChanged()
 {
     // Update our GUI (incl. its enabled state)
 
-    updateGui(mElement, !mItemsCount, true);
+    updateGui(mElement, !mItems.count(), true);
 }
 
 //==============================================================================
