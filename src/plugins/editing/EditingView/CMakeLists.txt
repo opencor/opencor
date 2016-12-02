@@ -4,10 +4,12 @@ PROJECT(EditingViewPlugin)
 
 ADD_PLUGIN(EditingView
     SOURCES
+        ../../filehandlinginterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
         ../../pluginmanager.cpp
 
         src/editingviewinterface.cpp

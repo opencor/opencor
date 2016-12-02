@@ -236,8 +236,21 @@ void CellMLTextViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-bool CellMLTextViewPlugin::definesInterfaces()
+bool CellMLTextViewPlugin::definesPluginInterfaces()
 {
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool CellMLTextViewPlugin::pluginInterfacesOk(const QString &pFileName,
+                                              QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
     // We don't handle this interface...
 
     return false;

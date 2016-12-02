@@ -64,8 +64,21 @@ void SampleWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-bool SampleWindowPlugin::definesInterfaces()
+bool SampleWindowPlugin::definesPluginInterfaces()
 {
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool SampleWindowPlugin::pluginInterfacesOk(const QString &pFileName,
+                                            QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
     // We don't handle this interface...
 
     return false;

@@ -6,6 +6,8 @@ ADD_PLUGIN(FileOrganiserWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
+        ../../windowinterface.cpp
 
         src/fileorganiserwindowmodel.cpp
         src/fileorganiserwindowplugin.cpp

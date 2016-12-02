@@ -241,11 +241,23 @@ void SEDMLEditingViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-bool SEDMLEditingViewPlugin::definesInterfaces()
+bool SEDMLEditingViewPlugin::definesPluginInterfaces()
 {
     // We define the SED-ML editing view interface
 
     return true;
+}
+
+//==============================================================================
+
+bool SEDMLEditingViewPlugin::pluginInterfacesOk(const QString &pFileName,
+                                                QObject *pInstance)
+{
+    // Make sure that the given plugin instance uses the right version of the
+    // SED-ML editing view interface, if it supports it
+
+    return !(   qobject_cast<SedmlEditingViewInterface *>(pInstance)
+             && (Plugin::interfaceVersion(pFileName, "sedmlEditingViewInterfaceVersion") != sedmlEditingViewInterfaceVersion()));
 }
 
 //==============================================================================

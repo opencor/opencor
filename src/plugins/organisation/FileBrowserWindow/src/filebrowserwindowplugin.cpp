@@ -68,8 +68,21 @@ void FileBrowserWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-bool FileBrowserWindowPlugin::definesInterfaces()
+bool FileBrowserWindowPlugin::definesPluginInterfaces()
 {
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool FileBrowserWindowPlugin::pluginInterfacesOk(const QString &pFileName,
+                                                 QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
     // We don't handle this interface...
 
     return false;

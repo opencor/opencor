@@ -42,21 +42,6 @@ extern "C" Q_DECL_EXPORT int pluginInfoVersion();
 
 //==============================================================================
 
-extern "C" Q_DECL_EXPORT int cliInterfaceVersion();
-extern "C" Q_DECL_EXPORT int coreInterfaceVersion();
-extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion();
-extern "C" Q_DECL_EXPORT int fileHandlingInterfaceVersion();
-extern "C" Q_DECL_EXPORT int fileTypeInterfaceVersion();
-extern "C" Q_DECL_EXPORT int guiInterfaceVersion();
-extern "C" Q_DECL_EXPORT int i18nInterfaceVersion();
-extern "C" Q_DECL_EXPORT int pluginInterfaceVersion();
-extern "C" Q_DECL_EXPORT int preferencesInterfaceVersion();
-extern "C" Q_DECL_EXPORT int solverInterfaceVersion();
-extern "C" Q_DECL_EXPORT int viewInterfaceVersion();
-extern "C" Q_DECL_EXPORT int windowInterfaceVersion();
-
-//==============================================================================
-
 #define PLUGININFO_FUNC extern "C" Q_DECL_EXPORT void *
 // Note: each plugin has a function called <PLUGIN_NAME>PluginInfo which is used
 //       to retrieve some information about the plugin itself. This is done by

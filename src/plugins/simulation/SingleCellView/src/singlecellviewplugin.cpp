@@ -165,8 +165,21 @@ void SingleCellViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-bool SingleCellViewPlugin::definesInterfaces()
+bool SingleCellViewPlugin::definesPluginInterfaces()
 {
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool SingleCellViewPlugin::pluginInterfacesOk(const QString &pFileName,
+                                              QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
     // We don't handle this interface...
 
     return false;

@@ -68,8 +68,21 @@ void FileOrganiserWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-bool FileOrganiserWindowPlugin::definesInterfaces()
+bool FileOrganiserWindowPlugin::definesPluginInterfaces()
 {
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool FileOrganiserWindowPlugin::pluginInterfacesOk(const QString &pFileName,
+                                                   QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
     // We don't handle this interface...
 
     return false;

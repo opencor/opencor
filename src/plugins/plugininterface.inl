@@ -29,7 +29,9 @@ limitations under the License.
     // Note: make sure to update pluginInterfaceVersion() whenever you update
     //       this interface...
 
-    virtual bool definesInterfaces() PURE;
+    virtual bool definesPluginInterfaces() PURE;
+    virtual bool pluginInterfacesOk(const QString &pFileName,
+                                    QObject *pInstance) PURE;
 
     virtual void initializePlugin() PURE;
     virtual void finalizePlugin() PURE;

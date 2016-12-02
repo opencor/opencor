@@ -69,8 +69,21 @@ void PMRWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-bool PMRWindowPlugin::definesInterfaces()
+bool PMRWindowPlugin::definesPluginInterfaces()
 {
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool PMRWindowPlugin::pluginInterfacesOk(const QString &pFileName,
+                                         QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
     // We don't handle this interface...
 
     return false;

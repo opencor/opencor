@@ -98,7 +98,7 @@ public:
 
     static int pluginInfoVersion(const QString &pFileName);
     static int interfaceVersion(const QString &pFileName,
-                                const QString &pInterface);
+                                const QString &pFunctionName);
 
     static QString name(const QString &pFileName);
     static QString fileName(const QString &pPluginsDir, const QString &pName);

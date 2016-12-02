@@ -309,11 +309,23 @@ void EditingViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-bool EditingViewPlugin::definesInterfaces()
+bool EditingViewPlugin::definesPluginInterfaces()
 {
     // We define the editing view interface
 
     return true;
+}
+
+//==============================================================================
+
+bool EditingViewPlugin::pluginInterfacesOk(const QString &pFileName,
+                                           QObject *pInstance)
+{
+    // Make sure that the given plugin instance uses the right version of the
+    // editing view interface, if it supports it
+
+    return !(   qobject_cast<EditingViewInterface *>(pInstance)
+             && (Plugin::interfaceVersion(pFileName, "editingViewInterfaceVersion") != editingViewInterfaceVersion()));
 }
 
 //==============================================================================

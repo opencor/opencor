@@ -215,8 +215,21 @@ void RawCellMLViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-bool RawCellMLViewPlugin::definesInterfaces()
+bool RawCellMLViewPlugin::definesPluginInterfaces()
 {
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool RawCellMLViewPlugin::pluginInterfacesOk(const QString &pFileName,
+                                             QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
     // We don't handle this interface...
 
     return false;

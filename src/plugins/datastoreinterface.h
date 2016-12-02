@@ -171,6 +171,10 @@ private slots:
 
 //==============================================================================
 
+extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion();
+
+//==============================================================================
+
 class DataStoreInterface
 {
 public:

@@ -6,6 +6,8 @@ ADD_PLUGIN(FileBrowserWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
+        ../../windowinterface.cpp
 
         src/filebrowserwindowmodel.cpp
         src/filebrowserwindowplugin.cpp

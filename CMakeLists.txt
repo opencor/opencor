@@ -87,12 +87,21 @@ SET(SOURCES
     src/misc/guiapplication.cpp
     src/misc/guiutils.cpp
 
+    src/plugins/cliinterface.cpp
+    src/plugins/coreinterface.cpp
+    src/plugins/datastoreinterface.cpp
+    src/plugins/filehandlinginterface.cpp
+    src/plugins/filetypeinterface.cpp
     src/plugins/guiinterface.cpp
     src/plugins/i18ninterface.cpp
     src/plugins/plugin.cpp
     src/plugins/plugininfo.cpp
+    src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
+    src/plugins/solverinterface.cpp
+    src/plugins/viewinterface.cpp
+    src/plugins/windowinterface.cpp
 )
 
 SET(HEADERS_MOC
@@ -105,9 +114,11 @@ SET(HEADERS_MOC
     src/misc/cliutils.h
     src/misc/guiapplication.h
 
+    src/plugins/datastoreinterface.h
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
     src/plugins/preferencesinterface.h
+    src/plugins/solverinterface.h
 )
 
 SET(UIS
