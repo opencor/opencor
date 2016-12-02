@@ -272,7 +272,7 @@ QString PluginsDialog::statusDescription(Plugin *pPlugin) const
     case Plugin::NotPlugin:
         return tr("this is not a plugin.");
     case Plugin::OldPlugin:
-        return tr("the plugin could not be loaded due to it being too old.");
+        return tr("the plugin could not be loaded (one or several of the interfaces it supports are too old).");
     case Plugin::NotCorePlugin:
         return tr("the plugin claims to be the core plugin, but it is not.");
     case Plugin::InvalidCorePlugin:
