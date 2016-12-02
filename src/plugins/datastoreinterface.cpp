@@ -52,6 +52,9 @@ namespace DataStore {
 
 DataStoreVariable::DataStoreVariable(const qulonglong &pCapacity,
                                      double *pValue) :
+#ifndef CLI_VERSION
+    mIcon(QIcon()),
+#endif
     mUri(QString()),
     mName(QString()),
     mUnit(QString()),
@@ -100,21 +103,25 @@ bool DataStoreVariable::isVisible() const
 
 //==============================================================================
 
+#ifndef CLI_VERSION
 QIcon DataStoreVariable::icon() const
 {
     // Return our icon
 
     return mIcon;
 }
+#endif
 
 //==============================================================================
 
+#ifndef CLI_VERSION
 void DataStoreVariable::setIcon(const QIcon &pIcon)
 {
     // Set our icon
 
     mIcon = pIcon;
 }
+#endif
 
 //==============================================================================
 

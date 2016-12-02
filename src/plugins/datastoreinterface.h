@@ -28,7 +28,9 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QIcon>
+#ifndef CLI_VERSION
+    #include <QIcon>
+#endif
 
 //==============================================================================
 
@@ -48,8 +50,10 @@ public:
 
     bool isVisible() const;
 
+#ifndef CLI_VERSION
     QIcon icon() const;
     void setIcon(const QIcon &pIcon);
+#endif
 
     QString uri() const;
     void setUri(const QString &pUri);
@@ -69,7 +73,9 @@ public:
     double * values() const;
 
 private:
+#ifndef CLI_VERSION
     QIcon mIcon;
+#endif
     QString mUri;
     QString mName;
     QString mUnit;

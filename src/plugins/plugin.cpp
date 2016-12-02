@@ -25,15 +25,21 @@ limitations under the License.
 #include "datastoreinterface.h"
 #include "filehandlinginterface.h"
 #include "filetypeinterface.h"
-#include "guiinterface.h"
-#include "i18ninterface.h"
+#ifndef CLI_VERSION
+    #include "guiinterface.h"
+    #include "i18ninterface.h"
+#endif
 #include "plugin.h"
 #include "plugininterface.h"
 #include "pluginmanager.h"
-#include "preferencesinterface.h"
+#ifndef CLI_VERSION
+    #include "preferencesinterface.h"
+#endif
 #include "solverinterface.h"
-#include "viewinterface.h"
-#include "windowinterface.h"
+#ifndef CLI_VERSION
+    #include "viewinterface.h"
+    #include "windowinterface.h"
+#endif
 
 //==============================================================================
 
@@ -133,20 +139,27 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                             && (interfaceVersion(pFileName, "fileHandlingInterfaceVersion") != fileHandlingInterfaceVersion()))
                         || (   qobject_cast<FileTypeInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "fileTypeInterfaceVersion") != fileTypeInterfaceVersion()))
+#ifndef CLI_VERSION
                         || (   qobject_cast<GuiInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "guiInterfaceVersion") != guiInterfaceVersion()))
                         || (   qobject_cast<I18nInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "i18nInterfaceVersion") != i18nInterfaceVersion()))
+#endif
                         || (   pluginInterface
                             && (interfaceVersion(pFileName, "pluginInterfaceVersion") != pluginInterfaceVersion()))
+#ifndef CLI_VERSION
                         || (   qobject_cast<PreferencesInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "preferencesInterfaceVersion") != preferencesInterfaceVersion()))
+#endif
                         || (   qobject_cast<SolverInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "solverInterfaceVersion") != solverInterfaceVersion()))
+#ifndef CLI_VERSION
                         || (   qobject_cast<ViewInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "viewInterfaceVersion") != viewInterfaceVersion()))
                         || (   qobject_cast<WindowInterface *>(mInstance)
-                            && (interfaceVersion(pFileName, "windowInterfaceVersion") != windowInterfaceVersion()))) {
+                            && (interfaceVersion(pFileName, "windowInterfaceVersion") != windowInterfaceVersion()))
+#endif
+                       ) {
                         // One or several of the official interfaces used by the
                         // plugin are too old
 
