@@ -1,3 +1,4 @@
+```
 a=pow(b, 3{dimensionless});                     // 001
 a=pow(-b, 3{dimensionless});                    // 002
 a=-pow(b, 3{dimensionless});                    // 003
@@ -144,3 +145,4 @@ a=-pow(sin(b), c);                              // 107
 a=pow(sin(b+c), d);                             // 108
 a=pow(-sin(b+c), d);                            // 109
 a=-pow(sin(b+c), d);                            // 110
+```
