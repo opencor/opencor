@@ -396,6 +396,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     )
     SET(ONE_VALUE_KEYWORDS
         EXTERNAL_BINARIES_DIR
+        EXTERNAL_LIBRARIES_DIR
     )
     SET(MULTI_VALUE_KEYWORDS
         SOURCES
@@ -407,6 +408,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         PLUGIN_BINARIES
         QT_MODULES
         EXTERNAL_BINARIES
+        EXTERNAL_DEPENDENCIES
+        EXTERNAL_LIBRARIES
         TESTS
     )
 
@@ -575,8 +578,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             SET(FULL_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}")
 
-            IF(NOT EXISTS ${FULL_EXTERNAL_BINARY})
-                MESSAGE(FATAL_ERROR "'${FULL_EXTERNAL_BINARY}' does not exist...")
+            IF(EXISTS ${FULL_EXTERNAL_BINARY})
+                SET(COPY_TARGET DIRECT)
+            ELSE()
+                SET(COPY_TARGET ${PROJECT_NAME})
+##                MESSAGE(FATAL_ERROR "'${FULL_EXTERNAL_BINARY}' does not exist...")
             ENDIF()
 
             # Copy the external binary to its destination directory, so we can
@@ -585,10 +591,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             #       so that we can test things from within Qt Creator...
 
             IF(WIN32)
-                COPY_FILE_TO_BUILD_DIR(DIRECT ${ARG_EXTERNAL_BINARIES_DIR} . ${ARG_EXTERNAL_BINARY})
+                COPY_FILE_TO_BUILD_DIR(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} . ${ARG_EXTERNAL_BINARY})
             ENDIF()
 
-            COPY_FILE_TO_BUILD_DIR(DIRECT ${ARG_EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
+            COPY_FILE_TO_BUILD_DIR(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
 
             # Strip the external library of all its local symbols, if possible
 
@@ -600,37 +606,51 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             # Link the plugin to the external library
 
             IF(WIN32)
+#                STRING(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+#                       IMPORT_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARY}")
+
                 STRING(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
-                       IMPORT_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARY}")
+                       IMPORT_EXTERNAL_BINARY "${FULL_EXTERNAL_BINARY}")
 
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                    ${ARG_EXTERNAL_BINARIES_DIR}/${IMPORT_EXTERNAL_BINARY}
+#                    ${ARG_EXTERNAL_BINARIES_DIR}/${IMPORT_EXTERNAL_BINARY}
+                    ${IMPORT_EXTERNAL_BINARY}
                 )
-            ELSE()
+            ELSEIF(${COPY_TARGET} STREQUAL "DIRECT")
+                IF(APPLE)
+                    EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
+                                    WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                    )
+                ENDIF()
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                 )
-            ENDIF()
-
-            # On macOS, ensure that @rpath is set in the external library's id
-
-            IF(APPLE)
-                EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
-                                WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            ELSE()
+                TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+                    ${FULL_EXTERNAL_BINARY}
                 )
+                IF(APPLE)
+                    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                        COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
+                        WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                    )
+                ENDIF()
             ENDIF()
 
             # Package the external library, if needed
 
             IF(WIN32)
-                INSTALL(FILES ${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
+                INSTALL(FILES ${FULL_EXTERNAL_BINARY}
                         DESTINATION bin)
             ELSEIF(NOT APPLE)
-                INSTALL(FILES ${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
+                INSTALL(FILES ${FULL_EXTERNAL_BINARY}
                         DESTINATION lib)
             ENDIF()
         ENDFOREACH()
     ENDIF()
+
+    FOREACH(ARG_EXTERNAL_LIBRARY ${ARG_EXTERNAL_LIBRARIES})
+    ENDFOREACH()
 
     # Some settings
 
@@ -1201,65 +1221,113 @@ ENDMACRO()
 
 MACRO(CREATE_PACKAGE_FILE DIRNAME PACKAGE_NAME VERSION)
 
-    SET(FULL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
+    SET(OPTIONS "")
+    SET(ONE_VALUE_KEYWORDS
+        DEPENDENCY
+        )
+    SET(MULTI_VALUE_KEYWORDS
+        PACKAGED_FILES
+        CHECKED_FILES
+    )
 
-    # What we are going to create
+    CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
+
+    # The full path to the package's files.
+
+    SET(FULL_DIRNAME "${PROJECT_SOURCE_DIR}/${DIRNAME}")
+
+    # The package name in uppercase.
+
+    STRING(TOUPPER ${PACKAGE_NAME} UC_PACKAGE_NAME)
+
+    # The name of the package's archive.
 
     SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${VERSION}.tar.gz)
     SET(REAL_COMPRESSED_FILENAME ${FULL_DIRNAME}/${COMPRESSED_FILENAME})
-    SET(PACKAGE_CMAKE_FILE "${FULL_DIRNAME}/${PACKAGE_NAME}.cmake")
 
-    # Clean up any historical packaging
+    # Remove any historical package archive
 
     FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
-    FILE(REMOVE ${PACKAGE_CMAKE_FILE})
 
-    # Calculate SHA1 values for specified files
+    # Where we put CMake code to retrieve the archived package.
 
-    INCLUDE(CMakeParseArguments)
-    CMAKE_PARSE_ARGUMENTS(PACKAGE "" "" "PACKAGED_FILES;CHECKED_FILES" ${ARGN})
+    SET(RETRIEVAL_SCRIPT "${FULL_DIRNAME}/${PACKAGE_NAME}.cmake")
 
-    IF(NOT PACKAGE_FILES)
-        SET(PACKAGE_FILES ".")
-    ENDIF()
+    # The actual packaging code goes into a separate CMake script file
+    # that is run as a POST_BUILD step.
 
-    SET(CHECKED_FILES)
-    SET(SHA1_VALUES)
-    FOREACH(FILENAME IN LISTS PACKAGE_CHECKED_FILES)
-        SET(REAL_FILENAME ${FULL_DIRNAME}/${FILENAME})
-        IF(NOT EXISTS ${REAL_FILENAME})
-            MESSAGE(FATAL_ERROR "The file '${REAL_FILENAME}` is missing from '${PACKAGE_NAME}'...")
-        ENDIF()
-        FILE(SHA1 ${REAL_FILENAME} SHA1_VALUE)
-        LIST(APPEND CHECKED_FILES ${FILENAME})
-        LIST(APPEND SHA1_VALUES ${SHA1_VALUE})
+    SET(PACKAGING_SCRIPT "${PROJECT_BINARY_DIR}/package_${PACKAGE_NAME}.cmake")
+    FILE(WRITE ${PACKAGING_SCRIPT} "# Package ${PACKAGE_NAME} files
+
+CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+
+# The files and directories to package
+SET(PACKAGED_FILES_LIST)
+")
+
+    FOREACH(FILENAME IN LISTS ARG_PACKAGED_FILES)
+        FILE(APPEND ${PACKAGING_SCRIPT} "LIST(APPEND PACKAGED_FILES_LIST ${FILENAME})
+")
     ENDFOREACH()
 
-    MESSAGE("Packaging '${PACKAGE_NAME}' into '${REAL_COMPRESSED_FILENAME}'...")
-    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -czf ${REAL_COMPRESSED_FILENAME} ${PACKAGE_PACKAGED_FILES}
-                    WORKING_DIRECTORY ${FULL_DIRNAME} OUTPUT_QUIET)
+    FILE(APPEND ${PACKAGING_SCRIPT} "
+# The files to have SHA1 values checked
+SET(CHECKED_FILES_LIST)
+")
 
-    IF(EXISTS ${REAL_COMPRESSED_FILENAME})
-        FILE(SHA1 ${REAL_COMPRESSED_FILENAME} SHA1_VALUE)
-        IF(CHECKED_FILES)
-            STRING(REPLACE ";" "\n        " CHECKED_FILES "${CHECKED_FILES}")
-            STRING(REPLACE ";" "\n        " SHA1_VALUES "${SHA1_VALUES}")
-        ENDIF()
+    FOREACH(FILENAME IN LISTS ARG_CHECKED_FILES)
+        FILE(APPEND ${PACKAGING_SCRIPT} "LIST(APPEND CHECKED_FILES_LIST ${FILENAME})
+")
+    ENDFOREACH()
 
-        STRING(TOUPPER ${PACKAGE_NAME} UC_NAME)
+    FILE(APPEND ${PACKAGING_SCRIPT} "
 
-        FILE(WRITE ${PACKAGE_CMAKE_FILE} "# Retrieve ${REAL_COMPRESSED_FILENAME}
+# Calculate SHA1 values for specified files
 
-RETRIEVE_PACKAGE_FILE(\$\{RELATIVE_ROOT_DIR\}
-    ${PACKAGE_NAME} \$\{${UC_NAME}_VERSION\} ${SHA1_VALUE}
-    CHECKED_FILES ${CHECKED_FILES}
-    SHA1_VALUES ${SHA1_VALUES}
-    )")
-        MESSAGE("Use '${PACKAGE_CMAKE_FILE}' to load '${PACKAGE_NAME}'...")
-    ELSE()
-        MESSAGE(FATAL_ERROR "Unable to build a package for '${PACKAGE_NAME}'...")
+SET(CHECKED_FILES)
+SET(SHA1_VALUES)
+FOREACH(FILENAME IN LISTS CHECKED_FILES_LIST)
+    SET(REAL_FILENAME \"${FULL_DIRNAME}/\$\{FILENAME\}\")
+
+    IF(NOT EXISTS \$\{REAL_FILENAME\})
+        MESSAGE(FATAL_ERROR \"The file '\$\{REAL_FILENAME\}` is missing from '${PACKAGE_NAME}'.\")
     ENDIF()
 
+    FILE(SHA1 \$\{REAL_FILENAME\} SHA1_VALUE)
+
+    LIST(APPEND CHECKED_FILES \$\{FILENAME\})
+    LIST(APPEND SHA1_VALUES \$\{SHA1_VALUE\})
+ENDFOREACH()
+
+MESSAGE(\"Packaging '${PACKAGE_NAME}' into '${REAL_COMPRESSED_FILENAME}'.\")
+
+EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -czf ${REAL_COMPRESSED_FILENAME} \$\{PACKAGED_FILES_LIST\}
+                WORKING_DIRECTORY ${FULL_DIRNAME} OUTPUT_QUIET)
+
+IF(EXISTS ${REAL_COMPRESSED_FILENAME})
+    FILE(SHA1 ${REAL_COMPRESSED_FILENAME} SHA1_VALUE)
+    IF(SHA1_VALUES)
+        STRING(REPLACE \";\" \"\\n                \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
+    ENDIF()
+
+    FILE(WRITE ${RETRIEVAL_SCRIPT} \"# Archive is at ${REAL_COMPRESSED_FILENAME}
+
+RETRIEVE_PACKAGE_FILE(\\$\\{RELATIVE_PROJECT_SOURCE_DIR\\}
+    ${PACKAGE_NAME} \\$\\{${UC_PACKAGE_NAME}_VERSION\\} \$\{SHA1_VALUE\}
+    CHECKED_FILES \\$\\{CHECKED_FILES\\}
+    SHA1_VALUES \$\{SHA1_VALUES\}
+)\")
+        MESSAGE(\"Use '${RETRIEVAL_SCRIPT}' to load '${PACKAGE_NAME}'.\")
+    ELSE()
+        MESSAGE(FATAL_ERROR \"Unable to build a package for '${PACKAGE_NAME}'.\")
+    ENDIF()
+")
+
+    # Run the packaging script once the dependency target has been satisfied
+
+    ADD_CUSTOM_COMMAND(TARGET ${ARG_DEPENDENCY} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -P ${PACKAGING_SCRIPT}
+                       VERBATIM)
 ENDMACRO()
 
 #===============================================================================
@@ -1308,6 +1376,27 @@ ENDMACRO()
 
 MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION DIRNAME PACKAGE_NAME VERSION SHA1_VALUE)
 
+    SET(OPTIONS "")
+    SET(ONE_VALUE_KEYWORDS "")
+    SET(MULTI_VALUE_KEYWORDS
+        CHECKED_FILES
+        SHA1_VALUES
+    )
+
+    # Check that we have at least the required arguments in order
+
+    set(_ARG_LIST ${ARGV} ${ARGN})
+    LIST(GET _ARG_LIST 5 _CHECKED_FILES_NAME)
+    IF(NOT "${_CHECKED_FILES_NAME}" STREQUAL "CHECKED_FILES")
+        MESSAGE(FATAL_ERROR "Too few arguments for retreiving package ${PACKAGE_NAME}")
+    ENDIF()
+
+    # Parse the argument list
+
+    CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
+
+    # The full path to the package's files
+
     SET(FULL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
 
     # Create the destination folder, if needed
@@ -1316,10 +1405,9 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION DIRNAME PACKAGE_NAME VERSION SHA1_VALU
         FILE(MAKE_DIRECTORY ${FULL_DIRNAME})
     ENDIF()
 
-    INCLUDE(CMakeParseArguments)
-    CMAKE_PARSE_ARGUMENTS(PACKAGE "" "" "CHECKED_FILES;SHA1_VALUES" ${ARGN})
+    # Check to see if we already have the package's files
 
-    CHECK_FILES("${FULL_DIRNAME}" "${PACKAGE_CHECKED_FILES}" "${PACKAGE_SHA1_VALUES}")
+    CHECK_FILES("${FULL_DIRNAME}" "${ARG_CHECKED_FILES}" "${ARG_SHA1_VALUES}")
 
     IF(CHECK_FILES_FAILED)
 
@@ -1357,7 +1445,7 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION DIRNAME PACKAGE_NAME VERSION SHA1_VALU
         # Check that the files, if we managed to retrieve them, have the expected
         # SHA-1 values
 
-        CHECK_FILES("${FULL_DIRNAME}" "${PACKAGE_CHECKED_FILES}" "${PACKAGE_SHA1_VALUES}")
+        CHECK_FILES("${FULL_DIRNAME}" "${ARG_CHECKED_FILES}" "${ARG_SHA1_VALUES}")
         IF(CHECK_FILES_FAILED)
             FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
             MESSAGE(FATAL_ERROR "The files in ${REAL_COMPRESSED_FILENAME} do not have the expected SHA-1 values...")

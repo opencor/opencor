@@ -15,8 +15,6 @@ ADD_PLUGIN(ZIPSupport
     PLUGINS
         Core
         ${ZLIB_PLUGIN}
-    PLUGIN_BINARIES
-        ${ZLIB_PLUGIN_BINARY}
     TESTS
         tests
 )

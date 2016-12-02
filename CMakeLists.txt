@@ -283,7 +283,7 @@ ENDIF()
 IF(ENABLE_SAMPLES)
     SET(SAMPLE_PLUGINS
         sample/Sample
-        sample/SampleExternal
+#       sample/SampleExternal
         sample/SampleTools
         sample/SampleView
         sample/SampleWindow
@@ -306,9 +306,7 @@ SET(PLUGINS
 
     thirdParty/libgit2
     thirdParty/LLVM
-    thirdParty/OAuth
     thirdParty/OpenSSL
-    thirdParty/PythonQt
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
@@ -319,6 +317,8 @@ SET(PLUGINS
     miscellaneous/Compiler
 
     thirdParty/Python
+    thirdParty/PythonQt
+
     # Plugins that provide support for some third-party libraries
 
     support/CellMLSupport
