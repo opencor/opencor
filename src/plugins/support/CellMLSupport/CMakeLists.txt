@@ -9,6 +9,7 @@ ADD_PLUGIN(CellMLSupport
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
         ../../plugininterface.cpp
+        ../../solverinterface.cpp
 
         src/cellmlfile.cpp
         src/cellmlfilecellml10exporter.cpp
@@ -22,6 +23,8 @@ ADD_PLUGIN(CellMLSupport
         src/cellmlfileruntime.cpp
         src/cellmlsupportplugin.cpp
     HEADERS_MOC
+        ../../solverinterface.h
+
         src/cellmlfile.h
         src/cellmlfilemanager.h
         src/cellmlsupportplugin.h
