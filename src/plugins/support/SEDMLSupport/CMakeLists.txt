@@ -4,9 +4,11 @@ PROJECT(SEDMLSupportPlugin)
 
 ADD_PLUGIN(SEDMLSupport
     SOURCES
+        ../../filetypeinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
 
         src/sedmlfile.cpp
         src/sedmlfileissue.cpp

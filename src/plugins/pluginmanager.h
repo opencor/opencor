@@ -50,6 +50,8 @@ public:
     explicit PluginManager(const bool &pGuiMode = true);
     ~PluginManager();
 
+    bool guiMode() const;
+
     Plugins plugins() const;
     Plugins sortedPlugins() const;
 
@@ -62,6 +64,8 @@ public:
     Plugin * corePlugin() const;
 
 private:
+    bool mGuiMode;
+
     QString mPluginsDir;
 
     Plugins mPlugins;

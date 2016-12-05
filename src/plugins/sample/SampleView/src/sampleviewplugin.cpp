@@ -165,6 +165,28 @@ void SampleViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool SampleViewPlugin::definesPluginInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool SampleViewPlugin::pluginInterfacesOk(const QString &pFileName,
+                                          QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void SampleViewPlugin::initializePlugin()
 {
     // Create our sample view widget

@@ -22,8 +22,24 @@ limitations under the License.
 
 #include "cliinterface.h"
 #include "coreinterface.h"
+#include "datastoreinterface.h"
+#include "filehandlinginterface.h"
+#include "filetypeinterface.h"
+#ifndef CLI_VERSION
+    #include "guiinterface.h"
+    #include "i18ninterface.h"
+#endif
 #include "plugin.h"
+#include "plugininterface.h"
 #include "pluginmanager.h"
+#ifndef CLI_VERSION
+    #include "preferencesinterface.h"
+#endif
+#include "solverinterface.h"
+#ifndef CLI_VERSION
+    #include "viewinterface.h"
+    #include "windowinterface.h"
+#endif
 
 //==============================================================================
 
@@ -81,14 +97,15 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                     if (!mStatusErrors.isEmpty())
                         mStatusErrors += "\n";
 
-                    mStatusErrors += " - "+dependency;
+                    mStatusErrors +=  (pPluginManager->guiMode()?QString():QString("   "))
+                                     +" - "+dependency;
                 }
             }
 
             if (statusErrorsCount() == 1) {
                 // There is only one error, so remove the leading " - "
 
-                mStatusErrors = mStatusErrors.remove(0, 3);
+                mStatusErrors = mStatusErrors.remove(0, pPluginManager->guiMode()?3:6);
             }
 
             // Check whether all of the plugin's dependencies, if any, were
@@ -103,37 +120,111 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                 if (pluginLoader.load()) {
                     mInstance = pluginLoader.instance();
 
-                    // Check for the Core plugin/interface and CLI support
+                    // Make sure that the plugin uses the right version of the
+                    // official interfaces it supports
 
                     bool unloadPlugin = true;
 
-                    CoreInterface *coreInterface = qobject_cast<CoreInterface *>(mInstance);
                     CliInterface *cliInterface = qobject_cast<CliInterface *>(mInstance);
+                    CoreInterface *coreInterface = qobject_cast<CoreInterface *>(mInstance);
+                    PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(mInstance);
 
-                    if (coreInterface && mName.compare(CorePluginName)) {
-                        // We are dealing with a plugin that supports the Core
-                        // interface, but it's not the Core plugin
+                    if (   (   cliInterface
+                            && (interfaceVersion(pFileName, "cliInterfaceVersion") != cliInterfaceVersion()))
+                        || (   coreInterface
+                            && (interfaceVersion(pFileName, "coreInterfaceVersion") != coreInterfaceVersion()))
+                        || (   qobject_cast<DataStoreInterface *>(mInstance)
+                            && (interfaceVersion(pFileName, "dataStoreInterfaceVersion") != dataStoreInterfaceVersion()))
+                        || (   qobject_cast<FileHandlingInterface *>(mInstance)
+                            && (interfaceVersion(pFileName, "fileHandlingInterfaceVersion") != fileHandlingInterfaceVersion()))
+                        || (   qobject_cast<FileTypeInterface *>(mInstance)
+                            && (interfaceVersion(pFileName, "fileTypeInterfaceVersion") != fileTypeInterfaceVersion()))
+#ifndef CLI_VERSION
+                        || (   qobject_cast<GuiInterface *>(mInstance)
+                            && (interfaceVersion(pFileName, "guiInterfaceVersion") != guiInterfaceVersion()))
+                        || (   qobject_cast<I18nInterface *>(mInstance)
+                            && (interfaceVersion(pFileName, "i18nInterfaceVersion") != i18nInterfaceVersion()))
+#endif
+                        || (   pluginInterface
+                            && (interfaceVersion(pFileName, "pluginInterfaceVersion") != pluginInterfaceVersion()))
+#ifndef CLI_VERSION
+                        || (   qobject_cast<PreferencesInterface *>(mInstance)
+                            && (interfaceVersion(pFileName, "preferencesInterfaceVersion") != preferencesInterfaceVersion()))
+#endif
+                        || (   qobject_cast<SolverInterface *>(mInstance)
+                            && (interfaceVersion(pFileName, "solverInterfaceVersion") != solverInterfaceVersion()))
+#ifndef CLI_VERSION
+                        || (   qobject_cast<ViewInterface *>(mInstance)
+                            && (interfaceVersion(pFileName, "viewInterfaceVersion") != viewInterfaceVersion()))
+                        || (   qobject_cast<WindowInterface *>(mInstance)
+                            && (interfaceVersion(pFileName, "windowInterfaceVersion") != windowInterfaceVersion()))
+#endif
+                       ) {
+                        // One or several of the official interfaces used by the
+                        // plugin are too old
 
-                        mStatus = NotCorePlugin;
-                    } else if (!coreInterface && !mName.compare(CorePluginName)) {
-                        // We are dealing with the Core plugin, but it doesn't
-                        // support the Core interface
-
-                        mStatus = InvalidCorePlugin;
-                    } else if (cliInterface && !pInfo->hasCliSupport()) {
-                        // We are dealing with a plugin that supports the CLI
-                        // interface, but it doesn't claim to have CLI support
-
-                        mStatus = NotCliPluginNoCliSupport;
-                    } else if (!cliInterface && pInfo->hasCliSupport()) {
-                        // We are dealing with a plugin that is supposed to have
-                        // CLI support, but it doesn't support the CLI interface
-
-                        mStatus = NotCliPluginNoCliInterface;
+                        mStatus = OldPlugin;
                     } else {
-                        unloadPlugin = false;
+                        // Check for the Core plugin/interface and CLI support
 
-                        mStatus = Loaded;
+                        if (coreInterface && mName.compare(CorePluginName)) {
+                            // We are dealing with a plugin that supports the
+                            // Core interface, but it's not the Core plugin
+
+                            mStatus = NotCorePlugin;
+                        } else if (!coreInterface && !mName.compare(CorePluginName)) {
+                            // We are dealing with the Core plugin, but it
+                            // doesn't support the Core interface
+
+                            mStatus = InvalidCorePlugin;
+                        } else if (cliInterface && !pInfo->hasCliSupport()) {
+                            // We are dealing with a plugin that supports the
+                            // CLI interface, but it doesn't claim to have CLI
+                            // support
+
+                            mStatus = NotCliPluginNoCliSupport;
+                        } else if (!cliInterface && pInfo->hasCliSupport()) {
+                            // We are dealing with a plugin that is supposed to
+                            // have CLI support, but it doesn't support the CLI
+                            // interface
+
+                            mStatus = NotCliPluginNoCliInterface;
+                        } else {
+                            // So far so good, so now check whether the plugin
+                            // defines new interfaces and, if so, keep track of
+                            // them
+
+                            static PluginInterfaces pluginsWithInterfaces = PluginInterfaces();
+static QMap<PluginInterface *, QString> names = QMap<PluginInterface *, QString>();
+
+                            if (   pluginInterface
+                                && pluginInterface->definesPluginInterfaces()) {
+                                pluginsWithInterfaces << pluginInterface;
+names.insert(pluginInterface, mName);
+                            }
+
+                            // Check whether the plugin supports any of the
+                            // interfaces defined by the other plugins and, if
+                            // so, whether it is of the right version
+
+                            bool pluginInterfacesOk = true;
+
+                            foreach (PluginInterface *pluginWithInterfaces, pluginsWithInterfaces) {
+                                if (!pluginWithInterfaces->pluginInterfacesOk(pFileName, mInstance)) {
+                                    pluginInterfacesOk = false;
+
+                                    break;
+                                }
+                            }
+
+                            if (pluginInterfacesOk) {
+                                unloadPlugin = false;
+
+                                mStatus = Loaded;
+                            } else {
+                                mStatus = OldPlugin;
+                            }
+                        }
                     }
 
                     if (unloadPlugin) {
@@ -156,10 +247,19 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                 mStatus = NotNeeded;
         }
     } else {
-       // What we thought was a plugin is not actually a plugin, so consider it
-        // as invalid...
+        // What we thought was a plugin is not actually a plugin or it is a
+        // plugin that uses an old version of PluginInfo, so consider it as
+        // invalid...
+        // Note: to call Plugin::pluginInfoVersion() to distinguish between the
+        //       two cases is not good enough since an old plugin may or not
+        //       implement the pluginInfoVersion() method, which means that
+        //       Plugin::pluginInfoVersion() would return 0 whether it's a
+        //       library that is not a plugin or a plugin that uses an old
+        //       version of PluginInfo. So, instead, we call Plugin::info()
+        //       since we know it will only work for a plugin that uses an old
+        //       version of PluginInfo...
 
-       mStatus = Invalid;
+        mStatus = Plugin::info(pFileName)?OldPlugin:NotPlugin;
     }
 }
 
@@ -273,6 +373,57 @@ QString Plugin::fileName(const QString &pPluginsDir, const QString &pName)
 
 //==============================================================================
 
+int Plugin::pluginInfoVersion(const QString &pFileName)
+{
+    // Return the version of PluginInfo used by the plugin
+
+    typedef int (*PluginInfoVersionFunc)();
+
+#ifdef Q_OS_WIN
+    QString origPath = QDir::currentPath();
+
+    QDir::setCurrent(QFileInfo(pFileName).absolutePath());
+#endif
+
+    QLibrary plugin(pFileName);
+
+    PluginInfoVersionFunc function = (PluginInfoVersionFunc) plugin.resolve("pluginInfoVersion");
+
+#ifdef Q_OS_WIN
+    QDir::setCurrent(origPath);
+#endif
+
+    return function?function():0;
+}
+
+//==============================================================================
+
+int Plugin::interfaceVersion(const QString &pFileName,
+                             const QString &pFunctionName)
+{
+    // Return the version of the given interface used by the plugin
+
+    typedef int (*InterfaceVersionFunc)();
+
+#ifdef Q_OS_WIN
+    QString origPath = QDir::currentPath();
+
+    QDir::setCurrent(QFileInfo(pFileName).absolutePath());
+#endif
+
+    QLibrary plugin(pFileName);
+
+    InterfaceVersionFunc function = (InterfaceVersionFunc) plugin.resolve(qPrintable(pFunctionName));
+
+#ifdef Q_OS_WIN
+    QDir::setCurrent(origPath);
+#endif
+
+    return function?function():0;
+}
+
+//==============================================================================
+
 PluginInfo * Plugin::info(const QString &pFileName, QString *pErrorMessage)
 {
     // Return the plugin's information
@@ -293,7 +444,7 @@ PluginInfo * Plugin::info(const QString &pFileName, QString *pErrorMessage)
 
     QLibrary plugin(pFileName);
 
-    PluginInfoFunc pluginInfoFunc = (PluginInfoFunc) plugin.resolve(qPrintable(name(pFileName)+"PluginInfo"));
+    PluginInfoFunc function = (PluginInfoFunc) plugin.resolve(qPrintable(name(pFileName)+"PluginInfo"));
 
 #ifdef Q_OS_WIN
     QDir::setCurrent(origPath);
@@ -302,11 +453,11 @@ PluginInfo * Plugin::info(const QString &pFileName, QString *pErrorMessage)
     // Check whether the plugin information could be retrieved and, if not,
     // retrieve the error and format it a bit
 
-    if (pluginInfoFunc) {
+    if (function) {
         if (pErrorMessage)
             *pErrorMessage = QString();
 
-        return static_cast<PluginInfo *>(pluginInfoFunc());
+        return static_cast<PluginInfo *>(function());
     } else {
         if (pErrorMessage) {
             *pErrorMessage = plugin.errorString();

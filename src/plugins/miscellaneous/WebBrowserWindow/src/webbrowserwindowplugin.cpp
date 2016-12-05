@@ -69,6 +69,28 @@ void WebBrowserWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool WebBrowserWindowPlugin::definesPluginInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool WebBrowserWindowPlugin::pluginInterfacesOk(const QString &pFileName,
+                                                QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void WebBrowserWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our web browser window

@@ -4,9 +4,11 @@ PROJECT(CellMLAnnotationViewPlugin)
 
 ADD_PLUGIN(CellMLAnnotationView
     SOURCES
+        ../../filehandlinginterface.cpp
         ../../i18ninterface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
         ../../pluginmanager.cpp
         ../../viewinterface.cpp
 

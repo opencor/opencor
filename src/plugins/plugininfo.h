@@ -38,6 +38,10 @@ namespace OpenCOR {
 
 //==============================================================================
 
+extern "C" Q_DECL_EXPORT int pluginInfoVersion();
+
+//==============================================================================
+
 #define PLUGININFO_FUNC extern "C" Q_DECL_EXPORT void *
 // Note: each plugin has a function called <PLUGIN_NAME>PluginInfo which is used
 //       to retrieve some information about the plugin itself. This is done by

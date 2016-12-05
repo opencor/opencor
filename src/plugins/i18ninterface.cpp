@@ -33,6 +33,15 @@ namespace OpenCOR {
 
 //==============================================================================
 
+extern "C" Q_DECL_EXPORT int i18nInterfaceVersion()
+{
+    // Version of the internationalisation interface
+
+    return 1;
+}
+
+//==============================================================================
+
 void I18nInterface::updateTranslator(const QString &pTranslator)
 {
     // Update the plugin's translator

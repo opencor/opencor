@@ -72,7 +72,8 @@ public:
         NotNeeded,
         Loaded,
         NotLoaded,
-        Invalid,
+        NotPlugin,
+        OldPlugin,
         NotCorePlugin,
         InvalidCorePlugin,
         NotCliPluginNoCliSupport,
@@ -94,6 +95,10 @@ public:
     Status status() const;
     QString statusErrors() const;
     int statusErrorsCount() const;
+
+    static int pluginInfoVersion(const QString &pFileName);
+    static int interfaceVersion(const QString &pFileName,
+                                const QString &pFunctionName);
 
     static QString name(const QString &pFileName);
     static QString fileName(const QString &pPluginsDir, const QString &pName);
