@@ -24,6 +24,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include "pmrworkspace.h"
+
+//==============================================================================
+
 #include <QDialog>
 #include <QStringList>
 
@@ -45,13 +49,13 @@ class PmrWorkspacesWindowCommitDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowCommitDialog(const QStringList &pStagedFiles,
+    explicit PmrWorkspacesWindowCommitDialog(const PMRSupport::StagedFiles &pStagedFiles,
                                              QWidget *pParent);
     ~PmrWorkspacesWindowCommitDialog();
 
     virtual void retranslateUi();
 
-    const QString message() const;
+    QString message() const;
 
 private:
     Ui::PmrWorkspacesWindowCommitDialog *mGui;

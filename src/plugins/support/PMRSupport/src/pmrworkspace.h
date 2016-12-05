@@ -35,6 +35,7 @@ limitations under the License.
 //==============================================================================
 
 #include "git2/checkout.h"
+#include "git2/status.h"
 
 //==============================================================================
 
@@ -44,6 +45,11 @@ namespace PMRSupport {
 //==============================================================================
 
 class PmrWebService;
+
+//==============================================================================
+
+typedef QPair<QString, git_status_t> StagedFile;
+typedef QList<StagedFile> StagedFiles;
 
 //==============================================================================
 
@@ -102,7 +108,7 @@ public:
     WorkspaceStatus gitWorkspaceStatus() const;
 
     void stageFile(const QString &pPath, const bool &pStage);
-    QStringList stagedFiles();
+    StagedFiles stagedFiles();
 
 private:
     bool mOwned;

@@ -39,7 +39,7 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowCommitDialog::PmrWorkspacesWindowCommitDialog(const QStringList &pStagedFiles,
+PmrWorkspacesWindowCommitDialog::PmrWorkspacesWindowCommitDialog(const PMRSupport::StagedFiles &pStagedFiles,
                                                                  QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::PmrWorkspacesWindowCommitDialog)
@@ -48,20 +48,58 @@ PmrWorkspacesWindowCommitDialog::PmrWorkspacesWindowCommitDialog(const QStringLi
 
     mGui->setupUi(this);
 
-    /*
-    ; Changes to be committed:
-    ;       new file:   untitled.html
-    ;       modified:   untitled.html
-    ;       deleted:    untitled.html
-    ;       renamed:    untitled.html
-    */
-    mGui->message->setTabStopWidth(40);
-    mGui->message->setPlainText("\n; Changes to be committed:\n;\t"
-                                + pStagedFiles.join("\n;\t"));
+    QString message =  "\n\n"
+                      +tr("; Changes to be committed:")+"\n";
+    QString status = QString();
+    int counter = 0;
+    int nbOfStagedFiles = pStagedFiles.count();
 
-    connect(mGui->cancel_save, SIGNAL(accepted()),
+    foreach (const PMRSupport::StagedFile &stagedFile, pStagedFiles) {
+        switch (stagedFile.second) {
+        case GIT_STATUS_INDEX_NEW:
+            status = tr("new");
+
+            break;
+        case GIT_STATUS_INDEX_MODIFIED:
+            status = tr("modified");
+
+            break;
+        case GIT_STATUS_INDEX_DELETED:
+            status = tr("deleted");
+
+            break;
+        case GIT_STATUS_INDEX_RENAMED:
+            status = tr("renamed");
+
+            break;
+        case GIT_STATUS_INDEX_TYPECHANGE:
+            status = tr("type change");
+
+            break;
+        default:
+            // Note: we should never reach this point...
+
+            status = "???";
+        }
+
+        ++counter;
+
+        if (counter == nbOfStagedFiles) {
+            message += tr(";   - %1 (%2).").arg(stagedFile.first, status)+"\n";
+        } else if (counter == nbOfStagedFiles-1) {
+            message += tr(";   - %1 (%2); and").arg(stagedFile.first, status)+"\n";
+        } else {
+            message += tr(";   - %1 (%2);").arg(stagedFile.first, status)+"\n";
+        }
+    }
+
+    mGui->messageValue->setPlainText(message);
+
+    // Connect some signals
+
+    connect(mGui->buttonBox, SIGNAL(accepted()),
             this, SLOT(accept()));
-    connect(mGui->cancel_save, SIGNAL(rejected()),
+    connect(mGui->buttonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
 }
 
@@ -85,9 +123,11 @@ void PmrWorkspacesWindowCommitDialog::retranslateUi()
 
 //==============================================================================
 
-const QString PmrWorkspacesWindowCommitDialog::message() const
+QString PmrWorkspacesWindowCommitDialog::message() const
 {
-    return mGui->message->toPlainText().trimmed();
+    // Return the commit message
+
+    return mGui->messageValue->toPlainText().trimmed();
 }
 
 //==============================================================================

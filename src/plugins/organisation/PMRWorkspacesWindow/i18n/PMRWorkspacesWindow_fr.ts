@@ -13,6 +13,45 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowCommitDialog</name>
+    <message>
+        <source>; Changes to be committed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>new</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>modified</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>deleted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>renamed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>type change</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>;   - %1 (%2).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>;   - %1 (%2); and</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>;   - %1 (%2);</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWidget</name>
     <message>
         <source>Stage</source>
@@ -141,7 +180,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Please enter the commit message for your changes. Lines starting with &apos;;&apos; will be ignored, and an empty message aborts the commit.</source>
+        <source>Commit message:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note:&lt;/span&gt; lines starting with &apos;;&apos; will be ignored while an empty message will abort the commit.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

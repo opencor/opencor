@@ -41,7 +41,6 @@ limitations under the License.
 #include "git2/remote.h"
 #include "git2/repository.h"
 #include "git2/signature.h"
-#include "git2/status.h"
 
 //==============================================================================
 
@@ -502,31 +501,33 @@ CharPair PmrWorkspace::gitStatusChars(const int &pFlags) const
 
     QChar iStatus = ' ';
 
-    if (pFlags & GIT_STATUS_INDEX_TYPECHANGE)
-        iStatus = 'T';
-    else if (pFlags & GIT_STATUS_INDEX_RENAMED)
-        iStatus = 'R';
-    else if (pFlags & GIT_STATUS_INDEX_DELETED)
-        iStatus = 'D';
+    if (pFlags & GIT_STATUS_INDEX_NEW)
+        iStatus = 'A';
     else if (pFlags & GIT_STATUS_INDEX_MODIFIED)
         iStatus = 'M';
-    else if (pFlags & GIT_STATUS_INDEX_NEW)
-        iStatus = 'A';
+    else if (pFlags & GIT_STATUS_INDEX_DELETED)
+        iStatus = 'D';
+    else if (pFlags & GIT_STATUS_INDEX_RENAMED)
+        iStatus = 'R';
+    else if (pFlags & GIT_STATUS_INDEX_TYPECHANGE)
+        iStatus = 'T';
 
     // wStatus
 
     QChar wStatus = ' ';
 
-    if (pFlags & GIT_STATUS_WT_TYPECHANGE)
+    if (pFlags & GIT_STATUS_WT_NEW)
+        wStatus = 'A';
+    else if (pFlags & GIT_STATUS_WT_MODIFIED)
+        wStatus = 'M';
+    else if (pFlags & GIT_STATUS_WT_DELETED)
+        wStatus = 'D';
+    else if (pFlags & GIT_STATUS_WT_TYPECHANGE)
         wStatus = 'T';
     else if (pFlags & GIT_STATUS_WT_RENAMED)
         wStatus = 'R';
-    else if (pFlags & GIT_STATUS_WT_DELETED)
-        wStatus = 'D';
-    else if (pFlags & GIT_STATUS_WT_MODIFIED)
-        wStatus = 'M';
-    else if (pFlags & GIT_STATUS_WT_NEW)
-        wStatus = 'A';
+    else if (pFlags & GIT_STATUS_WT_UNREADABLE)
+        wStatus = 'U';
 
     return CharPair(iStatus, wStatus);
 }
@@ -808,11 +809,11 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
 
 //==============================================================================
 
-QStringList PmrWorkspace::stagedFiles()
+StagedFiles PmrWorkspace::stagedFiles()
 {
     // Retrieve and return all current staged files
 
-    QStringList fileList = QStringList();
+    StagedFiles res = StagedFiles();
     git_index *index;
 
     if (!git_repository_index(&index, mGitRepository)) {
@@ -836,20 +837,16 @@ QStringList PmrWorkspace::stagedFiles()
                                                0;
 
                 if (filePath) {
-                    QString description = QString();
-
-                    if (status->status & GIT_STATUS_INDEX_TYPECHANGE)
-                        description = "typechange";
-                    else if (status->status & GIT_STATUS_INDEX_RENAMED)
-                        description = "renamed";
-                    else if (status->status & GIT_STATUS_INDEX_DELETED)
-                        description = "deleted";
+                    if (status->status & GIT_STATUS_INDEX_NEW)
+                        res << StagedFile(filePath, GIT_STATUS_INDEX_NEW);
                     else if (status->status & GIT_STATUS_INDEX_MODIFIED)
-                        description = "modified";
-                    else if (status->status & GIT_STATUS_INDEX_NEW)
-                        description = "new file";
-
-                    fileList << description+":\t"+filePath;
+                        res << StagedFile(filePath, GIT_STATUS_INDEX_MODIFIED);
+                    else if (status->status & GIT_STATUS_INDEX_DELETED)
+                        res << StagedFile(filePath, GIT_STATUS_INDEX_DELETED);
+                    else if (status->status & GIT_STATUS_INDEX_RENAMED)
+                        res << StagedFile(filePath, GIT_STATUS_INDEX_RENAMED);
+                    else if (status->status & GIT_STATUS_INDEX_TYPECHANGE)
+                        res << StagedFile(filePath, GIT_STATUS_INDEX_TYPECHANGE);
                 }
             }
 
@@ -859,7 +856,7 @@ QStringList PmrWorkspace::stagedFiles()
         git_index_free(index);
     }
 
-    return fileList;
+    return res;
 }
 
 //==============================================================================
