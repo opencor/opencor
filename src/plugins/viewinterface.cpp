@@ -28,6 +28,15 @@ namespace OpenCOR {
 
 //==============================================================================
 
+extern "C" Q_DECL_EXPORT int viewInterfaceVersion()
+{
+    // Version of the view interface
+
+    return 1;
+}
+
+//==============================================================================
+
 static const auto ViewModeUnknown    = QStringLiteral("UnknownMode");
 #ifdef ENABLE_SAMPLES
 static const auto ViewModeSample     = QStringLiteral("SampleMode");

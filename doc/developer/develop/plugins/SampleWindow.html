@@ -85,6 +85,8 @@ ADD_PLUGIN(SampleWindow
     SOURCES
         <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.cpp"><code>../../i18ninterface.cpp</code></a>
         <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.cpp"><code>../../plugininfo.cpp</code></a>
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.cpp"><code>../../plugininterface.cpp</code></a>
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/windowinterface.cpp"><code>../../windowinterface.cpp</code></a>
 
         <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowplugin.cpp"><code>src/samplewindowplugin.cpp</code></a>
         <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.cpp"><code>src/samplewindowwindow.cpp</code></a>
@@ -101,7 +103,7 @@ ADD_PLUGIN(SampleWindow
 )</pre>
 
         <p>
-            One of the interfaces our plugin implements comes with a <code>.cpp</code> file, so we reference it (line 7). Then, our plugin needs both the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> and <a href="Sample.html"><a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/">Sample</a></a> plugins (the latter, to be able to use its <code>add()</code> function), so  they are referenced (lines 20 and 21) using the <code>PLUGINS</code> keyword (line 19). Our plugin comes with a dockable window, which is implemented using various files (lines 11, 14 and 16). One of those files is a <code>.ui</code> file, which is referenced using the <code>UIS</code> keyword (line 15).
+            One of the interfaces our plugin implements comes with a <code>.cpp</code> file, so we reference it (lines 7 and 9-10). Then, our plugin needs both the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> and <a href="Sample.html"><a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/">Sample</a></a> plugins (the latter, to be able to use its <code>add()</code> function), so  they are referenced (lines 22 and 23) using the <code>PLUGINS</code> keyword (line 21). Our plugin comes with a dockable window, which is implemented using various files (lines 13, 16 and 18). One of those files is a <code>.ui</code> file, which is referenced using the <code>UIS</code> keyword (line 17).
         </p>
 
         <div class="section">
@@ -224,6 +226,28 @@ void SampleWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool SampleWindowPlugin::definesPluginInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool SampleWindowPlugin::pluginInterfacesOk(const QString &pFileName,
+                                            QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void SampleWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our sample window
@@ -281,14 +305,14 @@ void SampleWindowPlugin::handleUrl(const QUrl &pUrl)
 //==============================================================================</pre>
 
         <p>
-            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 67-76), which is where we initialise both <code>mSampleWindowAction</code> and <code>mSampleWindowWindow </code>. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleUrl()</code>) are left empty.
+            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 89-98), which is where we initialise both <code>mSampleWindowAction</code> and <code>mSampleWindowWindow </code>. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleUrl()</code>) are left empty.
         </p>
 
         <p>
             Finally, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/windowinterface.inl">Window</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:121">//==============================================================================
+        <pre class="prettyprint linenums:143">//==============================================================================
 // Window interface
 //==============================================================================
 
@@ -320,7 +344,7 @@ QDockWidget * SampleWindowPlugin::windowWidget() const
 //==============================================================================</pre>
 
         <p>
-            All three methods are implemented since they tell OpenCOR the default dock area for our plugin window (see <code>windowDefaultDockArea()</code>; lines 125-130), as well as provide the pointer to our action (see <code>windowAction()</code>; lines 134-139) and window (see <code>windowWidget()</code>; lines 143-148).
+            All three methods are implemented since they tell OpenCOR the default dock area for our plugin window (see <code>windowDefaultDockArea()</code>; lines 147-152), as well as provide the pointer to our action (see <code>windowAction()</code>; lines 156-161) and window (see <code>windowWidget()</code>; lines 165-170).
         </p>
 
         <span class="anchor" id="Plugin specific"></span>

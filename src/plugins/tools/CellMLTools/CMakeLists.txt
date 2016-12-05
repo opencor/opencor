@@ -4,10 +4,12 @@ PROJECT(CellMLToolsPlugin)
 
 ADD_PLUGIN(CellMLTools
     SOURCES
+        ../../cliinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
         ../../pluginmanager.cpp
 
         src/cellmltoolsplugin.cpp

@@ -68,6 +68,28 @@ void HelpWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool HelpWindowPlugin::definesPluginInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool HelpWindowPlugin::pluginInterfacesOk(const QString &pFileName,
+                                          QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void HelpWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our help window

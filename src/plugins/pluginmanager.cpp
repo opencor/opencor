@@ -40,6 +40,7 @@ namespace OpenCOR {
 //==============================================================================
 
 PluginManager::PluginManager(const bool &pGuiMode) :
+    mGuiMode(pGuiMode),
     mPlugins(Plugins()),
     mLoadedPlugins(Plugins()),
     mCorePlugin(0)
@@ -70,17 +71,19 @@ PluginManager::PluginManager(const bool &pGuiMode) :
     QMap<QString, QString> pluginsError = QMap<QString, QString>();
 
     foreach (const QString &fileName, fileNames) {
-        QString pluginError;
-        PluginInfo *pluginInfo = Plugin::info(fileName, &pluginError);
-        // Note: if there is some plugin information, then it will get owned by
-        //       the plugin itself. So, it's the plugin's responsibility to
-        //       delete it (see Plugin::~Plugin())...
         QString pluginName = Plugin::name(fileName);
+        QString pluginError = QString();
+        PluginInfo *pluginInfo = (Plugin::pluginInfoVersion(fileName) == pluginInfoVersion())?
+                                     Plugin::info(fileName, &pluginError):
+                                     0;
 
         pluginsInfo.insert(pluginName, pluginInfo);
         pluginsError.insert(pluginName, pluginError);
 
         // Keep track of the plugin's full dependencies, if possible
+        // Note: if there is some plugin information, then it will get owned by
+        //       the plugin itself. So, it will be the plugin's responsibility
+        //       to delete it (see Plugin::~Plugin())...
 
         if (pluginInfo)
             pluginInfo->setFullDependencies(Plugin::fullDependencies(mPluginsDir, pluginName));
@@ -198,6 +201,15 @@ PluginManager::~PluginManager()
 #else
     Core::resetList(mPlugins);
 #endif
+}
+
+//==============================================================================
+
+bool PluginManager::guiMode() const
+{
+    // Return whether we are in GUI mode
+
+    return mGuiMode;
 }
 
 //==============================================================================

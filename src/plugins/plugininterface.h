@@ -41,6 +41,10 @@ namespace OpenCOR {
 
 //==============================================================================
 
+extern "C" Q_DECL_EXPORT int pluginInterfaceVersion();
+
+//==============================================================================
+
 class PluginInterface
 {
 public:
@@ -48,6 +52,10 @@ public:
     #include "plugininterface.inl"
 #undef INTERFACE_DEFINITION
 };
+
+//==============================================================================
+
+typedef QList<PluginInterface *> PluginInterfaces;
 
 //==============================================================================
 

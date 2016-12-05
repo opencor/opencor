@@ -4,9 +4,14 @@ PROJECT(RawCellMLViewPlugin)
 
 ADD_PLUGIN(RawCellMLView
     SOURCES
+        ../../filehandlinginterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
         ../../viewinterface.cpp
+
+        ../CellMLEditingView/src/cellmleditingviewinterface.cpp
+        ../EditingView/src/editingviewinterface.cpp
 
         src/rawcellmlviewplugin.cpp
         src/rawcellmlviewwidget.cpp

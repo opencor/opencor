@@ -4,7 +4,6 @@ PROJECT(EditorWidgetPlugin)
 
 ADD_PLUGIN(EditorWidget
     SOURCES
-        ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 

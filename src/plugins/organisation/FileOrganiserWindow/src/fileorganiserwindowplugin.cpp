@@ -68,6 +68,28 @@ void FileOrganiserWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool FileOrganiserWindowPlugin::definesPluginInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool FileOrganiserWindowPlugin::pluginInterfacesOk(const QString &pFileName,
+                                                   QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void FileOrganiserWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our file organiser window
