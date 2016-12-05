@@ -304,7 +304,10 @@ QString getDirectory(const QString &pCaption, const QString &pDirName,
     dialog.setFileMode(QFileDialog::DirectoryOnly);
     dialog.setOption(QFileDialog::ShowDirsOnly);
 
-    if (dialog.exec() == QDialog::Accepted) {
+    forever {
+        if (dialog.exec() != QDialog::Accepted)
+            break;
+
         QString res = Core::nativeCanonicalDirName(dialog.selectedFiles().first());
 
         if (!res.isEmpty()) {
@@ -319,14 +322,14 @@ QString getDirectory(const QString &pCaption, const QString &pDirName,
                 warningMessageBox(pCaption,
                                   QObject::tr("Please choose an empty directory."));
 
-                return QString();
+                continue;
             }
         }
 
         return res;
-    } else {
-        return QString();
     }
+
+    return QString();
 }
 
 //==============================================================================
