@@ -26,8 +26,8 @@ limitations under the License.
     #define PURE
 #endif
 
-    // Note: changes to this interface must result in pluginVersion() being
-    //       updated (see [OpenCOR]/src/plugins/pluginInfo.cpp)...
+    // Note: make sure to update guiInterfaceVersion() whenever you update this
+    //       interface...
 
     virtual void updateGui(Plugin *pViewPlugin, const QString &pFileName) PURE;
 

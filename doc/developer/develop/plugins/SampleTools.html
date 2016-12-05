@@ -80,9 +80,11 @@
 
 ADD_PLUGIN(SampleTools
     SOURCES
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/cliinterface.cpp"><code>../../cliinterface.cpp</code></a>
         <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.cpp"><code>../../guiinterface.cpp</code></a>
         <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.cpp"><code>../../i18ninterface.cpp</code></a>
         <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.cpp"><code>../../plugininfo.cpp</code></a>
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.cpp"><code>../../plugininterface.cpp</code></a>
 
         <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp"><code>src/sampletoolsplugin.cpp</code></a>
     HEADERS_MOC
@@ -95,7 +97,7 @@ ADD_PLUGIN(SampleTools
 )</pre>
 
         <p>
-            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 9). Then, our plugin needs the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> and <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/">Sample</a> plugins (the latter, to be able to use its <code>add()</code> function), so they are referenced (lines 17 and 18) using the <code>PLUGINS</code> keyword (line 16).
+            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7-9 and 11). Then, our plugin needs the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> and <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/">Sample</a> plugins (the latter, to be able to use its <code>add()</code> function), so they are referenced (lines 19 and 20) using the <code>PLUGINS</code> keyword (line 18).
         </p>
 
         <div class="section">
@@ -299,6 +301,28 @@ void SampleToolsPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool SampleToolsPlugin::definesPluginInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool SampleToolsPlugin::pluginInterfacesOk(const QString &pFileName,
+                                           QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void SampleToolsPlugin::initializePlugin()
 {
     // Create our Add Two Numbers action
@@ -357,7 +381,7 @@ void SampleToolsPlugin::handleUrl(const QUrl &pUrl)
 //==============================================================================</pre>
 
         <p>
-            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 130-140), which is where we initialise <code>mAddTwoNumbersAction</code>, among a couple of other things. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleUrl()</code>) are left empty.
+            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 152-162), which is where we initialise <code>mAddTwoNumbersAction</code>, among a couple of other things. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleUrl()</code>) are left empty.
         </p>
 
         <span class="anchor" id="Plugin specific"></span>
@@ -383,7 +407,7 @@ private slots:
             Their implementation can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp"><code>sampletoolsplugin.cpp</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:185">//==============================================================================
+        <pre class="prettyprint linenums:207">//==============================================================================
 // Plugin specific
 //==============================================================================
 
@@ -460,11 +484,11 @@ void SampleToolsPlugin::addTwoNumbers()
 //==============================================================================</pre>
 
         <p>
-            <code>runHelpCommand()</code> (lines 189-198) is the method that is executed whenever our plugin is asked to handle the <code>help</code> command. It provides the user with some information about the commands it supports. In a similar way, <code>runAddCommand()</code> (lines 202-237) is executed whenever our plugin is asked to handle the <code>add</code> command. It checks that two numbers have been passed to the command and, if so, returns their sum to the user.
+            <code>runHelpCommand()</code> (lines 211-220) is the method that is executed whenever our plugin is asked to handle the <code>help</code> command. It provides the user with some information about the commands it supports. In a similar way, <code>runAddCommand()</code> (lines 224-259) is executed whenever our plugin is asked to handle the <code>add</code> command. It checks that two numbers have been passed to the command and, if so, returns their sum to the user.
         </p>
 
         <p>
-            <code>addTwoNumbers()</code> (lines 241-257) is a <a href="https://www.qt.io/">Qt</a> slot that is executed whenever the user selects our menu item (see <code>mAddTwoNumbersAction</code>). Using a GUI approach, it asks the user to provide two numbers and returns their sum, unless the user decides to cancel the action.
+            <code>addTwoNumbers()</code> (lines 263-279) is a <a href="https://www.qt.io/">Qt</a> slot that is executed whenever the user selects our menu item (see <code>mAddTwoNumbersAction</code>). Using a GUI approach, it asks the user to provide two numbers and returns their sum, unless the user decides to cancel the action.
         </p>
 
         <script type="text/javascript">

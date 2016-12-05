@@ -188,6 +188,28 @@ void RawTextViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool RawTextViewPlugin::definesPluginInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool RawTextViewPlugin::pluginInterfacesOk(const QString &pFileName,
+                                           QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void RawTextViewPlugin::initializePlugin()
 {
     // Create our raw text view widget

@@ -17,15 +17,10 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// View interface
+// CellML editing interface
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include <QString>
-#include <QWidget>
+#include "cellmleditingviewinterface.h"
 
 //==============================================================================
 
@@ -33,43 +28,16 @@ namespace OpenCOR {
 
 //==============================================================================
 
-extern "C" Q_DECL_EXPORT int viewInterfaceVersion();
-
-//==============================================================================
-
-class ViewInterface
+extern "C" Q_DECL_EXPORT int cellmlEditingViewInterfaceVersion()
 {
-public:
-    enum Mode {
-        UnknownMode,
-#ifdef ENABLE_SAMPLES
-        SampleMode,
-#endif
-        EditingMode,
-        SimulationMode,
-        AnalysisMode
-    };
+    // Version of the CellML editing view interface
 
-    enum MimeTypeMode {
-        OpenMimeTypeMode,
-        SaveMimeTypeMode
-    };
-
-#define INTERFACE_DEFINITION
-    #include "viewinterface.inl"
-#undef INTERFACE_DEFINITION
-
-    static QString modeAsString(const Mode &pMode);
-    static Mode modeFromString(const QString &pMode);
-};
+    return 1;
+}
 
 //==============================================================================
 
 }   // namespace OpenCOR
-
-//==============================================================================
-
-Q_DECLARE_INTERFACE(OpenCOR::ViewInterface, "OpenCOR::ViewInterface")
 
 //==============================================================================
 // End of file

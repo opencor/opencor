@@ -96,7 +96,9 @@ public:
     QString statusErrors() const;
     int statusErrorsCount() const;
 
-    static int pluginVersion(const QString &pFileName);
+    static int pluginInfoVersion(const QString &pFileName);
+    static int interfaceVersion(const QString &pFileName,
+                                const QString &pFunctionName);
 
     static QString name(const QString &pFileName);
     static QString fileName(const QString &pPluginsDir, const QString &pName);
