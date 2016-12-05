@@ -160,6 +160,28 @@ void PMRWorkspacesWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool PMRWorkspacesWindowPlugin::definesPluginInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool PMRWorkspacesWindowPlugin::pluginInterfacesOk(const QString &pFileName,
+                                                   QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void PMRWorkspacesWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our workspaces window
