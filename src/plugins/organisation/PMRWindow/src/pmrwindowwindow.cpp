@@ -235,6 +235,12 @@ void PmrWindowWindow::showProgress(const double &pProgress)
     setBusyWidgetProgress(pProgress);
 }
 
+//==============================================================================
+
+void PmrWindowWindow::showWarning(const QString &pMessage)
+{
+    // Show the given message as a warning
+
     Core::warningMessageBox(windowTitle(), pMessage);
 }
 
