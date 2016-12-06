@@ -10,7 +10,8 @@
     - `Ruby >= 1.9 <http://rubyinstaller.org/>`__;
     - `Bison and Flex <https://sourceforge.net/projects/winflexbison/>`__ (you will need to make a copy of ``win_flex.exe`` and name it ``flex.exe``);
     - `gperf <http://gnuwin32.sourceforge.net/packages/gperf.htm>`__; and
-    - `ICU <http://www.npcglib.org/~stathis/blog/precompiled-icu/>`__ (uncompress the binaries to ``C:\icu``). |br|
+    - `ICU <http://www.npcglib.org/~stathis/blog/precompiled-icu/>`__ (uncompress the binaries to ``C:\icu``).
+
       **Note:** the `GnuWin32 <http://gnuwin32.sourceforge.net/>`__ version of `Flex <http://gnuwin32.sourceforge.net/packages/flex.htm>`__ is not suitable, hence we use `Win flex-bison <https://sourceforge.net/projects/winflexbison/>`__ instead.
 
   - **Linux**, i.e. running the following command from the terminal:
@@ -77,7 +78,3 @@ Once `QtWebKit <https://wiki.qt.io/QtWebKit>`__ is fully built:
     - ``[QtWebKit]/lib`` containing only the original ``.lib`` files;
   - **Linux:** ``[QtWebKit]/lib`` containing only the original ``.so*`` files; and
   - **macOS:** ``[QtWebKit]/lib`` containing only the original ``.framework`` folders.
-
-.. |br| raw:: html
-
-   <br/>
