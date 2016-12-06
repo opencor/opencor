@@ -5,3 +5,8 @@ In case `LLVM <http://www.llvm.org/>`__ is to be built (by setting the ``USE_PRE
 - Download the `LLVM <http://www.llvm.org/>`__ and `Clang <http://clang.llvm.org/>`__ source codes from http://llvm.org/releases/download.html;
 - Extract their corresponding ``.tar.xz`` file;
 - Move the contents of ``[Clang]`` to ``[LLVM]/tools/clang``;
+- From the command line:
+  ::
+    cd [LLVM]
+    mkdir build
+    cd build
