@@ -5,11 +5,11 @@ dist: trusty
 
 os:
   - linux
-  - osx
+#  - osx
 
 env:
   - CONFIG=Release
-  - CONFIG=Debug
+#  - CONFIG=Debug
 
 branches:
   only:
@@ -56,6 +56,7 @@ script:
        fi
     && make -j 3
     && cd ..
+    && ./run -p
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          build/bin/runtests
          ;
