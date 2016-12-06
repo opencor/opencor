@@ -1,1 +1,11 @@
-[Third-party plugins](https://github.com/opencor/opencor/tree/master/src/plugins/thirdParty) can take time to build (especially [LLVM](http://www.llvm.org/)). So, since we (should) never modify them, there is no point in wasting time building them every time we build OpenCOR from scratch. So, unless we explicitly want to build one or all of them (by setting the `USE_PREBUILT_LIBGIT2_PLUGIN`, `USE_PREBUILT_LLVM_PLUGIN`, `USE_PREBUILT_QSCINTILLA_PLUGIN`, `USE_PREBUILT_QWT_PLUGIN`, `USE_PREBUILT_SUNDIALS_PLUGIN` and/or `USE_PREBUILT_ZLIB_PLUGIN` option/s to `OFF`), we retrieve their pre-built version off the OpenCOR website.
+`Third-party
+plugins <https://github.com/opencor/opencor/tree/master/src/plugins/thirdParty>`__
+can take time to build (especially `LLVM <http://www.llvm.org/>`__). So,
+since we (should) never modify them, there is no point in wasting time
+building them every time we build OpenCOR from scratch. So, unless we
+explicitly want to build one or all of them (by setting the
+``USE_PREBUILT_LIBGIT2_PLUGIN``, ``USE_PREBUILT_LLVM_PLUGIN``,
+``USE_PREBUILT_QSCINTILLA_PLUGIN``, ``USE_PREBUILT_QWT_PLUGIN``,
+``USE_PREBUILT_SUNDIALS_PLUGIN`` and/or ``USE_PREBUILT_ZLIB_PLUGIN``
+option/s to ``OFF``), we retrieve their pre-built version off the
+OpenCOR website.

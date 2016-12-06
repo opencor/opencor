@@ -1,1 +1,18 @@
-There are two [XSL](https://www.w3.org/Style/XSL/) files for converting [Content MathML](https://www.w3.org/TR/MathML3/chapter4.html) to [Presentation MathML](https://www.w3.org/TR/MathML2/chapter2.html): [`ctop.xsl`](https://github.com/davidcarlisle/web-xslt/blob/master/ctop/ctop.xsl) and [`ctopff.xsl`](https://github.com/davidcarlisle/web-xslt/blob/master/ctop/ctopff.xsl). The difference between the two is that [`ctopff.xsl`](https://github.com/davidcarlisle/web-xslt/blob/master/ctop/ctopff.xsl) uses a modified namespace and mode usage. Those differences are necessary if we want to use the [XSL](https://www.w3.org/Style/XSL/) file with [Firefox](https://www.mozilla.org/en-US/firefox/new/) (hence the file name!) and, as it happens, they are also necessary for use with [Qt](https://www.qt.io/) and [QtWebKit](https://wiki.qt.io/QtWebKit) in particular. This is therefore the version we use here. However, the [Presentation MathML](https://www.w3.org/TR/MathML2/chapter2.html) it generates is not exactly what we want, so we edited the file quite a bit.
+There are two `XSL <https://www.w3.org/Style/XSL/>`__ files for
+converting `Content
+MathML <https://www.w3.org/TR/MathML3/chapter4.html>`__ to `Presentation
+MathML <https://www.w3.org/TR/MathML2/chapter2.html>`__:
+```ctop.xsl`` <https://github.com/davidcarlisle/web-xslt/blob/master/ctop/ctop.xsl>`__
+and
+```ctopff.xsl`` <https://github.com/davidcarlisle/web-xslt/blob/master/ctop/ctopff.xsl>`__.
+The difference between the two is that
+```ctopff.xsl`` <https://github.com/davidcarlisle/web-xslt/blob/master/ctop/ctopff.xsl>`__
+uses a modified namespace and mode usage. Those differences are
+necessary if we want to use the `XSL <https://www.w3.org/Style/XSL/>`__
+file with `Firefox <https://www.mozilla.org/en-US/firefox/new/>`__
+(hence the file name!) and, as it happens, they are also necessary for
+use with `Qt <https://www.qt.io/>`__ and
+`QtWebKit <https://wiki.qt.io/QtWebKit>`__ in particular. This is
+therefore the version we use here. However, the `Presentation
+MathML <https://www.w3.org/TR/MathML2/chapter2.html>`__ it generates is
+not exactly what we want, so we edited the file quite a bit.
