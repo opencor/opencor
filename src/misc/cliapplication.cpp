@@ -400,7 +400,12 @@ bool CliApplication::run(int *pRes)
     //       to our executable, which we are not interested in...
 
     foreach (const QString &appArgument, appArguments) {
-        if (!appArgument.compare("-a") || !appArgument.compare("--about")) {
+        if (option == CommandOption) {
+            // All arguments following a command are passed to the command
+
+            commandArguments << appArgument;
+        }
+        else if (!appArgument.compare("-a") || !appArgument.compare("--about")) {
             if (option == NoOption) {
                 option = AboutOption;
             } else {
@@ -448,10 +453,6 @@ bool CliApplication::run(int *pRes)
             *pRes = -1;
 
             break;
-        } else if (option == CommandOption) {
-            // Not an option, so we consider it to be part of a command
-
-            commandArguments << appArgument;
         }
     }
 
