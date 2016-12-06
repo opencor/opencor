@@ -82,6 +82,7 @@ ADD_PLUGIN(Core
         Xml
         XmlPatterns
     TESTS
+        clitests
         generaltests
         mathmltests
 )
