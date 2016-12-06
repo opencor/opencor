@@ -15,10 +15,10 @@ In case `LLVM <http://www.llvm.org/>`__ is to be built (by setting the ``USE_PRE
   and then
   ::
     ccmake -G "Ninja" ..
-  or
+  or\
   ::
     ccmake -G "Unix Makefiles" ..
-  or
+  or\
   ::
     ccmake -G "NMake Makefiles JOM" ..
 - Configure the build with the following options:
