@@ -120,40 +120,35 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
     if (commandSeparatorPosition != -1) {
         commandPlugin = commandPlugin.remove(commandSeparatorPosition, commandName.length()-commandSeparatorPosition);
         commandName = commandName.remove(0, commandPlugin.length()+CommandSeparator.length());
-
-        // Make sure that the plugin to which the command is to be sent exists
-
-        if (!commandPlugin.isEmpty()) {
-            bool pluginFound = false;
-            bool pluginHasCliSupport = false;
-
-            foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-                if (!commandPlugin.compare(plugin->name())) {
-                    pluginFound = true;
-                    pluginHasCliSupport = qobject_cast<CliInterface *>(plugin->instance());
-
-                    break;
-                }
-            }
-
-            if (!pluginFound) {
-                std::cout << "The " << commandPlugin.toStdString() << " plugin could not be found." << std::endl;
-
-                return true;
-            } else if (!pluginHasCliSupport) {
-                std::cout << "The " << commandPlugin.toStdString() << " plugin does not support the execution of commands." << std::endl;
-
-                return true;
-            }
-        }
     } else {
-        commandPlugin = QString();
+        commandName = QString();
     }
 
-    // Make sure that we have a command name
+    // Make sure that the plugin to which the command is to be sent exists
 
-    if (commandName.isEmpty())
-        return false;
+    if (!commandPlugin.isEmpty()) {
+        bool pluginFound = false;
+        bool pluginHasCliSupport = false;
+
+        foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+            if (!commandPlugin.compare(plugin->name())) {
+                pluginFound = true;
+                pluginHasCliSupport = qobject_cast<CliInterface *>(plugin->instance());
+
+                break;
+            }
+        }
+
+        if (!pluginFound) {
+            std::cout << "The " << commandPlugin.toStdString() << " plugin could not be found." << std::endl;
+
+            return true;
+        } else if (!pluginHasCliSupport) {
+            std::cout << "The " << commandPlugin.toStdString() << " plugin does not support the execution of commands." << std::endl;
+
+            return true;
+        }
+    }
 
     // Make sure that we have at least one CLI-enabled plugin
 
@@ -196,7 +191,7 @@ void CliApplication::help() const
     // Output some help
 
     std::cout << "Usage: " << qAppName().toStdString()
-              << " [-a|--about] [-c|--command [<plugin>::]<command> <options>] [-h|--help] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
+              << " [-a|--about] [-c|--command [<plugin>]::<command> <options>] [-h|--help] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
               << std::endl;
     std::cout << " -a, --about     Display some information about OpenCOR"
               << std::endl;
