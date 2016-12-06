@@ -28,9 +28,10 @@ From there, using ``cmake-gui`` on **Windows** or ``ccmake`` on **Linux**/**macO
   - **macOS:**
     ::
       CMAKE_CXX_FLAGS=-std=c++11 -stdlib=libc++
-  - Update the installation destination so that, upon 'installation', we have a ready to use version of the `libSBML <http://sbml.org/Software/libSBML>`__ binaries (this is particularly useful on **macOS** since the 'installation' will result in 'clean' binaries):
-    ::
-      CMAKE_INSTALL_PREFIX=<InstallationDestination>
+
+- Update the installation destination so that, upon 'installation', we have a ready to use version of the `libSBML <http://sbml.org/Software/libSBML>`__ binaries (this is particularly useful on **macOS** since the 'installation' will result in 'clean' binaries):
+  ::
+    CMAKE_INSTALL_PREFIX=<InstallationDestination>
 
 Once we have built and 'installed' `libSBML <http://sbml.org/Software/libSBML>`__, we can replace the OpenCOR version of the include and binary files, which are located in the 'installed' ``include`` and ``lib`` folders, respectively.
 
