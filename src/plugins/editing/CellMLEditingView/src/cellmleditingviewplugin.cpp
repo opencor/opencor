@@ -241,6 +241,27 @@ void CellMLEditingViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool CellMLEditingViewPlugin::definesPluginInterfaces()
+{
+    // We define the CellML editing view interface
+
+    return true;
+}
+
+//==============================================================================
+
+bool CellMLEditingViewPlugin::pluginInterfacesOk(const QString &pFileName,
+                                                 QObject *pInstance)
+{
+    // Make sure that the given plugin instance uses the right version of the
+    // CellML editing view interface, if it supports it
+
+    return !(   qobject_cast<CellmlEditingViewInterface *>(pInstance)
+             && (Plugin::interfaceVersion(pFileName, "cellmlEditingViewInterfaceVersion") != cellmlEditingViewInterfaceVersion()));
+}
+
+//==============================================================================
+
 void CellMLEditingViewPlugin::initializePlugin()
 {
     // Create our different actions

@@ -58,6 +58,10 @@ protected:
 
 //==============================================================================
 
+extern "C" Q_DECL_EXPORT int preferencesInterfaceVersion();
+
+//==============================================================================
+
 class PreferencesInterface
 {
 public:

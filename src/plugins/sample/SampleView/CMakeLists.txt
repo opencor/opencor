@@ -4,8 +4,10 @@ PROJECT(SampleViewPlugin)
 
 ADD_PLUGIN(SampleView
     SOURCES
+        ../../filehandlinginterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
         ../../viewinterface.cpp
 
         src/sampleviewplugin.cpp

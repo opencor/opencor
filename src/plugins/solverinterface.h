@@ -220,6 +220,10 @@ typedef QList<Property> Properties;
 
 //==============================================================================
 
+extern "C" Q_DECL_EXPORT int solverInterfaceVersion();
+
+//==============================================================================
+
 class SolverInterface
 {
 public:

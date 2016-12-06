@@ -89,12 +89,21 @@ SET(SOURCES
     src/misc/guiapplication.cpp
     src/misc/guiutils.cpp
 
+    src/plugins/cliinterface.cpp
+    src/plugins/coreinterface.cpp
+    src/plugins/datastoreinterface.cpp
+    src/plugins/filehandlinginterface.cpp
+    src/plugins/filetypeinterface.cpp
     src/plugins/guiinterface.cpp
     src/plugins/i18ninterface.cpp
     src/plugins/plugin.cpp
     src/plugins/plugininfo.cpp
+    src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
+    src/plugins/solverinterface.cpp
+    src/plugins/viewinterface.cpp
+    src/plugins/windowinterface.cpp
 )
 
 SET(HEADERS_MOC
@@ -107,9 +116,11 @@ SET(HEADERS_MOC
     src/misc/cliutils.h
     src/misc/guiapplication.h
 
+    src/plugins/datastoreinterface.h
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
     src/plugins/preferencesinterface.h
+    src/plugins/solverinterface.h
 )
 
 SET(UIS
@@ -134,9 +145,16 @@ IF(WIN32)
         src/misc/cliapplication.cpp
         src/misc/cliutils.cpp
 
+        src/plugins/cliinterface.cpp
+        src/plugins/coreinterface.cpp
+        src/plugins/datastoreinterface.cpp
+        src/plugins/filehandlinginterface.cpp
+        src/plugins/filetypeinterface.cpp
         src/plugins/plugin.cpp
         src/plugins/plugininfo.cpp
+        src/plugins/plugininterface.cpp
         src/plugins/pluginmanager.cpp
+        src/plugins/solverinterface.cpp
 
         src/windows/main.cpp
     )
@@ -144,8 +162,10 @@ IF(WIN32)
     SET(WINDOWS_CLI_HEADERS_MOC
         src/misc/cliutils.h
 
+        src/plugins/datastoreinterface.h
         src/plugins/plugin.h
         src/plugins/pluginmanager.h
+        src/plugins/solverinterface.h
     )
 
     SET(WINDOWS_CLI_RESOURCES
@@ -450,6 +470,9 @@ IF(WIN32)
         ${WINDOWS_CLI_SOURCES_MOC}
         ${WINDOWS_CLI_SOURCES_RCS}
     )
+
+    TARGET_COMPILE_DEFINITIONS(${WINDOWS_CLI_PROJECT_NAME}
+                               PRIVATE CLI_VERSION)
 
     SET_TARGET_PROPERTIES(${WINDOWS_CLI_PROJECT_NAME} PROPERTIES
         OUTPUT_NAME ${WINDOWS_CLI_PROJECT_NAME}

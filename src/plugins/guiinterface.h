@@ -105,6 +105,10 @@ typedef QList<MenuAction> MenuActions;
 
 //==============================================================================
 
+extern "C" Q_DECL_EXPORT int guiInterfaceVersion();
+
+//==============================================================================
+
 class GuiInterface
 {
 public:

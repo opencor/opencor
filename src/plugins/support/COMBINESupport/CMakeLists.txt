@@ -4,8 +4,10 @@ PROJECT(COMBINESupportPlugin)
 
 ADD_PLUGIN(COMBINESupport
     SOURCES
+        ../../filetypeinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
 
         src/combinearchive.cpp
         src/combinearchiveissue.cpp

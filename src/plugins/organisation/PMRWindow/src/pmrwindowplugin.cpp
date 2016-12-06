@@ -69,6 +69,28 @@ void PMRWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool PMRWindowPlugin::definesPluginInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool PMRWindowPlugin::pluginInterfacesOk(const QString &pFileName,
+                                         QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void PMRWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our PMR window

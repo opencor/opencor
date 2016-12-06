@@ -28,9 +28,9 @@ namespace OpenCOR {
 
 //==============================================================================
 
-extern "C" Q_DECL_EXPORT int pluginVersion()
+extern "C" Q_DECL_EXPORT int pluginInfoVersion()
 {
-    // Version of the/our plugin/s
+    // Version of PluginInfo
 
     return 1;
 }

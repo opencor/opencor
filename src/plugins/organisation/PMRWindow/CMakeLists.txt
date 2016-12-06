@@ -6,6 +6,8 @@ ADD_PLUGIN(PMRWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
+        ../../windowinterface.cpp
 
         src/pmrwindowplugin.cpp
         src/pmrwindowwidget.cpp

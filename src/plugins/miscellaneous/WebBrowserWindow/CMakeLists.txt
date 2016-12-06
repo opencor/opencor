@@ -6,6 +6,8 @@ ADD_PLUGIN(WebBrowserWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
+        ../../windowinterface.cpp
 
         src/webbrowserwindowplugin.cpp
         src/webbrowserwindowwidget.cpp
