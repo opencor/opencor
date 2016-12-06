@@ -582,7 +582,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 SET(COPY_TARGET DIRECT)
             ELSE()
                 SET(COPY_TARGET ${PROJECT_NAME})
-##                MESSAGE(FATAL_ERROR "'${FULL_EXTERNAL_BINARY}' does not exist...")
             ENDIF()
 
             # Copy the external binary to its destination directory, so we can
@@ -606,14 +605,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             # Link the plugin to the external library
 
             IF(WIN32)
-#                STRING(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
-#                       IMPORT_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARY}")
-
                 STRING(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
                        IMPORT_EXTERNAL_BINARY "${FULL_EXTERNAL_BINARY}")
 
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-#                    ${ARG_EXTERNAL_BINARIES_DIR}/${IMPORT_EXTERNAL_BINARY}
                     ${IMPORT_EXTERNAL_BINARY}
                 )
             ELSEIF(${COPY_TARGET} STREQUAL "DIRECT")
