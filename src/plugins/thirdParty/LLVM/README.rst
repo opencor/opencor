@@ -13,3 +13,6 @@ In case `LLVM <http://www.llvm.org/>`__ is to be built (by setting the ``USE_PRE
   and then
   ::
     ccmake -G "Ninja" ..
+  or
+  ::
+    ccmake -G "Unix Makefiles" ..
