@@ -404,8 +404,7 @@ bool CliApplication::run(int *pRes)
             // All arguments following a command are passed to the command
 
             commandArguments << appArgument;
-        }
-        else if (!appArgument.compare("-a") || !appArgument.compare("--about")) {
+        } else if (!appArgument.compare("-a") || !appArgument.compare("--about")) {
             if (option == NoOption) {
                 option = AboutOption;
             } else {
