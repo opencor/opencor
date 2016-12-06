@@ -120,6 +120,8 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
     if (commandSeparatorPosition != -1) {
         commandPlugin = commandPlugin.remove(commandSeparatorPosition, commandName.length()-commandSeparatorPosition);
         commandName = commandName.remove(0, commandPlugin.length()+CommandSeparator.length());
+    } else {
+        commandName = QString();
     }
 
     // Make sure that the plugin to which the command is to be sent exists
@@ -147,11 +149,6 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
             return true;
         }
     }
-
-    // Make sure that we have a command name
-
-    if (commandName.isEmpty())
-        return false;
 
     // Make sure that we have at least one CLI-enabled plugin
 
