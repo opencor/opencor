@@ -4,12 +4,15 @@ PROJECT(SEDMLEditingViewPlugin)
 
 ADD_PLUGIN(SEDMLEditingView
     SOURCES
+        ../../filehandlinginterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
         ../../pluginmanager.cpp
 
+        src/sedmleditingviewinterface.cpp
         src/sedmleditingviewplugin.cpp
         src/sedmleditingviewwidget.cpp
     HEADERS_MOC

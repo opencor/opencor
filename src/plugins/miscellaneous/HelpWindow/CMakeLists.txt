@@ -15,6 +15,8 @@ ADD_PLUGIN(HelpWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
+        ../../windowinterface.cpp
 
         src/helpwindowplugin.cpp
         src/helpwindowwidget.cpp

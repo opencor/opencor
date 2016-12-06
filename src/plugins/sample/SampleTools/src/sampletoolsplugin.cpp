@@ -73,7 +73,7 @@ int SampleToolsPlugin::executeCommand(const QString &pCommand,
 
         return runAddCommand(pArguments);
     } else {
-        // Not a CLI command that we support, so...
+        // Not a CLI command that we support, so show our help and leave
 
         runHelpCommand();
 
@@ -125,6 +125,28 @@ void SampleToolsPlugin::retranslateUi()
 
 //==============================================================================
 // Plugin interface
+//==============================================================================
+
+bool SampleToolsPlugin::definesPluginInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool SampleToolsPlugin::pluginInterfacesOk(const QString &pFileName,
+                                           QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
 //==============================================================================
 
 void SampleToolsPlugin::initializePlugin()

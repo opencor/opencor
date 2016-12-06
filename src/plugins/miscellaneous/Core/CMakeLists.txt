@@ -10,12 +10,21 @@ ENDIF()
 
 ADD_PLUGIN(Core
     SOURCES
+        ../../cliinterface.cpp
+        ../../datastoreinterface.cpp
+        ../../coreinterface.cpp
+        ../../filehandlinginterface.cpp
+        ../../filetypeinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
         ../../pluginmanager.cpp
+        ../../preferencesinterface.cpp
+        ../../solverinterface.cpp
         ../../viewinterface.cpp
+        ../../windowinterface.cpp
 
         src/borderedwidget.cpp
         src/busywidget.cpp
@@ -40,8 +49,11 @@ ADD_PLUGIN(Core
         src/windowwidget.cpp
         src/xsltransformer.cpp
     HEADERS_MOC
+        ../../datastoreinterface.h
         ../../plugin.h
         ../../pluginmanager.h
+        ../../preferencesinterface.h
+        ../../solverinterface.h
 
         src/borderedwidget.h
         src/busywidget.h

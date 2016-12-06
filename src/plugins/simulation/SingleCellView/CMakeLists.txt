@@ -5,9 +5,11 @@ PROJECT(SingleCellViewPlugin)
 ADD_PLUGIN(SingleCellView
     SOURCES
         ../../datastoreinterface.cpp
+        ../../filehandlinginterface.cpp
         ../../i18ninterface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
         ../../pluginmanager.cpp
         ../../solverinterface.cpp
         ../../viewinterface.cpp

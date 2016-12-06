@@ -149,6 +149,28 @@ void CellMLAnnotationViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
+bool CellMLAnnotationViewPlugin::definesPluginInterfaces()
+{
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+bool CellMLAnnotationViewPlugin::pluginInterfacesOk(const QString &pFileName,
+                                                    QObject *pInstance)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pInstance);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void CellMLAnnotationViewPlugin::initializePlugin()
 {
     // Create our CellML annotation view widget

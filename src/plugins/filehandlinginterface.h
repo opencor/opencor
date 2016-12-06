@@ -33,6 +33,10 @@ namespace OpenCOR {
 
 //==============================================================================
 
+extern "C" Q_DECL_EXPORT int fileHandlingInterfaceVersion();
+
+//==============================================================================
+
 class FileHandlingInterface
 {
 public:

@@ -6,6 +6,8 @@ ADD_PLUGIN(SampleWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
+        ../../windowinterface.cpp
 
         src/samplewindowplugin.cpp
         src/samplewindowwindow.cpp

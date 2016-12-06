@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Internationalisatio interface
+// Internationalisation interface
 //==============================================================================
 
 #ifdef INTERFACE_DEFINITION
@@ -26,8 +26,8 @@ limitations under the License.
     #define PURE
 #endif
 
-    // Note: changes to this interface must result in pluginVersion() being
-    //       updated (see [OpenCOR]/src/plugins/pluginInfo.cpp)...
+    // Note: make sure to update i18nInterfaceVersion() whenever you update this
+    //       interface...
 
     virtual void retranslateUi() PURE;
 

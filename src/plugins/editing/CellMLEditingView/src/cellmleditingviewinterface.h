@@ -32,6 +32,10 @@ namespace OpenCOR {
 
 //==============================================================================
 
+extern "C" Q_DECL_EXPORT int cellmlEditingViewInterfaceVersion();
+
+//==============================================================================
+
 class CellmlEditingViewInterface
 {
 public:
