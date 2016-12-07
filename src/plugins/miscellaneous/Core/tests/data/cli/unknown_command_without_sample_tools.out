@@ -1,0 +1,15 @@
+Commands supported by CellMLTextView:
+ * Display the commands supported by CellMLTextView:
+      help
+ * Export a CellML Text <file> to CellML:
+      export <file>
+ * Import a CellML <file> to the CellML Text format:
+      import <file>
+
+Commands supported by CellMLTools:
+ * Display the commands supported by CellMLTools:
+      help
+ * Export <file> to a <predefined_format> or a <user_defined_format_file>:
+      export <file> <predefined_format>|<user_defined_format_file>
+   <predefined_format> can take one of the following values:
+      cellml_1_0: to export a CellML 1.1 file to CellML 1.0

@@ -1,0 +1,16 @@
+The following plugins are available:
+ - CellMLAPI: the plugin is loaded and fully functional.
+ - CellMLEditingView: the plugin is loaded and fully functional.
+ - CellMLSupport: the plugin is loaded and fully functional.
+ - CellMLTextView: the plugin is loaded and fully functional.
+ - CellMLTools: the plugin is loaded and fully functional.
+ - Compiler: the plugin is loaded and fully functional.
+ - Core: the plugin is loaded and fully functional.
+ - EditingView: the plugin is loaded and fully functional.
+ - EditorWidget: the plugin is loaded and fully functional.
+ - LLVM: the plugin is loaded and fully functional.
+ - MathMLViewerWidget: the plugin is loaded and fully functional.
+ - QScintilla: the plugin is loaded and fully functional.
+ - QScintillaSupport: the plugin is loaded and fully functional.
+ - Qwt: the plugin is loaded and fully functional.
+ - StandardSupport: the plugin is loaded and fully functional.
