@@ -88,7 +88,6 @@ private:
 
     QString mCurrentWorkspaceUrl;
     QSet<QString> mExpandedItems;
-    QString mSelectedItem;
 
     bool mInitialized;
 
@@ -106,9 +105,6 @@ private:
 
     void displayWorkspaces();
     void expandHtmlTree(const QString &pId);
-
-    void scrollToSelected();
-    void setSelected(QWebElement pNewSelectedRow);
 
     void setCurrentWorkspaceUrl(const QString &pUrl);
 

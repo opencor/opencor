@@ -88,7 +88,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mUrlFolderNameMines(QMap<QString, QPair<QString, bool>>()),
     mCurrentWorkspaceUrl(QString()),
     mExpandedItems(QSet<QString>()),
-    mSelectedItem(QString()),
     mInitialized(false),
     mErrorMessage(QString()),
     mAuthenticated(true),
@@ -181,8 +180,8 @@ static const auto TrTag = QStringLiteral("TR");
 //==============================================================================
 
 static const auto StatusClass  = QStringLiteral("status");
-static const auto IStatusClass = QStringLiteral("istatus");
-static const auto WStatusClass = QStringLiteral("wstatus");
+static const auto IStatusClass = QStringLiteral("iStatus");
+static const auto WStatusClass = QStringLiteral("wStatus");
 
 //==============================================================================
 
@@ -403,9 +402,6 @@ void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
 
         QString rowLink = trElement.attribute("id");
 
-        if (!trElement.hasClass("workspace"))
-            setSelected(trElement);
-
         QWebElement aElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
 
         while (   !aElement.isNull()
@@ -497,7 +493,6 @@ QSize PmrWorkspacesWindowWidget::sizeHint() const
 static const auto SettingsWorkspaces       = QStringLiteral("Workspaces");
 static const auto SettingsFolders          = QStringLiteral("Folders");
 static const auto SettingsExpandedItems    = QStringLiteral("ExpandedItems");
-static const auto SettingsSelectedItem     = QStringLiteral("SelectedItem");
 static const auto SettingsCurrentWorkspace = QStringLiteral("CurrentWorkspace");
 
 //==============================================================================
@@ -529,10 +524,6 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
         // Retrieve the names of expanded workspaces and folders
 
         mExpandedItems = pSettings->value(SettingsExpandedItems).toStringList().toSet();
-
-        // Retrieve the currently selected item, if any
-
-        mSelectedItem = pSettings->value(SettingsSelectedItem).toString();
     pSettings->endGroup();
 }
 
@@ -550,10 +541,6 @@ void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
         // Keep track of the names of expanded workspaces and folders
 
         pSettings->setValue(SettingsExpandedItems, QVariant(mExpandedItems.toList()));
-
-        // Keep track of the currently selected item
-
-        pSettings->setValue(SettingsSelectedItem, mSelectedItem);
 
         // Keep track of the current workspace url
 
@@ -695,14 +682,13 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
                                 "</tr>\n";
 
     const QString iconHtml = QString("<img class=\"%1\">").arg(pIcon);
-    const QString rowClass = pClass + ((pId == mSelectedItem || pId == mCurrentWorkspaceUrl)?" selected":"");
 
     // Use an anchor element to allow us to set the scroll position at a row
 
     ++mRowAnchor;
     mItemAnchors.insert(pId, mRowAnchor);
 
-    return html.arg(rowClass, pId, iconHtml, pName, pStatus, actionHtml(pActionList)).arg(mRowAnchor);
+    return html.arg(pClass, pId, iconHtml, pName, pStatus, actionHtml(pActionList)).arg(mRowAnchor);
 }
 
 //==============================================================================
@@ -710,7 +696,7 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
 QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const QString &pPath,
                                                             const PMRSupport::CharPair &pGitStatus)
 {
-    static const QString statusHtml = "<span class=\"istatus\">%1</span><span class=\"wstatus\">%2</span>";
+    static const QString statusHtml = "<span class=\"iStatus\">%1</span><span class=\"wStatus\">%2</span>";
 
     StringPairs actionList = StringPairs();
 
@@ -742,19 +728,14 @@ QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::Pm
 
 QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
-    static const QString html = "<tr class=\"file%1\" id=\"%2\">\n"
-                                "    <td colspan=\"2\" class=\"name\"><a id=\"a_%6\" href=\"%2\">%3</a></td>\n"
-                                "    <td class=\"status\">%4</td>\n"
-                                "    <td class=\"action\">%5</td>\n"
+    static const QString html = "<tr class=\"file\" id=\"%1\">\n"
+                                "    <td colspan=\"2\" class=\"name\"><a id=\"a_%5\" href=\"%1\">%2</a></td>\n"
+                                "    <td class=\"status\">%3</td>\n"
+                                "    <td class=\"action\">%4</td>\n"
                                 "</tr>\n";
     QString path = pFileNode->fullName();
 
     ++mRow;
-
-    QString rowClass = (mRow % 2)?QString():" even";
-
-    if (path == mSelectedItem)
-        rowClass += " selected";
 
     QStringList statusActionHtml = fileStatusActionHtml(pFileNode);
 
@@ -764,7 +745,8 @@ QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNo
 
     mItemAnchors.insert(path, mRowAnchor);
 
-    return html.arg(rowClass, path, pFileNode->shortName(), statusActionHtml[0], statusActionHtml[1]).arg(mRowAnchor);
+    return html.arg(path, pFileNode->shortName(), statusActionHtml[0], statusActionHtml[1])
+               .arg(mRowAnchor);
 }
 
 //==============================================================================
@@ -895,7 +877,6 @@ void PmrWorkspacesWindowWidget::setCurrentWorkspaceUrl(const QString &pUrl)
             QWebElement workspaceContents = page()->mainFrame()->documentElement().findFirst(QString("tr.workspace[id=\"%1\"] + tr").arg(mCurrentWorkspaceUrl));
 
             if (!workspaceContents.isNull()) {
-                workspaceContents.previousSibling().removeClass("selected");
                 workspaceContents.addClass("hidden");
                 mExpandedItems.remove(mCurrentWorkspaceUrl);
             }
@@ -958,36 +939,6 @@ void PmrWorkspacesWindowWidget::focusWindowChanged()
 void PmrWorkspacesWindowWidget::refreshCurrentWorkspace()
 {
     refreshWorkspace(mCurrentWorkspaceUrl);
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::setSelected(QWebElement pNewSelectedRow)
-{
-    QString id = pNewSelectedRow.attribute("id");
-
-    if (!id.isEmpty() && id != mSelectedItem) {
-
-        QWebElement trElement = page()->mainFrame()->documentElement().findFirst(
-                                    QString("tr.selected[id=\"%1\"]").arg(mSelectedItem));
-        if (!trElement.isNull()) trElement.removeClass("selected");
-
-        pNewSelectedRow.addClass("selected");
-        mSelectedItem = id;
-    }
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::scrollToSelected()
-{
-    // Position the frame so that the selected line is shown
-
-    if (!mSelectedItem.isEmpty() && mItemAnchors.contains(mSelectedItem)) {
-        // Position two rows before the selected item to show some context.
-
-        page()->mainFrame()->scrollToAnchor(QString("a_%1").arg(mItemAnchors.value(mSelectedItem) - 2));
-    }
 }
 
 //==============================================================================
@@ -1135,10 +1086,6 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
     // Display the list of workspaces
 
     displayWorkspaces();
-
-    // And scroll to the current selected item
-
-    scrollToSelected();
 
     mInitialized = true;
 }
@@ -1329,11 +1276,10 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
         setCurrentWorkspaceUrl(url);
 
-        // Redisplay with workspace expanded and selected
+        // Redisplay with workspace expanded
 
         pWorkspace->open();
         displayWorkspaces();
-        scrollToSelected();
     }
 }
 

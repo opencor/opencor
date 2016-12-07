@@ -40,6 +40,7 @@
 
             img.button {
                 position: relative;
+                top: 1px;
                 margin-left: 2px;
                 border: 1px solid rgb(213, 213, 213);
                 border-radius: 5px;
@@ -48,12 +49,35 @@
                 cursor: default;
             }
 
+            img.button:hover {
+                border: 1px solid rgb(221, 221, 221);
+                background: linear-gradient(rgb(238, 238, 238), rgb(221, 221, 221));
+            }
+
+            img.button:active {
+                border: 1px solid rgb(181, 181, 181);
+                background: rgb(220, 220, 220);
+                box-shadow: rgba(0, 0, 0, 0.14902) 0px 2px 4px 0px inset;
+            }
+
             img.clone {
                 content: url("%1");
             }
 
             img.commit {
                 content: url("%2");
+            }
+
+            img.downButton {
+                position: relative;
+                top: 1px;
+                margin-left: 4px;
+                border: 1px solid rgb(181, 181, 181);
+                border-radius: 5px;
+                padding: 2px;
+                background: rgb(220, 220, 220);
+                box-shadow: rgba(0, 0, 0, 0.14902) 0px 2px 4px 0px inset;
+                cursor: default;
             }
 
             img.folder {
@@ -70,20 +94,10 @@
 
             img.stage {
                 content: url("%6");
-                border: 0;
-                border-radius: 0;
-                padding: 0;
-                margin: 0;
-                margin-right: 2px;
             }
 
             img.unstage {
                 content: url("%7");
-                border: 0;
-                border-radius: 0;
-                padding: 0;
-                margin: 0;
-                margin-right: 2px;
             }
 
             img.synchronize {
@@ -99,26 +113,23 @@
             }
 
             p {
-                margin: 0px;
+                margin: 0px 0px 2px 0px;
             }
 
-            span.istatus {
-              color: rgb(136, 0, 0);
-              display: inline-block;
-              width: 1em;
+            span.iStatus {
+                color: rgb(136, 0, 0);
+                display: inline-block;
+                width: 1em;
             }
 
-            span.wstatus {
-              color: rgb(136, 0, 0);
-              display: inline-block;
-              width: 1em;
+            span.wStatus {
+                color: rgb(136, 0, 0);
+                display: inline-block;
+                width: 1em;
             }
 
             table {
                 border-spacing: 0px;
-                border-collapse: collapse;
-                width: 100%;
-                table-layout: fixed;
             }
 
             table,
@@ -205,21 +216,8 @@
                 overflow-wrap: break-word;
             }
 
-            tr.even {
-                background: rgb(240, 240, 250)
-            }
-
             tr.folder > td.icon {
                 padding-top: 0px;
-            }
-
-            tr.selected {
-                background: rgb(85, 158, 249);
-                color: black;
-            }
-
-            tr.selected a {
-              color: white;
             }
 
             tr.workspace {
