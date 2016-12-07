@@ -20,11 +20,9 @@ limitations under the License.
 // PMR Workspaces window widget
 //==============================================================================
 
+#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "pmrwebservice.h"
-#include "pmrworkspace.h"
-#include "pmrworkspacefilenode.h"
-#include "pmrworkspacemanager.h"
 #include "pmrworkspaceswindowcommitdialog.h"
 #include "pmrworkspaceswindowwidget.h"
 
@@ -33,21 +31,12 @@ limitations under the License.
 #include <QApplication>
 #include <QContextMenuEvent>
 #include <QDesktopServices>
-#include <QDialog>
 #include <QDir>
-#include <QFile>
-#include <QFileInfo>
-#include <QHeaderView>
-#include <QHelpEvent>
 #include <QMainWindow>
 #include <QMenu>
-#include <QMutableMapIterator>
-#include <QProcess>
 #include <QSettings>
-#include <QStandardPaths>
 #include <QTimer>
 #include <QToolTip>
-#include <QUrl>
 #include <QWebElement>
 #include <QWebFrame>
 

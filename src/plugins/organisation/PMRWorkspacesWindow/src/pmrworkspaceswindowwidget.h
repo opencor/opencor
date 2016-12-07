@@ -24,20 +24,8 @@ limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
-#include "corecliutils.h"
 #include "pmrworkspacemanager.h"
 #include "webviewerwidget.h"
-
-//==============================================================================
-
-#include <QMap>
-#include <QFileInfo>
-
-//==============================================================================
-
-class QContextMenuEvent;
-class QTimer;
 
 //==============================================================================
 
