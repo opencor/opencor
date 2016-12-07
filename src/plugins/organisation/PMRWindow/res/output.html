@@ -34,6 +34,58 @@
                 background: rgba(255, 255, 255, 0);
             }
 
+            img.button {
+                position: relative;
+                top: 1px;
+                margin-left: 4px;
+                border: 1px solid rgb(213, 213, 213);
+                border-radius: 5px;
+                padding: 2px;
+                background: linear-gradient(rgb(252, 252, 252), rgb(238, 238, 238));
+                cursor: default;
+            }
+
+            img.button:hover {
+                border: 1px solid rgb(221, 221, 221);
+                background: linear-gradient(rgb(238, 238, 238), rgb(221, 221, 221));
+            }
+
+            img.button:active {
+                border: 1px solid rgb(181, 181, 181);
+                background: rgb(220, 220, 220);
+                box-shadow: rgba(0, 0, 0, 0.14902) 0px 2px 4px 0px inset;
+            }
+
+            img.clone {
+                content: url("%1");
+            }
+
+            img.downButton {
+                position: relative;
+                top: 1px;
+                margin-left: 4px;
+                border: 1px solid rgb(181, 181, 181);
+                border-radius: 5px;
+                padding: 2px;
+                background: rgb(220, 220, 220);
+                box-shadow: rgba(0, 0, 0, 0.14902) 0px 2px 4px 0px inset;
+                cursor: default;
+            }
+
+            img.open {
+                content: url("%2");
+            }
+
+            li.exposure {
+                list-style-type: square;
+                margin-left: -1em;
+            }
+
+            li.exposureFile {
+                list-style-type: disc;
+                margin-left: 4em;
+            }
+
             p {
                 margin: 0px;
             }
@@ -65,58 +117,6 @@
 
             ul {
                 margin: 0px;
-            }
-
-            li.exposure {
-                list-style-type: square;
-                margin-left: -1em;
-            }
-
-            li.exposureFile {
-                list-style-type: disc;
-                margin-left: 4em;
-            }
-
-            img.button {
-                position: relative;
-                top: 1px;
-                margin-left: 4px;
-                border: 1px solid rgb(213, 213, 213);
-                border-radius: 5px;
-                padding: 2px;
-                background: linear-gradient(rgb(252, 252, 252), rgb(238, 238, 238));
-                cursor: default;
-            }
-
-            img.button:hover {
-                border: 1px solid rgb(221, 221, 221);
-                background: linear-gradient(rgb(238, 238, 238), rgb(221, 221, 221));
-            }
-
-            img.button:active {
-                border: 1px solid rgb(181, 181, 181);
-                background: rgb(220, 220, 220);
-                box-shadow: rgba(0, 0, 0, 0.14902) 0px 2px 4px 0px inset;
-            }
-
-            img.downButton {
-                position: relative;
-                top: 1px;
-                margin-left: 4px;
-                border: 1px solid rgb(181, 181, 181);
-                border-radius: 5px;
-                padding: 2px;
-                background: rgb(220, 220, 220);
-                box-shadow: rgba(0, 0, 0, 0.14902) 0px 2px 4px 0px inset;
-                cursor: default;
-            }
-
-            img.clone {
-                content: url("%1");
-            }
-
-            img.open {
-                content: url("%2");
             }
         </style>
     </head>

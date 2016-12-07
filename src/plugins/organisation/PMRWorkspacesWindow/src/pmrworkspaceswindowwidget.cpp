@@ -688,10 +688,10 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
                                                  const StringPairs &pActionList)
 {
     static const QString html = "<tr class=\"%1\" id=\"%2\">\n"
-                                "  <td class=\"icon\"><a id=\"a_%7\">%3</a></td>\n"
-                                "  <td class=\"name\">%4</td>\n"
-                                "  <td class=\"status\">%5</td>\n"
-                                "  <td class=\"action\">%6</td>\n"
+                                "    <td class=\"icon\"><a id=\"a_%7\">%3</a></td>\n"
+                                "    <td class=\"name\">%4</td>\n"
+                                "    <td class=\"status\">%5</td>\n"
+                                "    <td class=\"action\">%6</td>\n"
                                 "</tr>\n";
 
     const QString iconHtml = QString("<img class=\"%1\">").arg(pIcon);
@@ -743,9 +743,9 @@ QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::Pm
 QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     static const QString html = "<tr class=\"file%1\" id=\"%2\">\n"
-                                "  <td colspan=\"2\" class=\"name\"><a id=\"a_%6\" href=\"%2\">%3</a></td>\n"
-                                "  <td class=\"status\">%4</td>\n"
-                                "  <td class=\"action\">%5</td>\n"
+                                "    <td colspan=\"2\" class=\"name\"><a id=\"a_%6\" href=\"%2\">%3</a></td>\n"
+                                "    <td class=\"status\">%4</td>\n"
+                                "    <td class=\"action\">%5</td>\n"
                                 "</tr>\n";
     QString path = pFileNode->fullName();
 
@@ -782,18 +782,18 @@ QString PmrWorkspacesWindowWidget::contentsHtml(const PMRSupport::PmrWorkspaceFi
                                                 const bool &pHidden)
 {
     static const QString html = "<tr class=\"contents%1\">\n"
-                                "  <td></td>\n"
-                                "  <td colspan=\"3\">\n"
-                                "    <table>\n"
-                                "      <tr class=\"spacing\">\n"
-                                "        <td class=\"icon\"></td>\n"
-                                "        <td class=\"name\"></td>\n"
-                                "        <td class=\"status\"></td>\n"
-                                "        <td class=\"action\"></td>\n"
-                                "      </tr>\n"
-                                "      %2\n"
-                                "    </table>\n"
-                                "  </td>\n"
+                                "    <td></td>\n"
+                                "    <td colspan=\"3\">\n"
+                                "        <table>\n"
+                                "            <tr class=\"spacing\">\n"
+                                "                <td class=\"icon\"></td>\n"
+                                "                <td class=\"name\"></td>\n"
+                                "                <td class=\"status\"></td>\n"
+                                "                <td class=\"action\"></td>\n"
+                                "            </tr>\n"
+                                "            %2\n"
+                                "        </table>\n"
+                                "    </td>\n"
                                 "</tr>\n";
 
     if (pFileNode) {
