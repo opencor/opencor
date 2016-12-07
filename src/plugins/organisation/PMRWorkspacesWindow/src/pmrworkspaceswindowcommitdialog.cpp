@@ -20,13 +20,7 @@ limitations under the License.
 // PMR Workspaces window commit dialog
 //==============================================================================
 
-#include "coreguiutils.h"
-#include "pmrworkspace.h"
 #include "pmrworkspaceswindowcommitdialog.h"
-
-//==============================================================================
-
-#include <QString>
 
 //==============================================================================
 
