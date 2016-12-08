@@ -39,8 +39,6 @@ QMainWindow * mainWindow()
         firstTime = false;
     }
 
-    Q_ASSERT(res);
-
     return res;
 }
 
