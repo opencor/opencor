@@ -20,8 +20,14 @@ limitations under the License.
 // Python plugin
 //==============================================================================
 
-#include "pythonplugin.h"
+// This must be the first include file
+
 #include "Python.h"
+
+//==============================================================================
+
+#include "coreguiutils.h"
+#include "pythonplugin.h"
 
 //==============================================================================
 
@@ -31,6 +37,7 @@ limitations under the License.
 //==============================================================================
 
 #include <clocale>
+#include <iostream>
 #include <unistd.h>
 
 #ifdef __FreeBSD__
@@ -71,11 +78,14 @@ int PythonPlugin::executeCommand(const QString &pCommand,
         runHelpCommand();
 
         return 0;
-    } else if (!pCommand.compare("shell")) {
+    } else if (pCommand.isEmpty() || !pCommand.compare("shell")) {
         // Run the Python interpreter
 
         return runPythonShell(pArguments);
-// TODO: pip install....
+    } else if (!pCommand.compare("pip")) {
+        // Run the pip package installer
+
+        return runPipInstaller(pArguments);
     } else {
         // Not a CLI command that we support
 
@@ -89,7 +99,6 @@ int PythonPlugin::executeCommand(const QString &pCommand,
 // Plugin interface
 //==============================================================================
 
-void PythonPlugin::initializePlugin()
 bool PythonPlugin::definesPluginInterfaces()
 {
     // We don't handle this interface...
@@ -112,6 +121,21 @@ bool PythonPlugin::pluginInterfacesOk(const QString &pFileName,
 
 //==============================================================================
 
+void PythonPlugin::initializePlugin()
+{
+    // We must set PYTHONHOME to where Python is 'installed' **before** calling
+    // any Python library code. Calling `Py_SetPythonHome()` doesn't work as
+    // the `Py_Initialize()` code first checks the environment and, if PYTHONHOME
+    // isn't set, uses the installation path compiled in at Python build time...
+
+    auto applicationDirectories = QCoreApplication::applicationDirPath().split("/");
+    applicationDirectories.removeLast();
+
+    auto pythonHome = QString();
+#if __APPLE__
+    pythonHome = (applicationDirectories << "Frameworks" << "Python").join("/");
+#endif
+    setenv("PYTHONHOME", pythonHome.toUtf8().data(), true);
 }
 
 //==============================================================================
@@ -164,34 +188,92 @@ void PythonPlugin::handleUrl(const QUrl &pUrl)
 void PythonPlugin::runHelpCommand()
 {
     // Output the commands we support
-/**
-    stdout << "Commands supported by the Python plugin:" << std::endl;
+
+    std::cout << "Commands supported by the Python plugin:" << std::endl;
     std::cout << " * Display the commands supported by the Python plugin:" << std::endl;
     std::cout << "      help" << std::endl;
     std::cout << " * Run a Python interpreter:" << std::endl;
     std::cout << "      shell ..." << std::endl;
-    std::cout << " * Install ...:" << std::endl;
+    std::cout << " * Install Python packages from PyPi:" << std::endl;
     std::cout << "      pip ..." << std::endl;
-**/
+}
+
+//==============================================================================
+
+// Helper macro
+#define SET_AND_CHECK_PY_OBJECT(obj, value) \
+    obj = (value);                          \
+    if (obj == nullptr) {                   \
+        PyErr_PrintEx(0);                   \
+        break;                              \
+    }
+
+int PythonPlugin::runPipInstaller(const QStringList &pArguments)
+{
+    initializePlugin();
+
+    // In case of failure
+
+    int result = -1;
+
+    // Python objects we create and use
+
+    PyObject
+        *argList = nullptr,
+        *pipModule = nullptr,
+        *pipMain = nullptr,
+        *argTuple = nullptr,
+        *pipMainResult = nullptr;
+
+    // Initialise the Python interpreter
+
+    Py_Initialize();
+
+    do {
+        const int argc = pArguments.size();
+
+        // Create a Python list for the arguments
+
+        SET_AND_CHECK_PY_OBJECT(argList, PyList_New(argc));
+
+        // Copy arguments into the list
+
+        for (int i = 0; i < argc; i++) {
+            PyList_SET_ITEM(argList, i, PyUnicode_FromString(pArguments[i].toUtf8().constData()));
+        }
+
+        // import pip
+        // pip.main(argList)
+
+        SET_AND_CHECK_PY_OBJECT(argTuple, PyTuple_Pack(1, argList));
+        SET_AND_CHECK_PY_OBJECT(pipModule, PyImport_ImportModule("pip"))
+        SET_AND_CHECK_PY_OBJECT(pipMain, PyObject_GetAttrString(pipModule, "main"))
+        SET_AND_CHECK_PY_OBJECT(pipMainResult, PyObject_CallObject(pipMain, argTuple));
+
+        // All was well
+
+        result = 0;
+    } while (0);
+
+    // Decrement the reference count of our Python objects
+
+    Py_XDECREF(pipMain);
+    Py_XDECREF(pipModule);
+    Py_XDECREF(argTuple);
+    Py_XDECREF(argList);
+
+    // Finished with the interpreter
+
+    Py_Finalize();
+
+    return result;
 }
 
 //==============================================================================
 
 int PythonPlugin::runPythonShell(const QStringList &pArguments)
 {
-    // We must set PYTHONHOME to where Python is 'installed' **before** calling
-    // any Python library code. Calling `Py_SetPythonHome()` doesn't work as
-    // the `Py_Initialise()` code first checks the environment and, if PYTHONHOME
-    // isn't set, uses the installation path compiled in at Python build time...
-
-    auto applicationDirectories = QCoreApplication::applicationDirPath().split("/");
-    applicationDirectories.removeLast();
-
-    auto pythonHome = QString();
-#if __APPLE__
-    pythonHome = (applicationDirectories << "Frameworks" << "Python").join("/");
-#endif
-    setenv("PYTHONHOME", pythonHome.toUtf8().data(), true);
+    initializePlugin();
 
     // The following has been adapted from `Programs/python.c` in the Python sources.
 
@@ -241,6 +323,8 @@ int PythonPlugin::runPythonShell(const QStringList &pArguments)
 
     setlocale(LC_ALL, oldloc);
     PyMem_RawFree(oldloc);
+
+    // N.B. PyMain() calls Py_Initialize() and Py_Finalize()
 
     res = Py_Main(argc, argv_copy);
 

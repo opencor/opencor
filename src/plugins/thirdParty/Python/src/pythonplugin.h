@@ -55,6 +55,7 @@ public:
 
 private:
     void runHelpCommand();
+    int runPipInstaller(const QStringList &pArguments);
     int runPythonShell(const QStringList &pArguments);
 };
 
