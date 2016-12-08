@@ -363,6 +363,12 @@ bool CorePlugin::pluginInterfacesOk(const QString &pFileName,
 
 void CorePlugin::initializePlugin()
 {
+    // What we are doing below requires to be in GUI mode, so leave if we are
+    // not in that mode
+
+    if (!mainWindow())
+        return;
+
     // Create our central widget
 
     mCentralWidget = new CentralWidget(mainWindow());
@@ -545,6 +551,12 @@ void CorePlugin::finalizePlugin()
 
 void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
+    // What we are doing below requires to be in GUI mode, so leave if we are
+    // not in that mode
+
+    if (!mainWindow())
+        return;
+
     // Retrieve the file type interfaces supported by our various plugins and
     // make our central widget aware of them
 
@@ -586,6 +598,12 @@ static const auto SettingsRecentFiles = QStringLiteral("RecentFiles");
 
 void CorePlugin::loadSettings(QSettings *pSettings)
 {
+    // What we are doing below requires to be in GUI mode, so leave if we are
+    // not in that mode
+
+    if (!Core::mainWindow())
+        return;
+
     // Retrieve the recent files
     // Note: it's important to retrieve the recent files before retrieving our
     //       central widget settings since mRecentFileNamesOrUrls gets updated
@@ -608,6 +626,12 @@ void CorePlugin::loadSettings(QSettings *pSettings)
 
 void CorePlugin::saveSettings(QSettings *pSettings) const
 {
+    // What we are doing below requires to be in GUI mode, so leave if we are
+    // not in that mode
+
+    if (!Core::mainWindow())
+        return;
+
     // Keep track of the recent files
 
     pSettings->setValue(SettingsRecentFiles, mRecentFileNamesOrUrls);

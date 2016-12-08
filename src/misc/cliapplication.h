@@ -56,6 +56,7 @@ private:
 
     PluginManager *mPluginManager;
 
+    Plugins mLoadedPluginPlugins;
     Plugins mLoadedCliPlugins;
 
     void loadPlugins();
