@@ -61,7 +61,6 @@ PLUGININFO_FUNC CorePluginInfo()
 //==============================================================================
 
 CorePlugin::CorePlugin() :
-    mFileTypeInterfaces(FileTypeInterfaces()),
     mRecentFileNamesOrUrls(QStringList())
 {
 }
@@ -364,37 +363,43 @@ bool CorePlugin::pluginInterfacesOk(const QString &pFileName,
 
 void CorePlugin::initializePlugin()
 {
+    // What we are doing below requires to be in GUI mode, so leave if we are
+    // not in that mode
+
+    if (!mainWindow())
+        return;
+
     // Create our central widget
 
-    mCentralWidget = new CentralWidget(Core::mainWindow());
+    mCentralWidget = new CentralWidget(mainWindow());
 
     mCentralWidget->setObjectName("CentralWidget");
 
     // Create our different File actions
 
-    mFileNewFileAction = Core::newAction(QIcon(":/oxygen/actions/document-new.png"),
-                                         QKeySequence::New, Core::mainWindow());
+    mFileNewFileAction = newAction(QIcon(":/oxygen/actions/document-new.png"),
+                                   QKeySequence::New, mainWindow());
 
     mFileOpenAction = newAction(QIcon(":/oxygen/actions/document-open.png"),
-                                QKeySequence::Open, Core::mainWindow());
+                                QKeySequence::Open, mainWindow());
     mFileOpenRemoteAction = newAction(QIcon(":/oxygen/actions/document-open-remote.png"),
                                       QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_O),
-                                      Core::mainWindow());
+                                      mainWindow());
 
-    mFileReloadAction = Core::newAction(Core::mainWindow());
+    mFileReloadAction = newAction(mainWindow());
 
     mFileDuplicateAction = newAction(QKeySequence(Qt::CTRL|Qt::Key_D),
-                                     Core::mainWindow());
+                                     mainWindow());
 
     mFileLockedAction = newAction(true, QKeySequence(Qt::CTRL|Qt::Key_L),
-                                  Core::mainWindow());
+                                  mainWindow());
 
     mFileSaveAction = newAction(QIcon(":/oxygen/actions/document-save.png"),
-                                QKeySequence::Save, Core::mainWindow());
+                                QKeySequence::Save, mainWindow());
     mFileSaveAsAction = newAction(QIcon(":/oxygen/actions/document-save-as.png"),
-                                  QKeySequence::SaveAs, Core::mainWindow());
+                                  QKeySequence::SaveAs, mainWindow());
     mFileSaveAllAction = newAction(QIcon(":/oxygen/actions/document-save-all.png"),
-                                   Core::mainWindow());
+                                   mainWindow());
 
     // Note: for mFilePreviousAction and mFileNextAction, we would normally use
     //       QKeySequence::PreviousChild and QKeySequence::NextChild,
@@ -418,7 +423,7 @@ void CorePlugin::initializePlugin()
 #else
     #error Unsupported platform
 #endif
-                                    Core::mainWindow());
+                                    mainWindow());
     mFileNextAction = newAction(QIcon(":/oxygen/actions/go-next.png"),
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
                                 QKeySequence(Qt::CTRL|Qt::Key_Tab),
@@ -427,7 +432,7 @@ void CorePlugin::initializePlugin()
 #else
     #error Unsupported platform
 #endif
-                                    Core::mainWindow());
+                                    mainWindow());
 
     mFileCloseAction = newAction(QIcon(":/oxygen/actions/document-close.png"),
 #if defined(Q_OS_WIN)
@@ -437,25 +442,25 @@ void CorePlugin::initializePlugin()
 #else
     #error Unsupported platform
 #endif
-                                 Core::mainWindow());
-    mFileCloseAllAction = Core::newAction(Core::mainWindow());
+                                 mainWindow());
+    mFileCloseAllAction = newAction(mainWindow());
 
     // Create the separator before which we will insert our Reopen sub-menu
 
-    mOpenReloadSeparator = Core::newAction(Core::mainWindow());
+    mOpenReloadSeparator = newAction(mainWindow());
 
     mOpenReloadSeparator->setSeparator(true);
 
     // Create our Reopen sub-menu
 
     mFileReopenSubMenu = newMenu(QIcon(":/oxygen/actions/document-open-recent.png"),
-                                 Core::mainWindow());
+                                 mainWindow());
 
     mFileReopenMostRecentFileAction = newAction(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_T),
-                                                Core::mainWindow());
-    mFileReopenSubMenuSeparator1 = Core::newAction(Core::mainWindow());
-    mFileReopenSubMenuSeparator2 = Core::newAction(Core::mainWindow());
-    mFileClearReopenSubMenuAction = Core::newAction(Core::mainWindow());
+                                                mainWindow());
+    mFileReopenSubMenuSeparator1 = newAction(mainWindow());
+    mFileReopenSubMenuSeparator2 = newAction(mainWindow());
+    mFileClearReopenSubMenuAction = newAction(mainWindow());
 
     mFileReopenSubMenuSeparator1->setSeparator(true);
     mFileReopenSubMenuSeparator2->setSeparator(true);
@@ -546,8 +551,16 @@ void CorePlugin::finalizePlugin()
 
 void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
+    // What we are doing below requires to be in GUI mode, so leave if we are
+    // not in that mode
+
+    if (!mainWindow())
+        return;
+
     // Retrieve the file type interfaces supported by our various plugins and
     // make our central widget aware of them
+
+    FileTypeInterfaces fileTypeInterfaces = FileTypeInterfaces();
 
     foreach (Plugin *plugin, pLoadedPlugins) {
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
@@ -556,11 +569,11 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
             // The plugin implements our file type interface, so add it to our
             // list
 
-            mFileTypeInterfaces << fileTypeInterface;
+            fileTypeInterfaces << fileTypeInterface;
         }
     }
 
-    mCentralWidget->setFileTypeInterfaces(mFileTypeInterfaces);
+    mCentralWidget->setFileTypeInterfaces(fileTypeInterfaces);
 
     // Check, based on the loaded plugins, which views, if any, our central
     // widget should support
@@ -585,6 +598,12 @@ static const auto SettingsRecentFiles = QStringLiteral("RecentFiles");
 
 void CorePlugin::loadSettings(QSettings *pSettings)
 {
+    // What we are doing below requires to be in GUI mode, so leave if we are
+    // not in that mode
+
+    if (!Core::mainWindow())
+        return;
+
     // Retrieve the recent files
     // Note: it's important to retrieve the recent files before retrieving our
     //       central widget settings since mRecentFileNamesOrUrls gets updated
@@ -607,6 +626,12 @@ void CorePlugin::loadSettings(QSettings *pSettings)
 
 void CorePlugin::saveSettings(QSettings *pSettings) const
 {
+    // What we are doing below requires to be in GUI mode, so leave if we are
+    // not in that mode
+
+    if (!Core::mainWindow())
+        return;
+
     // Keep track of the recent files
 
     pSettings->setValue(SettingsRecentFiles, mRecentFileNamesOrUrls);
@@ -645,16 +670,16 @@ void CorePlugin::newFile()
 {
     // Ask our file manager to create a new file
 
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+    FileManager *fileManagerInstance = FileManager::instance();
 #ifdef QT_DEBUG
-    Core::FileManager::Status createStatus =
+    FileManager::Status createStatus =
 #endif
     fileManagerInstance->create();
 
 #ifdef QT_DEBUG
     // Make sure that the file has indeed been created
 
-    if (createStatus != Core::FileManager::Created)
+    if (createStatus != FileManager::Created)
         qFatal("FATAL ERROR | %s:%d: the new file was not created.", __FILE__, __LINE__);
 #endif
 }
@@ -683,7 +708,7 @@ void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
     // Add the recent files to our Reopen sub-menu
 
     foreach (const QString &recentFile, mRecentFileNamesOrUrls) {
-        QAction *action = Core::newAction(Core::mainWindow());
+        QAction *action = newAction(mainWindow());
 
         action->setEnabled(pEnabled);
         action->setText(recentFile);

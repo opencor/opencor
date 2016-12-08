@@ -188,6 +188,12 @@ bool CellMLToolsPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void CellMLToolsPlugin::initializePlugin()
 {
+    // What we are doing below requires to be in GUI mode, so leave if we are
+    // not in that mode
+
+    if (!Core::mainWindow())
+        return;
+
     // Create our Tools | Export To menu
 
     mCellmlFileExportToMenu = Core::newMenu("CellmlFileExportTo", Core::mainWindow());

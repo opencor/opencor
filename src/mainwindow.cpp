@@ -241,7 +241,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     mGui->actionFullScreen->setShortcut(QKeySequence::FullScreen);
 
-    // Initialise the plugin itself
+    // Initialise the plugins themselves
 
     foreach (Plugin *plugin, mLoadedPluginPlugins)
         qobject_cast<PluginInterface *>(plugin->instance())->initializePlugin();
@@ -304,7 +304,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
 MainWindow::~MainWindow()
 {
-    // Finalise our various plugins
+    // Finalise our plugins
     // Note: we only need to test for our default interface since we want to
     //       call the finalize method and this method is not overriden by any
     //       other interface...

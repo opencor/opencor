@@ -264,6 +264,12 @@ bool CellMLEditingViewPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void CellMLEditingViewPlugin::initializePlugin()
 {
+    // What we are doing below requires to be in GUI mode, so leave if we are
+    // not in that mode
+
+    if (!Core::mainWindow())
+        return;
+
     // Create our different actions
 
     mEditReformatAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_R),
