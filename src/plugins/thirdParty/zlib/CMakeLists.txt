@@ -140,6 +140,10 @@ ELSE()
         )
 ENDIF()
 
+# Allow other external projects to find our zlib
+
+SET(ZLIB_ROOT_DIR ${FULL_INSTALL_DIR} PARENT_SCOPE)
+
 # Add the plugin
 
 SET(ZLIB_PLUGIN zlib PARENT_SCOPE)

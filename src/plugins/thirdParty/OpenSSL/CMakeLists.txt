@@ -193,6 +193,10 @@ ELSE()
         )
 ENDIF()
 
+# Allow other external projects to find our OpenSSL
+
+SET(OPENSSL_ROOT_DIR ${FULL_INSTALL_DIR} PARENT_SCOPE)
+
 # Add the plugin
 
 SET(OPENSSL_PLUGIN OpenSSL PARENT_SCOPE)
