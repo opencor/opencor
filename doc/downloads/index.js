@@ -37,7 +37,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> prevented old plugins from potentially crashing OpenCOR (see issue <a href=\"https://github.com/opencor/opencor/issues/1163\">#1163</a>)." }
+                       { "change": "<strong>General:</strong> simplified the build process on macOS when linking libraries (see issue <a href=\"https://github.com/opencor/opencor/issues/1159\">#1159</a>). Prevented old plugins from potentially crashing OpenCOR (see issue <a href=\"https://github.com/opencor/opencor/issues/1163\">#1163</a>). Converted the README files to reStructuredText (see issue <a href=\"https://github.com/opencor/opencor/issues/1170\">#1170</a>)." },
+                       { "change": "<strong>CLI:</strong> options can now be passed to plugins (see issue <a href=\"https://github.com/opencor/opencor/issues/1166\">#1166</a>). Fixed a misleading help message when the command specifies a missing plugin (see issue <a href=\"https://github.com/opencor/opencor/issues/1168\">#1168</a>). A plugin's initialisation and finalisation code now gets called when run from the CLI (see issue <a href=\"https://github.com/opencor/opencor/issues/1173\">#1173</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,

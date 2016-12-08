@@ -17,64 +17,24 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CLI application
+// Core CLI tests
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "plugin.h"
+#include <QObject>
 
 //==============================================================================
 
-#include <QStringList>
+class CliTests : public QObject
+{
+    Q_OBJECT
 
-//==============================================================================
-
-class QCoreApplication;
-
-//==============================================================================
-
-namespace OpenCOR {
-
-//==============================================================================
-
-class PluginManager;
-
-//==============================================================================
-
-class CliApplication {
-public:
-    explicit CliApplication(int &pArgC, char **pArgV);
-    ~CliApplication();
-
-    bool run(int *pRes);
-
-private:
-    QCoreApplication *mCliApplication;
-
-    PluginManager *mPluginManager;
-
-    Plugins mLoadedPluginPlugins;
-    Plugins mLoadedCliPlugins;
-
-    void loadPlugins();
-
-    QString pluginDescription(Plugin *pPlugin) const;
-
-    void about() const;
-    bool command(const QStringList &pArguments, int *pRes) const;
-    void help() const;
-    void plugins() const;
-    void reset() const;
-    void status() const;
-    void version() const;
+private slots:
+    void cliTests();
 };
-
-//==============================================================================
-
-}   // namespace OpenCOR
 
 //==============================================================================
 // End of file

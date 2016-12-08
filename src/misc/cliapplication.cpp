@@ -23,6 +23,7 @@ limitations under the License.
 #include "cliapplication.h"
 #include "cliinterface.h"
 #include "cliutils.h"
+#include "plugininterface.h"
 #include "pluginmanager.h"
 
 //==============================================================================
@@ -42,6 +43,7 @@ namespace OpenCOR {
 
 CliApplication::CliApplication(int &pArgC, char **pArgV) :
     mPluginManager(0),
+    mLoadedPluginPlugins(Plugins()),
     mLoadedCliPlugins(Plugins())
 {
     // Create our CLI application
@@ -53,6 +55,23 @@ CliApplication::CliApplication(int &pArgC, char **pArgV) :
 
 CliApplication::~CliApplication()
 {
+    // Keep track of the settings of our various plugins
+
+    QSettings settings;
+
+    foreach (Plugin *plugin, mLoadedPluginPlugins) {
+        settings.beginGroup(SettingsPlugins);
+            settings.beginGroup(plugin->name());
+                qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(&settings);
+            settings.endGroup();
+        settings.endGroup();
+    }
+
+    // Finalise our loaded plugins, if any
+
+    foreach (Plugin *plugin, mLoadedPluginPlugins)
+        qobject_cast<PluginInterface *>(plugin->instance())->finalizePlugin();
+
     // Delete some internal objects
 
     delete mCliApplication;
@@ -67,11 +86,36 @@ void CliApplication::loadPlugins()
 
     mPluginManager = new PluginManager(false);
 
-    // Keep track of our loaded CLI plugins
+    // Retrieve some categories of plugins
 
     foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        if (qobject_cast<PluginInterface *>(plugin->instance()))
+            mLoadedPluginPlugins << plugin;
+
         if (qobject_cast<CliInterface *>(plugin->instance()))
             mLoadedCliPlugins << plugin;
+    }
+
+    // Initialise the plugins themselves
+
+    foreach (Plugin *plugin, mLoadedPluginPlugins)
+        qobject_cast<PluginInterface *>(plugin->instance())->initializePlugin();
+
+    // Let our various plugins know that all of them have been initialised
+
+    foreach (Plugin *plugin, mLoadedPluginPlugins)
+        qobject_cast<PluginInterface *>(plugin->instance())->pluginsInitialized(mPluginManager->loadedPlugins());
+
+    // Retrieve the settings of our various plugins
+
+    QSettings settings;
+
+    foreach (Plugin *plugin, mLoadedPluginPlugins) {
+        settings.beginGroup(SettingsPlugins);
+            settings.beginGroup(plugin->name());
+                qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(&settings);
+            settings.endGroup();
+        settings.endGroup();
     }
 }
 
@@ -399,8 +443,7 @@ bool CliApplication::run(int *pRes)
             // All arguments following a command are passed to the command
 
             commandArguments << appArgument;
-        }
-        else if (!appArgument.compare("-a") || !appArgument.compare("--about")) {
+        } else if (!appArgument.compare("-a") || !appArgument.compare("--about")) {
             if (option == NoOption) {
                 option = AboutOption;
             } else {
