@@ -26,6 +26,7 @@ limitations under the License.
 
 #include "organisationwidget.h"
 #include "pmrexposure.h"
+#include "pmrwindowwidget.h"
 
 //==============================================================================
 
@@ -89,19 +90,20 @@ private slots:
     void filterValueChanged(const QString &pText);
 
     void busy(const bool &pBusy);
+    void showProgress(const double &pProgress);
 
-    void showWarning(const QString &pMessage);
+    void repositoryError(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
+    void showError(const QString &pMessage);
     void showInformation(const QString &pMessage);
+    void showWarning(const QString &pMessage);
 
     void retrieveExposuresList(const bool &pVisible);
 
-    void initializeWidget(const PMRSupport::PmrExposures &pExposures,
-                          const QString &pErrorMessage,
-                          const bool &pInternetConnectionAvailable);
+    void gotExposuresList(const PMRSupport::PmrExposureList &pExposureList);
 
-    void showExposureFiles(const QString &pUrl);
+    void requestExposureFiles(const QString &pUrl);
 
-    void cloneWorkspace(const QString &pUrl);
+    void cloneWorkspace(const QString &pExposureUrl);
 };
 
 //==============================================================================

@@ -48,8 +48,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(const PMRSupport::PmrExposures &pExposures,
-                    const QString &pErrorMessage, const QString &pFilter,
+    void initialize(const PMRSupport::PmrExposureList &pExposureList, const QString &pFilter,
                     const bool &pInternetConnectionAvailable);
 
     void filter(const QString &pFilter);
@@ -69,25 +68,32 @@ private:
     bool mInitialized;
 
     QString mTemplate;
-    QString mErrorMessage;
     bool mInternetConnectionAvailable;
 
     int mNumberOfFilteredExposures;
 
     QString mExposureUrl;
 
+    QTimer *mShowExposureFilesTimer;
+    QString mShowExposureFilesUrl;
+
     QString message() const;
+
+    void showExposureFiles(const QString &pUrl, const bool &pShow = true);
+
+    void setShowExposureFilesUrl(const QString &pUrl);
+    void startShowExposureFilesTimer(void);
+    void stopShowExposureFilesTimer(void);
 
 signals:
     void cloneWorkspaceRequested(const QString &pUrl);
-    void showExposureFilesRequested(const QString &pUrl);
+    void requestExposureFiles(const QString &pUrl);
 
     void openExposureFileRequested(const QString &pUrl);
 
 public slots:
     void addExposureFiles(const QString &pUrl,
                           const QStringList &pExposureFiles);
-    void showExposureFiles(const QString &pUrl, const bool &pShow = true);
 
 private slots:
     void copy();
@@ -96,6 +102,8 @@ private slots:
     void linkHovered();
 
     void showCustomContextMenu();
+
+    void clearShowExposureFilesUrl(void);
 };
 
 //==============================================================================

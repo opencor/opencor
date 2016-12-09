@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PmrWorkspacesWindow</class>
+ <widget class="QDockWidget" name="PmrWorkspacesWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>320</width>
+    <height>240</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>My PMR Workspaces</string>
+  </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QVBoxLayout" name="layout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <layout class="QHBoxLayout" name="subLayout">
+      <property name="spacing">
+       <number>8</number>
+      </property>
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <action name="actionAuthenticate">
+   <property name="icon">
+    <iconset resource="../res/PMRWorkspaces_ui.qrc">
+     <normaloff>:/PMRWorkspaces/icons/pmr-unauthenticated.png</normaloff>:/PMRWorkspaces/icons/pmr-unauthenticated.png</iconset>
+   </property>
+   <property name="text">
+    <string>Log on to PMR</string>
+   </property>
+   <property name="toolTip">
+    <string>Log on to PMR</string>
+   </property>
+  </action>
+  <action name="actionUnauthenticate">
+   <property name="icon">
+    <iconset resource="../res/PMRWorkspaces_ui.qrc">
+     <normaloff>:/PMRWorkspaces/icons/pmr-authenticated.png</normaloff>:/PMRWorkspaces/icons/pmr-authenticated.png</iconset>
+   </property>
+   <property name="text">
+    <string>Log off PMR</string>
+   </property>
+   <property name="toolTip">
+    <string>Log off PMR</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
+   </property>
+   <property name="text">
+    <string>New Workspace</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new workspace</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Refresh List</string>
+   </property>
+   <property name="toolTip">
+    <string>Refresh the list of workspaces</string>
+   </property>
+  </action>
+  <action name="actionRescan">
+   <property name="text">
+    <string>Rescan Folders</string>
+   </property>
+   <property name="toolTip">
+    <string>Rescan workspace folders</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../../../../../res/ui.qrc"/>
+  <include location="../res/PMRWorkspaces_ui.qrc"/>
+ </resources>
+ <connections/>
+</ui>

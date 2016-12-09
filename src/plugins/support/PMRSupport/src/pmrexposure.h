@@ -28,6 +28,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QObject>
 #include <QList>
 #ifdef Q_OS_WIN
     #include <QSet>
@@ -39,22 +40,45 @@ limitations under the License.
 namespace OpenCOR {
 namespace PMRSupport {
 
+class PmrWorkspace;
+
 //==============================================================================
 
-class PMRSUPPORT_EXPORT PmrExposure
+class PMRSUPPORT_EXPORT PmrExposure : public QObject
 {
+    Q_OBJECT
+
 public:
-    explicit PmrExposure(const QString &pUrl, const QString &pName);
+    explicit PmrExposure(QObject *parent=0);
+    PmrExposure(const QString &pUrl, const QString &pName, QObject *parent);
 
     static bool compare(const PmrExposure *pExposure1,
                         const PmrExposure *pExposure2);
 
-    QString url() const;
+    bool isNull() const;
+
     QString name() const;
+    QString url() const;
+
+    int fileUrlsLeftCount(void) const;
+    void setFileUrlsLeftCount(const int &count);
+
+    void addExposureFile(const QString &pFileName);
+    void addOtherFile(const QString &pFileName);
+    const QStringList exposureFileList(void) const;
+
+    PmrWorkspace *workspace(void) const;
+    void setWorkspace(PmrWorkspace *pWorkspace);
+
+    QString toHtml(void) const;
 
 private:
-    QString mUrl;
     QString mName;
+    QString mUrl;
+
+    QStringList mExposureFileList;
+    int mFileUrlsLeftCount;
+    PmrWorkspace *mWorkspace;
 };
 
 //==============================================================================
@@ -65,7 +89,7 @@ public:
     explicit PmrExposures();
     ~PmrExposures();
 
-    void add(const QString &pUrl, const QString &pName);
+    void add(const QString &pUrl, const QString &pName, QObject *parent);
 };
 
 //==============================================================================

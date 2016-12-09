@@ -15,6 +15,8 @@ OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plugin" ON)
 OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
+OPTION(USE_PREBUILT_OPENSSL_PLUGIN "Use the pre-built version of the OpenSSL plugin" ON)
+OPTION(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of Python" ON)
 OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
@@ -301,6 +303,7 @@ ENDIF()
 IF(ENABLE_SAMPLES)
     SET(SAMPLE_PLUGINS
         sample/Sample
+#       sample/SampleExternal
         sample/SampleTools
         sample/SampleView
         sample/SampleWindow
@@ -323,6 +326,7 @@ SET(PLUGINS
 
     thirdParty/libgit2
     thirdParty/LLVM
+    thirdParty/OpenSSL
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
@@ -331,6 +335,9 @@ SET(PLUGINS
     # Plugins that build on top of some third-party libraries
 
     miscellaneous/Compiler
+
+    thirdParty/Python
+    thirdParty/PythonQt
 
     # Plugins that provide support for some third-party libraries
 
@@ -380,6 +387,7 @@ SET(PLUGINS
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
     organisation/PMRWindow
+    organisation/PMRWorkspaces
 
     simulation/SingleCellView
 

@@ -113,22 +113,26 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(this, SIGNAL(visibilityChanged(bool)),
             this, SLOT(retrieveExposuresList(const bool &)));
 
-    // Create and add the PMR web service
+    // Get a PMR repository
 
-    mPmrWebService = new PMRSupport::PmrWebService();
+    mPmrWebService = new PMRSupport::PmrWebService(this);
 
-    // Some connections to process responses from the PMR web service
+    // Some connections to process responses from the PMR repository
 
     connect(mPmrWebService, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
+    connect(mPmrWebService, SIGNAL(progress(double)),
+            this, SLOT(showProgress(double)));
 
+    connect(mPmrWebService, SIGNAL(error(const QString &, const bool &)),
+            this, SLOT(repositoryError(const QString &, const bool &)));
     connect(mPmrWebService, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));
     connect(mPmrWebService, SIGNAL(warning(const QString &)),
             this, SLOT(showWarning(const QString &)));
 
-    connect(mPmrWebService, SIGNAL(exposuresList(const PMRSupport::PmrExposures &, const QString &, const bool &)),
-            this, SLOT(initializeWidget(const PMRSupport::PmrExposures &, const QString &, const bool &)));
+    connect(mPmrWebService, SIGNAL(exposuresList(const PMRSupport::PmrExposureList &)),
+            this, SLOT(gotExposuresList(const PMRSupport::PmrExposureList &)));
 
     connect(mPmrWebService, SIGNAL(addExposureFiles(const QString &, const QStringList &)),
             mPmrWindowWidget, SLOT(addExposureFiles(const QString &, const QStringList &)));
@@ -155,10 +159,6 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
 PmrWindowWindow::~PmrWindowWindow()
 {
-    // Delete our PMR web service
-
-    delete mPmrWebService;
-
     // Delete the GUI
 
     delete mGui;
@@ -230,6 +230,13 @@ void PmrWindowWindow::busy(const bool &pBusy)
 
 //==============================================================================
 
+void PmrWindowWindow::showProgress(const double &pProgress)
+{
+    setBusyWidgetProgress(pProgress);
+}
+
+//==============================================================================
+
 void PmrWindowWindow::showWarning(const QString &pMessage)
 {
     // Show the given message as a warning
@@ -250,16 +257,14 @@ void PmrWindowWindow::showInformation(const QString &pMessage)
 
 void PmrWindowWindow::on_actionReload_triggered()
 {
-    // Get the list of exposures from our PMR web service
+    // Get the list of exposures from our PMR repository
 
     mPmrWebService->requestExposuresList();
 }
 
 //==============================================================================
 
-void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposures,
-                                       const QString &pErrorMessage,
-                                       const bool &pInternetConnectionAvailable)
+void PmrWindowWindow::gotExposuresList(const PMRSupport::PmrExposureList &pExposures)
 {
     // Ask our PMR widget to initialise itself
 
@@ -288,26 +293,16 @@ void PmrWindowWindow::retrieveExposuresList(const bool &pVisible)
 
 //==============================================================================
 
-void PmrWindowWindow::cloneWorkspace(const QString &pUrl)
+void PmrWindowWindow::cloneWorkspace(const QString &pExposureUrl)
 {
-    // Retrieve the name of an empty directory
-
-    QString dirName = Core::getExistingDirectory(tr("Select Empty Directory"),
-                                                 QString(), true);
-
-    if (!dirName.isEmpty()) {
-        // We have got a directory name where we can clone the workspace, so
-        // request a clone of it
-
-        mPmrWebService->cloneWorkspace(pUrl, dirName);
-    }
+    mPmrWebService->requestExposureWorkspaceClone(pExposureUrl);
 }
 
 //==============================================================================
 
-void PmrWindowWindow::showExposureFiles(const QString &pUrl)
+void PmrWindowWindow::requestExposureFiles(const QString &pUrl)
 {
-    // Request a list of the exposure's files from our PMR web service
+    // Request a list of the exposure's files from our PMR repository
 
     mPmrWebService->requestExposureFiles(pUrl);
 }
