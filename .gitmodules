@@ -1,4 +1,0 @@
-[submodule "src/plugins/thirdParty/PythonQt/PythonQt"]
-    path = src/plugins/thirdParty/PythonQt/PythonQt
-    url = https://github.com/commontk/PythonQt
-    branch = patched-6
