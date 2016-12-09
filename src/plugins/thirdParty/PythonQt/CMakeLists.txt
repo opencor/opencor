@@ -1,94 +1,150 @@
 PROJECT(PythonQtPlugin)
 
+SET(USE_PREBUILT_PYTHONQTQT_PACKAGE OFF)
 
-# Qt 5.4 wrappers are used for Qt 5.6
+# Specify the version of PythonQt we are using.
 
-set(generated_cpp_suffix "_54")
+SET(PYTHONQT_VERSION 3.1)
 
+# Specify the git tag in the OpenSSL repository that we want to use
 
-# Definitions for PythonQt
+SET(PYTHONQT_GIT_TAG "patched-6")
 
-set(DEFINITIONS PYTHONQT_EXPORTS
-                PYTHONQT_SUPPORT_NAME_PROPERTY
-   )
+# The names of the libraries built by PythonQt's build process.
 
-option(PythonQt_DEBUG "Enable/Disable PythonQt debug output" OFF)
-if(PythonQt_DEBUG)
-  set(DEFINITIONS ${DEFINITIONS} PYTHONQT_DEBUG)
-endif()
+IF(WIN32)
+    SET(PYTHONQT_LIBRARY PythonQt.${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(PYTHONQT_GENERATED_LIBRARY PythonQt.lib)
+ELSE()
+    SET(PYTHONQT_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(PYTHONQT_GENERATED_LIBRARY ${PYTHONQT_LIBRARY})
+ENDIF()
+SET(EXTERNAL_BINARIES ${PYTHONQT_LIBRARY})
 
+# Specify where our PythonQt will be installed.
 
-# PythonQt sources
+SET(RELATIVE_INSTALL_DIR external/${REMOTE_EXTERNAL_BINARIES_DIR})
+SET(FULL_INSTALL_DIR ${PROJECT_SOURCE_DIR}/${RELATIVE_INSTALL_DIR})
 
-set(PythonQt_SOURCES
-    PythonQt/src/PythonQtBoolResult.cpp
-    PythonQt/src/PythonQtClassInfo.cpp
-    PythonQt/src/PythonQtClassWrapper.cpp
-    PythonQt/src/PythonQtConversion.cpp
-    PythonQt/src/PythonQt.cpp
-    PythonQt/src/PythonQtImporter.cpp
-    PythonQt/src/PythonQtInstanceWrapper.cpp
-    PythonQt/src/PythonQtMethodInfo.cpp
-    PythonQt/src/PythonQtMisc.cpp
-    PythonQt/src/PythonQtObjectPtr.cpp
-    PythonQt/src/PythonQtQFileImporter.cpp
-    PythonQt/src/PythonQtSignalReceiver.cpp
-    PythonQt/src/PythonQtSlot.cpp
-    PythonQt/src/PythonQtSignal.cpp
-    PythonQt/src/PythonQtStdDecorators.cpp
-    PythonQt/src/PythonQtStdIn.cpp
-    PythonQt/src/PythonQtStdOut.cpp
-    PythonQt/src/gui/PythonQtScriptingConsole.cpp
+# The PythonQt runtime library directory
 
-    PythonQt/generated_cpp${generated_cpp_suffix}/PythonQt_QtBindings.cpp
+SET(PYTHONQT_LIBRARY_DIR lib/python${PYTHONQT_SHORT_VERSION})
 
-    PythonQt/generated_cpp${generated_cpp_suffix}/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin0.cpp
-    PythonQt/generated_cpp${generated_cpp_suffix}/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin_init.cpp
-    PythonQt/generated_cpp${generated_cpp_suffix}/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin0.cpp
-    PythonQt/generated_cpp${generated_cpp_suffix}/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin_init.cpp
-)
+# Specify the files that will have their SHA1 checked when packaged.
 
-# PythonQt moc headers
+SET(CHECKED_FILES lib/${PYTHONQT_LIBRARY})
 
-set(Python_HEADERS_MOC
-    PythonQt/src/PythonQt.h
-    PythonQt/src/PythonQtSignalReceiver.h
-    PythonQt/src/PythonQtStdDecorators.h
-    PythonQt/src/gui/PythonQtScriptingConsole.h
+# We need to check the link library for Windows.
 
-    PythonQt/generated_cpp${generated_cpp_suffix}/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin0.h
-    PythonQt/generated_cpp${generated_cpp_suffix}/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin0.h
-)
+IF(WIN32)
+    LIST(APPEND CHECKED_FILES lib/${PYTHONQT_GENERATED_LIBRARY})
+ENDIF()
 
-if(WIN32)
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /bigobj")
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
-endif()
+# Add headers and... to the package archive
 
+SET(PACKAGED_FILES
+    include
+    ${CHECKED_FILES}
+    )
+
+IF(USE_PREBUILT_PYTHONQT_PACKAGE)
+    # Retrieve the plugin's file(s)
+
+    STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
+           RELATIVE_PROJECT_SOURCE_DIR "${FULL_INSTALL_DIR}")
+
+    IF(WIN32)
+        IF(RELEASE_MODE)
+            RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
+                PythonQt ${PYTHONQT_VERSION} 3351428b9aef566ce5ba3441ad5d7b5256e63280
+                CHECKED_FILES ${CHECKED_FILES}
+                SHA1_VALUES 710a0520607377a1429933cd91399a3200f45314
+                    b9895617dc6c321eaaa7d5eef7e4a922f6fb226a
+                    a18cbb0332fcef7ce3f3a73fbeb9b463a69632f7
+                )
+        ELSE()
+            RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Sample sha...)
+        ENDIF()
+    ELSEIF(APPLE)
+        RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
+            PythonQt ${PYTHONQT_VERSION} c092e866be33664594689071d524112a8e8dcb78
+            CHECKED_FILES ${CHECKED_FILES}
+            SHA1_VALUES fde7a24f5c786cbd5fae9ab49b7cb4a684098af1
+                        0a85986027182a62e051820f0f754e5f285d3e40
+        )
+    ELSE()
+        RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Sample sha...)
+    ENDIF()
+ELSE()
+    # Build and install PythonQt as an external package
+
+    INCLUDE(ExternalProject)
+
+    ExternalProject_Add(
+        PythonQtBuild
+        DEPENDS PythonPlugin
+        SOURCE_DIR ${PROJECT_SOURCE_DIR}/PythonQt
+        INSTALL_DIR ${FULL_INSTALL_DIR}
+        GIT_REPOSITORY https://github.com/commontk/PythonQt.git
+        GIT_TAG ${PYTHONQT_GIT_TAG}
+        UPDATE_COMMAND ""
+        CMAKE_ARGS
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+            -DCMAKE_MACOSX_RPATH=1
+            -DPYTHON_EXECUTABLE=${FULL_DEST_EXTERNAL_BINARIES_DIR}/Python/bin/python
+            -DQt5_DIR=1
+        BUILD_BYPRODUCTS
+            <INSTALL_DIR>/lib/${PYTHONQT_GENERATED_LIBRARY}
+    )
+
+    IF(APPLE)
+        # Fix up the newly installed shared library
+
+        ExternalProject_Add_Step(PythonQtBuild set_rpath
+            # Set RPATH in library to enable linking independent of location
+            COMMAND install_name_tool -id @rpath/${PYTHONQT_LIBRARY} ${PYTHONQT_LIBRARY}
+            WORKING_DIRECTORY ${FULL_INSTALL_DIR}/lib
+            DEPENDEES install
+            )
+    ENDIF()
+
+    # Package PythonQt's include files and libraries
+
+    CREATE_PACKAGE_FILE(${RELATIVE_INSTALL_DIR}
+        PythonQt ${PYTHONQT_VERSION}
+        PACKAGED_FILES ${PACKAGED_FILES}
+        CHECKED_FILES ${CHECKED_FILES}
+        DEPENDENCY PythonQtBuild
+        )
+ENDIF()
+
+# Ensure other plugins can find us
+
+SET(PYTHONQT_ROOT_DIR ${FULL_INSTALL_DIR} PARENT_SCOPE)
 
 # Add the plugin
 
 ADD_PLUGIN(PythonQt
-    THIRD_PARTY
     SOURCES
         ../../plugininfo.cpp
 
         src/pythonqtplugin.cpp
-        ${PythonQt_SOURCES}
     HEADERS_MOC
         src/pythonqtplugin.h
-        ${PythonQt_HEADERS_MOC}
     INCLUDE_DIRS
         src
-        PythonQt/src
-        ${PYTHON_INCLUDE_DIRS}
+        ${RELATIVE_INSTALL_DIR}/include/PythonQt
     PLUGINS
         Core
-        Python
-    PLUGIN_BINARIES
-        ${PYTHON_PLUGIN_BINARY}
-    QT_MODULES
-        Core
-    DEFINITIONS
-        ${DEFINITIONS}
+    EXTERNAL_BINARIES
+        ${EXTERNAL_BINARIES}
+    EXTERNAL_BINARIES_DIR
+        ${FULL_INSTALL_DIR}/lib
 )
+
+# We depend on PythonQt being built if we are not using the prebuilt package
+
+IF(NOT USE_PREBUILT_PYTHONQT_PACKAGE)
+    ADD_DEPENDENCIES(PythonQtPlugin PythonQtBuild)
+ENDIF()
