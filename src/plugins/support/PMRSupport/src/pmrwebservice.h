@@ -17,23 +17,24 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR repository
+// PMR web service
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "pmrauthentication.h"
 #include "pmrexposure.h"
 #include "pmrsupportglobal.h"
-#include "pmrworkspace.h"
 
 //==============================================================================
 
 #include <QList>
-#include <QObject>
-#include <QString>
+#include <QSslError>
+
+//==============================================================================
+
+#include "git2/types.h"
 
 //==============================================================================
 
@@ -47,97 +48,75 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PmrWebServiceManager;
-
-//==============================================================================
-
 class PMRSUPPORT_EXPORT PmrWebService : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit PmrWebService(QObject *parent = 0);
+    explicit PmrWebService();
     ~PmrWebService();
 
-    static const QString Url();
-    static const QByteArray CollectionMimeType();
-    static const QByteArray RequestMimeType();
-
-    void requestExposureFiles(const QString &pUrl);
+    void cloneWorkspace(const QString &pUrl, const QString &pDirName);
     void requestExposuresList();
-    void requestExposureWorkspaceClone(const QString &pExposureUrl);
-
-    PmrWorkspace *getWorkspace(const QString &pUrl);
-
-    void requestWorkspaceClone(PmrWorkspace *pWorkspace, const QString &pDirName);
-    void requestWorkspaceInformation(const QString &pUrl);
-    void requestWorkspacesList();
-    void requestWorkspaceSynchronise(PmrWorkspace *pWorkspace, const bool pOnlyPull);
-
-    void requestNewWorkspace(const QString &pName, const QString &pDescription,
-                             const QString &pDirName);
+    void requestExposureFiles(const QString &pUrl);
 
 private:
+    enum PmrRequest {
+        ExposuresList,
+        ExposureInformation,
+        WorkspaceInformation,
+        ExposureFileInformation
+    };
 
     enum Action {
         None,
-        CloneExposureWorkspace,
-        RequestExposureFiles
+        CloneWorkspace,
+        ShowExposureFiles
     };
 
-    PmrWebServiceManager *mPmrWebServiceManager;
+    QNetworkAccessManager *mNetworkAccessManager;
 
-    QMap<QString, PmrExposure *> mExposures;    // Exposure Url --> Exposure
+    int mNumberOfExposureFileUrlsLeft;
 
-    void emitInformation(const QString &pMessage);
+    QMap<QString, QString> mWorkspaces;
+    QMap<QString, QString> mExposureUrls;
+    QMap<QString, QString> mExposureNames;
+    QMap<QString, QString> mExposureFileNames;
+
     QString informationNoteMessage() const;
 
-    void getWorkspaceCredentials(PmrWorkspace *pWorkspace);
-    void requestExposureFileInformation(PmrExposure *pExposure, const QString &pUrl);
-    void requestExposureInformation(PmrExposure *pExposure, const Action &pNextAction);
+    static int bypassCertificateCheck(git_cert *pCertificate, int pValid,
+                                      const char *pHost, void *pPayload);
+    static int processEvents(const git_transfer_progress *pStatistics,
+                             void *pPayload);
 
-    void requestWorkspaceInformation(const QString &pUrl, const QString &pDirName,
-                                     PmrExposure *pExposure=nullptr);
+    void doCloneWorkspace(const QString &pWorkspace, const QString &pDirName);
+    void doShowExposureFiles(const QString &pExposureUrl);
+
+    void sendPmrRequest(const PmrRequest &pPmrRequest,
+                        const QString &pUrl = QString(),
+                        const Action pAction = None,
+                        const QString &pDirName = QString());
 
 signals:
-    void authenticated(const bool &pAuthenticated);
-    //void authenticationChanged(const bool &pAuthenticated);
-
     void busy(const bool &pBusy);
-    void progress(const double &pProgress);
 
-    void error(const QString &pErrorMessage, const bool &pInternetConnectionAvailable);
-    void information(const QString &pMessage);
     void warning(const QString &pMessage);
+    void information(const QString &pMessage);
 
-    void exposureFilesList(const QString &pUrl, const QStringList &pExposureFiles);
-    void exposuresList(const PMRSupport::PmrExposureList &pExposureList);
+    void exposuresList(const PMRSupport::PmrExposures &pExposures,
+                       const QString &pErrorMessage,
+                       const bool &pInternetConnectionAvailable);
 
-    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceCreated(const QString &pUrl);
-    void workspacesList(const PMRSupport::PmrWorkspaceList &pWorkspaceList);
-    void workspaceSynchronised(PMRSupport::PmrWorkspace *pWorkspace);
-
-public slots:
-    void authenticate(const bool &pLink = true);
-    void getAuthenticationStatus();
-    void unauthorised(const QString &pUrl);
+    void addExposureFiles(const QString &pUrl,
+                          const QStringList &pExposureFiles);
+    void showExposureFiles(const QString &pUrl);
 
 private slots:
-    void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
-    void exposureInformationResponse(const QJsonDocument &pJsonDocument);
-    void exposuresListResponse(const QJsonDocument &pJsonDocument);
+    void finished(QNetworkReply *pNetworkReply = 0);
+    void sslErrors(QNetworkReply *pNetworkReply,
+                   const QList<QSslError> &pSslErrors);
 
-    void getWorkspaceResponse(const QJsonDocument &pJsonDocument);
-    void workspaceUnauthorised(const QString &pUrl);
-
-    void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
-    void workspacesListResponse(const QJsonDocument &pJsonDocument);
-
-    void workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceCreatedResponse(const QString &pUrl);
-    void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
-    void workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================
