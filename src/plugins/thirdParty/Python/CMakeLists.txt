@@ -98,6 +98,7 @@ ELSE()
 
     ExternalProject_Add(
         PythonBuild
+        DEPENDS OpenSSLPlugin zlibPlugin
         SOURCE_DIR ${PROJECT_SOURCE_DIR}/PythonCMake
         INSTALL_DIR ${FULL_INSTALL_DIR}
 #        GIT_REPOSITORY https://github.com/python-cmake-buildsystem/python-cmake-buildsystem.git
@@ -154,15 +155,6 @@ ELSE()
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${PYTHON_GENERATED_LIBRARY}
     )
-
-    IF(WIN32)
-        SET(DEST_EXTERNAL_BINARIES_DIR bin)
-    ELSEIF(APPLE)
-        SET(DEST_EXTERNAL_BINARIES_DIR ${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
-    ELSE()
-        SET(DEST_EXTERNAL_BINARIES_DIR lib)
-    ENDIF()
-    SET(FULL_DEST_EXTERNAL_BINARIES_DIR ${PROJECT_BUILD_DIR}/${DEST_EXTERNAL_BINARIES_DIR})
 
     SET(INSTALL_STEP install)
 
