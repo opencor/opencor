@@ -210,8 +210,6 @@ void PythonPlugin::runHelpCommand()
 
 int PythonPlugin::runPipInstaller(const QStringList &pArguments)
 {
-    initializePlugin();
-
     // In case of failure
 
     int result = -1;
@@ -273,8 +271,6 @@ int PythonPlugin::runPipInstaller(const QStringList &pArguments)
 
 int PythonPlugin::runPythonShell(const QStringList &pArguments)
 {
-    initializePlugin();
-
     // The following has been adapted from `Programs/python.c` in the Python sources.
 
     const int argc = pArguments.size() + 1;
