@@ -1,6 +1,5 @@
 PROJECT(PythonPlugin)
 
-
 # Specify the version of Python we are using.
 
 SET(PYTHON_VERSION 3.5.2)
@@ -55,7 +54,6 @@ LIST(APPEND CHECKED_FILES lib/python${PYTHON_NUMERIC_VERSION}.zip)
 
 SET(PACKAGED_FILES
     include
-    share  ## So other packages can find use using CMake tools??
     ${PYTHON_LIBRARY_DIR}/config-${PYTHON_SHORT_VERSION}${PYTHON_ABIFLAGS}
     ${PYTHON_LIBRARY_DIR}/lib2to3
     ${PYTHON_LIBRARY_DIR}/lib-dynload
@@ -83,10 +81,10 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            Python ${PYTHON_VERSION} c092e866be33664594689071d524112a8e8dcb78
+            Python ${PYTHON_VERSION} b34c95f116d94e3e41b7e5c8d67848fa43e939ef
             CHECKED_FILES ${CHECKED_FILES}
-            SHA1_VALUES fde7a24f5c786cbd5fae9ab49b7cb4a684098af1
-                        0a85986027182a62e051820f0f754e5f285d3e40
+            SHA1_VALUES 9e71138ba7dc675c8f32c9a8c4f3896c90696e39
+                        b4eeb93a744971acd35bafdde004b920207304e4
         )
     ELSE()
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Sample sha...)
@@ -102,8 +100,10 @@ ELSE()
         SOURCE_DIR ${PROJECT_SOURCE_DIR}/PythonCMake
         INSTALL_DIR ${FULL_INSTALL_DIR}
 #        GIT_REPOSITORY https://github.com/python-cmake-buildsystem/python-cmake-buildsystem.git
+# Until our branch is merged...
         GIT_REPOSITORY https://github.com/dbrnz/python-cmake-buildsystem.git
         GIT_TAG abiflags
+#
         UPDATE_COMMAND ""
         CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
@@ -158,11 +158,11 @@ ELSE()
 
     SET(INSTALL_STEP install)
 
-        # Fix up the newly created Python executable and shared library
     IF(APPLE)
+        # Fix up the newly installed Python executable and shared library
 
-        ExternalProject_Add_Step(PythonBuild add_rpath
-            # Add RPATH to executable so it can use other external libraries
+        ExternalProject_Add_Step(PythonBuild set_rpath
+            # Add RPATH to executable so it can use installed libraries
             COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_BINARIES_DIR} ../bin/python
             # Set RPATH in library to enable linking independent of location
             COMMAND install_name_tool -id @rpath/${PYTHON_LIBRARY} ${PYTHON_LIBRARY}
@@ -170,7 +170,7 @@ ELSE()
             DEPENDEES install
             )
 
-        SET(INSTALL_STEP add_rpath)
+        SET(INSTALL_STEP set_rpath)
     ENDIF()
 
     # Install the Python package installer
@@ -210,11 +210,9 @@ ELSE()
         )
 ENDIF()
 
-# Ensure external packages built by other plugins can find us using CMake
+# Ensure other plugins can find us
 
 SET(PYTHON_ROOT_DIR ${FULL_INSTALL_DIR} PARENT_SCOPE)
-##### CMake uses this when trying to find Python
-####set(Python_DIR ${PYTHON_ROOT_DIR} PARENT_SCOPE)
 
 # Add the plugin
 
@@ -227,11 +225,9 @@ ADD_PLUGIN(Python
         src/pythonplugin.h
     INCLUDE_DIRS
         src
-        ${FULL_INSTALL_DIR}/include/python${PYTHON_SHORT_VERSION}${PYTHON_ABIFLAGS}
+        ${RELATIVE_INSTALL_DIR}/include/python${PYTHON_SHORT_VERSION}${PYTHON_ABIFLAGS}
     PLUGINS
         Core
-    DEFINITIONS
-        QT_NO_KEYWORDS
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
     EXTERNAL_BINARIES_DIR

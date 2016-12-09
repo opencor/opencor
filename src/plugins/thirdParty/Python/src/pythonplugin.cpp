@@ -200,7 +200,9 @@ void PythonPlugin::runHelpCommand()
 
 //==============================================================================
 
-// Helper macro
+int PythonPlugin::runPipInstaller(const QStringList &pArguments)
+{
+// A helper macro
 #define SET_AND_CHECK_PY_OBJECT(obj, value) \
     obj = (value);                          \
     if (obj == nullptr) {                   \
@@ -208,8 +210,6 @@ void PythonPlugin::runHelpCommand()
         break;                              \
     }
 
-int PythonPlugin::runPipInstaller(const QStringList &pArguments)
-{
     // In case of failure
 
     int result = -1;
