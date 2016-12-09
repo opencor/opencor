@@ -27,8 +27,9 @@ limitations under the License.
 //==============================================================================
 
 #include "llvmdisablewarnings.h"
-    #include "llvm/IR/LLVMContext.h"
     #include "llvm/Support/TargetSelect.h"
+
+    #include "llvm-c/Core.h"
 
     #include "clang/Basic/DiagnosticOptions.h"
     #include "clang/CodeGen/CodeGenAction.h"
@@ -182,7 +183,15 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     compilationArguments.push_back("clang");
     compilationArguments.push_back("-fsyntax-only");
+//---ISSUE1099---(BEGIN)
+// There is a bug in LLVM 3.9 that crashes the debug version of OpenCOR on
+// Windows when using -O3, hence we temporarily disable that piece of code...
+#if !defined(Q_OS_WIN) || !defined(QT_DEBUG)
+//---ISSUE1099---(END)
     compilationArguments.push_back("-O3");
+//---ISSUE1099---(BEGIN)
+#endif
+//---ISSUE1099---(END)
     compilationArguments.push_back("-ffast-math");
     compilationArguments.push_back("-Werror");
     compilationArguments.push_back(dummyFileName.data());
@@ -252,7 +261,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Create and execute the frontend to generate an LLVM bitcode module
 
-    std::unique_ptr<clang::CodeGenAction> codeGenerationAction(new clang::EmitLLVMOnlyAction(&llvm::getGlobalContext()));
+    std::unique_ptr<clang::CodeGenAction> codeGenerationAction(new clang::EmitLLVMOnlyAction(llvm::unwrap(LLVMGetGlobalContext())));
 
     if (!compilerInstance.ExecuteAction(*codeGenerationAction)) {
         mError = tr("the code could not be compiled");

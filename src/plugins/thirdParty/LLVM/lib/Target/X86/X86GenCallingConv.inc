@@ -135,6 +135,9 @@ static bool RetCC_X86_64_HHVM(unsigned ValNo, MVT ValVT,
 static bool RetCC_X86_64_HiPE(unsigned ValNo, MVT ValVT,
                               MVT LocVT, CCValAssign::LocInfo LocInfo,
                               ISD::ArgFlagsTy ArgFlags, CCState &State);
+static bool RetCC_X86_64_Swift(unsigned ValNo, MVT ValVT,
+                               MVT LocVT, CCValAssign::LocInfo LocInfo,
+                               ISD::ArgFlagsTy ArgFlags, CCState &State);
 static bool RetCC_X86_64_WebKit_JS(unsigned ValNo, MVT ValVT,
                                    MVT LocVT, CCValAssign::LocInfo LocInfo,
                                    ISD::ArgFlagsTy ArgFlags, CCState &State);
@@ -292,6 +295,11 @@ static bool CC_X86_32(unsigned ValNo, MVT ValVT,
                       MVT LocVT, CCValAssign::LocInfo LocInfo,
                       ISD::ArgFlagsTy ArgFlags, CCState &State) {
 
+  if (State.getCallingConv() == CallingConv::X86_INTR) {
+    if (!CC_X86_32_Intr(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
+      return false;
+  }
+
   if (static_cast<const X86Subtarget&>(State.getMachineFunction().getSubtarget()).isTargetMCU()) {
     if (!CC_X86_32_MCU(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
       return false;
@@ -324,11 +332,6 @@ static bool CC_X86_32(unsigned ValNo, MVT ValVT,
 
   if (State.getCallingConv() == CallingConv::HiPE) {
     if (!CC_X86_32_HiPE(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
-      return false;
-  }
-
-  if (State.getCallingConv() == CallingConv::X86_INTR) {
-    if (!CC_X86_32_Intr(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
       return false;
   }
 
@@ -1185,6 +1188,35 @@ static bool CC_X86_64_C(unsigned ValNo, MVT ValVT,
     if (unsigned Reg = State.AllocateReg(X86::R10)) {
       State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
       return false;
+    }
+  }
+
+  if (ArgFlags.isSwiftSelf()) {
+    if (LocVT == MVT::i64) {
+      if (unsigned Reg = State.AllocateReg(X86::R13)) {
+        State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+        return false;
+      }
+    }
+  }
+
+  if (ArgFlags.isSwiftError()) {
+    if (LocVT == MVT::i64) {
+      if (unsigned Reg = State.AllocateReg(X86::R12)) {
+        State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+        return false;
+      }
+    }
+  }
+
+  if (State.getCallingConv() == CallingConv::Swift) {
+    if (ArgFlags.isSRet()) {
+      if (LocVT == MVT::i64) {
+        if (unsigned Reg = State.AllocateReg(X86::RAX)) {
+          State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+          return false;
+        }
+      }
     }
   }
 
@@ -2261,6 +2293,11 @@ static bool RetCC_X86_64(unsigned ValNo, MVT ValVT,
       return false;
   }
 
+  if (State.getCallingConv() == CallingConv::Swift) {
+    if (!RetCC_X86_64_Swift(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
+      return false;
+  }
+
   if (State.getCallingConv() == CallingConv::X86_64_Win64) {
     if (!RetCC_X86_Win64_C(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
       return false;
@@ -2343,6 +2380,15 @@ static bool RetCC_X86_64_C(unsigned ValNo, MVT ValVT,
     }
   }
 
+  if (ArgFlags.isSwiftError()) {
+    if (LocVT == MVT::i64) {
+      if (unsigned Reg = State.AllocateReg(X86::R12)) {
+        State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+        return false;
+      }
+    }
+  }
+
   if (!RetCC_X86Common(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
     return false;
 
@@ -2405,6 +2451,107 @@ static bool RetCC_X86_64_HiPE(unsigned ValNo, MVT ValVT,
       return false;
     }
   }
+
+  return true;  // CC didn't match.
+}
+
+
+static bool RetCC_X86_64_Swift(unsigned ValNo, MVT ValVT,
+                               MVT LocVT, CCValAssign::LocInfo LocInfo,
+                               ISD::ArgFlagsTy ArgFlags, CCState &State) {
+
+  if (LocVT == MVT::i1) {
+    LocVT = MVT::i8;
+    if (ArgFlags.isSExt())
+        LocInfo = CCValAssign::SExt;
+    else if (ArgFlags.isZExt())
+        LocInfo = CCValAssign::ZExt;
+    else
+        LocInfo = CCValAssign::AExt;
+  }
+
+  if (LocVT == MVT::i8) {
+    static const MCPhysReg RegList1[] = {
+      X86::AL, X86::DL, X86::CL, X86::R8B
+    };
+    if (unsigned Reg = State.AllocateReg(RegList1)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (LocVT == MVT::i16) {
+    static const MCPhysReg RegList2[] = {
+      X86::AX, X86::DX, X86::CX, X86::R8W
+    };
+    if (unsigned Reg = State.AllocateReg(RegList2)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (LocVT == MVT::i32) {
+    static const MCPhysReg RegList3[] = {
+      X86::EAX, X86::EDX, X86::ECX, X86::R8D
+    };
+    if (unsigned Reg = State.AllocateReg(RegList3)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (LocVT == MVT::i64) {
+    static const MCPhysReg RegList4[] = {
+      X86::RAX, X86::RDX, X86::RCX, X86::R8
+    };
+    if (unsigned Reg = State.AllocateReg(RegList4)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (LocVT == MVT::f32) {
+    static const MCPhysReg RegList5[] = {
+      X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3
+    };
+    if (unsigned Reg = State.AllocateReg(RegList5)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (LocVT == MVT::f64) {
+    static const MCPhysReg RegList6[] = {
+      X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3
+    };
+    if (unsigned Reg = State.AllocateReg(RegList6)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (LocVT == MVT::f128) {
+    static const MCPhysReg RegList7[] = {
+      X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3
+    };
+    if (unsigned Reg = State.AllocateReg(RegList7)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (LocVT == MVT::x86mmx) {
+    static const MCPhysReg RegList8[] = {
+      X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3
+    };
+    if (unsigned Reg = State.AllocateReg(RegList8)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (!RetCC_X86Common(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
+    return false;
 
   return true;  // CC didn't match.
 }

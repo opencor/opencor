@@ -12,8 +12,6 @@ namespace sema {
 Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
         const MultiLevelTemplateArgumentList &TemplateArgs) {
   switch (At->getKind()) {
-    default:
-      break;
     case attr::AMDGPUNumSGPR: {
       const auto *A = cast<AMDGPUNumSGPRAttr>(At);
       return A->clone(C);
@@ -24,6 +22,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::ARMInterrupt: {
       const auto *A = cast<ARMInterruptAttr>(At);
+      return A->clone(C);
+    }
+    case attr::AbiTag: {
+      const auto *A = cast<AbiTagAttr>(At);
       return A->clone(C);
     }
     case attr::AcquireCapability: {
@@ -97,6 +99,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::Annotate: {
       const auto *A = cast<AnnotateAttr>(At);
+      return A->clone(C);
+    }
+    case attr::AnyX86Interrupt: {
+      const auto *A = cast<AnyX86InterruptAttr>(At);
       return A->clone(C);
     }
     case attr::ArcWeakrefUnavailable: {
@@ -291,6 +297,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const auto *A = cast<DisableTailCallsAttr>(At);
       return A->clone(C);
     }
+    case attr::EmptyBases: {
+      const auto *A = cast<EmptyBasesAttr>(At);
+      return A->clone(C);
+    }
     case attr::EnableIf: {
       const auto *A = cast<EnableIfAttr>(At);
       Expr * tempInstCond;
@@ -384,6 +394,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const auto *A = cast<IBOutletCollectionAttr>(At);
       return A->clone(C);
     }
+    case attr::IFunc: {
+      const auto *A = cast<IFuncAttr>(At);
+      return A->clone(C);
+    }
     case attr::InitPriority: {
       const auto *A = cast<InitPriorityAttr>(At);
       return A->clone(C);
@@ -398,6 +412,14 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::InternalLinkage: {
       const auto *A = cast<InternalLinkageAttr>(At);
+      return A->clone(C);
+    }
+    case attr::LTOVisibilityPublic: {
+      const auto *A = cast<LTOVisibilityPublicAttr>(At);
+      return A->clone(C);
+    }
+    case attr::LayoutVersion: {
+      const auto *A = cast<LayoutVersionAttr>(At);
       return A->clone(C);
     }
     case attr::LockReturned: {
@@ -557,6 +579,18 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const auto *A = cast<NotTailCalledAttr>(At);
       return A->clone(C);
     }
+    case attr::OMPCaptureNoInit: {
+      const auto *A = cast<OMPCaptureNoInitAttr>(At);
+      return A->clone(C);
+    }
+    case attr::OMPDeclareSimdDecl: {
+      const auto *A = cast<OMPDeclareSimdDeclAttr>(At);
+      return A->clone(C);
+    }
+    case attr::OMPDeclareTargetDecl: {
+      const auto *A = cast<OMPDeclareTargetDeclAttr>(At);
+      return A->clone(C);
+    }
     case attr::OMPThreadPrivateDecl: {
       const auto *A = cast<OMPThreadPrivateDeclAttr>(At);
       return A->clone(C);
@@ -625,12 +659,20 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const auto *A = cast<ObjCRuntimeNameAttr>(At);
       return A->clone(C);
     }
-    case attr::OpenCLImageAccess: {
-      const auto *A = cast<OpenCLImageAccessAttr>(At);
+    case attr::ObjCRuntimeVisible: {
+      const auto *A = cast<ObjCRuntimeVisibleAttr>(At);
+      return A->clone(C);
+    }
+    case attr::OpenCLAccess: {
+      const auto *A = cast<OpenCLAccessAttr>(At);
       return A->clone(C);
     }
     case attr::OpenCLKernel: {
       const auto *A = cast<OpenCLKernelAttr>(At);
+      return A->clone(C);
+    }
+    case attr::OpenCLUnrollHint: {
+      const auto *A = cast<OpenCLUnrollHintAttr>(At);
       return A->clone(C);
     }
     case attr::OptimizeNone: {
@@ -669,6 +711,14 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const auto *A = cast<PcsAttr>(At);
       return A->clone(C);
     }
+    case attr::PreserveAll: {
+      const auto *A = cast<PreserveAllAttr>(At);
+      return A->clone(C);
+    }
+    case attr::PreserveMost: {
+      const auto *A = cast<PreserveMostAttr>(At);
+      return A->clone(C);
+    }
     case attr::PtGuardedBy: {
       const auto *A = cast<PtGuardedByAttr>(At);
       Expr * tempInstArg;
@@ -701,6 +751,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
         }
       }
       return new (C) ReleaseCapabilityAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
+    }
+    case attr::RenderScriptKernel: {
+      const auto *A = cast<RenderScriptKernelAttr>(At);
+      return A->clone(C);
     }
     case attr::ReqdWorkGroupSize: {
       const auto *A = cast<ReqdWorkGroupSizeAttr>(At);
@@ -780,6 +834,22 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::StdCall: {
       const auto *A = cast<StdCallAttr>(At);
+      return A->clone(C);
+    }
+    case attr::SwiftCall: {
+      const auto *A = cast<SwiftCallAttr>(At);
+      return A->clone(C);
+    }
+    case attr::SwiftContext: {
+      const auto *A = cast<SwiftContextAttr>(At);
+      return A->clone(C);
+    }
+    case attr::SwiftErrorResult: {
+      const auto *A = cast<SwiftErrorResultAttr>(At);
+      return A->clone(C);
+    }
+    case attr::SwiftIndirectResult: {
+      const auto *A = cast<SwiftIndirectResultAttr>(At);
       return A->clone(C);
     }
     case attr::SysVABI: {
@@ -895,6 +965,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::X86ForceAlignArgPointer: {
       const auto *A = cast<X86ForceAlignArgPointerAttr>(At);
+      return A->clone(C);
+    }
+    case attr::XRayInstrument: {
+      const auto *A = cast<XRayInstrumentAttr>(At);
       return A->clone(C);
     }
   } // end switch

@@ -429,6 +429,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         PLUGIN_BINARIES
         QT_MODULES
         EXTERNAL_BINARIES
+        SYSTEM_BINARIES
         TESTS
     )
 
@@ -640,6 +641,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
+    # System binaries
+
+    FOREACH(ARG_SYSTEM_BINARY ${ARG_SYSTEM_BINARIES})
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+            ${ARG_SYSTEM_BINARY}
+        )
+    ENDFOREACH()
+
     # Some settings
 
     IF(XCODE)
@@ -779,6 +788,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ENDFOREACH()
                 ENDIF()
 
+                # System binaries
+
+                FOREACH(ARG_SYSTEM_BINARY ${ARG_SYSTEM_BINARIES})
+                    TARGET_LINK_LIBRARIES(${TEST_NAME}
+                        ${ARG_SYSTEM_BINARY}
+                    )
+                ENDFOREACH()
+
                 # Copy the test to our tests directory
                 # Note: DEST_TESTS_DIR is defined in our main CMake file...
 
@@ -833,6 +850,11 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
     SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR})
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+#---ISSUE1099---(BEGIN)
+IF("${PLUGIN_NAME}" STREQUAL "LLVM")
+    SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR}/3.9)
+ENDIF()
+#---ISSUE1099---(END)
 
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
