@@ -3,9 +3,9 @@ PROJECT(PythonPlugin)
 
 # Specify the version of Python we are using.
 
-set(PYTHON_VERSION 3.5.2)
-set(PYTHON_SHORT_VERSION 3.5)
-set(PYTHON_NUMERIC_VERSION 35)
+SET(PYTHON_VERSION 3.5.2)
+SET(PYTHON_SHORT_VERSION 3.5)
+SET(PYTHON_NUMERIC_VERSION 35)
 
 # The names of the libraries built by Python's build process.
 
@@ -49,11 +49,11 @@ ENDIF()
 
 # Check the zipped Python runtime library.
 
-list(APPEND CHECKED_FILES lib/python${PYTHON_NUMERIC_VERSION}.zip)
+LIST(APPEND CHECKED_FILES lib/python${PYTHON_NUMERIC_VERSION}.zip)
 
 # Add headers and... to the package archive
 
-set(PACKAGED_FILES
+SET(PACKAGED_FILES
     include
     share  ## So other packages can find use using CMake tools??
     ${PYTHON_LIBRARY_DIR}/config-${PYTHON_SHORT_VERSION}${PYTHON_ABIFLAGS}
@@ -63,14 +63,14 @@ set(PACKAGED_FILES
     ${CHECKED_FILES}
     )
 
-if(USE_PREBUILT_PYTHON_PACKAGE)
+IF(USE_PREBUILT_PYTHON_PACKAGE)
     # Retrieve the plugin's file(s)
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
            RELATIVE_PROJECT_SOURCE_DIR "${FULL_INSTALL_DIR}")
 
-    if(WIN32)
-        if(RELEASE_MODE)
+    IF(WIN32)
+        IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
                 Python ${PYTHON_VERSION} 3351428b9aef566ce5ba3441ad5d7b5256e63280
                 CHECKED_FILES ${CHECKED_FILES}
@@ -78,20 +78,20 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
                     b9895617dc6c321eaaa7d5eef7e4a922f6fb226a
                     a18cbb0332fcef7ce3f3a73fbeb9b463a69632f7
                 )
-        else()
+        ELSE()
             RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Sample sha...)
-        endif()
-    elseif(APPLE)
+        ENDIF()
+    ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
             Python ${PYTHON_VERSION} c092e866be33664594689071d524112a8e8dcb78
             CHECKED_FILES ${CHECKED_FILES}
             SHA1_VALUES fde7a24f5c786cbd5fae9ab49b7cb4a684098af1
                         0a85986027182a62e051820f0f754e5f285d3e40
         )
-    else()
+    ELSE()
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Sample sha...)
-    endif()
-else()
+    ENDIF()
+ELSE()
     # Build and install Python as an external package
 
     INCLUDE(ExternalProject)
@@ -166,8 +166,8 @@ else()
 
     SET(INSTALL_STEP install)
 
-    if(APPLE)
         # Fix up the newly created Python executable and shared library
+    IF(APPLE)
 
         ExternalProject_Add_Step(PythonBuild add_rpath
             # Add RPATH to executable so it can use other external libraries
@@ -179,7 +179,7 @@ else()
             )
 
         SET(INSTALL_STEP add_rpath)
-    endif()
+    ENDIF()
 
     # Install the Python package installer
 
@@ -216,7 +216,7 @@ else()
         CHECKED_FILES ${CHECKED_FILES}
         DEPENDENCY PythonBuild
         )
-endif()
+ENDIF()
 
 # Ensure external packages built by other plugins can find us using CMake
 
