@@ -343,6 +343,7 @@ SET(PLUGINS
 
     support/CellMLSupport
     support/PMRSupport
+    support/PythonQtSupport
     support/QScintillaSupport
     support/SEDMLSupport
     support/ZIPSupport

@@ -93,6 +93,7 @@ ELSE()
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DCMAKE_MACOSX_RPATH=1
             -DPYTHON_EXECUTABLE=${FULL_DEST_EXTERNAL_BINARIES_DIR}/Python/bin/python
+            -DPythonQt_Wrap_QtAll=1
             -DQt5_DIR=1
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${PYTHONQT_GENERATED_LIBRARY}
@@ -137,6 +138,7 @@ ADD_PLUGIN(PythonQt
         ${RELATIVE_INSTALL_DIR}/include/PythonQt
     PLUGINS
         Core
+        Python
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
     EXTERNAL_BINARIES_DIR

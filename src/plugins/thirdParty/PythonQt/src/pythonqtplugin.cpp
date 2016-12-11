@@ -24,12 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include "PythonQt.h"
-
-//==============================================================================
-
 #include <Qt>
-#include <QSettings>
 
 //==============================================================================
 
@@ -45,7 +40,7 @@ PLUGININFO_FUNC PythonQtPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to allow the use of Qt with Python."));
     descriptions.insert("fr", QString::fromUtf8("une extension ..."));
 
-    return new PluginInfo(PluginInfo::ThirdParty, false, true,
+    return new PluginInfo(PluginInfo::ThirdParty, false, false,
                           QStringList() << "Python",
                           descriptions);
 }
@@ -64,7 +59,7 @@ bool PythonQtPlugin::definesPluginInterfaces()
 //==============================================================================
 
 bool PythonQtPlugin::pluginInterfacesOk(const QString &pFileName,
-                                      QObject *pInstance)
+                                        QObject *pInstance)
 {
     Q_UNUSED(pFileName);
     Q_UNUSED(pInstance);
@@ -77,18 +72,14 @@ bool PythonQtPlugin::pluginInterfacesOk(const QString &pFileName,
 //==============================================================================
 void PythonQtPlugin::initializePlugin()
 {
-    // Initialise PythonQt
-
-//    ::PythonQt::init();
+    // We don't handle this interface...
 }
 
 //==============================================================================
 
 void PythonQtPlugin::finalizePlugin()
 {
-    // Clean up PythonQt
-
-//     ::PythonQt::cleanup();
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -106,7 +97,7 @@ void PythonQtPlugin::loadSettings(QSettings *pSettings)
 {
     Q_UNUSED(pSettings);
 
-    // TODO: Retrieve our Python settings
+    // TODO: Retrieve our Python Qt settings
 }
 
 //==============================================================================
@@ -115,7 +106,7 @@ void PythonQtPlugin::saveSettings(QSettings *pSettings) const
 {
     Q_UNUSED(pSettings);
 
-    // TODO: Keep track of our Python settings
+    // TODO: Keep track of our Python Qt settings
 }
 
 //==============================================================================
