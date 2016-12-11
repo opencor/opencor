@@ -481,7 +481,7 @@ PyObject* ctkAbstractPythonManager::pythonObject(const QString& variableNameAndF
           continue;
           }
         QString keyStr = PyString_AsString(key);
-        if (keyStr.operator ==(compareFunction))
+        if (keyStr == compareFunction)
           {
           finalPythonObject = value;
           break;
@@ -508,7 +508,7 @@ PyObject* ctkAbstractPythonManager::pythonModule(const QString& module)
     }
   foreach(const QString& module, moduleList)
     {
-    object = PyDict_GetItemString(dict, module.toAscii().data());
+    object = PyDict_GetItemString(dict, module.toUtf8().constData());
     if (prevObject)
       {
       Py_DECREF(prevObject);
