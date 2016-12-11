@@ -24,7 +24,6 @@
 
 // CTK includes
 #include "ctkAbstractPythonManager.h"
-#include "ctkScriptingPythonCoreConfigure.h"
 
 // PythonQT includes
 #include <PythonQt.h>
