@@ -53,7 +53,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // CTK includes
 #include <ctkConsole.h>
-#include "ctkScriptingPythonWidgetsExport.h"
+
+// OpenCOR includes
+#include "pythonconsolewindowglobal.h"
 
 /// \ingroup Scripting_Python_Widgets
 ///
@@ -66,7 +68,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 class ctkPythonConsolePrivate;
 class ctkAbstractPythonManager;
 
-class CTK_SCRIPTING_PYTHON_WIDGETS_EXPORT ctkPythonConsole : public ctkConsole
+class PYTHONCONSOLEWINDOW_EXPORT ctkPythonConsole : public ctkConsole
 {
   Q_OBJECT
   

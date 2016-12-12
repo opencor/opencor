@@ -28,12 +28,14 @@
 
 // CTK includes
 #include "ctkConsole.h"
-#include "ctkWidgetsExport.h"
+
+// OpenCOR includes
+#include "pythonconsolewindowglobal.h"
 
 class QPushButton;
 
 /// \ingroup Widgets
-class CTK_WIDGETS_EXPORT ctkConsolePrivate : public QTextEdit
+class PYTHONCONSOLEWINDOW_EXPORT ctkConsolePrivate : public QTextEdit
 {
   Q_OBJECT
   Q_DECLARE_PUBLIC(ctkConsole);

@@ -56,15 +56,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QTextCharFormat>
 #include <QCompleter>
 
-// CTK includes
-#include "ctkWidgetsExport.h"
+// OpenCOR includes
+#include "pythonconsolewindowglobal.h"
 
 class ctkConsolePrivate;
 class ctkConsoleCompleter;
 
 /// \ingroup Widgets
 /// QWidget that provides an interactive console
-class CTK_WIDGETS_EXPORT ctkConsole : public QWidget
+class PYTHONCONSOLEWINDOW_EXPORT ctkConsole : public QWidget
 {
   Q_OBJECT
   Q_PROPERTY(QColor promptColor READ promptColor WRITE setPromptColor)
@@ -83,7 +83,7 @@ class CTK_WIDGETS_EXPORT ctkConsole : public QWidget
   Q_PROPERTY(QList<QKeySequence> completerShortcuts READ completerShortcuts WRITE setCompleterShortcuts)
   Q_FLAGS(RunFileOption RunFileOptions)
   Q_PROPERTY(RunFileOptions runFileOptions READ runFileOptions WRITE setRunFileOptions)
-  
+
 public:
 
   enum EditorHint
@@ -258,7 +258,7 @@ private:
 Q_DECLARE_OPERATORS_FOR_FLAGS(ctkConsole::EditorHints);
 
 //-----------------------------------------------------------------------------
-class CTK_WIDGETS_EXPORT ctkConsoleCompleter : public QCompleter
+class PYTHONCONSOLEWINDOW_EXPORT ctkConsoleCompleter : public QCompleter
 {
 public:
 
