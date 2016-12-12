@@ -852,7 +852,7 @@ QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorksp
 QStringList PmrWorkspacesWindowWidget::folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     QString fullname = pFileNode->fullName();
-    QString icon = mExpandedItems.contains(fullname)?"open":"folder";
+    QString icon = mExpandedItems.contains(fullname)?"folderOpen":"folder";
 
     ++mRow;
 
