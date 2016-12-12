@@ -56,7 +56,7 @@ static const auto AboutAction           = QStringLiteral("about");
 static const auto CloneAction           = QStringLiteral("clone");
 static const auto CommitAction          = QStringLiteral("commit");
 static const auto RefreshAction         = QStringLiteral("refresh");
-static const auto StageAction           = QStringLiteral("action");
+static const auto StageAction           = QStringLiteral("stage");
 static const auto UnstageAction         = QStringLiteral("unstage");
 static const auto SynchronizeAction     = QStringLiteral("synchronize");
 static const auto SynchronizePushAction = QStringLiteral("synchronizePush");
@@ -66,14 +66,14 @@ static const auto SynchronizePullAction = QStringLiteral("synchronizePull");
 
 static const auto AboutIcon           = QStringLiteral(":/oxygen/actions/help-about.png");
 static const auto CloneIcon           = QStringLiteral(":/oxygen/places/folder-downloads.png");
-static const auto CommitIcon          = QStringLiteral(":/oxygen/actions/view-task.png");
+static const auto CommitIcon          = QStringLiteral(":/oxygen/actions/dialog-ok-apply.png");
 static const auto FolderOwnedIcon     = QStringLiteral(":/PMRWorkspacesWindow/icons/folder-owned.png");
 static const auto FolderOwnedOpenIcon = QStringLiteral(":/PMRWorkspacesWindow/icons/folder-owned-open.png");
 static const auto FolderIcon          = QStringLiteral(":/oxygen/places/folder.png");
 static const auto FolderOpenIcon      = QStringLiteral(":/oxygen/places/folder-open.png");
 static const auto RefreshIcon         = QStringLiteral(":/oxygen/actions/view-refresh.png");
-static const auto StageIcon           = QStringLiteral(":/oxygen/actions/dialog-ok-apply.png");
-static const auto UnstageIcon         = QStringLiteral(":/oxygen/actions/dialog-cancel.png");
+static const auto StageIcon           = QStringLiteral(":/oxygen/actions/list-add.png");
+static const auto UnstageIcon         = QStringLiteral(":/oxygen/actions/list-remove.png");
 static const auto SynchronizeIcon     = QStringLiteral(":/PMRWorkspacesWindow/icons/synchronize.png");
 static const auto SynchronizePushIcon = QStringLiteral(":/PMRWorkspacesWindow/icons/synchronize-push.png");
 static const auto SynchronizePullIcon = QStringLiteral(":/PMRWorkspacesWindow/icons/synchronize-pull.png");
@@ -118,6 +118,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     // Retrieve the HTML template
 
     QString fileContents;
+
     Core::readFileContentsFromFile(":/PMRWorkspacesWindow/output.html", fileContents);
 
     mTemplate = fileContents.arg(Core::iconDataUri(CloneIcon, 16, 16),
@@ -133,11 +134,9 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                  Core::iconDataUri(SynchronizePullIcon, 16, 16))
                             .arg("%1");
 
-    // Create our timer for refreshing the current workspace
+    // Create our timer for refreshing our current workspace
 
     mTimer = new QTimer(this);
-
-    // A connection to handle the timing out of our timer
 
     connect(mTimer, SIGNAL(timeout()),
             this, SLOT(refreshCurrentWorkspace()));
@@ -930,6 +929,8 @@ void PmrWorkspacesWindowWidget::focusWindowChanged()
 
 void PmrWorkspacesWindowWidget::refreshCurrentWorkspace()
 {
+    // Refresh our current workspace
+
     refreshWorkspace(mCurrentWorkspaceUrl);
 }
 
