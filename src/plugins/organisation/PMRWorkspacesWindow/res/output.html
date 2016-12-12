@@ -80,36 +80,40 @@
                 cursor: default;
             }
 
-            img.folder {
+            img.folderOwned {
                 content: url("%3");
             }
 
-            img.folderOpen {
+            img.folderOwnedOpen {
                 content: url("%4");
             }
 
-            img.owned {
+            img.folder {
                 content: url("%5");
             }
 
-            img.stage {
+            img.folderOpen {
                 content: url("%6");
             }
 
-            img.unstage {
+            img.stage {
                 content: url("%7");
             }
 
-            img.synchronize {
+            img.unstage {
                 content: url("%8");
             }
 
-            img.synchronizePush {
+            img.synchronize {
                 content: url("%9");
             }
 
-            img.synchronizePull {
+            img.synchronizePush {
                 content: url("%10");
+            }
+
+            img.synchronizePull {
+                content: url("%11");
             }
 
             p {
@@ -231,12 +235,12 @@
     </head>
     <body ondragstart="return false;" ondrop="return false;">
         <p id="message">
-            %11
+            %12
         </p>
 
         <table class="fullWidth">
             <tbody id="workspaces">
-                %12
+                %13
             </tbody>
         </table>
     </body>

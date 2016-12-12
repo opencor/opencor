@@ -67,9 +67,10 @@ static const auto SynchronizePullAction = QStringLiteral("synchronizePull");
 static const auto AboutIcon           = QStringLiteral(":/oxygen/actions/help-about.png");
 static const auto CloneIcon           = QStringLiteral(":/oxygen/places/folder-downloads.png");
 static const auto CommitIcon          = QStringLiteral(":/oxygen/actions/view-task.png");
+static const auto FolderOwnedIcon     = QStringLiteral(":/PMRWorkspacesWindow/icons/folder-owned.png");
+static const auto FolderOwnedOpenIcon = QStringLiteral(":/PMRWorkspacesWindow/icons/folder-owned-open.png");
 static const auto FolderIcon          = QStringLiteral(":/oxygen/places/folder.png");
 static const auto FolderOpenIcon      = QStringLiteral(":/oxygen/places/folder-open.png");
-static const auto OwnedIcon           = QStringLiteral(":/oxygen/places/folder-favorites.png");
 static const auto RefreshIcon         = QStringLiteral(":/oxygen/actions/view-refresh.png");
 static const auto StageIcon           = QStringLiteral(":/oxygen/actions/dialog-ok-apply.png");
 static const auto UnstageIcon         = QStringLiteral(":/oxygen/actions/dialog-cancel.png");
@@ -109,7 +110,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     connect(mPmrWebService, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceSynchronized(PMRSupport::PmrWorkspace *)));
 
-    // Handle workspace cloned signals from other plugins
+    // Connection to handle a response from our workspace manager
 
     connect(mWorkspaceManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
@@ -121,9 +122,10 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     mTemplate = fileContents.arg(Core::iconDataUri(CloneIcon, 16, 16),
                                  Core::iconDataUri(CommitIcon, 16, 16))
+                            .arg(Core::iconDataUri(FolderOwnedIcon, 16, 16),
+                                 Core::iconDataUri(FolderOwnedOpenIcon, 16, 16))
                             .arg(Core::iconDataUri(FolderIcon, 16, 16),
                                  Core::iconDataUri(FolderOpenIcon, 16, 16))
-                            .arg(Core::iconDataUri(OwnedIcon, 16, 16))
                             .arg(Core::iconDataUri(StageIcon, 16, 16),
                                  Core::iconDataUri(UnstageIcon, 16, 16))
                             .arg(Core::iconDataUri(SynchronizeIcon, 16, 16),
@@ -646,12 +648,12 @@ const QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFold
 
 const QString PmrWorkspacesWindowWidget::actionHtml(const StringPairs &pActions)
 {
-    QStringList actions = QStringList();
+    QString actions = QString();
 
     foreach (const StringPair &action, pActions)
-        actions << QString("<a href=\"%1|%2\"><img class=\"button noHover %1\"></a>").arg(action.first, action.second);
+        actions += QString("<a href=\"%1|%2\"><img class=\"button noHover %1\"></a>").arg(action.first, action.second);
 
-    return actions.join("");
+    return actions;
 }
 
 //==============================================================================
@@ -790,7 +792,7 @@ QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorksp
     QString url = pWorkspace->url();
     QString name = pWorkspace->name();
     QString path = pWorkspace->path();
-    QString icon = pWorkspace->isOwned()?"owned":"folder";
+    QString icon = pWorkspace->isOwned()?"folderOwned":"folder";
     QString status = QString();
     StringPairs actionList = StringPairs();
     PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = pWorkspace->gitWorkspaceStatus();
