@@ -383,6 +383,7 @@ SET(PLUGINS
     editing/RawTextView
 
     miscellaneous/HelpWindow
+    miscellaneous/PythonConsoleWindow
     miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
