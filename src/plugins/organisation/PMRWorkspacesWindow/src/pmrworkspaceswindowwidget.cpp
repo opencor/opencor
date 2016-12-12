@@ -106,8 +106,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     connect(mPmrWebService, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
-    connect(mPmrWebService, SIGNAL(workspaceCreated(const QString &)),
-            this, SLOT(workspaceCreated(const QString &)));
     connect(mPmrWebService, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceSynchronized(PMRSupport::PmrWorkspace *)));
 
@@ -302,16 +300,6 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
-{
-    Q_UNUSED(pEvent);
-
-    // We handle this event ourselves so default event processing
-    // doesn't do anything (such as follow a link or open a file).
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     QWebElement webElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
@@ -483,7 +471,8 @@ QSize PmrWorkspacesWindowWidget::sizeHint() const
 {
     // Suggest a default size for our PMR workspaces widget
     // Note: this is critical if we want a docked widget, with a PMR workspaces
-    //        widget on it, to have a decent size when docked to the main window.
+    //       widget on it, to have a decent size when docked to the main
+    //       window...
 
     return defaultSize(0.15);
 }
@@ -788,7 +777,7 @@ QString PmrWorkspacesWindowWidget::contentsHtml(const PMRSupport::PmrWorkspaceFi
                 itemHtml << fileHtml(fileNode);
         }
 
-        return html.arg(pHidden?" hidden":"", itemHtml.join("\n"));
+        return html.arg(pHidden?" hidden":QString(), itemHtml.join("\n"));
     } else {
         return emptyContentsHtml();
     }
@@ -823,8 +812,8 @@ QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorksp
         if (workspaceStatus & PMRSupport::PmrWorkspace::StatusCommit)
             actionList << StringPair(CommitAction, url);
 
-        // Show synchronisation button, with different styles to
-        // indicate exactly what it will do
+        // Show synchronisation button, with different styles to indicate
+        // exactly what it will do
 
         if (pWorkspace->isOwned()) {
             if (workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead)
@@ -856,9 +845,9 @@ QStringList PmrWorkspacesWindowWidget::folderHtml(const PMRSupport::PmrWorkspace
 
     ++mRow;
 
-    QStringList html = QStringList(containerHtml((mRow % 2)?"folder":"folder even",
-                                                 icon, fullname, pFileNode->shortName(), "",
-                                                 StringPairs()));
+    QStringList html = QStringList(containerHtml("folder", icon, fullname,
+                                                 pFileNode->shortName(),
+                                                 QString(), StringPairs()));
 
     html << contentsHtml(pFileNode, !mExpandedItems.contains(fullname));
 
@@ -870,7 +859,6 @@ QStringList PmrWorkspacesWindowWidget::folderHtml(const PMRSupport::PmrWorkspace
 void PmrWorkspacesWindowWidget::setCurrentWorkspaceUrl(const QString &pUrl)
 {
     if (pUrl != mCurrentWorkspaceUrl) {
-
         // Close the current workspace if we are selecting a different one
 
         if (!mCurrentWorkspaceUrl.isEmpty()) {
@@ -900,10 +888,11 @@ void PmrWorkspacesWindowWidget::setCurrentWorkspaceUrl(const QString &pUrl)
 
 void PmrWorkspacesWindowWidget::startStopTimer()
 {
-    // Start our timer if OpenCOR is active and we have a current workspace, or stop
-    // it if either OpenCOR is not active or we no longer have have a current workspace.
-    // Note: If we are to start our timer, then we refresh the workspace first since
-    //       waiting one second may seem long to a user.
+    // Start our timer if OpenCOR is active and we have a current workspace, or
+    // stop it if either OpenCOR is not active or we no longer have have a
+    // current workspace
+    // Note: if we are to start our timer, then we refresh the workspace first
+    //       since waiting one second may seem long to a user...
 
     if (Core::opencorActive() && !mCurrentWorkspaceUrl.isEmpty() && !mTimer->isActive()) {
         disconnect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
@@ -914,6 +903,7 @@ void PmrWorkspacesWindowWidget::startStopTimer()
            modifications) where the PmrWorkspace class compares (via SHA?)
            current and new status.
         */
+
         refreshCurrentWorkspace();
 
         connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
@@ -945,8 +935,8 @@ void PmrWorkspacesWindowWidget::refreshCurrentWorkspace()
 
 void PmrWorkspacesWindowWidget::expandHtmlTree(const QString &pId)
 {
-    QWebElement trElement = page()->mainFrame()->documentElement().findFirst(
-                                QString("tr[id=\"%1\"] + tr").arg(pId));
+    QWebElement trElement = page()->mainFrame()->documentElement().findFirst(QString("tr[id=\"%1\"] + tr").arg(pId));
+
     if (!trElement.isNull()) {
         if (mExpandedItems.contains(pId)) {
             trElement.addClass("hidden");
@@ -1025,10 +1015,11 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
     if (pErrorMessage.isEmpty() && pAuthenticated) {
         // We now reconcile URLs of my-workspaces (on PMR) with those from
-        // workspace folders. In doing so, folders/URLs that don't correspond to
-        // an actual PMR workspace are pruned from the relevant maps
+        // workspace folders (in doing so, folders/URLs that don't correspond to
+        // an actual PMR workspace are pruned from the relevant maps)
 
-        // First, clear the owned flag from the list of URLs with workspace folders
+        // First, clear the owned flag from the list of URLs with workspace
+        // folders
 
         QMutableMapIterator<QString, QPair<QString, bool>> urlsIterator(mUrlFolderNameMines);
 
@@ -1253,15 +1244,6 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace(const QString &pUrl,
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::workspaceCreated(const QString &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // Ignore as workspaceCloned() will be called next
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
 {
     if (pWorkspace) {
@@ -1287,9 +1269,8 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
 void PmrWorkspacesWindowWidget::workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace)
 {
-    if (pWorkspace) {
+    if (pWorkspace)
         refreshWorkspace(pWorkspace->url());
-    }
 }
 
 //==============================================================================

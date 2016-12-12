@@ -73,7 +73,6 @@ public:
 
 protected:
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
-    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual QSize sizeHint() const;
@@ -155,7 +154,6 @@ public slots:
                     const bool &pAuthenticated = true);
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceCreated(const QString &pUrl);
     void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
