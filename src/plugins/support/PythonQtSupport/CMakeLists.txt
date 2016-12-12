@@ -19,6 +19,3 @@ ADD_PLUGIN(PythonConsoleWindow
     PLUGINS
         PythonQtAPI
 )
-
-#  ctkAbstractPythonManager.cpp
-#  ctkAbstractPythonManager.h

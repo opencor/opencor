@@ -44,7 +44,7 @@ PythonConsoleWindow::PythonConsoleWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
-    // Get the Python manager
+    // Get the Python Qt manager
 
     auto pythonManager = PythonQtSupport::PythonQtSupportPlugin::pythonManager();
 

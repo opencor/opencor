@@ -1,7 +1,5 @@
 PROJECT(PythonQtAPIPlugin)
 
-SET(USE_PREBUILT_PYTHONQTQT_PACKAGE OFF)
-
 # Specify the version of PythonQt we are using.
 
 SET(PYTHONQTAPI_VERSION 3.1)
@@ -25,10 +23,6 @@ SET(EXTERNAL_BINARIES ${PYTHONQT_LIBRARY})
 
 SET(RELATIVE_INSTALL_DIR external/${REMOTE_EXTERNAL_BINARIES_DIR})
 SET(FULL_INSTALL_DIR ${PROJECT_SOURCE_DIR}/${RELATIVE_INSTALL_DIR})
-
-# The PythonQt runtime library directory
-
-SET(PYTHONQT_LIBRARY_DIR lib/python${PYTHONQT_SHORT_VERSION})
 
 # Specify the files that will have their SHA1 checked when packaged.
 
