@@ -228,6 +228,8 @@ ADD_PLUGIN(Python
         ${RELATIVE_INSTALL_DIR}/include/python${PYTHON_SHORT_VERSION}${PYTHON_ABIFLAGS}
     PLUGINS
         Core
+        OpenSSL
+        zlib
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
     EXTERNAL_BINARIES_DIR

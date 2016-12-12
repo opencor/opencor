@@ -59,7 +59,7 @@ PLUGININFO_FUNC PythonPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension ..."));
 
     return new PluginInfo(PluginInfo::ThirdParty, false, true,
-                          QStringList(),
+                          QStringList() << "zlib" << "OpenSSL",
                           descriptions);
 }
 
