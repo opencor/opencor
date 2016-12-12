@@ -2,7 +2,7 @@ PROJECT(PythonQtSupportPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(PythonConsoleWindow
+ADD_PLUGIN(PythonQtSupport
     SOURCES
         ../../plugininfo.cpp
         ../../plugininterface.cpp
