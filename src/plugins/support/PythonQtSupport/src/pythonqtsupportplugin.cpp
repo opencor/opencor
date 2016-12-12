@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "PythonQt.h"
+#include "ctkAbstractPythonManager.h"
 
 //==============================================================================
 
@@ -77,22 +77,21 @@ bool PythonQtSupportPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void PythonQtSupportPlugin::initializePlugin()
 {
-    // Initialise Python and PythonQt
+    // Create and initialise a new CTK Python manager
 
-    Py_Initialize();
-    ::PythonQt::init(::PythonQt::PythonAlreadyInitialized | ::PythonQt::RedirectStdOut);
+    auto pythonManager = new ctkAbstractPythonManager(this);
+    pythonManager->initialize();
 
-    instance()->mPythonQtInstance = ::PythonQt::self();
+    // Save it in our instance
+
+    instance()->mPythonManager = pythonManager;
 }
 
 //==============================================================================
 
 void PythonQtSupportPlugin::finalizePlugin()
 {
-    // Clean up PythonQt and Python
-
-    ::PythonQt::cleanup();
-    Py_Finalize();
+    delete mPythonManager;
 }
 
 //==============================================================================
@@ -132,6 +131,13 @@ void PythonQtSupportPlugin::handleUrl(const QUrl &pUrl)
 }
 
 //==============================================================================
+//==============================================================================
+
+ctkAbstractPythonManager *PythonQtSupportPlugin::pythonManager(void)
+{
+    return instance()->mPythonManager;
+}
+
 //==============================================================================
 
 PythonQtSupportPlugin *PythonQtSupportPlugin::instance(void)

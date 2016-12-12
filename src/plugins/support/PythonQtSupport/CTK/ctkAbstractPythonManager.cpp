@@ -65,7 +65,7 @@ ctkAbstractPythonManagerPrivate::ctkAbstractPythonManagerPrivate(ctkAbstractPyth
   q_ptr(&object)
 {
   this->InitFunction = 0;
-  this->PythonQtInitializationFlags = PythonQt::IgnoreSiteModule | PythonQt::RedirectStdOut;
+  this->PythonQtInitializationFlags = PythonQt::RedirectStdOut;
 }
 
 //-----------------------------------------------------------------------------

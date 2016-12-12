@@ -28,7 +28,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-class PythonQt;
+class ctkAbstractPythonManager;
 
 //==============================================================================
 
@@ -52,10 +52,12 @@ class PythonQtSupportPlugin : public QObject, public PluginInterface
 public:
 #include "plugininterface.inl"
 
-    PythonQtSupportPlugin *instance();
+    static ctkAbstractPythonManager *pythonManager();
+
+    static PythonQtSupportPlugin *instance();
 
 private:
-    PythonQt *mPythonQtInstance;
+    ctkAbstractPythonManager *mPythonManager;
 };
 
 //==============================================================================
