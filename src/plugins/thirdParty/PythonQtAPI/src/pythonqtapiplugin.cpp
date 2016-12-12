@@ -17,10 +17,10 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PythonQt plugin
+// Python Qt API plugin
 //==============================================================================
 
-#include "pythonqtplugin.h"
+#include "pythonqtapiplugin.h"
 
 //==============================================================================
 
@@ -29,11 +29,11 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonQt {
+namespace PythonQtAPI {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonQtPluginInfo()
+PLUGININFO_FUNC PythonQtAPIPluginInfo()
 {
     Descriptions descriptions;
 
@@ -49,7 +49,7 @@ PLUGININFO_FUNC PythonQtPluginInfo()
 // Plugin interface
 //==============================================================================
 
-bool PythonQtPlugin::definesPluginInterfaces()
+bool PythonQtAPIPlugin::definesPluginInterfaces()
 {
     // We don't handle this interface...
 
@@ -58,7 +58,7 @@ bool PythonQtPlugin::definesPluginInterfaces()
 
 //==============================================================================
 
-bool PythonQtPlugin::pluginInterfacesOk(const QString &pFileName,
+bool PythonQtAPIPlugin::pluginInterfacesOk(const QString &pFileName,
                                         QObject *pInstance)
 {
     Q_UNUSED(pFileName);
@@ -70,21 +70,21 @@ bool PythonQtPlugin::pluginInterfacesOk(const QString &pFileName,
 }
 
 //==============================================================================
-void PythonQtPlugin::initializePlugin()
+void PythonQtAPIPlugin::initializePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void PythonQtPlugin::finalizePlugin()
+void PythonQtAPIPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void PythonQtPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void PythonQtAPIPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -93,7 +93,7 @@ void PythonQtPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void PythonQtPlugin::loadSettings(QSettings *pSettings)
+void PythonQtAPIPlugin::loadSettings(QSettings *pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -102,7 +102,7 @@ void PythonQtPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PythonQtPlugin::saveSettings(QSettings *pSettings) const
+void PythonQtAPIPlugin::saveSettings(QSettings *pSettings) const
 {
     Q_UNUSED(pSettings);
 
@@ -111,7 +111,7 @@ void PythonQtPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void PythonQtPlugin::handleUrl(const QUrl &pUrl)
+void PythonQtAPIPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -120,7 +120,7 @@ void PythonQtPlugin::handleUrl(const QUrl &pUrl)
 
 //==============================================================================
 
-}   // namespace PythonQt
+}   // namespace PythonQtAPI
 }   // namespace OpenCOR
 
 //==============================================================================

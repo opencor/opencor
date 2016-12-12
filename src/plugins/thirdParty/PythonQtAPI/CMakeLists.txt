@@ -1,10 +1,10 @@
-PROJECT(PythonQtPlugin)
+PROJECT(PythonQtAPIPlugin)
 
 SET(USE_PREBUILT_PYTHONQTQT_PACKAGE OFF)
 
 # Specify the version of PythonQt we are using.
 
-SET(PYTHONQT_VERSION 3.1)
+SET(PYTHONQTAPI_VERSION 3.1)
 
 # Specify the git tag in the OpenSSL repository that we want to use
 
@@ -81,7 +81,7 @@ ELSE()
     INCLUDE(ExternalProject)
 
     ExternalProject_Add(
-        PythonQtBuild
+        PythonQtAPIBuild
         DEPENDS PythonPlugin
         SOURCE_DIR ${PROJECT_SOURCE_DIR}/PythonQt
         INSTALL_DIR ${FULL_INSTALL_DIR}
@@ -102,7 +102,7 @@ ELSE()
     IF(APPLE)
         # Fix up the newly installed shared library
 
-        ExternalProject_Add_Step(PythonQtBuild set_rpath
+        ExternalProject_Add_Step(PythonQtAPIBuild set_rpath
             # Set RPATH in library to enable linking independent of location
             COMMAND install_name_tool -id @rpath/${PYTHONQT_LIBRARY} ${PYTHONQT_LIBRARY}
             WORKING_DIRECTORY ${FULL_INSTALL_DIR}/lib
@@ -113,10 +113,10 @@ ELSE()
     # Package PythonQt's include files and libraries
 
     CREATE_PACKAGE_FILE(${RELATIVE_INSTALL_DIR}
-        PythonQt ${PYTHONQT_VERSION}
+        PythonQtAPI ${PYTHONQTAPI_VERSION}
         PACKAGED_FILES ${PACKAGED_FILES}
         CHECKED_FILES ${CHECKED_FILES}
-        DEPENDENCY PythonQtBuild
+        DEPENDENCY PythonQtAPIBuild
         )
 ENDIF()
 
@@ -126,13 +126,13 @@ SET(PYTHONQT_ROOT_DIR ${FULL_INSTALL_DIR} PARENT_SCOPE)
 
 # Add the plugin
 
-ADD_PLUGIN(PythonQt
+ADD_PLUGIN(PythonQtAPI
     SOURCES
         ../../plugininfo.cpp
 
-        src/pythonqtplugin.cpp
+        src/pythonqtapiplugin.cpp
     HEADERS_MOC
-        src/pythonqtplugin.h
+        src/pythonqtapiplugin.h
     INCLUDE_DIRS
         src
         ${RELATIVE_INSTALL_DIR}/include/PythonQt
@@ -148,5 +148,5 @@ ADD_PLUGIN(PythonQt
 # We depend on PythonQt being built if we are not using the prebuilt package
 
 IF(NOT USE_PREBUILT_PYTHONQT_PACKAGE)
-    ADD_DEPENDENCIES(PythonQtPlugin PythonQtBuild)
+    ADD_DEPENDENCIES(PythonQtAPIPlugin PythonQtAPIBuild)
 ENDIF()

@@ -337,7 +337,7 @@ SET(PLUGINS
     miscellaneous/Compiler
 
     thirdParty/Python
-    thirdParty/PythonQt
+    thirdParty/PythonQtAPI
 
     # Plugins that provide support for some third-party libraries
 
