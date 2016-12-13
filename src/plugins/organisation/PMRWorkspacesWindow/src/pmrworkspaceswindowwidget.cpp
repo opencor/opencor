@@ -84,6 +84,14 @@ static const auto SynchronizePullIcon = QStringLiteral(":/PMRWorkspacesWindow/ic
 //             the current one?...
 //           - We want to be able to expand *all* workspaces, if the user so
 //             desires...
+//           - Check and optimise (e.g. create the menu actions once and for
+//             all) contextMenuEvent()...
+//           - Get rid of mouseMoveEvent() and set the tool tip using
+//             linkHovered() (see PmrWindowWidget::linkHovered()) and
+//             setLinkToolTip()...
+//           - Revisit mousePressEvent()...
+//           - Double check loadSettings() and saveSettings() (e.g. we want to
+//             be able to have anumber of workspaces expanded, not just one)...
 
 PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService,
                                                      QWidget *pParent) :
@@ -91,7 +99,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mPmrWebService(pPmrWebService),
     mWorkspaceManager(PMRSupport::PmrWorkspaceManager::instance()),
     mWorkspaceFolderUrls(QMap<QString, QString>()),
-    mUrlFolderNameMines(QMap<QString, QPair<QString, bool>>()),
+    mWorkspaceUrlFolderMines(QMap<QString, QPair<QString, bool>>()),
     mCurrentWorkspaceUrl(QString()),
     mExpandedItems(QSet<QString>()),
     mInitialized(false),
@@ -174,6 +182,71 @@ void PmrWorkspacesWindowWidget::retranslateUi()
 
     if (mInitialized)
         updateMessage();
+}
+
+//==============================================================================
+
+static const auto SettingsWorkspaces       = QStringLiteral("Workspaces");
+static const auto SettingsFolders          = QStringLiteral("Folders");
+static const auto SettingsExpandedItems    = QStringLiteral("ExpandedItems");
+static const auto SettingsCurrentWorkspace = QStringLiteral("CurrentWorkspace");
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our settings
+
+    pSettings->beginGroup(SettingsWorkspaces);
+        // Retrieve the current workspace url, if any
+
+        mCurrentWorkspaceUrl = pSettings->value(SettingsCurrentWorkspace).toString();
+
+        // Retrieve the names of folders containing cloned workspaces
+
+        QStringList folders = pSettings->value(SettingsFolders).toStringList();
+
+        foreach (const QString &folder, folders) {
+            if (!folder.isEmpty()) {
+                QString url = addWorkspaceFolder(folder);
+
+                // Ensure only the current workspace is expanded
+
+                if (url == mCurrentWorkspaceUrl)
+                    mExpandedItems.insert(mCurrentWorkspaceUrl);
+                else if (mExpandedItems.contains(url))
+                    mExpandedItems.remove(url);
+            }
+        }
+
+        // Retrieve the names of expanded workspaces and folders
+
+        mExpandedItems = pSettings->value(SettingsExpandedItems).toStringList().toSet();
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our settings
+
+    pSettings->remove(SettingsWorkspaces);
+    pSettings->beginGroup(SettingsWorkspaces);
+
+        // Keep track of the names of folders containing cloned workspaces
+
+        pSettings->setValue(SettingsFolders, QVariant(mWorkspaceFolderUrls.keys()));
+
+        // Keep track of the names of expanded workspaces and folders
+
+        pSettings->setValue(SettingsExpandedItems, QVariant(mExpandedItems.toList()));
+
+        // Keep track of the current workspace url
+
+        pSettings->setValue(SettingsCurrentWorkspace, mCurrentWorkspaceUrl);
+
+    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -376,7 +449,7 @@ void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
     }
 
     setCursor(mouseCursor);
-    QToolTip::showText(mapToGlobal(pEvent->pos()), toolTip, this, QRect());
+    QToolTip::showText(pEvent->globalPos(), toolTip, this, QRect());
 }
 
 //==============================================================================
@@ -484,67 +557,6 @@ QSize PmrWorkspacesWindowWidget::sizeHint() const
 
 //==============================================================================
 
-static const auto SettingsWorkspaces       = QStringLiteral("Workspaces");
-static const auto SettingsFolders          = QStringLiteral("Folders");
-static const auto SettingsExpandedItems    = QStringLiteral("ExpandedItems");
-static const auto SettingsCurrentWorkspace = QStringLiteral("CurrentWorkspace");
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
-{
-    pSettings->beginGroup(SettingsWorkspaces);
-        // Retrieve the current workspace url, if any
-
-        mCurrentWorkspaceUrl = pSettings->value(SettingsCurrentWorkspace).toString();
-
-        // Retrieve the names of folders containing cloned workspaces
-
-        QStringList folders = pSettings->value(SettingsFolders).toStringList();
-
-        foreach (const QString &folder, folders) {
-            if (!folder.isEmpty()) {
-                QString url = addWorkspaceFolder(folder);
-
-                // Ensure only the current workspace is expanded
-
-                if (url == mCurrentWorkspaceUrl)
-                    mExpandedItems.insert(mCurrentWorkspaceUrl);
-                else if (mExpandedItems.contains(url))
-                    mExpandedItems.remove(url);
-            }
-        }
-
-        // Retrieve the names of expanded workspaces and folders
-
-        mExpandedItems = pSettings->value(SettingsExpandedItems).toStringList().toSet();
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
-{
-    pSettings->remove(SettingsWorkspaces);
-    pSettings->beginGroup(SettingsWorkspaces);
-
-        // Keep track of the names of folders containing cloned workspaces
-
-        pSettings->setValue(SettingsFolders, QVariant(mWorkspaceFolderUrls.keys()));
-
-        // Keep track of the names of expanded workspaces and folders
-
-        pSettings->setValue(SettingsExpandedItems, QVariant(mExpandedItems.toList()));
-
-        // Keep track of the current workspace url
-
-        pSettings->setValue(SettingsCurrentWorkspace, mCurrentWorkspaceUrl);
-
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::updateMessage()
 {
     // Determine the message to be displayed, if any
@@ -578,15 +590,22 @@ void PmrWorkspacesWindowWidget::updateMessage()
 void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                                              const bool &pOwned)
 {
+    // Add the given workspace, if it hasn't already been added
+
     QString folder = pWorkspace->path();
     QString url = pWorkspace->url();
 
     if (!mWorkspaceFolderUrls.contains(folder)) {
-        if (mUrlFolderNameMines.contains(url)) {
-            duplicateCloneMessage(url, mUrlFolderNameMines.value(url).first, folder);
+        if (mWorkspaceUrlFolderMines.contains(url)) {
+            // Let the user know that there is already a workspace with that URL
+
+            duplicateCloneMessage(url, mWorkspaceUrlFolderMines.value(url).first, folder);
         } else {
+            // The given workspace hasn't already been added, so keep track of
+            // it and ask our workspace manager to do the same
+
             mWorkspaceFolderUrls.insert(folder, url);
-            mUrlFolderNameMines.insert(url, QPair<QString, bool>(folder, pOwned));
+            mWorkspaceUrlFolderMines.insert(url, QPair<QString, bool>(folder, pOwned));
 
             mWorkspaceManager->addWorkspace(pWorkspace);
         }
@@ -599,6 +618,8 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
                                                       const QString &pPath1,
                                                       const QString &pPath2)
 {
+    // Let people know that the given workspace has been cloned twice
+
     emit warning(QString("Workspace '%1' is cloned into both '%2' and '%3'").arg(pUrl, pPath1, pPath2));
 }
 
@@ -639,11 +660,11 @@ const QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFold
         }
 
         if (!res.isEmpty()) {
-            if (mUrlFolderNameMines.contains(res)) {
-                duplicateCloneMessage(res, mUrlFolderNameMines.value(res).first, pFolder);
+            if (mWorkspaceUrlFolderMines.contains(res)) {
+                duplicateCloneMessage(res, mWorkspaceUrlFolderMines.value(res).first, pFolder);
             } else {
                 mWorkspaceFolderUrls.insert(pFolder, res);
-                mUrlFolderNameMines.insert(res, QPair<QString, bool>(pFolder, false));
+                mWorkspaceUrlFolderMines.insert(res, QPair<QString, bool>(pFolder, false));
             }
         }
         return res;
@@ -1035,7 +1056,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
         // First, clear the owned flag from the list of URLs with workspace
         // folders
 
-        QMutableMapIterator<QString, QPair<QString, bool>> urlsIterator(mUrlFolderNameMines);
+        QMutableMapIterator<QString, QPair<QString, bool>> urlsIterator(mWorkspaceUrlFolderMines);
 
         while (urlsIterator.hasNext()) {
             urlsIterator.next();
@@ -1052,10 +1073,10 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
             // Check if we know its folder and flag it as ours
 
-            if (mUrlFolderNameMines.contains(url)) {
-                QString path = mUrlFolderNameMines.value(url).first;
+            if (mWorkspaceUrlFolderMines.contains(url)) {
+                QString path = mWorkspaceUrlFolderMines.value(url).first;
 
-                mUrlFolderNameMines.insert(url, QPair<QString, bool>(path, true));
+                mWorkspaceUrlFolderMines.insert(url, QPair<QString, bool>(path, true));
 
                 workspace->setPath(path);
                 workspace->open();
@@ -1265,7 +1286,7 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
         // Ensure our widget knows about the workspace
 
-        if (!mUrlFolderNameMines.contains(url))
+        if (!mWorkspaceUrlFolderMines.contains(url))
             addWorkspace(pWorkspace);
 
         // Close display of current workspace and set the cloned one current
