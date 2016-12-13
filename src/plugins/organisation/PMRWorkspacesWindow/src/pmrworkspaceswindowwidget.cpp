@@ -79,6 +79,11 @@ static const auto SynchronizePushIcon = QStringLiteral(":/PMRWorkspacesWindow/ic
 static const auto SynchronizePullIcon = QStringLiteral(":/PMRWorkspacesWindow/icons/synchronize-pull.png");
 
 //==============================================================================
+//---GRY--- TODO:
+//           - Shouldn't mTimer be used to refresh *all* workspaces and not only
+//             the current one?...
+//           - We want to be able to expand *all* workspaces, if the user so
+//             desires...
 
 PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService,
                                                      QWidget *pParent) :
@@ -134,7 +139,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                  Core::iconDataUri(SynchronizePullIcon, 16, 16))
                             .arg("%1");
 
-    // Create our timer for refreshing our current workspace
+    // Create a timer for refreshing our current workspace
 
     mTimer = new QTimer(this);
 
@@ -168,7 +173,7 @@ void PmrWorkspacesWindowWidget::retranslateUi()
     // Retranslate our message, if we have been initialised
 
     if (mInitialized)
-        page()->mainFrame()->documentElement().findFirst("p[id=message]").setInnerXml(message());
+        updateMessage();
 }
 
 //==============================================================================
@@ -541,27 +546,32 @@ void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-QString PmrWorkspacesWindowWidget::message() const
+void PmrWorkspacesWindowWidget::updateMessage()
 {
     // Determine the message to be displayed, if any
 
-    QString res = QString();
+    QString message = QString();
 
     if (!mAuthenticated) {
-        res = tr("You need to authenticate yourself...");
+        message = tr("You need to authenticate yourself...");
     } else if (mErrorMessage.isEmpty()) {
-        if (!mWorkspaceManager->count()) {
-            res = tr("No workspaces were found.");
-        } else if (mWorkspaceManager->count() == 1) {
-            res = tr("<strong>1</strong> workspace was found:");
-        } else {
-            res = tr("<strong>%1</strong> workspaces were found:").arg(QLocale().toString(mWorkspaceManager->count()));
-        }
+        if (!mWorkspaceManager->count())
+            message = tr("No workspaces were found.");
     } else {
-        res = tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true);
+        message = tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true);
     }
 
-    return res;
+    // Update our message element, and show/hide it depending on whether we have
+    // a message to show
+
+    QWebElement messageElement = page()->mainFrame()->documentElement().findFirst("p[id=message]");
+
+    if (message.isEmpty())
+        messageElement.addClass("hidden");
+    else
+        messageElement.removeClass("hidden");
+
+    messageElement.setInnerXml(message);
 }
 
 //==============================================================================
@@ -973,7 +983,9 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
     foreach (PMRSupport::PmrWorkspace *workspace, workspaces)
         html << workspaceHtml(workspace);
 
-    setHtml(mTemplate.arg(message(), html.join("\n")));
+    setHtml(mTemplate.arg(html.join("\n")));
+
+    updateMessage();
 }
 
 //==============================================================================

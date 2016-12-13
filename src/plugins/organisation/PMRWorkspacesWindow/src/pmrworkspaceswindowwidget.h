@@ -100,7 +100,7 @@ private:
 
     QTimer *mTimer;
 
-    QString message() const;
+    void updateMessage();
 
     void displayWorkspaces();
     void expandHtmlTree(const QString &pId);
