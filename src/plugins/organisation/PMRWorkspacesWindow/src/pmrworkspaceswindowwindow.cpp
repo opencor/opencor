@@ -167,7 +167,7 @@ void PmrWorkspacesWindowWindow::retranslateUi()
 
 void PmrWorkspacesWindowWindow::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the settings of the workspaces widget
+    // Retrieve the settings of the workspaces window widget
 
     pSettings->beginGroup(mPmrWorkspacesWindowWidget->objectName());
         mPmrWorkspacesWindowWidget->loadSettings(pSettings);
@@ -178,7 +178,7 @@ void PmrWorkspacesWindowWindow::loadSettings(QSettings *pSettings)
 
 void PmrWorkspacesWindowWindow::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the settings of the workspaces widget
+    // Keep track of the settings of the workspaces window widget
 
     pSettings->beginGroup(mPmrWorkspacesWindowWidget->objectName());
         mPmrWorkspacesWindowWidget->saveSettings(pSettings);

@@ -65,7 +65,8 @@ public:
     bool hasWorkspaces() const;
 
     void aboutWorkspace(const QString &pUrl);
-    void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace, const bool &pOwned=false);
+    void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
+                      const bool &pOwned = false);
     const QString addWorkspaceFolder(const QString &pFolder);
     void refreshWorkspace(const QString &pUrl);
     void refreshWorkspaceFile(const QString &pPath);
@@ -75,6 +76,7 @@ protected:
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
+
     virtual QSize sizeHint() const;
 
 private:
@@ -83,7 +85,7 @@ private:
     PMRSupport::PmrWorkspaceManager *mWorkspaceManager;
 
     QMap<QString, QString> mWorkspaceFolderUrls;
-    QMap<QString, QPair<QString, bool>> mUrlFolderNameMines;
+    QMap<QString, QPair<QString, bool>> mWorkspaceUrlFolderMines;
 
     QString mCurrentWorkspaceUrl;
     QSet<QString> mExpandedItems;
@@ -112,7 +114,8 @@ private:
                           const QString &pId, const QString &pName,
                           const QString &pStatus,
                           const StringPairs &pActionList);
-    QString contentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode, const bool &pHidden);
+    QString contentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                         const bool &pHidden);
     QString emptyContentsHtml();
 
     static QStringList fileStatusActionHtml(const QString &pPath,
@@ -128,8 +131,8 @@ private:
     static QWebElement parentWorkspaceElement(const QWebElement &pRowElement);
 
     void cloneWorkspace(const QString &pUrl);
-    void duplicateCloneMessage(const QString &pUrl,
-                               const QString &pPath1, const QString &pPath2);
+    void duplicateCloneMessage(const QString &pUrl, const QString &pPath1,
+                               const QString &pPath2);
 
     void commitWorkspace(const QString &pUrl);
     void synchronizeWorkspace(const QString &pUrl, const bool &pPush = true);
