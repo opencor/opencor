@@ -27,6 +27,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QContextMenuEvent>
 #include <QMenu>
 
 //==============================================================================
@@ -47,13 +48,6 @@ SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWi
     // Create our context menu
 
     mContextMenu = new QMenu(this);
-
-    // We want our own context menu
-
-    setContextMenuPolicy(Qt::CustomContextMenu);
-
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(propertyEditorContextMenu(const QPoint &)));
 
     // Keep track of when the user changes a property value
 
@@ -90,6 +84,27 @@ void SingleCellViewInformationParametersWidget::retranslateUi()
     // Retranslate the extra info of all our parameters
 
     updateExtraInfos();
+}
+
+//==============================================================================
+
+void SingleCellViewInformationParametersWidget::contextMenuEvent(QContextMenuEvent *pEvent)
+{
+    // Make sure that we have a current property
+
+    Core::Property *crtProperty = currentProperty();
+
+    if (!crtProperty)
+        return;
+
+    // Make sure that our current property is not a section
+
+    if (crtProperty->type() == Core::Property::Section)
+        return;
+
+    // Generate and show the context menu
+
+    mContextMenu->exec(pEvent->globalPos());
 }
 
 //==============================================================================
@@ -525,29 +540,6 @@ void SingleCellViewInformationParametersWidget::updateExtraInfos()
             property->setExtraInfo(parameterType);
         }
     }
-}
-
-//==============================================================================
-
-void SingleCellViewInformationParametersWidget::propertyEditorContextMenu(const QPoint &pPosition) const
-{
-    Q_UNUSED(pPosition);
-
-    // Make sure that we have a current property
-
-    Core::Property *crtProperty = currentProperty();
-
-    if (!crtProperty)
-        return;
-
-    // Make sure that our current property is not a section
-
-    if (crtProperty->type() == Core::Property::Section)
-        return;
-
-    // Generate and show the context menu
-
-    mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

@@ -28,6 +28,7 @@ limitations under the License.
 
 #include <QApplication>
 #include <QClipboard>
+#include <QContextMenuEvent>
 #include <QDesktopServices>
 #include <QIODevice>
 #include <QMenu>
@@ -69,13 +70,6 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     setZoomingEnabled(false);
 
-    // We want our own context menu
-
-    setContextMenuPolicy(Qt::CustomContextMenu);
-
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
-
     // Prevent objects from being dropped on us
 
     setAcceptDrops(false);
@@ -113,6 +107,24 @@ void PmrWindowWidget::retranslateUi()
 
     if (mInitialized)
         page()->mainFrame()->documentElement().findFirst("p[id=message]").setInnerXml(message());
+}
+
+//==============================================================================
+
+void PmrWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
+{
+    // Retrieve some information about the link, if any
+
+    QString textContent;
+
+    retrieveLinkInformation(mExposureUrl, textContent);
+
+    // Show our context menu to allow the copying of the URL of the exposure,
+    // but only if we are over a link, i.e. if both mLink and textContent are
+    // not empty
+
+    if (!mExposureUrl.isEmpty() && !textContent.isEmpty())
+        mContextMenu->exec(pEvent->globalPos());
 }
 
 //==============================================================================
@@ -395,24 +407,6 @@ void PmrWindowWidget::linkHovered()
     }
 
     setLinkToolTip(linkToolTip);
-}
-
-//==============================================================================
-
-void PmrWindowWidget::showCustomContextMenu()
-{
-    // Retrieve some information about the link, if any
-
-    QString textContent;
-
-    retrieveLinkInformation(mExposureUrl, textContent);
-
-    // Show our context menu to allow the copying of the URL of the exposure,
-    // but only if we are over a link, i.e. if both mLink and textContent are
-    // not empty
-
-    if (!mExposureUrl.isEmpty() && !textContent.isEmpty())
-        mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

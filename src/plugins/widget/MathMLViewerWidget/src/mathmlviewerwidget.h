@@ -79,6 +79,7 @@ public:
     void setDigitGrouping(const bool &pDigitGrouping);
 
 protected:
+    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
     virtual void paintEvent(QPaintEvent *pEvent);
 
     virtual QSize minimumSizeHint() const;
@@ -112,8 +113,6 @@ private:
     QString processedContents() const;
 
 private slots:
-    void showCustomContextMenu() const;
-
     void updateMathmlViewerWidget();
 
     void copyToClipboard();
