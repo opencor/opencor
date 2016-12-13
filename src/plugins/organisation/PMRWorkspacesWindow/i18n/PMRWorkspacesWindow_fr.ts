@@ -134,14 +134,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&lt;strong&gt;1&lt;/strong&gt; workspace was found:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; workspaces were found:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
         <translation type="unfinished"></translation>
     </message>

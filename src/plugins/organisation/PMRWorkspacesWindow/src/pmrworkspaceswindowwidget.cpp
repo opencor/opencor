@@ -192,8 +192,7 @@ static const auto WStatusClass = QStringLiteral("wStatus");
 void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 {
     QMenu *menu = new QMenu(this);
-    const QPoint &pos = pEvent->pos();
-    QWebElement trElement = page()->mainFrame()->hitTestContent(pos).element();
+    QWebElement trElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
 
     while (!trElement.isNull() && trElement.tagName().compare(TrTag))
         trElement = trElement.parent();
@@ -275,7 +274,7 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
     }
 
     if (!menu->isEmpty()) {
-        QAction *item = menu->exec(mapToGlobal(pos));
+        QAction *item = menu->exec(pEvent->globalPos());
 
         if (item) {
             QStringList linkList = item->data().toString().split("|");
