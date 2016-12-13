@@ -394,27 +394,25 @@ void PmrWindowWidget::linkHovered()
     // link
     // Note: this follows the approach used in linkClicked()...
 
-    QString linkToolTip = QString();
-
     if (textContent.isEmpty()) {
         QStringList linkList = link.split("|");
 
         if (!linkList[0].compare("cloneWorkspace")) {
-            linkToolTip = tr("Clone Workspace");
+            setLinkToolTip(tr("Clone Workspace"));
         } else if (linkList.count() == 2) {
             if (page()->mainFrame()->documentElement().findFirst(QString("img[id=exposureFilesButton_%1]").arg(mExposureUrlId.value(linkList[1]))).hasClass("button"))
-                linkToolTip = tr("Show Exposure Files");
+                setLinkToolTip(tr("Show Exposure Files"));
             else
-                linkToolTip = tr("Hide Exposure Files");
+                setLinkToolTip(tr("Hide Exposure Files"));
+        } else {
+            setLinkToolTip(QString());
         }
     } else {
         if (element.parent().hasClass("exposureFile"))
-            linkToolTip = tr("Open Exposure File");
+            setLinkToolTip(tr("Open Exposure File"));
         else
-            linkToolTip = tr("Browse Exposure");
+            setLinkToolTip(tr("Browse Exposure"));
     }
-
-    setLinkToolTip(linkToolTip);
 }
 
 //==============================================================================
