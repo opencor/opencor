@@ -65,6 +65,7 @@ public:
     void selectFirstItem();
 
 protected:
+    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
 private:
@@ -82,8 +83,6 @@ public slots:
     void clear();
 
 private slots:
-    void showCustomContextMenu() const;
-
     void copyToClipboard();
 
     void requestItem(const QModelIndex &pItemIndex);

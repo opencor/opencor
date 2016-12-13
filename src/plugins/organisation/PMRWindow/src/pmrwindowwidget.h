@@ -57,6 +57,8 @@ public:
     bool hasExposures() const;
 
 protected:
+    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
+
     virtual QSize sizeHint() const;
 
 private:
@@ -96,8 +98,6 @@ private slots:
 
     void linkClicked();
     void linkHovered();
-
-    void showCustomContextMenu();
 };
 
 //==============================================================================
