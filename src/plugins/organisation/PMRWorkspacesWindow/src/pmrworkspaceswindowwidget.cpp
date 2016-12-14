@@ -204,15 +204,13 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 
         // Retrieve the names of folders containing cloned workspaces
 
-        QStringList folders = pSettings->value(SettingsFolders).toStringList();
-
-        foreach (const QString &folder, folders) {
+        foreach (const QString &folder, pSettings->value(SettingsFolders).toStringList()) {
             if (!folder.isEmpty()) {
                 QString url = addWorkspaceFolder(folder);
 
                 // Ensure only the current workspace is expanded
 
-                if (url == mCurrentWorkspaceUrl)
+                if (!url.compare(mCurrentWorkspaceUrl))
                     mExpandedItems.insert(mCurrentWorkspaceUrl);
                 else if (mExpandedItems.contains(url))
                     mExpandedItems.remove(url);
@@ -910,6 +908,7 @@ void PmrWorkspacesWindowWidget::setCurrentWorkspaceUrl(const QString &pUrl)
         // Set the new current workspace and ensure it is expanded when displayed
 
         mCurrentWorkspaceUrl = pUrl;
+
         mExpandedItems.insert(mCurrentWorkspaceUrl);
 
         // Set the active directory to the workspace
