@@ -736,6 +736,10 @@ void MainWindow::loadSettings()
 
 void MainWindow::saveSettings() const
 {
+    // Start afresh
+
+    mSettings->clear();
+
     // Keep track of the geometry and state of the main window
 
     mSettings->setValue(SettingsGeometry, saveGeometry());
