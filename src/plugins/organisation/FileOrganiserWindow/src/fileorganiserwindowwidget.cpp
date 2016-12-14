@@ -273,7 +273,6 @@ void FileOrganiserWindowWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the data model
 
-    pSettings->remove(SettingsModel);
     pSettings->beginGroup(SettingsModel);
         saveItemSettings(pSettings, mModel->invisibleRootItem(), -1);
     pSettings->endGroup();
