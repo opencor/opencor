@@ -198,7 +198,7 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
     // Retrieve our settings
 
     pSettings->beginGroup(SettingsWorkspaces);
-        // Retrieve the current workspace url, if any
+        // Retrieve the current workspace URL, if any
 
         mCurrentWorkspaceUrl = pSettings->value(SettingsCurrentWorkspace).toString();
 
@@ -209,6 +209,8 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
                 QString url = addWorkspaceFolder(folder);
 
                 // Ensure only the current workspace is expanded
+//---GRY--- Hmm... this seems useless since we initialise mExpandedItems after
+//          the foreach() statement?...
 
                 if (!url.compare(mCurrentWorkspaceUrl))
                     mExpandedItems.insert(mCurrentWorkspaceUrl);
@@ -638,15 +640,14 @@ QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFolder)
         // folder
 
         QString res = QString();
-
-        git_repository *gitRepository = 0;
         QByteArray folderByteArray = pFolder.toUtf8();
+        git_repository *gitRepository = 0;
 
         if (!git_repository_open(&gitRepository, folderByteArray.constData())) {
             git_strarray remotes;
 
             if (!git_remote_list(&remotes, gitRepository)) {
-                for (int i = 0; i < (int)remotes.count; i++) {
+                for (size_t i = 0; i < remotes.count; ++i) {
                     char *name = remotes.strings[i];
 
                     if (!strcmp(name, "origin")) {
@@ -664,6 +665,9 @@ QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFolder)
 
             git_repository_free(gitRepository);
         }
+
+        // Keep track of the workspace space URL, if there is one and it's not
+        // already tracked
 
         if (!res.isEmpty()) {
             if (mWorkspaceUrlFolderMines.contains(res)) {
