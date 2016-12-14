@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "ctkAbstractPythonManager.h"
+#include "PythonQt_QtBindings.h"
 
 //==============================================================================
 
@@ -77,12 +78,20 @@ bool PythonQtSupportPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void PythonQtSupportPlugin::initializePlugin()
 {
+    // Use our (patched) backend for PythonQt
+
+    qputenv("MPLBACKEND", "module://matplotlib.backends.backend_qt5agg");
+
     // Create and initialise a new CTK Python manager
 
     auto pythonManager = new ctkAbstractPythonManager(this);
     pythonManager->initialize();
 
     // Save it in our instance
+    // Enable the Qt bindings for Python
+
+    PythonQt_init_QtBindings();
+
 
     instance()->mPythonManager = pythonManager;
 }

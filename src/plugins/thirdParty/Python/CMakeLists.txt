@@ -6,6 +6,12 @@ SET(PYTHON_VERSION 3.5.2)
 SET(PYTHON_SHORT_VERSION 3.5)
 SET(PYTHON_NUMERIC_VERSION 35)
 
+# The versions of the Python packages we bundle.
+
+SET(NUMPY_VERSION 1.11.2)
+SET(SCIPY_VERSION 0.18.1)
+SET(MATPLOTLIB_VERSION 1.5.3)
+
 # The names of the libraries built by Python's build process.
 
 IF(WIN32)
@@ -173,20 +179,43 @@ ELSE()
         SET(INSTALL_STEP set_rpath)
     ENDIF()
 
+    # Clean our site-packages directory
+
+    ExternalProject_Add_Step(PythonBuild clean_site
+        COMMAND ${CMAKE_COMMAND} -E remove_directory site-packages
+        COMMAND ${CMAKE_COMMAND} -E make_directory site-packages
+        WORKING_DIRECTORY ${FULL_INSTALL_DIR}/lib/python${PYTHON_SHORT_VERSION}
+        DEPENDEES ${INSTALL_STEP}
+        )
+
     # Install the Python package installer
 
     ExternalProject_Add_Step(PythonBuild install_pip
         COMMAND ./python ${PROJECT_SOURCE_DIR}/bin/get-pip.py --prefix ..
         WORKING_DIRECTORY ${FULL_INSTALL_DIR}/bin
-        DEPENDEES ${INSTALL_STEP}
+        DEPENDEES clean_site
         )
 
     # Install some base packages
 
     ExternalProject_Add_Step(PythonBuild install_packages
-        COMMAND ./python ./pip install numpy scipy matplotlib
+        COMMAND ./python ./pip install
+            numpy==${NUMPY_VERSION}
+            scipy==${SCIPY_VERSION}
+            matplotlib==${MATPLOTLIB_VERSION}
         WORKING_DIRECTORY ${FULL_INSTALL_DIR}/bin
         DEPENDEES install_pip
+        )
+
+    # Patch matplotlib backend so that it works with PythonQt
+
+    ExternalProject_Add_Step(PythonBuild patch_matplotlib
+        COMMAND ./python ${PROJECT_SOURCE_DIR}/bin/patch.py
+            --strip=2
+            --directory=${FULL_INSTALL_DIR}/lib/python3.5/site-packages/matplotlib
+            ${PROJECT_SOURCE_DIR}/src/matplotlib_${MATPLOTLIB_VERSION}.diff
+        WORKING_DIRECTORY ${FULL_INSTALL_DIR}/bin
+        DEPENDEES install_packages
         )
 
     # Precompile the Python library sources and package as a ZIP file
@@ -197,7 +226,7 @@ ELSE()
             ${FULL_INSTALL_DIR}/lib/python${PYTHON_NUMERIC_VERSION}.zip
             ${FULL_INSTALL_DIR}/lib/python${PYTHON_SHORT_VERSION}
         WORKING_DIRECTORY ${FULL_INSTALL_DIR}/bin
-        DEPENDEES install_packages
+        DEPENDEES patch_matplotlib
         )
 
     # Package Python's include files and libraries
