@@ -231,9 +231,7 @@ void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our settings
 
-    pSettings->remove(SettingsWorkspaces);
     pSettings->beginGroup(SettingsWorkspaces);
-
         // Keep track of the names of folders containing cloned workspaces
 
         pSettings->setValue(SettingsFolders, QVariant(mWorkspaceFolderUrls.keys()));
@@ -242,10 +240,9 @@ void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
 
         pSettings->setValue(SettingsExpandedItems, QVariant(mExpandedItems.toList()));
 
-        // Keep track of the current workspace url
+        // Keep track of the current workspace URL
 
         pSettings->setValue(SettingsCurrentWorkspace, mCurrentWorkspaceUrl);
-
     pSettings->endGroup();
 }
 
@@ -636,7 +633,7 @@ QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFolder)
     // Add the given workspace folder, if it's not already added
 
     if (!mWorkspaceFolderUrls.contains(pFolder)) {
-        // Retrieve the workspace url (i.e. remote.origin.url) for the given
+        // Retrieve the workspace URL (i.e. remote.origin.url) for the given
         // folder
 
         QString res = QString();
