@@ -67,7 +67,7 @@ public:
     void aboutWorkspace(const QString &pUrl);
     void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                       const bool &pOwned = false);
-    const QString addWorkspaceFolder(const QString &pFolder);
+    QString addWorkspaceFolder(const QString &pFolder);
     void refreshWorkspace(const QString &pUrl);
     void refreshWorkspaceFile(const QString &pPath);
     void requestWorkspaces();

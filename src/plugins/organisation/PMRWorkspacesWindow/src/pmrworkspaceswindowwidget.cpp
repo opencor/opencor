@@ -629,8 +629,10 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
 
 //==============================================================================
 
-const QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFolder)
+QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFolder)
 {
+    // Add the given workspace folder, if it's not already added
+
     if (!mWorkspaceFolderUrls.contains(pFolder)) {
         // Retrieve the workspace url (i.e. remote.origin.url) for the given
         // folder
@@ -671,6 +673,7 @@ const QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFold
                 mWorkspaceUrlFolderMines.insert(res, QPair<QString, bool>(pFolder, false));
             }
         }
+
         return res;
     } else {
         return mWorkspaceFolderUrls.value(pFolder);
