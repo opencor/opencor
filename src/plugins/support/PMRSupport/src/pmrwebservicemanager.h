@@ -34,7 +34,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PmrOauthClient;
+class PmrAuthentication;
 class PmrWebService;
 class PmrWebServiceResponse;
 
@@ -56,7 +56,7 @@ public:
                                     const QJsonDocument &pJsonDocument = QJsonDocument());
 private:
     PmrWebService *mPmrWebService;
-    PmrOauthClient *mPmrOAuthClient;
+    PmrAuthentication *mPmrAuthentication;
 
 signals:
     void busy(const bool &pBusy);

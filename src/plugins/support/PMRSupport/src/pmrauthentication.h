@@ -33,12 +33,12 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PmrOauthClient: public O1
+class PmrAuthentication: public O1
 {
     Q_OBJECT
 
 public:
-    explicit PmrOauthClient(const QString &pUrl, QObject *pParent);
+    explicit PmrAuthentication(const QString &pUrl, QObject *pParent);
 };
 
 //==============================================================================

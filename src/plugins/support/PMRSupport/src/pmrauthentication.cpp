@@ -47,7 +47,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrOauthClient::PmrOauthClient(const QString &pUrl, QObject *pParent) :
+PmrAuthentication::PmrAuthentication(const QString &pUrl, QObject *pParent) :
     O1(pParent)
 {
     // Note: our various constants must match the values assigned to PMR...

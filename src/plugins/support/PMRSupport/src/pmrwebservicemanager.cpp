@@ -47,7 +47,7 @@ PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
 {
     // Create an OAuth client for authenticated requests to PMR
 
-    mPmrOAuthClient = new PmrOauthClient(PmrUrl, this);
+    mPmrAuthentication = new PmrAuthentication(PmrUrl, this);
 
     // Make sure that we get told when there are SSL errors (which would happen
     // if the website's certificate is invalid, e.g. it has expired)
@@ -57,12 +57,12 @@ PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
 
     // Connect some signals
 
-    connect(mPmrOAuthClient, SIGNAL(linkingSucceeded()),
+    connect(mPmrAuthentication, SIGNAL(linkingSucceeded()),
             this, SLOT(authenticationSucceeded()));
-    connect(mPmrOAuthClient, SIGNAL(linkingFailed()),
+    connect(mPmrAuthentication, SIGNAL(linkingFailed()),
             this, SLOT(authenticationFailed()));
 
-    connect(mPmrOAuthClient, SIGNAL(openBrowser(const QUrl &)),
+    connect(mPmrAuthentication, SIGNAL(openBrowser(const QUrl &)),
             this, SLOT(openBrowser(const QUrl &)));
 }
 
@@ -72,7 +72,7 @@ bool PmrWebServiceManager::isAuthenticated() const
 {
     // Return whether we are authenticated to PMR
 
-    return mPmrOAuthClient->linked();
+    return mPmrAuthentication->linked();
 }
 
 //==============================================================================
@@ -82,9 +82,9 @@ void PmrWebServiceManager::authenticate(const bool &pAuthenticate)
     // Authenticate ourselves to PMR
 
     if (pAuthenticate)
-        mPmrOAuthClient->link();
+        mPmrAuthentication->link();
     else
-        mPmrOAuthClient->unlink();
+        mPmrAuthentication->unlink();
 }
 
 //==============================================================================
@@ -93,7 +93,7 @@ void PmrWebServiceManager::authenticationSucceeded()
 {
     // Let people know whether we are really authenticated, i.e. linked
 
-    emit authenticated(qobject_cast<PmrOauthClient *>(sender())->linked());
+    emit authenticated(qobject_cast<PmrAuthentication *>(sender())->linked());
 }
 
 //==============================================================================
@@ -157,8 +157,8 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
 
     QNetworkReply *networkReply;
 
-    if (pSecureRequest && mPmrOAuthClient->linked()) {
-        O1Requestor *requestor = new O1Requestor(this, mPmrOAuthClient, this);
+    if (pSecureRequest && mPmrAuthentication->linked()) {
+        O1Requestor *requestor = new O1Requestor(this, mPmrAuthentication, this);
 
         if (!pUsePost && pJsonDocument.isEmpty()) {
             networkReply = requestor->get(networkRequest, QList<O0RequestParameter>());
