@@ -994,27 +994,34 @@ void PmrWorkspacesWindowWidget::expandHtmlTree(const QString &pId)
 
 void PmrWorkspacesWindowWidget::displayWorkspaces()
 {
+    // Retrieve our managed workspaces
+
     PMRSupport::PmrWorkspaces workspaces = mWorkspaceManager->workspaces();
 
-    // We want the HTML table in name order
+    // Generate and set the HTML code, if we have some managed workspaces, or
+    // update our message, if we don't
 
-    std::sort(workspaces.begin(), workspaces.end(), PMRSupport::PmrWorkspace::compare);
+    if (workspaces.isEmpty()) {
+        setHtml(mTemplate.arg(QString()));
 
-    // Reset our row anchors
+        updateMessage();
+    } else {
+        // We have some managed workspaces, so make sure that they are
+        // alphabetically sorted before generating and setting the corresponding
+        // HTML code
 
-    mRowAnchor = 0;
-    mItemAnchors.clear();
+        std::sort(workspaces.begin(), workspaces.end(), PMRSupport::PmrWorkspace::compare);
 
-    // Finally generate and emit HTML
+        QStringList html = QStringList();
 
-    QStringList html;
+        mRowAnchor = 0;
+        mItemAnchors.clear();
 
-    foreach (PMRSupport::PmrWorkspace *workspace, workspaces)
-        html << workspaceHtml(workspace);
+        foreach (PMRSupport::PmrWorkspace *workspace, workspaces)
+            html << workspaceHtml(workspace);
 
-    setHtml(mTemplate.arg(html.join("\n")));
-
-    updateMessage();
+        setHtml(mTemplate.arg(html.join("\n")));
+    }
 }
 
 //==============================================================================
