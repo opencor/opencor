@@ -47,10 +47,6 @@ namespace PMRSupport {
 
 //==============================================================================
 
-static const auto SettingsPmr = QStringLiteral("PMR");
-
-//==============================================================================
-
 PmrAuthentication::PmrAuthentication(const QString &pUrl, QObject *pParent) :
     O1(pParent)
 {
@@ -89,9 +85,8 @@ PmrAuthentication::PmrAuthentication(const QString &pUrl, QObject *pParent) :
     //       contains a "://" and this messes things up with QSettings...
 
     O0SettingsStore *store = new O0SettingsStore("hgh189;;099!@7878");
-    QUrl url = pUrl;
 
-    store->setGroupKey(SettingsPmr+"/"+url.host());
+    store->setGroupKey("PMR/"+QUrl(pUrl).host());
 
     setStore(store);
 }
