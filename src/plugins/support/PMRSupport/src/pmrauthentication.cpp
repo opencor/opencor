@@ -81,10 +81,13 @@ PmrAuthentication::PmrAuthentication(const QString &pUrl, QObject *pParent) :
     setRequestParameters(requestParameters);
 
     // Create a store object for writing the received authentication tokens
+    // Note: for the group key, we use the given URL's host since the URL itself
+    //       contains a "://" and this messes things up with QSettings...
 
     O0SettingsStore *store = new O0SettingsStore("hgh189;;099!@7878");
+    QUrl url = pUrl;
 
-    store->setGroupKey(PmrUrl);
+    store->setGroupKey("PMR/"+url.host());
 
     setStore(store);
 }
