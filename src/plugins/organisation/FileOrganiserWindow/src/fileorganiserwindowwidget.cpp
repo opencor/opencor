@@ -272,6 +272,13 @@ void FileOrganiserWindowWidget::saveItemSettings(QSettings *pSettings,
 void FileOrganiserWindowWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the data model
+    // Note: we first clear all previous settings, so that we are 100% sure that
+    //       we don't have any 'dead' items left (e.g. if we used to have three
+    //       items and we now have two of them, then not to clear everything
+    //       first would mean that the 'old' third item would be back the next
+    //       time we start OpenCOR)...
+
+    pSettings->remove(SettingsModel);
 
     pSettings->beginGroup(SettingsModel);
         saveItemSettings(pSettings, mModel->invisibleRootItem(), -1);
