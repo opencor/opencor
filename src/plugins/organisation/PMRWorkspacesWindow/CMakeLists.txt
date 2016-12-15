@@ -4,8 +4,11 @@ PROJECT(PMRWorkspacesWindowPlugin)
 
 ADD_PLUGIN(PMRWorkspacesWindow
     SOURCES
+        ../../filehandlinginterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
+        ../../windowinterface.cpp
 
         src/pmrworkspaceswindowcommitdialog.cpp
         src/pmrworkspaceswindownewworkspacedialog.cpp
