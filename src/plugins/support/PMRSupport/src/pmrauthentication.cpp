@@ -47,6 +47,10 @@ namespace PMRSupport {
 
 //==============================================================================
 
+static const auto SettingsPmr = QStringLiteral("PMR");
+
+//==============================================================================
+
 PmrAuthentication::PmrAuthentication(const QString &pUrl, QObject *pParent) :
     O1(pParent)
 {
@@ -87,7 +91,7 @@ PmrAuthentication::PmrAuthentication(const QString &pUrl, QObject *pParent) :
     O0SettingsStore *store = new O0SettingsStore("hgh189;;099!@7878");
     QUrl url = pUrl;
 
-    store->setGroupKey("PMR/"+url.host());
+    store->setGroupKey(SettingsPmr+"/"+url.host());
 
     setStore(store);
 }
