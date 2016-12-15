@@ -210,7 +210,7 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 
                 // Ensure only the current workspace is expanded
 //---GRY--- Hmm... this seems useless since we initialise mExpandedItems after
-//          the foreach() statement?...
+//          this foreach() statement?...
 
                 if (!url.compare(mCurrentWorkspaceUrl))
                     mExpandedItems.insert(mCurrentWorkspaceUrl);
@@ -1105,11 +1105,16 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
                 PMRSupport::PmrWorkspace *workspace = mPmrWebService->workspace(url);
 
                 if (workspace) {
+                    // The workspace is known, so ask our workspace manager to
+                    // track it, and then open it
+
                     mWorkspaceManager->addWorkspace(workspace);
 
                     workspace->setPath(urlsIterator.value().first);
                     workspace->open();
                 } else {
+                    // The workspace is not known, so forget about it
+
                     mWorkspaceFolderUrls.remove(urlsIterator.value().first);
 
                     urlsIterator.remove();
@@ -1118,7 +1123,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
         }
     }
 
-    // Display the list of workspaces
+    // Display our list of workspaces
 
     displayWorkspaces();
 
