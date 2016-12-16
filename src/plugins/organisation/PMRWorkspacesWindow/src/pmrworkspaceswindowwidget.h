@@ -109,14 +109,17 @@ private:
 
     void setCurrentWorkspaceUrl(const QString &pUrl);
 
-    static const QString actionHtml(const StringPairs &pActions);
-    QString containerHtml(const QString &pClass, const QString &pIcon,
-                          const QString &pId, const QString &pName,
-                          const QString &pStatus,
-                          const StringPairs &pActionList);
-    QString contentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode,
-                         const bool &pHidden);
+    QString containerHtml(const QString &pClass, const QString &pId,
+                          const QString &pIcon, const QString &pName,
+                          const QString &pStatus, const StringPairs &pActions);
+
+    QString fileNodeContentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                 const bool &pHidden);
     QString emptyContentsHtml();
+
+    QStringList workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace);
+
+    static const QString actionHtml(const StringPairs &pActions);
 
     static QStringList fileStatusActionHtml(const QString &pPath,
                                             const PMRSupport::CharPair &pGitStatus);
@@ -126,7 +129,6 @@ private:
 
     QString fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
     QStringList folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
-    QStringList workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace);
 
     static QWebElement parentWorkspaceElement(const QWebElement &pRowElement);
 

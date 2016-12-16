@@ -695,32 +695,6 @@ const QString PmrWorkspacesWindowWidget::actionHtml(const StringPairs &pActions)
 
 //==============================================================================
 
-QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
-                                                 const QString &pIcon,
-                                                 const QString &pId,
-                                                 const QString &pName,
-                                                 const QString &pStatus,
-                                                 const StringPairs &pActionList)
-{
-    static const QString html = "<tr class=\"%1\" id=\"%2\">\n"
-                                "    <td class=\"icon\"><a id=\"a_%7\">%3</a></td>\n"
-                                "    <td class=\"name\">%4</td>\n"
-                                "    <td class=\"status\">%5</td>\n"
-                                "    <td class=\"action\">%6</td>\n"
-                                "</tr>\n";
-
-    const QString iconHtml = QString("<img class=\"%1\">").arg(pIcon);
-
-    // Use an anchor element to allow us to set the scroll position at a row
-
-    ++mRowAnchor;
-    mItemAnchors.insert(pId, mRowAnchor);
-
-    return html.arg(pClass, pId, iconHtml, pName, pStatus, actionHtml(pActionList)).arg(mRowAnchor);
-}
-
-//==============================================================================
-
 QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const QString &pPath,
                                                             const PMRSupport::CharPair &pGitStatus)
 {
@@ -779,18 +753,40 @@ QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNo
 
 //==============================================================================
 
-QString PmrWorkspacesWindowWidget::emptyContentsHtml()
+QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
+                                                 const QString &pId,
+                                                 const QString &pIcon,
+                                                 const QString &pName,
+                                                 const QString &pStatus,
+                                                 const StringPairs &pActions)
 {
-    static const QString html = "<tr></tr>\n";
+    // Generate and return the HTML code for the given container
 
-    return html;
+    static const QString html = "<tr class=\"%1\" id=\"%2\">\n"
+                                "    <td class=\"icon\">\n"
+                                "        <a id=\"a_%7\">%3</a>\n"
+                                "    </td>\n"
+                                "    <td class=\"name\">%4</td>\n"
+                                "    <td class=\"status\">%5</td>\n"
+                                "    <td class=\"action\">%6</td>\n"
+                                "</tr>\n";
+
+    const QString iconHtml = QString("<img class=\"%1\">").arg(pIcon);
+
+    // Use an anchor element to allow us to set the scroll position at a row
+
+    mItemAnchors.insert(pId, ++mRowAnchor);
+
+    return html.arg(pClass, pId, iconHtml, pName, pStatus, actionHtml(pActions)).arg(mRowAnchor);
 }
 
 //==============================================================================
 
-QString PmrWorkspacesWindowWidget::contentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode,
-                                                const bool &pHidden)
+QString PmrWorkspacesWindowWidget::fileNodeContentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                                        const bool &pHidden)
 {
+    // Generate and return the HTML code for the contents of the given file node
+
     static const QString html = "<tr class=\"contents%1\">\n"
                                 "    <td></td>\n"
                                 "    <td colspan=\"3\">\n"
@@ -824,9 +820,20 @@ QString PmrWorkspacesWindowWidget::contentsHtml(const PMRSupport::PmrWorkspaceFi
 
 //==============================================================================
 
+QString PmrWorkspacesWindowWidget::emptyContentsHtml()
+{
+    // Generate and return the HTML code for an empty contents
+
+    static const QString html = "<tr></tr>\n";
+
+    return html;
+}
+
+//==============================================================================
+
 QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace)
 {
-    // Generate the HTML code for the given workspace
+    // Generate and return the HTML code for the given workspace
 
     QString url = pWorkspace->url();
     QString path = pWorkspace->path();
@@ -865,15 +872,16 @@ QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorksp
     }
 
     mRow = 0;
-    QStringList html = QStringList(containerHtml("workspace",
-                                                 pWorkspace->isOwned()?
-                                                     "folderOwned":
-                                                     "folder",
-                                                 url, pWorkspace->name(),
-                                                 status, actions));
+
+    QStringList html = QStringList() << containerHtml("workspace", url,
+                                                      pWorkspace->isOwned()?
+                                                          "folderOwned":
+                                                          "folder",
+                                                      pWorkspace->name(),
+                                                      status, actions);
 
     if (!path.isEmpty())
-        html << contentsHtml(pWorkspace->rootFileNode(), !mExpandedItems.contains(url));
+        html << fileNodeContentsHtml(pWorkspace->rootFileNode(), !mExpandedItems.contains(url));
     else
         html << emptyContentsHtml();
 
@@ -889,11 +897,11 @@ QStringList PmrWorkspacesWindowWidget::folderHtml(const PMRSupport::PmrWorkspace
 
     ++mRow;
 
-    QStringList html = QStringList(containerHtml("folder", icon, fullname,
+    QStringList html = QStringList(containerHtml("folder", fullname, icon,
                                                  pFileNode->shortName(),
                                                  QString(), StringPairs()));
 
-    html << contentsHtml(pFileNode, !mExpandedItems.contains(fullname));
+    html << fileNodeContentsHtml(pFileNode, !mExpandedItems.contains(fullname));
 
     return html;
 }
