@@ -508,13 +508,25 @@ void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
                         QStringList statusActionHtml = fileStatusActionHtml(workspace, linkUrl);
                         QWebElement statusElement = trElement.findFirst("td.status");
 
-                        if (!statusElement.isNull())
+                        if (!statusElement.isNull()) {
+                            if (statusActionHtml[0].isEmpty())
+                                statusElement.addClass("hidden");
+                            else
+                                statusElement.removeClass("hidden");
+
                             statusElement.setInnerXml(statusActionHtml[0]);
+                        }
 
                         QWebElement actionElement = trElement.findFirst("td.action");
 
-                        if (!actionElement.isNull())
+                        if (!actionElement.isNull()) {
+                            if (statusActionHtml[0].isEmpty())
+                                actionElement.addClass("hidden");
+                            else
+                                actionElement.removeClass("hidden");
+
                             actionElement.setInnerXml(statusActionHtml[1]);
+                        }
 
                         // And update the workspace's header icons
 
@@ -731,9 +743,9 @@ QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::Pm
 QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     static const QString html = "<tr class=\"file\" id=\"%1\">\n"
-                                "    <td colspan=\"2\" class=\"name\"><a id=\"a_%5\" href=\"%1\">%2</a></td>\n"
-                                "    <td class=\"status\">%3</td>\n"
-                                "    <td class=\"action\">%4</td>\n"
+                                "    <td colspan=\"2\" class=\"name\"><a id=\"a_%7\" href=\"%1\">%2</a></td>\n"
+                                "    <td class=\"status%3\">%4</td>\n"
+                                "    <td class=\"action%5\">%6</td>\n"
                                 "</tr>\n";
     QString path = pFileNode->fullName();
 
@@ -747,7 +759,11 @@ QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNo
 
     mItemAnchors.insert(path, mRowAnchor);
 
-    return html.arg(path, pFileNode->shortName(), statusActionHtml[0], statusActionHtml[1])
+    return html.arg(path, pFileNode->shortName(),
+                    statusActionHtml[0].isEmpty()?" hidden":QString(),
+                    statusActionHtml[0],
+                    statusActionHtml[1].isEmpty()?" hidden":QString(),
+                    statusActionHtml[1])
                .arg(mRowAnchor);
 }
 
@@ -764,11 +780,11 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
 
     static const QString html = "<tr class=\"%1\" id=\"%2\">\n"
                                 "    <td class=\"icon\">\n"
-                                "        <a id=\"a_%7\">%3</a>\n"
+                                "        <a id=\"a_%9\">%3</a>\n"
                                 "    </td>\n"
-                                "    <td class=\"name\">%4</td>\n"
-                                "    <td class=\"status\">%5</td>\n"
-                                "    <td class=\"action\">%6</td>\n"
+                                "    <td class=\"name fullWidth\">%4</td>\n"
+                                "    <td class=\"status%5\">%6</td>\n"
+                                "    <td class=\"action%7\">%8</td>\n"
                                 "</tr>\n";
 
     const QString iconHtml = QString("<img class=\"%1\">").arg(pIcon);
@@ -777,7 +793,11 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
 
     mItemAnchors.insert(pId, ++mRowAnchor);
 
-    return html.arg(pClass, pId, iconHtml, pName, pStatus, actionHtml(pActions)).arg(mRowAnchor);
+    QString actions = actionHtml(pActions);
+
+    return html.arg(pClass, pId, iconHtml, pName,
+                    pStatus.isEmpty()?" hidden":QString(), pStatus,
+                    actions.isEmpty()?" hidden":QString(), actions).arg(mRowAnchor);
 }
 
 //==============================================================================
@@ -794,8 +814,8 @@ QString PmrWorkspacesWindowWidget::fileNodeContentsHtml(const PMRSupport::PmrWor
                                 "            <tr class=\"spacing\">\n"
                                 "                <td class=\"icon\"></td>\n"
                                 "                <td class=\"name\"></td>\n"
-                                "                <td class=\"status\"></td>\n"
-                                "                <td class=\"action\"></td>\n"
+                                "                <td class=\"status hidden\"></td>\n"
+                                "                <td class=\"action hidden\"></td>\n"
                                 "            </tr>\n"
                                 "            %2\n"
                                 "        </table>\n"
@@ -995,9 +1015,11 @@ void PmrWorkspacesWindowWidget::expandHtmlTree(const QString &pId)
     if (!trElement.isNull()) {
         if (mExpandedItems.contains(pId)) {
             trElement.addClass("hidden");
+
             mExpandedItems.remove(pId);
         } else if (trElement.hasClass("contents")) {
             trElement.removeClass("hidden");
+
             mExpandedItems.insert(pId);
         }
     }
@@ -1272,16 +1294,27 @@ void PmrWorkspacesWindowWidget::refreshWorkspaceFile(const QString &pPath)
             // We have a valid workspace so update file's status
 
             QStringList statusActionHtml = fileStatusActionHtml(workspace, pPath);
-
             QWebElement statusElement = fileElement.findFirst("td.status");
 
-            if (!statusElement.isNull())
+            if (!statusElement.isNull()) {
+                if (statusActionHtml[0].isEmpty())
+                    statusElement.addClass("hidden");
+                else
+                    statusElement.removeClass("hidden");
+
                 statusElement.setInnerXml(statusActionHtml[0]);
+            }
 
             QWebElement actionElement = fileElement.findFirst("td.action");
 
-            if (!actionElement.isNull())
+            if (!actionElement.isNull()) {
+                if (statusActionHtml[1].isEmpty())
+                    actionElement.addClass("hidden");
+                else
+                    actionElement.removeClass("hidden");
+
                 actionElement.setInnerXml(statusActionHtml[1]);
+            }
         }
     }
 }
