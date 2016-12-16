@@ -688,7 +688,7 @@ const QString PmrWorkspacesWindowWidget::actionHtml(const StringPairs &pActions)
     QString actions = QString();
 
     foreach (const StringPair &action, pActions)
-        actions += QString("<a href=\"%1|%2\"><img class=\"button noHover %1\"></a>").arg(action.first, action.second);
+        actions += QString("<a class=\"noHover\" href=\"%1|%2\"><img class=\"button %1\"></a>").arg(action.first, action.second);
 
     return actions;
 }
@@ -803,7 +803,7 @@ QString PmrWorkspacesWindowWidget::fileNodeContentsHtml(const PMRSupport::PmrWor
                                 "</tr>\n";
 
     if (pFileNode) {
-        QStringList itemHtml;
+        QStringList itemHtml = QStringList();
 
         foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
             if (fileNode->hasChildren())
