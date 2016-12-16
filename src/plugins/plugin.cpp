@@ -195,12 +195,10 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                             // them
 
                             static PluginInterfaces pluginsWithInterfaces = PluginInterfaces();
-static QMap<PluginInterface *, QString> names = QMap<PluginInterface *, QString>();
 
                             if (   pluginInterface
                                 && pluginInterface->definesPluginInterfaces()) {
                                 pluginsWithInterfaces << pluginInterface;
-names.insert(pluginInterface, mName);
                             }
 
                             // Check whether the plugin supports any of the
