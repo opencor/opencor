@@ -826,16 +826,16 @@ QString PmrWorkspacesWindowWidget::contentsHtml(const PMRSupport::PmrWorkspaceFi
 
 QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace)
 {
+    // Generate the HTML code for the given workspace
+
     QString url = pWorkspace->url();
-    QString name = pWorkspace->name();
     QString path = pWorkspace->path();
-    QString icon = pWorkspace->isOwned()?"folderOwned":"folder";
     QString status = QString();
-    StringPairs actionList = StringPairs();
+    StringPairs actions = StringPairs();
     PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = pWorkspace->gitWorkspaceStatus();
 
     if (path.isEmpty()) {
-        actionList << StringPair(CloneAction, url);
+        actions << StringPair(CloneAction, url);
     } else if (workspaceStatus & PMRSupport::PmrWorkspace::StatusConflict) {
         // Indicate that there are merge conflicts
 
@@ -849,23 +849,28 @@ QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorksp
         // Indicate whether files are staged for commit
 
         if (workspaceStatus & PMRSupport::PmrWorkspace::StatusCommit)
-            actionList << StringPair(CommitAction, url);
+            actions << StringPair(CommitAction, url);
 
         // Show synchronisation button, with different styles to indicate
         // exactly what it will do
 
         if (pWorkspace->isOwned()) {
             if (workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead)
-                actionList << StringPair(SynchronizePushAction, url);
+                actions << StringPair(SynchronizePushAction, url);
             else
-                actionList << StringPair(SynchronizeAction, url);
+                actions << StringPair(SynchronizeAction, url);
         } else {
-            actionList << StringPair(SynchronizePullAction, url);
+            actions << StringPair(SynchronizePullAction, url);
         }
     }
 
     mRow = 0;
-    QStringList html = QStringList(containerHtml("workspace", icon, url, name, status, actionList));
+    QStringList html = QStringList(containerHtml("workspace",
+                                                 pWorkspace->isOwned()?
+                                                     "folderOwned":
+                                                     "folder",
+                                                 url, pWorkspace->name(),
+                                                 status, actions));
 
     if (!path.isEmpty())
         html << contentsHtml(pWorkspace->rootFileNode(), !mExpandedItems.contains(url));
