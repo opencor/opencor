@@ -37,8 +37,6 @@ namespace Core {
 
 ProgressBarWidget::ProgressBarWidget(QWidget *pParent) :
     Widget(QSize(), pParent),
-    mWidth(0),
-    mOldValue(0.0),
     mValue(0.0)
 {
 }
@@ -51,30 +49,17 @@ void ProgressBarWidget::paintEvent(QPaintEvent *pEvent)
 
     QPainter painter(this);
 
-    int value = mValue*mWidth;
+    int value = mValue*width();
 
     if (value)
         painter.fillRect(0, 0, value, height(), highlightColor());
 
-    if (value != mWidth)
-        painter.fillRect(value, 0, mWidth-value, height(), windowColor());
+    if (value != width())
+        painter.fillRect(value, 0, width()-value, height(), windowColor());
 
     // Accept the event
 
     pEvent->accept();
-}
-
-//==============================================================================
-
-void ProgressBarWidget::resizeEvent(QResizeEvent *pEvent)
-{
-    // Default handling of the event
-
-    Widget::resizeEvent(pEvent);
-
-    // Keep track of our new width
-
-    mWidth = pEvent->size().width();
 }
 
 //==============================================================================
@@ -86,15 +71,12 @@ void ProgressBarWidget::setValue(const double &pValue)
     double value = qMin(1.0, qMax(pValue, 0.0));
 
     if (value != mValue) {
+        bool needUpdate = int(mValue*width()) != int(value*width());
+        
         mValue = value;
 
-        // Update ourselves, but only if necessary
-
-        if (int(mOldValue*mWidth) != int(mValue*mWidth)) {
-            mOldValue = mValue;
-
+        if (needUpdate)
             update();
-        }
     }
 }
 
