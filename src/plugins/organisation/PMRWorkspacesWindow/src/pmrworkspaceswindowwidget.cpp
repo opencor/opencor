@@ -104,9 +104,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mExpandedItems(QSet<QString>()),
     mInitialized(false),
     mErrorMessage(QString()),
-    mAuthenticated(true),
-    mRowAnchor(0),
-    mItemAnchors(QMap<QString, int>())
+    mAuthenticated(true)
 {
     // Prevent objects from being dropped on us
 
@@ -743,7 +741,7 @@ QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::Pm
 QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     static const QString html = "<tr class=\"file\" id=\"%1\">\n"
-                                "    <td colspan=\"2\" class=\"name\"><a id=\"a_%7\" href=\"%1\">%2</a></td>\n"
+                                "    <td colspan=\"2\" class=\"name\"><a href=\"%1\">%2</a></td>\n"
                                 "    <td class=\"status%3\">%4</td>\n"
                                 "    <td class=\"action%5\">%6</td>\n"
                                 "</tr>\n";
@@ -755,16 +753,11 @@ QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNo
 
     // Use an anchor element to allow us to set the scroll position at a row
 
-    ++mRowAnchor;
-
-    mItemAnchors.insert(path, mRowAnchor);
-
     return html.arg(path, pFileNode->shortName(),
                     statusActionHtml[0].isEmpty()?" hidden":QString(),
                     statusActionHtml[0],
                     statusActionHtml[1].isEmpty()?" hidden":QString(),
-                    statusActionHtml[1])
-               .arg(mRowAnchor);
+                    statusActionHtml[1]);
 }
 
 //==============================================================================
@@ -780,24 +773,28 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
 
     static const QString html = "<tr class=\"%1\" id=\"%2\">\n"
                                 "    <td class=\"icon\">\n"
-                                "        <a id=\"a_%9\">%3</a>\n"
+                                "        <a>%3</a>\n"
                                 "    </td>\n"
-                                "    <td class=\"name fullWidth\">%4</td>\n"
-                                "    <td class=\"status%5\">%6</td>\n"
-                                "    <td class=\"action%7\">%8</td>\n"
+                                "    <td class=\"name fullWidth\">\n"
+                                "        %4\n"
+                                "    </td>\n"
+                                "    <td class=\"status%5\">\n"
+                                "        %6\n"
+                                "    </td>\n"
+                                "    <td class=\"action%7\">\n"
+                                "        %8\n"
+                                "    </td>\n"
                                 "</tr>\n";
 
     const QString iconHtml = QString("<img class=\"%1\">").arg(pIcon);
 
     // Use an anchor element to allow us to set the scroll position at a row
 
-    mItemAnchors.insert(pId, ++mRowAnchor);
-
     QString actions = actionHtml(pActions);
 
     return html.arg(pClass, pId, iconHtml, pName,
                     pStatus.isEmpty()?" hidden":QString(), pStatus,
-                    actions.isEmpty()?" hidden":QString(), actions).arg(mRowAnchor);
+                    actions.isEmpty()?" hidden":QString(), actions);
 }
 
 //==============================================================================
@@ -1049,9 +1046,6 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
 
         QStringList html = QStringList();
 
-        mRowAnchor = 0;
-        mItemAnchors.clear();
-
         foreach (PMRSupport::PmrWorkspace *workspace, workspaces)
             html << workspaceHtml(workspace);
 
@@ -1256,8 +1250,8 @@ void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
 
 void PmrWorkspacesWindowWidget::refreshWorkspace(const QString &pUrl)
 {
-    QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(
-                                       QString("tr.workspace[id=\"%1\"]").arg(pUrl));
+    QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(QString("tr.workspace[id=\"%1\"]").arg(pUrl));
+
     if (!workspaceElement.isNull()) {
         PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(workspaceElement.attribute("id"));
 

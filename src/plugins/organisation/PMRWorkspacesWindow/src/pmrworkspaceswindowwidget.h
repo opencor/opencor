@@ -97,8 +97,6 @@ private:
     bool mAuthenticated;
 
     int mRow;
-    int mRowAnchor;
-    QMap<QString, int> mItemAnchors;
 
     QTimer *mTimer;
 
