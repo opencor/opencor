@@ -1052,6 +1052,9 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
             html << workspaceHtml(workspace);
 
         setHtml(mTemplate.arg(html.join("\n")));
+qDebug("---------");
+qDebug("%s", qPrintable(html.join("\n")));
+qDebug("---------");
     }
 }
 
