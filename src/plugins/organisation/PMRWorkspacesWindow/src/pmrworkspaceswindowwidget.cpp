@@ -964,7 +964,8 @@ void PmrWorkspacesWindowWidget::startStopTimer()
     // Note: if we are to start our timer, then we refresh the workspace first
     //       since waiting one second may seem long to a user...
 
-    if (Core::opencorActive() && !mCurrentWorkspaceUrl.isEmpty() && !mTimer->isActive()) {
+    if (   !mTimer->isActive()
+        &&  Core::opencorActive() && !mCurrentWorkspaceUrl.isEmpty()) {
         disconnect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
                    this, SLOT(focusWindowChanged()));
 
@@ -980,7 +981,8 @@ void PmrWorkspacesWindowWidget::startStopTimer()
                 this, SLOT(focusWindowChanged()));
 
         mTimer->start(1000);
-    } else if ((!Core::opencorActive() || mCurrentWorkspaceUrl.isEmpty()) && mTimer->isActive()) {
+    } else if (   mTimer->isActive()
+               && (!Core::opencorActive() || mCurrentWorkspaceUrl.isEmpty())) {
         mTimer->stop();
     }
 }
