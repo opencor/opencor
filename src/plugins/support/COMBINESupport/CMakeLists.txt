@@ -24,8 +24,6 @@ ADD_PLUGIN(COMBINESupport
         StandardSupport
         ZIPSupport
         ${ZLIB_PLUGIN}
-    PLUGIN_BINARIES
-        ${ZLIB_PLUGIN_BINARY}
     TESTS
         tests
 )

@@ -62,5 +62,4 @@ ADD_PLUGIN(SingleCellView
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
         ${QWT_PLUGIN_BINARY}
-        ${ZLIB_PLUGIN_BINARY}
 )

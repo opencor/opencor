@@ -301,6 +301,7 @@ ENDIF()
 IF(ENABLE_SAMPLES)
     SET(SAMPLE_PLUGINS
         sample/Sample
+#       sample/SampleExternal
         sample/SampleTools
         sample/SampleView
         sample/SampleWindow
