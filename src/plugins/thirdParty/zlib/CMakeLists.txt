@@ -1,11 +1,5 @@
 PROJECT(zlibPlugin)
 
-# Retrieve some header files that were generated on each of our target platforms
-
-RETRIEVE_CONFIG_FILES(
-    src/PLATFORM_DIR/zconf.h
-)
-
 # Use our pre-built version unless instructed otherwise
 
 IF(USE_PREBUILT_ZLIB_PLUGIN)
