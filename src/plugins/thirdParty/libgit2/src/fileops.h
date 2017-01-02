@@ -45,12 +45,12 @@ extern int git_futils_writebuffer(
 extern int git_futils_creat_withpath(const char *path, const mode_t dirmode, const mode_t mode);
 
 /**
- * Create an open a process-locked file
+ * Create and open a process-locked file
  */
 extern int git_futils_creat_locked(const char *path, const mode_t mode);
 
 /**
- * Create an open a process-locked file, while
+ * Create and open a process-locked file, while
  * also creating all the folders in its path
  */
 extern int git_futils_creat_locked_withpath(const char *path, const mode_t dirmode, const mode_t mode);
@@ -183,6 +183,12 @@ extern int git_futils_cp(
 	const char *from,
 	const char *to,
 	mode_t filemode);
+
+/**
+ * Set the files atime and mtime to the given time, or the current time
+ * if `ts` is NULL.
+ */
+extern int git_futils_touch(const char *path, time_t *when);
 
 /**
  * Flags that can be passed to `git_futils_cp_r`.
