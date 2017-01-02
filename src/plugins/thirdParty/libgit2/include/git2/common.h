@@ -109,9 +109,27 @@ GIT_EXTERN(void) git_libgit2_version(int *major, int *minor, int *rev);
  * was compiled
  */
 typedef enum {
+  /**
+   * If set, libgit2 was built thread-aware and can be safely used from multiple
+   * threads.
+   */
 	GIT_FEATURE_THREADS	= (1 << 0),
+  /**
+   * If set, libgit2 was built with and linked against a TLS implementation.
+   * Custom TLS streams may still be added by the user to support HTTPS
+   * regardless of this.
+   */
 	GIT_FEATURE_HTTPS	= (1 << 1),
+  /**
+   * If set, libgit2 was built with and linked against libssh2. A custom
+   * transport may still be added by the user to support libssh2 regardless of
+   * this.
+   */
 	GIT_FEATURE_SSH		= (1 << 2),
+  /**
+   * If set, libgit2 was built with support for sub-second resolution in file
+   * modification times.
+   */
 	GIT_FEATURE_NSEC	= (1 << 3),
 } git_feature_t;
 
@@ -158,6 +176,7 @@ typedef enum {
 	GIT_OPT_SET_USER_AGENT,
 	GIT_OPT_ENABLE_STRICT_OBJECT_CREATION,
 	GIT_OPT_SET_SSL_CIPHERS,
+	GIT_OPT_GET_USER_AGENT,
 } git_libgit2_opt_t;
 
 /**
@@ -268,7 +287,8 @@ typedef enum {
  *		> to ensure that all inputs to the new objects are valid.  For
  *		> example, when this is enabled, the parent(s) and tree inputs
  *		> will be validated when creating a new commit.  This defaults
- *		> to disabled.
+ *		> to enabled.
+ *
  *	* opts(GIT_OPT_SET_SSL_CIPHERS, const char *ciphers)
  *
  *		> Set the SSL ciphers use for HTTPS connections.

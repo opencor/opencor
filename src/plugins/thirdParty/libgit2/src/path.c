@@ -306,6 +306,25 @@ int git_path_join_unrooted(
 	return 0;
 }
 
+void git_path_squash_slashes(git_buf *path)
+{
+	char *p, *q;
+
+	if (path->size == 0)
+		return;
+
+	for (p = path->ptr, q = path->ptr; *q; p++, q++) {
+		*p = *q;
+
+		while (*q == '/' && *(q+1) == '/') {
+			path->size--;
+			q++;
+		}
+	}
+
+	*p = '\0';
+}
+
 int git_path_prettify(git_buf *path_out, const char *path, const char *base)
 {
 	char buf[GIT_PATH_MAX];
@@ -625,6 +644,10 @@ int git_path_set_error(int errno_value, const char *path, const char *action)
 		giterr_set(GITERR_OS, "Failed %s - '%s' already exists", action, path);
 		return GIT_EEXISTS;
 
+	case EACCES:
+		giterr_set(GITERR_OS, "Failed %s - '%s' is locked", action, path);
+		return GIT_ELOCKED;
+
 	default:
 		giterr_set(GITERR_OS, "Could not %s '%s'", action, path);
 		return -1;
@@ -808,6 +831,20 @@ int git_path_cmp(
 		c2 = '/';
 
 	return (c1 < c2) ? -1 : (c1 > c2) ? 1 : 0;
+}
+
+size_t git_path_common_dirlen(const char *one, const char *two)
+{
+	const char *p, *q, *dirsep = NULL;
+
+	for (p = one, q = two; *p && *q; p++, q++) {
+		if (*p == '/' && *q == '/')
+			dirsep = p;
+		else if (*p != *q)
+			break;
+	}
+
+	return dirsep ? (dirsep - one) + 1 : 0;
 }
 
 int git_path_make_relative(git_buf *path, const char *parent)
@@ -1108,7 +1145,6 @@ int git_path_diriter_init(
 	unsigned int flags)
 {
 	git_win32_path path_filter;
-	git_buf hack = {0};
 
 	static int is_win7_or_later = -1;
 	if (is_win7_or_later < 0)
@@ -1314,7 +1350,7 @@ int git_path_diriter_next(git_path_diriter *diriter)
 				return GIT_ITEROVER;
 
 			giterr_set(GITERR_OS,
-				"Could not read directory '%s'", diriter->path);
+				"Could not read directory '%s'", diriter->path.ptr);
 			return -1;
 		}
 	} while (skip_dot && git_path_is_dot_or_dotdot(de->d_name));

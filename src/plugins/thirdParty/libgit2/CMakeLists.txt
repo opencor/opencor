@@ -173,6 +173,7 @@ ELSE()
             ${DEPENDENCIES_SOURCES}
 
             src/annotated_commit.c
+            src/apply.c
             src/attr.c
             src/attr_file.c
             src/attrcache.c
@@ -194,13 +195,13 @@ ELSE()
             src/crlf.c
             src/curl_stream.c
             src/date.c
-            src/delta-apply.c
             src/delta.c
             src/describe.c
             src/diff.c
             src/diff_driver.c
             src/diff_file.c
-            src/diff_patch.c
+            src/diff_generate.c
+            src/diff_parse.c
             src/diff_print.c
             src/diff_stats.c
             src/diff_tform.c
@@ -223,6 +224,7 @@ ELSE()
             src/iterator.c
             src/libgit2plugin.cpp
             src/merge.c
+            src/merge_driver.c
             src/merge_file.c
             src/message.c
             src/mwindow.c
@@ -239,11 +241,15 @@ ELSE()
             src/openssl_stream.c
             src/pack-objects.c
             src/pack.c
+            src/patch.c
+            src/patch_generate.c
+            src/patch_parse.c
             src/path.c
             src/pathspec.c
             src/pool.c
             src/posix.c
             src/pqueue.c
+            src/proxy.c
             src/push.c
             src/rebase.c
             src/refdb.c
@@ -278,6 +284,7 @@ ELSE()
             src/tree.c
             src/tsort.c
             src/util.c
+            src/varint.c
             src/vector.c
             src/zstream.c
 
