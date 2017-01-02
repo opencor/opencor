@@ -87,11 +87,13 @@ ELSE()
         SET(DEFINITIONS
             GIT_COMMON_CRYPTO
             GIT_OPENSSL
+            GIT_USE_STAT_MTIMESPEC
         )
     ELSE()
         SET(DEFINITIONS
             GIT_OPENSSL
             OPENSSL_SHA1
+            GIT_USE_STAT_MTIM
         )
     ENDIF()
 
@@ -100,6 +102,7 @@ ELSE()
 
         GIT_ARCH_64
         GIT_THREADS
+        GIT_USE_NSEC
         STDC
     )
 
