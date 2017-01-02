@@ -164,7 +164,7 @@ int git_openssl_set_locking(void)
 	git__on_shutdown(shutdown_ssl_locking);
 	return 0;
 #else
-	giterr_set(GITERR_THREAD, "libgit2 as not built with threads");
+	giterr_set(GITERR_THREAD, "libgit2 was not built with threads");
 	return -1;
 #endif
 }
@@ -515,11 +515,11 @@ int openssl_certificate(git_cert **out, git_stream *stream)
 	return 0;
 }
 
-static int openssl_set_proxy(git_stream *stream, const char *proxy_url)
+static int openssl_set_proxy(git_stream *stream, const git_proxy_options *proxy_opts)
 {
 	openssl_stream *st = (openssl_stream *) stream;
 
-	return git_stream_set_proxy(st->io, proxy_url);
+	return git_stream_set_proxy(st->io, proxy_opts);
 }
 
 ssize_t openssl_write(git_stream *stream, const char *data, size_t len, int flags)
@@ -541,9 +541,8 @@ ssize_t openssl_read(git_stream *stream, void *data, size_t len)
 	openssl_stream *st = (openssl_stream *) stream;
 	int ret;
 
-	if ((ret = SSL_read(st->ssl, data, len)) <= 0) {
+	if ((ret = SSL_read(st->ssl, data, len)) <= 0)
 		return ssl_set_error(st->ssl, ret);
-	}
 
 	return ret;
 }

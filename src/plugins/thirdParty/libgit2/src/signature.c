@@ -200,7 +200,8 @@ int git_signature__parse(git_signature *sig, const char **buffer_out,
 
 	memset(sig, 0, sizeof(git_signature));
 
-	if ((buffer_end = memchr(buffer, ender, buffer_end - buffer)) == NULL)
+	if (ender &&
+		(buffer_end = memchr(buffer, ender, buffer_end - buffer)) == NULL)
 		return signature_error("no newline given");
 
 	if (header) {
@@ -250,7 +251,7 @@ int git_signature__parse(git_signature *sig, const char **buffer_out,
 			 * only store timezone if it's not overflowing;
 			 * see http://www.worldtimezone.com/faq.html
 			 */
-			if (hours < 14 && mins < 59) {
+			if (hours <= 14 && mins <= 59) {
 				sig->when.offset = (hours * 60) + mins;
 				if (tz_start[0] == '-')
 					sig->when.offset = -sig->when.offset;
@@ -260,6 +261,30 @@ int git_signature__parse(git_signature *sig, const char **buffer_out,
 
 	*buffer_out = buffer_end + 1;
 	return 0;
+}
+
+int git_signature_from_buffer(git_signature **out, const char *buf)
+{
+	git_signature *sig;
+	const char *buf_end;
+	int error;
+
+	assert(out && buf);
+
+	*out = NULL;
+
+	sig = git__calloc(1, sizeof(git_signature));
+	GITERR_CHECK_ALLOC(sig);
+
+	buf_end = buf + strlen(buf);
+	error = git_signature__parse(sig, &buf, buf_end, NULL, '\0');
+
+	if (error)
+		git__free(sig);
+	else
+		*out = sig;
+
+	return error;
 }
 
 void git_signature__writebuf(git_buf *buf, const char *header, const git_signature *sig)
