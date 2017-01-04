@@ -27,8 +27,9 @@ limitations under the License.
 //==============================================================================
 
 #include "llvmdisablewarnings.h"
-    #include "llvm/IR/LLVMContext.h"
     #include "llvm/Support/TargetSelect.h"
+
+    #include "llvm-c/Core.h"
 
     #include "clang/Basic/DiagnosticOptions.h"
     #include "clang/CodeGen/CodeGenAction.h"
@@ -264,7 +265,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Create and execute the frontend to generate an LLVM bitcode module
 
-    std::unique_ptr<clang::CodeGenAction> codeGenerationAction(new clang::EmitLLVMOnlyAction(&llvm::getGlobalContext()));
+    std::unique_ptr<clang::CodeGenAction> codeGenerationAction(new clang::EmitLLVMOnlyAction(llvm::unwrap(LLVMGetGlobalContext())));
 
     if (!compilerInstance.ExecuteAction(*codeGenerationAction)) {
         mError = tr("the code could not be compiled");

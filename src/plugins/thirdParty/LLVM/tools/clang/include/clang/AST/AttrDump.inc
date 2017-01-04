@@ -7,9 +7,6 @@
 \*===----------------------------------------------------------------------===*/
 
   switch (A->getKind()) {
-  default:
-    llvm_unreachable("Unknown attribute kind!");
-    break;
   case attr::AMDGPUNumSGPR: {
     const auto *SA = cast<AMDGPUNumSGPRAttr>(A);
     OS << " " << SA->getNumSGPR();
@@ -42,6 +39,12 @@
       OS << " Generic";
       break;
     }
+    break;
+  }
+  case attr::AbiTag: {
+    const auto *SA = cast<AbiTagAttr>(A);
+    for (const auto &Val : SA->tags())
+      OS << " " << Val;
     break;
   }
   case attr::AcquireCapability: {
@@ -97,6 +100,9 @@
     OS << " \"" << SA->getAnnotation() << "\"";
     break;
   }
+  case attr::AnyX86Interrupt: {
+    break;
+  }
   case attr::ArcWeakrefUnavailable: {
     break;
   }
@@ -146,6 +152,8 @@
     OS << " " << SA->getObsoleted();
     if (SA->getUnavailable()) OS << " Unavailable";
     OS << " \"" << SA->getMessage() << "\"";
+    if (SA->getStrict()) OS << " Strict";
+    OS << " \"" << SA->getReplacement() << "\"";
     break;
   }
   case attr::Blocks: {
@@ -284,6 +292,7 @@
   case attr::Deprecated: {
     const auto *SA = cast<DeprecatedAttr>(A);
     OS << " \"" << SA->getMessage() << "\"";
+    OS << " \"" << SA->getReplacement() << "\"";
     break;
   }
   case attr::Destructor: {
@@ -292,6 +301,9 @@
     break;
   }
   case attr::DisableTailCalls: {
+    break;
+  }
+  case attr::EmptyBases: {
     break;
   }
   case attr::EnableIf: {
@@ -360,6 +372,11 @@
     OS << " " << SA->getInterface().getAsString();
     break;
   }
+  case attr::IFunc: {
+    const auto *SA = cast<IFuncAttr>(A);
+    OS << " \"" << SA->getResolver() << "\"";
+    break;
+  }
   case attr::InitPriority: {
     const auto *SA = cast<InitPriorityAttr>(A);
     OS << " " << SA->getPriority();
@@ -374,6 +391,14 @@
     break;
   }
   case attr::InternalLinkage: {
+    break;
+  }
+  case attr::LTOVisibilityPublic: {
+    break;
+  }
+  case attr::LayoutVersion: {
+    const auto *SA = cast<LayoutVersionAttr>(A);
+    OS << " " << SA->getVersion();
     break;
   }
   case attr::LockReturned: {
@@ -408,6 +433,9 @@
       break;
     case LoopHintAttr::UnrollCount:
       OS << " UnrollCount";
+      break;
+    case LoopHintAttr::Distribute:
+      OS << " Distribute";
       break;
     }
     switch(SA->getState()) {
@@ -573,6 +601,49 @@
   case attr::NotTailCalled: {
     break;
   }
+  case attr::OMPCaptureNoInit: {
+    break;
+  }
+  case attr::OMPDeclareSimdDecl: {
+    const auto *SA = cast<OMPDeclareSimdDeclAttr>(A);
+    switch(SA->getBranchState()) {
+    case OMPDeclareSimdDeclAttr::BS_Undefined:
+      OS << " BS_Undefined";
+      break;
+    case OMPDeclareSimdDeclAttr::BS_Inbranch:
+      OS << " BS_Inbranch";
+      break;
+    case OMPDeclareSimdDeclAttr::BS_Notinbranch:
+      OS << " BS_Notinbranch";
+      break;
+    }
+    for (const auto &Val : SA->modifiers())
+      OS << " " << Val;
+    dumpStmt(SA->getSimdlen());
+    for (OMPDeclareSimdDeclAttr::uniforms_iterator I = SA->uniforms_begin(), E = SA->uniforms_end(); I != E; ++I)
+      dumpStmt(*I);
+    for (OMPDeclareSimdDeclAttr::aligneds_iterator I = SA->aligneds_begin(), E = SA->aligneds_end(); I != E; ++I)
+      dumpStmt(*I);
+    for (OMPDeclareSimdDeclAttr::alignments_iterator I = SA->alignments_begin(), E = SA->alignments_end(); I != E; ++I)
+      dumpStmt(*I);
+    for (OMPDeclareSimdDeclAttr::linears_iterator I = SA->linears_begin(), E = SA->linears_end(); I != E; ++I)
+      dumpStmt(*I);
+    for (OMPDeclareSimdDeclAttr::steps_iterator I = SA->steps_begin(), E = SA->steps_end(); I != E; ++I)
+      dumpStmt(*I);
+    break;
+  }
+  case attr::OMPDeclareTargetDecl: {
+    const auto *SA = cast<OMPDeclareTargetDeclAttr>(A);
+    switch(SA->getMapType()) {
+    case OMPDeclareTargetDeclAttr::MT_To:
+      OS << " MT_To";
+      break;
+    case OMPDeclareTargetDeclAttr::MT_Link:
+      OS << " MT_Link";
+      break;
+    }
+    break;
+  }
   case attr::OMPThreadPrivateDecl: {
     break;
   }
@@ -657,11 +728,19 @@
     OS << " \"" << SA->getMetadataName() << "\"";
     break;
   }
-  case attr::OpenCLImageAccess: {
+  case attr::ObjCRuntimeVisible: {
+    break;
+  }
+  case attr::OpenCLAccess: {
     OS << " " << A->getSpelling();
     break;
   }
   case attr::OpenCLKernel: {
+    break;
+  }
+  case attr::OpenCLUnrollHint: {
+    const auto *SA = cast<OpenCLUnrollHintAttr>(A);
+    OS << " " << SA->getUnrollHint();
     break;
   }
   case attr::OptimizeNone: {
@@ -719,6 +798,12 @@
     }
     break;
   }
+  case attr::PreserveAll: {
+    break;
+  }
+  case attr::PreserveMost: {
+    break;
+  }
   case attr::PtGuardedBy: {
     const auto *SA = cast<PtGuardedByAttr>(A);
     dumpStmt(SA->getArg());
@@ -735,6 +820,9 @@
     const auto *SA = cast<ReleaseCapabilityAttr>(A);
     for (ReleaseCapabilityAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I)
       dumpStmt(*I);
+    break;
+  }
+  case attr::RenderScriptKernel: {
     break;
   }
   case attr::ReqdWorkGroupSize: {
@@ -817,6 +905,18 @@
     break;
   }
   case attr::StdCall: {
+    break;
+  }
+  case attr::SwiftCall: {
+    break;
+  }
+  case attr::SwiftContext: {
+    break;
+  }
+  case attr::SwiftErrorResult: {
+    break;
+  }
+  case attr::SwiftIndirectResult: {
     break;
   }
   case attr::SysVABI: {
@@ -910,6 +1010,7 @@
     break;
   }
   case attr::Unused: {
+    OS << " " << A->getSpelling();
     break;
   }
   case attr::Used: {
@@ -950,6 +1051,7 @@
     break;
   }
   case attr::WarnUnusedResult: {
+    OS << " " << A->getSpelling();
     break;
   }
   case attr::Weak: {
@@ -971,6 +1073,10 @@
     break;
   }
   case attr::X86ForceAlignArgPointer: {
+    break;
+  }
+  case attr::XRayInstrument: {
+    OS << " " << A->getSpelling();
     break;
   }
   }
