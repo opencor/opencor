@@ -176,14 +176,26 @@ bool CompilerEngine::compileCode(const QString &pCode)
     driver.setCheckInputsExist(false);
 
     // Get a compilation object to which we pass some arguments
+    // Note: on Windows, we have both a pre-built release and a pre-built debug
+    //       version of LLVM, so we make sure that we use the right flags for
+    //       the right version, not least because with LLVM 3.9.x, to use an
+    //       optimisation flag with a pre-built debug version of LLVM results in
+    //       some of the Compiler and CellMLSupport tests to fail...
 
     llvm::StringRef dummyFileName("dummyFile.c");
     llvm::SmallVector<const char *, 16> compilationArguments;
 
     compilationArguments.push_back("clang");
     compilationArguments.push_back("-fsyntax-only");
+#if    defined(QT_DEBUG) \
+    && (   (defined(USE_PREBUILT_LLVM_PLUGIN) && defined(Q_OS_WIN)) \
+        || !defined(USE_PREBUILT_LLVM_PLUGIN))
+    compilationArguments.push_back("-g");
+    compilationArguments.push_back("-O0");
+#else
     compilationArguments.push_back("-O3");
     compilationArguments.push_back("-ffast-math");
+#endif
     compilationArguments.push_back("-Werror");
     compilationArguments.push_back(dummyFileName.data());
 
