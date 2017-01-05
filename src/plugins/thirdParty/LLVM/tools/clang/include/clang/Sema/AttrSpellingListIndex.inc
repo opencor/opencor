@@ -7,9 +7,6 @@
 \*===----------------------------------------------------------------------===*/
 
   switch (AttrKind) {
-  default:
-    llvm_unreachable("Unknown attribute kind!");
-    break;
   case AT_AMDGPUNumSGPR: {
     if (Name == "amdgpu_num_sgpr" && SyntaxUsed == 0 && Scope == "")
         return 0;
@@ -23,6 +20,13 @@
   case AT_Interrupt: {
     if (Name == "interrupt" && SyntaxUsed == 0 && Scope == "")
         return 0;
+    break;
+  }
+  case AT_AbiTag: {
+    if (Name == "abi_tag" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "abi_tag" && SyntaxUsed == 1 && Scope == "gnu")
+        return 1;
     break;
   }
   case AT_AcquireCapability: {
@@ -343,6 +347,11 @@
         return 1;
     break;
   }
+  case AT_EmptyBases: {
+    if (Name == "empty_bases" && SyntaxUsed == 2 && Scope == "")
+        return 0;
+    break;
+  }
   case AT_EnableIf: {
     if (Name == "enable_if" && SyntaxUsed == 0 && Scope == "")
         return 0;
@@ -359,8 +368,10 @@
     break;
   }
   case AT_FallThrough: {
-    if (Name == "fallthrough" && SyntaxUsed == 1 && Scope == "clang")
+    if (Name == "fallthrough" && SyntaxUsed == 1 && Scope == "")
         return 0;
+    if (Name == "fallthrough" && SyntaxUsed == 1 && Scope == "clang")
+        return 1;
     break;
   }
   case AT_FastCall: {
@@ -439,6 +450,13 @@
         return 0;
     break;
   }
+  case AT_IFunc: {
+    if (Name == "ifunc" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "ifunc" && SyntaxUsed == 1 && Scope == "gnu")
+        return 1;
+    break;
+  }
   case AT_InitPriority: {
     if (Name == "init_priority" && SyntaxUsed == 0 && Scope == "")
         return 0;
@@ -454,6 +472,16 @@
         return 0;
     if (Name == "internal_linkage" && SyntaxUsed == 1 && Scope == "clang")
         return 1;
+    break;
+  }
+  case AT_LTOVisibilityPublic: {
+    if (Name == "lto_visibility_public" && SyntaxUsed == 1 && Scope == "clang")
+        return 0;
+    break;
+  }
+  case AT_LayoutVersion: {
+    if (Name == "layout_version" && SyntaxUsed == 2 && Scope == "")
+        return 0;
     break;
   }
   case AT_LockReturned: {
@@ -792,6 +820,26 @@
         return 0;
     break;
   }
+  case AT_ObjCRuntimeVisible: {
+    if (Name == "objc_runtime_visible" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    break;
+  }
+  case AT_OpenCLAccess: {
+    if (Name == "__read_only" && SyntaxUsed == 3 && Scope == "")
+        return 0;
+    if (Name == "read_only" && SyntaxUsed == 3 && Scope == "")
+        return 1;
+    if (Name == "__write_only" && SyntaxUsed == 3 && Scope == "")
+        return 2;
+    if (Name == "write_only" && SyntaxUsed == 3 && Scope == "")
+        return 3;
+    if (Name == "__read_write" && SyntaxUsed == 3 && Scope == "")
+        return 4;
+    if (Name == "read_write" && SyntaxUsed == 3 && Scope == "")
+        return 5;
+    break;
+  }
   case AT_OpenCLConstantAddressSpace: {
     if (Name == "__constant" && SyntaxUsed == 3 && Scope == "")
         return 0;
@@ -813,21 +861,6 @@
         return 1;
     break;
   }
-  case AT_OpenCLImageAccess: {
-    if (Name == "__read_only" && SyntaxUsed == 3 && Scope == "")
-        return 0;
-    if (Name == "read_only" && SyntaxUsed == 3 && Scope == "")
-        return 1;
-    if (Name == "__write_only" && SyntaxUsed == 3 && Scope == "")
-        return 2;
-    if (Name == "write_only" && SyntaxUsed == 3 && Scope == "")
-        return 3;
-    if (Name == "__read_write" && SyntaxUsed == 3 && Scope == "")
-        return 4;
-    if (Name == "read_write" && SyntaxUsed == 3 && Scope == "")
-        return 5;
-    break;
-  }
   case AT_OpenCLKernel: {
     if (Name == "__kernel" && SyntaxUsed == 3 && Scope == "")
         return 0;
@@ -842,11 +875,21 @@
         return 1;
     break;
   }
+  case AT_OpenCLNoSVM: {
+    if (Name == "nosvm" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    break;
+  }
   case AT_OpenCLPrivateAddressSpace: {
     if (Name == "__private" && SyntaxUsed == 3 && Scope == "")
         return 0;
     if (Name == "private" && SyntaxUsed == 3 && Scope == "")
         return 1;
+    break;
+  }
+  case AT_OpenCLUnrollHint: {
+    if (Name == "opencl_unroll_hint" && SyntaxUsed == 0 && Scope == "")
+        return 0;
     break;
   }
   case AT_OptimizeNone: {
@@ -903,6 +946,16 @@
         return 1;
     break;
   }
+  case AT_PreserveAll: {
+    if (Name == "preserve_all" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    break;
+  }
+  case AT_PreserveMost: {
+    if (Name == "preserve_most" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    break;
+  }
   case AT_PtGuardedBy: {
     if (Name == "pt_guarded_by" && SyntaxUsed == 0 && Scope == "")
         return 0;
@@ -952,6 +1005,11 @@
         return 5;
     if (Name == "unlock_function" && SyntaxUsed == 0 && Scope == "")
         return 6;
+    break;
+  }
+  case AT_RenderScriptKernel: {
+    if (Name == "kernel" && SyntaxUsed == 0 && Scope == "")
+        return 0;
     break;
   }
   case AT_ReqdWorkGroupSize: {
@@ -1054,6 +1112,34 @@
         return 3;
     break;
   }
+  case AT_SwiftCall: {
+    if (Name == "swiftcall" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "swiftcall" && SyntaxUsed == 1 && Scope == "gnu")
+        return 1;
+    break;
+  }
+  case AT_SwiftContext: {
+    if (Name == "swift_context" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "swift_context" && SyntaxUsed == 1 && Scope == "gnu")
+        return 1;
+    break;
+  }
+  case AT_SwiftErrorResult: {
+    if (Name == "swift_error_result" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "swift_error_result" && SyntaxUsed == 1 && Scope == "gnu")
+        return 1;
+    break;
+  }
+  case AT_SwiftIndirectResult: {
+    if (Name == "swift_indirect_result" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "swift_indirect_result" && SyntaxUsed == 1 && Scope == "gnu")
+        return 1;
+    break;
+  }
   case AT_SysVABI: {
     if (Name == "sysv_abi" && SyntaxUsed == 0 && Scope == "")
         return 0;
@@ -1152,10 +1238,12 @@
     break;
   }
   case AT_Unused: {
-    if (Name == "unused" && SyntaxUsed == 0 && Scope == "")
+    if (Name == "maybe_unused" && SyntaxUsed == 1 && Scope == "")
         return 0;
-    if (Name == "unused" && SyntaxUsed == 1 && Scope == "gnu")
+    if (Name == "unused" && SyntaxUsed == 0 && Scope == "")
         return 1;
+    if (Name == "unused" && SyntaxUsed == 1 && Scope == "gnu")
+        return 2;
     break;
   }
   case AT_Used: {
@@ -1209,12 +1297,14 @@
     break;
   }
   case AT_WarnUnusedResult: {
-    if (Name == "warn_unused_result" && SyntaxUsed == 0 && Scope == "")
+    if (Name == "nodiscard" && SyntaxUsed == 1 && Scope == "")
         return 0;
-    if (Name == "warn_unused_result" && SyntaxUsed == 1 && Scope == "gnu")
-        return 1;
     if (Name == "warn_unused_result" && SyntaxUsed == 1 && Scope == "clang")
+        return 1;
+    if (Name == "warn_unused_result" && SyntaxUsed == 0 && Scope == "")
         return 2;
+    if (Name == "warn_unused_result" && SyntaxUsed == 1 && Scope == "gnu")
+        return 3;
     break;
   }
   case AT_Weak: {
@@ -1244,6 +1334,17 @@
   case AT_X86ForceAlignArgPointer: {
     if (Name == "force_align_arg_pointer" && SyntaxUsed == 0 && Scope == "")
         return 0;
+    break;
+  }
+  case AT_XRayInstrument: {
+    if (Name == "xray_always_instrument" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "xray_always_instrument" && SyntaxUsed == 1 && Scope == "clang")
+        return 1;
+    if (Name == "xray_never_instrument" && SyntaxUsed == 0 && Scope == "")
+        return 2;
+    if (Name == "xray_never_instrument" && SyntaxUsed == 1 && Scope == "clang")
+        return 3;
     break;
   }
   }

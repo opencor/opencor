@@ -269,10 +269,38 @@ MACRO(INITIALISE_PROJECT)
 
     ADD_DEFINITIONS(-DQT_DEPRECATED_WARNINGS)
 
-    # Sample plugins support, if requested
+    # Let OpenCOR know about the options with which it was built
 
     IF(ENABLE_SAMPLES)
         ADD_DEFINITIONS(-DENABLE_SAMPLES)
+    ENDIF()
+
+    IF(ENABLE_TESTS)
+        ADD_DEFINITIONS(-DENABLE_TESTS)
+    ENDIF()
+
+    IF(USE_PREBUILT_LIBGIT2_PLUGIN)
+        ADD_DEFINITIONS(-DUSE_PREBUILT_LIBGIT2_PLUGIN)
+    ENDIF()
+
+    IF(USE_PREBUILT_LLVM_PLUGIN)
+        ADD_DEFINITIONS(-DUSE_PREBUILT_LLVM_PLUGIN)
+    ENDIF()
+
+    IF(USE_PREBUILT_QSCINTILLA_PLUGIN)
+        ADD_DEFINITIONS(-DUSE_PREBUILT_QSCINTILLA_PLUGIN)
+    ENDIF()
+
+    IF(USE_PREBUILT_QWT_PLUGIN)
+        ADD_DEFINITIONS(-DUSE_PREBUILT_QWT_PLUGIN)
+    ENDIF()
+
+    IF(USE_PREBUILT_SUNDIALS_PLUGIN)
+        ADD_DEFINITIONS(-DUSE_PREBUILT_SUNDIALS_PLUGIN)
+    ENDIF()
+
+    IF(USE_PREBUILT_ZLIB_PLUGIN)
+        ADD_DEFINITIONS(-DUSE_PREBUILT_ZLIB_PLUGIN)
     ENDIF()
 
     # On macOS, make sure that we support 10.8 and later, unless a specific
@@ -429,6 +457,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         PLUGIN_BINARIES
         QT_MODULES
         EXTERNAL_BINARIES
+        SYSTEM_BINARIES
         TESTS
     )
 
@@ -644,6 +673,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
+    # System binaries
+
+    FOREACH(ARG_SYSTEM_BINARY ${ARG_SYSTEM_BINARIES})
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+            ${ARG_SYSTEM_BINARY}
+        )
+    ENDFOREACH()
+
     # Some settings
 
     IF(XCODE)
@@ -782,6 +819,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                         ENDIF()
                     ENDFOREACH()
                 ENDIF()
+
+                # System binaries
+
+                FOREACH(ARG_SYSTEM_BINARY ${ARG_SYSTEM_BINARIES})
+                    TARGET_LINK_LIBRARIES(${TEST_NAME}
+                        ${ARG_SYSTEM_BINARY}
+                    )
+                ENDFOREACH()
 
                 # Copy the test to our tests directory
                 # Note: DEST_TESTS_DIR is defined in our main CMake file...

@@ -257,6 +257,19 @@ public:
   /// CompilerInstance's Diagnostic object to report errors.
   virtual bool ParseArgs(const CompilerInstance &CI,
                          const std::vector<std::string> &arg) = 0;
+
+  enum ActionType {
+    Cmdline,             ///< Action is determined by the cc1 command-line
+    ReplaceAction,       ///< Replace the main action
+    AddBeforeMainAction, ///< Execute the action before the main action
+    AddAfterMainAction   ///< Execute the action after the main action
+  };
+  /// \brief Get the action type for this plugin
+  ///
+  /// \return The action type. If the type is Cmdline then by default the
+  /// plugin does nothing and what it does is determined by the cc1
+  /// command-line.
+  virtual ActionType getActionType() { return Cmdline; }
 };
 
 /// \brief Abstract base class to use for preprocessor-based frontend actions.
@@ -291,7 +304,7 @@ protected:
 public:
   /// Construct a WrapperFrontendAction from an existing action, taking
   /// ownership of it.
-  WrapperFrontendAction(FrontendAction *WrappedAction);
+  WrapperFrontendAction(std::unique_ptr<FrontendAction> WrappedAction);
 
   bool usesPreprocessorOnly() const override;
   TranslationUnitKind getTranslationUnitKind() override;
