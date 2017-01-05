@@ -36,7 +36,7 @@
 #define BACKEND_PACKAGE_STRING "LLVM 3.9.1"
 
 /* Linker version detected at compile time. */
-#define HOST_LINK_VERSION "274.1"
+#define HOST_LINK_VERSION "274.2"
 
 /* pass --build-id to ld */
 /* #undef ENABLE_LINKER_BUILD_ID */
