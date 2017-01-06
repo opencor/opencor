@@ -515,7 +515,7 @@ void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
                             statusElement.setInnerXml(statusActionHtml[0]);
                         }
 
-                        QWebElement actionElement = trElement.findFirst("td.action");
+                        QWebElement actionElement = trElement.findFirst("td.actions");
 
                         if (!actionElement.isNull()) {
                             if (statusActionHtml[0].isEmpty())
@@ -778,13 +778,19 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
                                 "    <td class=\"name fullWidth\">\n"
                                 "        %4\n"
                                 "    </td>\n"
-                                "    <td class=\"status%5\">\n"
-                                "        %6\n"
-                                "    </td>\n"
-                                "    <td class=\"action button%7\">\n"
-                                "        %8\n"
-                                "    </td>\n"
+                                "%5"
+                                "%6"
                                 "</tr>\n";
+    static const QString statusHtml = "    <td class=\"status\">\n"
+                                      "        %1\n"
+                                      "    </td>\n";
+    static const QString noStatusHtml = "    <td class=\"status hidden\">\n"
+                                        "    </td>\n";
+    static const QString actionsHtml = "    <td class=\"actions button\">\n"
+                                       "        %1\n"
+                                       "    </td>\n";
+    static const QString noActionsHtml = "    <td class=\"actions button hidden\">\n"
+                                         "    </td>\n";
 
     const QString iconHtml = QString("<img class=\"%1\">").arg(pIcon);
 
@@ -793,8 +799,8 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
     QString actions = actionHtml(pActions);
 
     return html.arg(pClass, pId, iconHtml, pName,
-                    pStatus.isEmpty()?" hidden":QString(), pStatus,
-                    actions.isEmpty()?" hidden":QString(), actions);
+                    pStatus.isEmpty()?noStatusHtml:statusHtml.arg(pStatus),
+                    actions.isEmpty()?noActionsHtml:actionsHtml.arg(actions));
 }
 
 //==============================================================================
@@ -1051,9 +1057,9 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
         foreach (PMRSupport::PmrWorkspace *workspace, workspaces)
             html << workspaceHtml(workspace);
 
-        setHtml(mTemplate.arg(html.join("\n")));
+        setHtml(mTemplate.arg(html.join("")));
 qDebug("---------");
-qDebug("%s", qPrintable(html.join("\n")));
+qDebug("%s", qPrintable(html.join("")));
 qDebug("---------");
     }
 }
@@ -1304,7 +1310,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspaceFile(const QString &pPath)
                 statusElement.setInnerXml(statusActionHtml[0]);
             }
 
-            QWebElement actionElement = fileElement.findFirst("td.action");
+            QWebElement actionElement = fileElement.findFirst("td.actions");
 
             if (!actionElement.isNull()) {
                 if (statusActionHtml[1].isEmpty())
