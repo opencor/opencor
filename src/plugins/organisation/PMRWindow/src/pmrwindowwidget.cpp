@@ -187,31 +187,31 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
         QString exposureName = pExposures[i]->name();
         bool exposureDisplayed = exposureName.contains(filterRegEx);
 
-        exposures += "<tr id=\"exposure_"+QString::number(i)+"\" style=\"display: "+(exposureDisplayed?"table-row":"none")+";\">\n"
-                     "    <td class=\"exposure\">\n"
-                     "        <table class=\"fullWidth\">\n"
-                     "            <tbody>\n"
-                     "                <tr>\n"
-                     "                    <td class=\"fullWidth\">\n"
-                     "                        <ul>\n"
-                     "                            <li class=\"exposure\">\n"
-                     "                                <a href=\""+exposureUrl+"\">"+exposureName+"</a>\n"
-                     "                            </li>\n"
+        exposures += "                <tr id=\"exposure_"+QString::number(i)+"\" style=\"display: "+(exposureDisplayed?"table-row":"none")+";\">\n"
+                     "                    <td class=\"exposure\">\n"
+                     "                        <table class=\"fullWidth\">\n"
+                     "                            <tbody>\n"
+                     "                                <tr>\n"
+                     "                                    <td class=\"fullWidth\">\n"
+                     "                                        <ul>\n"
+                     "                                            <li class=\"exposure\">\n"
+                     "                                                <a href=\""+exposureUrl+"\">"+exposureName+"</a>\n"
+                     "                                            </li>\n"
+                     "                                        </ul>\n"
+                     "                                    </td>\n"
+                     "                                    <td class=\"button\">\n"
+                     "                                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"\"><img class=\"button clone\"></a>\n"
+                     "                                    </td>\n"
+                     "                                    <td class=\"button\">\n"
+                     "                                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"\"><img id=\"exposureFilesButton_"+QString::number(i)+"\" class=\"button open\"></a>\n"
+                     "                                    </td>\n"
+                     "                                </tr>\n"
+                     "                            </tbody>\n"
+                     "                        </table>\n"
+                     "                        <ul id=\"exposureFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
                      "                        </ul>\n"
                      "                    </td>\n"
-                     "                    <td class=\"button\">\n"
-                     "                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"\"><img class=\"button clone\"></a>\n"
-                     "                    </td>\n"
-                     "                    <td class=\"button\">\n"
-                     "                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"\"><img id=\"exposureFilesButton_"+QString::number(i)+"\" class=\"button open\"></a>\n"
-                     "                    </td>\n"
-                     "                </tr>\n"
-                     "            </tbody>\n"
-                     "        </table>\n"
-                     "        <ul id=\"exposureFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
-                     "        </ul>\n"
-                     "    </td>\n"
-                     "</tr>\n";
+                     "                </tr>\n";
 
         mExposureNames << exposureName;
         mExposureDisplayed << exposureDisplayed;
@@ -221,6 +221,9 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
     }
 
     setHtml(mTemplate.arg(message(), exposures));
+qDebug("---------");
+qDebug("%s", qPrintable(mTemplate.arg(message(), exposures)));
+qDebug("---------");
 
     mInitialized = true;
 }
