@@ -771,26 +771,26 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
 {
     // Generate and return the HTML code for the given container
 
-    static const QString Html = "<tr class=\"%1\" id=\"%2\">\n"
-                                "    <td class=\"icon\">\n"
-                                "        <a>%3</a>\n"
-                                "    </td>\n"
-                                "    <td class=\"name fullWidth\">\n"
-                                "        %4\n"
-                                "    </td>\n"
+    static const QString Html = "                <tr class=\"%1\" id=\"%2\">\n"
+                                "                    <td class=\"icon\">\n"
+                                "                        <a>%3</a>\n"
+                                "                    </td>\n"
+                                "                    <td class=\"name fullWidth\">\n"
+                                "                        %4\n"
+                                "                    </td>\n"
                                 "%5"
                                 "%6"
-                                "</tr>\n";
-    static const QString StatusHtml = "    <td class=\"status\">\n"
-                                      "        %1\n"
-                                      "    </td>\n";
-    static const QString NoStatusHtml = "    <td class=\"status hidden\">\n"
-                                        "    </td>\n";
-    static const QString ActionsHtml = "    <td class=\"actions button\">\n"
-                                       "        %1\n"
-                                       "    </td>\n";
-    static const QString NoActionsHtml = "    <td class=\"actions button hidden\">\n"
-                                         "    </td>\n";
+                                "                </tr>\n";
+    static const QString StatusHtml = "                    <td class=\"status\">\n"
+                                      "                        %1\n"
+                                      "                    </td>\n";
+    static const QString NoStatusHtml = "                    <td class=\"status hidden\">\n"
+                                        "                    </td>\n";
+    static const QString ActionsHtml = "                    <td class=\"actions button\">\n"
+                                       "                        %1\n"
+                                       "                    </td>\n";
+    static const QString NoActionsHtml = "                    <td class=\"actions button hidden\">\n"
+                                         "                    </td>\n";
 
     const QString iconHtml = QString("<img class=\"%1\">").arg(pIcon);
 
@@ -811,21 +811,21 @@ QString PmrWorkspacesWindowWidget::fileNodeContentsHtml(const PMRSupport::PmrWor
     // Generate and return the HTML code for the contents of the given file node
 
     if (pFileNode) {
-        static const QString Html = "<tr class=\"contents%1\">\n"
-                                    "    <td></td>\n"
-                                    "    <td colspan=\"3\">\n"
-                                    "        <table>\n"
-                                    "            <tr class=\"spacing\">\n"
-                                    "                <td class=\"icon\"></td>\n"
-                                    "                <td class=\"name\"></td>\n"
-                                    "                <td class=\"status hidden\"></td>\n"
-                                    "                <td class=\"action hidden\"></td>\n"
-                                    "            </tr>\n"
+        static const QString Html = "                <tr class=\"contents%1\">\n"
+                                    "                    <td></td>\n"
+                                    "                    <td colspan=\"3\">\n"
+                                    "                        <table>\n"
+                                    "                            <tr class=\"spacing\">\n"
+                                    "                                <td class=\"icon\"></td>\n"
+                                    "                                <td class=\"name\"></td>\n"
+                                    "                                <td class=\"status hidden\"></td>\n"
+                                    "                                <td class=\"action hidden\"></td>\n"
+                                    "                            </tr>\n"
                                     "%2"
-                                    "        </table>\n"
-                                    "    </td>\n"
-                                    "</tr>\n";
-        static const QString ItemHtml = "            %1\n";
+                                    "                        </table>\n"
+                                    "                    </td>\n"
+                                    "                </tr>\n";
+        static const QString ItemHtml = "                            %1\n";
 
         QStringList itemHtml = QStringList();
 
@@ -1060,7 +1060,7 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
 
         setHtml(mTemplate.arg(html.join("")));
 qDebug("---------");
-qDebug("%s", qPrintable(html.join("")));
+qDebug("%s", qPrintable(mTemplate.arg(html.join(""))));
 qDebug("---------");
     }
 }
