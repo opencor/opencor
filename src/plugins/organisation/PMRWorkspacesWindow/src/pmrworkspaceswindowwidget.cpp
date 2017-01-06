@@ -708,7 +708,7 @@ const QString PmrWorkspacesWindowWidget::actionHtml(const StringPairs &pActions)
 QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const QString &pPath,
                                                             const PMRSupport::CharPair &pGitStatus)
 {
-    static const QString statusHtml = "<span class=\"iStatus\">%1</span><span class=\"wStatus\">%2</span>";
+    static const QString StatusHtml = "<span class=\"iStatus\">%1</span><span class=\"wStatus\">%2</span>";
 
     StringPairs actionList = StringPairs();
 
@@ -717,7 +717,7 @@ QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const QString &pPath
     else if (pGitStatus.first != ' ')
         actionList << StringPair(UnstageAction, pPath);
 
-    return QStringList() << statusHtml.arg(pGitStatus.first).arg(pGitStatus.second)
+    return QStringList() << StatusHtml.arg(pGitStatus.first).arg(pGitStatus.second)
                          << actionHtml(actionList);
 }
 
@@ -740,7 +740,7 @@ QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::Pm
 
 QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
-    static const QString html = "<tr class=\"file\" id=\"%1\">\n"
+    static const QString Html = "<tr class=\"file\" id=\"%1\">\n"
                                 "    <td colspan=\"2\" class=\"name\"><a href=\"%1\">%2</a></td>\n"
                                 "    <td class=\"status%3\">%4</td>\n"
                                 "    <td class=\"action%5\">%6</td>\n"
@@ -753,7 +753,7 @@ QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNo
 
     // Use an anchor element to allow us to set the scroll position at a row
 
-    return html.arg(path, pFileNode->shortName(),
+    return Html.arg(path, pFileNode->shortName(),
                     statusActionHtml[0].isEmpty()?" hidden":QString(),
                     statusActionHtml[0],
                     statusActionHtml[1].isEmpty()?" hidden":QString(),
@@ -771,7 +771,7 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
 {
     // Generate and return the HTML code for the given container
 
-    static const QString html = "<tr class=\"%1\" id=\"%2\">\n"
+    static const QString Html = "<tr class=\"%1\" id=\"%2\">\n"
                                 "    <td class=\"icon\">\n"
                                 "        <a>%3</a>\n"
                                 "    </td>\n"
@@ -781,15 +781,15 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
                                 "%5"
                                 "%6"
                                 "</tr>\n";
-    static const QString statusHtml = "    <td class=\"status\">\n"
+    static const QString StatusHtml = "    <td class=\"status\">\n"
                                       "        %1\n"
                                       "    </td>\n";
-    static const QString noStatusHtml = "    <td class=\"status hidden\">\n"
+    static const QString NoStatusHtml = "    <td class=\"status hidden\">\n"
                                         "    </td>\n";
-    static const QString actionsHtml = "    <td class=\"actions button\">\n"
+    static const QString ActionsHtml = "    <td class=\"actions button\">\n"
                                        "        %1\n"
                                        "    </td>\n";
-    static const QString noActionsHtml = "    <td class=\"actions button hidden\">\n"
+    static const QString NoActionsHtml = "    <td class=\"actions button hidden\">\n"
                                          "    </td>\n";
 
     const QString iconHtml = QString("<img class=\"%1\">").arg(pIcon);
@@ -798,9 +798,9 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
 
     QString actions = actionHtml(pActions);
 
-    return html.arg(pClass, pId, iconHtml, pName,
-                    pStatus.isEmpty()?noStatusHtml:statusHtml.arg(pStatus),
-                    actions.isEmpty()?noActionsHtml:actionsHtml.arg(actions));
+    return Html.arg(pClass, pId, iconHtml, pName,
+                    pStatus.isEmpty()?NoStatusHtml:StatusHtml.arg(pStatus),
+                    actions.isEmpty()?NoActionsHtml:ActionsHtml.arg(actions));
 }
 
 //==============================================================================
@@ -810,22 +810,23 @@ QString PmrWorkspacesWindowWidget::fileNodeContentsHtml(const PMRSupport::PmrWor
 {
     // Generate and return the HTML code for the contents of the given file node
 
-    static const QString html = "<tr class=\"contents%1\">\n"
-                                "    <td></td>\n"
-                                "    <td colspan=\"3\">\n"
-                                "        <table>\n"
-                                "            <tr class=\"spacing\">\n"
-                                "                <td class=\"icon\"></td>\n"
-                                "                <td class=\"name\"></td>\n"
-                                "                <td class=\"status hidden\"></td>\n"
-                                "                <td class=\"action hidden\"></td>\n"
-                                "            </tr>\n"
-                                "            %2\n"
-                                "        </table>\n"
-                                "    </td>\n"
-                                "</tr>\n";
-
     if (pFileNode) {
+        static const QString Html = "<tr class=\"contents%1\">\n"
+                                    "    <td></td>\n"
+                                    "    <td colspan=\"3\">\n"
+                                    "        <table>\n"
+                                    "            <tr class=\"spacing\">\n"
+                                    "                <td class=\"icon\"></td>\n"
+                                    "                <td class=\"name\"></td>\n"
+                                    "                <td class=\"status hidden\"></td>\n"
+                                    "                <td class=\"action hidden\"></td>\n"
+                                    "            </tr>\n"
+                                    "%2"
+                                    "        </table>\n"
+                                    "    </td>\n"
+                                    "</tr>\n";
+        static const QString ItemHtml = "            %1\n";
+
         QStringList itemHtml = QStringList();
 
         foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
@@ -835,7 +836,7 @@ QString PmrWorkspacesWindowWidget::fileNodeContentsHtml(const PMRSupport::PmrWor
                 itemHtml << fileHtml(fileNode);
         }
 
-        return html.arg(pHidden?" hidden":QString(), itemHtml.join("\n"));
+        return Html.arg(pHidden?" hidden":QString(), itemHtml.isEmpty()?QString():ItemHtml.arg(itemHtml.join("\n")));
     } else {
         return emptyContentsHtml();
     }
@@ -847,9 +848,9 @@ QString PmrWorkspacesWindowWidget::emptyContentsHtml()
 {
     // Generate and return the HTML code for an empty contents
 
-    static const QString html = "<tr></tr>\n";
+    static const QString Html = "<tr></tr>\n";
 
-    return html;
+    return Html;
 }
 
 //==============================================================================
