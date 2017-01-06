@@ -781,7 +781,7 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
                                 "    <td class=\"status%5\">\n"
                                 "        %6\n"
                                 "    </td>\n"
-                                "    <td class=\"action%7\">\n"
+                                "    <td class=\"action button%7\">\n"
                                 "        %8\n"
                                 "    </td>\n"
                                 "</tr>\n";
