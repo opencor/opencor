@@ -221,9 +221,6 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
     }
 
     setHtml(mTemplate.arg(message(), exposures));
-qDebug("---------");
-qDebug("%s", qPrintable(mTemplate.arg(message(), exposures)));
-qDebug("---------");
 
     mInitialized = true;
 }

@@ -113,7 +113,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     setAcceptDrops(false);
 
-    // We track the mouse ourselves
+    // Track the mouse
 
     setMouseTracking(true);
 
@@ -1066,9 +1066,6 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
             html << workspaceHtml(workspace);
 
         setHtml(mTemplate.arg(html.join("")));
-qDebug("---------");
-qDebug("%s", qPrintable(mTemplate.arg(html.join(""))));
-qDebug("---------");
     }
 }
 
