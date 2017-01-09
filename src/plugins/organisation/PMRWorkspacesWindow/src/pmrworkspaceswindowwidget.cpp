@@ -89,9 +89,12 @@ static const auto SynchronizePullIcon = QStringLiteral(":/PMRWorkspacesWindow/ic
 //           - Get rid of mouseMoveEvent() and set the tool tip using
 //             linkHovered() (see PmrWindowWidget::linkHovered()) and
 //             setLinkToolTip()...
-//           - Revisit mousePressEvent()...
+//           - Get rid of mouseMoveEvent() and mousePressEvent() and handle the
+//             QWebPage::linkClicked() and QWebPage::linkHovered() signals
+//             instead...
 //           - Double check loadSettings() and saveSettings() (e.g. we want to
-//             be able to have anumber of workspaces expanded, not just one)...
+//             be able to have any number of workspaces expanded, not just
+//             one)...
 
 PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService,
                                                      QWidget *pParent) :
@@ -375,6 +378,8 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 
 void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
+    WebViewerWidget::WebViewerWidget::mouseMoveEvent(pEvent);
+
     QWebElement webElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
 
     while (   !webElement.isNull()
@@ -451,6 +456,8 @@ void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
 void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
 {
+    WebViewerWidget::WebViewerWidget::mousePressEvent(pEvent);
+
     if (pEvent->button() == Qt::LeftButton) {
         // Find the containing row and highlight it
 
