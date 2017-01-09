@@ -86,9 +86,6 @@ static const auto SynchronizePullIcon = QStringLiteral(":/PMRWorkspacesWindow/ic
 //             desires...
 //           - Check and optimise (e.g. create the menu actions once and for
 //             all) contextMenuEvent()...
-//           - Get rid of mouseMoveEvent() and set the tool tip using
-//             linkHovered() (see PmrWindowWidget::linkHovered()) and
-//             setLinkToolTip()...
 //           - Get rid of mouseMoveEvent() and mousePressEvent() and handle the
 //             QWebPage::linkClicked() and QWebPage::linkHovered() signals
 //             instead...
@@ -254,6 +251,13 @@ static const auto TrTag = QStringLiteral("TR");
 
 //==============================================================================
 
+static const auto AStatus  = QStringLiteral("A");
+static const auto CStatus  = QStringLiteral("C");
+static const auto DStatus  = QStringLiteral("D");
+static const auto MStatus  = QStringLiteral("M");
+
+//==============================================================================
+
 static const auto StatusClass  = QStringLiteral("status");
 static const auto IStatusClass = QStringLiteral("iStatus");
 static const auto WStatusClass = QStringLiteral("wStatus");
@@ -378,35 +382,40 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 
 void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
+    // Default handling of the event
+    // Note: this will ensure that CSS works as expected...
+
     WebViewerWidget::WebViewerWidget::mouseMoveEvent(pEvent);
 
-    QWebElement webElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
+    // Determine the element that is being hovered
 
-    while (   !webElement.isNull()
-           &&  webElement.tagName().compare(ATag)
-           &&  webElement.tagName().compare(TrTag)
-           && !webElement.hasClass(StatusClass)
-           && !webElement.hasClass(IStatusClass)
-           && !webElement.hasClass(WStatusClass)) {
-        webElement = webElement.parent();
+    QWebElement element = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
+
+    while (   !element.isNull()
+           &&  element.tagName().compare(ATag)
+           &&  element.tagName().compare(TrTag)
+           && !element.hasClass(StatusClass)
+           && !element.hasClass(IStatusClass)
+           && !element.hasClass(WStatusClass)) {
+        element = element.parent();
     }
 
-    QString toolTip = QString();
-    QCursor mouseCursor = QCursor(Qt::ArrowCursor);
+    // Determine the tool tip to show for the element that is being hovered, if
+    // any
 
-    if (!webElement.isNull()) {
-        if (   !webElement.tagName().compare(ATag)
-            && !webElement.attribute("href").isEmpty()) {
-            QString action = webElement.attribute("href").split("|")[0];
+    QString toolTip = QString();
+
+    if (!element.isNull()) {
+        if (   !element.tagName().compare(ATag)
+            && !element.attribute("href").isEmpty()) {
+            QString action = element.attribute("href").split("|")[0];
 
             if (!action.compare(StageAction)) {
                 toolTip = tr("Stage");
             } else if (!action.compare(UnstageAction)) {
                 toolTip = tr("Unstage");
-            } else if (webElement.parent().parent().hasClass("file")) {
+            } else if (element.parent().parent().hasClass("file")) {
                 toolTip = tr("Open File");
-
-                mouseCursor = QCursor(Qt::PointingHandCursor);
             } else if (!action.compare(CloneAction)) {
                 toolTip = tr("Clone Workspace");
             } else if (   !action.compare(SynchronizeAction)
@@ -417,39 +426,28 @@ void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
             } else if (!action.compare(CommitAction)) {
                 toolTip = tr("Commit Staged Changes");
             }
-        } else if (   webElement.hasClass(StatusClass)
-                   || webElement.hasClass(IStatusClass)
-                   || webElement.hasClass(WStatusClass)) {
-            QString statusChar = webElement.toPlainText().trimmed();
+        } else if (   element.hasClass(StatusClass)
+                   || element.hasClass(IStatusClass)
+                   || element.hasClass(WStatusClass)) {
+            QString statusChar = element.toPlainText().trimmed();
 
-            if (webElement.hasClass(StatusClass)) {
-                if (!statusChar.compare("C"))
+            if (element.hasClass(StatusClass)) {
+                if (!statusChar.compare(CStatus))
                     toolTip = tr("Conflicts");
             } else {
-                if (!statusChar.compare(ATag))
+                if (!statusChar.compare(AStatus))
                     toolTip = tr("Added");
-                else if (!statusChar.compare("C"))
+                else if (!statusChar.compare(CStatus))
                     toolTip = tr("Conflicts");
-                else if (!statusChar.compare("D"))
+                else if (!statusChar.compare(DStatus))
                     toolTip = tr("Deleted");
-                else if (!statusChar.compare("M"))
+                else if (!statusChar.compare(MStatus))
                     toolTip = tr("Modified");
-            }
-        }
-
-        if (toolTip.isEmpty()) {
-            QString link = webElement.attribute("id");
-
-            if (webElement.hasClass("workspace")) {
-                PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(link);
-
-                toolTip = QString("%1\n%2").arg(workspace->url(), workspace->path());
             }
         }
     }
 
-    setCursor(mouseCursor);
-    QToolTip::showText(pEvent->globalPos(), toolTip, this, QRect());
+    setToolTip(toolTip);
 }
 
 //==============================================================================
