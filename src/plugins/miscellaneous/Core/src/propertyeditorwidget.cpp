@@ -1564,7 +1564,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
-    // Note: this will finish the editing of our 'old' property, if any
+    // Note: this will finish the editing of our 'old' property, if any...
 
     TreeViewWidget::mouseMoveEvent(pEvent);
 
@@ -1594,7 +1594,7 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     Property *oldProperty = mProperty;
 
     // Default handling of the event
-    // Note: this will finish the editing of our 'old' property, if any
+    // Note: this will finish the editing of our 'old' property, if any...
 
     TreeViewWidget::mousePressEvent(pEvent);
 
@@ -1621,7 +1621,7 @@ void PropertyEditorWidget::mouseReleaseEvent(QMouseEvent *pEvent)
     mRightClicking = false;
 
     // Default handling of the event
-    // Note: this will finish the editing of our 'old' property, if any
+    // Note: this will finish the editing of our 'old' property, if any...
 
     TreeViewWidget::mouseReleaseEvent(pEvent);
 }

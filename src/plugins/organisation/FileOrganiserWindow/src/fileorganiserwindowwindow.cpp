@@ -107,11 +107,11 @@ FileOrganiserWindowWindow::~FileOrganiserWindowWindow()
 
 void FileOrganiserWindowWindow::retranslateUi()
 {
-    // Retranslate the whole window
+    // Retranslate our whole window
 
     mGui->retranslateUi(this);
 
-    // Retranslate the file organiser widget
+    // Retranslate our file organiser widget
 
     mFileOrganiserWindowWidget->retranslateUi();
 }
