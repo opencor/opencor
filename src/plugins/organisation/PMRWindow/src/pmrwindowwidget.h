@@ -30,6 +30,7 @@ limitations under the License.
 
 //==============================================================================
 
+class QLabel;
 class QMenu;
 
 //==============================================================================
@@ -68,6 +69,8 @@ private:
 
     QAction *mCopyAction;
 
+    QLabel *mMessageLabel;
+
     QStringList mExposureNames;
     QBoolList mExposureDisplayed;
     QMap<QString, int> mExposureUrlId;
@@ -82,6 +85,7 @@ private:
     QString mExposureUrl;
 
     QString message() const;
+    void updateMessage();
 
     void showExposureFiles(const QString &pUrl, const bool &pShow = true);
 

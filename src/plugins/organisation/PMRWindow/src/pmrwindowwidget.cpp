@@ -31,6 +31,8 @@ limitations under the License.
 #include <QContextMenuEvent>
 #include <QDesktopServices>
 #include <QIODevice>
+#include <QLabel>
+#include <QLayout>
 #include <QMenu>
 #include <QRegularExpression>
 
@@ -51,6 +53,24 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     mNumberOfFilteredExposures(0),
     mExposureUrl(QString())
 {
+    // Create and customise our message label
+
+    mMessageLabel = new QLabel(this);
+
+    mMessageLabel->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+    mMessageLabel->setMargin(8);
+    mMessageLabel->setStyleSheet("QLabel {"
+                                 "     background-color: white;"
+                                 "     font-family: arial, sans-serif;"
+                                 "}");
+    mMessageLabel->setWordWrap(true);
+
+    // Populate ourselves
+
+    createLayout();
+
+    layout()->addWidget(mMessageLabel);
+
     // Create and populate our context menu
 
     mContextMenu = new QMenu(this);
@@ -75,10 +95,8 @@ void PmrWindowWidget::retranslateUi()
 
     // Retranslate our message, if we have been initialised
 
-/*---GRY---
     if (mInitialized)
-        page()->mainFrame()->documentElement().findFirst("p[id=message]").setInnerXml(message());
-*/
+        updateMessage();
 }
 
 //==============================================================================
@@ -114,26 +132,28 @@ QSize PmrWindowWidget::sizeHint() const
 
 //==============================================================================
 
-QString PmrWindowWidget::message() const
+void PmrWindowWidget::updateMessage()
 {
     // Determine the message to be displayed, if any
 
-    QString res = QString();
+    QString message = QString();
 
     if (mErrorMessage.isEmpty()) {
         if (!mNumberOfFilteredExposures) {
             if (!mExposureNames.isEmpty())
-                res = tr("No exposures match your criteria.");
+                message = tr("No exposures match your criteria.");
         } else if (mNumberOfFilteredExposures == 1) {
-            res = tr("<strong>1</strong> exposure was found:");
+            message = tr("<strong>1</strong> exposure was found:");
         } else {
-            res = tr("<strong>%1</strong> exposures were found:").arg(QLocale().toString(mNumberOfFilteredExposures));
+            message = tr("<strong>%1</strong> exposures were found:").arg(QLocale().toString(mNumberOfFilteredExposures));
         }
     } else {
-        res = tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true);
+        message = tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true);
     }
 
-    return res;
+    // Update our message label
+
+    mMessageLabel->setText(message);
 }
 
 //==============================================================================
@@ -199,6 +219,8 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
     setHtml(mTemplate.arg(message(), exposures));
 */
 
+    updateMessage();
+
     mInitialized = true;
 }
 
@@ -217,9 +239,9 @@ void PmrWindowWidget::filter(const QString &pFilter)
 
     // Update our message and show/hide the relevant exposures
 
-/*---GRY---
-    page()->mainFrame()->documentElement().findFirst("p[id=message]").setInnerXml(message());
+    updateMessage();
 
+/*---GRY---
     QWebElement trElement = page()->mainFrame()->documentElement().findFirst(QString("tbody[id=exposures]")).firstChild();
     QWebElement ulElement;
 
