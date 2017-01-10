@@ -38,26 +38,6 @@
         <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
         <translation>&lt;strong&gt;Erreur :&lt;/strong&gt; </translation>
     </message>
-    <message>
-        <source>Clone Workspace</source>
-        <translation>Cloner Espace De Travail</translation>
-    </message>
-    <message>
-        <source>Show Exposure Files</source>
-        <translation>Montrer Fichiers Exposition</translation>
-    </message>
-    <message>
-        <source>Hide Exposure Files</source>
-        <translation>Cacher Fichiers Exposition</translation>
-    </message>
-    <message>
-        <source>Open Exposure File</source>
-        <translation>Ouvrir Fichier Exposition</translation>
-    </message>
-    <message>
-        <source>Browse Exposure</source>
-        <translation>Naviguer Exposition</translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::PMRWindow::PmrWindowWindow</name>

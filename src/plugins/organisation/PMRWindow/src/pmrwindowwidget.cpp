@@ -33,8 +33,6 @@ limitations under the License.
 #include <QIODevice>
 #include <QMenu>
 #include <QRegularExpression>
-#include <QWebElement>
-#include <QWebFrame>
 
 //==============================================================================
 
@@ -44,7 +42,7 @@ namespace PMRWindow {
 //==============================================================================
 
 PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
-    WebViewerWidget::WebViewerWidget(pParent),
+    Core::Widget(pParent),
     mExposureNames(QStringList()),
     mExposureDisplayed(QBoolList()),
     mExposureUrlId(QMap<QString, int>()),
@@ -64,33 +62,6 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
             this, SLOT(copy()));
 
     mContextMenu->addAction(mCopyAction);
-
-    // Prevent zooming in/out
-
-    setZoomingEnabled(false);
-
-    // Prevent objects from being dropped on us
-
-    setAcceptDrops(false);
-
-    // Some connections to handle the clicking and hovering of a link
-
-    page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-
-    connect(page(), SIGNAL(linkClicked(const QUrl &)),
-            this, SLOT(linkClicked()));
-    connect(page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
-            this, SLOT(linkHovered()));
-
-    // Retrieve the HTML template
-
-    QString fileContents;
-
-    Core::readFileContentsFromFile(":/PMRWindow/output.html", fileContents);
-
-    mTemplate = fileContents.arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
-                                 Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16),
-                                 "%1", "%2");
 }
 
 //==============================================================================
@@ -104,12 +75,15 @@ void PmrWindowWidget::retranslateUi()
 
     // Retranslate our message, if we have been initialised
 
+/*---GRY---
     if (mInitialized)
         page()->mainFrame()->documentElement().findFirst("p[id=message]").setInnerXml(message());
+*/
 }
 
 //==============================================================================
 
+/*---GRY---
 void PmrWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 {
     // Retrieve some information about the link, if any
@@ -125,6 +99,7 @@ void PmrWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
     if (!mExposureUrl.isEmpty() && !textContent.isEmpty())
         mContextMenu->exec(pEvent->globalPos());
 }
+*/
 
 //==============================================================================
 
@@ -220,7 +195,9 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
         mNumberOfFilteredExposures += exposureDisplayed;
     }
 
+/*---GRY---
     setHtml(mTemplate.arg(message(), exposures));
+*/
 
     mInitialized = true;
 }
@@ -240,6 +217,7 @@ void PmrWindowWidget::filter(const QString &pFilter)
 
     // Update our message and show/hide the relevant exposures
 
+/*---GRY---
     page()->mainFrame()->documentElement().findFirst("p[id=message]").setInnerXml(message());
 
     QWebElement trElement = page()->mainFrame()->documentElement().findFirst(QString("tbody[id=exposures]")).firstChild();
@@ -261,6 +239,7 @@ void PmrWindowWidget::filter(const QString &pFilter)
 
         trElement = trElement.nextSibling();
     }
+*/
 }
 
 //==============================================================================
@@ -283,8 +262,9 @@ void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
 
     sortedExposureFiles.sort(Qt::CaseInsensitive);
 
-    static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
+//    static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
 
+/*---GRY---
     QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=exposureFiles_%1]").arg(mExposureUrlId.value(pUrl)));
 
     foreach (const QString &exposureFile, sortedExposureFiles) {
@@ -292,6 +272,7 @@ void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
                                        "    <a href=\"%1\">%2</a>"
                                        "</li>").arg(exposureFile, QString(exposureFile).remove(FilePathRegEx)));
     }
+*/
 
     showExposureFiles(pUrl, true);
 }
@@ -302,6 +283,9 @@ void PmrWindowWidget::showExposureFiles(const QString &pUrl, const bool &pShow)
 {
     // Show the exposure files for the given exposure
 
+Q_UNUSED(pUrl);
+Q_UNUSED(pShow);
+/*---GRY---
     int id = mExposureUrlId.value(pUrl);
     QWebElement documentElement = page()->mainFrame()->documentElement();
     QWebElement imgElement = documentElement.findFirst(QString("img[id=exposureFilesButton_%1]").arg(id));
@@ -320,6 +304,7 @@ void PmrWindowWidget::showExposureFiles(const QString &pUrl, const bool &pShow)
         ulElement.removeClass("visible");
         ulElement.setStyleProperty("display", "none");
     }
+*/
 }
 
 //==============================================================================
@@ -329,92 +314,6 @@ void PmrWindowWidget::copy()
     // Copy the URL of the exposure to the clipboard
 
     QApplication::clipboard()->setText(mExposureUrl);
-}
-
-//==============================================================================
-
-void PmrWindowWidget::linkClicked()
-{
-    // Retrieve some information about the link
-
-    QString link;
-    QString textContent;
-
-    QWebElement element = retrieveLinkInformation(link, textContent);
-
-    // Check whether we have clicked a text or button link
-
-    if (textContent.isEmpty()) {
-        // We have clicked on a button link, so let people know whether we want
-        // to clone a workspace or whether we want to show/hide exposure files
-
-        QStringList linkList = link.split("|");
-
-        if (!linkList[0].compare("cloneWorkspace")) {
-            emit cloneWorkspaceRequested(linkList[1]);
-        } else {
-            // Show/hide exposure files, if we have them, or let people know
-            // that we want to show them
-
-            int id = mExposureUrlId.value(linkList[1]);
-
-            QWebElement documentElement = page()->mainFrame()->documentElement();
-            QWebElement ulElement = documentElement.findFirst(QString("ul[id=exposureFiles_%1]").arg(id));
-
-            if (ulElement.firstChild().isNull()) {
-                emit exposureFilesRequested(linkList[1]);
-            } else {
-                showExposureFiles(linkList[1],
-                                  documentElement.findFirst(QString("img[id=exposureFilesButton_%1]").arg(id)).hasClass("button"));
-            }
-        }
-    } else {
-        // Open an exposure link in the user's browser or ask for an exposure
-        // file to be opened in OpenCOR
-
-        if (element.parent().hasClass("exposureFile"))
-            emit openExposureFileRequested(link);
-        else
-            QDesktopServices::openUrl(link);
-    }
-}
-
-//==============================================================================
-
-void PmrWindowWidget::linkHovered()
-{
-    // Retrieve some information about the link
-
-    QString link;
-    QString textContent;
-
-    QWebElement element = retrieveLinkInformation(link, textContent);
-
-    // Update our tool tip based on whether we are hovering a text or button
-    // link
-    // Note: this follows the approach used in linkClicked()...
-
-    QString toolTip = QString();
-
-    if (textContent.isEmpty()) {
-        QStringList linkList = link.split("|");
-
-        if (!linkList[0].compare("cloneWorkspace")) {
-            toolTip = tr("Clone Workspace");
-        } else if (linkList.count() == 2) {
-            if (page()->mainFrame()->documentElement().findFirst(QString("img[id=exposureFilesButton_%1]").arg(mExposureUrlId.value(linkList[1]))).hasClass("button"))
-                toolTip = tr("Show Exposure Files");
-            else
-                toolTip = tr("Hide Exposure Files");
-        }
-    } else {
-        if (element.parent().hasClass("exposureFile"))
-            toolTip = tr("Open Exposure File");
-        else
-            toolTip = tr("Browse Exposure");
-    }
-
-    setToolTip(toolTip);
 }
 
 //==============================================================================

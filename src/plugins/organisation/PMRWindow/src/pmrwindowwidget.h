@@ -26,7 +26,7 @@ limitations under the License.
 
 #include "corecliutils.h"
 #include "pmrexposure.h"
-#include "webviewerwidget.h"
+#include "widget.h"
 
 //==============================================================================
 
@@ -39,7 +39,7 @@ namespace PMRWindow {
 
 //==============================================================================
 
-class PmrWindowWidget : public WebViewerWidget::WebViewerWidget
+class PmrWindowWidget : public Core::Widget
 {
     Q_OBJECT
 
@@ -57,7 +57,9 @@ public:
     bool hasExposures() const;
 
 protected:
+/*---GRY---
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
+*/
 
     virtual QSize sizeHint() const;
 
@@ -95,9 +97,6 @@ public slots:
 
 private slots:
     void copy();
-
-    void linkClicked();
-    void linkHovered();
 };
 
 //==============================================================================
