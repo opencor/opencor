@@ -72,7 +72,7 @@ public:
 
     QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
-    void setLinkToolTip(const QString &pLinkToolTip);
+    void setToolTip(const QString &pToolTip);
 
     virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
 
@@ -97,7 +97,7 @@ protected:
 private:
     bool mResettingCursor;
 
-    QString mLinkToolTip;
+    QString mToolTip;
 
     QString mHomePage;
 
