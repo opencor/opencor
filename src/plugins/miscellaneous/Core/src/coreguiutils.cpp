@@ -334,15 +334,6 @@ QString getDirectory(const QString &pCaption, const QString &pDirName,
 
 //==============================================================================
 
-QString getEmptyDirectory(const QString &pCaption, const QString &pDirName)
-{
-    // Retrieve and return the name of an empty directory
-
-    return getDirectory(pCaption, pDirName, true);
-}
-
-//==============================================================================
-
 void setFocusTo(QWidget *pWidget)
 {
     // Give the focus to pWidget, but then revert the focus back to whoever had
