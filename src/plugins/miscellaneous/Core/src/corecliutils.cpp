@@ -397,6 +397,22 @@ void setActiveDirectory(const QString &pDirName)
 
 //==============================================================================
 
+bool isEmptyDirectory(const QString &pDirName)
+{
+    // Return whether the given directory exists and is empty
+
+    if (pDirName.isEmpty()) {
+        return false;
+    } else {
+        QDir dir(pDirName);
+
+        return      dir.exists()
+                && !dir.entryInfoList(QDir::AllEntries|QDir::System|QDir::Hidden|QDir::NoDotAndDotDot).count();
+    }
+}
+
+//==============================================================================
+
 #ifdef Q_OS_WIN
     #pragma optimize("", off)
 #endif

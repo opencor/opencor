@@ -132,6 +132,8 @@ void CORE_EXPORT * globalInstance(const QString &pObjectName,
 QString CORE_EXPORT activeDirectory();
 void CORE_EXPORT setActiveDirectory(const QString &pDirName);
 
+bool CORE_EXPORT isEmptyDirectory(const QString &pDirName);
+
 void CORE_EXPORT doNothing(const int &pMax);
 
 void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
