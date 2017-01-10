@@ -79,9 +79,9 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QStringList &pFilters = QStringList(),
                                     QString *pSelectedFilter = 0);
 
-QString CORE_EXPORT getExistingDirectory(const QString &pCaption,
-                                         const QString &pDirName = QString(),
-                                         const bool &pEmptyDir = false);
+QString CORE_EXPORT getDirectory(const QString &pCaption,
+                                 const QString &pDirName = QString(),
+                                 const bool &pEmptyDir = false);
 
 void CORE_EXPORT setFocusTo(QWidget *pWidget);
 

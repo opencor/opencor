@@ -292,8 +292,8 @@ void PmrWindowWindow::cloneWorkspace(const QString &pUrl)
 {
     // Retrieve the name of an empty directory
 
-    QString dirName = Core::getExistingDirectory(tr("Select Empty Directory"),
-                                                 QString(), true);
+    QString dirName = Core::getDirectory(tr("Select Empty Directory"),
+                                         QString(), true);
 
     if (!dirName.isEmpty()) {
         // We have got a directory name where we can clone the workspace, so

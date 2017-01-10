@@ -289,10 +289,10 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 
 //==============================================================================
 
-QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
-                             const bool &pEmptyDir)
+QString getDirectory(const QString &pCaption, const QString &pDirName,
+                     const bool &pEmptyDir)
 {
-    // Retrieve and return an existing directory path
+    // Retrieve and return the name of an existing directory
     // Note: normally, we would rely on QFileDialog::getExistingDirectory() to
     //       retrieve the path of an existing directory, but then we wouldn't be
     //       able to handle the case where the user cancels his/her action, so
@@ -304,7 +304,10 @@ QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
     dialog.setFileMode(QFileDialog::DirectoryOnly);
     dialog.setOption(QFileDialog::ShowDirsOnly);
 
-    if (dialog.exec() == QDialog::Accepted) {
+    forever {
+        if (dialog.exec() != QDialog::Accepted)
+            break;
+
         QString res = Core::nativeCanonicalDirName(dialog.selectedFiles().first());
 
         if (!res.isEmpty()) {
@@ -315,18 +318,18 @@ QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
             // Check whether the directory should be empty
 
             if (   pEmptyDir
-                && QDir(res).entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count()) {
+                && QDir(res).entryInfoList(QDir::AllEntries|QDir::System|QDir::Hidden|QDir::NoDotAndDotDot).count()) {
                 warningMessageBox(pCaption,
                                   QObject::tr("Please choose an empty directory."));
 
-                return QString();
+                continue;
             }
         }
 
         return res;
-    } else {
-        return QString();
     }
+
+    return QString();
 }
 
 //==============================================================================
