@@ -23,8 +23,8 @@
         <translation>Copier l&apos;URL dans le presse-papier</translation>
     </message>
     <message>
-        <source>No exposure matches your criteria.</source>
-        <translation>Aucune exposition ne correspond à votre critère.</translation>
+        <source>No exposures match your criteria.</source>
+        <translation>Aucunes expositions ne correspondent à votre critère.</translation>
     </message>
     <message>
         <source>&lt;strong&gt;1&lt;/strong&gt; exposure was found:</source>

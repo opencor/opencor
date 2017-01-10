@@ -93,7 +93,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     setFocusProxy(mFilterValue);
 
-    // Create and add the PMR widget
+    // Create and add our PMR widget
 
     mPmrWindowWidget = new PmrWindowWidget(this);
 
@@ -117,7 +117,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     mPmrWebService = new PMRSupport::PmrWebService();
 
-    // Some connections to process responses from the PMR web service
+    // Some connections to process responses from our PMR web service
 
     connect(mPmrWebService, SIGNAL(busy(const bool &)),
             this, SLOT(busy(const bool &)));
@@ -168,7 +168,7 @@ PmrWindowWindow::~PmrWindowWindow()
 
 void PmrWindowWindow::retranslateUi()
 {
-    // Retranslate the whole window and our information note message
+    // Retranslate our whole window and our information note message
 
     mGui->retranslateUi(this);
 

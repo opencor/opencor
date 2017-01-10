@@ -138,7 +138,7 @@ QSize PmrWindowWidget::sizeHint() const
     return defaultSize(0.15);
 }
 
- //==============================================================================
+//==============================================================================
 
 QString PmrWindowWidget::message() const
 {
@@ -149,7 +149,7 @@ QString PmrWindowWidget::message() const
     if (mInternetConnectionAvailable && mErrorMessage.isEmpty()) {
         if (!mNumberOfFilteredExposures) {
             if (!mExposureNames.isEmpty())
-                res = tr("No exposure matches your criteria.");
+                res = tr("No exposures match your criteria.");
         } else if (mNumberOfFilteredExposures == 1) {
             res = tr("<strong>1</strong> exposure was found:");
         } else {
