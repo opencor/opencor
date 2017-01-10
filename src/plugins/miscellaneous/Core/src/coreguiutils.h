@@ -82,6 +82,8 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
 QString CORE_EXPORT getDirectory(const QString &pCaption,
                                  const QString &pDirName = QString(),
                                  const bool &pEmptyDir = false);
+QString CORE_EXPORT getEmptyDirectory(const QString &pCaption,
+                                      const QString &pDirName = QString());
 
 void CORE_EXPORT setFocusTo(QWidget *pWidget);
 

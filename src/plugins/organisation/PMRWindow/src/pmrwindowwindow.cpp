@@ -296,32 +296,6 @@ void PmrWindowWindow::retrieveExposures(const bool &pVisible)
 
 //==============================================================================
 
-void PmrWindowWindow::cloneWorkspace(const QString &pUrl)
-{
-    // Retrieve the name of an empty directory
-
-    QString dirName = Core::getDirectory(tr("Select Empty Directory"),
-                                         QString(), true);
-
-    if (!dirName.isEmpty()) {
-        // We have got a directory name where we can clone the workspace, so
-        // request a clone of it
-
-        mPmrWebService->cloneWorkspace(pUrl, dirName);
-    }
-}
-
-//==============================================================================
-
-void PmrWindowWindow::showExposureFiles(const QString &pUrl)
-{
-    // Request a list of the exposure's files from our PMR web service
-
-    mPmrWebService->requestExposureFiles(pUrl);
-}
-
-//==============================================================================
-
 }   // namespace PMRWindow
 }   // namespace OpenCOR
 
