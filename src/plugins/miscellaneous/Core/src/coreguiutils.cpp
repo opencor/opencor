@@ -595,13 +595,18 @@ QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
     if (icon.isNull())
         return QString();
 
+    QList<QSize> iconAvailableSizes = icon.availableSizes();
+
+    if (!iconAvailableSizes.count())
+        return QString();
+
     QByteArray data;
     QBuffer buffer(&data);
-    QSize iconSize = icon.availableSizes().first();
 
     buffer.open(QIODevice::WriteOnly);
-    icon.pixmap((pWidth == -1)?iconSize.width():pWidth,
-                (pHeight == -1)?iconSize.height():pHeight,
+
+    icon.pixmap((pWidth == -1)?iconAvailableSizes.first().width():pWidth,
+                (pHeight == -1)?iconAvailableSizes.first().height():pHeight,
                 pMode).save(&buffer, "PNG");
 
     return QString("data:image/png;base64,%1").arg(QString(data.toBase64()));
