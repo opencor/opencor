@@ -91,7 +91,8 @@ void FileManager::startStopTimer()
     //          handle that signal would result in reentry, so we temporarily
     //          disable our handling of it...
 
-    if (Core::opencorActive() && !mFiles.isEmpty() && !mTimer->isActive()) {
+    if (   !mTimer->isActive()
+        &&  Core::opencorActive() && !mFiles.isEmpty()) {
         disconnect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
                    this, SLOT(focusWindowChanged()));
 
@@ -101,7 +102,8 @@ void FileManager::startStopTimer()
                 this, SLOT(focusWindowChanged()));
 
         mTimer->start(1000);
-    } else if ((!Core::opencorActive() || mFiles.isEmpty()) && mTimer->isActive()) {
+    } else if (   mTimer->isActive()
+               && (!Core::opencorActive() || mFiles.isEmpty())) {
         mTimer->stop();
     }
 }
