@@ -306,17 +306,21 @@ bool internetConnectionAvailable()
 {
     // Check whether an Internet connection is available, this by going through
     // all of our network interfaces and checking whether one of them is both
-    // active and is a loopback, and has at least one IP address
+    // active and is not a loopback, and has at least one IPv4 IP address
 
-    QList<QNetworkInterface> networkInterfaces = QNetworkInterface::allInterfaces();
+    foreach (const QNetworkInterface &networkInterface, QNetworkInterface::allInterfaces()) {
+        QNetworkInterface::InterfaceFlags interfaceFlags = networkInterface.flags();
 
-    for (int i = 0, iMax = networkInterfaces.count(); i < iMax; ++i) {
-        QNetworkInterface networkInterface = networkInterfaces[i];
+        if (    interfaceFlags.testFlag(QNetworkInterface::IsUp)
+            && !interfaceFlags.testFlag(QNetworkInterface::IsLoopBack)) {
+            foreach (const QNetworkAddressEntry &addressEntry, networkInterface.addressEntries()) {
+                QAbstractSocket::NetworkLayerProtocol protocol = addressEntry.ip().protocol();
 
-        if (    networkInterface.flags().testFlag(QNetworkInterface::IsUp)
-            && !networkInterface.flags().testFlag(QNetworkInterface::IsLoopBack)
-            &&  networkInterface.addressEntries().count()) {
-            return true;
+                if (   (protocol == QAbstractSocket::IPv4Protocol)
+                    || (protocol == QAbstractSocket::AnyIPProtocol)) {
+                    return true;
+                }
+            }
         }
     }
 
