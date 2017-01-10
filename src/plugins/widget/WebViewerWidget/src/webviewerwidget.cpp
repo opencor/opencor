@@ -123,7 +123,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     QWebView(pParent),
     Core::CommonWidget(this),
     mResettingCursor(false),
-    mLinkToolTip(QString()),
+    mToolTip(QString()),
     mHomePage("about:blank"),
     mZoomingEnabled(true),
     mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our
@@ -199,18 +199,18 @@ void WebViewerWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void WebViewerWidget::setLinkToolTip(const QString &pLinkToolTip)
+void WebViewerWidget::setToolTip(const QString &pToolTip)
 {
-    // Set our link tool tip
+    // Set our tool tip
 
-    mLinkToolTip = pLinkToolTip;
+    mToolTip = pToolTip;
 }
 
 //==============================================================================
 
 bool WebViewerWidget::event(QEvent *pEvent)
 {
-    // Override the change of the cursor and tool tip when hovering a link
+    // Override the change of the cursor and tool tip
 
     if (mResettingCursor) {
         return true;
@@ -227,8 +227,8 @@ bool WebViewerWidget::event(QEvent *pEvent)
     } else if (pEvent->type() == QEvent::ToolTip) {
         QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
 
-        if (!mLinkToolTip.isEmpty()) {
-            QToolTip::showText(helpEvent->globalPos(), mLinkToolTip);
+        if (!mToolTip.isEmpty()) {
+            QToolTip::showText(helpEvent->globalPos(), mToolTip);
         } else {
             QToolTip::hideText();
 

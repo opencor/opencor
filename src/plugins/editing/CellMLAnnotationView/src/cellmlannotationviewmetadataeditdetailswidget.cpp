@@ -880,7 +880,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkHovered()
             linkToolTip = mUrls.contains(textContent)?tr("Look Up Resource"):tr("Look Up Id");
     }
 
-    mOutputOntologicalTerms->setLinkToolTip(linkToolTip);
+    mOutputOntologicalTerms->setToolTip(linkToolTip);
 }
 
 //==============================================================================

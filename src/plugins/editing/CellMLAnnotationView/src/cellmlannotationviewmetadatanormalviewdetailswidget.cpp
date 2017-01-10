@@ -610,7 +610,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkHovered()
         }
     }
 
-    mOutputOntologicalTerms->setLinkToolTip(linkToolTip);
+    mOutputOntologicalTerms->setToolTip(linkToolTip);
 }
 
 //==============================================================================
