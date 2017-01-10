@@ -34,53 +34,10 @@
                 background: rgba(255, 255, 255, 0);
             }
 
-            p {
-                margin: 0px;
-            }
-
-            table {
-                border-spacing: 0px;
-            }
-
-            table.fullWidth {
-                width: 100%;
-                margin: 0px;
-            }
-
-            td {
-                padding: 0px;
-            }
-
-            td.fullWidth {
-                width: 100%;
-            }
-
-            td.button {
-                vertical-align: top;
-            }
-
-            td.exposure {
-                padding: 0px 0px 4px 0px;
-            }
-
-            ul {
-                margin: 0px;
-            }
-
-            li.exposure {
-                list-style-type: square;
-                margin-left: -1em;
-            }
-
-            li.exposureFile {
-                list-style-type: disc;
-                margin-left: 4em;
-            }
-
             img.button {
                 position: relative;
-                top: 1px;
-                margin-left: 4px;
+                top: -3px;
+                margin-left: 2px;
                 border: 1px solid rgb(213, 213, 213);
                 border-radius: 5px;
                 padding: 2px;
@@ -99,10 +56,14 @@
                 box-shadow: rgba(0, 0, 0, 0.14902) 0px 2px 4px 0px inset;
             }
 
+            img.clone {
+                content: url("%1");
+            }
+
             img.downButton {
                 position: relative;
-                top: 1px;
-                margin-left: 4px;
+                top: -3px;
+                margin-left: 2px;
                 border: 1px solid rgb(181, 181, 181);
                 border-radius: 5px;
                 padding: 2px;
@@ -111,12 +72,48 @@
                 cursor: default;
             }
 
-            img.clone {
-                content: url("%1");
-            }
-
             img.open {
                 content: url("%2");
+            }
+
+            li.exposure {
+                list-style-type: square;
+                margin-left: -1em;
+            }
+
+            li.exposureFile {
+                list-style-type: disc;
+                margin-left: 4em;
+            }
+
+            p {
+                margin: 0px 0px 2px 0px;
+            }
+
+            table {
+                border-spacing: 0px;
+            }
+
+            table.fullWidth {
+                width: 100%;
+                margin: 0px;
+            }
+
+            td {
+                padding: 0px;
+                vertical-align: top;
+            }
+
+            td.exposure {
+                padding: 0px 0px 4px 0px;
+            }
+
+            td.fullWidth {
+                width: 100%;
+            }
+
+            ul {
+                margin: 0px;
             }
         </style>
     </head>
@@ -127,8 +124,7 @@
 
         <table class="fullWidth">
             <tbody id="exposures">
-                %4
-            </tbody>
+%4            </tbody>
         </table>
     </body>
 </html>
