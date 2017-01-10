@@ -266,6 +266,7 @@ static const auto WStatusClass = QStringLiteral("wStatus");
 
 void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 {
+//---GRY--- To be reviewed...
     QMenu *menu = new QMenu(this);
     QWebElement trElement = page()->mainFrame()->hitTestContent(pEvent->pos()).element();
 
@@ -454,6 +455,7 @@ void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
 void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
 {
+//---GRY--- To be reviewed...
     WebViewerWidget::WebViewerWidget::mousePressEvent(pEvent);
 
     if (pEvent->button() == Qt::LeftButton) {
@@ -700,6 +702,7 @@ QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFolder)
 
 const QString PmrWorkspacesWindowWidget::actionHtml(const StringPairs &pActions)
 {
+//---GRY--- To be reviewed...
     QString actions = QString();
 
     foreach (const StringPair &action, pActions)
@@ -713,6 +716,7 @@ const QString PmrWorkspacesWindowWidget::actionHtml(const StringPairs &pActions)
 QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const QString &pPath,
                                                             const PMRSupport::CharPair &pGitStatus)
 {
+//---GRY--- To be reviewed...
     static const QString StatusHtml = "<span class=\"iStatus\">%1</span><span class=\"wStatus\">%2</span>";
 
     StringPairs actionList = StringPairs();
@@ -731,6 +735,7 @@ QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const QString &pPath
 QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
                                                             const QString &pPath)
 {
+//---GRY--- To be reviewed...
     return fileStatusActionHtml(pPath, pWorkspace->gitFileStatus(pPath));
 }
 
@@ -738,6 +743,7 @@ QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::Pm
 
 QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
+//---GRY--- To be reviewed...
     return fileStatusActionHtml(pFileNode->fullName(), pFileNode->status());
 }
 
@@ -745,6 +751,7 @@ QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::Pm
 
 QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
+//---GRY--- To be reviewed...
     static const QString Html = "<tr class=\"file\" id=\"%1\">\n"
                                 "    <td colspan=\"2\" class=\"name\"><a href=\"%1\">%2</a></td>\n"
                                 "    <td class=\"status%3\">%4</td>\n"
@@ -921,6 +928,7 @@ QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorksp
 
 QStringList PmrWorkspacesWindowWidget::folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
+//---GRY--- To be reviewed...
     QString fullname = pFileNode->fullName();
     QString icon = mExpandedItems.contains(fullname)?"folderOpen":"folder";
 
@@ -939,6 +947,7 @@ QStringList PmrWorkspacesWindowWidget::folderHtml(const PMRSupport::PmrWorkspace
 
 void PmrWorkspacesWindowWidget::setCurrentWorkspaceUrl(const QString &pUrl)
 {
+//---GRY--- To be reviewed...
     if (pUrl != mCurrentWorkspaceUrl) {
         // Close the current workspace if we are selecting a different one
 
@@ -1021,6 +1030,7 @@ void PmrWorkspacesWindowWidget::refreshCurrentWorkspace()
 
 void PmrWorkspacesWindowWidget::expandHtmlTree(const QString &pId)
 {
+//---GRY--- To be reviewed...
     QWebElement trElement = page()->mainFrame()->documentElement().findFirst(QString("tr[id=\"%1\"] + tr").arg(pId));
 
     if (!trElement.isNull()) {
@@ -1064,6 +1074,9 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
             html << workspaceHtml(workspace);
 
         setHtml(mTemplate.arg(html.join("")));
+qDebug("---------");
+qDebug("%s", qPrintable(mTemplate.arg(html.join(""))));
+qDebug("---------");
     }
 }
 
@@ -1071,6 +1084,7 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
 
 QWebElement PmrWorkspacesWindowWidget::parentWorkspaceElement(const QWebElement &pRowElement)
 {
+//---GRY--- To be reviewed...
     QWebElement workspaceElement = pRowElement;
 
     // Find parent workspace
@@ -1091,6 +1105,7 @@ QWebElement PmrWorkspacesWindowWidget::parentWorkspaceElement(const QWebElement 
 
 void PmrWorkspacesWindowWidget::showInGraphicalShell(const QString &pPath)
 {
+//---GRY--- To be reviewed...
     QDesktopServices::openUrl(QUrl::fromLocalFile(pPath));
 }
 
@@ -1193,6 +1208,7 @@ bool PmrWorkspacesWindowWidget::hasWorkspaces() const
 
 void PmrWorkspacesWindowWidget::aboutWorkspace(const QString &pUrl)
 {
+//---GRY--- To be reviewed...
     QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(QString("tr.workspace[id=\"%1\"]").arg(pUrl));
 
     if (!workspaceElement.isNull()) {
@@ -1221,6 +1237,7 @@ void PmrWorkspacesWindowWidget::aboutWorkspace(const QString &pUrl)
 
 void PmrWorkspacesWindowWidget::cloneWorkspace(const QString &pUrl)
 {
+//---GRY--- To be reviewed...
     PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
 
     if (workspace && !workspace->isLocal()) {
@@ -1243,6 +1260,7 @@ void PmrWorkspacesWindowWidget::cloneWorkspace(const QString &pUrl)
 
 void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
 {
+//---GRY--- To be reviewed...
     PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
 
     if (workspace && workspace->isLocal()) {
@@ -1264,6 +1282,7 @@ void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
 
 void PmrWorkspacesWindowWidget::refreshWorkspace(const QString &pUrl)
 {
+//---GRY--- To be reviewed...
     QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(QString("tr.workspace[id=\"%1\"]").arg(pUrl));
 
     if (!workspaceElement.isNull()) {
@@ -1292,6 +1311,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(const QString &pUrl)
 
 void PmrWorkspacesWindowWidget::refreshWorkspaceFile(const QString &pPath)
 {
+//---GRY--- To be reviewed...
     QWebElement fileElement = page()->mainFrame()->documentElement().findFirst(QString("tr.file[id=\"%1\"]").arg(pPath));
     QWebElement workspaceElement = parentWorkspaceElement(fileElement);
 
@@ -1346,6 +1366,7 @@ void PmrWorkspacesWindowWidget::requestWorkspaces()
 void PmrWorkspacesWindowWidget::synchronizeWorkspace(const QString &pUrl,
                                                      const bool &pPush)
 {
+//---GRY--- To be reviewed...
     PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
 
     if (workspace && workspace->isLocal())
@@ -1356,6 +1377,7 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace(const QString &pUrl,
 
 void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
 {
+//---GRY--- To be reviewed...
     if (pWorkspace) {
         QString url = pWorkspace->url();
 
@@ -1379,6 +1401,7 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
 void PmrWorkspacesWindowWidget::workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace)
 {
+//---GRY--- To be reviewed...
     if (pWorkspace)
         refreshWorkspace(pWorkspace->url());
 }
