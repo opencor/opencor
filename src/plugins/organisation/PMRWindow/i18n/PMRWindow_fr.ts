@@ -15,14 +15,6 @@
 <context>
     <name>OpenCOR::PMRWindow::PmrWindowWidget</name>
     <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
-    </message>
-    <message>
-        <source>Copy the URL to the clipboard</source>
-        <translation>Copier l&apos;URL dans le presse-papier</translation>
-    </message>
-    <message>
         <source>No exposures match your criteria.</source>
         <translation>Aucunes expositions ne correspondent à votre critère.</translation>
     </message>
@@ -37,6 +29,14 @@
     <message>
         <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
         <translation>&lt;strong&gt;Erreur :&lt;/strong&gt; </translation>
+    </message>
+    <message>
+        <source>View In PMR</source>
+        <translation>Voir Dans PMR</translation>
+    </message>
+    <message>
+        <source>View the exposure in PMR</source>
+        <translation>Voir l&apos;exposition dans PMR</translation>
     </message>
 </context>
 <context>

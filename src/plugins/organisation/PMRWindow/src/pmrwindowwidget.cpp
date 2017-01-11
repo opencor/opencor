@@ -110,8 +110,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     mMessageLabel->setAlignment(Qt::AlignTop|Qt::AlignLeft);
     mMessageLabel->setStyleSheet("QLabel {"
                                  "     background-color: white;"
-                                 "     font-family: arial, sans-serif;"
-                                 "     padding: 8px 8px 4px 8px;"
+                                 "     padding: 8px 8px 0px 8px;"
                                  "}");
     mMessageLabel->setWordWrap(true);
 
