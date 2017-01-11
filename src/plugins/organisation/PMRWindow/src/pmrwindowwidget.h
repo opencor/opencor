@@ -49,6 +49,10 @@ namespace PMRWindow {
 
 //==============================================================================
 
+class PmrWindowModel;
+
+//==============================================================================
+
 class PmrWindowWidget : public Core::Widget
 {
     Q_OBJECT
@@ -79,6 +83,8 @@ private:
     QAction *mCopyAction;
 
     QLabel *mMessageLabel;
+
+    PmrWindowModel *mModel;
     Core::TreeViewWidget *mTreeViewWidget;
 
     QStringList mExposureNames;

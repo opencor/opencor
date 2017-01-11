@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "coreguiutils.h"
 #include "i18ninterface.h"
+#include "pmrwindowmodel.h"
 #include "pmrwindowwidget.h"
 #include "treeviewwidget.h"
 
@@ -66,9 +67,18 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
                                  "}");
     mMessageLabel->setWordWrap(true);
 
+    // Create an instance of the data model that we want to view
+
+    mModel = new PmrWindowModel(this);
+
     // Create and customise our tree view
 
     mTreeViewWidget = new Core::TreeViewWidget(this);
+
+    mTreeViewWidget->setEditTriggers(QAbstractItemView::EditKeyPressed);
+    mTreeViewWidget->setHeaderHidden(true);
+    mTreeViewWidget->setModel(mModel);
+    mTreeViewWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     // Populate ourselves
 

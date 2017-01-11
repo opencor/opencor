@@ -9,10 +9,12 @@ ADD_PLUGIN(PMRWindow
         ../../plugininterface.cpp
         ../../windowinterface.cpp
 
+        src/pmrwindowmodel.cpp
         src/pmrwindowplugin.cpp
         src/pmrwindowwidget.cpp
         src/pmrwindowwindow.cpp
     HEADERS_MOC
+        src/pmrwindowmodel.h
         src/pmrwindowplugin.h
         src/pmrwindowwidget.h
         src/pmrwindowwindow.h
