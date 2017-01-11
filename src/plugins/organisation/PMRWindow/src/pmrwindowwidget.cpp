@@ -23,6 +23,7 @@ limitations under the License.
 #include "coreguiutils.h"
 #include "i18ninterface.h"
 #include "pmrwindowwidget.h"
+#include "treeviewwidget.h"
 
 //==============================================================================
 
@@ -65,11 +66,16 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
                                  "}");
     mMessageLabel->setWordWrap(true);
 
+    // Create and customise our tree view
+
+    mTreeViewWidget = new Core::TreeViewWidget(this);
+
     // Populate ourselves
 
     createLayout();
 
     layout()->addWidget(mMessageLabel);
+    layout()->addWidget(mTreeViewWidget);
 
     // Create and populate our context menu
 

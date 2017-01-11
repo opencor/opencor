@@ -36,6 +36,15 @@ class QMenu;
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class TreeViewWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace PMRWindow {
 
 //==============================================================================
@@ -70,6 +79,7 @@ private:
     QAction *mCopyAction;
 
     QLabel *mMessageLabel;
+    Core::TreeViewWidget *mTreeViewWidget;
 
     QStringList mExposureNames;
     QBoolList mExposureDisplayed;
