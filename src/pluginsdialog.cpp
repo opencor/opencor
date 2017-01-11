@@ -111,7 +111,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     // plugins that are shown as 'disabled' (to reflect the fact that users
     // cannot decide whether they should be loaded)
 
-    mModel = new QStandardItemModel(mGui->treeView);
+    mModel = new QStandardItemModel(this);
 
 #ifdef Q_OS_MAC
     mGui->treeView->setAttribute(Qt::WA_MacShowFocusRect, false);
