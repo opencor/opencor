@@ -406,8 +406,8 @@ bool isEmptyDirectory(const QString &pDirName)
     } else {
         QDir dir(pDirName);
 
-        return      dir.exists()
-                && !dir.entryInfoList(QDir::AllEntries|QDir::System|QDir::Hidden|QDir::NoDotAndDotDot).count();
+        return     dir.exists()
+               && !dir.entryInfoList(QDir::AllEntries|QDir::System|QDir::Hidden|QDir::NoDotAndDotDot).count();
     }
 }
 
