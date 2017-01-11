@@ -98,6 +98,7 @@ protected:
 
 private:
     QAction *mViewInPmrAction;
+    QAction *mCloneWorkspaceAction;
 
     QLabel *mMessageLabel;
 
@@ -137,6 +138,7 @@ private slots:
     void showCustomContextMenu(const QPoint &pPosition) const;
 
     void viewInPmr();
+    void cloneWorkspace();
 };
 
 //==============================================================================

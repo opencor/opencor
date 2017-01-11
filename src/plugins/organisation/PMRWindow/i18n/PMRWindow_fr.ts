@@ -38,6 +38,14 @@
         <source>View the exposure in PMR</source>
         <translation>Voir l&apos;exposition dans PMR</translation>
     </message>
+    <message>
+        <source>Clone Workspace</source>
+        <translation>Cloner Espace De Travail</translation>
+    </message>
+    <message>
+        <source>Clone the corresponding workspace</source>
+        <translation>Cloner l&apos;espace de travail correspondant</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PMRWindow::PmrWindowWindow</name>

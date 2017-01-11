@@ -146,19 +146,24 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     // Create our actions
 
     mViewInPmrAction = Core::newAction(this);
+    mCloneWorkspaceAction = Core::newAction(this);
 
     connect(mViewInPmrAction, SIGNAL(triggered(bool)),
             this, SLOT(viewInPmr()));
+    connect(mCloneWorkspaceAction, SIGNAL(triggered(bool)),
+            this, SLOT(cloneWorkspace()));
 }
 
 //==============================================================================
 
 void PmrWindowWidget::retranslateUi()
 {
-    // Retranslate our action
+    // Retranslate our actions
 
     I18nInterface::retranslateAction(mViewInPmrAction, tr("View In PMR"),
                                      tr("View the exposure in PMR"));
+    I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone Workspace"),
+                                     tr("Clone the corresponding workspace"));
 
     // Retranslate our message, if we have been initialised
 
@@ -375,8 +380,11 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
 
         QMenu menu;
 
-        if (item->type() == PmrWindowItem::Exposure)
+        if (item->type() == PmrWindowItem::Exposure) {
             menu.addAction(mViewInPmrAction);
+            menu.addSeparator();
+            menu.addAction(mCloneWorkspaceAction);
+        }
 
         if (!menu.isEmpty())
             menu.exec(QCursor::pos());
@@ -390,6 +398,15 @@ void PmrWindowWidget::viewInPmr()
     // Show the current exposure in PMR
 
     QDesktopServices::openUrl(currentItem()->url());
+}
+
+//==============================================================================
+
+void PmrWindowWidget::cloneWorkspace()
+{
+    // Let people know that we want to clone the current exposure's workspace
+
+    emit cloneWorkspaceRequested(currentItem()->url());
 }
 
 //==============================================================================
