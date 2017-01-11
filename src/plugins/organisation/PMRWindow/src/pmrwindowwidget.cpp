@@ -81,16 +81,10 @@ void PmrWindowItem::setIcon(const Type &pType)
     static const QIcon ExposureIcon     = QIcon(":/oxygen/places/folder.png");
     static const QIcon ExposureFileIcon = QIcon(":/oxygen/mimetypes/application-x-zerosize.png");
 
-    switch (pType) {
-    case Exposure:
+    if (pType == Exposure)
         QStandardItem::setIcon(ExposureIcon);
-
-        break;
-    case ExposureFile:
+    else
         QStandardItem::setIcon(ExposureFileIcon);
-
-        break;
-    }
 }
 
 //==============================================================================
