@@ -22,7 +22,6 @@ limitations under the License.
 
 #include "coreguiutils.h"
 #include "i18ninterface.h"
-#include "pmrwindowmodel.h"
 #include "pmrwindowwidget.h"
 #include "treeviewwidget.h"
 
@@ -42,6 +41,47 @@ limitations under the License.
 
 namespace OpenCOR {
 namespace PMRWindow {
+
+//==============================================================================
+
+PmrWindowItem::PmrWindowItem(const Type &pType, const QString &pText) :
+    QStandardItem(pText),
+    mType(pType)
+{
+    // Set the icon for the item
+
+    setIcon(pType);
+}
+
+//==============================================================================
+
+int PmrWindowItem::type() const
+{
+    // Return the item's type
+
+    return mType;
+}
+
+//==============================================================================
+
+void PmrWindowItem::setIcon(const Type &pType)
+{
+    // Determine the icon to be used for the item
+
+    static const QIcon ExposureIcon     = QIcon(":/oxygen/places/folder.png");
+    static const QIcon ExposureFileIcon = QIcon(":/oxygen/mimetypes/application-x-zerosize.png");
+
+    switch (pType) {
+    case Exposure:
+        QStandardItem::setIcon(ExposureIcon);
+
+        break;
+    case ExposureFile:
+        QStandardItem::setIcon(ExposureFileIcon);
+
+        break;
+    }
+}
 
 //==============================================================================
 
@@ -69,16 +109,16 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     // Create an instance of the data model that we want to view
 
-    mModel = new PmrWindowModel(this);
+    mModel = new QStandardItemModel(this);
 
     // Create and customise our tree view
 
     mTreeViewWidget = new Core::TreeViewWidget(this);
 
-    mTreeViewWidget->setEditTriggers(QAbstractItemView::EditKeyPressed);
+    mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
     mTreeViewWidget->setModel(mModel);
-    mTreeViewWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    mTreeViewWidget->setRootIsDecorated(false);
 
     // Populate ourselves
 
@@ -188,7 +228,6 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
 
     // Initialise our list of exposures
 
-    QString exposures = QString();
     QRegularExpression filterRegEx = QRegularExpression(pFilter, QRegularExpression::CaseInsensitiveOption);
 
     mNumberOfFilteredExposures = 0;
@@ -198,31 +237,33 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
         QString exposureName = pExposures[i]->name();
         bool exposureDisplayed = exposureName.contains(filterRegEx);
 
-        exposures += "                <tr id=\"exposure_"+QString::number(i)+"\" style=\"display: "+(exposureDisplayed?"table-row":"none")+";\">\n"
-                     "                    <td class=\"exposure\">\n"
-                     "                        <table class=\"fullWidth\">\n"
-                     "                            <tbody>\n"
-                     "                                <tr>\n"
-                     "                                    <td class=\"fullWidth\">\n"
-                     "                                        <ul>\n"
-                     "                                            <li class=\"exposure\">\n"
-                     "                                                <a href=\""+exposureUrl+"\">"+exposureName+"</a>\n"
-                     "                                            </li>\n"
-                     "                                        </ul>\n"
-                     "                                    </td>\n"
-                     "                                    <td class=\"button\">\n"
-                     "                                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"\"><img class=\"button clone\"></a>\n"
-                     "                                    </td>\n"
-                     "                                    <td class=\"button\">\n"
-                     "                                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"\"><img id=\"exposureFilesButton_"+QString::number(i)+"\" class=\"button open\"></a>\n"
-                     "                                    </td>\n"
-                     "                                </tr>\n"
-                     "                            </tbody>\n"
-                     "                        </table>\n"
-                     "                        <ul id=\"exposureFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
-                     "                        </ul>\n"
-                     "                    </td>\n"
-                     "                </tr>\n";
+        mModel->invisibleRootItem()->appendRow(new PmrWindowItem(PmrWindowItem::Exposure, exposureName));
+
+//        exposures += "                <tr id=\"exposure_"+QString::number(i)+"\" style=\"display: "+(exposureDisplayed?"table-row":"none")+";\">\n"
+//                     "                    <td class=\"exposure\">\n"
+//                     "                        <table class=\"fullWidth\">\n"
+//                     "                            <tbody>\n"
+//                     "                                <tr>\n"
+//                     "                                    <td class=\"fullWidth\">\n"
+//                     "                                        <ul>\n"
+//                     "                                            <li class=\"exposure\">\n"
+//                     "                                                <a href=\""+exposureUrl+"\">"+exposureName+"</a>\n"
+//                     "                                            </li>\n"
+//                     "                                        </ul>\n"
+//                     "                                    </td>\n"
+//                     "                                    <td class=\"button\">\n"
+//                     "                                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"\"><img class=\"button clone\"></a>\n"
+//                     "                                    </td>\n"
+//                     "                                    <td class=\"button\">\n"
+//                     "                                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"\"><img id=\"exposureFilesButton_"+QString::number(i)+"\" class=\"button open\"></a>\n"
+//                     "                                    </td>\n"
+//                     "                                </tr>\n"
+//                     "                            </tbody>\n"
+//                     "                        </table>\n"
+//                     "                        <ul id=\"exposureFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
+//                     "                        </ul>\n"
+//                     "                    </td>\n"
+//                     "                </tr>\n";
 
         mExposureNames << exposureName;
         mExposureDisplayed << exposureDisplayed;
@@ -230,10 +271,6 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
 
         mNumberOfFilteredExposures += exposureDisplayed;
     }
-
-/*---GRY---
-    setHtml(mTemplate.arg(message(), exposures));
-*/
 
     updateMessage();
 

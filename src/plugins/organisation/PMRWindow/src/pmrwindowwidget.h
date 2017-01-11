@@ -30,6 +30,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QStandardItem>
+
+//==============================================================================
+
 class QLabel;
 class QMenu;
 
@@ -49,7 +53,23 @@ namespace PMRWindow {
 
 //==============================================================================
 
-class PmrWindowModel;
+class PmrWindowItem : public QStandardItem
+{
+public:
+    enum Type {
+        Exposure     = QStandardItem::UserType,
+        ExposureFile = QStandardItem::UserType+1
+    };
+
+    explicit PmrWindowItem(const Type &pType, const QString &pText);
+
+    virtual int type() const;
+
+private:
+    Type mType;
+
+    void setIcon(const Type &pType);
+};
 
 //==============================================================================
 
@@ -84,7 +104,7 @@ private:
 
     QLabel *mMessageLabel;
 
-    PmrWindowModel *mModel;
+    QStandardItemModel *mModel;
     Core::TreeViewWidget *mTreeViewWidget;
 
     QStringList mExposureNames;
