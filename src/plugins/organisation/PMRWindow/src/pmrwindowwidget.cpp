@@ -44,9 +44,10 @@ namespace PMRWindow {
 
 //==============================================================================
 
-PmrWindowItem::PmrWindowItem(const Type &pType, const QString &pText) :
+PmrWindowItem::PmrWindowItem(const Type &pType, const QString &pText, const QString &pUrl) :
     QStandardItem(pText),
-    mType(pType)
+    mType(pType),
+    mUrl(pUrl)
 {
     // Set the icon for the item
 
@@ -57,9 +58,18 @@ PmrWindowItem::PmrWindowItem(const Type &pType, const QString &pText) :
 
 int PmrWindowItem::type() const
 {
-    // Return the item's type
+    // Return our type
 
     return mType;
+}
+
+//==============================================================================
+
+QString PmrWindowItem::url() const
+{
+    // Return our URL
+
+    return mUrl;
 }
 
 //==============================================================================
@@ -91,8 +101,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     mExposureUrlId(QMap<QString, int>()),
     mInitialized(false),
     mErrorMessage(QString()),
-    mNumberOfFilteredExposures(0),
-    mExposureUrl(QString())
+    mNumberOfFilteredExposures(0)
 {
     // Create and customise our message label
 
@@ -108,7 +117,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     // Create an instance of the data model that we want to view
 
-    mModel = new QStandardItemModel(this);
+    mTreeViewModel = new QStandardItemModel(this);
 
     // Create and customise our tree view
 
@@ -119,10 +128,14 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
                                     "     padding-left: 8px;"
                                     "}");
 
+    mTreeViewWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
-    mTreeViewWidget->setModel(mModel);
+    mTreeViewWidget->setModel(mTreeViewModel);
     mTreeViewWidget->setRootIsDecorated(false);
+
+    connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showCustomContextMenu(const QPoint &)));
 
     // Populate ourselves
 
@@ -131,17 +144,12 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     layout()->addWidget(mMessageLabel);
     layout()->addWidget(mTreeViewWidget);
 
-    // Create and populate our context menu
+    // Create our actions
 
-    mContextMenu = new QMenu(this);
+    mViewInPmrAction = Core::newAction(this);
 
-    mCopyAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
-                                  this);
-
-    connect(mCopyAction, SIGNAL(triggered(bool)),
-            this, SLOT(copy()));
-
-    mContextMenu->addAction(mCopyAction);
+    connect(mViewInPmrAction, SIGNAL(triggered(bool)),
+            this, SLOT(viewInPmr()));
 }
 
 //==============================================================================
@@ -150,34 +158,14 @@ void PmrWindowWidget::retranslateUi()
 {
     // Retranslate our action
 
-    I18nInterface::retranslateAction(mCopyAction, tr("Copy"),
-                                     tr("Copy the URL to the clipboard"));
+    I18nInterface::retranslateAction(mViewInPmrAction, tr("View In PMR"),
+                                     tr("View the exposure in PMR"));
 
     // Retranslate our message, if we have been initialised
 
     if (mInitialized)
         updateMessage();
 }
-
-//==============================================================================
-
-/*---GRY---
-void PmrWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
-{
-    // Retrieve some information about the link, if any
-
-    QString textContent;
-
-    retrieveLinkInformation(mExposureUrl, textContent);
-
-    // Show our context menu to allow the copying of the URL of the exposure,
-    // but only if we are over a link, i.e. if both mLink and textContent are
-    // not empty
-
-    if (!mExposureUrl.isEmpty() && !textContent.isEmpty())
-        mContextMenu->exec(pEvent->globalPos());
-}
-*/
 
 //==============================================================================
 
@@ -224,7 +212,7 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
 {
     // Initialise / keep track of some properties
 
-    mModel->clear();
+    mTreeViewModel->clear();
 
     mExposureNames.clear();
     mExposureUrlId.clear();
@@ -241,12 +229,12 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
         QString exposureUrl = pExposures[i]->url();
         QString exposureName = pExposures[i]->name();
         bool exposureDisplayed = exposureName.contains(filterRegEx);
-        QStandardItem *item = new PmrWindowItem(PmrWindowItem::Exposure, exposureName);
+        QStandardItem *item = new PmrWindowItem(PmrWindowItem::Exposure, exposureName, exposureUrl);
 
-        mModel->invisibleRootItem()->appendRow(item);
+        mTreeViewModel->invisibleRootItem()->appendRow(item);
 
         mTreeViewWidget->setRowHidden(item->row(),
-                                      mModel->invisibleRootItem()->index(),
+                                      mTreeViewModel->invisibleRootItem()->index(),
                                       !exposureDisplayed);
 
         mExposureNames << exposureName;
@@ -254,6 +242,8 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
 
         mNumberOfFilteredExposures += exposureDisplayed;
     }
+
+    resizeTreeViewToContents();
 
     updateMessage();
 
@@ -277,13 +267,15 @@ void PmrWindowWidget::filter(const QString &pFilter)
 
     updateMessage();
 
-    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
-        QStandardItem *item = mModel->invisibleRootItem()->child(i);
+    for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        QStandardItem *item = mTreeViewModel->invisibleRootItem()->child(i);
 
         mTreeViewWidget->setRowHidden(item->row(),
-                                      mModel->invisibleRootItem()->index(),
+                                      mTreeViewModel->invisibleRootItem()->index(),
                                       !filteredExposureNames.contains(item->text()));
     }
+
+    resizeTreeViewToContents();
 }
 
 //==============================================================================
@@ -353,11 +345,52 @@ Q_UNUSED(pShow);
 
 //==============================================================================
 
-void PmrWindowWidget::copy()
+void PmrWindowWidget::resizeTreeViewToContents()
 {
-    // Copy the URL of the exposure to the clipboard
+    // Resize our tree view widget so that all of its contents is visible
 
-    QApplication::clipboard()->setText(mExposureUrl);
+    mTreeViewWidget->resizeColumnToContents(0);
+}
+
+//==============================================================================
+
+PmrWindowItem * PmrWindowWidget::currentItem() const
+{
+    // Return our current item
+
+    return static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->currentIndex()));
+}
+
+//==============================================================================
+
+void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
+{
+    // Determine whether to show the context menu based on whether we are over
+    // an item
+
+    PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
+
+    if (item) {
+        // We are over an item, so create a custom context menu for our current
+        // item and show it, if it isn't empty
+
+        QMenu menu;
+
+        if (item->type() == PmrWindowItem::Exposure)
+            menu.addAction(mViewInPmrAction);
+
+        if (!menu.isEmpty())
+            menu.exec(QCursor::pos());
+    }
+}
+
+//==============================================================================
+
+void PmrWindowWidget::viewInPmr()
+{
+    // Show the current exposure in PMR
+
+    QDesktopServices::openUrl(currentItem()->url());
 }
 
 //==============================================================================

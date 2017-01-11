@@ -35,7 +35,6 @@ limitations under the License.
 //==============================================================================
 
 class QLabel;
-class QMenu;
 
 //==============================================================================
 
@@ -61,12 +60,16 @@ public:
         ExposureFile = QStandardItem::UserType+1
     };
 
-    explicit PmrWindowItem(const Type &pType, const QString &pText);
+    explicit PmrWindowItem(const Type &pType, const QString &pText,
+                           const QString &pUrl);
 
     virtual int type() const;
 
+    QString url() const;
+
 private:
     Type mType;
+    QString mUrl;
 
     void setIcon(const Type &pType);
 };
@@ -91,20 +94,14 @@ public:
     bool hasExposures() const;
 
 protected:
-/*---GRY---
-    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
-*/
-
     virtual QSize sizeHint() const;
 
 private:
-    QMenu *mContextMenu;
-
-    QAction *mCopyAction;
+    QAction *mViewInPmrAction;
 
     QLabel *mMessageLabel;
 
-    QStandardItemModel *mModel;
+    QStandardItemModel *mTreeViewModel;
     Core::TreeViewWidget *mTreeViewWidget;
 
     QStringList mExposureNames;
@@ -117,12 +114,14 @@ private:
 
     int mNumberOfFilteredExposures;
 
-    QString mExposureUrl;
-
     QString message() const;
     void updateMessage();
 
     void showExposureFiles(const QString &pUrl, const bool &pShow = true);
+
+    void resizeTreeViewToContents();
+
+    PmrWindowItem * currentItem() const;
 
 signals:
     void cloneWorkspaceRequested(const QString &pUrl);
@@ -135,7 +134,9 @@ public slots:
                                  const QStringList &pExposureFiles);
 
 private slots:
-    void copy();
+    void showCustomContextMenu(const QPoint &pPosition) const;
+
+    void viewInPmr();
 };
 
 //==============================================================================
