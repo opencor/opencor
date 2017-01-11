@@ -108,7 +108,6 @@ private:
     Core::TreeViewWidget *mTreeViewWidget;
 
     QStringList mExposureNames;
-    QBoolList mExposureDisplayed;
     QMap<QString, int> mExposureUrlId;
 
     bool mInitialized;

@@ -88,7 +88,6 @@ void PmrWindowItem::setIcon(const Type &pType)
 PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     Core::Widget(pParent),
     mExposureNames(QStringList()),
-    mExposureDisplayed(QBoolList()),
     mExposureUrlId(QMap<QString, int>()),
     mInitialized(false),
     mErrorMessage(QString()),
@@ -114,6 +113,11 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     // Create and customise our tree view
 
     mTreeViewWidget = new Core::TreeViewWidget(this);
+
+    mTreeViewWidget->setStyleSheet( mTreeViewWidget->styleSheet()
+                                   +"QTreeView {"
+                                    "     padding-left: 8px;"
+                                    "}");
 
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
@@ -220,8 +224,9 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
 {
     // Initialise / keep track of some properties
 
+    mModel->clear();
+
     mExposureNames.clear();
-    mExposureDisplayed.clear();
     mExposureUrlId.clear();
 
     mErrorMessage = pErrorMessage;
@@ -236,37 +241,15 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
         QString exposureUrl = pExposures[i]->url();
         QString exposureName = pExposures[i]->name();
         bool exposureDisplayed = exposureName.contains(filterRegEx);
+        QStandardItem *item = new PmrWindowItem(PmrWindowItem::Exposure, exposureName);
 
-        mModel->invisibleRootItem()->appendRow(new PmrWindowItem(PmrWindowItem::Exposure, exposureName));
+        mModel->invisibleRootItem()->appendRow(item);
 
-//        exposures += "                <tr id=\"exposure_"+QString::number(i)+"\" style=\"display: "+(exposureDisplayed?"table-row":"none")+";\">\n"
-//                     "                    <td class=\"exposure\">\n"
-//                     "                        <table class=\"fullWidth\">\n"
-//                     "                            <tbody>\n"
-//                     "                                <tr>\n"
-//                     "                                    <td class=\"fullWidth\">\n"
-//                     "                                        <ul>\n"
-//                     "                                            <li class=\"exposure\">\n"
-//                     "                                                <a href=\""+exposureUrl+"\">"+exposureName+"</a>\n"
-//                     "                                            </li>\n"
-//                     "                                        </ul>\n"
-//                     "                                    </td>\n"
-//                     "                                    <td class=\"button\">\n"
-//                     "                                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"\"><img class=\"button clone\"></a>\n"
-//                     "                                    </td>\n"
-//                     "                                    <td class=\"button\">\n"
-//                     "                                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"\"><img id=\"exposureFilesButton_"+QString::number(i)+"\" class=\"button open\"></a>\n"
-//                     "                                    </td>\n"
-//                     "                                </tr>\n"
-//                     "                            </tbody>\n"
-//                     "                        </table>\n"
-//                     "                        <ul id=\"exposureFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
-//                     "                        </ul>\n"
-//                     "                    </td>\n"
-//                     "                </tr>\n";
+        mTreeViewWidget->setRowHidden(item->row(),
+                                      mModel->invisibleRootItem()->index(),
+                                      !exposureDisplayed);
 
         mExposureNames << exposureName;
-        mExposureDisplayed << exposureDisplayed;
         mExposureUrlId.insert(exposureUrl, i);
 
         mNumberOfFilteredExposures += exposureDisplayed;
@@ -294,27 +277,13 @@ void PmrWindowWidget::filter(const QString &pFilter)
 
     updateMessage();
 
-/*---GRY---
-    QWebElement trElement = page()->mainFrame()->documentElement().findFirst(QString("tbody[id=exposures]")).firstChild();
-    QWebElement ulElement;
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        QStandardItem *item = mModel->invisibleRootItem()->child(i);
 
-    for (int i = 0, iMax = mExposureNames.count(); i < iMax; ++i) {
-        if (mExposureDisplayed[i] != filteredExposureNames.contains(mExposureNames[i])) {
-            QString displayValue = mExposureDisplayed[i]?"none":"table-row";
-
-            trElement.setStyleProperty("display", displayValue);
-
-            ulElement = trElement.firstChild().firstChild().nextSibling();
-
-            if (ulElement.hasClass("visible"))
-                ulElement.setStyleProperty("display", displayValue);
-
-            mExposureDisplayed[i] = !mExposureDisplayed[i];
-        }
-
-        trElement = trElement.nextSibling();
+        mTreeViewWidget->setRowHidden(item->row(),
+                                      mModel->invisibleRootItem()->index(),
+                                      !filteredExposureNames.contains(item->text()));
     }
-*/
 }
 
 //==============================================================================
