@@ -317,7 +317,7 @@ QString getDirectory(const QString &pCaption, const QString &pDirName,
 
             // Check whether the directory should be empty
 
-            if (pEmptyDir && isEmptyDirectory(res)) {
+            if (pEmptyDir && !isEmptyDirectory(res)) {
                 warningMessageBox(pCaption,
                                   QObject::tr("Please choose an empty directory."));
 
