@@ -158,7 +158,7 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     // Set up the tree view widget
 
-    mModel = new QStandardItemModel(mGui->treeView);
+    mModel = new QStandardItemModel(this);
 
 #ifdef Q_OS_MAC
     mGui->treeView->setAttribute(Qt::WA_MacShowFocusRect, false);

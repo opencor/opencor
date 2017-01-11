@@ -96,7 +96,7 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
     //       of integration (since, to respect the BioSignalML format, the
     //       variable of integration must absolutely be exported)...
 
-    mModel = new QStandardItemModel(mGui->treeView);
+    mModel = new QStandardItemModel(this);
 
     mGui->treeView->setModel(mModel);
     mGui->treeView->setItemDelegate(new DataItemDelegate());
