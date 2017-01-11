@@ -118,8 +118,6 @@ private:
     QString message() const;
     void updateMessage();
 
-    void showExposureFiles(const QString &pUrl, const bool &pShow = true);
-
     void resizeTreeViewToContents();
 
     PmrWindowItem * currentItem() const;
@@ -136,6 +134,7 @@ public slots:
 
 private slots:
     void showCustomContextMenu(const QPoint &pPosition) const;
+    void itemDoubleClicked(const QModelIndex &pIndex);
 
     void viewInPmr();
     void cloneWorkspace();

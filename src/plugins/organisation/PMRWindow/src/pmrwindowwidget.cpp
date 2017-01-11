@@ -130,6 +130,8 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu(const QPoint &)));
+    connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
+            this, SLOT(itemDoubleClicked(const QModelIndex &)));
 
     // Populate ourselves
 
@@ -291,55 +293,36 @@ bool PmrWindowWidget::hasExposures() const
 void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
                                               const QStringList &pExposureFiles)
 {
-    // Add the given exposure files to the exposure and show them
+    // Make sure that the exposure files are sorted
 
     QStringList sortedExposureFiles = QStringList(pExposureFiles);
 
     sortedExposureFiles.sort(Qt::CaseInsensitive);
 
-//    static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
+    // Retrieve the item which URL is given
 
-/*---GRY---
-    QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=exposureFiles_%1]").arg(mExposureUrlId.value(pUrl)));
+    PmrWindowItem *item = 0;
+
+    for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        item = static_cast<PmrWindowItem *>(mTreeViewModel->invisibleRootItem()->child(i));
+
+        if (!pUrl.compare(item->url()))
+            break;
+    }
+
+    // Add the given exposure files to the exposure and show them
+
+    static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
 
     foreach (const QString &exposureFile, sortedExposureFiles) {
-        ulElement.appendInside(QString("<li class=\"exposureFile\">"
-                                       "    <a href=\"%1\">%2</a>"
-                                       "</li>").arg(exposureFile, QString(exposureFile).remove(FilePathRegEx)));
+        item->appendRow(new PmrWindowItem(PmrWindowItem::ExposureFile,
+                                          QString(exposureFile).remove(FilePathRegEx),
+                                          exposureFile));
     }
-*/
 
-    showExposureFiles(pUrl, true);
-}
+    mTreeViewWidget->expand(item->index());
 
-//==============================================================================
-
-void PmrWindowWidget::showExposureFiles(const QString &pUrl, const bool &pShow)
-{
-    // Show the exposure files for the given exposure
-
-Q_UNUSED(pUrl);
-Q_UNUSED(pShow);
-/*---GRY---
-    int id = mExposureUrlId.value(pUrl);
-    QWebElement documentElement = page()->mainFrame()->documentElement();
-    QWebElement imgElement = documentElement.findFirst(QString("img[id=exposureFilesButton_%1]").arg(id));
-    QWebElement ulElement = documentElement.findFirst(QString("ul[id=exposureFiles_%1]").arg(id));
-
-    if (pShow) {
-        imgElement.removeClass("button");
-        imgElement.addClass("downButton");
-
-        ulElement.addClass("visible");
-        ulElement.setStyleProperty("display", "table-row");
-    } else {
-        imgElement.addClass("button");
-        imgElement.removeClass("downButton");
-
-        ulElement.removeClass("visible");
-        ulElement.setStyleProperty("display", "none");
-    }
-*/
+    resizeTreeViewToContents();
 }
 
 //==============================================================================
@@ -383,6 +366,30 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
 
         if (!menu.isEmpty())
             menu.exec(QCursor::pos());
+    }
+}
+
+//==============================================================================
+
+void PmrWindowWidget::itemDoubleClicked(const QModelIndex &pIndex)
+{
+    // Expand/collapse an exposure or open an exposure file
+
+    PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
+
+    if (item->type() == PmrWindowItem::Exposure) {
+        // It's an exposure, so check whether we have already retrieved its
+        // exposure files and, if not, let people know that we need to retrieve
+        // them otherwise just resize ourselves (to be on the safe side)
+
+        if (item->rowCount())
+            resizeTreeViewToContents();
+        else
+            emit exposureFilesRequested(item->url());
+    } else {
+        // It's an exposure file, so ask for it to be opened
+
+        emit openExposureFileRequested(item->url());
     }
 }
 
