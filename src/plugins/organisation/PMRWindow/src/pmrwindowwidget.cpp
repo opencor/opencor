@@ -148,10 +148,13 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     // Create our actions
 
     mViewInPmrAction = Core::newAction(this);
+    mCopyUrlAction = Core::newAction(this);
     mCloneWorkspaceAction = Core::newAction(this);
 
     connect(mViewInPmrAction, SIGNAL(triggered(bool)),
             this, SLOT(viewInPmr()));
+    connect(mCopyUrlAction, SIGNAL(triggered(bool)),
+            this, SLOT(copyUrl()));
     connect(mCloneWorkspaceAction, SIGNAL(triggered(bool)),
             this, SLOT(cloneWorkspace()));
 }
@@ -163,7 +166,9 @@ void PmrWindowWidget::retranslateUi()
     // Retranslate our actions
 
     I18nInterface::retranslateAction(mViewInPmrAction, tr("View In PMR"),
-                                     tr("View the exposure in PMR"));
+                                     tr("View in PMR"));
+    I18nInterface::retranslateAction(mCopyUrlAction, tr("Copy URL"),
+                                     tr("Copy the URL to the clipboard"));
     I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone Workspace"),
                                      tr("Clone the corresponding workspace"));
 
@@ -362,6 +367,8 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
         QMenu menu;
 
         menu.addAction(mViewInPmrAction);
+        menu.addSeparator();
+        menu.addAction(mCopyUrlAction);
 
         if (item->type() == PmrWindowItem::Exposure) {
             menu.addSeparator();
@@ -430,9 +437,18 @@ void PmrWindowWidget::collapsedExposure(const QModelIndex &pExposureIndex)
 
 void PmrWindowWidget::viewInPmr()
 {
-    // Show the current exposure in PMR
+    // Show the current item in PMR
 
     QDesktopServices::openUrl(currentItem()->url());
+}
+
+//==============================================================================
+
+void PmrWindowWidget::copyUrl()
+{
+    // Copy the current item's URL to the clipboard
+
+    QApplication::clipboard()->setText(currentItem()->url());
 }
 
 //==============================================================================

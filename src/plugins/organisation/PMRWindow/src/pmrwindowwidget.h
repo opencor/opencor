@@ -97,6 +97,7 @@ protected:
 
 private:
     QAction *mViewInPmrAction;
+    QAction *mCopyUrlAction;
     QAction *mCloneWorkspaceAction;
 
     Core::UserMessageWidget *mUserMessageWidget;
@@ -139,6 +140,7 @@ private slots:
     void collapsedExposure(const QModelIndex &pExposureIndex);
 
     void viewInPmr();
+    void copyUrl();
     void cloneWorkspace();
 };
 

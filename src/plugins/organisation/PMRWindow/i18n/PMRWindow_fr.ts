@@ -23,8 +23,8 @@
         <translation>Voir Dans PMR</translation>
     </message>
     <message>
-        <source>View the exposure in PMR</source>
-        <translation>Voir l&apos;exposition dans PMR</translation>
+        <source>View in PMR</source>
+        <translation>Voir dans PMR</translation>
     </message>
     <message>
         <source>Clone Workspace</source>
@@ -33,6 +33,14 @@
     <message>
         <source>Clone the corresponding workspace</source>
         <translation>Cloner l&apos;espace de travail correspondant</translation>
+    </message>
+    <message>
+        <source>Copy URL</source>
+        <translation>Copier URL</translation>
+    </message>
+    <message>
+        <source>Copy the URL to the clipboard</source>
+        <translation>Copier l&apos;URL dans le presse-papier</translation>
     </message>
 </context>
 <context>
