@@ -119,8 +119,6 @@ private:
 
     PmrWindowItem * currentItem() const;
 
-    void showExposureFiles(const QString &pUrl, const bool &pShow = true);
-
 signals:
     void cloneWorkspaceRequested(const QString &pUrl);
     void exposureFilesRequested(const QString &pUrl);
