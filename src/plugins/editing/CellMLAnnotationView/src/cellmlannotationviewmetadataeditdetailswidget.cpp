@@ -56,7 +56,6 @@ limitations under the License.
 #include <QNetworkRequest>
 #include <QPushButton>
 #include <QRegularExpression>
-#include <QScrollArea>
 #include <QTimer>
 #include <QVariant>
 #include <QWebElement>
@@ -299,17 +298,9 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mOutput->createLayout();
 
-    // Create our output message (within a scroll area, in case the label is too
-    // wide)
+    // Create our output message
 
-    mOutputMessageScrollArea = new QScrollArea(mOutput);
-
-    mOutputMessageScrollArea->setFrameShape(QFrame::NoFrame);
-    mOutputMessageScrollArea->setWidgetResizable(true);
-
-    mOutputMessage = new Core::UserMessageWidget(mOutputMessageScrollArea);
-
-    mOutputMessageScrollArea->setWidget(mOutputMessage);
+    mOutputMessage = new Core::UserMessageWidget(this);
 
     // Create our output for ontological terms
 
@@ -333,7 +324,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     // Add our output message and output for ontological terms to our output
     // widget
 
-    mOutput->layout()->addWidget(mOutputMessageScrollArea);
+    mOutput->layout()->addWidget(mOutputMessage);
     mOutput->layout()->addWidget(mOutputOntologicalTerms);
 
     // Add our 'internal' widgets to our main layout
@@ -632,7 +623,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
     // Show/hide our output message and output for ontological terms
 
-    mOutputMessageScrollArea->setVisible(!pItems.count());
+    mOutputMessage->setVisible(!pItems.count());
     mOutputOntologicalTerms->setVisible(pItems.count());
 
     // Show our busy widget instead, if needed
