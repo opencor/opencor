@@ -137,6 +137,9 @@ private slots:
     void showCustomContextMenu(const QPoint &pPosition) const;
     void itemDoubleClicked(const QModelIndex &pIndex);
 
+    void expandedExposure(const QModelIndex &pExposureIndex);
+    void collapsedExposure(const QModelIndex &pExposureIndex);
+
     void viewInPmr();
     void cloneWorkspace();
 };

@@ -120,6 +120,13 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(itemDoubleClicked(const QModelIndex &)));
 
+    // Some connections
+
+    connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
+            this, SLOT(expandedExposure(const QModelIndex &)));
+    connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
+            this, SLOT(collapsedExposure(const QModelIndex &)));
+
     // Populate ourselves
 
     createLayout();
@@ -365,17 +372,47 @@ void PmrWindowWidget::itemDoubleClicked(const QModelIndex &pIndex)
     if (item->type() == PmrWindowItem::Exposure) {
         // It's an exposure, so check whether we have already retrieved its
         // exposure files and, if not, let people know that we need to retrieve
-        // them otherwise just resize ourselves (to be on the safe side)
+        // them
 
-        if (item->rowCount())
-            resizeTreeViewToContents();
-        else
+        if (!item->rowCount())
             emit exposureFilesRequested(item->url());
     } else {
         // It's an exposure file, so ask for it to be opened
 
         emit openExposureFileRequested(item->url());
     }
+}
+
+//==============================================================================
+
+void PmrWindowWidget::expandedExposure(const QModelIndex &pExposureIndex)
+{
+    // The exposure is being expanded, so update its icon to reflect its new
+    // state
+
+    static const QIcon ExpandedExposureIcon = QIcon(":/oxygen/actions/document-open-folder.png");
+
+    mTreeViewModel->itemFromIndex(pExposureIndex)->setIcon(ExpandedExposureIcon);
+
+    // Resize our tree view widget, just to be on the safe side
+
+    resizeTreeViewToContents();
+}
+
+//==============================================================================
+
+void PmrWindowWidget::collapsedExposure(const QModelIndex &pExposureIndex)
+{
+    // The exposure is being expanded, so update its icon to reflect its new
+    // state
+
+    static const QIcon CollapsedExposureIcon = QIcon(":/oxygen/places/folder.png");
+
+    mTreeViewModel->itemFromIndex(pExposureIndex)->setIcon(CollapsedExposureIcon);
+
+    // Resize our tree view widget, just to be on the safe side
+
+    resizeTreeViewToContents();
 }
 
 //==============================================================================
