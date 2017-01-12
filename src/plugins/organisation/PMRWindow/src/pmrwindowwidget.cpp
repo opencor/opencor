@@ -56,12 +56,32 @@ PmrWindowItem::PmrWindowItem(const Type &pType, const QString &pText,
     static const QIcon ExposureIcon     = QIcon(":/oxygen/places/folder.png");
     static const QIcon ExposureFileIcon = QIcon(":/oxygen/mimetypes/application-x-zerosize.png");
 
-    if (pType == Exposure)
-        QStandardItem::setIcon(ExposureIcon);
-    else
-        QStandardItem::setIcon(ExposureFileIcon);
+    QStandardItem::setIcon((pType == Exposure)?ExposureIcon:ExposureFileIcon);
 
-    setToolTip(pText);
+    static const QString ToolTip = "<table>\n"
+                                   "    <tbody>\n"
+                                   "        <tr>\n"
+                                   "            <td style=\"font-weight: bold;\">\n"
+                                   "                Name:\n"
+                                   "            </td>\n"
+                                   "            <td></td>\n"
+                                   "            <td>\n"
+                                   "                %1\n"
+                                   "            </td>\n"
+                                   "        </tr>\n"
+                                   "        <tr>\n"
+                                   "            <td style=\"font-weight: bold;\">\n"
+                                   "                URL:\n"
+                                   "            </td>\n"
+                                   "            <td></td>\n"
+                                   "            <td>\n"
+                                   "                %2\n"
+                                   "            </td>\n"
+                                   "        </tr>\n"
+                                   "    </tbody>\n"
+                                   "</table>\n";
+
+    setToolTip(ToolTip.arg(pText, pUrl));
 }
 
 //==============================================================================
@@ -337,18 +357,18 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
 
     if (item) {
         // We are over an item, so create a custom context menu for our current
-        // item and show it, if it isn't empty
+        // item and show it
 
         QMenu menu;
 
+        menu.addAction(mViewInPmrAction);
+
         if (item->type() == PmrWindowItem::Exposure) {
-            menu.addAction(mViewInPmrAction);
             menu.addSeparator();
             menu.addAction(mCloneWorkspaceAction);
         }
 
-        if (!menu.isEmpty())
-            menu.exec(QCursor::pos());
+        menu.exec(QCursor::pos());
     }
 }
 
