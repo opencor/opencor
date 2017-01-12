@@ -35,7 +35,6 @@ limitations under the License.
 
 class QLabel;
 class QMenu;
-class QScrollArea;
 
 //==============================================================================
 
@@ -100,8 +99,6 @@ private:
     int mItemsCount;
 
     Core::Widget *mOutput;
-
-    QScrollArea *mOutputMessageScrollArea;
     Core::UserMessageWidget *mOutputMessage;
 
     QString mOutputOntologicalTermsTemplate;
