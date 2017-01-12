@@ -104,11 +104,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     mUserMessageWidget = new Core::UserMessageWidget(this);
 
-    QFont newFont = mUserMessageWidget->font();
-
-    newFont.setPointSizeF(0.75*newFont.pointSize());
-
-    mUserMessageWidget->setFont(newFont);
+    mUserMessageWidget->setScale(0.85);
 
     mTreeViewModel = new QStandardItemModel(this);
     mTreeViewWidget = new Core::TreeViewWidget(this);
@@ -177,12 +173,15 @@ void PmrWindowWidget::updateMessage()
     // Update the message to be displayed, if any
 
     if (mErrorMessage.isEmpty()) {
-        if (!mNumberOfFilteredExposures && !mExposureNames.isEmpty())
-            mUserMessageWidget->setMessage(tr("No exposures match your criteria."));
-        else
-            mUserMessageWidget->setMessage(QString());
+        if (!mNumberOfFilteredExposures && !mExposureNames.isEmpty()) {
+            mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
+                                               tr("No exposures match your criteria."));
+        } else {
+            mUserMessageWidget->resetMessage();
+        }
     } else {
-        mUserMessageWidget->setMessage(Core::formatMessage(mErrorMessage, false, true));
+        mUserMessageWidget->setIconMessage(":/oxygen/emblems/emblem-important.png",
+                                           Core::formatMessage(mErrorMessage, false, true));
     }
 
     // Show/hide our user message widget and our tree view widget
