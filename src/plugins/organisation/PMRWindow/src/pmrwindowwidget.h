@@ -26,20 +26,56 @@ limitations under the License.
 
 #include "corecliutils.h"
 #include "pmrexposure.h"
-#include "webviewerwidget.h"
+#include "widget.h"
 
 //==============================================================================
 
-class QMenu;
+#include <QStandardItem>
+
+//==============================================================================
+
+class QLabel;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class TreeViewWidget;
+    class UserMessageWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace PMRWindow {
 
 //==============================================================================
 
-class PmrWindowWidget : public WebViewerWidget::WebViewerWidget
+class PmrWindowItem : public QStandardItem
+{
+public:
+    enum Type {
+        Exposure     = QStandardItem::UserType,
+        ExposureFile = QStandardItem::UserType+1
+    };
+
+    explicit PmrWindowItem(const Type &pType, const QString &pText,
+                           const QString &pUrl);
+
+    virtual int type() const;
+
+    QString url() const;
+
+private:
+    Type mType;
+    QString mUrl;
+};
+
+//==============================================================================
+
+class PmrWindowWidget : public Core::Widget
 {
     Q_OBJECT
 
@@ -57,29 +93,31 @@ public:
     bool hasExposures() const;
 
 protected:
-    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
-
     virtual QSize sizeHint() const;
 
 private:
-    QMenu *mContextMenu;
+    QAction *mViewInPmrAction;
+    QAction *mCopyUrlAction;
+    QAction *mCloneWorkspaceAction;
 
-    QAction *mCopyAction;
+    Core::UserMessageWidget *mUserMessageWidget;
+
+    QStandardItemModel *mTreeViewModel;
+    Core::TreeViewWidget *mTreeViewWidget;
 
     QStringList mExposureNames;
-    QBoolList mExposureDisplayed;
-    QMap<QString, int> mExposureUrlId;
 
     bool mInitialized;
 
-    QString mTemplate;
     QString mErrorMessage;
 
     int mNumberOfFilteredExposures;
 
-    QString mExposureUrl;
+    void updateMessage();
 
-    QString message() const;
+    void resizeTreeViewToContents();
+
+    PmrWindowItem * currentItem() const;
 
     void showExposureFiles(const QString &pUrl, const bool &pShow = true);
 
@@ -89,15 +127,22 @@ signals:
 
     void openExposureFileRequested(const QString &pUrl);
 
+    void itemDoubleClicked();
+
 public slots:
     void addAndShowExposureFiles(const QString &pUrl,
                                  const QStringList &pExposureFiles);
 
 private slots:
-    void copy();
+    void showCustomContextMenu(const QPoint &pPosition) const;
+    void itemDoubleClicked(const QModelIndex &pIndex);
 
-    void linkClicked();
-    void linkHovered();
+    void expandedExposure(const QModelIndex &pExposureIndex);
+    void collapsedExposure(const QModelIndex &pExposureIndex);
+
+    void viewInPmr();
+    void copyUrl();
+    void cloneWorkspace();
 };
 
 //==============================================================================

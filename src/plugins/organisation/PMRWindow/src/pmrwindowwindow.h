@@ -83,6 +83,8 @@ private:
 
     PmrWindowWidget *mPmrWindowWidget;
 
+    bool mItemDoubleClicked;
+
 private slots:
     void on_actionReload_triggered();
 
@@ -97,6 +99,8 @@ private slots:
     void retrieveExposures(const bool &pVisible);
 
     void initializeWidget(const PMRSupport::PmrExposures &pExposures);
+
+    void itemDoubleClicked();
 };
 
 //==============================================================================

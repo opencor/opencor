@@ -25,7 +25,6 @@ ADD_PLUGIN(PMRWindow
         ${LIBGIT2_PLUGIN}
         ${OAUTH_PLUGIN}
         PMRSupport
-        WebViewerWidget
         ${ZLIB_PLUGIN}
     PLUGIN_BINARIES
         ${LIBGIT2_PLUGIN_BINARY}

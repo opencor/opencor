@@ -23,6 +23,8 @@ limitations under the License.
 #include "coreguiutils.h"
 #include "i18ninterface.h"
 #include "pmrwindowwidget.h"
+#include "treeviewwidget.h"
+#include "usermessagewidget.h"
 
 //==============================================================================
 
@@ -31,10 +33,11 @@ limitations under the License.
 #include <QContextMenuEvent>
 #include <QDesktopServices>
 #include <QIODevice>
+#include <QLabel>
+#include <QLayout>
 #include <QMenu>
 #include <QRegularExpression>
-#include <QWebElement>
-#include <QWebFrame>
+#include <QToolTip>
 
 //==============================================================================
 
@@ -43,87 +46,180 @@ namespace PMRWindow {
 
 //==============================================================================
 
+QString spaces(const QString &pString1, const QString &pString2)
+{
+    // Return as many "&nbsp;" as necessary for pString1 to be as wide as
+    // pString2 when shown in a tool tip
+
+    QFontMetrics fontMetrics = QFontMetrics(QToolTip::font());
+    int string1Width = fontMetrics.width(pString1);
+    int string2Width = fontMetrics.width(pString2);
+
+    if (string1Width >= string2Width) {
+        return QString();
+    } else {
+        // Get an estimate of the number of spaces we should need and then
+        // adjust it, if needed
+        // Note: we do this because calling fontMetrics.width() too many times
+        //       is quite costly...
+
+        QString string = QString(" ").repeated((string2Width-string1Width)/fontMetrics.width(" "));
+
+        forever {
+            string.chop(1);
+
+            if (string1Width+fontMetrics.width(string) < string2Width)
+                break;
+        }
+
+        return QString("&nbsp;").repeated(string.size()+1);
+    }
+}
+
+//==============================================================================
+
+PmrWindowItem::PmrWindowItem(const Type &pType, const QString &pText,
+                             const QString &pUrl) :
+    QStandardItem(pText),
+    mType(pType),
+    mUrl(pUrl)
+{
+    // Customise ourselves
+    // Note: for the tool tip, we want it to be as wide as necessary to display
+    //       both the text and URL on one line. Normally, to use
+    //       "white-space: nowrap;" for both td elements would be sufficient,
+    //       but when it comes to a tool tip, it's not. So, instead, we add, if
+    //       needed, some "&nbsp;"s to the text in case it's shorter than the
+    //       URL...
+
+    static const QIcon ExposureIcon     = QIcon(":/oxygen/places/folder.png");
+    static const QIcon ExposureFileIcon = QIcon(":/oxygen/mimetypes/application-x-zerosize.png");
+
+    QStandardItem::setIcon((pType == Exposure)?ExposureIcon:ExposureFileIcon);
+
+    static const QString ToolTip = "<table>\n"
+                                   "    <tbody>\n"
+                                   "        <tr>\n"
+                                   "            <td style=\"font-weight: bold;\">\n"
+                                   "                Name:\n"
+                                   "            </td>\n"
+                                   "            <td></td>\n"
+                                   "            <td style=\"white-space: nowrap;\">\n"
+                                   "                %1%2\n"
+                                   "            </td>\n"
+                                   "        </tr>\n"
+                                   "        <tr>\n"
+                                   "            <td style=\"font-weight: bold;\">\n"
+                                   "                URL:\n"
+                                   "            </td>\n"
+                                   "            <td></td>\n"
+                                   "            <td>\n"
+                                   "                %3\n"
+                                   "            </td>\n"
+                                   "        </tr>\n"
+                                   "    </tbody>\n"
+                                   "</table>\n";
+
+    setToolTip(ToolTip.arg(pText, spaces(pText, pUrl), pUrl));
+}
+
+//==============================================================================
+
+int PmrWindowItem::type() const
+{
+    // Return our type
+
+    return mType;
+}
+
+//==============================================================================
+
+QString PmrWindowItem::url() const
+{
+    // Return our URL
+
+    return mUrl;
+}
+
+//==============================================================================
+
 PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
-    WebViewerWidget::WebViewerWidget(pParent),
+    Core::Widget(pParent),
     mExposureNames(QStringList()),
-    mExposureDisplayed(QBoolList()),
-    mExposureUrlId(QMap<QString, int>()),
     mInitialized(false),
     mErrorMessage(QString()),
-    mNumberOfFilteredExposures(0),
-    mExposureUrl(QString())
+    mNumberOfFilteredExposures(0)
 {
-    // Create and populate our context menu
+    // Create and customise some objects
 
-    mContextMenu = new QMenu(this);
+    mUserMessageWidget = new Core::UserMessageWidget(this);
 
-    mCopyAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
-                                  this);
+    mUserMessageWidget->setScale(0.85);
 
-    connect(mCopyAction, SIGNAL(triggered(bool)),
-            this, SLOT(copy()));
+    mTreeViewModel = new QStandardItemModel(this);
+    mTreeViewWidget = new Core::TreeViewWidget(this);
 
-    mContextMenu->addAction(mCopyAction);
+    mTreeViewWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    mTreeViewWidget->setHeaderHidden(true);
+    mTreeViewWidget->setModel(mTreeViewModel);
 
-    // Prevent zooming in/out
+    connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showCustomContextMenu(const QPoint &)));
+    connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
+            this, SLOT(itemDoubleClicked(const QModelIndex &)));
+    connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
+            this, SIGNAL(itemDoubleClicked()));
 
-    setZoomingEnabled(false);
+    // Some connections
 
-    // Prevent objects from being dropped on us
+    connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
+            this, SLOT(expandedExposure(const QModelIndex &)));
+    connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
+            this, SLOT(collapsedExposure(const QModelIndex &)));
 
-    setAcceptDrops(false);
+    // Populate ourselves
 
-    // Some connections to handle the clicking and hovering of a link
+    createLayout();
 
-    page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    layout()->addWidget(mUserMessageWidget);
+    layout()->addWidget(mTreeViewWidget);
 
-    connect(page(), SIGNAL(linkClicked(const QUrl &)),
-            this, SLOT(linkClicked()));
-    connect(page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
-            this, SLOT(linkHovered()));
+    // Create our actions
 
-    // Retrieve the HTML template
+    mViewInPmrAction = Core::newAction(this);
+    mCopyUrlAction = Core::newAction(this);
+    mCloneWorkspaceAction = Core::newAction(this);
 
-    QString fileContents;
+    connect(mViewInPmrAction, SIGNAL(triggered(bool)),
+            this, SLOT(viewInPmr()));
+    connect(mCopyUrlAction, SIGNAL(triggered(bool)),
+            this, SLOT(copyUrl()));
+    connect(mCloneWorkspaceAction, SIGNAL(triggered(bool)),
+            this, SLOT(cloneWorkspace()));
 
-    Core::readFileContentsFromFile(":/PMRWindow/output.html", fileContents);
+    // Make our tree view widget our focus proxy
 
-    mTemplate = fileContents.arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
-                                 Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16),
-                                 "%1", "%2");
+    setFocusProxy(mTreeViewWidget);
 }
 
 //==============================================================================
 
 void PmrWindowWidget::retranslateUi()
 {
-    // Retranslate our action
+    // Retranslate our actions
 
-    I18nInterface::retranslateAction(mCopyAction, tr("Copy"),
+    I18nInterface::retranslateAction(mViewInPmrAction, tr("View In PMR"),
+                                     tr("View in PMR"));
+    I18nInterface::retranslateAction(mCopyUrlAction, tr("Copy URL"),
                                      tr("Copy the URL to the clipboard"));
+    I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone Workspace"),
+                                     tr("Clone the corresponding workspace"));
 
     // Retranslate our message, if we have been initialised
 
     if (mInitialized)
-        page()->mainFrame()->documentElement().findFirst("p[id=message]").setInnerXml(message());
-}
-
-//==============================================================================
-
-void PmrWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
-{
-    // Retrieve some information about the link, if any
-
-    QString textContent;
-
-    retrieveLinkInformation(mExposureUrl, textContent);
-
-    // Show our context menu to allow the copying of the URL of the exposure,
-    // but only if we are over a link, i.e. if both mLink and textContent are
-    // not empty
-
-    if (!mExposureUrl.isEmpty() && !textContent.isEmpty())
-        mContextMenu->exec(pEvent->globalPos());
+        updateMessage();
 }
 
 //==============================================================================
@@ -139,26 +235,26 @@ QSize PmrWindowWidget::sizeHint() const
 
 //==============================================================================
 
-QString PmrWindowWidget::message() const
+void PmrWindowWidget::updateMessage()
 {
-    // Determine the message to be displayed, if any
-
-    QString res = QString();
+    // Update the message to be displayed, if any
 
     if (mErrorMessage.isEmpty()) {
-        if (!mNumberOfFilteredExposures) {
-            if (!mExposureNames.isEmpty())
-                res = tr("No exposures match your criteria.");
-        } else if (mNumberOfFilteredExposures == 1) {
-            res = tr("<strong>1</strong> exposure was found:");
+        if (!mNumberOfFilteredExposures && !mExposureNames.isEmpty()) {
+            mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
+                                               tr("No exposures match your criteria..."));
         } else {
-            res = tr("<strong>%1</strong> exposures were found:").arg(QLocale().toString(mNumberOfFilteredExposures));
+            mUserMessageWidget->resetMessage();
         }
     } else {
-        res = tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true);
+        mUserMessageWidget->setIconMessage(":/oxygen/emblems/emblem-important.png",
+                                           Core::formatMessage(mErrorMessage, false, true));
     }
 
-    return res;
+    // Show/hide our user message widget and our tree view widget
+
+    mUserMessageWidget->setVisible(!mUserMessageWidget->text().isEmpty());
+    mTreeViewWidget->setVisible(mUserMessageWidget->text().isEmpty());
 }
 
 //==============================================================================
@@ -169,15 +265,13 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
 {
     // Initialise / keep track of some properties
 
+    mTreeViewModel->clear();
     mExposureNames.clear();
-    mExposureDisplayed.clear();
-    mExposureUrlId.clear();
 
     mErrorMessage = pErrorMessage;
 
     // Initialise our list of exposures
 
-    QString exposures = QString();
     QRegularExpression filterRegEx = QRegularExpression(pFilter, QRegularExpression::CaseInsensitiveOption);
 
     mNumberOfFilteredExposures = 0;
@@ -186,41 +280,22 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
         QString exposureUrl = pExposures[i]->url();
         QString exposureName = pExposures[i]->name();
         bool exposureDisplayed = exposureName.contains(filterRegEx);
+        QStandardItem *item = new PmrWindowItem(PmrWindowItem::Exposure, exposureName, exposureUrl);
 
-        exposures += "                <tr id=\"exposure_"+QString::number(i)+"\" style=\"display: "+(exposureDisplayed?"table-row":"none")+";\">\n"
-                     "                    <td class=\"exposure\">\n"
-                     "                        <table class=\"fullWidth\">\n"
-                     "                            <tbody>\n"
-                     "                                <tr>\n"
-                     "                                    <td class=\"fullWidth\">\n"
-                     "                                        <ul>\n"
-                     "                                            <li class=\"exposure\">\n"
-                     "                                                <a href=\""+exposureUrl+"\">"+exposureName+"</a>\n"
-                     "                                            </li>\n"
-                     "                                        </ul>\n"
-                     "                                    </td>\n"
-                     "                                    <td class=\"button\">\n"
-                     "                                        <a class=\"noHover\" href=\"cloneWorkspace|"+exposureUrl+"\"><img class=\"button clone\"></a>\n"
-                     "                                    </td>\n"
-                     "                                    <td class=\"button\">\n"
-                     "                                        <a class=\"noHover\" href=\"showExposureFiles|"+exposureUrl+"\"><img id=\"exposureFilesButton_"+QString::number(i)+"\" class=\"button open\"></a>\n"
-                     "                                    </td>\n"
-                     "                                </tr>\n"
-                     "                            </tbody>\n"
-                     "                        </table>\n"
-                     "                        <ul id=\"exposureFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
-                     "                        </ul>\n"
-                     "                    </td>\n"
-                     "                </tr>\n";
+        mTreeViewModel->invisibleRootItem()->appendRow(item);
+
+        mTreeViewWidget->setRowHidden(item->row(),
+                                      mTreeViewModel->invisibleRootItem()->index(),
+                                      !exposureDisplayed);
 
         mExposureNames << exposureName;
-        mExposureDisplayed << exposureDisplayed;
-        mExposureUrlId.insert(exposureUrl, i);
 
         mNumberOfFilteredExposures += exposureDisplayed;
     }
 
-    setHtml(mTemplate.arg(message(), exposures));
+    resizeTreeViewToContents();
+
+    updateMessage();
 
     mInitialized = true;
 }
@@ -240,27 +315,17 @@ void PmrWindowWidget::filter(const QString &pFilter)
 
     // Update our message and show/hide the relevant exposures
 
-    page()->mainFrame()->documentElement().findFirst("p[id=message]").setInnerXml(message());
+    updateMessage();
 
-    QWebElement trElement = page()->mainFrame()->documentElement().findFirst(QString("tbody[id=exposures]")).firstChild();
-    QWebElement ulElement;
+    for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        QStandardItem *item = mTreeViewModel->invisibleRootItem()->child(i);
 
-    for (int i = 0, iMax = mExposureNames.count(); i < iMax; ++i) {
-        if (mExposureDisplayed[i] != filteredExposureNames.contains(mExposureNames[i])) {
-            QString displayValue = mExposureDisplayed[i]?"none":"table-row";
-
-            trElement.setStyleProperty("display", displayValue);
-
-            ulElement = trElement.firstChild().firstChild().nextSibling();
-
-            if (ulElement.hasClass("visible"))
-                ulElement.setStyleProperty("display", displayValue);
-
-            mExposureDisplayed[i] = !mExposureDisplayed[i];
-        }
-
-        trElement = trElement.nextSibling();
+        mTreeViewWidget->setRowHidden(item->row(),
+                                      mTreeViewModel->invisibleRootItem()->index(),
+                                      !filteredExposureNames.contains(item->text()));
     }
+
+    resizeTreeViewToContents();
 }
 
 //==============================================================================
@@ -277,144 +342,163 @@ bool PmrWindowWidget::hasExposures() const
 void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
                                               const QStringList &pExposureFiles)
 {
-    // Add the given exposure files to the exposure and show them
+    // Make sure that the exposure files are sorted
 
     QStringList sortedExposureFiles = QStringList(pExposureFiles);
 
     sortedExposureFiles.sort(Qt::CaseInsensitive);
 
+    // Retrieve the item which URL is given
+
+    PmrWindowItem *item = 0;
+
+    for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        item = static_cast<PmrWindowItem *>(mTreeViewModel->invisibleRootItem()->child(i));
+
+        if (!pUrl.compare(item->url()))
+            break;
+    }
+
+    // Add the given exposure files to the exposure and show them
+
     static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
 
-    QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=exposureFiles_%1]").arg(mExposureUrlId.value(pUrl)));
-
     foreach (const QString &exposureFile, sortedExposureFiles) {
-        ulElement.appendInside(QString("<li class=\"exposureFile\">"
-                                       "    <a href=\"%1\">%2</a>"
-                                       "</li>").arg(exposureFile, QString(exposureFile).remove(FilePathRegEx)));
+        item->appendRow(new PmrWindowItem(PmrWindowItem::ExposureFile,
+                                          QString(exposureFile).remove(FilePathRegEx),
+                                          exposureFile));
     }
 
-    showExposureFiles(pUrl, true);
+    mTreeViewWidget->expand(item->index());
+
+    resizeTreeViewToContents();
 }
 
 //==============================================================================
 
-void PmrWindowWidget::showExposureFiles(const QString &pUrl, const bool &pShow)
+void PmrWindowWidget::resizeTreeViewToContents()
 {
-    // Show the exposure files for the given exposure
+    // Resize our tree view widget so that all of its contents is visible
 
-    int id = mExposureUrlId.value(pUrl);
-    QWebElement documentElement = page()->mainFrame()->documentElement();
-    QWebElement imgElement = documentElement.findFirst(QString("img[id=exposureFilesButton_%1]").arg(id));
-    QWebElement ulElement = documentElement.findFirst(QString("ul[id=exposureFiles_%1]").arg(id));
-
-    if (pShow) {
-        imgElement.removeClass("button");
-        imgElement.addClass("downButton");
-
-        ulElement.addClass("visible");
-        ulElement.setStyleProperty("display", "table-row");
-    } else {
-        imgElement.addClass("button");
-        imgElement.removeClass("downButton");
-
-        ulElement.removeClass("visible");
-        ulElement.setStyleProperty("display", "none");
-    }
+    mTreeViewWidget->resizeColumnToContents(0);
 }
 
 //==============================================================================
 
-void PmrWindowWidget::copy()
+PmrWindowItem * PmrWindowWidget::currentItem() const
 {
-    // Copy the URL of the exposure to the clipboard
+    // Return our current item
 
-    QApplication::clipboard()->setText(mExposureUrl);
+    return static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->currentIndex()));
 }
 
 //==============================================================================
 
-void PmrWindowWidget::linkClicked()
+void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
 {
-    // Retrieve some information about the link
+    // Determine whether to show the context menu based on whether we are over
+    // an item
 
-    QString link;
-    QString textContent;
+    PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
 
-    QWebElement element = retrieveLinkInformation(link, textContent);
+    if (item) {
+        // We are over an item, so create a custom context menu for our current
+        // item and show it
 
-    // Check whether we have clicked a text or button link
+        QMenu menu;
 
-    if (textContent.isEmpty()) {
-        // We have clicked on a button link, so let people know whether we want
-        // to clone a workspace or whether we want to show/hide exposure files
+        menu.addAction(mViewInPmrAction);
+        menu.addSeparator();
+        menu.addAction(mCopyUrlAction);
 
-        QStringList linkList = link.split("|");
-
-        if (!linkList[0].compare("cloneWorkspace")) {
-            emit cloneWorkspaceRequested(linkList[1]);
-        } else {
-            // Show/hide exposure files, if we have them, or let people know
-            // that we want to show them
-
-            int id = mExposureUrlId.value(linkList[1]);
-
-            QWebElement documentElement = page()->mainFrame()->documentElement();
-            QWebElement ulElement = documentElement.findFirst(QString("ul[id=exposureFiles_%1]").arg(id));
-
-            if (ulElement.firstChild().isNull()) {
-                emit exposureFilesRequested(linkList[1]);
-            } else {
-                showExposureFiles(linkList[1],
-                                  documentElement.findFirst(QString("img[id=exposureFilesButton_%1]").arg(id)).hasClass("button"));
-            }
+        if (item->type() == PmrWindowItem::Exposure) {
+            menu.addSeparator();
+            menu.addAction(mCloneWorkspaceAction);
         }
-    } else {
-        // Open an exposure link in the user's browser or ask for an exposure
-        // file to be opened in OpenCOR
 
-        if (element.parent().hasClass("exposureFile"))
-            emit openExposureFileRequested(link);
-        else
-            QDesktopServices::openUrl(link);
+        menu.exec(QCursor::pos());
     }
 }
 
 //==============================================================================
 
-void PmrWindowWidget::linkHovered()
+void PmrWindowWidget::itemDoubleClicked(const QModelIndex &pIndex)
 {
-    // Retrieve some information about the link
+    // Expand/collapse an exposure or open an exposure file
 
-    QString link;
-    QString textContent;
+    PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
 
-    QWebElement element = retrieveLinkInformation(link, textContent);
+    if (item->type() == PmrWindowItem::Exposure) {
+        // It's an exposure, so check whether we have already retrieved its
+        // exposure files and, if not, let people know that we need to retrieve
+        // them
 
-    // Update our tool tip based on whether we are hovering a text or button
-    // link
-    // Note: this follows the approach used in linkClicked()...
-
-    QString toolTip = QString();
-
-    if (textContent.isEmpty()) {
-        QStringList linkList = link.split("|");
-
-        if (!linkList[0].compare("cloneWorkspace")) {
-            toolTip = tr("Clone Workspace");
-        } else if (linkList.count() == 2) {
-            if (page()->mainFrame()->documentElement().findFirst(QString("img[id=exposureFilesButton_%1]").arg(mExposureUrlId.value(linkList[1]))).hasClass("button"))
-                toolTip = tr("Show Exposure Files");
-            else
-                toolTip = tr("Hide Exposure Files");
-        }
+        if (!item->rowCount())
+            emit exposureFilesRequested(item->url());
     } else {
-        if (element.parent().hasClass("exposureFile"))
-            toolTip = tr("Open Exposure File");
-        else
-            toolTip = tr("Browse Exposure");
-    }
+        // It's an exposure file, so ask for it to be opened
 
-    setToolTip(toolTip);
+        emit openExposureFileRequested(item->url());
+    }
+}
+
+//==============================================================================
+
+void PmrWindowWidget::expandedExposure(const QModelIndex &pExposureIndex)
+{
+    // The exposure is being expanded, so update its icon to reflect its new
+    // state
+
+    static const QIcon ExpandedExposureIcon = QIcon(":/oxygen/actions/document-open-folder.png");
+
+    mTreeViewModel->itemFromIndex(pExposureIndex)->setIcon(ExpandedExposureIcon);
+
+    // Resize our tree view widget, just to be on the safe side
+
+    resizeTreeViewToContents();
+}
+
+//==============================================================================
+
+void PmrWindowWidget::collapsedExposure(const QModelIndex &pExposureIndex)
+{
+    // The exposure is being expanded, so update its icon to reflect its new
+    // state
+
+    static const QIcon CollapsedExposureIcon = QIcon(":/oxygen/places/folder.png");
+
+    mTreeViewModel->itemFromIndex(pExposureIndex)->setIcon(CollapsedExposureIcon);
+
+    // Resize our tree view widget, just to be on the safe side
+
+    resizeTreeViewToContents();
+}
+
+//==============================================================================
+
+void PmrWindowWidget::viewInPmr()
+{
+    // Show the current item in PMR
+
+    QDesktopServices::openUrl(currentItem()->url());
+}
+
+//==============================================================================
+
+void PmrWindowWidget::copyUrl()
+{
+    // Copy the current item's URL to the clipboard
+
+    QApplication::clipboard()->setText(currentItem()->url());
+}
+
+//==============================================================================
+
+void PmrWindowWidget::cloneWorkspace()
+{
+    // Let people know that we want to clone the current exposure's workspace
+
+    emit cloneWorkspaceRequested(currentItem()->url());
 }
 
 //==============================================================================

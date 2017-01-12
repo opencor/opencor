@@ -15,48 +15,32 @@
 <context>
     <name>OpenCOR::PMRWindow::PmrWindowWidget</name>
     <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
+        <source>No exposures match your criteria...</source>
+        <translation>Aucunes expositions ne correspondent à votre critère...</translation>
     </message>
     <message>
-        <source>Copy the URL to the clipboard</source>
-        <translation>Copier l&apos;URL dans le presse-papier</translation>
+        <source>View In PMR</source>
+        <translation>Voir Dans PMR</translation>
     </message>
     <message>
-        <source>No exposures match your criteria.</source>
-        <translation>Aucunes expositions ne correspondent à votre critère.</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;1&lt;/strong&gt; exposure was found:</source>
-        <translation>&lt;strong&gt;1&lt;/strong&gt; exposition a été trouvée :</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; exposures were found:</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; expositions ont été trouvées :</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
-        <translation>&lt;strong&gt;Erreur :&lt;/strong&gt; </translation>
+        <source>View in PMR</source>
+        <translation>Voir dans PMR</translation>
     </message>
     <message>
         <source>Clone Workspace</source>
         <translation>Cloner Espace De Travail</translation>
     </message>
     <message>
-        <source>Show Exposure Files</source>
-        <translation>Montrer Fichiers Exposition</translation>
+        <source>Clone the corresponding workspace</source>
+        <translation>Cloner l&apos;espace de travail correspondant</translation>
     </message>
     <message>
-        <source>Hide Exposure Files</source>
-        <translation>Cacher Fichiers Exposition</translation>
+        <source>Copy URL</source>
+        <translation>Copier URL</translation>
     </message>
     <message>
-        <source>Open Exposure File</source>
-        <translation>Ouvrir Fichier Exposition</translation>
-    </message>
-    <message>
-        <source>Browse Exposure</source>
-        <translation>Naviguer Exposition</translation>
+        <source>Copy the URL to the clipboard</source>
+        <translation>Copier l&apos;URL dans le presse-papier</translation>
     </message>
 </context>
 <context>
