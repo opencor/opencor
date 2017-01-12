@@ -107,7 +107,6 @@ QString PmrWindowItem::url() const
 PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     Core::Widget(pParent),
     mExposureNames(QStringList()),
-    mExposureUrlId(QMap<QString, int>()),
     mInitialized(false),
     mErrorMessage(QString()),
     mNumberOfFilteredExposures(0)
@@ -228,9 +227,7 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
     // Initialise / keep track of some properties
 
     mTreeViewModel->clear();
-
     mExposureNames.clear();
-    mExposureUrlId.clear();
 
     mErrorMessage = pErrorMessage;
 
@@ -253,7 +250,6 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
                                       !exposureDisplayed);
 
         mExposureNames << exposureName;
-        mExposureUrlId.insert(exposureUrl, i);
 
         mNumberOfFilteredExposures += exposureDisplayed;
     }

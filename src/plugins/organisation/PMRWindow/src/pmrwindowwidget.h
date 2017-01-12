@@ -106,16 +106,13 @@ private:
     Core::TreeViewWidget *mTreeViewWidget;
 
     QStringList mExposureNames;
-    QMap<QString, int> mExposureUrlId;
 
     bool mInitialized;
 
-    QString mTemplate;
     QString mErrorMessage;
 
     int mNumberOfFilteredExposures;
 
-    QString message() const;
     void updateMessage();
 
     void resizeTreeViewToContents();
