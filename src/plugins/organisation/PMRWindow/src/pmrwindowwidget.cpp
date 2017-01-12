@@ -105,7 +105,6 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
     mTreeViewWidget->setModel(mTreeViewModel);
-    mTreeViewWidget->setRootIsDecorated(false);
 
     connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu(const QPoint &)));
