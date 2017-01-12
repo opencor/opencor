@@ -15,8 +15,8 @@
 <context>
     <name>OpenCOR::PMRWindow::PmrWindowWidget</name>
     <message>
-        <source>No exposures match your criteria.</source>
-        <translation>Aucunes expositions ne correspondent à votre critère.</translation>
+        <source>No exposures match your criteria...</source>
+        <translation>Aucunes expositions ne correspondent à votre critère...</translation>
     </message>
     <message>
         <source>View In PMR</source>

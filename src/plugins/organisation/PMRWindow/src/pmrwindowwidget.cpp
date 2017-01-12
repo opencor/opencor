@@ -175,7 +175,7 @@ void PmrWindowWidget::updateMessage()
     if (mErrorMessage.isEmpty()) {
         if (!mNumberOfFilteredExposures && !mExposureNames.isEmpty()) {
             mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
-                                               tr("No exposures match your criteria."));
+                                               tr("No exposures match your criteria..."));
         } else {
             mUserMessageWidget->resetMessage();
         }
