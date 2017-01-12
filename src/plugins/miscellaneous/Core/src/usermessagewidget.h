@@ -65,6 +65,7 @@ public:
 
 private:
     double mScale;
+    double mDefaultFontScale;
 
     QString mIcon;
     QString mMessage;
