@@ -24,6 +24,7 @@ limitations under the License.
 #include "i18ninterface.h"
 #include "pmrwindowwidget.h"
 #include "treeviewwidget.h"
+#include "usermessagewidget.h"
 
 //==============================================================================
 
@@ -99,29 +100,18 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     mErrorMessage(QString()),
     mNumberOfFilteredExposures(0)
 {
-    // Create and customise our message label
+    // Create and customise some objects
 
-    mMessageLabel = new QLabel(this);
+    mUserMessageWidget = new Core::UserMessageWidget(this);
 
-    mMessageLabel->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-    mMessageLabel->setStyleSheet("QLabel {"
-                                 "     background-color: white;"
-                                 "     padding: 8px 8px 0px 8px;"
-                                 "}");
-    mMessageLabel->setWordWrap(true);
+    QFont newFont = mUserMessageWidget->font();
 
-    // Create an instance of the data model that we want to view
+    newFont.setPointSizeF(0.75*newFont.pointSize());
+
+    mUserMessageWidget->setFont(newFont);
 
     mTreeViewModel = new QStandardItemModel(this);
-
-    // Create and customise our tree view
-
     mTreeViewWidget = new Core::TreeViewWidget(this);
-
-    mTreeViewWidget->setStyleSheet( mTreeViewWidget->styleSheet()
-                                   +"QTreeView {"
-                                    "     padding-left: 8px;"
-                                    "}");
 
     mTreeViewWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -138,7 +128,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     createLayout();
 
-    layout()->addWidget(mMessageLabel);
+    layout()->addWidget(mUserMessageWidget);
     layout()->addWidget(mTreeViewWidget);
 
     // Create our actions
@@ -184,26 +174,21 @@ QSize PmrWindowWidget::sizeHint() const
 
 void PmrWindowWidget::updateMessage()
 {
-    // Determine the message to be displayed, if any
-
-    QString message = QString();
+    // Update the message to be displayed, if any
 
     if (mErrorMessage.isEmpty()) {
-        if (!mNumberOfFilteredExposures) {
-            if (!mExposureNames.isEmpty())
-                message = tr("No exposures match your criteria.");
-        } else if (mNumberOfFilteredExposures == 1) {
-            message = tr("<strong>1</strong> exposure was found:");
-        } else {
-            message = tr("<strong>%1</strong> exposures were found:").arg(QLocale().toString(mNumberOfFilteredExposures));
-        }
+        if (!mNumberOfFilteredExposures && !mExposureNames.isEmpty())
+            mUserMessageWidget->setMessage(tr("No exposures match your criteria."));
+        else
+            mUserMessageWidget->setMessage(QString());
     } else {
-        message = tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true);
+        mUserMessageWidget->setMessage(Core::formatMessage(mErrorMessage, false, true));
     }
 
-    // Update our message label
+    // Show/hide our user message widget and our tree view widget
 
-    mMessageLabel->setText(message);
+    mUserMessageWidget->setVisible(!mUserMessageWidget->text().isEmpty());
+    mTreeViewWidget->setVisible(mUserMessageWidget->text().isEmpty());
 }
 
 //==============================================================================

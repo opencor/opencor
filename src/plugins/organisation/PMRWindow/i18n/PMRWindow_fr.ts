@@ -19,18 +19,6 @@
         <translation>Aucunes expositions ne correspondent à votre critère.</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;1&lt;/strong&gt; exposure was found:</source>
-        <translation>&lt;strong&gt;1&lt;/strong&gt; exposition a été trouvée :</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; exposures were found:</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; expositions ont été trouvées :</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
-        <translation>&lt;strong&gt;Erreur :&lt;/strong&gt; </translation>
-    </message>
-    <message>
         <source>View In PMR</source>
         <translation>Voir Dans PMR</translation>
     </message>

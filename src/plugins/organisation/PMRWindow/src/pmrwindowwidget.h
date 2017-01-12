@@ -44,6 +44,7 @@ namespace OpenCOR {
 
 namespace Core {
     class TreeViewWidget;
+    class UserMessageWidget;
 }   // namespace Core
 
 //==============================================================================
@@ -100,7 +101,7 @@ private:
     QAction *mViewInPmrAction;
     QAction *mCloneWorkspaceAction;
 
-    QLabel *mMessageLabel;
+    Core::UserMessageWidget *mUserMessageWidget;
 
     QStandardItemModel *mTreeViewModel;
     Core::TreeViewWidget *mTreeViewWidget;
