@@ -128,6 +128,8 @@ signals:
 
     void openExposureFileRequested(const QString &pUrl);
 
+    void itemDoubleClicked();
+
 public slots:
     void addAndShowExposureFiles(const QString &pUrl,
                                  const QStringList &pExposureFiles);

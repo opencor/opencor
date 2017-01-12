@@ -48,7 +48,8 @@ namespace PMRWindow {
 
 PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
-    mGui(new Ui::PmrWindowWindow)
+    mGui(new Ui::PmrWindowWindow),
+    mItemDoubleClicked(false)
 {
     // Set up the GUI
 
@@ -143,6 +144,8 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
             mPmrWebService, SLOT(requestExposureFiles(const QString &)));
     connect(mPmrWindowWidget, SIGNAL(openExposureFileRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
+    connect(mPmrWindowWidget, SIGNAL(itemDoubleClicked()),
+            this, SLOT(itemDoubleClicked()));
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -213,13 +216,20 @@ void PmrWindowWindow::busy(const bool &pBusy)
         mGui->dockWidgetContents->setEnabled(false);
     } else if (!pBusy && !counter) {
         // Re-enable the GUI side and give, within the current window, the focus
-        // to mFilterValue, but only if the current window already has the focus
+        // to mFilterValue, but only if the current window already has the
+        // focus, or to mPmrWindowWidget if it was previously double clicked
 
         mPmrWindowWidget->hideBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(true);
 
-        Core::setFocusTo(mFilterValue);
+        if (mItemDoubleClicked) {
+            mItemDoubleClicked = false;
+
+            mPmrWindowWidget->setFocus();
+        } else {
+            Core::setFocusTo(mFilterValue);
+        }
     }
 }
 
@@ -274,6 +284,16 @@ void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposure
     // Ask our PMR widget to initialise itself
 
     mPmrWindowWidget->initialize(pExposures, mFilterValue->text(), QString());
+}
+
+//==============================================================================
+
+void PmrWindowWindow::itemDoubleClicked()
+{
+    // Keep track of the fact that an item got double clicked and that we will
+    // want it to get the focus back once we are not busy anymore
+
+    mItemDoubleClicked = true;
 }
 
 //==============================================================================

@@ -130,6 +130,8 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
             this, SLOT(showCustomContextMenu(const QPoint &)));
     connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(itemDoubleClicked(const QModelIndex &)));
+    connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
+            this, SIGNAL(itemDoubleClicked()));
 
     // Some connections
 
@@ -157,6 +159,10 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
             this, SLOT(copyUrl()));
     connect(mCloneWorkspaceAction, SIGNAL(triggered(bool)),
             this, SLOT(cloneWorkspace()));
+
+    // Make our tree view widget our focus proxy
+
+    setFocusProxy(mTreeViewWidget);
 }
 
 //==============================================================================
