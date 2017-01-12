@@ -50,9 +50,10 @@ PmrWindowItem::PmrWindowItem(const Type &pType, const QString &pText,
     mType(pType),
     mUrl(pUrl)
 {
-    // Set the icon for the item
+    // Customise ourselves
 
     setIcon(pType);
+    setToolTip(pText);
 }
 
 //==============================================================================
