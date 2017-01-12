@@ -53,7 +53,14 @@ PmrWindowItem::PmrWindowItem(const Type &pType, const QString &pText,
 {
     // Customise ourselves
 
-    setIcon(pType);
+    static const QIcon ExposureIcon     = QIcon(":/oxygen/places/folder.png");
+    static const QIcon ExposureFileIcon = QIcon(":/oxygen/mimetypes/application-x-zerosize.png");
+
+    if (pType == Exposure)
+        QStandardItem::setIcon(ExposureIcon);
+    else
+        QStandardItem::setIcon(ExposureFileIcon);
+
     setToolTip(pText);
 }
 
@@ -73,21 +80,6 @@ QString PmrWindowItem::url() const
     // Return our URL
 
     return mUrl;
-}
-
-//==============================================================================
-
-void PmrWindowItem::setIcon(const Type &pType)
-{
-    // Determine the icon to be used for the item
-
-    static const QIcon ExposureIcon     = QIcon(":/oxygen/places/folder.png");
-    static const QIcon ExposureFileIcon = QIcon(":/oxygen/mimetypes/application-x-zerosize.png");
-
-    if (pType == Exposure)
-        QStandardItem::setIcon(ExposureIcon);
-    else
-        QStandardItem::setIcon(ExposureFileIcon);
 }
 
 //==============================================================================

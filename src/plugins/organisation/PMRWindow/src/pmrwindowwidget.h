@@ -71,8 +71,6 @@ public:
 private:
     Type mType;
     QString mUrl;
-
-    void setIcon(const Type &pType);
 };
 
 //==============================================================================
