@@ -38,7 +38,6 @@ limitations under the License.
 #include <QLayout>
 #include <QMenu>
 #include <QRegularExpression>
-#include <QScrollArea>
 #include <QString>
 #include <QTimer>
 #include <QWebElement>
@@ -89,18 +88,9 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
 
     mOutput->createLayout();
 
-    // Create our output message (within a scroll area, in case the label is too
-    // wide)
+    // Create our output message
 
-    mOutputMessageScrollArea = new QScrollArea(mOutput);
-
-    mOutputMessageScrollArea->setFrameShape(QFrame::NoFrame);
-    mOutputMessageScrollArea->setWidgetResizable(true);
-
-    mOutputMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
-                                                 mOutputMessageScrollArea);
-
-    mOutputMessageScrollArea->setWidget(mOutputMessage);
+    mOutputMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png", this);
 
     // Create our output for ontological terms
 
@@ -124,7 +114,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     // Add our output message and output for ontological terms to our output
     // widget
 
-    mOutput->layout()->addWidget(mOutputMessageScrollArea);
+    mOutput->layout()->addWidget(mOutputMessage);
     mOutput->layout()->addWidget(mOutputOntologicalTerms);
 
     // Add our output widget to our main layout
@@ -184,7 +174,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::additionalGuiUpdates(c
 
     // Show/hide our output message and output for ontological terms
 
-    mOutputMessageScrollArea->setVisible(!mItemsCount);
+    mOutputMessage->setVisible(!mItemsCount);
     mOutputOntologicalTerms->setVisible(mItemsCount);
 
     // Request for something to be looked up, if needed

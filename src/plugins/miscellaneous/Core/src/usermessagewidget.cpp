@@ -45,22 +45,20 @@ void UserMessageWidget::constructor(const QString &pIcon,
     // Some initialisations
 
     mScale = 0.0;
+    mDefaultFontScale = 1.35*font().pointSize();
 
     mIcon = pIcon;
     mMessage = pMessage;
     mExtraMessage = pExtraMessage;
 
-    // Customise our background
-
-    setStyleSheet("QLabel {"
-                  "     background-color: white;"
-                  "}");
-
-    // Some other customisations
+    // Some customisations
 
     setContextMenuPolicy(Qt::NoContextMenu);
     setScale(1.0);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setStyleSheet("QLabel {"
+                  "     background-color: white;"
+                  "}");
     setWordWrap(true);
 }
 
@@ -120,7 +118,7 @@ void UserMessageWidget::setScale(const double &pScale)
 
         QFont newFont = font();
 
-        newFont.setPointSizeF(pScale*1.35*newFont.pointSize());
+        newFont.setPointSizeF(pScale*mDefaultFontScale);
 
         setFont(newFont);
 

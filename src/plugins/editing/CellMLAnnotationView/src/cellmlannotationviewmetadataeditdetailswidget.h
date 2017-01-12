@@ -45,7 +45,6 @@ class QMenu;
 class QNetworkAccessManager;
 class QNetworkReply;
 class QPushButton;
-class QScrollArea;
 
 //==============================================================================
 
@@ -144,8 +143,6 @@ private:
     bool mInternetConnectionAvailable;
 
     Core::Widget *mOutput;
-
-    QScrollArea *mOutputMessageScrollArea;
     Core::UserMessageWidget *mOutputMessage;
 
     QString mOutputOntologicalTermsTemplate;
