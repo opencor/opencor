@@ -24,6 +24,7 @@ limitations under the License.
 #include "coreguiutils.h"
 #include "i18ninterface.h"
 #include "pmrwebservice.h"
+#include "pmrworkspacemanager.h"
 #include "pmrworkspaceswindowcommitdialog.h"
 #include "pmrworkspaceswindowwidget.h"
 #include "treeviewwidget.h"
@@ -33,7 +34,6 @@ limitations under the License.
 
 #include <QApplication>
 #include <QClipboard>
-#include <QContextMenuEvent>
 #include <QDesktopServices>
 #include <QDir>
 #include <QLayout>
@@ -41,7 +41,6 @@ limitations under the License.
 #include <QMenu>
 #include <QSettings>
 #include <QTimer>
-#include <QToolTip>
 
 //==============================================================================
 

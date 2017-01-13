@@ -24,13 +24,14 @@ limitations under the License.
 
 //==============================================================================
 
-#include "pmrworkspacemanager.h"
+#include "pmrworkspace.h"
+#include "pmrworkspacefilenode.h"
 #include "widget.h"
 
 //==============================================================================
 
 #include <QSet>
-#include <QStandardItemModel>
+#include <QStandardItem>
 
 //==============================================================================
 
@@ -51,6 +52,7 @@ namespace Core {
 
 namespace PMRSupport {
     class PmrWebService;
+    class PmrWorkspaceManager;
 }   // namespace PMRSupport
 
 //==============================================================================
