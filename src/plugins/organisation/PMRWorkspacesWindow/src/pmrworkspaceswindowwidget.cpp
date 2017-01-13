@@ -810,6 +810,8 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
     if (item) {
         // We are over an item, so update our context menu and show it
 
+        mCopyUrlAction->setEnabled(mTreeViewWidget->selectedIndexes().count() == 1);
+
         mContextMenu->exec(QCursor::pos());
     }
 }
@@ -1514,9 +1516,12 @@ void PmrWorkspacesWindowWidget::workspaceSynchronized(PMRSupport::PmrWorkspace *
 
 void PmrWorkspacesWindowWidget::viewInPmr()
 {
-    // Show the current item in PMR
+    // Show the selected items in PMR
 
-    QDesktopServices::openUrl(currentItem()->url());
+    QModelIndexList selectedIndexes = mTreeViewWidget->selectedIndexes();
+
+    for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i)
+        QDesktopServices::openUrl(static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]))->url());
 }
 
 //==============================================================================
