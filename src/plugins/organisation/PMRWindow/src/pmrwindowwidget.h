@@ -24,7 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "corecliutils.h"
 #include "pmrexposure.h"
 #include "widget.h"
 
@@ -34,7 +33,6 @@ limitations under the License.
 
 //==============================================================================
 
-class QLabel;
 class QMenu;
 
 //==============================================================================
@@ -71,6 +69,7 @@ public:
 
 private:
     Type mType;
+
     QString mUrl;
 };
 

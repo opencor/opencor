@@ -20,6 +20,7 @@ limitations under the License.
 // PMR window widget
 //==============================================================================
 
+#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "i18ninterface.h"
 #include "pmrwindowwidget.h"
@@ -30,14 +31,9 @@ limitations under the License.
 
 #include <QApplication>
 #include <QClipboard>
-#include <QContextMenuEvent>
 #include <QDesktopServices>
-#include <QIODevice>
-#include <QLabel>
 #include <QLayout>
 #include <QMenu>
-#include <QRegularExpression>
-#include <QToolTip>
 
 //==============================================================================
 
