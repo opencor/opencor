@@ -83,7 +83,7 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
             this, SLOT(showCustomContextMenu()));
     connect(mFileOrganiserWindowWidget, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(itemDoubleClicked(const QModelIndex &)));
-    connect(mFileOrganiserWindowWidget, SIGNAL(filesOpenRequested(const QStringList &)),
+    connect(mFileOrganiserWindowWidget, SIGNAL(openFilesRequested(const QStringList &)),
             this, SLOT(openFiles(const QStringList &)));
 
     // Some connections to update the enabled state of our various actions

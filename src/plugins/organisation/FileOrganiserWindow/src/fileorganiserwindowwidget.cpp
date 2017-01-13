@@ -484,30 +484,30 @@ void FileOrganiserWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     // Note: if there is a folder among the selected items, then ignore all of
     //       them...
 
-    QStringList selectedFiles = QStringList();
+    QStringList fileNames = QStringList();
     QModelIndexList crtSelectedIndexes = selectedIndexes();
 
     for (int i = 0, iMax = crtSelectedIndexes.count(); i < iMax; ++i) {
         QString fileName = filePath(crtSelectedIndexes[i]);
 
         if (fileName.isEmpty()) {
-            selectedFiles = QStringList();
+            fileNames = QStringList();
 
             break;
         } else {
-            selectedFiles << fileName;
+            fileNames << fileName;
         }
     }
 
     // Let people know about a key having been pressed with the view of opening
     // one or several files
 
-    if (   selectedFiles.count()
+    if (   fileNames.count()
         && ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))) {
         // There are some files that are selected and we want to open them, so
         // let people know about it
 
-        emit filesOpenRequested(selectedFiles);
+        emit openFilesRequested(fileNames);
     }
 }
 
