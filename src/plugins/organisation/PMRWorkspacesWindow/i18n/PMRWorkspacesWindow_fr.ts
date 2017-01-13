@@ -54,91 +54,15 @@
 <context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWidget</name>
     <message>
-        <source>Stage</source>
+        <source>Authenticate yourself...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Unstage</source>
+        <source>Click on the top-right button.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Owner: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>PMR: &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Path: &lt;a href=&quot;file://%1/&quot;&gt;%1&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clone Workspace</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Synchronise</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Synchronise And Upload</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Commit Staged Changes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Commit Changes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Refresh Display</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>View In PMR...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show Containing Folder...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About Workspace</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Conflicts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Added</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Deleted</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Modified</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No workspaces were found.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>You need to authenticate yourself...</source>
+        <source>No workspaces were found...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

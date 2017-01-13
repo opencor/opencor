@@ -153,25 +153,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     connect(mWorkspaceManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
 
-    // Retrieve the HTML template
-
-    QString fileContents;
-
-    Core::readFileContentsFromFile(":/PMRWorkspacesWindow/output.html", fileContents);
-
-    mTemplate = fileContents.arg(Core::iconDataUri(CloneIcon, 16, 16),
-                                 Core::iconDataUri(CommitIcon, 16, 16))
-                            .arg(Core::iconDataUri(FolderOwnedIcon, 16, 16),
-                                 Core::iconDataUri(FolderOwnedOpenIcon, 16, 16))
-                            .arg(Core::iconDataUri(FolderIcon, 16, 16),
-                                 Core::iconDataUri(FolderOpenIcon, 16, 16))
-                            .arg(Core::iconDataUri(StageIcon, 16, 16),
-                                 Core::iconDataUri(UnstageIcon, 16, 16))
-                            .arg(Core::iconDataUri(SynchronizeIcon, 16, 16),
-                                 Core::iconDataUri(SynchronizePushIcon, 16, 16),
-                                 Core::iconDataUri(SynchronizePullIcon, 16, 16))
-                            .arg("%1");
-
     // Create a timer for refreshing our current workspace
 
     mTimer = new QTimer(this);

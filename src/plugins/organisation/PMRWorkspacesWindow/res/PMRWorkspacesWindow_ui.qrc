@@ -5,6 +5,5 @@
         <file>icons/synchronize-pull.png</file>
         <file>icons/synchronize-push.png</file>
         <file>icons/synchronize.png</file>
-        <file>output.html</file>
     </qresource>
 </RCC>

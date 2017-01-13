@@ -106,7 +106,6 @@ private:
 
     bool mInitialized;
 
-    QString mTemplate;
     QString mErrorMessage;
     bool mAuthenticated;
 
