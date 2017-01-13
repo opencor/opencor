@@ -33,6 +33,7 @@ limitations under the License.
 #include <QClipboard>
 #include <QDesktopServices>
 #include <QFileIconProvider>
+#include <QKeyEvent>
 #include <QLayout>
 #include <QMenu>
 
@@ -98,6 +99,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
     mTreeViewWidget->setModel(mTreeViewModel);
+    mTreeViewWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     mTreeViewWidget->setVisible(false);
 
     connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
@@ -164,6 +166,45 @@ void PmrWindowWidget::retranslateUi()
 
     if (mInitialized)
         updateGui();
+}
+
+//==============================================================================
+
+void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Default handling of the event
+
+    Core::Widget::keyPressEvent(pEvent);
+
+    // Retrieve all the exposure files that are currently selected
+    // Note: if there is an exposure among the selected items, then ignore all
+    //       of them...
+
+    QStringList exposureFileUrls = QStringList();
+    QModelIndexList crtSelectedIndexes = mTreeViewWidget->selectedIndexes();
+
+    for (int i = 0, iMax = crtSelectedIndexes.count(); i < iMax; ++i) {
+        PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(crtSelectedIndexes[i]));
+
+        if (item->type() == PmrWindowItem::Exposure) {
+            exposureFileUrls = QStringList();
+
+            break;
+        } else {
+            exposureFileUrls << item->url();
+        }
+    }
+
+    // Let people know about a key having been pressed with the view of opening
+    // one or several exposure files
+
+    if (   exposureFileUrls.count()
+        && ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))) {
+        // There are some files that are selected and we want to open them, so
+        // let people know about it
+
+        emit openExposureFilesRequested(exposureFileUrls);
+    }
 }
 
 //==============================================================================

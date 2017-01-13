@@ -144,6 +144,8 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
             mPmrWebService, SLOT(requestExposureFiles(const QString &)));
     connect(mPmrWindowWidget, SIGNAL(openExposureFileRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
+    connect(mPmrWindowWidget, SIGNAL(openExposureFilesRequested(const QStringList &)),
+            this, SLOT(openFiles(const QStringList &)));
     connect(mPmrWindowWidget, SIGNAL(itemDoubleClicked()),
             this, SLOT(itemDoubleClicked()));
 

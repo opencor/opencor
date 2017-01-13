@@ -93,6 +93,7 @@ public:
     bool hasExposures() const;
 
 protected:
+    virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual QSize sizeHint() const;
 
 private:
@@ -124,6 +125,7 @@ signals:
     void exposureFilesRequested(const QString &pUrl);
 
     void openExposureFileRequested(const QString &pUrl);
+    void openExposureFilesRequested(const QStringList &pUrls);
 
     void itemDoubleClicked();
 
