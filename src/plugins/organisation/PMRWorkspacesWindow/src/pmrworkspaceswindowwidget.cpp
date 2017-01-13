@@ -690,6 +690,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
     mErrorMessage = pErrorMessage;
     mAuthenticated = pAuthenticated;
 
+/*---GRY---
     if (pErrorMessage.isEmpty() && pAuthenticated) {
         // Reconcile the URLs of my-workspaces (on PMR) with those from our
         // workspace folders (in doing so, folders/URLs that don't correspond to
@@ -758,9 +759,15 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
     // Display our list of workspaces
 
-/*---GRY---
     displayWorkspaces();
 */
+
+    for (int i = 0, iMax = pWorkspaces.count(); i < iMax; ++i) {
+        QString workspaceName = pWorkspaces[i]->name();
+        QString workspaceUrl = pWorkspaces[i]->url();
+
+        mTreeViewModel->invisibleRootItem()->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Workspace, workspaceName, workspaceUrl));
+    }
 
     resizeTreeViewToContents();
 
