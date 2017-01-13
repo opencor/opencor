@@ -121,6 +121,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mTreeViewWidget->setHeaderHidden(true);
     mTreeViewWidget->setModel(mTreeViewModel);
 
+qDebug("---[Tree view widget signals]---");
     connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu(const QPoint &)));
 
@@ -133,6 +134,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
             this, SLOT(expandedExposure(const QModelIndex &)));
     connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(collapsedExposure(const QModelIndex &)));
+qDebug("--------------------------------");
 
     // Populate ourselves
 
@@ -603,6 +605,8 @@ void PmrWorkspacesWindowWidget::updateMessage()
         if (!mWorkspaceManager->count()) {
             mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
                                                tr("No workspaces were found..."));
+        } else {
+            mUserMessageWidget->resetMessage();
         }
     } else {
         mUserMessageWidget->setIconMessage(":/oxygen/emblems/emblem-important.png",
