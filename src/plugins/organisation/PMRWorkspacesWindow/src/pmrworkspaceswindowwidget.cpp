@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "corecliutils.h"
 #include "coreguiutils.h"
+#include "i18ninterface.h"
 #include "pmrwebservice.h"
 #include "pmrworkspaceswindowcommitdialog.h"
 #include "pmrworkspaceswindowwidget.h"
@@ -31,6 +32,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QApplication>
+#include <QClipboard>
 #include <QContextMenuEvent>
 #include <QDesktopServices>
 #include <QDir>
@@ -50,6 +52,43 @@ limitations under the License.
 
 namespace OpenCOR {
 namespace PMRWorkspacesWindow {
+
+//==============================================================================
+
+PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+                                                 const QString &pText,
+                                                 const QString &pUrl) :
+    QStandardItem(pText),
+    mType(pType),
+    mUrl(pUrl)
+{
+    // Customise ourselves
+
+    static const QIcon WorkspaceIcon     = QIcon(":/oxygen/places/folder.png");
+    static const QIcon WorkspaceFileIcon = QIcon(":/oxygen/mimetypes/application-x-zerosize.png");
+
+    QStandardItem::setIcon((pType == Workspace)?WorkspaceIcon:WorkspaceFileIcon);
+
+    setToolTip(pText);
+}
+
+//==============================================================================
+
+int PmrWorkspacesWindowItem::type() const
+{
+    // Return our type
+
+    return mType;
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWindowItem::url() const
+{
+    // Return our URL
+
+    return mUrl;
+}
 
 //==============================================================================
 
@@ -173,6 +212,22 @@ qDebug("--------------------------------");
                 this, SLOT(focusWindowChanged()));
     }
 
+    // Create and populate our context menu
+
+    mContextMenu = new QMenu(this);
+
+    mViewInPmrAction = Core::newAction(this);
+    mCopyUrlAction = Core::newAction(this);
+
+    connect(mViewInPmrAction, SIGNAL(triggered(bool)),
+            this, SLOT(viewInPmr()));
+    connect(mCopyUrlAction, SIGNAL(triggered(bool)),
+            this, SLOT(copyUrl()));
+
+    mContextMenu->addAction(mViewInPmrAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mCopyUrlAction);
+
     // Make our tree view widget our focus proxy
 
     setFocusProxy(mTreeViewWidget);
@@ -191,6 +246,13 @@ PmrWorkspacesWindowWidget::~PmrWorkspacesWindowWidget()
 
 void PmrWorkspacesWindowWidget::retranslateUi()
 {
+    // Retranslate our actions
+
+    I18nInterface::retranslateAction(mViewInPmrAction, tr("View In PMR"),
+                                     tr("View in PMR"));
+    I18nInterface::retranslateAction(mCopyUrlAction, tr("Copy URL"),
+                                     tr("Copy the URL to the clipboard"));
+
     // Retranslate our message, if we have been initialised
 
     if (mInitialized)
@@ -626,6 +688,31 @@ void PmrWorkspacesWindowWidget::resizeTreeViewToContents()
     // Resize our tree view widget so that all of its contents is visible
 
     mTreeViewWidget->resizeColumnToContents(0);
+}
+
+//==============================================================================
+
+PmrWorkspacesWindowItem * PmrWorkspacesWindowWidget::currentItem() const
+{
+    // Return our current item
+
+    return static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->currentIndex()));
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
+{
+    // Determine whether to show the context menu based on whether we are over
+    // an item
+
+    PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
+
+    if (item) {
+        // We are over an item, so update our context menu and show it
+
+        mContextMenu->exec(QCursor::pos());
+    }
 }
 
 //==============================================================================
@@ -1445,6 +1532,24 @@ void PmrWorkspacesWindowWidget::workspaceSynchronized(PMRSupport::PmrWorkspace *
 //---GRY--- To be reviewed...
     if (pWorkspace)
         refreshWorkspace(pWorkspace->url());
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::viewInPmr()
+{
+    // Show the current item in PMR
+
+    QDesktopServices::openUrl(currentItem()->url());
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::copyUrl()
+{
+    // Copy the current item's URL to the clipboard
+
+    QApplication::clipboard()->setText(currentItem()->url());
 }
 
 //==============================================================================

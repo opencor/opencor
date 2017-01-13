@@ -34,6 +34,10 @@ limitations under the License.
 
 //==============================================================================
 
+class QMenu;
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -57,6 +61,29 @@ namespace PMRWorkspacesWindow {
 
 typedef QPair<QString, QString> StringPair;
 typedef QList<StringPair> StringPairs;
+
+//==============================================================================
+
+class PmrWorkspacesWindowItem : public QStandardItem
+{
+public:
+    enum Type {
+        Workspace     = QStandardItem::UserType,
+        WorkspaceFile = QStandardItem::UserType+1
+    };
+
+    explicit PmrWorkspacesWindowItem(const Type &pType, const QString &pText,
+                                     const QString &pUrl);
+
+    virtual int type() const;
+
+    QString url() const;
+
+private:
+    Type mType;
+
+    QString mUrl;
+};
 
 //==============================================================================
 
@@ -113,6 +140,11 @@ private:
 
     QTimer *mTimer;
 
+    QMenu *mContextMenu;
+
+    QAction *mViewInPmrAction;
+    QAction *mCopyUrlAction;
+
     Core::UserMessageWidget *mUserMessageWidget;
 
     QStandardItemModel *mTreeViewModel;
@@ -121,6 +153,8 @@ private:
     void updateMessage();
 
     void resizeTreeViewToContents();
+
+    PmrWorkspacesWindowItem * currentItem() const;
 
     void displayWorkspaces();
     void expandHtmlTree(const QString &pId);
@@ -169,17 +203,22 @@ signals:
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
 
-private slots:
-    void focusWindowChanged();
-    void refreshWorkspaces();
-
 public slots:
     void initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
                     const QString &pErrorMessage = QString(),
                     const bool &pAuthenticated = true);
 
+private slots:
+    void showCustomContextMenu(const QPoint &pPosition) const;
+
+    void focusWindowChanged();
+    void refreshWorkspaces();
+
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
+
+    void viewInPmr();
+    void copyUrl();
 };
 
 //==============================================================================
