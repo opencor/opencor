@@ -25,6 +25,8 @@ limitations under the License.
 #include "pmrwebservice.h"
 #include "pmrworkspaceswindowcommitdialog.h"
 #include "pmrworkspaceswindowwidget.h"
+#include "treeviewwidget.h"
+#include "usermessagewidget.h"
 
 //==============================================================================
 
@@ -32,6 +34,7 @@ limitations under the License.
 #include <QContextMenuEvent>
 #include <QDesktopServices>
 #include <QDir>
+#include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
 #include <QSettings>
@@ -104,13 +107,39 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mErrorMessage(QString()),
     mAuthenticated(true)
 {
-    // Prevent objects from being dropped on us
+    // Create and customise some objects
 
-    setAcceptDrops(false);
+    mUserMessageWidget = new Core::UserMessageWidget(this);
 
-    // Track the mouse
+    mUserMessageWidget->setScale(0.85);
 
-    setMouseTracking(true);
+    mTreeViewModel = new QStandardItemModel(this);
+    mTreeViewWidget = new Core::TreeViewWidget(this);
+
+    mTreeViewWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    mTreeViewWidget->setHeaderHidden(true);
+    mTreeViewWidget->setModel(mTreeViewModel);
+
+    connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showCustomContextMenu(const QPoint &)));
+
+    connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
+            this, SLOT(itemDoubleClicked(const QModelIndex &)));
+    connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
+            this, SIGNAL(itemDoubleClicked()));
+
+    connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
+            this, SLOT(expandedExposure(const QModelIndex &)));
+    connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
+            this, SLOT(collapsedExposure(const QModelIndex &)));
+
+    // Populate ourselves
+
+    createLayout();
+
+    layout()->addWidget(mUserMessageWidget);
+    layout()->addWidget(mTreeViewWidget);
 
     // Connections to handle responses from PMR
 

@@ -30,10 +30,18 @@ limitations under the License.
 //==============================================================================
 
 #include <QSet>
+#include <QStandardItemModel>
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class TreeViewWidget;
+    class UserMessageWidget;
+}   // namespace Core
 
 //==============================================================================
 
@@ -105,6 +113,11 @@ private:
     int mRow;
 
     QTimer *mTimer;
+
+    Core::UserMessageWidget *mUserMessageWidget;
+
+    QStandardItemModel *mTreeViewModel;
+    Core::TreeViewWidget *mTreeViewWidget;
 
     void updateMessage();
 
