@@ -117,8 +117,6 @@ private:
 
     void updateGui();
 
-    void resizeTreeViewToContents();
-
     PmrWindowItem * currentItem() const;
 
 signals:
@@ -137,8 +135,7 @@ private slots:
     void showCustomContextMenu(const QPoint &pPosition) const;
     void itemDoubleClicked(const QModelIndex &pIndex);
 
-    void expandedExposure(const QModelIndex &pExposureIndex);
-    void collapsedExposure(const QModelIndex &pExposureIndex);
+    void resizeTreeViewToContents();
 
     void viewInPmr();
     void copyUrl();

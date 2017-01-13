@@ -32,6 +32,7 @@ limitations under the License.
 #include <QApplication>
 #include <QClipboard>
 #include <QDesktopServices>
+#include <QFileIconProvider>
 #include <QLayout>
 #include <QMenu>
 
@@ -50,10 +51,9 @@ PmrWindowItem::PmrWindowItem(const Type &pType, const QString &pText,
 {
     // Customise ourselves
 
-    static const QIcon ExposureIcon     = QIcon(":/oxygen/places/folder.png");
-    static const QIcon ExposureFileIcon = QIcon(":/oxygen/mimetypes/application-x-zerosize.png");
-
-    QStandardItem::setIcon((pType == Exposure)?ExposureIcon:ExposureFileIcon);
+    QStandardItem::setIcon((pType == Exposure)?
+                               QFileIconProvider().icon(QFileIconProvider::Folder):
+                               QFileIconProvider().icon(QFileIconProvider::File));
 
     setToolTip(pText);
 }
@@ -109,9 +109,9 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
             this, SIGNAL(itemDoubleClicked()));
 
     connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(expandedExposure(const QModelIndex &)));
+            this, SLOT(resizeTreeViewToContents()));
     connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(collapsedExposure(const QModelIndex &)));
+            this, SLOT(resizeTreeViewToContents()));
 
     // Populate ourselves
 
@@ -375,38 +375,6 @@ void PmrWindowWidget::itemDoubleClicked(const QModelIndex &pIndex)
 
         emit openExposureFileRequested(item->url());
     }
-}
-
-//==============================================================================
-
-void PmrWindowWidget::expandedExposure(const QModelIndex &pExposureIndex)
-{
-    // The exposure is being expanded, so update its icon to reflect its new
-    // state
-
-    static const QIcon ExpandedExposureIcon = QIcon(":/oxygen/actions/document-open-folder.png");
-
-    mTreeViewModel->itemFromIndex(pExposureIndex)->setIcon(ExpandedExposureIcon);
-
-    // Resize our tree view widget, just to be on the safe side
-
-    resizeTreeViewToContents();
-}
-
-//==============================================================================
-
-void PmrWindowWidget::collapsedExposure(const QModelIndex &pExposureIndex)
-{
-    // The exposure is being expanded, so update its icon to reflect its new
-    // state
-
-    static const QIcon CollapsedExposureIcon = QIcon(":/oxygen/places/folder.png");
-
-    mTreeViewModel->itemFromIndex(pExposureIndex)->setIcon(CollapsedExposureIcon);
-
-    // Resize our tree view widget, just to be on the safe side
-
-    resizeTreeViewToContents();
 }
 
 //==============================================================================

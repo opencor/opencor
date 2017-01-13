@@ -154,8 +154,6 @@ private:
 
     void updateGui();
 
-    void resizeTreeViewToContents();
-
     PmrWorkspacesWindowItem * currentItem() const;
 
     void expandHtmlTree(const QString &pId);
@@ -211,6 +209,8 @@ public slots:
 
 private slots:
     void showCustomContextMenu(const QPoint &pPosition) const;
+
+    void resizeTreeViewToContents();
 
     void focusWindowChanged();
     void refreshWorkspaces();

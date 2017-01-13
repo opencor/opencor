@@ -36,6 +36,7 @@ limitations under the License.
 #include <QClipboard>
 #include <QDesktopServices>
 #include <QDir>
+#include <QFileIconProvider>
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
@@ -63,10 +64,9 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
 {
     // Customise ourselves
 
-    static const QIcon WorkspaceIcon     = QIcon(":/oxygen/places/folder.png");
-    static const QIcon WorkspaceFileIcon = QIcon(":/oxygen/mimetypes/application-x-zerosize.png");
-
-    QStandardItem::setIcon((pType == Workspace)?WorkspaceIcon:WorkspaceFileIcon);
+    QStandardItem::setIcon((pType == Workspace)?
+                               QFileIconProvider().icon(QFileIconProvider::Folder):
+                               QFileIconProvider().icon(QFileIconProvider::File));
 
     setToolTip(pText);
 }
@@ -165,9 +165,9 @@ qDebug("---[Tree view widget signals]---");
             this, SIGNAL(itemDoubleClicked()));
 
     connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(expandedExposure(const QModelIndex &)));
+            this, SLOT(resizeTreeViewToContents()));
     connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(collapsedExposure(const QModelIndex &)));
+            this, SLOT(resizeTreeViewToContents()));
 qDebug("--------------------------------");
 
     // Populate ourselves
