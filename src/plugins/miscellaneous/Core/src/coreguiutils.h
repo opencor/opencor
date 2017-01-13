@@ -118,6 +118,9 @@ QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal, QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(const QColor &pColor, QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(QWidget *pParent);
 
+QString CORE_EXPORT iconDataUri(const QIcon &pIcon, const int &pWidth,
+                                const int &pHeight,
+                                const QIcon::Mode &pMode = QIcon::Normal);
 QString CORE_EXPORT iconDataUri(const QString &pIcon, const int &pWidth,
                                 const int &pHeight,
                                 const QIcon::Mode &pMode = QIcon::Normal);
