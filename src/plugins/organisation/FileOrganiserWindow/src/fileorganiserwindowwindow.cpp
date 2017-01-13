@@ -52,12 +52,23 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
     mGui->setupUi(this);
 
     // Create a tool bar widget with different buttons
+    // Note: regarding the icon for mGui->actionNew, we create an overlayed icon
+    //       based on the system's folder icon. However, for this to work
+    //       properly on Windows (since on that platform, we only have 16x16 and
+    //       32x32-pixel icons while we have 16x16, 32x32 and 128x128-pixel
+    //       icons on Linux and 16x16, 32x32, 64x64 and 128x128-pixel icons on
+    //       macOS), we need to make sure that we are creating the new icon
+    //       using an icon size that is closest to the one we want and need...
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
+    QIcon folderIcon = QFileIconProvider().icon(QFileIconProvider::Folder);
+    int folderIconSize = qMin(folderIcon.availableSizes().last().width(), 48);
+    int folderIconHalfSize = folderIconSize >> 1;
 
-    mGui->actionNew->setIcon(Core::overlayedIcon(QFileIconProvider().icon(QFileIconProvider::Folder),
+    mGui->actionNew->setIcon(Core::overlayedIcon(folderIcon,
                                                  QIcon(":/oxygen/actions/list-add.png"),
-                                                 48, 48, 24, 0, 24, 24));
+                                                 folderIconSize, folderIconSize,
+                                                 folderIconHalfSize, 0, folderIconHalfSize, folderIconHalfSize));
 
     toolBarWidget->addAction(mGui->actionNew);
     toolBarWidget->addAction(mGui->actionDelete);
