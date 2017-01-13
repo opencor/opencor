@@ -677,6 +677,98 @@ void PmrWorkspacesWindowWidget::updateMessage()
 
 //==============================================================================
 
+void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
+                                           const QString &pErrorMessage,
+                                           const bool &pAuthenticated)
+{
+    // Initialise / keep track of some properties
+
+    mWorkspaceManager->clearWorkspaces();
+
+    mErrorMessage = pErrorMessage;
+    mAuthenticated = pAuthenticated;
+
+    if (pErrorMessage.isEmpty() && pAuthenticated) {
+        // Reconcile URLs of my-workspaces (on PMR) with those from workspace
+        // folders (in doing so, folders/URLs that don't correspond to an actual
+        // PMR workspace are pruned from the relevant maps)
+
+        // First, clear the owned flag from the list of URLs with workspace
+        // folders
+
+        QMutableMapIterator<QString, QPair<QString, bool>> urlsIterator(mWorkspaceUrlFolderMines);
+
+        while (urlsIterator.hasNext()) {
+            urlsIterator.next();
+
+            urlsIterator.setValue(QPair<QString, bool>(urlsIterator.value().first, false));
+        }
+
+        foreach (PMRSupport::PmrWorkspace *workspace, pWorkspaces) {
+            // Remember our workspace, so we can find it by URL
+
+            QString url = workspace->url();
+
+            mWorkspaceManager->addWorkspace(workspace);
+
+            // Check if we know its folder and flag it as ours
+
+            if (mWorkspaceUrlFolderMines.contains(url)) {
+                QString path = mWorkspaceUrlFolderMines.value(url).first;
+
+                mWorkspaceUrlFolderMines.insert(url, QPair<QString, bool>(path, true));
+
+                workspace->setPath(path);
+                workspace->open();
+            }
+        }
+
+        // Now check the workspace folders that aren't from my-workspaces (on
+        // PMR)
+
+        urlsIterator.toFront();
+
+        while (urlsIterator.hasNext()) {
+            urlsIterator.next();
+
+            if (!urlsIterator.value().second) {
+                QString url = urlsIterator.key();
+                PMRSupport::PmrWorkspace *workspace = mPmrWebService->workspace(url);
+
+                if (workspace) {
+                    // The workspace is known, so ask our workspace manager to
+                    // track it, and then open it
+
+                    mWorkspaceManager->addWorkspace(workspace);
+
+                    workspace->setPath(urlsIterator.value().first);
+                    workspace->open();
+                } else {
+                    // The workspace is not known, so forget about it
+
+                    mWorkspaceFolderUrls.remove(urlsIterator.value().first);
+
+                    urlsIterator.remove();
+                }
+            }
+        }
+    }
+
+    // Display our list of workspaces
+
+/*---GRY---
+    displayWorkspaces();
+*/
+
+    resizeTreeViewToContents();
+
+    updateMessage();
+
+    mInitialized = true;
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowWidget::resizeTreeViewToContents()
 {
     // Resize our tree view widget so that all of its contents is visible
@@ -1217,98 +1309,6 @@ void PmrWorkspacesWindowWidget::showInGraphicalShell(const QString &pPath)
 {
 //---GRY--- To be reviewed...
     QDesktopServices::openUrl(QUrl::fromLocalFile(pPath));
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
-                                           const QString &pErrorMessage,
-                                           const bool &pAuthenticated)
-{
-    // Initialise / keep track of some properties
-
-    mWorkspaceManager->clearWorkspaces();
-
-    mErrorMessage = pErrorMessage;
-    mAuthenticated = pAuthenticated;
-
-    if (pErrorMessage.isEmpty() && pAuthenticated) {
-        // Reconcile URLs of my-workspaces (on PMR) with those from workspace
-        // folders (in doing so, folders/URLs that don't correspond to an actual
-        // PMR workspace are pruned from the relevant maps)
-
-        // First, clear the owned flag from the list of URLs with workspace
-        // folders
-
-        QMutableMapIterator<QString, QPair<QString, bool>> urlsIterator(mWorkspaceUrlFolderMines);
-
-        while (urlsIterator.hasNext()) {
-            urlsIterator.next();
-
-            urlsIterator.setValue(QPair<QString, bool>(urlsIterator.value().first, false));
-        }
-
-        foreach (PMRSupport::PmrWorkspace *workspace, pWorkspaces) {
-            // Remember our workspace, so we can find it by URL
-
-            QString url = workspace->url();
-
-            mWorkspaceManager->addWorkspace(workspace);
-
-            // Check if we know its folder and flag it as ours
-
-            if (mWorkspaceUrlFolderMines.contains(url)) {
-                QString path = mWorkspaceUrlFolderMines.value(url).first;
-
-                mWorkspaceUrlFolderMines.insert(url, QPair<QString, bool>(path, true));
-
-                workspace->setPath(path);
-                workspace->open();
-            }
-        }
-
-        // Now check the workspace folders that aren't from my-workspaces (on
-        // PMR)
-
-        urlsIterator.toFront();
-
-        while (urlsIterator.hasNext()) {
-            urlsIterator.next();
-
-            if (!urlsIterator.value().second) {
-                QString url = urlsIterator.key();
-                PMRSupport::PmrWorkspace *workspace = mPmrWebService->workspace(url);
-
-                if (workspace) {
-                    // The workspace is known, so ask our workspace manager to
-                    // track it, and then open it
-
-                    mWorkspaceManager->addWorkspace(workspace);
-
-                    workspace->setPath(urlsIterator.value().first);
-                    workspace->open();
-                } else {
-                    // The workspace is not known, so forget about it
-
-                    mWorkspaceFolderUrls.remove(urlsIterator.value().first);
-
-                    urlsIterator.remove();
-                }
-            }
-        }
-    }
-
-    // Display our list of workspaces
-
-/*---GRY---
-    displayWorkspaces();
-*/
-
-    resizeTreeViewToContents();
-
-    updateMessage();
-
-    mInitialized = true;
 }
 
 //==============================================================================
