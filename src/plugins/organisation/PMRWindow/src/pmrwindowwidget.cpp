@@ -181,10 +181,10 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     //       of them...
 
     QStringList exposureFileUrls = QStringList();
-    QModelIndexList crtSelectedIndexes = mTreeViewWidget->selectedIndexes();
+    QModelIndexList selectedIndexes = mTreeViewWidget->selectedIndexes();
 
-    for (int i = 0, iMax = crtSelectedIndexes.count(); i < iMax; ++i) {
-        PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(crtSelectedIndexes[i]));
+    for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i) {
+        PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]));
 
         if (item->type() == PmrWindowItem::Exposure) {
             exposureFileUrls = QStringList();
