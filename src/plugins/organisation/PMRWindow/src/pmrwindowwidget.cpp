@@ -392,6 +392,11 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
 
         mCloneWorkspaceAction->setVisible(item->type() == PmrWindowItem::Exposure);
 
+        bool onlyOneItem = mTreeViewWidget->selectedIndexes().count() == 1;
+
+        mCopyUrlAction->setEnabled(onlyOneItem);
+        mCloneWorkspaceAction->setEnabled(onlyOneItem);
+
         mContextMenu->exec(QCursor::pos());
     }
 }
@@ -422,9 +427,12 @@ void PmrWindowWidget::itemDoubleClicked(const QModelIndex &pIndex)
 
 void PmrWindowWidget::viewInPmr()
 {
-    // Show the current item in PMR
+    // Show the selected items in PMR
 
-    QDesktopServices::openUrl(currentItem()->url());
+    QModelIndexList selectedIndexes = mTreeViewWidget->selectedIndexes();
+
+    for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i)
+        QDesktopServices::openUrl(static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]))->url());
 }
 
 //==============================================================================
