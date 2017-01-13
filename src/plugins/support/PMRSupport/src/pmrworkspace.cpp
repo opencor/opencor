@@ -49,7 +49,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-void PmrWorkspace::constructor(const QString &pUrl, const QString &pName,
+void PmrWorkspace::constructor(const QString &pName, const QString &pUrl,
                                const QString &pDescription,
                                const QString &pOwner, PmrWebService *pParent)
 {
@@ -59,8 +59,8 @@ void PmrWorkspace::constructor(const QString &pUrl, const QString &pName,
     mPath = QString();
     mUsername = QString();
     mPassword = QString();
-    mUrl = pUrl;
     mName = pName;
+    mUrl = pUrl;
     mDescription = pDescription;
     mOwner = pOwner;
 
@@ -95,25 +95,25 @@ void PmrWorkspace::constructor(const QString &pUrl, const QString &pName,
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName,
+PmrWorkspace::PmrWorkspace(const QString &pName, const QString &pUrl,
                            const QString &pDescription, const QString &pOwner,
                            PmrWebService *pParent) :
     QObject(pParent)
 {
     // Construct our PMR workspace
 
-    constructor(pUrl, pName, pDescription, pOwner, pParent);
+    constructor(pName, pUrl, pDescription, pOwner, pParent);
 }
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(const QString &pUrl, const QString &pName,
+PmrWorkspace::PmrWorkspace(const QString &pName, const QString &pUrl,
                            PmrWebService *pParent) :
     QObject(pParent)
 {
     // Construct our PMR workspace
 
-    constructor(pUrl, pName, QString(), QString(), pParent);
+    constructor(pName, pUrl, QString(), QString(), pParent);
 }
 
 //==============================================================================
@@ -193,20 +193,20 @@ void PmrWorkspace::setCredentials(const QString &pUsername,
 
 //==============================================================================
 
-QString PmrWorkspace::url() const
-{
-    // Return our URL
-
-    return mUrl;
-}
-
-//==============================================================================
-
 QString PmrWorkspace::name() const
 {
     // Return our name
 
     return mName;
+}
+
+//==============================================================================
+
+QString PmrWorkspace::url() const
+{
+    // Return our URL
+
+    return mUrl;
 }
 
 //==============================================================================

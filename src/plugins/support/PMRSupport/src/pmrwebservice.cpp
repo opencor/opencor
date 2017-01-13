@@ -207,8 +207,8 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
             workspaceName = tr("** Unknown name **");
 
         if (!workspaceUrl.isEmpty() && !storage.compare("git")) {
-            *workspacePointer = new PmrWorkspace(workspaceUrl,
-                                                 workspaceName,
+            *workspacePointer = new PmrWorkspace(workspaceName,
+                                                 workspaceUrl,
                                                  workspaceDescription,
                                                  workspaceOwner, this);
         }
@@ -287,7 +287,7 @@ void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
             QString workspaceName = linksMap["prompt"].toString().simplified();
 
             if (!workspaceUrl.isEmpty() && !workspaceName.isEmpty()) {
-                workspaces << new PmrWorkspace(workspaceUrl, workspaceName, this);
+                workspaces << new PmrWorkspace(workspaceName, workspaceUrl, this);
 
                 workspaces.last()->setOwned(true);
             }
@@ -361,8 +361,8 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
             // Make sure that our workspace is a Git repository
 
             if (!storage.compare("git")) {
-                PmrWorkspace *workspace = new PmrWorkspace(workspaceUrl,
-                                                           workspaceName,
+                PmrWorkspace *workspace = new PmrWorkspace(workspaceName,
+                                                           workspaceUrl,
                                                            workspaceDescription,
                                                            workspaceOwner,
                                                            this);

@@ -58,10 +58,10 @@ class PMRSUPPORT_EXPORT PmrWorkspace : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrWorkspace(const QString &pUrl, const QString &pName,
+    explicit PmrWorkspace(const QString &pName, const QString &pUrl,
                           const QString &pDescription, const QString &pOwner,
                           PmrWebService *pParent);
-    explicit PmrWorkspace(const QString &pUrl, const QString &pName,
+    explicit PmrWorkspace(const QString &pName, const QString &pUrl,
                           PmrWebService *pParent);
     ~PmrWorkspace();
 
@@ -77,8 +77,8 @@ public:
 
     void setCredentials(const QString &pUsername, const QString &pPassword);
 
-    QString url() const;
     QString name() const;
+    QString url() const;
     QString description() const;
     QString owner() const;
 
@@ -115,8 +115,8 @@ private:
     QString mPath;
     QString mUsername;
     QString mPassword;
-    QString mUrl;
     QString mName;
+    QString mUrl;
     QString mDescription;
     QString mOwner;
 
@@ -131,7 +131,7 @@ private:
     int mStagedCount;
     int mUnstagedCount;
 
-    void constructor(const QString &pUrl, const QString &pName,
+    void constructor(const QString &pName, const QString &pUrl,
                      const QString &pDescription, const QString &pOwner,
                      PmrWebService *pParent);
 
