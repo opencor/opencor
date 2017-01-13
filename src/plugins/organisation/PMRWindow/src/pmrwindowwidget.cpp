@@ -124,7 +124,9 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     layout()->addWidget(mUserMessageWidget);
     layout()->addWidget(mTreeViewWidget);
 
-    // Create our actions
+    // Create and populate our context menu
+
+    mContextMenu = new QMenu(this);
 
     mViewInPmrAction = Core::newAction(this);
     mCopyUrlAction = Core::newAction(this);
@@ -136,6 +138,12 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
             this, SLOT(copyUrl()));
     connect(mCloneWorkspaceAction, SIGNAL(triggered(bool)),
             this, SLOT(cloneWorkspace()));
+
+    mContextMenu->addAction(mViewInPmrAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mCopyUrlAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mCloneWorkspaceAction);
 
     // Make our tree view widget our focus proxy
 
@@ -341,21 +349,11 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
     PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
 
     if (item) {
-        // We are over an item, so create a custom context menu for our current
-        // item and show it
+        // We are over an item, so update our context menu and show it
 
-        QMenu menu;
+        mCloneWorkspaceAction->setVisible(item->type() == PmrWindowItem::Exposure);
 
-        menu.addAction(mViewInPmrAction);
-        menu.addSeparator();
-        menu.addAction(mCopyUrlAction);
-
-        if (item->type() == PmrWindowItem::Exposure) {
-            menu.addSeparator();
-            menu.addAction(mCloneWorkspaceAction);
-        }
-
-        menu.exec(QCursor::pos());
+        mContextMenu->exec(QCursor::pos());
     }
 }
 

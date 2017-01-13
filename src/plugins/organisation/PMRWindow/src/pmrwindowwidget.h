@@ -35,6 +35,7 @@ limitations under the License.
 //==============================================================================
 
 class QLabel;
+class QMenu;
 
 //==============================================================================
 
@@ -96,6 +97,8 @@ protected:
     virtual QSize sizeHint() const;
 
 private:
+    QMenu *mContextMenu;
+
     QAction *mViewInPmrAction;
     QAction *mCopyUrlAction;
     QAction *mCloneWorkspaceAction;
