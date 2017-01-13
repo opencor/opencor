@@ -159,10 +159,11 @@ void PmrWindowWidget::retranslateUi()
     I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone Workspace"),
                                      tr("Clone the corresponding workspace"));
 
-    // Retranslate our message, if we have been initialised
+    // Retranslate the rest of our GUI by updating it, if we have been
+    // initialised
 
     if (mInitialized)
-        updateMessage();
+        updateGui();
 }
 
 //==============================================================================
@@ -178,7 +179,7 @@ QSize PmrWindowWidget::sizeHint() const
 
 //==============================================================================
 
-void PmrWindowWidget::updateMessage()
+void PmrWindowWidget::updateGui()
 {
     // Update the message to be displayed, if any
 
@@ -220,8 +221,8 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
     mNumberOfFilteredExposures = 0;
 
     for (int i = 0, iMax = pExposures.count(); i < iMax; ++i) {
-        QString exposureUrl = pExposures[i]->url();
         QString exposureName = pExposures[i]->name();
+        QString exposureUrl = pExposures[i]->url();
         bool exposureDisplayed = exposureName.contains(filterRegEx);
         QStandardItem *item = new PmrWindowItem(PmrWindowItem::Exposure, exposureName, exposureUrl);
 
@@ -238,7 +239,7 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
 
     resizeTreeViewToContents();
 
-    updateMessage();
+    updateGui();
 
     mInitialized = true;
 }
@@ -256,9 +257,9 @@ void PmrWindowWidget::filter(const QString &pFilter)
 
     filteredExposureNames.removeDuplicates();
 
-    // Update our message and show/hide the relevant exposures
+    // Update our GUI and show/hide the relevant exposures
 
-    updateMessage();
+    updateGui();
 
     for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         QStandardItem *item = mTreeViewModel->invisibleRootItem()->child(i);

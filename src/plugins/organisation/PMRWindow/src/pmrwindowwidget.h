@@ -115,7 +115,7 @@ private:
 
     int mNumberOfFilteredExposures;
 
-    void updateMessage();
+    void updateGui();
 
     void resizeTreeViewToContents();
 

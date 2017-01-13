@@ -248,10 +248,11 @@ void PmrWorkspacesWindowWidget::retranslateUi()
     I18nInterface::retranslateAction(mCopyUrlAction, tr("Copy URL"),
                                      tr("Copy the URL to the clipboard"));
 
-    // Retranslate our message, if we have been initialised
+    // Retranslate the rest of our GUI by updating it, if we have been
+    // initialised
 
     if (mInitialized)
-        updateMessage();
+        updateGui();
 }
 
 //==============================================================================
@@ -650,7 +651,7 @@ QSize PmrWorkspacesWindowWidget::sizeHint() const
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::updateMessage()
+void PmrWorkspacesWindowWidget::updateGui()
 {
     // Determine the message to be displayed, if any
 
@@ -763,7 +764,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
     resizeTreeViewToContents();
 
-    updateMessage();
+    updateGui();
 
     mInitialized = true;
 }
@@ -1263,7 +1264,7 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
     if (workspaces.isEmpty()) {
         setHtml(mTemplate.arg(QString()));
 
-        updateMessage();
+        updateGui();
     } else {
         // We have some managed workspaces, so make sure that they are
         // alphabetically sorted before generating and setting the corresponding
