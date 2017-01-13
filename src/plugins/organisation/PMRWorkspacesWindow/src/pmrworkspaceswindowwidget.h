@@ -158,7 +158,6 @@ private:
 
     PmrWorkspacesWindowItem * currentItem() const;
 
-    void displayWorkspaces();
     void expandHtmlTree(const QString &pId);
 
     void setCurrentWorkspaceUrl(const QString &pUrl);

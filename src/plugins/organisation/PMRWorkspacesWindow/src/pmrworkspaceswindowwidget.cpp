@@ -756,14 +756,20 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
         }
     }
 
-    // Populate our tree view widget with our different workspaces
+    // Populate our tree view widget with our different workspaces, after having
+    // alphabetically sorted them
+//---GRY--- Check workspaceHtml();
+
+    PMRSupport::PmrWorkspaces workspaces = mWorkspaceManager->workspaces();
+
+    std::sort(workspaces.begin(), workspaces.end(), PMRSupport::PmrWorkspace::compare);
 
     mTreeViewModel->clear();
 
-    for (int i = 0, iMax = pWorkspaces.count(); i < iMax; ++i) {
+    for (int i = 0, iMax = workspaces.count(); i < iMax; ++i) {
         mTreeViewModel->invisibleRootItem()->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Workspace,
-                                                                                   pWorkspaces[i]->name(),
-                                                                                   pWorkspaces[i]->url()));
+                                                                                   workspaces[i]->name(),
+                                                                                   workspaces[i]->url()));
     }
 
     resizeTreeViewToContents();
@@ -1255,39 +1261,6 @@ Q_UNUSED(pId);
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::displayWorkspaces()
-{
-/*---GRY---
-    // Retrieve our managed workspaces
-
-    PMRSupport::PmrWorkspaces workspaces = mWorkspaceManager->workspaces();
-
-    // Generate and set the HTML code, if we have some managed workspaces, or
-    // update our message, if we don't
-
-    if (workspaces.isEmpty()) {
-        setHtml(mTemplate.arg(QString()));
-
-        updateGui();
-    } else {
-        // We have some managed workspaces, so make sure that they are
-        // alphabetically sorted before generating and setting the corresponding
-        // HTML code
-
-        std::sort(workspaces.begin(), workspaces.end(), PMRSupport::PmrWorkspace::compare);
-
-        QStringList html = QStringList();
-
-        foreach (PMRSupport::PmrWorkspace *workspace, workspaces)
-            html << workspaceHtml(workspace);
-
-        setHtml(mTemplate.arg(html.join("")));
-    }
-*/
-}
-
-//==============================================================================
-
 /*---GRY---
 QWebElement PmrWorkspacesWindowWidget::parentWorkspaceElement(const QWebElement &pRowElement)
 {
@@ -1521,7 +1494,9 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
         // Redisplay with workspace expanded
 
         pWorkspace->open();
+/*---GRY--- Need to update our tree view widget with the new workspace...
         displayWorkspaces();
+*/
     }
 }
 
