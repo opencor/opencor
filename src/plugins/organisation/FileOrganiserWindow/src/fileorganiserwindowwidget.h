@@ -87,8 +87,6 @@ private:
     void moveItem(QStandardItem *pItem, QStandardItem *pDropItem,
                   const QAbstractItemView::DropIndicatorPosition &pDropPosition);
 
-    QStringList selectedFiles() const;
-
     bool parentIndexExists(const QModelIndex &pIndex,
                            const QModelIndexList &pIndexes) const;
 
