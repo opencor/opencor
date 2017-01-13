@@ -605,9 +605,7 @@ QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
 
     buffer.open(QIODevice::WriteOnly);
 
-    icon.pixmap((pWidth == -1)?iconAvailableSizes.first().width():pWidth,
-                (pHeight == -1)?iconAvailableSizes.first().height():pHeight,
-                pMode).save(&buffer, "PNG");
+    icon.pixmap(pWidth, pHeight, pMode).save(&buffer, "PNG");
 
     return QString("data:image/png;base64,%1").arg(QString(data.toBase64()));
 }
