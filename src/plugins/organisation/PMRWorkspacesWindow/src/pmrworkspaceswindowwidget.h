@@ -171,7 +171,7 @@ signals:
 
 private slots:
     void focusWindowChanged();
-    void refreshCurrentWorkspace();
+    void refreshWorkspaces();
 
 public slots:
     void initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,

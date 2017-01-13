@@ -153,14 +153,15 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     connect(mWorkspaceManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
 
-    // Create a timer for refreshing our current workspace
+    // Create a timer for refreshing our workspaces
 
     mTimer = new QTimer(this);
 
     connect(mTimer, SIGNAL(timeout()),
-            this, SLOT(refreshCurrentWorkspace()));
+            this, SLOT(refreshWorkspaces()));
 
-    // Keep track of when OpenCOR gets/loses the focus
+    // Keep track of when OpenCOR gets/loses the focus, so we can enable/disable
+    // the timer that we use to refresh our workspaces
     // Note: the focusWindowChanged() signal comes from QGuiApplication, so we
     //       need to check whether we are running the console version of OpenCOR
     //       or its GUI version...
@@ -169,6 +170,10 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
         connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
                 this, SLOT(focusWindowChanged()));
     }
+
+    // Make our tree view widget our focus proxy
+
+    setFocusProxy(mTreeViewWidget);
 }
 
 //==============================================================================
@@ -1012,13 +1017,7 @@ void PmrWorkspacesWindowWidget::startStopTimer()
         disconnect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
                    this, SLOT(focusWindowChanged()));
 
-        /* TODO: To avoid redrawing on every timed refresh we could check if
-           workspace->modified() (or have refreshStatus() return true if
-           modifications) where the PmrWorkspace class compares (via SHA?)
-           current and new status.
-        */
-
-        refreshCurrentWorkspace();
+        refreshWorkspaces();
 
         connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
                 this, SLOT(focusWindowChanged()));
@@ -1041,9 +1040,10 @@ void PmrWorkspacesWindowWidget::focusWindowChanged()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::refreshCurrentWorkspace()
+void PmrWorkspacesWindowWidget::refreshWorkspaces()
 {
-    // Refresh our current workspace
+    // Refresh our workspaces
+//---GRY--- TO BE DONE...
 
     refreshWorkspace(mCurrentWorkspaceUrl);
 }
