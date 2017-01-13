@@ -25,6 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QDrag>
+#include <QFileIconProvider>
 #include <QHeaderView>
 #include <QModelIndex>
 #include <QMouseEvent>
@@ -282,9 +283,8 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
 
         // Create the pixmap that will be associated with the dragging action
 
-        QPixmap pixmap((selectedDraggableIndexes.count() == 1)?
-                           ":/oxygen/mimetypes/application-x-zerosize.png":
-                           ":/oxygen/places/document-multiple.png");
+        QIcon icon = QFileIconProvider().icon(QFileIconProvider::File);
+        QPixmap pixmap(icon.pixmap(32, 32));
 
         // Create the drag object
 
