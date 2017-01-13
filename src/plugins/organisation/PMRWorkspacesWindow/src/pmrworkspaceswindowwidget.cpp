@@ -689,9 +689,9 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
     mAuthenticated = pAuthenticated;
 
     if (pErrorMessage.isEmpty() && pAuthenticated) {
-        // Reconcile URLs of my-workspaces (on PMR) with those from workspace
-        // folders (in doing so, folders/URLs that don't correspond to an actual
-        // PMR workspace are pruned from the relevant maps)
+        // Reconcile the URLs of my-workspaces (on PMR) with those from our
+        // workspace folders (in doing so, folders/URLs that don't correspond to
+        // an actual PMR workspace are pruned from the relevant maps)
 
         // First, clear the owned flag from the list of URLs with workspace
         // folders
