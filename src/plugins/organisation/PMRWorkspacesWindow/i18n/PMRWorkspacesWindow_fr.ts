@@ -65,6 +65,22 @@
         <source>No workspaces were found...</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>View In PMR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View in PMR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy the URL to the clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWindow</name>
