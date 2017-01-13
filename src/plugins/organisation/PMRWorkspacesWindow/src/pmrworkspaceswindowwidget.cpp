@@ -105,7 +105,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mExpandedItems(QSet<QString>()),
     mInitialized(false),
     mErrorMessage(QString()),
-    mAuthenticated(true)
+    mAuthenticated(false)
 {
     // Create and customise some objects
 
@@ -607,32 +607,35 @@ QSize PmrWorkspacesWindowWidget::sizeHint() const
 
 void PmrWorkspacesWindowWidget::updateMessage()
 {
-/*---GRY---
     // Determine the message to be displayed, if any
 
-    QString message = QString();
-
     if (!mAuthenticated) {
-        message = tr("You need to authenticate yourself...");
+        mUserMessageWidget->setIconMessage(":/oxygen/actions/help-hint.png",
+                                           tr("Authenticate yourself..."),
+                                           tr("Click on the top-right button."));
     } else if (mErrorMessage.isEmpty()) {
-        if (!mWorkspaceManager->count())
-            message = tr("No workspaces were found.");
+        if (!mWorkspaceManager->count()) {
+            mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
+                                               tr("No workspaces were found..."));
+        }
     } else {
-        message = tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true);
+        mUserMessageWidget->setIconMessage(":/oxygen/emblems/emblem-important.png",
+                                           Core::formatMessage(mErrorMessage, false, true));
     }
 
-    // Update our message element, and show/hide it depending on whether we have
-    // a message to show
+    // Show/hide our user message widget and our tree view widget
 
-    QWebElement messageElement = page()->mainFrame()->documentElement().findFirst("p[id=message]");
+    mUserMessageWidget->setVisible(!mUserMessageWidget->text().isEmpty());
+    mTreeViewWidget->setVisible(mUserMessageWidget->text().isEmpty());
+}
 
-    if (message.isEmpty())
-        messageElement.addClass("hidden");
-    else
-        messageElement.removeClass("hidden");
+//==============================================================================
 
-    messageElement.setInnerXml(message);
-*/
+void PmrWorkspacesWindowWidget::resizeTreeViewToContents()
+{
+    // Resize our tree view widget so that all of its contents is visible
+
+    mTreeViewWidget->resizeColumnToContents(0);
 }
 
 //==============================================================================
@@ -1231,7 +1234,13 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
     // Display our list of workspaces
 
+/*---GRY---
     displayWorkspaces();
+*/
+
+    resizeTreeViewToContents();
+
+    updateMessage();
 
     mInitialized = true;
 }

@@ -121,6 +121,8 @@ private:
 
     void updateMessage();
 
+    void resizeTreeViewToContents();
+
     void displayWorkspaces();
     void expandHtmlTree(const QString &pId);
 
