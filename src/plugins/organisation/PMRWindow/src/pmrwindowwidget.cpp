@@ -101,12 +101,11 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu(const QPoint &)));
+
     connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(itemDoubleClicked(const QModelIndex &)));
     connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SIGNAL(itemDoubleClicked()));
-
-    // Some connections
 
     connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(expandedExposure(const QModelIndex &)));
