@@ -42,10 +42,6 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     CommonWidget(this)
 {
     // Set some properties
-    // Note: the only reason for 'forcing' the background colour to be white is
-    //       in case we show our busy widget at startup (e.g. in the PMR
-    //       window), in which case we would normally start with a grey
-    //       background, which is not neat...
 
     setAllColumnsShowFocus(true);
 #ifdef Q_OS_MAC
@@ -53,9 +49,6 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     // Note: the above removes the focus border since it messes up our look
 #endif
     setFrameShape(QFrame::NoFrame);
-    setStyleSheet("QTreeView {"
-                  "     background-color: white;"
-                  "}");
 }
 
 //==============================================================================
