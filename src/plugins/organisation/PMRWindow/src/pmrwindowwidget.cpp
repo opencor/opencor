@@ -222,9 +222,10 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
 
     for (int i = 0, iMax = pExposures.count(); i < iMax; ++i) {
         QString exposureName = pExposures[i]->name();
-        QString exposureUrl = pExposures[i]->url();
         bool exposureDisplayed = exposureName.contains(filterRegEx);
-        QStandardItem *item = new PmrWindowItem(PmrWindowItem::Exposure, exposureName, exposureUrl);
+        QStandardItem *item = new PmrWindowItem(PmrWindowItem::Exposure,
+                                                exposureName,
+                                                pExposures[i]->url());
 
         mTreeViewModel->invisibleRootItem()->appendRow(item);
 
