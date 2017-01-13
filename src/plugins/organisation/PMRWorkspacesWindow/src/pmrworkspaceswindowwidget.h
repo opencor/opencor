@@ -25,7 +25,11 @@ limitations under the License.
 //==============================================================================
 
 #include "pmrworkspacemanager.h"
-#include "webviewerwidget.h"
+#include "widget.h"
+
+//==============================================================================
+
+#include <QSet>
 
 //==============================================================================
 
@@ -48,7 +52,7 @@ typedef QList<StringPair> StringPairs;
 
 //==============================================================================
 
-class PmrWorkspacesWindowWidget : public WebViewerWidget::WebViewerWidget
+class PmrWorkspacesWindowWidget : public Core::Widget
 {
     Q_OBJECT
 
@@ -73,7 +77,9 @@ public:
     void requestWorkspaces();
 
 protected:
+/*---GRY---
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
+*/
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
 
@@ -128,7 +134,9 @@ private:
     QString fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
     QStringList folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
+/*---GRY---
     static QWebElement parentWorkspaceElement(const QWebElement &pRowElement);
+*/
 
     void cloneWorkspace(const QString &pUrl);
     void duplicateCloneMessage(const QString &pUrl, const QString &pPath1,

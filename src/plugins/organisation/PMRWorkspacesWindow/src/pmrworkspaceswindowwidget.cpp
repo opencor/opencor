@@ -37,8 +37,6 @@ limitations under the License.
 #include <QSettings>
 #include <QTimer>
 #include <QToolTip>
-#include <QWebElement>
-#include <QWebFrame>
 
 //==============================================================================
 
@@ -95,7 +93,7 @@ static const auto SynchronizePullIcon = QStringLiteral(":/PMRWorkspacesWindow/ic
 
 PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService,
                                                      QWidget *pParent) :
-    WebViewerWidget::WebViewerWidget(pParent),
+    Core::Widget(pParent),
     mPmrWebService(pPmrWebService),
     mWorkspaceManager(PMRSupport::PmrWorkspaceManager::instance()),
     mWorkspaceFolderUrls(QMap<QString, QString>()),
@@ -264,6 +262,7 @@ static const auto WStatusClass = QStringLiteral("wStatus");
 
 //==============================================================================
 
+/*---GRY---
 void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 {
 //---GRY--- To be reviewed...
@@ -378,11 +377,14 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
         }
     }
 }
+*/
 
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
+Q_UNUSED(pEvent);
+/*---GRY---
     // Default handling of the event
     // Note: this will ensure that CSS works as expected...
 
@@ -449,13 +451,15 @@ void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
     }
 
     setToolTip(toolTip);
+*/
 }
 
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
 {
-//---GRY--- To be reviewed...
+Q_UNUSED(pEvent);
+/*---GRY---
     WebViewerWidget::WebViewerWidget::mousePressEvent(pEvent);
 
     if (pEvent->button() == Qt::LeftButton) {
@@ -555,6 +559,7 @@ void PmrWorkspacesWindowWidget::mousePressEvent(QMouseEvent *pEvent)
             expandHtmlTree(rowLink);
         }
     }
+*/
 }
 
 //==============================================================================
@@ -573,6 +578,7 @@ QSize PmrWorkspacesWindowWidget::sizeHint() const
 
 void PmrWorkspacesWindowWidget::updateMessage()
 {
+/*---GRY---
     // Determine the message to be displayed, if any
 
     QString message = QString();
@@ -597,6 +603,7 @@ void PmrWorkspacesWindowWidget::updateMessage()
         messageElement.removeClass("hidden");
 
     messageElement.setInnerXml(message);
+*/
 }
 
 //==============================================================================
@@ -952,12 +959,14 @@ void PmrWorkspacesWindowWidget::setCurrentWorkspaceUrl(const QString &pUrl)
         // Close the current workspace if we are selecting a different one
 
         if (!mCurrentWorkspaceUrl.isEmpty()) {
+/*---GRY---
             QWebElement workspaceContents = page()->mainFrame()->documentElement().findFirst(QString("tr.workspace[id=\"%1\"] + tr").arg(mCurrentWorkspaceUrl));
 
             if (!workspaceContents.isNull()) {
                 workspaceContents.addClass("hidden");
                 mExpandedItems.remove(mCurrentWorkspaceUrl);
             }
+*/
         }
 
         // Set the new current workspace and ensure it is expanded when displayed
@@ -1030,7 +1039,8 @@ void PmrWorkspacesWindowWidget::refreshCurrentWorkspace()
 
 void PmrWorkspacesWindowWidget::expandHtmlTree(const QString &pId)
 {
-//---GRY--- To be reviewed...
+Q_UNUSED(pId);
+/*---GRY---
     QWebElement trElement = page()->mainFrame()->documentElement().findFirst(QString("tr[id=\"%1\"] + tr").arg(pId));
 
     if (!trElement.isNull()) {
@@ -1044,12 +1054,14 @@ void PmrWorkspacesWindowWidget::expandHtmlTree(const QString &pId)
             mExpandedItems.insert(pId);
         }
     }
+*/
 }
 
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::displayWorkspaces()
 {
+/*---GRY---
     // Retrieve our managed workspaces
 
     PMRSupport::PmrWorkspaces workspaces = mWorkspaceManager->workspaces();
@@ -1075,10 +1087,12 @@ void PmrWorkspacesWindowWidget::displayWorkspaces()
 
         setHtml(mTemplate.arg(html.join("")));
     }
+*/
 }
 
 //==============================================================================
 
+/*---GRY---
 QWebElement PmrWorkspacesWindowWidget::parentWorkspaceElement(const QWebElement &pRowElement)
 {
 //---GRY--- To be reviewed...
@@ -1097,6 +1111,7 @@ QWebElement PmrWorkspacesWindowWidget::parentWorkspaceElement(const QWebElement 
 
     return workspaceElement;
 }
+*/
 
 //==============================================================================
 
@@ -1205,7 +1220,8 @@ bool PmrWorkspacesWindowWidget::hasWorkspaces() const
 
 void PmrWorkspacesWindowWidget::aboutWorkspace(const QString &pUrl)
 {
-//---GRY--- To be reviewed...
+Q_UNUSED(pUrl);
+/*---GRY---
     QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(QString("tr.workspace[id=\"%1\"]").arg(pUrl));
 
     if (!workspaceElement.isNull()) {
@@ -1228,6 +1244,7 @@ void PmrWorkspacesWindowWidget::aboutWorkspace(const QString &pUrl)
             emit information(workspaceInformation.join("<br></br><br></br>"));
         }
     }
+*/
 }
 
 //==============================================================================
@@ -1279,7 +1296,8 @@ void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
 
 void PmrWorkspacesWindowWidget::refreshWorkspace(const QString &pUrl)
 {
-//---GRY--- To be reviewed...
+Q_UNUSED(pUrl);
+/*---GRY---
     QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(QString("tr.workspace[id=\"%1\"]").arg(pUrl));
 
     if (!workspaceElement.isNull()) {
@@ -1302,13 +1320,15 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(const QString &pUrl)
             contentsElement.setOuterXml(htmlRows[1]);
         }
     }
+*/
 }
 
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::refreshWorkspaceFile(const QString &pPath)
 {
-//---GRY--- To be reviewed...
+Q_UNUSED(pPath);
+/*---GRY---
     QWebElement fileElement = page()->mainFrame()->documentElement().findFirst(QString("tr.file[id=\"%1\"]").arg(pPath));
     QWebElement workspaceElement = parentWorkspaceElement(fileElement);
 
@@ -1342,6 +1362,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspaceFile(const QString &pPath)
             }
         }
     }
+*/
 }
 
 //==============================================================================
