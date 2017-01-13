@@ -152,7 +152,7 @@ private:
     QStandardItemModel *mTreeViewModel;
     Core::TreeViewWidget *mTreeViewWidget;
 
-    void updateMessage();
+    void updateGui();
 
     void resizeTreeViewToContents();
 
