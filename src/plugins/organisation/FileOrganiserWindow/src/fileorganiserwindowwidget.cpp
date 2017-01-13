@@ -481,8 +481,8 @@ void FileOrganiserWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     TreeViewWidget::keyPressEvent(pEvent);
 
     // Retrieve all the files that are currently selected
-    // Note: if there is a folder among the selected items, then we return an
-    //       empty list
+    // Note: if there is a folder among the selected items, then ignore all of
+    //       them...
 
     QStringList selectedFiles = QStringList();
     QModelIndexList crtSelectedIndexes = selectedIndexes();
