@@ -20,6 +20,7 @@ limitations under the License.
 // File Organiser window
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "fileorganiserwindowwindow.h"
 #include "fileorganiserwindowwidget.h"
 #include "toolbarwidget.h"
@@ -30,6 +31,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QFileIconProvider>
 #include <QMenu>
 #include <QPoint>
 #include <QSettings>
@@ -52,6 +54,10 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
     // Create a tool bar widget with different buttons
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
+
+    mGui->actionNew->setIcon(Core::overlayedIcon(QFileIconProvider().icon(QFileIconProvider::Folder),
+                                                 QIcon(":/oxygen/actions/list-add.png"),
+                                                 48, 48, 24, 0, 24, 24));
 
     toolBarWidget->addAction(mGui->actionNew);
     toolBarWidget->addAction(mGui->actionDelete);

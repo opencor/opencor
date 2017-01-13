@@ -43,6 +43,7 @@ limitations under the License.
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
+#include <QPainter>
 #include <QPalette>
 #include <QPushButton>
 #include <QSizePolicy>
@@ -608,6 +609,31 @@ QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
     icon.pixmap(pWidth, pHeight, pMode).save(&buffer, "PNG");
 
     return QString("data:image/png;base64,%1").arg(QString(data.toBase64()));
+}
+
+//==============================================================================
+
+QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
+                    const int &pBaseWidth, const int &pBaseHeight,
+                    const int &pOverlayLeft, const int &pOverlayTop,
+                    const int &pOverlayWidth, const int &pOverlayHeight)
+{
+    // Create and return an overlayed icon using the given base and overlay
+    // icons
+
+    QImage image = QImage(pBaseWidth, pBaseHeight, QImage::Format_ARGB32_Premultiplied);
+    QPainter painter(&image);
+
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.fillRect(image.rect(), Qt::transparent);
+
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    pBaseIcon.paint(&painter, QRect(0, 0, pBaseWidth, pBaseHeight));
+
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    pOverlayIcon.paint(&painter, QRect(pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight));
+
+    return QPixmap::fromImage(image);
 }
 
 //==============================================================================
