@@ -46,38 +46,6 @@ namespace PMRWindow {
 
 //==============================================================================
 
-QString spaces(const QString &pString1, const QString &pString2)
-{
-    // Return as many "&nbsp;" as necessary for pString1 to be as wide as
-    // pString2 when shown in a tool tip
-
-    QFontMetrics fontMetrics = QFontMetrics(QToolTip::font());
-    int string1Width = fontMetrics.width(pString1);
-    int string2Width = fontMetrics.width(pString2);
-
-    if (string1Width >= string2Width) {
-        return QString();
-    } else {
-        // Get an estimate of the number of spaces we should need and then
-        // adjust it, if needed
-        // Note: we do this because calling fontMetrics.width() too many times
-        //       is quite costly...
-
-        QString string = QString(" ").repeated((string2Width-string1Width)/fontMetrics.width(" "));
-
-        forever {
-            string.chop(1);
-
-            if (string1Width+fontMetrics.width(string) < string2Width)
-                break;
-        }
-
-        return QString("&nbsp;").repeated(string.size()+1);
-    }
-}
-
-//==============================================================================
-
 PmrWindowItem::PmrWindowItem(const Type &pType, const QString &pText,
                              const QString &pUrl) :
     QStandardItem(pText),
@@ -85,42 +53,13 @@ PmrWindowItem::PmrWindowItem(const Type &pType, const QString &pText,
     mUrl(pUrl)
 {
     // Customise ourselves
-    // Note: for the tool tip, we want it to be as wide as necessary to display
-    //       both the text and URL on one line. Normally, to use
-    //       "white-space: nowrap;" for both td elements would be sufficient,
-    //       but when it comes to a tool tip, it's not. So, instead, we add, if
-    //       needed, some "&nbsp;"s to the text in case it's shorter than the
-    //       URL...
 
     static const QIcon ExposureIcon     = QIcon(":/oxygen/places/folder.png");
     static const QIcon ExposureFileIcon = QIcon(":/oxygen/mimetypes/application-x-zerosize.png");
 
     QStandardItem::setIcon((pType == Exposure)?ExposureIcon:ExposureFileIcon);
 
-    static const QString ToolTip = "<table>\n"
-                                   "    <tbody>\n"
-                                   "        <tr>\n"
-                                   "            <td style=\"font-weight: bold;\">\n"
-                                   "                Name:\n"
-                                   "            </td>\n"
-                                   "            <td></td>\n"
-                                   "            <td style=\"white-space: nowrap;\">\n"
-                                   "                %1%2\n"
-                                   "            </td>\n"
-                                   "        </tr>\n"
-                                   "        <tr>\n"
-                                   "            <td style=\"font-weight: bold;\">\n"
-                                   "                URL:\n"
-                                   "            </td>\n"
-                                   "            <td></td>\n"
-                                   "            <td>\n"
-                                   "                %3\n"
-                                   "            </td>\n"
-                                   "        </tr>\n"
-                                   "    </tbody>\n"
-                                   "</table>\n";
-
-    setToolTip(ToolTip.arg(pText, spaces(pText, pUrl), pUrl));
+    setToolTip(pText);
 }
 
 //==============================================================================
