@@ -153,6 +153,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
     mTreeViewWidget->setModel(mTreeViewModel);
+    mTreeViewWidget->setVisible(false);
 
 qDebug("---[Tree view widget signals]---");
     connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
