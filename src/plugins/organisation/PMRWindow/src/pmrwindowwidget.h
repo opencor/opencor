@@ -100,6 +100,7 @@ private:
     QMenu *mContextMenu;
 
     QAction *mViewInPmrAction;
+    QAction *mShowHideExposureFilesAction;
     QAction *mCopyUrlAction;
     QAction *mCloneWorkspaceAction;
 
@@ -140,6 +141,7 @@ private slots:
     void resizeTreeViewToContents();
 
     void viewInPmr();
+    void showHideExposureFiles();
     void copyUrl();
     void cloneWorkspace();
 };
