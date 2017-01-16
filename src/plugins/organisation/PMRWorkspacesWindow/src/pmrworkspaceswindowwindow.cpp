@@ -128,6 +128,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     connect(mPmrWorkspacesWindowWidget, SIGNAL(openFileRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
+    connect(mPmrWorkspacesWindowWidget, SIGNAL(openFilesRequested(const QStringList &)),
+            this, SLOT(openFiles(const QStringList &)));
 
     connect(mPmrWorkspacesWindowWidget, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));

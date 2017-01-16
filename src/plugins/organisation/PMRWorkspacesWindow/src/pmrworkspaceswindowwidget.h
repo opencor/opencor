@@ -72,7 +72,8 @@ public:
     enum Type {
         OwnedWorkspace = QStandardItem::UserType,
         Workspace      = QStandardItem::UserType+1,
-        WorkspaceFile  = QStandardItem::UserType+2
+        Folder         = QStandardItem::UserType+2,
+        File           = QStandardItem::UserType+3
     };
 
     explicit PmrWorkspacesWindowItem(const Type &pType, const QString &pText,
@@ -118,9 +119,9 @@ protected:
 /*---GRY---
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
 */
+    virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
-
     virtual QSize sizeHint() const;
 
 private:
@@ -201,7 +202,8 @@ private:
     void startStopTimer();
 
 signals:
-    void openFileRequested(const QString &pFile);
+    void openFileRequested(const QString &pFileName);
+    void openFilesRequested(const QStringList &pFileNames);
 
     void information(const QString &pMessage);
     void warning(const QString &pMessage);

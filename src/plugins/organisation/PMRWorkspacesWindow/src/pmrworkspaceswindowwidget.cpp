@@ -37,6 +37,7 @@ limitations under the License.
 #include <QDesktopServices>
 #include <QDir>
 #include <QFileIconProvider>
+#include <QKeyEvent>
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
@@ -87,11 +88,12 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
 
     // Customise ourselves
 
-    QStandardItem::setIcon((pType == OwnedWorkspace)?
-                               OwnedWorkspaceIcon:
-                               (pType == Workspace)?
-                                   QFileIconProvider().icon(QFileIconProvider::Folder):
-                                   QFileIconProvider().icon(QFileIconProvider::File));
+    if (pType == OwnedWorkspace)
+        QStandardItem::setIcon(OwnedWorkspaceIcon);
+    else if ((pType == Workspace) || (pType == Folder))
+        QStandardItem::setIcon(QFileIconProvider().icon(QFileIconProvider::Folder));
+    else
+        QStandardItem::setIcon(QFileIconProvider().icon(QFileIconProvider::File));
 
     setToolTip(pText);
 }
@@ -478,6 +480,45 @@ void PmrWorkspacesWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 
 //==============================================================================
 
+void PmrWorkspacesWindowWidget::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Default handling of the event
+
+    Core::Widget::keyPressEvent(pEvent);
+
+    // Retrieve all the files that are currently selected
+    // Note: if there is folder among the selected items, then ignore
+    //       everything...
+
+    QStringList fileNames = QStringList();
+    QModelIndexList selectedIndexes = mTreeViewWidget->selectedIndexes();
+
+    for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i) {
+        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]));
+
+        if (item->type() != PmrWorkspacesWindowItem::File) {
+            fileNames = QStringList();
+
+            break;
+        } else {
+            fileNames << item->urlOrPath();
+        }
+    }
+
+    // Let people know about a key having been pressed with the view of opening
+    // one or several files
+
+    if (   fileNames.count()
+        && ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))) {
+        // There are some files that are selected and we want to open them, so
+        // let people know about it
+
+        emit openFilesRequested(fileNames);
+    }
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
 Q_UNUSED(pEvent);
@@ -836,7 +877,7 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
 
     foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
         if (fileNode->hasChildren()) {
-            PmrWorkspacesWindowItem *folderItem = new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Workspace,
+            PmrWorkspacesWindowItem *folderItem = new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Folder,
                                                                               fileNode->name());
 
             pFolderItem->appendRow(folderItem);
@@ -844,7 +885,7 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
             if (fileNode->hasChildren())
                 populateWorkspace(folderItem, fileNode);
         } else {
-            pFolderItem->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::WorkspaceFile,
+            pFolderItem->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::File,
                                                                fileNode->name(),
                                                                fileNode->fullName()));
         }
@@ -877,7 +918,7 @@ void PmrWorkspacesWindowWidget::itemDoubleClicked(const QModelIndex &pIndex)
 
     PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
 
-    if (item->type() == PmrWorkspacesWindowItem::WorkspaceFile)
+    if (item->type() == PmrWorkspacesWindowItem::File)
         emit openFileRequested(item->urlOrPath());
 }
 
