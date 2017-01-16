@@ -77,16 +77,17 @@ public:
     };
 
     explicit PmrWorkspacesWindowItem(const Type &pType, const QString &pText,
-                                     const QString &pUrlOrPath = QString());
+                                     const QString &pUrlOrFileName = QString());
 
     virtual int type() const;
 
-    QString urlOrPath() const;
+    QString url() const;
+    QString fileName() const;
 
 private:
     Type mType;
 
-    QString mUrlOrPath;
+    QString mUrlOrFileName;
 };
 
 //==============================================================================

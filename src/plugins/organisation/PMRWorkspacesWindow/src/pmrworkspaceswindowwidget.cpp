@@ -58,10 +58,10 @@ namespace PMRWorkspacesWindow {
 
 PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  const QString &pText,
-                                                 const QString &pUrlOrPath) :
+                                                 const QString &pUrlOrFileName) :
     QStandardItem(pText),
     mType(pType),
-    mUrlOrPath(pUrlOrPath)
+    mUrlOrFileName(pUrlOrFileName)
 {
     // Create our owned workspace icon, if needed
     // Note: we create our owned workspace icon using the system's folder icon.
@@ -109,11 +109,20 @@ int PmrWorkspacesWindowItem::type() const
 
 //==============================================================================
 
-QString PmrWorkspacesWindowItem::urlOrPath() const
+QString PmrWorkspacesWindowItem::url() const
 {
-    // Return our URL/path
+    // Return our URL
 
-    return mUrlOrPath;
+    return mUrlOrFileName;
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWindowItem::fileName() const
+{
+    // Return our file name
+
+    return mUrlOrFileName;
 }
 
 //==============================================================================
@@ -501,7 +510,7 @@ void PmrWorkspacesWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 
             break;
         } else {
-            fileNames << item->urlOrPath();
+            fileNames << item->fileName();
         }
     }
 
@@ -919,7 +928,7 @@ void PmrWorkspacesWindowWidget::itemDoubleClicked(const QModelIndex &pIndex)
     PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
 
     if (item->type() == PmrWorkspacesWindowItem::File)
-        emit openFileRequested(item->urlOrPath());
+        emit openFileRequested(item->fileName());
 }
 
 //==============================================================================
@@ -1627,7 +1636,7 @@ void PmrWorkspacesWindowWidget::viewInPmr()
     QModelIndexList selectedIndexes = mTreeViewWidget->selectedIndexes();
 
     for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i)
-        QDesktopServices::openUrl(static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]))->urlOrPath());
+        QDesktopServices::openUrl(static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]))->url());
 }
 
 //==============================================================================
@@ -1636,7 +1645,7 @@ void PmrWorkspacesWindowWidget::copyUrl()
 {
     // Copy the current item's URL to the clipboard
 
-    QApplication::clipboard()->setText(currentItem()->urlOrPath());
+    QApplication::clipboard()->setText(currentItem()->url());
 }
 
 //==============================================================================
