@@ -42,6 +42,22 @@
         <source>Copy the URL to the clipboard</source>
         <translation>Copier l&apos;URL dans le presse-papier</translation>
     </message>
+    <message>
+        <source>Hide Exposure Files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide the exposure files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Exposure Files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the exposure files</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PMRWindow::PmrWindowWindow</name>
