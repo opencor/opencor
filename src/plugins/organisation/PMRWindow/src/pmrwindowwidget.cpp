@@ -184,8 +184,8 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     Core::Widget::keyPressEvent(pEvent);
 
     // Retrieve all the exposure files that are currently selected
-    // Note: if there is an exposure among the selected items, then ignore all
-    //       of them...
+    // Note: if there is an exposure among the selected items, then ignore
+    //       everything...
 
     QStringList exposureFileUrls = QStringList();
     QModelIndexList selectedIndexes = mTreeViewWidget->selectedIndexes();
@@ -207,8 +207,8 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 
     if (   exposureFileUrls.count()
         && ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))) {
-        // There are some files that are selected and we want to open them, so
-        // let people know about it
+        // There are some exposure files that are selected and we want to open
+        // them, so let people know about it
 
         emit openExposureFilesRequested(exposureFileUrls);
     }
