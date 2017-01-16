@@ -51,12 +51,12 @@ class PMRSUPPORT_EXPORT PmrWorkspaceFileNode : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrWorkspaceFileNode(const QString &pShortName,
+    explicit PmrWorkspaceFileNode(const QString &pName,
                                   const QString &pFullName,
                                   const CharPair &pStatus = CharPair(),
                                   PmrWorkspaceFileNode *pParent = 0);
 
-    QString shortName() const;
+    QString name() const;
     QString fullName() const;
 
     CharPair status() const;
@@ -68,7 +68,7 @@ public:
                                     const CharPair &pStatus = CharPair());
 
 private:
-    QString mShortName;
+    QString mName;
     QString mFullName;
     CharPair mStatus;
 

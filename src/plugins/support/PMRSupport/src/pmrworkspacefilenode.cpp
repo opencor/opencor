@@ -29,12 +29,12 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pShortName,
+PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pName,
                                            const QString &pFullName,
                                            const CharPair &pStatus,
                                            PmrWorkspaceFileNode *pParent) :
     QObject(pParent),
-    mShortName(pShortName),
+    mName(pName),
     mFullName(pFullName),
     mStatus(pStatus),
     mChildren(PmrWorkspaceFileNodes())
@@ -43,11 +43,11 @@ PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pShortName,
 
 //==============================================================================
 
-QString PmrWorkspaceFileNode::shortName() const
+QString PmrWorkspaceFileNode::name() const
 {
-    // Return our short name
+    // Return our name
 
-    return mShortName;
+    return mName;
 }
 //==============================================================================
 
@@ -96,13 +96,13 @@ PmrWorkspaceFileNodes PmrWorkspaceFileNode::children() const
 
 //==============================================================================
 
-PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pShortName,
+PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pName,
                                                       const CharPair &pStatus)
 {
     // Add the given child to ourselves
 
-    PmrWorkspaceFileNode *res = new PmrWorkspaceFileNode(pShortName,
-                                                         fullName()+"/"+pShortName,
+    PmrWorkspaceFileNode *res = new PmrWorkspaceFileNode(pName,
+                                                         fullName()+"/"+pName,
                                                          pStatus, this);
 
     mChildren << res;

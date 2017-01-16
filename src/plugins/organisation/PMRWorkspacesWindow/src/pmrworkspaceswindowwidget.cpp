@@ -841,7 +841,7 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
     foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
         if (fileNode->hasChildren()) {
             PmrWorkspacesWindowItem *folderItem = new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Workspace,
-                                                                              fileNode->shortName());
+                                                                              fileNode->name());
 
             pFolderItem->appendRow(folderItem);
 
@@ -849,7 +849,7 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
                 populateWorkspace(folderItem, fileNode);
         } else {
             pFolderItem->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::WorkspaceFile,
-                                                         fileNode->shortName()));
+                                                               fileNode->name()));
         }
     }
 }
@@ -1038,7 +1038,7 @@ QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNo
 
     // Use an anchor element to allow us to set the scroll position at a row
 
-    return Html.arg(path, pFileNode->shortName(),
+    return Html.arg(path, pFileNode->name(),
                     statusActionHtml[0].isEmpty()?" hidden":QString(),
                     statusActionHtml[0],
                     statusActionHtml[1].isEmpty()?" hidden":QString(),
@@ -1208,7 +1208,7 @@ QStringList PmrWorkspacesWindowWidget::folderHtml(const PMRSupport::PmrWorkspace
     ++mRow;
 
     QStringList html = QStringList(containerHtml("folder", fullname, icon,
-                                                 pFileNode->shortName(),
+                                                 pFileNode->name(),
                                                  QString(), StringPairs()));
 
     html << fileNodeContentsHtml(pFileNode, !mExpandedItems.contains(fullname));

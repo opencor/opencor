@@ -592,7 +592,7 @@ void PmrWorkspace::refreshStatus()
                     int n = std::min(pathComponentsSize, fileNodes.size())-1;
 
                     while (   (i < n)
-                           && pathComponents[i].compare(fileNodes[i+1]->shortName(), Qt::CaseInsensitive)) {
+                           && pathComponents[i].compare(fileNodes[i+1]->name(), Qt::CaseInsensitive)) {
                         ++i;
                     }
 
