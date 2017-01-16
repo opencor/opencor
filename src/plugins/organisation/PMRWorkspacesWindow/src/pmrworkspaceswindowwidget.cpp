@@ -913,6 +913,12 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
     if (item) {
         // We are over an item, so update our context menu and show it
 
+        bool workspaceItem =    (item->type() == PmrWorkspacesWindowItem::OwnedWorkspace)
+                             || (item->type() == PmrWorkspacesWindowItem::Workspace);
+
+        mViewInPmrAction->setVisible(workspaceItem);
+        mCopyUrlAction->setVisible(workspaceItem);
+
         mCopyUrlAction->setEnabled(mTreeViewWidget->selectedIndexes().count() == 1);
 
         mContextMenu->exec(QCursor::pos());
