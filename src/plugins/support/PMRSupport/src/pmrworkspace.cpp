@@ -589,7 +589,7 @@ void PmrWorkspace::refreshStatus()
                     QStringList pathComponents = QString(filePath).split('/');
                     int pathComponentsSize = pathComponents.size();
                     int i = 0;
-                    int n = std::min(pathComponentsSize, fileNodes.size())-1;
+                    int n = qMin(pathComponentsSize, fileNodes.size())-1;
 
                     while (   (i < n)
                            && pathComponents[i].compare(fileNodes[i+1]->name(), Qt::CaseInsensitive)) {
