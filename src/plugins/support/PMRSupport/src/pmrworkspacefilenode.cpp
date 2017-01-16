@@ -100,10 +100,19 @@ PmrWorkspaceFileNodes PmrWorkspaceFileNode::children() const
 PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pName,
                                                       const CharPair &pStatus)
 {
-    // Add the given child to ourselves
+    // Check whether we already have the given child and, if so, return it
+
+    QString childFullName = fullName()+"/"+pName;
+
+    foreach (PmrWorkspaceFileNode *child, mChildren) {
+        if (!child->fullName().compare(childFullName))
+            return child;
+    }
+
+    // We don't already have the given child, so add it to ourselves
 
     PmrWorkspaceFileNode *res = new PmrWorkspaceFileNode(pName,
-                                                         fullName()+"/"+pName,
+                                                         childFullName,
                                                          pStatus, this);
 
     mChildren << res;
