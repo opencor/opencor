@@ -67,9 +67,15 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
     static QIcon OwnedWorkspaceIcon = QIcon();
 
     if (OwnedWorkspaceIcon.isNull()) {
-        OwnedWorkspaceIcon = Core::overlayedIcon(QFileIconProvider().icon(QFileIconProvider::Folder),
+        QIcon folderIcon = QFileIconProvider().icon(QFileIconProvider::Folder);
+        int folderIconSize = qMin(folderIcon.availableSizes().last().width(), 48);
+        int folderIconHalfSize = folderIconSize >> 1;
+
+        OwnedWorkspaceIcon = Core::overlayedIcon(folderIcon,
                                                  ":/oxygen/places/favorites.png",
-                                                 48, 48, 24, 24, 24, 24);
+                                                 folderIconSize, folderIconSize,
+                                                 folderIconHalfSize, folderIconHalfSize,
+                                                 folderIconHalfSize, folderIconHalfSize);
     }
 
     // Customise ourselves
