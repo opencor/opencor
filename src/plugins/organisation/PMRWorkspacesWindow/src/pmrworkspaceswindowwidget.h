@@ -76,16 +76,16 @@ public:
     };
 
     explicit PmrWorkspacesWindowItem(const Type &pType, const QString &pText,
-                                     const QString &pUrl = QString());
+                                     const QString &pUrlOrPath = QString());
 
     virtual int type() const;
 
-    QString url() const;
+    QString urlOrPath() const;
 
 private:
     Type mType;
 
-    QString mUrl;
+    QString mUrlOrPath;
 };
 
 //==============================================================================
@@ -213,6 +213,7 @@ public slots:
 
 private slots:
     void showCustomContextMenu(const QPoint &pPosition) const;
+    void itemDoubleClicked(const QModelIndex &pIndex);
 
     void resizeTreeViewToContents();
 

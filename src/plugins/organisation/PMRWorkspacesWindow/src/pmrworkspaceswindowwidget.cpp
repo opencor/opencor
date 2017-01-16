@@ -57,10 +57,10 @@ namespace PMRWorkspacesWindow {
 
 PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  const QString &pText,
-                                                 const QString &pUrl) :
+                                                 const QString &pUrlOrPath) :
     QStandardItem(pText),
     mType(pType),
-    mUrl(pUrl)
+    mUrlOrPath(pUrlOrPath)
 {
     // Create our owned workspace icon, if needed
     // Note: we create our owned workspace icon using the system's folder icon.
@@ -107,11 +107,11 @@ int PmrWorkspacesWindowItem::type() const
 
 //==============================================================================
 
-QString PmrWorkspacesWindowItem::url() const
+QString PmrWorkspacesWindowItem::urlOrPath() const
 {
-    // Return our URL
+    // Return our URL/path
 
-    return mUrl;
+    return mUrlOrPath;
 }
 
 //==============================================================================
@@ -181,20 +181,16 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mTreeViewWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     mTreeViewWidget->setVisible(false);
 
-qDebug("---[Tree view widget signals]---");
     connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu(const QPoint &)));
 
     connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(itemDoubleClicked(const QModelIndex &)));
-    connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SIGNAL(itemDoubleClicked()));
 
     connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(resizeTreeViewToContents()));
     connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(resizeTreeViewToContents()));
-qDebug("--------------------------------");
 
     // Populate ourselves
 
@@ -849,7 +845,8 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
                 populateWorkspace(folderItem, fileNode);
         } else {
             pFolderItem->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::WorkspaceFile,
-                                                               fileNode->name()));
+                                                               fileNode->name(),
+                                                               fileNode->fullName()));
         }
     }
 }
@@ -870,6 +867,18 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
 
         mContextMenu->exec(QCursor::pos());
     }
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::itemDoubleClicked(const QModelIndex &pIndex)
+{
+    // Ask for a file to be opened
+
+    PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
+
+    if (item->type() == PmrWorkspacesWindowItem::WorkspaceFile)
+        emit openFileRequested(item->urlOrPath());
 }
 
 //==============================================================================
@@ -1577,7 +1586,7 @@ void PmrWorkspacesWindowWidget::viewInPmr()
     QModelIndexList selectedIndexes = mTreeViewWidget->selectedIndexes();
 
     for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i)
-        QDesktopServices::openUrl(static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]))->url());
+        QDesktopServices::openUrl(static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]))->urlOrPath());
 }
 
 //==============================================================================
@@ -1586,7 +1595,7 @@ void PmrWorkspacesWindowWidget::copyUrl()
 {
     // Copy the current item's URL to the clipboard
 
-    QApplication::clipboard()->setText(currentItem()->url());
+    QApplication::clipboard()->setText(currentItem()->urlOrPath());
 }
 
 //==============================================================================
