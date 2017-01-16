@@ -642,6 +642,48 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
 
 //==============================================================================
 
+QIcon overlayedIcon(const QString &pBaseIcon, const QIcon &pOverlayIcon,
+                    const int &pBaseWidth, const int &pBaseHeight,
+                    const int &pOverlayLeft, const int &pOverlayTop,
+                    const int &pOverlayWidth, const int &pOverlayHeight)
+{
+    // Create and return an overlayed icon using the given base and overlay
+    // icons
+
+    return overlayedIcon(QIcon(pBaseIcon), pOverlayIcon, pBaseWidth, pBaseHeight,
+                         pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
+}
+
+//==============================================================================
+
+QIcon overlayedIcon(const QIcon &pBaseIcon, const QString &pOverlayIcon,
+                    const int &pBaseWidth, const int &pBaseHeight,
+                    const int &pOverlayLeft, const int &pOverlayTop,
+                    const int &pOverlayWidth, const int &pOverlayHeight)
+{
+    // Create and return an overlayed icon using the given base and overlay
+    // icons
+
+    return overlayedIcon(pBaseIcon, QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
+                         pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
+}
+
+//==============================================================================
+
+QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
+                    const int &pBaseWidth, const int &pBaseHeight,
+                    const int &pOverlayLeft, const int &pOverlayTop,
+                    const int &pOverlayWidth, const int &pOverlayHeight)
+{
+    // Create and return an overlayed icon using the given base and overlay
+    // icons
+
+    return overlayedIcon(QIcon(pBaseIcon), QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
+                         pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
+}
+
+//==============================================================================
+
 void showEnableWidget(QWidget *pWidget, const bool &pVisible,
                       const bool &pEnabled)
 {
