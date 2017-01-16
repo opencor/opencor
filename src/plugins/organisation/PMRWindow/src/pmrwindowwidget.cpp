@@ -425,20 +425,15 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
 
 void PmrWindowWidget::itemDoubleClicked(const QModelIndex &pIndex)
 {
-    // Expand/collapse an exposure or open an exposure file
+    // Ask for exposure files to be retrieved (if it hasn't already been done)
+    // or an exposure file to be opened
 
     PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
 
     if (item->type() == PmrWindowItem::Exposure) {
-        // It's an exposure, so check whether we have already retrieved its
-        // exposure files and, if not, let people know that we need to retrieve
-        // them
-
         if (!item->rowCount())
             emit exposureFilesRequested(item->url());
     } else {
-        // It's an exposure file, so ask for it to be opened
-
         emit openExposureFileRequested(item->url());
     }
 }
