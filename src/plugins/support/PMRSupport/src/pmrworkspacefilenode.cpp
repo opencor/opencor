@@ -49,6 +49,7 @@ QString PmrWorkspaceFileNode::name() const
 
     return mName;
 }
+
 //==============================================================================
 
 QString PmrWorkspaceFileNode::fullName() const
