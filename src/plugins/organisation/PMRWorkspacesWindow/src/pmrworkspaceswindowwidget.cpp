@@ -62,11 +62,23 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
     mType(pType),
     mUrl(pUrl)
 {
+    // Create our owned workspace icon, if needed
+
+    static QIcon OwnedWorkspaceIcon = QIcon();
+
+    if (OwnedWorkspaceIcon.isNull()) {
+        OwnedWorkspaceIcon = Core::overlayedIcon(QFileIconProvider().icon(QFileIconProvider::Folder),
+                                                 ":/oxygen/places/favorites.png",
+                                                 48, 48, 24, 24, 24, 24);
+    }
+
     // Customise ourselves
 
-    QStandardItem::setIcon((pType == Workspace)?
-                               QFileIconProvider().icon(QFileIconProvider::Folder):
-                               QFileIconProvider().icon(QFileIconProvider::File));
+    QStandardItem::setIcon((pType == OwnedWorkspace)?
+                               OwnedWorkspaceIcon:
+                               (pType == Workspace)?
+                                   QFileIconProvider().icon(QFileIconProvider::Folder):
+                                   QFileIconProvider().icon(QFileIconProvider::File));
 
     setToolTip(pText);
 }
@@ -768,7 +780,9 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
     mTreeViewModel->clear();
 
     for (int i = 0, iMax = workspaces.count(); i < iMax; ++i) {
-        mTreeViewModel->invisibleRootItem()->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Workspace,
+        mTreeViewModel->invisibleRootItem()->appendRow(new PmrWorkspacesWindowItem(workspaces[i]->isOwned()?
+                                                                                       PmrWorkspacesWindowItem::OwnedWorkspace:
+                                                                                       PmrWorkspacesWindowItem::Workspace,
                                                                                    workspaces[i]->name(),
                                                                                    workspaces[i]->url()));
     }

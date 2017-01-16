@@ -70,8 +70,9 @@ class PmrWorkspacesWindowItem : public QStandardItem
 {
 public:
     enum Type {
-        Workspace     = QStandardItem::UserType,
-        WorkspaceFile = QStandardItem::UserType+1
+        OwnedWorkspace = QStandardItem::UserType,
+        Workspace      = QStandardItem::UserType+1,
+        WorkspaceFile  = QStandardItem::UserType+2
     };
 
     explicit PmrWorkspacesWindowItem(const Type &pType, const QString &pText,
