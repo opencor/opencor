@@ -63,6 +63,13 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
     mUrl(pUrl)
 {
     // Create our owned workspace icon, if needed
+    // Note: regarding the icon for mGui->actionNew, we create an overlayed icon
+    //       based on the system's folder icon. However, for this to work
+    //       properly on Windows (since on that platform, we only have 16x16 and
+    //       32x32-pixel icons while we have 16x16, 32x32 and 128x128-pixel
+    //       icons on Linux and 16x16, 32x32, 64x64 and 128x128-pixel icons on
+    //       macOS), we need to make sure that we are creating the new icon
+    //       using an icon size that is closest to the one we want and need...
 
     static QIcon OwnedWorkspaceIcon = QIcon();
 
