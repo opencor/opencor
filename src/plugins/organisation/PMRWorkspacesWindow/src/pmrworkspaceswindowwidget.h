@@ -76,7 +76,7 @@ public:
     };
 
     explicit PmrWorkspacesWindowItem(const Type &pType, const QString &pText,
-                                     const QString &pUrl);
+                                     const QString &pUrl = QString());
 
     virtual int type() const;
 
@@ -156,6 +156,9 @@ private:
     void updateGui();
 
     PmrWorkspacesWindowItem * currentItem() const;
+
+    void populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
+                           PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
     void expandHtmlTree(const QString &pId);
 

@@ -784,7 +784,6 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
     // Populate our tree view widget with our different workspaces, after having
     // alphabetically sorted them
-//---GRY--- Check workspaceHtml();
 
     PMRSupport::PmrWorkspaces workspaces = mWorkspaceManager->workspaces();
 
@@ -793,11 +792,17 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
     mTreeViewModel->clear();
 
     for (int i = 0, iMax = workspaces.count(); i < iMax; ++i) {
-        mTreeViewModel->invisibleRootItem()->appendRow(new PmrWorkspacesWindowItem(workspaces[i]->isOwned()?
-                                                                                       PmrWorkspacesWindowItem::OwnedWorkspace:
-                                                                                       PmrWorkspacesWindowItem::Workspace,
-                                                                                   workspaces[i]->name(),
-                                                                                   workspaces[i]->url()));
+        PMRSupport::PmrWorkspace *workspace = workspaces[i];
+        PmrWorkspacesWindowItem *workspaceItem = new PmrWorkspacesWindowItem(workspace->isOwned()?
+                                                                                 PmrWorkspacesWindowItem::OwnedWorkspace:
+                                                                                 PmrWorkspacesWindowItem::Workspace,
+                                                                             workspace->name(),
+                                                                             workspace->url());
+
+        mTreeViewModel->invisibleRootItem()->appendRow(workspaceItem);
+
+        if (workspace->rootFileNode())
+            populateWorkspace(workspaceItem, workspace->rootFileNode());
     }
 
     resizeTreeViewToContents();
@@ -823,6 +828,30 @@ PmrWorkspacesWindowItem * PmrWorkspacesWindowWidget::currentItem() const
     // Return our current item
 
     return static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->currentIndex()));
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
+                                                  PMRSupport::PmrWorkspaceFileNode *pFileNode)
+{
+    // Populate the given folder item with its children, which are referenced in
+    // the given file node
+
+    foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
+        if (fileNode->hasChildren()) {
+            PmrWorkspacesWindowItem *folderItem = new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Workspace,
+                                                                              fileNode->shortName());
+
+            pFolderItem->appendRow(folderItem);
+
+            if (fileNode->hasChildren())
+                populateWorkspace(folderItem, fileNode);
+        } else {
+            pFolderItem->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::WorkspaceFile,
+                                                         fileNode->shortName()));
+        }
+    }
 }
 
 //==============================================================================
