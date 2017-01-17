@@ -66,7 +66,8 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
 
     mGui->actionNew->setIcon(Core::overlayedIcon(folderIcon, PlusIcon,
                                                  folderIconSize, folderIconSize,
-                                                 folderIconHalfSize, 0, folderIconHalfSize, folderIconHalfSize));
+                                                 folderIconHalfSize, 0,
+                                                 folderIconHalfSize, folderIconHalfSize));
 
     toolBarWidget->addAction(mGui->actionNew);
     toolBarWidget->addAction(mGui->actionDelete);
