@@ -79,18 +79,18 @@ void PmrWorkspacesWindowItemDelegate::paint(QPainter *pPainter,
         QIcon collapsedFolderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
         QIcon expandedFolderIcon = QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
         int folderIconSize = collapsedFolderIcon.availableSizes().first().width();
-        int folderIconHalfSize = folderIconSize >> 1;
+        int favoriteIconSize = 0.625*folderIconSize;
 
         CollapsedOwnedWorkspaceIcon = Core::overlayedIcon(collapsedFolderIcon,
                                                           FavoriteIcon,
                                                           folderIconSize, folderIconSize,
-                                                          folderIconHalfSize, folderIconHalfSize,
-                                                          folderIconHalfSize, folderIconHalfSize);
+                                                          folderIconSize-favoriteIconSize, folderIconSize-favoriteIconSize,
+                                                          favoriteIconSize, favoriteIconSize);
         ExpandedOwnedWorkspaceIcon = Core::overlayedIcon(expandedFolderIcon,
                                                          FavoriteIcon,
                                                          folderIconSize, folderIconSize,
-                                                         folderIconHalfSize, folderIconHalfSize,
-                                                         folderIconHalfSize, folderIconHalfSize);
+                                                         folderIconSize-favoriteIconSize, folderIconSize-favoriteIconSize,
+                                                         favoriteIconSize, favoriteIconSize);
     }
 
     // Make sure that the item has the correct icon
