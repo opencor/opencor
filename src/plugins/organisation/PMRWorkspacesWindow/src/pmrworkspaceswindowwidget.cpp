@@ -64,18 +64,23 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
     mUrlOrFileName(pUrlOrFileName)
 {
     // Create our owned workspace icon, if needed
-    // Note: we create our owned workspace icon using the system's folder icon.
-    //       However, for this to work properly on Windows (since on that
-    //       platform, we only have 16x16 and 32x32-pixel icons while we have
-    //       16x16, 32x32 and 128x128-pixel icons on Linux and 16x16, 32x32,
-    //       64x64 and 128x128-pixel icons on macOS), we need to make sure that
-    //       we are creating the new icon using an icon size that is closest to
-    //       the one we want and need...
+    // Note #1: normally, we would retrieve the folder icon through a call to
+    //          QFileIconProvider().icon(QFileIconProvider::Folder), but on
+    //          Windows it will, in this case, return the QStyle::SP_DirIcon
+    //          icon while we really want the QStyle::SP_DirClosedIcon icon...
+    // Note #2: we create our owned workspace icon using the system's folder
+    //          icon. However, for this to work properly on Windows (since on
+    //          that platform, we have 16x16-pixel icons (as well as 32x32-pixel
+    //          icons sometimes too) while we have 16x16, 32x32 and
+    //          128x128-pixel icons on Linux and 16x16, 32x32, 64x64 and
+    //          128x128-pixel icons on macOS), we need to make sure that we are
+    //          creating the new icon using an icon size that is closest to the
+    //          one we want and need...
 
     static QIcon OwnedWorkspaceIcon = QIcon();
 
     if (OwnedWorkspaceIcon.isNull()) {
-        QIcon folderIcon = QFileIconProvider().icon(QFileIconProvider::Folder);
+        QIcon folderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
         int folderIconSize = qMin(folderIcon.availableSizes().last().width(), 48);
         int folderIconHalfSize = folderIconSize >> 1;
 
