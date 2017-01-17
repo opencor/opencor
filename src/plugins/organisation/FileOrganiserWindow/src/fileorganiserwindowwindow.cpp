@@ -52,26 +52,19 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
     mGui->setupUi(this);
 
     // Create a tool bar widget with different buttons
-    // Note #1: normally, we would retrieve the folder icon through a call to
-    //          QFileIconProvider().icon(QFileIconProvider::Folder), but on
-    //          Windows it will, in this case, return the QStyle::SP_DirIcon
-    //          icon while we really want the QStyle::SP_DirClosedIcon icon...
-    // Note #2: regarding the icon for mGui->actionNew, we create an overlayed
-    //          icon based on the system's folder icon. However, for this to
-    //          work properly on Windows (since on that platform, we have
-    //          16x16-pixel icons (as well as 32x32-pixel icons sometimes too)
-    //          while we have 16x16, 32x32 and 128x128-pixel icons on Linux and
-    //          16x16, 32x32, 64x64 and 128x128-pixel icons on macOS), we need
-    //          to make sure that we are creating the new icon using an icon
-    //          size that is closest to the one we want and need...
+    // Note: normally, we would retrieve the folder icon through a call to
+    //       QFileIconProvider().icon(QFileIconProvider::Folder), but on Windows
+    //       it will, in this case, return the QStyle::SP_DirIcon icon while we
+    //       really want the QStyle::SP_DirClosedIcon icon...
+
+    static const QIcon PlusIcon = QIcon(":/oxygen/actions/list-add.png");
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
     QIcon folderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
-    int folderIconSize = qMin(folderIcon.availableSizes().last().width(), 48);
+    int folderIconSize = folderIcon.availableSizes().first().width();
     int folderIconHalfSize = folderIconSize >> 1;
 
-    mGui->actionNew->setIcon(Core::overlayedIcon(folderIcon,
-                                                 QIcon(":/oxygen/actions/list-add.png"),
+    mGui->actionNew->setIcon(Core::overlayedIcon(folderIcon, PlusIcon,
                                                  folderIconSize, folderIconSize,
                                                  folderIconHalfSize, 0, folderIconHalfSize, folderIconHalfSize));
 

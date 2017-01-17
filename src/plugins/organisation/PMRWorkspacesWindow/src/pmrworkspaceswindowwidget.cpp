@@ -69,13 +69,8 @@ void PmrWorkspacesWindowItemDelegate::paint(QPainter *pPainter,
                                             const QModelIndex &pIndex) const
 {
     // Create our owned workspace icons, if needed
-    // Note: we create our owned workspace icon using the system's folder icon.
-    //       However, for this to work properly on Windows (since on that
-    //       platform, we have 16x16-pixel icons (as well as 32x32-pixel icons
-    //       sometimes too) while we have 16x16, 32x32 and 128x128-pixel icons
-    //       on Linux and 16x16, 32x32, 64x64 and 128x128-pixel icons on macOS),
-    //       we need to make sure that we are creating the new icon using an
-    //       icon size that is closest to the one we want and need...
+
+    static const QIcon FavoriteIcon = QIcon(":/oxygen/places/favorites.png");
 
     static QIcon CollapsedOwnedWorkspaceIcon = QIcon();
     static QIcon ExpandedOwnedWorkspaceIcon = QIcon();
@@ -83,16 +78,16 @@ void PmrWorkspacesWindowItemDelegate::paint(QPainter *pPainter,
     if (CollapsedOwnedWorkspaceIcon.isNull()) {
         QIcon collapsedFolderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
         QIcon expandedFolderIcon = QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
-        int folderIconSize = qMin(collapsedFolderIcon.availableSizes().last().width(), 48);
+        int folderIconSize = collapsedFolderIcon.availableSizes().first().width();
         int folderIconHalfSize = folderIconSize >> 1;
 
         CollapsedOwnedWorkspaceIcon = Core::overlayedIcon(collapsedFolderIcon,
-                                                          ":/oxygen/places/favorites.png",
+                                                          FavoriteIcon,
                                                           folderIconSize, folderIconSize,
                                                           folderIconHalfSize, folderIconHalfSize,
                                                           folderIconHalfSize, folderIconHalfSize);
         ExpandedOwnedWorkspaceIcon = Core::overlayedIcon(expandedFolderIcon,
-                                                         ":/oxygen/places/favorites.png",
+                                                         FavoriteIcon,
                                                          folderIconSize, folderIconSize,
                                                          folderIconHalfSize, folderIconHalfSize,
                                                          folderIconHalfSize, folderIconHalfSize);
