@@ -47,6 +47,13 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
+CellmlAnnotationViewCellmlElementItemDelegate::CellmlAnnotationViewCellmlElementItemDelegate(QObject *pParent) :
+    QStyledItemDelegate(pParent)
+{
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
                                                           const QStyleOptionViewItem &pOption,
                                                           const QModelIndex &pIndex) const
@@ -345,7 +352,7 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     mTreeViewWidget = new Core::TreeViewWidget(this);
 
     mTreeViewWidget->setModel(mTreeViewModel);
-    mTreeViewWidget->setItemDelegate(new CellmlAnnotationViewCellmlElementItemDelegate());
+    mTreeViewWidget->setItemDelegate(new CellmlAnnotationViewCellmlElementItemDelegate(this));
 
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);

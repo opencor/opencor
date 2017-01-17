@@ -61,6 +61,8 @@ class CellmlAnnotationViewEditingWidget;
 class CellmlAnnotationViewCellmlElementItemDelegate : public QStyledItemDelegate
 {
 public:
+    explicit CellmlAnnotationViewCellmlElementItemDelegate(QObject *pParent);
+
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
                        const QModelIndex &pIndex) const;
 };

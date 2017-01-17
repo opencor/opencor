@@ -47,6 +47,13 @@ namespace OpenCOR {
 
 //==============================================================================
 
+PluginItemDelegate::PluginItemDelegate(QObject *pParent) :
+    QStyledItemDelegate(pParent)
+{
+}
+
+//==============================================================================
+
 void PluginItemDelegate::paint(QPainter *pPainter,
                                const QStyleOptionViewItem &pOption,
                                const QModelIndex &pIndex) const
@@ -119,7 +126,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     //       our plugins tree view widget...
 #endif
     mGui->treeView->setModel(mModel);
-    mGui->treeView->setItemDelegate(new PluginItemDelegate());
+    mGui->treeView->setItemDelegate(new PluginItemDelegate(this));
 
     // Populate the data model with our different plugins
 

@@ -277,8 +277,9 @@ BooleanEditorWidget::BooleanEditorWidget(QWidget *pParent) :
 
 //==============================================================================
 
-PropertyItemDelegate::PropertyItemDelegate(PropertyEditorWidget *pParent) :
-    QStyledItemDelegate(pParent)
+PropertyItemDelegate::PropertyItemDelegate(OpenCOR::Core::PropertyEditorWidget *pParent) :
+    QStyledItemDelegate(pParent),
+    mPropertyEditorWidget(pParent)
 {
 }
 
@@ -405,7 +406,7 @@ void PropertyItemDelegate::listPropertyChanged(const QString &pValue)
 {
     // Force the updating of our list property value
 
-    qobject_cast<PropertyEditorWidget *>(parent())->currentProperty()->setValue(pValue);
+    mPropertyEditorWidget->currentProperty()->setValue(pValue);
 }
 
 //==============================================================================
@@ -414,7 +415,7 @@ void PropertyItemDelegate::booleanPropertyChanged(const QString &pValue)
 {
     // Force the updating of our boolean property value
 
-    qobject_cast<PropertyEditorWidget *>(parent())->currentProperty()->setValue(pValue);
+    mPropertyEditorWidget->currentProperty()->setValue(pValue);
 }
 
 //==============================================================================

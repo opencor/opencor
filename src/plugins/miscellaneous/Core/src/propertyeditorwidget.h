@@ -136,6 +136,9 @@ protected:
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
                        const QModelIndex &pIndex) const;
 
+private:
+    PropertyEditorWidget *mPropertyEditorWidget;
+
 signals:
     void openEditor(QWidget *pEditor) const;
 
