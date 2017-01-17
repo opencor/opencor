@@ -32,6 +32,7 @@ limitations under the License.
 
 #include <QSet>
 #include <QStandardItem>
+#include <QStyledItemDelegate>
 
 //==============================================================================
 
@@ -63,6 +64,21 @@ namespace PMRWorkspacesWindow {
 
 typedef QPair<QString, QString> StringPair;
 typedef QList<StringPair> StringPairs;
+
+//==============================================================================
+
+class PmrWorkspacesWindowItemDelegate : public QStyledItemDelegate
+{
+public:
+    explicit PmrWorkspacesWindowItemDelegate(Core::TreeViewWidget *pTreeViewWidget,
+                                             QObject *pParent);
+
+    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+                       const QModelIndex &pIndex) const;
+
+private:
+    Core::TreeViewWidget *mTreeViewWidget;
+};
 
 //==============================================================================
 
