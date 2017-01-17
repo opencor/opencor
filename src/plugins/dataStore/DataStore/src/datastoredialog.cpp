@@ -40,6 +40,13 @@ namespace DataStore {
 
 //==============================================================================
 
+DataItemDelegate::DataItemDelegate(QObject *pParent) :
+    QStyledItemDelegate(pParent)
+{
+}
+
+//==============================================================================
+
 void DataItemDelegate::paint(QPainter *pPainter,
                                const QStyleOptionViewItem &pOption,
                                const QModelIndex &pIndex) const
@@ -99,7 +106,7 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
     mModel = new QStandardItemModel(this);
 
     mGui->treeView->setModel(mModel);
-    mGui->treeView->setItemDelegate(new DataItemDelegate());
+    mGui->treeView->setItemDelegate(new DataItemDelegate(this));
 
     QString dataHierarchy = QString();
     QStandardItem *hierarchyItem = 0;
