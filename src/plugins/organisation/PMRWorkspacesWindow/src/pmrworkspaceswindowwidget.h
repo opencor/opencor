@@ -70,8 +70,7 @@ typedef QList<StringPair> StringPairs;
 class PmrWorkspacesWindowItemDelegate : public QStyledItemDelegate
 {
 public:
-    explicit PmrWorkspacesWindowItemDelegate(Core::TreeViewWidget *pTreeViewWidget,
-                                             QObject *pParent);
+    explicit PmrWorkspacesWindowItemDelegate(Core::TreeViewWidget *pParent);
 
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
                        const QModelIndex &pIndex) const;

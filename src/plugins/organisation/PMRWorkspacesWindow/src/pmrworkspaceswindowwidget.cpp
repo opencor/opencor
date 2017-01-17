@@ -56,10 +56,9 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowItemDelegate::PmrWorkspacesWindowItemDelegate(Core::TreeViewWidget *pTreeViewWidget,
-                                                                 QObject *pParent) :
+PmrWorkspacesWindowItemDelegate::PmrWorkspacesWindowItemDelegate(Core::TreeViewWidget *pParent) :
     QStyledItemDelegate(pParent),
-    mTreeViewWidget(pTreeViewWidget)
+    mTreeViewWidget(pParent)
 {
 }
 
@@ -224,7 +223,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mTreeViewWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
-    mTreeViewWidget->setItemDelegate(new PmrWorkspacesWindowItemDelegate(mTreeViewWidget, this));
+    mTreeViewWidget->setItemDelegate(new PmrWorkspacesWindowItemDelegate(mTreeViewWidget));
     mTreeViewWidget->setModel(mTreeViewModel);
     mTreeViewWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     mTreeViewWidget->setVisible(false);
