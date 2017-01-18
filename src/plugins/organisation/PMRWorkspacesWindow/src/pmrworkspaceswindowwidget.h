@@ -67,20 +67,6 @@ typedef QList<StringPair> StringPairs;
 
 //==============================================================================
 
-class PmrWorkspacesWindowItemDelegate : public QStyledItemDelegate
-{
-public:
-    explicit PmrWorkspacesWindowItemDelegate(Core::TreeViewWidget *pParent);
-
-    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
-                       const QModelIndex &pIndex) const;
-
-private:
-    Core::TreeViewWidget *mTreeViewWidget;
-};
-
-//==============================================================================
-
 class PmrWorkspacesWindowItem : public QStandardItem
 {
 public:
@@ -91,7 +77,8 @@ public:
         File           = QStandardItem::UserType+3
     };
 
-    explicit PmrWorkspacesWindowItem(const Type &pType, const QString &pText,
+    explicit PmrWorkspacesWindowItem(const Type &pType, const QIcon &pIcon,
+                                     const QString &pText,
                                      const QString &pUrlOrFileName = QString());
 
     virtual int type() const;
@@ -170,6 +157,9 @@ private:
     QStandardItemModel *mTreeViewModel;
     Core::TreeViewWidget *mTreeViewWidget;
 
+    QIcon mCollapsedOwnedWorkspaceIcon;
+    QIcon mExpandedOwnedWorkspaceIcon;
+
     void updateGui();
 
     PmrWorkspacesWindowItem * currentItem() const;
@@ -232,6 +222,8 @@ public slots:
 private slots:
     void showCustomContextMenu(const QPoint &pPosition) const;
     void itemDoubleClicked(const QModelIndex &pIndex);
+    void itemExpanded(const QModelIndex &pIndex);
+    void itemCollapsed(const QModelIndex &pIndex);
 
     void resizeTreeViewToContents();
 

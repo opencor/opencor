@@ -56,63 +56,8 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowItemDelegate::PmrWorkspacesWindowItemDelegate(Core::TreeViewWidget *pParent) :
-    QStyledItemDelegate(pParent),
-    mTreeViewWidget(pParent)
-{
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowItemDelegate::paint(QPainter *pPainter,
-                                            const QStyleOptionViewItem &pOption,
-                                            const QModelIndex &pIndex) const
-{
-    // Create our owned workspace icons, if needed
-
-    static const QIcon FavoriteIcon = QIcon(":/oxygen/places/favorites.png");
-
-    static QIcon CollapsedOwnedWorkspaceIcon = QIcon();
-    static QIcon ExpandedOwnedWorkspaceIcon = QIcon();
-
-    if (CollapsedOwnedWorkspaceIcon.isNull()) {
-        QIcon collapsedFolderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
-        QIcon expandedFolderIcon = QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
-        int folderIconSize = collapsedFolderIcon.availableSizes().first().width();
-        int favoriteIconSize = 0.57*folderIconSize;
-
-        CollapsedOwnedWorkspaceIcon = Core::overlayedIcon(collapsedFolderIcon,
-                                                          FavoriteIcon,
-                                                          folderIconSize, folderIconSize,
-                                                          folderIconSize-favoriteIconSize, folderIconSize-favoriteIconSize,
-                                                          favoriteIconSize, favoriteIconSize);
-        ExpandedOwnedWorkspaceIcon = Core::overlayedIcon(expandedFolderIcon,
-                                                         FavoriteIcon,
-                                                         folderIconSize, folderIconSize,
-                                                         folderIconSize-favoriteIconSize, folderIconSize-favoriteIconSize,
-                                                         favoriteIconSize, favoriteIconSize);
-    }
-
-    // Make sure that the item has the correct icon
-    // Note: indeed, in the case of an owned workspace, we need to 'manually'
-    //       set the icon to be used in case of a collapsed/expanded item...
-
-    PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
-
-    if (item->type() == PmrWorkspacesWindowItem::OwnedWorkspace) {
-        item->setIcon(mTreeViewWidget->isExpanded(pIndex)?
-                          ExpandedOwnedWorkspaceIcon:
-                          CollapsedOwnedWorkspaceIcon);
-    }
-
-    // Paint the item normally
-
-    QStyledItemDelegate::paint(pPainter, pOption, pIndex);
-}
-
-//==============================================================================
-
 PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+                                                 const QIcon &pIcon,
                                                  const QString &pText,
                                                  const QString &pUrlOrFileName) :
     QStandardItem(pText),
@@ -121,9 +66,7 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
 {
     // Customise ourselves
 
-    QStandardItem::setIcon((pType == File)?
-                               QFileIconProvider().icon(QFileIconProvider::File):
-                               QFileIconProvider().icon(QFileIconProvider::Folder));
+    QStandardItem::setIcon(pIcon);
 
     setToolTip(pText);
 }
@@ -218,7 +161,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mTreeViewWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
-    mTreeViewWidget->setItemDelegate(new PmrWorkspacesWindowItemDelegate(mTreeViewWidget));
     mTreeViewWidget->setModel(mTreeViewModel);
     mTreeViewWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     mTreeViewWidget->setVisible(false);
@@ -231,8 +173,33 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(resizeTreeViewToContents()));
+    connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
+            this, SLOT(itemExpanded(const QModelIndex &)));
+
     connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(resizeTreeViewToContents()));
+    connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
+            this, SLOT(itemCollapsed(const QModelIndex &)));
+
+    // Create our owned workspace icons
+
+    static const QIcon FavoriteIcon = QIcon(":/oxygen/places/favorites.png");
+
+    QIcon collapsedFolderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
+    QIcon expandedFolderIcon = QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
+    int folderIconSize = collapsedFolderIcon.availableSizes().first().width();
+    int favoriteIconSize = 0.57*folderIconSize;
+
+    mCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(collapsedFolderIcon,
+                                                      FavoriteIcon,
+                                                      folderIconSize, folderIconSize,
+                                                      folderIconSize-favoriteIconSize, folderIconSize-favoriteIconSize,
+                                                      favoriteIconSize, favoriteIconSize);
+    mExpandedOwnedWorkspaceIcon = Core::overlayedIcon(expandedFolderIcon,
+                                                     FavoriteIcon,
+                                                     folderIconSize, folderIconSize,
+                                                     folderIconSize-favoriteIconSize, folderIconSize-favoriteIconSize,
+                                                     favoriteIconSize, favoriteIconSize);
 
     // Populate ourselves
 
@@ -873,6 +840,9 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
         PmrWorkspacesWindowItem *workspaceItem = new PmrWorkspacesWindowItem(workspace->isOwned()?
                                                                                  PmrWorkspacesWindowItem::OwnedWorkspace:
                                                                                  PmrWorkspacesWindowItem::Workspace,
+                                                                             workspace->isOwned()?
+                                                                                 mCollapsedOwnedWorkspaceIcon:
+                                                                                 QFileIconProvider().icon(QFileIconProvider::Folder),
                                                                              workspace->name(),
                                                                              workspace->url());
 
@@ -918,6 +888,7 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
     foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
         if (fileNode->hasChildren()) {
             PmrWorkspacesWindowItem *folderItem = new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Folder,
+                                                                              QFileIconProvider().icon(QFileIconProvider::Folder),
                                                                               fileNode->name());
 
             pFolderItem->appendRow(folderItem);
@@ -926,6 +897,7 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
                 populateWorkspace(folderItem, fileNode);
         } else {
             pFolderItem->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::File,
+                                                               QFileIconProvider().icon(QFileIconProvider::File),
                                                                fileNode->name(),
                                                                fileNode->fullName()));
         }
@@ -966,6 +938,30 @@ void PmrWorkspacesWindowWidget::itemDoubleClicked(const QModelIndex &pIndex)
 
     if (item->type() == PmrWorkspacesWindowItem::File)
         emit openFileRequested(item->fileName());
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::itemExpanded(const QModelIndex &pIndex)
+{
+    // Update the icon of the item, if its type is that an owned workspace
+
+    PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
+
+    if (item->type() == PmrWorkspacesWindowItem::OwnedWorkspace)
+        item->setIcon(mExpandedOwnedWorkspaceIcon);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::itemCollapsed(const QModelIndex &pIndex)
+{
+    // Update the icon of the item, if its type is that an owned workspace
+
+    PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
+
+    if (item->type() == PmrWorkspacesWindowItem::OwnedWorkspace)
+        item->setIcon(mCollapsedOwnedWorkspaceIcon);
 }
 
 //==============================================================================
