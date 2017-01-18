@@ -111,8 +111,6 @@ public:
     bool hasWorkspaces() const;
 
     void aboutWorkspace(const QString &pUrl);
-    void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
-                      const bool &pOwned = false);
     QString addWorkspaceFolder(const QString &pWorkspaceFolder);
     void refreshWorkspace(const QString &pUrl);
     void refreshWorkspaceFile(const QString &pPath);

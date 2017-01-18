@@ -919,33 +919,6 @@ void PmrWorkspacesWindowWidget::itemCollapsed(const QModelIndex &pIndex)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
-                                             const bool &pOwned)
-{
-    // Add the given workspace, if it hasn't already been added
-
-    QString folder = pWorkspace->path();
-    QString url = pWorkspace->url();
-
-    if (!mWorkspaceFolderUrls.contains(folder)) {
-        if (mOwnedWorkspaceUrlFolders.contains(url)) {
-            // Let the user know that there is already a workspace with that URL
-
-            duplicateCloneMessage(url, mOwnedWorkspaceUrlFolders.value(url).first, folder);
-        } else {
-            // The given workspace hasn't already been added, so keep track of
-            // it and ask our workspace manager to do the same
-
-            mWorkspaceFolderUrls.insert(folder, url);
-            mOwnedWorkspaceUrlFolders.insert(url, QPair<QString, bool>(folder, pOwned));
-
-            mWorkspaceManager->addWorkspace(pWorkspace);
-        }
-    }
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
                                                       const QString &pPath1,
                                                       const QString &pPath2)
@@ -1537,18 +1510,31 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace(const QString &pUrl,
 
 void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
 {
-//---GRY--- To be reviewed...
+    // Add the given cloned workspace to ourselves, if possible
+
     if (pWorkspace) {
         QString url = pWorkspace->url();
 
-        // Ensure our widget knows about the workspace
+        // Ensure that we don't already know about the workspace
 
-        if (!mOwnedWorkspaceUrlFolders.contains(url))
-            addWorkspace(pWorkspace);
+        if (!mOwnedWorkspaceUrlFolders.contains(url)) {
+            // Add the workspace, if its folder isn't already in use
 
-        // Redisplay with workspace expanded
+            QString folder = pWorkspace->path();
+
+            mWorkspaceFolderUrls.insert(folder, url);
+            mOwnedWorkspaceUrlFolders.insert(url, QPair<QString, bool>(folder, false));
+
+            mWorkspaceManager->addWorkspace(pWorkspace);
+        } else {
+            // Let the user know that there is already a workspace with
+            // that URL
+
+            duplicateCloneMessage(url, mOwnedWorkspaceUrlFolders.value(url).first, pWorkspace->path());
+        }
 
         pWorkspace->open();
+
 /*---GRY--- Need to update our tree view widget with the new workspace...
         displayWorkspaces();
 */
