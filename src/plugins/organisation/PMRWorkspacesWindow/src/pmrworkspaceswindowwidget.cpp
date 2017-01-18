@@ -1023,7 +1023,7 @@ QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const QString &pPath
 
 //==============================================================================
 
-QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
+QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(PMRSupport::PmrWorkspace *pWorkspace,
                                                             const QString &pPath)
 {
 //---GRY--- To be reviewed...
@@ -1032,7 +1032,7 @@ QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::Pm
 
 //==============================================================================
 
-QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
+QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
 //---GRY--- To be reviewed...
     return fileStatusActionHtml(pFileNode->fullName(), pFileNode->status());
@@ -1040,7 +1040,7 @@ QStringList PmrWorkspacesWindowWidget::fileStatusActionHtml(const PMRSupport::Pm
 
 //==============================================================================
 
-QString PmrWorkspacesWindowWidget::fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
+QString PmrWorkspacesWindowWidget::fileHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
 //---GRY--- To be reviewed...
     static const QString Html = "<tr class=\"file\" id=\"%1\">\n"
@@ -1108,7 +1108,7 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
 
 //==============================================================================
 
-QString PmrWorkspacesWindowWidget::fileNodeContentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
+QString PmrWorkspacesWindowWidget::fileNodeContentsHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     // Generate and return the HTML code for the contents of the given file node
 
@@ -1157,7 +1157,7 @@ QString PmrWorkspacesWindowWidget::emptyContentsHtml()
 
 //==============================================================================
 
-QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace)
+QStringList PmrWorkspacesWindowWidget::workspaceHtml(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // Generate and return the HTML code for the given workspace
 
@@ -1216,7 +1216,7 @@ QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorksp
 
 //==============================================================================
 
-QStringList PmrWorkspacesWindowWidget::folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
+QStringList PmrWorkspacesWindowWidget::folderHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
 //---GRY--- To be reviewed...
     QString fullname = pFileNode->fullName();

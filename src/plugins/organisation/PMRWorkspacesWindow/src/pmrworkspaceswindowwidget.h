@@ -168,21 +168,21 @@ private:
                           const QString &pIcon, const QString &pName,
                           const QString &pStatus, const StringPairs &pActions);
 
-    QString fileNodeContentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
+    QString fileNodeContentsHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode);
     QString emptyContentsHtml();
 
-    QStringList workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace);
+    QStringList workspaceHtml(PMRSupport::PmrWorkspace *pWorkspace);
 
     static const QString actionHtml(const StringPairs &pActions);
 
     static QStringList fileStatusActionHtml(const QString &pPath,
                                             const PMRSupport::CharPair &pGitStatus);
-    static QStringList fileStatusActionHtml(const PMRSupport::PmrWorkspace *pWorkspace,
+    static QStringList fileStatusActionHtml(PMRSupport::PmrWorkspace *pWorkspace,
                                             const QString &pPath);
-    static QStringList fileStatusActionHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
+    static QStringList fileStatusActionHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
-    QString fileHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
-    QStringList folderHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
+    QString fileHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode);
+    QStringList folderHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
 /*---GRY---
     static QWebElement parentWorkspaceElement(const QWebElement &pRowElement);
