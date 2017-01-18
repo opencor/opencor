@@ -710,6 +710,8 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
     mWorkspaceManager->clearWorkspaces();
 
+    mTreeViewModel->clear();
+
     mErrorMessage = pErrorMessage;
     mAuthenticated = pAuthenticated;
 
@@ -784,10 +786,6 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
     PMRSupport::PmrWorkspaces workspaces = mWorkspaceManager->workspaces();
 
-    std::sort(workspaces.begin(), workspaces.end(), PMRSupport::PmrWorkspace::compare);
-
-    mTreeViewModel->clear();
-
     for (int i = 0, iMax = workspaces.count(); i < iMax; ++i)
         addWorkspace(workspaces[i]);
 
@@ -818,6 +816,21 @@ PmrWorkspacesWindowItem * PmrWorkspacesWindowWidget::currentItem() const
 
 void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
 {
+    // Determine where in our tree view widget the given workspace should be
+    // inserted
+
+    QStandardItem *rootItem = mTreeViewModel->invisibleRootItem();
+    QString workspaceName = pWorkspace->name();
+    int row = -1;
+
+    for (int i = 0, iMax = rootItem->rowCount(); i < iMax; ++i) {
+        if (workspaceName.compare(rootItem->child(i)->text()) < 0) {
+            row = i;
+
+            break;
+        }
+    }
+
     // Add the given workspace to our tree view widget
 
     PmrWorkspacesWindowItem *workspaceItem = new PmrWorkspacesWindowItem(pWorkspace->isOwned()?
@@ -826,10 +839,13 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
                                                                          pWorkspace->isOwned()?
                                                                              mCollapsedOwnedWorkspaceIcon:
                                                                              QFileIconProvider().icon(QFileIconProvider::Folder),
-                                                                         pWorkspace->name(),
+                                                                         workspaceName,
                                                                          pWorkspace->url());
 
-    mTreeViewModel->invisibleRootItem()->appendRow(workspaceItem);
+    if (row == -1)
+        rootItem->appendRow(workspaceItem);
+    else
+        rootItem->insertRow(row, workspaceItem);
 
     if (pWorkspace->rootFileNode())
         populateWorkspace(workspaceItem, pWorkspace->rootFileNode());
