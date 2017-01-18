@@ -788,24 +788,8 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
     mTreeViewModel->clear();
 
-    for (int i = 0, iMax = workspaces.count(); i < iMax; ++i) {
-        PMRSupport::PmrWorkspace *workspace = workspaces[i];
-        PmrWorkspacesWindowItem *workspaceItem = new PmrWorkspacesWindowItem(workspace->isOwned()?
-                                                                                 PmrWorkspacesWindowItem::OwnedWorkspace:
-                                                                                 PmrWorkspacesWindowItem::Workspace,
-                                                                             workspace->isOwned()?
-                                                                                 mCollapsedOwnedWorkspaceIcon:
-                                                                                 QFileIconProvider().icon(QFileIconProvider::Folder),
-                                                                             workspace->name(),
-                                                                             workspace->url());
-
-        mTreeViewModel->invisibleRootItem()->appendRow(workspaceItem);
-
-        if (workspace->rootFileNode())
-            populateWorkspace(workspaceItem, workspace->rootFileNode());
-    }
-
-    resizeTreeViewToContents();
+    for (int i = 0, iMax = workspaces.count(); i < iMax; ++i)
+        addWorkspace(workspaces[i]);
 
     updateGui();
 
@@ -828,6 +812,29 @@ PmrWorkspacesWindowItem * PmrWorkspacesWindowWidget::currentItem() const
     // Return our current item
 
     return static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->currentIndex()));
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
+{
+    // Add the given workspace to our tree view widget
+
+    PmrWorkspacesWindowItem *workspaceItem = new PmrWorkspacesWindowItem(pWorkspace->isOwned()?
+                                                                             PmrWorkspacesWindowItem::OwnedWorkspace:
+                                                                             PmrWorkspacesWindowItem::Workspace,
+                                                                         pWorkspace->isOwned()?
+                                                                             mCollapsedOwnedWorkspaceIcon:
+                                                                             QFileIconProvider().icon(QFileIconProvider::Folder),
+                                                                         pWorkspace->name(),
+                                                                         pWorkspace->url());
+
+    mTreeViewModel->invisibleRootItem()->appendRow(workspaceItem);
+
+    if (pWorkspace->rootFileNode())
+        populateWorkspace(workspaceItem, pWorkspace->rootFileNode());
+
+    resizeTreeViewToContents();
 }
 
 //==============================================================================
@@ -1518,7 +1525,7 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
         // Ensure that we don't already know about the workspace
 
         if (!mOwnedWorkspaceUrlFolders.contains(url)) {
-            // Add the workspace, if its folder isn't already in use
+            // Keep track of the workspace, open it and then add it to our GUI
 
             QString folder = pWorkspace->path();
 
@@ -1526,18 +1533,16 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
             mOwnedWorkspaceUrlFolders.insert(url, QPair<QString, bool>(folder, false));
 
             mWorkspaceManager->addWorkspace(pWorkspace);
+
+            pWorkspace->open();
+
+            addWorkspace(pWorkspace);
         } else {
             // Let the user know that there is already a workspace with
             // that URL
 
             duplicateCloneMessage(url, mOwnedWorkspaceUrlFolders.value(url).first, pWorkspace->path());
         }
-
-        pWorkspace->open();
-
-/*---GRY--- Need to update our tree view widget with the new workspace...
-        displayWorkspaces();
-*/
     }
 }
 

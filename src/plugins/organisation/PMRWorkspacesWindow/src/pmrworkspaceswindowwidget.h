@@ -159,6 +159,7 @@ private:
 
     PmrWorkspacesWindowItem * currentItem() const;
 
+    void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
     void populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
                            PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
