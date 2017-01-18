@@ -138,17 +138,17 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(workspaces(const PMRSupport::PmrWorkspaces &)),
             mPmrWorkspacesWindowWidget, SLOT(initialize(const PMRSupport::PmrWorkspaces &)));
 
-    // Connections to process requests from our workspaces widget
-
-    connect(mPmrWorkspacesWindowWidget, SIGNAL(openFileRequested(const QString &)),
-            this, SLOT(openFile(const QString &)));
-    connect(mPmrWorkspacesWindowWidget, SIGNAL(openFilesRequested(const QStringList &)),
-            this, SLOT(openFiles(const QStringList &)));
+    // Connections to process requests from our PMR workspaces widget
 
     connect(mPmrWorkspacesWindowWidget, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));
     connect(mPmrWorkspacesWindowWidget, SIGNAL(warning(const QString &)),
             this, SLOT(showWarning(const QString &)));
+
+    connect(mPmrWorkspacesWindowWidget, SIGNAL(openFileRequested(const QString &)),
+            this, SLOT(openFile(const QString &)));
+    connect(mPmrWorkspacesWindowWidget, SIGNAL(openFilesRequested(const QStringList &)),
+            this, SLOT(openFiles(const QStringList &)));
 
     // Retranslate our GUI
 
