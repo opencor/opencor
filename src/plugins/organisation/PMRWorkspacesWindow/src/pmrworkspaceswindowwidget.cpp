@@ -1346,14 +1346,14 @@ void PmrWorkspacesWindowWidget::setCurrentWorkspaceUrl(const QString &pUrl)
 
 void PmrWorkspacesWindowWidget::startStopTimer()
 {
-    // Start our timer if OpenCOR is active and we have a current workspace, or
-    // stop it if either OpenCOR is not active or we no longer have have a
-    // current workspace
+    // Start our timer if OpenCOR is active and we have at least one workspace,
+    // or stop it if either OpenCOR is not active or we no longer have at least
+    // one workspace
     // Note: if we are to start our timer, then we refresh the workspace first
     //       since waiting one second may seem long to a user...
 
     if (   !mTimer->isActive()
-        &&  Core::opencorActive() && !mCurrentWorkspaceUrl.isEmpty()) {
+        &&  Core::opencorActive() && mTreeViewModel->rowCount()) {
         disconnect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
                    this, SLOT(startStopTimer()));
 
@@ -1364,7 +1364,7 @@ void PmrWorkspacesWindowWidget::startStopTimer()
 
         mTimer->start(1000);
     } else if (   mTimer->isActive()
-               && (!Core::opencorActive() || mCurrentWorkspaceUrl.isEmpty())) {
+               && (!Core::opencorActive() || !mTreeViewModel->rowCount())) {
         mTimer->stop();
     }
 }
