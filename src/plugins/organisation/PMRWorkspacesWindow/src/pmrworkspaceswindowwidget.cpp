@@ -142,7 +142,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mPmrWebService(pPmrWebService),
     mWorkspaceManager(PMRSupport::PmrWorkspaceManager::instance()),
     mWorkspaceFolderUrls(QMap<QString, QString>()),
-    mWorkspaceUrlFolderMines(QMap<QString, QPair<QString, bool>>()),
+    mOwnedWorkspaceUrlFolders(QMap<QString, QPair<QString, bool>>()),
     mInitialized(false),
     mErrorMessage(QString()),
     mAuthenticated(false)
@@ -721,7 +721,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
         // First, clear the owned flag from the list of URLs with workspace
         // folders
 
-        QMutableMapIterator<QString, QPair<QString, bool>> urlsIterator(mWorkspaceUrlFolderMines);
+        QMutableMapIterator<QString, QPair<QString, bool>> urlsIterator(mOwnedWorkspaceUrlFolders);
 
         while (urlsIterator.hasNext()) {
             urlsIterator.next();
@@ -738,10 +738,10 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
             // Check if we know its folder and flag it as ours
 
-            if (mWorkspaceUrlFolderMines.contains(url)) {
-                QString path = mWorkspaceUrlFolderMines.value(url).first;
+            if (mOwnedWorkspaceUrlFolders.contains(url)) {
+                QString path = mOwnedWorkspaceUrlFolders.value(url).first;
 
-                mWorkspaceUrlFolderMines.insert(url, QPair<QString, bool>(path, true));
+                mOwnedWorkspaceUrlFolders.insert(url, QPair<QString, bool>(path, true));
 
                 workspace->setPath(path);
                 workspace->open();
@@ -928,16 +928,16 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
     QString url = pWorkspace->url();
 
     if (!mWorkspaceFolderUrls.contains(folder)) {
-        if (mWorkspaceUrlFolderMines.contains(url)) {
+        if (mOwnedWorkspaceUrlFolders.contains(url)) {
             // Let the user know that there is already a workspace with that URL
 
-            duplicateCloneMessage(url, mWorkspaceUrlFolderMines.value(url).first, folder);
+            duplicateCloneMessage(url, mOwnedWorkspaceUrlFolders.value(url).first, folder);
         } else {
             // The given workspace hasn't already been added, so keep track of
             // it and ask our workspace manager to do the same
 
             mWorkspaceFolderUrls.insert(folder, url);
-            mWorkspaceUrlFolderMines.insert(url, QPair<QString, bool>(folder, pOwned));
+            mOwnedWorkspaceUrlFolders.insert(url, QPair<QString, bool>(folder, pOwned));
 
             mWorkspaceManager->addWorkspace(pWorkspace);
         }
@@ -1002,11 +1002,11 @@ QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pWorkspaceF
         // already tracked
 
         if (!res.isEmpty()) {
-            if (mWorkspaceUrlFolderMines.contains(res)) {
-                duplicateCloneMessage(res, mWorkspaceUrlFolderMines.value(res).first, pWorkspaceFolder);
+            if (mOwnedWorkspaceUrlFolders.contains(res)) {
+                duplicateCloneMessage(res, mOwnedWorkspaceUrlFolders.value(res).first, pWorkspaceFolder);
             } else {
                 mWorkspaceFolderUrls.insert(pWorkspaceFolder, res);
-                mWorkspaceUrlFolderMines.insert(res, QPair<QString, bool>(pWorkspaceFolder, false));
+                mOwnedWorkspaceUrlFolders.insert(res, QPair<QString, bool>(pWorkspaceFolder, false));
             }
         }
 
@@ -1543,7 +1543,7 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
         // Ensure our widget knows about the workspace
 
-        if (!mWorkspaceUrlFolderMines.contains(url))
+        if (!mOwnedWorkspaceUrlFolders.contains(url))
             addWorkspace(pWorkspace);
 
         // Redisplay with workspace expanded

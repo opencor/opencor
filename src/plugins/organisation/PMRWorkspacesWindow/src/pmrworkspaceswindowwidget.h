@@ -133,7 +133,7 @@ private:
     PMRSupport::PmrWorkspaceManager *mWorkspaceManager;
 
     QMap<QString, QString> mWorkspaceFolderUrls;
-    QMap<QString, QPair<QString, bool>> mWorkspaceUrlFolderMines;
+    QMap<QString, QPair<QString, bool>> mOwnedWorkspaceUrlFolders;
 
     bool mInitialized;
 
