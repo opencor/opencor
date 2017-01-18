@@ -205,8 +205,6 @@ private:
 
     void showInGraphicalShell(const QString &pPath);
 
-    void startStopTimer();
-
 signals:
     void openFileRequested(const QString &pFileName);
     void openFilesRequested(const QStringList &pFileNames);
@@ -227,7 +225,7 @@ private slots:
 
     void resizeTreeViewToContents();
 
-    void focusWindowChanged();
+    void startStopTimer();
     void refreshWorkspaces();
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);

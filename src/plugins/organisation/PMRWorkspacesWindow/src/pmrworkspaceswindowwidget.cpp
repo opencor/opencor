@@ -235,7 +235,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     if (dynamic_cast<QGuiApplication *>(QCoreApplication::instance())) {
         connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
-                this, SLOT(focusWindowChanged()));
+                this, SLOT(startStopTimer()));
     }
 
     // Create and populate our context menu
@@ -1355,27 +1355,18 @@ void PmrWorkspacesWindowWidget::startStopTimer()
     if (   !mTimer->isActive()
         &&  Core::opencorActive() && !mCurrentWorkspaceUrl.isEmpty()) {
         disconnect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
-                   this, SLOT(focusWindowChanged()));
+                   this, SLOT(startStopTimer()));
 
         refreshWorkspaces();
 
         connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
-                this, SLOT(focusWindowChanged()));
+                this, SLOT(startStopTimer()));
 
         mTimer->start(1000);
     } else if (   mTimer->isActive()
                && (!Core::opencorActive() || mCurrentWorkspaceUrl.isEmpty())) {
         mTimer->stop();
     }
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::focusWindowChanged()
-{
-    // Start/stop our timer
-
-    startStopTimer();
 }
 
 //==============================================================================
