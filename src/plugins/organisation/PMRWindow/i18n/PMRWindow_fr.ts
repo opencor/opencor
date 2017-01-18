@@ -27,10 +27,6 @@
         <translation>Voir dans PMR</translation>
     </message>
     <message>
-        <source>Clone Workspace</source>
-        <translation>Cloner Espace De Travail</translation>
-    </message>
-    <message>
         <source>Clone the corresponding workspace</source>
         <translation>Cloner l&apos;espace de travail correspondant</translation>
     </message>
@@ -43,19 +39,7 @@
         <translation>Copier l&apos;URL dans le presse-papier</translation>
     </message>
     <message>
-        <source>Hide Exposure Files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hide the exposure files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show Exposure Files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show the exposure files</source>
+        <source>Clone Workspace...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

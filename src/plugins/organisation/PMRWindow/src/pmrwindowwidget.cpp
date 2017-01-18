@@ -158,7 +158,7 @@ void PmrWindowWidget::retranslateUi()
                                      tr("View in PMR"));
     I18nInterface::retranslateAction(mCopyUrlAction, tr("Copy URL"),
                                      tr("Copy the URL to the clipboard"));
-    I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone Workspace"),
+    I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone Workspace..."),
                                      tr("Clone the corresponding workspace"));
 
     // Retranslate the rest of our GUI by updating it, if we have been
