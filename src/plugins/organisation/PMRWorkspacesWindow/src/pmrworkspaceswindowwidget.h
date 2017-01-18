@@ -196,13 +196,13 @@ private:
     void showInGraphicalShell(const QString &pPath);
 
 signals:
+    void information(const QString &pMessage);
+    void warning(const QString &pMessage);
+
     void cloneWorkspaceRequested(const QString &pUrl);
 
     void openFileRequested(const QString &pFileName);
     void openFilesRequested(const QStringList &pFileNames);
-
-    void information(const QString &pMessage);
-    void warning(const QString &pMessage);
 
 public slots:
     void initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
