@@ -36,10 +36,6 @@
    <property name="enabled">
     <bool>false</bool>
    </property>
-   <property name="icon">
-    <iconset resource="../../../../../res/ui.qrc">
-     <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
-   </property>
    <property name="text">
     <string>New</string>
    </property>
