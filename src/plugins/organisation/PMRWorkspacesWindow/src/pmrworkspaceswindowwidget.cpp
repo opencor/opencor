@@ -79,7 +79,7 @@ void PmrWorkspacesWindowItemDelegate::paint(QPainter *pPainter,
         QIcon collapsedFolderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
         QIcon expandedFolderIcon = QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
         int folderIconSize = collapsedFolderIcon.availableSizes().first().width();
-        int favoriteIconSize = 0.625*folderIconSize;
+        int favoriteIconSize = 0.57*folderIconSize;
 
         CollapsedOwnedWorkspaceIcon = Core::overlayedIcon(collapsedFolderIcon,
                                                           FavoriteIcon,

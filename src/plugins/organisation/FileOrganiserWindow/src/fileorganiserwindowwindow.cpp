@@ -62,7 +62,7 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
     QIcon folderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
     int folderIconSize = folderIcon.availableSizes().first().width();
-    int plusIconSize = 0.625*folderIconSize;
+    int plusIconSize = 0.57*folderIconSize;
 
     mGui->actionNew->setIcon(Core::overlayedIcon(folderIcon, PlusIcon,
                                                  folderIconSize, folderIconSize,
