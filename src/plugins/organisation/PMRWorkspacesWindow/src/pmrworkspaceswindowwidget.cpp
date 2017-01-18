@@ -242,15 +242,20 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     mViewInPmrAction = Core::newAction(this);
     mCopyUrlAction = Core::newAction(this);
+    mCloneWorkspaceAction = Core::newAction(this);
 
     connect(mViewInPmrAction, SIGNAL(triggered(bool)),
             this, SLOT(viewInPmr()));
     connect(mCopyUrlAction, SIGNAL(triggered(bool)),
             this, SLOT(copyUrl()));
+    connect(mCloneWorkspaceAction, SIGNAL(triggered(bool)),
+            this, SLOT(cloneWorkspace()));
 
     mContextMenu->addAction(mViewInPmrAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyUrlAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mCloneWorkspaceAction);
 
     // Make our tree view widget our focus proxy
 
@@ -276,6 +281,8 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("View in PMR"));
     I18nInterface::retranslateAction(mCopyUrlAction, tr("Copy URL"),
                                      tr("Copy the URL to the clipboard"));
+    I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone Workspace..."),
+                                     tr("Clone the current workspace"));
 
     // Retranslate the rest of our GUI by updating it, if we have been
     // initialised
@@ -895,6 +902,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
 
         mViewInPmrAction->setVisible(workspaceItem);
         mCopyUrlAction->setVisible(workspaceItem);
+        mCloneWorkspaceAction->setVisible(item->type() == PmrWorkspacesWindowItem::OwnedWorkspace);
 
         mCopyUrlAction->setEnabled(mTreeViewWidget->selectedIndexes().count() == 1);
 
@@ -1543,6 +1551,15 @@ void PmrWorkspacesWindowWidget::copyUrl()
     // Copy the current item's URL to the clipboard
 
     QApplication::clipboard()->setText(currentItem()->url());
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::cloneWorkspace()
+{
+    // Let people know that we want to clone the current workspace
+
+    emit cloneWorkspaceRequested(currentItem()->url());
 }
 
 //==============================================================================

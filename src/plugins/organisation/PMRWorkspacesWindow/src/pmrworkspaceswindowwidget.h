@@ -146,6 +146,7 @@ private:
 
     QAction *mViewInPmrAction;
     QAction *mCopyUrlAction;
+    QAction *mCloneWorkspaceAction;
 
     Core::UserMessageWidget *mUserMessageWidget;
 
@@ -195,6 +196,8 @@ private:
     void showInGraphicalShell(const QString &pPath);
 
 signals:
+    void cloneWorkspaceRequested(const QString &pUrl);
+
     void openFileRequested(const QString &pFileName);
     void openFilesRequested(const QStringList &pFileNames);
 
@@ -222,6 +225,7 @@ private slots:
 
     void viewInPmr();
     void copyUrl();
+    void cloneWorkspace();
 };
 
 //==============================================================================
