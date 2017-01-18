@@ -127,22 +127,17 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     mContextMenu = new QMenu(this);
 
     mViewInPmrAction = Core::newAction(this);
-    mShowHideExposureFilesAction = Core::newAction(this);
     mCopyUrlAction = Core::newAction(this);
     mCloneWorkspaceAction = Core::newAction(this);
 
     connect(mViewInPmrAction, SIGNAL(triggered(bool)),
             this, SLOT(viewInPmr()));
-    connect(mShowHideExposureFilesAction, SIGNAL(triggered(bool)),
-            this, SLOT(showHideExposureFiles()));
     connect(mCopyUrlAction, SIGNAL(triggered(bool)),
             this, SLOT(copyUrl()));
     connect(mCloneWorkspaceAction, SIGNAL(triggered(bool)),
             this, SLOT(cloneWorkspace()));
 
     mContextMenu->addAction(mViewInPmrAction);
-    mContextMenu->addSeparator();
-    mContextMenu->addAction(mShowHideExposureFilesAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyUrlAction);
     mContextMenu->addSeparator();
@@ -158,8 +153,6 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 void PmrWindowWidget::retranslateUi()
 {
     // Retranslate our actions
-    // Note: mShowHideExposureFilesAction is exposure item dependent, so
-    //       translate it only when we are about to show our context menu...
 
     I18nInterface::retranslateAction(mViewInPmrAction, tr("View In PMR"),
                                      tr("View in PMR"));
@@ -397,20 +390,7 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
     if (item) {
         // We are over an item, so update our context menu and show it
 
-        bool exposureItem = item->type() == PmrWindowItem::Exposure;
-
-        if (exposureItem) {
-            if (mTreeViewWidget->isExpanded(item->index())) {
-                I18nInterface::retranslateAction(mShowHideExposureFilesAction, tr("Hide Exposure Files"),
-                                                 tr("Hide the exposure files"));
-            } else {
-                I18nInterface::retranslateAction(mShowHideExposureFilesAction, tr("Show Exposure Files"),
-                                                 tr("Show the exposure files"));
-            }
-        }
-
-        mShowHideExposureFilesAction->setVisible(exposureItem);
-        mCloneWorkspaceAction->setVisible(exposureItem);
+        mCloneWorkspaceAction->setVisible(item->type() == PmrWindowItem::Exposure);
 
         bool onlyOneItem = mTreeViewWidget->selectedIndexes().count() == 1;
 
@@ -448,32 +428,6 @@ void PmrWindowWidget::viewInPmr()
 
     for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i)
         QDesktopServices::openUrl(static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]))->url());
-}
-
-//==============================================================================
-
-void PmrWindowWidget::showHideExposureFiles()
-{
-    // Show/hide the exposure files for the current exposure item
-
-    PmrWindowItem *crtItem = currentItem();
-
-    if (crtItem->rowCount()) {
-        // Our exposure item already has some exposure files, so simply expand
-        // it or collapse it
-
-        QModelIndex crtItemIndex = crtItem->index();
-
-        if (mTreeViewWidget->isExpanded(crtItemIndex))
-            mTreeViewWidget->collapse(crtItemIndex);
-        else
-            mTreeViewWidget->expand(crtItemIndex);
-    } else {
-        // Our exposure item doesn't have any exposure files, so try to retrieve
-        // them by simulating a double click on it
-
-        itemDoubleClicked(crtItem->index());
-    }
 }
 
 //==============================================================================
