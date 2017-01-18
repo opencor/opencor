@@ -143,8 +143,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mWorkspaceManager(PMRSupport::PmrWorkspaceManager::instance()),
     mWorkspaceFolderUrls(QMap<QString, QString>()),
     mWorkspaceUrlFolderMines(QMap<QString, QPair<QString, bool>>()),
-    mCurrentWorkspaceUrl(QString()),
-    mExpandedItems(QSet<QString>()),
     mInitialized(false),
     mErrorMessage(QString()),
     mAuthenticated(false)
@@ -288,64 +286,27 @@ void PmrWorkspacesWindowWidget::retranslateUi()
 
 //==============================================================================
 
-static const auto SettingsWorkspaces       = QStringLiteral("Workspaces");
-static const auto SettingsFolders          = QStringLiteral("Folders");
-static const auto SettingsExpandedItems    = QStringLiteral("ExpandedItems");
-static const auto SettingsCurrentWorkspace = QStringLiteral("CurrentWorkspace");
+static const auto SettingsClonedWorkspaceFolders = QStringLiteral("ClonedWorkspaceFolders");
 
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our settings
+    // Retrieve the names of folders containing a cloned workspace, and add them
 
-    pSettings->beginGroup(SettingsWorkspaces);
-        // Retrieve the current workspace URL, if any
-
-        mCurrentWorkspaceUrl = pSettings->value(SettingsCurrentWorkspace).toString();
-
-        // Retrieve the names of folders containing cloned workspaces
-
-        foreach (const QString &folder, pSettings->value(SettingsFolders).toStringList()) {
-            if (!folder.isEmpty()) {
-                QString url = addWorkspaceFolder(folder);
-
-                // Ensure only the current workspace is expanded
-//---GRY--- Hmm... this seems useless since we initialise mExpandedItems after
-//          this foreach() statement?...
-
-                if (!url.compare(mCurrentWorkspaceUrl))
-                    mExpandedItems.insert(mCurrentWorkspaceUrl);
-                else if (mExpandedItems.contains(url))
-                    mExpandedItems.remove(url);
-            }
-        }
-
-        // Retrieve the names of expanded workspaces and folders
-
-        mExpandedItems = pSettings->value(SettingsExpandedItems).toStringList().toSet();
-    pSettings->endGroup();
+    foreach (const QString &cloneWorkspaceFolder,
+             pSettings->value(SettingsClonedWorkspaceFolders).toStringList()) {
+        addWorkspaceFolder(cloneWorkspaceFolder);
+    }
 }
 
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our settings
+    // Keep track of the names of folders containing cloned workspaces
 
-    pSettings->beginGroup(SettingsWorkspaces);
-        // Keep track of the names of folders containing cloned workspaces
-
-        pSettings->setValue(SettingsFolders, QVariant(mWorkspaceFolderUrls.keys()));
-
-        // Keep track of the names of expanded workspaces and folders
-
-        pSettings->setValue(SettingsExpandedItems, QVariant(mExpandedItems.toList()));
-
-        // Keep track of the current workspace URL
-
-        pSettings->setValue(SettingsCurrentWorkspace, mCurrentWorkspaceUrl);
-    pSettings->endGroup();
+    pSettings->setValue(SettingsClonedWorkspaceFolders, QVariant(mWorkspaceFolderUrls.keys()));
 }
 
 //==============================================================================
@@ -692,14 +653,6 @@ Q_UNUSED(pEvent);
 
                 emit openFileRequested(aLink);
             }
-        } else if (trElement.hasClass("workspace")) {
-            if (rowLink == mCurrentWorkspaceUrl)
-                expandHtmlTree(rowLink);
-            else
-                setCurrentWorkspaceUrl(rowLink);
-
-            if (mExpandedItems.contains(rowLink))
-                refreshWorkspace(rowLink);
         } else if (trElement.hasClass("folder")) {
             expandHtmlTree(rowLink);
         }
@@ -1010,16 +963,16 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
 
 //==============================================================================
 
-QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFolder)
+QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pWorkspaceFolder)
 {
-    // Add the given workspace folder, if it's not already added
+    // Add the given workspace folder, if it has not already been added
 
-    if (!mWorkspaceFolderUrls.contains(pFolder)) {
+    if (!mWorkspaceFolderUrls.contains(pWorkspaceFolder)) {
         // Retrieve the workspace URL (i.e. remote.origin.url) for the given
         // folder
 
         QString res = QString();
-        QByteArray folderByteArray = pFolder.toUtf8();
+        QByteArray folderByteArray = pWorkspaceFolder.toUtf8();
         git_repository *gitRepository = 0;
 
         if (!git_repository_open(&gitRepository, folderByteArray.constData())) {
@@ -1050,16 +1003,16 @@ QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pFolder)
 
         if (!res.isEmpty()) {
             if (mWorkspaceUrlFolderMines.contains(res)) {
-                duplicateCloneMessage(res, mWorkspaceUrlFolderMines.value(res).first, pFolder);
+                duplicateCloneMessage(res, mWorkspaceUrlFolderMines.value(res).first, pWorkspaceFolder);
             } else {
-                mWorkspaceFolderUrls.insert(pFolder, res);
-                mWorkspaceUrlFolderMines.insert(res, QPair<QString, bool>(pFolder, false));
+                mWorkspaceFolderUrls.insert(pWorkspaceFolder, res);
+                mWorkspaceUrlFolderMines.insert(res, QPair<QString, bool>(pWorkspaceFolder, false));
             }
         }
 
         return res;
     } else {
-        return mWorkspaceFolderUrls.value(pFolder);
+        return mWorkspaceFolderUrls.value(pWorkspaceFolder);
     }
 }
 
@@ -1182,13 +1135,12 @@ QString PmrWorkspacesWindowWidget::containerHtml(const QString &pClass,
 
 //==============================================================================
 
-QString PmrWorkspacesWindowWidget::fileNodeContentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode,
-                                                        const bool &pHidden)
+QString PmrWorkspacesWindowWidget::fileNodeContentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     // Generate and return the HTML code for the contents of the given file node
 
     if (pFileNode) {
-        static const QString Html = "                <tr class=\"contents%1\">\n"
+        static const QString Html = "                <tr class=\"contents\">\n"
                                     "                    <td></td>\n"
                                     "                    <td colspan=\"3\">\n"
                                     "                        <table>\n"
@@ -1198,7 +1150,7 @@ QString PmrWorkspacesWindowWidget::fileNodeContentsHtml(const PMRSupport::PmrWor
                                     "                                <td class=\"status hidden\"></td>\n"
                                     "                                <td class=\"action hidden\"></td>\n"
                                     "                            </tr>\n"
-                                    "%2"
+                                    "%1"
                                     "                        </table>\n"
                                     "                    </td>\n"
                                     "                </tr>\n";
@@ -1213,7 +1165,7 @@ QString PmrWorkspacesWindowWidget::fileNodeContentsHtml(const PMRSupport::PmrWor
                 itemHtml << fileHtml(fileNode);
         }
 
-        return Html.arg(pHidden?" hidden":QString(), itemHtml.isEmpty()?QString():ItemHtml.arg(itemHtml.join("\n")));
+        return Html.arg(itemHtml.isEmpty()?QString():ItemHtml.arg(itemHtml.join("\n")));
     } else {
         return emptyContentsHtml();
     }
@@ -1282,7 +1234,7 @@ QStringList PmrWorkspacesWindowWidget::workspaceHtml(const PMRSupport::PmrWorksp
                                                       status, actions);
 
     if (!path.isEmpty())
-        html << fileNodeContentsHtml(pWorkspace->rootFileNode(), !mExpandedItems.contains(url));
+        html << fileNodeContentsHtml(pWorkspace->rootFileNode());
     else
         html << emptyContentsHtml();
 
@@ -1295,51 +1247,16 @@ QStringList PmrWorkspacesWindowWidget::folderHtml(const PMRSupport::PmrWorkspace
 {
 //---GRY--- To be reviewed...
     QString fullname = pFileNode->fullName();
-    QString icon = mExpandedItems.contains(fullname)?"folderOpen":"folder";
 
     ++mRow;
 
-    QStringList html = QStringList(containerHtml("folder", fullname, icon,
+    QStringList html = QStringList(containerHtml("folder", fullname, "folder",
                                                  pFileNode->name(),
                                                  QString(), StringPairs()));
 
-    html << fileNodeContentsHtml(pFileNode, !mExpandedItems.contains(fullname));
+    html << fileNodeContentsHtml(pFileNode);
 
     return html;
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::setCurrentWorkspaceUrl(const QString &pUrl)
-{
-//---GRY--- To be reviewed...
-    if (pUrl != mCurrentWorkspaceUrl) {
-        // Close the current workspace if we are selecting a different one
-
-        if (!mCurrentWorkspaceUrl.isEmpty()) {
-/*---GRY---
-            QWebElement workspaceContents = page()->mainFrame()->documentElement().findFirst(QString("tr.workspace[id=\"%1\"] + tr").arg(mCurrentWorkspaceUrl));
-
-            if (!workspaceContents.isNull()) {
-                workspaceContents.addClass("hidden");
-                mExpandedItems.remove(mCurrentWorkspaceUrl);
-            }
-*/
-        }
-
-        // Set the new current workspace and ensure it is expanded when displayed
-
-        mCurrentWorkspaceUrl = pUrl;
-
-        mExpandedItems.insert(mCurrentWorkspaceUrl);
-
-        // Set the active directory to the workspace
-
-        PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
-
-        if (workspace->isLocal())
-            Core::setActiveDirectory(workspace->path());
-    }
 }
 
 //==============================================================================
@@ -1374,9 +1291,9 @@ void PmrWorkspacesWindowWidget::startStopTimer()
 void PmrWorkspacesWindowWidget::refreshWorkspaces()
 {
     // Refresh our workspaces
-//---GRY--- TO BE DONE...
 
-    refreshWorkspace(mCurrentWorkspaceUrl);
+    foreach (const QString &workspaceFolder, mWorkspaceFolderUrls.keys())
+        refreshWorkspace(workspaceFolder);
 }
 
 //==============================================================================
@@ -1628,10 +1545,6 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
         if (!mWorkspaceUrlFolderMines.contains(url))
             addWorkspace(pWorkspace);
-
-        // Close display of current workspace and set the cloned one current
-
-        setCurrentWorkspaceUrl(url);
 
         // Redisplay with workspace expanded
 

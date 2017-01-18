@@ -113,7 +113,7 @@ public:
     void aboutWorkspace(const QString &pUrl);
     void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                       const bool &pOwned = false);
-    QString addWorkspaceFolder(const QString &pFolder);
+    QString addWorkspaceFolder(const QString &pWorkspaceFolder);
     void refreshWorkspace(const QString &pUrl);
     void refreshWorkspaceFile(const QString &pPath);
     void requestWorkspaces();
@@ -134,9 +134,6 @@ private:
 
     QMap<QString, QString> mWorkspaceFolderUrls;
     QMap<QString, QPair<QString, bool>> mWorkspaceUrlFolderMines;
-
-    QString mCurrentWorkspaceUrl;
-    QSet<QString> mExpandedItems;
 
     bool mInitialized;
 
@@ -169,14 +166,11 @@ private:
 
     void expandHtmlTree(const QString &pId);
 
-    void setCurrentWorkspaceUrl(const QString &pUrl);
-
     QString containerHtml(const QString &pClass, const QString &pId,
                           const QString &pIcon, const QString &pName,
                           const QString &pStatus, const StringPairs &pActions);
 
-    QString fileNodeContentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode,
-                                 const bool &pHidden);
+    QString fileNodeContentsHtml(const PMRSupport::PmrWorkspaceFileNode *pFileNode);
     QString emptyContentsHtml();
 
     QStringList workspaceHtml(const PMRSupport::PmrWorkspace *pWorkspace);
