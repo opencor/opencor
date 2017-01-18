@@ -653,8 +653,6 @@ Q_UNUSED(pEvent);
 
                 emit openFileRequested(aLink);
             }
-        } else if (trElement.hasClass("folder")) {
-            expandHtmlTree(rowLink);
         }
     }
 */
@@ -1291,51 +1289,6 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces()
     foreach (const QString &workspaceFolder, mWorkspaceFolderUrls.keys())
         refreshWorkspace(workspaceFolder);
 }
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::expandHtmlTree(const QString &pId)
-{
-Q_UNUSED(pId);
-/*---GRY---
-    QWebElement trElement = page()->mainFrame()->documentElement().findFirst(QString("tr[id=\"%1\"] + tr").arg(pId));
-
-    if (!trElement.isNull()) {
-        if (mExpandedItems.contains(pId)) {
-            trElement.addClass("hidden");
-
-            mExpandedItems.remove(pId);
-        } else if (trElement.hasClass("contents")) {
-            trElement.removeClass("hidden");
-
-            mExpandedItems.insert(pId);
-        }
-    }
-*/
-}
-
-//==============================================================================
-
-/*---GRY---
-QWebElement PmrWorkspacesWindowWidget::parentWorkspaceElement(const QWebElement &pRowElement)
-{
-//---GRY--- To be reviewed...
-    QWebElement workspaceElement = pRowElement;
-
-    // Find parent workspace
-
-    while (   !workspaceElement.isNull()
-           && !(   !workspaceElement.tagName().compare(TrTag)
-                &&  workspaceElement.hasClass("workspace"))) {
-        workspaceElement = workspaceElement.parent();
-
-        if (workspaceElement.hasClass("contents"))
-            workspaceElement = workspaceElement.previousSibling();
-    }
-
-    return workspaceElement;
-}
-*/
 
 //==============================================================================
 

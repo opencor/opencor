@@ -185,10 +185,6 @@ private:
     QString fileHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode);
     QStringList folderHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
-/*---GRY---
-    static QWebElement parentWorkspaceElement(const QWebElement &pRowElement);
-*/
-
     void cloneWorkspace(const QString &pUrl);
     void duplicateCloneMessage(const QString &pUrl, const QString &pPath1,
                                const QString &pPath2);
