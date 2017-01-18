@@ -27,10 +27,6 @@
         <translation>Voir dans PMR</translation>
     </message>
     <message>
-        <source>Clone the corresponding workspace</source>
-        <translation>Cloner l&apos;espace de travail correspondant</translation>
-    </message>
-    <message>
         <source>Copy URL</source>
         <translation>Copier URL</translation>
     </message>
@@ -40,7 +36,11 @@
     </message>
     <message>
         <source>Clone Workspace...</source>
-        <translation type="unfinished"></translation>
+        <translation>Cloner Espace De Travail...</translation>
+    </message>
+    <message>
+        <source>Clone the current workspace</source>
+        <translation>Cloner l&apos;espace de travail actuel</translation>
     </message>
 </context>
 <context>
