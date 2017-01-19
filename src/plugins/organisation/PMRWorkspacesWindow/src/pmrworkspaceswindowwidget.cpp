@@ -882,10 +882,7 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
         mTreeViewModel->invisibleRootItem()->insertRow(row, workspaceItem);
 
     if (pWorkspace->rootFileNode())
-/*
         populateWorkspace(workspaceItem, pWorkspace->rootFileNode());
-*/
-        populateWorkspace(pWorkspace);
 
     resizeTreeViewToContents();
 }
