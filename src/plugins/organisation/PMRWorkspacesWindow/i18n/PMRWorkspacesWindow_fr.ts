@@ -82,10 +82,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clone Workspace...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Clone the current workspace</source>
         <translation type="unfinished"></translation>
     </message>
@@ -103,6 +99,10 @@
     </message>
     <message>
         <source>Copy the path to the clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clone...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

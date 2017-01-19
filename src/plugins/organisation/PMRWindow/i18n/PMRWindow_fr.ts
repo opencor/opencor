@@ -35,12 +35,12 @@
         <translation>Copier l&apos;URL dans le presse-papier</translation>
     </message>
     <message>
-        <source>Clone Workspace...</source>
-        <translation>Cloner Espace De Travail...</translation>
-    </message>
-    <message>
         <source>Clone the current workspace</source>
         <translation>Cloner l&apos;espace de travail actuel</translation>
+    </message>
+    <message>
+        <source>Clone...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
