@@ -501,33 +501,31 @@ CharPair PmrWorkspace::gitStatusChars(const int &pFlags) const
 
     QChar iStatus = ' ';
 
-    if (pFlags & GIT_STATUS_INDEX_NEW)
-        iStatus = 'A';
-    else if (pFlags & GIT_STATUS_INDEX_MODIFIED)
-        iStatus = 'M';
-    else if (pFlags & GIT_STATUS_INDEX_DELETED)
-        iStatus = 'D';
+    if (pFlags & GIT_STATUS_INDEX_TYPECHANGE)
+        iStatus = 'T';
     else if (pFlags & GIT_STATUS_INDEX_RENAMED)
         iStatus = 'R';
-    else if (pFlags & GIT_STATUS_INDEX_TYPECHANGE)
-        iStatus = 'T';
+    else if (pFlags & GIT_STATUS_INDEX_DELETED)
+        iStatus = 'D';
+    else if (pFlags & GIT_STATUS_INDEX_MODIFIED)
+        iStatus = 'M';
+    else if (pFlags & GIT_STATUS_INDEX_NEW)
+        iStatus = 'A';
 
     // wStatus
 
     QChar wStatus = ' ';
 
-    if (pFlags & GIT_STATUS_WT_NEW)
-        wStatus = 'A';
-    else if (pFlags & GIT_STATUS_WT_MODIFIED)
-        wStatus = 'M';
-    else if (pFlags & GIT_STATUS_WT_DELETED)
-        wStatus = 'D';
-    else if (pFlags & GIT_STATUS_WT_TYPECHANGE)
+    if (pFlags & GIT_STATUS_WT_TYPECHANGE)
         wStatus = 'T';
     else if (pFlags & GIT_STATUS_WT_RENAMED)
         wStatus = 'R';
-    else if (pFlags & GIT_STATUS_WT_UNREADABLE)
-        wStatus = 'U';
+    else if (pFlags & GIT_STATUS_WT_DELETED)
+        wStatus = 'D';
+    else if (pFlags & GIT_STATUS_WT_MODIFIED)
+        wStatus = 'M';
+    else if (pFlags & GIT_STATUS_WT_NEW)
+        wStatus = 'A';
 
     return CharPair(iStatus, wStatus);
 }
@@ -839,16 +837,16 @@ StagedFiles PmrWorkspace::stagedFiles()
                                                0;
 
                 if (filePath) {
-                    if (status->status & GIT_STATUS_INDEX_NEW)
-                        res << StagedFile(filePath, GIT_STATUS_INDEX_NEW);
-                    else if (status->status & GIT_STATUS_INDEX_MODIFIED)
-                        res << StagedFile(filePath, GIT_STATUS_INDEX_MODIFIED);
-                    else if (status->status & GIT_STATUS_INDEX_DELETED)
-                        res << StagedFile(filePath, GIT_STATUS_INDEX_DELETED);
+                    if (status->status & GIT_STATUS_INDEX_TYPECHANGE)
+                        res << StagedFile(filePath, GIT_STATUS_INDEX_TYPECHANGE);
                     else if (status->status & GIT_STATUS_INDEX_RENAMED)
                         res << StagedFile(filePath, GIT_STATUS_INDEX_RENAMED);
-                    else if (status->status & GIT_STATUS_INDEX_TYPECHANGE)
-                        res << StagedFile(filePath, GIT_STATUS_INDEX_TYPECHANGE);
+                    else if (status->status & GIT_STATUS_INDEX_DELETED)
+                        res << StagedFile(filePath, GIT_STATUS_INDEX_DELETED);
+                    else if (status->status & GIT_STATUS_INDEX_MODIFIED)
+                        res << StagedFile(filePath, GIT_STATUS_INDEX_MODIFIED);
+                    else if (status->status & GIT_STATUS_INDEX_NEW)
+                        res << StagedFile(filePath, GIT_STATUS_INDEX_NEW);
                 }
             }
 
