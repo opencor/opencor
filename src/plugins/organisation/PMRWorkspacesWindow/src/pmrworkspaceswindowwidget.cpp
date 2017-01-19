@@ -819,13 +819,10 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
         }
     }
 
-    // Populate our tree view widget with our different workspaces, after having
-    // alphabetically sorted them
+    // Populate our tree view widget with our different workspaces
 
-    PMRSupport::PmrWorkspaces workspaces = mWorkspaceManager->workspaces();
-
-    for (int i = 0, iMax = workspaces.count(); i < iMax; ++i)
-        addWorkspace(workspaces[i]);
+    foreach (PMRSupport::PmrWorkspace *workspace, mWorkspaceManager->workspaces())
+        addWorkspace(workspace);
 
     updateGui();
 
