@@ -113,6 +113,18 @@
         <source>Some information about the current workspace</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Owner:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PMR:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Path:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWindow</name>
