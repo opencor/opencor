@@ -219,15 +219,15 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     int favoriteIconSize = 0.57*folderIconSize;
 
     mCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(collapsedFolderIcon,
+                                                       FavoriteIcon,
+                                                       folderIconSize, folderIconSize,
+                                                       folderIconSize-favoriteIconSize, folderIconSize-favoriteIconSize,
+                                                       favoriteIconSize, favoriteIconSize);
+    mExpandedOwnedWorkspaceIcon = Core::overlayedIcon(expandedFolderIcon,
                                                       FavoriteIcon,
                                                       folderIconSize, folderIconSize,
                                                       folderIconSize-favoriteIconSize, folderIconSize-favoriteIconSize,
                                                       favoriteIconSize, favoriteIconSize);
-    mExpandedOwnedWorkspaceIcon = Core::overlayedIcon(expandedFolderIcon,
-                                                     FavoriteIcon,
-                                                     folderIconSize, folderIconSize,
-                                                     folderIconSize-favoriteIconSize, folderIconSize-favoriteIconSize,
-                                                     favoriteIconSize, favoriteIconSize);
 
     // Populate ourselves
 
