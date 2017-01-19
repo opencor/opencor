@@ -665,10 +665,12 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         mCloneWorkspaceAction->setVisible(item->type() == PmrWorkspacesWindowItem::OwnedWorkspace);
 
         bool onlyOneItem = mTreeViewWidget->selectedIndexes().count() == 1;
+        bool clonedItem = !mOwnedWorkspaceUrlFolders.value(item->url()).first.isEmpty();
 
+        mViewOncomputerAction->setEnabled(clonedItem);
         mCopyUrlAction->setEnabled(onlyOneItem);
-        mCopyPathAction->setEnabled(onlyOneItem);
-        mCloneWorkspaceAction->setEnabled(mOwnedWorkspaceUrlFolders.value(item->url()).first.isEmpty());
+        mCopyPathAction->setEnabled(onlyOneItem && clonedItem);
+        mCloneWorkspaceAction->setEnabled(!clonedItem);
 
         mContextMenu->exec(QCursor::pos());
     }
