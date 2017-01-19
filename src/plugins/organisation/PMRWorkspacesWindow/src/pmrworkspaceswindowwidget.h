@@ -129,12 +129,7 @@ public:
     void requestWorkspaces();
 
 protected:
-/*---GRY---
-    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
-*/
     virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual void mouseMoveEvent(QMouseEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual QSize sizeHint() const;
 
 private:
