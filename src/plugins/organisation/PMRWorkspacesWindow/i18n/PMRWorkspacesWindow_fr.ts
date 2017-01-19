@@ -105,6 +105,14 @@
         <source>Clone...</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Some information about the current workspace</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWindow</name>
