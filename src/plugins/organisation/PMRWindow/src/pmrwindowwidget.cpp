@@ -124,13 +124,23 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     // Create and populate our context menu
 
+    static const QIcon ArrowDownIcon = QIcon(":/oxygen/actions/arrow-down.png");
+
+    QIcon folderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
+    int folderIconSize = folderIcon.availableSizes().first().width();
+    int overlayIconSize = 0.57*folderIconSize;
+
     mContextMenu = new QMenu(this);
 
     mViewInPmrAction = Core::newAction(QIcon(":/oxygen/categories/applications-internet.png"),
                                        this);
     mCopyUrlAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                      this);
-    mCloneWorkspaceAction = Core::newAction(this);
+    mCloneWorkspaceAction = Core::newAction(Core::overlayedIcon(folderIcon, ArrowDownIcon,
+                                                                folderIconSize, folderIconSize,
+                                                                folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
+                                                                overlayIconSize, overlayIconSize),
+                                            this);
 
     connect(mViewInPmrAction, SIGNAL(triggered(bool)),
             this, SLOT(viewInPmr()));

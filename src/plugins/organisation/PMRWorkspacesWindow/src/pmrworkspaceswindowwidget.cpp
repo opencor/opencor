@@ -188,18 +188,18 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     QIcon collapsedFolderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
     QIcon expandedFolderIcon = QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
     int folderIconSize = collapsedFolderIcon.availableSizes().first().width();
-    int favoriteIconSize = 0.57*folderIconSize;
+    int overlayIconSize = 0.57*folderIconSize;
 
     mCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(collapsedFolderIcon,
                                                        FavoriteIcon,
                                                        folderIconSize, folderIconSize,
-                                                       folderIconSize-favoriteIconSize, folderIconSize-favoriteIconSize,
-                                                       favoriteIconSize, favoriteIconSize);
+                                                       folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
+                                                       overlayIconSize, overlayIconSize);
     mExpandedOwnedWorkspaceIcon = Core::overlayedIcon(expandedFolderIcon,
                                                       FavoriteIcon,
                                                       folderIconSize, folderIconSize,
-                                                      folderIconSize-favoriteIconSize, folderIconSize-favoriteIconSize,
-                                                      favoriteIconSize, favoriteIconSize);
+                                                      folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
+                                                      overlayIconSize, overlayIconSize);
 
     // Populate ourselves
 
@@ -240,13 +240,19 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     // Create and populate our context menu
 
+    static const QIcon ArrowDownIcon = QIcon(":/oxygen/actions/arrow-down.png");
+
     mContextMenu = new QMenu(this);
 
     mViewInPmrAction = Core::newAction(QIcon(":/oxygen/categories/applications-internet.png"),
                                        this);
     mCopyUrlAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                      this);
-    mCloneWorkspaceAction = Core::newAction(this);
+    mCloneWorkspaceAction = Core::newAction(Core::overlayedIcon(collapsedFolderIcon, ArrowDownIcon,
+                                                                folderIconSize, folderIconSize,
+                                                                folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
+                                                                overlayIconSize, overlayIconSize),
+                                            this);
 
     connect(mViewInPmrAction, SIGNAL(triggered(bool)),
             this, SLOT(viewInPmr()));
