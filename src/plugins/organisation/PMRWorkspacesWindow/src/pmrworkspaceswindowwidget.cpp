@@ -129,6 +129,15 @@ QString PmrWorkspacesWindowItem::url() const
 
 //==============================================================================
 
+QString PmrWorkspacesWindowItem::path() const
+{
+    // Return our path
+
+    return mWorkspace?mWorkspace->path():QString();
+}
+
+//==============================================================================
+
 QString PmrWorkspacesWindowItem::fileName() const
 {
     // Return our file name
@@ -246,8 +255,12 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     mViewInPmrAction = Core::newAction(QIcon(":/oxygen/categories/applications-internet.png"),
                                        this);
+    mViewOncomputerAction = Core::newAction(QIcon(":/oxygen/devices/computer.png"),
+                                       this);
     mCopyUrlAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                      this);
+    mCopyPathAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
+                                      this);
     mCloneWorkspaceAction = Core::newAction(Core::overlayedIcon(collapsedFolderIcon, ArrowDownIcon,
                                                                 folderIconSize, folderIconSize,
                                                                 folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
@@ -256,14 +269,20 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     connect(mViewInPmrAction, SIGNAL(triggered(bool)),
             this, SLOT(viewInPmr()));
+    connect(mViewOncomputerAction, SIGNAL(triggered(bool)),
+            this, SLOT(viewOnComputer()));
     connect(mCopyUrlAction, SIGNAL(triggered(bool)),
             this, SLOT(copyUrl()));
+    connect(mCopyPathAction, SIGNAL(triggered(bool)),
+            this, SLOT(copyPath()));
     connect(mCloneWorkspaceAction, SIGNAL(triggered(bool)),
             this, SLOT(cloneWorkspace()));
 
     mContextMenu->addAction(mViewInPmrAction);
+    mContextMenu->addAction(mViewOncomputerAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyUrlAction);
+    mContextMenu->addAction(mCopyPathAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCloneWorkspaceAction);
 
@@ -289,8 +308,12 @@ void PmrWorkspacesWindowWidget::retranslateUi()
 
     I18nInterface::retranslateAction(mViewInPmrAction, tr("View In PMR"),
                                      tr("View in PMR"));
+    I18nInterface::retranslateAction(mViewOncomputerAction, tr("View On Computer"),
+                                     tr("View on computer"));
     I18nInterface::retranslateAction(mCopyUrlAction, tr("Copy URL"),
                                      tr("Copy the URL to the clipboard"));
+    I18nInterface::retranslateAction(mCopyPathAction, tr("Copy Path"),
+                                     tr("Copy the path to the clipboard"));
     I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone Workspace..."),
                                      tr("Clone the current workspace"));
 
@@ -636,10 +659,15 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
                              || (item->type() == PmrWorkspacesWindowItem::Workspace);
 
         mViewInPmrAction->setVisible(workspaceItem);
+        mViewOncomputerAction->setVisible(workspaceItem);
         mCopyUrlAction->setVisible(workspaceItem);
+        mCopyPathAction->setVisible(workspaceItem);
         mCloneWorkspaceAction->setVisible(item->type() == PmrWorkspacesWindowItem::OwnedWorkspace);
 
-        mCopyUrlAction->setEnabled(mTreeViewWidget->selectedIndexes().count() == 1);
+        bool onlyOneItem = mTreeViewWidget->selectedIndexes().count() == 1;
+
+        mCopyUrlAction->setEnabled(onlyOneItem);
+        mCopyPathAction->setEnabled(onlyOneItem);
         mCloneWorkspaceAction->setEnabled(mOwnedWorkspaceUrlFolders.value(item->url()).first.isEmpty());
 
         mContextMenu->exec(QCursor::pos());
@@ -789,14 +817,6 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces()
 
     foreach (PMRSupport::PmrWorkspace *workspace, mWorkspaceManager->workspaces())
         refreshWorkspace(workspace);
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::showInGraphicalShell(const QString &pPath)
-{
-//---GRY--- To be reviewed...
-    QDesktopServices::openUrl(QUrl::fromLocalFile(pPath));
 }
 
 //==============================================================================
@@ -1010,11 +1030,32 @@ void PmrWorkspacesWindowWidget::viewInPmr()
 
 //==============================================================================
 
+void PmrWorkspacesWindowWidget::viewOnComputer()
+{
+    // Show the selected items on the user's computer
+
+    QModelIndexList selectedIndexes = mTreeViewWidget->selectedIndexes();
+
+    for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i)
+        QDesktopServices::openUrl(QUrl::fromLocalFile(static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]))->path()));
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowWidget::copyUrl()
 {
     // Copy the current item's URL to the clipboard
 
     QApplication::clipboard()->setText(currentItem()->url());
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::copyPath()
+{
+    // Copy the current item's path to the clipboard
+
+    QApplication::clipboard()->setText(currentItem()->path());
 }
 
 //==============================================================================

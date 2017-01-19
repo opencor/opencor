@@ -89,6 +89,7 @@ public:
     PMRSupport::PmrWorkspace * workspace() const;
 
     QString url() const;
+    QString path() const;
     QString fileName() const;
 
 private:
@@ -152,7 +153,9 @@ private:
     QMenu *mContextMenu;
 
     QAction *mViewInPmrAction;
+    QAction *mViewOncomputerAction;
     QAction *mCopyUrlAction;
+    QAction *mCopyPathAction;
     QAction *mCloneWorkspaceAction;
 
     Core::UserMessageWidget *mUserMessageWidget;
@@ -177,8 +180,6 @@ private:
 
     void commitWorkspace(const QString &pUrl);
     void synchronizeWorkspace(const QString &pUrl, const bool &pPush = true);
-
-    void showInGraphicalShell(const QString &pPath);
 
 signals:
     void information(const QString &pMessage);
@@ -209,7 +210,9 @@ private slots:
     void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
 
     void viewInPmr();
+    void viewOnComputer();
     void copyUrl();
+    void copyPath();
     void cloneWorkspace();
 };
 
