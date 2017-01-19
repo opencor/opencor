@@ -299,18 +299,20 @@ void PmrWorkspacesWindowWindow::retrieveWorkspaces(const bool &pVisible)
 
 void PmrWorkspacesWindowWindow::cloneOwnedWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
 {
-    // Clone the workspace which URL is given
+    // Clone the owned workspace
 
     if (pWorkspace && !pWorkspace->isLocal()) {
         QString dirName = PMRSupport::PmrWebService::getEmptyDirectory();
 
         if (!dirName.isEmpty()) {
-            // Create the folder for the new workspace
+            // Create, if needed, the folder where the workspace will be cloned
 
             QDir workspaceFolder = QDir(dirName);
 
             if (!workspaceFolder.exists())
                 workspaceFolder.mkpath(".");
+
+            // Ask our PMR web service to effectively clone our owned workspace
 
             mPmrWebService->requestWorkspaceClone(pWorkspace, dirName);
         }
@@ -361,7 +363,7 @@ void PmrWorkspacesWindowWindow::retranslateActionPmr()
 
 void PmrWorkspacesWindowWindow::on_actionNew_triggered()
 {
-    // Create a new workspace
+    // Create a new (owned) workspace
 
     PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(Core::mainWindow());
 
@@ -379,7 +381,7 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
 
 void PmrWorkspacesWindowWindow::on_actionReload_triggered()
 {
-    // Ask our widget to get the list of workspaces from PMR
+    // Ask our widget to get our list of workspaces from PMR
 
     mPmrWorkspacesWindowWidget->requestWorkspaces();
 }
