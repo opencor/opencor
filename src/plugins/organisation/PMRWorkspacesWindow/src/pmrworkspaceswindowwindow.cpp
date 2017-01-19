@@ -145,6 +145,9 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     connect(mPmrWorkspacesWindowWidget, SIGNAL(warning(const QString &)),
             this, SLOT(showWarning(const QString &)));
 
+    connect(mPmrWorkspacesWindowWidget, SIGNAL(cloneOwnedWorkspaceRequested(PMRSupport::PmrWorkspace *)),
+            this, SLOT(cloneOwnedWorkspace(PMRSupport::PmrWorkspace *)));
+
     connect(mPmrWorkspacesWindowWidget, SIGNAL(openFileRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
     connect(mPmrWorkspacesWindowWidget, SIGNAL(openFilesRequested(const QStringList &)),
@@ -289,6 +292,28 @@ void PmrWorkspacesWindowWindow::retrieveWorkspaces(const bool &pVisible)
         firstTime = false;
 
         QTimer::singleShot(0, this, SLOT(updateGui()));
+    }
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWindow::cloneOwnedWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
+{
+    // Clone the workspace which URL is given
+
+    if (pWorkspace && !pWorkspace->isLocal()) {
+        QString dirName = PMRSupport::PmrWebService::getEmptyDirectory();
+
+        if (!dirName.isEmpty()) {
+            // Create the folder for the new workspace
+
+            QDir workspaceFolder = QDir(dirName);
+
+            if (!workspaceFolder.exists())
+                workspaceFolder.mkpath(".");
+
+            mPmrWebService->requestWorkspaceClone(pWorkspace, dirName);
+        }
     }
 }
 

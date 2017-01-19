@@ -79,9 +79,14 @@ public:
 
     explicit PmrWorkspacesWindowItem(const Type &pType, const QIcon &pIcon,
                                      const QString &pText,
-                                     const QString &pUrlOrFileName = QString());
+                                     PMRSupport::PmrWorkspace *pWorkspace = 0);
+    explicit PmrWorkspacesWindowItem(const Type &pType, const QIcon &pIcon,
+                                     const QString &pText,
+                                     const QString &pFileName);
 
     virtual int type() const;
+
+    PMRSupport::PmrWorkspace * workspace() const;
 
     QString url() const;
     QString fileName() const;
@@ -89,7 +94,14 @@ public:
 private:
     Type mType;
 
-    QString mUrlOrFileName;
+    PMRSupport::PmrWorkspace *mWorkspace;
+
+    QString mFileName;
+
+    void constructor(const Type &pType, const QIcon &pIcon,
+                     const QString &pText,
+                     PMRSupport::PmrWorkspace *pWorkspace,
+                     const QString &pFileName);
 };
 
 //==============================================================================
@@ -161,6 +173,7 @@ private:
     PmrWorkspacesWindowItem * currentItem() const;
 
     void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
+    void populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
     void populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
                            PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
@@ -186,7 +199,6 @@ private:
     QString fileHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode);
     QStringList folderHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
-    void cloneWorkspace(const QString &pUrl);
     void duplicateCloneMessage(const QString &pUrl, const QString &pPath1,
                                const QString &pPath2);
 
@@ -199,7 +211,7 @@ signals:
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
 
-    void cloneWorkspaceRequested(const QString &pUrl);
+    void cloneOwnedWorkspaceRequested(PMRSupport::PmrWorkspace *pWorkspace);
 
     void openFileRequested(const QString &pFileName);
     void openFilesRequested(const QStringList &pFileNames);

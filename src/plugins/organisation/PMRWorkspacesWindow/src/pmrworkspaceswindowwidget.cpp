@@ -56,19 +56,48 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
-                                                 const QIcon &pIcon,
-                                                 const QString &pText,
-                                                 const QString &pUrlOrFileName) :
-    QStandardItem(pText),
-    mType(pType),
-    mUrlOrFileName(pUrlOrFileName)
+void PmrWorkspacesWindowItem::constructor(const Type &pType, const QIcon &pIcon,
+                                          const QString &pText,
+                                          PMRSupport::PmrWorkspace *pWorkspace,
+                                          const QString &pFileName)
 {
+    // Some initialisations
+
+    mType = pType;
+    mWorkspace = pWorkspace;
+    mFileName = pFileName;
+
     // Customise ourselves
 
     QStandardItem::setIcon(pIcon);
 
     setToolTip(pText);
+}
+
+//==============================================================================
+
+PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+                                                 const QIcon &pIcon,
+                                                 const QString &pText,
+                                                 PMRSupport::PmrWorkspace *pWorkspace) :
+    QStandardItem(pText)
+{
+    // Construct our object
+
+    constructor(pType, pIcon, pText, pWorkspace, QString());
+}
+
+//==============================================================================
+
+PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+                                                 const QIcon &pIcon,
+                                                 const QString &pText,
+                                                 const QString &pFileName) :
+    QStandardItem(pText)
+{
+    // Construct our object
+
+    constructor(pType, pIcon, pText, 0, pFileName);
 }
 
 //==============================================================================
@@ -82,11 +111,20 @@ int PmrWorkspacesWindowItem::type() const
 
 //==============================================================================
 
+PMRSupport::PmrWorkspace * PmrWorkspacesWindowItem::workspace() const
+{
+    // Return our workspace
+
+    return mWorkspace;
+}
+
+//==============================================================================
+
 QString PmrWorkspacesWindowItem::url() const
 {
     // Return our URL
 
-    return mUrlOrFileName;
+    return mWorkspace?mWorkspace->url():QString();
 }
 
 //==============================================================================
@@ -95,7 +133,7 @@ QString PmrWorkspacesWindowItem::fileName() const
 {
     // Return our file name
 
-    return mUrlOrFileName;
+    return mFileName;
 }
 
 //==============================================================================
@@ -824,12 +862,11 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
     // Determine where in our tree view widget the given workspace should be
     // inserted
 
-    QStandardItem *rootItem = mTreeViewModel->invisibleRootItem();
     QString workspaceName = pWorkspace->name();
     int row = -1;
 
-    for (int i = 0, iMax = rootItem->rowCount(); i < iMax; ++i) {
-        if (workspaceName.compare(rootItem->child(i)->text()) < 0) {
+    for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        if (workspaceName.compare(mTreeViewModel->invisibleRootItem()->child(i)->text()) < 0) {
             row = i;
 
             break;
@@ -845,17 +882,37 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
                                                                              mCollapsedOwnedWorkspaceIcon:
                                                                              QFileIconProvider().icon(QFileIconProvider::Folder),
                                                                          workspaceName,
-                                                                         pWorkspace->url());
+                                                                         pWorkspace);
 
     if (row == -1)
-        rootItem->appendRow(workspaceItem);
+        mTreeViewModel->invisibleRootItem()->appendRow(workspaceItem);
     else
-        rootItem->insertRow(row, workspaceItem);
+        mTreeViewModel->invisibleRootItem()->insertRow(row, workspaceItem);
 
     if (pWorkspace->rootFileNode())
+/*
         populateWorkspace(workspaceItem, pWorkspace->rootFileNode());
+*/
+        populateWorkspace(pWorkspace);
 
     resizeTreeViewToContents();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
+{
+    // Retrieve the folder item for the given workspace and populate it
+
+    for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->invisibleRootItem()->child(i));
+
+        if (item->workspace() == pWorkspace) {
+            populateWorkspace(item, pWorkspace->rootFileNode());
+
+            break;
+        }
+    }
 }
 
 //==============================================================================
@@ -905,6 +962,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         mCloneWorkspaceAction->setVisible(item->type() == PmrWorkspacesWindowItem::OwnedWorkspace);
 
         mCopyUrlAction->setEnabled(mTreeViewWidget->selectedIndexes().count() == 1);
+        mCloneWorkspaceAction->setEnabled(mOwnedWorkspaceUrlFolders.value(item->url()).first.isEmpty());
 
         mContextMenu->exec(QCursor::pos());
     }
@@ -1348,29 +1406,6 @@ Q_UNUSED(pUrl);
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::cloneWorkspace(const QString &pUrl)
-{
-//---GRY--- To be reviewed...
-    PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
-
-    if (workspace && !workspace->isLocal()) {
-        QString dirName = PMRSupport::PmrWebService::getEmptyDirectory();
-
-        if (!dirName.isEmpty()) {
-            // Create the folder for the new workspace
-
-            QDir workspaceFolder = QDir(dirName);
-
-            if (!workspaceFolder.exists())
-                workspaceFolder.mkpath(".");
-
-            mPmrWebService->requestWorkspaceClone(workspace, dirName);
-        }
-    }
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
 {
 //---GRY--- To be reviewed...
@@ -1499,10 +1534,11 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
     if (pWorkspace) {
         QString url = pWorkspace->url();
 
-        // Ensure that we don't already know about the workspace
+        // Check whether we already know about the workspace
 
         if (!mOwnedWorkspaceUrlFolders.contains(url)) {
-            // Keep track of the workspace, open it and then add it to our GUI
+            // This is a cloned workspace that we don't own, so keep track of
+            // it, open it and then add it to our GUI
 
             QString folder = pWorkspace->path();
 
@@ -1515,10 +1551,23 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
             addWorkspace(pWorkspace);
         } else {
-            // Let the user know that there is already a workspace with
-            // that URL
+            // We already about that workspace, so check whether it's because we
+            // have just cloned a workspace that we own
 
-            duplicateCloneMessage(url, mOwnedWorkspaceUrlFolders.value(url).first, pWorkspace->path());
+            QPair<QString, bool> folderOwned = mOwnedWorkspaceUrlFolders.value(url);
+
+            if (folderOwned.second) {
+                // We have just cloned a workspace that we own, so simply
+                // populate it
+
+                populateWorkspace(pWorkspace);
+            } else {
+                // This is not a workspace that we own, meaning that we have
+                // already cloned a workspace with the same URL, so let the user
+                // know about it
+
+                duplicateCloneMessage(url, folderOwned.first, pWorkspace->path());
+            }
         }
     }
 }
@@ -1557,9 +1606,9 @@ void PmrWorkspacesWindowWidget::copyUrl()
 
 void PmrWorkspacesWindowWidget::cloneWorkspace()
 {
-    // Let people know that we want to clone the current workspace
+    // Let people know that we want to clone the current (owned) workspace
 
-    emit cloneWorkspaceRequested(currentItem()->url());
+    emit cloneOwnedWorkspaceRequested(mWorkspaceManager->workspace(currentItem()->url()));
 }
 
 //==============================================================================
