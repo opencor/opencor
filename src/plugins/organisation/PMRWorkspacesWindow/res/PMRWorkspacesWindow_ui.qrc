@@ -2,8 +2,20 @@
     <qresource prefix="/PMRWorkspacesWindow">
         <file>folder-owned-open.png</file>
         <file>folder-owned.png</file>
+        <file>iA.png</file>
+        <file>iD.png</file>
+        <file>iM.png</file>
+        <file>iR.png</file>
+        <file>iT.png</file>
         <file>synchronize-pull.png</file>
         <file>synchronize-push.png</file>
         <file>synchronize.png</file>
+        <file>w!.png</file>
+        <file>wA.png</file>
+        <file>wC.png</file>
+        <file>wD.png</file>
+        <file>wM.png</file>
+        <file>wR.png</file>
+        <file>wT.png</file>
     </qresource>
 </RCC>

@@ -923,8 +923,27 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
             if (fileNode->hasChildren())
                 populateWorkspace(folderItem, fileNode);
         } else {
+            // We are dealing with a file, so retrieve its status and generate a
+            // special icon for it, if needed
+
+            static const QIcon DefaultFileIcon = QFileIconProvider().icon(QFileIconProvider::File);
+
+            PMRSupport::CharPair status = fileNode->status();
+            QIcon icon = DefaultFileIcon;
+            int iconSize = icon.availableSizes().first().width();
+            int overlaySize = 0.57*iconSize;
+
+            if ((status.first != ' ') || (status.second != ' ')) {
+                icon = Core::overlayedIcon(icon,
+                                           QIcon(QString(":/PMRWorkspacesWindow/%1%2.png").arg((status.first != ' ')?"i":"w",
+                                                                                               (status.first != ' ')?status.first:status.second)),
+                                           iconSize, iconSize,
+                                           iconSize-overlaySize, 0,
+                                           overlaySize, overlaySize);
+            }
+
             pFolderItem->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::File,
-                                                               QFileIconProvider().icon(QFileIconProvider::File),
+                                                               icon,
                                                                fileNode->name(),
                                                                fileNode->fullName()));
         }
