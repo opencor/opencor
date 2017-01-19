@@ -165,14 +165,6 @@ static const auto SynchronizePushIcon = QStringLiteral(":/PMRWorkspacesWindow/ic
 static const auto SynchronizePullIcon = QStringLiteral(":/PMRWorkspacesWindow/icons/synchronize-pull.png");
 
 //==============================================================================
-//---GRY--- TODO:
-//           - Shouldn't mTimer be used to refresh *all* workspaces and not only
-//             the current one?...
-//           - We want to be able to expand *any* workspace, if the user so
-//             desires...
-//           - Double check loadSettings() and saveSettings() (e.g. we want to
-//             be able to have any number of workspaces expanded, not just
-//             one)...
 
 PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService,
                                                      QWidget *pParent) :
