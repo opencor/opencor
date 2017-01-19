@@ -126,8 +126,10 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     mContextMenu = new QMenu(this);
 
-    mViewInPmrAction = Core::newAction(this);
-    mCopyUrlAction = Core::newAction(this);
+    mViewInPmrAction = Core::newAction(QIcon(":/oxygen/categories/applications-internet.png"),
+                                       this);
+    mCopyUrlAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
+                                     this);
     mCloneWorkspaceAction = Core::newAction(this);
 
     connect(mViewInPmrAction, SIGNAL(triggered(bool)),
