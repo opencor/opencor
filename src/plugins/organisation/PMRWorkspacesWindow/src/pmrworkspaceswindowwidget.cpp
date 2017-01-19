@@ -418,8 +418,6 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
     mWorkspaceManager->clearWorkspaces();
 
-    mTreeViewModel->clear();
-
     mErrorMessage = pErrorMessage;
     mAuthenticated = pAuthenticated;
 
@@ -490,6 +488,8 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
     }
 
     // Populate our tree view widget with our different workspaces
+
+    mTreeViewModel->clear();
 
     foreach (PMRSupport::PmrWorkspace *workspace, mWorkspaceManager->workspaces())
         addWorkspace(workspace);
