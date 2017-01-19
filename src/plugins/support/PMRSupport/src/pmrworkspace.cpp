@@ -543,6 +543,8 @@ void PmrWorkspace::refreshStatus()
 
     mRepositoryStatusMap.clear();
 
+    delete mRootFileNode;
+
     mRootFileNode = new PmrWorkspaceFileNode(QString(), mPath);
 
     if (isOpen()) {
