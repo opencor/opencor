@@ -737,10 +737,13 @@ void PmrWorkspacesWindowWidget::updateGui()
                                            Core::formatMessage(mErrorMessage, false, true));
     }
 
-    // Show/hide our user message widget and our tree view widget
+    // Show/hide our user message widget and our tree view widget, and then
+    // check whether we should start/stop our timer
 
     mUserMessageWidget->setVisible(!mUserMessageWidget->text().isEmpty());
     mTreeViewWidget->setVisible(mUserMessageWidget->text().isEmpty());
+
+    startStopTimer();
 }
 
 //==============================================================================
