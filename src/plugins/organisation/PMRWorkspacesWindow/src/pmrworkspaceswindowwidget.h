@@ -177,28 +177,6 @@ private:
     void populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
                            PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
-    void expandHtmlTree(const QString &pId);
-
-    QString containerHtml(const QString &pClass, const QString &pId,
-                          const QString &pIcon, const QString &pName,
-                          const QString &pStatus, const StringPairs &pActions);
-
-    QString fileNodeContentsHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode);
-    QString emptyContentsHtml();
-
-    QStringList workspaceHtml(PMRSupport::PmrWorkspace *pWorkspace);
-
-    static const QString actionHtml(const StringPairs &pActions);
-
-    static QStringList fileStatusActionHtml(const QString &pPath,
-                                            const PMRSupport::CharPair &pGitStatus);
-    static QStringList fileStatusActionHtml(PMRSupport::PmrWorkspace *pWorkspace,
-                                            const QString &pPath);
-    static QStringList fileStatusActionHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode);
-
-    QString fileHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode);
-    QStringList folderHtml(PMRSupport::PmrWorkspaceFileNode *pFileNode);
-
     void duplicateCloneMessage(const QString &pUrl, const QString &pPath1,
                                const QString &pPath2);
 
