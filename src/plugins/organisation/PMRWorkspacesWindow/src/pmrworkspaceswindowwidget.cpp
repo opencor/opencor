@@ -266,6 +266,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                                                 folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
                                                                 overlayIconSize, overlayIconSize),
                                             this);
+    mAboutWorkspaceAction = Core::newAction(QIcon(":/oxygen/actions/help-about.png"),
+                                            this);
 
     connect(mViewInPmrAction, SIGNAL(triggered(bool)),
             this, SLOT(viewInPmr()));
@@ -277,6 +279,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
             this, SLOT(copyPath()));
     connect(mCloneWorkspaceAction, SIGNAL(triggered(bool)),
             this, SLOT(clone()));
+    connect(mAboutWorkspaceAction, SIGNAL(triggered(bool)),
+            this, SLOT(about()));
 
     mContextMenu->addAction(mViewInPmrAction);
     mContextMenu->addAction(mViewOncomputerAction);
@@ -285,6 +289,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mContextMenu->addAction(mCopyPathAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCloneWorkspaceAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mAboutWorkspaceAction);
 
     // Make our tree view widget our focus proxy
 
@@ -316,6 +322,8 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("Copy the path to the clipboard"));
     I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone..."),
                                      tr("Clone the current workspace"));
+    I18nInterface::retranslateAction(mAboutWorkspaceAction, tr("About"),
+                                     tr("Some information about the current workspace"));
 
     // Retranslate the rest of our GUI by updating it, if we have been
     // initialised
@@ -663,6 +671,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         mCopyUrlAction->setVisible(workspaceItem);
         mCopyPathAction->setVisible(workspaceItem);
         mCloneWorkspaceAction->setVisible(item->type() == PmrWorkspacesWindowItem::OwnedWorkspace);
+        mAboutWorkspaceAction->setVisible(workspaceItem);
 
         bool onlyOneItem = mTreeViewWidget->selectedIndexes().count() == 1;
         bool clonedItem = !mOwnedWorkspaceUrlFolders.value(item->url()).first.isEmpty();
@@ -671,6 +680,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         mCopyUrlAction->setEnabled(onlyOneItem);
         mCopyPathAction->setEnabled(onlyOneItem && clonedItem);
         mCloneWorkspaceAction->setEnabled(!clonedItem);
+        mAboutWorkspaceAction->setEnabled(onlyOneItem);
 
         mContextMenu->exec(QCursor::pos());
     }
@@ -828,37 +838,6 @@ bool PmrWorkspacesWindowWidget::hasWorkspaces() const
     // Return whether we have some workspaces
 
     return !mWorkspaceManager->workspaces().isEmpty();
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::aboutWorkspace(const QString &pUrl)
-{
-Q_UNUSED(pUrl);
-/*---GRY---
-    QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(QString("tr.workspace[id=\"%1\"]").arg(pUrl));
-
-    if (!workspaceElement.isNull()) {
-        PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(workspaceElement.attribute("id"));
-
-        if (workspace) {
-            QStringList workspaceInformation = QStringList() << workspace->name();
-
-            if (!workspace->description().isEmpty())
-                workspaceInformation << workspace->description();
-
-            if (!workspace->owner().isEmpty())
-                workspaceInformation << tr("Owner: %1").arg(workspace->owner());
-
-            workspaceInformation << tr("PMR: <a href=\"%1\">%1</a>").arg(workspace->url());
-
-            if (workspace->isLocal())
-                workspaceInformation << tr("Path: <a href=\"file://%1/\">%1</a>").arg(workspace->path());
-
-            emit information(workspaceInformation.join("<br></br><br></br>"));
-        }
-    }
-*/
 }
 
 //==============================================================================
@@ -1067,6 +1046,16 @@ void PmrWorkspacesWindowWidget::clone()
     // Let people know that we want to clone the current (owned) workspace
 
     emit cloneOwnedWorkspaceRequested(mWorkspaceManager->workspace(currentItem()->url()));
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::about()
+{
+    // Let people know that we want to show some information about the current
+    // workspace
+
+    emit information(mWorkspaceManager->workspace(currentItem()->url())->name());
 }
 
 //==============================================================================

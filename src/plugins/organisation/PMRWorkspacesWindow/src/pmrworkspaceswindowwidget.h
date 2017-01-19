@@ -123,7 +123,6 @@ public:
 
     bool hasWorkspaces() const;
 
-    void aboutWorkspace(const QString &pUrl);
     QString addWorkspaceFolder(const QString &pWorkspaceFolder);
     void refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
     void refreshWorkspaceFile(const QString &pPath);
@@ -157,6 +156,7 @@ private:
     QAction *mCopyUrlAction;
     QAction *mCopyPathAction;
     QAction *mCloneWorkspaceAction;
+    QAction *mAboutWorkspaceAction;
 
     Core::UserMessageWidget *mUserMessageWidget;
 
@@ -214,6 +214,7 @@ private slots:
     void copyUrl();
     void copyPath();
     void clone();
+    void about();
 };
 
 //==============================================================================
