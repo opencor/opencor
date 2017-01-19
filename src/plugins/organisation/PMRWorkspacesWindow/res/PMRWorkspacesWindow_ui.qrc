@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/PMRWorkspacesWindow">
-        <file>folder-owned-open.png</file>
-        <file>folder-owned.png</file>
         <file>iA.png</file>
         <file>iD.png</file>
         <file>iM.png</file>
