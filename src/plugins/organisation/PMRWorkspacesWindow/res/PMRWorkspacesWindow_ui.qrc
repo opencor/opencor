@@ -1,9 +1,9 @@
 <RCC>
     <qresource prefix="/PMRWorkspacesWindow">
-        <file>icons/folder-owned-open.png</file>
-        <file>icons/folder-owned.png</file>
-        <file>icons/synchronize-pull.png</file>
-        <file>icons/synchronize-push.png</file>
-        <file>icons/synchronize.png</file>
+        <file>folder-owned-open.png</file>
+        <file>folder-owned.png</file>
+        <file>synchronize-pull.png</file>
+        <file>synchronize-push.png</file>
+        <file>synchronize.png</file>
     </qresource>
 </RCC>
