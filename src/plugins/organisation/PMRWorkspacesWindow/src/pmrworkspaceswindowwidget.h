@@ -124,7 +124,7 @@ public:
 
     void aboutWorkspace(const QString &pUrl);
     QString addWorkspaceFolder(const QString &pWorkspaceFolder);
-    void refreshWorkspace(const QString &pUrl);
+    void refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
     void refreshWorkspaceFile(const QString &pPath);
     void requestWorkspaces();
 

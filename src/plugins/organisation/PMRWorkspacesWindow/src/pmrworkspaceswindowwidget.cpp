@@ -1098,8 +1098,8 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces()
 {
     // Refresh our workspaces
 
-    foreach (const QString &workspaceFolder, mWorkspaceFolderUrls.keys())
-        refreshWorkspace(workspaceFolder);
+    foreach (PMRSupport::PmrWorkspace *workspace, mWorkspaceManager->workspaces())
+        refreshWorkspace(workspace);
 }
 
 //==============================================================================
@@ -1168,15 +1168,15 @@ void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
                 workspace->commit(commitDialog.message());
         }
 
-        refreshWorkspace(workspace->url());
+        refreshWorkspace(workspace);
     }
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::refreshWorkspace(const QString &pUrl)
+void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
 {
-Q_UNUSED(pUrl);
+Q_UNUSED(pWorkspace);
 /*---GRY---
     QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(QString("tr.workspace[id=\"%1\"]").arg(pUrl));
 
@@ -1324,7 +1324,7 @@ void PmrWorkspacesWindowWidget::workspaceSynchronized(PMRSupport::PmrWorkspace *
 {
 //---GRY--- To be reviewed...
     if (pWorkspace)
-        refreshWorkspace(pWorkspace->url());
+        refreshWorkspace(pWorkspace);
 }
 
 //==============================================================================
