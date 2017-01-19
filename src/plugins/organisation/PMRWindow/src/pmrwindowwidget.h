@@ -141,7 +141,7 @@ private slots:
 
     void viewInPmr();
     void copyUrl();
-    void cloneWorkspace();
+    void clone();
 };
 
 //==============================================================================

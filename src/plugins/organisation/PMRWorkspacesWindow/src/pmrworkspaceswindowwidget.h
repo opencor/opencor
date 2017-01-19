@@ -213,7 +213,7 @@ private slots:
     void viewOnComputer();
     void copyUrl();
     void copyPath();
-    void cloneWorkspace();
+    void clone();
 };
 
 //==============================================================================

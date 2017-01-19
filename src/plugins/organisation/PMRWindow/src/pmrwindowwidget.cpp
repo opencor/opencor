@@ -147,7 +147,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     connect(mCopyUrlAction, SIGNAL(triggered(bool)),
             this, SLOT(copyUrl()));
     connect(mCloneWorkspaceAction, SIGNAL(triggered(bool)),
-            this, SLOT(cloneWorkspace()));
+            this, SLOT(clone()));
 
     mContextMenu->addAction(mViewInPmrAction);
     mContextMenu->addSeparator();
@@ -170,7 +170,7 @@ void PmrWindowWidget::retranslateUi()
                                      tr("View in PMR"));
     I18nInterface::retranslateAction(mCopyUrlAction, tr("Copy URL"),
                                      tr("Copy the URL to the clipboard"));
-    I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone Workspace..."),
+    I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone..."),
                                      tr("Clone the current workspace"));
 
     // Retranslate the rest of our GUI by updating it, if we have been
@@ -453,7 +453,7 @@ void PmrWindowWidget::copyUrl()
 
 //==============================================================================
 
-void PmrWindowWidget::cloneWorkspace()
+void PmrWindowWidget::clone()
 {
     // Let people know that we want to clone the current exposure's workspace
 

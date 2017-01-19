@@ -276,7 +276,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     connect(mCopyPathAction, SIGNAL(triggered(bool)),
             this, SLOT(copyPath()));
     connect(mCloneWorkspaceAction, SIGNAL(triggered(bool)),
-            this, SLOT(cloneWorkspace()));
+            this, SLOT(clone()));
 
     mContextMenu->addAction(mViewInPmrAction);
     mContextMenu->addAction(mViewOncomputerAction);
@@ -314,7 +314,7 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("Copy the URL to the clipboard"));
     I18nInterface::retranslateAction(mCopyPathAction, tr("Copy Path"),
                                      tr("Copy the path to the clipboard"));
-    I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone Workspace..."),
+    I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone..."),
                                      tr("Clone the current workspace"));
 
     // Retranslate the rest of our GUI by updating it, if we have been
@@ -1060,7 +1060,7 @@ void PmrWorkspacesWindowWidget::copyPath()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::cloneWorkspace()
+void PmrWorkspacesWindowWidget::clone()
 {
     // Let people know that we want to clone the current (owned) workspace
 
