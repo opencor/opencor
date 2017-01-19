@@ -1176,31 +1176,11 @@ void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
 
 void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
 {
-Q_UNUSED(pWorkspace);
-/*---GRY---
-    QWebElement workspaceElement = page()->mainFrame()->documentElement().findFirst(QString("tr.workspace[id=\"%1\"]").arg(pUrl));
+    // Refresh the status of the given workspace
 
-    if (!workspaceElement.isNull()) {
-        PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(workspaceElement.attribute("id"));
+    pWorkspace->refreshStatus();
 
-        if (workspace) {
-            // We have a valid workspace so refresh its status
-
-            workspace->refreshStatus();
-
-            // And replace the header and content rows
-
-            QStringList htmlRows = workspaceHtml(workspace);
-
-            // Using workspaceElement.nextSibling() directly doesn't update Xml
-
-            QWebElement contentsElement = workspaceElement.nextSibling();
-
-            workspaceElement.setOuterXml(htmlRows[0]);
-            contentsElement.setOuterXml(htmlRows[1]);
-        }
-    }
-*/
+//---GRY--- Somehow need to update our tree view, if needed...
 }
 
 //==============================================================================
