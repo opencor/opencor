@@ -639,8 +639,7 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
                                            QIcon(QString(":/PMRWorkspacesWindow/%1%2.png").arg((status.first != ' ')?"i":"w",
                                                                                                (status.first != ' ')?status.first:status.second)),
                                            iconSize, iconSize,
-                                           iconSize-overlaySize, 0,
-                                           overlaySize, overlaySize);
+                                           0, 0, overlaySize, overlaySize);
             }
 
             pFolderItem->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::File,
