@@ -83,12 +83,12 @@ public:
                                      const QString &pText,
                                      PMRSupport::PmrWorkspace *pWorkspace = 0);
     explicit PmrWorkspacesWindowItem(const Type &pType, const QIcon &pIcon,
-                                     const QString &pText,
-                                     const QString &pFileName);
+                                     PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
     virtual int type() const;
 
     PMRSupport::PmrWorkspace * workspace() const;
+    PMRSupport::PmrWorkspaceFileNode * fileNode() const;
 
     QIcon collapsedIcon() const;
     QIcon expandedIcon() const;
@@ -101,16 +101,15 @@ private:
     Type mType;
 
     PMRSupport::PmrWorkspace *mWorkspace;
+    PMRSupport::PmrWorkspaceFileNode *mFileNode;
 
     QIcon mCollapsedIcon;
     QIcon mExpandedIcon;
 
-    QString mFileName;
-
     void constructor(const Type &pType, const QIcon &pCollapsedIcon,
                      const QIcon &pExpandedIcon, const QIcon &pIcon,
-                     const QString &pText, PMRSupport::PmrWorkspace *pWorkspace,
-                     const QString &pFileName);
+                     PMRSupport::PmrWorkspace *pWorkspace,
+                     PMRSupport::PmrWorkspaceFileNode *pFileNode);
 };
 
 //==============================================================================

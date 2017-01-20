@@ -60,23 +60,22 @@ void PmrWorkspacesWindowItem::constructor(const Type &pType,
                                           const QIcon &pCollapsedIcon,
                                           const QIcon &pExpandedIcon,
                                           const QIcon &pIcon,
-                                          const QString &pText,
                                           PMRSupport::PmrWorkspace *pWorkspace,
-                                          const QString &pFileName)
+                                          PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     // Some initialisations
 
     mType = pType;
     mWorkspace = pWorkspace;
+    mFileNode = pFileNode;
     mCollapsedIcon = pCollapsedIcon;
     mExpandedIcon = pExpandedIcon;
-    mFileName = pFileName;
 
     // Customise ourselves
 
     QStandardItem::setIcon(pCollapsedIcon.isNull()?pIcon:pCollapsedIcon);
 
-    setToolTip(pText);
+    setToolTip(text());
 }
 
 //==============================================================================
@@ -90,20 +89,19 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
 {
     // Construct our object
 
-    constructor(pType, pCollapsedIcon, pExpandedIcon, QIcon(), pText, pWorkspace, QString());
+    constructor(pType, pCollapsedIcon, pExpandedIcon, QIcon(), pWorkspace, 0);
 }
 
 //==============================================================================
 
 PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  const QIcon &pIcon,
-                                                 const QString &pText,
-                                                 const QString &pFileName) :
-    QStandardItem(pText)
+                                                 PMRSupport::PmrWorkspaceFileNode *pFileNode) :
+    QStandardItem(pFileNode->name())
 {
     // Construct our object
 
-    constructor(pType, QIcon(), QIcon(), pIcon, pText, 0, pFileName);
+    constructor(pType, QIcon(), QIcon(), pIcon, 0, pFileNode);
 }
 
 //==============================================================================
@@ -122,6 +120,15 @@ PMRSupport::PmrWorkspace * PmrWorkspacesWindowItem::workspace() const
     // Return our workspace
 
     return mWorkspace;
+}
+
+//==============================================================================
+
+PMRSupport::PmrWorkspaceFileNode * PmrWorkspacesWindowItem::fileNode() const
+{
+    // Return our file node
+
+    return mFileNode;
 }
 
 //==============================================================================
@@ -166,7 +173,7 @@ QString PmrWorkspacesWindowItem::fileName() const
 {
     // Return our file name
 
-    return mFileName;
+    return mFileNode?mFileNode->fullName():QString();
 }
 
 //==============================================================================
@@ -689,9 +696,7 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
             }
 
             pFolderItem->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::File,
-                                                               icon,
-                                                               fileNode->name(),
-                                                               fileNode->fullName()));
+                                                               icon, fileNode));
         }
     }
 }
