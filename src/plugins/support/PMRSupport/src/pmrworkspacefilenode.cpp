@@ -29,16 +29,43 @@ namespace PMRSupport {
 
 //==============================================================================
 
+void PmrWorkspaceFileNode::constructor(const QString &pName,
+                                       const QString &pFullName,
+                                       const CharPair &pStatus)
+{
+    // Some initialisations
+
+    mName = pName;
+    mFullName = pFullName;
+
+    mStatus = pStatus;
+
+    mChildren = PmrWorkspaceFileNodes();
+}
+
+//==============================================================================
+
 PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pName,
                                            const QString &pFullName,
                                            const CharPair &pStatus,
-                                           PmrWorkspaceFileNode *pParent) :
-    QObject(pParent),
-    mName(pName),
-    mFullName(pFullName),
-    mStatus(pStatus),
-    mChildren(PmrWorkspaceFileNodes())
+                                           QObject *pParent) :
+    QObject(pParent)
 {
+    // Construct ourselves
+
+    constructor(pName, pFullName, pStatus);
+}
+
+//==============================================================================
+
+PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pName,
+                                           const QString &pFullName,
+                                           QObject *pParent) :
+    QObject(pParent)
+{
+    // Construct ourselves
+
+    constructor(pName, pFullName, CharPair());
 }
 
 //==============================================================================
@@ -111,8 +138,7 @@ PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pName,
 
     // We don't already have the given child, so add it to ourselves
 
-    PmrWorkspaceFileNode *res = new PmrWorkspaceFileNode(pName,
-                                                         childFullName,
+    PmrWorkspaceFileNode *res = new PmrWorkspaceFileNode(pName, childFullName,
                                                          pStatus, this);
 
     mChildren << res;

@@ -543,7 +543,7 @@ void PmrWorkspace::refreshStatus()
 
     delete mRootFileNode;
 
-    mRootFileNode = new PmrWorkspaceFileNode(QString(), mPath);
+    mRootFileNode = new PmrWorkspaceFileNode(QString(), mPath, this);
 
     if (isOpen()) {
         git_status_options statusOptions;
