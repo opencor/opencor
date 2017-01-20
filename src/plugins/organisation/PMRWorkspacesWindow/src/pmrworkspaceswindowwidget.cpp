@@ -609,15 +609,14 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
 
     if (   (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)
         || (workspaceStatus & PMRSupport::PmrWorkspace::StatusConflict)) {
+        QIcon overlayIcon = QIcon(QString(":/PMRWorkspacesWindow/w%1.png").arg((workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)?"Q":"E"));
         int folderIconSize = icon.availableSizes().first().width();
         int overlayIconSize = 0.57*folderIconSize;
 
-        icon = Core::overlayedIcon(icon,
-                                   QIcon(QString(":/PMRWorkspacesWindow/w%1.png").arg((workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)?"?":"!")),
+        icon = Core::overlayedIcon(icon, overlayIcon,
                                    folderIconSize, folderIconSize,
                                    0, 0, overlayIconSize, overlayIconSize);
-        otherIcon = Core::overlayedIcon(otherIcon,
-                                        QIcon(QString(":/PMRWorkspacesWindow/w%1.png").arg((workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)?"?":"!")),
+        otherIcon = Core::overlayedIcon(otherIcon, overlayIcon,
                                         folderIconSize, folderIconSize,
                                         0, 0, overlayIconSize, overlayIconSize);
     }
