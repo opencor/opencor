@@ -56,7 +56,10 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-void PmrWorkspacesWindowItem::constructor(const Type &pType, const QIcon &pIcon,
+void PmrWorkspacesWindowItem::constructor(const Type &pType,
+                                          const QIcon &pCollapsedIcon,
+                                          const QIcon &pExpandedIcon,
+                                          const QIcon &pIcon,
                                           const QString &pText,
                                           PMRSupport::PmrWorkspace *pWorkspace,
                                           const QString &pFileName)
@@ -65,11 +68,13 @@ void PmrWorkspacesWindowItem::constructor(const Type &pType, const QIcon &pIcon,
 
     mType = pType;
     mWorkspace = pWorkspace;
+    mCollapsedIcon = pCollapsedIcon;
+    mExpandedIcon = pExpandedIcon;
     mFileName = pFileName;
 
     // Customise ourselves
 
-    QStandardItem::setIcon(pIcon);
+    QStandardItem::setIcon(pCollapsedIcon.isNull()?pIcon:pCollapsedIcon);
 
     setToolTip(pText);
 }
@@ -77,14 +82,15 @@ void PmrWorkspacesWindowItem::constructor(const Type &pType, const QIcon &pIcon,
 //==============================================================================
 
 PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
-                                                 const QIcon &pIcon,
+                                                 const QIcon &pCollapsedIcon,
+                                                 const QIcon &pExpandedIcon,
                                                  const QString &pText,
                                                  PMRSupport::PmrWorkspace *pWorkspace) :
     QStandardItem(pText)
 {
     // Construct our object
 
-    constructor(pType, pIcon, pText, pWorkspace, QString());
+    constructor(pType, pCollapsedIcon, pExpandedIcon, QIcon(), pText, pWorkspace, QString());
 }
 
 //==============================================================================
@@ -97,7 +103,7 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
 {
     // Construct our object
 
-    constructor(pType, pIcon, pText, 0, pFileName);
+    constructor(pType, QIcon(), QIcon(), pIcon, pText, 0, pFileName);
 }
 
 //==============================================================================
@@ -116,6 +122,24 @@ PMRSupport::PmrWorkspace * PmrWorkspacesWindowItem::workspace() const
     // Return our workspace
 
     return mWorkspace;
+}
+
+//==============================================================================
+
+QIcon PmrWorkspacesWindowItem::collapsedIcon() const
+{
+    // Return our collapsed icon
+
+    return mCollapsedIcon;
+}
+
+//==============================================================================
+
+QIcon PmrWorkspacesWindowItem::expandedIcon() const
+{
+    // Return our expanded icon
+
+    return mExpandedIcon;
 }
 
 //==============================================================================
@@ -568,12 +592,33 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
 
     // Add the given workspace to our tree view widget
 
+    PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = pWorkspace->gitWorkspaceStatus();
+    QIcon icon = pWorkspace->isOwned()?
+                     mCollapsedOwnedWorkspaceIcon:
+                     QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
+    QIcon otherIcon = pWorkspace->isOwned()?
+                          mExpandedOwnedWorkspaceIcon:
+                          QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
+
+    if (   (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)
+        || (workspaceStatus & PMRSupport::PmrWorkspace::StatusConflict)) {
+        int folderIconSize = icon.availableSizes().first().width();
+        int overlayIconSize = 0.57*folderIconSize;
+
+        icon = Core::overlayedIcon(icon,
+                                   QIcon(QString(":/PMRWorkspacesWindow/w%1.png").arg((workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)?"?":"!")),
+                                   folderIconSize, folderIconSize,
+                                   0, 0, overlayIconSize, overlayIconSize);
+        otherIcon = Core::overlayedIcon(otherIcon,
+                                        QIcon(QString(":/PMRWorkspacesWindow/w%1.png").arg((workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)?"?":"!")),
+                                        folderIconSize, folderIconSize,
+                                        0, 0, overlayIconSize, overlayIconSize);
+    }
+
     PmrWorkspacesWindowItem *workspaceItem = new PmrWorkspacesWindowItem(pWorkspace->isOwned()?
                                                                              PmrWorkspacesWindowItem::OwnedWorkspace:
                                                                              PmrWorkspacesWindowItem::Workspace,
-                                                                         pWorkspace->isOwned()?
-                                                                             mCollapsedOwnedWorkspaceIcon:
-                                                                             QFileIconProvider().icon(QFileIconProvider::Folder),
+                                                                         icon, otherIcon,
                                                                          workspaceName,
                                                                          pWorkspace);
 
@@ -616,7 +661,8 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
     foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
         if (fileNode->hasChildren()) {
             PmrWorkspacesWindowItem *folderItem = new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Folder,
-                                                                              QFileIconProvider().icon(QFileIconProvider::Folder),
+                                                                              QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon),
+                                                                              QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon),
                                                                               fileNode->name());
 
             pFolderItem->appendRow(folderItem);
@@ -705,8 +751,7 @@ void PmrWorkspacesWindowWidget::itemExpanded(const QModelIndex &pIndex)
 
     PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
 
-    if (item->type() == PmrWorkspacesWindowItem::OwnedWorkspace)
-        item->setIcon(mExpandedOwnedWorkspaceIcon);
+    item->setIcon(item->expandedIcon());
 }
 
 //==============================================================================
@@ -717,8 +762,7 @@ void PmrWorkspacesWindowWidget::itemCollapsed(const QModelIndex &pIndex)
 
     PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
 
-    if (item->type() == PmrWorkspacesWindowItem::OwnedWorkspace)
-        item->setIcon(mCollapsedOwnedWorkspaceIcon);
+    item->setIcon(item->collapsedIcon());
 }
 
 //==============================================================================

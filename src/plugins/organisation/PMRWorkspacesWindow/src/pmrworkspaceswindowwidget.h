@@ -77,7 +77,9 @@ public:
         File           = QStandardItem::UserType+3
     };
 
-    explicit PmrWorkspacesWindowItem(const Type &pType, const QIcon &pIcon,
+    explicit PmrWorkspacesWindowItem(const Type &pType,
+                                     const QIcon &pCollapsedIcon,
+                                     const QIcon &pExpandedIcon,
                                      const QString &pText,
                                      PMRSupport::PmrWorkspace *pWorkspace = 0);
     explicit PmrWorkspacesWindowItem(const Type &pType, const QIcon &pIcon,
@@ -88,6 +90,9 @@ public:
 
     PMRSupport::PmrWorkspace * workspace() const;
 
+    QIcon collapsedIcon() const;
+    QIcon expandedIcon() const;
+
     QString url() const;
     QString path() const;
     QString fileName() const;
@@ -97,11 +102,14 @@ private:
 
     PMRSupport::PmrWorkspace *mWorkspace;
 
+    QIcon mCollapsedIcon;
+    QIcon mExpandedIcon;
+
     QString mFileName;
 
-    void constructor(const Type &pType, const QIcon &pIcon,
-                     const QString &pText,
-                     PMRSupport::PmrWorkspace *pWorkspace,
+    void constructor(const Type &pType, const QIcon &pCollapsedIcon,
+                     const QIcon &pExpandedIcon, const QIcon &pIcon,
+                     const QString &pText, PMRSupport::PmrWorkspace *pWorkspace,
                      const QString &pFileName);
 };
 
