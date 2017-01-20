@@ -163,8 +163,8 @@ private:
     QAction *mViewOncomputerAction;
     QAction *mCopyUrlAction;
     QAction *mCopyPathAction;
-    QAction *mCloneWorkspaceAction;
-    QAction *mAboutWorkspaceAction;
+    QAction *mCloneAction;
+    QAction *mAboutAction;
 
     Core::UserMessageWidget *mUserMessageWidget;
 

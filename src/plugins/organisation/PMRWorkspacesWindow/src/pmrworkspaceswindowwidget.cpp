@@ -285,13 +285,13 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                      this);
     mCopyPathAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                       this);
-    mCloneWorkspaceAction = Core::newAction(Core::overlayedIcon(collapsedFolderIcon, ArrowDownIcon,
-                                                                folderIconSize, folderIconSize,
-                                                                folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
-                                                                overlayIconSize, overlayIconSize),
+    mCloneAction = Core::newAction(Core::overlayedIcon(collapsedFolderIcon, ArrowDownIcon,
+                                                       folderIconSize, folderIconSize,
+                                                       folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
+                                                       overlayIconSize, overlayIconSize),
                                             this);
-    mAboutWorkspaceAction = Core::newAction(QIcon(":/oxygen/actions/help-about.png"),
-                                            this);
+    mAboutAction = Core::newAction(QIcon(":/oxygen/actions/help-about.png"),
+                                   this);
 
     connect(mViewInPmrAction, SIGNAL(triggered(bool)),
             this, SLOT(viewInPmr()));
@@ -301,9 +301,9 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
             this, SLOT(copyUrl()));
     connect(mCopyPathAction, SIGNAL(triggered(bool)),
             this, SLOT(copyPath()));
-    connect(mCloneWorkspaceAction, SIGNAL(triggered(bool)),
+    connect(mCloneAction, SIGNAL(triggered(bool)),
             this, SLOT(clone()));
-    connect(mAboutWorkspaceAction, SIGNAL(triggered(bool)),
+    connect(mAboutAction, SIGNAL(triggered(bool)),
             this, SLOT(about()));
 
     mContextMenu->addAction(mViewInPmrAction);
@@ -312,9 +312,9 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mContextMenu->addAction(mCopyUrlAction);
     mContextMenu->addAction(mCopyPathAction);
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mCloneWorkspaceAction);
+    mContextMenu->addAction(mCloneAction);
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mAboutWorkspaceAction);
+    mContextMenu->addAction(mAboutAction);
 
     // Make our tree view widget our focus proxy
 
@@ -344,9 +344,9 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("Copy the URL to the clipboard"));
     I18nInterface::retranslateAction(mCopyPathAction, tr("Copy Path"),
                                      tr("Copy the path to the clipboard"));
-    I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone..."),
+    I18nInterface::retranslateAction(mCloneAction, tr("Clone..."),
                                      tr("Clone the current workspace"));
-    I18nInterface::retranslateAction(mAboutWorkspaceAction, tr("About"),
+    I18nInterface::retranslateAction(mAboutAction, tr("About"),
                                      tr("Some information about the current workspace"));
 
     // Retranslate the rest of our GUI by updating it, if we have been
@@ -715,8 +715,8 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         mViewOncomputerAction->setVisible(workspaceItem);
         mCopyUrlAction->setVisible(workspaceItem);
         mCopyPathAction->setVisible(workspaceItem);
-        mCloneWorkspaceAction->setVisible(item->type() == PmrWorkspacesWindowItem::OwnedWorkspace);
-        mAboutWorkspaceAction->setVisible(workspaceItem);
+        mCloneAction->setVisible(item->type() == PmrWorkspacesWindowItem::OwnedWorkspace);
+        mAboutAction->setVisible(workspaceItem);
 
         bool onlyOneItem = mTreeViewWidget->selectedIndexes().count() == 1;
         bool clonedItem = !mOwnedWorkspaceUrlFolders.value(item->url()).first.isEmpty();
@@ -724,8 +724,8 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         mViewOncomputerAction->setEnabled(clonedItem);
         mCopyUrlAction->setEnabled(onlyOneItem);
         mCopyPathAction->setEnabled(onlyOneItem && clonedItem);
-        mCloneWorkspaceAction->setEnabled(!clonedItem);
-        mAboutWorkspaceAction->setEnabled(onlyOneItem);
+        mCloneAction->setEnabled(!clonedItem);
+        mAboutAction->setEnabled(onlyOneItem);
 
         mContextMenu->exec(QCursor::pos());
     }
