@@ -576,7 +576,7 @@ void PmrWorkspace::refreshStatus()
                                                0;
 
                 if (filePath) {
-                    const CharPair statusChars = gitStatusChars(status->status);
+                    CharPair statusChars = gitStatusChars(status->status);
 
                     if (statusChars.first != ' ')
                         ++mStagedCount;
