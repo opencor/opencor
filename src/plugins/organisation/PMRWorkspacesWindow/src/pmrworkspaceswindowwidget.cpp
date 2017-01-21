@@ -297,6 +297,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                                        folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
                                                        overlayIconSize, overlayIconSize),
                                             this);
+    mStageUnstageAction = Core::newAction(this);
     mAboutAction = Core::newAction(QIcon(":/oxygen/actions/help-about.png"),
                                    this);
 
@@ -310,6 +311,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
             this, SLOT(copyPath()));
     connect(mCloneAction, SIGNAL(triggered(bool)),
             this, SLOT(clone()));
+    connect(mStageUnstageAction, SIGNAL(triggered(bool)),
+            this, SLOT(stageUnstage()));
     connect(mAboutAction, SIGNAL(triggered(bool)),
             this, SLOT(about()));
 
@@ -320,6 +323,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mContextMenu->addAction(mCopyPathAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCloneAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mStageUnstageAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mAboutAction);
 
@@ -342,6 +347,9 @@ PmrWorkspacesWindowWidget::~PmrWorkspacesWindowWidget()
 void PmrWorkspacesWindowWidget::retranslateUi()
 {
     // Retranslate our actions
+    // Note: mStageUnstageAction gets translated just before showing our custom
+    //       context menu since it can either be for staging or unstaging a
+    //       file...
 
     I18nInterface::retranslateAction(mViewInPmrAction, tr("View In PMR"),
                                      tr("View in PMR"));
@@ -714,13 +722,32 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
 
         bool workspaceItem =    (item->type() == PmrWorkspacesWindowItem::OwnedWorkspace)
                              || (item->type() == PmrWorkspacesWindowItem::Workspace);
+        bool fileItem = item->type() == PmrWorkspacesWindowItem::File;
+        bool stagedFileItem = fileItem?(item->fileNode()->status().second != ' '):false;
+        bool unstagedFileItem = fileItem?(item->fileNode()->status().first != ' '):false;
 
         mViewInPmrAction->setVisible(workspaceItem);
         mViewOncomputerAction->setVisible(workspaceItem);
         mCopyUrlAction->setVisible(workspaceItem);
         mCopyPathAction->setVisible(workspaceItem);
         mCloneAction->setVisible(item->type() == PmrWorkspacesWindowItem::OwnedWorkspace);
+        mStageUnstageAction->setVisible(stagedFileItem || unstagedFileItem);
         mAboutAction->setVisible(workspaceItem);
+
+        if (mStageUnstageAction->isVisible()) {
+            static const QIcon StageIcon = QIcon(":/oxygen/actions/list-add.png");
+            static const QIcon UnstageIcon = QIcon(":/oxygen/actions/list-remove.png");
+
+            mStageUnstageAction->setIcon(unstagedFileItem?StageIcon:UnstageIcon);
+
+            I18nInterface::retranslateAction(mStageUnstageAction,
+                                             unstagedFileItem?
+                                                 tr("Stage"):
+                                                 tr("Unstage"),
+                                             unstagedFileItem?
+                                                 tr("Stage the file"):
+                                                 tr("Unstage the file"));
+        }
 
         bool onlyOneItem = mTreeViewWidget->selectedIndexes().count() == 1;
         bool clonedItem = !mOwnedWorkspaceUrlFolders.value(item->url()).first.isEmpty();
@@ -1093,6 +1120,13 @@ void PmrWorkspacesWindowWidget::clone()
     // Let people know that we want to clone the current (owned) workspace
 
     emit cloneOwnedWorkspaceRequested(mWorkspaceManager->workspace(currentItem()->url()));
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::stageUnstage()
+{
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================
