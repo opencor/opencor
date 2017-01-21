@@ -125,6 +125,22 @@
         <source>Path:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Stage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unstage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stage the file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unstage the file</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWindow</name>
