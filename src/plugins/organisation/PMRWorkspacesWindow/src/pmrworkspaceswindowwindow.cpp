@@ -26,6 +26,7 @@ limitations under the License.
 #include "i18ninterface.h"
 #include "toolbarwidget.h"
 #include "pmrwebservice.h"
+#include "pmrworkspacemanager.h"
 #include "pmrworkspaceswindownewworkspacedialog.h"
 #include "pmrworkspaceswindowwidget.h"
 #include "pmrworkspaceswindowwindow.h"
@@ -334,12 +335,12 @@ void PmrWorkspacesWindowWindow::updateGui()
 
     retranslateActionPmr();
 
-    // Ask our widget to get the list of workspaces from PMR, if we are
+    // Ask ourselves to reload the list of workspaces from PMR, if we are
     // authenticated, or simply show a message asking us to authenticate
     // ourselves
 
     if (mAuthenticated)
-        mPmrWorkspacesWindowWidget->requestWorkspaces();
+        on_actionReload_triggered();
     else
         mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), QString(), false);
 }
@@ -381,9 +382,12 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
 
 void PmrWorkspacesWindowWindow::on_actionReload_triggered()
 {
-    // Ask our widget to get our list of workspaces from PMR
+    // Get the list of workspaces from our PMR web service, after making sure
+    // that we have cleared existing workspaces from our workspace manager
 
-    mPmrWorkspacesWindowWidget->requestWorkspaces();
+    PMRSupport::PmrWorkspaceManager::instance()->clearWorkspaces();
+
+    mPmrWebService->requestWorkspaces();
 }
 
 //==============================================================================

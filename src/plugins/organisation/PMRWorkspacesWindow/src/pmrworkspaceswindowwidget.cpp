@@ -182,7 +182,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                                      QWidget *pParent) :
     Core::Widget(pParent),
     mPmrWebService(pPmrWebService),
-    mWorkspaceManager(PMRSupport::PmrWorkspaceManager::instance()),
     mWorkspaceFolderUrls(QMap<QString, QString>()),
     mOwnedWorkspaceUrlFolders(QMap<QString, QPair<QString, bool>>()),
     mInitialized(false),
@@ -257,7 +256,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     // Connection to handle a response from our workspace manager
 
-    connect(mWorkspaceManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
+    connect(PMRSupport::PmrWorkspaceManager::instance(), SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
 
     // Create a timer for refreshing our workspaces
@@ -458,7 +457,7 @@ void PmrWorkspacesWindowWidget::updateGui()
                                            tr("Authenticate yourself..."),
                                            tr("Click on the top-right button."));
     } else if (mErrorMessage.isEmpty()) {
-        if (!mWorkspaceManager->count()) {
+        if (!PMRSupport::PmrWorkspaceManager::instance()->count()) {
             mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
                                                tr("No workspaces were found..."));
         } else {
@@ -486,7 +485,9 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 {
     // Initialise / keep track of some properties
 
-    mWorkspaceManager->clearWorkspaces();
+    PMRSupport::PmrWorkspaceManager *workspaceManager = PMRSupport::PmrWorkspaceManager::instance();
+
+    workspaceManager->clearWorkspaces();
 
     mErrorMessage = pErrorMessage;
     mAuthenticated = pAuthenticated;
@@ -512,7 +513,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
             QString url = workspace->url();
 
-            mWorkspaceManager->addWorkspace(workspace);
+            workspaceManager->addWorkspace(workspace);
 
             // Check if we know its folder and flag it as ours
 
@@ -542,7 +543,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
                     // The workspace is known, so ask our workspace manager to
                     // track it, and then open it
 
-                    mWorkspaceManager->addWorkspace(workspace);
+                    workspaceManager->addWorkspace(workspace);
 
                     workspace->setPath(urlsIterator.value().first);
                     workspace->open();
@@ -561,7 +562,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
     mTreeViewModel->clear();
 
-    foreach (PMRSupport::PmrWorkspace *workspace, mWorkspaceManager->workspaces())
+    foreach (PMRSupport::PmrWorkspace *workspace, workspaceManager->workspaces())
         addWorkspace(workspace);
 
     updateGui();
@@ -901,8 +902,10 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces()
 {
     // Refresh our workspaces
 
-    foreach (PMRSupport::PmrWorkspace *workspace, mWorkspaceManager->workspaces())
+    foreach (PMRSupport::PmrWorkspace *workspace,
+             PMRSupport::PmrWorkspaceManager::instance()->workspaces()) {
         refreshWorkspace(workspace);
+    }
 }
 
 //==============================================================================
@@ -911,7 +914,7 @@ bool PmrWorkspacesWindowWidget::hasWorkspaces() const
 {
     // Return whether we have some workspaces
 
-    return !mWorkspaceManager->workspaces().isEmpty();
+    return !PMRSupport::PmrWorkspaceManager::instance()->workspaces().isEmpty();
 }
 
 //==============================================================================
@@ -919,7 +922,7 @@ bool PmrWorkspacesWindowWidget::hasWorkspaces() const
 void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
 {
 //---GRY--- To be reviewed...
-    PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
+    PMRSupport::PmrWorkspace *workspace = PMRSupport::PmrWorkspaceManager::instance()->workspace(pUrl);
 
     if (workspace && workspace->isLocal()) {
         if (workspace->isMerging()) {
@@ -949,25 +952,11 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWork
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::requestWorkspaces()
-{
-    // Get the list of workspaces from our PMR web service, after making sure
-    // that we have cleared existing workspaces
-    // Note: initialize() will be called when the list of workspaces has been
-    //       received...
-
-    mWorkspaceManager->clearWorkspaces();
-
-    mPmrWebService->requestWorkspaces();
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::synchronizeWorkspace(const QString &pUrl,
                                                      const bool &pPush)
 {
 //---GRY--- To be reviewed...
-    PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(pUrl);
+    PMRSupport::PmrWorkspace *workspace = PMRSupport::PmrWorkspaceManager::instance()->workspace(pUrl);
 
     if (workspace && workspace->isLocal())
         mPmrWebService->requestWorkspaceSynchronize(workspace, pPush);
@@ -993,7 +982,7 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
             mWorkspaceFolderUrls.insert(folder, url);
             mOwnedWorkspaceUrlFolders.insert(url, QPair<QString, bool>(folder, false));
 
-            mWorkspaceManager->addWorkspace(pWorkspace);
+            PMRSupport::PmrWorkspaceManager::instance()->addWorkspace(pWorkspace);
 
             pWorkspace->open();
 
@@ -1077,7 +1066,7 @@ void PmrWorkspacesWindowWidget::clone()
 {
     // Let people know that we want to clone the current (owned) workspace
 
-    emit cloneOwnedWorkspaceRequested(mWorkspaceManager->workspace(currentItem()->url()));
+    emit cloneOwnedWorkspaceRequested(PMRSupport::PmrWorkspaceManager::instance()->workspace(currentItem()->url()));
 }
 
 //==============================================================================
@@ -1099,7 +1088,7 @@ void PmrWorkspacesWindowWidget::about()
                                  "        <td>%2</td>\n"
                                  "    </tr>\n";
 
-    PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(currentItem()->url());
+    PMRSupport::PmrWorkspace *workspace = PMRSupport::PmrWorkspaceManager::instance()->workspace(currentItem()->url());
     QString message = QString("<p style=\"font-weight: bold;\">\n"
                               "    %1\n"
                               "</p>\n").arg(workspace->name());

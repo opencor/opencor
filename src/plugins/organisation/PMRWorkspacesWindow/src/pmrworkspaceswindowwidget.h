@@ -53,7 +53,6 @@ namespace Core {
 
 namespace PMRSupport {
     class PmrWebService;
-    class PmrWorkspaceManager;
 }   // namespace PMRSupport
 
 //==============================================================================
@@ -132,7 +131,6 @@ public:
 
     QString addWorkspaceFolder(const QString &pWorkspaceFolder);
     void refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
-    void requestWorkspaces();
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -140,8 +138,6 @@ protected:
 
 private:
     PMRSupport::PmrWebService *mPmrWebService;
-
-    PMRSupport::PmrWorkspaceManager *mWorkspaceManager;
 
     QMap<QString, QString> mWorkspaceFolderUrls;
     QMap<QString, QPair<QString, bool>> mOwnedWorkspaceUrlFolders;
