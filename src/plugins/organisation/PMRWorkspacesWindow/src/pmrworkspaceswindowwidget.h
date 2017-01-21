@@ -127,7 +127,6 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    QString addWorkspaceFolder(const QString &pWorkspaceFolder);
     void refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
 
 protected:

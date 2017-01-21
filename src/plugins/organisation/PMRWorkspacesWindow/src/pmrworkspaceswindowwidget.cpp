@@ -372,7 +372,7 @@ void PmrWorkspacesWindowWidget::retranslateUi()
 
 //==============================================================================
 
-static const auto SettingsClonedWorkspaceFolders = QStringLiteral("ClonedWorkspaceFolders");
+static const auto SettingsWorkspaceFolders = QStringLiteral("WorkspaceFolders");
 
 //==============================================================================
 
@@ -380,9 +380,53 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve the names of folders containing a cloned workspace, and add them
 
-    foreach (const QString &cloneWorkspaceFolder,
-             pSettings->value(SettingsClonedWorkspaceFolders).toStringList()) {
-        addWorkspaceFolder(cloneWorkspaceFolder);
+    foreach (const QString &workspaceFolder,
+             pSettings->value(SettingsWorkspaceFolders).toStringList()) {
+        // Add the given workspace folder, if it has not already been added
+
+        if (!mWorkspaceFolderUrls.contains(workspaceFolder)) {
+            // Retrieve the workspace URL (i.e. remote.origin.url) for the given
+            // folder
+
+            QString res = QString();
+            QByteArray folderByteArray = workspaceFolder.toUtf8();
+            git_repository *gitRepository = 0;
+
+            if (!git_repository_open(&gitRepository, folderByteArray.constData())) {
+                git_strarray remotes;
+
+                if (!git_remote_list(&remotes, gitRepository)) {
+                    for (size_t i = 0; i < remotes.count; ++i) {
+                        char *name = remotes.strings[i];
+
+                        if (!strcmp(name, "origin")) {
+                            git_remote *remote = 0;
+
+                            if (!git_remote_lookup(&remote, gitRepository, name)) {
+                                const char *remoteUrl = git_remote_url(remote);
+
+                                if (remoteUrl)
+                                    res = QString(remoteUrl);
+                            }
+                        }
+                    }
+                }
+
+                git_repository_free(gitRepository);
+            }
+
+            // Keep track of the workspace space URL, if there is one and it's not
+            // already tracked
+
+            if (!res.isEmpty()) {
+                if (mOwnedWorkspaceUrlFolders.contains(res)) {
+                    duplicateCloneMessage(res, mOwnedWorkspaceUrlFolders.value(res).first, workspaceFolder);
+                } else {
+                    mWorkspaceFolderUrls.insert(workspaceFolder, res);
+                    mOwnedWorkspaceUrlFolders.insert(res, QPair<QString, bool>(workspaceFolder, false));
+                }
+            }
+        }
     }
 }
 
@@ -392,7 +436,7 @@ void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the names of folders containing cloned workspaces
 
-    pSettings->setValue(SettingsClonedWorkspaceFolders, QVariant(mWorkspaceFolderUrls.keys()));
+    pSettings->setValue(SettingsWorkspaceFolders, QVariant(mWorkspaceFolderUrls.keys()));
 }
 
 //==============================================================================
@@ -812,61 +856,6 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
 
     if (mInitialized)
         emit warning(QString("Workspace '%1' is cloned into both '%2' and '%3'").arg(pUrl, pPath1, pPath2));
-}
-
-//==============================================================================
-
-QString PmrWorkspacesWindowWidget::addWorkspaceFolder(const QString &pWorkspaceFolder)
-{
-    // Add the given workspace folder, if it has not already been added
-
-    if (!mWorkspaceFolderUrls.contains(pWorkspaceFolder)) {
-        // Retrieve the workspace URL (i.e. remote.origin.url) for the given
-        // folder
-
-        QString res = QString();
-        QByteArray folderByteArray = pWorkspaceFolder.toUtf8();
-        git_repository *gitRepository = 0;
-
-        if (!git_repository_open(&gitRepository, folderByteArray.constData())) {
-            git_strarray remotes;
-
-            if (!git_remote_list(&remotes, gitRepository)) {
-                for (size_t i = 0; i < remotes.count; ++i) {
-                    char *name = remotes.strings[i];
-
-                    if (!strcmp(name, "origin")) {
-                        git_remote *remote = 0;
-
-                        if (!git_remote_lookup(&remote, gitRepository, name)) {
-                            const char *remoteUrl = git_remote_url(remote);
-
-                            if (remoteUrl)
-                                res = QString(remoteUrl);
-                        }
-                    }
-                }
-            }
-
-            git_repository_free(gitRepository);
-        }
-
-        // Keep track of the workspace space URL, if there is one and it's not
-        // already tracked
-
-        if (!res.isEmpty()) {
-            if (mOwnedWorkspaceUrlFolders.contains(res)) {
-                duplicateCloneMessage(res, mOwnedWorkspaceUrlFolders.value(res).first, pWorkspaceFolder);
-            } else {
-                mWorkspaceFolderUrls.insert(pWorkspaceFolder, res);
-                mOwnedWorkspaceUrlFolders.insert(res, QPair<QString, bool>(pWorkspaceFolder, false));
-            }
-        }
-
-        return res;
-    } else {
-        return mWorkspaceFolderUrls.value(pWorkspaceFolder);
-    }
 }
 
 //==============================================================================
