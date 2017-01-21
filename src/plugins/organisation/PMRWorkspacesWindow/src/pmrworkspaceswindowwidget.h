@@ -127,8 +127,6 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    void refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
-
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual QSize sizeHint() const;
@@ -174,6 +172,7 @@ private:
     void populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
     void populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
                            PMRSupport::PmrWorkspaceFileNode *pFileNode);
+    void refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
 
     void duplicateCloneMessage(const QString &pUrl, const QString &pPath1,
                                const QString &pPath2);

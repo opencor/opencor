@@ -755,6 +755,17 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
 
 //==============================================================================
 
+void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
+{
+    // Refresh the status of the given workspace
+
+    pWorkspace->refreshStatus();
+
+//---GRY--- Somehow need to update our tree view, if needed...
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
 {
     // Determine whether to show the context menu based on whether we are over
@@ -917,17 +928,6 @@ void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
 
         refreshWorkspace(workspace);
     }
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
-{
-    // Refresh the status of the given workspace
-
-    pWorkspace->refreshStatus();
-
-//---GRY--- Somehow need to update our tree view, if needed...
 }
 
 //==============================================================================
