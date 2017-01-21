@@ -264,16 +264,16 @@ void PmrWorkspacesWindowWindow::showWarning(const QString &pMessage)
 void PmrWorkspacesWindowWindow::showError(const QString &pMessage)
 {
     // Either show the given message as an error message box or tell our
-    // workspaces widget that we have a problem, this based on whether we
-    // already retrieved the list of workspaces
+    // workspaces widget that we have a problem, this based on whether our
+    // workspace manager keeps track of some workspaces
     // Note: indeed, the idea is not to break the user's workflow, should an
     //       error occur when trying to retrieve the list of workspaces at
     //       startup...
 
-    if (mPmrWorkspacesWindowWidget->hasWorkspaces())
-        Core::criticalMessageBox(windowTitle(), pMessage);
-    else
+    if (PMRSupport::PmrWorkspaceManager::instance()->workspaces().isEmpty())
         mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), pMessage);
+    else
+        Core::criticalMessageBox(windowTitle(), pMessage);
 }
 
 //==============================================================================

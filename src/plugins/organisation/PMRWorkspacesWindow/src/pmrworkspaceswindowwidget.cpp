@@ -910,15 +910,6 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces()
 
 //==============================================================================
 
-bool PmrWorkspacesWindowWidget::hasWorkspaces() const
-{
-    // Return whether we have some workspaces
-
-    return !PMRSupport::PmrWorkspaceManager::instance()->workspaces().isEmpty();
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
 {
 //---GRY--- To be reviewed...
