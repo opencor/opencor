@@ -848,7 +848,7 @@ void PmrWorkspacesWindowWidget::startStopTimer()
     // Start our timer if OpenCOR is active and we have at least one workspace,
     // or stop it if either OpenCOR is not active or we no longer have at least
     // one workspace
-    // Note: if we are to start our timer, then we refresh the workspace first
+    // Note: if we are to start our timer, then we refresh our workspaces first
     //       since waiting one second may seem long to a user...
 
     if (   !mTimer->isActive()
