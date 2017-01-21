@@ -404,26 +404,6 @@ void PmrWorkspacesWindowWindow::on_actionPmr_triggered()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::fileReloaded(const QString &pFileName)
-{
-    // The given file has been reloaded, so let our widget know about it
-
-    mPmrWorkspacesWindowWidget->refreshWorkspaceFile(pFileName);
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWindow::fileRenamed(const QString &pOldFileName,
-                                            const QString &pNewFileName)
-{
-    // The given file has been renamed, so let our widget know about it
-
-    mPmrWorkspacesWindowWidget->refreshWorkspaceFile(pOldFileName);
-    mPmrWorkspacesWindowWidget->refreshWorkspaceFile(pNewFileName);
-}
-
-//==============================================================================
-
 }   // namespace PMRWorkspacesWindow
 }   // namespace OpenCOR
 

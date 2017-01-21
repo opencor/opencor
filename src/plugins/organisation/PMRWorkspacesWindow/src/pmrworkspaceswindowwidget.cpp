@@ -949,48 +949,6 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWork
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::refreshWorkspaceFile(const QString &pPath)
-{
-Q_UNUSED(pPath);
-/*---GRY---
-    QWebElement fileElement = page()->mainFrame()->documentElement().findFirst(QString("tr.file[id=\"%1\"]").arg(pPath));
-    QWebElement workspaceElement = parentWorkspaceElement(fileElement);
-
-    if (!workspaceElement.isNull()) {
-        PMRSupport::PmrWorkspace *workspace = mWorkspaceManager->workspace(workspaceElement.attribute("id"));
-
-        if (workspace) {
-            // We have a valid workspace so update file's status
-
-            QStringList statusActionHtml = fileStatusActionHtml(workspace, pPath);
-            QWebElement statusElement = fileElement.findFirst("td.status");
-
-            if (!statusElement.isNull()) {
-                if (statusActionHtml[0].isEmpty())
-                    statusElement.addClass("hidden");
-                else
-                    statusElement.removeClass("hidden");
-
-                statusElement.setInnerXml(statusActionHtml[0]);
-            }
-
-            QWebElement actionElement = fileElement.findFirst("td.actions");
-
-            if (!actionElement.isNull()) {
-                if (statusActionHtml[1].isEmpty())
-                    actionElement.addClass("hidden");
-                else
-                    actionElement.removeClass("hidden");
-
-                actionElement.setInnerXml(statusActionHtml[1]);
-            }
-        }
-    }
-*/
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::requestWorkspaces()
 {
     // Get the list of workspaces from our PMR web service, after making sure

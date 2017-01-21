@@ -24,7 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "filehandlinginterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
@@ -45,21 +44,18 @@ class PmrWorkspacesWindowWindow;
 
 //==============================================================================
 
-class PMRWorkspacesWindowPlugin : public QObject, public FileHandlingInterface,
-                                  public I18nInterface, public PluginInterface,
-                                  public WindowInterface
+class PMRWorkspacesWindowPlugin : public QObject, public I18nInterface,
+                                  public PluginInterface, public WindowInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.PMRWorkspacesWindowPlugin" FILE "pmrworkspaceswindowplugin.json")
 
-    Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
     Q_INTERFACES(OpenCOR::WindowInterface)
 
 public:
-#include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
 #include "windowinterface.inl"

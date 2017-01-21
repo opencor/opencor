@@ -70,9 +70,6 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    void fileReloaded(const QString &pFileName);
-    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
-
 protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 
