@@ -91,7 +91,6 @@ public:
     bool isMerging() const;
     bool isOpen() const;
     bool open();
-    void refreshStatus();
     void synchronize(const bool &pPush);
 
     enum WorkspaceStatus {
@@ -168,6 +167,9 @@ signals:
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
+
+public slots:
+    void refreshStatus();
 };
 
 //==============================================================================
