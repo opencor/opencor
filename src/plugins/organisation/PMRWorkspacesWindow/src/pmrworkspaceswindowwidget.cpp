@@ -183,7 +183,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     Core::Widget(pParent),
     mPmrWebService(pPmrWebService),
     mClonedWorkspaceFolderUrls(QMap<QString, QString>()),
-    mOwnedWorkspaceUrlFolders(QMap<QString, QPair<QString, bool>>()),
+    mWorkspaceUrlFoldersOwned(QMap<QString, QPair<QString, bool>>()),
     mInitialized(false),
     mErrorMessage(QString()),
     mAuthenticated(false)
@@ -414,11 +414,11 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
         // and it's not already tracked
 
         if (!clonedWorkspaceUrl.isEmpty()) {
-            if (mOwnedWorkspaceUrlFolders.contains(clonedWorkspaceUrl)) {
-                duplicateCloneMessage(clonedWorkspaceUrl, mOwnedWorkspaceUrlFolders.value(clonedWorkspaceUrl).first, clonedWorkspaceFolder);
+            if (mWorkspaceUrlFoldersOwned.contains(clonedWorkspaceUrl)) {
+                duplicateCloneMessage(clonedWorkspaceUrl, mWorkspaceUrlFoldersOwned.value(clonedWorkspaceUrl).first, clonedWorkspaceFolder);
             } else {
                 mClonedWorkspaceFolderUrls.insert(clonedWorkspaceFolder, clonedWorkspaceUrl);
-                mOwnedWorkspaceUrlFolders.insert(clonedWorkspaceUrl, QPair<QString, bool>(clonedWorkspaceFolder, false));
+                mWorkspaceUrlFoldersOwned.insert(clonedWorkspaceUrl, QPair<QString, bool>(clonedWorkspaceFolder, false));
             }
         }
     }
@@ -538,7 +538,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
         // First, clear the owned flag from the list of URLs with workspace
         // folders
 
-        QMutableMapIterator<QString, QPair<QString, bool>> urlsIterator(mOwnedWorkspaceUrlFolders);
+        QMutableMapIterator<QString, QPair<QString, bool>> urlsIterator(mWorkspaceUrlFoldersOwned);
 
         while (urlsIterator.hasNext()) {
             urlsIterator.next();
@@ -553,12 +553,12 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
             workspaceManager->addWorkspace(workspace);
 
-            // Check if we know its folder and flag it as ours
+            // Check if we know its folder and, if so, flag it as ours
 
-            if (mOwnedWorkspaceUrlFolders.contains(url)) {
-                QString path = mOwnedWorkspaceUrlFolders.value(url).first;
+            if (mWorkspaceUrlFoldersOwned.contains(url)) {
+                QString path = mWorkspaceUrlFoldersOwned.value(url).first;
 
-                mOwnedWorkspaceUrlFolders.insert(url, QPair<QString, bool>(path, true));
+                mWorkspaceUrlFoldersOwned.insert(url, QPair<QString, bool>(path, true));
 
                 workspace->setPath(path);
                 workspace->open();
@@ -800,7 +800,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         }
 
         bool onlyOneItem = mTreeViewWidget->selectedIndexes().count() == 1;
-        bool clonedItem = !mOwnedWorkspaceUrlFolders.value(item->url()).first.isEmpty();
+        bool clonedItem = !mWorkspaceUrlFoldersOwned.value(item->url()).first.isEmpty();
 
         mViewOncomputerAction->setEnabled(clonedItem);
         mCopyUrlAction->setEnabled(onlyOneItem);
@@ -940,45 +940,43 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace(const QString &pUrl,
 
 void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
 {
-    // Add the given cloned workspace to ourselves, if possible
+    // Add the given cloned workspace to ourselves
 
-    if (pWorkspace) {
-        QString url = pWorkspace->url();
+    QString url = pWorkspace->url();
 
-        // Check whether we already know about the workspace
+    // Check whether we already know about the workspace
 
-        if (!mOwnedWorkspaceUrlFolders.contains(url)) {
-            // This is a cloned workspace that we don't own, so keep track of
-            // it, open it and then add it to our GUI
+    if (!mWorkspaceUrlFoldersOwned.contains(url)) {
+        // This is a cloned workspace that we don't own, so keep track of it,
+        // open it and then add it to our GUI
 
-            QString folder = pWorkspace->path();
+        QString folder = pWorkspace->path();
 
-            mClonedWorkspaceFolderUrls.insert(folder, url);
-            mOwnedWorkspaceUrlFolders.insert(url, QPair<QString, bool>(folder, false));
+        mClonedWorkspaceFolderUrls.insert(folder, url);
+        mWorkspaceUrlFoldersOwned.insert(url, QPair<QString, bool>(folder, false));
 
-            PMRSupport::PmrWorkspaceManager::instance()->addWorkspace(pWorkspace);
+        PMRSupport::PmrWorkspaceManager::instance()->addWorkspace(pWorkspace);
 
-            pWorkspace->open();
+        pWorkspace->open();
 
-            addWorkspace(pWorkspace);
+        addWorkspace(pWorkspace);
+    } else {
+        // We already know about that workspace, so check whether it's because
+        // we have just cloned a workspace that we own
+
+        QPair<QString, bool> folderOwned = mWorkspaceUrlFoldersOwned.value(url);
+
+        if (folderOwned.second) {
+            // We have just cloned a workspace that we own, so simply populate
+            // it
+
+            populateWorkspace(pWorkspace);
         } else {
-            // We already know about that workspace, so check whether it's
-            // because we have just cloned a workspace that we own
+            // This is not a workspace that we own, meaning that we have already
+            // cloned a workspace with the same URL, so let the user know about
+            // it
 
-            QPair<QString, bool> folderOwned = mOwnedWorkspaceUrlFolders.value(url);
-
-            if (folderOwned.second) {
-                // We have just cloned a workspace that we own, so simply
-                // populate it
-
-                populateWorkspace(pWorkspace);
-            } else {
-                // This is not a workspace that we own, meaning that we have
-                // already cloned a workspace with the same URL, so let the user
-                // know about it
-
-                duplicateCloneMessage(url, folderOwned.first, pWorkspace->path());
-            }
+            duplicateCloneMessage(url, folderOwned.first, pWorkspace->path());
         }
     }
 }
@@ -988,8 +986,7 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 void PmrWorkspacesWindowWidget::workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace)
 {
 //---GRY--- To be reviewed...
-    if (pWorkspace)
-        refreshWorkspace(pWorkspace);
+    refreshWorkspace(pWorkspace);
 }
 
 //==============================================================================
