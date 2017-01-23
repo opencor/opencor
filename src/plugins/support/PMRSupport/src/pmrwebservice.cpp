@@ -81,7 +81,7 @@ void PmrWebService::authenticate(const bool &pAuthenticate)
 
 //==============================================================================
 
-void PmrWebService::requestExposures()
+void PmrWebService::requestExposures() const
 {
     // Request the list of exposures from PMR
 
@@ -353,7 +353,7 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                 workspaceName = dataMap["value"].toString();
         }
 
-        // Retrieve the the exposure
+        // Retrieve the exposure
 
         PmrExposure *exposure = (PmrExposure *) sender()->property(ExposureProperty).value<void *>();
 
@@ -697,12 +697,12 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
 
 //==============================================================================
 
-void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
+void PmrWebService::requestExposureWorkspaceClone(const QString &pUrl)
 {
     // Ask for the workspace associated with the given exposure to be cloned,
     // but only if we don't already know about that workspace
 
-    PmrExposure *exposure = mUrlExposures.value(pExposureUrl);
+    PmrExposure *exposure = mUrlExposures.value(pUrl);
 
     if (exposure->workspace()) {
         QString url = exposure->workspace()->url();
@@ -730,7 +730,7 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pExposureUrl)
         // To clone the workspace associated with the given exposure, we first
         // need to retrieve some information about the exposure itself
 
-        PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pExposureUrl, false);
+        PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, false);
 
         if (pmrResponse) {
             pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *) exposure));

@@ -60,7 +60,7 @@ public:
     bool isAuthenticated() const;
     void authenticate(const bool &pAuthenticate = true);
 
-    void requestExposures();
+    void requestExposures() const;
 
     PmrWorkspace * workspace(const QString &pUrl) const;
 
@@ -118,7 +118,7 @@ public slots:
     void forbidden(const QString &pUrl);
 
     void requestExposureFiles(const QString &pUrl);
-    void requestExposureWorkspaceClone(const QString &pExposureUrl);
+    void requestExposureWorkspaceClone(const QString &pUrl);
 
 private slots:
     void exposuresResponse(const QJsonDocument &pJsonDocument);

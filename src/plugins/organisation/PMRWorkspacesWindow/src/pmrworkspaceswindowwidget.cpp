@@ -940,7 +940,7 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace(const QString &pUrl,
 
 void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
 {
-    // Add the given cloned workspace to ourselves
+    // The given workspace has been cloned, so update ourselves accordingly
 
     QString url = pWorkspace->url();
 
