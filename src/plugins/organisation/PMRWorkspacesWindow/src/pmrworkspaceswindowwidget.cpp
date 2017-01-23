@@ -254,11 +254,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     connect(mPmrWebService, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceSynchronized(PMRSupport::PmrWorkspace *)));
 
-    // Connection to handle a response from our workspace manager
-
-    connect(PMRSupport::PmrWorkspaceManager::instance(), SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
-
     // Create a timer for refreshing our workspaces
 
     mTimer = new QTimer(this);
