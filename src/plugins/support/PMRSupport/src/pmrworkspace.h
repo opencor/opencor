@@ -123,6 +123,7 @@ private:
     git_repository *mGitRepository;
 
     PmrWorkspaceFileNode *mRootFileNode;
+    QMap<QString, PmrWorkspaceFileNode *> mRepositoryStatusMap;
 
     QStringList mConflictedFiles;
     QStringList mUpdatedFiles;
