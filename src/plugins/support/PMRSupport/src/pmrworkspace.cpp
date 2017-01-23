@@ -639,22 +639,17 @@ CharPair PmrWorkspace::gitFileStatus(const QString &pPath) const
 {
     // Retrieve and return the status of the file, which path is given
 
-    CharPair res = CharPair(' ', ' ');
-
     if (isOpen()) {
         unsigned int statusFlags = 0;
         QByteArray relativePathByteArray = QDir(mPath).relativeFilePath(pPath).toUtf8();
 
-        if (!git_status_file(&statusFlags, mGitRepository, relativePathByteArray.constData())) {
-            // Retrieve the status itself
-
-            res = gitStatusChars(statusFlags);
-        } else {
+        if (!git_status_file(&statusFlags, mGitRepository, relativePathByteArray.constData()))
+            return gitStatusChars(statusFlags);
+        else
             emitGitError(tr("An error occurred while trying to get the status of %1.").arg(pPath));
-        }
     }
 
-    return res;
+    return CharPair(' ', ' ');
 }
 
 //==============================================================================
