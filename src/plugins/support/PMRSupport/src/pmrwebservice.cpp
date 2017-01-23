@@ -421,18 +421,19 @@ void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace,
     // Clone the given workspace to the given path
 
     connect(pWorkspace, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceCloneFinished()));
+            this, SLOT(workspaceCloneFinished(PMRSupport::PmrWorkspace *)));
 
     QtConcurrent::run(pWorkspace, &PmrWorkspace::clone, pPath);
 }
 
 //==============================================================================
 
-void PmrWebService::workspaceCloneFinished()
+void PmrWebService::workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // Let people know that we are not busy anymore
 
     emit busy(false);
+    emit workspaceCloned(pWorkspace);
 }
 
 //==============================================================================
