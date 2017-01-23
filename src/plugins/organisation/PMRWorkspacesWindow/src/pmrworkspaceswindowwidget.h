@@ -134,7 +134,7 @@ protected:
 private:
     PMRSupport::PmrWebService *mPmrWebService;
 
-    QMap<QString, QString> mWorkspaceFolderUrls;
+    QMap<QString, QString> mClonedWorkspaceFolderUrls;
     QMap<QString, QPair<QString, bool>> mOwnedWorkspaceUrlFolders;
 
     bool mInitialized;

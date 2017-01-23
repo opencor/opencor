@@ -182,7 +182,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                                      QWidget *pParent) :
     Core::Widget(pParent),
     mPmrWebService(pPmrWebService),
-    mWorkspaceFolderUrls(QMap<QString, QString>()),
+    mClonedWorkspaceFolderUrls(QMap<QString, QString>()),
     mOwnedWorkspaceUrlFolders(QMap<QString, QPair<QString, bool>>()),
     mInitialized(false),
     mErrorMessage(QString()),
@@ -369,59 +369,56 @@ void PmrWorkspacesWindowWidget::retranslateUi()
 
 //==============================================================================
 
-static const auto SettingsWorkspaceFolders = QStringLiteral("WorkspaceFolders");
+static const auto SettingsClonedWorkspaceFolders = QStringLiteral("ClonedWorkspaceFolders");
 
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the names of folders containing a cloned workspace, and add them
+    // Retrieve and keep track of some information about the previously cloned
+    // workspace folders
 
-    foreach (const QString &workspaceFolder,
-             pSettings->value(SettingsWorkspaceFolders).toStringList()) {
-        // Add the given workspace folder, if it has not already been added
+    foreach (const QString &clonedWorkspaceFolder,
+             pSettings->value(SettingsClonedWorkspaceFolders).toStringList()) {
+        // Retrieve the URL (i.e. remote.origin.url) of the cloned workspace
+        // folder
 
-        if (!mWorkspaceFolderUrls.contains(workspaceFolder)) {
-            // Retrieve the workspace URL (i.e. remote.origin.url) for the given
-            // folder
+        QString clonedWorkspaceUrl = QString();
+        QByteArray folderByteArray = clonedWorkspaceFolder.toUtf8();
+        git_repository *gitRepository = 0;
 
-            QString res = QString();
-            QByteArray folderByteArray = workspaceFolder.toUtf8();
-            git_repository *gitRepository = 0;
+        if (!git_repository_open(&gitRepository, folderByteArray.constData())) {
+            git_strarray remotes;
 
-            if (!git_repository_open(&gitRepository, folderByteArray.constData())) {
-                git_strarray remotes;
+            if (!git_remote_list(&remotes, gitRepository)) {
+                for (size_t i = 0; i < remotes.count; ++i) {
+                    char *name = remotes.strings[i];
 
-                if (!git_remote_list(&remotes, gitRepository)) {
-                    for (size_t i = 0; i < remotes.count; ++i) {
-                        char *name = remotes.strings[i];
+                    if (!strcmp(name, "origin")) {
+                        git_remote *remote = 0;
 
-                        if (!strcmp(name, "origin")) {
-                            git_remote *remote = 0;
+                        if (!git_remote_lookup(&remote, gitRepository, name)) {
+                            const char *remoteUrl = git_remote_url(remote);
 
-                            if (!git_remote_lookup(&remote, gitRepository, name)) {
-                                const char *remoteUrl = git_remote_url(remote);
-
-                                if (remoteUrl)
-                                    res = QString(remoteUrl);
-                            }
+                            if (remoteUrl)
+                                clonedWorkspaceUrl = QString(remoteUrl);
                         }
                     }
                 }
-
-                git_repository_free(gitRepository);
             }
 
-            // Keep track of the workspace space URL, if there is one and it's not
-            // already tracked
+            git_repository_free(gitRepository);
+        }
 
-            if (!res.isEmpty()) {
-                if (mOwnedWorkspaceUrlFolders.contains(res)) {
-                    duplicateCloneMessage(res, mOwnedWorkspaceUrlFolders.value(res).first, workspaceFolder);
-                } else {
-                    mWorkspaceFolderUrls.insert(workspaceFolder, res);
-                    mOwnedWorkspaceUrlFolders.insert(res, QPair<QString, bool>(workspaceFolder, false));
-                }
+        // Keep track of the URL of the cloned workspace folder, if there is one
+        // and it's not already tracked
+
+        if (!clonedWorkspaceUrl.isEmpty()) {
+            if (mOwnedWorkspaceUrlFolders.contains(clonedWorkspaceUrl)) {
+                duplicateCloneMessage(clonedWorkspaceUrl, mOwnedWorkspaceUrlFolders.value(clonedWorkspaceUrl).first, clonedWorkspaceFolder);
+            } else {
+                mClonedWorkspaceFolderUrls.insert(clonedWorkspaceFolder, clonedWorkspaceUrl);
+                mOwnedWorkspaceUrlFolders.insert(clonedWorkspaceUrl, QPair<QString, bool>(clonedWorkspaceFolder, false));
             }
         }
     }
@@ -433,7 +430,7 @@ void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the names of folders containing cloned workspaces
 
-    pSettings->setValue(SettingsWorkspaceFolders, QVariant(mWorkspaceFolderUrls.keys()));
+    pSettings->setValue(SettingsClonedWorkspaceFolders, QVariant(mClonedWorkspaceFolderUrls.keys()));
 }
 
 //==============================================================================
@@ -591,7 +588,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
                 } else {
                     // The workspace is not known, so forget about it
 
-                    mWorkspaceFolderUrls.remove(urlsIterator.value().first);
+                    mClonedWorkspaceFolderUrls.remove(urlsIterator.value().first);
 
                     urlsIterator.remove();
                 }
@@ -956,7 +953,7 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
             QString folder = pWorkspace->path();
 
-            mWorkspaceFolderUrls.insert(folder, url);
+            mClonedWorkspaceFolderUrls.insert(folder, url);
             mOwnedWorkspaceUrlFolders.insert(url, QPair<QString, bool>(folder, false));
 
             PMRSupport::PmrWorkspaceManager::instance()->addWorkspace(pWorkspace);
@@ -965,8 +962,8 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
             addWorkspace(pWorkspace);
         } else {
-            // We already about that workspace, so check whether it's because we
-            // have just cloned a workspace that we own
+            // We already know about that workspace, so check whether it's
+            // because we have just cloned a workspace that we own
 
             QPair<QString, bool> folderOwned = mOwnedWorkspaceUrlFolders.value(url);
 
