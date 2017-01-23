@@ -75,6 +75,14 @@ void PmrWorkspace::constructor(const QString &pName, const QString &pUrl,
     mStagedCount = 0;
     mUnstagedCount = 0;
 
+    // Make sure that the status of a workspace that has just been cloned is
+    // up to date
+    // Note: ideally, we would do this within the clone() method, but we can't
+    //       since it's executed in a different thread...
+
+    connect(this, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
+            this, SLOT(refreshStatus()));
+
     // Forward a couple of our signals to the 'global' instance of our workspace
     // manager class
 
