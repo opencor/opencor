@@ -257,7 +257,7 @@ void PmrWorkspace::clone(const QString &pPath)
 
     cloneOptions.checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE;
 
-    // Perform the cloning itself and let people know whether it worked or not
+    // Perform the cloning itself and let people know whether it didn't work
 
     if (git_clone(&mGitRepository, workspaceByteArray.constData(),
                   pathByteArray.constData(), &cloneOptions)) {
@@ -265,6 +265,9 @@ void PmrWorkspace::clone(const QString &pPath)
     }
 
     git_strarray_free(&authorizationStrArray);
+
+    // Keep track of our path and let people know that we are all done with the
+    // cloning
 
     mPath = pPath;
 
