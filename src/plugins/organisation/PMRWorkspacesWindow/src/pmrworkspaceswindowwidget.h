@@ -169,9 +169,9 @@ private:
     PmrWorkspacesWindowItem * currentItem() const;
 
     void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
-    void populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
     void populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
                            PMRSupport::PmrWorkspaceFileNode *pFileNode);
+    void populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
     void refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
 
     void duplicateCloneMessage(const QString &pUrl, const QString &pPath1,

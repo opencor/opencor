@@ -688,23 +688,6 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
-{
-    // Retrieve the folder item for the given workspace and populate it
-
-    for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
-        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->invisibleRootItem()->child(i));
-
-        if (item->workspace() == pWorkspace) {
-            populateWorkspace(item, pWorkspace->rootFileNode());
-
-            break;
-        }
-    }
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
                                                   PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
@@ -743,6 +726,23 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
 
             pFolderItem->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::File,
                                                                icon, fileNode));
+        }
+    }
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
+{
+    // Retrieve the folder item for the given workspace and populate it
+
+    for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->invisibleRootItem()->child(i));
+
+        if (item->workspace() == pWorkspace) {
+            populateWorkspace(item, pWorkspace->rootFileNode());
+
+            break;
         }
     }
 }
