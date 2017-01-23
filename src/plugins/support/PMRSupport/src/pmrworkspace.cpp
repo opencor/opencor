@@ -276,11 +276,9 @@ void PmrWorkspace::close()
 {
     // Close ourselves, i.e. reset our Git repository object
 
-    if (mGitRepository) {
-        git_repository_free(mGitRepository);
+    git_repository_free(mGitRepository);
 
-        mGitRepository = 0;
-    }
+    mGitRepository = 0;
 }
 
 //==============================================================================
@@ -448,8 +446,7 @@ bool PmrWorkspace::isMerging() const
 {
     // Return whether we are merging
 
-    return     mGitRepository
-           && (git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE);
+    return git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE;
 }
 
 //==============================================================================

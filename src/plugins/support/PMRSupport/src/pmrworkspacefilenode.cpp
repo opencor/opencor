@@ -136,7 +136,8 @@ PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pName,
             return child;
     }
 
-    // We don't already have the given child, so add it to ourselves
+    // We don't already have the given child, so add it to ourselves and return
+    // it
 
     PmrWorkspaceFileNode *res = new PmrWorkspaceFileNode(pName, childFullName,
                                                          pStatus, this);
