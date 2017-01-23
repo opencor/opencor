@@ -247,11 +247,13 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     layout()->addWidget(mUserMessageWidget);
     layout()->addWidget(mTreeViewWidget);
 
-    // Connections to handle responses from PMR
+    // Connection to handle a response from our workspace manager
 
-    connect(mPmrWebService, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
+    PMRSupport::PmrWorkspaceManager *workspaceManager = PMRSupport::PmrWorkspaceManager::instance();
+
+    connect(workspaceManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
-    connect(mPmrWebService, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
+    connect(workspaceManager, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceSynchronized(PMRSupport::PmrWorkspace *)));
 
     // Create a timer for refreshing our workspaces
