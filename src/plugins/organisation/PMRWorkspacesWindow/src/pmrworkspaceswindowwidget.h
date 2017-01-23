@@ -184,8 +184,6 @@ signals:
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
 
-    void cloneOwnedWorkspaceRequested(PMRSupport::PmrWorkspace *pWorkspace);
-
     void openFileRequested(const QString &pFileName);
     void openFilesRequested(const QStringList &pFileNames);
 

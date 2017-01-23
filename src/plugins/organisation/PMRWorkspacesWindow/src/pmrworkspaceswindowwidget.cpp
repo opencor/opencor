@@ -1044,9 +1044,23 @@ void PmrWorkspacesWindowWidget::copyPath()
 
 void PmrWorkspacesWindowWidget::clone()
 {
-    // Let people know that we want to clone the current (owned) workspace
+    // Clone the owned workspace
 
-    emit cloneOwnedWorkspaceRequested(PMRSupport::PmrWorkspaceManager::instance()->workspace(currentItem()->url()));
+    QString dirName = PMRSupport::PmrWebService::getEmptyDirectory();
+
+    if (!dirName.isEmpty()) {
+        // Create, if needed, the folder where the workspace will be cloned
+
+        QDir workspaceFolder = QDir(dirName);
+
+        if (!workspaceFolder.exists())
+            workspaceFolder.mkpath(".");
+
+        // Ask our PMR web service to effectively clone our owned workspace
+
+        mPmrWebService->requestWorkspaceClone(PMRSupport::PmrWorkspaceManager::instance()->workspace(currentItem()->url()),
+                                              dirName);
+    }
 }
 
 //==============================================================================

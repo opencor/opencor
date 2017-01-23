@@ -99,8 +99,6 @@ private slots:
     void updateGui();
 
     void retrieveWorkspaces(const bool &pVisible);
-
-    void cloneOwnedWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================
