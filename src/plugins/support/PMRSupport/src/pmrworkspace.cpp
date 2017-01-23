@@ -67,7 +67,6 @@ void PmrWorkspace::constructor(const QString &pName, const QString &pUrl,
     mGitRepository = 0;
 
     mRootFileNode = 0;
-    mRepositoryStatusMap = QMap<QString, PmrWorkspaceFileNode *>();
 
     mConflictedFiles = QStringList();
     mUpdatedFiles = QStringList();
@@ -539,8 +538,6 @@ void PmrWorkspace::refreshStatus()
     mStagedCount = 0;
     mUnstagedCount = 0;
 
-    mRepositoryStatusMap.clear();
-
     delete mRootFileNode;
 
     mRootFileNode = new PmrWorkspaceFileNode(QString(), mPath, this);
@@ -612,8 +609,6 @@ void PmrWorkspace::refreshStatus()
 
                         ++i;
                     }
-
-                    mRepositoryStatusMap.insert(filePath, currentFileNode->addChild(pathComponents[i], statusChars));
                 }
             }
 
@@ -654,11 +649,6 @@ CharPair PmrWorkspace::gitFileStatus(const QString &pPath) const
             // Retrieve the status itself
 
             res = gitStatusChars(statusFlags);
-
-            // Also update status in file tree
-
-            if (mRepositoryStatusMap.contains(pPath))
-                mRepositoryStatusMap.value(pPath)->setStatus(res);
         } else {
             emitGitError(tr("An error occurred while trying to get the status of %1.").arg(pPath));
         }
