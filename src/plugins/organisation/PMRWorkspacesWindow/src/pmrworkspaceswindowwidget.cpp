@@ -170,7 +170,7 @@ QString PmrWorkspacesWindowItem::fileName() const
 {
     // Return our file name
 
-    return mFileNode?mFileNode->fullName():QString();
+    return mFileNode?mFileNode->path():QString();
 }
 
 //==============================================================================

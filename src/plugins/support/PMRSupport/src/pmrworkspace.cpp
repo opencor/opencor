@@ -187,7 +187,7 @@ void PmrWorkspace::setPath(const QString &pPath)
 
     mPath = pPath;
 
-    mRootFileNode->setFullName(pPath);
+    mRootFileNode->setPath(pPath);
 }
 
 //==============================================================================

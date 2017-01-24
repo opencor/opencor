@@ -30,13 +30,13 @@ namespace PMRSupport {
 //==============================================================================
 
 void PmrWorkspaceFileNode::constructor(const QString &pName,
-                                       const QString &pFullName,
+                                       const QString &pPath,
                                        const CharPair &pStatus)
 {
     // Some initialisations
 
     mName = pName;
-    mFullName = pFullName;
+    mPath = pPath;
 
     mStatus = pStatus;
 
@@ -46,14 +46,14 @@ void PmrWorkspaceFileNode::constructor(const QString &pName,
 //==============================================================================
 
 PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pName,
-                                           const QString &pFullName,
+                                           const QString &pPath,
                                            const CharPair &pStatus,
                                            QObject *pParent) :
     QObject(pParent)
 {
     // Construct ourselves
 
-    constructor(pName, pFullName, pStatus);
+    constructor(pName, pPath, pStatus);
 }
 
 //==============================================================================
@@ -77,20 +77,20 @@ QString PmrWorkspaceFileNode::name() const
 
 //==============================================================================
 
-QString PmrWorkspaceFileNode::fullName() const
+QString PmrWorkspaceFileNode::path() const
 {
-    // Return our full name
+    // Return our path
 
-    return mFullName;
+    return mPath;
 }
 
 //==============================================================================
 
-void PmrWorkspaceFileNode::setFullName(const QString &pFullName)
+void PmrWorkspaceFileNode::setPath(const QString &pPath)
 {
-    // Set our full name
+    // Set our path
 
-    mFullName = pFullName;
+    mPath = pPath;
 }
 
 //==============================================================================
@@ -136,17 +136,17 @@ PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pName,
 {
     // Check whether we already have the given child and, if so, return it
 
-    QString childFullName = fullName()+"/"+pName;
+    QString childPath = path()+"/"+pName;
 
     foreach (PmrWorkspaceFileNode *child, mChildren) {
-        if (!child->fullName().compare(childFullName))
+        if (!child->path().compare(childPath))
             return child;
     }
 
     // We don't already have the given child, so add it to ourselves and return
     // it
 
-    PmrWorkspaceFileNode *res = new PmrWorkspaceFileNode(pName, childFullName,
+    PmrWorkspaceFileNode *res = new PmrWorkspaceFileNode(pName, childPath,
                                                          pStatus, this);
 
     mChildren << res;
