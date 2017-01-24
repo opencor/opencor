@@ -186,6 +186,23 @@ private:
     QIcon mConflictCollapsedOwnedWorkspaceIcon;
     QIcon mConflictExpandedOwnedWorkspaceIcon;
 
+    QIcon mFileIcon;
+
+    QIcon mIaFileIcon;
+    QIcon mIdFileIcon;
+    QIcon mImFileIcon;
+    QIcon mIrFileIcon;
+    QIcon mItFileIcon;
+
+    QIcon mWaFileIcon;
+    QIcon mWcFileIcon;
+    QIcon mWdFileIcon;
+    QIcon mWeFileIcon;
+    QIcon mWmFileIcon;
+    QIcon mWqFileIcon;
+    QIcon mWrFileIcon;
+    QIcon mWtFileIcon;
+
     void updateGui();
 
     PmrWorkspacesWindowItem * currentItem() const;
