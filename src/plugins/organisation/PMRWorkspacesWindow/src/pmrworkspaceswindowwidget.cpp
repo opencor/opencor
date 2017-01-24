@@ -553,7 +553,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
             workspaceManager->addWorkspace(workspace);
 
-            // Check if we know its folder and, if so, flag it as ours
+            // Check if we know about its folder and, if so, flag it as ours
 
             if (mWorkspaceUrlFoldersOwned.contains(url)) {
                 QString path = mWorkspaceUrlFoldersOwned.value(url).first;
@@ -953,8 +953,8 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
         QString url = pWorkspace->url();
 
         if (!mWorkspaceUrlFoldersOwned.contains(url)) {
-            // We don't know about the workspace, so so keep track of it, open
-            // it and add it to our GUI
+            // We don't know about the workspace, so keep track of it, open it
+            // and add it to our GUI
 
             QString folder = pWorkspace->path();
 
