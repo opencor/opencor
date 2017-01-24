@@ -677,8 +677,7 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
     else
         mTreeViewModel->invisibleRootItem()->insertRow(row, workspaceItem);
 
-    if (pWorkspace->rootFileNode())
-        populateWorkspace(workspaceItem, pWorkspace->rootFileNode());
+    populateWorkspace(workspaceItem, pWorkspace->rootFileNode());
 
     resizeTreeViewToContents();
 }
@@ -797,8 +796,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         }
 
         bool onlyOneItem = mTreeViewWidget->selectedIndexes().count() == 1;
-        bool clonedItem =     item->workspace()->isOwned()
-                          && !item->workspace()->path().isEmpty();
+        bool clonedItem = !mWorkspaceUrlFoldersOwned.value(item->url()).first.isEmpty();
 
         mViewOncomputerAction->setEnabled(clonedItem);
         mCopyUrlAction->setEnabled(onlyOneItem);
