@@ -92,6 +92,19 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
 //==============================================================================
 
 PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+                                                 const QIcon &pCollapsedIcon,
+                                                 const QIcon &pExpandedIcon,
+                                                 PMRSupport::PmrWorkspaceFileNode *pFileNode) :
+    QStandardItem(pCollapsedIcon, pFileNode->name())
+{
+    // Construct our object
+
+    constructor(pType, pCollapsedIcon, pExpandedIcon, 0, pFileNode);
+}
+
+//==============================================================================
+
+PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  const QIcon &pIcon,
                                                  PMRSupport::PmrWorkspaceFileNode *pFileNode) :
     QStandardItem(pIcon, pFileNode->name())
@@ -691,13 +704,33 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
     // the given file node
 
     foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
-        if (fileNode->hasChildren()) {
-            PmrWorkspacesWindowItem *folderItem = new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Folder,
-                                                                              QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon),
-                                                                              QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon),
-                                                                              fileNode->name());
+        // Check whether we already know about the file node
 
-            pFolderItem->appendRow(folderItem);
+        PmrWorkspacesWindowItem *newItem = 0;
+
+        for (int i = 0, iMax = pFolderItem->rowCount(); i < iMax; ++i) {
+            PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(pFolderItem->child(i));
+
+            if (item->fileNode() == fileNode) {
+                newItem = item;
+
+                break;
+            }
+        }
+
+        // Add a new item for the file node or use the one that already exists
+        // for it
+
+        if (fileNode->hasChildren()) {
+            PmrWorkspacesWindowItem *folderItem = newItem?
+                                                      newItem:
+                                                      new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Folder,
+                                                                                  QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon),
+                                                                                  QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon),
+                                                                                  fileNode);
+
+            if (!newItem)
+                pFolderItem->appendRow(folderItem);
 
             if (fileNode->hasChildren())
                 populateWorkspace(folderItem, fileNode);
@@ -720,8 +753,16 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
                                            0, 0, overlaySize, overlaySize);
             }
 
-            pFolderItem->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::File,
-                                                               icon, fileNode));
+            if (newItem) {
+                // We already have an item, so just update its icon
+
+                newItem->setIcon(icon);
+            } else {
+                // We don't already have an item, so create it and add it
+
+                pFolderItem->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::File,
+                                                                   icon, fileNode));
+            }
         }
     }
 }
@@ -747,11 +788,11 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWor
 
 void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
 {
-    // Refresh the status of the given workspace
+    // Refresh the status of the given workspace and update our GUI accordingly
 
     pWorkspace->refreshStatus();
 
-//---GRY--- Somehow need to update our tree view, if needed...
+    populateWorkspace(pWorkspace);
 }
 
 //==============================================================================

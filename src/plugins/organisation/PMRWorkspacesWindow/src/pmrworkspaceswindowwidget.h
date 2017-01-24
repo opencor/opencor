@@ -80,7 +80,11 @@ public:
                                      const QIcon &pCollapsedIcon,
                                      const QIcon &pExpandedIcon,
                                      const QString &pText,
-                                     PMRSupport::PmrWorkspace *pWorkspace = 0);
+                                     PMRSupport::PmrWorkspace *pWorkspace);
+    explicit PmrWorkspacesWindowItem(const Type &pType,
+                                     const QIcon &pCollapsedIcon,
+                                     const QIcon &pExpandedIcon,
+                                     PMRSupport::PmrWorkspaceFileNode *pFileNode);
     explicit PmrWorkspacesWindowItem(const Type &pType, const QIcon &pIcon,
                                      PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
