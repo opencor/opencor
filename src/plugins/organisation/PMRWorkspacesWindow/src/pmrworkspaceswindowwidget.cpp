@@ -800,7 +800,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         }
 
         bool onlyOneItem = mTreeViewWidget->selectedIndexes().count() == 1;
-        bool clonedItem = !mWorkspaceUrlFoldersOwned.value(item->url()).first.isEmpty();
+        bool clonedItem = item->workspace()->isOwned() && !item->workspace()->path().isEmpty();
 
         mViewOncomputerAction->setEnabled(clonedItem);
         mCopyUrlAction->setEnabled(onlyOneItem);
