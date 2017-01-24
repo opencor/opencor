@@ -248,25 +248,69 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(itemCollapsed(const QModelIndex &)));
 
-    // Create our owned workspace icons
+    // Create our various non-owned workspace icons
+
+    static const QIcon UnstagedIcon = QIcon(":/PMRWorkspacesWindow/wQ.png");
+    static const QIcon ConflictIcon = QIcon(":/PMRWorkspacesWindow/wE.png");
+
+    mCollapsedWorkspaceIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
+    mExpandedWorkspaceIcon = QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
+
+    int folderIconSize = mCollapsedWorkspaceIcon.availableSizes().first().width();
+    int overlayIconSize = 0.57*folderIconSize;
+
+    mUnstagedCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon,
+                                                          UnstagedIcon,
+                                                          folderIconSize, folderIconSize,
+                                                          0, 0, overlayIconSize, overlayIconSize);
+    mUnstagedExpandedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon,
+                                                         UnstagedIcon,
+                                                         folderIconSize, folderIconSize,
+                                                         0, 0, overlayIconSize, overlayIconSize);
+
+    mConflictCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon,
+                                                          ConflictIcon,
+                                                          folderIconSize, folderIconSize,
+                                                          0, 0, overlayIconSize, overlayIconSize);
+    mConflictExpandedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon,
+                                                         ConflictIcon,
+                                                         folderIconSize, folderIconSize,
+                                                         0, 0, overlayIconSize, overlayIconSize);
+
+    // Create our various owned workspace icons
 
     static const QIcon FavoriteIcon = QIcon(":/oxygen/places/favorites.png");
 
-    QIcon collapsedFolderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
-    QIcon expandedFolderIcon = QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
-    int folderIconSize = collapsedFolderIcon.availableSizes().first().width();
-    int overlayIconSize = 0.57*folderIconSize;
+    int overlayIconPos = folderIconSize-overlayIconSize;
 
-    mCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(collapsedFolderIcon,
+    mCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon,
                                                        FavoriteIcon,
                                                        folderIconSize, folderIconSize,
-                                                       folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
+                                                       overlayIconPos, overlayIconPos,
                                                        overlayIconSize, overlayIconSize);
-    mExpandedOwnedWorkspaceIcon = Core::overlayedIcon(expandedFolderIcon,
+    mExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon,
                                                       FavoriteIcon,
                                                       folderIconSize, folderIconSize,
-                                                      folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
+                                                      overlayIconPos, overlayIconPos,
                                                       overlayIconSize, overlayIconSize);
+
+    mUnstagedCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedOwnedWorkspaceIcon,
+                                                               UnstagedIcon,
+                                                               folderIconSize, folderIconSize,
+                                                               0, 0, overlayIconSize, overlayIconSize);
+    mUnstagedExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedOwnedWorkspaceIcon,
+                                                              UnstagedIcon,
+                                                              folderIconSize, folderIconSize,
+                                                              0, 0, overlayIconSize, overlayIconSize);
+
+    mConflictCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedOwnedWorkspaceIcon,
+                                                               ConflictIcon,
+                                                               folderIconSize, folderIconSize,
+                                                               0, 0, overlayIconSize, overlayIconSize);
+    mConflictExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedOwnedWorkspaceIcon,
+                                                              ConflictIcon,
+                                                              folderIconSize, folderIconSize,
+                                                              0, 0, overlayIconSize, overlayIconSize);
 
     // Populate ourselves
 
@@ -307,9 +351,9 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                      this);
     mCopyPathAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                       this);
-    mCloneAction = Core::newAction(Core::overlayedIcon(collapsedFolderIcon, ArrowDownIcon,
+    mCloneAction = Core::newAction(Core::overlayedIcon(mCollapsedWorkspaceIcon, ArrowDownIcon,
                                                        folderIconSize, folderIconSize,
-                                                       folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
+                                                       overlayIconPos, overlayIconPos,
                                                        overlayIconSize, overlayIconSize),
                                             this);
     mStageUnstageAction = Core::newAction(this);
@@ -651,25 +695,16 @@ void PmrWorkspacesWindowWidget::retrieveWorkspaceIcons(PMRSupport::PmrWorkspace 
     // Retrieve the icons to use for the given workspace
 
     PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = pWorkspace->gitWorkspaceStatus();
-    pCollapsedIcon = pWorkspace->isOwned()?
-                         mCollapsedOwnedWorkspaceIcon:
-                         QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
-    pExpandedIcon = pWorkspace->isOwned()?
-                        mExpandedOwnedWorkspaceIcon:
-                        QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
 
-    if (   (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)
-        || (workspaceStatus & PMRSupport::PmrWorkspace::StatusConflict)) {
-        QIcon overlayIcon = QIcon(QString(":/PMRWorkspacesWindow/w%1.png").arg((workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)?"Q":"E"));
-        int folderIconSize = pCollapsedIcon.availableSizes().first().width();
-        int overlayIconSize = 0.57*folderIconSize;
-
-        pCollapsedIcon = Core::overlayedIcon(pCollapsedIcon, overlayIcon,
-                                             folderIconSize, folderIconSize,
-                                             0, 0, overlayIconSize, overlayIconSize);
-        pExpandedIcon = Core::overlayedIcon(pExpandedIcon, overlayIcon,
-                                            folderIconSize, folderIconSize,
-                                            0, 0, overlayIconSize, overlayIconSize);
+    if (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged) {
+        pCollapsedIcon = pWorkspace->isOwned()?mUnstagedCollapsedOwnedWorkspaceIcon:mUnstagedCollapsedWorkspaceIcon;
+        pExpandedIcon = pWorkspace->isOwned()?mUnstagedExpandedOwnedWorkspaceIcon:mUnstagedExpandedWorkspaceIcon;
+    } else if (workspaceStatus & PMRSupport::PmrWorkspace::StatusConflict) {
+        pCollapsedIcon = pWorkspace->isOwned()?mConflictCollapsedOwnedWorkspaceIcon:mConflictCollapsedWorkspaceIcon;
+        pExpandedIcon = pWorkspace->isOwned()?mConflictExpandedOwnedWorkspaceIcon:mConflictExpandedWorkspaceIcon;
+    } else {
+        pCollapsedIcon = pWorkspace->isOwned()?mCollapsedOwnedWorkspaceIcon:mCollapsedWorkspaceIcon;
+        pExpandedIcon = pWorkspace->isOwned()?mExpandedOwnedWorkspaceIcon:mExpandedWorkspaceIcon;
     }
 }
 
@@ -745,8 +780,8 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
             PmrWorkspacesWindowItem *folderItem = newItem?
                                                       newItem:
                                                       new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Folder,
-                                                                                  QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon),
-                                                                                  QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon),
+                                                                                  mCollapsedWorkspaceIcon,
+                                                                                  mExpandedWorkspaceIcon,
                                                                                   fileNode);
 
             if (!newItem)

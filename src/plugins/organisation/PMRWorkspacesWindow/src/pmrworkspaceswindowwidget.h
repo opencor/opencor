@@ -168,8 +168,23 @@ private:
     QStandardItemModel *mTreeViewModel;
     Core::TreeViewWidget *mTreeViewWidget;
 
+    QIcon mCollapsedWorkspaceIcon;
+    QIcon mExpandedWorkspaceIcon;
+
+    QIcon mUnstagedCollapsedWorkspaceIcon;
+    QIcon mUnstagedExpandedWorkspaceIcon;
+
+    QIcon mConflictCollapsedWorkspaceIcon;
+    QIcon mConflictExpandedWorkspaceIcon;
+
     QIcon mCollapsedOwnedWorkspaceIcon;
     QIcon mExpandedOwnedWorkspaceIcon;
+
+    QIcon mUnstagedCollapsedOwnedWorkspaceIcon;
+    QIcon mUnstagedExpandedOwnedWorkspaceIcon;
+
+    QIcon mConflictCollapsedOwnedWorkspaceIcon;
+    QIcon mConflictExpandedOwnedWorkspaceIcon;
 
     void updateGui();
 
