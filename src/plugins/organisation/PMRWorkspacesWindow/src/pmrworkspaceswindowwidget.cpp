@@ -152,11 +152,29 @@ QIcon PmrWorkspacesWindowItem::collapsedIcon() const
 
 //==============================================================================
 
+void PmrWorkspacesWindowItem::setCollapsedIcon(const QIcon &pCollapsedIcon)
+{
+    // Set our collapsed icon
+
+    mCollapsedIcon = pCollapsedIcon;
+}
+
+//==============================================================================
+
 QIcon PmrWorkspacesWindowItem::expandedIcon() const
 {
     // Return our expanded icon
 
     return mExpandedIcon;
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowItem::setExpandedIcon(const QIcon &pExpandedIcon)
+{
+    // Set our expanded icon
+
+    mExpandedIcon = pExpandedIcon;
 }
 
 //==============================================================================
@@ -626,6 +644,37 @@ PmrWorkspacesWindowItem * PmrWorkspacesWindowWidget::currentItem() const
 
 //==============================================================================
 
+void PmrWorkspacesWindowWidget::retrieveWorkspaceIcons(PMRSupport::PmrWorkspace *pWorkspace,
+                                                       QIcon &pCollapsedIcon,
+                                                       QIcon &pExpandedIcon)
+{
+    // Retrieve the icons to use for the given workspace
+
+    PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = pWorkspace->gitWorkspaceStatus();
+    pCollapsedIcon = pWorkspace->isOwned()?
+                         mCollapsedOwnedWorkspaceIcon:
+                         QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
+    pExpandedIcon = pWorkspace->isOwned()?
+                        mExpandedOwnedWorkspaceIcon:
+                        QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
+
+    if (   (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)
+        || (workspaceStatus & PMRSupport::PmrWorkspace::StatusConflict)) {
+        QIcon overlayIcon = QIcon(QString(":/PMRWorkspacesWindow/w%1.png").arg((workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)?"Q":"E"));
+        int folderIconSize = pCollapsedIcon.availableSizes().first().width();
+        int overlayIconSize = 0.57*folderIconSize;
+
+        pCollapsedIcon = Core::overlayedIcon(pCollapsedIcon, overlayIcon,
+                                             folderIconSize, folderIconSize,
+                                             0, 0, overlayIconSize, overlayIconSize);
+        pExpandedIcon = Core::overlayedIcon(pExpandedIcon, overlayIcon,
+                                            folderIconSize, folderIconSize,
+                                            0, 0, overlayIconSize, overlayIconSize);
+    }
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // Determine where in our tree view widget the given workspace should be
@@ -644,32 +693,15 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
 
     // Add the given workspace to our tree view widget
 
-    PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = pWorkspace->gitWorkspaceStatus();
-    QIcon icon = pWorkspace->isOwned()?
-                     mCollapsedOwnedWorkspaceIcon:
-                     QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
-    QIcon otherIcon = pWorkspace->isOwned()?
-                          mExpandedOwnedWorkspaceIcon:
-                          QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
+    QIcon collapsedIcon;
+    QIcon expandedIcon;
 
-    if (   (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)
-        || (workspaceStatus & PMRSupport::PmrWorkspace::StatusConflict)) {
-        QIcon overlayIcon = QIcon(QString(":/PMRWorkspacesWindow/w%1.png").arg((workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)?"Q":"E"));
-        int folderIconSize = icon.availableSizes().first().width();
-        int overlayIconSize = 0.57*folderIconSize;
-
-        icon = Core::overlayedIcon(icon, overlayIcon,
-                                   folderIconSize, folderIconSize,
-                                   0, 0, overlayIconSize, overlayIconSize);
-        otherIcon = Core::overlayedIcon(otherIcon, overlayIcon,
-                                        folderIconSize, folderIconSize,
-                                        0, 0, overlayIconSize, overlayIconSize);
-    }
+    retrieveWorkspaceIcons(pWorkspace, collapsedIcon, expandedIcon);
 
     PmrWorkspacesWindowItem *workspaceItem = new PmrWorkspacesWindowItem(pWorkspace->isOwned()?
                                                                              PmrWorkspacesWindowItem::OwnedWorkspace:
                                                                              PmrWorkspacesWindowItem::Workspace,
-                                                                         icon, otherIcon,
+                                                                         collapsedIcon, expandedIcon,
                                                                          workspaceName,
                                                                          pWorkspace);
 
@@ -759,12 +791,28 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
 
 void PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
 {
-    // Retrieve the folder item for the given workspace and populate it
+    // Retrieve the folder item for the given workspace and populate it, after
+    // having updated the folder item itself
 
     for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->invisibleRootItem()->child(i));
 
         if (item->workspace() == pWorkspace) {
+            // Retrieve and use the (potentially new) icons to use with the
+            // folder item
+
+            QIcon collapsedIcon;
+            QIcon expandedIcon;
+
+            retrieveWorkspaceIcons(pWorkspace, collapsedIcon, expandedIcon);
+
+            item->setCollapsedIcon(collapsedIcon);
+            item->setExpandedIcon(expandedIcon);
+
+            item->setIcon(mTreeViewWidget->isExpanded(item->index())?expandedIcon:collapsedIcon);
+
+            // Populate the given workspace
+
             populateWorkspace(item, pWorkspace->rootFileNode());
 
             break;

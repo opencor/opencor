@@ -94,7 +94,10 @@ public:
     PMRSupport::PmrWorkspaceFileNode * fileNode() const;
 
     QIcon collapsedIcon() const;
+    void setCollapsedIcon(const QIcon &pCollapsedIcon);
+
     QIcon expandedIcon() const;
+    void setExpandedIcon(const QIcon &pExpandedIcon);
 
     QString url() const;
     QString path() const;
@@ -171,6 +174,9 @@ private:
     void updateGui();
 
     PmrWorkspacesWindowItem * currentItem() const;
+
+    void retrieveWorkspaceIcons(PMRSupport::PmrWorkspace *pWorkspace,
+                                QIcon &pCollapsedIcon, QIcon &pExpandedIcon);
 
     void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
     void populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
