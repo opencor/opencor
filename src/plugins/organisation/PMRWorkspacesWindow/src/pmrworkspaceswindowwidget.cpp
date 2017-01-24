@@ -302,6 +302,55 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                                               folderIconSize, folderIconSize,
                                                               0, 0, overlayIconSize, overlayIconSize);
 
+    // Create our various file icons
+
+    mFileIcon = QFileIconProvider().icon(QFileIconProvider::File);
+
+    int fileIconSize = mFileIcon.availableSizes().first().width();
+
+    overlayIconSize = 0.57*fileIconSize;
+
+    mIaFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iA.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mIdFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iD.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mImFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iM.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mIrFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iR.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mItFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iT.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+
+    mWaFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wA.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mWcFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wC.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mWdFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wD.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mWeFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wE.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mWmFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wM.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mWqFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wQ.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mWrFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wR.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mWtFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wT.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+
     // Populate ourselves
 
     createLayout();
@@ -780,22 +829,40 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
             if (fileNode->hasChildren())
                 populateWorkspace(folderItem, fileNode);
         } else {
-            // We are dealing with a file, so retrieve its status and generate a
-            // special icon for it, if needed
-
-            static const QIcon DefaultFileIcon = QFileIconProvider().icon(QFileIconProvider::File);
+            // We are dealing with a file, so retrieve its status and use the
+            // corresponding icon for it, if needed
 
             PMRSupport::CharPair status = fileNode->status();
-            QIcon icon = DefaultFileIcon;
-            int iconSize = icon.availableSizes().first().width();
-            int overlaySize = 0.57*iconSize;
+            QIcon icon = mFileIcon;
 
-            if ((status.first != ' ') || (status.second != ' ')) {
-                icon = Core::overlayedIcon(icon,
-                                           QIcon(QString(":/PMRWorkspacesWindow/%1%2.png").arg((status.first != ' ')?"i":"w",
-                                                                                               (status.first != ' ')?status.first:status.second)),
-                                           iconSize, iconSize,
-                                           0, 0, overlaySize, overlaySize);
+            if (status.first != ' ') {
+                if (status.first == 'A')
+                    icon = mIaFileIcon;
+                else if (status.first == 'D')
+                    icon = mIdFileIcon;
+                else if (status.first == 'M')
+                    icon = mImFileIcon;
+                else if (status.first == 'R')
+                    icon = mIrFileIcon;
+                else if (status.first == 'T')
+                    icon = mItFileIcon;
+            } else if (status.second != ' ') {
+                if (status.second == 'A')
+                    icon = mWaFileIcon;
+                else if (status.second == 'C')
+                    icon = mWcFileIcon;
+                else if (status.second == 'D')
+                    icon = mWdFileIcon;
+                else if (status.second == 'E')
+                    icon = mWeFileIcon;
+                else if (status.second == 'M')
+                    icon = mWmFileIcon;
+                else if (status.second == 'Q')
+                    icon = mWqFileIcon;
+                else if (status.second == 'R')
+                    icon = mWrFileIcon;
+                else if (status.second == 'T')
+                    icon = mWtFileIcon;
             }
 
             if (newItem) {
