@@ -259,21 +259,17 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     int folderIconSize = mCollapsedWorkspaceIcon.availableSizes().first().width();
     int overlayIconSize = 0.57*folderIconSize;
 
-    mUnstagedCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon,
-                                                          UnstagedIcon,
+    mUnstagedCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon, UnstagedIcon,
                                                           folderIconSize, folderIconSize,
                                                           0, 0, overlayIconSize, overlayIconSize);
-    mUnstagedExpandedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon,
-                                                         UnstagedIcon,
+    mUnstagedExpandedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon, UnstagedIcon,
                                                          folderIconSize, folderIconSize,
                                                          0, 0, overlayIconSize, overlayIconSize);
 
-    mConflictCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon,
-                                                          ConflictIcon,
+    mConflictCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon, ConflictIcon,
                                                           folderIconSize, folderIconSize,
                                                           0, 0, overlayIconSize, overlayIconSize);
-    mConflictExpandedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon,
-                                                         ConflictIcon,
+    mConflictExpandedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon, ConflictIcon,
                                                          folderIconSize, folderIconSize,
                                                          0, 0, overlayIconSize, overlayIconSize);
 
@@ -283,32 +279,26 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     int overlayIconPos = folderIconSize-overlayIconSize;
 
-    mCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon,
-                                                       FavoriteIcon,
+    mCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon, FavoriteIcon,
                                                        folderIconSize, folderIconSize,
                                                        overlayIconPos, overlayIconPos,
                                                        overlayIconSize, overlayIconSize);
-    mExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon,
-                                                      FavoriteIcon,
+    mExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon, FavoriteIcon,
                                                       folderIconSize, folderIconSize,
                                                       overlayIconPos, overlayIconPos,
                                                       overlayIconSize, overlayIconSize);
 
-    mUnstagedCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedOwnedWorkspaceIcon,
-                                                               UnstagedIcon,
+    mUnstagedCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedOwnedWorkspaceIcon, UnstagedIcon,
                                                                folderIconSize, folderIconSize,
                                                                0, 0, overlayIconSize, overlayIconSize);
-    mUnstagedExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedOwnedWorkspaceIcon,
-                                                              UnstagedIcon,
+    mUnstagedExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedOwnedWorkspaceIcon, UnstagedIcon,
                                                               folderIconSize, folderIconSize,
                                                               0, 0, overlayIconSize, overlayIconSize);
 
-    mConflictCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedOwnedWorkspaceIcon,
-                                                               ConflictIcon,
+    mConflictCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedOwnedWorkspaceIcon, ConflictIcon,
                                                                folderIconSize, folderIconSize,
                                                                0, 0, overlayIconSize, overlayIconSize);
-    mConflictExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedOwnedWorkspaceIcon,
-                                                              ConflictIcon,
+    mConflictExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedOwnedWorkspaceIcon, ConflictIcon,
                                                               folderIconSize, folderIconSize,
                                                               0, 0, overlayIconSize, overlayIconSize);
 
