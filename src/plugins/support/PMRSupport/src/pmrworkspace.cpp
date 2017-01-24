@@ -549,9 +549,8 @@ void PmrWorkspace::refreshStatus()
 
     mRepositoryStatusMap.clear();
 
-    delete mRootFileNode;
-
-    mRootFileNode = new PmrWorkspaceFileNode(QString(), mPath, this);
+    if (!mRootFileNode)
+        mRootFileNode = new PmrWorkspaceFileNode(QString(), mPath, this);
 
     if (isOpen()) {
         git_status_options statusOptions;
@@ -627,6 +626,11 @@ void PmrWorkspace::refreshStatus()
 
             git_status_list_free(statusList);
         }
+    } else if (mRootFileNode->hasChildren()) {
+        // We are not open, so clear our root file node
+
+        foreach (PmrWorkspaceFileNode *child, mRootFileNode->children())
+            delete child;
     }
 }
 
