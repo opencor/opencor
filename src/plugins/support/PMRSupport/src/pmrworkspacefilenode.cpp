@@ -139,8 +139,14 @@ PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pName,
     QString childPath = path()+"/"+pName;
 
     foreach (PmrWorkspaceFileNode *child, mChildren) {
-        if (!child->path().compare(childPath))
+        if (!child->path().compare(childPath)) {
+            // This is the child we are trying to add, so update its status and
+            // return it
+
+            child->setStatus(pStatus);
+
             return child;
+        }
     }
 
     // We don't already have the given child, so add it to ourselves and return
