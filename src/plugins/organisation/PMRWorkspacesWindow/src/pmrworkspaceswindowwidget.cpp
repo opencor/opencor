@@ -940,38 +940,35 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 {
     // The given workspace has been cloned, so update ourselves accordingly
 
-    if (pWorkspace->isOwned()) {
-        // We have just cloned a workspace that we own, so simply populate it
+    QString url = pWorkspace->url();
 
-        populateWorkspace(pWorkspace);
-    } else {
-        // We don't own the workspace, so check whether we already know about it
+    if (!mWorkspaceUrlFoldersOwned.contains(url)) {
+        // We don't know about the workspace, so keep track of it and open it
 
-        QString url = pWorkspace->url();
+        QString folder = pWorkspace->path();
 
-        if (!mWorkspaceUrlFoldersOwned.contains(url)) {
-            // We don't know about the workspace, so keep track of it, open it
-            // and add it to our GUI
+        mClonedWorkspaceFolderUrls.insert(folder, url);
+        mWorkspaceUrlFoldersOwned.insert(url, QPair<QString, bool>(folder, false));
 
-            QString folder = pWorkspace->path();
+        PMRSupport::PmrWorkspaceManager::instance()->addWorkspace(pWorkspace);
 
-            mClonedWorkspaceFolderUrls.insert(folder, url);
-            mWorkspaceUrlFoldersOwned.insert(url, QPair<QString, bool>(folder, false));
+        pWorkspace->open();
 
-            PMRSupport::PmrWorkspaceManager::instance()->addWorkspace(pWorkspace);
+        // Populate the existing workspace, if we own it (since we already have
+        // an entry for it) or add it, if we don't
 
-            pWorkspace->open();
-
+        if (pWorkspace->isOwned())
+            populateWorkspace(pWorkspace);
+        else
             addWorkspace(pWorkspace);
-        } else {
-            // We already know about the workspace, which means that we have
-            // already cloned it and that we need to let the user know about it
-            // Note: this should never happen, but better be safe than sorry...
+    } else {
+        // We already know about the workspace, which means that we have already
+        // cloned it and that we need to let the user know about it
+        // Note: this should never happen, but better be safe than sorry...
 
-            QPair<QString, bool> folderOwned = mWorkspaceUrlFoldersOwned.value(url);
+        QPair<QString, bool> folderOwned = mWorkspaceUrlFoldersOwned.value(url);
 
-            duplicateCloneMessage(url, folderOwned.first, pWorkspace->path());
-        }
+        duplicateCloneMessage(url, folderOwned.first, pWorkspace->path());
     }
 }
 
