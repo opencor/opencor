@@ -86,6 +86,15 @@ QString PmrWorkspaceFileNode::fullName() const
 
 //==============================================================================
 
+void PmrWorkspaceFileNode::setFullName(const QString &pFullName)
+{
+    // Set our full name
+
+    mFullName = pFullName;
+}
+
+//==============================================================================
+
 CharPair PmrWorkspaceFileNode::status() const
 {
     // Return our status

@@ -57,7 +57,9 @@ public:
     explicit PmrWorkspaceFileNode(QObject *pParent);
 
     QString name() const;
+
     QString fullName() const;
+    void setFullName(const QString &pFullName);
 
     CharPair status() const;
     void setStatus(const CharPair &pStatus);
