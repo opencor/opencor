@@ -59,7 +59,6 @@ namespace PMRWorkspacesWindow {
 void PmrWorkspacesWindowItem::constructor(const Type &pType,
                                           const QIcon &pCollapsedIcon,
                                           const QIcon &pExpandedIcon,
-                                          const QIcon &pIcon,
                                           PMRSupport::PmrWorkspace *pWorkspace,
                                           PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
@@ -73,8 +72,6 @@ void PmrWorkspacesWindowItem::constructor(const Type &pType,
 
     // Customise ourselves
 
-    QStandardItem::setIcon(pCollapsedIcon.isNull()?pIcon:pCollapsedIcon);
-
     setToolTip(text());
 }
 
@@ -85,11 +82,11 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  const QIcon &pExpandedIcon,
                                                  const QString &pText,
                                                  PMRSupport::PmrWorkspace *pWorkspace) :
-    QStandardItem(pText)
+    QStandardItem(pCollapsedIcon, pText)
 {
     // Construct our object
 
-    constructor(pType, pCollapsedIcon, pExpandedIcon, QIcon(), pWorkspace, 0);
+    constructor(pType, pCollapsedIcon, pExpandedIcon, pWorkspace, 0);
 }
 
 //==============================================================================
@@ -97,11 +94,11 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
 PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  const QIcon &pIcon,
                                                  PMRSupport::PmrWorkspaceFileNode *pFileNode) :
-    QStandardItem(pFileNode->name())
+    QStandardItem(pIcon, pFileNode->name())
 {
     // Construct our object
 
-    constructor(pType, QIcon(), QIcon(), pIcon, 0, pFileNode);
+    constructor(pType, QIcon(), QIcon(), 0, pFileNode);
 }
 
 //==============================================================================

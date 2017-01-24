@@ -66,7 +66,7 @@ void PmrWorkspace::constructor(const QString &pName, const QString &pUrl,
 
     mGitRepository = 0;
 
-    mRootFileNode = 0;
+    mRootFileNode = new PmrWorkspaceFileNode(this);
     mRepositoryStatusMap = QMap<QString, PmrWorkspaceFileNode *>();
 
     mConflictedFiles = QStringList();
@@ -548,9 +548,6 @@ void PmrWorkspace::refreshStatus()
     mUnstagedCount = 0;
 
     mRepositoryStatusMap.clear();
-
-    if (!mRootFileNode)
-        mRootFileNode = new PmrWorkspaceFileNode(QString(), mPath, this);
 
     if (isOpen()) {
         git_status_options statusOptions;

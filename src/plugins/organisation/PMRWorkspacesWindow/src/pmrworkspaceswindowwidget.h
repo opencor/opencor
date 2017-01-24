@@ -106,7 +106,7 @@ private:
     QIcon mExpandedIcon;
 
     void constructor(const Type &pType, const QIcon &pCollapsedIcon,
-                     const QIcon &pExpandedIcon, const QIcon &pIcon,
+                     const QIcon &pExpandedIcon,
                      PMRSupport::PmrWorkspace *pWorkspace,
                      PMRSupport::PmrWorkspaceFileNode *pFileNode);
 };

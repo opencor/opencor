@@ -58,14 +58,12 @@ PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pName,
 
 //==============================================================================
 
-PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pName,
-                                           const QString &pFullName,
-                                           QObject *pParent) :
+PmrWorkspaceFileNode::PmrWorkspaceFileNode(QObject *pParent) :
     QObject(pParent)
 {
     // Construct ourselves
 
-    constructor(pName, pFullName, CharPair());
+    constructor(QString(), QString(), CharPair());
 }
 
 //==============================================================================

@@ -54,8 +54,7 @@ public:
     explicit PmrWorkspaceFileNode(const QString &pName,
                                   const QString &pFullName,
                                   const CharPair &pStatus, QObject *pParent);
-    explicit PmrWorkspaceFileNode(const QString &pName,
-                                  const QString &pFullName, QObject *pParent);
+    explicit PmrWorkspaceFileNode(QObject *pParent);
 
     QString name() const;
     QString fullName() const;
