@@ -204,7 +204,6 @@ private slots:
 
     void resizeTreeViewToContents();
 
-    void startStopTimer();
     void refreshWorkspaces();
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);

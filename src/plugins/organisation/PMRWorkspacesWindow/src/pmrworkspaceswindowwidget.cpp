@@ -266,23 +266,14 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     connect(workspaceManager, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceSynchronized(PMRSupport::PmrWorkspace *)));
 
-    // Create a timer for refreshing our workspaces
+    // Create and start a timer for refreshing our workspaces
 
     mTimer = new QTimer(this);
 
     connect(mTimer, SIGNAL(timeout()),
             this, SLOT(refreshWorkspaces()));
 
-    // Keep track of when OpenCOR gets/loses the focus, so we can enable/disable
-    // the timer that we use to refresh our workspaces
-    // Note: the focusWindowChanged() signal comes from QGuiApplication, so we
-    //       need to check whether we are running the console version of OpenCOR
-    //       or its GUI version...
-
-    if (dynamic_cast<QGuiApplication *>(QCoreApplication::instance())) {
-        connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
-                this, SLOT(startStopTimer()));
-    }
+    mTimer->start(1000);
 
     // Create and populate our context menu
 
@@ -516,13 +507,10 @@ void PmrWorkspacesWindowWidget::updateGui()
                                            Core::formatMessage(mErrorMessage, false, true));
     }
 
-    // Show/hide our user message widget and our tree view widget, and then
-    // check whether we should start/stop our timer
+    // Show/hide our user message widget and our tree view widget
 
     mUserMessageWidget->setVisible(!mUserMessageWidget->text().isEmpty());
     mTreeViewWidget->setVisible(mUserMessageWidget->text().isEmpty());
-
-    startStopTimer();
 }
 
 //==============================================================================
@@ -898,33 +886,6 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
 
     if (mInitialized)
         emit warning(QString("Workspace '%1' is cloned into both '%2' and '%3'").arg(pUrl, pPath1, pPath2));
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::startStopTimer()
-{
-    // Start our timer if OpenCOR is active and we have at least one workspace,
-    // or stop it if either OpenCOR is not active or we no longer have at least
-    // one workspace
-    // Note: if we are to start our timer, then we refresh our workspaces first
-    //       since waiting one second may seem long to a user...
-
-    if (   !mTimer->isActive()
-        &&  Core::opencorActive() && mTreeViewModel->rowCount()) {
-        disconnect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
-                   this, SLOT(startStopTimer()));
-
-        refreshWorkspaces();
-
-        connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
-                this, SLOT(startStopTimer()));
-
-        mTimer->start(1000);
-    } else if (   mTimer->isActive()
-               && (!Core::opencorActive() || !mTreeViewModel->rowCount())) {
-        mTimer->stop();
-    }
 }
 
 //==============================================================================
