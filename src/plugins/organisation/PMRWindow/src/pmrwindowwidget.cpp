@@ -28,6 +28,7 @@ limitations under the License.
 
 #include <QApplication>
 #include <QClipboard>
+#include <QContextMenuEvent>
 #include <QDesktopServices>
 #include <QIODevice>
 #include <QMenu>
@@ -68,13 +69,6 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     // Prevent zooming in/out
 
     setZoomingEnabled(false);
-
-    // We want our own context menu
-
-    setContextMenuPolicy(Qt::CustomContextMenu);
-
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
 
     // Prevent objects from being dropped on us
 
@@ -117,6 +111,24 @@ void PmrWindowWidget::retranslateUi()
 
 //==============================================================================
 
+void PmrWindowWidget::contextMenuEvent(QContextMenuEvent *pEvent)
+{
+    // Retrieve some information about the link, if any
+
+    QString textContent;
+
+    retrieveLinkInformation(mExposureUrl, textContent);
+
+    // Show our context menu to allow the copying of the URL of the exposure,
+    // but only if we are over a link, i.e. if both mLink and textContent are
+    // not empty
+
+    if (!mExposureUrl.isEmpty() && !textContent.isEmpty())
+        mContextMenu->exec(pEvent->globalPos());
+}
+
+//==============================================================================
+
 QSize PmrWindowWidget::sizeHint() const
 {
     // Suggest a default size for our PMR widget
@@ -126,7 +138,7 @@ QSize PmrWindowWidget::sizeHint() const
     return defaultSize(0.15);
 }
 
- //==============================================================================
+//==============================================================================
 
 QString PmrWindowWidget::message() const
 {
@@ -137,7 +149,7 @@ QString PmrWindowWidget::message() const
     if (mInternetConnectionAvailable && mErrorMessage.isEmpty()) {
         if (!mNumberOfFilteredExposures) {
             if (!mExposureNames.isEmpty())
-                res = tr("No exposure matches your criteria.");
+                res = tr("No exposures match your criteria.");
         } else if (mNumberOfFilteredExposures == 1) {
             res = tr("<strong>1</strong> exposure was found:");
         } else {
@@ -374,45 +386,27 @@ void PmrWindowWidget::linkHovered()
     // link
     // Note: this follows the approach used in linkClicked()...
 
-    QString linkToolTip = QString();
+    QString toolTip = QString();
 
     if (textContent.isEmpty()) {
         QStringList linkList = link.split("|");
 
         if (!linkList[0].compare("cloneWorkspace")) {
-            linkToolTip = tr("Clone Workspace");
+            toolTip = tr("Clone Workspace");
         } else if (linkList.count() == 2) {
             if (page()->mainFrame()->documentElement().findFirst(QString("img[id=exposureFilesButton_%1]").arg(mExposureUrlId.value(linkList[1]))).hasClass("button"))
-                linkToolTip = tr("Show Exposure Files");
+                toolTip = tr("Show Exposure Files");
             else
-                linkToolTip = tr("Hide Exposure Files");
+                toolTip = tr("Hide Exposure Files");
         }
     } else {
         if (element.parent().hasClass("exposureFile"))
-            linkToolTip = tr("Open Exposure File");
+            toolTip = tr("Open Exposure File");
         else
-            linkToolTip = tr("Browse Exposure");
+            toolTip = tr("Browse Exposure");
     }
 
-    setLinkToolTip(linkToolTip);
-}
-
-//==============================================================================
-
-void PmrWindowWidget::showCustomContextMenu()
-{
-    // Retrieve some information about the link, if any
-
-    QString textContent;
-
-    retrieveLinkInformation(mExposureUrl, textContent);
-
-    // Show our context menu to allow the copying of the URL of the exposure,
-    // but only if we are over a link, i.e. if both mLink and textContent are
-    // not empty
-
-    if (!mExposureUrl.isEmpty() && !textContent.isEmpty())
-        mContextMenu->exec(QCursor::pos());
+    setToolTip(toolTip);
 }
 
 //==============================================================================

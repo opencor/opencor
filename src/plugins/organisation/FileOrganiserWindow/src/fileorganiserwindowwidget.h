@@ -87,8 +87,6 @@ private:
     void moveItem(QStandardItem *pItem, QStandardItem *pDropItem,
                   const QAbstractItemView::DropIndicatorPosition &pDropPosition);
 
-    void resizeToContents();
-
     QStringList selectedFiles() const;
 
     bool parentIndexExists(const QModelIndex &pIndex,
@@ -112,8 +110,7 @@ signals:
     void deleteItemsEnabled(const bool &pEnabled);
 
 private slots:
-    void expandedFolder(const QModelIndex &pFolderIndex);
-    void collapsedFolder(const QModelIndex &pFolderIndex);
+    void resizeToContents();
 
     void emitItemsRelatedSignals();
 

@@ -102,6 +102,13 @@ QLabel * PreferencesPluginCategoryWidget::label(const QString &pLabel)
 
 //==============================================================================
 
+PreferencesItemDelegate::PreferencesItemDelegate(QObject *pParent) :
+    QStyledItemDelegate(pParent)
+{
+}
+
+//==============================================================================
+
 void PreferencesItemDelegate::paint(QPainter *pPainter,
                                     const QStyleOptionViewItem &pOption,
                                     const QModelIndex &pIndex) const
@@ -158,7 +165,7 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     // Set up the tree view widget
 
-    mModel = new QStandardItemModel(mGui->treeView);
+    mModel = new QStandardItemModel(this);
 
 #ifdef Q_OS_MAC
     mGui->treeView->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -166,7 +173,7 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     //       our plugins tree view widget...
 #endif
     mGui->treeView->setModel(mModel);
-    mGui->treeView->setItemDelegate(new PreferencesItemDelegate());
+    mGui->treeView->setItemDelegate(new PreferencesItemDelegate(this));
 
     // Populate the data model with our plugins that support the Preferences
     // interface

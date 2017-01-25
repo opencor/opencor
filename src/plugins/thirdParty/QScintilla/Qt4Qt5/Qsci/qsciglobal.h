@@ -28,8 +28,8 @@ extern "C++" {
 #include <qglobal.h>
 
 
-#define QSCINTILLA_VERSION      0x020903
-#define QSCINTILLA_VERSION_STR  "2.9.3"
+#define QSCINTILLA_VERSION      0x020904
+#define QSCINTILLA_VERSION_STR  "2.9.4"
 
 
 // Define QSCINTILLA_MAKE_DLL to create a QScintilla shared library, or

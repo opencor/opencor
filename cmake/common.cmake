@@ -261,10 +261,38 @@ MACRO(INITIALISE_PROJECT)
 
     ADD_DEFINITIONS(-DQT_DEPRECATED_WARNINGS)
 
-    # Sample plugins support, if requested
+    # Let OpenCOR know about the options with which it was built
 
     IF(ENABLE_SAMPLES)
         ADD_DEFINITIONS(-DENABLE_SAMPLES)
+    ENDIF()
+
+    IF(ENABLE_TESTS)
+        ADD_DEFINITIONS(-DENABLE_TESTS)
+    ENDIF()
+
+    IF(USE_PREBUILT_LIBGIT2_PLUGIN)
+        ADD_DEFINITIONS(-DUSE_PREBUILT_LIBGIT2_PLUGIN)
+    ENDIF()
+
+    IF(USE_PREBUILT_LLVM_PLUGIN)
+        ADD_DEFINITIONS(-DUSE_PREBUILT_LLVM_PLUGIN)
+    ENDIF()
+
+    IF(USE_PREBUILT_QSCINTILLA_PLUGIN)
+        ADD_DEFINITIONS(-DUSE_PREBUILT_QSCINTILLA_PLUGIN)
+    ENDIF()
+
+    IF(USE_PREBUILT_QWT_PLUGIN)
+        ADD_DEFINITIONS(-DUSE_PREBUILT_QWT_PLUGIN)
+    ENDIF()
+
+    IF(USE_PREBUILT_SUNDIALS_PLUGIN)
+        ADD_DEFINITIONS(-DUSE_PREBUILT_SUNDIALS_PLUGIN)
+    ENDIF()
+
+    IF(USE_PREBUILT_ZLIB_PLUGIN)
+        ADD_DEFINITIONS(-DUSE_PREBUILT_ZLIB_PLUGIN)
     ENDIF()
 
     # On macOS, make sure that we support 10.8 and later, unless a specific
@@ -303,10 +331,12 @@ MACRO(INITIALISE_PROJECT)
             SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/debug)
             SET(LOCAL_EXTERNAL_BINARIES_DIR bin/debug)
         ENDIF()
+
         SET(DEST_EXTERNAL_BINARIES_DIR bin)
     ELSE()
         SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR})
         SET(LOCAL_EXTERNAL_BINARIES_DIR bin)
+
         IF(APPLE)
             SET(DEST_EXTERNAL_BINARIES_DIR ${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
         ELSE()
@@ -422,6 +452,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         QT_MODULES
         EXTERNAL_BINARIES
         EXTERNAL_DEPENDENCIES
+        SYSTEM_BINARIES
         TESTS
     )
 
@@ -452,6 +483,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         IF(WIN32)
             ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
         ENDIF()
+
+        # Prevent all debug outputs
+
+        ADD_DEFINITIONS(-DQT_NO_DEBUG_OUTPUT)
     ENDIF()
 
     # Various include directories
@@ -655,6 +690,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                    ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_DEST_DIR})
     ENDIF()
 
+    # System binaries
+
+    FOREACH(ARG_SYSTEM_BINARY ${ARG_SYSTEM_BINARIES})
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+            ${ARG_SYSTEM_BINARY}
+        )
+    ENDFOREACH()
+
     # Some settings
 
     IF(XCODE)
@@ -793,6 +836,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                         ENDIF()
                     ENDFOREACH()
                 ENDIF()
+
+                # System binaries
+
+                FOREACH(ARG_SYSTEM_BINARY ${ARG_SYSTEM_BINARIES})
+                    TARGET_LINK_LIBRARIES(${TEST_NAME}
+                        ${ARG_SYSTEM_BINARY}
+                    )
+                ENDFOREACH()
 
                 # Copy the test to our tests directory
                 # Note: DEST_TESTS_DIR is defined in our main CMake file...

@@ -41,16 +41,16 @@ IF(USE_PREBUILT_LIBGIT2_PLUGIN)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll f3b2cf62569fb12e310e96163debbe261d8a4727)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib c7a6797b8062104111330ac602707a4725b59996)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 659477392a953f64753344719dad7a2bf90df42d)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib e0fce7528a50c74ef90c1b09c46de514d8e26669)
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 1576f5080a6ee6db508f7deda602adbe85f88cd9)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 66764ad26bb6fb1f225b37073752dfe0ff28e386)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 5179cc1f2a1669342b53372df3a2413d40d1bea5)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib a2eb48394e8858c29b5575ad8d166e2936db2a68)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib 15f0e2decaf870c73bb673f91ff385a678c0a5cb)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib caf7ad1b2e3df561cdb35d7d82f34b08e9a4428d)
     ELSE()
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so 166ed4b1e63e48b3c81c0836e15f06182692c083)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so d2b02a4f92be55df0b0b1655fe63eb68f5c90456)
     ENDIF()
 
     # Add the plugin as a binary
@@ -87,11 +87,13 @@ ELSE()
         SET(DEFINITIONS
             GIT_COMMON_CRYPTO
             GIT_OPENSSL
+            GIT_USE_STAT_MTIMESPEC
         )
     ELSE()
         SET(DEFINITIONS
             GIT_OPENSSL
             OPENSSL_SHA1
+            GIT_USE_STAT_MTIM
         )
     ENDIF()
 
@@ -100,6 +102,7 @@ ELSE()
 
         GIT_ARCH_64
         GIT_THREADS
+        GIT_USE_NSEC
         STDC
     )
 
@@ -173,6 +176,7 @@ ELSE()
             ${DEPENDENCIES_SOURCES}
 
             src/annotated_commit.c
+            src/apply.c
             src/attr.c
             src/attr_file.c
             src/attrcache.c
@@ -194,13 +198,13 @@ ELSE()
             src/crlf.c
             src/curl_stream.c
             src/date.c
-            src/delta-apply.c
             src/delta.c
             src/describe.c
             src/diff.c
             src/diff_driver.c
             src/diff_file.c
-            src/diff_patch.c
+            src/diff_generate.c
+            src/diff_parse.c
             src/diff_print.c
             src/diff_stats.c
             src/diff_tform.c
@@ -223,6 +227,7 @@ ELSE()
             src/iterator.c
             src/libgit2plugin.cpp
             src/merge.c
+            src/merge_driver.c
             src/merge_file.c
             src/message.c
             src/mwindow.c
@@ -239,11 +244,15 @@ ELSE()
             src/openssl_stream.c
             src/pack-objects.c
             src/pack.c
+            src/patch.c
+            src/patch_generate.c
+            src/patch_parse.c
             src/path.c
             src/pathspec.c
             src/pool.c
             src/posix.c
             src/pqueue.c
+            src/proxy.c
             src/push.c
             src/rebase.c
             src/refdb.c
@@ -278,6 +287,7 @@ ELSE()
             src/tree.c
             src/tsort.c
             src/util.c
+            src/varint.c
             src/vector.c
             src/zstream.c
 

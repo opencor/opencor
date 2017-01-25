@@ -44,32 +44,22 @@ void UserMessageWidget::constructor(const QString &pIcon,
 {
     // Some initialisations
 
-    mIcon = QString();
-    mMessage = QString();
-    mExtraMessage = QString();
+    mScale = 0.0;
+    mDefaultFontScale = 1.35*font().pointSize();
 
-    // Customise our background
+    mIcon = pIcon;
+    mMessage = pMessage;
+    mExtraMessage = pExtraMessage;
 
-    setAutoFillBackground(true);
-    setBackgroundRole(QPalette::Base);
-
-    // Increase the size of our font
-
-    QFont newFont = font();
-
-    newFont.setPointSizeF(1.35*newFont.pointSize());
-
-    setFont(newFont);
-
-    // Some other customisations
+    // Some customisations
 
     setContextMenuPolicy(Qt::NoContextMenu);
+    setScale(1.0);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setStyleSheet("QLabel {"
+                  "     background-color: white;"
+                  "}");
     setWordWrap(true);
-
-    // 'Initialise' our message
-
-    setIconMessage(pIcon, pMessage, pExtraMessage);
 }
 
 //==============================================================================
@@ -119,6 +109,84 @@ UserMessageWidget::UserMessageWidget(QWidget *pParent) :
 
 //==============================================================================
 
+void UserMessageWidget::setScale(const double &pScale)
+{
+    // Scale ourselves, if needed
+
+    if (pScale != mScale) {
+        mScale = pScale;
+
+        QFont newFont = font();
+
+        newFont.setPointSizeF(pScale*mDefaultFontScale);
+
+        setFont(newFont);
+
+        updateGui();
+    }
+}
+
+//==============================================================================
+
+void UserMessageWidget::updateGui()
+{
+    // Set our message as HTML
+    // Note: we want our icon to have a final size of 32px by 32px. However, it
+    //       may be that it has a different size to begin with. Normally, we
+    //       would rely on QLabel's HTML support (and in particular on the width
+    //       and height attributes of the img element) to have our icon resized
+    //       for us, but this results in a pixelated and therefore ugly image.
+    //       So, instead, we retrieve a data URI for our resized icon...
+
+    if (mIcon.isEmpty() && mMessage.isEmpty() && mExtraMessage.isEmpty()) {
+        setText(QString());
+    } else {
+        static const QString Message = "<table align=center>\n"
+                                       "    <tbody>\n"
+                                       "        <tr valign=middle>\n"
+                                       "%1"
+                                       "            <td>\n"
+                                       "                %2\n"
+                                       "            </td>\n"
+                                       "        </tr>\n"
+                                       "%3"
+                                       "    </tbody>\n"
+                                       "</table>\n";
+        static const QString Icon = "            <td>\n"
+                                    "                <img src=\"%1\">\n"
+                                    "            </td>\n";
+        static const QString ExtraMessage = "        <tr valign=middle>\n"
+                                            "%1"
+                                            "            <td align=center>\n"
+                                            "                <small><em>(%2)</em></small>\n"
+                                            "            </td>\n"
+                                            "        </tr>\n";
+        static const QString IconSpace = "            <td/>\n";
+
+        setText(Message.arg(mIcon.isEmpty()?
+                                QString():
+                                Icon.arg(iconDataUri(mIcon, mScale*32, mScale*32)),
+                            mMessage,
+                            mExtraMessage.isEmpty()?
+                                QString():
+                                ExtraMessage.arg(mIcon.isEmpty()?
+                                                     QString():
+                                                     IconSpace,
+                                                 mExtraMessage)));
+    }
+}
+
+//==============================================================================
+
+void UserMessageWidget::setIcon(const QString &pIcon)
+{
+    // Set our icon
+
+    setIconMessage(pIcon, mMessage, mExtraMessage);
+}
+
+//==============================================================================
+
 void UserMessageWidget::setIconMessage(const QString &pIcon,
                                        const QString &pMessage,
                                        const QString &pExtraMessage)
@@ -134,50 +202,9 @@ void UserMessageWidget::setIconMessage(const QString &pIcon,
         mMessage = pMessage;
         mExtraMessage = pExtraMessage;
 
-        // Set our text as HTML
-        // Note: we want our icon to have a final size of 32px by 32px. However,
-        //       it may be that it has a different size to begin with. Normally,
-        //       we would rely on QLabel's HTML support (and in particular on
-        //       the width and height attributes of the img element) to have our
-        //       icon resized for us, but this results in a pixelated and
-        //       therefore ugly image. So, instead, we retrieve a data URI for
-        //       our resized icon...
+        // Update ourselves
 
-        if (pIcon.isEmpty() && pMessage.isEmpty() && pExtraMessage.isEmpty()) {
-            setText(QString());
-        } else if (pExtraMessage.isEmpty()) {
-            setText(QString("<table align=center>\n"
-                            "    <tbody>\n"
-                            "        <tr valign=middle>\n"
-                            "            <td>\n"
-                            "                <img src=\"%1\">\n"
-                            "            </td>\n"
-                            "            <td>\n"
-                            "                %2\n"
-                            "            </td>\n"
-                            "        </tr>\n"
-                            "    </tbody>\n"
-                            "</table>\n").arg(iconDataUri(pIcon, 32, 32), pMessage));
-        } else {
-            setText(QString("<table align=center>\n"
-                            "    <tbody>\n"
-                            "        <tr valign=middle>\n"
-                            "            <td>\n"
-                            "                <img src=\"%1\">\n"
-                            "            </td>\n"
-                            "            <td>\n"
-                            "                %2\n"
-                            "            </td>\n"
-                            "        </tr>\n"
-                            "        <tr valign=middle>\n"
-                            "            <td/>\n"
-                            "            <td align=center>\n"
-                            "                <small><em>(%3)</em></small>\n"
-                            "            </td>\n"
-                            "        </tr>\n"
-                            "    </tbody>\n"
-                            "</table>\n").arg(iconDataUri(pIcon, 32, 32), pMessage, pExtraMessage));
-        }
+        updateGui();
     }
 }
 
@@ -189,6 +216,15 @@ void UserMessageWidget::setMessage(const QString &pMessage,
     // Set our message
 
     setIconMessage(mIcon, pMessage, pExtraMessage);
+}
+
+//==============================================================================
+
+void UserMessageWidget::resetMessage()
+{
+    // Reset our message
+
+    setIconMessage(QString(), QString());
 }
 
 //==============================================================================

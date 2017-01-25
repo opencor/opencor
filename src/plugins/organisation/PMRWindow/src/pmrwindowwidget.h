@@ -55,6 +55,8 @@ public:
     void filter(const QString &pFilter);
 
 protected:
+    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
+
     virtual QSize sizeHint() const;
 
 private:
@@ -94,8 +96,6 @@ private slots:
 
     void linkClicked();
     void linkHovered();
-
-    void showCustomContextMenu();
 };
 
 //==============================================================================

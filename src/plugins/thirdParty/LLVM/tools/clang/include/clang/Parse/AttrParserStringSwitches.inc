@@ -49,6 +49,8 @@
 .Case("nounroll", true)
 .Case("interrupt", true)
 .Case("mode", true)
+.Case("declare simd", true)
+.Case("declare target", true)
 .Case("objc_bridge", true)
 .Case("objc_bridge_mutable", true)
 .Case("objc_bridge_related", true)

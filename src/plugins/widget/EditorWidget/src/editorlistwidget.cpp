@@ -70,13 +70,6 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyToClipboardAction);
 
-    // We want a context menu
-
-    setContextMenuPolicy(Qt::CustomContextMenu);
-
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
-
     // Make sure that we are properly initialised
 
     clear();
@@ -177,6 +170,15 @@ void EditorListWidget::selectFirstItem()
 
 //==============================================================================
 
+void EditorListWidget::contextMenuEvent(QContextMenuEvent *pEvent)
+{
+    // Show our custom context menu
+
+    mContextMenu->exec(pEvent->globalPos());
+}
+
+//==============================================================================
+
 void EditorListWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Default handling of the event
@@ -187,15 +189,6 @@ void EditorListWidget::keyPressEvent(QKeyEvent *pEvent)
 
     if ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))
         requestItem(currentIndex());
-}
-
-//==============================================================================
-
-void EditorListWidget::showCustomContextMenu() const
-{
-    // Show our custom context menu
-
-    mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

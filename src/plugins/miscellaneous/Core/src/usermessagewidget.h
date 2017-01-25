@@ -54,12 +54,19 @@ public:
     explicit UserMessageWidget(const QString &pIcon, QWidget *pParent);
     explicit UserMessageWidget(QWidget *pParent);
 
+    void setScale(const double &pScale);
+
+    void setIcon(const QString &pIcon);
     void setIconMessage(const QString &pIcon, const QString &pMessage,
                         const QString &pExtraMessage = QString());
     void setMessage(const QString &pMessage,
                     const QString &pExtraMessage = QString());
+    void resetMessage();
 
 private:
+    double mScale;
+    double mDefaultFontScale;
+
     QString mIcon;
     QString mMessage;
     QString mExtraMessage;
@@ -67,6 +74,8 @@ private:
     void constructor(const QString &pIcon = QString(),
                      const QString &pMessage = QString(),
                      const QString &pExtraMessage = QString());
+
+    void updateGui();
 };
 
 //==============================================================================

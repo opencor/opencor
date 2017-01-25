@@ -27,6 +27,7 @@ limitations under the License.
 
 #include <QDir>
 #include <QFile>
+#include <QFileIconProvider>
 #include <QFileInfo>
 #include <QHelpEvent>
 #include <QMimeData>
@@ -71,9 +72,9 @@ FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
     // Some connections
 
     connect(this, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(expandedFolder(const QModelIndex &)));
+            this, SLOT(resizeToContents()));
     connect(this, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(collapsedFolder(const QModelIndex &)));
+            this, SLOT(resizeToContents()));
 
     // A connection to handle the change of selection
 
@@ -136,9 +137,7 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
             if (childItemsCount >= 0) {
                 // We are dealing with a folder item
 
-                static const QIcon CollapsedFolderIcon = QIcon(":/oxygen/places/folder.png");
-
-                QStandardItem *folderItem = new QStandardItem(CollapsedFolderIcon,
+                QStandardItem *folderItem = new QStandardItem(QFileIconProvider().icon(QFileIconProvider::Folder),
                                                               textOrPath);
 
                 folderItem->setData(true, Item::Folder);
@@ -157,12 +156,10 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
             } else {
                 // We are dealing with a file item
 
-                static const QIcon FileIcon = QIcon(":/oxygen/mimetypes/application-x-zerosize.png");
-
                 QFileInfo fileInfo = textOrPath;
 
                 if (fileInfo.exists()) {
-                    QStandardItem *fileItem = new QStandardItem(FileIcon,
+                    QStandardItem *fileItem = new QStandardItem(QFileIconProvider().icon(QFileIconProvider::File),
                                                                 fileInfo.fileName());
 
                     fileItem->setData(textOrPath, Item::Path);
@@ -272,8 +269,14 @@ void FileOrganiserWindowWidget::saveItemSettings(QSettings *pSettings,
 void FileOrganiserWindowWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the data model
+    // Note: we first clear all previous settings, so that we are 100% sure that
+    //       we don't have any 'dead' items left (e.g. if we used to have three
+    //       items and we now have two of them, then not to clear everything
+    //       first would mean that the 'old' third item would be back the next
+    //       time we start OpenCOR)...
 
     pSettings->remove(SettingsModel);
+
     pSettings->beginGroup(SettingsModel);
         saveItemSettings(pSettings, mModel->invisibleRootItem(), -1);
     pSettings->endGroup();
@@ -728,14 +731,12 @@ void FileOrganiserWindowWidget::newFolder()
     // Either create a folder item below the current folder item or below the
     // root item, depending on the situation
 
-    static const QIcon CollapsedFolderIcon = QIcon(":/oxygen/places/folder.png");
-
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
     int selectedIndexesCount = selectedIndexes.count();
     QStandardItem *crtItem = !selectedIndexesCount?
                                 mModel->invisibleRootItem():
                                 mModel->itemFromIndex(selectedIndexes.first());
-    QStandardItem *newFolderItem = new QStandardItem(CollapsedFolderIcon,
+    QStandardItem *newFolderItem = new QStandardItem(QFileIconProvider().icon(QFileIconProvider::Folder),
                                                      newFolderName(crtItem));
 
     newFolderItem->setData(true, Item::Folder);
@@ -883,9 +884,7 @@ void FileOrganiserWindowWidget::addFile(const QString &pFileName,
         // pDropPosition
 
         if (!ownedBy(fileName, newParentItem)) {
-            static const QIcon FileIcon = QIcon(":/oxygen/mimetypes/application-x-zerosize.png");
-
-            QStandardItem *newFileItem = new QStandardItem(FileIcon,
+            QStandardItem *newFileItem = new QStandardItem(QFileIconProvider().icon(QFileIconProvider::File),
                                                            QFileInfo(fileName).fileName());
 
             newFileItem->setData(fileName, Item::Path);
@@ -1079,36 +1078,6 @@ QStringList FileOrganiserWindowWidget::selectedFiles() const
     }
 
     return res;
-}
-
-//==============================================================================
-
-void FileOrganiserWindowWidget::expandedFolder(const QModelIndex &pFolderIndex)
-{
-    // The folder is being expanded, so update its icon to reflect its new state
-
-    static const QIcon ExpandedFolderIcon = QIcon(":/oxygen/actions/document-open-folder.png");
-
-    mModel->itemFromIndex(pFolderIndex)->setIcon(ExpandedFolderIcon);
-
-    // Resize the widget, just to be on the safe side
-
-    resizeToContents();
-}
-
-//==============================================================================
-
-void FileOrganiserWindowWidget::collapsedFolder(const QModelIndex &pFolderIndex)
-{
-    // The folder is being expanded, so update its icon to reflect its new state
-
-    static const QIcon CollapsedFolderIcon = QIcon(":/oxygen/places/folder.png");
-
-    mModel->itemFromIndex(pFolderIndex)->setIcon(CollapsedFolderIcon);
-
-    // Resize the widget, just to be on the safe side
-
-    resizeToContents();
 }
 
 //==============================================================================

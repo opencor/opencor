@@ -117,11 +117,11 @@ FileBrowserWindowWindow::~FileBrowserWindowWindow()
 
 void FileBrowserWindowWindow::retranslateUi()
 {
-    // Retranslate the whole window
+    // Retranslate our whole window
 
     mGui->retranslateUi(this);
 
-    // Retranslate the file browser widget
+    // Retranslate our file browser widget
 
     mFileBrowserWindowWidget->retranslateUi();
 }

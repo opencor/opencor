@@ -83,6 +83,8 @@ private:
 class PreferencesItemDelegate : public QStyledItemDelegate
 {
 public:
+    explicit PreferencesItemDelegate(QObject *pParent);
+
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
                        const QModelIndex &pIndex) const;
 };

@@ -62,6 +62,9 @@ public:
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
 
+protected:
+    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
+
 private:
     QMenu *mContextMenu;
 
@@ -88,8 +91,6 @@ public slots:
     void updateParameters(const double &pCurrentPoint);
 
 private slots:
-    void propertyEditorContextMenu(const QPoint &pPosition) const;
-
     void propertyChanged(Core::Property *pProperty);
 
     void emitGraphRequired();

@@ -1092,7 +1092,7 @@ QColor QsciScintilla::edgeColor() const
 {
     long res = SendScintilla(SCI_GETEDGECOLOUR);
 
-    return QColor((int)res, ((int)(res >> 8)) & 0x00ff, ((int)(res >> 16)) & 0x00ff);
+    return QColor(((int)res) & 0x00ff, ((int)(res >> 8)) & 0x00ff, ((int)(res >> 16)) & 0x00ff);
 }
 
 

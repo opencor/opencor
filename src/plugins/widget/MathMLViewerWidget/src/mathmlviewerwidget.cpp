@@ -155,13 +155,6 @@ MathmlViewerWidget::MathmlViewerWidget(QWidget *pParent) :
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyToClipboardAction);
 
-    // We want a context menu
-
-    setContextMenuPolicy(Qt::CustomContextMenu);
-
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
-
     // Retranslate ourselves, so that our actions are properly initialised
 
     retranslateUi();
@@ -416,6 +409,15 @@ void MathmlViewerWidget::setDigitGrouping(const bool &pDigitGrouping)
         return;
 
     mDigitGroupingAction->setChecked(pDigitGrouping);
+}
+
+//==============================================================================
+
+void MathmlViewerWidget::contextMenuEvent(QContextMenuEvent *pEvent)
+{
+    // Show our custom context menu
+
+    mContextMenu->exec(pEvent->globalPos());
 }
 
 //==============================================================================
@@ -731,15 +733,6 @@ QString MathmlViewerWidget::processedContents() const
 
         return QString();
     }
-}
-
-//==============================================================================
-
-void MathmlViewerWidget::showCustomContextMenu() const
-{
-    // Show our custom context menu
-
-    mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

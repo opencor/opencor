@@ -47,6 +47,13 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
+CellmlAnnotationViewCellmlElementItemDelegate::CellmlAnnotationViewCellmlElementItemDelegate(QObject *pParent) :
+    QStyledItemDelegate(pParent)
+{
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
                                                           const QStyleOptionViewItem &pOption,
                                                           const QModelIndex &pIndex) const
@@ -222,7 +229,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
 void CellmlAnnotationViewCellmlElementItem::setIcon(const Type &pType)
 {
-    // Determine the icon to be used for the item
+    // Set our icon based on our type
 
     static const QIcon ErrorIcon        = QIcon(":/oxygen/emblems/emblem-important.png");
     static const QIcon WarningIcon      = QIcon(":/oxygen/status/task-attention.png");
@@ -300,7 +307,7 @@ void CellmlAnnotationViewCellmlElementItem::setIcon(const Type &pType)
 
 bool CellmlAnnotationViewCellmlElementItem::isCategory() const
 {
-    // Return whether the CellML element item is a category
+    // Return whether we are a category
 
     return mCategory;
 }
@@ -309,7 +316,7 @@ bool CellmlAnnotationViewCellmlElementItem::isCategory() const
 
 int CellmlAnnotationViewCellmlElementItem::type() const
 {
-    // Return the CellML element item's type
+    // Return our type
 
     return mType;
 }
@@ -318,7 +325,7 @@ int CellmlAnnotationViewCellmlElementItem::type() const
 
 int CellmlAnnotationViewCellmlElementItem::number() const
 {
-    // Return the CellML element item's number
+    // Return our number
 
     return mNumber;
 }
@@ -327,7 +334,7 @@ int CellmlAnnotationViewCellmlElementItem::number() const
 
 iface::cellml_api::CellMLElement * CellmlAnnotationViewCellmlElementItem::element() const
 {
-    // Return the CellML element item's element
+    // Return our element
 
     return mElement;
 }
@@ -341,11 +348,11 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     // Create and customise our tree view widget which will contain all of the
     // imports, units, components, groups and connections from a CellML file
 
+    mTreeViewModel = new QStandardItemModel(this);
     mTreeViewWidget = new Core::TreeViewWidget(this);
-    mTreeViewModel = new QStandardItemModel(mTreeViewWidget);
 
     mTreeViewWidget->setModel(mTreeViewModel);
-    mTreeViewWidget->setItemDelegate(new CellmlAnnotationViewCellmlElementItemDelegate());
+    mTreeViewWidget->setItemDelegate(new CellmlAnnotationViewCellmlElementItemDelegate(this));
 
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
@@ -538,8 +545,6 @@ void CellmlAnnotationViewCellmlListWidget::initializeTreeViewWidget(const bool &
 void CellmlAnnotationViewCellmlListWidget::populateModel()
 {
     // Make sure that the CellML file was properly loaded
-
-    CellMLSupport::CellmlFileIssues issues = mCellmlFile->issues();
 
     if (mCellmlFile->issues().count()) {
         // Something went wrong while trying to load the CellML file, so report
@@ -881,7 +886,7 @@ void CellmlAnnotationViewCellmlListWidget::populateGroupComponentReferenceModel(
 
 void CellmlAnnotationViewCellmlListWidget::resizeTreeViewToContents()
 {
-    // Resize our tree view widget so that its contents is visible
+    // Resize our tree view widget so that all of its contents is visible
 
     mTreeViewWidget->resizeColumnToContents(0);
 }
@@ -917,9 +922,9 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
     // Determine whether to show the context menu based on whether we are over
     // an item
 
-    CellmlAnnotationViewCellmlElementItem *posItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
+    CellmlAnnotationViewCellmlElementItem *item = static_cast<CellmlAnnotationViewCellmlElementItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
 
-    if (posItem) {
+    if (item) {
         // We are over an item, so create a custom context menu for our current
         // item
 
@@ -927,30 +932,30 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
 
         bool fileReadableAndWritable = Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName());
 
-        mExpandAllAction->setEnabled(posItem->hasChildren() && !indexIsAllExpanded(mTreeViewWidget->currentIndex()));
-        mCollapseAllAction->setEnabled(posItem->hasChildren() && mTreeViewWidget->isExpanded(mTreeViewWidget->currentIndex()));
+        mExpandAllAction->setEnabled(item->hasChildren() && !indexIsAllExpanded(mTreeViewWidget->currentIndex()));
+        mCollapseAllAction->setEnabled(item->hasChildren() && mTreeViewWidget->isExpanded(mTreeViewWidget->currentIndex()));
 
-        mRemoveCurrentMetadataAction->setEnabled(fileReadableAndWritable && !posItem->isCategory() && mCellmlFile->rdfTriples(posItem->element()).count());
-        mRemoveAllMetadataAction->setEnabled(fileReadableAndWritable && !posItem->isCategory() && mCellmlFile->rdfTriples().count());
+        mRemoveCurrentMetadataAction->setEnabled(fileReadableAndWritable && !item->isCategory() && mCellmlFile->rdfTriples(item->element()).count());
+        mRemoveAllMetadataAction->setEnabled(fileReadableAndWritable && !item->isCategory() && mCellmlFile->rdfTriples().count());
 
-        mOpenImportAction->setEnabled(posItem->type() == CellmlAnnotationViewCellmlElementItem::Import);
+        mOpenImportAction->setEnabled(item->type() == CellmlAnnotationViewCellmlElementItem::Import);
 
         // Create and show the context menu, if it isn't empty
 
         QMenu menu;
 
-        if (posItem->hasChildren()) {
+        if (item->hasChildren()) {
             menu.addAction(mExpandAllAction);
             menu.addAction(mCollapseAllAction);
             menu.addSeparator();
         }
 
-        if (!posItem->isCategory()) {
+        if (!item->isCategory()) {
             menu.addAction(mRemoveCurrentMetadataAction);
             menu.addAction(mRemoveAllMetadataAction);
         }
 
-        if (posItem->type() == CellmlAnnotationViewCellmlElementItem::Import) {
+        if (item->type() == CellmlAnnotationViewCellmlElementItem::Import) {
             menu.addSeparator();
             menu.addAction(mOpenImportAction);
         }

@@ -40,6 +40,13 @@ namespace DataStore {
 
 //==============================================================================
 
+DataItemDelegate::DataItemDelegate(QObject *pParent) :
+    QStyledItemDelegate(pParent)
+{
+}
+
+//==============================================================================
+
 void DataItemDelegate::paint(QPainter *pPainter,
                                const QStyleOptionViewItem &pOption,
                                const QModelIndex &pIndex) const
@@ -96,10 +103,10 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
     //       of integration (since, to respect the BioSignalML format, the
     //       variable of integration must absolutely be exported)...
 
-    mModel = new QStandardItemModel(mGui->treeView);
+    mModel = new QStandardItemModel(this);
 
     mGui->treeView->setModel(mModel);
-    mGui->treeView->setItemDelegate(new DataItemDelegate());
+    mGui->treeView->setItemDelegate(new DataItemDelegate(this));
 
     QString dataHierarchy = QString();
     QStandardItem *hierarchyItem = 0;

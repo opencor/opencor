@@ -8,7 +8,7 @@
 #include "common.h"
 #include "odb.h"
 #include "pack.h"
-#include "delta-apply.h"
+#include "delta.h"
 #include "sha1_lookup.h"
 #include "mwindow.h"
 #include "fileops.h"
@@ -505,12 +505,14 @@ int git_packfile_resolve_header(
 		git_mwindow_close(&w_curs);
 		if ((error = git_packfile_stream_open(&stream, p, curpos)) < 0)
 			return error;
-		error = git__delta_read_header_fromstream(&base_size, size_p, &stream);
+		error = git_delta_read_header_fromstream(&base_size, size_p, &stream);
 		git_packfile_stream_free(&stream);
 		if (error < 0)
 			return error;
-	} else
+	} else {
 		*size_p = size;
+		base_offset = 0;
+	}
 
 	while (type == GIT_OBJ_OFS_DELTA || type == GIT_OBJ_REF_DELTA) {
 		curpos = base_offset;
@@ -730,8 +732,9 @@ int git_packfile_unpack(
 		obj->len = 0;
 		obj->type = GIT_OBJ_BAD;
 
-		error = git__delta_apply(obj, base.data, base.len, delta.data, delta.len);
+		error = git_delta_apply(&obj->data, &obj->len, base.data, base.len, delta.data, delta.len);
 		obj->type = base_type;
+
 		/*
 		 * We usually don't want to free the base at this
 		 * point, as we put it into the cache in the previous
@@ -756,8 +759,11 @@ int git_packfile_unpack(
 	}
 
 cleanup:
-	if (error < 0)
+	if (error < 0) {
 		git__free(obj->data);
+		if (cached)
+			git_atomic_dec(&cached->refcount);
+	}
 
 	if (elem)
 		*obj_offset = curpos;
@@ -1267,8 +1273,8 @@ static int pack_entry_find_offset(
 	const git_oid *short_oid,
 	size_t len)
 {
-	const uint32_t *level1_ofs = p->index_map.data;
-	const unsigned char *index = p->index_map.data;
+	const uint32_t *level1_ofs;
+	const unsigned char *index;
 	unsigned hi, lo, stride;
 	int pos, found = 0;
 	git_off_t offset;
@@ -1282,10 +1288,10 @@ static int pack_entry_find_offset(
 		if ((error = pack_index_open(p)) < 0)
 			return error;
 		assert(p->index_map.data);
-
-		index = p->index_map.data;
-		level1_ofs = p->index_map.data;
 	}
+
+	index = p->index_map.data;
+	level1_ofs = p->index_map.data;
 
 	if (p->index_version > 1) {
 		level1_ofs += 2;

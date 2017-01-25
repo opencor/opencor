@@ -277,8 +277,9 @@ BooleanEditorWidget::BooleanEditorWidget(QWidget *pParent) :
 
 //==============================================================================
 
-PropertyItemDelegate::PropertyItemDelegate(PropertyEditorWidget *pParent) :
-    QStyledItemDelegate(pParent)
+PropertyItemDelegate::PropertyItemDelegate(OpenCOR::Core::PropertyEditorWidget *pParent) :
+    QStyledItemDelegate(pParent),
+    mPropertyEditorWidget(pParent)
 {
 }
 
@@ -405,7 +406,7 @@ void PropertyItemDelegate::listPropertyChanged(const QString &pValue)
 {
     // Force the updating of our list property value
 
-    qobject_cast<PropertyEditorWidget *>(parent())->currentProperty()->setValue(pValue);
+    mPropertyEditorWidget->currentProperty()->setValue(pValue);
 }
 
 //==============================================================================
@@ -414,7 +415,7 @@ void PropertyItemDelegate::booleanPropertyChanged(const QString &pValue)
 {
     // Force the updating of our boolean property value
 
-    qobject_cast<PropertyEditorWidget *>(parent())->currentProperty()->setValue(pValue);
+    mPropertyEditorWidget->currentProperty()->setValue(pValue);
 }
 
 //==============================================================================
@@ -1564,7 +1565,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
-    // Note: this will finish the editing of our 'old' property, if any
+    // Note: this will finish the editing of our 'old' property, if any...
 
     TreeViewWidget::mouseMoveEvent(pEvent);
 
@@ -1594,7 +1595,7 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     Property *oldProperty = mProperty;
 
     // Default handling of the event
-    // Note: this will finish the editing of our 'old' property, if any
+    // Note: this will finish the editing of our 'old' property, if any...
 
     TreeViewWidget::mousePressEvent(pEvent);
 
@@ -1621,7 +1622,7 @@ void PropertyEditorWidget::mouseReleaseEvent(QMouseEvent *pEvent)
     mRightClicking = false;
 
     // Default handling of the event
-    // Note: this will finish the editing of our 'old' property, if any
+    // Note: this will finish the editing of our 'old' property, if any...
 
     TreeViewWidget::mouseReleaseEvent(pEvent);
 }

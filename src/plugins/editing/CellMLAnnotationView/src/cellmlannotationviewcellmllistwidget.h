@@ -61,6 +61,8 @@ class CellmlAnnotationViewEditingWidget;
 class CellmlAnnotationViewCellmlElementItemDelegate : public QStyledItemDelegate
 {
 public:
+    explicit CellmlAnnotationViewCellmlElementItemDelegate(QObject *pParent);
+
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
                        const QModelIndex &pIndex) const;
 };
@@ -129,13 +131,11 @@ public:
 
     Core::TreeViewWidget * treeViewWidget() const;
 
-    CellmlAnnotationViewCellmlElementItem * currentCellmlElementItem() const;
-
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    Core::TreeViewWidget *mTreeViewWidget;
     QStandardItemModel *mTreeViewModel;
+    Core::TreeViewWidget *mTreeViewWidget;
 
     QAction *mExpandAllAction;
     QAction *mCollapseAllAction;
@@ -152,6 +152,8 @@ private:
                             iface::cellml_api::UnitsSet *pUnitsSet);
     void populateGroupComponentReferenceModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
                                               iface::cellml_api::ComponentRef *pGroupComponentReference);
+
+    CellmlAnnotationViewCellmlElementItem * currentCellmlElementItem() const;
 
     void indexExpandAll(const QModelIndex &pIndex) const;
     void indexCollapseAll(const QModelIndex &pIndex) const;
