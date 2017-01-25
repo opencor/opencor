@@ -262,7 +262,7 @@ void PmrWorkspacesWindowWindow::showError(const QString &pMessage)
 {
     // Either show the given message as an error message box or tell our
     // workspaces widget that we have a problem, this based on whether our
-    // workspace manager keeps track of some workspaces
+    // workspace manager is keeping track of some workspaces
     // Note: indeed, the idea is not to break the user's workflow, should an
     //       error occur when trying to retrieve the list of workspaces at
     //       startup...
