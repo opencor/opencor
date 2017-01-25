@@ -671,6 +671,14 @@ void PmrWorkspace::deleteFileNodes(PmrWorkspaceFileNode *pFileNode,
     if (pFileNode->hasChildren()) {
         foreach (PmrWorkspaceFileNode *child, pFileNode->children())
             deleteFileNodes(child, pFileNodes);
+
+        // Remove the file node, if it doesn't have any children anymore
+
+        if (!pFileNode->hasChildren()) {
+            pFileNode->parent()->removeChild(pFileNode);
+
+            pFileNodes.removeOne(pFileNode);
+        }
     } else if (pFileNodes.contains(pFileNode)) {
         pFileNode->parent()->removeChild(pFileNode);
 
