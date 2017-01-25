@@ -279,7 +279,7 @@ void PmrWorkspace::clone(const QString &pPath)
     // Keep track of our path and let people know that we are all done with the
     // cloning
 
-    mPath = pPath;
+    setPath(pPath);
 
     emit workspaceCloned(this);
 }
