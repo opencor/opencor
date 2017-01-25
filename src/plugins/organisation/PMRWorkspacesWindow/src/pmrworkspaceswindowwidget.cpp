@@ -1028,8 +1028,8 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         bool workspaceItem =    (item->type() == PmrWorkspacesWindowItem::OwnedWorkspace)
                              || (item->type() == PmrWorkspacesWindowItem::Workspace);
         bool fileItem = item->type() == PmrWorkspacesWindowItem::File;
-        bool stagedFileItem = fileItem?(item->fileNode()->status().second != ' '):false;
-        bool unstagedFileItem = fileItem?(item->fileNode()->status().first != ' '):false;
+        bool stagedFileItem = fileItem?(item->fileNode()->status().first != ' '):false;
+        bool unstagedFileItem = fileItem?(item->fileNode()->status().second != ' '):false;
 
         mViewInPmrAction->setVisible(workspaceItem);
         mViewOncomputerAction->setVisible(workspaceItem);
