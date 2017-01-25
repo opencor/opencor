@@ -1142,3 +1142,17 @@ QString ctkConsole::readInputLine()
   return d->commandBuffer();
 }
 
+//-----------------------------------------------------------------------------
+
+QStringList ctkConsole::getCommandHistory()
+{
+  Q_D(ctkConsole);
+  return d->CommandHistory;
+}
+
+void ctkConsole::setCommandHistory(const QStringList& commandHistory)
+{
+  Q_D(ctkConsole);
+  d->CommandHistory = commandHistory;
+  d->CommandPosition = commandHistory.size();
+}

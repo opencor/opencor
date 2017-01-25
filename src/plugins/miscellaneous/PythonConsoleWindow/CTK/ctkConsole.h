@@ -207,6 +207,12 @@ public:
   /// \sa runFileOptions()
   void setRunFileOptions(const RunFileOptions& newOptions);
 
+  /// Get command history
+  QStringList getCommandHistory();
+
+  /// Set command history
+  void setCommandHistory(const QStringList &commandHistory);
+
 Q_SIGNALS:
 
   /// This signal emitted before and after a command is executed
