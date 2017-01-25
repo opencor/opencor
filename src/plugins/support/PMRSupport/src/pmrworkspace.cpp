@@ -66,7 +66,7 @@ void PmrWorkspace::constructor(const QString &pName, const QString &pUrl,
 
     mGitRepository = 0;
 
-    mRootFileNode = new PmrWorkspaceFileNode(this);
+    mRootFileNode = new PmrWorkspaceFileNode(0);
     mRepositoryStatusMap = QMap<QString, PmrWorkspaceFileNode *>();
 
     mConflictedFiles = QStringList();
@@ -131,6 +131,14 @@ PmrWorkspace::~PmrWorkspace()
     // Close ourselves
 
     close();
+
+    // Delete some internal objects
+    // Note: unlike for our other file nodes, we need to delete our root one
+    //       since it's not owned by a QObject-based object. This also means
+    //       that by deleting our root file node, all our other file nodes will
+    //       be deleted automatically...
+
+    delete mRootFileNode;
 }
 
 //==============================================================================
@@ -544,6 +552,10 @@ CharPair PmrWorkspace::gitStatusChars(const int &pFlags) const
 
 void PmrWorkspace::refreshStatus()
 {
+    // Keep track of our 'old' file nodes
+
+    PmrWorkspaceFileNodes oldFileNodes = mRepositoryStatusMap.values();
+
     // Refresh our status
 
     mStagedCount = 0;
@@ -625,11 +637,44 @@ void PmrWorkspace::refreshStatus()
 
             git_status_list_free(statusList);
         }
+
+        // Delete any 'old' file node that is not being used anymore
+
+        PmrWorkspaceFileNodes newFileNodes = mRepositoryStatusMap.values();
+        PmrWorkspaceFileNodes oldFileNodesToDelete = PmrWorkspaceFileNodes();
+
+        foreach (PmrWorkspaceFileNode *oldFileNode, oldFileNodes) {
+            if (!newFileNodes.contains(oldFileNode))
+                oldFileNodesToDelete << oldFileNode;
+        }
+
+        if (!oldFileNodesToDelete.isEmpty())
+            deleteFileNodes(mRootFileNode, oldFileNodesToDelete);
     } else if (mRootFileNode->hasChildren()) {
         // We are not open, so clear our root file node
 
         foreach (PmrWorkspaceFileNode *child, mRootFileNode->children())
             delete child;
+    }
+}
+
+//==============================================================================
+
+void PmrWorkspace::deleteFileNodes(PmrWorkspaceFileNode *pFileNode,
+                                   PmrWorkspaceFileNodes &pFileNodes)
+{
+    // Recursively delete the given file nodes, unless there is none left
+
+    if (pFileNodes.isEmpty())
+        return;
+
+    if (pFileNode->hasChildren()) {
+        foreach (PmrWorkspaceFileNode *child, pFileNode->children())
+            deleteFileNodes(child, pFileNodes);
+    } else if (pFileNodes.contains(pFileNode)) {
+        pFileNode->parent()->removeChild(pFileNode);
+
+        pFileNodes.removeOne(pFileNode);
     }
 }
 

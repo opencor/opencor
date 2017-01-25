@@ -120,6 +120,10 @@ private:
 
 //==============================================================================
 
+typedef QList<PmrWorkspacesWindowItem *> PmrWorkspacesWindowItems;
+
+//==============================================================================
+
 class PmrWorkspacesWindowWidget : public Core::Widget
 {
     Q_OBJECT
@@ -210,10 +214,15 @@ private:
     void retrieveWorkspaceIcons(PMRSupport::PmrWorkspace *pWorkspace,
                                 QIcon &pCollapsedIcon, QIcon &pExpandedIcon);
 
+    PmrWorkspacesWindowItems retrieveItems(PmrWorkspacesWindowItem *pItem) const;
+    void deleteItems(PmrWorkspacesWindowItem *pItem,
+                     PmrWorkspacesWindowItems &pItems);
+
     void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
-    void populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
-                           PMRSupport::PmrWorkspaceFileNode *pFileNode);
-    void populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
+    PmrWorkspacesWindowItems populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
+                                               PMRSupport::PmrWorkspaceFileNode *pFileNode);
+    void populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
+                           const bool &pRefresh = false);
     void refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
 
     void duplicateCloneMessage(const QString &pUrl, const QString &pPath1,

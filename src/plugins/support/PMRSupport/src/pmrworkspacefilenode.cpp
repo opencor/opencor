@@ -31,9 +31,12 @@ namespace PMRSupport {
 
 void PmrWorkspaceFileNode::constructor(const QString &pName,
                                        const QString &pPath,
-                                       const CharPair &pStatus)
+                                       const CharPair &pStatus,
+                                       PmrWorkspaceFileNode *pParent)
 {
     // Some initialisations
+
+    mParent = pParent;
 
     mName = pName;
     mPath = pPath;
@@ -48,22 +51,31 @@ void PmrWorkspaceFileNode::constructor(const QString &pName,
 PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pName,
                                            const QString &pPath,
                                            const CharPair &pStatus,
-                                           QObject *pParent) :
+                                           PmrWorkspaceFileNode *pParent) :
     QObject(pParent)
 {
     // Construct ourselves
 
-    constructor(pName, pPath, pStatus);
+    constructor(pName, pPath, pStatus, pParent);
 }
 
 //==============================================================================
 
-PmrWorkspaceFileNode::PmrWorkspaceFileNode(QObject *pParent) :
+PmrWorkspaceFileNode::PmrWorkspaceFileNode(PmrWorkspaceFileNode *pParent) :
     QObject(pParent)
 {
     // Construct ourselves
 
-    constructor(QString(), QString(), CharPair());
+    constructor(QString(), QString(), CharPair(), pParent);
+}
+
+//==============================================================================
+
+PmrWorkspaceFileNode * PmrWorkspaceFileNode::parent() const
+{
+    // Return our parent
+
+    return mParent;
 }
 
 //==============================================================================
@@ -158,6 +170,23 @@ PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pName,
     mChildren << res;
 
     return res;
+}
+
+//==============================================================================
+
+bool PmrWorkspaceFileNode::removeChild(PmrWorkspaceFileNode *pChild)
+{
+    // Remove the given child, if possible
+
+    if (mChildren.contains(pChild)) {
+        delete pChild;
+
+        mChildren.removeOne(pChild);
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================

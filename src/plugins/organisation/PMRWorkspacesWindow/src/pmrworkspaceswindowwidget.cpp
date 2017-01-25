@@ -749,6 +749,57 @@ void PmrWorkspacesWindowWidget::retrieveWorkspaceIcons(PMRSupport::PmrWorkspace 
 
 //==============================================================================
 
+PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::retrieveItems(PmrWorkspacesWindowItem *pItem) const
+{
+    // Return the child items of the given item
+
+    PmrWorkspacesWindowItems res = PmrWorkspacesWindowItems();
+
+    for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
+        PmrWorkspacesWindowItem *childItem = static_cast<PmrWorkspacesWindowItem *>(pItem->child(i));
+
+        res << childItem;
+
+        if (childItem->hasChildren())
+            res << retrieveItems(childItem);
+    }
+
+    return res;
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::deleteItems(PmrWorkspacesWindowItem *pItem,
+                                            PmrWorkspacesWindowItems &pItems)
+{
+    // Recursively delete the given items, unless there is none left or the
+    // given item has since been deleted
+    // Note: it may happen (e.g. when deleting several files at once) that we
+    //       come here with a given item that has since been deleted...
+
+    if (!pItem || pItems.isEmpty())
+        return;
+
+    if (pItem->hasChildren()) {
+        for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
+            deleteItems(static_cast<PmrWorkspacesWindowItem *>(pItem->child(i)), pItems);
+
+        // Remove the folder item, if it is now empty
+
+        if (!pItem->hasChildren()) {
+            pItem->parent()->removeRow(pItem->row());
+
+            pItems.removeOne(pItem);
+        }
+    } else if (pItems.contains(pItem)) {
+        pItem->parent()->removeRow(pItem->row());
+
+        pItems.removeOne(pItem);
+    }
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // Determine where in our tree view widget the given workspace should be
@@ -791,11 +842,13 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
-                                                  PMRSupport::PmrWorkspaceFileNode *pFileNode)
+PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
+                                                                      PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     // Populate the given folder item with its children, which are referenced in
     // the given file node
+
+    PmrWorkspacesWindowItems res = PmrWorkspacesWindowItems();
 
     foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
         // Check whether we already know about the file node
@@ -826,13 +879,21 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
             if (!newItem)
                 pFolderItem->appendRow(folderItem);
 
-            if (fileNode->hasChildren())
-                populateWorkspace(folderItem, fileNode);
+            res << folderItem
+                << populateWorkspace(folderItem, fileNode);
         } else {
             // We are dealing with a file, so retrieve its status and use the
             // corresponding icon for it, if needed
+            // Note: it may happen (e.g. when deleting a folder) that the Git
+            //       status is not up to date, hence we need to check for the
+            //       I and W values not to be '\0' (which would be the case for
+            //       a folder that doesn't have any files anymore)...
 
             PMRSupport::CharPair status = fileNode->status();
+
+            if ((status.first == '\0') && (status.second == '\0'))
+                continue;
+
             QIcon icon = mFileIcon;
 
             if (status.first != ' ') {
@@ -870,18 +931,25 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFold
 
                 newItem->setIcon(icon);
             } else {
-                // We don't already have an item, so create it and add it
+                // We don't already have an item, so create one and add it
 
-                pFolderItem->appendRow(new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::File,
-                                                                   icon, fileNode));
+                newItem = new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::File,
+                                                      icon, fileNode);
+
+                pFolderItem->appendRow(newItem);
             }
+
+            res << newItem;
         }
     }
+
+    return res;
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
+                                                  const bool &pRefresh)
 {
     // Retrieve the folder item for the given workspace and populate it, after
     // having updated the folder item itself
@@ -903,9 +971,31 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWor
 
             item->setIcon(mTreeViewWidget->isExpanded(item->index())?expandedIcon:collapsedIcon);
 
+            // Keep track of existing workspace items, if needed
+
+            PmrWorkspacesWindowItems oldItems = pRefresh?
+                                                    PmrWorkspacesWindowItems() << retrieveItems(item):
+                                                    PmrWorkspacesWindowItems();
+
             // Populate the given workspace
 
-            populateWorkspace(item, pWorkspace->rootFileNode());
+            PmrWorkspacesWindowItems newItems = populateWorkspace(item, pWorkspace->rootFileNode());
+
+            // Delete any old unused item, if needed
+
+            if (pRefresh) {
+                // Delete any 'old' file node that is not being used anymore
+
+                PmrWorkspacesWindowItems oldItemsToDelete = PmrWorkspacesWindowItems();
+
+                foreach (PmrWorkspacesWindowItem *oldItem, oldItems) {
+                    if (!newItems.contains(oldItem))
+                        oldItemsToDelete << oldItem;
+                }
+
+                if (!oldItemsToDelete.isEmpty())
+                    deleteItems(item, oldItemsToDelete);
+            }
 
             break;
         }
@@ -920,7 +1010,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWork
 
     pWorkspace->refreshStatus();
 
-    populateWorkspace(pWorkspace);
+    populateWorkspace(pWorkspace, true);
 }
 
 //==============================================================================

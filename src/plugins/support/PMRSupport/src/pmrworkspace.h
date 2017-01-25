@@ -159,6 +159,9 @@ private:
     bool merge();
     void push();
 
+    void deleteFileNodes(PmrWorkspaceFileNode *pFileNode,
+                         PmrWorkspaceFileNodes &pFileNodes);
+
     void emitGitError(const QString &pMessage) const;
 
 signals:
