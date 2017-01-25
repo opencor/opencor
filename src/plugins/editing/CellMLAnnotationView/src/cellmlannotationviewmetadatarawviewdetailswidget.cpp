@@ -70,7 +70,7 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
 
     // Remove all previous RDF triples from our tree view widget
 
-    while (mModel->rowCount()) {
+    while (mModel->hasChildren()) {
         foreach (QStandardItem *item, mModel->takeRow(0))
             delete item;
     }

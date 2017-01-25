@@ -427,7 +427,7 @@ void PmrWindowWidget::itemDoubleClicked(const QModelIndex &pIndex)
     PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
 
     if (item->type() == PmrWindowItem::Exposure) {
-        if (!item->rowCount())
+        if (!item->hasChildren())
             emit exposureFilesRequested(item->url());
     } else {
         emit openExposureFileRequested(item->url());

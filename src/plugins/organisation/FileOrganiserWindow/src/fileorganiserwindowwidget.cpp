@@ -653,7 +653,7 @@ bool FileOrganiserWindowWidget::itemIsOrIsChildOf(QStandardItem *pItem,
 
     if (pItem == pOtherItem) {
         return true;
-    } else if (pOtherItem->rowCount()) {
+    } else if (pOtherItem->hasChildren()) {
         // pOtherItem has children, so check against them
 
         for (int i = 0, iMax = pOtherItem->rowCount(); i < iMax; ++i) {
