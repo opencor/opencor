@@ -164,7 +164,8 @@ private:
     QAction *mCopyUrlAction;
     QAction *mCopyPathAction;
     QAction *mCloneAction;
-    QAction *mStageUnstageAction;
+    QAction *mStageAction;
+    QAction *mUnstageAction;
     QAction *mAboutAction;
 
     Core::UserMessageWidget *mUserMessageWidget;
@@ -261,7 +262,8 @@ private slots:
     void copyUrl();
     void copyPath();
     void clone();
-    void stageUnstage();
+    void stage();
+    void unstage();
     void about();
 };
 
