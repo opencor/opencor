@@ -30,6 +30,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QMainWindow>
+#include <QSettings>
+#include <QVariant>
 
 //==============================================================================
 
@@ -116,20 +118,29 @@ void PythonConsoleWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins
 
 //==============================================================================
 
+static const auto SettingsCommandHistory = QStringLiteral("CommandHistory");
+
+//==============================================================================
+
 void PythonConsoleWindowPlugin::loadSettings(QSettings *pSettings)
 {
-    Q_UNUSED(pSettings);
+    // Retrieve our Python window settings
 
-    // We don't handle this interface...
+    pSettings->beginGroup(mPythonConsoleWindow->objectName());
+        auto commandHistory = pSettings->value(SettingsCommandHistory, QVariant(QStringList() << "")).toStringList();
+        mPythonConsoleWindow->setCommandHistory(commandHistory);
+    pSettings->endGroup();
 }
 
 //==============================================================================
 
 void PythonConsoleWindowPlugin::saveSettings(QSettings *pSettings) const
 {
-    Q_UNUSED(pSettings);
+    // Keep track of our Python window settings
 
-    // We don't handle this interface...
+    pSettings->beginGroup(mPythonConsoleWindow->objectName());
+        pSettings->setValue(SettingsCommandHistory, QVariant(mPythonConsoleWindow->getCommandHistory()));
+    pSettings->endGroup();
 }
 
 //==============================================================================

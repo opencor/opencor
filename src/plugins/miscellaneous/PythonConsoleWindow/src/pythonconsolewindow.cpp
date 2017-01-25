@@ -82,6 +82,20 @@ PythonConsoleWindow::~PythonConsoleWindow()
 
 //==============================================================================
 
+QStringList PythonConsoleWindow::getCommandHistory() const
+{
+    return mPythonConsoleWidget->getCommandHistory();
+}
+
+//==============================================================================
+
+void PythonConsoleWindow::setCommandHistory(const QStringList &pCommandHistory)
+{
+    mPythonConsoleWidget->setCommandHistory(pCommandHistory);
+}
+
+//==============================================================================
+
 }   // namespace PythonConsoleWindow
 }   // namespace OpenCOR
 

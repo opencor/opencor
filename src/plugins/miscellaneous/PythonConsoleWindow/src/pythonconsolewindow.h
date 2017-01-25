@@ -54,6 +54,9 @@ public:
     explicit PythonConsoleWindow(QWidget *pParent);
     ~PythonConsoleWindow();
 
+    QStringList getCommandHistory() const;
+    void setCommandHistory(const QStringList &pCommandHistory);
+
 private:
     Ui::PythonConsoleWindow *mGui;
 
