@@ -120,6 +120,8 @@ public:
     void checkForModifications();
 
 private:
+    SolverInterface * solverInterface(const QString &pSolverName) const;
+
     SingleCellViewSimulation *mSimulation;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
