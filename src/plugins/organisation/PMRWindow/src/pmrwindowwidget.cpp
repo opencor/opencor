@@ -84,7 +84,8 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     mExposureNames(QStringList()),
     mInitialized(false),
     mErrorMessage(QString()),
-    mNumberOfFilteredExposures(0)
+    mNumberOfFilteredExposures(0),
+    mDontExpandExposures(QStringList())
 {
     // Create and customise some objects
 
@@ -367,7 +368,10 @@ void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
                                           exposureFile));
     }
 
-    mTreeViewWidget->expand(item->index());
+    if (mDontExpandExposures.contains(pUrl))
+        mDontExpandExposures.removeOne(pUrl);
+    else
+        mTreeViewWidget->expand(item->index());
 
     resizeTreeViewToContents();
 }
@@ -457,7 +461,11 @@ void PmrWindowWidget::clone()
 {
     // Let people know that we want to clone the current exposure's workspace
 
-    emit cloneWorkspaceRequested(currentItem()->url());
+    QString url = currentItem()->url();
+
+    mDontExpandExposures << url;
+
+    emit cloneWorkspaceRequested(url);
 }
 
 //==============================================================================

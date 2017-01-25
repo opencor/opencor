@@ -116,6 +116,8 @@ private:
 
     int mNumberOfFilteredExposures;
 
+    QStringList mDontExpandExposures;
+
     void updateGui();
 
     PmrWindowItem * currentItem() const;
