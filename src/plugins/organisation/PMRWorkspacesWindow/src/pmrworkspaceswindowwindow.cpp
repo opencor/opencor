@@ -242,18 +242,28 @@ void PmrWorkspacesWindowWindow::busy(const bool &pBusy)
 
 void PmrWorkspacesWindowWindow::showInformation(const QString &pMessage)
 {
-    // Show the given message as an information message box
+    // Show the given message as an information message box, but only if our
+    // workspace manager is keeping track of some workspaces
+    // Note: indeed, the idea is not to break the user's workflow, should some
+    //       information become available when trying to retrieve the list of
+    //       workspaces at startup...
 
-    Core::informationMessageBox(windowTitle(), pMessage);
+    if (!PMRSupport::PmrWorkspaceManager::instance()->workspaces().isEmpty())
+        Core::informationMessageBox(windowTitle(), pMessage);
 }
 
 //==============================================================================
 
 void PmrWorkspacesWindowWindow::showWarning(const QString &pMessage)
 {
-    // Show the given message as a warning message box
+    // Show the given message as a warning message box, but only if our
+    // workspace manager is keeping track of some workspaces
+    // Note: indeed, the idea is not to break the user's workflow, should a
+    //       warning occur when trying to retrieve the list of workspaces at
+    //       startup...
 
-    Core::warningMessageBox(windowTitle(), pMessage);
+    if (!PMRSupport::PmrWorkspaceManager::instance()->workspaces().isEmpty())
+        Core::warningMessageBox(windowTitle(), pMessage);
 }
 
 //==============================================================================

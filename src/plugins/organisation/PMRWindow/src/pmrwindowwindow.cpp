@@ -239,18 +239,28 @@ void PmrWindowWindow::busy(const bool &pBusy)
 
 void PmrWindowWindow::showInformation(const QString &pMessage)
 {
-    // Show the given message as an information message box
+    // Show the given message as an information message box, but only if we
+    // already have some exposures
+    // Note: indeed, the idea is not to break the user's workflow, should some
+    //       information become available when trying to retrieve the list of
+    //       exposures at startup...
 
-    Core::informationMessageBox(windowTitle(), pMessage);
+    if (mPmrWindowWidget->hasExposures())
+        Core::informationMessageBox(windowTitle(), pMessage);
 }
 
 //==============================================================================
 
 void PmrWindowWindow::showWarning(const QString &pMessage)
 {
-    // Show the given message as a warning message box
+    // Show the given message as a warning message box, but only if we already
+    // have some exposures
+    // Note: indeed, the idea is not to break the user's workflow, should a
+    //       warning occur when trying to retrieve the list of exposures at
+    //       startup...
 
-    Core::warningMessageBox(windowTitle(), pMessage);
+    if (mPmrWindowWidget->hasExposures())
+        Core::warningMessageBox(windowTitle(), pMessage);
 }
 
 //==============================================================================
