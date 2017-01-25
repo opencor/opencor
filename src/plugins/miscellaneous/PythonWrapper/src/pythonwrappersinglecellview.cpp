@@ -1,0 +1,213 @@
+/*******************************************************************************
+
+Licensed to the OpenCOR team under one or more contributor license agreements.
+See the NOTICE.txt file distributed with this work for additional information
+regarding copyright ownership. The OpenCOR team licenses this file to you under
+the Apache License, Version 2.0 (the "License"); you may not use this file
+except in compliance with the License. You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+
+*******************************************************************************/
+
+//==============================================================================
+// Python wrapper for SingleCellView classes
+//==============================================================================
+
+#include "centralwidget.h"
+#include "coreguiutils.h"
+#include "pythonwrapperplugin.h"
+#include "pythonwrapperdatastore.h"
+#include "pythonwrappersinglecellview.h"
+#include "singlecellviewplugin.h"
+#include "singlecellviewsimulation.h"
+#include "singlecellviewsimulationwidget.h"
+#include "singlecellviewwidget.h"
+
+//==============================================================================
+
+#include "PythonQt.h"
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace PythonWrapper {
+
+//==============================================================================
+
+static PyObject *OpenCOR_simulations(PyObject *self,  PyObject *args)
+{
+    Q_UNUSED(self);
+    Q_UNUSED(args);
+
+    auto simulationDict = PyDict_New();
+    auto singleCellViewWidget = PythonWrapperPlugin::instance()->singleCellViewWidget();
+
+    foreach (const QString &fileName, singleCellViewWidget->fileNames()) {
+        auto simulation = singleCellViewWidget->simulation(fileName);
+        PythonQt::self()->addObject(simulationDict, fileName, simulation);
+   }
+
+    return simulationDict;
+}
+
+//==============================================================================
+
+PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
+{
+    Q_UNUSED(self);
+    Q_UNUSED(args);
+
+    auto simulation = PythonWrapperPlugin::instance()->singleCellViewWidget()->simulation(Core::centralWidget()->currentFileName());
+    return PythonQt::priv()->wrapQObject(simulation);
+}
+
+//==============================================================================
+
+static PyMethodDef wrappedSingleCellViewMethods[] = {
+    {"simulation",  OpenCOR_simulation, METH_VARARGS, "Current simulation."},
+    {"simulations",  OpenCOR_simulations, METH_VARARGS, "Dictionary of simulations."},
+    {NULL, NULL, 0, NULL}
+};
+
+//==============================================================================
+
+void PythonWrapperSingleCellView::initialise(PyObject *pModule)
+{
+    PythonQt::self()->registerClass(&OpenCOR::SingleCellView::SingleCellViewSimulation::staticMetaObject);
+    PythonQt::self()->registerClass(&OpenCOR::SingleCellView::SingleCellViewSimulationData::staticMetaObject);
+    PythonQt::self()->registerClass(&OpenCOR::SingleCellView::SingleCellViewSimulationResults::staticMetaObject);
+    PythonQt::self()->registerClass(&OpenCOR::SingleCellView::SingleCellViewSimulationWidget::staticMetaObject);
+    PythonQt::self()->addInstanceDecorators(this);
+
+    PyModule_AddFunctions(pModule, wrappedSingleCellViewMethods);
+}
+
+//==============================================================================
+
+SingleCellView::SingleCellViewSimulationWidget * PythonWrapperSingleCellView::widget(SingleCellView::SingleCellViewSimulation *pSingleCellViewSimulation) const
+{
+    auto singleCellViewWidget = PythonWrapperPlugin::instance()->singleCellViewWidget();
+    return singleCellViewWidget->simulationWidget(pSingleCellViewSimulation->fileName());
+}
+
+//==============================================================================
+
+bool PythonWrapperSingleCellView::run(SingleCellView::SingleCellViewSimulation *pSingleCellViewSimulation)
+{
+    // Check that we have enough memory to run our simulation
+
+    bool runSimulation = true;
+
+    double freeMemory = Core::freeMemory();
+    double requiredMemory = pSingleCellViewSimulation->requiredMemory();
+
+    if (requiredMemory > freeMemory) {
+        Core::warningMessageBox(tr("Run Simulation"),
+                                tr("The simulation requires %1 of memory and you have only %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
+    } else {
+        // Theoretically speaking, we have enough memory to run the
+        // simulation, so try to allocate all the memory we need for the
+        // simulation by resetting its settings
+
+        runSimulation = pSingleCellViewSimulation->results()->reset();
+
+        PythonWrapperPlugin::instance()->singleCellViewWidget()->checkSimulationResults(pSingleCellViewSimulation->fileName(), true);
+        // Note: this will, among other things, clear our plots...
+
+        // Effectively run our simulation in case we were able to
+        // allocate all the memory we need to run the simulation
+
+        if (runSimulation) {
+            return pSingleCellViewSimulation->run();
+        } else {
+            Core::warningMessageBox(tr("Run Simulation"),
+                                    tr("We could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
+        }
+    }
+    return false;
+}
+
+//==============================================================================
+
+PyObject * PythonWrapperSingleCellView::constants(SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const
+{
+    return PythonWrapperDataStore::newNumPyArray(pSingleCellViewSimulationData->mConstantsArray);
+}
+
+//==============================================================================
+
+PyObject * PythonWrapperSingleCellView::rates(SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const
+{
+    return PythonWrapperDataStore::newNumPyArray(pSingleCellViewSimulationData->mRatesArray);
+}
+
+//==============================================================================
+
+PyObject * PythonWrapperSingleCellView::states(SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const
+{
+    return PythonWrapperDataStore::newNumPyArray(pSingleCellViewSimulationData->mStatesArray);
+}
+
+//==============================================================================
+
+PyObject * PythonWrapperSingleCellView::algebraic(SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const
+{
+    return PythonWrapperDataStore::newNumPyArray(pSingleCellViewSimulationData->mAlgebraicArray);
+}
+
+//==============================================================================
+
+PyObject * PythonWrapperSingleCellView::condVar(SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const
+{
+    return PythonWrapperDataStore::newNumPyArray(pSingleCellViewSimulationData->mCondVarArray);
+}
+
+//==============================================================================
+
+OpenCOR::DataStore::DataStoreVariable * PythonWrapperSingleCellView::points(SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
+{
+    return pSingleCellViewSimulationResults->mPoints;
+}
+
+//==============================================================================
+
+QList<OpenCOR::DataStore::DataStoreVariable *> PythonWrapperSingleCellView::constants(SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
+{
+    return pSingleCellViewSimulationResults->mConstants;
+}
+
+//==============================================================================
+
+QList<OpenCOR::DataStore::DataStoreVariable *> PythonWrapperSingleCellView::rates(SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
+{
+    return pSingleCellViewSimulationResults->mRates;
+}
+
+//==============================================================================
+
+QList<OpenCOR::DataStore::DataStoreVariable *> PythonWrapperSingleCellView::states(SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
+{
+    return pSingleCellViewSimulationResults->mStates;
+}
+
+//==============================================================================
+
+QList<OpenCOR::DataStore::DataStoreVariable *> PythonWrapperSingleCellView::algebraic(SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
+{
+    return pSingleCellViewSimulationResults->mAlgebraic;
+}
+
+//==============================================================================
+
+}   // namespace PythonWrapper
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================

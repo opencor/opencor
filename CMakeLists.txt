@@ -384,7 +384,6 @@ SET(PLUGINS
     editing/RawTextView
 
     miscellaneous/HelpWindow
-    miscellaneous/PythonConsoleWindow
     miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
@@ -402,6 +401,11 @@ SET(PLUGINS
     solver/SecondOrderRungeKuttaSolver
 
     tools/CellMLTools
+
+    # Python wrappers depend on simulation plugins
+
+    miscellaneous/PythonWrapper
+    miscellaneous/PythonConsoleWindow
 
     # Sample plugins
 
