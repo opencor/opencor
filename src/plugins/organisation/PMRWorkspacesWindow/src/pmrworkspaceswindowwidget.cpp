@@ -809,20 +809,6 @@ void PmrWorkspacesWindowWidget::deleteItems(PmrWorkspacesWindowItem *pItem,
 
 void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
 {
-    // Determine where in our tree view widget the given workspace should be
-    // inserted
-
-    QString workspaceName = pWorkspace->name();
-    int row = -1;
-
-    for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
-        if (workspaceName.compare(mTreeViewModel->invisibleRootItem()->child(i)->text()) < 0) {
-            row = i;
-
-            break;
-        }
-    }
-
     // Add the given workspace to our tree view widget
 
     QIcon collapsedIcon;
@@ -834,13 +820,10 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
                                                                              PmrWorkspacesWindowItem::OwnedWorkspace:
                                                                              PmrWorkspacesWindowItem::Workspace,
                                                                          collapsedIcon, expandedIcon,
-                                                                         workspaceName,
+                                                                         pWorkspace->name(),
                                                                          pWorkspace);
 
-    if (row == -1)
-        mTreeViewModel->invisibleRootItem()->appendRow(workspaceItem);
-    else
-        mTreeViewModel->invisibleRootItem()->insertRow(row, workspaceItem);
+    mTreeViewModel->invisibleRootItem()->appendRow(workspaceItem);
 
     populateWorkspace(workspaceItem, pWorkspace->rootFileNode());
 
@@ -949,6 +932,10 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspa
             res << newItem;
         }
     }
+
+    // Make sure that everything is properly sorted
+
+    mTreeViewModel->sort(0);
 
     return res;
 }
