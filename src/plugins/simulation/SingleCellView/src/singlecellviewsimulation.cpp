@@ -214,18 +214,25 @@ void SingleCellViewSimulationData::setPointInterval(const double &pPointInterval
 
 //==============================================================================
 
+SolverInterface * SingleCellViewSimulationData::solverInterface(const QString &pSolverName) const
+{
+    // Return the named solver interface, if any
+
+    foreach (SolverInterface *interface, mSolverInterfaces) {
+        if (!interface->solverName().compare(pSolverName))
+            return interface;
+    }
+
+    return 0;
+}
+
+//==============================================================================
+
 SolverInterface * SingleCellViewSimulationData::odeSolverInterface() const
 {
     // Return our ODE solver interface, if any
 
-    QString solverName = odeSolverName();
-
-    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-        if (!solverInterface->solverName().compare(solverName))
-            return solverInterface;
-    }
-
-    return 0;
+    return solverInterface(odeSolverName());
 }
 
 //==============================================================================
@@ -282,14 +289,7 @@ SolverInterface * SingleCellViewSimulationData::daeSolverInterface() const
 {
     // Return our DAE solver interface, if any
 
-    QString solverName = daeSolverName();
-
-    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-        if (!solverInterface->solverName().compare(solverName))
-            return solverInterface;
-    }
-
-    return 0;
+    return solverInterface(daeSolverName());
 }
 
 //==============================================================================
@@ -346,14 +346,7 @@ SolverInterface * SingleCellViewSimulationData::nlaSolverInterface() const
 {
     // Return our NLA solver interface, if any
 
-    QString solverName = nlaSolverName();
-
-    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-        if (!solverInterface->solverName().compare(solverName))
-            return solverInterface;
-    }
-
-    return 0;
+    return solverInterface(nlaSolverName());
 }
 
 //==============================================================================
