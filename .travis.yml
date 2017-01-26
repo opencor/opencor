@@ -31,7 +31,8 @@ install:
       ;
     else
          brew update
-      && brew install qt5
+      && curl -O https://raw.githubusercontent.com/Homebrew/homebrew-core/106d0878ee812cb8f5c403f717bdebe836445aee/Formula/qt5.rb
+      && brew install ./qt5.rb
       && export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
       && chmod -R 755 /usr/local/opt/qt5/*
       ;
