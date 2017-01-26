@@ -28,6 +28,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QObject>
 #ifndef CLI_VERSION
     #include <QIcon>
 #endif
@@ -39,8 +40,30 @@ namespace DataStore {
 
 //==============================================================================
 
-class DataStoreVariable
+class DataStoreArray
 {
+public:
+    explicit DataStoreArray(const qulonglong &pCapacity);
+
+    qulonglong capacity() const;
+    void decReference();
+    void incReference();
+    double * values() const;
+
+private:
+    ~DataStoreArray();
+
+    const qulonglong mCapacity;
+    int mReferences;
+    double *mValues;
+};
+
+//==============================================================================
+
+class DataStoreVariable : public QObject
+{
+    Q_OBJECT
+
 public:
     explicit DataStoreVariable(const qulonglong &pCapacity, double *pValue = 0);
     ~DataStoreVariable();
@@ -72,6 +95,8 @@ public:
     double value(const qulonglong &pPosition) const;
     double * values() const;
 
+    DataStoreArray * array() const;
+
 private:
 #ifndef CLI_VERSION
     QIcon mIcon;
@@ -83,13 +108,14 @@ private:
     const qulonglong mCapacity;
     qulonglong mSize;
 
+    DataStoreArray *mArray;
     double *mValue;
     double *mValues;
 };
 
 //==============================================================================
 
-typedef QList<DataStoreVariable *> DataStoreVariables;
+typedef QList<OpenCOR::DataStore::DataStoreVariable *> DataStoreVariables;
 
 //==============================================================================
 
@@ -109,8 +135,10 @@ private:
 
 //==============================================================================
 
-class DataStore
+class DataStore : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit DataStore(const QString &pUri, const qulonglong &pCapacity);
     ~DataStore();

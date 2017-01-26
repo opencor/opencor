@@ -575,12 +575,17 @@ void SingleCellViewSimulationData::createArrays()
     if (mRuntime) {
         // Create our various arrays to compute our model
 
-        mConstants = new double[mRuntime->constantsCount()];
-        mRates = new double[mRuntime->ratesCount()];
-        mStates = new double[mRuntime->statesCount()];
+        mConstantsArray = new DataStore::DataStoreArray(mRuntime->constantsCount());
+        mConstants = mConstantsArray->values();
+        mRatesArray = new DataStore::DataStoreArray(mRuntime->ratesCount());
+        mRates = mRatesArray->values();
+        mStatesArray = new DataStore::DataStoreArray(mRuntime->statesCount());
+        mStates = mStatesArray->values();
         mDummyStates = new double[mRuntime->statesCount()];
-        mAlgebraic = new double[mRuntime->algebraicCount()];
-        mCondVar = new double[mRuntime->condVarCount()];
+        mAlgebraicArray = new DataStore::DataStoreArray(mRuntime->algebraicCount());
+        mAlgebraic = mAlgebraicArray->values();
+        mCondVarArray = new DataStore::DataStoreArray(mRuntime->condVarCount());
+        mCondVar = mCondVarArray->values();
 
         // Create our various arrays to keep track of our various initial values
 
@@ -598,12 +603,12 @@ void SingleCellViewSimulationData::deleteArrays()
 {
     // Delete our various arrays
 
-    delete[] mConstants;
-    delete[] mRates;
-    delete[] mStates;
+    mConstantsArray->decReference();
+    mRatesArray->decReference();
+    mStatesArray->decReference();
     delete[] mDummyStates;
-    delete[] mAlgebraic;
-    delete[] mCondVar;
+    mAlgebraicArray->decReference();
+    mCondVarArray->decReference();
 
     delete[] mInitialConstants;
     delete[] mInitialStates;

@@ -144,11 +144,16 @@ private:
     Solver::Solver::Properties mNlaSolverProperties;
 
     double *mConstants;
+    DataStore::DataStoreArray *mConstantsArray;
     double *mRates;
+    DataStore::DataStoreArray *mRatesArray;
     double *mStates;
+    DataStore::DataStoreArray *mStatesArray;
     double *mDummyStates;
     double *mAlgebraic;
+    DataStore::DataStoreArray *mAlgebraicArray;
     double *mCondVar;
+    DataStore::DataStoreArray *mCondVarArray;
 
     double *mInitialConstants;
     double *mInitialStates;
