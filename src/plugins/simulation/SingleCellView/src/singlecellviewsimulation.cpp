@@ -1050,7 +1050,7 @@ bool SingleCellViewSimulation::run()
     if (mWorker) {
         return false;
     } else {
-        // Make sure that that the simulation settings we were given are sound
+        // Make sure that the simulation settings we were given are sound
 
         if (!simulationSettingsOk())
             return false;
