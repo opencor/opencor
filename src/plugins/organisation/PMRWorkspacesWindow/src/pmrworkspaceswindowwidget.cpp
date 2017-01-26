@@ -827,7 +827,10 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
 
     populateWorkspace(workspaceItem, pWorkspace->rootFileNode());
 
-    resizeTreeViewToContents();
+    // Make sure that everything is properly sorted and that all of the contents
+    // of our tree view widget is visible
+
+    sortAndResizeTreeViewToContents();
 }
 
 //==============================================================================
@@ -933,10 +936,6 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspa
         }
     }
 
-    // Make sure that everything is properly sorted
-
-    mTreeViewModel->sort(0);
-
     return res;
 }
 
@@ -998,13 +997,32 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWor
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::sortAndResizeTreeViewToContents()
+{
+    // Sort the contents of our tree view widget and make sure that all of its
+    // the contents is visible
+
+    mTreeViewModel->sort(0);
+
+    resizeTreeViewToContents();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
+                                                 const bool &pSortAndResize)
 {
     // Refresh the status of the given workspace and update our GUI accordingly
 
     pWorkspace->refreshStatus();
 
     populateWorkspace(pWorkspace, true);
+
+    // Make sure that everything is properly sorted and that all of the contents
+    // of our tree view widget is visible
+
+    if (pSortAndResize)
+        sortAndResizeTreeViewToContents();
 }
 
 //==============================================================================
@@ -1102,10 +1120,12 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces()
 {
     // Refresh our workspaces
 
-    foreach (PMRSupport::PmrWorkspace *workspace,
-             PMRSupport::PmrWorkspaceManager::instance()->workspaces()) {
-        refreshWorkspace(workspace);
-    }
+    PMRSupport::PmrWorkspaces workspaces = PMRSupport::PmrWorkspaceManager::instance()->workspaces();
+    int workspacesCount = workspaces.count();
+    int workspaceNb = 0;
+
+    foreach (PMRSupport::PmrWorkspace *workspace, workspaces)
+        refreshWorkspace(workspace, ++workspaceNb == workspacesCount);
 }
 
 //==============================================================================

@@ -224,13 +224,16 @@ private:
                                                PMRSupport::PmrWorkspaceFileNode *pFileNode);
     void populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                            const bool &pRefresh = false);
-    void refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
+    void refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
+                          const bool &pSortAndResize = true);
 
     void duplicateCloneMessage(const QString &pUrl, const QString &pPath1,
                                const QString &pPath2);
 
     void commitWorkspace(const QString &pUrl);
     void synchronizeWorkspace(const QString &pUrl, const bool &pPush = true);
+
+    void sortAndResizeTreeViewToContents();
 
 signals:
     void information(const QString &pMessage);
