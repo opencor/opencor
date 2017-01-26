@@ -154,6 +154,8 @@ private:
     void createArrays();
     void deleteArrays();
 
+    SolverInterface * solverInterface(const QString &pSolverName) const;
+
 signals:
     void updated(const double &pCurrentPoint);
     void modified(const bool &pIsModified);
@@ -222,6 +224,8 @@ public:
     ~SingleCellViewSimulation();
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
+
+    QString fileName() const;
 
     SingleCellViewSimulationData * data() const;
     SingleCellViewSimulationResults * results() const;

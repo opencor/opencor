@@ -214,18 +214,25 @@ void SingleCellViewSimulationData::setPointInterval(const double &pPointInterval
 
 //==============================================================================
 
-SolverInterface * SingleCellViewSimulationData::odeSolverInterface() const
+SolverInterface * SingleCellViewSimulationData::solverInterface(const QString &pSolverName) const
 {
-    // Return our ODE solver interface, if any
-
-    QString solverName = odeSolverName();
+    // Return the named solver interface, if any
 
     foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-        if (!solverInterface->solverName().compare(solverName))
+        if (!solverInterface->solverName().compare(pSolverName))
             return solverInterface;
     }
 
     return 0;
+}
+
+//==============================================================================
+
+SolverInterface * SingleCellViewSimulationData::odeSolverInterface() const
+{
+    // Return our ODE solver interface, if any
+
+    return solverInterface(odeSolverName());
 }
 
 //==============================================================================
@@ -282,14 +289,7 @@ SolverInterface * SingleCellViewSimulationData::daeSolverInterface() const
 {
     // Return our DAE solver interface, if any
 
-    QString solverName = daeSolverName();
-
-    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-        if (!solverInterface->solverName().compare(solverName))
-            return solverInterface;
-    }
-
-    return 0;
+    return solverInterface(daeSolverName());
 }
 
 //==============================================================================
@@ -346,14 +346,7 @@ SolverInterface * SingleCellViewSimulationData::nlaSolverInterface() const
 {
     // Return our NLA solver interface, if any
 
-    QString solverName = nlaSolverName();
-
-    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-        if (!solverInterface->solverName().compare(solverName))
-            return solverInterface;
-    }
-
-    return 0;
+    return solverInterface(nlaSolverName());
 }
 
 //==============================================================================
@@ -893,6 +886,15 @@ CellMLSupport::CellmlFileRuntime * SingleCellViewSimulation::runtime() const
     // Return our runtime
 
     return mRuntime;
+}
+
+//==============================================================================
+
+QString SingleCellViewSimulation::fileName() const
+{
+    // Return the name of the CellML file
+
+    return mRuntime?mRuntime->cellmlFile()->fileName():QString();
 }
 
 //==============================================================================

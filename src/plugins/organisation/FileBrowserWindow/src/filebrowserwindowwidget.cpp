@@ -155,8 +155,8 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
     // On Windows, if mInitPathDir refers to the root of a particular drive
     // (e.g. the C: drive), then it won't include a trailing separator (i.e.
     // "C:" instead of "C:/") and this causes problems below (when wanting to
-    // retrieve the different folders), so we must make sure that that
-    // mInitPathDir contains a trailing separator
+    // retrieve the different folders), so we must make sure that mInitPathDir
+    // contains a trailing separator
     // Note: this is clearly not needed on Linux and macOS, but it doesn't
     //       harm doing it for these platforms too...
 
