@@ -6,7 +6,7 @@ SET(OPENSSL_VERSION "1.0.0")
 
 # Specify the git tag in the OpenSSL repository that we want to use
 
-SET(OPENSSL_GIT_TAG "OpenSSL_1_0_1u")
+SET(OPENSSL_GIT_TAG "OpenSSL_1_0_2j")
 
 # The names of the libraries built by OpenSSL's build process
 
@@ -71,10 +71,10 @@ IF(USE_PREBUILT_OPENSSL_PLUGIN)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            OpenSSL ${OPENSSL_VERSION} fc098fbd37b9c43e37cd39693d0b6275d82984f3
+            OpenSSL ${OPENSSL_VERSION} 6fa6909703b2b7b6db26f08728a07e47fe8cb9b1
             CHECKED_FILES ${CHECKED_FILES}
-            SHA1_VALUES e408b768774141487cec72e4537df1fbd7ace703
-                        2415193789e779995ca82cd8adb8b1b238c8350b
+            SHA1_VALUES 967fb3221bf5c6def0e2b82f1e4b7076f4db1931
+                        9c6e9c4b7aa598c87082ecad09633a7c05883482
         )
     ELSE()
         RETRIEVE_PACKAGE_FILE(${RELATIVE_ROOT_DIR} Sample sha...)
