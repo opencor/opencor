@@ -1233,10 +1233,10 @@ void PmrWorkspacesWindowWidget::viewInPmr()
 {
     // Show the selected items in PMR
 
-    QModelIndexList selectedIndexes = mTreeViewWidget->selectedIndexes();
+    QModelIndexList selectedItems = mTreeViewWidget->selectedIndexes();
 
-    for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i)
-        QDesktopServices::openUrl(static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]))->url());
+    for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i)
+        QDesktopServices::openUrl(static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]))->url());
 }
 
 //==============================================================================
@@ -1245,10 +1245,10 @@ void PmrWorkspacesWindowWidget::viewOnComputer()
 {
     // Show the selected items on the user's computer
 
-    QModelIndexList selectedIndexes = mTreeViewWidget->selectedIndexes();
+    QModelIndexList selectedItems = mTreeViewWidget->selectedIndexes();
 
-    for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i)
-        QDesktopServices::openUrl(QUrl::fromLocalFile(static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]))->path()));
+    for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i)
+        QDesktopServices::openUrl(QUrl::fromLocalFile(static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]))->path()));
 }
 
 //==============================================================================
