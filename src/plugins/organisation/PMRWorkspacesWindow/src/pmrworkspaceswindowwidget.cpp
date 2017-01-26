@@ -1301,7 +1301,13 @@ void PmrWorkspacesWindowWidget::stageUnstage(const bool &pStage)
 {
     // Stage/unstage the current file(s)
 
-//---GRY--- TO BE DONE...
+    QModelIndexList selectedItems = mTreeViewWidget->selectedIndexes();
+
+    for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i) {
+        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]));
+
+        item->workspace()->stageFile(item->fileName(), pStage);
+    }
 }
 
 //==============================================================================
