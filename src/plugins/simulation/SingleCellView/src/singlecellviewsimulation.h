@@ -221,6 +221,8 @@ public:
                                       const SolverInterfaces &pSolverInterfaces);
     ~SingleCellViewSimulation();
 
+    QString fileName() const;
+
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
     SingleCellViewSimulationData * data() const;

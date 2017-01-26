@@ -897,6 +897,15 @@ CellMLSupport::CellmlFileRuntime * SingleCellViewSimulation::runtime() const
 
 //==============================================================================
 
+QString SingleCellViewSimulation::fileName() const
+{
+    // Return the name of the CellML file
+
+    return mRuntime->cellmlFile()->fileName();
+}
+
+//==============================================================================
+
 SingleCellViewSimulationData * SingleCellViewSimulation::data() const
 {
     // Return our data
