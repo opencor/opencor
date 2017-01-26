@@ -396,9 +396,9 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                                        overlayIconPos, overlayIconPos,
                                                        overlayIconSize, overlayIconSize),
                                             this);
-    mStageAction = Core::newAction(QIcon(":/oxygen/actions/list-add.png"),
+    mStageAction = Core::newAction(QIcon(":/oxygen/actions/dialog-ok-apply.png"),
                                    this);
-    mUnstageAction = Core::newAction(QIcon(":/oxygen/actions/list-remove.png"),
+    mUnstageAction = Core::newAction(QIcon(":/oxygen/actions/dialog-cancel.png"),
                                      this);
     mAboutAction = Core::newAction(QIcon(":/oxygen/actions/help-about.png"),
                                    this);
