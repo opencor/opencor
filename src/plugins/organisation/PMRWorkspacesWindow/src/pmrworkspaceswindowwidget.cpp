@@ -379,7 +379,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     // Create and populate our context menu
 
-    static const QIcon DownloadIcon = QIcon(":/oxygen/actions/go-down.png");
+    static const QIcon DownloadIcon = QIcon(":/oxygen/actions/arrow-down.png");
 
     mContextMenu = new QMenu(this);
 
@@ -396,6 +396,12 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                                        overlayIconPos, overlayIconPos,
                                                        overlayIconSize, overlayIconSize),
                                    this);
+    mCommitAction = Core::newAction(QIcon(":/oxygen/actions/view-task.png"),
+                                    this);
+    mPushAction = Core::newAction(QIcon(":/oxygen/actions/arrow-up.png"),
+                                  this);
+    mPullAction = Core::newAction(DownloadIcon,
+                                  this);
     mStageAction = Core::newAction(QIcon(":/oxygen/actions/dialog-ok-apply.png"),
                                    this);
     mUnstageAction = Core::newAction(QIcon(":/oxygen/actions/dialog-cancel.png"),
@@ -413,6 +419,12 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
             this, SLOT(copyPath()));
     connect(mCloneAction, SIGNAL(triggered(bool)),
             this, SLOT(clone()));
+    connect(mCommitAction, SIGNAL(triggered(bool)),
+            this, SLOT(commit()));
+    connect(mPushAction, SIGNAL(triggered(bool)),
+            this, SLOT(push()));
+    connect(mPullAction, SIGNAL(triggered(bool)),
+            this, SLOT(pull()));
     connect(mStageAction, SIGNAL(triggered(bool)),
             this, SLOT(stage()));
     connect(mUnstageAction, SIGNAL(triggered(bool)),
@@ -427,6 +439,11 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mContextMenu->addAction(mCopyPathAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCloneAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mCommitAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mPushAction);
+    mContextMenu->addAction(mPullAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mStageAction);
     mContextMenu->addAction(mUnstageAction);
@@ -463,6 +480,12 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("Copy the path to the clipboard"));
     I18nInterface::retranslateAction(mCloneAction, tr("Clone..."),
                                      tr("Clone the current workspace"));
+    I18nInterface::retranslateAction(mCommitAction, tr("Commit..."),
+                                     tr("Commit staged changes"));
+    I18nInterface::retranslateAction(mPushAction, tr("Push"),
+                                     tr("Push changes to PMR"));
+    I18nInterface::retranslateAction(mPullAction, tr("Pull"),
+                                     tr("Pull changes from PMR"));
     I18nInterface::retranslateAction(mStageAction, tr("Stage"),
                                      tr("Stage the file"));
     I18nInterface::retranslateAction(mUnstageAction, tr("Unstage"),
@@ -1041,7 +1064,8 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         // We are over an item, so update our context menu and show it
 
         QModelIndexList selectedItems = mTreeViewWidget->selectedIndexes();
-        bool workspaceItem =    (item->type() == PmrWorkspacesWindowItem::OwnedWorkspace)
+        bool ownedWorkspaceItem = item->type() == PmrWorkspacesWindowItem::OwnedWorkspace;
+        bool workspaceItem =    ownedWorkspaceItem
                              || (item->type() == PmrWorkspacesWindowItem::Workspace);
         int nbOfStagedFiles = 0;
         int nbOfUnstagedFiles = 0;
@@ -1068,7 +1092,10 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         mViewOncomputerAction->setVisible(workspaceItem);
         mCopyUrlAction->setVisible(workspaceItem);
         mCopyPathAction->setVisible(workspaceItem);
-        mCloneAction->setVisible(item->type() == PmrWorkspacesWindowItem::OwnedWorkspace);
+        mCloneAction->setVisible(ownedWorkspaceItem);
+        mCommitAction->setVisible(workspaceItem);
+        mPushAction->setVisible(ownedWorkspaceItem);
+        mPullAction->setVisible(workspaceItem);
         mStageAction->setVisible(nbOfUnstagedFiles);
         mUnstageAction->setVisible(nbOfStagedFiles);
         mAboutAction->setVisible(workspaceItem);
@@ -1296,6 +1323,27 @@ void PmrWorkspacesWindowWidget::clone()
         mPmrWebService->requestWorkspaceClone(PMRSupport::PmrWorkspaceManager::instance()->workspace(currentItem()->url()),
                                               dirName);
     }
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::commit()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::push()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::pull()
+{
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================
