@@ -1037,20 +1037,39 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
     if (item) {
         // We are over an item, so update our context menu and show it
 
+        QModelIndexList selectedItems = mTreeViewWidget->selectedIndexes();
         bool workspaceItem =    (item->type() == PmrWorkspacesWindowItem::OwnedWorkspace)
                              || (item->type() == PmrWorkspacesWindowItem::Workspace);
-        bool fileItem = item->type() == PmrWorkspacesWindowItem::File;
+        int nbOfStagedFiles = 0;
+        int nbOfUnstagedFiles = 0;
+
+        for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i) {
+            PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]));
+            bool stagedFile = item->fileNode()->status().first != ' ';
+            bool unstagedFile = item->fileNode()->status().second != ' ';
+
+            if (   (item->type() == PmrWorkspacesWindowItem::File)
+                && (stagedFile || unstagedFile)) {
+                nbOfStagedFiles += stagedFile;
+                nbOfUnstagedFiles += unstagedFile;
+            } else {
+                nbOfStagedFiles = 0;
+                nbOfUnstagedFiles = 0;
+
+                break;
+            }
+        }
 
         mViewInPmrAction->setVisible(workspaceItem);
         mViewOncomputerAction->setVisible(workspaceItem);
         mCopyUrlAction->setVisible(workspaceItem);
         mCopyPathAction->setVisible(workspaceItem);
         mCloneAction->setVisible(item->type() == PmrWorkspacesWindowItem::OwnedWorkspace);
-        mStageAction->setVisible(fileItem?(item->fileNode()->status().second != ' '):false);
-        mUnstageAction->setVisible(fileItem?(item->fileNode()->status().first != ' '):false);
+        mStageAction->setVisible(nbOfUnstagedFiles);
+        mUnstageAction->setVisible(nbOfStagedFiles);
         mAboutAction->setVisible(workspaceItem);
 
-        bool onlyOneItem = mTreeViewWidget->selectedIndexes().count() == 1;
+        bool onlyOneItem = selectedItems.count() == 1;
         bool clonedItem = !mWorkspaceUrlFoldersOwned.value(item->url()).first.isEmpty();
 
         mViewOncomputerAction->setEnabled(clonedItem);
