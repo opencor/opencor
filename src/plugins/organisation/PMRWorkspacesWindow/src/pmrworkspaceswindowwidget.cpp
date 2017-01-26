@@ -379,7 +379,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     // Create and populate our context menu
 
-    static const QIcon ArrowDownIcon = QIcon(":/oxygen/actions/arrow-down.png");
+    static const QIcon DownloadIcon = QIcon(":/oxygen/actions/go-down.png");
 
     mContextMenu = new QMenu(this);
 
@@ -391,11 +391,11 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                      this);
     mCopyPathAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                       this);
-    mCloneAction = Core::newAction(Core::overlayedIcon(mCollapsedWorkspaceIcon, ArrowDownIcon,
+    mCloneAction = Core::newAction(Core::overlayedIcon(mCollapsedWorkspaceIcon, DownloadIcon,
                                                        folderIconSize, folderIconSize,
                                                        overlayIconPos, overlayIconPos,
                                                        overlayIconSize, overlayIconSize),
-                                            this);
+                                   this);
     mStageAction = Core::newAction(QIcon(":/oxygen/actions/dialog-ok-apply.png"),
                                    this);
     mUnstageAction = Core::newAction(QIcon(":/oxygen/actions/dialog-cancel.png"),
