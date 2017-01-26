@@ -1064,6 +1064,32 @@ bool SingleCellViewSimulation::run()
         if (!simulationSettingsOk())
             return false;
 
+        // Make sure we have a data store in which to store results
+
+        if (!mResults->dataStore()) {
+            emit error(tr("no datastore for results"));
+
+            return false;
+        }
+
+        // Make sure the data store is big enough to store our results
+
+        if (size() > (mResults->dataStore()->capacity() - mResults->dataStore()->size())) {
+            emit error(tr("datastore doesn't have enough capacity"));
+
+            return false;
+        }
+
+        // Make sure we have a valid solver
+
+        if ((mRuntime->needOdeSolver() && !mData->odeSolverInterface())
+         || (!mRuntime->needOdeSolver() && !mData->daeSolverInterface())
+         || (mRuntime->needNlaSolver() && !mData->nlaSolverInterface())) {
+            emit error(tr("no valid solvers"));
+
+            return false;
+        }
+
         // Create our worker
 
         mWorker = new SingleCellViewSimulationWorker(this, mWorker);
