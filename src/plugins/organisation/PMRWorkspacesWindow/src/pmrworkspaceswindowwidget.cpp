@@ -1048,8 +1048,9 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
 
         for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i) {
             PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]));
-            bool stagedFile = item->fileNode()->status().first != ' ';
-            bool unstagedFile = item->fileNode()->status().second != ' ';
+            PMRSupport::PmrWorkspaceFileNode *fileNode = item->fileNode();
+            bool stagedFile = fileNode?(fileNode->status().first != ' '):false;
+            bool unstagedFile = fileNode?(fileNode->status().second != ' '):false;
 
             if (   (item->type() == PmrWorkspacesWindowItem::File)
                 && (stagedFile || unstagedFile)) {
