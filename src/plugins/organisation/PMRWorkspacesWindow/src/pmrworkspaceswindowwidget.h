@@ -259,7 +259,7 @@ private slots:
 
     void resizeTreeViewToContents();
 
-    void refreshWorkspaces();
+    void refreshWorkspaces(const PMRSupport::PmrWorkspaces &pWorkspaces = PMRSupport::PmrWorkspaces());
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);

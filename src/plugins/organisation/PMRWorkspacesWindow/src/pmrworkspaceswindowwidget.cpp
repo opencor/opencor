@@ -1138,11 +1138,13 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::refreshWorkspaces()
+void PmrWorkspacesWindowWidget::refreshWorkspaces(const PMRSupport::PmrWorkspaces &pWorkspaces)
 {
     // Refresh our workspaces
 
-    PMRSupport::PmrWorkspaces workspaces = PMRSupport::PmrWorkspaceManager::instance()->workspaces();
+    PMRSupport::PmrWorkspaces workspaces = pWorkspaces.isEmpty()?
+                                               PMRSupport::PmrWorkspaceManager::instance()->workspaces():
+                                               pWorkspaces;
     int workspacesCount = workspaces.count();
     int workspaceNb = 0;
 
@@ -1301,13 +1303,22 @@ void PmrWorkspacesWindowWidget::stageUnstage(const bool &pStage)
 {
     // Stage/unstage the current file(s)
 
+    PMRSupport::PmrWorkspaces workspaces = PMRSupport::PmrWorkspaces();
     QModelIndexList selectedItems = mTreeViewWidget->selectedIndexes();
 
     for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i) {
         PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]));
+        PMRSupport::PmrWorkspace *workspace = item->workspace();
 
-        item->workspace()->stageFile(item->fileName(), pStage);
+        workspace->stageFile(item->fileName(), pStage);
+
+        if (!workspaces.contains(workspace))
+            workspaces << workspace;
     }
+
+    // Refresh the workspaces that (may) have changed status
+
+    refreshWorkspaces(workspaces);
 }
 
 //==============================================================================
