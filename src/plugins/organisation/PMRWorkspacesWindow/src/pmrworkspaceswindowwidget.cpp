@@ -840,15 +840,15 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
 
     retrieveWorkspaceIcons(pWorkspace, collapsedIcon, expandedIcon);
 
-    PmrWorkspacesWindowItem *workspaceItem = new PmrWorkspacesWindowItem(pWorkspace->isOwned()?
-                                                                             PmrWorkspacesWindowItem::OwnedWorkspace:
-                                                                             PmrWorkspacesWindowItem::Workspace,
-                                                                         pWorkspace,
-                                                                         collapsedIcon, expandedIcon);
+    PmrWorkspacesWindowItem *item = new PmrWorkspacesWindowItem(pWorkspace->isOwned()?
+                                                                    PmrWorkspacesWindowItem::OwnedWorkspace:
+                                                                    PmrWorkspacesWindowItem::Workspace,
+                                                                pWorkspace,
+                                                                collapsedIcon, expandedIcon);
 
-    mTreeViewModel->invisibleRootItem()->appendRow(workspaceItem);
+    mTreeViewModel->invisibleRootItem()->appendRow(item);
 
-    populateWorkspace(pWorkspace, workspaceItem, pWorkspace->rootFileNode());
+    populateWorkspace(pWorkspace, item, pWorkspace->rootFileNode());
 
     // Make sure that everything is properly sorted and that all of the contents
     // of our tree view widget is visible
