@@ -779,16 +779,16 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::retrieveItems(PmrWorkspacesW
 void PmrWorkspacesWindowWidget::deleteItems(PmrWorkspacesWindowItem *pItem,
                                             PmrWorkspacesWindowItems &pItems)
 {
-    // Recursively delete the given items, unless there is none left or the
-    // given item has since been deleted
-    // Note: it may happen (e.g. when deleting several files at once) that we
-    //       come here with a given item that has since been deleted...
+    // Recursively delete the given items, unless there is none left
 
-    if (!pItem || pItems.isEmpty())
+    if (pItems.isEmpty())
         return;
 
     if (pItem->hasChildren()) {
-        for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
+        // Note: we delete the child items in reverse order since deletion is
+        //       done using their row number...
+
+        for (int i = pItem->rowCount()-1; i >= 0; --i)
             deleteItems(static_cast<PmrWorkspacesWindowItem *>(pItem->child(i)), pItems);
 
         // Remove the folder item, if it is now empty
