@@ -135,7 +135,11 @@ void PythonPlugin::initializePlugin()
 #if __APPLE__
     pythonHome = (applicationDirectories << "Frameworks" << "Python").join("/");
 #endif
-    setenv("PYTHONHOME", pythonHome.toUtf8().data(), true);
+    qputenv("PYTHONHOME", pythonHome.toUtf8());
+
+    // Ensure the user's Python site directory (in ~/.local etc) isn't used
+
+    Py_NoUserSiteDirectory = 1;
 }
 
 //==============================================================================

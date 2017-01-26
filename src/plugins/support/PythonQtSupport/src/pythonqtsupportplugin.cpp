@@ -85,13 +85,16 @@ void PythonQtSupportPlugin::initializePlugin()
     // Create and initialise a new CTK Python manager
 
     auto pythonManager = new ctkAbstractPythonManager(this);
+
+    // This also initialises Python Qt
+
     pythonManager->initialize();
 
-    // Save it in our instance
     // Enable the Qt bindings for Python
 
     PythonQt_init_QtBindings();
 
+    // Save the manager in our instance
 
     instance()->mPythonManager = pythonManager;
 }
@@ -155,7 +158,7 @@ PythonQtSupportPlugin *PythonQtSupportPlugin::instance(void)
 
     static PythonQtSupportPlugin pluginInstance;
     return static_cast<PythonQtSupportPlugin *>(Core::globalInstance("OpenCOR::PythonQtSupport::PythonQtSupportPlugin",
-                                                              &pluginInstance));
+                                                                     &pluginInstance));
 }
 
 //==============================================================================
