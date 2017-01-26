@@ -551,21 +551,21 @@ void PmrWorkspacesWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     Core::Widget::keyPressEvent(pEvent);
 
     // Retrieve all the files that are currently selected
-    // Note: if there is folder among the selected items, then ignore
+    // Note: if there is a folder among the selected items, then ignore
     //       everything...
 
     QStringList fileNames = QStringList();
-    QModelIndexList selectedIndexes = mTreeViewWidget->selectedIndexes();
+    QModelIndexList selectedItems = mTreeViewWidget->selectedIndexes();
 
-    for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i) {
-        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]));
+    for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i) {
+        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]));
 
-        if (item->type() != PmrWorkspacesWindowItem::File) {
+        if (item->type() == PmrWorkspacesWindowItem::File) {
+            fileNames << item->fileName();
+        } else {
             fileNames = QStringList();
 
             break;
-        } else {
-            fileNames << item->fileName();
         }
     }
 
