@@ -44,6 +44,12 @@ namespace CellMLSupport {
 
 //==============================================================================
 
+namespace PythonWrapper {
+    class PythonWrapperSingleCellView;
+}   // namespace PythonWrapper
+
+//==============================================================================
+
 namespace SingleCellView {
 
 //==============================================================================
@@ -56,6 +62,8 @@ class SingleCellViewSimulationData : public QObject
 {
     Q_OBJECT
 
+    friend class PythonWrapper::PythonWrapperSingleCellView;
+
 public:
     explicit SingleCellViewSimulationData(SingleCellViewSimulation *pSimulation,
                                           const SolverInterfaces &pSolverInterfaces);
@@ -63,26 +71,11 @@ public:
 
     void update();
 
-    SingleCellViewSimulation * simulation() const;
-
     double * constants() const;
     double * rates() const;
     double * states() const;
     double * algebraic() const;
     double * condVar() const;
-
-    int delay() const;
-    void setDelay(const int &pDelay);
-
-    double startingPoint() const;
-    void setStartingPoint(const double &pStartingPoint,
-                          const bool &pRecompute = true);
-
-    double endingPoint() const;
-    void setEndingPoint(const double &pEndingPoint);
-
-    double pointInterval() const;
-    void setPointInterval(const double &pPointInterval);
 
     SolverInterface * odeSolverInterface() const;
 
@@ -109,6 +102,22 @@ public:
     Solver::Solver::Properties nlaSolverProperties() const;
     void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
                               const bool &pReset = true);
+
+public slots:
+    OpenCOR::SingleCellView::SingleCellViewSimulation * simulation() const;
+
+    int delay() const;
+    void setDelay(const int &pDelay);
+
+    double startingPoint() const;
+    void setStartingPoint(const double &pStartingPoint,
+                          const bool &pRecompute = true);
+
+    double endingPoint() const;
+    void setEndingPoint(const double &pEndingPoint);
+
+    double pointInterval() const;
+    void setPointInterval(const double &pPointInterval);
 
     void reset(const bool &pInitialize = true);
 
@@ -174,19 +183,15 @@ class SingleCellViewSimulationResults : public QObject
 {
     Q_OBJECT
 
+    friend class PythonWrapper::PythonWrapperSingleCellView;
+
 public:
     explicit SingleCellViewSimulationResults(SingleCellViewSimulation *pSimulation);
     ~SingleCellViewSimulationResults();
 
     void update();
 
-    bool reset(const bool &pCreateDataStore = true);
-
     void addPoint(const double &pPoint);
-
-    qulonglong size() const;
-
-    DataStore::DataStore * dataStore() const;
 
     double * points() const;
 
@@ -194,6 +199,13 @@ public:
     double * rates(const int &pIndex) const;
     double * states(const int &pIndex) const;
     double * algebraic(const int &pIndex) const;
+
+public slots:
+    bool reset(const bool &pCreateDataStore = true);
+
+    qulonglong size() const;
+
+    OpenCOR::DataStore::DataStore * dataStore() const;
 
 private:
     SingleCellViewSimulation *mSimulation;
@@ -228,14 +240,20 @@ public:
                                       const SolverInterfaces &pSolverInterfaces);
     ~SingleCellViewSimulation();
 
-    QString fileName() const;
-
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
-    SingleCellViewSimulationData * data() const;
-    SingleCellViewSimulationResults * results() const;
-
     void update(CellMLSupport::CellmlFileRuntime *pRuntime);
+
+    bool run();
+    bool pause();
+    bool resume();
+    bool stop();
+
+public slots:
+    QString fileName() const;
+
+    OpenCOR::SingleCellView::SingleCellViewSimulationData * data() const;
+    OpenCOR::SingleCellView::SingleCellViewSimulationResults * results() const;
 
     bool isRunning() const;
     bool isPaused() const;
@@ -248,11 +266,6 @@ public:
     double requiredMemory();
 
     double size();
-
-    bool run();
-    bool pause();
-    bool resume();
-    bool stop();
 
     bool reset();
 

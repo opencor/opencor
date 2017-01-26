@@ -78,13 +78,10 @@ public:
     void setIcon(const QIcon &pIcon);
 #endif
 
-    QString uri() const;
     void setUri(const QString &pUri);
 
-    QString label() const;
     void setLabel(const QString &pLabel);
 
-    QString unit() const;
     void setUnit(const QString &pUnit);
 
     qulonglong size() const;
@@ -92,10 +89,18 @@ public:
     void addValue();
     void addValue(const double &pValue);
 
-    double value(const qulonglong &pPosition) const;
     double * values() const;
 
     DataStoreArray * array() const;
+
+public slots:
+    QString uri() const;
+
+    QString label() const;
+
+    QString unit() const;
+
+    double value(const qulonglong &pPosition) const;
 
 private:
 #ifndef CLI_VERSION
@@ -115,7 +120,7 @@ private:
 
 //==============================================================================
 
-typedef QList<OpenCOR::DataStore::DataStoreVariable *> DataStoreVariables;
+typedef QList<DataStoreVariable *> DataStoreVariables;
 
 //==============================================================================
 
@@ -143,21 +148,24 @@ public:
     explicit DataStore(const QString &pUri, const qulonglong &pCapacity);
     ~DataStore();
 
+    DataStoreVariable * addVoi();
+
+    DataStoreVariable * addVariable(double *pValue = 0);
+    DataStoreVariables addVariables(const int &pCount, double *pValues);
+
+    void addValues(const double &pVoiValue);
+
+public slots:
     QString uri() const;
 
     qulonglong capacity() const;
     qulonglong size() const;
 
-    DataStoreVariables voiAndVariables();
+    QList<OpenCOR::DataStore::DataStoreVariable *> voiAndVariables();
 
-    DataStoreVariable * voi() const;
-    DataStoreVariable * addVoi();
+    OpenCOR::DataStore::DataStoreVariable * voi() const;
 
-    DataStoreVariables variables();
-    DataStoreVariable * addVariable(double *pValue = 0);
-    DataStoreVariables addVariables(const int &pCount, double *pValues);
-
-    void addValues(const double &pVoiValue);
+    QList<OpenCOR::DataStore::DataStoreVariable *> variables();
 
 private:
     QString mlUri;
