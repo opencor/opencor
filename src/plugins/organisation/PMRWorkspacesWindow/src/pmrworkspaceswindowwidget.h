@@ -77,16 +77,18 @@ public:
     };
 
     explicit PmrWorkspacesWindowItem(const Type &pType,
+                                     PMRSupport::PmrWorkspace *pWorkspace,
                                      const QIcon &pCollapsedIcon,
-                                     const QIcon &pExpandedIcon,
-                                     const QString &pText,
-                                     PMRSupport::PmrWorkspace *pWorkspace);
+                                     const QIcon &pExpandedIcon);
     explicit PmrWorkspacesWindowItem(const Type &pType,
+                                     PMRSupport::PmrWorkspace *pWorkspace,
+                                     PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                      const QIcon &pCollapsedIcon,
-                                     const QIcon &pExpandedIcon,
-                                     PMRSupport::PmrWorkspaceFileNode *pFileNode);
-    explicit PmrWorkspacesWindowItem(const Type &pType, const QIcon &pIcon,
-                                     PMRSupport::PmrWorkspaceFileNode *pFileNode);
+                                     const QIcon &pExpandedIcon);
+    explicit PmrWorkspacesWindowItem(const Type &pType,
+                                     PMRSupport::PmrWorkspace *pWorkspace,
+                                     PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                     const QIcon &pIcon);
 
     virtual int type() const;
 
@@ -112,10 +114,9 @@ private:
     QIcon mCollapsedIcon;
     QIcon mExpandedIcon;
 
-    void constructor(const Type &pType, const QIcon &pCollapsedIcon,
-                     const QIcon &pExpandedIcon,
-                     PMRSupport::PmrWorkspace *pWorkspace,
-                     PMRSupport::PmrWorkspaceFileNode *pFileNode);
+    void constructor(const Type &pType, PMRSupport::PmrWorkspace *pWorkspace,
+                     PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                     const QIcon &pCollapsedIcon, const QIcon &pExpandedIcon);
 };
 
 //==============================================================================
@@ -220,7 +221,8 @@ private:
                      PmrWorkspacesWindowItems &pItems);
 
     void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
-    PmrWorkspacesWindowItems populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
+    PmrWorkspacesWindowItems populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
+                                               PmrWorkspacesWindowItem *pFolderItem,
                                                PMRSupport::PmrWorkspaceFileNode *pFileNode);
     void populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                            const bool &pRefresh = false);

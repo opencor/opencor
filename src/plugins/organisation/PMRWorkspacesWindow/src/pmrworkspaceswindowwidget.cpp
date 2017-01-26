@@ -57,10 +57,10 @@ namespace PMRWorkspacesWindow {
 //==============================================================================
 
 void PmrWorkspacesWindowItem::constructor(const Type &pType,
-                                          const QIcon &pCollapsedIcon,
-                                          const QIcon &pExpandedIcon,
                                           PMRSupport::PmrWorkspace *pWorkspace,
-                                          PMRSupport::PmrWorkspaceFileNode *pFileNode)
+                                          PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                          const QIcon &pCollapsedIcon,
+                                          const QIcon &pExpandedIcon)
 {
     // Some initialisations
 
@@ -78,40 +78,41 @@ void PmrWorkspacesWindowItem::constructor(const Type &pType,
 //==============================================================================
 
 PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+                                                 PMRSupport::PmrWorkspace *pWorkspace,
                                                  const QIcon &pCollapsedIcon,
-                                                 const QIcon &pExpandedIcon,
-                                                 const QString &pText,
-                                                 PMRSupport::PmrWorkspace *pWorkspace) :
-    QStandardItem(pCollapsedIcon, pText)
+                                                 const QIcon &pExpandedIcon) :
+    QStandardItem(pCollapsedIcon, pWorkspace->name())
 {
     // Construct our object
 
-    constructor(pType, pCollapsedIcon, pExpandedIcon, pWorkspace, 0);
+    constructor(pType, pWorkspace, 0, pCollapsedIcon, pExpandedIcon);
 }
 
 //==============================================================================
 
 PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+                                                 PMRSupport::PmrWorkspace *pWorkspace,
+                                                 PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                                  const QIcon &pCollapsedIcon,
-                                                 const QIcon &pExpandedIcon,
-                                                 PMRSupport::PmrWorkspaceFileNode *pFileNode) :
+                                                 const QIcon &pExpandedIcon) :
     QStandardItem(pCollapsedIcon, pFileNode->name())
 {
     // Construct our object
 
-    constructor(pType, pCollapsedIcon, pExpandedIcon, 0, pFileNode);
+    constructor(pType, pWorkspace, pFileNode, pCollapsedIcon, pExpandedIcon);
 }
 
 //==============================================================================
 
 PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
-                                                 const QIcon &pIcon,
-                                                 PMRSupport::PmrWorkspaceFileNode *pFileNode) :
+                                                 PMRSupport::PmrWorkspace *pWorkspace,
+                                                 PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                                 const QIcon &pIcon) :
     QStandardItem(pIcon, pFileNode->name())
 {
     // Construct our object
 
-    constructor(pType, QIcon(), QIcon(), 0, pFileNode);
+    constructor(pType, pWorkspace, pFileNode, QIcon(), QIcon());
 }
 
 //==============================================================================
@@ -819,13 +820,12 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
     PmrWorkspacesWindowItem *workspaceItem = new PmrWorkspacesWindowItem(pWorkspace->isOwned()?
                                                                              PmrWorkspacesWindowItem::OwnedWorkspace:
                                                                              PmrWorkspacesWindowItem::Workspace,
-                                                                         collapsedIcon, expandedIcon,
-                                                                         pWorkspace->name(),
-                                                                         pWorkspace);
+                                                                         pWorkspace,
+                                                                         collapsedIcon, expandedIcon);
 
     mTreeViewModel->invisibleRootItem()->appendRow(workspaceItem);
 
-    populateWorkspace(workspaceItem, pWorkspace->rootFileNode());
+    populateWorkspace(pWorkspace, workspaceItem, pWorkspace->rootFileNode());
 
     // Make sure that everything is properly sorted and that all of the contents
     // of our tree view widget is visible
@@ -835,7 +835,8 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
 
 //==============================================================================
 
-PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspacesWindowItem *pFolderItem,
+PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
+                                                                      PmrWorkspacesWindowItem *pFolderItem,
                                                                       PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     // Populate the given folder item with its children, which are referenced in
@@ -865,15 +866,16 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspa
             PmrWorkspacesWindowItem *folderItem = newItem?
                                                       newItem:
                                                       new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Folder,
+                                                                                  pWorkspace,
+                                                                                  fileNode,
                                                                                   mCollapsedWorkspaceIcon,
-                                                                                  mExpandedWorkspaceIcon,
-                                                                                  fileNode);
+                                                                                  mExpandedWorkspaceIcon);
 
             if (!newItem)
                 pFolderItem->appendRow(folderItem);
 
             res << folderItem
-                << populateWorkspace(folderItem, fileNode);
+                << populateWorkspace(pWorkspace, folderItem, fileNode);
         } else {
             // We are dealing with a file, so retrieve its status and use the
             // corresponding icon for it, if needed
@@ -927,7 +929,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PmrWorkspa
                 // We don't already have an item, so create one and add it
 
                 newItem = new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::File,
-                                                      icon, fileNode);
+                                                      pWorkspace, fileNode, icon);
 
                 pFolderItem->appendRow(newItem);
             }
@@ -948,9 +950,9 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWor
     // having updated the folder item itself
 
     for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
-        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->invisibleRootItem()->child(i));
+        PmrWorkspacesWindowItem *folderItem = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->invisibleRootItem()->child(i));
 
-        if (item->workspace() == pWorkspace) {
+        if (folderItem->workspace() == pWorkspace) {
             // Retrieve and use the (potentially new) icons to use with the
             // folder item
 
@@ -959,20 +961,21 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWor
 
             retrieveWorkspaceIcons(pWorkspace, collapsedIcon, expandedIcon);
 
-            item->setCollapsedIcon(collapsedIcon);
-            item->setExpandedIcon(expandedIcon);
+            folderItem->setCollapsedIcon(collapsedIcon);
+            folderItem->setExpandedIcon(expandedIcon);
 
-            item->setIcon(mTreeViewWidget->isExpanded(item->index())?expandedIcon:collapsedIcon);
+            folderItem->setIcon(mTreeViewWidget->isExpanded(folderItem->index())?expandedIcon:collapsedIcon);
 
             // Keep track of existing workspace items, if needed
 
             PmrWorkspacesWindowItems oldItems = pRefresh?
-                                                    PmrWorkspacesWindowItems() << retrieveItems(item):
+                                                    PmrWorkspacesWindowItems() << retrieveItems(folderItem):
                                                     PmrWorkspacesWindowItems();
 
             // Populate the given workspace
 
-            PmrWorkspacesWindowItems newItems = populateWorkspace(item, pWorkspace->rootFileNode());
+            PmrWorkspacesWindowItems newItems = populateWorkspace(pWorkspace, folderItem,
+                                                                  pWorkspace->rootFileNode());
 
             // Delete any old unused item, if needed
 
@@ -987,7 +990,7 @@ void PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWor
                 }
 
                 if (!oldItemsToDelete.isEmpty())
-                    deleteItems(item, oldItemsToDelete);
+                    deleteItems(folderItem, oldItemsToDelete);
             }
 
             break;
