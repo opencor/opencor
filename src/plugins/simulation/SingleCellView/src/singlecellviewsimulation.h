@@ -129,8 +129,6 @@ public slots:
     void checkForModifications();
 
 private:
-    SolverInterface * solverInterface(const QString &pSolverName) const;
-
     SingleCellViewSimulation *mSimulation;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
@@ -169,6 +167,8 @@ private:
 
     void createArrays();
     void deleteArrays();
+
+    SolverInterface * solverInterface(const QString &pSolverName) const;
 
 signals:
     void updated(const double &pCurrentPoint);
