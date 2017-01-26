@@ -217,6 +217,15 @@ void PmrWorkspacesWindowWindow::resizeEvent(QResizeEvent *pEvent)
 
 //==============================================================================
 
+Ui::PmrWorkspacesWindowWindow * PmrWorkspacesWindowWindow::gui() const
+{
+    // Return our GUI
+
+    return mGui;
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowWindow::busy(const bool &pBusy)
 {
     // Show ourselves as busy or not busy anymore

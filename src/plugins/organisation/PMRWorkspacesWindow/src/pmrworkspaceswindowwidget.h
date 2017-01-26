@@ -125,13 +125,17 @@ typedef QList<PmrWorkspacesWindowItem *> PmrWorkspacesWindowItems;
 
 //==============================================================================
 
+class PmrWorkspacesWindowWindow;
+
+//==============================================================================
+
 class PmrWorkspacesWindowWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
     explicit PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService,
-                                       QWidget *pParent);
+                                       PmrWorkspacesWindowWindow *pParent);
     ~PmrWorkspacesWindowWidget();
 
     virtual void retranslateUi();
@@ -160,6 +164,10 @@ private:
 
     QMenu *mContextMenu;
 
+    QAction *mParentNewAction;
+    QAction *mParentReloadAction;
+
+    QAction *mNewAction;
     QAction *mViewInPmrAction;
     QAction *mViewOncomputerAction;
     QAction *mCopyUrlAction;
@@ -170,6 +178,7 @@ private:
     QAction *mPullAction;
     QAction *mStageAction;
     QAction *mUnstageAction;
+    QAction *mReloadAction;
     QAction *mAboutAction;
 
     Core::UserMessageWidget *mUserMessageWidget;

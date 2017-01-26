@@ -27,8 +27,13 @@ limitations under the License.
 #include "pmrworkspacemanager.h"
 #include "pmrworkspaceswindowcommitdialog.h"
 #include "pmrworkspaceswindowwidget.h"
+#include "pmrworkspaceswindowwindow.h"
 #include "treeviewwidget.h"
 #include "usermessagewidget.h"
+
+//==============================================================================
+
+#include "ui_pmrworkspaceswindowwindow.h"
 
 //==============================================================================
 
@@ -208,7 +213,7 @@ QString PmrWorkspacesWindowItem::fileName() const
 //==============================================================================
 
 PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService,
-                                                     QWidget *pParent) :
+                                                     PmrWorkspacesWindowWindow *pParent) :
     Core::Widget(pParent),
     mPmrWebService(pPmrWebService),
     mClonedWorkspaceFolderUrls(QMap<QString, QString>()),
@@ -383,6 +388,11 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     mContextMenu = new QMenu(this);
 
+    mParentNewAction = pParent->gui()->actionNew;
+    mParentReloadAction = pParent->gui()->actionReload;
+
+    mNewAction = Core::newAction(mParentNewAction->icon(),
+                                 this);
     mViewInPmrAction = Core::newAction(QIcon(":/oxygen/categories/applications-internet.png"),
                                        this);
     mViewOncomputerAction = Core::newAction(QIcon(":/oxygen/devices/computer.png"),
@@ -406,9 +416,13 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                    this);
     mUnstageAction = Core::newAction(QIcon(":/oxygen/actions/dialog-cancel.png"),
                                      this);
+    mReloadAction = Core::newAction(mParentReloadAction->icon(),
+                                    this);
     mAboutAction = Core::newAction(QIcon(":/oxygen/actions/help-about.png"),
                                    this);
 
+    connect(mNewAction, SIGNAL(triggered(bool)),
+            mParentNewAction, SIGNAL(triggered(bool)));
     connect(mViewInPmrAction, SIGNAL(triggered(bool)),
             this, SLOT(viewInPmr()));
     connect(mViewOncomputerAction, SIGNAL(triggered(bool)),
@@ -429,9 +443,13 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
             this, SLOT(stage()));
     connect(mUnstageAction, SIGNAL(triggered(bool)),
             this, SLOT(unstage()));
+    connect(mReloadAction, SIGNAL(triggered(bool)),
+            mParentReloadAction, SIGNAL(triggered(bool)));
     connect(mAboutAction, SIGNAL(triggered(bool)),
             this, SLOT(about()));
 
+    mContextMenu->addAction(mNewAction);
+    mContextMenu->addSeparator();
     mContextMenu->addAction(mViewInPmrAction);
     mContextMenu->addAction(mViewOncomputerAction);
     mContextMenu->addSeparator();
@@ -447,6 +465,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mContextMenu->addSeparator();
     mContextMenu->addAction(mStageAction);
     mContextMenu->addAction(mUnstageAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mReloadAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mAboutAction);
 
@@ -470,6 +490,8 @@ void PmrWorkspacesWindowWidget::retranslateUi()
 {
     // Retranslate our actions
 
+    I18nInterface::retranslateAction(mNewAction, mParentNewAction->text(),
+                                     mParentNewAction->statusTip());
     I18nInterface::retranslateAction(mViewInPmrAction, tr("View In PMR"),
                                      tr("View in PMR"));
     I18nInterface::retranslateAction(mViewOncomputerAction, tr("View On Computer"),
@@ -490,6 +512,8 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("Stage the file"));
     I18nInterface::retranslateAction(mUnstageAction, tr("Unstage"),
                                      tr("Unstage the file"));
+    I18nInterface::retranslateAction(mReloadAction, mParentReloadAction->text(),
+                                     mParentReloadAction->statusTip());
     I18nInterface::retranslateAction(mAboutAction, tr("About"),
                                      tr("Some information about the current workspace"));
 
@@ -1057,57 +1081,56 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
 
     PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
 
-    if (item) {
-        // We are over an item, so update our context menu and show it
+    // We are over an item, so update our context menu and show it
 
-        QModelIndexList selectedItems = mTreeViewWidget->selectedIndexes();
-        bool ownedWorkspaceItem = item->type() == PmrWorkspacesWindowItem::OwnedWorkspace;
-        bool workspaceItem =    ownedWorkspaceItem
-                             || (item->type() == PmrWorkspacesWindowItem::Workspace);
-        int nbOfStagedFiles = 0;
-        int nbOfUnstagedFiles = 0;
+    QModelIndexList selectedItems = mTreeViewWidget->selectedIndexes();
+    bool ownedWorkspaceItem = item && (item->type() == PmrWorkspacesWindowItem::OwnedWorkspace);
+    bool workspaceItem =    ownedWorkspaceItem
+                         || (item && (item->type() == PmrWorkspacesWindowItem::Workspace));
+    int nbOfStagedFiles = 0;
+    int nbOfUnstagedFiles = 0;
 
-        for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i) {
-            PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]));
-            PMRSupport::PmrWorkspaceFileNode *fileNode = item->fileNode();
-            bool stagedFile = fileNode?(fileNode->status().first != ' '):false;
-            bool unstagedFile = fileNode?(fileNode->status().second != ' '):false;
+    for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i) {
+        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]));
+        PMRSupport::PmrWorkspaceFileNode *fileNode = item->fileNode();
+        bool stagedFile = fileNode?(fileNode->status().first != ' '):false;
+        bool unstagedFile = fileNode?(fileNode->status().second != ' '):false;
 
-            if (   (item->type() == PmrWorkspacesWindowItem::File)
-                && (stagedFile || unstagedFile)) {
-                nbOfStagedFiles += stagedFile;
-                nbOfUnstagedFiles += unstagedFile;
-            } else {
-                nbOfStagedFiles = 0;
-                nbOfUnstagedFiles = 0;
+        if (   (item->type() == PmrWorkspacesWindowItem::File)
+            && (stagedFile || unstagedFile)) {
+            nbOfStagedFiles += stagedFile;
+            nbOfUnstagedFiles += unstagedFile;
+        } else {
+            nbOfStagedFiles = 0;
+            nbOfUnstagedFiles = 0;
 
-                break;
-            }
+            break;
         }
-
-        mViewInPmrAction->setVisible(workspaceItem);
-        mViewOncomputerAction->setVisible(workspaceItem);
-        mCopyUrlAction->setVisible(workspaceItem);
-        mCopyPathAction->setVisible(workspaceItem);
-        mCloneAction->setVisible(ownedWorkspaceItem);
-        mCommitAction->setVisible(workspaceItem);
-        mPushAction->setVisible(ownedWorkspaceItem);
-        mPullAction->setVisible(workspaceItem);
-        mStageAction->setVisible(nbOfUnstagedFiles);
-        mUnstageAction->setVisible(nbOfStagedFiles);
-        mAboutAction->setVisible(workspaceItem);
-
-        bool onlyOneItem = selectedItems.count() == 1;
-        bool clonedItem = !mWorkspaceUrlFoldersOwned.value(item->url()).first.isEmpty();
-
-        mViewOncomputerAction->setEnabled(clonedItem);
-        mCopyUrlAction->setEnabled(onlyOneItem);
-        mCopyPathAction->setEnabled(onlyOneItem && clonedItem);
-        mCloneAction->setEnabled(!clonedItem);
-        mAboutAction->setEnabled(onlyOneItem);
-
-        mContextMenu->exec(QCursor::pos());
     }
+
+    mNewAction->setVisible(!item);
+    mViewInPmrAction->setVisible(workspaceItem);
+    mViewOncomputerAction->setVisible(workspaceItem);
+    mCopyUrlAction->setVisible(workspaceItem);
+    mCopyPathAction->setVisible(workspaceItem);
+    mCloneAction->setVisible(ownedWorkspaceItem);
+    mCommitAction->setVisible(workspaceItem);
+    mPushAction->setVisible(ownedWorkspaceItem);
+    mPullAction->setVisible(workspaceItem);
+    mStageAction->setVisible(nbOfUnstagedFiles);
+    mUnstageAction->setVisible(nbOfStagedFiles);
+    mAboutAction->setVisible(workspaceItem);
+
+    bool onlyOneItem = selectedItems.count() == 1;
+    bool clonedItem = item && !mWorkspaceUrlFoldersOwned.value(item->url()).first.isEmpty();
+
+    mViewOncomputerAction->setEnabled(clonedItem);
+    mCopyUrlAction->setEnabled(onlyOneItem);
+    mCopyPathAction->setEnabled(onlyOneItem && clonedItem);
+    mCloneAction->setEnabled(!clonedItem);
+    mAboutAction->setEnabled(onlyOneItem);
+
+    mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

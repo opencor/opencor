@@ -70,6 +70,8 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    Ui::PmrWorkspacesWindowWindow * gui() const;
+
 protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 
