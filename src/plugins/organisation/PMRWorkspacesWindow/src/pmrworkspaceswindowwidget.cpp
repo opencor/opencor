@@ -764,12 +764,12 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::retrieveItems(PmrWorkspacesW
     PmrWorkspacesWindowItems res = PmrWorkspacesWindowItems();
 
     for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
-        PmrWorkspacesWindowItem *childItem = static_cast<PmrWorkspacesWindowItem *>(pItem->child(i));
+        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(pItem->child(i));
 
-        res << childItem;
+        res << item;
 
-        if (childItem->hasChildren())
-            res << retrieveItems(childItem);
+        if (item->hasChildren())
+            res << retrieveItems(item);
     }
 
     return res;
