@@ -100,7 +100,7 @@ void PythonQtSupportPlugin::initializePlugin()
 
 void PythonQtSupportPlugin::finalizePlugin()
 {
-    delete mPythonManager;
+    delete instance()->mPythonManager;
 }
 
 //==============================================================================
