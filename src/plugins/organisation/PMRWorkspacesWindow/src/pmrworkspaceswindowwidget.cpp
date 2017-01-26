@@ -386,7 +386,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mViewInPmrAction = Core::newAction(QIcon(":/oxygen/categories/applications-internet.png"),
                                        this);
     mViewOncomputerAction = Core::newAction(QIcon(":/oxygen/devices/computer.png"),
-                                       this);
+                                            this);
     mCopyUrlAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                      this);
     mCopyPathAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
