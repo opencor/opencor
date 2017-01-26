@@ -218,9 +218,9 @@ SolverInterface * SingleCellViewSimulationData::solverInterface(const QString &p
 {
     // Return the named solver interface, if any
 
-    foreach (SolverInterface *interface, mSolverInterfaces) {
-        if (!interface->solverName().compare(pSolverName))
-            return interface;
+    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
+        if (!solverInterface->solverName().compare(pSolverName))
+            return solverInterface;
     }
 
     return 0;
