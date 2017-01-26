@@ -1294,16 +1294,29 @@ void PmrWorkspacesWindowWidget::clone()
 
 //==============================================================================
 
+void PmrWorkspacesWindowWidget::stageUnstage(const bool &pStage)
+{
+    // Stage/unstage the current file(s)
+
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowWidget::stage()
 {
-//---GRY--- TO BE DONE...
+    // Stage the current file(s)
+
+    stageUnstage(true);
 }
 
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::unstage()
 {
-//---GRY--- TO BE DONE...
+    // Stage the current file(s)
+
+    stageUnstage(false);
 }
 
 //==============================================================================

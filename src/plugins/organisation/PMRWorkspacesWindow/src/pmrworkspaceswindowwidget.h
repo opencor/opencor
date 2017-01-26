@@ -235,6 +235,8 @@ private:
 
     void sortAndResizeTreeViewToContents();
 
+    void stageUnstage(const bool &pStage);
+
 signals:
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
