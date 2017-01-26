@@ -901,7 +901,7 @@ QString SingleCellViewSimulation::fileName() const
 {
     // Return the name of the CellML file
 
-    return mRuntime ? mRuntime->cellmlFile()->fileName() : QString();
+    return mRuntime?mRuntime->cellmlFile()->fileName():QString();
 }
 
 //==============================================================================
