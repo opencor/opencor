@@ -758,6 +758,22 @@ PmrWorkspacesWindowItem * PmrWorkspacesWindowWidget::currentItem() const
 
 //==============================================================================
 
+PmrWorkspacesWindowItem * PmrWorkspacesWindowWidget::workspaceItem(PMRSupport::PmrWorkspace *pWorkspace) const
+{
+    // Return the item, if any, corresponding to the given workspace
+
+    for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->invisibleRootItem()->child(i));
+
+        if (item->workspace() == pWorkspace)
+            return item;
+    }
+
+    return 0;
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowWidget::retrieveWorkspaceIcons(PMRSupport::PmrWorkspace *pWorkspace,
                                                        QIcon &pCollapsedIcon,
                                                        QIcon &pExpandedIcon)
@@ -966,63 +982,6 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
-                                                  const bool &pRefresh)
-{
-    // Retrieve the folder item for the given workspace and populate it, after
-    // having updated the folder item itself
-
-    for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
-        PmrWorkspacesWindowItem *folderItem = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->invisibleRootItem()->child(i));
-
-        if (folderItem->workspace() == pWorkspace) {
-            // Retrieve and use the (potentially new) icons to use with the
-            // folder item
-
-            QIcon collapsedIcon;
-            QIcon expandedIcon;
-
-            retrieveWorkspaceIcons(pWorkspace, collapsedIcon, expandedIcon);
-
-            folderItem->setCollapsedIcon(collapsedIcon);
-            folderItem->setExpandedIcon(expandedIcon);
-
-            folderItem->setIcon(mTreeViewWidget->isExpanded(folderItem->index())?expandedIcon:collapsedIcon);
-
-            // Keep track of existing workspace items, if needed
-
-            PmrWorkspacesWindowItems oldItems = pRefresh?
-                                                    PmrWorkspacesWindowItems() << retrieveItems(folderItem):
-                                                    PmrWorkspacesWindowItems();
-
-            // Populate the given workspace
-
-            PmrWorkspacesWindowItems newItems = populateWorkspace(pWorkspace, folderItem,
-                                                                  pWorkspace->rootFileNode());
-
-            // Delete any old unused item, if needed
-
-            if (pRefresh) {
-                // Delete any 'old' file node that is not being used anymore
-
-                PmrWorkspacesWindowItems oldItemsToDelete = PmrWorkspacesWindowItems();
-
-                foreach (PmrWorkspacesWindowItem *oldItem, oldItems) {
-                    if (!newItems.contains(oldItem))
-                        oldItemsToDelete << oldItem;
-                }
-
-                if (!oldItemsToDelete.isEmpty())
-                    deleteItems(folderItem, oldItemsToDelete);
-            }
-
-            break;
-        }
-    }
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::sortAndResizeTreeViewToContents()
 {
     // Sort the contents of our tree view widget and make sure that all of its
@@ -1038,17 +997,55 @@ void PmrWorkspacesWindowWidget::sortAndResizeTreeViewToContents()
 void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                                                  const bool &pSortAndResize)
 {
-    // Refresh the status of the given workspace and update our GUI accordingly
+    // Refresh the status of the given workspace
 
     pWorkspace->refreshStatus();
 
-    populateWorkspace(pWorkspace, true);
+    // Retrieve the item for the given workspace, if any
 
-    // Make sure that everything is properly sorted and that all of the contents
-    // of our tree view widget is visible
+    PmrWorkspacesWindowItem *item = workspaceItem(pWorkspace);
 
-    if (pSortAndResize)
-        sortAndResizeTreeViewToContents();
+    if (item) {
+        // There is an item for the given workspace, retrieve and use the
+        // (potentially new) icons to use with the item
+
+        QIcon collapsedIcon;
+        QIcon expandedIcon;
+
+        retrieveWorkspaceIcons(pWorkspace, collapsedIcon, expandedIcon);
+
+        item->setCollapsedIcon(collapsedIcon);
+        item->setExpandedIcon(expandedIcon);
+
+        item->setIcon(mTreeViewWidget->isExpanded(item->index())?expandedIcon:collapsedIcon);
+
+        // Keep track of existing items
+
+        PmrWorkspacesWindowItems oldItems = PmrWorkspacesWindowItems() << retrieveItems(item);
+
+        // Populate the given workspace
+
+        PmrWorkspacesWindowItems newItems = populateWorkspace(pWorkspace, item,
+                                                              pWorkspace->rootFileNode());
+
+        // Delete old unused items
+
+        PmrWorkspacesWindowItems oldItemsToDelete = PmrWorkspacesWindowItems();
+
+        foreach (PmrWorkspacesWindowItem *oldItem, oldItems) {
+            if (!newItems.contains(oldItem))
+                oldItemsToDelete << oldItem;
+        }
+
+        if (!oldItemsToDelete.isEmpty())
+            deleteItems(item, oldItemsToDelete);
+
+        // Make sure that everything is properly sorted and that all of the
+        // contents of our tree view widget is visible
+
+        if (pSortAndResize)
+            sortAndResizeTreeViewToContents();
+    }
 }
 
 //==============================================================================
@@ -1234,11 +1231,14 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
         pWorkspace->open();
 
-        // Populate the existing workspace, if we own it (since we already have
-        // an entry for it) or add it, if we don't
+        // Populate the workspace, if we own it and we have an entry for it
+        // (i.e. we just cloned a workspace that we own), or add the workspace,
+        // if we don't own it or just created a new one (that we own)
 
-        if (pWorkspace->isOwned())
-            populateWorkspace(pWorkspace);
+        PmrWorkspacesWindowItem *item = workspaceItem(pWorkspace);
+
+        if (pWorkspace->isOwned() && item)
+            populateWorkspace(pWorkspace, item, pWorkspace->rootFileNode());
         else
             addWorkspace(pWorkspace);
     } else {

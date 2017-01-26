@@ -215,6 +215,7 @@ private:
     void updateGui();
 
     PmrWorkspacesWindowItem * currentItem() const;
+    PmrWorkspacesWindowItem * workspaceItem(PMRSupport::PmrWorkspace *pWorkspace) const;
 
     void retrieveWorkspaceIcons(PMRSupport::PmrWorkspace *pWorkspace,
                                 QIcon &pCollapsedIcon, QIcon &pExpandedIcon);
@@ -227,8 +228,6 @@ private:
     PmrWorkspacesWindowItems populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                                                PmrWorkspacesWindowItem *pFolderItem,
                                                PMRSupport::PmrWorkspaceFileNode *pFileNode);
-    void populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
-                           const bool &pRefresh = false);
     void refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                           const bool &pSortAndResize = true);
 

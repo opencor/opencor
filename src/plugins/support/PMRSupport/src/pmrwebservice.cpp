@@ -387,7 +387,9 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                                                                                              existingWorkspace->path()));
                     }
                 } else {
-                    // Cloning after creating a new workspace
+                    // Cloning after creating a new (owned) workspace
+
+                    workspace->setOwned(true);
 
                     dirName = sender()->property(PathProperty).toString();
                 }
