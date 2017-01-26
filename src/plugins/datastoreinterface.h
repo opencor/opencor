@@ -117,6 +117,7 @@ public:
 
     QString uri() const;
 
+    qulonglong capacity() const;
     qulonglong size() const;
 
     DataStoreVariables voiAndVariables();

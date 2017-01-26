@@ -298,6 +298,15 @@ QString DataStore::uri() const
 
 //==============================================================================
 
+qulonglong DataStore::capacity() const
+{
+    // Return our capacity
+
+    return mCapacity;
+}
+
+//==============================================================================
+
 qulonglong DataStore::size() const
 {
     // Return our size
