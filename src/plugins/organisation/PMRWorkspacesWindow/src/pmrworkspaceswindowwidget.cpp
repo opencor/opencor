@@ -1210,40 +1210,6 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces(const PMRSupport::PmrWorkspace
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::commitWorkspace(const QString &pUrl)
-{
-//---GRY--- To be reviewed...
-    PMRSupport::PmrWorkspace *workspace = PMRSupport::PmrWorkspaceManager::instance()->workspace(pUrl);
-
-    if (workspace && workspace->isLocal()) {
-        if (workspace->isMerging()) {
-            workspace->commitMerge();
-        } else {
-            PmrWorkspacesWindowCommitDialog commitDialog(workspace->stagedFiles(),
-                                                         Core::mainWindow());
-
-            if (commitDialog.exec() == QDialog::Accepted)
-                workspace->commit(commitDialog.message());
-        }
-
-        refreshWorkspace(workspace);
-    }
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::synchronizeWorkspace(const QString &pUrl,
-                                                     const bool &pPush)
-{
-//---GRY--- To be reviewed...
-    PMRSupport::PmrWorkspace *workspace = PMRSupport::PmrWorkspaceManager::instance()->workspace(pUrl);
-
-    if (workspace && workspace->isLocal())
-        mPmrWebService->requestWorkspaceSynchronize(workspace, pPush);
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // The given workspace has been cloned, so update ourselves accordingly
@@ -1287,7 +1253,8 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
 void PmrWorkspacesWindowWidget::workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace)
 {
-//---GRY--- To be reviewed...
+    // The workspace has been synchronised, so refresh it
+
     refreshWorkspace(pWorkspace);
 }
 
@@ -1360,21 +1327,39 @@ void PmrWorkspacesWindowWidget::clone()
 
 void PmrWorkspacesWindowWidget::commit()
 {
-//---GRY--- TO BE DONE...
+    // Commit the current workspace's staged changes
+
+    PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
+
+    if (workspace->isMerging()) {
+        workspace->commitMerge();
+    } else {
+        PmrWorkspacesWindowCommitDialog commitDialog(workspace->stagedFiles(),
+                                                     Core::mainWindow());
+
+        if (commitDialog.exec() == QDialog::Accepted)
+            workspace->commit(commitDialog.message());
+    }
+
+    refreshWorkspace(workspace);
 }
 
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::push()
 {
-//---GRY--- TO BE DONE...
+    // Synchronise the current workspace with PMR and push its changes to it
+
+    mPmrWebService->requestWorkspaceSynchronize(currentItem()->workspace(), true);
 }
 
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::pull()
 {
-//---GRY--- TO BE DONE...
+    // Synchronise the current workspace with PMR
+
+    mPmrWebService->requestWorkspaceSynchronize(currentItem()->workspace(), false);
 }
 
 //==============================================================================
