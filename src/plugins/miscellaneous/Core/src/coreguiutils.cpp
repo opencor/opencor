@@ -632,10 +632,12 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
     painter.fillRect(image.rect(), Qt::transparent);
 
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    pBaseIcon.paint(&painter, QRect(0, 0, pBaseWidth, pBaseHeight));
+    painter.drawPixmap(0, 0, pBaseWidth, pBaseWidth,
+                       pBaseIcon.pixmap(pBaseWidth, pBaseWidth));
 
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    pOverlayIcon.paint(&painter, QRect(pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight));
+    painter.drawPixmap(pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight,
+                       pOverlayIcon.pixmap(pOverlayWidth, pOverlayHeight));
 
     return QPixmap::fromImage(image);
 }
