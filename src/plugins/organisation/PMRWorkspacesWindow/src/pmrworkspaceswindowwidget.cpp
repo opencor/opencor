@@ -384,7 +384,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     // Create and populate our context menu
 
-    static const QIcon DownloadIcon = QIcon(":/oxygen/actions/arrow-down.png");
+    static const QIcon PullIcon = QIcon(":/PMRWorkspacesWindow/pull.png");
 
     mContextMenu = new QMenu(this);
 
@@ -401,16 +401,16 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                      this);
     mCopyPathAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                       this);
-    mCloneAction = Core::newAction(Core::overlayedIcon(mCollapsedWorkspaceIcon, DownloadIcon,
+    mCloneAction = Core::newAction(Core::overlayedIcon(mCollapsedWorkspaceIcon, PullIcon,
                                                        folderIconSize, folderIconSize,
                                                        overlayIconPos, overlayIconPos,
                                                        overlayIconSize, overlayIconSize),
                                    this);
     mCommitAction = Core::newAction(QIcon(":/oxygen/actions/view-task.png"),
                                     this);
-    mPushAction = Core::newAction(QIcon(":/oxygen/actions/arrow-up.png"),
+    mPushAction = Core::newAction(QIcon(":/PMRWorkspacesWindow/pullAndPush.png"),
                                   this);
-    mPullAction = Core::newAction(DownloadIcon,
+    mPullAction = Core::newAction(PullIcon,
                                   this);
     mStageAction = Core::newAction(QIcon(":/oxygen/actions/dialog-ok-apply.png"),
                                    this);
@@ -1141,6 +1141,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
     mCloneAction->setEnabled(!clonedItem);
     mCommitAction->setEnabled(workspaceStatus & PMRSupport::PmrWorkspace::StatusCommit);
     mPushAction->setEnabled(workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead);
+    mPullAction->setEnabled(clonedItem);
     mAboutAction->setEnabled(onlyOneItem);
 
     mContextMenu->exec(QCursor::pos());
