@@ -605,9 +605,9 @@ void PmrWorkspace::refreshStatus()
                     // Find the correct place in the tree to add the file
 
                     QStringList pathComponents = QString(filePath).split('/');
-                    int pathComponentsSize = pathComponents.size();
+                    int pathComponentsCount = pathComponents.count();
                     int i = 0;
-                    int n = qMin(pathComponentsSize, fileNodes.size())-1;
+                    int n = qMin(pathComponentsCount, fileNodes.count())-1;
 
                     while (   (i < n)
                            && pathComponents[i].compare(fileNodes[i+1]->name(), Qt::CaseInsensitive)) {
@@ -616,14 +616,14 @@ void PmrWorkspace::refreshStatus()
 
                     // Cut back the stack so that it matches the path component
 
-                    while (i+1 < fileNodes.size())
+                    while (i+1 < fileNodes.count())
                         fileNodes.removeLast();
 
                     currentFileNode = fileNodes[i];
 
                     // Add the directory nodes as required
 
-                    while (i < pathComponentsSize-1) {
+                    while (i < pathComponentsCount-1) {
                         currentFileNode = currentFileNode->addChild(pathComponents[i]);
 
                         fileNodes << currentFileNode;
