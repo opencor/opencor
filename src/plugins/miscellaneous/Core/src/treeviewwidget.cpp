@@ -107,6 +107,7 @@ bool TreeViewWidget::isEditing() const
 QModelIndexList TreeViewWidget::selectedIndexes() const
 {
     // Return the currently selected indexes
+    // Note: this method is originally protected, hence we override it here...
 
     return QTreeView::selectedIndexes();
 }
