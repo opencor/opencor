@@ -35,7 +35,7 @@
   <action name="actionHome">
    <property name="icon">
     <iconset resource="../../../../../res/ui.qrc">
-     <normaloff>:/oxygen/places/user-home.png</normaloff>:/oxygen/places/user-home.png</iconset>
+     <normaloff>:/oxygen/actions/go-home.png</normaloff>:/oxygen/actions/go-home.png</iconset>
    </property>
    <property name="text">
     <string>Home</string>
