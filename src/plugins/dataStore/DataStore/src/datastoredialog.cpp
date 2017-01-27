@@ -60,7 +60,7 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
     initStyleOption(&option, pIndex);
 
-    if (dataItem->rowCount())
+    if (dataItem->hasChildren())
         option.font.setBold(true);
 
     QStyledItemDelegate::paint(pPainter, option, pIndex);
@@ -215,7 +215,7 @@ DataStoreVariables DataStoreDialog::doSelectedData(QStandardItem *pItem) const
 
     DataStoreVariables res = DataStoreVariables();
 
-    if (pItem->rowCount()) {
+    if (pItem->hasChildren()) {
         for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
             res << doSelectedData(pItem->child(i));
     } else if (pItem->checkState() == Qt::Checked) {
@@ -251,7 +251,7 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem,
 
         childItem->setCheckState(pCheckState);
 
-        if (childItem->rowCount())
+        if (childItem->hasChildren())
             updateDataSelectedState(childItem, pCheckState);
     }
 }
@@ -269,13 +269,13 @@ void DataStoreDialog::checkDataSelectedState(QStandardItem *pItem,
     for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
         QStandardItem *childItem = pItem->child(i);
 
-        if (childItem->rowCount())
+        if (childItem->hasChildren())
             checkDataSelectedState(childItem, pNbOfselectedData);
 
         if (childItem->checkState() == Qt::Checked) {
             ++nbOfSelectedChildItems;
 
-            if (!childItem->rowCount())
+            if (!childItem->hasChildren())
                 ++pNbOfselectedData;
         }
 

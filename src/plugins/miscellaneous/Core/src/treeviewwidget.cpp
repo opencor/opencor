@@ -259,11 +259,11 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
             // column
             // Note: regarding the test on the column number, it is because we
             //       may have a model data that requires several columns (e.g.
-            //       QFileSystemModel) in which case selectedIndexes would
-            //       return a number of indexes equal to the number of rows
-            //       times the number of columns while we only want a number of
-            //       indexes to be equal to the number of rows (since we have a
-            //       selection mode of QAbstractItemView::ExtendedSelection)
+            //       QFileSystemModel) in which case selectedIndexes will return
+            //       a number of indexes equal to the number of rows times the
+            //       number of columns while we only want a number of indexes to
+            //       be equal to the number of rows (since we have a selection
+            //       mode of QAbstractItemView::ExtendedSelection)...
 
             selectedDraggableIndexes.removeAt(i);
         }

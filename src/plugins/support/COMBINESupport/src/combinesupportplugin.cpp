@@ -148,9 +148,9 @@ void COMBINESupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     // Make a call to the instance of the COMBINE file manager so that it gets
     // properly set up (and therefore can start managing COMBINE archives)
     // before it actually gets used by other plugins
-    // Note: we do it here rather than in initialize() since we need the Core
-    //       plugin to be initialised (so we can get access to our 'global' file
-    //       manager)...
+    // Note: we do it here rather than in initializePlugin() since we need the
+    //       Core plugin to be initialised (so we can get access to our 'global'
+    //       file manager)...
 
     CombineFileManager::instance();
 }
