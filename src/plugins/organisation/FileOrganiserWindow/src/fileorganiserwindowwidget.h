@@ -87,8 +87,6 @@ private:
     void moveItem(QStandardItem *pItem, QStandardItem *pDropItem,
                   const QAbstractItemView::DropIndicatorPosition &pDropPosition);
 
-    QStringList selectedFiles() const;
-
     bool parentIndexExists(const QModelIndex &pIndex,
                            const QModelIndexList &pIndexes) const;
 
@@ -104,7 +102,7 @@ private:
     bool canCreateNewFolder() const;
 
 signals:
-    void filesOpenRequested(const QStringList &pFileNames);
+    void openFilesRequested(const QStringList &pFileNames);
 
     void newFolderEnabled(const bool &pEnabled);
     void deleteItemsEnabled(const bool &pEnabled);

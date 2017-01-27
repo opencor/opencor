@@ -480,17 +480,34 @@ void FileOrganiserWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 
     TreeViewWidget::keyPressEvent(pEvent);
 
+    // Retrieve all the files that are currently selected
+    // Note: if there is a folder among the selected items, then ignore all of
+    //       them...
+
+    QStringList fileNames = QStringList();
+    QModelIndexList crtSelectedIndexes = selectedIndexes();
+
+    for (int i = 0, iMax = crtSelectedIndexes.count(); i < iMax; ++i) {
+        QString fileName = filePath(crtSelectedIndexes[i]);
+
+        if (fileName.isEmpty()) {
+            fileNames = QStringList();
+
+            break;
+        } else {
+            fileNames << fileName;
+        }
+    }
+
     // Let people know about a key having been pressed with the view of opening
     // one or several files
 
-    QStringList crtSelectedFiles = selectedFiles();
-
-    if (   crtSelectedFiles.count()
+    if (   fileNames.count()
         && ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))) {
         // There are some files that are selected and we want to open them, so
         // let people know about it
 
-        emit filesOpenRequested(crtSelectedFiles);
+        emit openFilesRequested(fileNames);
     }
 }
 
@@ -636,7 +653,7 @@ bool FileOrganiserWindowWidget::itemIsOrIsChildOf(QStandardItem *pItem,
 
     if (pItem == pOtherItem) {
         return true;
-    } else if (pOtherItem->rowCount()) {
+    } else if (pOtherItem->hasChildren()) {
         // pOtherItem has children, so check against them
 
         for (int i = 0, iMax = pOtherItem->rowCount(); i < iMax; ++i) {
@@ -1055,29 +1072,6 @@ void FileOrganiserWindowWidget::resizeToContents()
     // visible
 
     resizeColumnToContents(0);
-}
-
-//==============================================================================
-
-QStringList FileOrganiserWindowWidget::selectedFiles() const
-{
-    // Retrieve all the files that are currently selected
-    // Note: if there is a folder among the selected items, then we return an
-    //       empty list
-
-    QStringList res;
-    QModelIndexList crtSelectedIndexes = selectedIndexes();
-
-    for (int i = 0, iMax = crtSelectedIndexes.count(); i < iMax; ++i) {
-        QString fileName = filePath(crtSelectedIndexes[i]);
-
-        if (fileName.isEmpty())
-            return QStringList();
-        else
-            res << fileName;
-    }
-
-    return res;
 }
 
 //==============================================================================
