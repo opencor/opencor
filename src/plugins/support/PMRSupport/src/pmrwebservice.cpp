@@ -454,14 +454,14 @@ void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
     // Synchronise the given workspace
 
     connect(pWorkspace, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *)));
+            this, SLOT(workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *)));
 
     QtConcurrent::run(pWorkspace, &PmrWorkspace::synchronize, pPush);
 }
 
 //==============================================================================
 
-void PmrWebService::workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWebService::workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // Let people know that we are not busy anymore and that the given workspace
     // has been synchronised
