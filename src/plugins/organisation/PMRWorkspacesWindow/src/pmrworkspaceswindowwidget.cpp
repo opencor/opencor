@@ -1085,6 +1085,9 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
     bool ownedWorkspaceItem = item && (item->type() == PmrWorkspacesWindowItem::OwnedWorkspace);
     bool workspaceItem =    ownedWorkspaceItem
                          || (item && (item->type() == PmrWorkspacesWindowItem::Workspace));
+    PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = workspaceItem?
+                                                                    item->workspace()->gitWorkspaceStatus():
+                                                                    PMRSupport::PmrWorkspace::StatusUnknown;
     int nbOfStagedFiles = 0;
     int nbOfUnstagedFiles = 0;
 
@@ -1136,6 +1139,8 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
     mCopyUrlAction->setEnabled(onlyOneItem);
     mCopyPathAction->setEnabled(onlyOneItem && clonedItem);
     mCloneAction->setEnabled(!clonedItem);
+    mCommitAction->setEnabled(workspaceStatus & PMRSupport::PmrWorkspace::StatusCommit);
+    mPushAction->setEnabled(workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead);
     mAboutAction->setEnabled(onlyOneItem);
 
     mContextMenu->exec(QCursor::pos());
