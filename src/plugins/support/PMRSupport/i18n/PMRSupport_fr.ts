@@ -97,5 +97,21 @@
         <source>An error occurred while trying to stage %1.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>The following file has conflicts:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> - %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> - %1; and</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> - %1;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

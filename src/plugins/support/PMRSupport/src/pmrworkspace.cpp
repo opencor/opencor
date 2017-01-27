@@ -1192,11 +1192,28 @@ bool PmrWorkspace::merge()
         if (git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE)
             res = commitMerge();
     } else if (error != GIT_ENOTFOUND) {
+        int nbOfConflictedFiles = mConflictedFiles.count();
         QString errorMessage = tr("An error occurred while trying to merge the workspace.");
 
-        if (mConflictedFiles.size()) {
-            errorMessage +=  "\n\n"+tr("The following files have conflicts:")
-                            +"\n - "+mConflictedFiles.join("\n - ");
+        if (nbOfConflictedFiles) {
+            int counter = 0;
+
+            if (mConflictedFiles.count() == 1)
+                errorMessage += "\n\n"+tr("The following file has conflicts:");
+            else
+                errorMessage += "\n\n"+tr("The following files have conflicts:");
+
+            foreach (const QString &conflictedFile, mConflictedFiles) {
+                ++counter;
+
+                if (counter == nbOfConflictedFiles) {
+                    errorMessage += "\n"+tr(" - %1.").arg(conflictedFile);
+                } else if (counter == nbOfConflictedFiles-1) {
+                    errorMessage += "\n"+tr(" - %1; and").arg(conflictedFile);
+                } else {
+                    errorMessage += "\n"+tr(" - %1;").arg(conflictedFile);
+                }
+            }
         }
 
         emitGitError(errorMessage);
