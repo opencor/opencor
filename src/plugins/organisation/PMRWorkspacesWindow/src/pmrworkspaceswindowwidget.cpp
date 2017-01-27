@@ -408,10 +408,10 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
                                    this);
     mCommitAction = Core::newAction(QIcon(":/oxygen/actions/view-task.png"),
                                     this);
-    mPushAction = Core::newAction(QIcon(":/PMRWorkspacesWindow/pullAndPush.png"),
-                                  this);
     mPullAction = Core::newAction(PullIcon,
                                   this);
+    mPullAndPushAction = Core::newAction(QIcon(":/PMRWorkspacesWindow/pullAndPush.png"),
+                                         this);
     mStageAction = Core::newAction(QIcon(":/oxygen/actions/dialog-ok-apply.png"),
                                    this);
     mUnstageAction = Core::newAction(QIcon(":/oxygen/actions/dialog-cancel.png"),
@@ -435,10 +435,10 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
             this, SLOT(clone()));
     connect(mCommitAction, SIGNAL(triggered(bool)),
             this, SLOT(commit()));
-    connect(mPushAction, SIGNAL(triggered(bool)),
-            this, SLOT(push()));
     connect(mPullAction, SIGNAL(triggered(bool)),
             this, SLOT(pull()));
+    connect(mPullAndPushAction, SIGNAL(triggered(bool)),
+            this, SLOT(pullAndPush()));
     connect(mStageAction, SIGNAL(triggered(bool)),
             this, SLOT(stage()));
     connect(mUnstageAction, SIGNAL(triggered(bool)),
@@ -460,8 +460,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCommitAction);
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mPushAction);
     mContextMenu->addAction(mPullAction);
+    mContextMenu->addAction(mPullAndPushAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mStageAction);
     mContextMenu->addAction(mUnstageAction);
@@ -506,10 +506,10 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("Clone the current workspace"));
     I18nInterface::retranslateAction(mCommitAction, tr("Commit..."),
                                      tr("Commit staged changes"));
-    I18nInterface::retranslateAction(mPushAction, tr("Push"),
-                                     tr("Push changes to PMR"));
     I18nInterface::retranslateAction(mPullAction, tr("Pull"),
                                      tr("Pull changes from PMR"));
+    I18nInterface::retranslateAction(mPullAndPushAction, tr("Pull And Push"),
+                                     tr("Pull and push changes from/to PMR"));
     I18nInterface::retranslateAction(mReloadAction, mParentReloadAction->text(),
                                      mParentReloadAction->statusTip());
     I18nInterface::retranslateAction(mAboutAction, tr("About"),
@@ -1127,8 +1127,8 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
     mCopyPathAction->setVisible(workspaceItem);
     mCloneAction->setVisible(ownedWorkspaceItem);
     mCommitAction->setVisible(workspaceItem);
-    mPushAction->setVisible(ownedWorkspaceItem);
     mPullAction->setVisible(workspaceItem);
+    mPullAndPushAction->setVisible(ownedWorkspaceItem);
     mStageAction->setVisible(nbOfUnstagedFiles);
     mUnstageAction->setVisible(nbOfStagedFiles);
     mAboutAction->setVisible(workspaceItem);
@@ -1140,8 +1140,8 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
     mCopyPathAction->setEnabled(onlyOneItem && clonedItem);
     mCloneAction->setEnabled(!clonedItem);
     mCommitAction->setEnabled(workspaceStatus & PMRSupport::PmrWorkspace::StatusCommit);
-    mPushAction->setEnabled(workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead);
     mPullAction->setEnabled(clonedItem);
+    mPullAndPushAction->setEnabled(workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead);
     mAboutAction->setEnabled(onlyOneItem);
 
     mContextMenu->exec(QCursor::pos());
@@ -1352,20 +1352,20 @@ void PmrWorkspacesWindowWidget::commit()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::push()
-{
-    // Synchronise the current workspace with PMR and push its changes to it
-
-    mPmrWebService->requestWorkspaceSynchronize(currentItem()->workspace(), true);
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::pull()
 {
     // Synchronise the current workspace with PMR
 
     mPmrWebService->requestWorkspaceSynchronize(currentItem()->workspace(), false);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::pullAndPush()
+{
+    // Synchronise the current workspace with PMR and push its changes to it
+
+    mPmrWebService->requestWorkspaceSynchronize(currentItem()->workspace(), true);
 }
 
 //==============================================================================

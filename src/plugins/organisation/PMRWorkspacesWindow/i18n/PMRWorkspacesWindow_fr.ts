@@ -102,19 +102,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Push</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Push changes to PMR</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Pull</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Pull changes from PMR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pull And Push</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pull and push changes from/to PMR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

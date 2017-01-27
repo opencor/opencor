@@ -174,8 +174,8 @@ private:
     QAction *mCopyPathAction;
     QAction *mCloneAction;
     QAction *mCommitAction;
-    QAction *mPushAction;
     QAction *mPullAction;
+    QAction *mPullAndPushAction;
     QAction *mStageAction;
     QAction *mUnstageAction;
     QAction *mReloadAction;
@@ -278,8 +278,8 @@ private slots:
     void copyPath();
     void clone();
     void commit();
-    void push();
     void pull();
+    void pullAndPush();
     void stage();
     void unstage();
     void about();
