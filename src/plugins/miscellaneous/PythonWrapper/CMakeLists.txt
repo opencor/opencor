@@ -1,15 +1,5 @@
 PROJECT(PythonWrapperPlugin)
 
-# Our Python interpreter at buold time
-
-set(PYTHON_EXECUTABLE ${PYTHON_ROOT_DIR}/bin/python)
-
-# Find our installed NumPy
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
-                      ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-find_package(NumPy REQUIRED)
-
 # Add the plugin
 
 ADD_PLUGIN(PythonWrapper
@@ -32,6 +22,7 @@ ADD_PLUGIN(PythonWrapper
         ${NUMPY_INCLUDE_DIR}
     PLUGINS
         Core
+        Python
         PythonQtSupport
         SingleCellView
 )

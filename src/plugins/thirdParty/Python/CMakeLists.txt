@@ -184,7 +184,7 @@ ELSE()
     ExternalProject_Add_Step(PythonBuild clean_site
         COMMAND ${CMAKE_COMMAND} -E remove_directory site-packages
         COMMAND ${CMAKE_COMMAND} -E make_directory site-packages
-        WORKING_DIRECTORY ${FULL_INSTALL_DIR}/lib/python${PYTHON_SHORT_VERSION}
+        WORKING_DIRECTORY ${FULL_INSTALL_DIR}/${PYTHON_LIBRARY_DIR}
         DEPENDEES ${INSTALL_STEP}
         )
 
@@ -212,7 +212,7 @@ ELSE()
     ExternalProject_Add_Step(PythonBuild patch_matplotlib
         COMMAND ./python ${PROJECT_SOURCE_DIR}/bin/patch.py
             --strip=2
-            --directory=${FULL_INSTALL_DIR}/lib/python3.5/site-packages/matplotlib
+            --directory=${FULL_INSTALL_DIR}/${PYTHON_LIBRARY_DIR}/site-packages/matplotlib
             ${PROJECT_SOURCE_DIR}/src/matplotlib_${MATPLOTLIB_VERSION}.diff
         WORKING_DIRECTORY ${FULL_INSTALL_DIR}/bin
         DEPENDEES install_packages
@@ -239,9 +239,13 @@ ELSE()
         )
 ENDIF()
 
-# Ensure other plugins can find us
+# Ensure other plugins can find our Python installation
 
 SET(PYTHON_ROOT_DIR ${FULL_INSTALL_DIR} PARENT_SCOPE)
+
+# Ensure other plugins can our NumPy include directory
+
+SET(NUMPY_INCLUDE_DIR ${FULL_INSTALL_DIR}/${PYTHON_LIBRARY_DIR}/site-packages/numpy/core/include/numpy/ PARENT_SCOPE)
 
 # Add the plugin
 
