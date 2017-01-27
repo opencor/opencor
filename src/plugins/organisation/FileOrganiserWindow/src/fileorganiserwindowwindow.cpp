@@ -20,6 +20,7 @@ limitations under the License.
 // File Organiser window
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "fileorganiserwindowwindow.h"
 #include "fileorganiserwindowwidget.h"
 #include "toolbarwidget.h"
@@ -30,6 +31,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QFileIconProvider>
 #include <QMenu>
 #include <QPoint>
 #include <QSettings>
@@ -50,8 +52,22 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
     mGui->setupUi(this);
 
     // Create a tool bar widget with different buttons
+    // Note: normally, we would retrieve the folder icon through a call to
+    //       QFileIconProvider().icon(QFileIconProvider::Folder), but on Windows
+    //       it will, in this case, return the QStyle::SP_DirIcon icon while we
+    //       really want the QStyle::SP_DirClosedIcon icon...
+
+    static const QIcon PlusIcon = QIcon(":/oxygen/actions/list-add.png");
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
+    QIcon folderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
+    int folderIconSize = folderIcon.availableSizes().first().width();
+    int plusIconSize = 0.57*folderIconSize;
+
+    mGui->actionNew->setIcon(Core::overlayedIcon(folderIcon, PlusIcon,
+                                                 folderIconSize, folderIconSize,
+                                                 folderIconSize-plusIconSize, 0,
+                                                 plusIconSize, plusIconSize));
 
     toolBarWidget->addAction(mGui->actionNew);
     toolBarWidget->addAction(mGui->actionDelete);

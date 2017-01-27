@@ -125,6 +125,31 @@ QString CORE_EXPORT iconDataUri(const QString &pIcon, const int &pWidth,
                                 const int &pHeight,
                                 const QIcon::Mode &pMode = QIcon::Normal);
 
+QIcon CORE_EXPORT overlayedIcon(const QIcon &pBaseIcon,
+                                const QIcon &pOverlayIcon,
+                                const int &pBaseWidth, const int &pBaseHeight,
+                                const int &pOverlayLeft, const int &pOverlayTop,
+                                const int &pOverlayWidth,
+                                const int &pOverlayHeight);
+QIcon CORE_EXPORT overlayedIcon(const QString &pBaseIcon,
+                                const QIcon &pOverlayIcon,
+                                const int &pBaseWidth, const int &pBaseHeight,
+                                const int &pOverlayLeft, const int &pOverlayTop,
+                                const int &pOverlayWidth,
+                                const int &pOverlayHeight);
+QIcon CORE_EXPORT overlayedIcon(const QIcon &pBaseIcon,
+                                const QString &pOverlayIcon,
+                                const int &pBaseWidth, const int &pBaseHeight,
+                                const int &pOverlayLeft, const int &pOverlayTop,
+                                const int &pOverlayWidth,
+                                const int &pOverlayHeight);
+QIcon CORE_EXPORT overlayedIcon(const QString &pBaseIcon,
+                                const QString &pOverlayIcon,
+                                const int &pBaseWidth, const int &pBaseHeight,
+                                const int &pOverlayLeft, const int &pOverlayTop,
+                                const int &pOverlayWidth,
+                                const int &pOverlayHeight);
+
 void CORE_EXPORT showEnableWidget(QWidget *pWidget, const bool &pVisible,
                                   const bool &pEnabled = true);
 

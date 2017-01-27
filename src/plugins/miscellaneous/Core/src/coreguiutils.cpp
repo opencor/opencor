@@ -43,6 +43,7 @@ limitations under the License.
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
+#include <QPainter>
 #include <QPalette>
 #include <QPushButton>
 #include <QSizePolicy>
@@ -612,6 +613,75 @@ QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
     // having resized it, if requested
 
     return iconDataUri(QIcon(pIcon), pWidth, pHeight, pMode);
+}
+
+//==============================================================================
+
+QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
+                    const int &pBaseWidth, const int &pBaseHeight,
+                    const int &pOverlayLeft, const int &pOverlayTop,
+                    const int &pOverlayWidth, const int &pOverlayHeight)
+{
+    // Create and return an overlayed icon using the given base and overlay
+    // icons
+
+    QImage image = QImage(pBaseWidth, pBaseHeight, QImage::Format_ARGB32_Premultiplied);
+    QPainter painter(&image);
+
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.fillRect(image.rect(), Qt::transparent);
+
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    painter.drawPixmap(0, 0, pBaseWidth, pBaseWidth,
+                       pBaseIcon.pixmap(pBaseWidth, pBaseWidth));
+
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    painter.drawPixmap(pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight,
+                       pOverlayIcon.pixmap(pOverlayWidth, pOverlayHeight));
+
+    return QPixmap::fromImage(image);
+}
+
+//==============================================================================
+
+QIcon overlayedIcon(const QString &pBaseIcon, const QIcon &pOverlayIcon,
+                    const int &pBaseWidth, const int &pBaseHeight,
+                    const int &pOverlayLeft, const int &pOverlayTop,
+                    const int &pOverlayWidth, const int &pOverlayHeight)
+{
+    // Create and return an overlayed icon using the given base and overlay
+    // icons
+
+    return overlayedIcon(QIcon(pBaseIcon), pOverlayIcon, pBaseWidth, pBaseHeight,
+                         pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
+}
+
+//==============================================================================
+
+QIcon overlayedIcon(const QIcon &pBaseIcon, const QString &pOverlayIcon,
+                    const int &pBaseWidth, const int &pBaseHeight,
+                    const int &pOverlayLeft, const int &pOverlayTop,
+                    const int &pOverlayWidth, const int &pOverlayHeight)
+{
+    // Create and return an overlayed icon using the given base and overlay
+    // icons
+
+    return overlayedIcon(pBaseIcon, QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
+                         pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
+}
+
+//==============================================================================
+
+QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
+                    const int &pBaseWidth, const int &pBaseHeight,
+                    const int &pOverlayLeft, const int &pOverlayTop,
+                    const int &pOverlayWidth, const int &pOverlayHeight)
+{
+    // Create and return an overlayed icon using the given base and overlay
+    // icons
+
+    return overlayedIcon(QIcon(pBaseIcon), QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
+                         pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
 }
 
 //==============================================================================
