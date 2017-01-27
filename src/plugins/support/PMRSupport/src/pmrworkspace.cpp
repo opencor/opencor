@@ -1196,7 +1196,7 @@ bool PmrWorkspace::merge()
 
         if (mConflictedFiles.size()) {
             errorMessage +=  "\n\n"+tr("The following files have conflicts:")
-                            +"\n\t"+mConflictedFiles.join("\n\t");
+                            +"\n - "+mConflictedFiles.join("\n - ");
         }
 
         emitGitError(errorMessage);
