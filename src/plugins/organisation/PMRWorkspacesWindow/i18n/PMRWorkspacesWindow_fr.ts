@@ -142,11 +142,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Stage the file</source>
+        <source>Stage the file for commit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Stage the files</source>
+        <source>Stage the files for commit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -154,11 +154,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Unstage the file</source>
+        <source>Unstage the file from commit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Unstage the files</source>
+        <source>Unstage the files from commit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

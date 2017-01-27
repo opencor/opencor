@@ -1110,12 +1110,12 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
 
     I18nInterface::retranslateAction(mStageAction, tr("Stage"),
                                      onlyOneItem?
-                                         tr("Stage the file"):
-                                         tr("Stage the files"));
+                                         tr("Stage the file for commit"):
+                                         tr("Stage the files for commit"));
     I18nInterface::retranslateAction(mUnstageAction, tr("Unstage"),
                                      onlyOneItem?
-                                         tr("Unstage the file"):
-                                         tr("Unstage the files"));
+                                         tr("Unstage the file from commit"):
+                                         tr("Unstage the files from commit"));
 
     mNewAction->setVisible(!item);
     mViewInPmrAction->setVisible(workspaceItem);
