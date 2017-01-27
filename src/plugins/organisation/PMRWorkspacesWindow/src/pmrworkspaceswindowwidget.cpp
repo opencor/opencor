@@ -489,6 +489,8 @@ PmrWorkspacesWindowWidget::~PmrWorkspacesWindowWidget()
 void PmrWorkspacesWindowWidget::retranslateUi()
 {
     // Retranslate our actions
+    // Note: the stage and unstage actions are translated prior to showing the
+    //       context menu since they can be used for one or several files...
 
     I18nInterface::retranslateAction(mNewAction, mParentNewAction->text(),
                                      mParentNewAction->statusTip());
@@ -508,10 +510,6 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("Push changes to PMR"));
     I18nInterface::retranslateAction(mPullAction, tr("Pull"),
                                      tr("Pull changes from PMR"));
-    I18nInterface::retranslateAction(mStageAction, tr("Stage"),
-                                     tr("Stage the file"));
-    I18nInterface::retranslateAction(mUnstageAction, tr("Unstage"),
-                                     tr("Unstage the file"));
     I18nInterface::retranslateAction(mReloadAction, mParentReloadAction->text(),
                                      mParentReloadAction->statusTip());
     I18nInterface::retranslateAction(mAboutAction, tr("About"),
@@ -1108,6 +1106,17 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         }
     }
 
+    bool onlyOneItem = selectedItems.count() == 1;
+
+    I18nInterface::retranslateAction(mStageAction, tr("Stage"),
+                                     onlyOneItem?
+                                         tr("Stage the file"):
+                                         tr("Stage the files"));
+    I18nInterface::retranslateAction(mUnstageAction, tr("Unstage"),
+                                     onlyOneItem?
+                                         tr("Unstage the file"):
+                                         tr("Unstage the files"));
+
     mNewAction->setVisible(!item);
     mViewInPmrAction->setVisible(workspaceItem);
     mViewOncomputerAction->setVisible(workspaceItem);
@@ -1121,7 +1130,6 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
     mUnstageAction->setVisible(nbOfStagedFiles);
     mAboutAction->setVisible(workspaceItem);
 
-    bool onlyOneItem = selectedItems.count() == 1;
     bool clonedItem = item && !mWorkspaceUrlFoldersOwned.value(item->url()).first.isEmpty();
 
     mViewOncomputerAction->setEnabled(clonedItem);
