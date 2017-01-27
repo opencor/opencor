@@ -584,20 +584,13 @@ QFrame * newLineWidget(QWidget *pParent)
 
 //==============================================================================
 
-QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
+QString iconDataUri(const QIcon &pIcon, const int &pWidth, const int &pHeight,
                     const QIcon::Mode &pMode)
 {
     // Convert an icon, which resource name is given, to a data URI, after
     // having resized it, if requested
 
-    QIcon icon(pIcon);
-
-    if (icon.isNull())
-        return QString();
-
-    QList<QSize> iconAvailableSizes = icon.availableSizes();
-
-    if (!iconAvailableSizes.count())
+    if (pIcon.isNull())
         return QString();
 
     QByteArray data;
@@ -605,11 +598,20 @@ QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
 
     buffer.open(QIODevice::WriteOnly);
 
-    icon.pixmap((pWidth == -1)?iconAvailableSizes.first().width():pWidth,
-                (pHeight == -1)?iconAvailableSizes.first().height():pHeight,
-                pMode).save(&buffer, "PNG");
+    pIcon.pixmap(pWidth, pHeight, pMode).save(&buffer, "PNG");
 
     return QString("data:image/png;base64,%1").arg(QString(data.toBase64()));
+}
+
+//==============================================================================
+
+QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
+                    const QIcon::Mode &pMode)
+{
+    // Convert an icon, which resource name is given, to a data URI, after
+    // having resized it, if requested
+
+    return iconDataUri(QIcon(pIcon), pWidth, pHeight, pMode);
 }
 
 //==============================================================================
