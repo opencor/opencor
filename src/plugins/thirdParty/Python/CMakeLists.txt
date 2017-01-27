@@ -245,7 +245,7 @@ SET(PYTHON_ROOT_DIR ${FULL_INSTALL_DIR} PARENT_SCOPE)
 
 # Ensure other plugins can our NumPy include directory
 
-SET(NUMPY_INCLUDE_DIR ${FULL_INSTALL_DIR}/${PYTHON_LIBRARY_DIR}/site-packages/numpy/core/include/numpy/ PARENT_SCOPE)
+SET(NUMPY_INCLUDE_DIR ${FULL_INSTALL_DIR}/${PYTHON_LIBRARY_DIR}/site-packages/numpy/core/include PARENT_SCOPE)
 
 # Add the plugin
 
