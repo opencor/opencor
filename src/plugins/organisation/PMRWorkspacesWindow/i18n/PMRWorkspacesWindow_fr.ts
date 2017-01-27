@@ -118,22 +118,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Stage</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Stage the file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unstage</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unstage the file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
@@ -151,6 +135,30 @@
     </message>
     <message>
         <source>No workspaces were found...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stage the file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stage the files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unstage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unstage the file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unstage the files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
