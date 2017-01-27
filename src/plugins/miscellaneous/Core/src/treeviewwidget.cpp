@@ -104,15 +104,6 @@ bool TreeViewWidget::isEditing() const
 
 //==============================================================================
 
-QModelIndexList TreeViewWidget::selectedIndexes() const
-{
-    // Return the currently selected indexes
-
-    return QTreeView::selectedIndexes();
-}
-
-//==============================================================================
-
 QSize TreeViewWidget::sizeHint() const
 {
     // Suggest a default size for our tree view widget
