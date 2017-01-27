@@ -1074,17 +1074,26 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWork
 
 void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
 {
-    // Determine whether to show the context menu based on whether we are over
-    // an item
+    // Customise our context menu and show it
 
     PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
-
-    // We are over an item, so update our context menu and show it
-
     QModelIndexList selectedItems = mTreeViewWidget->selectedIndexes();
     bool ownedWorkspaceItem = item && (item->type() == PmrWorkspacesWindowItem::OwnedWorkspace);
     bool workspaceItem =    ownedWorkspaceItem
                          || (item && (item->type() == PmrWorkspacesWindowItem::Workspace));
+    bool workspaceItems = true;
+
+    for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i) {
+        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]));
+
+        if (   (item->type() != PmrWorkspacesWindowItem::OwnedWorkspace)
+            && (item->type() != PmrWorkspacesWindowItem::Workspace)) {
+            workspaceItems = false;
+
+            break;
+        }
+    }
+
     PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = workspaceItem?
                                                                     item->workspace()->gitWorkspaceStatus():
                                                                     PMRSupport::PmrWorkspace::StatusUnknown;
@@ -1121,28 +1130,27 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
                                          tr("Unstage the files from commit"));
 
     mNewAction->setVisible(!item);
-    mViewInPmrAction->setVisible(workspaceItem);
-    mViewOncomputerAction->setVisible(workspaceItem);
-    mCopyUrlAction->setVisible(workspaceItem);
-    mCopyPathAction->setVisible(workspaceItem);
-    mCloneAction->setVisible(ownedWorkspaceItem);
-    mCommitAction->setVisible(workspaceItem);
-    mPullAction->setVisible(workspaceItem);
-    mPullAndPushAction->setVisible(ownedWorkspaceItem);
+    mViewInPmrAction->setVisible(workspaceItems);
+    mViewOncomputerAction->setVisible(onlyOneItem && workspaceItem);
+    mCopyUrlAction->setVisible(onlyOneItem && workspaceItem);
+    mCopyPathAction->setVisible(onlyOneItem && workspaceItem);
+    mCloneAction->setVisible(onlyOneItem && ownedWorkspaceItem);
+    mCommitAction->setVisible(onlyOneItem && workspaceItem);
+    mPullAction->setVisible(onlyOneItem && workspaceItem);
+    mPullAndPushAction->setVisible(onlyOneItem && ownedWorkspaceItem);
     mStageAction->setVisible(nbOfUnstagedFiles);
     mUnstageAction->setVisible(nbOfStagedFiles);
-    mAboutAction->setVisible(workspaceItem);
+    mAboutAction->setVisible(onlyOneItem && workspaceItem);
 
-    bool clonedItem = item && !mWorkspaceUrlFoldersOwned.value(item->url()).first.isEmpty();
+    bool clonedWorkspaceItem =     workspaceItem && item
+                               && !mWorkspaceUrlFoldersOwned.value(item->url()).first.isEmpty();
 
-    mViewOncomputerAction->setEnabled(clonedItem);
-    mCopyUrlAction->setEnabled(onlyOneItem);
-    mCopyPathAction->setEnabled(onlyOneItem && clonedItem);
-    mCloneAction->setEnabled(!clonedItem);
+    mViewOncomputerAction->setEnabled(clonedWorkspaceItem);
+    mCopyPathAction->setEnabled(clonedWorkspaceItem);
+    mCloneAction->setEnabled(!clonedWorkspaceItem);
     mCommitAction->setEnabled(workspaceStatus & PMRSupport::PmrWorkspace::StatusCommit);
-    mPullAction->setEnabled(clonedItem);
+    mPullAction->setEnabled(clonedWorkspaceItem);
     mPullAndPushAction->setEnabled(workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead);
-    mAboutAction->setEnabled(onlyOneItem);
 
     mContextMenu->exec(QCursor::pos());
 }
