@@ -6,7 +6,7 @@ SET(OPENSSL_VERSION "1.0.0")
 
 # Specify the git tag in the OpenSSL repository that we want to use
 
-SET(OPENSSL_GIT_TAG "OpenSSL_1_0_2j")
+SET(OPENSSL_GIT_TAG "OpenSSL_1_0_2k")
 
 # The names of the libraries built by OpenSSL's build process
 
