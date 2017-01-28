@@ -214,18 +214,25 @@ void SingleCellViewSimulationData::setPointInterval(const double &pPointInterval
 
 //==============================================================================
 
-SolverInterface * SingleCellViewSimulationData::odeSolverInterface() const
+SolverInterface * SingleCellViewSimulationData::solverInterface(const QString &pSolverName) const
 {
-    // Return our ODE solver interface, if any
-
-    QString solverName = odeSolverName();
+    // Return the named solver interface, if any
 
     foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-        if (!solverInterface->solverName().compare(solverName))
+        if (!solverInterface->solverName().compare(pSolverName))
             return solverInterface;
     }
 
     return 0;
+}
+
+//==============================================================================
+
+SolverInterface * SingleCellViewSimulationData::odeSolverInterface() const
+{
+    // Return our ODE solver interface, if any
+
+    return solverInterface(odeSolverName());
 }
 
 //==============================================================================
@@ -282,14 +289,7 @@ SolverInterface * SingleCellViewSimulationData::daeSolverInterface() const
 {
     // Return our DAE solver interface, if any
 
-    QString solverName = daeSolverName();
-
-    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-        if (!solverInterface->solverName().compare(solverName))
-            return solverInterface;
-    }
-
-    return 0;
+    return solverInterface(daeSolverName());
 }
 
 //==============================================================================
@@ -346,14 +346,7 @@ SolverInterface * SingleCellViewSimulationData::nlaSolverInterface() const
 {
     // Return our NLA solver interface, if any
 
-    QString solverName = nlaSolverName();
-
-    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-        if (!solverInterface->solverName().compare(solverName))
-            return solverInterface;
-    }
-
-    return 0;
+    return solverInterface(nlaSolverName());
 }
 
 //==============================================================================
@@ -582,12 +575,17 @@ void SingleCellViewSimulationData::createArrays()
     if (mRuntime) {
         // Create our various arrays to compute our model
 
-        mConstants = new double[mRuntime->constantsCount()];
-        mRates = new double[mRuntime->ratesCount()];
-        mStates = new double[mRuntime->statesCount()];
+        mConstantsArray = new DataStore::DataStoreArray(mRuntime->constantsCount());
+        mConstants = mConstantsArray->values();
+        mRatesArray = new DataStore::DataStoreArray(mRuntime->ratesCount());
+        mRates = mRatesArray->values();
+        mStatesArray = new DataStore::DataStoreArray(mRuntime->statesCount());
+        mStates = mStatesArray->values();
         mDummyStates = new double[mRuntime->statesCount()];
-        mAlgebraic = new double[mRuntime->algebraicCount()];
-        mCondVar = new double[mRuntime->condVarCount()];
+        mAlgebraicArray = new DataStore::DataStoreArray(mRuntime->algebraicCount());
+        mAlgebraic = mAlgebraicArray->values();
+        mCondVarArray = new DataStore::DataStoreArray(mRuntime->condVarCount());
+        mCondVar = mCondVarArray->values();
 
         // Create our various arrays to keep track of our various initial values
 
@@ -605,12 +603,12 @@ void SingleCellViewSimulationData::deleteArrays()
 {
     // Delete our various arrays
 
-    delete[] mConstants;
-    delete[] mRates;
-    delete[] mStates;
+    mConstantsArray->decReference();
+    mRatesArray->decReference();
+    mStatesArray->decReference();
     delete[] mDummyStates;
-    delete[] mAlgebraic;
-    delete[] mCondVar;
+    mAlgebraicArray->decReference();
+    mCondVarArray->decReference();
 
     delete[] mInitialConstants;
     delete[] mInitialStates;
@@ -897,6 +895,15 @@ CellMLSupport::CellmlFileRuntime * SingleCellViewSimulation::runtime() const
 
 //==============================================================================
 
+QString SingleCellViewSimulation::fileName() const
+{
+    // Return the name of the CellML file
+
+    return mRuntime?mRuntime->cellmlFile()->fileName():QString();
+}
+
+//==============================================================================
+
 SingleCellViewSimulationData * SingleCellViewSimulation::data() const
 {
     // Return our data
@@ -1061,6 +1068,32 @@ bool SingleCellViewSimulation::run()
 
         if (!simulationSettingsOk())
             return false;
+
+        // Make sure we have a data store in which to store results
+
+        if (!mResults->dataStore()) {
+            emit error(tr("no datastore for results"));
+
+            return false;
+        }
+
+        // Make sure the data store is big enough to store our results
+
+        if (size() > (mResults->dataStore()->capacity() - mResults->dataStore()->size())) {
+            emit error(tr("datastore doesn't have enough capacity"));
+
+            return false;
+        }
+
+        // Make sure we have a valid solver
+
+        if ((mRuntime->needOdeSolver() && !mData->odeSolverInterface())
+         || (!mRuntime->needOdeSolver() && !mData->daeSolverInterface())
+         || (mRuntime->needNlaSolver() && !mData->nlaSolverInterface())) {
+            emit error(tr("no valid solvers"));
+
+            return false;
+        }
 
         // Create our worker
 

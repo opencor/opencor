@@ -50,6 +50,56 @@ namespace DataStore {
 
 //==============================================================================
 
+DataStoreArray::DataStoreArray(const qulonglong &pCapacity) :
+    mCapacity(pCapacity),
+    mReferences(0)
+{
+    mValues = new double[pCapacity];
+    mReferences = 1;
+}
+
+//==============================================================================
+
+DataStoreArray::~DataStoreArray()
+{
+    delete[] mValues;
+}
+
+//==============================================================================
+
+void DataStoreArray::decReference()
+{
+    --mReferences;
+    if (mReferences == 0) delete this;
+}
+
+//==============================================================================
+
+void DataStoreArray::incReference()
+{
+    ++mReferences;
+}
+
+//==============================================================================
+
+qulonglong DataStoreArray::capacity() const
+{
+    // Return our capacity
+
+    return mCapacity;
+}
+
+//==============================================================================
+
+double * DataStoreArray::values() const
+{
+    // Return our values
+
+    return mValues;
+}
+
+//==============================================================================
+
 DataStoreVariable::DataStoreVariable(const qulonglong &pCapacity,
                                      double *pValue) :
 #ifndef CLI_VERSION
@@ -64,7 +114,8 @@ DataStoreVariable::DataStoreVariable(const qulonglong &pCapacity,
 {
     // Create our array of values
 
-    mValues = new double[pCapacity];
+    mArray = new DataStoreArray(pCapacity);
+    mValues = mArray->values();
 }
 
 //==============================================================================
@@ -73,7 +124,7 @@ DataStoreVariable::~DataStoreVariable()
 {
     // Delete some internal objects
 
-    delete[] mValues;
+    mArray->decReference();
 }
 
 //==============================================================================
@@ -215,6 +266,15 @@ void DataStoreVariable::addValue(const double &pValue)
 
 //==============================================================================
 
+DataStoreArray * DataStoreVariable::array() const
+{
+    // Return our data array
+
+    return mArray;
+}
+
+//==============================================================================
+
 double DataStoreVariable::value(const qulonglong &pPosition) const
 {
     // Return our value at the given position
@@ -294,6 +354,15 @@ QString DataStore::uri() const
     // Return our URI
 
     return mlUri;
+}
+
+//==============================================================================
+
+qulonglong DataStore::capacity() const
+{
+    // Return our capacity
+
+    return mCapacity;
 }
 
 //==============================================================================

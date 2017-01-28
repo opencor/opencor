@@ -189,6 +189,18 @@
         <source>the simulation worker could not be created</source>
         <translation>l&apos;agent de simulation n&apos;a pas pu être créé</translation>
     </message>
+    <message>
+        <source>no datastore for results</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>datastore doesn&apos;t have enough capacity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>no valid solvers</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewSimulationWidget</name>

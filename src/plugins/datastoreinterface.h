@@ -28,6 +28,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QObject>
 #ifndef CLI_VERSION
     #include <QIcon>
 #endif
@@ -39,8 +40,30 @@ namespace DataStore {
 
 //==============================================================================
 
-class DataStoreVariable
+class DataStoreArray
 {
+public:
+    explicit DataStoreArray(const qulonglong &pCapacity);
+
+    qulonglong capacity() const;
+    void decReference();
+    void incReference();
+    double * values() const;
+
+private:
+    ~DataStoreArray();
+
+    const qulonglong mCapacity;
+    int mReferences;
+    double *mValues;
+};
+
+//==============================================================================
+
+class DataStoreVariable : public QObject
+{
+    Q_OBJECT
+
 public:
     explicit DataStoreVariable(const qulonglong &pCapacity, double *pValue = 0);
     ~DataStoreVariable();
@@ -55,13 +78,10 @@ public:
     void setIcon(const QIcon &pIcon);
 #endif
 
-    QString uri() const;
     void setUri(const QString &pUri);
 
-    QString label() const;
     void setLabel(const QString &pLabel);
 
-    QString unit() const;
     void setUnit(const QString &pUnit);
 
     qulonglong size() const;
@@ -69,8 +89,18 @@ public:
     void addValue();
     void addValue(const double &pValue);
 
-    double value(const qulonglong &pPosition) const;
     double * values() const;
+
+    DataStoreArray * array() const;
+
+public slots:
+    QString uri() const;
+
+    QString label() const;
+
+    QString unit() const;
+
+    double value(const qulonglong &pPosition) const;
 
 private:
 #ifndef CLI_VERSION
@@ -83,6 +113,7 @@ private:
     const qulonglong mCapacity;
     qulonglong mSize;
 
+    DataStoreArray *mArray;
     double *mValue;
     double *mValues;
 };
@@ -109,26 +140,32 @@ private:
 
 //==============================================================================
 
-class DataStore
+class DataStore : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit DataStore(const QString &pUri, const qulonglong &pCapacity);
     ~DataStore();
 
-    QString uri() const;
-
-    qulonglong size() const;
-
-    DataStoreVariables voiAndVariables();
-
-    DataStoreVariable * voi() const;
     DataStoreVariable * addVoi();
 
-    DataStoreVariables variables();
     DataStoreVariable * addVariable(double *pValue = 0);
     DataStoreVariables addVariables(const int &pCount, double *pValues);
 
     void addValues(const double &pVoiValue);
+
+public slots:
+    QString uri() const;
+
+    qulonglong capacity() const;
+    qulonglong size() const;
+
+    QList<OpenCOR::DataStore::DataStoreVariable *> voiAndVariables();
+
+    OpenCOR::DataStore::DataStoreVariable * voi() const;
+
+    QList<OpenCOR::DataStore::DataStoreVariable *> variables();
 
 private:
     QString mlUri;

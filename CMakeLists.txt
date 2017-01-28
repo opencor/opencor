@@ -16,6 +16,9 @@ OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plugin" ON)
 OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
 OPTION(USE_PREBUILT_OAUTH_PLUGIN "Use the pre-built version of the OAuth plugin" ON)
+OPTION(USE_PREBUILT_OPENSSL_PLUGIN "Use the pre-built version of the OpenSSL plugin" ON)
+OPTION(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of Python" ON)
+OPTION(USE_PREBUILT_PYTHONQT_PACKAGE "Use the pre-built version of Python Qt" ON)
 OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
@@ -302,6 +305,7 @@ ENDIF()
 IF(ENABLE_SAMPLES)
     SET(SAMPLE_PLUGINS
         sample/Sample
+#       sample/SampleExternal
         sample/SampleTools
         sample/SampleView
         sample/SampleWindow
@@ -325,6 +329,7 @@ SET(PLUGINS
     thirdParty/libgit2
     thirdParty/LLVM
     thirdParty/OAuth
+    thirdParty/OpenSSL
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
@@ -334,10 +339,14 @@ SET(PLUGINS
 
     miscellaneous/Compiler
 
+    thirdParty/Python
+    thirdParty/PythonQtAPI
+
     # Plugins that provide support for some third-party libraries
 
     support/CellMLSupport
     support/PMRSupport
+    support/PythonQtSupport
     support/QScintillaSupport
     support/SEDMLSupport
     support/ZIPSupport
@@ -395,6 +404,11 @@ SET(PLUGINS
     solver/SecondOrderRungeKuttaSolver
 
     tools/CellMLTools
+
+    # Python wrappers depend on simulation plugins
+
+    miscellaneous/PythonWrapper
+    miscellaneous/PythonConsoleWindow
 
     # Sample plugins
 
