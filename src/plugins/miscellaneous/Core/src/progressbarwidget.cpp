@@ -72,7 +72,7 @@ void ProgressBarWidget::setValue(const double &pValue)
 
     if (value != mValue) {
         bool needUpdate = int(mValue*width()) != int(value*width());
-        
+
         mValue = value;
 
         if (needUpdate)
