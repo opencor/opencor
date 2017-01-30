@@ -618,8 +618,8 @@ ELSE()
             ${WINDOWS_KIT_DIRNAME}/ucrtbase.dll
         )
 
-        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll 58f3cc096cfc002f575fb9041de757da8af6fd8d)
-        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll beca4818b830b2d9a0727b12df4794a1dfdb8cfd)
+        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll d34a0ba0dd7b3b1f900a7e02772e197e974b4a73)
+        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll 2ee9966a0fc163da58408d91be36b84fa287c10b)
 
         LIST(APPEND ADDITIONAL_FILES
             ${CMAKE_SOURCE_DIR}/distrib/bin/libeay32.dll
