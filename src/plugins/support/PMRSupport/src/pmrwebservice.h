@@ -26,20 +26,7 @@ limitations under the License.
 
 #include "pmrexposure.h"
 #include "pmrsupportglobal.h"
-
-//==============================================================================
-
-#include <QList>
-#include <QSslError>
-
-//==============================================================================
-
-#include "git2/types.h"
-
-//==============================================================================
-
-class QNetworkAccessManager;
-class QNetworkReply;
+#include "pmrworkspace.h"
 
 //==============================================================================
 
@@ -48,80 +35,111 @@ namespace PMRSupport {
 
 //==============================================================================
 
+class PmrWebServiceManager;
+
+//==============================================================================
+
+static const auto PmrUrl = QStringLiteral("https://models.physiomeproject.org");
+
+//==============================================================================
+
+static const auto RequestMimeType    = QStringLiteral("application/vnd.physiome.pmr2.json.0");
+static const auto CollectionMimeType = QStringLiteral("application/vnd.physiome.pmr2.json.1");
+
+//==============================================================================
+
 class PMRSUPPORT_EXPORT PmrWebService : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit PmrWebService();
-    ~PmrWebService();
+    explicit PmrWebService(QObject *pParent);
 
-    void cloneWorkspace(const QString &pUrl, const QString &pDirName);
-    void requestExposuresList();
-    void requestExposureFiles(const QString &pUrl);
+    bool isAuthenticated() const;
+    void authenticate(const bool &pAuthenticate = true);
+
+    void requestExposures() const;
+
+    PmrWorkspace * workspace(const QString &pUrl) const;
+
+    void requestNewWorkspace(const QString &pName, const QString &pDescription,
+                             const QString &pPath) const;
+    void requestWorkspaces() const;
+
+    void requestWorkspaceClone(PmrWorkspace *pWorkspace,
+                               const QString &pPath);
+    void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
+                                     const bool &pPush);
+
+    static QString getEmptyDirectory();
 
 private:
-    enum PmrRequest {
-        ExposuresList,
-        ExposureInformation,
-        WorkspaceInformation,
-        ExposureFileInformation
-    };
-
     enum Action {
         None,
-        CloneWorkspace,
-        ShowExposureFiles
+        CloneExposureWorkspace,
+        RequestExposureFiles
     };
 
-    QNetworkAccessManager *mNetworkAccessManager;
+    PmrWebServiceManager *mPmrWebServiceManager;
 
-    int mNumberOfExposureFileUrlsLeft;
+    QMap<QString, PmrExposure *> mUrlExposures;
+    QMap<PmrExposure *, int> mFileExposuresLeftCount;
 
-    QMap<QString, QString> mWorkspaces;
-    QMap<QString, QString> mExposureUrls;
-    QMap<QString, QString> mExposureNames;
-    QMap<QString, QString> mExposureFileNames;
+    void requestWorkspaceInformation(const QString &pUrl,
+                                     const QString &pPath,
+                                     PmrExposure *pExposure = 0);
+    void requestWorkspaceCredentials(PmrWorkspace *pWorkspace);
 
-    QString informationNoteMessage() const;
+    void requestExposureFileInformation(const QString &pUrl,
+                                        PmrExposure *pExposure);
 
-    static int bypassCertificateCheck(git_cert *pCertificate, int pValid,
-                                      const char *pHost, void *pPayload);
-    static int processEvents(const git_transfer_progress *pStatistics,
-                             void *pPayload);
-
-    void doCloneWorkspace(const QString &pWorkspace, const QString &pDirName);
-    void doShowExposureFiles(const QString &pExposureUrl);
-
-    void sendPmrRequest(const PmrRequest &pPmrRequest,
-                        const QString &pUrl = QString(),
-                        const Action pAction = None,
-                        const QString &pDirName = QString());
+    void emitInformation(const QString &pMessage);
 
 signals:
     void busy(const bool &pBusy);
+    void authenticated(const bool &pAuthenticated);
 
-    void warning(const QString &pMessage);
     void information(const QString &pMessage);
+    void warning(const QString &pMessage);
+    void error(const QString &pMessage);
 
-    void exposuresList(const PMRSupport::PmrExposures &pExposures,
-                       const QString &pErrorMessage,
-                       const bool &pInternetConnectionAvailable);
+    void workspaces(const PMRSupport::PmrWorkspaces &pWorkspaces);
 
-    void addExposureFiles(const QString &pUrl,
-                          const QStringList &pExposureFiles);
-    void showExposureFiles(const QString &pUrl);
+    void workspaceCreated(const QString &pUrl);
+    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
+
+    void exposures(const PMRSupport::PmrExposures &pExposures);
+    void exposureFiles(const QString &pUrl, const QStringList &pExposureFiles);
+
+public slots:
+    void forbidden(const QString &pUrl);
+
+    void requestExposureFiles(const QString &pUrl);
+    void requestExposureWorkspaceClone(const QString &pUrl);
 
 private slots:
-    void finished(QNetworkReply *pNetworkReply = 0);
-    void sslErrors(QNetworkReply *pNetworkReply,
-                   const QList<QSslError> &pSslErrors);
+    void exposuresResponse(const QJsonDocument &pJsonDocument);
 
+    void workspaceResponse(const QJsonDocument &pJsonDocument);
+
+    void newWorkspaceResponse(const QString &pUrl);
+    void workspacesResponse(const QJsonDocument &pJsonDocument);
+
+    void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
+
+    void workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *pWorkspace);
+
+    void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
+
+    void exposureInformationResponse(const QJsonDocument &pJsonDocument);
+    void exposureFileInformationResponse(const QJsonDocument &pJsonDocument);
 };
 
 //==============================================================================
 
-}   // namespace PMRWindow
+}   // namespace PMRSupport
 }   // namespace OpenCOR
 
 //==============================================================================

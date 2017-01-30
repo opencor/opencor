@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PmrWorkspacesWindowWindow</class>
+ <widget class="QDockWidget" name="PmrWorkspacesWindowWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>320</width>
+    <height>240</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PMR Workspaces</string>
+  </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QVBoxLayout" name="layout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+   </layout>
+  </widget>
+  <action name="actionNew">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="toolTip">
+    <string>New</string>
+   </property>
+   <property name="statusTip">
+    <string>Create a new workspace</string>
+   </property>
+  </action>
+  <action name="actionReload">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reload</string>
+   </property>
+   <property name="toolTip">
+    <string>Reload</string>
+   </property>
+   <property name="statusTip">
+    <string>Reload the list of workspaces</string>
+   </property>
+  </action>
+  <action name="actionPmr">
+   <property name="icon">
+    <iconset resource="../../../../../res/ui.qrc">
+     <normaloff>:/oxygen/apps/preferences-desktop-user-password.png</normaloff>:/oxygen/apps/preferences-desktop-user-password.png</iconset>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../../../../../res/ui.qrc"/>
+ </resources>
+ <connections/>
+</ui>

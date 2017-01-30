@@ -24,9 +24,12 @@ limitations under the License.
 
 //==============================================================================
 
-#include "corecliutils.h"
 #include "pmrexposure.h"
-#include "webviewerwidget.h"
+#include "widget.h"
+
+//==============================================================================
+
+#include <QStandardItem>
 
 //==============================================================================
 
@@ -35,11 +38,44 @@ class QMenu;
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class TreeViewWidget;
+    class UserMessageWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace PMRWindow {
 
 //==============================================================================
 
-class PmrWindowWidget : public WebViewerWidget::WebViewerWidget
+class PmrWindowItem : public QStandardItem
+{
+public:
+    enum Type {
+        Exposure     = QStandardItem::UserType,
+        ExposureFile = QStandardItem::UserType+1
+    };
+
+    explicit PmrWindowItem(const Type &pType, const QString &pText,
+                           const QString &pUrl);
+
+    virtual int type() const;
+
+    QString url() const;
+
+private:
+    Type mType;
+
+    QString mUrl;
+};
+
+//==============================================================================
+
+class PmrWindowWidget : public Core::Widget
 {
     Q_OBJECT
 
@@ -49,53 +85,65 @@ public:
     virtual void retranslateUi();
 
     void initialize(const PMRSupport::PmrExposures &pExposures,
-                    const QString &pErrorMessage, const QString &pFilter,
-                    const bool &pInternetConnectionAvailable);
+                    const QString &pFilter,
+                    const QString &pErrorMessage);
 
     void filter(const QString &pFilter);
 
-protected:
-    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
+    bool hasExposures() const;
 
+protected:
+    virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual QSize sizeHint() const;
 
 private:
     QMenu *mContextMenu;
 
-    QAction *mCopyAction;
+    QAction *mViewInPmrAction;
+    QAction *mCopyUrlAction;
+    QAction *mCloneWorkspaceAction;
+
+    Core::UserMessageWidget *mUserMessageWidget;
+
+    QStandardItemModel *mTreeViewModel;
+    Core::TreeViewWidget *mTreeViewWidget;
 
     QStringList mExposureNames;
-    QBoolList mExposureDisplayed;
-    QMap<QString, int> mExposureUrlId;
 
     bool mInitialized;
 
-    QString mTemplate;
     QString mErrorMessage;
-    bool mInternetConnectionAvailable;
 
     int mNumberOfFilteredExposures;
 
-    QString mExposureUrl;
+    QStringList mDontExpandExposures;
 
-    QString message() const;
+    void updateGui();
+
+    PmrWindowItem * currentItem() const;
 
 signals:
     void cloneWorkspaceRequested(const QString &pUrl);
-    void showExposureFilesRequested(const QString &pUrl);
+    void exposureFilesRequested(const QString &pUrl);
 
     void openExposureFileRequested(const QString &pUrl);
+    void openExposureFilesRequested(const QStringList &pUrls);
+
+    void itemDoubleClicked();
 
 public slots:
-    void addExposureFiles(const QString &pUrl,
-                          const QStringList &pExposureFiles);
-    void showExposureFiles(const QString &pUrl, const bool &pShow = true);
+    void addAndShowExposureFiles(const QString &pUrl,
+                                 const QStringList &pExposureFiles);
 
 private slots:
-    void copy();
+    void showCustomContextMenu(const QPoint &pPosition) const;
+    void itemDoubleClicked(const QModelIndex &pIndex);
 
-    void linkClicked();
-    void linkHovered();
+    void resizeTreeViewToContents();
+
+    void viewInPmr();
+    void copyUrl();
+    void clone();
 };
 
 //==============================================================================

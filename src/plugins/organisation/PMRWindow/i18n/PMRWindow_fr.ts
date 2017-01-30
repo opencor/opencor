@@ -15,56 +15,36 @@
 <context>
     <name>OpenCOR::PMRWindow::PmrWindowWidget</name>
     <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
+        <source>View In PMR</source>
+        <translation>Voir Dans PMR</translation>
+    </message>
+    <message>
+        <source>View in PMR</source>
+        <translation>Voir dans PMR</translation>
+    </message>
+    <message>
+        <source>Copy URL</source>
+        <translation>Copier URL</translation>
     </message>
     <message>
         <source>Copy the URL to the clipboard</source>
         <translation>Copier l&apos;URL dans le presse-papier</translation>
     </message>
     <message>
-        <source>No exposures match your criteria.</source>
-        <translation>Aucunes expositions ne correspondent à votre critère.</translation>
+        <source>Clone...</source>
+        <translation>Cloner...</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;1&lt;/strong&gt; exposure was found:</source>
-        <translation>&lt;strong&gt;1&lt;/strong&gt; exposition a été trouvée :</translation>
+        <source>Clone the current workspace</source>
+        <translation>Cloner l&apos;espace de travail actuel</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; exposures were found:</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; expositions ont été trouvées :</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
-        <translation>&lt;strong&gt;Erreur :&lt;/strong&gt; </translation>
-    </message>
-    <message>
-        <source>Clone Workspace</source>
-        <translation>Cloner Espace De Travail</translation>
-    </message>
-    <message>
-        <source>Show Exposure Files</source>
-        <translation>Montrer Fichiers Exposition</translation>
-    </message>
-    <message>
-        <source>Hide Exposure Files</source>
-        <translation>Cacher Fichiers Exposition</translation>
-    </message>
-    <message>
-        <source>Open Exposure File</source>
-        <translation>Ouvrir Fichier Exposition</translation>
-    </message>
-    <message>
-        <source>Browse Exposure</source>
-        <translation>Naviguer Exposition</translation>
+        <source>No exposures match your criteria...</source>
+        <translation>Aucunes expositions ne correspondent à votre critère...</translation>
     </message>
 </context>
 <context>
     <name>OpenCOR::PMRWindow::PmrWindowWindow</name>
-    <message>
-        <source>Select Empty Directory</source>
-        <translation>Sélectionner Répertoire Vide</translation>
-    </message>
     <message>
         <source>Filter:</source>
         <translation>Filtre :</translation>

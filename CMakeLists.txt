@@ -15,6 +15,7 @@ OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plugin" ON)
 OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
+OPTION(USE_PREBUILT_OAUTH_PLUGIN "Use the pre-built version of the OAuth plugin" ON)
 OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
@@ -323,6 +324,7 @@ SET(PLUGINS
 
     thirdParty/libgit2
     thirdParty/LLVM
+    thirdParty/OAuth
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
@@ -380,6 +382,7 @@ SET(PLUGINS
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
     organisation/PMRWindow
+    organisation/PMRWorkspacesWindow
 
     simulation/SingleCellView
 

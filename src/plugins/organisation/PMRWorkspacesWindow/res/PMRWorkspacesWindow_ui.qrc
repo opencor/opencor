@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/PMRWorkspacesWindow">
+        <file>iA.png</file>
+        <file>iD.png</file>
+        <file>iM.png</file>
+        <file>iR.png</file>
+        <file>iT.png</file>
+        <file>pull.png</file>
+        <file>pullAndPush.png</file>
+        <file>wA.png</file>
+        <file>wC.png</file>
+        <file>wD.png</file>
+        <file>wE.png</file>
+        <file>wM.png</file>
+        <file>wQ.png</file>
+        <file>wR.png</file>
+        <file>wT.png</file>
+    </qresource>
+</RCC>

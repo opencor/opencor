@@ -28,11 +28,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QList>
-#ifdef Q_OS_WIN
-    #include <QSet>
-    #include <QVector>
-#endif
+#include <QObject>
 
 //==============================================================================
 
@@ -41,32 +37,44 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PMRSUPPORT_EXPORT PmrExposure
-{
-public:
-    explicit PmrExposure(const QString &pUrl, const QString &pName);
+class PmrWorkspace;
+class PmrWebService;
 
-    static bool compare(const PmrExposure *pExposure1,
-                        const PmrExposure *pExposure2);
+//==============================================================================
+
+class PMRSUPPORT_EXPORT PmrExposure : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit PmrExposure(const QString &pUrl, const QString &pName,
+                         PmrWebService *pParent);
+
+    static bool compare(PmrExposure *pExposure1, PmrExposure *pExposure2);
 
     QString url() const;
     QString name() const;
 
+    PmrWorkspace * workspace() const;
+    void setWorkspace(PmrWorkspace *pWorkspace);
+
+    QStringList exposureFiles() const;
+    void addExposureFile(const QString &pFileName);
+
+    QString toHtml() const;
+
 private:
     QString mUrl;
     QString mName;
+
+    PmrWorkspace *mWorkspace;
+
+    QStringList mExposureFiles;
 };
 
 //==============================================================================
 
-class PMRSUPPORT_EXPORT PmrExposures : public QList<PmrExposure *>
-{
-public:
-    explicit PmrExposures();
-    ~PmrExposures();
-
-    void add(const QString &pUrl, const QString &pName);
-};
+typedef QList<PmrExposure *> PmrExposures;
 
 //==============================================================================
 

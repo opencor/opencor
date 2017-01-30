@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "pmrexposure.h"
+#include "pmrwebservice.h"
 
 //==============================================================================
 
@@ -29,20 +30,24 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrExposure::PmrExposure(const QString &pUrl, const QString &pName) :
+PmrExposure::PmrExposure(const QString &pUrl, const QString &pName,
+                         PmrWebService *pParent) :
+    QObject(pParent),
     mUrl(pUrl),
-    mName(pName)
+    mName(pName),
+    mWorkspace(0),
+    mExposureFiles(QStringList())
 {
 }
 
 //==============================================================================
 
-bool PmrExposure::compare(const PmrExposure *pFirst, const PmrExposure *pExposure2)
+bool PmrExposure::compare(PmrExposure *pExposure1, PmrExposure *pExposure2)
 {
     // Return whether the first exposure is lower than the second one (without
     // worrying about casing)
 
-    return pFirst->name().compare(pExposure2->name(), Qt::CaseInsensitive) < 0;
+    return pExposure1->name().compare(pExposure2->name(), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
@@ -65,28 +70,48 @@ QString PmrExposure::name() const
 
 //==============================================================================
 
-PmrExposures::PmrExposures() :
-    QList<PmrExposure *>()
+PmrWorkspace * PmrExposure::workspace() const
 {
+    // Return our workspace
+
+    return mWorkspace;
 }
 
 //==============================================================================
 
-PmrExposures::~PmrExposures()
+void PmrExposure::setWorkspace(PmrWorkspace *pWorkspace)
 {
-    // Delete the list of exposures
+    // Set our workspace
 
-    while (!isEmpty())
-        delete takeFirst();
+    mWorkspace = pWorkspace;
 }
 
 //==============================================================================
 
-void PmrExposures::add(const QString &pUrl, const QString &pName)
+QStringList PmrExposure::exposureFiles() const
 {
-    // Add a new exposure to the list
+    // Return our list of exposure files
 
-    *this << new PmrExposure(pUrl, pName);
+    return mExposureFiles;
+}
+
+//==============================================================================
+
+void PmrExposure::addExposureFile(const QString &pFileName)
+{
+    // Keep track of the given exposure file, if it's not already tracked
+
+    if (!mExposureFiles.contains(pFileName))
+        mExposureFiles << pFileName;
+}
+
+//==============================================================================
+
+QString PmrExposure::toHtml() const
+{
+    // Return an HTML description of ourselves
+
+    return QString("<a href=\"%1\">%2</a>").arg(mUrl, mName);
 }
 
 //==============================================================================

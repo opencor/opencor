@@ -83,6 +83,8 @@ private:
 
     PmrWindowWidget *mPmrWindowWidget;
 
+    bool mItemDoubleClicked;
+
 private slots:
     void on_actionReload_triggered();
 
@@ -90,18 +92,15 @@ private slots:
 
     void busy(const bool &pBusy);
 
-    void showWarning(const QString &pMessage);
     void showInformation(const QString &pMessage);
+    void showWarning(const QString &pMessage);
+    void showError(const QString &pMessage);
 
-    void retrieveExposuresList(const bool &pVisible);
+    void retrieveExposures(const bool &pVisible);
 
-    void initializeWidget(const PMRSupport::PmrExposures &pExposures,
-                          const QString &pErrorMessage,
-                          const bool &pInternetConnectionAvailable);
+    void initializeWidget(const PMRSupport::PmrExposures &pExposures);
 
-    void showExposureFiles(const QString &pUrl);
-
-    void cloneWorkspace(const QString &pUrl);
+    void itemDoubleClicked();
 };
 
 //==============================================================================

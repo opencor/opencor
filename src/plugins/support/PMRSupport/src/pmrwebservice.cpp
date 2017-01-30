@@ -20,23 +20,19 @@ limitations under the License.
 // PMR web service
 //==============================================================================
 
-#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "pmrwebservice.h"
+#include "pmrwebservicemanager.h"
+#include "pmrwebserviceresponse.h"
+#include "pmrworkspacemanager.h"
 
 //==============================================================================
 
-#include <QJsonDocument>
 #include <QJsonObject>
-#include <QMainWindow>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QNetworkRequest>
 
 //==============================================================================
 
-#include "git2.h"
-#include "zlib.h"
+#include <QtConcurrent/QtConcurrent>
 
 //==============================================================================
 
@@ -45,577 +41,706 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWebService::PmrWebService() :
-    mNumberOfExposureFileUrlsLeft(0),
-    mWorkspaces(QMap<QString, QString>()),
-    mExposureUrls(QMap<QString, QString>()),
-    mExposureNames(QMap<QString, QString>()),
-    mExposureFileNames(QMap<QString, QString>())
+PmrWebService::PmrWebService(QObject *pParent) :
+    QObject(pParent),
+    mUrlExposures(QMap<QString, PmrExposure *>()),
+    mFileExposuresLeftCount(QMap<PmrExposure *, int>())
 {
-    // Create a network access manager so that we can then retrieve various
-    // things from PMR
+    // Create a PMR web service manager so that we can retrieve various things
+    // from PMR
 
-    mNetworkAccessManager = new QNetworkAccessManager(this);
+    mPmrWebServiceManager = new PmrWebServiceManager(this);
 
-    // Make sure that we get told when our PMR requests are finished, as well as
-    // if there are SSL errors (which would happen if the website's certificate
-    // is invalid, e.g. it has expired)
+    // Forward any signal we receive from our PMR web service manager
 
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
-            this, SLOT(finished(QNetworkReply *)));
-    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
-            this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
+    connect(mPmrWebServiceManager, SIGNAL(busy(const bool &)),
+            this, SIGNAL(busy(const bool &)));
+    connect(mPmrWebServiceManager, SIGNAL(authenticated(const bool &)),
+            this, SIGNAL(authenticated(const bool &)));
+    connect(mPmrWebServiceManager, SIGNAL(error(const QString &)),
+            this, SIGNAL(error(const QString &)));
 }
 
 //==============================================================================
 
-PmrWebService::~PmrWebService()
+bool PmrWebService::isAuthenticated() const
 {
+    // Return whether we are authenticated
+
+    return mPmrWebServiceManager->isAuthenticated();
 }
 
 //==============================================================================
 
-static const char *PmrRequestProperty = "PmrRequest";
-static const char *ActionProperty     = "Action";
-static const char *DirNameProperty    = "DirName";
+void PmrWebService::authenticate(const bool &pAuthenticate)
+{
+    // Un/authenticate ourselves
+
+    mPmrWebServiceManager->authenticate(pAuthenticate);
+}
 
 //==============================================================================
 
-void PmrWebService::sendPmrRequest(const PmrRequest &pPmrRequest,
-                                   const QString &pUrl,
-                                   const Action pAction,
-                                   const QString &pDirName)
+void PmrWebService::requestExposures() const
 {
-    // Let the user know that we are busy
+    // Request the list of exposures from PMR
+
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(PmrUrl+"/exposure", false);
+
+    if (pmrResponse) {
+        connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
+                this, SLOT(exposuresResponse(const QJsonDocument &)));
+    }
+}
+
+//==============================================================================
+
+void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
+{
+    // Retrieve the list of exposures from the given PMR response
+
+    PmrExposures exposures = PmrExposures();
+    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+
+    foreach (const QVariant &links, collectionMap["links"].toList()) {
+        QVariantMap linksMap = links.toMap();
+
+        if (!linksMap["rel"].toString().compare("bookmark")) {
+            QString exposureUrl = linksMap["href"].toString().trimmed();
+            QString exposureName = linksMap["prompt"].toString().simplified();
+
+            if (!exposureUrl.isEmpty() && !exposureName.isEmpty()) {
+                PmrExposure *exposure = new PmrExposure(exposureUrl, exposureName, this);
+
+                mUrlExposures.insert(exposureUrl, exposure);
+
+                exposures << exposure;
+            }
+        }
+    }
+
+    std::sort(exposures.begin(), exposures.end(), PmrExposure::compare);
+
+    // Let people know about the list of exposures
+
+    emit PmrWebService::exposures(exposures);
+}
+
+//==============================================================================
+
+static const char *PathProperty       = "Path";
+static const char *ExposureProperty   = "Exposure";
+static const char *NextActionProperty = "NextAction";
+static const char *WorkspaceProperty  = "Workspace";
+
+//==============================================================================
+
+PmrWorkspace * PmrWebService::workspace(const QString &pUrl) const
+{
+    // Retrieve and return the workspace for the given URL
+
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, true);
+
+    if (pmrResponse) {
+        PmrWorkspace *workspace = 0;
+
+        pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *) &workspace));
+
+        connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
+                this, SLOT(workspaceResponse(const QJsonDocument &)));
+
+        // Don't return until the PMR response has been processed
+
+        QEventLoop waitLoop;
+
+        connect(pmrResponse, SIGNAL(finished()),
+                &waitLoop, SLOT(quit()));
+
+        waitLoop.exec();
+
+        return workspace;
+    } else {
+        return 0;
+    }
+}
+
+//==============================================================================
+
+void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
+{
+    // Retrieve the workspace from the given PMR response
+
+    PmrWorkspace **workspacePointer = (PmrWorkspace **) sender()->property(WorkspaceProperty).value<void *>();
+    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+    QVariantList itemsList = collectionMap["items"].toList();
+
+    if (itemsList.count()) {
+        // Retrieve the details of the workspace we are dealing with
+
+        QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
+        QString storage = QString();
+        QString workspaceDescription = QString();
+        QString workspaceOwner = QString();
+        QString workspaceName = QString();
+        QString workspaceId = QString();
+
+        foreach (const QVariant &data, itemsList.first().toMap()["data"].toList()) {
+            QVariantMap dataMap = data.toMap();
+            QString name = dataMap["name"].toString();
+
+            if (!name.compare("storage"))
+                storage = dataMap["value"].toString();
+            else if (!name.compare("description"))
+                workspaceDescription = dataMap["value"].toString();
+            else if (!name.compare("owner"))
+                workspaceOwner = dataMap["value"].toString();
+            else if (!name.compare("title"))
+                workspaceName = dataMap["value"].toString();
+            else if (!name.compare("id"))
+                workspaceId = dataMap["value"].toString();
+        }
+
+        if (workspaceName.isEmpty())
+            workspaceName = workspaceId;
+
+        if (workspaceName.isEmpty())
+            workspaceName = tr("** Unknown name **");
+
+        if (!workspaceUrl.isEmpty() && !storage.compare("git")) {
+            *workspacePointer = new PmrWorkspace(workspaceName,
+                                                 workspaceUrl,
+                                                 workspaceDescription,
+                                                 workspaceOwner, this);
+        }
+    }
+}
+
+//==============================================================================
+
+void PmrWebService::requestNewWorkspace(const QString &pName,
+                                        const QString &pDescription,
+                                        const QString &pPath) const
+{
+    // Create a new workspace
+
+    static const QString CreateWorkspaceJson = "{ \"template\": { \"data\": ["
+                                               "  { \"name\": \"form.widgets.title\", \"value\": \"%1\" },"
+                                               "  { \"name\": \"form.widgets.description\", \"value\": \"%2\" },"
+                                               "  { \"name\": \"form.widgets.storage\", \"value\": \"git\" },"
+                                               "  { \"name\": \"form.buttons.add\", \"value\": \"Add\" }"
+                                               "] } }";
+
+    QJsonDocument createWorkspaceJson = QJsonDocument::fromJson(QString(CreateWorkspaceJson).arg(pName, pDescription).toUtf8());
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(PmrUrl+"/workspace/+/addWorkspace",
+                                                                        true, true, createWorkspaceJson);
+
+    if (pmrResponse) {
+        pmrResponse->setProperty(PathProperty, pPath);
+
+        connect(pmrResponse, SIGNAL(found(const QString &)),
+                this, SLOT(newWorkspaceResponse(const QString &)));
+    }
+}
+
+//==============================================================================
+
+void PmrWebService::newWorkspaceResponse(const QString &pUrl)
+{
+    // Let people know that the workspace, which URL is given, has been created
+
+    emit workspaceCreated(pUrl);
+
+    // Now that the workspace has been created, we can request its information
+    // Note: a non-empty path will also clone the workspace...
+
+    requestWorkspaceInformation(pUrl, sender()->property(PathProperty).toString());
+}
+
+//==============================================================================
+
+void PmrWebService::requestWorkspaces() const
+{
+    // Retrieve all the workspaces
+
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(PmrUrl+"/my-workspaces", true);
+
+    if (pmrResponse) {
+        connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
+                this, SLOT(workspacesResponse(const QJsonDocument &)));
+    }
+}
+
+//==============================================================================
+
+void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
+{
+    // Retrieve the list of workspaces from the given PMR response
+
+    PmrWorkspaces workspaces = PmrWorkspaces();
+    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+
+    foreach (const QVariant &links, collectionMap["links"].toList()) {
+        QVariantMap linksMap = links.toMap();
+
+        if (!linksMap["rel"].toString().compare("bookmark")) {
+            QString workspaceUrl = linksMap["href"].toString().trimmed();
+            QString workspaceName = linksMap["prompt"].toString().simplified();
+
+            if (!workspaceUrl.isEmpty() && !workspaceName.isEmpty()) {
+                workspaces << new PmrWorkspace(workspaceName, workspaceUrl, this);
+
+                workspaces.last()->setOwned(true);
+            }
+        }
+    }
+
+    std::sort(workspaces.begin(), workspaces.end(), PmrWorkspace::compare);
+
+    // Let people know about the list of workspaces
+
+    emit PmrWebService::workspaces(workspaces);
+}
+
+//==============================================================================
+
+void PmrWebService::requestWorkspaceInformation(const QString &pUrl,
+                                                const QString &pPath,
+                                                PmrExposure *pExposure)
+{
+    // Retrieve some information about the workspace, which URL is given, and
+    // clone it (if the given path is non-empty or the given exposure is
+    // non-null)
+
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, true);
+
+    if (pmrResponse) {
+        pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *) pExposure));
+        pmrResponse->setProperty(PathProperty, pPath);
+
+        connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
+                this, SLOT(workspaceInformationResponse(const QJsonDocument &)));
+    }
+}
+
+//==============================================================================
+
+void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocument)
+{
+    // Retrieve the workspace information from the given PMR response
+
+    QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+    QVariantList itemsList = collectionMap["items"].toList();
+
+    if (itemsList.count()) {
+        // Retrieve the details of the workspace we are dealing with
+
+        QString workspaceUrl = itemsList.first().toMap()["href"].toString().trimmed();
+        QString storage = QString();
+        QString workspaceDescription = QString();
+        QString workspaceOwner = QString();
+        QString workspaceName = QString();
+
+        foreach (const QVariant &data, itemsList.first().toMap()["data"].toList()) {
+            QVariantMap dataMap = data.toMap();
+
+            if (!dataMap["name"].toString().compare("storage"))
+                storage = dataMap["value"].toString();
+            else if (!dataMap["name"].toString().compare("description"))
+                workspaceDescription = dataMap["value"].toString();
+            else if (!dataMap["name"].toString().compare("owner"))
+                workspaceOwner = dataMap["value"].toString();
+            else if (!dataMap["name"].toString().compare("title"))
+                workspaceName = dataMap["value"].toString();
+        }
+
+        // Retrieve the exposure
+
+        PmrExposure *exposure = (PmrExposure *) sender()->property(ExposureProperty).value<void *>();
+
+        if (!workspaceUrl.isEmpty()) {
+            // Make sure that our workspace is a Git repository
+
+            if (!storage.compare("git")) {
+                PmrWorkspace *workspace = new PmrWorkspace(workspaceName,
+                                                           workspaceUrl,
+                                                           workspaceDescription,
+                                                           workspaceOwner,
+                                                           this);
+                QString dirName = QString();
+
+                if (exposure) {
+                    // Cloning a workspace from an exposure
+
+                    exposure->setWorkspace(workspace);
+
+                    // Check that we aren't already managing a clone of the
+                    // workspace
+
+                    PmrWorkspace *existingWorkspace = PmrWorkspaceManager::instance()->workspace(workspaceUrl);
+
+                    if (!existingWorkspace) {
+                        // Retrieve the name of an empty directory
+
+                        dirName = getEmptyDirectory();
+                    } else {
+                        emit warning(tr("The workspace for %1 is already cloned in %2.").arg(workspaceUrl,
+                                                                                             existingWorkspace->path()));
+                    }
+                } else {
+                    // Cloning after creating a new (owned) workspace
+
+                    workspace->setOwned(true);
+
+                    dirName = sender()->property(PathProperty).toString();
+                }
+
+                // Clone the workspace, if we have an empty directory
+
+                if (!dirName.isEmpty())
+                    requestWorkspaceClone(workspace, dirName);
+            } else if (exposure) {
+                emitInformation(tr("The workspace for %1 is not a Git repository.").arg(exposure->toHtml()));
+            }
+        } else if (exposure) {
+            emitInformation(tr("No workspace information could be found for %1.").arg(exposure->toHtml()));
+        }
+    }
+}
+
+//==============================================================================
+
+void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace,
+                                          const QString &pPath)
+{
+    // Let people know that we are (going to be) busy
 
     emit busy(true);
 
-    // Send our request to PMR, asking for the response to be compressed, but
-    // only if we are connected to the Internet
+    // Get credentials for the given workspace
 
-    if (Core::internetConnectionAvailable()) {
-        QNetworkRequest networkRequest;
+    requestWorkspaceCredentials(pWorkspace);
 
-        networkRequest.setRawHeader("Accept", "application/vnd.physiome.pmr2.json.1");
-        networkRequest.setRawHeader("Accept-Encoding", "gzip");
+    // Clone the given workspace to the given path
 
-        switch (pPmrRequest) {
-        case ExposuresList:
-            networkRequest.setUrl(QUrl("https://models.physiomeproject.org/exposure"));
+    connect(pWorkspace, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspaceCloneFinished(PMRSupport::PmrWorkspace *)));
 
-            break;
-        case ExposureInformation:
-        case WorkspaceInformation:
-        case ExposureFileInformation:
-            networkRequest.setUrl(QUrl(pUrl));
-
-            break;
-        }
-
-        QNetworkReply *networkReply = mNetworkAccessManager->get(networkRequest);
-
-        // Keep track of the type of our PMR request and of the action to carry
-        // out (once we have retrieved everything we need from PMR)
-
-        networkReply->setProperty(PmrRequestProperty, pPmrRequest);
-        networkReply->setProperty(ActionProperty, pAction);
-        networkReply->setProperty(DirNameProperty, pDirName);
-    } else {
-        finished();
-    }
+    QtConcurrent::run(pWorkspace, &PmrWorkspace::clone, pPath);
 }
 
 //==============================================================================
 
-QString PmrWebService::informationNoteMessage() const
+void PmrWebService::workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace)
 {
-    // Return some information note
-
-    return tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case.");
-}
-
-//==============================================================================
-
-int PmrWebService::bypassCertificateCheck(git_cert *pCertificate, int pValid,
-                                          const char *pHost, void *pPayload)
-{
-    Q_UNUSED(pCertificate);
-    Q_UNUSED(pValid);
-    Q_UNUSED(pHost);
-    Q_UNUSED(pPayload);
-
-    // Bypass the certificate check
-
-    return 1;
-}
-
-//==============================================================================
-
-int PmrWebService::processEvents(const git_transfer_progress *pStatistics,
-                                 void *pPayload)
-{
-    Q_UNUSED(pStatistics);
-    Q_UNUSED(pPayload);
-
-    // Make sure that our busy widget gets updated
-
-    QCoreApplication::processEvents();
-
-    return 0;
-}
-
-//==============================================================================
-
-void PmrWebService::doCloneWorkspace(const QString &pWorkspace,
-                                     const QString &pDirName)
-{
-    // Clone the workspace, ignoring the certificate check (i.e. trusting PMR's
-    // SSL certificate) and making sure that any busy widget gets updated
-
-    git_libgit2_init();
-
-    git_repository *gitRepository = 0;
-    QByteArray workspaceByteArray = pWorkspace.toUtf8();
-    QByteArray dirNameByteArray = pDirName.toUtf8();
-    git_clone_options cloneOptions;
-
-    git_clone_init_options(&cloneOptions, GIT_CLONE_OPTIONS_VERSION);
-
-    cloneOptions.fetch_opts.callbacks.certificate_check = bypassCertificateCheck;
-    cloneOptions.fetch_opts.callbacks.transfer_progress = processEvents;
-
-    int res = git_clone(&gitRepository, workspaceByteArray.constData(),
-                        dirNameByteArray.constData(), &cloneOptions);
-
-    if (res) {
-        const git_error *gitError = giterr_last();
-
-        emit warning(gitError?
-                         tr("Error %1: %2.").arg(QString::number(gitError->klass), Core::formatMessage(gitError->message)):
-                         tr("An error occurred while trying to clone the workspace."));
-    } else if (gitRepository) {
-        git_repository_free(gitRepository);
-    }
-
-    git_libgit2_shutdown();
-}
-
-//==============================================================================
-
-void PmrWebService::doShowExposureFiles(const QString &pExposureUrl)
-{
-    // Show the exposure files, but only if there are some
-
-    if (!mExposureFileNames.values(pExposureUrl).isEmpty()) {
-        emit showExposureFiles(pExposureUrl);
-    } else {
-        emit information( tr("No exposure file URL could be found for <a href=\"%1\">%2</a>.").arg(pExposureUrl, mExposureNames.value(pExposureUrl))
-                         +"<br/><br/>"+informationNoteMessage());
-    }
-}
-
-//==============================================================================
-
-bool sortExposureFiles(const QString &pExposureFile1,
-                       const QString &pExposureFile2)
-{
-    // Determine which of the two exposure files should be first (without
-    // worrying about casing)
-
-    return pExposureFile1.compare(pExposureFile2, Qt::CaseInsensitive) < 0;
-}
-
-//==============================================================================
-
-void PmrWebService::finished(QNetworkReply *pNetworkReply)
-{
-    // Check whether our PMR request was successful
-
-    PmrRequest pmrRequest = pNetworkReply?PmrRequest(pNetworkReply->property(PmrRequestProperty).toInt()):ExposuresList;
-    bool internetConnectionAvailable = true;
-    QString errorMessage = QString();
-    QString informationMessage = QString();
-    PmrExposures exposures = PmrExposures();
-    QString workspaceUrl = QString();
-    QStringList exposureFileUrls = QStringList();
-    QString exposureUrl = QString();
-
-    if (pNetworkReply) {
-        if (pNetworkReply->error() == QNetworkReply::NoError) {
-            // Retrieve and uncompress our JSON data
-
-            QByteArray compressedData = pNetworkReply->readAll();
-            QByteArray uncompressedData = QByteArray();
-            z_stream stream;
-
-            memset(&stream, 0, sizeof(z_stream));
-
-            if (inflateInit2(&stream, MAX_WBITS+16) == Z_OK) {
-                enum {
-                    BufferSize = 32768
-                };
-
-                Bytef buffer[BufferSize];
-
-                stream.next_in = (Bytef *) compressedData.data();
-                stream.avail_in = compressedData.size();
-
-                do {
-                    stream.next_out = buffer;
-                    stream.avail_out = BufferSize;
-
-                    inflate(&stream, Z_NO_FLUSH);
-
-                    if (!stream.msg)
-                        uncompressedData += QByteArray::fromRawData((char *) buffer, BufferSize-stream.avail_out);
-                    else
-                        uncompressedData = QByteArray();
-                } while (!stream.avail_out);
-
-                inflateEnd(&stream);
-            }
-
-            // Parse our uncompressed JSON data
-
-            QJsonParseError jsonParseError;
-            QJsonDocument jsonDocument = QJsonDocument::fromJson(uncompressedData, &jsonParseError);
-            QString url = pNetworkReply->url().toString();
-
-            if (jsonParseError.error == QJsonParseError::NoError) {
-                // Check our PMR request to determine what we should do with the
-                // data
-
-                QVariantMap collectionMap = jsonDocument.object().toVariantMap()["collection"].toMap();
-
-                switch (pmrRequest) {
-                case ExposuresList:
-                    // Retrieve the list of exposures
-
-                    foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
-                        QVariantMap linksMap = linksVariant.toMap();
-
-                        if (!linksMap["rel"].toString().compare("bookmark")) {
-                            QString exposureUrl = linksMap["href"].toString().trimmed();
-                            QString exposureName = linksMap["prompt"].toString().simplified();
-
-                            if (   !exposureUrl.isEmpty()
-                                && !exposureName.isEmpty()) {
-                                mExposureNames.insert(exposureUrl, exposureName);
-
-                                exposures.add(exposureUrl, exposureName);
-                            }
-                        }
-                    }
-
-                    std::sort(exposures.begin(), exposures.end(),
-                              PmrExposure::compare);
-
-                    break;
-                case ExposureInformation:
-                    // Retrieve the URLs that will help us to retrieve some
-                    // information about the exposure's workspace and exposure
-                    // files
-
-                    exposureUrl = url;
-
-                    foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
-                        QVariantMap linksMap = linksVariant.toMap();
-                        QString relValue = linksMap["rel"].toString();
-
-                        if (!relValue.compare("via")) {
-                            workspaceUrl = linksMap["href"].toString().trimmed();
-                        } else if (!relValue.compare("bookmark")) {
-                            QString exposureFileUrl = linksMap["href"].toString().trimmed();
-
-                            if (!exposureFileUrl.isEmpty()) {
-                                exposureFileUrls << exposureFileUrl;
-
-                                ++mNumberOfExposureFileUrlsLeft;
-                            }
-                        }
-                    }
-
-                    // Make sure that we at least have a workspace
-
-                    if (workspaceUrl.isEmpty()) {
-                        informationMessage = tr("No workspace URL could be found for <a href=\"%1\">%2</a>.");
-
-                        break;
-                    }
-
-                    // (Pretend) to show our exposure files in case this is what
-                    // we ultimately want to do and in case we have no exposure
-                    // files to show
-                    // Note: indeed, this will result in an information message
-                    //       being shown to tell us that there are no exposure
-                    //       files. If we were not do the below, then we would
-                    //       never get that message the first time we try to
-                    //       show our exposure files (since that first time, we
-                    //       would normally show our exposure files after having
-                    //       retrieved the last exposure file information)...
-
-                    if (   exposureFileUrls.isEmpty()
-                        && (Action(pNetworkReply->property(ActionProperty).toInt()) == ShowExposureFiles)) {
-                        doShowExposureFiles(exposureUrl);
-                    }
-
-                    // Retrieve the workspace and exposure file information from
-                    // PMR
-
-                    mExposureUrls.insert(workspaceUrl, url);
-
-                    sendPmrRequest(WorkspaceInformation, workspaceUrl,
-                                   Action(pNetworkReply->property(ActionProperty).toInt()),
-                                   pNetworkReply->property(DirNameProperty).toString());
-
-                    foreach (const QString &exposureFileUrl, exposureFileUrls) {
-                        mExposureUrls.insert(exposureFileUrl, url);
-
-                        sendPmrRequest(ExposureFileInformation, exposureFileUrl,
-                                       Action(pNetworkReply->property(ActionProperty).toInt()));
-                    }
-
-                    break;
-                case WorkspaceInformation: {
-                    QVariantList itemsList = collectionMap["items"].toList();
-
-                    exposureUrl = mExposureUrls.value(url);
-
-                    if (itemsList.count()) {
-                        // Retrieve the ype of workspace we are dealing with
-
-                        QString storageValue = QString();
-
-                        foreach (const QVariant &dataVariant, itemsList.first().toMap()["data"].toList()) {
-                            QVariantMap dataMap = dataVariant.toMap();
-
-                            if (!dataMap["name"].toString().compare("storage")) {
-                                storageValue = dataMap["value"].toString();
-
-                                break;
-                            }
-                        }
-
-                        // Make sure that our workspace is a Git repository
-
-                        if (!storageValue.compare("git")) {
-                            // Retrieve the workspace URL from the workspace
-                            // information, and keep track of it
-
-                            QString workspace = itemsList.first().toMap()["href"].toString().trimmed();
-
-                            if (!workspace.isEmpty())
-                                mWorkspaces.insert(exposureUrl, workspace);
-                        } else {
-                            informationMessage = tr("The workspace for <a href=\"%1\">%2</a> is not a Git repository.");
-                        }
-                    } else {
-                        informationMessage = tr("No workspace information could be found for <a href=\"%1\">%2</a>.");
-                    }
-
-                    break;
-                }
-                case ExposureFileInformation: {
-                    bool hasExposureFileInformation = false;
-                    QVariantList itemsList = collectionMap["items"].toList();
-
-                    exposureUrl = mExposureUrls.value(url);
-
-                    if (itemsList.count()) {
-                        QVariantList linksList = itemsList.first().toMap()["links"].toList();
-
-                        if (linksList.count()) {
-                            // Retrieve the exposure file name, from the
-                            // exposure file information, and keep track of it
-
-                            QString exposureFile = linksList.first().toMap()["href"].toString().trimmed();
-
-                            if (!exposureFile.isEmpty()) {
-                                hasExposureFileInformation = true;
-
-                                exposureUrl = mExposureUrls.value(url);
-
-                                mExposureFileNames.insertMulti(exposureUrl, exposureFile);
-
-                                --mNumberOfExposureFileUrlsLeft;
-
-                                // Check whether the exposure file has a link
-                                // called "Launch with OpenCOR"
-
-                                foreach (const QVariant &linksVariant, collectionMap["links"].toList()) {
-                                    QVariantMap linksMap = linksVariant.toMap();
-                                    QString promptValue = linksMap["prompt"].toString();
-                                    QString relValue = linksMap["rel"].toString();
-
-                                    if (   !promptValue.compare("Launch with OpenCOR")
-                                        && !relValue.compare("section")) {
-                                        // Our exposure file has a link called
-                                        // "Launch with OpenCOR", so check
-                                        // whether its href value is already
-                                        // listed in our list of exposure files
-                                        // and, if not, then add it to it
-
-                                        exposureFile = linksMap["href"].toString().trimmed().remove("opencor://openFile/");
-
-                                        if (   !exposureFile.isEmpty()
-                                            && !mExposureFileNames.values(exposureUrl).contains(exposureFile)) {
-                                            mExposureFileNames.insertMulti(exposureUrl, exposureFile);
-                                        }
-                                    }
-                                }
-
-                                // Ask our widget to add our exposure files,
-                                // should we have no exposure file URL left to
-                                // handle
-
-                                if (!mNumberOfExposureFileUrlsLeft) {
-                                    QStringList exposureFileNames = mExposureFileNames.values(exposureUrl);
-
-                                    std::sort(exposureFileNames.begin(), exposureFileNames.end(),
-                                              sortExposureFiles);
-
-                                    emit addExposureFiles(exposureUrl, exposureFileNames);
-                                }
-                            }
-                        }
-                    }
-
-                    if (!hasExposureFileInformation)
-                        informationMessage = tr("No exposure file information could be found for <a href=\"%1\">%2</a>.");
-
-                    break;
-                }
-                }
-
-                // Check whether something wrong happened during the processing
-                // of our request
-
-                if (!informationMessage.isEmpty()) {
-                    emit information( informationMessage.arg(exposureUrl, mExposureNames.value(exposureUrl))
-                                     +"<br/><br/>"+informationNoteMessage());
-                }
-            } else {
-                errorMessage = jsonParseError.errorString();
-            }
-        } else {
-            errorMessage = pNetworkReply->errorString();
-        }
-    } else {
-        internetConnectionAvailable = false;
-    }
-
-    // Some additional processing based on our PMR request
-
-    switch (pmrRequest) {
-    case ExposuresList:
-        // Respond with a list of exposures
-
-        emit exposuresList(exposures, errorMessage, internetConnectionAvailable);
-
-        break;
-    case ExposureInformation:
-        // No additional processing needed
-
-        break;
-    case WorkspaceInformation:
-        // Clone the workspace, if possible and requested
-
-        if (   mWorkspaces.contains(exposureUrl)
-            && (Action(pNetworkReply->property(ActionProperty).toInt()) == CloneWorkspace)) {
-            doCloneWorkspace(mWorkspaces.value(exposureUrl),
-                             pNetworkReply->property(DirNameProperty).toString());
-        }
-
-        break;
-    case ExposureFileInformation:
-        // Show the exposure files, if possible and requested
-
-        if (   !mNumberOfExposureFileUrlsLeft
-            &&  (Action(pNetworkReply->property(ActionProperty).toInt()) == ShowExposureFiles)) {
-            doShowExposureFiles(exposureUrl);
-        }
-
-        break;
-    }
-
-    // Show ourselves as not busy anymore
+    // Let people know that we are not busy anymore
 
     emit busy(false);
-
-    // Delete (later) the network reply
-
-    if (pNetworkReply)
-        pNetworkReply->deleteLater();
+    emit workspaceCloned(pWorkspace);
 }
 
 //==============================================================================
 
-void PmrWebService::sslErrors(QNetworkReply *pNetworkReply,
-                                const QList<QSslError> &pSslErrors)
+void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
+                                                const bool &pPush)
 {
-    // Ignore the SSL errors since we trust the website and therefore its
-    // certificate (even if it is invalid, e.g. it has expired)
+    // Let people know that we are (going to be) busy
 
-    pNetworkReply->ignoreSslErrors(pSslErrors);
+    emit busy(true);
+
+    // Get credentials for the given workspace
+
+    requestWorkspaceCredentials(pWorkspace);
+
+    // Synchronise the given workspace
+
+    connect(pWorkspace, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *)));
+
+    QtConcurrent::run(pWorkspace, &PmrWorkspace::synchronize, pPush);
 }
 
 //==============================================================================
 
-void PmrWebService::requestExposuresList()
+void PmrWebService::workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *pWorkspace)
 {
-    // Get the list of exposures from PMR after making sure that our internal
-    // data has been reset
+    // Let people know that we are not busy anymore and that the given workspace
+    // has been synchronised
 
-    mWorkspaces.clear();
-    mExposureUrls.clear();
-    mExposureNames.clear();
-    mExposureFileNames.clear();
-
-    sendPmrRequest(ExposuresList);
+    emit busy(false);
+    emit workspaceSynchronized(pWorkspace);
 }
 
 //==============================================================================
 
-void PmrWebService::cloneWorkspace(const QString &pUrl, const QString &pDirName)
+QString PmrWebService::getEmptyDirectory()
 {
-    // Check whether we already know about the workspace for the given exposure
+    // Retrieve and return the name of an empty directory
 
-    QString workspace = mWorkspaces.value(pUrl);
+    return Core::getEmptyDirectory(tr("Select Empty Directory"));
+}
 
-    if (!workspace.isEmpty()) {
-        emit busy(true);
+//==============================================================================
 
-        doCloneWorkspace(workspace, pDirName);
+void PmrWebService::requestWorkspaceCredentials(PmrWorkspace *pWorkspace)
+{
+    // Request credentials for the given workspace
 
-        emit busy(false);
-    } else {
-        // To clone the workspace associated with the given exposure, we first
-        // need to retrieve some information about the exposure itself
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pWorkspace->url()+"/request_temporary_password",
+                                                                        true, true);
 
-        mNumberOfExposureFileUrlsLeft = 0;
+    if (pmrResponse) {
+        pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *) pWorkspace));
 
-        sendPmrRequest(ExposureInformation, pUrl, CloneWorkspace, pDirName);
+        connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
+                this, SLOT(workspaceCredentialsResponse(const QJsonDocument &)));
+
+        // Don't return until the PMR response has been processed
+
+        QEventLoop waitLoop;
+
+        connect(pmrResponse, SIGNAL(finished()),
+                &waitLoop, SLOT(quit()));
+
+        waitLoop.exec();
     }
+}
+
+//==============================================================================
+
+void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocument)
+{
+    // Retrieve the credentials from the given PMR response
+
+    QVariantMap jsonResponse = pJsonDocument.object().toVariantMap();
+    PmrWorkspace *workspace = (PmrWorkspace *) sender()->property(WorkspaceProperty).value<void *>();
+
+    if ( workspace &&
+        !jsonResponse["target"].toString().compare(workspace->url())) {
+        workspace->setCredentials(jsonResponse["user"].toString(), jsonResponse["key"].toString());
+    }
+}
+
+//==============================================================================
+
+void PmrWebService::requestExposureFileInformation(const QString &pUrl,
+                                                   PmrExposure *pExposure)
+{
+    // Retrieve some information about the exposure file, which URL is given
+
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, false);
+
+    if (pmrResponse) {
+        pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *) pExposure));
+
+        connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
+                this, SLOT(exposureFileInformationResponse(const QJsonDocument &)));
+    }
+}
+
+//==============================================================================
+
+void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDocument)
+{
+    // Retrieve some information about an exposure file
+
+    PmrExposure *exposure = (PmrExposure *) sender()->property(ExposureProperty).value<void *>();
+
+    if (exposure) {
+        bool hasExposureFileInformation = false;
+        QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+        QVariantList itemsList = collectionMap["items"].toList();
+
+        if (itemsList.count()) {
+            QVariantList linksList = itemsList.first().toMap()["links"].toList();
+
+            if (linksList.count()) {
+                // Retrieve the exposure file name, from the exposure file
+                // information, and keep track of it
+
+                QString exposureFile = linksList.first().toMap()["href"].toString().trimmed();
+
+                if (!exposureFile.isEmpty()) {
+                    hasExposureFileInformation = true;
+
+                    exposure->addExposureFile(exposureFile);
+
+                    mFileExposuresLeftCount.insert(exposure, mFileExposuresLeftCount.value(exposure)-1);
+
+                    // Check whether the exposure file has a link called
+                    // "Launch with OpenCOR" (e.g. for SED-ML files)
+
+                    foreach (const QVariant &links, collectionMap["links"].toList()) {
+                        QVariantMap linksMap = links.toMap();
+                        QString prompt = linksMap["prompt"].toString();
+                        QString rel = linksMap["rel"].toString();
+
+                        if (   !prompt.compare("Launch with OpenCOR")
+                            && !rel.compare("section")) {
+                            // Our exposure file has a link called
+                            // "Launch with OpenCOR", so check whether its href
+                            // value is already listed in our list of exposure
+                            // files and, if not, add it to it
+
+                            exposureFile = linksMap["href"].toString().trimmed().remove("opencor://openFile/");
+
+                            if (!exposureFile.isEmpty())
+                                exposure->addExposureFile(exposureFile);
+                        }
+                    }
+
+                    // Let people know that exposure files are available, should
+                    // we have no exposure file URLs left to handle
+
+                    if (!mFileExposuresLeftCount.value(exposure))
+                        emit exposureFiles(exposure->url(), exposure->exposureFiles());
+                }
+            }
+        }
+
+        if (!hasExposureFileInformation)
+            emitInformation(tr("No exposure file information could be found for %1.").arg(exposure->toHtml()));
+    }
+}
+
+//==============================================================================
+
+void PmrWebService::emitInformation(const QString &pMessage)
+{
+    // Let people know about the given information message
+
+    emit information( pMessage+"<br/><br/>"
+                     +tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."));
+}
+
+//==============================================================================
+
+void PmrWebService::forbidden(const QString &pUrl)
+{
+    // Let people know that access to the given URL is forbidden
+
+    emitInformation(tr("Access to %1 is forbidden.").arg(pUrl));
 }
 
 //==============================================================================
 
 void PmrWebService::requestExposureFiles(const QString &pUrl)
 {
-    // Check whether we already know about the exposure URL for the given
-    // exposure
+    // Request some information about the exposure, which URL is given, and then
+    // request the coorresponding exposure files
 
-    QString exposureUrl = mExposureUrls.value(mWorkspaces.value(pUrl));
+    PmrExposure *exposure = mUrlExposures.value(pUrl);
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(exposure->url(), false);
 
-    if (!exposureUrl.isEmpty()) {
-        doShowExposureFiles(exposureUrl);
+    if (pmrResponse) {
+        pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *) exposure));
+        pmrResponse->setProperty(NextActionProperty, RequestExposureFiles);
+
+        connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
+                this, SLOT(exposureInformationResponse(const QJsonDocument &)));
+    }
+}
+
+//==============================================================================
+
+void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocument)
+{
+    // Retrieve some information about an exposure from the given PMR response,
+    // and then clone it (if requested) and retrieve some information for all
+    // the corresponding exposure files
+
+    PmrExposure *exposure = (PmrExposure *) sender()->property(ExposureProperty).value<void *>();
+
+    if (exposure) {
+        // Retrieve the URLs that will help us to retrieve some information
+        // about the exposure's workspace and its exposure files
+
+        QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
+        QString workspaceUrl = QString();
+        QStringList exposureFileUrls = QStringList();
+
+        foreach (const QVariant &links, collectionMap["links"].toList()) {
+            QVariantMap linksMap = links.toMap();
+            QString rel = linksMap["rel"].toString();
+
+            if (!rel.compare("via")) {
+                workspaceUrl = linksMap["href"].toString().trimmed();
+            } else if (!rel.compare("bookmark")) {
+                QString exposureFileUrl = linksMap["href"].toString().trimmed();
+
+                if (!exposureFileUrl.isEmpty())
+                    exposureFileUrls << exposureFileUrl;
+            }
+        }
+
+        mFileExposuresLeftCount.insert(exposure, exposureFileUrls.count());
+
+        // Make sure that we at least have a workspace
+
+        if (workspaceUrl.isEmpty()) {
+            emitInformation(tr("No workspace could be found for %1.").arg(exposure->toHtml()));
+        } else {
+            Action action = Action(sender()->property(NextActionProperty).toInt());
+
+            if (action == CloneExposureWorkspace) {
+                // Retrieve some information about the workspace and then clone
+                // it
+
+                requestWorkspaceInformation(workspaceUrl, QString(), exposure);
+            } else if (   exposureFileUrls.isEmpty()
+                       && (action == RequestExposureFiles)) {
+                emitInformation(tr("No exposure files could be found for %1.").arg(exposure->toHtml()));
+            }
+        }
+
+        foreach (const QString &exposureFileUrl, exposureFileUrls)
+            requestExposureFileInformation(exposureFileUrl, exposure);
+    }
+}
+
+//==============================================================================
+
+void PmrWebService::requestExposureWorkspaceClone(const QString &pUrl)
+{
+    // Ask for the workspace associated with the given exposure to be cloned,
+    // but only if we don't already know about that workspace
+
+    PmrExposure *exposure = mUrlExposures.value(pUrl);
+
+    if (exposure->workspace()) {
+        QString url = exposure->workspace()->url();
+        QString dirName = exposure->workspace()->path();
+
+        // Check that we aren't already managing a clone of the workspace
+
+        if (!dirName.isEmpty()) {
+            emit warning(tr("The workspace for %1 is already cloned in %2.").arg(url, dirName));
+        } else {
+            PmrWorkspace *existingWorkspace = PmrWorkspaceManager::instance()->workspace(url);
+
+            if (!existingWorkspace) {
+                // Retrieve the name of an empty directory
+
+                dirName = getEmptyDirectory();
+
+                if (!dirName.isEmpty())
+                    requestWorkspaceClone(exposure->workspace(), dirName);
+            } else {
+                emit warning(tr("The workspace for %1 is already cloned in %2.").arg(url, existingWorkspace->path()));
+            }
+        }
     } else {
-        // To show the exposure files associated with the given exposure, we
-        // first need to retrieve some information about the exposure itself
+        // To clone the workspace associated with the given exposure, we first
+        // need to retrieve some information about the exposure itself
 
-        mNumberOfExposureFileUrlsLeft = 0;
+        PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, false);
 
-        sendPmrRequest(ExposureInformation, pUrl, ShowExposureFiles);
+        if (pmrResponse) {
+            pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *) exposure));
+            pmrResponse->setProperty(NextActionProperty, CloneExposureWorkspace);
+
+            connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
+                    this, SLOT(exposureInformationResponse(const QJsonDocument &)));
+        }
     }
 }
 

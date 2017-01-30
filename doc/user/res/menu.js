@@ -28,6 +28,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                                 { "level": 2, "label": "FileBrowserWindow", "link": "user/plugins/organisation/FileBrowserWindow.html", "subMenuItem": true },
                                 { "level": 2, "label": "FileOrganiserWindow", "link": "user/plugins/organisation/FileOrganiserWindow.html", "subMenuItem": true },
                                 { "level": 2, "label": "PMRWindow", "link": "user/plugins/organisation/PMRWindow.html", "subMenuItem": true },
+                                { "level": 2, "label": "PMRWorskspacesWindow", "link": "user/plugins/organisation/PMRWorskspacesWindow.html", "subMenuItem": true },
                                 { "level": 1, "label": "Simulation", "subMenuHeader": true },
                                 { "level": 2, "label": "SingleCellView", "link": "user/plugins/simulation/SingleCellView.html", "subMenuItem": true },
                                 { "level": 1, "label": "Solver", "subMenuHeader": true },

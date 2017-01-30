@@ -48,7 +48,8 @@ namespace PMRWindow {
 
 PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
-    mGui(new Ui::PmrWindowWindow)
+    mGui(new Ui::PmrWindowWindow),
+    mItemDoubleClicked(false)
 {
     // Set up the GUI
 
@@ -111,11 +112,11 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     // exposures, if necessary
 
     connect(this, SIGNAL(visibilityChanged(bool)),
-            this, SLOT(retrieveExposuresList(const bool &)));
+            this, SLOT(retrieveExposures(const bool &)));
 
-    // Create and add the PMR web service
+    // Create an instance of our PMR web service
 
-    mPmrWebService = new PMRSupport::PmrWebService();
+    mPmrWebService = new PMRSupport::PmrWebService(this);
 
     // Some connections to process responses from our PMR web service
 
@@ -126,24 +127,27 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
             this, SLOT(showInformation(const QString &)));
     connect(mPmrWebService, SIGNAL(warning(const QString &)),
             this, SLOT(showWarning(const QString &)));
+    connect(mPmrWebService, SIGNAL(error(const QString &)),
+            this, SLOT(showError(const QString &)));
 
-    connect(mPmrWebService, SIGNAL(exposuresList(const PMRSupport::PmrExposures &, const QString &, const bool &)),
-            this, SLOT(initializeWidget(const PMRSupport::PmrExposures &, const QString &, const bool &)));
+    connect(mPmrWebService, SIGNAL(exposures(const PMRSupport::PmrExposures &)),
+            this, SLOT(initializeWidget(const PMRSupport::PmrExposures &)));
 
-    connect(mPmrWebService, SIGNAL(addExposureFiles(const QString &, const QStringList &)),
-            mPmrWindowWidget, SLOT(addExposureFiles(const QString &, const QStringList &)));
-    connect(mPmrWebService, SIGNAL(showExposureFiles(const QString &)),
-            mPmrWindowWidget, SLOT(showExposureFiles(const QString &)));
+    connect(mPmrWebService, SIGNAL(exposureFiles(const QString &, const QStringList &)),
+            mPmrWindowWidget, SLOT(addAndShowExposureFiles(const QString &, const QStringList &)));
 
     // Some connections to know what our PMR widget wants from us
 
     connect(mPmrWindowWidget, SIGNAL(cloneWorkspaceRequested(const QString &)),
-            this, SLOT(cloneWorkspace(const QString &)));
-    connect(mPmrWindowWidget, SIGNAL(showExposureFilesRequested(const QString &)),
-            this, SLOT(showExposureFiles(const QString &)));
-
+            mPmrWebService, SLOT(requestExposureWorkspaceClone(const QString &)));
+    connect(mPmrWindowWidget, SIGNAL(exposureFilesRequested(const QString &)),
+            mPmrWebService, SLOT(requestExposureFiles(const QString &)));
     connect(mPmrWindowWidget, SIGNAL(openExposureFileRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
+    connect(mPmrWindowWidget, SIGNAL(openExposureFilesRequested(const QStringList &)),
+            this, SLOT(openFiles(const QStringList &)));
+    connect(mPmrWindowWidget, SIGNAL(itemDoubleClicked()),
+            this, SLOT(itemDoubleClicked()));
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -155,10 +159,6 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
 PmrWindowWindow::~PmrWindowWindow()
 {
-    // Delete our PMR web service
-
-    delete mPmrWebService;
-
     // Delete the GUI
 
     delete mGui;
@@ -218,32 +218,66 @@ void PmrWindowWindow::busy(const bool &pBusy)
         mGui->dockWidgetContents->setEnabled(false);
     } else if (!pBusy && !counter) {
         // Re-enable the GUI side and give, within the current window, the focus
-        // to mFilterValue, but only if the current window already has the focus
+        // to mFilterValue, but only if the current window already has the
+        // focus, or to mPmrWindowWidget if it was previously double clicked
 
         mPmrWindowWidget->hideBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(true);
 
-        Core::setFocusTo(mFilterValue);
+        if (mItemDoubleClicked) {
+            mItemDoubleClicked = false;
+
+            mPmrWindowWidget->setFocus();
+        } else {
+            Core::setFocusTo(mFilterValue);
+        }
     }
-}
-
-//==============================================================================
-
-void PmrWindowWindow::showWarning(const QString &pMessage)
-{
-    // Show the given message as a warning
-
-    Core::warningMessageBox(windowTitle(), pMessage);
 }
 
 //==============================================================================
 
 void PmrWindowWindow::showInformation(const QString &pMessage)
 {
-    // Show the given message as informative text
+    // Show the given message as an information message box, but only if we
+    // already have some exposures
+    // Note: indeed, the idea is not to break the user's workflow, should some
+    //       information become available when trying to retrieve the list of
+    //       exposures at startup...
 
-    Core::informationMessageBox(windowTitle(), pMessage);
+    if (mPmrWindowWidget->hasExposures())
+        Core::informationMessageBox(windowTitle(), pMessage);
+}
+
+//==============================================================================
+
+void PmrWindowWindow::showWarning(const QString &pMessage)
+{
+    // Show the given message as a warning message box, but only if we already
+    // have some exposures
+    // Note: indeed, the idea is not to break the user's workflow, should a
+    //       warning occur when trying to retrieve the list of exposures at
+    //       startup...
+
+    if (mPmrWindowWidget->hasExposures())
+        Core::warningMessageBox(windowTitle(), pMessage);
+}
+
+//==============================================================================
+
+void PmrWindowWindow::showError(const QString &pMessage)
+{
+    // Either show the given message as an error message box or tell our PMR
+    // widget that we have a problem, this based on whether we have already
+    // retrieved the list of exposures
+    // Note: indeed, the idea is not to break the user's workflow, should an
+    //       error occur when trying to retrieve the list of exposures at
+    //       startup...
+
+    if (mPmrWindowWidget->hasExposures())
+        Core::criticalMessageBox(windowTitle(), pMessage);
+    else
+        mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(), pMessage);
 }
 
 //==============================================================================
@@ -252,25 +286,31 @@ void PmrWindowWindow::on_actionReload_triggered()
 {
     // Get the list of exposures from our PMR web service
 
-    mPmrWebService->requestExposuresList();
+    mPmrWebService->requestExposures();
 }
 
 //==============================================================================
 
-void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposures,
-                                       const QString &pErrorMessage,
-                                       const bool &pInternetConnectionAvailable)
+void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposures)
 {
     // Ask our PMR widget to initialise itself
 
-    mPmrWindowWidget->initialize(pExposures, pErrorMessage,
-                                 mFilterValue->text(),
-                                 pInternetConnectionAvailable);
+    mPmrWindowWidget->initialize(pExposures, mFilterValue->text(), QString());
 }
 
 //==============================================================================
 
-void PmrWindowWindow::retrieveExposuresList(const bool &pVisible)
+void PmrWindowWindow::itemDoubleClicked()
+{
+    // Keep track of the fact that an item got double clicked and that we will
+    // want it to get the focus back once we are not busy anymore
+
+    mItemDoubleClicked = true;
+}
+
+//==============================================================================
+
+void PmrWindowWindow::retrieveExposures(const bool &pVisible)
 {
     // Retrieve the list of exposures, if we are becoming visible and the list
     // of exposures has never been requested before (through a single shot, this
@@ -284,32 +324,6 @@ void PmrWindowWindow::retrieveExposuresList(const bool &pVisible)
 
         QTimer::singleShot(0, this, SLOT(on_actionReload_triggered()));
     }
-}
-
-//==============================================================================
-
-void PmrWindowWindow::cloneWorkspace(const QString &pUrl)
-{
-    // Retrieve the name of an empty directory
-
-    QString dirName = Core::getDirectory(tr("Select Empty Directory"),
-                                         QString(), true);
-
-    if (!dirName.isEmpty()) {
-        // We have got a directory name where we can clone the workspace, so
-        // request a clone of it
-
-        mPmrWebService->cloneWorkspace(pUrl, dirName);
-    }
-}
-
-//==============================================================================
-
-void PmrWindowWindow::showExposureFiles(const QString &pUrl)
-{
-    // Request a list of the exposure's files from our PMR web service
-
-    mPmrWebService->requestExposureFiles(pUrl);
 }
 
 //==============================================================================
