@@ -1,31 +1,37 @@
 /****************************************************************************
 **
-** Copyright (C) 2015 The Qt Company Ltd.
-** Contact: http://www.qt.io/licensing/
+** Copyright (C) 2016 The Qt Company Ltd.
+** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the QtGui module of the Qt Toolkit.
 **
-** $QT_BEGIN_LICENSE:LGPL21$
+** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
 ** Licensees holding valid commercial Qt licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
 ** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see http://www.qt.io/terms-conditions. For further
-** information use the contact form at http://www.qt.io/contact-us.
+** and conditions see https://www.qt.io/terms-conditions. For further
+** information use the contact form at https://www.qt.io/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 or version 3 as published by the Free
-** Software Foundation and appearing in the file LICENSE.LGPLv21 and
-** LICENSE.LGPLv3 included in the packaging of this file. Please review the
-** following information to ensure the GNU Lesser General Public License
-** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
-** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+** General Public License version 3 as published by the Free Software
+** Foundation and appearing in the file LICENSE.LGPL3 included in the
+** packaging of this file. Please review the following information to
+** ensure the GNU Lesser General Public License version 3 requirements
+** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
 **
-** As a special exception, The Qt Company gives you certain additional
-** rights. These rights are described in The Qt Company LGPL Exception
-** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 2.0 or (at your option) the GNU General
+** Public license version 3 or any later version approved by the KDE Free
+** Qt Foundation. The licenses are as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
+** included in the packaging of this file. Please review the following
+** information to ensure the GNU General Public License requirements will
+** be met: https://www.gnu.org/licenses/gpl-2.0.html and
+** https://www.gnu.org/licenses/gpl-3.0.html.
 **
 ** $QT_END_LICENSE$
 **
@@ -573,11 +579,13 @@ QZipReader::FileInfo QZipPrivate::fillFileInfo(int index) const
 
     // fix the file path, if broken (convert separators, eat leading and trailing ones)
     fileInfo.filePath = QDir::fromNativeSeparators(fileInfo.filePath);
-    while (!fileInfo.filePath.isEmpty() && (fileInfo.filePath.at(0) == QLatin1Char('.') || fileInfo.filePath.at(0) == QLatin1Char('/')))
-        fileInfo.filePath = fileInfo.filePath.mid(1);
-    while (!fileInfo.filePath.isEmpty() && fileInfo.filePath.at(fileInfo.filePath.size() - 1) == QLatin1Char('/'))
-        fileInfo.filePath.chop(1);
+    QStringRef filePathRef(&fileInfo.filePath);
+    while (filePathRef.startsWith(QLatin1Char('.')) || filePathRef.startsWith(QLatin1Char('/')))
+        filePathRef = filePathRef.mid(1);
+    while (filePathRef.endsWith(QLatin1Char('/')))
+        filePathRef = filePathRef.left(filePathRef.length()-1);
 
+    fileInfo.filePath = filePathRef.toString();
     return fileInfo;
 }
 
@@ -650,7 +658,7 @@ void QZipReaderPrivate::scanFiles()
     device->read((char *)tmp, 4);
     if (readUInt(tmp) != 0x04034b50) {
 /*---OPENCOR---
-        qWarning() << "QZip: not a zip file!";
+        qWarning("QZip: not a zip file!");
 */
         return;
     }
@@ -664,7 +672,7 @@ void QZipReaderPrivate::scanFiles()
         const int pos = device->size() - int(sizeof(EndOfDirectory)) - i;
         if (pos < 0 || i > 65535) {
 /*---OPENCOR---
-            qWarning() << "QZip: EndOfDirectory not found";
+            qWarning("QZip: EndOfDirectory not found");
 */
             return;
         }
@@ -683,7 +691,7 @@ void QZipReaderPrivate::scanFiles()
     int comment_length = readUShort(eod.comment_length);
 /*---OPENCOR---
     if (comment_length != i)
-        qWarning() << "QZip: failed to parse zip file.";
+        qWarning("QZip: failed to parse zip file.");
 */
     comment = device->read(qMin(comment_length, i));
 
@@ -694,13 +702,13 @@ void QZipReaderPrivate::scanFiles()
         int read = device->read((char *) &header.h, sizeof(CentralFileHeader));
         if (read < (int)sizeof(CentralFileHeader)) {
 /*---OPENCOR---
-            qWarning() << "QZip: Failed to read complete header, index may be incomplete";
+            qWarning("QZip: Failed to read complete header, index may be incomplete");
 */
             break;
         }
         if (readUInt(header.h.signature) != 0x02014b50) {
 /*---OPENCOR---
-            qWarning() << "QZip: invalid header signature, index may be incomplete";
+            qWarning("QZip: invalid header signature, index may be incomplete");
 */
             break;
         }
@@ -709,7 +717,7 @@ void QZipReaderPrivate::scanFiles()
         header.file_name = device->read(l);
         if (header.file_name.length() != l) {
 /*---OPENCOR---
-            qWarning() << "QZip: Failed to read filename from zip index, index may be incomplete";
+            qWarning("QZip: Failed to read filename from zip index, index may be incomplete");
 */
             break;
         }
@@ -717,7 +725,7 @@ void QZipReaderPrivate::scanFiles()
         header.extra_field = device->read(l);
         if (header.extra_field.length() != l) {
 /*---OPENCOR---
-            qWarning() << "QZip: Failed to read extra field in zip file, skipping file, index may be incomplete";
+            qWarning("QZip: Failed to read extra field in zip file, skipping file, index may be incomplete");
 */
             break;
         }
@@ -725,7 +733,7 @@ void QZipReaderPrivate::scanFiles()
         header.file_comment = device->read(l);
         if (header.file_comment.length() != l) {
 /*---OPENCOR---
-            qWarning() << "QZip: Failed to read read file comment, index may be incomplete";
+            qWarning("QZip: Failed to read read file comment, index may be incomplete");
 */
             break;
         }
@@ -919,16 +927,17 @@ void QZipWriterPrivate::addEntry(EntryType type, const QString &fileName, const 
 QZipReader::QZipReader(const QString &archive, QIODevice::OpenMode mode)
 {
     QScopedPointer<QFile> f(new QFile(archive));
-    f->open(mode);
+    const bool result = f->open(mode);
     QZipReader::Status status;
-    if (f->error() == QFile::NoError)
+    const QFileDevice::FileError error = f->error();
+    if (result && error == QFile::NoError) {
         status = NoError;
-    else {
-        if (f->error() == QFile::ReadError)
+    } else {
+        if (error == QFile::ReadError)
             status = FileReadError;
-        else if (f->error() == QFile::OpenError)
+        else if (error == QFile::OpenError)
             status = FileOpenError;
-        else if (f->error() == QFile::PermissionsError)
+        else if (error == QFile::PermissionsError)
             status = FilePermissionsError;
         else
             status = FileError;
@@ -1129,7 +1138,7 @@ bool QZipReader::extractAll(const QString &destinationDir) const
 
     // create directories first
     const QVector<FileInfo> allFiles = fileInfoList();
-    foreach (const FileInfo &fi, allFiles) {
+    for (const FileInfo &fi : allFiles) {
         const QString absPath = destinationDir + QDir::separator() + fi.filePath;
         if (fi.isDir) {
             if (!baseDir.mkpath(fi.filePath))
@@ -1140,7 +1149,7 @@ bool QZipReader::extractAll(const QString &destinationDir) const
     }
 
     // set up symlinks
-    foreach (const FileInfo &fi, allFiles) {
+    for (const FileInfo &fi : allFiles) {
         const QString absPath = destinationDir + QDir::separator() + fi.filePath;
         if (fi.isSymLink) {
             QString destination = QFile::decodeName(fileData(fi.filePath));
@@ -1167,7 +1176,7 @@ bool QZipReader::extractAll(const QString &destinationDir) const
     #error Unsupported platform
 #endif
 //---OPENCOR--- END
-    foreach (const FileInfo &fi, allFiles) {
+    for (const FileInfo &fi : allFiles) {
         const QString absPath = destinationDir + QDir::separator() + fi.filePath;
         if (fi.isFile) {
 //---OPENCOR--- BEGIN
@@ -1241,9 +1250,8 @@ void QZipReader::close()
 QZipWriter::QZipWriter(const QString &fileName, QIODevice::OpenMode mode)
 {
     QScopedPointer<QFile> f(new QFile(fileName));
-    f->open(mode);
     QZipWriter::Status status;
-    if (f->error() == QFile::NoError)
+    if (f->open(mode) && f->error() == QFile::NoError)
         status = QZipWriter::NoError;
     else {
         if (f->error() == QFile::WriteError)
