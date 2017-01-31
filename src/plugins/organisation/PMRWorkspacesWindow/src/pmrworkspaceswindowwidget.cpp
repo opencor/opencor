@@ -363,7 +363,7 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("Pull and push changes from/to PMR"));
     I18nInterface::retranslateAction(mReloadAction, mParentReloadAction->text(),
                                      mParentReloadAction->statusTip());
-    I18nInterface::retranslateAction(mAboutAction, tr("About"),
+    I18nInterface::retranslateAction(mAboutAction, tr("About..."),
                                      tr("Some information about the current workspace"));
 
     // Retranslate the rest of our GUI by updating it, if we have been
