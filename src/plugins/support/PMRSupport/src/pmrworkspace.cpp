@@ -49,13 +49,13 @@ namespace PMRSupport {
 
 //==============================================================================
 
-void PmrWorkspace::constructor(const QString &pName, const QString &pUrl,
-                               const QString &pDescription,
+void PmrWorkspace::constructor(const bool &pOwned, const QString &pName,
+                               const QString &pUrl, const QString &pDescription,
                                const QString &pOwner, PmrWebService *pParent)
 {
     // Initialise ourselves
 
-    mOwned = false;
+    mOwned = pOwned;
     mPath = QString();
     mUsername = QString();
     mPassword = QString();
@@ -83,13 +83,15 @@ void PmrWorkspace::constructor(const QString &pName, const QString &pUrl,
     connect(this, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(refreshStatus()));
 
-    // Forward a couple of our signals to the 'global' instance of our workspace
-    // manager class
+    // Forward our signals to the 'global' instance of our workspace manager
+    // class
 
     PmrWorkspaceManager *workspaceManager = PmrWorkspaceManager::instance();
 
     connect(this, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             workspaceManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)));
+    connect(this, SIGNAL(workspaceUncloned(PMRSupport::PmrWorkspace *)),
+            workspaceManager, SIGNAL(workspaceUncloned(PMRSupport::PmrWorkspace *)));
     connect(this, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
             workspaceManager, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)));
 
@@ -103,25 +105,25 @@ void PmrWorkspace::constructor(const QString &pName, const QString &pUrl,
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(const QString &pName, const QString &pUrl,
-                           const QString &pDescription, const QString &pOwner,
-                           PmrWebService *pParent) :
+PmrWorkspace::PmrWorkspace(const bool &pOwned, const QString &pName,
+                           const QString &pUrl, const QString &pDescription,
+                           const QString &pOwner, PmrWebService *pParent) :
     QObject(pParent)
 {
     // Construct our PMR workspace
 
-    constructor(pName, pUrl, pDescription, pOwner, pParent);
+    constructor(pOwned, pName, pUrl, pDescription, pOwner, pParent);
 }
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(const QString &pName, const QString &pUrl,
-                           PmrWebService *pParent) :
+PmrWorkspace::PmrWorkspace(const bool &pOwned, const QString &pName,
+                           const QString &pUrl, PmrWebService *pParent) :
     QObject(pParent)
 {
     // Construct our PMR workspace
 
-    constructor(pName, pUrl, QString(), QString(), pParent);
+    constructor(pOwned, pName, pUrl, QString(), QString(), pParent);
 }
 
 //==============================================================================
@@ -171,31 +173,11 @@ bool PmrWorkspace::isOwned() const
 
 //==============================================================================
 
-void PmrWorkspace::setOwned(const bool &pOwned)
-{
-    // Set whether we are owned
-
-    mOwned = pOwned;
-}
-
-//==============================================================================
-
 QString PmrWorkspace::path() const
 {
     // Return our path
 
     return mPath;
-}
-
-//==============================================================================
-
-void PmrWorkspace::setPath(const QString &pPath)
-{
-    // Set our path
-
-    mPath = pPath;
-
-    mRootFileNode->setPath(pPath);
 }
 
 //==============================================================================
@@ -284,10 +266,12 @@ void PmrWorkspace::clone(const QString &pPath)
 
     git_strarray_free(&authorizationStrArray);
 
-    // Keep track of our path and let people know that we are all done with the
-    // cloning
+    // Open ourselves in the given path and let people know that we are all done
+    // with the cloning
 
-    setPath(pPath);
+    open(pPath);
+
+    PmrWorkspaceManager::instance()->addWorkspace(this);
 
     emit workspaceCloned(this);
 }
@@ -296,7 +280,11 @@ void PmrWorkspace::clone(const QString &pPath)
 
 void PmrWorkspace::close()
 {
-    // Close ourselves, i.e. reset our Git repository object
+    // Close ourselves, i.e. reset both our path and our Git repository object
+
+    mPath = QString();
+
+    mRootFileNode->setPath(QString());
 
     git_repository_free(mGitRepository);
 
@@ -482,14 +470,20 @@ bool PmrWorkspace::isOpen() const
 
 //==============================================================================
 
-bool PmrWorkspace::open()
+bool PmrWorkspace::open(const QString &pPath)
 {
-    // Open ourselves (by first making sure that we are closed)
+    // Open ourselves by first making sure that we are closed
 
     close();
 
-    if (!mPath.isEmpty()) {
-        QByteArray pathByteArray = mPath.toUtf8();
+    // Now, set our path and get our Git repository object ready
+
+    mPath = pPath;
+
+    mRootFileNode->setPath(pPath);
+
+    if (!pPath.isEmpty()) {
+        QByteArray pathByteArray = pPath.toUtf8();
 
         if (!git_repository_open(&mGitRepository, pathByteArray.constData())) {
             refreshStatus();
@@ -672,10 +666,24 @@ void PmrWorkspace::deleteFileNodes(PmrWorkspaceFileNode *pFileNode,
         foreach (PmrWorkspaceFileNode *child, pFileNode->children())
             deleteFileNodes(child, pFileNodes);
 
-        // Remove the file node, if it doesn't have any children anymore
+        // Remove the file node or let people know that we have been uncloned,
+        // if the file node doesn't have any children anymore
 
         if (!pFileNode->hasChildren()) {
-            pFileNode->parent()->removeChild(pFileNode);
+            if (pFileNode->parent()) {
+                pFileNode->parent()->removeChild(pFileNode);
+            } else {
+                // The folder where we were cloned has been deleted, so close
+                // ourselves and ask the workspace manager to stop tracking us,
+                // if we are not owned
+
+                close();
+
+                if (!isOwned())
+                    PmrWorkspaceManager::instance()->removeWorkspace(this);
+
+                emit workspaceUncloned(this);
+            }
 
             pFileNodes.removeOne(pFileNode);
         }

@@ -205,6 +205,7 @@ private slots:
     void refreshWorkspaces(const PMRSupport::PmrWorkspaces &pWorkspaces = PMRSupport::PmrWorkspaces());
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
 
     void viewInPmr();

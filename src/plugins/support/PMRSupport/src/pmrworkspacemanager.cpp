@@ -116,6 +116,19 @@ void PmrWorkspaceManager::addWorkspace(PmrWorkspace *pWorkspace)
 
 //==============================================================================
 
+void PmrWorkspaceManager::removeWorkspace(PmrWorkspace *pWorkspace)
+{
+    // Stop tracking the given workspace, if any
+
+    if (pWorkspace) {
+        pWorkspace->close();
+
+        mUrlWorkspaces.remove(pWorkspace->url());
+    }
+}
+
+//==============================================================================
+
 void PmrWorkspaceManager::clearWorkspaces()
 {
     // Stop tracking all of our workspaces

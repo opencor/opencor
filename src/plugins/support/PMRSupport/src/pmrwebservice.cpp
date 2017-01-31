@@ -207,7 +207,7 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
             workspaceName = tr("** Unknown name **");
 
         if (!workspaceUrl.isEmpty() && !storage.compare("git")) {
-            *workspacePointer = new PmrWorkspace(workspaceName,
+            *workspacePointer = new PmrWorkspace(false, workspaceName,
                                                  workspaceUrl,
                                                  workspaceDescription,
                                                  workspaceOwner, this);
@@ -287,9 +287,8 @@ void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
             QString workspaceName = linksMap["prompt"].toString().simplified();
 
             if (!workspaceUrl.isEmpty() && !workspaceName.isEmpty()) {
-                workspaces << new PmrWorkspace(workspaceName, workspaceUrl, this);
-
-                workspaces.last()->setOwned(true);
+                workspaces << new PmrWorkspace(true, workspaceName,
+                                               workspaceUrl, this);
             }
         }
     }
@@ -361,7 +360,8 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
             // Make sure that our workspace is a Git repository
 
             if (!storage.compare("git")) {
-                PmrWorkspace *workspace = new PmrWorkspace(workspaceName,
+                PmrWorkspace *workspace = new PmrWorkspace(!exposure,
+                                                           workspaceName,
                                                            workspaceUrl,
                                                            workspaceDescription,
                                                            workspaceOwner,
@@ -388,8 +388,6 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
                     }
                 } else {
                     // Cloning after creating a new (owned) workspace
-
-                    workspace->setOwned(true);
 
                     dirName = sender()->property(PathProperty).toString();
                 }
@@ -514,10 +512,8 @@ void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocum
     QVariantMap jsonResponse = pJsonDocument.object().toVariantMap();
     PmrWorkspace *workspace = (PmrWorkspace *) sender()->property(WorkspaceProperty).value<void *>();
 
-    if ( workspace &&
-        !jsonResponse["target"].toString().compare(workspace->url())) {
+    if (workspace && !jsonResponse["target"].toString().compare(workspace->url()))
         workspace->setCredentials(jsonResponse["user"].toString(), jsonResponse["key"].toString());
-    }
 }
 
 //==============================================================================

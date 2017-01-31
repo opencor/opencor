@@ -56,6 +56,7 @@ public:
     PmrWorkspace * workspace(const QString &pUrl) const;
 
     void addWorkspace(PmrWorkspace *pWorkspace);
+    void removeWorkspace(PmrWorkspace *pWorkspace);
     void clearWorkspaces();
 
 private:
@@ -63,6 +64,7 @@ private:
 
 signals:
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
 };
 
