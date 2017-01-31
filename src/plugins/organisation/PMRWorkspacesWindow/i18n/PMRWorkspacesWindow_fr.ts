@@ -118,6 +118,10 @@
         <translation>Tirer et pousser les changements de/vers PMR</translation>
     </message>
     <message>
+        <source>About...</source>
+        <translation>À Propos...</translation>
+    </message>
+    <message>
         <source>Some information about the current workspace</source>
         <translation>Quelques informations au sujet de l&apos;espace de travail actuel</translation>
     </message>
@@ -168,10 +172,6 @@
     <message>
         <source>Path:</source>
         <translation>Chemin :</translation>
-    </message>
-    <message>
-        <source>About...</source>
-        <translation>À Propos...</translation>
     </message>
 </context>
 <context>
