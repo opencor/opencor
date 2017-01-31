@@ -39,9 +39,7 @@ class PmrWebServiceManager;
 
 //==============================================================================
 
-static const auto PmrUrl = QStringLiteral("http://staging.physiomeproject.org");
-//---OPENCOR--- THE ABOVE SHOULD EVENTUALLY BE REPLACED WITH THE BELOW...
-//static const auto PmrUrl = QStringLiteral("https://models.physiomeproject.org");
+static const auto PmrUrl = QStringLiteral("https://models.physiomeproject.org");
 
 //==============================================================================
 
@@ -131,7 +129,7 @@ private slots:
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
 
     void workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceSynchroniseFinished(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *pWorkspace);
 
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
 

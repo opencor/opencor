@@ -605,9 +605,9 @@ void PmrWorkspace::refreshStatus()
                     // Find the correct place in the tree to add the file
 
                     QStringList pathComponents = QString(filePath).split('/');
-                    int pathComponentsSize = pathComponents.size();
+                    int pathComponentsCount = pathComponents.count();
                     int i = 0;
-                    int n = qMin(pathComponentsSize, fileNodes.size())-1;
+                    int n = qMin(pathComponentsCount, fileNodes.count())-1;
 
                     while (   (i < n)
                            && pathComponents[i].compare(fileNodes[i+1]->name(), Qt::CaseInsensitive)) {
@@ -616,14 +616,14 @@ void PmrWorkspace::refreshStatus()
 
                     // Cut back the stack so that it matches the path component
 
-                    while (i+1 < fileNodes.size())
+                    while (i+1 < fileNodes.count())
                         fileNodes.removeLast();
 
                     currentFileNode = fileNodes[i];
 
                     // Add the directory nodes as required
 
-                    while (i < pathComponentsSize-1) {
+                    while (i < pathComponentsCount-1) {
                         currentFileNode = currentFileNode->addChild(pathComponents[i]);
 
                         fileNodes << currentFileNode;
@@ -1192,11 +1192,28 @@ bool PmrWorkspace::merge()
         if (git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE)
             res = commitMerge();
     } else if (error != GIT_ENOTFOUND) {
+        int nbOfConflictedFiles = mConflictedFiles.count();
         QString errorMessage = tr("An error occurred while trying to merge the workspace.");
 
-        if (mConflictedFiles.size()) {
-            errorMessage +=  "\n\n"+tr("The following files have conflicts:")
-                            +"\n\t"+mConflictedFiles.join("\n\t");
+        if (nbOfConflictedFiles) {
+            int counter = 0;
+
+            if (mConflictedFiles.count() == 1)
+                errorMessage += "\n\n"+tr("The following file has conflicts:");
+            else
+                errorMessage += "\n\n"+tr("The following files have conflicts:");
+
+            foreach (const QString &conflictedFile, mConflictedFiles) {
+                ++counter;
+
+                if (counter == nbOfConflictedFiles) {
+                    errorMessage += "\n"+tr(" - %1.").arg(conflictedFile);
+                } else if (counter == nbOfConflictedFiles-1) {
+                    errorMessage += "\n"+tr(" - %1; and").arg(conflictedFile);
+                } else {
+                    errorMessage += "\n"+tr(" - %1;").arg(conflictedFile);
+                }
+            }
         }
 
         emitGitError(errorMessage);

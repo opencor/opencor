@@ -370,7 +370,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         IDARootInit(mSolver, pCondVarCount, rootFindingFunction);
         //---GRY--- NEED TO CHECK THAT THINGS WORK AS EXPECTED BY TRYING IT OUT
-        //          ON A MODEL WHICH NEEDS ROOT FINDING (E.G. THE SAUCERMAN
+        //          ON A MODEL THAT NEEDS ROOT FINDING (E.G. THE SAUCERMAN
         //          MODEL)...
 
         // Set some user data

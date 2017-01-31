@@ -10,6 +10,7 @@ ADD_PLUGIN(PMRWorkspacesWindow
         ../../windowinterface.cpp
 
         src/pmrworkspaceswindowcommitdialog.cpp
+        src/pmrworkspaceswindowitem.cpp
         src/pmrworkspaceswindownewworkspacedialog.cpp
         src/pmrworkspaceswindowplugin.cpp
         src/pmrworkspaceswindowwidget.cpp

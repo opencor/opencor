@@ -15,10 +15,6 @@
 <context>
     <name>OpenCOR::PMRWindow::PmrWindowWidget</name>
     <message>
-        <source>No exposures match your criteria...</source>
-        <translation>Aucunes expositions ne correspondent à votre critère...</translation>
-    </message>
-    <message>
         <source>View In PMR</source>
         <translation>Voir Dans PMR</translation>
     </message>
@@ -35,12 +31,16 @@
         <translation>Copier l&apos;URL dans le presse-papier</translation>
     </message>
     <message>
+        <source>Clone...</source>
+        <translation>Cloner...</translation>
+    </message>
+    <message>
         <source>Clone the current workspace</source>
         <translation>Cloner l&apos;espace de travail actuel</translation>
     </message>
     <message>
-        <source>Clone...</source>
-        <translation type="unfinished"></translation>
+        <source>No exposures match your criteria...</source>
+        <translation>Aucunes expositions ne correspondent à votre critère...</translation>
     </message>
 </context>
 <context>
