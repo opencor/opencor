@@ -109,7 +109,7 @@ void PmrWebServiceResponse::processResponse()
     } else if (httpStatusCode == 302) {
         emit found(mNetworkReply->header(QNetworkRequest::LocationHeader).toString());
     } else if (!ResponseMimeTypes.contains(mNetworkReply->header(QNetworkRequest::ContentTypeHeader).toString())) {
-        emit error(tr("Response has unexpected content type"));
+        emit error(tr("PMR response has unexpected content type"));
     } else {
         // Parse our response
 

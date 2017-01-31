@@ -9,46 +9,46 @@
     </message>
     <message>
         <source>No exposure files could be found for %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Aucuns fichiers d&apos;exposition n&apos;ont pu être trouvés pour %1.</translation>
     </message>
     <message>
         <source>No exposure file information could be found for %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Aucunes informations de fichier d&apos;exposition n&apos;ont pu être trouvées pour %1.</translation>
     </message>
     <message>
         <source>The workspace for %1 is not a Git repository.</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;espace de travail pour %1 n&apos;est pas un répertoire Git.</translation>
     </message>
     <message>
         <source>No workspace information could be found for %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Aucunes informations d&apos;espace de travail n&apos;ont pu être trouvées pour %1.</translation>
     </message>
     <message>
         <source>** Unknown name **</source>
-        <translation type="unfinished"></translation>
+        <translation>** Nom inconnu **</translation>
     </message>
     <message>
         <source>No workspace could be found for %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Aucun espace de travail n&apos;a pu être trouvé pour %1.</translation>
     </message>
     <message>
         <source>Select Empty Directory</source>
-        <translation type="unfinished">Sélectionner Répertoire Vide</translation>
+        <translation>Sélectionner Répertoire Vide</translation>
     </message>
     <message>
         <source>The workspace for %1 is already cloned in %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;espace de travail pour %1 est déjà cloné à %2.</translation>
     </message>
     <message>
         <source>Access to %1 is forbidden.</source>
-        <translation type="unfinished"></translation>
+        <translation>Accès à %1 est interdit.</translation>
     </message>
 </context>
 <context>
     <name>OpenCOR::PMRSupport::PmrWebServiceResponse</name>
     <message>
-        <source>Response has unexpected content type</source>
-        <translation type="unfinished"></translation>
+        <source>PMR response has unexpected content type</source>
+        <translation>La réponse PMR a un type de contenu inattendu</translation>
     </message>
 </context>
 <context>
@@ -59,59 +59,59 @@
     </message>
     <message>
         <source>An error occurred while trying to open the workspace.</source>
-        <translation type="unfinished"></translation>
+        <translation>Une erreur s&apos;est produite lors de l&apos;ouverture de l&apos;espace de travail.</translation>
     </message>
     <message>
         <source>An error occurred while trying to push the workspace.</source>
-        <translation type="unfinished"></translation>
+        <translation>Une erreur s&apos;est produite lors du poussage de l&apos;espace de travail.</translation>
     </message>
     <message>
         <source>An error occurred while trying to fetch the remote workspace.</source>
-        <translation type="unfinished"></translation>
+        <translation>Une erreur s&apos;est produite lors de la récupération de l&apos;espace de travail.</translation>
     </message>
     <message>
         <source>An error occurred while trying to merge the workspace.</source>
-        <translation type="unfinished"></translation>
+        <translation>Une erreur s&apos;est produite lors de la fusion de l&apos;espace de travail.</translation>
     </message>
     <message>
         <source>The following files have conflicts:</source>
-        <translation type="unfinished"></translation>
+        <translation>Les fichiers suivants ont des conflits :</translation>
     </message>
     <message>
         <source>An error occurred while trying to commit the merge.</source>
-        <translation type="unfinished"></translation>
+        <translation>Une erreur s&apos;est produite lors de la validation de la fusion.</translation>
     </message>
     <message>
         <source>An error occurred while trying to commit to the workspace.</source>
-        <translation type="unfinished"></translation>
+        <translation>Une erreur s&apos;est produite lors de la validation de l&apos;espace de travail.</translation>
     </message>
     <message>
         <source>An error occurred while trying to get the remote status of %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Une erreur s&apos;est produite lors de l&apos;obtention de l&apos;état distant de %1.</translation>
     </message>
     <message>
         <source>An error occurred while trying to get the status of %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Une erreur s&apos;est produite lors de l&apos;obtention de l&apos;état de %1.</translation>
     </message>
     <message>
         <source>An error occurred while trying to stage %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Une erreur s&apos;est produite lors de l&apos;indexation de %1.</translation>
     </message>
     <message>
         <source>The following file has conflicts:</source>
-        <translation type="unfinished"></translation>
+        <translation>Le fichier suivant a des conflits :</translation>
     </message>
     <message>
         <source> - %1.</source>
-        <translation type="unfinished"></translation>
+        <translation> - %1.</translation>
     </message>
     <message>
         <source> - %1; and</source>
-        <translation type="unfinished"></translation>
+        <translation> - %1 ; et</translation>
     </message>
     <message>
         <source> - %1;</source>
-        <translation type="unfinished"></translation>
+        <translation> - %1 ;</translation>
     </message>
 </context>
 </TS>
