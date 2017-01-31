@@ -120,7 +120,7 @@ void PmrWorkspaceManager::clearWorkspaces()
 {
     // Stop tracking all of our workspaces
 
-    foreach (PmrWorkspace * workspace, mUrlWorkspaces.values())
+    foreach (PmrWorkspace *workspace, mUrlWorkspaces.values())
         workspace->close();
 
     mUrlWorkspaces.clear();
