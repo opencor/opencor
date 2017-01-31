@@ -17,14 +17,14 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// File Organiser window model
+// File Organiser window item
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include <QStandardItemModel>
+#include <QStandardItem>
 
 //==============================================================================
 
@@ -33,34 +33,30 @@ namespace FileOrganiserWindow {
 
 //==============================================================================
 
-static const auto FileOrganiserWindowMimeType = QStringLiteral("opencor/file-organiser-window");
+class FileOrganiserWindowItem : public QStandardItem
+{
+public:
+    explicit FileOrganiserWindowItem(const QIcon &pIcon,
+                                     const QString &pTextOrPath,
+                                     const bool &pFolder = false);
+
+    bool isFolder() const;
+
+    bool isExpanded() const;
+    void setExpanded(const bool &pExpanded);
+
+    QString path() const;
+
+private:
+    bool mFolder;
+    bool mExpanded;
+
+    QString mPath;
+};
 
 //==============================================================================
 
-class FileOrganiserWindowModel : public QStandardItemModel
-{
-    Q_OBJECT
-
-public:
-    explicit FileOrganiserWindowModel(QObject *pParent);
-
-    virtual QStringList mimeTypes() const;
-    virtual QMimeData * mimeData(const QModelIndexList &pIndexes) const;
-
-    QByteArray encodeHierarchyData(const QModelIndex &pIndex) const;
-
-    QModelIndex decodeHierarchyData(QByteArray &pData) const;
-    QModelIndexList decodeData(QByteArray &pData) const;
-
-    QString filePath(const QModelIndex &pFileIndex) const;
-
-private:
-    void encodeHierarchyData(const QModelIndex &pIndex, QDataStream &pStream,
-                             const int &pLevel = 0) const;
-    QByteArray encodeData(const QModelIndexList &pIndexes) const;
-
-    QModelIndex decodeHierarchyData(QDataStream &pStream) const;
-};
+typedef QList<FileOrganiserWindowItem *> FileOrganiserWindowItems;
 
 //==============================================================================
 

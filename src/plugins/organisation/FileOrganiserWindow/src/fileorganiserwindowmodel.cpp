@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "filemanager.h"
+#include "fileorganiserwindowitem.h"
 #include "fileorganiserwindowmodel.h"
 
 //==============================================================================
@@ -202,7 +203,7 @@ QMimeData * FileOrganiserWindowModel::mimeData(const QModelIndexList &pIndexes) 
 
     res->setUrls(urls);
 
-    // Set the data which contains information on both the folder and file items
+    // Set the data that contains information on both the folder and file items
     // Note: this data is useful with regards to the FileOrganiserWindowMimeType
     //       MIME type on which the file organiser widget relies for moving
     //       folder and file items around
@@ -219,10 +220,10 @@ QString FileOrganiserWindowModel::filePath(const QModelIndex &pFileIndex) const
     // Return the file path of pFileIndex, if it exists and corresponds to a
     // file
 
-    QStandardItem *fileItem = itemFromIndex(pFileIndex);
+    FileOrganiserWindowItem *fileItem = static_cast<FileOrganiserWindowItem *>(itemFromIndex(pFileIndex));
 
-    if (fileItem && !fileItem->data(Item::Folder).toBool())
-        return fileItem->data(Item::Path).toString();
+    if (fileItem && !fileItem->isFolder())
+        return fileItem->path();
     else
         return QString();
 }
