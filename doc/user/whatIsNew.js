@@ -26,6 +26,16 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "Added", "description": "Web Browser window." }
                          ]
+                       },
+                       { "name": "Organisation",
+                         "entries": [
+                           { "type": "Added", "description": "<a href=\"plugins/organisation/PMRWorkspacesWindow.html\">PMR Workspaces window</a>." },
+                           { "type": "subCategory", "name": "PMR window",
+                             "entries": [
+                               { "type": "Improved", "description": "Cloning of a workspace." }
+                             ]
+                           }
+                         ]
                        }
                      ]
                    },
