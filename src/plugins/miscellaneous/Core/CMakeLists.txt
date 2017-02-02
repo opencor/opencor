@@ -2,12 +2,6 @@ PROJECT(CorePlugin)
 
 # Add the plugin
 
-IF(WIN32)
-    SET(PLATFORM_SPECIFIC_CPP qtlockedfile_win.cpp)
-ELSE()
-    SET(PLATFORM_SPECIFIC_CPP qtlockedfile_unix.cpp)
-ENDIF()
-
 ADD_PLUGIN(Core
     SOURCES
         ../../cliinterface.cpp
