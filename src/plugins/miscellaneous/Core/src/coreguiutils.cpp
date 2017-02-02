@@ -664,7 +664,7 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
     // Create and return an overlayed icon using the given base and overlay
     // icons
 
-    QImage image = QImage(pBaseWidth, pBaseHeight, QImage::Format_ARGB32_Premultiplied);
+    QImage image(pBaseWidth, pBaseHeight, QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&image);
 
     painter.setCompositionMode(QPainter::CompositionMode_Source);
