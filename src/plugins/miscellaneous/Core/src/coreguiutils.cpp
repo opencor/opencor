@@ -636,8 +636,11 @@ QIcon tintedIcon(const QIcon &pIcon, const int &pWidth, const int &pHeight,
 
     scene.addItem(&pixmapItem);
 
-    QImage image(pWidth, pHeight, QImage::Format_ARGB32);
+    QImage image(pWidth, pHeight, QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&image);
+
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.fillRect(image.rect(), Qt::transparent);
 
     scene.render(&painter);
 
