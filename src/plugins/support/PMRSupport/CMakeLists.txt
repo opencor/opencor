@@ -10,6 +10,7 @@ ADD_PLUGIN(PMRSupport
         src/pmrauthentication.cpp
         src/pmrexposure.cpp
         src/pmrsupportplugin.cpp
+        src/pmrsupportpreferenceswidget.cpp
         src/pmrwebservice.cpp
         src/pmrwebservicemanager.cpp
         src/pmrwebserviceresponse.cpp
@@ -20,12 +21,15 @@ ADD_PLUGIN(PMRSupport
         src/pmrauthentication.h
         src/pmrexposure.h
         src/pmrsupportplugin.h
+        src/pmrsupportpreferenceswidget.h
         src/pmrwebservice.h
         src/pmrwebservicemanager.h
         src/pmrwebserviceresponse.h
         src/pmrworkspace.h
         src/pmrworkspacefilenode.h
         src/pmrworkspacemanager.h
+    UIS
+        src/pmrsupportpreferenceswidget.ui
     INCLUDE_DIRS
         src
     PLUGINS

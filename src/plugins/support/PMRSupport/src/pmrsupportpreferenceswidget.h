@@ -17,16 +17,20 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR support plugin
+// PMR support preferences widget
 //==============================================================================
 
-#include "coreguiutils.h"
-#include "pmrsupportplugin.h"
-#include "pmrsupportpreferenceswidget.h"
+#pragma once
 
 //==============================================================================
 
-#include <QMainWindow>
+#include "preferencesinterface.h"
+
+//==============================================================================
+
+namespace Ui {
+    class PmrSupportPreferencesWidget;
+}
 
 //==============================================================================
 
@@ -35,40 +39,21 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC PMRSupportPluginInfo()
+class PmrSupportPreferencesWidget : public Preferences::PreferencesWidget
 {
-    Descriptions descriptions;
+    Q_OBJECT
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
+public:
+    explicit PmrSupportPreferencesWidget(QObject *pPluginInstance,
+                                         QWidget *pParent);
+    ~PmrSupportPreferencesWidget();
 
-    return new PluginInfo(PluginInfo::Support, false, false,
-                          QStringList() << "Core" << "libgit2" << "OAuth" << "zlib",
-                          descriptions);
-}
+    virtual void resetPreferences();
+    virtual void savePreferences();
 
-//==============================================================================
-// I18n interface
-//==============================================================================
-
-void PMRSupportPlugin::retranslateUi()
-{
-    // We don't handle this interface...
-    // Note: even though we don't handle this interface, we still want to
-    //       support it since some other aspects of our plugin are
-    //       multilingual...
-}
-
-//==============================================================================
-// Preferences interface
-//==============================================================================
-
-Preferences::PreferencesWidget * PMRSupportPlugin::preferencesWidget()
-{
-    // Return our preferences widget
-
-    return new PmrSupportPreferencesWidget(this, Core::mainWindow());
-}
+private:
+    Ui::PmrSupportPreferencesWidget *mGui;
+};
 
 //==============================================================================
 
