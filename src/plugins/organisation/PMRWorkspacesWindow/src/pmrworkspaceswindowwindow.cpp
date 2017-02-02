@@ -53,8 +53,7 @@ namespace PMRWorkspacesWindow {
 PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::PmrWorkspacesWindowWindow),
-    mAuthenticated(false),
-    mColorizeEffect(new QGraphicsColorizeEffect(this))
+    mAuthenticated(false)
 {
     // Set up the GUI
 
@@ -69,6 +68,10 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     //          colorisation effect...
 
     static const QIcon PlusIcon = QIcon(":/oxygen/actions/list-add.png");
+    static const QIcon UserIcon = QIcon(":/oxygen/apps/preferences-desktop-user-password.png");
+
+    static const int UserIconWidth = UserIcon.availableSizes().first().width();
+    static const int UserIconHeight = UserIcon.availableSizes().first().height();
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
     QIcon folderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
@@ -91,7 +94,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     toolBarWidget->addWidget(spacer);
     toolBarWidget->addAction(mGui->actionPmr);
 
-    toolBarWidget->widgetForAction(mGui->actionPmr)->setGraphicsEffect(mColorizeEffect);
+    mLoggedOnIcon = Core::tintedIcon(UserIcon, UserIconWidth, UserIconHeight, Qt::darkGreen);
+    mLoggedOffIcon = Core::tintedIcon(UserIcon, UserIconWidth, UserIconHeight, Qt::darkRed);
 
     mGui->layout->addWidget(toolBarWidget);
 
@@ -323,7 +327,7 @@ void PmrWorkspacesWindowWindow::updateGui()
     Core::showEnableAction(mGui->actionNew, true, mAuthenticated);
     Core::showEnableAction(mGui->actionReload, true, mAuthenticated);
 
-    mColorizeEffect->setColor(mAuthenticated?Qt::darkGreen:Qt::darkRed);
+    mGui->actionPmr->setIcon(mAuthenticated?mLoggedOnIcon:mLoggedOffIcon);
 
     retranslateActionPmr();
 

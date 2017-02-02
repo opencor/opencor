@@ -38,6 +38,9 @@ limitations under the License.
 #include <QFileInfo>
 #include <QFont>
 #include <QFrame>
+#include <QGraphicsColorizeEffect>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsScene>
 #include <QIODevice>
 #include <QLabel>
 #include <QLayout>
@@ -613,6 +616,42 @@ QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
     // having resized it, if requested
 
     return iconDataUri(QIcon(pIcon), pWidth, pHeight, pMode);
+}
+
+//==============================================================================
+
+QIcon tintedIcon(const QIcon &pIcon, const int &pWidth, const int &pHeight,
+                 const QColor &pColor)
+{
+    // Create and return a tinted icon using the given icon and colour
+
+    QGraphicsScene scene(0, 0, pWidth, pHeight);
+    QGraphicsPixmapItem pixmapItem;
+    QGraphicsColorizeEffect effect;
+
+    effect.setColor(pColor);
+
+    pixmapItem.setGraphicsEffect(&effect);
+    pixmapItem.setPixmap(pIcon.pixmap(pWidth, pHeight));
+
+    scene.addItem(&pixmapItem);
+
+    QImage image(pWidth, pHeight, QImage::Format_ARGB32);
+    QPainter painter(&image);
+
+    scene.render(&painter);
+
+    return QPixmap::fromImage(image);
+}
+
+//==============================================================================
+
+QIcon tintedIcon(const QString &pIcon, const int &pWidth, const int &pHeight,
+                 const QColor &pColor)
+{
+    // Create and return a tinted icon using the given icon and colour
+
+    return tintedIcon(QIcon(pIcon), pWidth, pHeight, pColor);
 }
 
 //==============================================================================

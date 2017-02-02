@@ -28,13 +28,13 @@ limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class PmrWorkspacesWindowWindow;
-}
+#include <QIcon>
 
 //==============================================================================
 
-class QGraphicsColorizeEffect;
+namespace Ui {
+    class PmrWorkspacesWindowWindow;
+}
 
 //==============================================================================
 
@@ -83,7 +83,8 @@ private:
 
     bool mAuthenticated;
 
-    QGraphicsColorizeEffect *mColorizeEffect;
+    QIcon mLoggedOnIcon;
+    QIcon mLoggedOffIcon;
 
     void retranslateActionPmr();
 
