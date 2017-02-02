@@ -17,14 +17,15 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// File Organiser window model
+// File Organiser window item
 //==============================================================================
 
-#pragma once
+#include "corecliutils.h"
+#include "fileorganiserwindowitem.h"
 
 //==============================================================================
 
-#include <QStandardItemModel>
+#include <QFileInfo>
 
 //==============================================================================
 
@@ -33,34 +34,59 @@ namespace FileOrganiserWindow {
 
 //==============================================================================
 
-static const auto FileOrganiserWindowMimeType = QStringLiteral("opencor/file-organiser-window");
+FileOrganiserWindowItem::FileOrganiserWindowItem(const QIcon &pIcon,
+                                                 const QString &pTextOrPath,
+                                                 const bool &pFolder) :
+    QStandardItem(pIcon,
+                  pFolder?
+                      pTextOrPath:
+                      QFileInfo(pTextOrPath).fileName()),
+    mFolder(pFolder),
+    mExpanded(false),
+    mPath(pFolder?QString():pTextOrPath)
+{
+    // Customise ourselves
+
+    setToolTip(pFolder?
+                   pTextOrPath:
+                   Core::nativeCanonicalDirName(pTextOrPath));
+}
 
 //==============================================================================
 
-class FileOrganiserWindowModel : public QStandardItemModel
+bool FileOrganiserWindowItem::isFolder() const
 {
-    Q_OBJECT
+    // Return whether we are a folder
 
-public:
-    explicit FileOrganiserWindowModel(QObject *pParent);
+    return mFolder;
+}
 
-    virtual QStringList mimeTypes() const;
-    virtual QMimeData * mimeData(const QModelIndexList &pIndexes) const;
+//==============================================================================
 
-    QByteArray encodeHierarchyData(const QModelIndex &pIndex) const;
+bool FileOrganiserWindowItem::isExpanded() const
+{
+    // Return whether we are expanded
 
-    QModelIndex decodeHierarchyData(QByteArray &pData) const;
-    QModelIndexList decodeData(QByteArray &pData) const;
+    return mExpanded;
+}
 
-    QString filePath(const QModelIndex &pFileIndex) const;
+//==============================================================================
 
-private:
-    void encodeHierarchyData(const QModelIndex &pIndex, QDataStream &pStream,
-                             const int &pLevel = 0) const;
-    QByteArray encodeData(const QModelIndexList &pIndexes) const;
+void FileOrganiserWindowItem::setExpanded(const bool &pExpanded)
+{
+    // Set our expanded state
 
-    QModelIndex decodeHierarchyData(QDataStream &pStream) const;
-};
+    mExpanded = mFolder?pExpanded:false;
+}
+
+//==============================================================================
+
+QString FileOrganiserWindowItem::path() const
+{
+    // Return our path
+
+    return mPath;
+}
 
 //==============================================================================
 

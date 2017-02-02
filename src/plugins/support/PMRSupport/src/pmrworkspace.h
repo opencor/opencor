@@ -58,22 +58,19 @@ class PMRSUPPORT_EXPORT PmrWorkspace : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrWorkspace(const QString &pName, const QString &pUrl,
-                          const QString &pDescription, const QString &pOwner,
-                          PmrWebService *pParent);
-    explicit PmrWorkspace(const QString &pName, const QString &pUrl,
-                          PmrWebService *pParent);
+    explicit PmrWorkspace(const bool &pOwned, const QString &pName,
+                          const QString &pUrl, const QString &pDescription,
+                          const QString &pOwner, PmrWebService *pParent);
+    explicit PmrWorkspace(const bool &pOwned, const QString &pName,
+                          const QString &pUrl, PmrWebService *pParent);
     ~PmrWorkspace();
 
     static bool compare(PmrWorkspace *pWorkspace1, PmrWorkspace *pWorkspace2);
 
     bool isLocal() const;
-
     bool isOwned() const;
-    void setOwned(const bool &pOwned);
 
     QString path() const;
-    void setPath(const QString &pPath);
 
     void setCredentials(const QString &pUsername, const QString &pPassword);
 
@@ -90,7 +87,7 @@ public:
     bool commitMerge();
     bool isMerging() const;
     bool isOpen() const;
-    bool open();
+    bool open(const QString &pPath);
     void synchronize(const bool &pPush);
 
     enum WorkspaceStatus {
@@ -130,9 +127,9 @@ private:
     int mStagedCount;
     int mUnstagedCount;
 
-    void constructor(const QString &pName, const QString &pUrl,
-                     const QString &pDescription, const QString &pOwner,
-                     PmrWebService *pParent);
+    void constructor(const bool &pOwned, const QString &pName,
+                     const QString &pUrl, const QString &pDescription,
+                     const QString &pOwner, PmrWebService *pParent);
 
     bool doCommit(const char *pMessage, const size_t &pParentCount,
                   const git_commit **pParents);
@@ -169,6 +166,7 @@ signals:
     void warning(const QString &pMessage) const;
 
     void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
 
 public slots:

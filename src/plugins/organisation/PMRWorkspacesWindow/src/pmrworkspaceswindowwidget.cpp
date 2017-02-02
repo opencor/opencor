@@ -219,6 +219,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *
 
     connect(workspaceManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
+    connect(workspaceManager, SIGNAL(workspaceUncloned(PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspaceUncloned(PMRSupport::PmrWorkspace *)));
     connect(workspaceManager, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceSynchronized(PMRSupport::PmrWorkspace *)));
 
@@ -361,7 +363,7 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("Pull and push changes from/to PMR"));
     I18nInterface::retranslateAction(mReloadAction, mParentReloadAction->text(),
                                      mParentReloadAction->statusTip());
-    I18nInterface::retranslateAction(mAboutAction, tr("About"),
+    I18nInterface::retranslateAction(mAboutAction, tr("About..."),
                                      tr("Some information about the current workspace"));
 
     // Retranslate the rest of our GUI by updating it, if we have been
@@ -561,8 +563,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
                 mWorkspaceUrlFoldersOwned.insert(url, QPair<QString, bool>(path, true));
 
-                workspace->setPath(path);
-                workspace->open();
+                workspace->open(path);
             }
         }
 
@@ -584,8 +585,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
                     workspaceManager->addWorkspace(workspace);
 
-                    workspace->setPath(urlsIterator.value().first);
-                    workspace->open();
+                    workspace->open(urlsIterator.value().first);
                 } else {
                     // The workspace is not known, so forget about it
 
@@ -702,10 +702,14 @@ void PmrWorkspacesWindowWidget::deleteItems(PmrWorkspacesWindowItem *pItem,
         for (int i = pItem->rowCount()-1; i >= 0; --i)
             deleteItems(static_cast<PmrWorkspacesWindowItem *>(pItem->child(i)), pItems);
 
-        // Remove the folder item, if it is now empty
+        // Remove the folder item, if it is now empty, or workspace, if it's not
+        // owned and the folder where it was cloned has been deleted
 
         if (!pItem->hasChildren()) {
-            pItem->parent()->removeRow(pItem->row());
+            if (pItem->parent())
+                pItem->parent()->removeRow(pItem->row());
+            else if (!pItem->workspace()->isOwned())
+                mTreeViewModel->invisibleRootItem()->removeRow(pItem->row());
 
             pItems.removeOne(pItem);
         }
@@ -1087,10 +1091,6 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
         mClonedWorkspaceFolderUrls.insert(folder, url);
         mWorkspaceUrlFoldersOwned.insert(url, QPair<QString, bool>(folder, false));
 
-        PMRSupport::PmrWorkspaceManager::instance()->addWorkspace(pWorkspace);
-
-        pWorkspace->open();
-
         // Populate the workspace, if we own it and we have an entry for it
         // (i.e. we just cloned a workspace that we own), or add the workspace,
         // if we don't own it or just created a new one (that we own)
@@ -1110,6 +1110,18 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
         duplicateCloneMessage(url, folderOwned.first, pWorkspace->path());
     }
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace)
+{
+    // The given workspace has been uncloned, so update ourselves accordingly
+
+    QString url = pWorkspace->url();
+
+    mClonedWorkspaceFolderUrls.remove(mWorkspaceUrlFoldersOwned.value(url).first);
+    mWorkspaceUrlFoldersOwned.remove(url);
 }
 
 //==============================================================================

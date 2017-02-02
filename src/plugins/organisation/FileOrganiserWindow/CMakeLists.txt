@@ -9,6 +9,7 @@ ADD_PLUGIN(FileOrganiserWindow
         ../../plugininterface.cpp
         ../../windowinterface.cpp
 
+        src/fileorganiserwindowitem.cpp
         src/fileorganiserwindowmodel.cpp
         src/fileorganiserwindowplugin.cpp
         src/fileorganiserwindowwidget.cpp

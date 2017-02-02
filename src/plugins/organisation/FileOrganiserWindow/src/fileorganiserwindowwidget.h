@@ -56,7 +56,6 @@ protected:
     virtual void dragMoveEvent(QDragMoveEvent *pEvent);
     virtual void dropEvent(QDropEvent *pEvent);
     virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual bool viewportEvent(QEvent *pEvent);
 
 private:
     FileOrganiserWindowModel *mModel;
@@ -76,7 +75,8 @@ private:
 
     void dropItems(QStandardItem *pDropItem,
                    const QAbstractItemView::DropIndicatorPosition &pDropPosition,
-                   QStandardItem *pNewParentItem, QList<QStandardItem *> pItems);
+                   QStandardItem *pNewParentItem,
+                   const QList<QStandardItem *> &pItems);
     void dropItem(QStandardItem *pDropItem,
                   const QAbstractItemView::DropIndicatorPosition &pDropPosition,
                   QStandardItem *pNewParentItem, QStandardItem *pItem);
@@ -92,7 +92,8 @@ private:
 
     QModelIndexList cleanIndexList(const QModelIndexList &pIndexes) const;
 
-    bool itemIsOrIsChildOf(QStandardItem *pItem, QStandardItem *pOtherItem) const;
+    bool itemIsOrIsChildOf(QStandardItem *pItem,
+                           QStandardItem *pOtherItem) const;
 
     void backupExpandedInformation(QStandardItem *pItem) const;
     void restoreExpandedInformation(QStandardItem *pItem);

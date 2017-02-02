@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 17, "month": 11, "year": 2016,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 1, "month": 2, "year": 2017,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -25,6 +25,16 @@ var jsonData = { "versions": [
                        { "name": "Miscellaneous",
                          "entries": [
                            { "type": "Added", "description": "Web Browser window." }
+                         ]
+                       },
+                       { "name": "Organisation",
+                         "entries": [
+                           { "type": "Added", "description": "<a href=\"plugins/organisation/PMRWorkspacesWindow.html\">PMR Workspaces window</a>." },
+                           { "type": "subCategory", "name": "PMR window",
+                             "entries": [
+                               { "type": "Improved", "description": "Cloning of a workspace." }
+                             ]
+                           }
                          ]
                        }
                      ]
