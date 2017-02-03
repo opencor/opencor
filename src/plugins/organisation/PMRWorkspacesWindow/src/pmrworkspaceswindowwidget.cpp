@@ -1051,9 +1051,9 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
     // Let people know that the given workspace has been cloned twice, but only
     // if it doesn't occur when initialising ourselves
     // Note: indeed, someone handling the warning() signal might decide to show
-    //       a dialog box to warn the user. Such a thing is fine when everything
-    //       is initialised, but not when initialising ourselves (since the
-    //       dialog box would show up from nowhere)...
+    //       a message box to warn the user. Such a thing is fine when
+    //       everything is initialised, but not when initialising ourselves
+    //       (since the message box would show up from nowhere)...
 
     if (mInitialized)
         emit warning(QString("Workspace '%1' is cloned into both '%2' and '%3'").arg(pUrl, pPath1, pPath2));

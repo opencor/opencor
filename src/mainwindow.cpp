@@ -1037,12 +1037,12 @@ void MainWindow::handleUrl(const QUrl &pUrl)
 
     QString actionName = pUrl.authority();
 
-    if (!actionName.compare("openPluginsDialogBox", Qt::CaseInsensitive)) {
-        // We want to open the Plugins dialog box
+    if (!actionName.compare("openPluginsDialog", Qt::CaseInsensitive)) {
+        // We want to open the Plugins dialog
 
         on_actionPlugins_triggered();
-    } else if (!actionName.compare("openAboutDialogBox", Qt::CaseInsensitive)) {
-        // We want to open the About dialog box
+    } else if (!actionName.compare("openAboutDialog", Qt::CaseInsensitive)) {
+        // We want to open the About dialog
 
         on_actionAbout_triggered();
     } else if (!actionName.compare("openFile", Qt::CaseInsensitive)) {
