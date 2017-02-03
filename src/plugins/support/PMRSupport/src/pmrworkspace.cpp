@@ -20,9 +20,11 @@ limitations under the License.
 // PMR workspace
 //==============================================================================
 
+#include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrworkspace.h"
 #include "pmrworkspacemanager.h"
+#include "preferencesinterface.h"
 
 //==============================================================================
 
@@ -299,13 +301,14 @@ bool PmrWorkspace::doCommit(const char *pMessage, const size_t &pParentCount,
     // Commit everything that is staged
 
     git_signature *author = 0;
+    QByteArray name = PreferencesInterface::preference(PluginName, SettingsPreferencesName).toByteArray();
+    QByteArray email = PreferencesInterface::preference(PluginName, SettingsPreferencesEmail).toByteArray();
     git_index *index = 0;
     git_oid treeId;
     git_tree *tree = 0;
     git_oid commitId;
 
-    bool res =    git_signature_now(&author, "Test Author",
-                                    "testing@staging.physiomeproject.org")
+    bool res =    git_signature_now(&author, name.data(), email.data())
                || git_repository_index(&index, mGitRepository)
                || git_index_write_tree(&treeId, index)
                || git_tree_lookup(&tree, mGitRepository, &treeId)

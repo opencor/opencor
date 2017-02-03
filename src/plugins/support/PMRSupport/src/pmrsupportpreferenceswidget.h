@@ -39,13 +39,21 @@ namespace PMRSupport {
 
 //==============================================================================
 
+static const auto PluginName = QStringLiteral("PMRSupport");
+
+//==============================================================================
+
+static const auto SettingsPreferencesName  = QStringLiteral("Name");
+static const auto SettingsPreferencesEmail = QStringLiteral("Email");
+
+//==============================================================================
+
 class PmrSupportPreferencesWidget : public Preferences::PreferencesWidget
 {
     Q_OBJECT
 
 public:
-    explicit PmrSupportPreferencesWidget(QObject *pPluginInstance,
-                                         QWidget *pParent);
+    explicit PmrSupportPreferencesWidget(QWidget *pParent);
     ~PmrSupportPreferencesWidget();
 
     virtual void resetPreferences();

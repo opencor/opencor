@@ -37,14 +37,8 @@ namespace PMRSupport {
 
 //==============================================================================
 
-static const auto SettingsPmrSupportPreferencesName  = QStringLiteral("Name");
-static const auto SettingsPmrSupportPreferencesEmail = QStringLiteral("Email");
-
-//==============================================================================
-
-PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QObject *pPluginInstance,
-                                                         QWidget *pParent) :
-    Preferences::PreferencesWidget(pPluginInstance, pParent),
+PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
+    Preferences::PreferencesWidget(PluginName, pParent),
     mGui(new Ui::PmrSupportPreferencesWidget)
 {
     // Set up the GUI
@@ -56,8 +50,8 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QObject *pPluginInstanc
     mGui->emailValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
-    mGui->nameValue->setText(mSettings->value(SettingsPmrSupportPreferencesName).toString());
-    mGui->emailValue->setText(mSettings->value(SettingsPmrSupportPreferencesEmail).toString());
+    mGui->nameValue->setText(mSettings->value(SettingsPreferencesName).toString());
+    mGui->emailValue->setText(mSettings->value(SettingsPreferencesEmail).toString());
 
     setFocusProxy(mGui->nameValue);
 }
@@ -87,8 +81,8 @@ void PmrSupportPreferencesWidget::savePreferences()
 {
     // Save our preferences
 
-    mSettings->setValue(SettingsPmrSupportPreferencesName, mGui->nameValue->text());
-    mSettings->setValue(SettingsPmrSupportPreferencesEmail, mGui->emailValue->text());
+    mSettings->setValue(SettingsPreferencesName, mGui->nameValue->text());
+    mSettings->setValue(SettingsPreferencesEmail, mGui->emailValue->text());
 }
 
 //==============================================================================

@@ -67,7 +67,7 @@ Preferences::PreferencesWidget * PMRSupportPlugin::preferencesWidget()
 {
     // Return our preferences widget
 
-    return new PmrSupportPreferencesWidget(this, Core::mainWindow());
+    return new PmrSupportPreferencesWidget(Core::mainWindow());
 }
 
 //==============================================================================
