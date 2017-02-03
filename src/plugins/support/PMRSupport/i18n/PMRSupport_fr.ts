@@ -2,13 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>CorePreferencesWidget</name>
-    <message>
-        <source>Under construction...</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>OpenCOR::PMRSupport::PmrWebService</name>
     <message>
         <source>** Unknown name **</source>
@@ -119,6 +112,13 @@
     <message>
         <source>An error occurred while trying to push the workspace.</source>
         <translation>Une erreur s&apos;est produite lors du poussage de l&apos;espace de travail.</translation>
+    </message>
+</context>
+<context>
+    <name>PmrSupportPreferencesWidget</name>
+    <message>
+        <source>Under construction...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

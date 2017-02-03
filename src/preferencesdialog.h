@@ -96,6 +96,8 @@ class PreferencesDialog : public QDialog
     Q_OBJECT
 
 public:
+    explicit PreferencesDialog(PluginManager *pPluginManager,
+                               const QString &pPluginName, QWidget *pParent);
     explicit PreferencesDialog(PluginManager *pPluginManager, QWidget *pParent);
     ~PreferencesDialog();
 
@@ -114,6 +116,8 @@ private:
 
     QPushButton *mResetAllButton;
     QPushButton *mResetPluginButton;
+
+    void constructor(PluginManager *pPluginManager, const QString &pPluginName);
 
     QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
 

@@ -130,6 +130,8 @@ private:
 
     void showEnableActions(const QList<QAction *> &pActions);
 
+    void showPreferencesDialog(const QString &pPluginName = QString());
+
 private slots:
     void openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl);
     void handleMessage(const QString &pMessage);

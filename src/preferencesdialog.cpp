@@ -130,15 +130,18 @@ void PreferencesItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
-                                     QWidget *pParent) :
-    QDialog(pParent),
-    mGui(new Ui::PreferencesDialog),
-    mPluginManager(pPluginManager),
-    mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>()),
-    mItemCategories(QMap<QStandardItem *, PluginInfo::Category>()),
-    mItemPreferencesWidgets(QMap<QStandardItem *, Preferences::PreferencesWidget *>())
+void PreferencesDialog::constructor(PluginManager *pPluginManager,
+                                    const QString &pPluginName)
 {
+    // Some initialisations
+
+    mGui = new Ui::PreferencesDialog();
+
+    mPluginManager = pPluginManager;
+    mCategoryItems = QMap<PluginInfo::Category, QStandardItem *>();
+    mItemCategories = QMap<QStandardItem *, PluginInfo::Category>();
+    mItemPreferencesWidgets = QMap<QStandardItem *, Preferences::PreferencesWidget *>();
+
     // Set up the GUI
 
     mGui->setupUi(this);
@@ -178,6 +181,8 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     // Populate the data model with our plugins that support the Preferences
     // interface
 
+    QStandardItem *selectedPluginItem = 0;
+
     foreach (Plugin *plugin, mPluginManager->sortedPlugins()) {
         PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
 
@@ -188,6 +193,9 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
             QStandardItem *pluginItem = new QStandardItem(plugin->name());
 
             pluginCategoryItem(plugin->info()->category())->appendRow(pluginItem);
+
+            if (!plugin->name().compare(pPluginName))
+                selectedPluginItem = pluginItem;
 
             // Retrieve the corresponding preferences widget and add it to our
             // stacked widget, as well as keep track of it
@@ -228,9 +236,35 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     connect(mGui->treeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updatePreferencesWidget(const QModelIndex &, const QModelIndex &)));
 
-    // Select our first item
+    // Select our first item or that of the given plugin, if any
 
-    mGui->treeView->setCurrentIndex(mModel->invisibleRootItem()->child(0)->index());
+    if (selectedPluginItem)
+        mGui->treeView->setCurrentIndex(selectedPluginItem->index());
+    else
+        mGui->treeView->setCurrentIndex(mModel->invisibleRootItem()->child(0)->index());
+}
+
+//==============================================================================
+
+PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
+                                     const QString &pPluginName,
+                                     QWidget *pParent) :
+    QDialog(pParent)
+{
+    // Construct ourselves
+
+    constructor(pPluginManager, pPluginName);
+}
+
+//==============================================================================
+
+PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
+                                     QWidget *pParent) :
+    QDialog(pParent)
+{
+    // Construct ourselves
+
+    constructor(pPluginManager, QString());
 }
 
 //==============================================================================

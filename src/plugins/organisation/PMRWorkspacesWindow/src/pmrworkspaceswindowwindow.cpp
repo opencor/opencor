@@ -37,11 +37,13 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QDesktopServices>
 #include <QDir>
 #include <QGraphicsColorizeEffect>
 #include <QMainWindow>
 #include <QSettings>
 #include <QTimer>
+#include <QUrl>
 
 //==============================================================================
 
@@ -86,6 +88,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     toolBarWidget->addAction(mGui->actionNew);
     toolBarWidget->addSeparator();
     toolBarWidget->addAction(mGui->actionReload);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionPreferences);
 
     QWidget *spacer = new QWidget(toolBarWidget);
 
@@ -384,6 +388,15 @@ void PmrWorkspacesWindowWindow::on_actionReload_triggered()
     PMRSupport::PmrWorkspaceManager::instance()->clearWorkspaces();
 
     mPmrWebService->requestWorkspaces();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWindow::on_actionPreferences_triggered()
+{
+    // Show the preferences for PMR support
+
+    QDesktopServices::openUrl(QUrl("opencor://openPreferencesDialog/PMRSupport"));
 }
 
 //==============================================================================

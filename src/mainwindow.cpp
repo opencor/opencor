@@ -1041,6 +1041,10 @@ void MainWindow::handleUrl(const QUrl &pUrl)
         // We want to open the Plugins dialog
 
         on_actionPlugins_triggered();
+    } else if (!actionName.compare("openPreferencesDialog", Qt::CaseInsensitive)) {
+        // We want to open the Preferences dialog
+
+        showPreferencesDialog(urlArguments(pUrl));
     } else if (!actionName.compare("openAboutDialog", Qt::CaseInsensitive)) {
         // We want to open the About dialog
 
@@ -1160,7 +1164,7 @@ void MainWindow::on_actionPlugins_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionPreferences_triggered()
+void MainWindow::showPreferencesDialog(const QString &pPluginName)
 {
     // Show the preferences dialog, if we have at least one plugin that supports
     // the Preferences interface
@@ -1177,7 +1181,7 @@ void MainWindow::on_actionPreferences_triggered()
         }
 
         if (pluginsWithPreferences) {
-            PreferencesDialog preferencesDialog(mPluginManager, this);
+            PreferencesDialog preferencesDialog(mPluginManager, pPluginName, this);
 
             preferencesDialog.exec();
         } else {
@@ -1188,6 +1192,15 @@ void MainWindow::on_actionPreferences_triggered()
         warningMessageBox(tr("Preferences"),
                           tr("No plugins could be found."));
     }
+}
+
+//==============================================================================
+
+void MainWindow::on_actionPreferences_triggered()
+{
+    // Show the preferences dialog
+
+    showPreferencesDialog();
 }
 
 //==============================================================================
