@@ -300,9 +300,9 @@ bool PmrWorkspace::doCommit(const char *pMessage, const size_t &pParentCount,
 
     git_signature *author = 0;
     git_index *index = 0;
+    git_oid treeId;
     git_tree *tree = 0;
     git_oid commitId;
-    git_oid treeId;
 
     bool res =    git_signature_now(&author, "Test Author",
                                     "testing@staging.physiomeproject.org")
