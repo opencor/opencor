@@ -265,7 +265,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
                 this, SLOT(updateFileTabIcons()));
     }
 
-    // Create our remote file dialog box
+    // Create our remote file dialog
 //---GRY--- THE ORIGINAL PLAN WAS TO HAVE A REGULAR EXPRESSION TO VALIDATE A
 //          URL, BUT IT LOOKS LIKE THERE MIGHT BE AN ISSUE WITH
 //          QRegularExpressionValidator, SO WE SIMPLY ALLOW FREE TEXT FOR NOW
@@ -292,7 +292,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     openRemoteFileChanged();
 
-    // Some connections to handle our remote file dialog box
+    // Some connections to handle our remote file dialog
 
     connect(mRemoteFileDialogUrlValue, SIGNAL(textChanged(const QString &)),
             this, SLOT(openRemoteFileChanged()));
@@ -1845,9 +1845,9 @@ void CentralWidget::fileChanged(const QString &pFileName,
         // The given file and/or one or several of its dependencies has changed,
         // so ask the user whether to reload the given file
         // Note: we temporarily disable the fact that our file manager can check
-        //       its fiels. Indeed, we are going to show a dialog box and this
+        //       its fiels. Indeed, we are going to show a message box and this
         //       would normally result in our file manager stopping its timer
-        //       and then restarting it straightaway once our dialog box
+        //       and then restarting it straightaway once our message box
         //       disappears (see FileManager::focusWindowChanged()). So, if we
         //       were not to do this, the fileChanged() signal would be handled
         //       a second time before we get a chance to reload the changed

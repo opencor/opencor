@@ -86,7 +86,7 @@ void FileManager::startStopTimer()
     // Note #1: if we are to start our timer, then we check files first since
     //          waiting one second may seem long to a user (when some files have
     //          changed and after having reactivated OpenCOR)...
-    // Note #2: checking files may result in a dialog box being shown and,
+    // Note #2: checking files may result in a message box being shown and,
     //          therefore, in a focusWindowChanged() signal being emitted. To
     //          handle that signal would result in reentry, so we temporarily
     //          disable our handling of it...

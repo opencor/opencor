@@ -205,8 +205,8 @@ QStringList getOpenFileNames(const QString &pCaption,
             // Note #1: we use the last open file name to determine the folder
             //          that is to be remembered since on Windows 7, at least,
             //          it's possible to search for files from within the file
-            //          dialog box, and the last file name should be the one we
-            //          are most 'interested' in...
+            //          dialog, and the last file name should be the one we are
+            //          most 'interested' in...
             // Note #2: normally, we would use QFileInfo::canonicalPath(), but
             //          this requires an existing file, so instead we use
             //          QFileInfo::path()...
@@ -806,7 +806,7 @@ bool opencorActive()
 {
     // Return whether OpenCOR is active
     // Note: we only consider OpenCOR to be active if the main window or one of
-    //       its dockable windows is active. In other words, if a dialog box is
+    //       its dockable windows is active. In other words, if a dialog is
     //       opened, then we don't consider OpenCOR active since it could
     //       disturb our user's workflow...
 
