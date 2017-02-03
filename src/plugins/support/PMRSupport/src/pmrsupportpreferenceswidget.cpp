@@ -17,16 +17,18 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR support plugin
+// PMR support preferences widget
 //==============================================================================
 
-#include "coreguiutils.h"
-#include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"
 
 //==============================================================================
 
-#include <QMainWindow>
+#include "ui_pmrsupportpreferenceswidget.h"
+
+//==============================================================================
+
+#include <QSettings>
 
 //==============================================================================
 
@@ -35,39 +37,52 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC PMRSupportPluginInfo()
+PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
+    Preferences::PreferencesWidget(PluginName, pParent),
+    mGui(new Ui::PmrSupportPreferencesWidget)
 {
-    Descriptions descriptions;
+    // Set up the GUI
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
+    mGui->setupUi(this);
 
-    return new PluginInfo(PluginInfo::Support, false, false,
-                          QStringList() << "Core" << "libgit2" << "OAuth" << "zlib",
-                          descriptions);
+#ifdef Q_OS_MAC
+    mGui->nameValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+    mGui->emailValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+#endif
+
+    mGui->nameValue->setText(mSettings->value(SettingsPreferencesName).toString());
+    mGui->emailValue->setText(mSettings->value(SettingsPreferencesEmail).toString());
+
+    setFocusProxy(mGui->nameValue);
 }
 
 //==============================================================================
-// I18n interface
-//==============================================================================
 
-void PMRSupportPlugin::retranslateUi()
+PmrSupportPreferencesWidget::~PmrSupportPreferencesWidget()
 {
-    // We don't handle this interface...
-    // Note: even though we don't handle this interface, we still want to
-    //       support it since some other aspects of our plugin are
-    //       multilingual...
+    // Delete the GUI
+
+    delete mGui;
 }
 
 //==============================================================================
-// Preferences interface
+
+void PmrSupportPreferencesWidget::resetPreferences()
+{
+    // Reset our preferences
+
+    mGui->nameValue->setText(QString());
+    mGui->emailValue->setText(QString());
+}
+
 //==============================================================================
 
-Preferences::PreferencesWidget * PMRSupportPlugin::preferencesWidget()
+void PmrSupportPreferencesWidget::savePreferences()
 {
-    // Return our preferences widget
+    // Save our preferences
 
-    return new PmrSupportPreferencesWidget(Core::mainWindow());
+    mSettings->setValue(SettingsPreferencesName, mGui->nameValue->text());
+    mSettings->setValue(SettingsPreferencesEmail, mGui->emailValue->text());
 }
 
 //==============================================================================

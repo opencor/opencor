@@ -76,8 +76,6 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
 #ifdef Q_OS_MAC
     mFilterValue->setAttribute(Qt::WA_MacShowFocusRect, false);
-    // Note: the above removes the focus border since it messes up the look of
-    //       our URL value widget...
 #endif
 
     connect(mFilterValue, SIGNAL(textChanged(const QString &)),

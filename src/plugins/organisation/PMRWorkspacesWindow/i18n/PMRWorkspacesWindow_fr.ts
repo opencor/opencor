@@ -261,5 +261,17 @@
         <source>Reload the list of workspaces</source>
         <translation>Recharger la liste d&apos;espaces de travail</translation>
     </message>
+    <message>
+        <source>Preferences...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preferences for PMR support</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

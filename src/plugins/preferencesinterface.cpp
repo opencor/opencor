@@ -47,16 +47,14 @@ namespace Preferences {
 
 //==============================================================================
 
-PreferencesWidget::PreferencesWidget(QObject *pPluginInstance, QWidget *pParent) :
+PreferencesWidget::PreferencesWidget(const QString &pPluginName,
+                                     QWidget *pParent) :
     QWidget(pParent)
 {
-    static const QRegularExpression BeforeRegEx = QRegularExpression("^.*:");
-    static const QRegularExpression AfterRegEx = QRegularExpression("Plugin$");
-
     mSettings = new QSettings();
 
     mSettings->beginGroup(SettingsPlugins);
-    mSettings->beginGroup(QString(pPluginInstance->metaObject()->className()).remove(BeforeRegEx).remove(AfterRegEx));
+    mSettings->beginGroup(pPluginName);
     mSettings->beginGroup("Preferences");
 }
 
@@ -72,6 +70,28 @@ PreferencesWidget::~PreferencesWidget()
 //==============================================================================
 
 }   // namespace Preferences
+
+//==============================================================================
+
+QVariant PreferencesInterface::preference(const QString &pPluginName,
+                                          const QString &pKey,
+                                          const QVariant &pDefaultValue)
+{
+    // Retrieve the preference, which key is given, associated with the plugin,
+    // which name is given, and for which we have a given default value in case
+    // the preference doesn't exist
+
+    QSettings settings;
+
+    settings.beginGroup(SettingsPlugins);
+    settings.beginGroup(pPluginName);
+    settings.beginGroup("Preferences");
+
+    return settings.value(pKey, pDefaultValue);
+}
+
+//==============================================================================
+
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -114,4 +114,15 @@
         <translation>Une erreur s&apos;est produite lors du poussage de l&apos;espace de travail.</translation>
     </message>
 </context>
+<context>
+    <name>PmrSupportPreferencesWidget</name>
+    <message>
+        <source>Name:</source>
+        <translation>Nom :</translation>
+    </message>
+    <message>
+        <source>Email:</source>
+        <translation>Email :</translation>
+    </message>
+</context>
 </TS>
