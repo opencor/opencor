@@ -6,6 +6,7 @@ ADD_PLUGIN(PMRSupport
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../preferencesinterface.cpp
 
         src/pmrauthentication.cpp
         src/pmrexposure.cpp
