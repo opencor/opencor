@@ -1,6 +1,5 @@
 We build our own copy of the `CellML API <http://cellml-api.sourceforge.net/>`__, which requires the following:
 
-- `Doxygen <http://www.doxygen.org/>`__;
 - `omniidl <http://omniorb.sourceforge.net/>`__ (`working Windows binaries <http://sourceforge.net/projects/omniorb/files/omniORB/omniORB-4.1.5/>`__); and
 - the `CellML API source code <https://github.com/cellmlapi/cellml-api/>`__.
 
