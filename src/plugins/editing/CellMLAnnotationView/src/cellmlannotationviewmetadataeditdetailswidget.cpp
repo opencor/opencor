@@ -241,8 +241,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
 #ifdef Q_OS_MAC
     mTermValue->setAttribute(Qt::WA_MacShowFocusRect, false);
-    // Note: the above removes the focus border since it messes up the look of
-    //       our term value widget...
 #endif
 
     connect(mTermValue, SIGNAL(textChanged(const QString &)),

@@ -73,8 +73,6 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
 #ifdef Q_OS_MAC
     mUrlValue->setAttribute(Qt::WA_MacShowFocusRect, false);
-    // Note: the above removes the focus border since it messes up the look of
-    //       our URL value widget...
 #endif
 
     connect(mUrlValue, SIGNAL(returnPressed()),

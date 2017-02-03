@@ -61,8 +61,6 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(QWidget *pParent) :
 #ifdef Q_OS_MAC
     mGui->findEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
     mGui->replaceEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
-    // Note: the above remove the focus border since it messes up the look of
-    //       our edit widgets...
 #endif
 
     // Create and handle our drop-down menu action
