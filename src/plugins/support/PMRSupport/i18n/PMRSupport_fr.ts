@@ -117,8 +117,12 @@
 <context>
     <name>PmrSupportPreferencesWidget</name>
     <message>
-        <source>Under construction...</source>
-        <translation type="unfinished"></translation>
+        <source>Name:</source>
+        <translation>Nom :</translation>
+    </message>
+    <message>
+        <source>Email:</source>
+        <translation>Email :</translation>
     </message>
 </context>
 </TS>

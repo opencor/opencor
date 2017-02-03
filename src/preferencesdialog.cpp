@@ -236,10 +236,13 @@ void PreferencesDialog::constructor(PluginManager *pPluginManager,
 
     // Select our first item or that of the given plugin, if any
 
-    if (selectedPluginItem)
+    if (selectedPluginItem) {
         mGui->treeView->setCurrentIndex(selectedPluginItem->index());
-    else
+
+        mGui->stackedWidget->currentWidget()->setFocus();
+    } else {
         mGui->treeView->setCurrentIndex(mModel->invisibleRootItem()->child(0)->index());
+    }
 }
 
 //==============================================================================

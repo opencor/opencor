@@ -28,8 +28,17 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QSettings>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace PMRSupport {
+
+//==============================================================================
+
+static const auto SettingsPmrSupportPreferencesName  = QStringLiteral("Name");
+static const auto SettingsPmrSupportPreferencesEmail = QStringLiteral("Email");
 
 //==============================================================================
 
@@ -41,6 +50,16 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QObject *pPluginInstanc
     // Set up the GUI
 
     mGui->setupUi(this);
+
+#ifdef Q_OS_MAC
+    mGui->nameValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+    mGui->emailValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+#endif
+
+    mGui->nameValue->setText(mSettings->value(SettingsPmrSupportPreferencesName).toString());
+    mGui->emailValue->setText(mSettings->value(SettingsPmrSupportPreferencesEmail).toString());
+
+    setFocusProxy(mGui->nameValue);
 }
 
 //==============================================================================
@@ -56,16 +75,20 @@ PmrSupportPreferencesWidget::~PmrSupportPreferencesWidget()
 
 void PmrSupportPreferencesWidget::resetPreferences()
 {
-//---ISSUE1057--- TO BE DONE...
-qDebug("PmrSupportPreferencesWidget::resetPreferences()...");
+    // Reset our preferences
+
+    mGui->nameValue->setText(QString());
+    mGui->emailValue->setText(QString());
 }
 
 //==============================================================================
 
 void PmrSupportPreferencesWidget::savePreferences()
 {
-//---ISSUE1057--- TO BE DONE...
-    qDebug("PmrSupportPreferencesWidget::savePreferences()...");
+    // Save our preferences
+
+    mSettings->setValue(SettingsPmrSupportPreferencesName, mGui->nameValue->text());
+    mSettings->setValue(SettingsPmrSupportPreferencesEmail, mGui->emailValue->text());
 }
 
 //==============================================================================
