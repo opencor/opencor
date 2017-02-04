@@ -62,6 +62,10 @@
         <translation>Une erreur s&apos;est produite lors de la validation de l&apos;espace de travail (vous devez fournir un nom et un email).</translation>
     </message>
     <message>
+        <source>An error occurred while trying to commit to the workspace (you must provide a message).</source>
+        <translation>Une erreur s&apos;est produite lors de la validation de l&apos;espace de travail (vous devez mettre un message).</translation>
+    </message>
+    <message>
         <source>An error occurred while trying to commit the merge.</source>
         <translation>Une erreur s&apos;est produite lors de la validation de la fusion.</translation>
     </message>

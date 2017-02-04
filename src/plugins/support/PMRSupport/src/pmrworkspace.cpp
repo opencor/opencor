@@ -382,6 +382,8 @@ bool PmrWorkspace::commit(const QString &pMessage)
 
         if (parent)
             git_commit_free(parent);
+    } else {
+        emitGitError(tr("An error occurred while trying to commit to the workspace (you must provide a message)."));
     }
 
     git_buf_free(&message);
