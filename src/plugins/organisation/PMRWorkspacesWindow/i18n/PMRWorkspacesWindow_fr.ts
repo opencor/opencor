@@ -263,15 +263,15 @@
     </message>
     <message>
         <source>Preferences...</source>
-        <translation type="unfinished"></translation>
+        <translation>Préférences...</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Préférences</translation>
     </message>
     <message>
         <source>Preferences for PMR support</source>
-        <translation type="unfinished"></translation>
+        <translation>Préférences pour le support PMR</translation>
     </message>
 </context>
 </TS>
