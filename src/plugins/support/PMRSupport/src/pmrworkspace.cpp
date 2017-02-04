@@ -377,7 +377,7 @@ bool PmrWorkspace::commit(const QString &pMessage)
                            (const git_commit **) (&parent));
 
             if (!res)
-                emitGitError(tr("An error occurred while trying to commit to the workspace."));
+                emitGitError(tr("An error occurred while trying to commit to the workspace (you must provide both a name and an email)."));
         }
 
         if (parent)

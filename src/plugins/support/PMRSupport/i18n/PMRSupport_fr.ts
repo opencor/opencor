@@ -58,8 +58,8 @@
         <translation>Une erreur s&apos;est produite lors du clonage de l&apos;espace de travail.</translation>
     </message>
     <message>
-        <source>An error occurred while trying to commit to the workspace.</source>
-        <translation>Une erreur s&apos;est produite lors de la validation de l&apos;espace de travail.</translation>
+        <source>An error occurred while trying to commit to the workspace (you must provide both a name and an email).</source>
+        <translation>Une erreur s&apos;est produite lors de la validation de l&apos;espace de travail (vous devez fournir un nom et un email).</translation>
     </message>
     <message>
         <source>An error occurred while trying to commit the merge.</source>
