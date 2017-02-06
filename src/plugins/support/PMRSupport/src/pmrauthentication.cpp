@@ -86,7 +86,7 @@ PmrAuthentication::PmrAuthentication(const QString &pUrl, QObject *pParent) :
 
     O0SettingsStore *store = new O0SettingsStore("hgh189;;099!@7878");
 
-    store->setGroupKey("PMR/"+QUrl(pUrl).host());
+    store->setGroupKey("Plugins/PMRSupport/Credentials/"+QUrl(pUrl).host());
 
     setStore(store);
 }
