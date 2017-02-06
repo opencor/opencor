@@ -908,8 +908,20 @@ void CellmlFileRuntime::update()
                                                                                    parameterType,
                                                                                    computationTarget->assignedIndex());
 
-            if (parameterType == CellmlFileRuntimeParameter::Voi)
-                mVariableOfIntegration = parameter;
+            if (parameterType == CellmlFileRuntimeParameter::Voi) {
+                if (mVariableOfIntegration) {
+                    // The CellML API wrongly validated a model that has more
+                    // more than one variable of integration (at least,
+                    // according to the CellML API), but this is clearly wrong
+                    // (not to mention that it crashes OpenCOR), so let the user
+                    // know about it
+
+                    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                               QObject::tr("a model can have only one variable of integration"));
+                } else {
+                    mVariableOfIntegration = parameter;
+                }
+            }
 
             if (realVariable == mainVariable)
                 mParameters << parameter;
