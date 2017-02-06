@@ -44,11 +44,6 @@ span.task {
     background: rgb(254, 242, 192);
 }
 
-span.topPriority {
-    background: rgb(225, 29, 33);
-    color: rgb(255, 255, 255);
-}
-
 span.windows {
     background: rgb(191, 229, 191);
 }
