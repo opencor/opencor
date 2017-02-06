@@ -211,7 +211,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // The compilation object should have only one command, so if it doesn't
     // then something went wrong
 
-    const clang::driver::JobList &jobs = compilation->getJobs();
+    clang::driver::JobList &jobs = compilation->getJobs();
 
     if (    (jobs.size() != 1)
         || !llvm::isa<clang::driver::Command>(*jobs.begin())) {
@@ -222,7 +222,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Retrieve the command job
 
-    const clang::driver::Command &command = llvm::cast<clang::driver::Command>(*jobs.begin());
+    clang::driver::Command &command = llvm::cast<clang::driver::Command>(*jobs.begin());
     QString commandName = command.getCreator().getName();
 
     if (commandName.compare("clang")) {

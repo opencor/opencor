@@ -765,7 +765,7 @@ void MainWindow::saveSettings() const
 
 void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
 {
-    const QString systemLocale = QLocale::system().name().left(2);
+    QString systemLocale = QLocale::system().name().left(2);
 
     QString oldLocale = mRawLocale.isEmpty()?systemLocale:mRawLocale;
     QString newLocale = pRawLocale.isEmpty()?systemLocale:pRawLocale;

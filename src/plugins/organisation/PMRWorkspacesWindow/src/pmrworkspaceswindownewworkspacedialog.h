@@ -49,9 +49,9 @@ public:
 
     virtual void retranslateUi();
 
-    const QString title() const;
-    const QString description() const;
-    const QString path() const;
+    QString title() const;
+    QString description() const;
+    QString path() const;
 
 private:
     Ui::PmrWorkspacesWindowNewWorkspaceDialog *mGui;

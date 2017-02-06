@@ -988,7 +988,7 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
     // Make sure that we have only one repeated task, which aim is to execute
     // each simulation (using a sub-task) once
 
-    const uint totalNbOfTasks = secondSimulation?3:2;
+    uint totalNbOfTasks = secondSimulation?3:2;
 
     if (sedmlDocument->getNumTasks() != totalNbOfTasks) {
         pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,

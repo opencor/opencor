@@ -67,7 +67,7 @@ void ConversionTests::successfulConversionTests()
     // Retest the conversion of a CellML file that works with COR, except that
     // we insert comments everywhere
 
-    const QString comment = QString("<!-- In between comment #%1...-->");
+    static const QString Comment = QString("<!-- In between comment #%1...-->");
 
     QStringList cellmlCorWithCommentsCellmlContents = QStringList() << cellmlCorCellmlContents[0];
     QString currentLine;
@@ -79,7 +79,7 @@ void ConversionTests::successfulConversionTests()
         cellmlCorWithCommentsCellmlContents << currentLine;
 
         if (currentLine.compare("</model>"))
-            cellmlCorWithCommentsCellmlContents << comment.arg(++commentNumber);
+            cellmlCorWithCommentsCellmlContents << Comment.arg(++commentNumber);
         else
             break;
     }
