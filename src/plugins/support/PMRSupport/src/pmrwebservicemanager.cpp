@@ -26,12 +26,12 @@ limitations under the License.
 #include "pmrwebservice.h"
 #include "pmrwebservicemanager.h"
 #include "pmrwebserviceresponse.h"
+#include "webviewerwidget.h"
 
 //==============================================================================
 
 #include <QDesktopServices>
 #include <QMainWindow>
-#include <QWebView>
 
 //==============================================================================
 
@@ -47,7 +47,7 @@ namespace PMRSupport {
 PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
     QNetworkAccessManager(pPmrWebService),
     mPmrWebService(pPmrWebService),
-    mWebView(0)
+    mWebViewer(0)
 {
     // Create an OAuth client for authenticated requests to PMR
 
@@ -117,11 +117,13 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 {
     // Open the given URL in our temporary web browser
 
-    mWebView = new QWebView(Core::mainWindow());
+    mWebViewer = new WebViewerWidget::WebViewerWidget(Core::mainWindow());
 
-    mWebView->setWindowFlags(Qt::Sheet);
-    mWebView->setUrl(pUrl);
-    mWebView->show();
+    mWebViewer->setContextMenuPolicy(Qt::NoContextMenu);
+    mWebViewer->setUrl(pUrl);
+    mWebViewer->setWindowFlags(Qt::Sheet);
+
+    mWebViewer->show();
 }
 
 //==============================================================================
@@ -130,9 +132,9 @@ void PmrWebServiceManager::closeBrowser()
 {
     // Close and delete our temporary web browser
 
-    mWebView->close();
+    mWebViewer->close();
 
-    delete mWebView;
+    delete mWebViewer;
 }
 
 //==============================================================================

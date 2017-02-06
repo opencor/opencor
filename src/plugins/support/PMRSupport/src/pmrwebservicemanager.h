@@ -29,11 +29,16 @@ limitations under the License.
 
 //==============================================================================
 
-class QWebView;
+namespace OpenCOR {
 
 //==============================================================================
 
-namespace OpenCOR {
+namespace WebViewerWidget {
+    class WebViewerWidget;
+}   // namespace WebViewerWidget
+
+//==============================================================================
+
 namespace PMRSupport {
 
 //==============================================================================
@@ -62,7 +67,7 @@ private:
     PmrWebService *mPmrWebService;
     PmrAuthentication *mPmrAuthentication;
 
-    QWebView *mWebView;
+    WebViewerWidget::WebViewerWidget *mWebViewer;
 
 signals:
     void busy(const bool &pBusy);
