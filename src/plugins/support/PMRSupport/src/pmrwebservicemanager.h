@@ -29,6 +29,10 @@ limitations under the License.
 
 //==============================================================================
 
+class QWebView;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace PMRSupport {
 
@@ -58,6 +62,8 @@ private:
     PmrWebService *mPmrWebService;
     PmrAuthentication *mPmrAuthentication;
 
+    QWebView *mWebView;
+
 signals:
     void busy(const bool &pBusy);
     void authenticated(const bool &pAuthenticated);
@@ -68,6 +74,7 @@ private slots:
     void authenticationFailed();
 
     void openBrowser(const QUrl &pUrl);
+    void closeBrowser();
 
     void sslErrors(QNetworkReply *pNetworkReply,
                    const QList<QSslError> &pSslErrors);

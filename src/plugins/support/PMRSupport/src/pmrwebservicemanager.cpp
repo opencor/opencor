@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "coreguiutils.h"
 #include "pmrauthentication.h"
 #include "pmrwebservice.h"
 #include "pmrwebservicemanager.h"
@@ -29,6 +30,8 @@ limitations under the License.
 //==============================================================================
 
 #include <QDesktopServices>
+#include <QMainWindow>
+#include <QWebView>
 
 //==============================================================================
 
@@ -43,7 +46,8 @@ namespace PMRSupport {
 
 PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
     QNetworkAccessManager(pPmrWebService),
-    mPmrWebService(pPmrWebService)
+    mPmrWebService(pPmrWebService),
+    mWebView(0)
 {
     // Create an OAuth client for authenticated requests to PMR
 
@@ -64,6 +68,8 @@ PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
 
     connect(mPmrAuthentication, SIGNAL(openBrowser(const QUrl &)),
             this, SLOT(openBrowser(const QUrl &)));
+    connect(mPmrAuthentication, SIGNAL(closeBrowser()),
+            this, SLOT(closeBrowser()));
 }
 
 //==============================================================================
@@ -109,9 +115,24 @@ void PmrWebServiceManager::authenticationFailed()
 
 void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 {
-    // Open the given URL in the user's browser
+    // Open the given URL in our temporary web browser
 
-    QDesktopServices::openUrl(pUrl);
+    mWebView = new QWebView(Core::mainWindow());
+
+    mWebView->setWindowFlags(Qt::Sheet);
+    mWebView->setUrl(pUrl);
+    mWebView->show();
+}
+
+//==============================================================================
+
+void PmrWebServiceManager::closeBrowser()
+{
+    // Close and delete our temporary web browser
+
+    mWebView->close();
+
+    delete mWebView;
 }
 
 //==============================================================================

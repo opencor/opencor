@@ -44,4 +44,6 @@ ADD_PLUGIN(PMRSupport
         ${LIBGIT2_PLUGIN_BINARY}
         ${OAUTH_PLUGIN_BINARY}
         ${ZLIB_PLUGIN_BINARY}
+    QT_MODULES
+        WebKitWidgets
 )
