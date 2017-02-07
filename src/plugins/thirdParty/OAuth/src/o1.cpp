@@ -200,8 +200,13 @@ void O1::link() {
     setExtraTokens(QVariantMap());
 
     // Start reply server
+/*---OPENCOR---
+    replyServer_->listen(QHostAddress::Any, localPort());
+*/
+//---OPENCOR--- BEGIN
     if (!replyServer_->isListening())
         replyServer_->listen(QHostAddress::Any, localPort());
+//---OPENCOR--- END
 
     // Get any query parameters for the request
     QUrlQuery requestData;
