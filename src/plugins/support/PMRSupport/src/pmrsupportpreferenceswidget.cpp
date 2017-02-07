@@ -50,11 +50,11 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
     mGui->emailValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
-    mPmr = mSettings->value(SettingsPreferencesPmr).toString();
+    mPmrUrl = mSettings->value(SettingsPreferencesPmrUrl).toString();
     mName = mSettings->value(SettingsPreferencesName).toString();
     mEmail = mSettings->value(SettingsPreferencesEmail).toString();
 
-    mGui->pmrValue->setCurrentText(mPmr);
+    mGui->pmrUrlValue->setCurrentText(mPmrUrl);
     mGui->nameValue->setText(mName);
     mGui->emailValue->setText(mEmail);
 
@@ -76,7 +76,7 @@ bool PmrSupportPreferencesWidget::preferencesChanged() const
 {
     // Return whether our preferences have changed
 
-    return    mGui->pmrValue->currentText().compare(mPmr)
+    return    mGui->pmrUrlValue->currentText().compare(mPmrUrl)
            || mGui->nameValue->text().compare(mName)
            || mGui->emailValue->text().compare(mEmail);
 }
@@ -87,11 +87,11 @@ void PmrSupportPreferencesWidget::resetPreferences()
 {
     // Reset our preferences
 
-    mPmr = mGui->pmrValue->itemText(0);
+    mPmrUrl = mGui->pmrUrlValue->itemText(0);
     mName = QString();
     mEmail = QString();
 
-    mGui->pmrValue->setCurrentText(mPmr);
+    mGui->pmrUrlValue->setCurrentText(mPmrUrl);
     mGui->nameValue->setText(mName);
     mGui->emailValue->setText(mEmail);
 }
@@ -102,11 +102,11 @@ void PmrSupportPreferencesWidget::savePreferences()
 {
     // Save our preferences
 
-    mPmr = mGui->pmrValue->currentText();
+    mPmrUrl = mGui->pmrUrlValue->currentText();
     mName = mGui->nameValue->text();
     mEmail = mGui->emailValue->text();
 
-    mSettings->setValue(SettingsPreferencesPmr, mPmr);
+    mSettings->setValue(SettingsPreferencesPmrUrl, mPmrUrl);
     mSettings->setValue(SettingsPreferencesName, mName);
     mSettings->setValue(SettingsPreferencesEmail, mEmail);
 }

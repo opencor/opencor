@@ -49,7 +49,7 @@ class PMRSUPPORT_EXPORT PmrWebService : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrWebService(const QString &pUrl, QObject *pParent);
+    explicit PmrWebService(const QString &pPmrUrl, QObject *pParent);
 
     bool isAuthenticated() const;
     void authenticate(const bool &pAuthenticate = true);
@@ -67,8 +67,8 @@ public:
     void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
                                      const bool &pPush);
 
-    QString url() const;
-    void setUrl(const QString &pUrl);
+    QString pmrUrl() const;
+    void setPmrUrl(const QString &pPmrUrl);
 
     static QString getEmptyDirectory();
 
@@ -79,7 +79,7 @@ private:
         RequestExposureFiles
     };
 
-    QString mUrl;
+    QString mPmrUrl;
 
     PmrWebServiceManager *mPmrWebServiceManager;
 

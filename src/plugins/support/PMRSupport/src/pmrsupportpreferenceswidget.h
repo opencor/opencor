@@ -43,9 +43,9 @@ static const auto PluginName = QStringLiteral("PMRSupport");
 
 //==============================================================================
 
-static const auto SettingsPreferencesPmr   = QStringLiteral("Pmr");
-static const auto SettingsPreferencesName  = QStringLiteral("Name");
-static const auto SettingsPreferencesEmail = QStringLiteral("Email");
+static const auto SettingsPreferencesPmrUrl = QStringLiteral("PmrUrl");
+static const auto SettingsPreferencesName   = QStringLiteral("Name");
+static const auto SettingsPreferencesEmail  = QStringLiteral("Email");
 
 //==============================================================================
 
@@ -65,7 +65,7 @@ public:
 private:
     Ui::PmrSupportPreferencesWidget *mGui;
 
-    QString mPmr;
+    QString mPmrUrl;
     QString mName;
     QString mEmail;
 };
