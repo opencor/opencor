@@ -55,7 +55,8 @@ namespace PMRWorkspacesWindow {
 PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::PmrWorkspacesWindowWindow),
-    mAuthenticated(false)
+    mAuthenticated(false),
+    mWaitingForPmrWebService(false)
 {
     // Set up the GUI
 
@@ -142,6 +143,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
             this, SLOT(showError(const QString &)));
 
     connect(mPmrWebService, SIGNAL(authenticated(const bool &)),
+            this, SLOT(updateGui()));
+    connect(mPmrWebService, SIGNAL(cancelled()),
             this, SLOT(updateGui()));
 
     connect(mPmrWebService, SIGNAL(workspaces(const PMRSupport::PmrWorkspaces &)),
@@ -328,6 +331,8 @@ void PmrWorkspacesWindowWindow::updateGui()
 
     mAuthenticated = mPmrWebService->isAuthenticated();
 
+    mWaitingForPmrWebService = false;
+
     Core::showEnableAction(mGui->actionNew, true, mAuthenticated);
     Core::showEnableAction(mGui->actionReload, true, mAuthenticated);
 
@@ -404,6 +409,11 @@ void PmrWorkspacesWindowWindow::on_actionPreferences_triggered()
 void PmrWorkspacesWindowWindow::on_actionPmr_triggered()
 {
     // Log on/off to/ PMR
+
+    if (mWaitingForPmrWebService)
+        return;
+
+    mWaitingForPmrWebService = true;
 
     if (mAuthenticated) {
         if (Core::questionMessageBox(windowTitle(),

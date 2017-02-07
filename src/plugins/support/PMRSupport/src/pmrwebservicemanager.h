@@ -29,7 +29,20 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QDialog>
+
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class ProgressBarWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace PMRSupport {
 
 //==============================================================================
@@ -58,16 +71,26 @@ private:
     PmrWebService *mPmrWebService;
     PmrAuthentication *mPmrAuthentication;
 
+    QDialog *mWebViewerDialog;
+
+    Core::ProgressBarWidget *mProgressBarWidget;
+
 signals:
     void busy(const bool &pBusy);
     void authenticated(const bool &pAuthenticated);
     void error(const QString &pErrorMessage);
+    void cancelled();
 
 private slots:
     void authenticationSucceeded();
     void authenticationFailed();
 
     void openBrowser(const QUrl &pUrl);
+    void closeBrowser();
+
+    void loadProgress(const int &pProgress);
+    void loadFinished();
+    void resetProgressBar();
 
     void sslErrors(QNetworkReply *pNetworkReply,
                    const QList<QSslError> &pSslErrors);

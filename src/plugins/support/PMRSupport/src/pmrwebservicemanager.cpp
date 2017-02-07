@@ -20,15 +20,22 @@ limitations under the License.
 // PMR web service manager
 //==============================================================================
 
+#include "borderedwidget.h"
 #include "corecliutils.h"
+#include "coreguiutils.h"
 #include "pmrauthentication.h"
 #include "pmrwebservice.h"
 #include "pmrwebservicemanager.h"
 #include "pmrwebserviceresponse.h"
+#include "progressbarwidget.h"
+#include "webviewerwidget.h"
 
 //==============================================================================
 
-#include <QDesktopServices>
+#include <QDialog>
+#include <QLayout>
+#include <QMainWindow>
+#include <QTimer>
 
 //==============================================================================
 
@@ -43,7 +50,9 @@ namespace PMRSupport {
 
 PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
     QNetworkAccessManager(pPmrWebService),
-    mPmrWebService(pPmrWebService)
+    mPmrWebService(pPmrWebService),
+    mWebViewerDialog(0),
+    mProgressBarWidget(0)
 {
     // Create an OAuth client for authenticated requests to PMR
 
@@ -64,6 +73,8 @@ PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
 
     connect(mPmrAuthentication, SIGNAL(openBrowser(const QUrl &)),
             this, SLOT(openBrowser(const QUrl &)));
+    connect(mPmrAuthentication, SIGNAL(closeBrowser()),
+            this, SLOT(closeBrowser()));
 }
 
 //==============================================================================
@@ -109,9 +120,90 @@ void PmrWebServiceManager::authenticationFailed()
 
 void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 {
-    // Open the given URL in the user's browser
+    // Open the given URL in a temporary web browser of ours
 
-    QDesktopServices::openUrl(pUrl);
+    if (!mWebViewerDialog) {
+        mWebViewerDialog = new QDialog(Core::mainWindow());
+
+        connect(mWebViewerDialog, SIGNAL(rejected()),
+                this, SIGNAL(cancelled()));
+
+        WebViewerWidget::WebViewerWidget *webViewer = new WebViewerWidget::WebViewerWidget(mWebViewerDialog);
+
+        webViewer->setContextMenuPolicy(Qt::NoContextMenu);
+
+        connect(webViewer, SIGNAL(loadProgress(int)),
+                this, SLOT(loadProgress(const int &)));
+        connect(webViewer, SIGNAL(loadFinished(bool)),
+                this, SLOT(loadFinished()));
+
+        mProgressBarWidget = new Core::ProgressBarWidget(mWebViewerDialog);
+
+        Core::BorderedWidget *progressBarBorderedWidget = new Core::BorderedWidget(mProgressBarWidget,
+                                                                                   true, false, false, false);
+
+        progressBarBorderedWidget->setFixedHeight(4);
+        progressBarBorderedWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+
+        QVBoxLayout *layout = new QVBoxLayout(mWebViewerDialog);
+
+        layout->setMargin(0);
+        layout->setSpacing(0);
+
+        layout->addWidget(webViewer);
+        layout->addWidget(progressBarBorderedWidget);
+
+        mWebViewerDialog->setLayout(layout);
+    }
+
+    qobject_cast<QWebView *>(mWebViewerDialog->layout()->itemAt(0)->widget())->setUrl(pUrl);
+
+    mWebViewerDialog->exec();
+}
+
+//==============================================================================
+
+void PmrWebServiceManager::closeBrowser()
+{
+    // Close our temporary web browser, but only if the current page has
+    // finished loading otherwise try again in a bit
+
+    if (mProgressBarWidget->value())
+        QTimer::singleShot(0, this, SLOT(closeBrowser()));
+    else
+        mWebViewerDialog->close();
+}
+
+//==============================================================================
+
+void PmrWebServiceManager::loadProgress(const int &pProgress)
+{
+    // Update the value of our progress bar
+
+    mProgressBarWidget->setValue(0.01*pProgress);
+}
+
+//==============================================================================
+
+void PmrWebServiceManager::loadFinished()
+{
+    // The loading is finished, so reset our progress bar, but with a slight
+    // delay (it looks better that way)
+
+    enum {
+        ResetDelay = 169
+    };
+
+    QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
+}
+
+//==============================================================================
+
+void PmrWebServiceManager::resetProgressBar()
+{
+    // Reset our progress bar
+
+    mProgressBarWidget->setValue(0.0);
 }
 
 //==============================================================================

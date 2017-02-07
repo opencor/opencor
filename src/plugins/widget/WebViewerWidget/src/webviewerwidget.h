@@ -88,6 +88,8 @@ public:
 
     void setZoomingEnabled(const bool &pZoomingEnabled);
 
+    void setOverrideCursor(const bool &pOverrideCursor);
+
     void showWebInspector();
 
 protected:
@@ -95,14 +97,15 @@ protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
-    bool mResettingCursor;
-
     QString mToolTip;
 
     QString mHomePage;
 
     bool mZoomingEnabled;
     int mZoomLevel;
+
+    bool mOverrideCursor;
+    bool mOverridingCursor;
 
     void emitZoomRelatedSignals();
 
