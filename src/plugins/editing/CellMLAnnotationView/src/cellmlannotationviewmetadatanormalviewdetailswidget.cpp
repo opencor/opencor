@@ -98,8 +98,9 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
 
     mOutputOntologicalTerms = new WebViewerWidget::WebViewerWidget(mOutput);
 
-    mOutputOntologicalTerms->setZoomingEnabled(false);
     mOutputOntologicalTerms->setContextMenuPolicy(Qt::CustomContextMenu);
+    mOutputOntologicalTerms->setOverrideCursor(true);
+    mOutputOntologicalTerms->setZoomingEnabled(false);
 
     connect(mOutputOntologicalTerms, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu()));

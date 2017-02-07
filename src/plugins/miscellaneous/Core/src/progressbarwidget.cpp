@@ -64,6 +64,15 @@ void ProgressBarWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
+double ProgressBarWidget::value() const
+{
+    // Return our value
+
+    return mValue;
+}
+
+//==============================================================================
+
 void ProgressBarWidget::setValue(const double &pValue)
 {
     // Update both our value and ourselves, if needed

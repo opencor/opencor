@@ -86,6 +86,8 @@ private:
     QIcon mLoggedOnIcon;
     QIcon mLoggedOffIcon;
 
+    bool mWaitingForPmrWebService;
+
     void retranslateActionPmr();
 
 private slots:

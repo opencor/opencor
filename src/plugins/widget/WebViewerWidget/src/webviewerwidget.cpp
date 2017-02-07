@@ -122,12 +122,12 @@ enum {
 WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     QWebView(pParent),
     Core::CommonWidget(this),
-    mResettingCursor(false),
     mToolTip(QString()),
     mHomePage("about:blank"),
     mZoomingEnabled(true),
-    mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our
-                     // first call to setZoomLevel
+    mZoomLevel(-1),
+    mOverrideCursor(false),
+    mOverridingCursor(false)
 {
     // Use our own page
 
@@ -136,7 +136,6 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     // Customise ourselves
 
     setAcceptDrops(false);
-    setFocusPolicy(Qt::NoFocus);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     // Make sure that we can use our Web inspector
@@ -212,16 +211,16 @@ bool WebViewerWidget::event(QEvent *pEvent)
 {
     // Override the change of the cursor and tool tip
 
-    if (mResettingCursor) {
+    if (mOverridingCursor) {
         return true;
-    } else if (    (pEvent->type() == QEvent::CursorChange)
-               &&  (cursor().shape() == Qt::IBeamCursor)
-               && !mResettingCursor) {
-        mResettingCursor = true;
+    } else if (    mOverrideCursor && !mOverridingCursor
+               &&  (pEvent->type() == QEvent::CursorChange)
+               &&  (cursor().shape() == Qt::IBeamCursor)) {
+        mOverridingCursor = true;
 
         setCursor(Qt::ArrowCursor);
 
-        mResettingCursor = false;
+        mOverridingCursor = false;
 
         return true;
     } else if (pEvent->type() == QEvent::ToolTip) {
@@ -369,6 +368,15 @@ void WebViewerWidget::setZoomingEnabled(const bool &pZoomingEnabled)
     // Set whether zooming in/out is enabled
 
     mZoomingEnabled = pZoomingEnabled;
+}
+
+//==============================================================================
+
+void WebViewerWidget::setOverrideCursor(const bool &pOverrideCursor)
+{
+    // Set whether we should override our cursor
+
+    mOverrideCursor = pOverrideCursor;
 }
 
 //==============================================================================

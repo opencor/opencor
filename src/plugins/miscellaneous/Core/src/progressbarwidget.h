@@ -45,6 +45,7 @@ class CORE_EXPORT ProgressBarWidget : public Widget
 public:
     explicit ProgressBarWidget(QWidget *pParent);
 
+    double value() const;
     void setValue(const double &pValue);
 
 protected:
