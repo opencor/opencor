@@ -72,6 +72,7 @@ void PmrSupportPreferencesWidget::resetPreferences()
 {
     // Reset our preferences
 
+    mGui->pmrValue->setCurrentIndex(0);
     mGui->nameValue->setText(QString());
     mGui->emailValue->setText(QString());
 }
