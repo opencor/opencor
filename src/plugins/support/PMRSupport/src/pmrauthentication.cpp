@@ -48,9 +48,10 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrAuthentication::PmrAuthentication(const QString &pUrl,
+PmrAuthentication::PmrAuthentication(const QString &pPmrUrl,
                                      PmrWebServiceManager *pParent) :
-    O1(pParent)
+    O1(pParent),
+    mStore(0)
 {
     // Note: our various constants must match the values assigned to PMR...
 
@@ -69,11 +70,20 @@ PmrAuthentication::PmrAuthentication(const QString &pUrl,
     setCallbackUrl("http://localhost:%1/");
     setLocalPort(1234);
 
+    // Finish initialising ourselves
+
+    pmrUrlRelatedInitialisation(pPmrUrl);
+}
+
+//==============================================================================
+
+void PmrAuthentication::pmrUrlRelatedInitialisation(const QString &pPmrUrl)
+{
     // Set the URLs used to get authentication tokens
 
-    setAccessTokenUrl(pUrl+"/OAuthGetAccessToken");
-    setAuthorizeUrl(pUrl+"/OAuthAuthorizeToken");
-    setRequestTokenUrl(pUrl+"/OAuthRequestToken");
+    setAccessTokenUrl(pPmrUrl+"/OAuthGetAccessToken");
+    setAuthorizeUrl(pPmrUrl+"/OAuthAuthorizeToken");
+    setRequestTokenUrl(pPmrUrl+"/OAuthRequestToken");
 
     // Specify the scope of token requests
 
@@ -83,7 +93,7 @@ PmrAuthentication::PmrAuthentication(const QString &pUrl,
                                             QString("%1/oauth_scope/collection,"
                                                     "%1/oauth_scope/search,"
                                                     "%1/oauth_scope/workspace_tempauth,"
-                                                    "%1/oauth_scope/workspace_full").arg(pUrl).toUtf8());
+                                                    "%1/oauth_scope/workspace_full").arg(pPmrUrl).toUtf8());
 
     setRequestParameters(requestParameters);
 
@@ -91,19 +101,23 @@ PmrAuthentication::PmrAuthentication(const QString &pUrl,
     // Note: for the group key, we use the given URL's host since the URL itself
     //       contains a "://" and this messes things up with QSettings...
 
-    O0SettingsStore *store = new O0SettingsStore("hgh189;;099!@7878");
+    if (mStore)
+        delete mStore;
 
-    store->setGroupKey("Plugins/PMRSupport/Credentials/"+QUrl(pUrl).host());
+    mStore = new O0SettingsStore("hgh189;;099!@7878");
 
-    setStore(store);
+    mStore->setGroupKey("Plugins/PMRSupport/Credentials/"+QUrl(pPmrUrl).host());
+
+    setStore(mStore);
 }
 
 //==============================================================================
 
 void PmrAuthentication::pmrUrlChanged(const QString &pPmrUrl)
 {
-//---ISSUE1069--- TO BE DONE...
-qDebug("NEW PMR URL: %s", qPrintable(pPmrUrl));
+    // Update ourselves using the given PMR URL
+
+    pmrUrlRelatedInitialisation(pPmrUrl);
 }
 
 //==============================================================================
