@@ -119,14 +119,12 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
     // Open the given URL in a temporary web browser of ours
 
     if (!mWebViewerDialog) {
-        QMainWindow *mainWindow = Core::mainWindow();
-
-        mWebViewerDialog = new QDialog(mainWindow);
+        mWebViewerDialog = new QDialog(Core::mainWindow());
 
         connect(mWebViewerDialog, SIGNAL(rejected()),
                 this, SIGNAL(cancelled()));
 
-        WebViewerWidget::WebViewerWidget *webViewer = new WebViewerWidget::WebViewerWidget(mainWindow);
+        WebViewerWidget::WebViewerWidget *webViewer = new WebViewerWidget::WebViewerWidget(mWebViewerDialog);
 
         webViewer->setContextMenuPolicy(Qt::NoContextMenu);
 
