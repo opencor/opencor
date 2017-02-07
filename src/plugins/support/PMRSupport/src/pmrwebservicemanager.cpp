@@ -139,15 +139,8 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 
         mProgressBarWidget = new Core::ProgressBarWidget(mWebViewerDialog);
 
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-        Core::BorderedWidget *progressBarBorderedWidget = new Core::BorderedWidget(mProgressBarWidget,
-                                                                                   false, true, true, true);
-#elif defined(Q_OS_MAC)
         Core::BorderedWidget *progressBarBorderedWidget = new Core::BorderedWidget(mProgressBarWidget,
                                                                                    true, false, false, false);
-#else
-    #error Unsupported platform
-#endif
 
         progressBarBorderedWidget->setFixedHeight(4);
         progressBarBorderedWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
