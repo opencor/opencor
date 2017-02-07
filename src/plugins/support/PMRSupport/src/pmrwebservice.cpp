@@ -59,6 +59,8 @@ PmrWebService::PmrWebService(QObject *pParent) :
             this, SIGNAL(authenticated(const bool &)));
     connect(mPmrWebServiceManager, SIGNAL(error(const QString &)),
             this, SIGNAL(error(const QString &)));
+    connect(mPmrWebServiceManager, SIGNAL(cancelled()),
+            this, SIGNAL(cancelled()));
 }
 
 //==============================================================================

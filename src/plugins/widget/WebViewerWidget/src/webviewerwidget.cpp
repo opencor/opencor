@@ -136,7 +136,6 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     // Customise ourselves
 
     setAcceptDrops(false);
-    setFocusPolicy(Qt::NoFocus);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     // Make sure that we can use our Web inspector

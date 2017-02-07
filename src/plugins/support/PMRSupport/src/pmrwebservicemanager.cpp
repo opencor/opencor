@@ -30,7 +30,8 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QDesktopServices>
+#include <QDialog>
+#include <QLayout>
 #include <QMainWindow>
 
 //==============================================================================
@@ -47,7 +48,7 @@ namespace PMRSupport {
 PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
     QNetworkAccessManager(pPmrWebService),
     mPmrWebService(pPmrWebService),
-    mWebViewer(0)
+    mWebViewerDialog(0)
 {
     // Create an OAuth client for authenticated requests to PMR
 
@@ -115,26 +116,40 @@ void PmrWebServiceManager::authenticationFailed()
 
 void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 {
-    // Open the given URL in our temporary web browser
+    // Open the given URL in a temporary web browser of ours
 
-    mWebViewer = new WebViewerWidget::WebViewerWidget(Core::mainWindow());
+    if (!mWebViewerDialog) {
+        QMainWindow *mainWindow = Core::mainWindow();
 
-    mWebViewer->setContextMenuPolicy(Qt::NoContextMenu);
-    mWebViewer->setUrl(pUrl);
-    mWebViewer->setWindowFlags(Qt::Sheet);
+        mWebViewerDialog = new QDialog(mainWindow);
 
-    mWebViewer->show();
+        connect(mWebViewerDialog, SIGNAL(rejected()),
+                this, SIGNAL(cancelled()));
+
+        WebViewerWidget::WebViewerWidget *webViewer = new WebViewerWidget::WebViewerWidget(mainWindow);
+
+        webViewer->setContextMenuPolicy(Qt::NoContextMenu);
+
+        QVBoxLayout *layout = new QVBoxLayout(mWebViewerDialog);
+
+        layout->addWidget(webViewer);
+        layout->setMargin(0);
+
+        mWebViewerDialog->setLayout(layout);
+    }
+
+    qobject_cast<QWebView *>(mWebViewerDialog->layout()->itemAt(0)->widget())->setUrl(pUrl);
+
+    mWebViewerDialog->exec();
 }
 
 //==============================================================================
 
 void PmrWebServiceManager::closeBrowser()
 {
-    // Close and delete our temporary web browser
+    // Close our temporary web browser
 
-    mWebViewer->close();
-
-    delete mWebViewer;
+    mWebViewerDialog->close();
 }
 
 //==============================================================================

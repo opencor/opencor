@@ -29,16 +29,11 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QDialog>
+
+//==============================================================================
+
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace WebViewerWidget {
-    class WebViewerWidget;
-}   // namespace WebViewerWidget
-
-//==============================================================================
-
 namespace PMRSupport {
 
 //==============================================================================
@@ -67,12 +62,13 @@ private:
     PmrWebService *mPmrWebService;
     PmrAuthentication *mPmrAuthentication;
 
-    WebViewerWidget::WebViewerWidget *mWebViewer;
+    QDialog *mWebViewerDialog;
 
 signals:
     void busy(const bool &pBusy);
     void authenticated(const bool &pAuthenticated);
     void error(const QString &pErrorMessage);
+    void cancelled();
 
 private slots:
     void authenticationSucceeded();
