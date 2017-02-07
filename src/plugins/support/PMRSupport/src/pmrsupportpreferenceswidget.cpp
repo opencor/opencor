@@ -50,9 +50,13 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
     mGui->emailValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
-    mGui->pmrValue->setCurrentText(mSettings->value(SettingsPreferencesPmr).toString());
-    mGui->nameValue->setText(mSettings->value(SettingsPreferencesName).toString());
-    mGui->emailValue->setText(mSettings->value(SettingsPreferencesEmail).toString());
+    mPmr = mSettings->value(SettingsPreferencesPmr).toString();
+    mName = mSettings->value(SettingsPreferencesName).toString();
+    mEmail = mSettings->value(SettingsPreferencesEmail).toString();
+
+    mGui->pmrValue->setCurrentText(mPmr);
+    mGui->nameValue->setText(mName);
+    mGui->emailValue->setText(mEmail);
 
     setFocusProxy(mGui->nameValue);
 }
@@ -68,13 +72,28 @@ PmrSupportPreferencesWidget::~PmrSupportPreferencesWidget()
 
 //==============================================================================
 
+bool PmrSupportPreferencesWidget::preferencesChanged() const
+{
+    // Return whether our preferences have changed
+
+    return    mGui->pmrValue->currentText().compare(mPmr)
+           || mGui->nameValue->text().compare(mName)
+           || mGui->emailValue->text().compare(mEmail);
+}
+
+//==============================================================================
+
 void PmrSupportPreferencesWidget::resetPreferences()
 {
     // Reset our preferences
 
-    mGui->pmrValue->setCurrentIndex(0);
-    mGui->nameValue->setText(QString());
-    mGui->emailValue->setText(QString());
+    mPmr = mGui->pmrValue->itemText(0);
+    mName = QString();
+    mEmail = QString();
+
+    mGui->pmrValue->setCurrentText(mPmr);
+    mGui->nameValue->setText(mName);
+    mGui->emailValue->setText(mEmail);
 }
 
 //==============================================================================
@@ -83,9 +102,13 @@ void PmrSupportPreferencesWidget::savePreferences()
 {
     // Save our preferences
 
-    mSettings->setValue(SettingsPreferencesPmr, mGui->pmrValue->currentText());
-    mSettings->setValue(SettingsPreferencesName, mGui->nameValue->text());
-    mSettings->setValue(SettingsPreferencesEmail, mGui->emailValue->text());
+    mPmr = mGui->pmrValue->currentText();
+    mName = mGui->nameValue->text();
+    mEmail = mGui->emailValue->text();
+
+    mSettings->setValue(SettingsPreferencesPmr, mPmr);
+    mSettings->setValue(SettingsPreferencesName, mName);
+    mSettings->setValue(SettingsPreferencesEmail, mEmail);
 }
 
 //==============================================================================

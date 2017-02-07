@@ -57,11 +57,17 @@ public:
     explicit PmrSupportPreferencesWidget(QWidget *pParent);
     ~PmrSupportPreferencesWidget();
 
+    virtual bool preferencesChanged() const;
+
     virtual void resetPreferences();
     virtual void savePreferences();
 
 private:
     Ui::PmrSupportPreferencesWidget *mGui;
+
+    QString mPmr;
+    QString mName;
+    QString mEmail;
 };
 
 //==============================================================================
