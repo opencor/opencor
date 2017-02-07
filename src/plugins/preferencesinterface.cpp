@@ -49,7 +49,8 @@ namespace Preferences {
 
 PreferencesWidget::PreferencesWidget(const QString &pPluginName,
                                      QWidget *pParent) :
-    QWidget(pParent)
+    QWidget(pParent),
+    mPluginName(pPluginName)
 {
     mSettings = new QSettings();
 
@@ -65,6 +66,15 @@ PreferencesWidget::~PreferencesWidget()
     // Delete some internal objects
 
     delete mSettings;
+}
+
+//==============================================================================
+
+QString PreferencesWidget::pluginName() const
+{
+    // Return our plugin name
+
+    return mPluginName;
 }
 
 //==============================================================================
