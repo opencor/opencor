@@ -27,6 +27,7 @@ limitations under the License.
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
+#include "preferencesinterface.h"
 #include "windowinterface.h"
 
 //==============================================================================
@@ -45,7 +46,8 @@ class PmrWindowWindow;
 //==============================================================================
 
 class PMRWindowPlugin : public QObject, public I18nInterface,
-                        public PluginInterface, public WindowInterface
+                        public PluginInterface, public PreferencesInterface,
+                        public WindowInterface
 {
     Q_OBJECT
 
@@ -53,11 +55,13 @@ class PMRWindowPlugin : public QObject, public I18nInterface,
 
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::PreferencesInterface)
     Q_INTERFACES(OpenCOR::WindowInterface)
 
 public:
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
+#include "preferencesinterface.inl"
 #include "windowinterface.inl"
 
 private:

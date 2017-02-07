@@ -184,7 +184,7 @@ void PreferencesDialog::constructor(PluginManager *pPluginManager,
     foreach (Plugin *plugin, mPluginManager->sortedPlugins()) {
         PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
 
-        if (preferencesInterface) {
+        if (preferencesInterface && preferencesInterface->preferencesWidget()) {
             // Create the item corresponding to the current plugin and add it to
             // its corresponding category
 

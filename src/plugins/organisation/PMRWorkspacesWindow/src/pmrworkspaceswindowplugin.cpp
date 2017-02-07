@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "coreguiutils.h"
+#include "pmrsupportpreferenceswidget.h"
 #include "pmrworkspaceswindowplugin.h"
 #include "pmrworkspaceswindowwindow.h"
 
@@ -151,6 +152,29 @@ void PMRWorkspacesWindowPlugin::handleUrl(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// Preferences interface
+//==============================================================================
+
+Preferences::PreferencesWidget * PMRWorkspacesWindowPlugin::preferencesWidget()
+{
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+void PMRWorkspacesWindowPlugin::preferencesChanged(const QString &pPluginName)
+{
+    // Check whether it's the PMR Support preferences that have changed and, if
+    // so, then update ourselves accordingly
+
+    if (!pPluginName.compare(PMRSupport::PluginName)) {
+//---ISSUE1069--- TO BE DONE...
+    }
 }
 
 //==============================================================================
