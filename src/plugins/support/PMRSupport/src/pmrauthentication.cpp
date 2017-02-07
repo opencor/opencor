@@ -23,6 +23,7 @@ limitations under the License.
 #include "corecliutils.h"
 #include "pmrauthentication.h"
 #include "pmrwebservice.h"
+#include "pmrwebservicemanager.h"
 
 //==============================================================================
 
@@ -47,10 +48,16 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrAuthentication::PmrAuthentication(const QString &pUrl, QObject *pParent) :
+PmrAuthentication::PmrAuthentication(const QString &pUrl,
+                                     PmrWebServiceManager *pParent) :
     O1(pParent)
 {
     // Note: our various constants must match the values assigned to PMR...
+
+    // Make sure that we get told when our parent's PMR URL has changed
+
+    connect(pParent, SIGNAL(pmrUrlChanged(const QString &)),
+            this, SLOT(pmrUrlChanged(const QString &)));
 
     // Set the client ID and secret
 
@@ -89,6 +96,14 @@ PmrAuthentication::PmrAuthentication(const QString &pUrl, QObject *pParent) :
     store->setGroupKey("Plugins/PMRSupport/Credentials/"+QUrl(pUrl).host());
 
     setStore(store);
+}
+
+//==============================================================================
+
+void PmrAuthentication::pmrUrlChanged(const QString &pPmrUrl)
+{
+//---ISSUE1069--- TO BE DONE...
+qDebug("NEW PMR URL: %s", qPrintable(pPmrUrl));
 }
 
 //==============================================================================

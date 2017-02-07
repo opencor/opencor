@@ -64,6 +64,11 @@ PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
     connect(this, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
             this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
 
+    // Forward our PMR web service's signal about its PMR URL having changed
+
+    connect(pPmrWebService, SIGNAL(pmrUrlChanged(const QString &)),
+            this, SIGNAL(pmrUrlChanged(const QString &)));
+
     // Connect some signals
 
     connect(mPmrAuthentication, SIGNAL(linkingSucceeded()),

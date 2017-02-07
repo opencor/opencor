@@ -33,12 +33,20 @@ namespace PMRSupport {
 
 //==============================================================================
 
+class PmrWebServiceManager;
+
+//==============================================================================
+
 class PmrAuthentication: public O1
 {
     Q_OBJECT
 
 public:
-    explicit PmrAuthentication(const QString &pUrl, QObject *pParent);
+    explicit PmrAuthentication(const QString &pUrl,
+                               PmrWebServiceManager *pParent);
+
+private slots:
+    void pmrUrlChanged(const QString &pPmrUrl);
 };
 
 //==============================================================================

@@ -194,6 +194,15 @@ void PmrWindowWindow::resizeEvent(QResizeEvent *pEvent)
 
 //==============================================================================
 
+void PmrWindowWindow::setPmrUrl(const QString &pPmrUrl)
+{
+    // Update the PMR URL to be used by our PMR web service
+
+    mPmrWebService->setPmrUrl(pPmrUrl);
+}
+
+//==============================================================================
+
 void PmrWindowWindow::filterValueChanged(const QString &pText)
 {
     // Ask our PMR widget to filter its output using the given regular

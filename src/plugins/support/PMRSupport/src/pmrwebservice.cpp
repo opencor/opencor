@@ -475,7 +475,7 @@ void PmrWebService::workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *pWork
 
 QString PmrWebService::pmrUrl() const
 {
-    // Return our URL
+    // Return our PMR URL
 
     return mPmrUrl;
 }
@@ -484,9 +484,11 @@ QString PmrWebService::pmrUrl() const
 
 void PmrWebService::setPmrUrl(const QString &pPmrUrl)
 {
-    // Set our URL
+    // Set our PMR URL and let people know that it has changed
 
     mPmrUrl = pPmrUrl;
+
+    emit pmrUrlChanged(pPmrUrl);
 }
 
 //==============================================================================

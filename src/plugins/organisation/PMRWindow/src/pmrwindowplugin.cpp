@@ -168,9 +168,8 @@ void PMRWindowPlugin::preferencesChanged(const QString &pPluginName)
     // Check whether it's the PMR Support preferences that have changed and, if
     // so, then update ourselves accordingly
 
-    if (!pPluginName.compare(PMRSupport::PluginName)) {
-//---ISSUE1069--- TO BE DONE...
-    }
+    if (!pPluginName.compare(PMRSupport::PluginName))
+        mPmrWindowWindow->setPmrUrl(PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesPmrUrl).toString());
 }
 
 //==============================================================================

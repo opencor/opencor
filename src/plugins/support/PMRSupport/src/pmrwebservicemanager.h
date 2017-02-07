@@ -76,9 +76,13 @@ private:
     Core::ProgressBarWidget *mProgressBarWidget;
 
 signals:
+    void pmrUrlChanged(const QString &pPmrUrl);
+
     void busy(const bool &pBusy);
     void authenticated(const bool &pAuthenticated);
+
     void error(const QString &pErrorMessage);
+
     void cancelled();
 
 private slots:
