@@ -38,7 +38,7 @@ extern "C" Q_DECL_EXPORT int preferencesInterfaceVersion()
 {
     // Version of the preferences interface
 
-    return 1;
+    return 2;
 }
 
 //==============================================================================
