@@ -34,6 +34,15 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class ProgressBarWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace PMRSupport {
 
 //==============================================================================
@@ -64,6 +73,8 @@ private:
 
     QDialog *mWebViewerDialog;
 
+    Core::ProgressBarWidget *mProgressBarWidget;
+
 signals:
     void busy(const bool &pBusy);
     void authenticated(const bool &pAuthenticated);
@@ -76,6 +87,10 @@ private slots:
 
     void openBrowser(const QUrl &pUrl);
     void closeBrowser();
+
+    void loadProgress(const int &pProgress);
+    void loadFinished();
+    void resetProgressBar();
 
     void sslErrors(QNetworkReply *pNetworkReply,
                    const QList<QSslError> &pSslErrors);
