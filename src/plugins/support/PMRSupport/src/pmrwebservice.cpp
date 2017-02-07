@@ -41,8 +41,9 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWebService::PmrWebService(QObject *pParent) :
+PmrWebService::PmrWebService(const QString &pUrl, QObject *pParent) :
     QObject(pParent),
+    mUrl(pUrl),
     mUrlExposures(QMap<QString, PmrExposure *>()),
     mFileExposuresLeftCount(QMap<PmrExposure *, int>())
 {
@@ -87,7 +88,7 @@ void PmrWebService::requestExposures() const
 {
     // Request the list of exposures from PMR
 
-    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(PmrUrl+"/exposure", false);
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(mUrl+"/exposure", false);
 
     if (pmrResponse) {
         connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
@@ -233,7 +234,7 @@ void PmrWebService::requestNewWorkspace(const QString &pName,
                                                "] } }";
 
     QJsonDocument createWorkspaceJson = QJsonDocument::fromJson(QString(CreateWorkspaceJson).arg(pName, pDescription).toUtf8());
-    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(PmrUrl+"/workspace/+/addWorkspace",
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(mUrl+"/workspace/+/addWorkspace",
                                                                         true, true, createWorkspaceJson);
 
     if (pmrResponse) {
@@ -264,7 +265,7 @@ void PmrWebService::requestWorkspaces() const
 {
     // Retrieve all the workspaces
 
-    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(PmrUrl+"/my-workspaces", true);
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(mUrl+"/my-workspaces", true);
 
     if (pmrResponse) {
         connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
@@ -468,6 +469,24 @@ void PmrWebService::workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *pWork
 
     emit busy(false);
     emit workspaceSynchronized(pWorkspace);
+}
+
+//==============================================================================
+
+QString PmrWebService::url() const
+{
+    // Return our URL
+
+    return mUrl;
+}
+
+//==============================================================================
+
+void PmrWebService::setUrl(const QString &pUrl)
+{
+    // Set our URL
+
+    mUrl = pUrl;
 }
 
 //==============================================================================

@@ -25,11 +25,13 @@ limitations under the License.
 #include "filemanager.h"
 #include "i18ninterface.h"
 #include "toolbarwidget.h"
+#include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrworkspacemanager.h"
 #include "pmrworkspaceswindownewworkspacedialog.h"
 #include "pmrworkspaceswindowwidget.h"
 #include "pmrworkspaceswindowwindow.h"
+#include "preferencesinterface.h"
 
 //==============================================================================
 
@@ -106,7 +108,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     // Create an instance of our PMR web service
 
-    mPmrWebService = new PMRSupport::PmrWebService(this);
+    mPmrWebService = new PMRSupport::PmrWebService(PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesPmr).toString(), this);
 
     // Create and add our workspaces widget
 

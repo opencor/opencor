@@ -23,9 +23,11 @@ limitations under the License.
 #include "borderedwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
+#include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrwindowwidget.h"
 #include "pmrwindowwindow.h"
+#include "preferencesinterface.h"
 #include "toolbarwidget.h"
 
 //==============================================================================
@@ -114,7 +116,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     // Create an instance of our PMR web service
 
-    mPmrWebService = new PMRSupport::PmrWebService(this);
+    mPmrWebService = new PMRSupport::PmrWebService(PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesPmr).toString(), this);
 
     // Some connections to process responses from our PMR web service
 

@@ -56,7 +56,7 @@ PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
 {
     // Create an OAuth client for authenticated requests to PMR
 
-    mPmrAuthentication = new PmrAuthentication(PmrUrl, this);
+    mPmrAuthentication = new PmrAuthentication(pPmrWebService->url(), this);
 
     // Make sure that we get told when there are SSL errors (which would happen
     // if the website's certificate is invalid, e.g. it has expired)
