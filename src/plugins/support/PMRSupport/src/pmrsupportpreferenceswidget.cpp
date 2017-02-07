@@ -50,6 +50,7 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
     mGui->emailValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
+    mGui->pmrValue->setCurrentText(mSettings->value(SettingsPreferencesPmr).toString());
     mGui->nameValue->setText(mSettings->value(SettingsPreferencesName).toString());
     mGui->emailValue->setText(mSettings->value(SettingsPreferencesEmail).toString());
 
@@ -81,6 +82,7 @@ void PmrSupportPreferencesWidget::savePreferences()
 {
     // Save our preferences
 
+    mSettings->setValue(SettingsPreferencesPmr, mGui->pmrValue->currentText());
     mSettings->setValue(SettingsPreferencesName, mGui->nameValue->text());
     mSettings->setValue(SettingsPreferencesEmail, mGui->emailValue->text());
 }

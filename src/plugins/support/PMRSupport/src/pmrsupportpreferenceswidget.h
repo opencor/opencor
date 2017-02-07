@@ -43,6 +43,7 @@ static const auto PluginName = QStringLiteral("PMRSupport");
 
 //==============================================================================
 
+static const auto SettingsPreferencesPmr   = QStringLiteral("Pmr");
 static const auto SettingsPreferencesName  = QStringLiteral("Name");
 static const auto SettingsPreferencesEmail = QStringLiteral("Email");
 
