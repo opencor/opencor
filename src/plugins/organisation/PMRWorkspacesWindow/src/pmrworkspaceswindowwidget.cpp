@@ -66,14 +66,12 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                                      PmrWorkspacesWindowWindow *pParent) :
     Core::Widget(pParent),
     mSettingsGroup(QString()),
-    mPmrUrl(pPmrUrl),
-    mPmrWebService(pPmrWebService),
-    mClonedWorkspaceFolderUrls(QMap<QString, QString>()),
-    mWorkspaceUrlFoldersOwned(QMap<QString, QPair<QString, bool>>()),
-    mInitialized(false),
-    mErrorMessage(QString()),
-    mAuthenticated(false)
+    mPmrWebService(pPmrWebService)
 {
+    // Initialise our internals by 'resetting' them
+
+    reset(pPmrUrl);
+
     // Create and customise some objects
 
     mUserMessageWidget = new Core::UserMessageWidget(this);
@@ -502,18 +500,35 @@ QSize PmrWorkspacesWindowWidget::sizeHint() const
 
 void PmrWorkspacesWindowWidget::update(const QString &pPmrUrl)
 {
-    // Save our settings using the 'old' PMR URL, keep track of the new PMR URL
-    // and use it to load our 'new' settings
+    // Save our settings using the 'old' PMR URL, reset ourselves and load our
+    // 'new' settings
 
     QSettings settings;
 
     settings.beginGroup(mSettingsGroup);
         saveSettings(&settings);
 
-        mPmrUrl = pPmrUrl;
+        reset(pPmrUrl);
 
         loadSettings(&settings);
     settings.endGroup();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::reset(const QString &pPmrUrl)
+{
+    // Reset our internals
+
+    mPmrUrl = pPmrUrl;
+
+    mClonedWorkspaceFolderUrls = QMap<QString, QString>();
+    mWorkspaceUrlFoldersOwned = QMap<QString, QPair<QString, bool>>();
+
+    mInitialized = false;
+
+    mErrorMessage = QString();
+    mAuthenticated = false;
 }
 
 //==============================================================================

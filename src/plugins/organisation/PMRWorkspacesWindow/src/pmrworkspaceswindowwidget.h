@@ -160,6 +160,8 @@ private:
     QIcon mWrFileIcon;
     QIcon mWtFileIcon;
 
+    void reset(const QString &pPmrUrl);
+
     void updateGui();
 
     PmrWorkspacesWindowItem * currentItem() const;
