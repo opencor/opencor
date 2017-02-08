@@ -141,6 +141,7 @@ void PreferencesDialog::constructor(PluginManager *pPluginManager,
     mCategoryItems = QMap<PluginInfo::Category, QStandardItem *>();
     mItemCategories = QMap<QStandardItem *, PluginInfo::Category>();
     mItemPreferencesWidgets = QMap<QStandardItem *, Preferences::PreferencesWidget *>();
+    mPluginNames = QStringList();
 
     // Set up the GUI
 
@@ -279,6 +280,15 @@ PreferencesDialog::~PreferencesDialog()
 
 //==============================================================================
 
+QStringList PreferencesDialog::pluginNames() const
+{
+    // Return our plugin names
+
+    return mPluginNames;
+}
+
+//==============================================================================
+
 QStandardItem * PreferencesDialog::pluginCategoryItem(const PluginInfo::Category &pCategory)
 {
     // Return the given category item, after having created it, if it didn't
@@ -332,25 +342,22 @@ void PreferencesDialog::on_treeView_collapsed(const QModelIndex &pIndex)
 
 void PreferencesDialog::on_buttonBox_accepted()
 {
-    // Save all of our plugins' preferences, if they have changed, and let
-    // people know about it, if needed
+    // Save all of our plugins' preferences, if they have changed, and keep
+    // track of their name
+
+    mPluginNames = QStringList();
 
     foreach (Preferences::PreferencesWidget *preferencesWidget, mItemPreferencesWidgets.values()) {
         if (preferencesWidget->preferencesChanged()) {
             preferencesWidget->savePreferences();
 
-            foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-                PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
-
-                if (preferencesInterface)
-                    preferencesInterface->preferencesChanged(preferencesWidget->pluginName());
-            }
+            mPluginNames << preferencesWidget->pluginName();
         }
     }
 
     // Confirm that we accepted the changes
 
-    accept();
+    done(QMessageBox::Ok);
 }
 
 //==============================================================================

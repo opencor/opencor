@@ -93,6 +93,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mLoadedPluginPlugins(Plugins()),
     mLoadedI18nPlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
+    mLoadedPreferencesPlugins(Plugins()),
     mLoadedWindowPlugins(Plugins()),
     mRawLocale(QString()),
     mMenus(QMap<QString, QMenu *>()),
@@ -146,6 +147,9 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
         if (qobject_cast<GuiInterface *>(plugin->instance()))
             mLoadedGuiPlugins << plugin;
+
+        if (qobject_cast<PreferencesInterface *>(plugin->instance()))
+            mLoadedPreferencesPlugins << plugin;
 
         if (qobject_cast<WindowInterface *>(plugin->instance()))
             mLoadedWindowPlugins << plugin;
@@ -1166,20 +1170,23 @@ void MainWindow::showPreferencesDialog(const QString &pPluginName)
     // the Preferences interface
 
     if (mPluginManager->plugins().count()) {
-        bool pluginsWithPreferences = false;
-
-        foreach (Plugin *plugin, mPluginManager->plugins()) {
-            if (qobject_cast<PreferencesInterface *>(plugin->instance())) {
-                pluginsWithPreferences = true;
-
-                break;
-            }
-        }
-
-        if (pluginsWithPreferences) {
+        if (mLoadedPreferencesPlugins.count()) {
             PreferencesDialog preferencesDialog(mPluginManager, pPluginName, this);
 
             preferencesDialog.exec();
+
+            // Let people know about the plugins which preferences have changed,
+            // if needed and any
+
+            if (    (preferencesDialog.result() == QMessageBox::Ok)
+                && !preferencesDialog.pluginNames().isEmpty()) {
+                foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+                    PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
+
+                    if (preferencesInterface)
+                        preferencesInterface->preferencesChanged(preferencesDialog.pluginNames());
+                }
+            }
         } else {
             warningMessageBox(tr("Preferences"),
                               tr("No plugins have preferences."));

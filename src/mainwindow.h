@@ -90,6 +90,7 @@ private:
     Plugins mLoadedPluginPlugins;
     Plugins mLoadedI18nPlugins;
     Plugins mLoadedGuiPlugins;
+    Plugins mLoadedPreferencesPlugins;
     Plugins mLoadedWindowPlugins;
 
     QString mRawLocale;

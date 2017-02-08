@@ -72,9 +72,9 @@ Preferences::PreferencesWidget * PMRSupportPlugin::preferencesWidget()
 
 //==============================================================================
 
-void PMRSupportPlugin::preferencesChanged(const QString &pPluginName)
+void PMRSupportPlugin::preferencesChanged(const QStringList &pPluginNames)
 {
-    Q_UNUSED(pPluginName);
+    Q_UNUSED(pPluginNames);
 
     // We don't handle this interface...
 }

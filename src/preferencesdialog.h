@@ -101,6 +101,8 @@ public:
     explicit PreferencesDialog(PluginManager *pPluginManager, QWidget *pParent);
     ~PreferencesDialog();
 
+    QStringList pluginNames() const;
+
 private:
     Ui::PreferencesDialog *mGui;
 
@@ -116,6 +118,8 @@ private:
 
     QPushButton *mResetAllButton;
     QPushButton *mResetPluginButton;
+
+    QStringList mPluginNames;
 
     void constructor(PluginManager *pPluginManager, const QString &pPluginName);
 

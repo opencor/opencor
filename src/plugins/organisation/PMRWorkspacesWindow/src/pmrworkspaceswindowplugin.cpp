@@ -167,12 +167,12 @@ Preferences::PreferencesWidget * PMRWorkspacesWindowPlugin::preferencesWidget()
 
 //==============================================================================
 
-void PMRWorkspacesWindowPlugin::preferencesChanged(const QString &pPluginName)
+void PMRWorkspacesWindowPlugin::preferencesChanged(const QStringList &pPluginNames)
 {
     // Check whether it's the PMR Support preferences that have changed and, if
     // so, then update ourselves accordingly
 
-    if (!pPluginName.compare(PMRSupport::PluginName)) {
+    if (pPluginNames.contains(PMRSupport::PluginName)) {
 //---ISSUE1069--- TO BE DONE...
     }
 }
