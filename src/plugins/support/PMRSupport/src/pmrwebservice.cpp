@@ -488,7 +488,7 @@ void PmrWebService::setPmrUrl(const QString &pPmrUrl)
 
     mPmrUrl = pPmrUrl;
 
-    mPmrWebServiceManager->setPmrUrl(pPmrUrl);
+    mPmrWebServiceManager->update(pPmrUrl);
 }
 
 //==============================================================================

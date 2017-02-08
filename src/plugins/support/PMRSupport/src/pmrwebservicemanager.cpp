@@ -51,30 +51,20 @@ namespace PMRSupport {
 PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
     QNetworkAccessManager(pPmrWebService),
     mPmrWebService(pPmrWebService),
+    mPmrAuthentication(0),
     mWebViewerDialog(0),
     mProgressBarWidget(0)
 {
-    // Create an OAuth client for authenticated requests to PMR
-
-    mPmrAuthentication = new PmrAuthentication(pPmrWebService->pmrUrl(), this);
-
     // Make sure that we get told when there are SSL errors (which would happen
     // if the website's certificate is invalid, e.g. it has expired)
 
     connect(this, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
             this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
 
-    // Connect some signals
+    // Create, by updating ourselves, our PMR authentication object using our
+    // PMR web service's PMR URL
 
-    connect(mPmrAuthentication, SIGNAL(linkingSucceeded()),
-            this, SLOT(authenticationSucceeded()));
-    connect(mPmrAuthentication, SIGNAL(linkingFailed()),
-            this, SLOT(authenticationFailed()));
-
-    connect(mPmrAuthentication, SIGNAL(openBrowser(const QUrl &)),
-            this, SLOT(openBrowser(const QUrl &)));
-    connect(mPmrAuthentication, SIGNAL(closeBrowser()),
-            this, SLOT(closeBrowser()));
+    update(pPmrWebService->pmrUrl());
 }
 
 //==============================================================================
@@ -289,11 +279,28 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
 
 //==============================================================================
 
-void PmrWebServiceManager::setPmrUrl(const QString &pPmrUrl)
+void PmrWebServiceManager::update(const QString &pPmrUrl)
 {
-    // Ask our PMR authentication object to update its PMR URL
+    // Delete any previous instance of our PMR authentication object
 
-    mPmrAuthentication->setPmrUrl(pPmrUrl);
+    if (mPmrAuthentication)
+        delete mPmrAuthentication;
+
+    // Create our PMR authentication object
+
+    mPmrAuthentication = new PmrAuthentication(pPmrUrl, this);
+
+    // Connect some signals
+
+    connect(mPmrAuthentication, SIGNAL(linkingSucceeded()),
+            this, SLOT(authenticationSucceeded()));
+    connect(mPmrAuthentication, SIGNAL(linkingFailed()),
+            this, SLOT(authenticationFailed()));
+
+    connect(mPmrAuthentication, SIGNAL(openBrowser(const QUrl &)),
+            this, SLOT(openBrowser(const QUrl &)));
+    connect(mPmrAuthentication, SIGNAL(closeBrowser()),
+            this, SLOT(closeBrowser()));
 }
 
 //==============================================================================

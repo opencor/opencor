@@ -68,7 +68,7 @@ public:
                                     const bool &pUsePost = false,
                                     const QJsonDocument &pJsonDocument = QJsonDocument());
 
-    void setPmrUrl(const QString &pPmrUrl);
+    void update(const QString &pPmrUrl);
 
 private:
     PmrWebService *mPmrWebService;

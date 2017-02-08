@@ -49,8 +49,7 @@ namespace PMRSupport {
 //==============================================================================
 
 PmrAuthentication::PmrAuthentication(const QString &pPmrUrl, QObject *pParent) :
-    O1(pParent),
-    mStore(0)
+    O1(pParent)
 {
     // Note: our various constants must match the values assigned to PMR...
 
@@ -64,24 +63,6 @@ PmrAuthentication::PmrAuthentication(const QString &pPmrUrl, QObject *pParent) :
     setCallbackUrl("http://localhost:%1/");
     setLocalPort(1234);
 
-    // Finish initialising ourselves
-
-    pmrUrlRelatedInitialisation(pPmrUrl);
-}
-
-//==============================================================================
-
-void PmrAuthentication::setPmrUrl(const QString &pPmrUrl)
-{
-    // Update ourselves using the given PMR URL
-
-    pmrUrlRelatedInitialisation(pPmrUrl);
-}
-
-//==============================================================================
-
-void PmrAuthentication::pmrUrlRelatedInitialisation(const QString &pPmrUrl)
-{
     // Set the URLs used to get authentication tokens
 
     setAccessTokenUrl(pPmrUrl+"/OAuthGetAccessToken");
@@ -104,14 +85,11 @@ void PmrAuthentication::pmrUrlRelatedInitialisation(const QString &pPmrUrl)
     // Note: for the group key, we use the given URL's host since the URL itself
     //       contains a "://" and this messes things up with QSettings...
 
-    if (mStore)
-        delete mStore;
+    O0SettingsStore *store = new O0SettingsStore("hgh189;;099!@7878");
 
-    mStore = new O0SettingsStore("hgh189;;099!@7878");
+    store->setGroupKey("Plugins/PMRSupport/Credentials/"+QUrl(pPmrUrl).host());
 
-    mStore->setGroupKey("Plugins/PMRSupport/Credentials/"+QUrl(pPmrUrl).host());
-
-    setStore(mStore);
+    setStore(store);
 }
 
 //==============================================================================

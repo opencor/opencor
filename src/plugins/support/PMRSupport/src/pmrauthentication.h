@@ -28,10 +28,6 @@ limitations under the License.
 
 //==============================================================================
 
-class O0SettingsStore;
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace PMRSupport {
 
@@ -43,13 +39,6 @@ class PmrAuthentication: public O1
 
 public:
     explicit PmrAuthentication(const QString &pPmrUrl, QObject *pParent);
-
-    void setPmrUrl(const QString &pPmrUrl);
-
-private:
-    O0SettingsStore *mStore;
-
-    void pmrUrlRelatedInitialisation(const QString &pPmrUrl);
 };
 
 //==============================================================================
