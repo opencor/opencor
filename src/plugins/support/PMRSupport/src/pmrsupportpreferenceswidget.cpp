@@ -58,7 +58,7 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
     mGui->nameValue->setText(mName);
     mGui->emailValue->setText(mEmail);
 
-    setFocusProxy(mGui->nameValue);
+    setFocusProxy(mGui->pmrUrlValue);
 }
 
 //==============================================================================
