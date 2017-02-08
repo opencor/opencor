@@ -1175,8 +1175,8 @@ void MainWindow::showPreferencesDialog(const QString &pPluginName)
 
             preferencesDialog.exec();
 
-            // Let people know about the plugins which preferences have changed,
-            // if needed and any
+            // Let people know about the plugins that had their preferences
+            // changed, if any and if requested
 
             if (    (preferencesDialog.result() == QMessageBox::Ok)
                 && !preferencesDialog.pluginNames().isEmpty()) {
