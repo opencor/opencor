@@ -49,6 +49,10 @@ static const auto SettingsPreferencesEmail  = QStringLiteral("Email");
 
 //==============================================================================
 
+static const auto SettingsPreferencesPmrUrlDefault = QStringLiteral("https://models.physiomeproject.org");
+
+//==============================================================================
+
 class PmrSupportPreferencesWidget : public Preferences::PreferencesWidget
 {
     Q_OBJECT

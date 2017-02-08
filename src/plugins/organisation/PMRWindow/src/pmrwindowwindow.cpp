@@ -116,7 +116,10 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     // Create an instance of our PMR web service
 
-    mPmrWebService = new PMRSupport::PmrWebService(PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesPmrUrl).toString(), this);
+    mPmrWebService = new PMRSupport::PmrWebService(PreferencesInterface::preference(PMRSupport::PluginName,
+                                                                                    PMRSupport::SettingsPreferencesPmrUrl,
+                                                                                    PMRSupport::SettingsPreferencesPmrUrlDefault).toString(),
+                                                   this);
 
     // Some connections to process responses from our PMR web service
 

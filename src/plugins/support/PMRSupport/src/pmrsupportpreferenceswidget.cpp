@@ -50,7 +50,7 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
     mGui->emailValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
-    mPmrUrl = mSettings->value(SettingsPreferencesPmrUrl).toString();
+    mPmrUrl = mSettings->value(SettingsPreferencesPmrUrl, SettingsPreferencesPmrUrlDefault).toString();
     mName = mSettings->value(SettingsPreferencesName).toString();
     mEmail = mSettings->value(SettingsPreferencesEmail).toString();
 
