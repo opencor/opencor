@@ -49,13 +49,12 @@ public:
     explicit PmrAuthentication(const QString &pPmrUrl,
                                PmrWebServiceManager *pParent);
 
+    void setPmrUrl(const QString &pPmrUrl);
+
 private:
     O0SettingsStore *mStore;
 
     void pmrUrlRelatedInitialisation(const QString &pPmrUrl);
-
-private slots:
-    void pmrUrlChanged(const QString &pPmrUrl);
 };
 
 //==============================================================================

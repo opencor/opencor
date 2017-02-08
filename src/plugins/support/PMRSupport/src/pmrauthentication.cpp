@@ -55,11 +55,6 @@ PmrAuthentication::PmrAuthentication(const QString &pPmrUrl,
 {
     // Note: our various constants must match the values assigned to PMR...
 
-    // Make sure that we get told when our parent's PMR URL has changed
-
-    connect(pParent, SIGNAL(pmrUrlChanged(const QString &)),
-            this, SLOT(pmrUrlChanged(const QString &)));
-
     // Set the client ID and secret
 
     setClientId("9uuENvnELA1cdoy7WhFg4Gsq");
@@ -71,6 +66,15 @@ PmrAuthentication::PmrAuthentication(const QString &pPmrUrl,
     setLocalPort(1234);
 
     // Finish initialising ourselves
+
+    pmrUrlRelatedInitialisation(pPmrUrl);
+}
+
+//==============================================================================
+
+void PmrAuthentication::setPmrUrl(const QString &pPmrUrl)
+{
+    // Update ourselves using the given PMR URL
 
     pmrUrlRelatedInitialisation(pPmrUrl);
 }
@@ -109,15 +113,6 @@ void PmrAuthentication::pmrUrlRelatedInitialisation(const QString &pPmrUrl)
     mStore->setGroupKey("Plugins/PMRSupport/Credentials/"+QUrl(pPmrUrl).host());
 
     setStore(mStore);
-}
-
-//==============================================================================
-
-void PmrAuthentication::pmrUrlChanged(const QString &pPmrUrl)
-{
-    // Update ourselves using the given PMR URL
-
-    pmrUrlRelatedInitialisation(pPmrUrl);
 }
 
 //==============================================================================

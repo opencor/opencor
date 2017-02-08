@@ -67,6 +67,9 @@ public:
                                     const bool &pSecureRequest,
                                     const bool &pUsePost = false,
                                     const QJsonDocument &pJsonDocument = QJsonDocument());
+
+    void setPmrUrl(const QString &pPmrUrl);
+
 private:
     PmrWebService *mPmrWebService;
     PmrAuthentication *mPmrAuthentication;
@@ -76,8 +79,6 @@ private:
     Core::ProgressBarWidget *mProgressBarWidget;
 
 signals:
-    void pmrUrlChanged(const QString &pPmrUrl);
-
     void busy(const bool &pBusy);
     void authenticated(const bool &pAuthenticated);
 

@@ -64,11 +64,6 @@ PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
     connect(this, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
             this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
 
-    // Forward our PMR web service's signal about its PMR URL having changed
-
-    connect(pPmrWebService, SIGNAL(pmrUrlChanged(const QString &)),
-            this, SIGNAL(pmrUrlChanged(const QString &)));
-
     // Connect some signals
 
     connect(mPmrAuthentication, SIGNAL(linkingSucceeded()),
@@ -290,6 +285,15 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
             mPmrWebService, SLOT(forbidden(const QString &)));
 
     return pmrWebServiceResponse;
+}
+
+//==============================================================================
+
+void PmrWebServiceManager::setPmrUrl(const QString &pPmrUrl)
+{
+    // Ask our PMR authentication object to update its PMR URL
+
+    mPmrAuthentication->setPmrUrl(pPmrUrl);
 }
 
 //==============================================================================

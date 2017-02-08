@@ -97,8 +97,6 @@ private:
     void emitInformation(const QString &pMessage);
 
 signals:
-    void pmrUrlChanged(const QString &pPmrUrl);
-
     void busy(const bool &pBusy);
     void authenticated(const bool &pAuthenticated);
 

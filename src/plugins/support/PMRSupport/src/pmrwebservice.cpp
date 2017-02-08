@@ -484,11 +484,11 @@ QString PmrWebService::pmrUrl() const
 
 void PmrWebService::setPmrUrl(const QString &pPmrUrl)
 {
-    // Set our PMR URL and let people know that it has changed
+    // Set our PMR URL and ask our PMR web service manager to do the same
 
     mPmrUrl = pPmrUrl;
 
-    emit pmrUrlChanged(pPmrUrl);
+    mPmrWebServiceManager->setPmrUrl(pPmrUrl);
 }
 
 //==============================================================================
