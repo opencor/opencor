@@ -99,8 +99,6 @@ private:
     QString mErrorMessage;
     bool mAuthenticated;
 
-    int mRow;
-
     QTimer *mTimer;
 
     QMenu *mContextMenu;
