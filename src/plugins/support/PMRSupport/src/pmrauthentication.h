@@ -37,10 +37,6 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PmrWebServiceManager;
-
-//==============================================================================
-
 class PmrAuthentication: public O1
 {
     Q_OBJECT
