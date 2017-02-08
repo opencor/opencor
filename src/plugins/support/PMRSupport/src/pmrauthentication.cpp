@@ -23,7 +23,6 @@ limitations under the License.
 #include "corecliutils.h"
 #include "pmrauthentication.h"
 #include "pmrwebservice.h"
-#include "pmrwebservicemanager.h"
 
 //==============================================================================
 
