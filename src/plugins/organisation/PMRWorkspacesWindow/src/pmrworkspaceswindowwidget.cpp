@@ -388,9 +388,11 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve and keep track of some information about the previously cloned
     // workspace folders
+    // Note: for the key, we use the PMR URL's host since the URL itself
+    //       contains a "://" and this messes things up with QSettings...
 
     foreach (const QString &clonedWorkspaceFolder,
-             pSettings->value(SettingsClonedWorkspaceFolders.arg(mPmrUrl)).toStringList()) {
+             pSettings->value(SettingsClonedWorkspaceFolders.arg(QUrl(mPmrUrl).host())).toStringList()) {
         // Retrieve the URL (i.e. remote.origin.url) of the cloned workspace
         // folder
 
@@ -440,8 +442,10 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the names of folders containing cloned workspaces
+    // Note: for the key, we use the PMR URL's host since the URL itself
+    //       contains a "://" and this messes things up with QSettings...
 
-    pSettings->setValue(SettingsClonedWorkspaceFolders.arg(mPmrUrl),
+    pSettings->setValue(SettingsClonedWorkspaceFolders.arg(QUrl(mPmrUrl).host()),
                         QVariant(mClonedWorkspaceFolderUrls.keys()));
 }
 
