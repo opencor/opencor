@@ -46,6 +46,8 @@ public:
     explicit PreferencesWidget(const QString &pPluginName, QWidget *pParent);
     ~PreferencesWidget();
 
+    virtual bool preferencesChanged() const = 0;
+
     virtual void resetPreferences() = 0;
     virtual void savePreferences() = 0;
 

@@ -31,6 +31,8 @@ limitations under the License.
 
     virtual Preferences::PreferencesWidget * preferencesWidget() PURE;
 
+    virtual void preferencesChanged(const QStringList &pPluginNames) PURE;
+
 #undef PURE
 
 //==============================================================================

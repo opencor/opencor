@@ -25,11 +25,13 @@ limitations under the License.
 #include "filemanager.h"
 #include "i18ninterface.h"
 #include "toolbarwidget.h"
+#include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrworkspacemanager.h"
 #include "pmrworkspaceswindownewworkspacedialog.h"
 #include "pmrworkspaceswindowwidget.h"
 #include "pmrworkspaceswindowwindow.h"
+#include "preferencesinterface.h"
 
 //==============================================================================
 
@@ -106,11 +108,15 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     // Create an instance of our PMR web service
 
-    mPmrWebService = new PMRSupport::PmrWebService(this);
+    QString pmrUrl = PreferencesInterface::preference(PMRSupport::PluginName,
+                                                      PMRSupport::SettingsPreferencesPmrUrl,
+                                                      PMRSupport::SettingsPreferencesPmrUrlDefault).toString();
+
+    mPmrWebService = new PMRSupport::PmrWebService(pmrUrl, this);
 
     // Create and add our workspaces widget
 
-    mPmrWorkspacesWindowWidget = new PmrWorkspacesWindowWidget(mPmrWebService, this);
+    mPmrWorkspacesWindowWidget = new PmrWorkspacesWindowWidget(pmrUrl, mPmrWebService, this);
 
     mPmrWorkspacesWindowWidget->setObjectName("PmrWorkspacesWindowWidget");
 
@@ -233,6 +239,19 @@ Ui::PmrWorkspacesWindowWindow * PmrWorkspacesWindowWindow::gui() const
     // Return our GUI
 
     return mGui;
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
+{
+    // Update both our PMR web service and workspaces widget, and then update
+    // our GUI (which will, as a result, also update our workspaces widget)
+
+    mPmrWebService->update(pPmrUrl);
+    mPmrWorkspacesWindowWidget->update(pPmrUrl);
+
+    updateGui();
 }
 
 //==============================================================================

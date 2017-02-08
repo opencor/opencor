@@ -141,6 +141,8 @@ void PreferencesDialog::constructor(PluginManager *pPluginManager,
     mCategoryItems = QMap<PluginInfo::Category, QStandardItem *>();
     mItemCategories = QMap<QStandardItem *, PluginInfo::Category>();
     mItemPreferencesWidgets = QMap<QStandardItem *, Preferences::PreferencesWidget *>();
+    mPreferencesWidgetPluginNames = QMap<Preferences::PreferencesWidget *, QString>();
+    mPluginNames = QStringList();
 
     // Set up the GUI
 
@@ -184,7 +186,7 @@ void PreferencesDialog::constructor(PluginManager *pPluginManager,
     foreach (Plugin *plugin, mPluginManager->sortedPlugins()) {
         PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
 
-        if (preferencesInterface) {
+        if (preferencesInterface && preferencesInterface->preferencesWidget()) {
             // Create the item corresponding to the current plugin and add it to
             // its corresponding category
 
@@ -203,6 +205,7 @@ void PreferencesDialog::constructor(PluginManager *pPluginManager,
             mGui->stackedWidget->addWidget(preferencesWidget);
 
             mItemPreferencesWidgets.insert(pluginItem, preferencesWidget);
+            mPreferencesWidgetPluginNames.insert(preferencesWidget, plugin->name());
         }
     }
 
@@ -279,6 +282,15 @@ PreferencesDialog::~PreferencesDialog()
 
 //==============================================================================
 
+QStringList PreferencesDialog::pluginNames() const
+{
+    // Return our plugin names
+
+    return mPluginNames;
+}
+
+//==============================================================================
+
 QStandardItem * PreferencesDialog::pluginCategoryItem(const PluginInfo::Category &pCategory)
 {
     // Return the given category item, after having created it, if it didn't
@@ -332,14 +344,22 @@ void PreferencesDialog::on_treeView_collapsed(const QModelIndex &pIndex)
 
 void PreferencesDialog::on_buttonBox_accepted()
 {
-    // Save all of our plugins' preferences
+    // Save all of our plugins' preferences, if they have changed, and keep
+    // track of their name
 
-    foreach (Preferences::PreferencesWidget *preferencesWidget, mItemPreferencesWidgets.values())
-        preferencesWidget->savePreferences();
+    mPluginNames = QStringList();
+
+    foreach (Preferences::PreferencesWidget *preferencesWidget, mItemPreferencesWidgets.values()) {
+        if (preferencesWidget->preferencesChanged()) {
+            preferencesWidget->savePreferences();
+
+            mPluginNames << mPreferencesWidgetPluginNames.value(preferencesWidget);
+        }
+    }
 
     // Confirm that we accepted the changes
 
-    accept();
+    done(QMessageBox::Ok);
 }
 
 //==============================================================================

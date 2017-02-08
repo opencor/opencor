@@ -45,6 +45,13 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PMRSupport::PmrWebServiceManager</name>
+    <message>
+        <source>PMR Authentication</source>
+        <translation>Authentification PMR</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::PMRSupport::PmrWebServiceResponse</name>
     <message>
         <source>PMR response has unexpected content type</source>
@@ -127,6 +134,10 @@
     <message>
         <source>Email:</source>
         <translation>Email :</translation>
+    </message>
+    <message>
+        <source>PMR:</source>
+        <translation>PMR :</translation>
     </message>
 </context>
 </TS>

@@ -45,15 +45,23 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    mGui->pmrUrlValue->addItems(QStringList() << SettingsPreferencesPmrUrlDefault
+                                              << "https://staging.physiomeproject.org");
+
 #ifdef Q_OS_MAC
     mGui->nameValue->setAttribute(Qt::WA_MacShowFocusRect, false);
     mGui->emailValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
-    mGui->nameValue->setText(mSettings->value(SettingsPreferencesName).toString());
-    mGui->emailValue->setText(mSettings->value(SettingsPreferencesEmail).toString());
+    mPmrUrl = mSettings->value(SettingsPreferencesPmrUrl, SettingsPreferencesPmrUrlDefault).toString();
+    mName = mSettings->value(SettingsPreferencesName).toString();
+    mEmail = mSettings->value(SettingsPreferencesEmail).toString();
 
-    setFocusProxy(mGui->nameValue);
+    mGui->pmrUrlValue->setCurrentText(mPmrUrl);
+    mGui->nameValue->setText(mName);
+    mGui->emailValue->setText(mEmail);
+
+    setFocusProxy(mGui->pmrUrlValue);
 }
 
 //==============================================================================
@@ -67,12 +75,28 @@ PmrSupportPreferencesWidget::~PmrSupportPreferencesWidget()
 
 //==============================================================================
 
+bool PmrSupportPreferencesWidget::preferencesChanged() const
+{
+    // Return whether our preferences have changed
+
+    return    mGui->pmrUrlValue->currentText().compare(mPmrUrl)
+           || mGui->nameValue->text().compare(mName)
+           || mGui->emailValue->text().compare(mEmail);
+}
+
+//==============================================================================
+
 void PmrSupportPreferencesWidget::resetPreferences()
 {
     // Reset our preferences
 
-    mGui->nameValue->setText(QString());
-    mGui->emailValue->setText(QString());
+    mPmrUrl = mGui->pmrUrlValue->itemText(0);
+    mName = QString();
+    mEmail = QString();
+
+    mGui->pmrUrlValue->setCurrentText(mPmrUrl);
+    mGui->nameValue->setText(mName);
+    mGui->emailValue->setText(mEmail);
 }
 
 //==============================================================================
@@ -81,8 +105,13 @@ void PmrSupportPreferencesWidget::savePreferences()
 {
     // Save our preferences
 
-    mSettings->setValue(SettingsPreferencesName, mGui->nameValue->text());
-    mSettings->setValue(SettingsPreferencesEmail, mGui->emailValue->text());
+    mPmrUrl = mGui->pmrUrlValue->currentText();
+    mName = mGui->nameValue->text();
+    mEmail = mGui->emailValue->text();
+
+    mSettings->setValue(SettingsPreferencesPmrUrl, mPmrUrl);
+    mSettings->setValue(SettingsPreferencesName, mName);
+    mSettings->setValue(SettingsPreferencesEmail, mEmail);
 }
 
 //==============================================================================

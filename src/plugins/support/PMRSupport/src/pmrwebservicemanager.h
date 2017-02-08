@@ -58,7 +58,8 @@ class PmrWebServiceManager : public QNetworkAccessManager
     Q_OBJECT
 
 public:
-    explicit PmrWebServiceManager(PmrWebService *pPmrWebService);
+    explicit PmrWebServiceManager(const QString &pPmrUrl,
+                                  PmrWebService *pPmrWebService);
 
     bool isAuthenticated() const;
     void authenticate(const bool &pAuthenticate);
@@ -67,6 +68,9 @@ public:
                                     const bool &pSecureRequest,
                                     const bool &pUsePost = false,
                                     const QJsonDocument &pJsonDocument = QJsonDocument());
+
+    void update(const QString &pPmrUrl);
+
 private:
     PmrWebService *mPmrWebService;
     PmrAuthentication *mPmrAuthentication;
@@ -78,7 +82,9 @@ private:
 signals:
     void busy(const bool &pBusy);
     void authenticated(const bool &pAuthenticated);
+
     void error(const QString &pErrorMessage);
+
     void cancelled();
 
 private slots:

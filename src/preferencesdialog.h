@@ -101,6 +101,8 @@ public:
     explicit PreferencesDialog(PluginManager *pPluginManager, QWidget *pParent);
     ~PreferencesDialog();
 
+    QStringList pluginNames() const;
+
 private:
     Ui::PreferencesDialog *mGui;
 
@@ -111,11 +113,14 @@ private:
     QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
     QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
     QMap<QStandardItem *, Preferences::PreferencesWidget *> mItemPreferencesWidgets;
+    QMap<Preferences::PreferencesWidget *, QString> mPreferencesWidgetPluginNames;
 
     PreferencesPluginCategoryWidget *mPluginCategoryWidget;
 
     QPushButton *mResetAllButton;
     QPushButton *mResetPluginButton;
+
+    QStringList mPluginNames;
 
     void constructor(PluginManager *pPluginManager, const QString &pPluginName);
 

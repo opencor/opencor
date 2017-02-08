@@ -61,16 +61,17 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService,
+PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
+                                                     PMRSupport::PmrWebService *pPmrWebService,
                                                      PmrWorkspacesWindowWindow *pParent) :
     Core::Widget(pParent),
-    mPmrWebService(pPmrWebService),
-    mClonedWorkspaceFolderUrls(QMap<QString, QString>()),
-    mWorkspaceUrlFoldersOwned(QMap<QString, QPair<QString, bool>>()),
-    mInitialized(false),
-    mErrorMessage(QString()),
-    mAuthenticated(false)
+    mSettingsGroup(QString()),
+    mPmrWebService(pPmrWebService)
 {
+    // Initialise our internals by 'resetting' them
+
+    reset(pPmrUrl);
+
     // Create and customise some objects
 
     mUserMessageWidget = new Core::UserMessageWidget(this);
@@ -375,17 +376,23 @@ void PmrWorkspacesWindowWidget::retranslateUi()
 
 //==============================================================================
 
-static const auto SettingsClonedWorkspaceFolders = QStringLiteral("ClonedWorkspaceFolders");
+static const auto SettingsClonedWorkspaceFolders = QStringLiteral("ClonedWorkspaceFolders/%1");
 
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 {
+    // Keep track of the settings' group
+
+    mSettingsGroup = pSettings->group();
+
     // Retrieve and keep track of some information about the previously cloned
     // workspace folders
+    // Note: for the key, we use the PMR URL's host since the URL itself
+    //       contains a "://" and this messes things up with QSettings...
 
     foreach (const QString &clonedWorkspaceFolder,
-             pSettings->value(SettingsClonedWorkspaceFolders).toStringList()) {
+             pSettings->value(SettingsClonedWorkspaceFolders.arg(QUrl(mPmrUrl).host())).toStringList()) {
         // Retrieve the URL (i.e. remote.origin.url) of the cloned workspace
         // folder
 
@@ -435,8 +442,11 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the names of folders containing cloned workspaces
+    // Note: for the key, we use the PMR URL's host since the URL itself
+    //       contains a "://" and this messes things up with QSettings...
 
-    pSettings->setValue(SettingsClonedWorkspaceFolders, QVariant(mClonedWorkspaceFolderUrls.keys()));
+    pSettings->setValue(SettingsClonedWorkspaceFolders.arg(QUrl(mPmrUrl).host()),
+                        QVariant(mClonedWorkspaceFolderUrls.keys()));
 }
 
 //==============================================================================
@@ -488,6 +498,41 @@ QSize PmrWorkspacesWindowWidget::sizeHint() const
     //       window...
 
     return defaultSize(0.15);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::update(const QString &pPmrUrl)
+{
+    // Save our settings using the 'old' PMR URL, reset ourselves and load our
+    // 'new' settings
+
+    QSettings settings;
+
+    settings.beginGroup(mSettingsGroup);
+        saveSettings(&settings);
+
+        reset(pPmrUrl);
+
+        loadSettings(&settings);
+    settings.endGroup();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::reset(const QString &pPmrUrl)
+{
+    // Reset our internals
+
+    mPmrUrl = pPmrUrl;
+
+    mClonedWorkspaceFolderUrls = QMap<QString, QString>();
+    mWorkspaceUrlFoldersOwned = QMap<QString, QPair<QString, bool>>();
+
+    mInitialized = false;
+
+    mErrorMessage = QString();
+    mAuthenticated = false;
 }
 
 //==============================================================================

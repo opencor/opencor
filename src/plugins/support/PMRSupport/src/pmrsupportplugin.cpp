@@ -72,6 +72,15 @@ Preferences::PreferencesWidget * PMRSupportPlugin::preferencesWidget()
 
 //==============================================================================
 
+void PMRSupportPlugin::preferencesChanged(const QStringList &pPluginNames)
+{
+    Q_UNUSED(pPluginNames);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 }   // namespace PMRSupport
 }   // namespace OpenCOR
 

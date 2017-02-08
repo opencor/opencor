@@ -43,8 +43,13 @@ static const auto PluginName = QStringLiteral("PMRSupport");
 
 //==============================================================================
 
-static const auto SettingsPreferencesName  = QStringLiteral("Name");
-static const auto SettingsPreferencesEmail = QStringLiteral("Email");
+static const auto SettingsPreferencesPmrUrl = QStringLiteral("PmrUrl");
+static const auto SettingsPreferencesName   = QStringLiteral("Name");
+static const auto SettingsPreferencesEmail  = QStringLiteral("Email");
+
+//==============================================================================
+
+static const auto SettingsPreferencesPmrUrlDefault = QStringLiteral("https://models.physiomeproject.org");
 
 //==============================================================================
 
@@ -56,11 +61,17 @@ public:
     explicit PmrSupportPreferencesWidget(QWidget *pParent);
     ~PmrSupportPreferencesWidget();
 
+    virtual bool preferencesChanged() const;
+
     virtual void resetPreferences();
     virtual void savePreferences();
 
 private:
     Ui::PmrSupportPreferencesWidget *mGui;
+
+    QString mPmrUrl;
+    QString mName;
+    QString mEmail;
 };
 
 //==============================================================================

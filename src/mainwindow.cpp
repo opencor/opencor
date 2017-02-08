@@ -1174,6 +1174,19 @@ void MainWindow::showPreferencesDialog(const QString &pPluginName)
             PreferencesDialog preferencesDialog(mPluginManager, pPluginName, this);
 
             preferencesDialog.exec();
+
+            // Let people know about the plugins that had their preferences
+            // changed, if any and if requested
+
+            if (    (preferencesDialog.result() == QMessageBox::Ok)
+                && !preferencesDialog.pluginNames().isEmpty()) {
+                foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+                    PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
+
+                    if (preferencesInterface)
+                        preferencesInterface->preferencesChanged(preferencesDialog.pluginNames());
+                }
+            }
         } else {
             warningMessageBox(tr("Preferences"),
                               tr("No plugins have preferences."));
