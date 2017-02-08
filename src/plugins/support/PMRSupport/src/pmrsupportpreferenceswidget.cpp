@@ -45,6 +45,9 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    mGui->pmrUrlValue->addItems(QStringList() << SettingsPreferencesPmrUrlDefault
+                                              << "https://staging.physiomeproject.org");
+
 #ifdef Q_OS_MAC
     mGui->nameValue->setAttribute(Qt::WA_MacShowFocusRect, false);
     mGui->emailValue->setAttribute(Qt::WA_MacShowFocusRect, false);

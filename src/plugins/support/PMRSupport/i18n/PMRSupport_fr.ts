@@ -132,13 +132,5 @@
         <source>PMR:</source>
         <translation>PMR :</translation>
     </message>
-    <message>
-        <source>https://models.physiomeproject.org</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>https://staging.physiomeproject.org</source>
-        <translation></translation>
-    </message>
 </context>
 </TS>
