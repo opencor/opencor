@@ -72,6 +72,8 @@ public:
 
     Ui::PmrWorkspacesWindowWindow * gui() const;
 
+    void update(const QString &pPmrUrl);
+
 protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 

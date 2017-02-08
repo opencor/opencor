@@ -239,6 +239,18 @@ Ui::PmrWorkspacesWindowWindow * PmrWorkspacesWindowWindow::gui() const
 
 //==============================================================================
 
+void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
+{
+    // Update the PMR URL to be used by our PMR web service and then reload
+    // ourselves
+
+    mPmrWebService->update(pPmrUrl);
+
+    on_actionReload_triggered();
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowWindow::busy(const bool &pBusy)
 {
     // Show ourselves as busy or not busy anymore
