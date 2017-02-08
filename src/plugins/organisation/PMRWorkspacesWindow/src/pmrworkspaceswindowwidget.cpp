@@ -65,6 +65,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                                      PMRSupport::PmrWebService *pPmrWebService,
                                                      PmrWorkspacesWindowWindow *pParent) :
     Core::Widget(pParent),
+    mSettingsGroup(QString()),
     mPmrUrl(pPmrUrl),
     mPmrWebService(pPmrWebService),
     mClonedWorkspaceFolderUrls(QMap<QString, QString>()),
@@ -383,6 +384,10 @@ static const auto SettingsClonedWorkspaceFolders = QStringLiteral("ClonedWorkspa
 
 void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 {
+    // Keep track of the settings' group
+
+    mSettingsGroup = pSettings->group();
+
     // Retrieve and keep track of some information about the previously cloned
     // workspace folders
 
@@ -497,8 +502,18 @@ QSize PmrWorkspacesWindowWidget::sizeHint() const
 
 void PmrWorkspacesWindowWidget::update(const QString &pPmrUrl)
 {
-Q_UNUSED(pPmrUrl);
-//---ISSUE1069--- TO BE DONE...
+    // Save our settings using the 'old' PMR URL, keep track of the new PMR URL
+    // and use it to load our 'new' settings
+
+    QSettings settings;
+
+    settings.beginGroup(mSettingsGroup);
+        mPmrWorkspacesWindowWidget->saveSettings(&settings);
+
+        mPmrUrl = pPmrUrl;
+
+        mPmrWorkspacesWindowWidget->loadSettings(&settings);
+    settings.endGroup();
 }
 
 //==============================================================================

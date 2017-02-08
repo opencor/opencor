@@ -86,6 +86,7 @@ protected:
     virtual QSize sizeHint() const;
 
 private:
+    QString mSettingsGroup;
     QString mPmrUrl;
 
     PMRSupport::PmrWebService *mPmrWebService;

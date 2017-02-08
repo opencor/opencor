@@ -243,13 +243,13 @@ Ui::PmrWorkspacesWindowWindow * PmrWorkspacesWindowWindow::gui() const
 
 void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 {
-    // Update the PMR URL to be used by both our PMR web service and workspaces
-    // widget, and then reload ourselves
+    // Update both our PMR web service and workspaces widget, and then update
+    // our GUI (which will, as a result, also update our workspaces widget)
 
     mPmrWebService->update(pPmrUrl);
     mPmrWorkspacesWindowWidget->update(pPmrUrl);
 
-    on_actionReload_triggered();
+    updateGui();
 }
 
 //==============================================================================
