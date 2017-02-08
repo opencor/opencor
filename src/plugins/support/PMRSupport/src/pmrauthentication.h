@@ -46,8 +46,7 @@ class PmrAuthentication: public O1
     Q_OBJECT
 
 public:
-    explicit PmrAuthentication(const QString &pPmrUrl,
-                               PmrWebServiceManager *pParent);
+    explicit PmrAuthentication(const QString &pPmrUrl, QObject *pParent);
 
     void setPmrUrl(const QString &pPmrUrl);
 

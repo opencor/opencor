@@ -48,8 +48,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrAuthentication::PmrAuthentication(const QString &pPmrUrl,
-                                     PmrWebServiceManager *pParent) :
+PmrAuthentication::PmrAuthentication(const QString &pPmrUrl, QObject *pParent) :
     O1(pParent),
     mStore(0)
 {
