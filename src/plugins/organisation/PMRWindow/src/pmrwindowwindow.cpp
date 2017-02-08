@@ -196,9 +196,12 @@ void PmrWindowWindow::resizeEvent(QResizeEvent *pEvent)
 
 void PmrWindowWindow::setPmrUrl(const QString &pPmrUrl)
 {
-    // Update the PMR URL to be used by our PMR web service
+    // Update the PMR URL to be used by our PMR web service and then reload
+    // ourselves
 
     mPmrWebService->setPmrUrl(pPmrUrl);
+
+    on_actionReload_triggered();
 }
 
 //==============================================================================
