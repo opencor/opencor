@@ -67,8 +67,7 @@ public:
     void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
                                      const bool &pPush);
 
-    QString pmrUrl() const;
-    void setPmrUrl(const QString &pPmrUrl);
+    void update(const QString &pPmrUrl);
 
     static QString getEmptyDirectory();
 

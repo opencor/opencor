@@ -70,7 +70,7 @@ public:
 
     virtual void retranslateUi();
 
-    void setPmrUrl(const QString &pPmrUrl);
+    void update(const QString &pPmrUrl);
 
 protected:
     virtual void resizeEvent(QResizeEvent *pEvent);

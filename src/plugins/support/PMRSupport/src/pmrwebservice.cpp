@@ -50,7 +50,7 @@ PmrWebService::PmrWebService(const QString &pPmrUrl, QObject *pParent) :
     // Create a PMR web service manager so that we can retrieve various things
     // from PMR
 
-    mPmrWebServiceManager = new PmrWebServiceManager(this);
+    mPmrWebServiceManager = new PmrWebServiceManager(pPmrUrl, this);
 
     // Forward any signal we receive from our PMR web service manager
 
@@ -473,18 +473,10 @@ void PmrWebService::workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *pWork
 
 //==============================================================================
 
-QString PmrWebService::pmrUrl() const
+void PmrWebService::update(const QString &pPmrUrl)
 {
-    // Return our PMR URL
-
-    return mPmrUrl;
-}
-
-//==============================================================================
-
-void PmrWebService::setPmrUrl(const QString &pPmrUrl)
-{
-    // Set our PMR URL and ask our PMR web service manager to do the same
+    // Keep track of the new PMR URL and ask our PMR web service manager to
+    // update itself accordingly
 
     mPmrUrl = pPmrUrl;
 

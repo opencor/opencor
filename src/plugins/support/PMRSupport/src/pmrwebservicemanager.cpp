@@ -48,7 +48,8 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
+PmrWebServiceManager::PmrWebServiceManager(const QString &pPmrUrl,
+                                           PmrWebService *pPmrWebService) :
     QNetworkAccessManager(pPmrWebService),
     mPmrWebService(pPmrWebService),
     mPmrAuthentication(0),
@@ -64,7 +65,7 @@ PmrWebServiceManager::PmrWebServiceManager(PmrWebService *pPmrWebService) :
     // Create, by updating ourselves, our PMR authentication object using our
     // PMR web service's PMR URL
 
-    update(pPmrWebService->pmrUrl());
+    update(pPmrUrl);
 }
 
 //==============================================================================

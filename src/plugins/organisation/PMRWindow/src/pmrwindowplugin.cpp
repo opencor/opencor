@@ -169,7 +169,7 @@ void PMRWindowPlugin::preferencesChanged(const QStringList &pPluginNames)
     // so, then update ourselves accordingly
 
     if (pPluginNames.contains(PMRSupport::PluginName))
-        mPmrWindowWindow->setPmrUrl(PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesPmrUrl).toString());
+        mPmrWindowWindow->update(PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesPmrUrl).toString());
 }
 
 //==============================================================================
