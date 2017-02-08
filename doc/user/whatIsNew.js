@@ -36,6 +36,15 @@ var jsonData = { "versions": [
                              ]
                            }
                          ]
+                       },
+                       { "name": "Support",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML support",
+                             "entries": [
+                               { "type": "Improved", "description": "Generation of error messages." }
+                             ]
+                           }
+                         ]
                        }
                      ]
                    },
