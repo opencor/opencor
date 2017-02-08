@@ -69,7 +69,8 @@ class PmrWorkspacesWindowWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService,
+    explicit PmrWorkspacesWindowWidget(const QString &pPmrUrl,
+                                       PMRSupport::PmrWebService *pPmrWebService,
                                        PmrWorkspacesWindowWindow *pParent);
     ~PmrWorkspacesWindowWidget();
 
@@ -78,11 +79,15 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    void update(const QString &pPmrUrl);
+
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual QSize sizeHint() const;
 
 private:
+    QString mPmrUrl;
+
     PMRSupport::PmrWebService *mPmrWebService;
 
     QMap<QString, QString> mClonedWorkspaceFolderUrls;

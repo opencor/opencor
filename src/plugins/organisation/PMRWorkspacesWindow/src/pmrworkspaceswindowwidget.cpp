@@ -61,9 +61,11 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(PMRSupport::PmrWebService *pPmrWebService,
+PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
+                                                     PMRSupport::PmrWebService *pPmrWebService,
                                                      PmrWorkspacesWindowWindow *pParent) :
     Core::Widget(pParent),
+    mPmrUrl(pPmrUrl),
     mPmrWebService(pPmrWebService),
     mClonedWorkspaceFolderUrls(QMap<QString, QString>()),
     mWorkspaceUrlFoldersOwned(QMap<QString, QPair<QString, bool>>()),
@@ -375,7 +377,7 @@ void PmrWorkspacesWindowWidget::retranslateUi()
 
 //==============================================================================
 
-static const auto SettingsClonedWorkspaceFolders = QStringLiteral("ClonedWorkspaceFolders");
+static const auto SettingsClonedWorkspaceFolders = QStringLiteral("ClonedWorkspaceFolders/%1");
 
 //==============================================================================
 
@@ -385,7 +387,7 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
     // workspace folders
 
     foreach (const QString &clonedWorkspaceFolder,
-             pSettings->value(SettingsClonedWorkspaceFolders).toStringList()) {
+             pSettings->value(SettingsClonedWorkspaceFolders.arg(mPmrUrl)).toStringList()) {
         // Retrieve the URL (i.e. remote.origin.url) of the cloned workspace
         // folder
 
@@ -436,7 +438,8 @@ void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the names of folders containing cloned workspaces
 
-    pSettings->setValue(SettingsClonedWorkspaceFolders, QVariant(mClonedWorkspaceFolderUrls.keys()));
+    pSettings->setValue(SettingsClonedWorkspaceFolders.arg(mPmrUrl),
+                        QVariant(mClonedWorkspaceFolderUrls.keys()));
 }
 
 //==============================================================================
@@ -488,6 +491,14 @@ QSize PmrWorkspacesWindowWidget::sizeHint() const
     //       window...
 
     return defaultSize(0.15);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::update(const QString &pPmrUrl)
+{
+Q_UNUSED(pPmrUrl);
+//---ISSUE1069--- TO BE DONE...
 }
 
 //==============================================================================
