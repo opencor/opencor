@@ -475,8 +475,7 @@ void PmrWebService::workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *pWork
 
 void PmrWebService::update(const QString &pPmrUrl)
 {
-    // Keep track of the new PMR URL and ask our PMR web service manager to
-    // update itself accordingly
+    // Keep track of the new PMR URL and then update our PMR web service manager
 
     mPmrUrl = pPmrUrl;
 

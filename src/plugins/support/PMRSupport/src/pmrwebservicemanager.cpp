@@ -62,8 +62,7 @@ PmrWebServiceManager::PmrWebServiceManager(const QString &pPmrUrl,
     connect(this, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
             this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
 
-    // Create, by updating ourselves, our PMR authentication object using our
-    // PMR web service's PMR URL
+    // Create, by updating ourselves, our PMR authentication object
 
     update(pPmrUrl);
 }
