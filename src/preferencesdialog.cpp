@@ -141,6 +141,7 @@ void PreferencesDialog::constructor(PluginManager *pPluginManager,
     mCategoryItems = QMap<PluginInfo::Category, QStandardItem *>();
     mItemCategories = QMap<QStandardItem *, PluginInfo::Category>();
     mItemPreferencesWidgets = QMap<QStandardItem *, Preferences::PreferencesWidget *>();
+    mPreferencesWidgetPluginNames = QMap<Preferences::PreferencesWidget *, QString>();
     mPluginNames = QStringList();
 
     // Set up the GUI
@@ -204,6 +205,7 @@ void PreferencesDialog::constructor(PluginManager *pPluginManager,
             mGui->stackedWidget->addWidget(preferencesWidget);
 
             mItemPreferencesWidgets.insert(pluginItem, preferencesWidget);
+            mPreferencesWidgetPluginNames.insert(preferencesWidget, plugin->name());
         }
     }
 
@@ -351,7 +353,7 @@ void PreferencesDialog::on_buttonBox_accepted()
         if (preferencesWidget->preferencesChanged()) {
             preferencesWidget->savePreferences();
 
-            mPluginNames << preferencesWidget->pluginName();
+            mPluginNames << mPreferencesWidgetPluginNames.value(preferencesWidget);
         }
     }
 

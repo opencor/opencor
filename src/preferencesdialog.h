@@ -113,6 +113,7 @@ private:
     QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
     QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
     QMap<QStandardItem *, Preferences::PreferencesWidget *> mItemPreferencesWidgets;
+    QMap<Preferences::PreferencesWidget *, QString> mPreferencesWidgetPluginNames;
 
     PreferencesPluginCategoryWidget *mPluginCategoryWidget;
 

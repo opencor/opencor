@@ -51,12 +51,8 @@ public:
     virtual void resetPreferences() = 0;
     virtual void savePreferences() = 0;
 
-    QString pluginName() const;
-
 protected:
     QSettings *mSettings;
-
-    QString mPluginName;
 };
 
 //==============================================================================
