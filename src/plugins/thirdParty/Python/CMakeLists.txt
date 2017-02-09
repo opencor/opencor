@@ -172,11 +172,14 @@ ELSE()
 
             # Use our OpenSSL
             -DUSE_SYSTEM_OpenSSL=ON
-            -DOPENSSL_ROOT_DIR=${OPENSSL_ROOT_DIR}
+            -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
+            -DOPENSSL_CRYPTO_LIBRARY=${OPENSSL_CRYPTO_LIBRARY}
+            -DOPENSSL_SSL_LIBRARY=${OPENSSL_SSL_LIBRARY}
 
             # Use our zlib
             -DUSE_SYSTEM_ZLIB=ON
-            -DZLIB_ROOT=${ZLIB_ROOT_DIR}
+            -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
+            -DZLIB_LIBRARY=${ZLIB_LIBRARY}
 
             # OS/X specific; needed to install pip
             -DENABLE_SCPROXY=ON
