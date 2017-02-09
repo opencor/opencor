@@ -12,7 +12,7 @@ SET(NUMPY_VERSION 1.11.2)
 SET(SCIPY_VERSION 0.18.1)
 SET(MATPLOTLIB_VERSION 1.5.3)
 
-# The names of the libraries built by Python's build process.
+# Set the ABI flag and version identifier
 
 IF(WIN32)
     IF(RELEASE_MODE)
@@ -20,15 +20,18 @@ IF(WIN32)
     ELSE()
         SET(PYTHON_ABIFLAGS "d")
     ENDIF()
-    SET(PYTHON_LIBRARY python.${PYTHON_SHORT_VERSION}${PYTHON_ABIFLAGS}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(PYTHON_GENERATED_LIBRARY python.${PYTHON_SHORT_VERSION}${PYTHON_ABIFLAGS}.lib)
-ELSEIF(APPLE)
-    SET(PYTHON_ABIFLAGS "m")
-    SET(PYTHON_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}python${PYTHON_SHORT_VERSION}${PYTHON_ABIFLAGS}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(PYTHON_GENERATED_LIBRARY ${PYTHON_LIBRARY})
 ELSE()
     SET(PYTHON_ABIFLAGS "m")
-    SET(PYTHON_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}python${CMAKE_SHARED_LIBRARY_SUFFIX}.${PYTHON_SHORT_VERSION}${PYTHON_ABIFLAGS})
+ENDIF()
+SET(PYTHON_BUILT_VERSION ${PYTHON_SHORT_VERSION}${PYTHON_ABIFLAGS})
+
+# The names of the libraries built by Python's build process.
+
+IF(WIN32)
+    SET(PYTHON_LIBRARY python.${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(PYTHON_GENERATED_LIBRARY python.${PYTHON_BUILT_VERSION}.lib)
+ELSE()
+    SET(PYTHON_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(PYTHON_GENERATED_LIBRARY ${PYTHON_LIBRARY})
 ENDIF()
 SET(EXTERNAL_BINARIES ${PYTHON_LIBRARY})
@@ -60,7 +63,7 @@ LIST(APPEND CHECKED_FILES lib/python${PYTHON_NUMERIC_VERSION}.zip)
 
 SET(PACKAGED_FILES
     include
-    ${PYTHON_LIBRARY_DIR}/config-${PYTHON_SHORT_VERSION}${PYTHON_ABIFLAGS}
+    ${PYTHON_LIBRARY_DIR}/config-${PYTHON_BUILT_VERSION}
     ${PYTHON_LIBRARY_DIR}/lib2to3
     ${PYTHON_LIBRARY_DIR}/lib-dynload
     ${PYTHON_LIBRARY_DIR}/site-packages
@@ -105,15 +108,21 @@ ELSE()
         DEPENDS OpenSSLPlugin zlibPlugin
         SOURCE_DIR ${PROJECT_SOURCE_DIR}/PythonCMake
         INSTALL_DIR ${FULL_INSTALL_DIR}
-#        GIT_REPOSITORY https://github.com/python-cmake-buildsystem/python-cmake-buildsystem.git
-# Until our branch is merged...
+
+        # Uncomment following line and remove next two lines when our branch is merged upstream
+        #  GIT_REPOSITORY https://github.com/python-cmake-buildsystem/python-cmake-buildsystem.git
         GIT_REPOSITORY https://github.com/dbrnz/python-cmake-buildsystem.git
         GIT_TAG abiflags
 #
         CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+
+            # Options for MacOS builds
+            -DCMAKE_MACOSX_RPATH=1
             -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}
+
+            # The version of Python to build
             -DPYTHON_VERSION=${PYTHON_VERSION}
 
             # Build a shared library
@@ -153,9 +162,6 @@ ELSE()
 
             # OS/X specific; needed to install pip
             -DENABLE_SCPROXY=ON
-
-            # Ensure @rpath is set for MacOS
-            -DCMAKE_MACOSX_RPATH=1
 
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${PYTHON_GENERATED_LIBRARY}
@@ -261,7 +267,7 @@ ADD_PLUGIN(Python
         src/pythonplugin.h
     INCLUDE_DIRS
         src
-        ${RELATIVE_INSTALL_DIR}/include/python${PYTHON_SHORT_VERSION}${PYTHON_ABIFLAGS}
+        ${RELATIVE_INSTALL_DIR}/include/python${PYTHON_BUILT_VERSION}
     PLUGINS
         Core
         OpenSSL
