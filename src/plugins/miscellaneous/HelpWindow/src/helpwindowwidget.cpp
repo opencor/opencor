@@ -34,6 +34,7 @@ limitations under the License.
 #include <QSettings>
 #include <QTimer>
 #include <QWebPage>
+#include <QWebView>
 
 //==============================================================================
 
@@ -161,7 +162,7 @@ HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
 
     // Use our own help network access manager classes
 
-    page()->setNetworkAccessManager(new HelpWindowNetworkAccessManager(mHelpEngine, this));
+    webView()->page()->setNetworkAccessManager(new HelpWindowNetworkAccessManager(mHelpEngine, this));
 
     // Set and go to our home page
     // Note: we call setUrl() rather than goToHomePage() because we want and
@@ -171,7 +172,7 @@ HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
 
     setHomePage("qthelp://opencor/doc/user/index.html");
 
-    setUrl(homePage());
+    webView()->setUrl(homePage());
 }
 
 //==============================================================================
@@ -195,8 +196,8 @@ void HelpWindowWidget::retranslateUi()
     // Retranslate the current document, but only if it is an error document
     // since a valid document is hard-coded and therefore cannot be retranslated
 
-    if (!mHelpEngine->findFile(url()).isValid())
-        load(url());
+    if (!mHelpEngine->findFile(webView()->url()).isValid())
+        webView()->load(webView()->url());
 }
 
 //==============================================================================

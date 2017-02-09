@@ -43,6 +43,7 @@ limitations under the License.
 #include <QWebElement>
 #include <QWebFrame>
 #include <QWebPage>
+#include <QWebView>
 
 //==============================================================================
 
@@ -105,11 +106,11 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     connect(mOutputOntologicalTerms, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu()));
 
-    mOutputOntologicalTerms->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    mOutputOntologicalTerms->webView()->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
-    connect(mOutputOntologicalTerms->page(), SIGNAL(linkClicked(const QUrl &)),
+    connect(mOutputOntologicalTerms->webView()->page(), SIGNAL(linkClicked(const QUrl &)),
             this, SLOT(linkClicked()));
-    connect(mOutputOntologicalTerms->page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
+    connect(mOutputOntologicalTerms->webView()->page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
             this, SLOT(linkHovered()));
 
     // Add our output message and output for ontological terms to our output
@@ -149,7 +150,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateOutputHeaders()
 {
     // Update our output headers
 
-    QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
+    QWebElement documentElement = mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement();
 
     documentElement.findFirst("th[id=nameOrQualifier]").setInnerXml(tr("Qualifier"));
     documentElement.findFirst("th[id=resource]").setInnerXml(tr("Resource"));
@@ -249,7 +250,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
         foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, rdfTriples)
             addRdfTriple(rdfTriple, false);
     } else {
-        mOutputOntologicalTerms->setHtml(QString());
+        mOutputOntologicalTerms->webView()->setHtml(QString());
     }
 
     // Do additional GUI updates
@@ -269,8 +270,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
     // Initialise our web view, if needed
 
     if (!mItemsCount) {
-        mOutputOntologicalTerms->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16),
-                                                                             Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16, QIcon::Disabled)));
+        mOutputOntologicalTerms->webView()->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16),
+                                                                                        Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16, QIcon::Disabled)));
     }
 
     // Add the item
@@ -302,9 +303,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
                               "</tr>\n";
 
     if (mItemsCount == 1)
-        mOutputOntologicalTerms->page()->mainFrame()->documentElement().findFirst("tbody").appendInside(ontologicalTerm);
+        mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement().findFirst("tbody").appendInside(ontologicalTerm);
     else
-        mOutputOntologicalTerms->page()->mainFrame()->documentElement().findFirst(QString("tr[id=item_%1]").arg(mRdfTripleInformationSha1s.last())).appendOutside(ontologicalTerm);
+        mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement().findFirst(QString("tr[id=item_%1]").arg(mRdfTripleInformationSha1s.last())).appendOutside(ontologicalTerm);
 
     // Keep track of some information
 
@@ -355,7 +356,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
     static const QString Highlighted = "highlighted";
     static const QString Selected = "selected";
 
-    QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
+    QWebElement documentElement = mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement();
     QString rdfTripleInformationSha1 = pRdfTripleInformation.isEmpty()?QString():Core::sha1(pRdfTripleInformation);
 
     if (rdfTripleInformationSha1.compare(mRdfTripleInformationSha1)) {
@@ -404,7 +405,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
     // Note: there is nothing nothing do for Any...
 
     if (mLookUpRdfTripleInformation == First) {
-        mOutputOntologicalTerms->page()->triggerAction(QWebPage::MoveToStartOfDocument);
+        mOutputOntologicalTerms->webView()->page()->triggerAction(QWebPage::MoveToStartOfDocument);
     } else if (mLookUpRdfTripleInformation == Last) {
         // Note #1: normally, we would use
         //             mOutputOntologicalTerms->page()->triggerAction(QWebPage::MoveToEndOfDocument);
@@ -461,7 +462,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple()
 {
     // Show our last RDF triple by scrolling to the end of the page
 
-    QWebFrame *outputFrame = mOutputOntologicalTerms->page()->mainFrame();
+    QWebFrame *outputFrame = mOutputOntologicalTerms->webView()->page()->mainFrame();
 
     outputFrame->setScrollBarValue(Qt::Vertical, outputFrame->scrollBarMaximum(Qt::Vertical));
 }
@@ -498,7 +499,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
         // whether there are RDF triples left and whether the current RDF triple
         // is the one being highlighted
 
-        QWebElement rdfTripleElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement().findFirst(QString("tr[id=item_%1]").arg(mLink));
+        QWebElement rdfTripleElement = mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement().findFirst(QString("tr[id=item_%1]").arg(mLink));
 
         if (!mItemsCount) {
             mRdfTripleInformation = QString();
@@ -644,7 +645,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::filePermissionsChanged
     // whether the file is un/locked
 
     bool fileReadableAndWritable = Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName());
-    QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
+    QWebElement documentElement = mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement();
 
     foreach (const QString &rdfTripleInformationSha1, mRdfTripleInformationSha1s) {
         documentElement.findFirst(QString("td[id=button_%1]").arg(rdfTripleInformationSha1)).setStyleProperty("display", fileReadableAndWritable?"table-cell":"none");

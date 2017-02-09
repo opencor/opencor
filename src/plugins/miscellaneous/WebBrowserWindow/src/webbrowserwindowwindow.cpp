@@ -42,6 +42,7 @@ limitations under the License.
 #include <QSettings>
 #include <QTimer>
 #include <QWebHistory>
+#include <QWebView>
 
 //==============================================================================
 
@@ -52,8 +53,7 @@ namespace WebBrowserWindow {
 
 WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
-    mGui(new Ui::WebBrowserWindowWindow),
-    mUrl(QString())
+    mGui(new Ui::WebBrowserWindowWindow)
 {
     // Set up the GUI
 
@@ -115,6 +115,8 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mWebBrowserWindowWidget->setObjectName("WebBrowserWindowWidget");
 
+    mWebBrowserWindowWidget->showProgressBar();
+
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mWebBrowserWindowWidget,
                                                      true, true, true, true));
@@ -125,34 +127,10 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     #error Unsupported platform
 #endif
 
-    // Create our (thin) simulation progress widget
-
-    mProgressBarWidget = new Core::ProgressBarWidget(this);
-
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    Core::BorderedWidget *progressBarBorderedWidget = new Core::BorderedWidget(mProgressBarWidget,
-                                                                               false, true, true, true);
-#elif defined(Q_OS_MAC)
-    Core::BorderedWidget *progressBarBorderedWidget = new Core::BorderedWidget(mProgressBarWidget,
-                                                                               true, false, false, false);
-#else
-    #error Unsupported platform
-#endif
-
-    progressBarBorderedWidget->setFixedHeight(4);
-    progressBarBorderedWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-
-    mGui->layout->addWidget(progressBarBorderedWidget);
-
     // Various connections to handle our web browser window widget
 
-    connect(mWebBrowserWindowWidget, SIGNAL(urlChanged(const QUrl &)),
+    connect(mWebBrowserWindowWidget->webView(), SIGNAL(urlChanged(const QUrl &)),
             this, SLOT(urlChanged(const QUrl &)));
-
-    connect(mWebBrowserWindowWidget, SIGNAL(loadProgress(int)),
-            this, SLOT(loadProgress(const int &)));
-    connect(mWebBrowserWindowWidget, SIGNAL(loadFinished(bool)),
-            this, SLOT(loadFinished()));
 
     // Create and populate our context menu
 
@@ -286,8 +264,10 @@ void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
 void WebBrowserWindowWindow::on_actionClear_triggered()
 {
     // Clear the contents of our Web browser window widget
+    // Note: we disable the progress bar since we don't want to see its
+    //       progress...
 
-    mUrl = mWebBrowserWindowWidget->homePage();
+    mWebBrowserWindowWidget->progressBarWidget()->setEnabled(false);
 
     mWebBrowserWindowWidget->clear();
 }
@@ -297,10 +277,13 @@ void WebBrowserWindowWindow::on_actionClear_triggered()
 void WebBrowserWindowWindow::on_actionBack_triggered()
 {
     // Go to the previous page
+    // Note: we enable/disable the progress bar based on whether the back URL is
+    //       our homepage since we don't want to see its progress in the latter
+    //       case...
 
-    mUrl = mWebBrowserWindowWidget->history()->backItem().url().toString();
+    mWebBrowserWindowWidget->progressBarWidget()->setEnabled(mWebBrowserWindowWidget->webView()->history()->backItem().url().toString().compare(mWebBrowserWindowWidget->homePage()));
 
-    mWebBrowserWindowWidget->back();
+    mWebBrowserWindowWidget->webView()->back();
 }
 
 //==============================================================================
@@ -308,10 +291,13 @@ void WebBrowserWindowWindow::on_actionBack_triggered()
 void WebBrowserWindowWindow::on_actionForward_triggered()
 {
     // Go to the next page
+    // Note: we enable/disable the progress bar based on whether the forward URL
+    //       is our homepage since we don't want to see its progress in the
+    //       latter case...
 
-    mUrl = mWebBrowserWindowWidget->history()->forwardItem().url().toString();
+    mWebBrowserWindowWidget->progressBarWidget()->setEnabled(mWebBrowserWindowWidget->webView()->history()->forwardItem().url().toString().compare(mWebBrowserWindowWidget->homePage()));
 
-    mWebBrowserWindowWidget->forward();
+    mWebBrowserWindowWidget->webView()->forward();
 }
 
 //==============================================================================
@@ -320,7 +306,7 @@ void WebBrowserWindowWindow::on_actionCopy_triggered()
 {
     // Copy the current slection to the clipboard
 
-    QApplication::clipboard()->setText(mWebBrowserWindowWidget->selectedText());
+    QApplication::clipboard()->setText(mWebBrowserWindowWidget->webView()->selectedText());
 }
 
 //==============================================================================
@@ -361,7 +347,7 @@ void WebBrowserWindowWindow::on_actionPrint_triggered()
     QPrintDialog printDialog(&printer);
 
     if (printDialog.exec() == QDialog::Accepted)
-        mWebBrowserWindowWidget->print(&printer);
+        mWebBrowserWindowWidget->webView()->print(&printer);
 }
 
 //==============================================================================
@@ -379,7 +365,7 @@ void WebBrowserWindowWindow::on_actionReload_triggered()
 {
     // Reload the URL
 
-    mWebBrowserWindowWidget->reload();
+    mWebBrowserWindowWidget->webView()->reload();
 }
 
 //==============================================================================
@@ -388,17 +374,17 @@ void WebBrowserWindowWindow::returnPressed()
 {
     // Go to our home page (i.e. blank page), if the URL is empty, or load the
     // URL
-    // Note: we keep track of the URL since, in loadProgress(), the initial
-    //       value of mWebBrowserWindowWidget->url() will be that of the
-    //       previous URL, meaning that we would, in the case of our home page,
-    //       start showing the progress while we clearly shouldn't be...
+    // Note: we enable/disable the progress bar based on whether the URL is our
+    //       homepage since we don't want to see its progress in the latter
+    //       case...
 
-    if (mUrlValue->text().isEmpty())
-        mUrl = mWebBrowserWindowWidget->homePage();
-    else
-        mUrl = mUrlValue->text();
+    QString url = mUrlValue->text().isEmpty()?
+                      mWebBrowserWindowWidget->homePage():
+                      mUrlValue->text();
 
-    mWebBrowserWindowWidget->load(mUrl);
+    mWebBrowserWindowWidget->progressBarWidget()->setEnabled(url.compare(mWebBrowserWindowWidget->homePage()));
+
+    mWebBrowserWindowWidget->webView()->load(url);
 }
 
 //==============================================================================
@@ -409,42 +395,6 @@ void WebBrowserWindowWindow::showCustomContextMenu() const
     // widget
 
     mContextMenu->exec(QCursor::pos());
-}
-
-//==============================================================================
-
-void WebBrowserWindowWindow::loadProgress(const int &pProgress)
-{
-    // Update the value of our progress bar, but only if we are not dealing with
-    // a blank page
-
-    if (mUrl.compare(mWebBrowserWindowWidget->homePage()))
-        mProgressBarWidget->setValue(0.01*pProgress);
-}
-
-//==============================================================================
-
-void WebBrowserWindowWindow::loadFinished()
-{
-    // The loading is finished, so reset our progress bar, but only if we are
-    // not dealing with a blank page and with a slight delay (it looks better
-    // that way)
-
-    enum {
-        ResetDelay = 169
-    };
-
-    if (mUrl.compare(mWebBrowserWindowWidget->homePage()))
-        QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
-}
-
-//==============================================================================
-
-void WebBrowserWindowWindow::resetProgressBar()
-{
-    // Reset our progress bar
-
-    mProgressBarWidget->setValue(0.0);
 }
 
 //==============================================================================

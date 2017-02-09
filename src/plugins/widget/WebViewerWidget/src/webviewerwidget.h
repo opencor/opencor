@@ -30,11 +30,25 @@ limitations under the License.
 //==============================================================================
 
 #include <QString>
-#include <QWebView>
+#include <QWebPage>
+
+//==============================================================================
+
+class QWebView;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class BorderedWidget;
+    class ProgressBarWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace WebViewerWidget {
 
 //==============================================================================
@@ -59,7 +73,7 @@ private:
 
 //==============================================================================
 
-class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWebView,
+class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWidget,
                                                public Core::CommonWidget
 {
     Q_OBJECT
@@ -69,6 +83,9 @@ public:
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
+
+    QWebView * webView() const;
+    Core::ProgressBarWidget * progressBarWidget() const;
 
     QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
@@ -90,6 +107,9 @@ public:
 
     void setOverrideCursor(const bool &pOverrideCursor);
 
+    void showProgressBar();
+    void hideProgressBar();
+
     void showWebInspector();
 
 protected:
@@ -106,6 +126,11 @@ private:
 
     bool mOverrideCursor;
     bool mOverridingCursor;
+
+    QWebView *mWebView;
+
+    Core::ProgressBarWidget *mProgressBarWidget;
+    Core::BorderedWidget *mProgressBarBorderedWidget;
 
     void emitZoomRelatedSignals();
 
@@ -128,6 +153,10 @@ private slots:
     void selectionChanged();
 
     void pageChanged();
+
+    void loadProgress(const int &pProgress);
+    void loadFinished();
+    void resetProgressBar();
 };
 
 //==============================================================================
