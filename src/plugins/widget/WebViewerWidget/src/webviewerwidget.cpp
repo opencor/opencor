@@ -127,7 +127,8 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     mZoomingEnabled(true),
     mZoomLevel(-1),
     mOverrideCursor(false),
-    mOverridingCursor(false)
+    mOverridingCursor(false),
+    mProgressBarEnabled(false)
 {
     // Use our own page
 
@@ -377,6 +378,15 @@ void WebViewerWidget::setOverrideCursor(const bool &pOverrideCursor)
     // Set whether we should override our cursor
 
     mOverrideCursor = pOverrideCursor;
+}
+
+//==============================================================================
+
+void WebViewerWidget::setProgressBarEnabled(const bool &pProgressBarEnabled)
+{
+    // Set whether our progress bar is enabled
+
+    mProgressBarEnabled = pProgressBarEnabled;
 }
 
 //==============================================================================

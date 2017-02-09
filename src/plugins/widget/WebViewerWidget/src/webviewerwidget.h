@@ -90,6 +90,8 @@ public:
 
     void setOverrideCursor(const bool &pOverrideCursor);
 
+    void setProgressBarEnabled(const bool &pProgressBarEnabled);
+
     void showWebInspector();
 
 protected:
@@ -106,6 +108,8 @@ private:
 
     bool mOverrideCursor;
     bool mOverridingCursor;
+
+    bool mProgressBarEnabled;
 
     void emitZoomRelatedSignals();
 
