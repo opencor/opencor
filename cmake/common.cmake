@@ -350,6 +350,14 @@ MACRO(INITIALISE_PROJECT)
         FILE(MAKE_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR})
     ENDIF()
 
+    # Where external packages are installed
+
+    IF(APPLE)
+        SET(FULL_DEST_EXTERNAL_BASE_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR})
+    ELSE()
+        SET(FULL_DEST_EXTERNAL_BASE_DIR ${PROJECT_BUILD_DIR})
+    ENDIF()
+
     # Set the RPATH (and RPATH link, if needed) information on Linux and macOS
 
     IF(APPLE)
@@ -686,7 +694,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy_directory
                                    ${ARG_EXTERNAL_SOURCE_DIR}
-                                   ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_DEST_DIR})
+                                   ${FULL_DEST_EXTERNAL_BASE_DIR}/${ARG_EXTERNAL_DEST_DIR})
     ENDIF()
 
     # System binaries

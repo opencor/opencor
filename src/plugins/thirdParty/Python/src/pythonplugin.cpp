@@ -134,6 +134,8 @@ void PythonPlugin::initializePlugin()
     auto pythonHome = QString();
 #if __APPLE__
     pythonHome = (applicationDirectories << "Frameworks" << "Python").join("/");
+#else
+    pythonHome = applicationDirectories.join("/");
 #endif
     qputenv("PYTHONHOME", pythonHome.toUtf8());
 

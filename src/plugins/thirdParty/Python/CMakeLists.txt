@@ -34,7 +34,6 @@ ELSE()
     SET(PYTHON_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(PYTHON_GENERATED_LIBRARY ${PYTHON_LIBRARY})
 ENDIF()
-SET(EXTERNAL_BINARIES ${PYTHON_LIBRARY})
 
 # Specify where our Python will be installed.
 
@@ -103,6 +102,16 @@ ELSE()
 
     INCLUDE(ExternalProject)
 
+    IF(NOT APPLE)
+        SET(CMAKE_INSTALL_RPATH_OPTION -DCMAKE_INSTALL_RPATH=$ORIGIN/../lib)
+    ENDIF()
+
+    IF(UNIX AND NOT APPLE)      # Use the system's readline
+        SET(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
+    ELSE()                      # Use Python's built-in readline
+        SET(PYTHON_READLINE_OPTION -DBUILTIN_READLINE=ON)
+    ENDIF()
+
     ExternalProject_Add(
         PythonBuild
         DEPENDS OpenSSLPlugin zlibPlugin
@@ -112,11 +121,13 @@ ELSE()
         # Uncomment following line and remove next two lines when our branch is merged upstream
         #  GIT_REPOSITORY https://github.com/python-cmake-buildsystem/python-cmake-buildsystem.git
         GIT_REPOSITORY https://github.com/dbrnz/python-cmake-buildsystem.git
-        GIT_TAG abiflags
-#
+        GIT_TAG opencor
+
         CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+
+            ${CMAKE_INSTALL_RPATH_OPTION}
 
             # Options for MacOS builds
             -DCMAKE_MACOSX_RPATH=1
@@ -149,8 +160,8 @@ ELSE()
             -DENABLE_TESTCAPI=OFF
             -DENABLE_TKINTER=OFF
 
-            # Use Python's built-in readline
-            -DBUILTIN_READLINE=ON
+            # Build with an appropriate readline
+            ${PYTHON_READLINE_OPTION}
 
             # Use our OpenSSL
             -DUSE_SYSTEM_OpenSSL=ON
@@ -167,8 +178,6 @@ ELSE()
             <INSTALL_DIR>/lib/${PYTHON_GENERATED_LIBRARY}
     )
 
-    SET(INSTALL_STEP install)
-
     IF(APPLE)
         # Fix up the newly installed Python executable and shared library
 
@@ -182,6 +191,8 @@ ELSE()
             )
 
         SET(INSTALL_STEP set_rpath)
+    ELSE()
+        SET(INSTALL_STEP install)
     ENDIF()
 
     # Clean our site-packages directory
@@ -196,7 +207,7 @@ ELSE()
     # Install the Python package installer
 
     ExternalProject_Add_Step(PythonBuild install_pip
-        COMMAND ./python ${PROJECT_SOURCE_DIR}/bin/get-pip.py --prefix ..
+        COMMAND "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ./python -s ${PROJECT_SOURCE_DIR}/bin/get-pip.py --prefix ..
         WORKING_DIRECTORY ${FULL_INSTALL_DIR}/bin
         DEPENDEES clean_site
         )
@@ -204,7 +215,7 @@ ELSE()
     # Install some base packages
 
     ExternalProject_Add_Step(PythonBuild install_packages
-        COMMAND ./python ./pip install
+        COMMAND "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ./python -s ./pip install
             numpy==${NUMPY_VERSION}
             scipy==${SCIPY_VERSION}
             matplotlib==${MATPLOTLIB_VERSION}
@@ -215,7 +226,7 @@ ELSE()
     # Patch matplotlib backend so that it works with PythonQt
 
     ExternalProject_Add_Step(PythonBuild patch_matplotlib
-        COMMAND ./python ${PROJECT_SOURCE_DIR}/bin/patch.py
+        COMMAND "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ./python -s ${PROJECT_SOURCE_DIR}/bin/patch.py
             --strip=2
             --directory=${FULL_INSTALL_DIR}/${PYTHON_LIBRARY_DIR}/site-packages/matplotlib
             ${PROJECT_SOURCE_DIR}/src/matplotlib_${MATPLOTLIB_VERSION}.diff
@@ -227,7 +238,7 @@ ELSE()
     ## TODO: This needs a repeat run of the build to work...
 
     ExternalProject_Add_Step(PythonBuild compile_python_lib
-        COMMAND ./python ${PROJECT_SOURCE_DIR}/bin/ziplibrary.py
+        COMMAND "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ./python -s ${PROJECT_SOURCE_DIR}/bin/ziplibrary.py
             ${FULL_INSTALL_DIR}/lib/python${PYTHON_NUMERIC_VERSION}.zip
             ${FULL_INSTALL_DIR}/lib/python${PYTHON_SHORT_VERSION}
         WORKING_DIRECTORY ${FULL_INSTALL_DIR}/bin
@@ -254,6 +265,16 @@ SET(PYTHON_LIBRARY ${FULL_INSTALL_DIR}/lib/${PYTHON_LIBRARY} PARENT_SCOPE)
 
 SET(NUMPY_INCLUDE_DIR ${FULL_INSTALL_DIR}/${PYTHON_LIBRARY_DIR}/site-packages/numpy/core/include PARENT_SCOPE)
 
+IF(APPLE)
+    SET(EXTERNAL_BINARIES ${PYTHON_LIBRARY})
+    SET(EXTERNAL_BINARIES_DIR ${FULL_INSTALL_DIR}/lib)
+    SET(EXTERNAL_DEST_DIR Python)
+ELSE()
+    SET(EXTERNAL_BINARIES)
+    SET(EXTERNAL_BINARIES_DIR)
+    SET(EXTERNAL_DEST_DIR .)
+ENDIF()
+
 # Add the plugin
 
 ADD_PLUGIN(Python
@@ -275,9 +296,9 @@ ADD_PLUGIN(Python
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
     EXTERNAL_BINARIES_DIR
-        ${FULL_INSTALL_DIR}/lib
+        ${EXTERNAL_BINARIES_DIR}
     EXTERNAL_DEST_DIR
-        Python
+        ${EXTERNAL_DEST_DIR}
     EXTERNAL_SOURCE_DIR
         ${FULL_INSTALL_DIR}
 )
