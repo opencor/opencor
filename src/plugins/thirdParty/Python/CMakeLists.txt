@@ -142,6 +142,9 @@ ELSE()
             # We want development headers
             -DINSTALL_DEVELOPMENT=ON
 
+            # IPython and Jupyter need SQLite
+            -DENABLE_SQLITE3=ON
+
             # Turn off things we don't want
             -DINSTALL_MANUAL=OFF
             -DBUILD_TESTING=OFF
@@ -156,7 +159,6 @@ ELSE()
             -DENABLE_DBM=OFF
             -DENABLE_GDBM=OFF
             -DENABLE_IPV6=OFF
-            -DENABLE_SQLITE3=OFF
             -DENABLE_TESTCAPI=OFF
             -DENABLE_TKINTER=OFF
 
