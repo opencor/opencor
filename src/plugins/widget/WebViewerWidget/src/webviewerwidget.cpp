@@ -37,6 +37,7 @@ limitations under the License.
 #include <QTimer>
 #include <QToolTip>
 #include <QWebElement>
+#include <QWebHistory>
 #include <QWebHitTestResult>
 #include <QWebView>
 
@@ -151,11 +152,11 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
 
     mProgressBarWidget = new Core::ProgressBarWidget(this);
 
-    Core::BorderedWidget *progressBarBorderedWidget = new Core::BorderedWidget(mProgressBarWidget,
-                                                                               true, false, false, false);
+    mProgressBarBorderedWidget = new Core::BorderedWidget(mProgressBarWidget,
+                                                          true, false, false, false);
 
-    progressBarBorderedWidget->setFixedHeight(4);
-    progressBarBorderedWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    mProgressBarBorderedWidget->setFixedHeight(4);
+    mProgressBarBorderedWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
     // Some connections
 
@@ -175,17 +176,9 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     connect(mWebView, SIGNAL(loadFinished(bool)),
             this, SLOT(loadFinished()));
 
-    connect(mProgressBarWidget, SIGNAL(visible(const bool &)),
-            progressBarBorderedWidget, SLOT(setVisible(bool)));
-
     // Initially hide our progress bar
-    // Note: although we have a connection to keep track of the visible state of
-    //       our progress bar, we still need to hide its bordered widget
-    //       manually since at startup nothing will actually be visible from a
-    //       GUI viewpoint...
 
-    mProgressBarWidget->hide();
-    progressBarBorderedWidget->hide();
+    hideProgressBarEnabled();
 
     // Create our layout and populate it
 
@@ -195,7 +188,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     layout->setSpacing(0);
 
     layout->addWidget(mWebView);
-    layout->addWidget(progressBarBorderedWidget);
+    layout->addWidget(mProgressBarBorderedWidget);
 
     // Set our initial zoom level to its default value
     // Note: to set mZoomLevel directly is not good enough since one of the
@@ -437,6 +430,24 @@ void WebViewerWidget::setOverrideCursor(const bool &pOverrideCursor)
     // Set whether we should override our cursor
 
     mOverrideCursor = pOverrideCursor;
+}
+
+//==============================================================================
+
+void WebViewerWidget::showProgressBarEnabled()
+{
+    // Show our progress bar
+
+    mProgressBarBorderedWidget->show();
+}
+
+//==============================================================================
+
+void WebViewerWidget::hideProgressBarEnabled()
+{
+    // Hide our progress bar
+
+    mProgressBarBorderedWidget->hide();
 }
 
 //==============================================================================

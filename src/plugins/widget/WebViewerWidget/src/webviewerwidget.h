@@ -43,6 +43,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace Core {
+    class BorderedWidget;
     class ProgressBarWidget;
 }   // namespace Core
 
@@ -106,7 +107,8 @@ public:
 
     void setOverrideCursor(const bool &pOverrideCursor);
 
-    void setProgressBarEnabled(const bool &pProgressBarEnabled);
+    void showProgressBarEnabled();
+    void hideProgressBarEnabled();
 
     void showWebInspector();
 
@@ -126,7 +128,9 @@ private:
     bool mOverridingCursor;
 
     QWebView *mWebView;
+
     Core::ProgressBarWidget *mProgressBarWidget;
+    Core::BorderedWidget *mProgressBarBorderedWidget;
 
     void emitZoomRelatedSignals();
 
