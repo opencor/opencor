@@ -241,6 +241,8 @@ ENDIF()
 # Ensure other plugins can find our Python installation
 
 SET(PYTHON_ROOT_DIR ${FULL_INSTALL_DIR} PARENT_SCOPE)
+SET(PYTHON_INCLUDE_DIR ${FULL_INSTALL_DIR}/include/python${PYTHON_BUILT_VERSION} PARENT_SCOPE)
+SET(PYTHON_LIBRARY ${FULL_INSTALL_DIR}/lib/${PYTHON_LIBRARY} PARENT_SCOPE)
 
 # Ensure other plugins can our NumPy include directory
 
