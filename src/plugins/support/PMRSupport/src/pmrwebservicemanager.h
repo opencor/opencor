@@ -37,9 +37,9 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace Core {
-    class ProgressBarWidget;
-}   // namespace Core
+namespace WebViewerWidget {
+    class WebViewerWidget;
+}   // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -76,8 +76,7 @@ private:
     PmrAuthentication *mPmrAuthentication;
 
     QDialog *mWebViewerDialog;
-
-    Core::ProgressBarWidget *mProgressBarWidget;
+    WebViewerWidget::WebViewerWidget *mWebViewer;
 
 signals:
     void busy(const bool &pBusy);
@@ -93,10 +92,6 @@ private slots:
 
     void openBrowser(const QUrl &pUrl);
     void closeBrowser();
-
-    void loadProgress(const int &pProgress);
-    void loadFinished();
-    void resetProgressBar();
 
     void sslErrors(QNetworkReply *pNetworkReply,
                    const QList<QSslError> &pSslErrors);

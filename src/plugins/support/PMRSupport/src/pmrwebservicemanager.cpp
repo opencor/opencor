@@ -20,7 +20,6 @@ limitations under the License.
 // PMR web service manager
 //==============================================================================
 
-#include "borderedwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "pmrauthentication.h"
@@ -55,7 +54,7 @@ PmrWebServiceManager::PmrWebServiceManager(const QString &pPmrUrl,
     mPmrWebService(pPmrWebService),
     mPmrAuthentication(0),
     mWebViewerDialog(0),
-    mProgressBarWidget(0)
+    mWebViewer(0)
 {
     // Make sure that we get told when there are SSL errors (which would happen
     // if the website's certificate is invalid, e.g. it has expired)
@@ -119,37 +118,24 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
         connect(mWebViewerDialog, SIGNAL(rejected()),
                 this, SIGNAL(cancelled()));
 
-        WebViewerWidget::WebViewerWidget *webViewer = new WebViewerWidget::WebViewerWidget(mWebViewerDialog);
+        mWebViewer = new WebViewerWidget::WebViewerWidget(mWebViewerDialog);
 
-        webViewer->setContextMenuPolicy(Qt::NoContextMenu);
+        mWebViewer->setContextMenuPolicy(Qt::NoContextMenu);
 
-        connect(webViewer->webView(), SIGNAL(loadProgress(int)),
-                this, SLOT(loadProgress(const int &)));
-        connect(webViewer->webView(), SIGNAL(loadFinished(bool)),
-                this, SLOT(loadFinished()));
-
-        mProgressBarWidget = new Core::ProgressBarWidget(mWebViewerDialog);
-
-        Core::BorderedWidget *progressBarBorderedWidget = new Core::BorderedWidget(mProgressBarWidget,
-                                                                                   true, false, false, false);
-
-        progressBarBorderedWidget->setFixedHeight(4);
-        progressBarBorderedWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        mWebViewer->showProgressBarEnabled();
 
         QVBoxLayout *layout = new QVBoxLayout(mWebViewerDialog);
 
         layout->setMargin(0);
-        layout->setSpacing(0);
 
-        layout->addWidget(webViewer);
-        layout->addWidget(progressBarBorderedWidget);
+        layout->addWidget(mWebViewer);
 
         mWebViewerDialog->setLayout(layout);
     }
 
     mWebViewerDialog->setWindowTitle(tr("PMR Authentication"));
 
-    qobject_cast<WebViewerWidget::WebViewerWidget *>(mWebViewerDialog->layout()->itemAt(0)->widget())->webView()->load(pUrl);
+    mWebViewer->webView()->load(pUrl);
 
     mWebViewerDialog->exec();
 }
@@ -161,42 +147,10 @@ void PmrWebServiceManager::closeBrowser()
     // Close our temporary web browser, but only if the current page has
     // finished loading otherwise try again in a bit
 
-    if (mProgressBarWidget->value())
+    if (mWebViewer->progressBarWidget()->value())
         QTimer::singleShot(0, this, SLOT(closeBrowser()));
     else
         mWebViewerDialog->close();
-}
-
-//==============================================================================
-
-void PmrWebServiceManager::loadProgress(const int &pProgress)
-{
-    // Update the value of our progress bar
-
-    mProgressBarWidget->setValue(0.01*pProgress);
-}
-
-//==============================================================================
-
-void PmrWebServiceManager::loadFinished()
-{
-    // The loading is finished, so reset our progress bar, but with a slight
-    // delay (it looks better that way)
-
-    enum {
-        ResetDelay = 169
-    };
-
-    QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
-}
-
-//==============================================================================
-
-void PmrWebServiceManager::resetProgressBar()
-{
-    // Reset our progress bar
-
-    mProgressBarWidget->setValue(0.0);
 }
 
 //==============================================================================
