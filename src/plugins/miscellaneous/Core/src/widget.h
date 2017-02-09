@@ -59,10 +59,14 @@ public:
 protected:
     virtual QSize sizeHint() const;
 
+    virtual bool event(QEvent *pEvent);
     virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
     QSize mSizeHint;
+
+signals:
+    void visible(const bool &pVisible);
 };
 
 //==============================================================================

@@ -84,6 +84,7 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     QWebView * webView() const;
+    Core::ProgressBarWidget * progressBarWidget() const;
 
     QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
@@ -124,8 +125,6 @@ private:
     bool mOverrideCursor;
     bool mOverridingCursor;
 
-    bool mProgressBarEnabled;
-
     QWebView *mWebView;
     Core::ProgressBarWidget *mProgressBarWidget;
 
@@ -150,6 +149,10 @@ private slots:
     void selectionChanged();
 
     void pageChanged();
+
+    void loadProgress(const int &pProgress);
+    void loadFinished();
+    void resetProgressBar();
 };
 
 //==============================================================================

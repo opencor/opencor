@@ -20,6 +20,8 @@ limitations under the License.
 // Web Viewer widget
 //==============================================================================
 
+#include "borderedwidget.h"
+#include "progressbarwidget.h"
 #include "webviewerwidget.h"
 
 //==============================================================================
@@ -32,6 +34,7 @@ limitations under the License.
 #include <QLayout>
 #include <QNetworkRequest>
 #include <QSettings>
+#include <QTimer>
 #include <QToolTip>
 #include <QWebElement>
 #include <QWebHitTestResult>
@@ -129,8 +132,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     mZoomingEnabled(true),
     mZoomLevel(-1),
     mOverrideCursor(false),
-    mOverridingCursor(false),
-    mProgressBarEnabled(false)
+    mOverridingCursor(false)
 {
     // Customise ourselves
 
@@ -145,6 +147,16 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
 
     mWebView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
 
+    // Create our progress bar object and customise it
+
+    mProgressBarWidget = new Core::ProgressBarWidget(this);
+
+    Core::BorderedWidget *progressBarBorderedWidget = new Core::BorderedWidget(mProgressBarWidget,
+                                                                               true, false, false, false);
+
+    progressBarBorderedWidget->setFixedHeight(4);
+    progressBarBorderedWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+
     // Some connections
 
     connect(mWebView, SIGNAL(urlChanged(const QUrl &)),
@@ -158,6 +170,23 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     connect(mWebView->page(), SIGNAL(selectionChanged()),
             this, SLOT(selectionChanged()));
 
+    connect(mWebView, SIGNAL(loadProgress(int)),
+            this, SLOT(loadProgress(const int &)));
+    connect(mWebView, SIGNAL(loadFinished(bool)),
+            this, SLOT(loadFinished()));
+
+    connect(mProgressBarWidget, SIGNAL(visible(const bool &)),
+            progressBarBorderedWidget, SLOT(setVisible(bool)));
+
+    // Initially hide our progress bar
+    // Note: although we have a connection to keep track of the visible state of
+    //       our progress bar, we still need to hide its bordered widget
+    //       manually since at startup nothing will actually be visible from a
+    //       GUI viewpoint...
+
+    mProgressBarWidget->hide();
+    progressBarBorderedWidget->hide();
+
     // Create our layout and populate it
 
     QVBoxLayout *layout = new QVBoxLayout(this);
@@ -166,6 +195,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     layout->setSpacing(0);
 
     layout->addWidget(mWebView);
+    layout->addWidget(progressBarBorderedWidget);
 
     // Set our initial zoom level to its default value
     // Note: to set mZoomLevel directly is not good enough since one of the
@@ -298,6 +328,15 @@ QWebView * WebViewerWidget::webView() const
 
 //==============================================================================
 
+Core::ProgressBarWidget * WebViewerWidget::progressBarWidget() const
+{
+    // Return our progress bar
+
+    return mProgressBarWidget;
+}
+
+//==============================================================================
+
 QWebElement WebViewerWidget::retrieveLinkInformation(QString &pLink,
                                                      QString &pTextContent)
 {
@@ -402,15 +441,6 @@ void WebViewerWidget::setOverrideCursor(const bool &pOverrideCursor)
 
 //==============================================================================
 
-void WebViewerWidget::setProgressBarEnabled(const bool &pProgressBarEnabled)
-{
-    // Set whether our progress bar is enabled
-
-    mProgressBarEnabled = pProgressBarEnabled;
-}
-
-//==============================================================================
-
 void WebViewerWidget::emitZoomRelatedSignals()
 {
     // Let the user know whether we are not at the default zoom level and
@@ -479,6 +509,38 @@ void WebViewerWidget::pageChanged()
         emit backEnabled(action->isEnabled());
     else if (action == mWebView->pageAction(QWebPage::Forward))
         emit forwardEnabled(action->isEnabled());
+}
+
+//==============================================================================
+
+void WebViewerWidget::loadProgress(const int &pProgress)
+{
+    // Update the value of our progress bar
+
+    mProgressBarWidget->setValue(0.01*pProgress);
+}
+
+//==============================================================================
+
+void WebViewerWidget::loadFinished()
+{
+    // The loading is finished, so reset our progress bar, but with a slight
+    // delay (it looks better that way)
+
+    enum {
+        ResetDelay = 169
+    };
+
+    QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
+}
+
+//==============================================================================
+
+void WebViewerWidget::resetProgressBar()
+{
+    // Reset our progress bar
+
+    mProgressBarWidget->setValue(0.0);
 }
 
 //==============================================================================

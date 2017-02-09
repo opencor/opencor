@@ -105,6 +105,22 @@ QSize Widget::sizeHint() const
 
 //==============================================================================
 
+bool Widget::event(QEvent *pEvent)
+{
+    // Let people know whether we are being shown/hidden
+
+    bool res = QWidget::event(pEvent);
+
+    if (pEvent->type() == QEvent::Show)
+        emit visible(true);
+    else if (pEvent->type() == QEvent::Hide)
+        emit visible(false);
+
+    return res;
+}
+
+//==============================================================================
+
 void Widget::resizeEvent(QResizeEvent *pEvent)
 {
     // Default handling of the event
