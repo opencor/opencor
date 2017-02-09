@@ -30,11 +30,25 @@ limitations under the License.
 //==============================================================================
 
 #include <QString>
-#include <QWebView>
+#include <QWebPage>
+
+//==============================================================================
+
+class QPrinter;
+class QWebView;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class ProgressBarWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace WebViewerWidget {
 
 //==============================================================================
@@ -59,7 +73,7 @@ private:
 
 //==============================================================================
 
-class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWebView,
+class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWidget,
                                                public Core::CommonWidget
 {
     Q_OBJECT
@@ -76,10 +90,23 @@ public:
 
     virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
 
+    QWebPage * page() const;
+
+    QWebHistory * history() const;
+
     void setHomePage(const QString &pHomePage);
     QString homePage() const;
 
     void goToHomePage();
+
+    void load(const QUrl &pUrl);
+
+    QUrl url() const;
+    void setUrl(const QUrl &pUrl);
+
+    void setHtml(const QString &pHtml, const QUrl &pBaseUrl = QUrl());
+
+    QString selectedText() const;
 
     void resetZoom();
 
@@ -93,6 +120,8 @@ public:
     void setProgressBarEnabled(const bool &pProgressBarEnabled);
 
     void showWebInspector();
+
+    void clearHistory();
 
 protected:
     virtual bool event(QEvent *pEvent);
@@ -111,6 +140,9 @@ private:
 
     bool mProgressBarEnabled;
 
+    QWebView *mWebView;
+    Core::ProgressBarWidget *mProgressBarWidget;
+
     void emitZoomRelatedSignals();
 
     void setZoomLevel(const int &pZoomLevel);
@@ -125,6 +157,13 @@ signals:
 
     void defaultZoomLevel(const bool &pDefault);
     void zoomingOutEnabled(const bool &pEnabled);
+
+public slots:
+    void print(QPrinter*) const;
+
+    void forward();
+    void back();
+    void reload();
 
 private slots:
     void urlChanged(const QUrl &pUrl);

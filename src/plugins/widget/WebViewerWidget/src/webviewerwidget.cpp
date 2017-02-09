@@ -33,7 +33,9 @@ limitations under the License.
 #include <QSettings>
 #include <QToolTip>
 #include <QWebElement>
+#include <QWebHistory>
 #include <QWebHitTestResult>
+#include <QWebView>
 
 //==============================================================================
 
@@ -120,7 +122,7 @@ enum {
 //==============================================================================
 
 WebViewerWidget::WebViewerWidget(QWidget *pParent) :
-    QWebView(pParent),
+    QWidget(pParent),
     Core::CommonWidget(this),
     mToolTip(QString()),
     mHomePage("about:blank"),
@@ -130,30 +132,28 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     mOverridingCursor(false),
     mProgressBarEnabled(false)
 {
-    // Use our own page
-
-    setPage(new WebViewerPage(this));
-
     // Customise ourselves
 
     setAcceptDrops(false);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    // Make sure that we can use our Web inspector
+    // Create our web view object and customise it
 
-    settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+    mWebView = new QWebView(this);
 
-    // Some connections
+    mWebView->setPage(new WebViewerPage(this));
 
-    connect(this, SIGNAL(urlChanged(const QUrl &)),
+    mWebView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+
+    connect(mWebView, SIGNAL(urlChanged(const QUrl &)),
             this, SLOT(urlChanged(const QUrl &)));
 
-    connect(pageAction(QWebPage::Back), SIGNAL(changed()),
+    connect(mWebView->pageAction(QWebPage::Back), SIGNAL(changed()),
             this, SLOT(pageChanged()));
-    connect(pageAction(QWebPage::Forward), SIGNAL(changed()),
+    connect(mWebView->pageAction(QWebPage::Forward), SIGNAL(changed()),
             this, SLOT(pageChanged()));
 
-    connect(page(), SIGNAL(selectionChanged()),
+    connect(mWebView->page(), SIGNAL(selectionChanged()),
             this, SLOT(selectionChanged()));
 
     // Set our initial zoom level to its default value
@@ -237,7 +237,7 @@ bool WebViewerWidget::event(QEvent *pEvent)
 
         return true;
     } else {
-        return QWebView::event(pEvent);
+        return QWidget::event(pEvent);
     }
 }
 
@@ -261,7 +261,7 @@ void WebViewerWidget::wheelEvent(QWheelEvent *pEvent)
         // Not the modifier we were expecting, so call the default handling of
         // the event
 
-        QWebView::wheelEvent(pEvent);
+        QWidget::wheelEvent(pEvent);
     }
 }
 
@@ -291,7 +291,7 @@ QWebElement WebViewerWidget::retrieveLinkInformation(QString &pLink,
     //       handled), which means that if we need that information to process
     //       the click, then we will have the wrong information...
 
-    QWebHitTestResult hitTestResult = page()->mainFrame()->hitTestContent(mapFromGlobal(QCursor::pos()));
+    QWebHitTestResult hitTestResult = mWebView->page()->mainFrame()->hitTestContent(mapFromGlobal(QCursor::pos()));
     QWebElement res = hitTestResult.element();
 
     while (!res.isNull() && res.tagName().compare("A"))
@@ -306,6 +306,24 @@ QWebElement WebViewerWidget::retrieveLinkInformation(QString &pLink,
     }
 
     return res;
+}
+
+//==============================================================================
+
+QWebPage * WebViewerWidget::page() const
+{
+    // Return our page
+
+    return mWebView->page();
+}
+
+//==============================================================================
+
+QWebHistory * WebViewerWidget::history() const
+{
+    // Return our history
+
+    return mWebView->history();
 }
 
 //==============================================================================
@@ -332,7 +350,88 @@ void WebViewerWidget::goToHomePage()
 {
     // Go to our home page
 
-    load(mHomePage);
+    mWebView->load(mHomePage);
+}
+
+//==============================================================================
+
+void WebViewerWidget::load(const QUrl &pUrl)
+{
+    // Load the given URL
+
+    mWebView->load(pUrl);
+}
+
+//==============================================================================
+
+QUrl WebViewerWidget::url() const
+{
+    // Return our URL
+
+    return mWebView->url();
+}
+
+//==============================================================================
+
+void WebViewerWidget::setUrl(const QUrl &pUrl)
+{
+    // Set the given URL
+
+    mWebView->setUrl(pUrl);
+}
+
+//==============================================================================
+
+void WebViewerWidget::setHtml(const QString &pHtml, const QUrl &pBaseUrl)
+{
+    // Set the given HTML code using the given base URL
+
+    mWebView->setHtml(pHtml, pBaseUrl);
+}
+
+//==============================================================================
+
+QString WebViewerWidget::selectedText() const
+{
+    // Return our selected text
+
+    return mWebView->selectedText();
+}
+
+//==============================================================================
+
+void WebViewerWidget::print(QPrinter *pPrinter) const
+{
+    // Print to the given printer
+
+    mWebView->print(pPrinter);
+}
+
+//==============================================================================
+
+void WebViewerWidget::forward()
+{
+    // Go forward
+
+    mWebView->forward();
+}
+
+//==============================================================================
+
+void WebViewerWidget::back()
+{
+    // Go back
+
+    mWebView->back();
+}
+
+//==============================================================================
+
+void WebViewerWidget::reload()
+{
+    // Reload our contents
+
+    mWebView->reload();
 }
 
 //==============================================================================
@@ -411,7 +510,7 @@ void WebViewerWidget::setZoomLevel(const int &pZoomLevel)
 
     mZoomLevel = pZoomLevel;
 
-    setZoomFactor(0.1*mZoomLevel);
+    mWebView->setZoomFactor(0.1*mZoomLevel);
 
     // Emit a few zoom-related signals
 
@@ -424,7 +523,7 @@ void WebViewerWidget::showWebInspector()
 {
     // Show our Web inspector window
 
-    triggerPageAction(QWebPage::InspectElement);
+    mWebView->triggerPageAction(QWebPage::InspectElement);
 }
 
 //==============================================================================
@@ -443,7 +542,7 @@ void WebViewerWidget::selectionChanged()
     // The text selection has changed, so let the user know whether some text is
     // now selected
 
-    emit copyTextEnabled(!selectedText().isEmpty());
+    emit copyTextEnabled(!mWebView->selectedText().isEmpty());
 }
 
 //==============================================================================
@@ -455,9 +554,9 @@ void WebViewerWidget::pageChanged()
 
     QAction *action = qobject_cast<QAction *>(sender());
 
-    if (action == pageAction(QWebPage::Back))
+    if (action == mWebView->pageAction(QWebPage::Back))
         emit backEnabled(action->isEnabled());
-    else if (action == pageAction(QWebPage::Forward))
+    else if (action == mWebView->pageAction(QWebPage::Forward))
         emit forwardEnabled(action->isEnabled());
 }
 
