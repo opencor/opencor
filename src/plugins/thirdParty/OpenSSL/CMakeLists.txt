@@ -163,23 +163,29 @@ ELSE()
             WORKING_DIRECTORY ${FULL_INSTALL_DIR}
             DEPENDEES install
             )
-
-    ELSEIF(APPLE)
+    ELSE()
         # Fix up the newly created libraries
 
         ExternalProject_Add_Step(OpenSSLBuild FixupLibrary
             # The build process creates write-protected libraries
             COMMAND chmod 755 ${CRYPTO_LIBRARY}
             COMMAND chmod 755 ${OPENSSL_LIBRARY}
-            # Set RPATH to enable linking independent of library location
-            COMMAND install_name_tool -id @rpath/${CRYPTO_LIBRARY} ${CRYPTO_LIBRARY}
-            COMMAND install_name_tool -id @rpath/${OPENSSL_LIBRARY} ${OPENSSL_LIBRARY}
-            COMMAND install_name_tool -change ${FULL_INSTALL_DIR}/lib/${CRYPTO_LIBRARY}
-                                              @rpath/${CRYPTO_LIBRARY}
-                                              ${OPENSSL_LIBRARY}
             WORKING_DIRECTORY ${FULL_INSTALL_DIR}/lib
             DEPENDEES install
             )
+
+        IF(APPLE)
+            ExternalProject_Add_Step(OpenSSLBuild SetRPath
+                # Set RPATH to enable linking independent of library location
+                COMMAND install_name_tool -id @rpath/${CRYPTO_LIBRARY} ${CRYPTO_LIBRARY}
+                COMMAND install_name_tool -id @rpath/${OPENSSL_LIBRARY} ${OPENSSL_LIBRARY}
+                COMMAND install_name_tool -change ${FULL_INSTALL_DIR}/lib/${CRYPTO_LIBRARY}
+                                                  @rpath/${CRYPTO_LIBRARY}
+                                                  ${OPENSSL_LIBRARY}
+                WORKING_DIRECTORY ${FULL_INSTALL_DIR}/lib
+                DEPENDEES FixupLibrary
+                )
+        ENDIF()
     ENDIF()
 
     # Package OpenSSL's include files and library
