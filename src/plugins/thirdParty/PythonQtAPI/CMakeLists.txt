@@ -64,7 +64,11 @@ IF(USE_PREBUILT_PYTHONQT_PACKAGE)
             SHA1_VALUES 7addd9fd50a2c41da50288a976d8ab43d9c0da55
         )
     ELSE()
-        RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Sample sha...)
+        RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
+            PythonQtAPI ${PYTHONQTAPI_VERSION} 71ce9ae21087625ac56862cdb344c51a834b0cc2
+            CHECKED_FILES ${CHECKED_FILES}
+            SHA1_VALUES 3323c41ff51bf6ee532c0e788677b4e280385309
+        )
     ENDIF()
 ELSE()
     # Build and install PythonQt as an external package

@@ -95,7 +95,12 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
                         ecded0273f84c712a4b3f0d6503106f07efb44aa
         )
     ELSE()
-        RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Sample sha...)
+        RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
+            Python ${PYTHON_VERSION} 129d11e3f6a7bf4452e2afc748a8b759947b1cf4
+            CHECKED_FILES ${CHECKED_FILES}
+            SHA1_VALUES 79919deb65bfe038d17122def0fbbb132e0de2a0
+                        54a3aab285b64741df54f8e5fd2d8a2416b70608
+        )
     ENDIF()
 ELSE()
     # Build and install Python as an external package
