@@ -88,11 +88,11 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
             RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Sample sha...)
         ENDIF()
     ELSEIF(APPLE)
-            RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            Python ${PYTHON_VERSION} 1573360f0476cfc2cbe6d30e680fd2d4914a65d4
+        RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
+            Python ${PYTHON_VERSION} 830c72f9662d533201b64838c15db6bd22250440
             CHECKED_FILES ${CHECKED_FILES}
-            SHA1_VALUES b9c0cc945323fbf49fcb879f9d844ce94b9fd584
-                        ecded0273f84c712a4b3f0d6503106f07efb44aa
+            SHA1_VALUES 879062f7a6a3922f41c03c78486f5ed42755553f
+                        24e864b84c055bec51e662c3e0e303082fc437ca
         )
     ELSE()
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
@@ -115,6 +115,11 @@ ELSE()
         SET(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
     ELSE()                      # Use Python's built-in readline
         SET(PYTHON_READLINE_OPTION -DBUILTIN_READLINE=ON)
+    ENDIF()
+
+    IF(APPLE)                   # Use Homebrew's SQLite
+        SET(SQLITE3_INCLUDE_PATH /usr/local/opt/sqlite/include)
+        SET(SQLITE3_LIBRARY /usr/local/opt/sqlite/lib/libsqlite3.a)
     ENDIF()
 
     ExternalProject_Add(
@@ -147,6 +152,11 @@ ELSE()
             # We want development headers
             -DINSTALL_DEVELOPMENT=ON
 
+            # IPython and Jupyter need SQLite
+            -DENABLE_SQLITE3=ON
+            -DSQLITE3_INCLUDE_PATH=${SQLITE3_INCLUDE_PATH}
+            -DSQLITE3_LIBRARY=${SQLITE3_LIBRARY}
+
             # Turn off things we don't want
             -DINSTALL_MANUAL=OFF
             -DBUILD_TESTING=OFF
@@ -161,7 +171,6 @@ ELSE()
             -DENABLE_DBM=OFF
             -DENABLE_GDBM=OFF
             -DENABLE_IPV6=OFF
-            -DENABLE_SQLITE3=OFF
             -DENABLE_TESTCAPI=OFF
             -DENABLE_TKINTER=OFF
 
