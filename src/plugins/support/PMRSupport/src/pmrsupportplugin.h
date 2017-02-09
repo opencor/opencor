@@ -26,6 +26,7 @@ limitations under the License.
 
 #include "i18ninterface.h"
 #include "plugininfo.h"
+#include "preferencesinterface.h"
 
 //==============================================================================
 
@@ -38,16 +39,19 @@ PLUGININFO_FUNC PMRSupportPluginInfo();
 
 //==============================================================================
 
-class PMRSupportPlugin : public QObject, public I18nInterface
+class PMRSupportPlugin : public QObject, public I18nInterface,
+                         public PreferencesInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.PMRSupportPlugin" FILE "pmrsupportplugin.json")
 
     Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PreferencesInterface)
 
 public:
 #include "i18ninterface.inl"
+#include "preferencesinterface.inl"
 };
 
 //==============================================================================

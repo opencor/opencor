@@ -93,6 +93,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mLoadedPluginPlugins(Plugins()),
     mLoadedI18nPlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
+    mLoadedPreferencesPlugins(Plugins()),
     mLoadedWindowPlugins(Plugins()),
     mRawLocale(QString()),
     mMenus(QMap<QString, QMenu *>()),
@@ -146,6 +147,9 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
         if (qobject_cast<GuiInterface *>(plugin->instance()))
             mLoadedGuiPlugins << plugin;
+
+        if (qobject_cast<PreferencesInterface *>(plugin->instance()))
+            mLoadedPreferencesPlugins << plugin;
 
         if (qobject_cast<WindowInterface *>(plugin->instance()))
             mLoadedWindowPlugins << plugin;
@@ -662,6 +666,12 @@ static const auto SettingsStatusBarVisible     = QStringLiteral("StatusBarVisibl
 
 void MainWindow::loadSettings()
 {
+    // Retrieve and set the language to be used by OpenCOR
+    // Note: the setting is forced in order to account for locale-dependent
+    //       initialisations (e.g. see CentralWidget::retranslateUi())...
+
+    setLocale(rawLocale(), true);
+
     // Retrieve the geometry and state of the main window
 
     if (   !restoreGeometry(mSettings->value(SettingsGeometry).toByteArray())
@@ -720,16 +730,6 @@ void MainWindow::loadSettings()
     // Retrieve whether the status bar is to be shown
 
     mGui->actionStatusBar->setChecked(mSettings->value(SettingsStatusBarVisible, true).toBool());
-
-    // Retrieve and set the language to be used by OpenCOR
-    // Note #1: the setting is forced in order to account for locale-dependent
-    //          initialisations (e.g. see CentralWidget::retranslateUi())...
-    // Note #2: this must be done once all the settings have been loaded since
-    //          some plugins may, as a result of the loading of settings, create
-    //          widgets that need translating (e.g. graph panels get created in
-    //          the SingleCellView plugin)...
-
-    setLocale(rawLocale(), true);
 }
 
 //==============================================================================
@@ -769,7 +769,7 @@ void MainWindow::saveSettings() const
 
 void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
 {
-    const QString systemLocale = QLocale::system().name().left(2);
+    QString systemLocale = QLocale::system().name().left(2);
 
     QString oldLocale = mRawLocale.isEmpty()?systemLocale:mRawLocale;
     QString newLocale = pRawLocale.isEmpty()?systemLocale:pRawLocale;
@@ -1037,12 +1037,16 @@ void MainWindow::handleUrl(const QUrl &pUrl)
 
     QString actionName = pUrl.authority();
 
-    if (!actionName.compare("openPluginsDialogBox", Qt::CaseInsensitive)) {
-        // We want to open the Plugins dialog box
+    if (!actionName.compare("openPluginsDialog", Qt::CaseInsensitive)) {
+        // We want to open the Plugins dialog
 
         on_actionPlugins_triggered();
-    } else if (!actionName.compare("openAboutDialogBox", Qt::CaseInsensitive)) {
-        // We want to open the About dialog box
+    } else if (!actionName.compare("openPreferencesDialog", Qt::CaseInsensitive)) {
+        // We want to open the Preferences dialog
+
+        showPreferencesDialog(urlArguments(pUrl));
+    } else if (!actionName.compare("openAboutDialog", Qt::CaseInsensitive)) {
+        // We want to open the About dialog
 
         on_actionAbout_triggered();
     } else if (!actionName.compare("openFile", Qt::CaseInsensitive)) {
@@ -1160,26 +1164,29 @@ void MainWindow::on_actionPlugins_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionPreferences_triggered()
+void MainWindow::showPreferencesDialog(const QString &pPluginName)
 {
     // Show the preferences dialog, if we have at least one plugin that supports
     // the Preferences interface
 
     if (mPluginManager->plugins().count()) {
-        bool pluginsWithPreferences = false;
-
-        foreach (Plugin *plugin, mPluginManager->plugins()) {
-            if (qobject_cast<PreferencesInterface *>(plugin->instance())) {
-                pluginsWithPreferences = true;
-
-                break;
-            }
-        }
-
-        if (pluginsWithPreferences) {
-            PreferencesDialog preferencesDialog(mPluginManager, this);
+        if (mLoadedPreferencesPlugins.count()) {
+            PreferencesDialog preferencesDialog(mPluginManager, pPluginName, this);
 
             preferencesDialog.exec();
+
+            // Let people know about the plugins that had their preferences
+            // changed, if any and if requested
+
+            if (    (preferencesDialog.result() == QMessageBox::Ok)
+                && !preferencesDialog.pluginNames().isEmpty()) {
+                foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+                    PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
+
+                    if (preferencesInterface)
+                        preferencesInterface->preferencesChanged(preferencesDialog.pluginNames());
+                }
+            }
         } else {
             warningMessageBox(tr("Preferences"),
                               tr("No plugins have preferences."));
@@ -1188,6 +1195,15 @@ void MainWindow::on_actionPreferences_triggered()
         warningMessageBox(tr("Preferences"),
                           tr("No plugins could be found."));
     }
+}
+
+//==============================================================================
+
+void MainWindow::on_actionPreferences_triggered()
+{
+    // Show the preferences dialog
+
+    showPreferencesDialog();
 }
 
 //==============================================================================

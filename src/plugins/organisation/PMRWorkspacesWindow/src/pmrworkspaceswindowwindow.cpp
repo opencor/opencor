@@ -25,11 +25,13 @@ limitations under the License.
 #include "filemanager.h"
 #include "i18ninterface.h"
 #include "toolbarwidget.h"
+#include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrworkspacemanager.h"
 #include "pmrworkspaceswindownewworkspacedialog.h"
 #include "pmrworkspaceswindowwidget.h"
 #include "pmrworkspaceswindowwindow.h"
+#include "preferencesinterface.h"
 
 //==============================================================================
 
@@ -37,11 +39,13 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QDesktopServices>
 #include <QDir>
 #include <QGraphicsColorizeEffect>
 #include <QMainWindow>
 #include <QSettings>
 #include <QTimer>
+#include <QUrl>
 
 //==============================================================================
 
@@ -54,7 +58,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::PmrWorkspacesWindowWindow),
     mAuthenticated(false),
-    mColorizeEffect(new QGraphicsColorizeEffect(this))
+    mWaitingForPmrWebService(false)
 {
     // Set up the GUI
 
@@ -69,6 +73,10 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     //          colorisation effect...
 
     static const QIcon PlusIcon = QIcon(":/oxygen/actions/list-add.png");
+    static const QIcon UserIcon = QIcon(":/oxygen/apps/preferences-desktop-user-password.png");
+
+    static const int UserIconWidth = UserIcon.availableSizes().first().width();
+    static const int UserIconHeight = UserIcon.availableSizes().first().height();
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
     QIcon folderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
@@ -83,6 +91,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     toolBarWidget->addAction(mGui->actionNew);
     toolBarWidget->addSeparator();
     toolBarWidget->addAction(mGui->actionReload);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionPreferences);
 
     QWidget *spacer = new QWidget(toolBarWidget);
 
@@ -91,17 +101,22 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     toolBarWidget->addWidget(spacer);
     toolBarWidget->addAction(mGui->actionPmr);
 
-    toolBarWidget->widgetForAction(mGui->actionPmr)->setGraphicsEffect(mColorizeEffect);
+    mLoggedOnIcon = Core::tintedIcon(UserIcon, UserIconWidth, UserIconHeight, Qt::darkGreen);
+    mLoggedOffIcon = Core::tintedIcon(UserIcon, UserIconWidth, UserIconHeight, Qt::darkRed);
 
     mGui->layout->addWidget(toolBarWidget);
 
     // Create an instance of our PMR web service
 
-    mPmrWebService = new PMRSupport::PmrWebService(this);
+    QString pmrUrl = PreferencesInterface::preference(PMRSupport::PluginName,
+                                                      PMRSupport::SettingsPreferencesPmrUrl,
+                                                      PMRSupport::SettingsPreferencesPmrUrlDefault).toString();
+
+    mPmrWebService = new PMRSupport::PmrWebService(pmrUrl, this);
 
     // Create and add our workspaces widget
 
-    mPmrWorkspacesWindowWidget = new PmrWorkspacesWindowWidget(mPmrWebService, this);
+    mPmrWorkspacesWindowWidget = new PmrWorkspacesWindowWidget(pmrUrl, mPmrWebService, this);
 
     mPmrWorkspacesWindowWidget->setObjectName("PmrWorkspacesWindowWidget");
 
@@ -134,6 +149,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
             this, SLOT(showError(const QString &)));
 
     connect(mPmrWebService, SIGNAL(authenticated(const bool &)),
+            this, SLOT(updateGui()));
+    connect(mPmrWebService, SIGNAL(cancelled()),
             this, SLOT(updateGui()));
 
     connect(mPmrWebService, SIGNAL(workspaces(const PMRSupport::PmrWorkspaces &)),
@@ -222,6 +239,19 @@ Ui::PmrWorkspacesWindowWindow * PmrWorkspacesWindowWindow::gui() const
     // Return our GUI
 
     return mGui;
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
+{
+    // Update both our PMR web service and workspaces widget, and then update
+    // our GUI (which will, as a result, also update our workspaces widget)
+
+    mPmrWebService->update(pPmrUrl);
+    mPmrWorkspacesWindowWidget->update(pPmrUrl);
+
+    updateGui();
 }
 
 //==============================================================================
@@ -320,10 +350,12 @@ void PmrWorkspacesWindowWindow::updateGui()
 
     mAuthenticated = mPmrWebService->isAuthenticated();
 
+    mWaitingForPmrWebService = false;
+
     Core::showEnableAction(mGui->actionNew, true, mAuthenticated);
     Core::showEnableAction(mGui->actionReload, true, mAuthenticated);
 
-    mColorizeEffect->setColor(mAuthenticated?Qt::darkGreen:Qt::darkRed);
+    mGui->actionPmr->setIcon(mAuthenticated?mLoggedOnIcon:mLoggedOffIcon);
 
     retranslateActionPmr();
 
@@ -384,9 +416,23 @@ void PmrWorkspacesWindowWindow::on_actionReload_triggered()
 
 //==============================================================================
 
+void PmrWorkspacesWindowWindow::on_actionPreferences_triggered()
+{
+    // Show the preferences for PMR support
+
+    QDesktopServices::openUrl(QUrl("opencor://openPreferencesDialog/PMRSupport"));
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowWindow::on_actionPmr_triggered()
 {
     // Log on/off to/ PMR
+
+    if (mWaitingForPmrWebService)
+        return;
+
+    mWaitingForPmrWebService = true;
 
     if (mAuthenticated) {
         if (Core::questionMessageBox(windowTitle(),

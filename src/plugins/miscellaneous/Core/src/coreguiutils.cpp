@@ -38,6 +38,9 @@ limitations under the License.
 #include <QFileInfo>
 #include <QFont>
 #include <QFrame>
+#include <QGraphicsColorizeEffect>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsScene>
 #include <QIODevice>
 #include <QLabel>
 #include <QLayout>
@@ -202,8 +205,8 @@ QStringList getOpenFileNames(const QString &pCaption,
             // Note #1: we use the last open file name to determine the folder
             //          that is to be remembered since on Windows 7, at least,
             //          it's possible to search for files from within the file
-            //          dialog box, and the last file name should be the one we
-            //          are most 'interested' in...
+            //          dialog, and the last file name should be the one we are
+            //          most 'interested' in...
             // Note #2: normally, we would use QFileInfo::canonicalPath(), but
             //          this requires an existing file, so instead we use
             //          QFileInfo::path()...
@@ -617,6 +620,45 @@ QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
 
 //==============================================================================
 
+QIcon tintedIcon(const QIcon &pIcon, const int &pWidth, const int &pHeight,
+                 const QColor &pColor)
+{
+    // Create and return a tinted icon using the given icon and colour
+
+    QGraphicsScene scene(0, 0, pWidth, pHeight);
+    QGraphicsPixmapItem pixmapItem;
+    QGraphicsColorizeEffect effect;
+
+    effect.setColor(pColor);
+
+    pixmapItem.setGraphicsEffect(&effect);
+    pixmapItem.setPixmap(pIcon.pixmap(pWidth, pHeight));
+
+    scene.addItem(&pixmapItem);
+
+    QImage image(pWidth, pHeight, QImage::Format_ARGB32_Premultiplied);
+    QPainter painter(&image);
+
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.fillRect(image.rect(), Qt::transparent);
+
+    scene.render(&painter);
+
+    return QPixmap::fromImage(image);
+}
+
+//==============================================================================
+
+QIcon tintedIcon(const QString &pIcon, const int &pWidth, const int &pHeight,
+                 const QColor &pColor)
+{
+    // Create and return a tinted icon using the given icon and colour
+
+    return tintedIcon(QIcon(pIcon), pWidth, pHeight, pColor);
+}
+
+//==============================================================================
+
 QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
                     const int &pBaseWidth, const int &pBaseHeight,
                     const int &pOverlayLeft, const int &pOverlayTop,
@@ -625,7 +667,7 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
     // Create and return an overlayed icon using the given base and overlay
     // icons
 
-    QImage image = QImage(pBaseWidth, pBaseHeight, QImage::Format_ARGB32_Premultiplied);
+    QImage image(pBaseWidth, pBaseHeight, QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&image);
 
     painter.setCompositionMode(QPainter::CompositionMode_Source);
@@ -764,7 +806,7 @@ bool opencorActive()
 {
     // Return whether OpenCOR is active
     // Note: we only consider OpenCOR to be active if the main window or one of
-    //       its dockable windows is active. In other words, if a dialog box is
+    //       its dockable windows is active. In other words, if a dialog is
     //       opened, then we don't consider OpenCOR active since it could
     //       disturb our user's workflow...
 

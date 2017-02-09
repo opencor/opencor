@@ -41,15 +41,16 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWebService::PmrWebService(QObject *pParent) :
+PmrWebService::PmrWebService(const QString &pPmrUrl, QObject *pParent) :
     QObject(pParent),
+    mPmrUrl(pPmrUrl),
     mUrlExposures(QMap<QString, PmrExposure *>()),
     mFileExposuresLeftCount(QMap<PmrExposure *, int>())
 {
     // Create a PMR web service manager so that we can retrieve various things
     // from PMR
 
-    mPmrWebServiceManager = new PmrWebServiceManager(this);
+    mPmrWebServiceManager = new PmrWebServiceManager(pPmrUrl, this);
 
     // Forward any signal we receive from our PMR web service manager
 
@@ -59,6 +60,8 @@ PmrWebService::PmrWebService(QObject *pParent) :
             this, SIGNAL(authenticated(const bool &)));
     connect(mPmrWebServiceManager, SIGNAL(error(const QString &)),
             this, SIGNAL(error(const QString &)));
+    connect(mPmrWebServiceManager, SIGNAL(cancelled()),
+            this, SIGNAL(cancelled()));
 }
 
 //==============================================================================
@@ -85,7 +88,7 @@ void PmrWebService::requestExposures() const
 {
     // Request the list of exposures from PMR
 
-    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(PmrUrl+"/exposure", false);
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(mPmrUrl+"/exposure", false);
 
     if (pmrResponse) {
         connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
@@ -231,7 +234,7 @@ void PmrWebService::requestNewWorkspace(const QString &pName,
                                                "] } }";
 
     QJsonDocument createWorkspaceJson = QJsonDocument::fromJson(QString(CreateWorkspaceJson).arg(pName, pDescription).toUtf8());
-    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(PmrUrl+"/workspace/+/addWorkspace",
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(mPmrUrl+"/workspace/+/addWorkspace",
                                                                         true, true, createWorkspaceJson);
 
     if (pmrResponse) {
@@ -262,7 +265,7 @@ void PmrWebService::requestWorkspaces() const
 {
     // Retrieve all the workspaces
 
-    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(PmrUrl+"/my-workspaces", true);
+    PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(mPmrUrl+"/my-workspaces", true);
 
     if (pmrResponse) {
         connect(pmrResponse, SIGNAL(response(const QJsonDocument &)),
@@ -466,6 +469,17 @@ void PmrWebService::workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *pWork
 
     emit busy(false);
     emit workspaceSynchronized(pWorkspace);
+}
+
+//==============================================================================
+
+void PmrWebService::update(const QString &pPmrUrl)
+{
+    // Keep track of the new PMR URL and then update our PMR web service manager
+
+    mPmrUrl = pPmrUrl;
+
+    mPmrWebServiceManager->update(pPmrUrl);
 }
 
 //==============================================================================

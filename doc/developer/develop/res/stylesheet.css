@@ -14,6 +14,11 @@ span.label {
     line-height: 12px;
 }
 
+span.bug {
+    background: rgb(225, 29, 33);
+    color: rgb(255, 255, 255);
+}
+
 span.feature {
     background: rgb(0, 152, 0);
     color: rgb(255, 255, 255);
@@ -23,27 +28,22 @@ span.improvement {
     background: rgb(251, 202, 4);
 }
 
-span.bug {
-    background: rgb(225, 29, 33);
-    color: rgb(255, 255, 255);
-}
-
-span.task {
-    background: rgb(254, 242, 192);
-}
-
-span.regression {
-    background: rgb(191, 218, 220);
-}
-
-span.windows {
-    background: rgb(191, 229, 191);
-}
-
 span.linux {
     background: rgb(250, 216, 199);
 }
 
 span.macos {
     background: rgb(199, 222, 248);
+}
+
+span.regression {
+    background: rgb(191, 218, 220);
+}
+
+span.task {
+    background: rgb(254, 242, 192);
+}
+
+span.windows {
+    background: rgb(191, 229, 191);
 }

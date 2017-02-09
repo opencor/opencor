@@ -39,10 +39,6 @@ class PmrWebServiceManager;
 
 //==============================================================================
 
-static const auto PmrUrl = QStringLiteral("https://models.physiomeproject.org");
-
-//==============================================================================
-
 static const auto RequestMimeType    = QStringLiteral("application/vnd.physiome.pmr2.json.0");
 static const auto CollectionMimeType = QStringLiteral("application/vnd.physiome.pmr2.json.1");
 
@@ -53,7 +49,7 @@ class PMRSUPPORT_EXPORT PmrWebService : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrWebService(QObject *pParent);
+    explicit PmrWebService(const QString &pPmrUrl, QObject *pParent);
 
     bool isAuthenticated() const;
     void authenticate(const bool &pAuthenticate = true);
@@ -71,6 +67,8 @@ public:
     void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
                                      const bool &pPush);
 
+    void update(const QString &pPmrUrl);
+
     static QString getEmptyDirectory();
 
 private:
@@ -79,6 +77,8 @@ private:
         CloneExposureWorkspace,
         RequestExposureFiles
     };
+
+    QString mPmrUrl;
 
     PmrWebServiceManager *mPmrWebServiceManager;
 
@@ -102,6 +102,7 @@ signals:
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
     void error(const QString &pMessage);
+    void cancelled();
 
     void workspaces(const PMRSupport::PmrWorkspaces &pWorkspaces);
 

@@ -28,13 +28,13 @@ limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class PmrWorkspacesWindowWindow;
-}
+#include <QIcon>
 
 //==============================================================================
 
-class QGraphicsColorizeEffect;
+namespace Ui {
+    class PmrWorkspacesWindowWindow;
+}
 
 //==============================================================================
 
@@ -72,6 +72,8 @@ public:
 
     Ui::PmrWorkspacesWindowWindow * gui() const;
 
+    void update(const QString &pPmrUrl);
+
 protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 
@@ -83,13 +85,17 @@ private:
 
     bool mAuthenticated;
 
-    QGraphicsColorizeEffect *mColorizeEffect;
+    QIcon mLoggedOnIcon;
+    QIcon mLoggedOffIcon;
+
+    bool mWaitingForPmrWebService;
 
     void retranslateActionPmr();
 
 private slots:
     void on_actionNew_triggered();
     void on_actionReload_triggered();
+    void on_actionPreferences_triggered();
     void on_actionPmr_triggered();
 
     void busy(const bool &pBusy);

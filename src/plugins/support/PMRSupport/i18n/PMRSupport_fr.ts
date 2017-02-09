@@ -45,6 +45,13 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PMRSupport::PmrWebServiceManager</name>
+    <message>
+        <source>PMR Authentication</source>
+        <translation>Authentification PMR</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::PMRSupport::PmrWebServiceResponse</name>
     <message>
         <source>PMR response has unexpected content type</source>
@@ -58,8 +65,12 @@
         <translation>Une erreur s&apos;est produite lors du clonage de l&apos;espace de travail.</translation>
     </message>
     <message>
-        <source>An error occurred while trying to commit to the workspace.</source>
-        <translation>Une erreur s&apos;est produite lors de la validation de l&apos;espace de travail.</translation>
+        <source>An error occurred while trying to commit to the workspace (you must provide both a name and an email).</source>
+        <translation>Une erreur s&apos;est produite lors de la validation de l&apos;espace de travail (vous devez fournir un nom et un email).</translation>
+    </message>
+    <message>
+        <source>An error occurred while trying to commit to the workspace (you must provide a message).</source>
+        <translation>Une erreur s&apos;est produite lors de la validation de l&apos;espace de travail (vous devez mettre un message).</translation>
     </message>
     <message>
         <source>An error occurred while trying to commit the merge.</source>
@@ -112,6 +123,21 @@
     <message>
         <source>An error occurred while trying to push the workspace.</source>
         <translation>Une erreur s&apos;est produite lors du poussage de l&apos;espace de travail.</translation>
+    </message>
+</context>
+<context>
+    <name>PmrSupportPreferencesWidget</name>
+    <message>
+        <source>Name:</source>
+        <translation>Nom :</translation>
+    </message>
+    <message>
+        <source>Email:</source>
+        <translation>Email :</translation>
+    </message>
+    <message>
+        <source>PMR:</source>
+        <translation>PMR :</translation>
     </message>
 </context>
 </TS>

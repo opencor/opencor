@@ -34,7 +34,8 @@ class Tests : public QObject
 
 private:
     void doRuntimeTest(const QString &pFileName, const QString &pCellmlVersion,
-                       const QStringList &pModelParameters);
+                       const QStringList &pModelParameters,
+                       const bool &pIsValid = true);
 
 private slots:
     void runtimeTests();

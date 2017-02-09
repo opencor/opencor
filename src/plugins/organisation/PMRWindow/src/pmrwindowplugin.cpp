@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "coreguiutils.h"
+#include "pmrsupportpreferenceswidget.h"
 #include "pmrwindowplugin.h"
 #include "pmrwindowwindow.h"
 
@@ -147,6 +148,31 @@ void PMRWindowPlugin::handleUrl(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// Preferences interface
+//==============================================================================
+
+Preferences::PreferencesWidget * PMRWindowPlugin::preferencesWidget()
+{
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+void PMRWindowPlugin::preferencesChanged(const QStringList &pPluginNames)
+{
+    // Check whether it's the PMR Support preferences that have changed and, if
+    // so, then update ourselves accordingly
+
+    if (pPluginNames.contains(PMRSupport::PluginName)) {
+        mPmrWindowWindow->update(PreferencesInterface::preference(PMRSupport::PluginName,
+                                                                  PMRSupport::SettingsPreferencesPmrUrl,
+                                                                  PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
+    }
 }
 
 //==============================================================================

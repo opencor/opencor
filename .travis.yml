@@ -15,7 +15,6 @@ branches:
   only:
     - master
     - /^\d+\.\d+(\.\d+)?$/
-    - qtwebengine
     - travis-ci
 
 install:

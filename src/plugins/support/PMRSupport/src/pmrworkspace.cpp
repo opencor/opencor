@@ -20,9 +20,11 @@ limitations under the License.
 // PMR workspace
 //==============================================================================
 
+#include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrworkspace.h"
 #include "pmrworkspacemanager.h"
+#include "preferencesinterface.h"
 
 //==============================================================================
 
@@ -266,10 +268,14 @@ void PmrWorkspace::clone(const QString &pPath)
 
     git_strarray_free(&authorizationStrArray);
 
-    // Open ourselves in the given path and let people know that we are all done
-    // with the cloning
+    // Open ourselves in the given path and ask the workspace manager to keep
+    // track of us
+    // Note: we don't want to refresh our status as part of opening ourselves.
+    //       Indeed, this may require updating the GUI and there is no guarantee
+    //       that cloning is being done in the same thread as our GUI (see
+    //       PmrWebService::requestWorkspaceClone() for example)...
 
-    open(pPath);
+    open(pPath, false);
 
     PmrWorkspaceManager::instance()->addWorkspace(this);
 
@@ -299,13 +305,14 @@ bool PmrWorkspace::doCommit(const char *pMessage, const size_t &pParentCount,
     // Commit everything that is staged
 
     git_signature *author = 0;
+    QByteArray name = PreferencesInterface::preference(PluginName, SettingsPreferencesName).toByteArray();
+    QByteArray email = PreferencesInterface::preference(PluginName, SettingsPreferencesEmail).toByteArray();
     git_index *index = 0;
+    git_oid treeId;
     git_tree *tree = 0;
     git_oid commitId;
-    git_oid treeId;
 
-    bool res =    git_signature_now(&author, "Test Author",
-                                    "testing@staging.physiomeproject.org")
+    bool res =    git_signature_now(&author, name.data(), email.data())
                || git_repository_index(&index, mGitRepository)
                || git_index_write_tree(&treeId, index)
                || git_tree_lookup(&tree, mGitRepository, &treeId)
@@ -374,11 +381,13 @@ bool PmrWorkspace::commit(const QString &pMessage)
                            (const git_commit **) (&parent));
 
             if (!res)
-                emitGitError(tr("An error occurred while trying to commit to the workspace."));
+                emitGitError(tr("An error occurred while trying to commit to the workspace (you must provide both a name and an email)."));
         }
 
         if (parent)
             git_commit_free(parent);
+    } else {
+        emitGitError(tr("An error occurred while trying to commit to the workspace (you must provide a message)."));
     }
 
     git_buf_free(&message);
@@ -470,7 +479,7 @@ bool PmrWorkspace::isOpen() const
 
 //==============================================================================
 
-bool PmrWorkspace::open(const QString &pPath)
+bool PmrWorkspace::open(const QString &pPath, const bool &pRefreshStatus)
 {
     // Open ourselves by first making sure that we are closed
 
@@ -486,7 +495,8 @@ bool PmrWorkspace::open(const QString &pPath)
         QByteArray pathByteArray = pPath.toUtf8();
 
         if (!git_repository_open(&mGitRepository, pathByteArray.constData())) {
-            refreshStatus();
+            if (pRefreshStatus)
+                refreshStatus();
 
             return true;
         }

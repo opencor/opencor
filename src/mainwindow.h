@@ -90,6 +90,7 @@ private:
     Plugins mLoadedPluginPlugins;
     Plugins mLoadedI18nPlugins;
     Plugins mLoadedGuiPlugins;
+    Plugins mLoadedPreferencesPlugins;
     Plugins mLoadedWindowPlugins;
 
     QString mRawLocale;
@@ -129,6 +130,8 @@ private:
     void restart(const bool &pSaveSettings) const;
 
     void showEnableActions(const QList<QAction *> &pActions);
+
+    void showPreferencesDialog(const QString &pPluginName = QString());
 
 private slots:
     void openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl);

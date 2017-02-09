@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 1, "month": 2, "year": 2017,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 8, "month": 2, "year": 2017,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -33,6 +33,15 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "PMR window",
                              "entries": [
                                { "type": "Improved", "description": "Cloning of a workspace." }
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Support",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML support",
+                             "entries": [
+                               { "type": "Improved", "description": "Generation of error messages." }
                              ]
                            }
                          ]

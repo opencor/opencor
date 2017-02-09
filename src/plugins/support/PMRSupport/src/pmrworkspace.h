@@ -87,7 +87,7 @@ public:
     bool commitMerge();
     bool isMerging() const;
     bool isOpen() const;
-    bool open(const QString &pPath);
+    bool open(const QString &pPath, const bool &pRefreshStatus = true);
     void synchronize(const bool &pPush);
 
     enum WorkspaceStatus {

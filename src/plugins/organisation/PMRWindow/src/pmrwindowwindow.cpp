@@ -23,9 +23,11 @@ limitations under the License.
 #include "borderedwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
+#include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrwindowwidget.h"
 #include "pmrwindowwindow.h"
+#include "preferencesinterface.h"
 #include "toolbarwidget.h"
 
 //==============================================================================
@@ -76,8 +78,6 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
 #ifdef Q_OS_MAC
     mFilterValue->setAttribute(Qt::WA_MacShowFocusRect, false);
-    // Note: the above removes the focus border since it messes up the look of
-    //       our URL value widget...
 #endif
 
     connect(mFilterValue, SIGNAL(textChanged(const QString &)),
@@ -116,7 +116,10 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     // Create an instance of our PMR web service
 
-    mPmrWebService = new PMRSupport::PmrWebService(this);
+    mPmrWebService = new PMRSupport::PmrWebService(PreferencesInterface::preference(PMRSupport::PluginName,
+                                                                                    PMRSupport::SettingsPreferencesPmrUrl,
+                                                                                    PMRSupport::SettingsPreferencesPmrUrlDefault).toString(),
+                                                   this);
 
     // Some connections to process responses from our PMR web service
 
@@ -190,6 +193,17 @@ void PmrWindowWindow::resizeEvent(QResizeEvent *pEvent)
     // Resize our busy widget
 
     mPmrWindowWidget->resizeBusyWidget();
+}
+
+//==============================================================================
+
+void PmrWindowWindow::update(const QString &pPmrUrl)
+{
+    // Update our PMR web service and then reload ourselves
+
+    mPmrWebService->update(pPmrUrl);
+
+    on_actionReload_triggered();
 }
 
 //==============================================================================

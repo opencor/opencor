@@ -20,7 +20,13 @@ limitations under the License.
 // PMR support plugin
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "pmrsupportplugin.h"
+#include "pmrsupportpreferenceswidget.h"
+
+//==============================================================================
+
+#include <QMainWindow>
 
 //==============================================================================
 
@@ -37,7 +43,7 @@ PLUGININFO_FUNC PMRSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
 
     return new PluginInfo(PluginInfo::Support, false, false,
-                          QStringList() << "Core" << "libgit2" << "OAuth" << "zlib",
+                          QStringList() << "Core" << "libgit2" << "OAuth" << "WebViewerWidget" << "zlib",
                           descriptions);
 }
 
@@ -51,6 +57,26 @@ void PMRSupportPlugin::retranslateUi()
     // Note: even though we don't handle this interface, we still want to
     //       support it since some other aspects of our plugin are
     //       multilingual...
+}
+
+//==============================================================================
+// Preferences interface
+//==============================================================================
+
+Preferences::PreferencesWidget * PMRSupportPlugin::preferencesWidget()
+{
+    // Return our preferences widget
+
+    return new PmrSupportPreferencesWidget(Core::mainWindow());
+}
+
+//==============================================================================
+
+void PMRSupportPlugin::preferencesChanged(const QStringList &pPluginNames)
+{
+    Q_UNUSED(pPluginNames);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

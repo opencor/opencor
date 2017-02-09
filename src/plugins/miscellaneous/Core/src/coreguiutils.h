@@ -125,6 +125,11 @@ QString CORE_EXPORT iconDataUri(const QString &pIcon, const int &pWidth,
                                 const int &pHeight,
                                 const QIcon::Mode &pMode = QIcon::Normal);
 
+QIcon CORE_EXPORT tintedIcon(const QIcon &pIcon, const int &pWidth,
+                             const int &pHeight, const QColor &pColor);
+QIcon CORE_EXPORT tintedIcon(const QString &pIcon, const int &pWidth,
+                             const int &pHeight, const QColor &pColor);
+
 QIcon CORE_EXPORT overlayedIcon(const QIcon &pBaseIcon,
                                 const QIcon &pOverlayIcon,
                                 const int &pBaseWidth, const int &pBaseHeight,

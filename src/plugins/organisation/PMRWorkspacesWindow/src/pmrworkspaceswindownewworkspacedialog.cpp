@@ -96,7 +96,7 @@ void PmrWorkspacesWindowNewWorkspaceDialog::retranslateUi()
 
 //==============================================================================
 
-const QString PmrWorkspacesWindowNewWorkspaceDialog::title() const
+QString PmrWorkspacesWindowNewWorkspaceDialog::title() const
 {
     // Return our title
 
@@ -105,7 +105,7 @@ const QString PmrWorkspacesWindowNewWorkspaceDialog::title() const
 
 //==============================================================================
 
-const QString PmrWorkspacesWindowNewWorkspaceDialog::description() const
+QString PmrWorkspacesWindowNewWorkspaceDialog::description() const
 {
     // Return our description
 
@@ -114,7 +114,7 @@ const QString PmrWorkspacesWindowNewWorkspaceDialog::description() const
 
 //==============================================================================
 
-const QString PmrWorkspacesWindowNewWorkspaceDialog::path() const
+QString PmrWorkspacesWindowNewWorkspaceDialog::path() const
 {
     // Return our path
 
