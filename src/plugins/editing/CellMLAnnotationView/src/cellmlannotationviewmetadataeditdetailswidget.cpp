@@ -61,6 +61,7 @@ limitations under the License.
 #include <QWebElement>
 #include <QWebFrame>
 #include <QWebPage>
+#include <QWebView>
 
 //==============================================================================
 
@@ -313,11 +314,11 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     connect(mOutputOntologicalTerms, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu()));
 
-    mOutputOntologicalTerms->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    mOutputOntologicalTerms->webView()->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
-    connect(mOutputOntologicalTerms->page(), SIGNAL(linkClicked(const QUrl &)),
+    connect(mOutputOntologicalTerms->webView()->page(), SIGNAL(linkClicked(const QUrl &)),
             this, SLOT(linkClicked()));
-    connect(mOutputOntologicalTerms->page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
+    connect(mOutputOntologicalTerms->webView()->page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
             this, SLOT(linkHovered()));
 
     // Add our output message and output for ontological terms to our output
@@ -424,7 +425,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     // whether the file is un/locked and whether they are already associated
     // with the CellML element
 
-    QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
+    QWebElement documentElement = mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement();
 
     foreach (const QString &itemInformationSha1, mItemInformationSha1s) {
         CellmlAnnotationViewMetadataEditDetailsItem item = mItemsMapping.value(itemInformationSha1);
@@ -505,7 +506,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputHeaders()
 {
     // Update our output headers
 
-    QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
+    QWebElement documentElement = mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement();
 
     documentElement.findFirst("th[id=nameOrQualifier]").setInnerXml(tr("Name"));
     documentElement.findFirst("th[id=resource]").setInnerXml(tr("Resource"));
@@ -542,7 +543,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
     mItemsMapping.clear();
     mEnabledItems.clear();
 
-    mOutputOntologicalTerms->setHtml(QString());
+    mOutputOntologicalTerms->webView()->setHtml(QString());
 
     // Populate our web view, but only if there is at least one item
 
@@ -551,8 +552,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
     if (pItems.count()) {
         // Initialise our web view
 
-        mOutputOntologicalTerms->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16),
-                                                                             Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled)));
+        mOutputOntologicalTerms->webView()->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16),
+                                                                                        Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled)));
 
         // Add the items
 
@@ -597,7 +598,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
                                 "</tr>\n";
         }
 
-        mOutputOntologicalTerms->page()->mainFrame()->documentElement().findFirst("tbody").appendInside(ontologicalTerms);
+        mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement().findFirst("tbody").appendInside(ontologicalTerms);
 
         updateOutputHeaders();
     } else {
@@ -672,7 +673,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
     static const QString Highlighted = "highlighted";
     static const QString Selected = "selected";
 
-    QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
+    QWebElement documentElement = mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement();
     QString itemInformationSha1 = mLink.isEmpty()?QString():Core::sha1(mLink);
 
     if (itemInformationSha1.compare(mItemInformationSha1)) {
@@ -823,7 +824,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 
         mEnabledItems.insert(mLink, false);
 
-        QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
+        QWebElement documentElement = mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement();
 
         documentElement.findFirst(QString("td[id=button_%1]").arg(mLink)).setStyleProperty("display", "none");
         documentElement.findFirst(QString("td[id=disabledButton_%1]").arg(mLink)).setStyleProperty("display", "table-cell");

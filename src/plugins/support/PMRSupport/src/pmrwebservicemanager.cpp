@@ -36,6 +36,7 @@ limitations under the License.
 #include <QLayout>
 #include <QMainWindow>
 #include <QTimer>
+#include <QWebView>
 
 //==============================================================================
 
@@ -122,9 +123,9 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 
         webViewer->setContextMenuPolicy(Qt::NoContextMenu);
 
-        connect(webViewer, SIGNAL(loadProgress(int)),
+        connect(webViewer->webView(), SIGNAL(loadProgress(int)),
                 this, SLOT(loadProgress(const int &)));
-        connect(webViewer, SIGNAL(loadFinished(bool)),
+        connect(webViewer->webView(), SIGNAL(loadFinished(bool)),
                 this, SLOT(loadFinished()));
 
         mProgressBarWidget = new Core::ProgressBarWidget(mWebViewerDialog);
@@ -148,7 +149,7 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 
     mWebViewerDialog->setWindowTitle(tr("PMR Authentication"));
 
-    qobject_cast<QWebView *>(mWebViewerDialog->layout()->itemAt(0)->widget())->setUrl(pUrl);
+    qobject_cast<WebViewerWidget::WebViewerWidget *>(mWebViewerDialog->layout()->itemAt(0)->widget())->webView()->load(pUrl);
 
     mWebViewerDialog->exec();
 }

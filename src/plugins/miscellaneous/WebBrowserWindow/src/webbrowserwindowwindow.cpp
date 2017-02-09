@@ -42,6 +42,7 @@ limitations under the License.
 #include <QSettings>
 #include <QTimer>
 #include <QWebHistory>
+#include <QWebView>
 
 //==============================================================================
 
@@ -146,12 +147,12 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     // Various connections to handle our web browser window widget
 
-    connect(mWebBrowserWindowWidget, SIGNAL(urlChanged(const QUrl &)),
+    connect(mWebBrowserWindowWidget->webView(), SIGNAL(urlChanged(const QUrl &)),
             this, SLOT(urlChanged(const QUrl &)));
 
-    connect(mWebBrowserWindowWidget, SIGNAL(loadProgress(int)),
+    connect(mWebBrowserWindowWidget->webView(), SIGNAL(loadProgress(int)),
             this, SLOT(loadProgress(const int &)));
-    connect(mWebBrowserWindowWidget, SIGNAL(loadFinished(bool)),
+    connect(mWebBrowserWindowWidget->webView(), SIGNAL(loadFinished(bool)),
             this, SLOT(loadFinished()));
 
     // Create and populate our context menu
@@ -298,9 +299,9 @@ void WebBrowserWindowWindow::on_actionBack_triggered()
 {
     // Go to the previous page
 
-    mUrl = mWebBrowserWindowWidget->history()->backItem().url().toString();
+    mUrl = mWebBrowserWindowWidget->webView()->history()->backItem().url().toString();
 
-    mWebBrowserWindowWidget->back();
+    mWebBrowserWindowWidget->webView()->back();
 }
 
 //==============================================================================
@@ -309,9 +310,9 @@ void WebBrowserWindowWindow::on_actionForward_triggered()
 {
     // Go to the next page
 
-    mUrl = mWebBrowserWindowWidget->history()->forwardItem().url().toString();
+    mUrl = mWebBrowserWindowWidget->webView()->history()->forwardItem().url().toString();
 
-    mWebBrowserWindowWidget->forward();
+    mWebBrowserWindowWidget->webView()->forward();
 }
 
 //==============================================================================
@@ -320,7 +321,7 @@ void WebBrowserWindowWindow::on_actionCopy_triggered()
 {
     // Copy the current slection to the clipboard
 
-    QApplication::clipboard()->setText(mWebBrowserWindowWidget->selectedText());
+    QApplication::clipboard()->setText(mWebBrowserWindowWidget->webView()->selectedText());
 }
 
 //==============================================================================
@@ -361,7 +362,7 @@ void WebBrowserWindowWindow::on_actionPrint_triggered()
     QPrintDialog printDialog(&printer);
 
     if (printDialog.exec() == QDialog::Accepted)
-        mWebBrowserWindowWidget->print(&printer);
+        mWebBrowserWindowWidget->webView()->print(&printer);
 }
 
 //==============================================================================
@@ -379,7 +380,7 @@ void WebBrowserWindowWindow::on_actionReload_triggered()
 {
     // Reload the URL
 
-    mWebBrowserWindowWidget->reload();
+    mWebBrowserWindowWidget->webView()->reload();
 }
 
 //==============================================================================
@@ -398,7 +399,7 @@ void WebBrowserWindowWindow::returnPressed()
     else
         mUrl = mUrlValue->text();
 
-    mWebBrowserWindowWidget->load(mUrl);
+    mWebBrowserWindowWidget->webView()->load(mUrl);
 }
 
 //==============================================================================

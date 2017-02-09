@@ -30,11 +30,24 @@ limitations under the License.
 //==============================================================================
 
 #include <QString>
-#include <QWebView>
+#include <QWebPage>
+
+//==============================================================================
+
+class QWebView;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class ProgressBarWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace WebViewerWidget {
 
 //==============================================================================
@@ -59,7 +72,7 @@ private:
 
 //==============================================================================
 
-class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWebView,
+class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWidget,
                                                public Core::CommonWidget
 {
     Q_OBJECT
@@ -69,6 +82,8 @@ public:
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
+
+    QWebView * webView() const;
 
     QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
@@ -110,6 +125,9 @@ private:
     bool mOverridingCursor;
 
     bool mProgressBarEnabled;
+
+    QWebView *mWebView;
+    Core::ProgressBarWidget *mProgressBarWidget;
 
     void emitZoomRelatedSignals();
 

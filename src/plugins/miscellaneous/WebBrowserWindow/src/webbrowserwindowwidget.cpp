@@ -25,6 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QWebHistory>
+#include <QWebView>
 
 //==============================================================================
 
@@ -59,7 +60,7 @@ void WebBrowserWindowWidget::clear()
 
     goToHomePage();
 
-    history()->clear();
+    webView()->history()->clear();
 }
 
 //==============================================================================
