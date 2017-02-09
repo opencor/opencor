@@ -148,7 +148,7 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 
     mWebViewerDialog->setWindowTitle(tr("PMR Authentication"));
 
-    qobject_cast<WebViewerWidget::WebViewerWidget *>(mWebViewerDialog->layout()->itemAt(0)->widget())->load(pUrl);
+    qobject_cast<QWebView *>(mWebViewerDialog->layout()->itemAt(0)->widget())->setUrl(pUrl);
 
     mWebViewerDialog->exec();
 }
