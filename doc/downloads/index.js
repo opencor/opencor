@@ -37,8 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>CellML support:</strong> generate an error when a model has more than one variable of integration (see issue <a href=\"https://github.com/opencor/opencor/issues/1210\">#1210</a>)." },
-                       { "change": "<strong>PMR Workspaces window:</strong> allow the user's name and email to be set in Preferences (see issue <a href=\"https://github.com/opencor/opencor/issues/1057\">#1057</a>). Allow the PMR instance to be set in Preferences (see issue <a href=\"https://github.com/opencor/opencor/issues/1069\">#1069</a>). Fixed a problem with the log on/off icon not showing properly on a Mac with a HiDPI screen resolution (see issue <a href=\"https://github.com/opencor/opencor/issues/1204\">#1204</a>). Let the user know if no name and/or email are provided (see issue <a href=\"https://github.com/opencor/opencor/issues/1208\">#1208</a>). Warn the user if we try to commit without a message (see issue <a href=\"https://github.com/opencor/opencor/issues/1209\">#1209</a>). Don't rely on an external browser to do the PMR authentication (see issue <a href=\"https://github.com/opencor/opencor/issues/1211\">#1211</a>)." }
+                       { "change": "<strong>WebViewer widget:</strong> allow the use of a progress bar (see issue <a href=\"https://github.com/opencor/opencor/issues/1219\">#1219</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
