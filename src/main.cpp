@@ -16,11 +16,15 @@ limitations under the License.
 
 *******************************************************************************/
 
-#include "Python.h"
-
 //==============================================================================
 // Main
 //==============================================================================
+
+// The Python header must be included before Qt headers because of name clashes
+
+#ifdef Q_OS_LINUX
+    #include "Python.h"
+#endif
 
 #include "checkforupdatesdialog.h"
 #include "cliapplication.h"
@@ -60,7 +64,7 @@ int main(int pArgC, char *pArgV[])
 
     Py_NoUserSiteDirectory = 1;
 #endif
-    
+
     // Initialise Qt's message pattern
 
     OpenCOR::initQtMessagePattern();
