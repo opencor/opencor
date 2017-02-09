@@ -178,7 +178,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
 
     // Initially hide our progress bar
 
-    hideProgressBarEnabled();
+    hideProgressBar();
 
     // Create our layout and populate it
 
@@ -434,7 +434,7 @@ void WebViewerWidget::setOverrideCursor(const bool &pOverrideCursor)
 
 //==============================================================================
 
-void WebViewerWidget::showProgressBarEnabled()
+void WebViewerWidget::showProgressBar()
 {
     // Show our progress bar
 
@@ -443,7 +443,7 @@ void WebViewerWidget::showProgressBarEnabled()
 
 //==============================================================================
 
-void WebViewerWidget::hideProgressBarEnabled()
+void WebViewerWidget::hideProgressBar()
 {
     // Hide our progress bar
 

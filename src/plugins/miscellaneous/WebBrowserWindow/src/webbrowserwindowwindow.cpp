@@ -115,7 +115,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mWebBrowserWindowWidget->setObjectName("WebBrowserWindowWidget");
 
-    mWebBrowserWindowWidget->showProgressBarEnabled();
+    mWebBrowserWindowWidget->showProgressBar();
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mWebBrowserWindowWidget,

@@ -107,8 +107,8 @@ public:
 
     void setOverrideCursor(const bool &pOverrideCursor);
 
-    void showProgressBarEnabled();
-    void hideProgressBarEnabled();
+    void showProgressBar();
+    void hideProgressBar();
 
     void showWebInspector();
 

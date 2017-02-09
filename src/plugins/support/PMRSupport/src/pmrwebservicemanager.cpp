@@ -122,7 +122,7 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 
         mWebViewer->setContextMenuPolicy(Qt::NoContextMenu);
 
-        mWebViewer->showProgressBarEnabled();
+        mWebViewer->showProgressBar();
 
         QVBoxLayout *layout = new QVBoxLayout(mWebViewerDialog);
 
