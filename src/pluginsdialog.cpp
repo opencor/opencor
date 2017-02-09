@@ -122,8 +122,6 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 
 #ifdef Q_OS_MAC
     mGui->treeView->setAttribute(Qt::WA_MacShowFocusRect, false);
-    // Note: the above removes the focus border since it messes up the look of
-    //       our plugins tree view widget...
 #endif
     mGui->treeView->setModel(mModel);
     mGui->treeView->setItemDelegate(new PluginItemDelegate(this));

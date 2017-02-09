@@ -36,7 +36,8 @@ limitations under the License.
 
 void Tests::doRuntimeTest(const QString &pFileName,
                           const QString &pCellmlVersion,
-                          const QStringList &pModelParameters)
+                          const QStringList &pModelParameters,
+                          const bool &pIsValid)
 {
     // Get a CellML file object for the given CellML file and make sure that it
     // is considered of the expected CellML version
@@ -50,7 +51,10 @@ void Tests::doRuntimeTest(const QString &pFileName,
     OpenCOR::CellMLSupport::CellmlFileRuntime *runtime = cellmlFile.runtime();
 
     QVERIFY(runtime);
-    QVERIFY(runtime->isValid());
+    QVERIFY(pIsValid?runtime->isValid():!runtime->isValid());
+
+    if (!pIsValid)
+        return;
 
     // Retrieve the model parameters (i.e. the ones that would be shown in, say,
     // the Single Cell view) for our model and check that they contain the
@@ -92,7 +96,7 @@ void Tests::runtimeTests()
 
     doRuntimeTest(fileName, "1.1", modelParameters);
 
-    // Finally, we do the same for some proper CellML 1.1 models:
+    // Now, we do the same for some proper CellML 1.1 models:
     //  - Hodgking-Huxley model, which is somewhat 'complex' in terms of
     //    imports, etc.;
     //  - An 'old' version of a bond graph model implementation where the
@@ -116,6 +120,12 @@ void Tests::runtimeTests()
                   "1.1", modelParameters);
     doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/faville_model_2008.cellml"),
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/faville_model_2008.out")));
+
+    // Finally, test a CellML file that has, according to the CellML API at
+    // least, several variables of integration
+
+    doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/calcium transient.cellml"),
+                  "1.1", QStringList(), false);
 
     // Clean up after ourselves
 

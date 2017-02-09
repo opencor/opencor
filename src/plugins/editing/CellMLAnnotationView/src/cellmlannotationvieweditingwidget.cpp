@@ -35,6 +35,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QWebView>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
@@ -280,7 +284,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebV
 
     // Show the information
 
-    pWebViewer->setHtml(mQualifierInformationTemplate.arg(pQualifier, qualifierSvg, shortDescription, longDescription));
+    pWebViewer->webView()->setHtml(mQualifierInformationTemplate.arg(pQualifier, qualifierSvg, shortDescription, longDescription));
 }
 
 //==============================================================================
@@ -291,7 +295,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(WebVi
     // The user requested a resource to be looked up, so retrieve it using
     // identifiers.org
 
-    pWebViewer->load(CellmlAnnotationViewWidget::resourceUrl(pResource));
+    pWebViewer->webView()->load(CellmlAnnotationViewWidget::resourceUrl(pResource));
 }
 
 //==============================================================================
@@ -303,7 +307,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(WebViewerWi
     // The user requested a resource id to be looked up, so retrieve it using
     // identifiers.org
 
-    pWebViewer->load(CellmlAnnotationViewWidget::idUrl(pResource, pId));
+    pWebViewer->webView()->load(CellmlAnnotationViewWidget::idUrl(pResource, pId));
 }
 
 //==============================================================================

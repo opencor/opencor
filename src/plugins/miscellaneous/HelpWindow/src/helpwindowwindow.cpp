@@ -40,6 +40,7 @@ limitations under the License.
 #include <QPrinter>
 #include <QPrinterInfo>
 #include <QSettings>
+#include <QWebView>
 
 //==============================================================================
 
@@ -202,7 +203,7 @@ void HelpWindowWindow::on_actionBack_triggered()
 {
     // Go to the previous help page
 
-    mHelpWindowWidget->back();
+    mHelpWindowWidget->webView()->back();
 }
 
 //==============================================================================
@@ -211,7 +212,7 @@ void HelpWindowWindow::on_actionForward_triggered()
 {
     // Go to the next help page
 
-    mHelpWindowWidget->forward();
+    mHelpWindowWidget->webView()->forward();
 }
 
 //==============================================================================
@@ -220,7 +221,7 @@ void HelpWindowWindow::on_actionCopy_triggered()
 {
     // Copy the current slection to the clipboard
 
-    QApplication::clipboard()->setText(mHelpWindowWidget->selectedText());
+    QApplication::clipboard()->setText(mHelpWindowWidget->webView()->selectedText());
 }
 
 //==============================================================================
@@ -261,7 +262,7 @@ void HelpWindowWindow::on_actionPrint_triggered()
     QPrintDialog printDialog(&printer);
 
     if (printDialog.exec() == QDialog::Accepted)
-        mHelpWindowWidget->print(&printer);
+        mHelpWindowWidget->webView()->print(&printer);
 }
 
 //==============================================================================

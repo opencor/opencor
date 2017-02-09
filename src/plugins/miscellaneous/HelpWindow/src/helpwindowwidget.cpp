@@ -34,6 +34,7 @@ limitations under the License.
 #include <QSettings>
 #include <QTimer>
 #include <QWebPage>
+#include <QWebView>
 
 //==============================================================================
 
@@ -161,13 +162,17 @@ HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
 
     // Use our own help network access manager classes
 
-    page()->setNetworkAccessManager(new HelpWindowNetworkAccessManager(mHelpEngine, this));
+    webView()->page()->setNetworkAccessManager(new HelpWindowNetworkAccessManager(mHelpEngine, this));
 
     // Set and go to our home page
+    // Note: we call setUrl() rather than goToHomePage() because we want and
+    //       need our home page to be loaded straightaway (otherwise if our home
+    //       page is wrong and OpenCOR is in a non-English locale then our
+    //       contents will empty upon starting OpenCOR)...
 
     setHomePage("qthelp://opencor/doc/user/index.html");
 
-    goToHomePage();
+    webView()->setUrl(homePage());
 }
 
 //==============================================================================
@@ -189,16 +194,10 @@ HelpWindowWidget::~HelpWindowWidget()
 void HelpWindowWidget::retranslateUi()
 {
     // Retranslate the current document, but only if it is an error document
-    // since a valid document is hard-coded and therefore cannot be translated
-    // Note: we use setUrl() rather than reload() since it ensures that the URL
-    //       will be loaded straightaway while otherwise, upon starting OpenCOR,
-    //       we will see the non CSS-styled version of the page (which will
-    //       always be in English, no matter which locale is selected) for a
-    //       split second before seeing the CSS-styled one (which can be either
-    //       in English or in another locale)...
+    // since a valid document is hard-coded and therefore cannot be retranslated
 
-    if (!mHelpEngine->findFile(url()).isValid())
-        setUrl(url());
+    if (!mHelpEngine->findFile(webView()->url()).isValid())
+        webView()->load(webView()->url());
 }
 
 //==============================================================================

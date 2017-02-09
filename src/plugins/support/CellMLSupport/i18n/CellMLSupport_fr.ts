@@ -75,6 +75,10 @@
         <translation>un problème s&apos;est produit durant la génération du code pour le modèle</translation>
     </message>
     <message>
+        <source>a model can have only one variable of integration</source>
+        <translation>un modèle ne peut avoir qu&apos;une variable d&apos;intégration</translation>
+    </message>
+    <message>
         <source>definite integrals are not yet supported</source>
         <translation>les intégrales définies ne sont pas encore supportées</translation>
     </message>

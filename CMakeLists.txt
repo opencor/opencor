@@ -345,7 +345,6 @@ SET(PLUGINS
     # Plugins that provide support for some third-party libraries
 
     support/CellMLSupport
-    support/PMRSupport
     support/PythonQtSupport
     support/QScintillaSupport
     support/SEDMLSupport
@@ -373,6 +372,8 @@ SET(PLUGINS
 
     editing/CellMLEditingView
     editing/SEDMLEditingView
+
+    support/PMRSupport
 
     # Selectable plugins
 

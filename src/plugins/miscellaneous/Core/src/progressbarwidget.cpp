@@ -49,17 +49,30 @@ void ProgressBarWidget::paintEvent(QPaintEvent *pEvent)
 
     QPainter painter(this);
 
-    int value = mValue*width();
+    if (isEnabled()) {
+        int value = mValue*width();
 
-    if (value)
-        painter.fillRect(0, 0, value, height(), highlightColor());
+        if (value)
+            painter.fillRect(0, 0, value, height(), highlightColor());
 
-    if (value != width())
-        painter.fillRect(value, 0, width()-value, height(), windowColor());
+        if (value != width())
+            painter.fillRect(value, 0, width()-value, height(), windowColor());
+    } else {
+        painter.fillRect(0, 0, width(), height(), windowColor());
+    }
 
     // Accept the event
 
     pEvent->accept();
+}
+
+//==============================================================================
+
+double ProgressBarWidget::value() const
+{
+    // Return our value
+
+    return mValue;
 }
 
 //==============================================================================

@@ -40,15 +40,6 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class ProgressBarWidget;
-}   // namespace Core
-
-//==============================================================================
-
 namespace WebBrowserWindow {
 
 //==============================================================================
@@ -82,10 +73,6 @@ private:
 
     QLineEdit *mUrlValue;
 
-    QString mUrl;
-
-    Core::ProgressBarWidget *mProgressBarWidget;
-
 private slots:
     void on_actionClear_triggered();
     void on_actionBack_triggered();
@@ -102,9 +89,6 @@ private slots:
 
     void urlChanged(const QUrl &pUrl);
     void showCustomContextMenu() const;
-    void loadProgress(const int &pProgress);
-    void loadFinished();
-    void resetProgressBar();
 };
 
 //==============================================================================

@@ -815,6 +815,8 @@ void CellmlFileRuntime::update()
     // variable name
 
     ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIter = genericCodeInformation->iterateTargets();
+    QString voiName = QString();
+    QStringList voiComponentHierarchy = QStringList();
 
     for (ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIter->nextComputationTarget();
          computationTarget; computationTarget = computationTargetIter->nextComputationTarget()) {
@@ -908,8 +910,30 @@ void CellmlFileRuntime::update()
                                                                                    parameterType,
                                                                                    computationTarget->assignedIndex());
 
-            if (parameterType == CellmlFileRuntimeParameter::Voi)
-                mVariableOfIntegration = parameter;
+            if (parameterType == CellmlFileRuntimeParameter::Voi) {
+                if (!mVariableOfIntegration) {
+                    mVariableOfIntegration = parameter;
+
+                    voiName = parameter->name();
+                    voiComponentHierarchy = parameter->componentHierarchy();
+            } else if (   parameter->name().compare(voiName)
+                           || (parameter->componentHierarchy() != voiComponentHierarchy)) {
+                    // The CellML API wrongly validated a model that has more
+                    // more than one variable of integration (at least,
+                    // according to the CellML API), but this is clearly wrong
+                    // (not to mention that it crashes OpenCOR), so let the user
+                    // know about it
+                    // Note: we check the name and component hierarchy of the
+                    //       parameter against those of our current variable of
+                    //       integration since the CellML API may generate
+                    //       different targets that refer to the same CellML
+                    //       variable (!?), as is for example the case with
+                    //       [CellMLSupport]/tests/data/bond_graph_model_old.cellml...
+
+                    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                               QObject::tr("a model can have only one variable of integration"));
+                }
+            }
 
             if (realVariable == mainVariable)
                 mParameters << parameter;

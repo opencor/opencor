@@ -1,0 +1,162 @@
+<?xml version='1.0'?>
+<model name="calcium_transient" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#">
+    <units name="uM">
+        <unit prefix="micro" units="mole"/>
+        <unit exponent="-1" units="litre"/>
+    </units>
+    <units name="per_s">
+        <unit exponent="-1" units="second"/>
+    </units>
+    <units name="per_s_per_uM">
+        <unit exponent="-1" units="second"/>
+        <unit exponent="-1" units="uM"/>
+    </units>
+    <units name="kilopascal">
+        <unit prefix="kilo" units="pascal"/>
+    </units>
+    <units name="per_kilopascal">
+        <unit exponent="-1" units="kilopascal"/>
+    </units>
+    <component name="environment">
+        <variable initial_value="0" name="t" public_interface="out" units="second"/>
+        <variable name="time" units="second"/>
+        <variable name="To" public_interface="out" units="kilopascal"/>
+        <variable name="Tension" public_interface="out" units="kilopascal"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>t</ci>
+                </apply>
+                <cn cellml:units="dimensionless">1</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>To</ci>
+                <cn cellml:units="kilopascal">1</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>Tension</ci>
+                <ci>To</ci>
+            </apply>
+        </math>
+    </component>
+    <component name="calcium_transient">
+        <variable name="t" public_interface="in" units="second"/>
+        <variable initial_value="1.0" name="Ca_max" units="uM"/>
+        <variable initial_value="0.01" name="Ca_o" units="uM"/>
+        <variable initial_value="0.06" name="tau_Ca" units="second"/>
+        <variable name="Ca_i" public_interface="out" units="uM"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>Ca_i</ci>
+                <apply>
+                    <plus/>
+                    <ci>Ca_o</ci>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <times/>
+                                <apply>
+                                    <minus/>
+                                    <ci>Ca_max</ci>
+                                    <ci>Ca_o</ci>
+                                </apply>
+                                <ci>t</ci>
+                            </apply>
+                            <ci>tau_Ca</ci>
+                        </apply>
+                        <apply>
+                            <exp/>
+                            <apply>
+                                <minus/>
+                                <cn cellml:units="dimensionless">1.0</cn>
+                                <apply>
+                                    <divide/>
+                                    <ci>t</ci>
+                                    <ci>tau_Ca</ci>
+                                </apply>
+                            </apply>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="TnC_Ca_binding_kinetics">
+        <variable name="t" public_interface="in" units="second"/>
+        <variable name="Ca_i" public_interface="in" units="uM"/>
+        <variable name="To" public_interface="in" units="kilopascal"/>
+        <variable name="Tension" public_interface="in" units="kilopascal"/>
+        <variable initial_value="2.6" name="gamma" public_interface="out" units="dimensionless"/>
+        <variable initial_value="100.0" name="rho_0" units="per_s_per_uM"/>
+        <variable initial_value="163.0" name="rho_1" units="per_s"/>
+        <variable initial_value="2.26" name="Ca_b_max" units="uM"/>
+        <variable initial_value="0" name="Ca_b" public_interface="out" units="uM"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>Ca_b</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <times/>
+                        <ci>rho_0</ci>
+                        <ci>Ca_i</ci>
+                        <apply>
+                            <minus/>
+                            <ci>Ca_b_max</ci>
+                            <ci>Ca_b</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>rho_1</ci>
+                        <ci>Ca_b</ci>
+                        <apply>
+                            <minus/>
+                            <cn cellml:units="dimensionless">1.0</cn>
+                            <apply>
+                                <divide/>
+                                <ci>Tension</ci>
+                                <apply>
+                                    <times/>
+                                    <ci>gamma</ci>
+                                    <ci>To</ci>
+                                </apply>
+                            </apply>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <connection>
+        <map_components component_1="calcium_transient" component_2="environment"/>
+        <map_variables variable_1="t" variable_2="t"/>
+    </connection>
+    <connection>
+        <map_components component_1="TnC_Ca_binding_kinetics" component_2="environment"/>
+        <map_variables variable_1="t" variable_2="t"/>
+        <map_variables variable_1="Tension" variable_2="Tension"/>
+        <map_variables variable_1="To" variable_2="To"/>
+    </connection>
+    <connection>
+        <map_components component_1="calcium_transient" component_2="TnC_Ca_binding_kinetics"/>
+        <map_variables variable_1="Ca_i" variable_2="Ca_i"/>
+    </connection>
+</model>

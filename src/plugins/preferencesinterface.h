@@ -24,6 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QVariant>
 #include <QWidget>
 
 //==============================================================================
@@ -42,8 +43,10 @@ class PreferencesWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit PreferencesWidget(QObject *pPluginInstance, QWidget *pParent);
+    explicit PreferencesWidget(const QString &pPluginName, QWidget *pParent);
     ~PreferencesWidget();
+
+    virtual bool preferencesChanged() const = 0;
 
     virtual void resetPreferences() = 0;
     virtual void savePreferences() = 0;
@@ -68,6 +71,9 @@ public:
 #define INTERFACE_DEFINITION
     #include "preferencesinterface.inl"
 #undef INTERFACE_DEFINITION
+
+    static QVariant preference(const QString &pPluginName, const QString &pKey,
+                               const QVariant &pDefaultValue = QVariant());
 };
 
 //==============================================================================

@@ -133,13 +133,13 @@ function versions(downloads) {
             var versionClass;
 
             if (versionType === 1)
-                versionClass = "official withoutInfo";
+                versionClass = "official";
             else if ((versionType === 2) && downloads)
                 versionClass = "latest";
             else
-                versionClass = "old withoutInfo";
+                versionClass = "old";
 
-            document.write("<div class=\""+versionClass+"\">\n");
+            document.write("<div class=\"contents "+versionClass+"\">\n");
             document.write("    <table class=\"version\">\n");
             document.write("        <tbody>\n");
             document.write("            <tr>\n");
