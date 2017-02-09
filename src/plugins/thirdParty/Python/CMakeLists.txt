@@ -250,7 +250,9 @@ SET(NUMPY_INCLUDE_DIR ${FULL_INSTALL_DIR}/${PYTHON_LIBRARY_DIR}/site-packages/nu
 
 ADD_PLUGIN(Python
     SOURCES
+        ../../cliinterface.cpp
         ../../plugininfo.cpp
+        ../../plugininterface.cpp
 
         src/pythonplugin.cpp
     HEADERS_MOC
