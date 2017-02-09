@@ -16,6 +16,8 @@ limitations under the License.
 
 *******************************************************************************/
 
+#include "Python.h"
+
 //==============================================================================
 // Main
 //==============================================================================
@@ -48,6 +50,17 @@ limitations under the License.
 
 int main(int pArgC, char *pArgV[])
 {
+#ifdef Q_OS_LINUX
+    // The Python library needs linking directly to the executable as otherwise
+    // Python extension shared objects can't find symbols in the library. This is
+    // because the lookup scope changes for DSOs that are are loaded using dlopen()
+    // (see https://www.akkadia.org/drepper/dsohowto.pdf for details)
+
+    // This is sufficient to ensure the library is linked to the executable
+
+    Py_NoUserSiteDirectory = 1;
+#endif
+    
     // Initialise Qt's message pattern
 
     OpenCOR::initQtMessagePattern();

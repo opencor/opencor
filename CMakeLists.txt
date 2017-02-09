@@ -466,6 +466,16 @@ FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
     )
 ENDFOREACH()
 
+# Under Linux the Python library needs linking directly to the executable
+# as otherwise extension DSOs (which are loaded using dlopen()) can't find
+# symbols. (See https://www.akkadia.org/drepper/dsohowto.pdf for details.)
+
+IF(NOT WIN32 AND NOT APPLE)
+    INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIR})
+    TARGET_LINK_LIBRARIES(${CMAKE_PROJECT_NAME} ${PYTHON_LIBRARY})
+    ADD_DEPENDENCIES(${CMAKE_PROJECT_NAME} PythonPlugin)
+ENDIF()
+
 # Build the CLI version of OpenCOR (Windows specific)
 
 IF(WIN32)
