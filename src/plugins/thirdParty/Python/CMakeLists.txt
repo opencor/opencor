@@ -110,7 +110,6 @@ ELSE()
         GIT_REPOSITORY https://github.com/dbrnz/python-cmake-buildsystem.git
         GIT_TAG abiflags
 #
-        UPDATE_COMMAND ""
         CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
