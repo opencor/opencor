@@ -192,11 +192,13 @@ ELSE()
         # Fix up the newly installed Python executable and shared library
 
         ExternalProject_Add_Step(PythonBuild set_rpath
-            # Add RPATH to executable so it can use installed libraries
-            COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_BINARIES_DIR} ../bin/python
+            # Add RPATH to executable so it can use installed libraries at build time
+            COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_BINARIES_DIR} bin/python
+            # And also when installed (into Frameworks/Python/bin)
+            COMMAND install_name_tool -add_rpath @executable_path/../.. bin/python
             # Set RPATH in library to enable linking independent of location
-            COMMAND install_name_tool -id @rpath/${PYTHON_LIBRARY} ${PYTHON_LIBRARY}
-            WORKING_DIRECTORY ${FULL_INSTALL_DIR}/lib
+            COMMAND install_name_tool -id @rpath/${PYTHON_LIBRARY} lib/${PYTHON_LIBRARY}
+            WORKING_DIRECTORY ${FULL_INSTALL_DIR}
             DEPENDEES install
             )
 
