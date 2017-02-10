@@ -61,9 +61,6 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-protected:
-    virtual void resizeEvent(QResizeEvent *pEvent);
-
 private:
     Ui::WebBrowserWindowWindow *mGui;
 
