@@ -53,12 +53,15 @@ bool aboutToQuit()
 
 //==============================================================================
 
-void adjustWidgetSize(QWidget *pWidget)
+QSize minimumWidgetSize(QWidget *pWidget)
 {
-    // Determine the adjusted size of the given widget
+    // Determine the minimum size of the given widget
     // Note: this is based on QWidgetPrivate::adjustedSize()...
 
-    QSize adjustedSize = pWidget->sizeHint();
+    if (!pWidget)
+        return QSize();
+
+    QSize minimumSize = pWidget->sizeHint();
 
     if (pWidget->isWindow()) {
         Qt::Orientations expandingDirections;
@@ -66,44 +69,53 @@ void adjustWidgetSize(QWidget *pWidget)
 
         if (layout) {
             if (layout->hasHeightForWidth())
-                adjustedSize.setHeight(layout->totalHeightForWidth(adjustedSize.width()));
+                minimumSize.setHeight(layout->totalHeightForWidth(minimumSize.width()));
 
             expandingDirections = layout->expandingDirections();
         } else {
             if (pWidget->sizePolicy().hasHeightForWidth())
-                adjustedSize.setHeight(pWidget->heightForWidth(adjustedSize.width()));
+                minimumSize.setHeight(pWidget->heightForWidth(minimumSize.width()));
 
             expandingDirections = pWidget->sizePolicy().expandingDirections();
         }
 
         if (expandingDirections & Qt::Horizontal)
-            adjustedSize.setWidth(qMax(adjustedSize.width(), 200));
+            minimumSize.setWidth(qMax(minimumSize.width(), 200));
 
         if (expandingDirections & Qt::Vertical)
-            adjustedSize.setHeight(qMax(adjustedSize.height(), 100));
+            minimumSize.setHeight(qMax(minimumSize.height(), 100));
 
         QRect screen = QApplication::desktop()->screenGeometry(pWidget->pos());
 
-        adjustedSize.setWidth(qMin(adjustedSize.width(), screen.width()*2/3));
-        adjustedSize.setHeight(qMin(adjustedSize.height(), screen.height()*2/3));
+        minimumSize.setWidth(qMin(minimumSize.width(), screen.width()*2/3));
+        minimumSize.setHeight(qMin(minimumSize.height(), screen.height()*2/3));
     }
 
-    if (!adjustedSize.isValid()) {
+    if (!minimumSize.isValid()) {
         QRect childrenRect = pWidget->childrenRect();
 
         if (!childrenRect.isNull())
-            adjustedSize = childrenRect.size()+QSize(2*childrenRect.x(), 2*childrenRect.y());
+            minimumSize = childrenRect.size()+QSize(2*childrenRect.x(), 2*childrenRect.y());
     }
 
-    if (!adjustedSize.isValid())
+    return minimumSize;
+}
+
+//==============================================================================
+
+void adjustWidgetSize(QWidget *pWidget)
+{
+    // Retrieve the minimum size of the given , and resize and recenter it, if
+    // needed
+
+    QSize minimumSize = minimumWidgetSize(pWidget);
+
+    if (!minimumSize.isValid())
         return;
 
-    // Determine the new size of the given widget, and resize and recenter it,
-    // if needed
-
     QSize oldSize = pWidget->size();
-    QSize newSize = QSize(qMax(adjustedSize.width(), oldSize.width()),
-                          qMax(adjustedSize.height(), oldSize.height()));
+    QSize newSize = QSize(qMax(minimumSize.width(), oldSize.width()),
+                          qMax(minimumSize.height(), oldSize.height()));
 
     if (newSize != oldSize) {
         // Note: if the given widget is not visible then we only resize it
