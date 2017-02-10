@@ -75,8 +75,8 @@
    </item>
    <item>
     <layout class="QFormLayout" name="noteFormLayout">
-     <property name="formAlignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     <property name="fieldGrowthPolicy">
+      <enum>QFormLayout::ExpandingFieldsGrow</enum>
      </property>
      <item row="0" column="0">
       <widget class="QLabel" name="noteLabel">
@@ -97,6 +97,12 @@
      </item>
      <item row="0" column="1">
       <widget class="QLabel" name="noteValue">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
        </property>
