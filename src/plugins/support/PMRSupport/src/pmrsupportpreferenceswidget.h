@@ -72,6 +72,9 @@ private:
     QString mPmrUrl;
     QString mName;
     QString mEmail;
+
+private slots:
+    void on_pmrUrlValue_currentTextChanged(const QString &pCurrentText);
 };
 
 //==============================================================================
