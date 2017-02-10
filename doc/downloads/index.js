@@ -37,7 +37,9 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>WebViewer widget:</strong> allow the use of a progress bar (see issue <a href=\"https://github.com/opencor/opencor/issues/1219\">#1219</a>)." }
+                       { "change": "<strong>General:</strong> various minor GUI improvements here and there." },
+                       { "change": "<strong>WebViewer widget:</strong> allow the use of a progress bar (see issue <a href=\"https://github.com/opencor/opencor/issues/1219\">#1219</a>)." },
+                       { "change": "<strong>PMR Workspaces window:</strong> added the 'teaching' instance to the list of PMR instances (see issue <a href=\"https://github.com/opencor/opencor/issues/1218\">#1218</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
