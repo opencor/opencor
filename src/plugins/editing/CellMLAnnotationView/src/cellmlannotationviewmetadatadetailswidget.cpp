@@ -87,6 +87,8 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pCellmlFile, mSplitter);
     mWebViewer = new WebViewerWidget::WebViewerWidget(mSplitter);
 
+    mWebViewer->showProgressBar();
+
     mWebViewer->setContextMenuPolicy(Qt::NoContextMenu);
     mWebViewer->setOverrideCursor(true);
     mWebViewer->setZoomingEnabled(false);
