@@ -74,6 +74,10 @@ PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QWi
             this, SLOT(accept()));
     connect(mGui->buttonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
+
+    // Set our minimum size
+
+    setMinimumSize(Core::minimumWidgetSize(this));
 }
 
 //==============================================================================

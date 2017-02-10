@@ -173,6 +173,10 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
     mGui->treeView->expandAll();
 
     updateDataSelectedState();
+
+    // Set our minimum size
+
+    setMinimumSize(Core::minimumWidgetSize(this));
 }
 
 //==============================================================================

@@ -282,6 +282,19 @@ PreferencesDialog::~PreferencesDialog()
 
 //==============================================================================
 
+void PreferencesDialog::resizeEvent(QResizeEvent *pEvent)
+{
+    // Default handling of the event
+
+    QDialog::resizeEvent(pEvent);
+
+    // Set our minimum size
+
+    setMinimumSize(minimumWidgetSize(this));
+}
+
+//==============================================================================
+
 QStringList PreferencesDialog::pluginNames() const
 {
     // Return our plugin names

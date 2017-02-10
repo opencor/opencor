@@ -20,6 +20,7 @@ limitations under the License.
 // PMR Workspaces window commit dialog
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "pmrworkspaceswindowcommitdialog.h"
 
 //==============================================================================
@@ -95,6 +96,10 @@ PmrWorkspacesWindowCommitDialog::PmrWorkspacesWindowCommitDialog(const PMRSuppor
             this, SLOT(accept()));
     connect(mGui->buttonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
+
+    // Set our minimum size
+
+    setMinimumSize(Core::minimumWidgetSize(this));
 }
 
 //==============================================================================

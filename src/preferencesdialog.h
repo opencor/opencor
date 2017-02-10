@@ -103,6 +103,9 @@ public:
 
     QStringList pluginNames() const;
 
+protected:
+    virtual void resizeEvent(QResizeEvent *pEvent);
+
 private:
     Ui::PreferencesDialog *mGui;
 
