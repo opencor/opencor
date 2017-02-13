@@ -25,12 +25,12 @@ limitations under the License.
 //==============================================================================
 
 #include "commonwidget.h"
-#include "editorlistitem.h"
 #include "editorwidgetglobal.h"
 
 //==============================================================================
 
 #include <QListView>
+#include <QStandardItem>
 
 //==============================================================================
 
@@ -41,6 +41,34 @@ class QMenu;
 
 namespace OpenCOR {
 namespace EditorWidget {
+
+//==============================================================================
+
+class EDITORWIDGET_EXPORT EditorListItem : public QStandardItem
+{
+public:
+    enum Type {
+        Error       = QStandardItem::UserType,
+        Warning     = QStandardItem::UserType+1,
+        Hint        = QStandardItem::UserType+2,
+        Information = QStandardItem::UserType+3,
+        Fatal       = QStandardItem::UserType+4
+    };
+
+    explicit EditorListItem(const Type &pType, const int &pLine,
+                            const int &pColumn, const QString &pMessage);
+
+    virtual int type() const;
+    int line() const;
+    int column() const;
+    QString message() const;
+
+private:
+    Type mType;
+    int mLine;
+    int mColumn;
+    QString mMessage;
+};
 
 //==============================================================================
 

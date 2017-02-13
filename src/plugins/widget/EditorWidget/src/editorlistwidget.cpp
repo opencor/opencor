@@ -39,6 +39,94 @@ namespace EditorWidget {
 
 //==============================================================================
 
+EditorListItem::EditorListItem(const Type &pType, const int &pLine,
+                               const int &pColumn, const QString &pMessage) :
+    QStandardItem(),
+    mType(pType),
+    mLine(pLine),
+    mColumn(pColumn),
+    mMessage(pMessage)
+{
+    // Customise ourselves
+
+    static const QIcon ErrorIcon       = QIcon(":/oxygen/emblems/emblem-important.png");
+    static const QIcon WarningIcon     = QIcon(":/oxygen/status/task-attention.png");
+    static const QIcon HintIcon        = QIcon(":/oxygen/actions/help-hint.png");
+    static const QIcon InformationIcon = QIcon(":/oxygen/status/dialog-information.png");
+    static const QIcon FatalIcon       = QIcon(":/oxygen/status/edit-bomb.png");
+
+    if ((pLine == -1) && (pColumn == -1))
+        setText(pMessage);
+    else if (pColumn == -1)
+        setText(QString("[%1] %2").arg(QString::number(pLine), pMessage));
+    else
+        setText(QString("[%1:%2] %3").arg(QString::number(pLine), QString::number(pColumn), pMessage));
+
+    setToolTip(text());
+
+    switch (pType) {
+    case Error:
+        setIcon(ErrorIcon);
+
+        break;
+    case Warning:
+        setIcon(WarningIcon);
+
+        break;
+    case Hint:
+        setIcon(HintIcon);
+
+        break;
+    case Information:
+        setIcon(InformationIcon);
+
+        break;
+    case Fatal:
+        setIcon(FatalIcon);
+
+        break;
+    }
+
+}
+
+//==============================================================================
+
+int EditorListItem::type() const
+{
+    // Return the item's type
+
+    return mType;
+}
+
+//==============================================================================
+
+int EditorListItem::line() const
+{
+    // Return the item's line
+
+    return mLine;
+}
+
+//==============================================================================
+
+int EditorListItem::column() const
+{
+    // Return the item's column
+
+    return mColumn;
+}
+
+//==============================================================================
+
+QString EditorListItem::message() const
+{
+    // Return the item's message
+
+    return mMessage;
+}
+
+//==============================================================================
+
 EditorListWidget::EditorListWidget(QWidget *pParent) :
     QListView(pParent),
     Core::CommonWidget(this),
