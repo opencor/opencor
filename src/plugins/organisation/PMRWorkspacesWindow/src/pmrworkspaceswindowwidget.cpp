@@ -37,17 +37,16 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QApplication>
 #include <QClipboard>
 #include <QDesktopServices>
 #include <QDir>
 #include <QFileIconProvider>
 #include <QKeyEvent>
-#include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
 #include <QSettings>
 #include <QTimer>
+#include <QUrl>
 
 //==============================================================================
 

@@ -21,19 +21,16 @@ limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "filemanager.h"
 #include "fileorganiserwindowwidget.h"
 
 //==============================================================================
 
-#include <QDir>
-#include <QFile>
 #include <QFileIconProvider>
 #include <QFileInfo>
-#include <QHelpEvent>
+#include <QKeyEvent>
 #include <QMimeData>
-#include <QModelIndex>
 #include <QSettings>
-#include <QUrl>
 
 //==============================================================================
 

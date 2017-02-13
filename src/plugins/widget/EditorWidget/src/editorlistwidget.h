@@ -34,11 +34,6 @@ limitations under the License.
 
 //==============================================================================
 
-class QAction;
-class QMenu;
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace EditorWidget {
 
