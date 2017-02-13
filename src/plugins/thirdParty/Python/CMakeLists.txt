@@ -259,12 +259,15 @@ ELSE()
         )
 
     # Precompile the Python library sources and package as a ZIP file
-    ## TODO: This needs a repeat run of the build to work...
 
     ExternalProject_Add_Step(PythonBuild compile_python_lib
+        COMMAND ${CMAKE_COMMAND} -E
+            remove -f ${FULL_INSTALL_DIR}/lib/library.zip ${FULL_INSTALL_DIR}/lib/python${PYTHON_NUMERIC_VERSION}.zip
         COMMAND "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ./python -s ${PROJECT_SOURCE_DIR}/bin/ziplibrary.py
-            ${FULL_INSTALL_DIR}/lib/python${PYTHON_NUMERIC_VERSION}.zip
+            ${FULL_INSTALL_DIR}/lib/library.zip
             ${FULL_INSTALL_DIR}/lib/python${PYTHON_SHORT_VERSION}
+        COMMAND ${CMAKE_COMMAND} -E
+            rename ${FULL_INSTALL_DIR}/lib/library.zip ${FULL_INSTALL_DIR}/lib/python${PYTHON_NUMERIC_VERSION}.zip
         WORKING_DIRECTORY ${FULL_INSTALL_DIR}/bin
         DEPENDEES patch_matplotlib
         )
