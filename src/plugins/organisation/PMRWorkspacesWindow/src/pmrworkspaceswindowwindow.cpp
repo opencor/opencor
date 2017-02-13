@@ -108,15 +108,14 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     // Create an instance of our PMR web service
 
-    QString pmrUrl = PreferencesInterface::preference(PMRSupport::PluginName,
-                                                      PMRSupport::SettingsPreferencesPmrUrl,
-                                                      PMRSupport::SettingsPreferencesPmrUrlDefault).toString();
-
-    mPmrWebService = new PMRSupport::PmrWebService(pmrUrl, this);
+    mPmrUrl = PreferencesInterface::preference(PMRSupport::PluginName,
+                                               PMRSupport::SettingsPreferencesPmrUrl,
+                                               PMRSupport::SettingsPreferencesPmrUrlDefault).toString();
+    mPmrWebService = new PMRSupport::PmrWebService(mPmrUrl, this);
 
     // Create and add our workspaces widget
 
-    mPmrWorkspacesWindowWidget = new PmrWorkspacesWindowWidget(pmrUrl, mPmrWebService, this);
+    mPmrWorkspacesWindowWidget = new PmrWorkspacesWindowWidget(mPmrUrl, mPmrWebService, this);
 
     mPmrWorkspacesWindowWidget->setObjectName("PmrWorkspacesWindowWidget");
 
@@ -246,12 +245,17 @@ Ui::PmrWorkspacesWindowWindow * PmrWorkspacesWindowWindow::gui() const
 void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 {
     // Update both our PMR web service and workspaces widget, and then update
-    // our GUI (which will, as a result, also update our workspaces widget)
+    // our GUI (which will, as a result, also update our workspaces widget), if
+    // needed
 
-    mPmrWebService->update(pPmrUrl);
-    mPmrWorkspacesWindowWidget->update(pPmrUrl);
+    if (pPmrUrl.compare(mPmrUrl)) {
+        mPmrUrl = pPmrUrl;
 
-    updateGui();
+        mPmrWebService->update(pPmrUrl);
+        mPmrWorkspacesWindowWidget->update(pPmrUrl);
+
+        updateGui();
+    }
 }
 
 //==============================================================================

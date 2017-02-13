@@ -116,10 +116,10 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     // Create an instance of our PMR web service
 
-    mPmrWebService = new PMRSupport::PmrWebService(PreferencesInterface::preference(PMRSupport::PluginName,
-                                                                                    PMRSupport::SettingsPreferencesPmrUrl,
-                                                                                    PMRSupport::SettingsPreferencesPmrUrlDefault).toString(),
-                                                   this);
+    mPmrUrl = PreferencesInterface::preference(PMRSupport::PluginName,
+                                               PMRSupport::SettingsPreferencesPmrUrl,
+                                               PMRSupport::SettingsPreferencesPmrUrlDefault).toString();
+    mPmrWebService = new PMRSupport::PmrWebService(mPmrUrl, this);
 
     // Some connections to process responses from our PMR web service
 
@@ -199,11 +199,15 @@ void PmrWindowWindow::resizeEvent(QResizeEvent *pEvent)
 
 void PmrWindowWindow::update(const QString &pPmrUrl)
 {
-    // Update our PMR web service and then reload ourselves
+    // Update our PMR web service and then reload ourselves, if needed
 
-    mPmrWebService->update(pPmrUrl);
+    if (pPmrUrl.compare(mPmrUrl)) {
+        mPmrUrl = pPmrUrl;
 
-    on_actionReload_triggered();
+        mPmrWebService->update(pPmrUrl);
+
+        on_actionReload_triggered();
+    }
 }
 
 //==============================================================================

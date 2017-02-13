@@ -83,6 +83,8 @@ private:
     PMRSupport::PmrWebService *mPmrWebService;
     PmrWorkspacesWindowWidget *mPmrWorkspacesWindowWidget;
 
+    QString mPmrUrl;
+
     bool mAuthenticated;
 
     QIcon mLoggedOnIcon;
