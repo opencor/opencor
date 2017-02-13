@@ -306,8 +306,14 @@ int main(int pArgC, char *pArgV[])
 
     int res;
 
-    if (canExecuteAplication)
+    if (canExecuteAplication) {
+
+        // Listening slots will receive the signal when exec() is run
+
+        emit guiApp->eventLoopStarting();
+
         res = guiApp->exec();
+    }
     else
         res = 0;
 

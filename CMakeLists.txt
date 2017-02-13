@@ -411,6 +411,8 @@ SET(PLUGINS
     miscellaneous/PythonWrapper
     miscellaneous/PythonConsoleWindow
 
+    miscellaneous/JupyterKernel
+
     # Sample plugins
 
     ${SAMPLE_PLUGINS}

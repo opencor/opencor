@@ -54,6 +54,7 @@ private:
 
 signals:
     void fileOpenRequest(const QString &pFileName);
+    void eventLoopStarting();
 };
 
 //==============================================================================

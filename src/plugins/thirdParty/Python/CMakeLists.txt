@@ -12,6 +12,9 @@ SET(NUMPY_VERSION 1.11.2)
 SET(SCIPY_VERSION 0.18.1)
 SET(MATPLOTLIB_VERSION 1.5.3)
 
+SET(IPYKERNEL_VERSION 4.5.2)
+SET(IPYTHON_VERSION 5.2.2)
+
 # Set the ABI flag and version identifier
 
 IF(WIN32)
@@ -238,6 +241,8 @@ ELSE()
             numpy==${NUMPY_VERSION}
             scipy==${SCIPY_VERSION}
             matplotlib==${MATPLOTLIB_VERSION}
+            ipython==${IPYTHON_VERSION}
+            ipykernel==${IPYKERNEL_VERSION}
         WORKING_DIRECTORY ${FULL_INSTALL_DIR}/bin
         DEPENDEES install_pip
         )
