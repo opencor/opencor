@@ -166,8 +166,8 @@ private:
     QAction *mNewAction;
     QAction *mViewInPmrAction;
     QAction *mViewOncomputerAction;
-    QAction *mCopyUrlAction;
-    QAction *mCopyPathAction;
+    QAction *mCopyWorkspaceUrlAction;
+    QAction *mCopyWorkspacePathAction;
     QAction *mCloneAction;
     QAction *mCommitAction;
     QAction *mPullAction;
@@ -265,8 +265,8 @@ private slots:
 
     void viewInPmr();
     void viewOnComputer();
-    void copyUrl();
-    void copyPath();
+    void copyWorkspaceUrl();
+    void copyWorkspacePath();
     void clone();
     void commit();
     void pull();

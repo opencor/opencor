@@ -383,10 +383,10 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                        this);
     mViewOncomputerAction = Core::newAction(QIcon(":/oxygen/devices/computer.png"),
                                             this);
-    mCopyUrlAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
-                                     this);
-    mCopyPathAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
-                                      this);
+    mCopyWorkspaceUrlAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
+                                              this);
+    mCopyWorkspacePathAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
+                                               this);
     mCloneAction = Core::newAction(Core::overlayedIcon(mCollapsedWorkspaceIcon, PullIcon,
                                                        folderIconSize, folderIconSize,
                                                        overlayIconPos, overlayIconPos,
@@ -409,10 +409,10 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
             this, SLOT(viewInPmr()));
     connect(mViewOncomputerAction, SIGNAL(triggered(bool)),
             this, SLOT(viewOnComputer()));
-    connect(mCopyUrlAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyUrl()));
-    connect(mCopyPathAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyPath()));
+    connect(mCopyWorkspaceUrlAction, SIGNAL(triggered(bool)),
+            this, SLOT(copyWorkspaceUrl()));
+    connect(mCopyWorkspacePathAction, SIGNAL(triggered(bool)),
+            this, SLOT(copyWorkspacePath()));
     connect(mCloneAction, SIGNAL(triggered(bool)),
             this, SLOT(clone()));
     connect(mCommitAction, SIGNAL(triggered(bool)),
@@ -431,8 +431,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     mContextMenu->addAction(mViewInPmrAction);
     mContextMenu->addAction(mViewOncomputerAction);
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mCopyUrlAction);
-    mContextMenu->addAction(mCopyPathAction);
+    mContextMenu->addAction(mCopyWorkspaceUrlAction);
+    mContextMenu->addAction(mCopyWorkspacePathAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCloneAction);
     mContextMenu->addSeparator();
@@ -473,10 +473,10 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("View in PMR"));
     I18nInterface::retranslateAction(mViewOncomputerAction, tr("View On Computer"),
                                      tr("View on computer"));
-    I18nInterface::retranslateAction(mCopyUrlAction, tr("Copy URL"),
-                                     tr("Copy the URL to the clipboard"));
-    I18nInterface::retranslateAction(mCopyPathAction, tr("Copy Path"),
-                                     tr("Copy the path to the clipboard"));
+    I18nInterface::retranslateAction(mCopyWorkspaceUrlAction, tr("Copy Workspace URL"),
+                                     tr("Copy the workspace URL to the clipboard"));
+    I18nInterface::retranslateAction(mCopyWorkspacePathAction, tr("Copy Workspace Path"),
+                                     tr("Copy the workspace path to the clipboard"));
     I18nInterface::retranslateAction(mCloneAction, tr("Clone..."),
                                      tr("Clone the current workspace"));
     I18nInterface::retranslateAction(mCommitAction, tr("Commit..."),
@@ -1088,10 +1088,17 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
 
     PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
     QModelIndexList selectedItems = mTreeViewWidget->selectedIndexes();
+    bool onlyOneItem = selectedItems.count() == 1;
     bool ownedWorkspaceItem = item && (item->type() == PmrWorkspacesWindowItem::OwnedWorkspace);
     bool workspaceItem =    ownedWorkspaceItem
                          || (item && (item->type() == PmrWorkspacesWindowItem::Workspace));
-    bool workspaceItems = true;
+    bool clonedWorkspaceItem =     workspaceItem
+                               && !mWorkspaceUrlFoldersOwned.value(item->url()).first.isEmpty();
+    bool workspaceItems = selectedItems.count();
+    bool clonedWorkspaceItems = selectedItems.count();
+    PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = workspaceItem?
+                                                                    item->workspace()->gitWorkspaceStatus():
+                                                                    PMRSupport::PmrWorkspace::StatusUnknown;
 
     for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i) {
         PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]));
@@ -1099,32 +1106,21 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         if (   (item->type() != PmrWorkspacesWindowItem::OwnedWorkspace)
             && (item->type() != PmrWorkspacesWindowItem::Workspace)) {
             workspaceItems = false;
-
-            break;
+        } else if (mWorkspaceUrlFoldersOwned.value(item->url()).first.isEmpty()) {
+            clonedWorkspaceItems = false;
         }
     }
 
-    PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = workspaceItem?
-                                                                    item->workspace()->gitWorkspaceStatus():
-                                                                    PMRSupport::PmrWorkspace::StatusUnknown;
-    bool onlyOneItem = selectedItems.count() == 1;
+    mViewInPmrAction->setEnabled(workspaceItems);
+    mViewOncomputerAction->setEnabled(clonedWorkspaceItems);
+    mCopyWorkspaceUrlAction->setEnabled(onlyOneItem && workspaceItem);
+    mCopyWorkspacePathAction->setEnabled(onlyOneItem && clonedWorkspaceItem);
+    mCloneAction->setEnabled(onlyOneItem && ownedWorkspaceItem);
+    mCommitAction->setEnabled(onlyOneItem && workspaceItem);
+    mPullAction->setEnabled(onlyOneItem && workspaceItem);
+    mPullAndPushAction->setEnabled(onlyOneItem && ownedWorkspaceItem);
+    mAboutAction->setEnabled(onlyOneItem && workspaceItem);
 
-    mNewAction->setVisible(!item);
-    mViewInPmrAction->setVisible(workspaceItems);
-    mViewOncomputerAction->setVisible(onlyOneItem && workspaceItem);
-    mCopyUrlAction->setVisible(onlyOneItem && workspaceItem);
-    mCopyPathAction->setVisible(onlyOneItem && workspaceItem);
-    mCloneAction->setVisible(onlyOneItem && ownedWorkspaceItem);
-    mCommitAction->setVisible(onlyOneItem && workspaceItem);
-    mPullAction->setVisible(onlyOneItem && workspaceItem);
-    mPullAndPushAction->setVisible(onlyOneItem && ownedWorkspaceItem);
-    mAboutAction->setVisible(onlyOneItem && workspaceItem);
-
-    bool clonedWorkspaceItem =     workspaceItem && item
-                               && !mWorkspaceUrlFoldersOwned.value(item->url()).first.isEmpty();
-
-    mViewOncomputerAction->setEnabled(clonedWorkspaceItem);
-    mCopyPathAction->setEnabled(clonedWorkspaceItem);
     mCloneAction->setEnabled(!clonedWorkspaceItem);
     mCommitAction->setEnabled(workspaceStatus & PMRSupport::PmrWorkspace::StatusCommit);
     mPullAction->setEnabled(clonedWorkspaceItem);
@@ -1284,18 +1280,18 @@ void PmrWorkspacesWindowWidget::viewOnComputer()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::copyUrl()
+void PmrWorkspacesWindowWidget::copyWorkspaceUrl()
 {
-    // Copy the current item's URL to the clipboard
+    // Copy the current workspace item's URL to the clipboard
 
     QApplication::clipboard()->setText(currentItem()->url());
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::copyPath()
+void PmrWorkspacesWindowWidget::copyWorkspacePath()
 {
-    // Copy the current item's path to the clipboard
+    // Copy the current workspace item's path to the clipboard
 
     QApplication::clipboard()->setText(currentItem()->path());
 }

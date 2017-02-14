@@ -70,20 +70,20 @@
         <translation>Voir sur l&apos;ordinateur</translation>
     </message>
     <message>
-        <source>Copy URL</source>
-        <translation>Copier URL</translation>
+        <source>Copy Workspace URL</source>
+        <translation>Copier URL Espace De Travail</translation>
     </message>
     <message>
-        <source>Copy the URL to the clipboard</source>
-        <translation>Copier l&apos;URL dans le presse-papier</translation>
+        <source>Copy the workspace URL to the clipboard</source>
+        <translation>Copier l&apos;URL de l&apos;espace de travail dans le presse-papier</translation>
     </message>
     <message>
-        <source>Copy Path</source>
-        <translation>Copier Chemin</translation>
+        <source>Copy Workspace Path</source>
+        <translation>Copier Chemin Espace De Travail</translation>
     </message>
     <message>
-        <source>Copy the path to the clipboard</source>
-        <translation>Copier le chemin dans le presse-papier</translation>
+        <source>Copy the workspace path to the clipboard</source>
+        <translation>Copier le chemin de l&apos;espace de travail dans le presse-papier</translation>
     </message>
     <message>
         <source>Clone...</source>
