@@ -169,9 +169,7 @@ private:
     QAction *mCopyWorkspaceUrlAction;
     QAction *mCopyWorkspacePathAction;
     QAction *mCloneAction;
-    QAction *mCommitAction;
-    QAction *mPullAction;
-    QAction *mPullAndPushAction;
+    QAction *mSynchronizeAction;
     QAction *mReloadAction;
     QAction *mAboutAction;
 

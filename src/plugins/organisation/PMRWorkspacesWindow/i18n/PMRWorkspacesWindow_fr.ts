@@ -94,28 +94,12 @@
         <translation>Cloner l&apos;espace de travail actuel</translation>
     </message>
     <message>
-        <source>Commit...</source>
-        <translation>Valider...</translation>
+        <source>Synchronise...</source>
+        <translation>Synchroniser...</translation>
     </message>
     <message>
-        <source>Commit staged changes</source>
-        <translation>Valider les changements indexés</translation>
-    </message>
-    <message>
-        <source>Pull</source>
-        <translation>Tirer</translation>
-    </message>
-    <message>
-        <source>Pull changes from PMR</source>
-        <translation>Tirer les changements de PMR</translation>
-    </message>
-    <message>
-        <source>Pull And Push</source>
-        <translation>Tirer Et Pousser</translation>
-    </message>
-    <message>
-        <source>Pull and push changes from/to PMR</source>
-        <translation>Tirer et pousser les changements de/vers PMR</translation>
+        <source>Synchronise with PMR</source>
+        <translation>Synchroniser avec PMR</translation>
     </message>
     <message>
         <source>About...</source>

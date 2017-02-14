@@ -370,8 +370,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     // Create and populate our context menu
 
-    static const QIcon PullIcon = QIcon(":/PMRWorkspacesWindow/pull.png");
-
     mContextMenu = new QMenu(this);
 
     mParentNewAction = pParent->gui()->actionNew;
@@ -387,16 +385,13 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                               this);
     mCopyWorkspacePathAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                                this);
-    mCloneAction = Core::newAction(Core::overlayedIcon(mCollapsedWorkspaceIcon, PullIcon,
+    mCloneAction = Core::newAction(Core::overlayedIcon(mCollapsedWorkspaceIcon,
+                                                       QIcon(":/PMRWorkspacesWindow/pull.png"),
                                                        folderIconSize, folderIconSize,
                                                        overlayIconPos, overlayIconPos,
                                                        overlayIconSize, overlayIconSize),
                                    this);
-    mCommitAction = Core::newAction(QIcon(":/oxygen/actions/view-task.png"),
-                                    this);
-    mPullAction = Core::newAction(PullIcon,
-                                  this);
-    mPullAndPushAction = Core::newAction(QIcon(":/PMRWorkspacesWindow/pullAndPush.png"),
+    mSynchronizeAction = Core::newAction(QIcon(":/PMRWorkspacesWindow/synchronize.png"),
                                          this);
     mReloadAction = Core::newAction(mParentReloadAction->icon(),
                                     this);
@@ -415,12 +410,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
             this, SLOT(copyWorkspacePath()));
     connect(mCloneAction, SIGNAL(triggered(bool)),
             this, SLOT(clone()));
-    connect(mCommitAction, SIGNAL(triggered(bool)),
+    connect(mSynchronizeAction, SIGNAL(triggered(bool)),
             this, SLOT(commit()));
-    connect(mPullAction, SIGNAL(triggered(bool)),
-            this, SLOT(pull()));
-    connect(mPullAndPushAction, SIGNAL(triggered(bool)),
-            this, SLOT(pullAndPush()));
     connect(mReloadAction, SIGNAL(triggered(bool)),
             mParentReloadAction, SIGNAL(triggered(bool)));
     connect(mAboutAction, SIGNAL(triggered(bool)),
@@ -436,10 +427,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCloneAction);
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mCommitAction);
-    mContextMenu->addSeparator();
-    mContextMenu->addAction(mPullAction);
-    mContextMenu->addAction(mPullAndPushAction);
+    mContextMenu->addAction(mSynchronizeAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mReloadAction);
     mContextMenu->addSeparator();
@@ -479,12 +467,8 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("Copy the workspace path to the clipboard"));
     I18nInterface::retranslateAction(mCloneAction, tr("Clone..."),
                                      tr("Clone the current workspace"));
-    I18nInterface::retranslateAction(mCommitAction, tr("Commit..."),
-                                     tr("Commit staged changes"));
-    I18nInterface::retranslateAction(mPullAction, tr("Pull"),
-                                     tr("Pull changes from PMR"));
-    I18nInterface::retranslateAction(mPullAndPushAction, tr("Pull And Push"),
-                                     tr("Pull and push changes from/to PMR"));
+    I18nInterface::retranslateAction(mSynchronizeAction, tr("Synchronise..."),
+                                     tr("Synchronise with PMR"));
     I18nInterface::retranslateAction(mReloadAction, mParentReloadAction->text(),
                                      mParentReloadAction->statusTip());
     I18nInterface::retranslateAction(mAboutAction, tr("About..."),
@@ -1096,9 +1080,6 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
                                && !mWorkspaceUrlFoldersOwned.value(item->url()).first.isEmpty();
     bool workspaceItems = selectedItems.count();
     bool clonedWorkspaceItems = selectedItems.count();
-    PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = workspaceItem?
-                                                                    item->workspace()->gitWorkspaceStatus():
-                                                                    PMRSupport::PmrWorkspace::StatusUnknown;
 
     for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i) {
         PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]));
@@ -1115,16 +1096,10 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
     mViewOncomputerAction->setEnabled(clonedWorkspaceItems);
     mCopyWorkspaceUrlAction->setEnabled(onlyOneItem && workspaceItem);
     mCopyWorkspacePathAction->setEnabled(onlyOneItem && clonedWorkspaceItem);
-    mCloneAction->setEnabled(onlyOneItem && ownedWorkspaceItem);
-    mCommitAction->setEnabled(onlyOneItem && workspaceItem);
-    mPullAction->setEnabled(onlyOneItem && workspaceItem);
-    mPullAndPushAction->setEnabled(onlyOneItem && ownedWorkspaceItem);
+    mCloneAction->setEnabled(onlyOneItem && ownedWorkspaceItem && !clonedWorkspaceItem);
+    mSynchronizeAction->setEnabled(    onlyOneItem
+                                   && (item->workspace()->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusUnstaged));
     mAboutAction->setEnabled(onlyOneItem && workspaceItem);
-
-    mCloneAction->setEnabled(!clonedWorkspaceItem);
-    mCommitAction->setEnabled(workspaceStatus & PMRSupport::PmrWorkspace::StatusCommit);
-    mPullAction->setEnabled(clonedWorkspaceItem);
-    mPullAndPushAction->setEnabled(workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead);
 
     mContextMenu->exec(QCursor::pos());
 }
