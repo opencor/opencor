@@ -86,12 +86,12 @@
         <translation>Copier le chemin de l&apos;espace de travail dans le presse-papier</translation>
     </message>
     <message>
-        <source>Clone...</source>
-        <translation>Cloner...</translation>
+        <source>Make Local Copy...</source>
+        <translation>Faire Copie Locale...</translation>
     </message>
     <message>
-        <source>Clone the current workspace</source>
-        <translation>Cloner l&apos;espace de travail actuel</translation>
+        <source>Make a local copy of the current workspace</source>
+        <translation>Faire une copie locale de l&apos;espace de travail actuel</translation>
     </message>
     <message>
         <source>Synchronise...</source>

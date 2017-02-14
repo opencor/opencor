@@ -168,7 +168,7 @@ private:
     QAction *mViewOncomputerAction;
     QAction *mCopyWorkspaceUrlAction;
     QAction *mCopyWorkspacePathAction;
-    QAction *mCloneAction;
+    QAction *mMakeLocalCopyAction;
     QAction *mSynchronizeAction;
     QAction *mReloadAction;
     QAction *mAboutAction;
@@ -265,7 +265,7 @@ private slots:
     void viewOnComputer();
     void copyWorkspaceUrl();
     void copyWorkspacePath();
-    void clone();
+    void makeLocalCopy();
     void commit();
     void pull();
     void pullAndPush();

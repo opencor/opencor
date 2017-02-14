@@ -385,12 +385,12 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                               this);
     mCopyWorkspacePathAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                                this);
-    mCloneAction = Core::newAction(Core::overlayedIcon(mCollapsedWorkspaceIcon,
-                                                       QIcon(":/PMRWorkspacesWindow/pull.png"),
-                                                       folderIconSize, folderIconSize,
-                                                       overlayIconPos, overlayIconPos,
-                                                       overlayIconSize, overlayIconSize),
-                                   this);
+    mMakeLocalCopyAction = Core::newAction(Core::overlayedIcon(mCollapsedWorkspaceIcon,
+                                                               QIcon(":/PMRWorkspacesWindow/pull.png"),
+                                                               folderIconSize, folderIconSize,
+                                                               overlayIconPos, overlayIconPos,
+                                                               overlayIconSize, overlayIconSize),
+                                           this);
     mSynchronizeAction = Core::newAction(QIcon(":/PMRWorkspacesWindow/synchronize.png"),
                                          this);
     mReloadAction = Core::newAction(mParentReloadAction->icon(),
@@ -408,8 +408,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
             this, SLOT(copyWorkspaceUrl()));
     connect(mCopyWorkspacePathAction, SIGNAL(triggered(bool)),
             this, SLOT(copyWorkspacePath()));
-    connect(mCloneAction, SIGNAL(triggered(bool)),
-            this, SLOT(clone()));
+    connect(mMakeLocalCopyAction, SIGNAL(triggered(bool)),
+            this, SLOT(makeLocalCopy()));
     connect(mSynchronizeAction, SIGNAL(triggered(bool)),
             this, SLOT(commit()));
     connect(mReloadAction, SIGNAL(triggered(bool)),
@@ -425,7 +425,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     mContextMenu->addAction(mCopyWorkspaceUrlAction);
     mContextMenu->addAction(mCopyWorkspacePathAction);
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mCloneAction);
+    mContextMenu->addAction(mMakeLocalCopyAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mSynchronizeAction);
     mContextMenu->addSeparator();
@@ -465,8 +465,8 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("Copy the workspace URL to the clipboard"));
     I18nInterface::retranslateAction(mCopyWorkspacePathAction, tr("Copy Workspace Path"),
                                      tr("Copy the workspace path to the clipboard"));
-    I18nInterface::retranslateAction(mCloneAction, tr("Clone..."),
-                                     tr("Clone the current workspace"));
+    I18nInterface::retranslateAction(mMakeLocalCopyAction, tr("Make Local Copy..."),
+                                     tr("Make a local copy of the current workspace"));
     I18nInterface::retranslateAction(mSynchronizeAction, tr("Synchronise..."),
                                      tr("Synchronise with PMR"));
     I18nInterface::retranslateAction(mReloadAction, mParentReloadAction->text(),
@@ -1096,7 +1096,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
     mViewOncomputerAction->setEnabled(clonedWorkspaceItems);
     mCopyWorkspaceUrlAction->setEnabled(onlyOneItem && workspaceItem);
     mCopyWorkspacePathAction->setEnabled(onlyOneItem && clonedWorkspaceItem);
-    mCloneAction->setEnabled(onlyOneItem && ownedWorkspaceItem && !clonedWorkspaceItem);
+    mMakeLocalCopyAction->setEnabled(onlyOneItem && ownedWorkspaceItem && !clonedWorkspaceItem);
     mSynchronizeAction->setEnabled(    onlyOneItem
                                    && (item->workspace()->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusUnstaged));
     mAboutAction->setEnabled(onlyOneItem && workspaceItem);
@@ -1273,9 +1273,9 @@ void PmrWorkspacesWindowWidget::copyWorkspacePath()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::clone()
+void PmrWorkspacesWindowWidget::makeLocalCopy()
 {
-    // Clone the owned workspace
+    // Make a local copy (i.e. clone) of the owned workspace
 
     QString dirName = PMRSupport::PmrWebService::getEmptyDirectory();
 
