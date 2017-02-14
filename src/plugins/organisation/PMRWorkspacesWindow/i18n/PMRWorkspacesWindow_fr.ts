@@ -9,46 +9,7 @@
     </message>
     <message>
         <source>Show/hide the PMR Workspaces window</source>
-        <translation>Montrer/cacher la fenÃªtre Espaces De Travail PMR</translation>
-    </message>
-</context>
-<context>
-    <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowCommitDialog</name>
-    <message>
-        <source>; Changes to be committed:</source>
-        <translation>; Changements sur le point d&apos;Ãªtre validÃ©s :</translation>
-    </message>
-    <message>
-        <source>new</source>
-        <translation>nouveau</translation>
-    </message>
-    <message>
-        <source>modified</source>
-        <translation>modifiÃ©</translation>
-    </message>
-    <message>
-        <source>deleted</source>
-        <translation>supprimÃ©</translation>
-    </message>
-    <message>
-        <source>renamed</source>
-        <translation>renommÃ©</translation>
-    </message>
-    <message>
-        <source>type change</source>
-        <translation>changement de type</translation>
-    </message>
-    <message>
-        <source>;   - %1 (%2).</source>
-        <translation>;   - %1 (%2).</translation>
-    </message>
-    <message>
-        <source>;   - %1 (%2); and</source>
-        <translation>;   - %1 (%2) ; et</translation>
-    </message>
-    <message>
-        <source>;   - %1 (%2);</source>
-        <translation>;   - %1 (%2) ;</translation>
+        <translation>Montrer/cacher la fenêtre Espaces De Travail PMR</translation>
     </message>
 </context>
 <context>
@@ -103,7 +64,7 @@
     </message>
     <message>
         <source>About...</source>
-        <translation>Ã€ Propos...</translation>
+        <translation>À Propos...</translation>
     </message>
     <message>
         <source>Some information about the current workspace</source>
@@ -115,15 +76,15 @@
     </message>
     <message>
         <source>Click on the top-right button.</source>
-        <translation>Cliquez sur le bouton en haut Ã  droite.</translation>
+        <translation>Cliquez sur le bouton en haut à droite.</translation>
     </message>
     <message>
         <source>No workspaces were found...</source>
-        <translation>Aucuns espaces de travail n&apos;ont Ã©tÃ© trouvÃ©s...</translation>
+        <translation>Aucuns espaces de travail n&apos;ont été trouvés...</translation>
     </message>
     <message>
         <source>Owner:</source>
-        <translation>PropriÃ©taire :</translation>
+        <translation>Propriétaire :</translation>
     </message>
     <message>
         <source>PMR:</source>
@@ -138,7 +99,7 @@
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWindow</name>
     <message>
         <source>Log Off</source>
-        <translation>Se DÃ©connecter</translation>
+        <translation>Se Déconnecter</translation>
     </message>
     <message>
         <source>Log On</source>
@@ -146,30 +107,15 @@
     </message>
     <message>
         <source>Log off PMR</source>
-        <translation>Se dÃ©connecter de PMR</translation>
+        <translation>Se déconnecter de PMR</translation>
     </message>
     <message>
         <source>Log on to PMR</source>
-        <translation>Se connecter Ã  PMR</translation>
+        <translation>Se connecter à PMR</translation>
     </message>
     <message>
         <source>You are about to log off PMR. Do you want to proceed?</source>
-        <translation>Vous Ãªtes sur le point de vous dÃ©connecter de PMR. Voulez-vous continuer ?</translation>
-    </message>
-</context>
-<context>
-    <name>PmrWorkspacesWindowCommitDialog</name>
-    <message>
-        <source>Commit staged files</source>
-        <translation>Valider les fichiers indexÃ©s</translation>
-    </message>
-    <message>
-        <source>Commit message:</source>
-        <translation>Message de validation :</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note:&lt;/span&gt; lines starting with &apos;;&apos; will be ignored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note :&lt;/span&gt; les lignes commenÃ§ant par &apos;;&apos; seront ignorÃ©es.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>Vous êtes sur le point de vous déconnecter de PMR. Voulez-vous continuer ?</translation>
     </message>
 </context>
 <context>
@@ -188,7 +134,7 @@
     </message>
     <message>
         <source>Folder:</source>
-        <translation>RÃ©pertoire :</translation>
+        <translation>Répertoire :</translation>
     </message>
     <message>
         <source>...</source>
@@ -196,7 +142,18 @@
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note:&lt;/span&gt; the folder must exist and be empty.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note :&lt;/span&gt; le rÃ©pertoire doit exister et Ãªtre vide.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note :&lt;/span&gt; le répertoire doit exister et être vide.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>PmrWorkspacesWindowSynchronizeDialog</name>
+    <message>
+        <source>Synchronise With PMR</source>
+        <translation>Synchroniser Avec PMR</translation>
+    </message>
+    <message>
+        <source>Synchonisation message:</source>
+        <translation>Message de synchronisation :</translation>
     </message>
 </context>
 <context>
@@ -211,7 +168,7 @@
     </message>
     <message>
         <source>Create a new workspace</source>
-        <translation>CrÃ©er un nouvel espace de travail</translation>
+        <translation>Créer un nouvel espace de travail</translation>
     </message>
     <message>
         <source>Reload</source>
@@ -223,15 +180,15 @@
     </message>
     <message>
         <source>Preferences...</source>
-        <translation>PrÃ©fÃ©rences...</translation>
+        <translation>Préférences...</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation>PrÃ©fÃ©rences</translation>
+        <translation>Préférences</translation>
     </message>
     <message>
         <source>Preferences for PMR support</source>
-        <translation>PrÃ©fÃ©rences pour le support PMR</translation>
+        <translation>Préférences pour le support PMR</translation>
     </message>
 </context>
 </TS>

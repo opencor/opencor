@@ -17,24 +17,15 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR Workspaces window commit dialog
+// PMR Workspaces window synchronise dialog
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "pmrworkspace.h"
+#include "coreguiutils.h"
+#include "pmrworkspaceswindowsynchronizedialog.h"
 
 //==============================================================================
 
-#include <QDialog>
-
-//==============================================================================
-
-namespace Ui {
-    class PmrWorkspacesWindowCommitDialog;
-}
+#include "ui_pmrworkspaceswindowsynchronizedialog.h"
 
 //==============================================================================
 
@@ -43,22 +34,52 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-class PmrWorkspacesWindowCommitDialog : public QDialog
+PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(QWidget *pParent) :
+    QDialog(pParent),
+    mGui(new Ui::PmrWorkspacesWindowSynchronizeDialog)
 {
-    Q_OBJECT
+    // Set up the GUI
 
-public:
-    explicit PmrWorkspacesWindowCommitDialog(const PMRSupport::StagedFiles &pStagedFiles,
-                                             QWidget *pParent);
-    ~PmrWorkspacesWindowCommitDialog();
+    mGui->setupUi(this);
 
-    virtual void retranslateUi();
+    // Connect some signals
 
-    QString message() const;
+    connect(mGui->buttonBox, SIGNAL(accepted()),
+            this, SLOT(accept()));
+    connect(mGui->buttonBox, SIGNAL(rejected()),
+            this, SLOT(reject()));
 
-private:
-    Ui::PmrWorkspacesWindowCommitDialog *mGui;
-};
+    // Set our minimum size
+
+    setMinimumSize(Core::minimumWidgetSize(this));
+}
+
+//==============================================================================
+
+PmrWorkspacesWindowSynchronizeDialog::~PmrWorkspacesWindowSynchronizeDialog()
+{
+    // Delete the GUI
+
+    delete mGui;
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowSynchronizeDialog::retranslateUi()
+{
+    // Retranslate our GUI
+
+    mGui->retranslateUi(this);
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWindowSynchronizeDialog::message() const
+{
+    // Return the commit message
+
+    return mGui->messageValue->toPlainText().trimmed();
+}
 
 //==============================================================================
 

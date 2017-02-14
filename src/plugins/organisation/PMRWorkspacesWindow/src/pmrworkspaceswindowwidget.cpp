@@ -25,7 +25,7 @@ limitations under the License.
 #include "i18ninterface.h"
 #include "pmrwebservice.h"
 #include "pmrworkspacemanager.h"
-#include "pmrworkspaceswindowcommitdialog.h"
+#include "pmrworkspaceswindowsynchronizedialog.h"
 #include "pmrworkspaceswindowwidget.h"
 #include "pmrworkspaceswindowwindow.h"
 #include "treeviewwidget.h"
@@ -1305,11 +1305,13 @@ void PmrWorkspacesWindowWidget::commit()
     if (workspace->isMerging()) {
         workspace->commitMerge();
     } else {
-        PmrWorkspacesWindowCommitDialog commitDialog(workspace->stagedFiles(),
-                                                     Core::mainWindow());
+        PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(Core::mainWindow());
 
-        if (commitDialog.exec() == QDialog::Accepted)
-            workspace->commit(commitDialog.message());
+        if (synchronizeDialog.exec() == QDialog::Accepted) {
+            workspace->commit(synchronizeDialog.message());
+//---GRY--- WE THEN NEED TO EITHER PULL THINGS (IF WE DON'T OWN THE WORKSPACE)
+//          OR PULL AND PUSH THINGS (IF WE OWN THE WORKSPACE)...
+        }
     }
 
     refreshWorkspace(workspace);

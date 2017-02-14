@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PmrWorkspacesWindowCommitDialog</class>
- <widget class="QDialog" name="PmrWorkspacesWindowCommitDialog">
+ <class>PmrWorkspacesWindowSynchronizeDialog</class>
+ <widget class="QDialog" name="PmrWorkspacesWindowSynchronizeDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Commit staged files</string>
+   <string>Synchronise With PMR</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -23,28 +23,12 @@
       </font>
      </property>
      <property name="text">
-      <string>Commit message:</string>
+      <string>Synchonisation message:</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QTextEdit" name="messageValue"/>
-   </item>
-   <item>
-    <widget class="QLabel" name="noteLabel">
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note:&lt;/span&gt; lines starting with ';' will be ignored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-     <property name="margin">
-      <number>5</number>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
