@@ -138,30 +138,6 @@
         <translation>Aucuns espaces de travail n&apos;ont été trouvés...</translation>
     </message>
     <message>
-        <source>Stage</source>
-        <translation>Indexer</translation>
-    </message>
-    <message>
-        <source>Stage the file for commit</source>
-        <translation>Indexer le fichier pour validation</translation>
-    </message>
-    <message>
-        <source>Stage the files for commit</source>
-        <translation>Indexer les fichiers pour validation</translation>
-    </message>
-    <message>
-        <source>Unstage</source>
-        <translation>Désindexer</translation>
-    </message>
-    <message>
-        <source>Unstage the file from commit</source>
-        <translation>Désindexer le fichier de la validation</translation>
-    </message>
-    <message>
-        <source>Unstage the files from commit</source>
-        <translation>Désindexer les fichiers de la validation</translation>
-    </message>
-    <message>
         <source>Owner:</source>
         <translation>Propriétaire :</translation>
     </message>

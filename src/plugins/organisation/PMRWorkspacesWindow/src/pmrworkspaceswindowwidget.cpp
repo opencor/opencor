@@ -316,22 +316,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     overlayIconSize = 0.57*fileIconSize;
 
-    mIaFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iA.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mIdFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iD.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mImFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iM.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mIrFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iR.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mItFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iT.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-
     mWaFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wA.png"),
                                       fileIconSize, fileIconSize,
                                       0, 0, overlayIconSize, overlayIconSize);
@@ -989,18 +973,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
 
             QIcon icon = mFileIcon;
 
-            if (status.first != ' ') {
-                if (status.first == 'A')
-                    icon = mIaFileIcon;
-                else if (status.first == 'D')
-                    icon = mIdFileIcon;
-                else if (status.first == 'M')
-                    icon = mImFileIcon;
-                else if (status.first == 'R')
-                    icon = mIrFileIcon;
-                else if (status.first == 'T')
-                    icon = mItFileIcon;
-            } else if (status.second != ' ') {
+            if (status.second != ' ') {
                 if (status.second == 'A')
                     icon = mWaFileIcon;
                 else if (status.second == 'C')
