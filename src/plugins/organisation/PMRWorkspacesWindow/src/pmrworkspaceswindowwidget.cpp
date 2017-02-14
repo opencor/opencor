@@ -414,10 +414,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                   this);
     mPullAndPushAction = Core::newAction(QIcon(":/PMRWorkspacesWindow/pullAndPush.png"),
                                          this);
-    mStageAction = Core::newAction(QIcon(":/oxygen/actions/dialog-ok-apply.png"),
-                                   this);
-    mUnstageAction = Core::newAction(QIcon(":/oxygen/actions/dialog-cancel.png"),
-                                     this);
     mReloadAction = Core::newAction(mParentReloadAction->icon(),
                                     this);
     mAboutAction = Core::newAction(QIcon(":/oxygen/actions/help-about.png"),
@@ -441,10 +437,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
             this, SLOT(pull()));
     connect(mPullAndPushAction, SIGNAL(triggered(bool)),
             this, SLOT(pullAndPush()));
-    connect(mStageAction, SIGNAL(triggered(bool)),
-            this, SLOT(stage()));
-    connect(mUnstageAction, SIGNAL(triggered(bool)),
-            this, SLOT(unstage()));
     connect(mReloadAction, SIGNAL(triggered(bool)),
             mParentReloadAction, SIGNAL(triggered(bool)));
     connect(mAboutAction, SIGNAL(triggered(bool)),
@@ -464,9 +456,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     mContextMenu->addSeparator();
     mContextMenu->addAction(mPullAction);
     mContextMenu->addAction(mPullAndPushAction);
-    mContextMenu->addSeparator();
-    mContextMenu->addAction(mStageAction);
-    mContextMenu->addAction(mUnstageAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mReloadAction);
     mContextMenu->addSeparator();
@@ -1145,37 +1134,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
     PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = workspaceItem?
                                                                     item->workspace()->gitWorkspaceStatus():
                                                                     PMRSupport::PmrWorkspace::StatusUnknown;
-    int nbOfStagedFiles = 0;
-    int nbOfUnstagedFiles = 0;
-
-    for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i) {
-        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]));
-        PMRSupport::PmrWorkspaceFileNode *fileNode = item->fileNode();
-        bool stagedFile = fileNode?(fileNode->status().first != ' '):false;
-        bool unstagedFile = fileNode?(fileNode->status().second != ' '):false;
-
-        if (   (item->type() == PmrWorkspacesWindowItem::File)
-            && (stagedFile || unstagedFile)) {
-            nbOfStagedFiles += stagedFile;
-            nbOfUnstagedFiles += unstagedFile;
-        } else {
-            nbOfStagedFiles = 0;
-            nbOfUnstagedFiles = 0;
-
-            break;
-        }
-    }
-
     bool onlyOneItem = selectedItems.count() == 1;
-
-    I18nInterface::retranslateAction(mStageAction, tr("Stage"),
-                                     onlyOneItem?
-                                         tr("Stage the file for commit"):
-                                         tr("Stage the files for commit"));
-    I18nInterface::retranslateAction(mUnstageAction, tr("Unstage"),
-                                     onlyOneItem?
-                                         tr("Unstage the file from commit"):
-                                         tr("Unstage the files from commit"));
 
     mNewAction->setVisible(!item);
     mViewInPmrAction->setVisible(workspaceItems);
@@ -1186,8 +1145,6 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
     mCommitAction->setVisible(onlyOneItem && workspaceItem);
     mPullAction->setVisible(onlyOneItem && workspaceItem);
     mPullAndPushAction->setVisible(onlyOneItem && ownedWorkspaceItem);
-    mStageAction->setVisible(nbOfUnstagedFiles);
-    mUnstageAction->setVisible(nbOfStagedFiles);
     mAboutAction->setVisible(onlyOneItem && workspaceItem);
 
     bool clonedWorkspaceItem =     workspaceItem && item

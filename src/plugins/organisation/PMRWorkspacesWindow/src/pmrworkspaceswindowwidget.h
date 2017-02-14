@@ -172,8 +172,6 @@ private:
     QAction *mCommitAction;
     QAction *mPullAction;
     QAction *mPullAndPushAction;
-    QAction *mStageAction;
-    QAction *mUnstageAction;
     QAction *mReloadAction;
     QAction *mAboutAction;
 
