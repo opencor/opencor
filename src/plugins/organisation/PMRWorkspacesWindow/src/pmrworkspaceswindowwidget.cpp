@@ -382,9 +382,9 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     connect(mCopyWorkspacePathAction, SIGNAL(triggered(bool)),
             this, SLOT(copyWorkspacePath()));
     connect(mMakeLocalCopyAction, SIGNAL(triggered(bool)),
-            this, SLOT(makeLocalCopy()));
+            this, SLOT(makeLocalWorkspaceCopy()));
     connect(mSynchronizeWorkspaceAction, SIGNAL(triggered(bool)),
-            this, SLOT(commit()));
+            this, SLOT(synchronizeWorkspace()));
     connect(mReloadWorkspacesAction, SIGNAL(triggered(bool)),
             mParentReloadAction, SIGNAL(triggered(bool)));
     connect(mAboutWorkspaceAction, SIGNAL(triggered(bool)),
@@ -1290,9 +1290,9 @@ void PmrWorkspacesWindowWidget::copyWorkspacePath()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::makeLocalCopy()
+void PmrWorkspacesWindowWidget::makeLocalWorkspaceCopy()
 {
-    // Make a local copy (i.e. clone) of the owned workspace
+    // Make a local copy (i.e. clone) of the current owned workspace
 
     QString dirName = PMRSupport::PmrWebService::getEmptyDirectory();
 
@@ -1313,85 +1313,30 @@ void PmrWorkspacesWindowWidget::makeLocalCopy()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::commit()
+void PmrWorkspacesWindowWidget::synchronizeWorkspace()
 {
-    // Commit the current workspace's staged changes
+    // Synchronise the current workspace, which involves letting the user decide
+    // which files should be staged, commit those files, pull things from PMR
+    // and, if we own the workspace, push things to PMR before refreshing our
+    // workspace
 
     PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
+    PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(Core::mainWindow());
 
-    if (workspace->isMerging()) {
-        workspace->commitMerge();
-    } else {
-        PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(Core::mainWindow());
+    synchronizeDialog.exec();
 
-        if (synchronizeDialog.exec() == QDialog::Accepted) {
-            workspace->commit(synchronizeDialog.message());
-//---GRY--- WE THEN NEED TO EITHER PULL THINGS (IF WE DON'T OWN THE WORKSPACE)
-//          OR PULL AND PUSH THINGS (IF WE OWN THE WORKSPACE)...
-        }
+    if (synchronizeDialog.result() == QMessageBox::Ok) {
+        QStringList fileNames = synchronizeDialog.fileNames();
+
+        for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
+            workspace->stageFile(fileNames[i], true);
+
+        workspace->commit(synchronizeDialog.message());
+
+        mPmrWebService->requestWorkspaceSynchronize(currentItem()->workspace(), workspace->isOwned());
     }
 
     refreshWorkspace(workspace);
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::pull()
-{
-    // Synchronise the current workspace with PMR
-
-    mPmrWebService->requestWorkspaceSynchronize(currentItem()->workspace(), false);
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::pullAndPush()
-{
-    // Synchronise the current workspace with PMR and push its changes to it
-
-    mPmrWebService->requestWorkspaceSynchronize(currentItem()->workspace(), true);
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::stageUnstage(const bool &pStage)
-{
-    // Stage/unstage the current file(s)
-
-    PMRSupport::PmrWorkspaces workspaces = PMRSupport::PmrWorkspaces();
-    QModelIndexList items = mTreeViewWidget->selectedIndexes();
-
-    for (int i = 0, iMax = items.count(); i < iMax; ++i) {
-        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(items[i]));
-        PMRSupport::PmrWorkspace *workspace = item->workspace();
-
-        workspace->stageFile(item->fileNode()->path(), pStage);
-
-        if (!workspaces.contains(workspace))
-            workspaces << workspace;
-    }
-
-    // Refresh the workspaces that (may) have changed status
-
-    refreshWorkspaces(workspaces);
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::stage()
-{
-    // Stage the current file(s)
-
-    stageUnstage(true);
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowWidget::unstage()
-{
-    // Stage the current file(s)
-
-    stageUnstage(false);
 }
 
 //==============================================================================

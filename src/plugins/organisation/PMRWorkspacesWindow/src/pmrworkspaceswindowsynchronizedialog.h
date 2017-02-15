@@ -55,6 +55,8 @@ public:
 
     QString message() const;
 
+    QStringList fileNames() const;
+
 private:
     Ui::PmrWorkspacesWindowSynchronizeDialog *mGui;
 };

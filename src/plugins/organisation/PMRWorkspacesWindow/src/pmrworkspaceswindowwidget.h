@@ -227,8 +227,6 @@ private:
     void duplicateCloneMessage(const QString &pUrl, const QString &pPath1,
                                const QString &pPath2);
 
-    void stageUnstage(const bool &pStage);
-
     void sortAndResizeTreeViewToContents();
 
     QStringList selectedWorkspaceUrls() const;
@@ -264,12 +262,8 @@ private slots:
     void viewOnComputer();
     void copyWorkspaceUrl();
     void copyWorkspacePath();
-    void makeLocalCopy();
-    void commit();
-    void pull();
-    void pullAndPush();
-    void stage();
-    void unstage();
+    void makeLocalWorkspaceCopy();
+    void synchronizeWorkspace();
     void aboutWorkspace();
 };
 

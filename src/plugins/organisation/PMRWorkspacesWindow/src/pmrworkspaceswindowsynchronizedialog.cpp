@@ -83,6 +83,16 @@ QString PmrWorkspacesWindowSynchronizeDialog::message() const
 
 //==============================================================================
 
+QStringList PmrWorkspacesWindowSynchronizeDialog::fileNames() const
+{
+    // Return our file names
+//---GRY--- TO BE DONE...
+
+    return QStringList();
+}
+
+//==============================================================================
+
 }   // namespace PMRWorkspacesWindow
 }   // namespace OpenCOR
 
