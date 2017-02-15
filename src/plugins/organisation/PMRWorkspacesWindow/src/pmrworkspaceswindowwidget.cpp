@@ -184,33 +184,6 @@ void PmrWorkspacesWindowItem::setExpandedIcon(const QIcon &pExpandedIcon)
 
 //==============================================================================
 
-QString PmrWorkspacesWindowItem::url() const
-{
-    // Return our URL
-
-    return mWorkspace?mWorkspace->url():QString();
-}
-
-//==============================================================================
-
-QString PmrWorkspacesWindowItem::path() const
-{
-    // Return our path
-
-    return mWorkspace?mWorkspace->path():QString();
-}
-
-//==============================================================================
-
-QString PmrWorkspacesWindowItem::fileName() const
-{
-    // Return our file name
-
-    return mFileNode?mFileNode->path():QString();
-}
-
-//==============================================================================
-
 PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                                      PMRSupport::PmrWebService *pPmrWebService,
                                                      PmrWorkspacesWindowWindow *pParent) :
@@ -575,7 +548,7 @@ void PmrWorkspacesWindowWidget::keyPressEvent(QKeyEvent *pEvent)
         PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]));
 
         if (item->type() == PmrWorkspacesWindowItem::File) {
-            fileNames << item->fileName();
+            fileNames << item->fileNode()->path();
         } else {
             fileNames = QStringList();
 
@@ -1087,7 +1060,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu(const QPoint &pPosition) c
         if (   (item->type() != PmrWorkspacesWindowItem::OwnedWorkspace)
             && (item->type() != PmrWorkspacesWindowItem::Workspace)) {
             workspaceItems = false;
-        } else if (mWorkspaceUrlFoldersOwned.value(item->url()).first.isEmpty()) {
+        } else if (mWorkspaceUrlFoldersOwned.value(item->workspace()->url()).first.isEmpty()) {
             clonedWorkspaceItems = false;
         }
     }
@@ -1113,7 +1086,7 @@ void PmrWorkspacesWindowWidget::itemDoubleClicked(const QModelIndex &pIndex)
     PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
 
     if (item->type() == PmrWorkspacesWindowItem::File)
-        emit openFileRequested(item->fileName());
+        emit openFileRequested(item->fileNode()->path());
 }
 
 //==============================================================================
@@ -1238,7 +1211,7 @@ void PmrWorkspacesWindowWidget::viewInPmr()
     QModelIndexList selectedItems = mTreeViewWidget->selectedIndexes();
 
     for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i)
-        QDesktopServices::openUrl(static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]))->url());
+        QDesktopServices::openUrl(static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]))->workspace()->url());
 }
 
 //==============================================================================
@@ -1250,7 +1223,7 @@ void PmrWorkspacesWindowWidget::viewOnComputer()
     QModelIndexList selectedItems = mTreeViewWidget->selectedIndexes();
 
     for (int i = 0, iMax = selectedItems.count(); i < iMax; ++i)
-        QDesktopServices::openUrl(QUrl::fromLocalFile(static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]))->path()));
+        QDesktopServices::openUrl(QUrl::fromLocalFile(static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]))->workspace()->path()));
 }
 
 //==============================================================================
@@ -1259,7 +1232,7 @@ void PmrWorkspacesWindowWidget::copyWorkspaceUrl()
 {
     // Copy the current workspace item's URL to the clipboard
 
-    QApplication::clipboard()->setText(currentItem()->url());
+    QApplication::clipboard()->setText(currentItem()->workspace()->url());
 }
 
 //==============================================================================
@@ -1268,7 +1241,7 @@ void PmrWorkspacesWindowWidget::copyWorkspacePath()
 {
     // Copy the current workspace item's path to the clipboard
 
-    QApplication::clipboard()->setText(currentItem()->path());
+    QApplication::clipboard()->setText(currentItem()->workspace()->path());
 }
 
 //==============================================================================
@@ -1289,7 +1262,7 @@ void PmrWorkspacesWindowWidget::makeLocalCopy()
 
         // Ask our PMR web service to effectively clone our owned workspace
 
-        mPmrWebService->requestWorkspaceClone(PMRSupport::PmrWorkspaceManager::instance()->workspace(currentItem()->url()),
+        mPmrWebService->requestWorkspaceClone(PMRSupport::PmrWorkspaceManager::instance()->workspace(currentItem()->workspace()->url()),
                                               dirName);
     }
 }
@@ -1348,7 +1321,7 @@ void PmrWorkspacesWindowWidget::stageUnstage(const bool &pStage)
         PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(selectedItems[i]));
         PMRSupport::PmrWorkspace *workspace = item->workspace();
 
-        workspace->stageFile(item->fileName(), pStage);
+        workspace->stageFile(item->fileNode()->path(), pStage);
 
         if (!workspaces.contains(workspace))
             workspaces << workspace;
@@ -1389,7 +1362,7 @@ void PmrWorkspacesWindowWidget::about()
                                  "        <td>%2</td>\n"
                                  "    </tr>\n";
 
-    PMRSupport::PmrWorkspace *workspace = PMRSupport::PmrWorkspaceManager::instance()->workspace(currentItem()->url());
+    PMRSupport::PmrWorkspace *workspace = PMRSupport::PmrWorkspaceManager::instance()->workspace(currentItem()->workspace()->url());
     QString message = QString("<p style=\"font-weight: bold;\">\n"
                               "    %1\n"
                               "</p>\n").arg(workspace->name());

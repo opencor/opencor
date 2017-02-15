@@ -93,10 +93,6 @@ public:
     QIcon expandedIcon() const;
     void setExpandedIcon(const QIcon &pExpandedIcon);
 
-    QString url() const;
-    QString path() const;
-    QString fileName() const;
-
 private:
     Type mType;
 
