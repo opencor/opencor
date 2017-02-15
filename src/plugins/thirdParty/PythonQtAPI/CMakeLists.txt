@@ -4,9 +4,13 @@ PROJECT(PythonQtAPIPlugin)
 
 SET(PYTHONQTAPI_VERSION 3.1)
 
-# Specify the git tag in the OpenSSL repository that we want to use
+# Specify the PythonQt repository and branch that we want to use
 
-SET(PYTHONQT_GIT_TAG "patched-6")
+SET(PYTHONQT_GIT_REPOSITORY https://github.com/dbrnz/PythonQt.git)
+SET(PYTHONQT_GIT_TAG "opencor")
+
+#SET(PYTHONQT_GIT_REPOSITORY https://github.com/commontk/PythonQt.git)
+#SET(PYTHONQT_GIT_TAG "patched-6")
 
 # The names of the libraries built by PythonQt's build process.
 
@@ -80,7 +84,7 @@ ELSE()
         DEPENDS PythonPlugin
         SOURCE_DIR ${PROJECT_SOURCE_DIR}/PythonQt
         INSTALL_DIR ${FULL_INSTALL_DIR}
-        GIT_REPOSITORY https://github.com/commontk/PythonQt.git
+        GIT_REPOSITORY ${PYTHONQT_GIT_REPOSITORY}
         GIT_TAG ${PYTHONQT_GIT_TAG}
         CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
