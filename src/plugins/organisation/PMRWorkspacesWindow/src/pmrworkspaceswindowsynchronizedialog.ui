@@ -23,7 +23,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Synchonisation message:</string>
+      <string>Message:</string>
      </property>
     </widget>
    </item>
@@ -49,7 +49,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
