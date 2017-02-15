@@ -21,11 +21,12 @@ specific language governing permissions and limitations under the License.
 
 #include "corecliutils.h"
 #include "pythonqtsupportplugin.h"
+#include "ctkAbstractPythonManager.h"
 
 //==============================================================================
 
-#include "ctkAbstractPythonManager.h"
-#include "PythonQt_QtBindings.h"
+#include <PythonQt.h>
+#include <PythonQt_QtBindings.h>
 
 //==============================================================================
 
@@ -78,7 +79,7 @@ bool PythonQtSupportPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void PythonQtSupportPlugin::initializePlugin()
 {
-    // Use our (patched) backend for PythonQt
+    // Use our (patched) matplotlib backend for PythonQt
 
     qputenv("MPLBACKEND", "module://matplotlib.backends.backend_qt5agg");
 

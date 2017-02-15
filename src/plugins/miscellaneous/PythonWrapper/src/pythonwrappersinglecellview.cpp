@@ -48,10 +48,12 @@ static PyObject *OpenCOR_simulations(PyObject *self,  PyObject *args)
     auto simulationDict = PyDict_New();
     auto singleCellViewWidget = PythonWrapperPlugin::instance()->singleCellViewWidget();
 
-    foreach (const QString &fileName, singleCellViewWidget->fileNames()) {
-        auto simulation = singleCellViewWidget->simulation(fileName);
-        PythonQt::self()->addObject(simulationDict, fileName, simulation);
-   }
+    if (singleCellViewWidget) {
+        foreach (const QString &fileName, singleCellViewWidget->fileNames()) {
+            auto simulation = singleCellViewWidget->simulation(fileName);
+            PythonQt::self()->addObject(simulationDict, fileName, simulation);
+        }
+    }
 
     return simulationDict;
 }
@@ -63,8 +65,14 @@ PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
     Q_UNUSED(self);
     Q_UNUSED(args);
 
-    auto simulation = PythonWrapperPlugin::instance()->singleCellViewWidget()->simulation(Core::centralWidget()->currentFileName());
-    return PythonQt::priv()->wrapQObject(simulation);
+    auto singleCellViewWidget = PythonWrapperPlugin::instance()->singleCellViewWidget();
+    if (singleCellViewWidget) {
+        auto simulation = singleCellViewWidget->simulation(Core::centralWidget()->currentFileName());
+        return PythonQt::priv()->wrapQObject(simulation);
+    } else {
+        Py_INCREF(Py_None);
+        return Py_None;
+    }
 }
 
 //==============================================================================

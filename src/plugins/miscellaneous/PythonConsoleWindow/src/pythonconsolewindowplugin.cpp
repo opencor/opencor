@@ -25,10 +25,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-//#include "guiutils.h"
-
-//==============================================================================
-
 #include <QMainWindow>
 #include <QSettings>
 #include <QVariant>
@@ -48,7 +44,7 @@ PLUGININFO_FUNC PythonConsoleWindowPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("the Python Console window plugin."));
 
     return new PluginInfo(PluginInfo::Miscellaneous, true, false,
-                          QStringList() << "Core" << "PythonQtSupport",
+                          QStringList() << "Core" << "PythonQtSupport" << "PythonWrapper",
                           descriptions);
 }
 
@@ -98,6 +94,9 @@ void PythonConsoleWindowPlugin::initializePlugin()
     // Create our Python window
 
     mPythonConsoleWindow = new PythonConsoleWindow(Core::mainWindow());
+
+
+//    matplotlib.use('PythonQt')
 }
 
 //==============================================================================
