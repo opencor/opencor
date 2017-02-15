@@ -9,42 +9,30 @@
     </message>
     <message>
         <source>Show/hide the PMR Workspaces window</source>
-        <translation>Montrer/cacher la fenêtre Espaces De Travail PMR</translation>
+        <translation>Montrer/cacher la fenÃªtre Espaces De Travail PMR</translation>
     </message>
 </context>
 <context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWidget</name>
     <message>
-        <source>View In PMR</source>
-        <translation>Voir Dans PMR</translation>
-    </message>
-    <message>
-        <source>View in PMR</source>
-        <translation>Voir dans PMR</translation>
-    </message>
-    <message>
-        <source>View On Computer</source>
-        <translation>Voir Sur Ordinateur</translation>
-    </message>
-    <message>
-        <source>View on computer</source>
-        <translation>Voir sur l&apos;ordinateur</translation>
+        <source>New Workspace...</source>
+        <translation>Nouvel Espaces De Travail...</translation>
     </message>
     <message>
         <source>Copy Workspace URL</source>
         <translation>Copier URL Espace De Travail</translation>
     </message>
     <message>
-        <source>Copy the workspace URL to the clipboard</source>
-        <translation>Copier l&apos;URL de l&apos;espace de travail dans le presse-papier</translation>
+        <source>Copy the current workspace URL to the clipboard</source>
+        <translation>Copier l&apos;URL de l&apos;espace de travail actuel dans le presse-papier</translation>
     </message>
     <message>
         <source>Copy Workspace Path</source>
         <translation>Copier Chemin Espace De Travail</translation>
     </message>
     <message>
-        <source>Copy the workspace path to the clipboard</source>
-        <translation>Copier le chemin de l&apos;espace de travail dans le presse-papier</translation>
+        <source>Copy the current workspace path to the clipboard</source>
+        <translation>Copier le chemin de l&apos;espace de travail actuel dans le presse-papier</translation>
     </message>
     <message>
         <source>Make Local Copy...</source>
@@ -55,16 +43,20 @@
         <translation>Faire une copie locale de l&apos;espace de travail actuel</translation>
     </message>
     <message>
-        <source>Synchronise...</source>
-        <translation>Synchroniser...</translation>
+        <source>Synchronise Workspace...</source>
+        <translation>Synchroniser Espace De Travail...</translation>
     </message>
     <message>
-        <source>Synchronise with PMR</source>
-        <translation>Synchroniser avec PMR</translation>
+        <source>Synchronise the curent workspace with PMR</source>
+        <translation>Synchroniser l&apos;espace de travail actuel avec PMR</translation>
     </message>
     <message>
-        <source>About...</source>
-        <translation>À Propos...</translation>
+        <source>Reload Workspaces</source>
+        <translation>Recharger Espaces De Travail</translation>
+    </message>
+    <message>
+        <source>About Workspace</source>
+        <translation>Ã€ Propos Espace De Travail</translation>
     </message>
     <message>
         <source>Some information about the current workspace</source>
@@ -76,15 +68,47 @@
     </message>
     <message>
         <source>Click on the top-right button.</source>
-        <translation>Cliquez sur le bouton en haut à droite.</translation>
+        <translation>Cliquez sur le bouton en haut Ã  droite.</translation>
     </message>
     <message>
         <source>No workspaces were found...</source>
-        <translation>Aucuns espaces de travail n&apos;ont été trouvés...</translation>
+        <translation>Aucuns espaces de travail n&apos;ont Ã©tÃ© trouvÃ©s...</translation>
+    </message>
+    <message>
+        <source>View Workspace In PMR</source>
+        <translation>Voir Espace De Travail Dans PMR</translation>
+    </message>
+    <message>
+        <source>View Workspaces In PMR</source>
+        <translation>Voir Espaces De Travail Dans PMR</translation>
+    </message>
+    <message>
+        <source>View the current workspace in PMR</source>
+        <translation>Voir l&apos;espace de travail actuel dans PMR</translation>
+    </message>
+    <message>
+        <source>View the current workspaces in PMR</source>
+        <translation>Voir les espaces de travail actuels dans PMR</translation>
+    </message>
+    <message>
+        <source>View Workspace On Computer</source>
+        <translation>Voir Espace De Travail Sur Ordinateur</translation>
+    </message>
+    <message>
+        <source>View Workspaces On Computer</source>
+        <translation>Voir Espaces De Travail Sur Ordinateur</translation>
+    </message>
+    <message>
+        <source>View the current workspace on the computer</source>
+        <translation>Voir l&apos;espace de travail actuel sur l&apos;ordinateur</translation>
+    </message>
+    <message>
+        <source>View the current workspaces on the computer</source>
+        <translation>Voir les espaces de travail actuels sur l&apos;ordinateur</translation>
     </message>
     <message>
         <source>Owner:</source>
-        <translation>Propriétaire :</translation>
+        <translation>PropriÃ©taire :</translation>
     </message>
     <message>
         <source>PMR:</source>
@@ -99,7 +123,7 @@
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWindow</name>
     <message>
         <source>Log Off</source>
-        <translation>Se Déconnecter</translation>
+        <translation>Se DÃ©connecter</translation>
     </message>
     <message>
         <source>Log On</source>
@@ -107,15 +131,15 @@
     </message>
     <message>
         <source>Log off PMR</source>
-        <translation>Se déconnecter de PMR</translation>
+        <translation>Se dÃ©connecter de PMR</translation>
     </message>
     <message>
         <source>Log on to PMR</source>
-        <translation>Se connecter à PMR</translation>
+        <translation>Se connecter Ã  PMR</translation>
     </message>
     <message>
         <source>You are about to log off PMR. Do you want to proceed?</source>
-        <translation>Vous êtes sur le point de vous déconnecter de PMR. Voulez-vous continuer ?</translation>
+        <translation>Vous Ãªtes sur le point de vous dÃ©connecter de PMR. Voulez-vous continuer ?</translation>
     </message>
 </context>
 <context>
@@ -134,7 +158,7 @@
     </message>
     <message>
         <source>Folder:</source>
-        <translation>Répertoire :</translation>
+        <translation>RÃ©pertoire :</translation>
     </message>
     <message>
         <source>...</source>
@@ -142,7 +166,7 @@
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note:&lt;/span&gt; the folder must exist and be empty.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note :&lt;/span&gt; le répertoire doit exister et être vide.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note :&lt;/span&gt; le rÃ©pertoire doit exister et Ãªtre vide.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -168,7 +192,7 @@
     </message>
     <message>
         <source>Create a new workspace</source>
-        <translation>Créer un nouvel espace de travail</translation>
+        <translation>CrÃ©er un nouvel espace de travail</translation>
     </message>
     <message>
         <source>Reload</source>
@@ -180,15 +204,15 @@
     </message>
     <message>
         <source>Preferences...</source>
-        <translation>Préférences...</translation>
+        <translation>PrÃ©fÃ©rences...</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation>Préférences</translation>
+        <translation>PrÃ©fÃ©rences</translation>
     </message>
     <message>
         <source>Preferences for PMR support</source>
-        <translation>Préférences pour le support PMR</translation>
+        <translation>PrÃ©fÃ©rences pour le support PMR</translation>
     </message>
 </context>
 </TS>

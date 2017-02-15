@@ -159,15 +159,15 @@ private:
     QAction *mParentNewAction;
     QAction *mParentReloadAction;
 
-    QAction *mNewAction;
+    QAction *mNewWorkspaceAction;
     QAction *mViewInPmrAction;
     QAction *mViewOncomputerAction;
     QAction *mCopyWorkspaceUrlAction;
     QAction *mCopyWorkspacePathAction;
     QAction *mMakeLocalCopyAction;
-    QAction *mSynchronizeAction;
-    QAction *mReloadAction;
-    QAction *mAboutAction;
+    QAction *mSynchronizeWorkspaceAction;
+    QAction *mReloadWorkspacesAction;
+    QAction *mAboutWorkspaceAction;
 
     Core::UserMessageWidget *mUserMessageWidget;
 
@@ -231,6 +231,9 @@ private:
 
     void sortAndResizeTreeViewToContents();
 
+    QStringList selectedWorkspaceUrls() const;
+    QStringList selectedWorkspacePaths() const;
+
 signals:
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
@@ -244,10 +247,10 @@ public slots:
                     const bool &pAuthenticated = true);
 
 private slots:
-    void showCustomContextMenu(const QPoint &pPosition) const;
-    void itemDoubleClicked(const QModelIndex &pIndex);
-    void itemExpanded(const QModelIndex &pIndex);
-    void itemCollapsed(const QModelIndex &pIndex);
+    void showCustomContextMenu() const;
+    void itemDoubleClicked();
+    void itemExpanded();
+    void itemCollapsed();
 
     void resizeTreeViewToContents();
 
@@ -267,7 +270,7 @@ private slots:
     void pullAndPush();
     void stage();
     void unstage();
-    void about();
+    void aboutWorkspace();
 };
 
 //==============================================================================
