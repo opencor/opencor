@@ -1,8 +1,16 @@
 PROJECT(PythonQtAPIPlugin)
 
+# Increment this number before building a new package to a value larger
+# larger than its maximum value over all git branches. This is to ensure
+# that the correct package archive is retrieved when the build configuration
+# is changed (e.g. by changing the git branch).
+
+SET(BUILD_NUMBER 1)
+
 # Specify the version of PythonQt we are using.
 
 SET(PYTHONQTAPI_VERSION 3.1)
+SET(PYTHONQTAPI_PACKAGE_VERSION ${PYTHONQTAPI_VERSION}-${BUILD_NUMBER})
 
 # Specify the PythonQt repository and branch that we want to use
 
@@ -54,7 +62,7 @@ IF(USE_PREBUILT_PYTHONQT_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-                PythonQtAPI ${PYTHONQTAPI_VERSION} 3351428b9aef566ce5ba3441ad5d7b5256e63280
+                PythonQtAPI ${PYTHONQTAPI_PACKAGE_VERSION} 3351428b9aef566ce5ba3441ad5d7b5256e63280
                 CHECKED_FILES ${CHECKED_FILES}
                 SHA1_VALUES 710a0520607377a1429933cd91399a3200f45314
                 )
@@ -63,13 +71,13 @@ IF(USE_PREBUILT_PYTHONQT_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            PythonQtAPI ${PYTHONQTAPI_VERSION} a7f51745ea09b8b2daa6b466788317991fd1b04d
+            PythonQtAPI ${PYTHONQTAPI_PACKAGE_VERSION} 4b45ab8aee5eb583e7b3e73f344dd511b79b503d
             CHECKED_FILES ${CHECKED_FILES}
-            SHA1_VALUES 7addd9fd50a2c41da50288a976d8ab43d9c0da55
+            SHA1_VALUES b9607e268edf3e5ba8c4c08b172a42196a2fbeb5
         )
     ELSE()
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            PythonQtAPI ${PYTHONQTAPI_VERSION} 71ce9ae21087625ac56862cdb344c51a834b0cc2
+            PythonQtAPI ${PYTHONQTAPI_PACKAGE_VERSION} 71ce9ae21087625ac56862cdb344c51a834b0cc2
             CHECKED_FILES ${CHECKED_FILES}
             SHA1_VALUES 3323c41ff51bf6ee532c0e788677b4e280385309
         )
@@ -112,7 +120,7 @@ ELSE()
     # Package PythonQt's include files and libraries
 
     CREATE_PACKAGE_FILE(${RELATIVE_INSTALL_DIR}
-        PythonQtAPI ${PYTHONQTAPI_VERSION}
+        PythonQtAPI ${PYTHONQTAPI_PACKAGE_VERSION}
         PACKAGED_FILES ${PACKAGED_FILES}
         CHECKED_FILES ${CHECKED_FILES}
         DEPENDENCY PythonQtAPIBuild

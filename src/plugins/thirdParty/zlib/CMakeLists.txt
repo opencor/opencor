@@ -1,9 +1,17 @@
 PROJECT(zlibPlugin)
 
+# Increment this number before building a new package to a value larger
+# larger than its maximum value over all git branches. This is to ensure
+# that the correct package archive is retrieved when the build configuration
+# is changed (e.g. by changing the git branch).
+
+SET(BUILD_NUMBER 1)
+
 # Specify the version of zlib we want to build
 
 SET(ZLIB_FULL_VERSION "1.2.11")
 SET(ZLIB_SHORT_VERSION "1")
+SET(ZLIB_PACKAGE_VERSION ${ZLIB_SHORT_VERSION}-${BUILD_NUMBER})
 
 SET(ZLIB_GIT_TAG v${ZLIB_FULL_VERSION})
 
@@ -49,14 +57,14 @@ IF(USE_PREBUILT_ZLIB_PLUGIN)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-                zlib ${ZLIB_SHORT_VERSION} 7194c3b2dd6bd7ff0527f2233d2af79b4a14e5ba
+                zlib ${ZLIB_PACKAGE_VERSION} 7194c3b2dd6bd7ff0527f2233d2af79b4a14e5ba
                 CHECKED_FILES ${CHECKED_FILES}
                 SHA1_VALUES 6a20d25d86b04f05ce3a7522b55e0aa72b371d67
                             44029c49007f9f4763cc24697f5a844703fc60e3
             )
         ELSE()
             RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-                zlib ${ZLIB_SHORT_VERSION} 247cc1f804aa2e39ca12639428cab963ed5a2288
+                zlib ${ZLIB_PACKAGE_VERSION} 247cc1f804aa2e39ca12639428cab963ed5a2288
                 CHECKED_FILES ${CHECKED_FILES}
                 SHA1_VALUES 28c247df6eb273f0054307a2e7eb8acf15b56509
                             7bca1863a471c08a27bca8d5a6739cc835966195
@@ -64,13 +72,13 @@ IF(USE_PREBUILT_ZLIB_PLUGIN)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            zlib ${ZLIB_SHORT_VERSION} 7619ac9f841d68aa161309e620bd124cea822d51
+            zlib ${ZLIB_PACKAGE_VERSION} 45a5b4c6aeadf704ce18337e46e3d0b9c6d54bb8
             CHECKED_FILES ${CHECKED_FILES}
-            SHA1_VALUES 5c7dd20dbfe27adf568e66f7701ba8eae1575dea
+            SHA1_VALUES cd253f8540dda135d970a06b6315210b7b756a56
         )
     ELSE()
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            zlib ${ZLIB_SHORT_VERSION} 488cf13e9c9d00cbf3112482d4a8110c3bc8b5d1
+            zlib ${ZLIB_PACKAGE_VERSION} 488cf13e9c9d00cbf3112482d4a8110c3bc8b5d1
             CHECKED_FILES ${CHECKED_FILES}
             SHA1_VALUES e7a94eaf5cd6bfa099ffc700ea81f26e3030a065
         )
@@ -132,7 +140,7 @@ ELSE()
     # Package zlib's include files and library
 
     CREATE_PACKAGE_FILE(${RELATIVE_INSTALL_DIR}
-        zlib ${ZLIB_SHORT_VERSION}
+        zlib ${ZLIB_PACKAGE_VERSION}
         PACKAGED_FILES include ${CHECKED_FILES}
         CHECKED_FILES ${CHECKED_FILES}
         DEPENDENCY zlibBuild
