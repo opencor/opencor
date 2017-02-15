@@ -1,8 +1,16 @@
 PROJECT(OpenSSLPlugin)
 
+# Increment this number before building a new package to a value larger
+# larger than its maximum value over all git branches. This is to ensure
+# that the correct package archive is retrieved when the build configuration
+# is changed (e.g. by changing the git branch).
+
+SET(BUILD_NUMBER 1)
+
 # Specify the version of OpenSSL we want to build
 
 SET(OPENSSL_VERSION "1.0.0")
+SET(OPENSSL_PACKAGE_VERSION ${OPENSSL_VERSION}-${BUILD_NUMBER})
 
 # Specify the git tag in the OpenSSL repository that we want to use
 
@@ -59,7 +67,7 @@ IF(USE_PREBUILT_OPENSSL_PLUGIN)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${RELATIVE_ROOT_DIR}
-                OpenSSL ${OPENSSL_VERSION} 3351428b9aef566ce5ba3441ad5d7b5256e63280
+                OpenSSL ${OPENSSL_PACKAGE_VERSION} 3351428b9aef566ce5ba3441ad5d7b5256e63280
                 CHECKED_FILES ${CHECKED_FILES}
                 SHA1_VALUES 710a0520607377a1429933cd91399a3200f45314
                     b9895617dc6c321eaaa7d5eef7e4a922f6fb226a
@@ -71,14 +79,14 @@ IF(USE_PREBUILT_OPENSSL_PLUGIN)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            OpenSSL ${OPENSSL_VERSION} f297ab1a30363f55cc61fef1afc6b3e8d952c673
+            OpenSSL ${OPENSSL_PACKAGE_VERSION} 5e0698b9c7ce2c3eeec841302ea3b04d77a924da
             CHECKED_FILES ${CHECKED_FILES}
             SHA1_VALUES 48b0abbc61b40a9e54a6196dab180322ec7f41a1
                         140ce0a6149e936aecdbd646272d34186ac782e9
         )
     ELSE()
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            OpenSSL ${OPENSSL_VERSION} 092af4340f68d8cc448778bb93da2b78d3f1c46d
+            OpenSSL ${OPENSSL_PACKAGE_VERSION} 092af4340f68d8cc448778bb93da2b78d3f1c46d
             CHECKED_FILES ${CHECKED_FILES}
             SHA1_VALUES c448bb86fee3ccf8600061b74953b375f5ca2f6f
                         88583b407a4625ee157d25b35ce9328e023d8584
@@ -196,7 +204,7 @@ ELSE()
     # Package OpenSSL's include files and library
 
     CREATE_PACKAGE_FILE(${RELATIVE_INSTALL_DIR}
-        OpenSSL ${OPENSSL_VERSION}
+        OpenSSL ${OPENSSL_PACKAGE_VERSION}
         PACKAGED_FILES include ${CHECKED_FILES}
         CHECKED_FILES ${CHECKED_FILES}
         DEPENDENCY OpenSSLBuild

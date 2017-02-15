@@ -1,5 +1,12 @@
 PROJECT(PythonPlugin)
 
+# Increment this number before building a new package to a value larger
+# larger than its maximum value over all git branches. This is to ensure
+# that the correct package archive is retrieved when the build configuration
+# is changed (e.g. by changing the git branch).
+
+SET(BUILD_NUMBER 1)
+
 # Specify the version of Python we are using.
 
 SET(PYTHON_VERSION 3.5.2)
@@ -27,6 +34,8 @@ ELSE()
     SET(PYTHON_ABIFLAGS "m")
 ENDIF()
 SET(PYTHON_BUILT_VERSION ${PYTHON_SHORT_VERSION}${PYTHON_ABIFLAGS})
+
+SET(PYTHON_PACKAGE_VERSION ${PYTHON_VERSION}-${BUILD_NUMBER})
 
 # The names of the libraries built by Python's build process.
 
@@ -81,7 +90,7 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-                Python ${PYTHON_VERSION} 3351428b9aef566ce5ba3441ad5d7b5256e63280
+                Python ${PYTHON_PACKAGE_VERSION} 3351428b9aef566ce5ba3441ad5d7b5256e63280
                 CHECKED_FILES ${CHECKED_FILES}
                 SHA1_VALUES 710a0520607377a1429933cd91399a3200f45314
                     b9895617dc6c321eaaa7d5eef7e4a922f6fb226a
@@ -92,14 +101,14 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            Python ${PYTHON_VERSION} 830c72f9662d533201b64838c15db6bd22250440
+            Python ${PYTHON_PACKAGE_VERSION} 313e10e8cb3e531eebbd784f42cda86b2ab6d19e
             CHECKED_FILES ${CHECKED_FILES}
-            SHA1_VALUES 879062f7a6a3922f41c03c78486f5ed42755553f
-                        24e864b84c055bec51e662c3e0e303082fc437ca
+            SHA1_VALUES 1adde662a808499970c2a3e3a34cce32195e5d7d
+                        025e6b1103c045c732e26a4215ca5d098d2357a1
         )
     ELSE()
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            Python ${PYTHON_VERSION} 129d11e3f6a7bf4452e2afc748a8b759947b1cf4
+            Python ${PYTHON_PACKAGE_VERSION} 129d11e3f6a7bf4452e2afc748a8b759947b1cf4
             CHECKED_FILES ${CHECKED_FILES}
             SHA1_VALUES 79919deb65bfe038d17122def0fbbb132e0de2a0
                         54a3aab285b64741df54f8e5fd2d8a2416b70608
@@ -275,7 +284,7 @@ ELSE()
     # Package Python's include files and libraries
 
     CREATE_PACKAGE_FILE(${RELATIVE_INSTALL_DIR}
-        Python ${PYTHON_VERSION}
+        Python ${PYTHON_PACKAGE_VERSION}
         PACKAGED_FILES ${PACKAGED_FILES}
         CHECKED_FILES ${CHECKED_FILES}
         DEPENDENCY PythonBuild
