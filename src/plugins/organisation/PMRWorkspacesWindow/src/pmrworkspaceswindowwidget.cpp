@@ -434,7 +434,7 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("Copy the current workspace URL to the clipboard"));
     I18nInterface::retranslateAction(mCopyWorkspacePathAction, tr("Copy Workspace Path"),
                                      tr("Copy the current workspace path to the clipboard"));
-    I18nInterface::retranslateAction(mMakeLocalCopyAction, tr("Make Local Copy..."),
+    I18nInterface::retranslateAction(mMakeLocalCopyAction, tr("Make Local Workspace Copy..."),
                                      tr("Make a local copy of the current workspace"));
     I18nInterface::retranslateAction(mSynchronizeWorkspaceAction, tr("Synchronise Workspace..."),
                                      tr("Synchronise the curent workspace with PMR"));
@@ -1080,6 +1080,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
     // Customise our context menu and show it
 
     QModelIndexList items = mTreeViewWidget->selectedIndexes();
+    bool oneItem = (items.count() == 1);
     PMRSupport::PmrWorkspaces workspaces = PMRSupport::PmrWorkspaces();
     int nbOfWorkspacePaths = selectedWorkspacePaths().count();
     bool oneWorkspaceUrl = selectedWorkspaceUrls().count() == 1;
@@ -1100,10 +1101,10 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
                                          tr("View the current workspace in PMR"):
                                          tr("View the current workspaces in PMR"));
     I18nInterface::retranslateAction(mViewOncomputerAction,
-                                     oneWorkspacePath?
+                                     (oneItem || oneWorkspacePath)?
                                          tr("View Workspace On Computer"):
                                          tr("View Workspaces On Computer"),
-                                     oneWorkspacePath?
+                                     (oneItem || oneWorkspacePath)?
                                          tr("View the current workspace on the computer"):
                                          tr("View the current workspaces on the computer"));
 
@@ -1111,7 +1112,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
     mViewOncomputerAction->setEnabled(nbOfWorkspacePaths && (nbOfWorkspacePaths == workspaces.count()));
     mCopyWorkspaceUrlAction->setEnabled(oneWorkspaceUrl);
     mCopyWorkspacePathAction->setEnabled(oneWorkspacePath);
-    mMakeLocalCopyAction->setEnabled((items.count() == 1) && !nbOfWorkspacePaths);
+    mMakeLocalCopyAction->setEnabled(oneItem && !nbOfWorkspacePaths);
     mSynchronizeWorkspaceAction->setEnabled(   oneWorkspacePath
                                             && (currentItem()->workspace()->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusUnstaged));
     mAboutWorkspaceAction->setEnabled(oneWorkspaceUrl);

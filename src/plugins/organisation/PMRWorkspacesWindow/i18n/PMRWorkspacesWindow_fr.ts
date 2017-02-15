@@ -35,8 +35,8 @@
         <translation>Copier le chemin de l&apos;espace de travail actuel dans le presse-papier</translation>
     </message>
     <message>
-        <source>Make Local Copy...</source>
-        <translation>Faire Copie Locale...</translation>
+        <source>Make Local Workspace Copy...</source>
+        <translation>Faire Copie Locale Espace De Travail...</translation>
     </message>
     <message>
         <source>Make a local copy of the current workspace</source>
