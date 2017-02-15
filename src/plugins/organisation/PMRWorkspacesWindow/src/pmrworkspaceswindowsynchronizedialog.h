@@ -24,10 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "pmrworkspace.h"
-
-//==============================================================================
-
 #include <QDialog>
 
 //==============================================================================
@@ -38,7 +34,21 @@ namespace Ui {
 
 //==============================================================================
 
+class QStandardItemModel;
+
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace PMRSupport {
+    class PmrWorkspace;
+    class PmrWorkspaceFileNode;
+}   // namespace PMRSupport
+
+//==============================================================================
+
 namespace PMRWorkspacesWindow {
 
 //==============================================================================
@@ -48,10 +58,9 @@ class PmrWorkspacesWindowSynchronizeDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowSynchronizeDialog(QWidget *pParent);
+    explicit PmrWorkspacesWindowSynchronizeDialog(PMRSupport::PmrWorkspace *pWorkspace,
+                                                  QWidget *pParent);
     ~PmrWorkspacesWindowSynchronizeDialog();
-
-    virtual void retranslateUi();
 
     QString message() const;
 
@@ -59,6 +68,13 @@ public:
 
 private:
     Ui::PmrWorkspacesWindowSynchronizeDialog *mGui;
+
+    QStandardItemModel *mModel;
+
+    void populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode);
+
+private slots:
+    void on_buttonBox_accepted();
 };
 
 //==============================================================================

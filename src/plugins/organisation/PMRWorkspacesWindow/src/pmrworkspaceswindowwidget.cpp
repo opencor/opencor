@@ -1321,7 +1321,7 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
     // workspace
 
     PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
-    PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(Core::mainWindow());
+    PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(workspace, Core::mainWindow());
 
     synchronizeDialog.exec();
 

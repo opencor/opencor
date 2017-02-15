@@ -31,6 +31,19 @@
     <widget class="QTextEdit" name="messageValue"/>
    </item>
    <item>
+    <widget class="QLabel" name="changesLabel">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QListView" name="changesValue"/>
+   </item>
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

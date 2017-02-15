@@ -176,8 +176,8 @@
         <translation>Synchroniser Avec PMR</translation>
     </message>
     <message>
-        <source>Synchonisation message:</source>
-        <translation>Message de synchronisation :</translation>
+        <source>Message:</source>
+        <translation>Message :</translation>
     </message>
 </context>
 <context>

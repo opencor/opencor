@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "coreguiutils.h"
+#include "pmrworkspace.h"
 #include "pmrworkspaceswindowsynchronizedialog.h"
 
 //==============================================================================
@@ -29,18 +30,31 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QStandardItemModel>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(QWidget *pParent) :
+PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSupport::PmrWorkspace *pWorkspace,
+                                                                           QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::PmrWorkspacesWindowSynchronizeDialog)
 {
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    // Populate ourselves with the list of files that have changed
+
+    mModel = new QStandardItemModel(this);
+
+    mGui->changesValue->setModel(mModel);
+
+    populateModel(pWorkspace->rootFileNode());
 
     // Connect some signals
 
@@ -65,11 +79,10 @@ PmrWorkspacesWindowSynchronizeDialog::~PmrWorkspacesWindowSynchronizeDialog()
 
 //==============================================================================
 
-void PmrWorkspacesWindowSynchronizeDialog::retranslateUi()
+void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
-    // Retranslate our GUI
-
-    mGui->retranslateUi(this);
+Q_UNUSED(pFileNode);
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================
@@ -89,6 +102,15 @@ QStringList PmrWorkspacesWindowSynchronizeDialog::fileNames() const
 //---GRY--- TO BE DONE...
 
     return QStringList();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowSynchronizeDialog::on_buttonBox_accepted()
+{
+    // Confirm that we accepted the changes
+
+    done(QMessageBox::Ok);
 }
 
 //==============================================================================
