@@ -28,6 +28,7 @@ ADD_PLUGIN(PythonConsoleWindow
     PLUGINS
         Core
         PythonQtSupport
+        PythonWrapper
 )
 
 #  ctkAbstractPythonManager.cpp
