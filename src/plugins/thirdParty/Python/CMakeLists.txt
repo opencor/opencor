@@ -8,9 +8,9 @@ SET(PYTHON_NUMERIC_VERSION 35)
 
 # The versions of the Python packages we bundle.
 
+SET(MATPLOTLIB_VERSION 1.5.3)
 SET(NUMPY_VERSION 1.11.2)
 SET(SCIPY_VERSION 0.18.1)
-SET(MATPLOTLIB_VERSION 1.5.3)
 
 # Set the ABI flag and version identifier
 

@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Python wrapper for SingleCellView classes
+// Python wrapper for DataStore classes
 //==============================================================================
 
 #include "datastoreinterface.h"
@@ -64,8 +64,7 @@ PyObject * PythonWrapperDataStore::newNumPyArray(DataStore::DataStoreArray *pDat
     if (pDataStoreArray) {
         auto numpyArray = new PythonWrapperNumPy(pDataStoreArray);
         return numpyArray->numpyArray();
-    }
-    else {
+    } else {
         Py_INCREF(Py_None);
         return Py_None;
     }
@@ -78,8 +77,7 @@ PyObject * PythonWrapperDataStore::newNumPyArray(DataStore::DataStoreVariable *p
     if (pDataStoreVariable) {
         auto numpyArray = new PythonWrapperNumPy(pDataStoreVariable->array(), pDataStoreVariable->size());
         return numpyArray->numpyArray();
-    }
-    else {
+    } else {
         Py_INCREF(Py_None);
         return Py_None;
     }

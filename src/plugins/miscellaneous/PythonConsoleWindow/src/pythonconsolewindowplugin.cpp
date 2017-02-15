@@ -25,10 +25,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-//#include "guiutils.h"
-
-//==============================================================================
-
 #include <QMainWindow>
 #include <QSettings>
 #include <QVariant>
@@ -98,6 +94,9 @@ void PythonConsoleWindowPlugin::initializePlugin()
     // Create our Python window
 
     mPythonConsoleWindow = new PythonConsoleWindow(Core::mainWindow());
+
+
+//    matplotlib.use('PythonQt')
 }
 
 //==============================================================================

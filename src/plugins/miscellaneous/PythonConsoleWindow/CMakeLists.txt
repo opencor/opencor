@@ -30,6 +30,3 @@ ADD_PLUGIN(PythonConsoleWindow
         PythonQtSupport
         PythonWrapper
 )
-
-#  ctkAbstractPythonManager.cpp
-#  ctkAbstractPythonManager.h
