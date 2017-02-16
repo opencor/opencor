@@ -183,9 +183,17 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     connect(buttonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
 
-    // Set our minimum size
+    // Set our minimum size and adjust our initial size
 
-    setMinimumSize(Core::minimumWidgetSize(this));
+    QSize minimumSize = Core::minimumWidgetSize(this);
+
+    setMinimumSize(minimumSize);
+
+    QSize size = minimumSize;
+
+    size.setWidth(qMax(size.width(), int(0.85*size.height())));
+
+    resize(size);
 }
 
 //==============================================================================
