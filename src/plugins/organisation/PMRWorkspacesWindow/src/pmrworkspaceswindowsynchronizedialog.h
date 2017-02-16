@@ -63,14 +63,18 @@ class PmrWorkspacesWindowSynchronizeDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowSynchronizeDialog(PMRSupport::PmrWorkspace *pWorkspace,
+    explicit PmrWorkspacesWindowSynchronizeDialog(const QString &pSettingsGroup,
+                                                  PMRSupport::PmrWorkspace *pWorkspace,
                                                   QWidget *pParent);
+    ~PmrWorkspacesWindowSynchronizeDialog();
 
     QString message() const;
 
     QStringList fileNames() const;
 
 private:
+    QString mSettingsGroup;
+
     Core::SplitterWidget *mSplitter;
 
     QStandardItemModel *mModel;
@@ -85,8 +89,6 @@ private:
                        const bool &pRootFileNode = false);
 
 private slots:
-    void saveSplitterSizes();
-
     void acceptSynchronization();
 };
 

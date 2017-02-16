@@ -34,6 +34,7 @@ limitations under the License.
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QListView>
+#include <QSettings>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include <QTextEdit>
@@ -46,12 +47,19 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSupport::PmrWorkspace *pWorkspace,
-                                                                           QWidget *pParent) :
-    QDialog(pParent)
-{
-    // Set our title
+static const auto SettingsSplitterSizes = QStringLiteral("SplitterSizes");
 
+//==============================================================================
+
+PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const QString &pSettingsGroup,
+                                                                           PMRSupport::PmrWorkspace *pWorkspace,
+                                                                           QWidget *pParent) :
+    QDialog(pParent),
+    mSettingsGroup(pSettingsGroup)
+{
+    // Set both our object name and title
+
+    setObjectName("PmrWorkspacesWindowSynchronizeDialog");
     setWindowTitle(tr("Synchronise With PMR"));
 
     // Create and set our vertical layout
@@ -63,9 +71,6 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
     // Create our splitter and make sure we can keep track of its sizes
 
     mSplitter = new Core::SplitterWidget(Qt::Vertical, this);
-
-    connect(mSplitter, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(saveSplitterSizes()));
 
     // Create our message-related widget, populate it, and add it to our
     // splitter
@@ -130,7 +135,15 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     mSplitter->setCollapsible(0, false);
     mSplitter->setCollapsible(1, false);
-    mSplitter->setSizes(QIntList() << 222 << 555);
+
+    QSettings settings;
+
+    settings.beginGroup(mSettingsGroup);
+        settings.beginGroup(objectName());
+            mSplitter->setSizes(qVariantListToIntList(settings.value(SettingsSplitterSizes,
+                                                                     QVariantList() << 222 << 555).toList()));
+        settings.endGroup();
+    settings.endGroup();
 
     layout->addWidget(mSplitter);
 
@@ -177,12 +190,30 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
 //==============================================================================
 
+PmrWorkspacesWindowSynchronizeDialog::~PmrWorkspacesWindowSynchronizeDialog()
+{
+    // Keep track of our splitter's sizes
+
+    QSettings settings;
+
+    settings.beginGroup(mSettingsGroup);
+        settings.beginGroup(objectName());
+            settings.setValue(SettingsSplitterSizes, qIntListToVariantList(mSplitter->sizes()));
+        settings.endGroup();
+    settings.endGroup();
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                                          const bool &pRootFileNode)
 {
     // List all the files that have changed
 
-    int nbOfChanges = 0;
+    static int nbOfChanges;
+
+    if (pRootFileNode)
+        nbOfChanges = 0;
 
     foreach (PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
         if (fileNode->hasChildren()) {
@@ -204,16 +235,17 @@ void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspac
         }
     }
 
-    mChangesLabel->setText((nbOfChanges == 1)?
-                               tr("1 change:"):
-                               tr("%1 changes:").arg(nbOfChanges));
+    // Finalise a few things if we are the root file node
 
-    mSelectAllChangesCheckBox->setVisible(nbOfChanges != 1);
-
-    // Sort ourselves if we are the root file node
-
-    if (pRootFileNode)
+    if (pRootFileNode) {
         mProxyModel->sort(0);
+
+        mChangesLabel->setText((nbOfChanges == 1)?
+                                   tr("1 change:"):
+                                   tr("%1 changes:").arg(nbOfChanges));
+
+        mSelectAllChangesCheckBox->setVisible(nbOfChanges != 1);
+    }
 }
 
 //==============================================================================
@@ -233,14 +265,6 @@ QStringList PmrWorkspacesWindowSynchronizeDialog::fileNames() const
 //---GRY--- TO BE DONE...
 
     return QStringList();
-}
-
-//==============================================================================
-
-void PmrWorkspacesWindowSynchronizeDialog::saveSplitterSizes()
-{
-    // Keep track of our splitter's sizes
-//---GRY--- TO BE DONE...
 }
 
 //==============================================================================
