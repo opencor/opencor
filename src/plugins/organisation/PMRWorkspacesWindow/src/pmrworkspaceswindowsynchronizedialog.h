@@ -28,8 +28,10 @@ limitations under the License.
 
 //==============================================================================
 
+class QLabel;
 class QSortFilterProxyModel;
 class QStandardItemModel;
+class QTextEdit;
 
 //==============================================================================
 
@@ -72,6 +74,10 @@ private:
 
     QStandardItemModel *mModel;
     QSortFilterProxyModel *mProxyModel;
+
+    QTextEdit *mMessageValue;
+
+    QLabel *mChangesLabel;
 
     void populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode,
                        const bool &pRootFileNode = false);

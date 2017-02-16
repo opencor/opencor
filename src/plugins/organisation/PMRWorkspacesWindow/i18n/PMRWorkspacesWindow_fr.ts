@@ -23,8 +23,12 @@
         <translation>Message :</translation>
     </message>
     <message>
-        <source>Changes:</source>
-        <translation>Changements :</translation>
+        <source>1 change:</source>
+        <translation>1 changement :</translation>
+    </message>
+    <message>
+        <source>%1 changes:</source>
+        <translation>%1 changements :</translation>
     </message>
 </context>
 <context>

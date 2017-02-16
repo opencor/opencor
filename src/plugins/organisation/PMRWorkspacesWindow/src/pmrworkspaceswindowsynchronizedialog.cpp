@@ -80,10 +80,10 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     messageLabel->setFont(messageLabelFont);
 
-    QTextEdit *messageValue = new QTextEdit(messageWidget);
+    mMessageValue = new QTextEdit(messageWidget);
 
     messageLayout->addWidget(messageLabel);
-    messageLayout->addWidget(messageValue);
+    messageLayout->addWidget(mMessageValue);
 
     mSplitter->addWidget(messageWidget);
 
@@ -97,12 +97,12 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     changesWidget->setLayout(changesLayout);
 
-    QLabel *changesLabel = new QLabel(tr("Changes:"), changesWidget);
-    QFont changesLabelFont = changesLabel->font();
+    mChangesLabel = new QLabel(changesWidget);
+    QFont changesLabelFont = mChangesLabel->font();
 
     changesLabelFont.setBold(true);
 
-    changesLabel->setFont(changesLabelFont);
+    mChangesLabel->setFont(changesLabelFont);
 
     QListView *changesValue = new QListView(changesWidget);
 
@@ -110,7 +110,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
     changesValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
-    changesLayout->addWidget(changesLabel);
+    changesLayout->addWidget(mChangesLabel);
     changesLayout->addWidget(changesValue);
 
     mSplitter->addWidget(changesWidget);
@@ -160,8 +160,9 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                                          const bool &pRootFileNode)
 {
-Q_UNUSED(pFileNode);
-//---GRY--- TO BE DONE...
+    // List all the files that have changed
+
+    int nbOfChanges = 0;
 
     foreach (PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
         if (fileNode->hasChildren()) {
@@ -170,6 +171,8 @@ Q_UNUSED(pFileNode);
             QChar status = fileNode->status().second;
 
             if ((status != '\0') && (status != ' ')) {
+                ++nbOfChanges;
+
                 QStandardItem *dataItem = new QStandardItem(fileNode->path());
 
                 dataItem->setCheckable(true);
@@ -180,6 +183,10 @@ Q_UNUSED(pFileNode);
             }
         }
     }
+
+    mChangesLabel->setText((nbOfChanges == 1)?
+                               tr("1 change:"):
+                               tr("%1 changes:").arg(nbOfChanges));
 
     // Sort ourselves if we are the root file node
 
@@ -193,8 +200,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::message() const
 {
     // Return the commit message
 
-return QString();
-//    return mGui->messageValue->toPlainText().trimmed();
+    return mMessageValue->toPlainText().trimmed();
 }
 
 //==============================================================================
