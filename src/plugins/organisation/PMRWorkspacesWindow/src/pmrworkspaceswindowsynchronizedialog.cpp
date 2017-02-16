@@ -23,14 +23,16 @@ limitations under the License.
 #include "coreguiutils.h"
 #include "pmrworkspace.h"
 #include "pmrworkspaceswindowsynchronizedialog.h"
+#include "splitterwidget.h"
 
 //==============================================================================
 
-#include "ui_pmrworkspaceswindowsynchronizedialog.h"
-
-//==============================================================================
-
+#include <QDialogButtonBox>
+#include <QLabel>
+#include <QListView>
 #include <QStandardItemModel>
+#include <QTextEdit>
+#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -41,40 +43,105 @@ namespace PMRWorkspacesWindow {
 
 PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSupport::PmrWorkspace *pWorkspace,
                                                                            QWidget *pParent) :
-    QDialog(pParent),
-    mGui(new Ui::PmrWorkspacesWindowSynchronizeDialog)
+    QDialog(pParent)
 {
-    // Set up the GUI
+    // Set our title
 
-    mGui->setupUi(this);
+    setWindowTitle(tr("Synchronise With PMR"));
+
+    // Create and set our vertical layout
+
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    setLayout(layout);
+
+    // Create our splitter
+
+    mSplitter = new Core::SplitterWidget(Qt::Vertical, this);
+
+    // Create our message-related widget, populate it, and add it to our
+    // splitter
+
+    QWidget *messageWidget = new QWidget(mSplitter);
+    QVBoxLayout *messageLayout = new QVBoxLayout(messageWidget);
+    int margin;
+
+    messageLayout->getContentsMargins(0, 0, 0, &margin);
+    messageLayout->setContentsMargins(0, 0, 0, margin >> 1);
+
+    messageWidget->setLayout(messageLayout);
+
+    QLabel *messageLabel = new QLabel(tr("Message:"), messageWidget);
+    QFont messageLabelFont = messageLabel->font();
+
+    messageLabelFont.setBold(true);
+
+    messageLabel->setFont(messageLabelFont);
+
+    QTextEdit *messageValue = new QTextEdit(messageWidget);
+
+    messageLayout->addWidget(messageLabel);
+    messageLayout->addWidget(messageValue);
+
+    mSplitter->addWidget(messageWidget);
+
+    // Create our changes-related widget, populate it, and add it to our
+    // splitter
+
+    QWidget *changesWidget = new QWidget(mSplitter);
+    QVBoxLayout *changesLayout = new QVBoxLayout(changesWidget);
+
+    changesLayout->setContentsMargins(0, margin >> 1, 0, 0);
+
+    changesWidget->setLayout(changesLayout);
+
+    QLabel *changesLabel = new QLabel(tr("Changes:"), changesWidget);
+    QFont changesLabelFont = changesLabel->font();
+
+    changesLabelFont.setBold(true);
+
+    changesLabel->setFont(changesLabelFont);
+
+    QListView *changesValue = new QListView(changesWidget);
+
+    changesLayout->addWidget(changesLabel);
+    changesLayout->addWidget(changesValue);
+
+    mSplitter->addWidget(changesWidget);
+
+    // Customise our splitter and add it to our layout
+
+    mSplitter->setCollapsible(0, false);
+    mSplitter->setCollapsible(1, false);
+
+    layout->addWidget(mSplitter);
+
+    // Add some dialog buttons
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
+
+    buttonBox->setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+
+    layout->addWidget(buttonBox);
 
     // Populate ourselves with the list of files that have changed
 
     mModel = new QStandardItemModel(this);
 
-    mGui->changesValue->setModel(mModel);
+    changesValue->setModel(mModel);
 
     populateModel(pWorkspace->rootFileNode());
 
     // Connect some signals
 
-    connect(mGui->buttonBox, SIGNAL(accepted()),
+    connect(buttonBox, SIGNAL(accepted()),
             this, SLOT(accept()));
-    connect(mGui->buttonBox, SIGNAL(rejected()),
+    connect(buttonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
 
     // Set our minimum size
 
     setMinimumSize(Core::minimumWidgetSize(this));
-}
-
-//==============================================================================
-
-PmrWorkspacesWindowSynchronizeDialog::~PmrWorkspacesWindowSynchronizeDialog()
-{
-    // Delete the GUI
-
-    delete mGui;
 }
 
 //==============================================================================
@@ -91,7 +158,8 @@ QString PmrWorkspacesWindowSynchronizeDialog::message() const
 {
     // Return the commit message
 
-    return mGui->messageValue->toPlainText().trimmed();
+return QString();
+//    return mGui->messageValue->toPlainText().trimmed();
 }
 
 //==============================================================================

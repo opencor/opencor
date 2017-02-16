@@ -28,17 +28,18 @@ limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class PmrWorkspacesWindowSynchronizeDialog;
-}
-
-//==============================================================================
-
 class QStandardItemModel;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class SplitterWidget;
+}   // namespace Core
+
 
 //==============================================================================
 
@@ -60,14 +61,13 @@ class PmrWorkspacesWindowSynchronizeDialog : public QDialog
 public:
     explicit PmrWorkspacesWindowSynchronizeDialog(PMRSupport::PmrWorkspace *pWorkspace,
                                                   QWidget *pParent);
-    ~PmrWorkspacesWindowSynchronizeDialog();
 
     QString message() const;
 
     QStringList fileNames() const;
 
 private:
-    Ui::PmrWorkspacesWindowSynchronizeDialog *mGui;
+    Core::SplitterWidget *mSplitter;
 
     QStandardItemModel *mModel;
 

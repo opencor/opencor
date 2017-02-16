@@ -13,6 +13,21 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowSynchronizeDialog</name>
+    <message>
+        <source>Synchronise With PMR</source>
+        <translation>Synchroniser Avec PMR</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation>Message :</translation>
+    </message>
+    <message>
+        <source>Changes:</source>
+        <translation>Changements :</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWidget</name>
     <message>
         <source>New Workspace...</source>
@@ -167,17 +182,6 @@
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note:&lt;/span&gt; the folder must exist and be empty.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note :&lt;/span&gt; le répertoire doit exister et être vide.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>PmrWorkspacesWindowSynchronizeDialog</name>
-    <message>
-        <source>Synchronise With PMR</source>
-        <translation>Synchroniser Avec PMR</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Message :</translation>
     </message>
 </context>
 <context>

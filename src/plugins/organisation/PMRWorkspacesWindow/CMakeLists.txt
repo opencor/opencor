@@ -25,7 +25,6 @@ ADD_PLUGIN(PMRWorkspacesWindow
         src/pmrworkspaceswindowwindow.h
     UIS
         src/pmrworkspaceswindownewworkspacedialog.ui
-        src/pmrworkspaceswindowsynchronizedialog.ui
         src/pmrworkspaceswindowwindow.ui
     INCLUDE_DIRS
         src
