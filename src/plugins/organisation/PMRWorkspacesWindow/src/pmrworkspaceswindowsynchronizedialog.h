@@ -28,6 +28,7 @@ limitations under the License.
 
 //==============================================================================
 
+class QSortFilterProxyModel;
 class QStandardItemModel;
 
 //==============================================================================
@@ -70,8 +71,10 @@ private:
     Core::SplitterWidget *mSplitter;
 
     QStandardItemModel *mModel;
+    QSortFilterProxyModel *mProxyModel;
 
-    void populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode);
+    void populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                       const bool &pRootFileNode = false);
 
 private slots:
     void on_buttonBox_accepted();

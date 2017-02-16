@@ -31,6 +31,7 @@ limitations under the License.
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QListView>
+#include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include <QTextEdit>
 #include <QVBoxLayout>
@@ -133,10 +134,14 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
     // Populate ourselves with the list of files that have changed
 
     mModel = new QStandardItemModel(this);
+    mProxyModel = new QSortFilterProxyModel(this);
 
-    changesValue->setModel(mModel);
+    mProxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+    mProxyModel->setSourceModel(mModel);
 
-    populateModel(pWorkspace->rootFileNode());
+    changesValue->setModel(mProxyModel);
+
+    populateModel(pWorkspace->rootFileNode(), true);
 
     // Connect some signals
 
@@ -152,7 +157,8 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
 //==============================================================================
 
-void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode)
+void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                                         const bool &pRootFileNode)
 {
 Q_UNUSED(pFileNode);
 //---GRY--- TO BE DONE...
@@ -174,6 +180,11 @@ Q_UNUSED(pFileNode);
             }
         }
     }
+
+    // Sort ourselves if we are the root file node
+
+    if (pRootFileNode)
+        mProxyModel->sort(0);
 }
 
 //==============================================================================

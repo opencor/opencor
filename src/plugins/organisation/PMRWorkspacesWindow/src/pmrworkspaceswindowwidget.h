@@ -34,6 +34,7 @@ limitations under the License.
 //==============================================================================
 
 class QMenu;
+class QSortFilterProxyModel;
 
 //==============================================================================
 
@@ -172,6 +173,7 @@ private:
     Core::UserMessageWidget *mUserMessageWidget;
 
     QStandardItemModel *mTreeViewModel;
+    QSortFilterProxyModel *mTreeViewProxyModel;
     Core::TreeViewWidget *mTreeViewWidget;
 
     QIcon mCollapsedWorkspaceIcon;

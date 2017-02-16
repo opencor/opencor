@@ -45,6 +45,7 @@ limitations under the License.
 #include <QMainWindow>
 #include <QMenu>
 #include <QSettings>
+#include <QSortFilterProxyModel>
 #include <QTimer>
 #include <QUrl>
 
@@ -202,12 +203,17 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     mUserMessageWidget->setScale(0.85);
 
     mTreeViewModel = new QStandardItemModel(this);
+    mTreeViewProxyModel = new QSortFilterProxyModel(this);
+
+    mTreeViewProxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+    mTreeViewProxyModel->setSourceModel(mTreeViewModel);
+
     mTreeViewWidget = new Core::TreeViewWidget(this);
 
     mTreeViewWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
-    mTreeViewWidget->setModel(mTreeViewModel);
+    mTreeViewWidget->setModel(mTreeViewProxyModel);
     mTreeViewWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     mTreeViewWidget->setVisible(false);
 
@@ -541,7 +547,7 @@ void PmrWorkspacesWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     QModelIndexList items = mTreeViewWidget->selectedIndexes();
 
     for (int i = 0, iMax = items.count(); i < iMax; ++i) {
-        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(items[i]));
+        PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(items[i])));
 
         if (item->type() == PmrWorkspacesWindowItem::File) {
             fileNames << item->fileNode()->path();
@@ -745,7 +751,7 @@ PmrWorkspacesWindowItem * PmrWorkspacesWindowWidget::currentItem() const
 {
     // Return our current item
 
-    return static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->currentIndex()));
+    return static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(mTreeViewWidget->currentIndex())));
 }
 
 //==============================================================================
@@ -972,7 +978,7 @@ void PmrWorkspacesWindowWidget::sortAndResizeTreeViewToContents()
     // Sort the contents of our tree view widget and make sure that all of its
     // the contents is visible
 
-    mTreeViewModel->sort(0);
+    mTreeViewProxyModel->sort(0);
 
     resizeTreeViewToContents();
 }
@@ -1044,7 +1050,7 @@ QStringList PmrWorkspacesWindowWidget::selectedWorkspaceUrls() const
     QModelIndexList items = mTreeViewWidget->selectedIndexes();
 
     for (int i = 0, iMax = items.count(); i < iMax; ++i)
-        res << static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(items[i]))->workspace()->url();
+        res << static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(items[i])))->workspace()->url();
 
     res.removeDuplicates();
 
@@ -1062,7 +1068,7 @@ QStringList PmrWorkspacesWindowWidget::selectedWorkspacePaths() const
     QModelIndexList items = mTreeViewWidget->selectedIndexes();
 
     for (int i = 0, iMax = items.count(); i < iMax; ++i) {
-        QString workspacePath = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(items[i]))->workspace()->path();
+        QString workspacePath = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(items[i])))->workspace()->path();
 
         if (!workspacePath.isEmpty())
             res << workspacePath;
@@ -1087,7 +1093,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
     bool oneWorkspacePath = nbOfWorkspacePaths == 1;
 
     for (int i = 0, iMax = items.count(); i < iMax; ++i) {
-        PMRSupport::PmrWorkspace *workspace = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(items[i]))->workspace();
+        PMRSupport::PmrWorkspace *workspace = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(items[i])))->workspace();
 
         if (!workspaces.contains(workspace))
             workspaces << workspace;
