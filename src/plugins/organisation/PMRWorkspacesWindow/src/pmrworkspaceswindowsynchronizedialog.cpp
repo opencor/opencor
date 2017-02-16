@@ -29,6 +29,8 @@ limitations under the License.
 //==============================================================================
 
 #include <QCheckBox>
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QListView>
@@ -125,7 +127,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     mSplitter->setCollapsible(0, false);
     mSplitter->setCollapsible(1, false);
-    mSplitter->setSizes(QIntList() << 1 << 999);
+    mSplitter->setSizes(QIntList() << 222 << 555);
 
     layout->addWidget(mSplitter);
 
@@ -137,7 +139,10 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     layout->addWidget(buttonBox);
 
-    // Populate ourselves with the list of files that have changed
+    // Populate ourselves with the list of files that have changed and make sure
+    // that the width of our list view is always such that we can see all of its
+    // contents (though up to a point!)
+    // Note: the +2 is to avoid getting a horizontal scroll bar...
 
     mModel = new QStandardItemModel(this);
     mProxyModel = new QSortFilterProxyModel(this);
@@ -148,6 +153,9 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
     changesValue->setModel(mProxyModel);
 
     populateModel(pWorkspace->rootFileNode(), true);
+
+    changesValue->setMinimumWidth(qMin(qApp->desktop()->availableGeometry().width() >> 1,
+                                       changesValue->sizeHintForColumn(0)+2));
 
     // Connect some signals
 
