@@ -29,12 +29,12 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QSortFilterProxyModel>
 #include <QStandardItem>
 
 //==============================================================================
 
 class QMenu;
-class QSortFilterProxyModel;
 
 //==============================================================================
 
@@ -114,6 +114,22 @@ typedef QList<PmrWorkspacesWindowItem *> PmrWorkspacesWindowItems;
 
 //==============================================================================
 
+class PmrWorkspacesWindowProxyModel : public QSortFilterProxyModel
+{
+public:
+    explicit PmrWorkspacesWindowProxyModel(QStandardItemModel *pModel,
+                                           QObject *pParent);
+
+protected:
+    virtual bool lessThan(const QModelIndex &pSourceLeft,
+                          const QModelIndex &pSourceRight) const;
+
+private:
+    QStandardItemModel *mModel;
+};
+
+//==============================================================================
+
 class PmrWorkspacesWindowWindow;
 
 //==============================================================================
@@ -173,7 +189,7 @@ private:
     Core::UserMessageWidget *mUserMessageWidget;
 
     QStandardItemModel *mTreeViewModel;
-    QSortFilterProxyModel *mTreeViewProxyModel;
+    PmrWorkspacesWindowProxyModel *mTreeViewProxyModel;
     Core::TreeViewWidget *mTreeViewWidget;
 
     QIcon mCollapsedWorkspaceIcon;

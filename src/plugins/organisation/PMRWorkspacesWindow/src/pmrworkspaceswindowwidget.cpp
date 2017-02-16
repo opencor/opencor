@@ -45,7 +45,6 @@ limitations under the License.
 #include <QMainWindow>
 #include <QMenu>
 #include <QSettings>
-#include <QSortFilterProxyModel>
 #include <QTimer>
 #include <QUrl>
 
@@ -185,6 +184,37 @@ void PmrWorkspacesWindowItem::setExpandedIcon(const QIcon &pExpandedIcon)
 
 //==============================================================================
 
+PmrWorkspacesWindowProxyModel::PmrWorkspacesWindowProxyModel(QStandardItemModel *pModel,
+                                                             QObject *pParent) :
+    QSortFilterProxyModel(pParent),
+    mModel(pModel)
+{
+}
+
+//==============================================================================
+
+bool PmrWorkspacesWindowProxyModel::lessThan(const QModelIndex &pSourceLeft,
+                                             const QModelIndex &pSourceRight) const
+{
+    // Determine and return whether the left source should be before the right
+    // source
+
+    int leftType = static_cast<PmrWorkspacesWindowItem *>(mModel->itemFromIndex(pSourceLeft))->type();
+    int rightType = static_cast<PmrWorkspacesWindowItem *>(mModel->itemFromIndex(pSourceRight))->type();
+
+    if (   (leftType != PmrWorkspacesWindowItem::File)
+        && (rightType == PmrWorkspacesWindowItem::File)) {
+        return true;
+    } else if (   (leftType == PmrWorkspacesWindowItem::File)
+               && (rightType != PmrWorkspacesWindowItem::File)) {
+        return false;
+    } else {
+        return QSortFilterProxyModel::lessThan(pSourceLeft, pSourceRight);
+    }
+}
+
+//==============================================================================
+
 PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                                      PMRSupport::PmrWebService *pPmrWebService,
                                                      PmrWorkspacesWindowWindow *pParent) :
@@ -203,7 +233,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     mUserMessageWidget->setScale(0.85);
 
     mTreeViewModel = new QStandardItemModel(this);
-    mTreeViewProxyModel = new QSortFilterProxyModel(this);
+    mTreeViewProxyModel = new PmrWorkspacesWindowProxyModel(mTreeViewModel, this);
 
     mTreeViewProxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     mTreeViewProxyModel->setSourceModel(mTreeViewModel);
