@@ -24,6 +24,7 @@ limitations under the License.
 #include "checkforupdatesdialog.h"
 #include "cliutils.h"
 #include "coreinterface.h"
+#include "eventloopinterface.h"
 #include "guiapplication.h"
 #include "guiinterface.h"
 #include "guiutils.h"
@@ -102,7 +103,8 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mViewSeparator(0),
     mViewPlugin(0),
     mDockedWindowsVisible(true),
-    mDockedWindowsState(QByteArray())
+    mDockedWindowsState(QByteArray()),
+    mEventLoopPlugin(0)
 {
     // Make sure that OpenCOR can handle a file opening request (from the
     // operating system), as well as a message sent by another instance of
@@ -283,6 +285,20 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Retrieve the user settings from the previous session, if any
 
     loadSettings();
+
+    // Check if any plugin is running the main event loop
+
+    foreach (Plugin *plugin, mLoadedPluginPlugins) {
+
+        EventLoopInterface *eventLoopInterface = qobject_cast<EventLoopInterface *>(plugin->instance());
+
+        if (eventLoopInterface && eventLoopInterface->hasEventLoop()) {
+
+            mEventLoopPlugin = plugin;
+
+            break;
+        }
+    }
 
     // Initialise the checked state of our full screen action, since OpenCOR may
     // (re)start in full screen mode
@@ -1018,6 +1034,28 @@ void MainWindow::handleArguments(const QStringList &pArguments)
     //       make sure that the status bar is shown/hidden, as needed...
 
     mGui->statusBar->setVisible(mGui->actionStatusBar->isChecked());
+}
+
+//==============================================================================
+
+bool MainWindow::hasEventLoopPlugin()
+{
+    return (mEventLoopPlugin != 0);
+}
+
+//==============================================================================
+
+int MainWindow::runEventLoopPlugin()
+{
+    if (mEventLoopPlugin) {
+
+        EventLoopInterface *eventLoopInterface = qobject_cast<EventLoopInterface *>(mEventLoopPlugin->instance());
+
+        if (eventLoopInterface)
+            return eventLoopInterface->runEventLoop();
+    }
+
+    return 0;
 }
 
 //==============================================================================

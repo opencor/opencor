@@ -17,14 +17,10 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// GUI application
+// Event loop interface
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include <QtSingleApplication>
+#include "eventloopinterface.h"
 
 //==============================================================================
 
@@ -32,29 +28,12 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class GuiApplication : public QtSingleApplication
+extern "C" Q_DECL_EXPORT int eventLoopInterfaceVersion()
 {
-    Q_OBJECT
+    // Version of the plugin interface
 
-public:
-    GuiApplication(const QString &pId, int &pArgC, char **pArgV);
-
-    bool hasFileNamesOrOpencorUrls() const;
-    QString firstFileNameOrOpencorUrl();
-
-    void updateCanEmitFileOpenRequestSignal();
-
-protected:
-    virtual bool event(QEvent *pEvent);
-
-private:
-    bool mCanEmitFileOpenRequestSignal;
-
-    QStringList mFileNamesOrOpencorUrls;
-
-signals:
-    void fileOpenRequest(const QString &pFileName);
-};
+    return 1;
+}
 
 //==============================================================================
 

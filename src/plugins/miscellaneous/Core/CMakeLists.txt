@@ -7,6 +7,7 @@ ADD_PLUGIN(Core
         ../../cliinterface.cpp
         ../../datastoreinterface.cpp
         ../../coreinterface.cpp
+        ../../eventloopinterface.cpp
         ../../filehandlinginterface.cpp
         ../../filetypeinterface.cpp
         ../../guiinterface.cpp

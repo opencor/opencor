@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "eventloopinterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
 
@@ -37,26 +38,24 @@ PLUGININFO_FUNC JupyterKernelPluginInfo();
 
 //==============================================================================
 
-class JupyterKernelPlugin : public QObject, public PluginInterface
+class JupyterKernelPlugin : public QObject, public EventLoopInterface,
+                            public PluginInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.JupyterKernelPlugin" FILE "jupyterkernelplugin.json")
 
+    Q_INTERFACES(OpenCOR::EventLoopInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
+#include "eventloopinterface.inl"
 #include "plugininterface.inl"
 
 private:
-    void startKernel();
+    int runKernel();
 
-    bool mAppStarted;
     QString mConnectionFile;
-
-private slots:
-    void appStarted();
-    void delayKernelStart();
 };
 
 //==============================================================================

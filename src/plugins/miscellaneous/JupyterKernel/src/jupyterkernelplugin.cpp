@@ -52,6 +52,26 @@ PLUGININFO_FUNC JupyterKernelPluginInfo()
 }
 
 //==============================================================================
+// Event loop interface
+//==============================================================================
+
+bool JupyterKernelPlugin::hasEventLoop()
+{
+    return true;
+//    return false;
+}
+
+//==============================================================================
+
+int JupyterKernelPlugin::runEventLoop()
+{
+    if (not mConnectionFile.isEmpty())
+        return runKernel();
+
+    return 0;
+}
+
+//==============================================================================
 // Plugin interface
 //==============================================================================
 
@@ -79,9 +99,7 @@ bool JupyterKernelPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void JupyterKernelPlugin::initializePlugin()
 {
-    mAppStarted = false;
-
-    connect(QCoreApplication::instance(), SIGNAL(eventLoopStarting()), this, SLOT(appStarted()));
+    mConnectionFile = QString();
 }
 
 //==============================================================================
@@ -120,39 +138,34 @@ void JupyterKernelPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
+void JupyterKernelPlugin::handleUrl(const QUrl &pUrl)
+{
+    // Save the path of the connection file
+
+    mConnectionFile = pUrl.path().mid(1);
+}
+
+//==============================================================================
+// Plugin specific
+//==============================================================================
+
 // The OpenCOR Jupyter kernel
 
 static QString jupyterKernel = R"PYTHON(
-import sys
-print(sys.path)
-
-#import pudb
-#pudb.set_trace()
-
-from ipykernel.eventloops import register_integration, enable_gui, _notify_stream_qt
-from ipykernel.ipkernel import IPythonKernel
-import matplotlib
 import os
-from PythonQt import QtGui
-
 import logging
+
+from ipykernel.eventloops import register_integration, enable_gui, loop_qt4
+from ipykernel.ipkernel import IPythonKernel
+
+import matplotlib
+
 
 @register_integration('opencor')
 def loop_opencor(kernel):
-    """Start a kernel with PyQt5 event loop integration in OpenCOR."""
-
-    os.environ['QT_API'] = 'pythonqt'
-    kernel.app = QtGui.QApplication.instance()
-    kernel.app.setQuitOnLastWindowClosed(False)
-
-    logging.debug("Starting kernel %s", kernel)
-
-    for s in kernel.shell_streams:
-        logging.debug("Notify stream %s", s)
-        ##_notify_stream_qt(kernel, s)
-
-    # We assume the Qt event loop is already running...
-    # start_event_loop_qt4(kernel.app)
+    """Start a kernel with PyQt5 event loop integration."""
+    os.environ['QT_API'] = 'opencor'
+    return loop_qt4(kernel)
 
 
 class OpenCORKernel(IPythonKernel):
@@ -168,6 +181,7 @@ class OpenCORKernel(IPythonKernel):
         enable_gui('opencor', self)
         logging.debug("Kernel inited...")
 
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)-15s %(message)s')
 
@@ -180,42 +194,15 @@ if __name__ == '__main__':
 
 //==============================================================================
 
-void JupyterKernelPlugin::handleUrl(const QUrl &pUrl)
-{
-    // Save the path of the connection file
-
-    mConnectionFile = pUrl.path().mid(1);
-qDebug() << QTime::currentTime().toString("hh:mm:ss.zzz") << "Jupyter URL " << mConnectionFile;
-
-    if (mAppStarted) startKernel();
-}
-
-//==============================================================================
-
-void JupyterKernelPlugin::appStarted()
-{
-qDebug() << QTime::currentTime().toString("hh:mm:ss.zzz") << "App event loop started...";
-    QTimer::singleShot(100, this, SLOT(delayKernelStart()));
-}
-
-//==============================================================================
-
-void JupyterKernelPlugin::delayKernelStart()
-{
-    mAppStarted = true;
-qDebug() << QTime::currentTime().toString("hh:mm:ss.zzz") << "App event loop running...";
-
-    if (not mConnectionFile.isEmpty()) startKernel();
-}
-
-//==============================================================================
-
-void JupyterKernelPlugin::startKernel()
+int JupyterKernelPlugin::runKernel()
 {
     // Run the the kernel using our connection file
 qDebug() << QTime::currentTime().toString("hh:mm:ss.zzz") << "Starting Jupyter kernel...";
 
     PythonQtSupport::PythonQtSupportPlugin::pythonManager()->executeString(jupyterKernel.arg(mConnectionFile));
+
+    // TODO: return gui->exec()
+    return 0;
 }
 
 //==============================================================================

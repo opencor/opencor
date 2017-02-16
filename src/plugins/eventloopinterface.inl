@@ -17,48 +17,22 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// GUI application
+// Event loop interface
 //==============================================================================
 
-#pragma once
+#ifdef INTERFACE_DEFINITION
+    #define PURE = 0
+#else
+    #define PURE
+#endif
 
-//==============================================================================
+    // Note: make sure to update eventLoopInterfaceVersion() whenever you update
+    //       this interface...
 
-#include <QtSingleApplication>
+    virtual bool hasEventLoop() PURE;
+    virtual int runEventLoop() PURE;
 
-//==============================================================================
-
-namespace OpenCOR {
-
-//==============================================================================
-
-class GuiApplication : public QtSingleApplication
-{
-    Q_OBJECT
-
-public:
-    GuiApplication(const QString &pId, int &pArgC, char **pArgV);
-
-    bool hasFileNamesOrOpencorUrls() const;
-    QString firstFileNameOrOpencorUrl();
-
-    void updateCanEmitFileOpenRequestSignal();
-
-protected:
-    virtual bool event(QEvent *pEvent);
-
-private:
-    bool mCanEmitFileOpenRequestSignal;
-
-    QStringList mFileNamesOrOpencorUrls;
-
-signals:
-    void fileOpenRequest(const QString &pFileName);
-};
-
-//==============================================================================
-
-}   // namespace OpenCOR
+#undef PURE
 
 //==============================================================================
 // End of file

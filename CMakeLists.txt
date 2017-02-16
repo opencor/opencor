@@ -94,6 +94,7 @@ SET(SOURCES
     src/plugins/cliinterface.cpp
     src/plugins/coreinterface.cpp
     src/plugins/datastoreinterface.cpp
+    src/plugins/eventloopinterface.cpp
     src/plugins/filehandlinginterface.cpp
     src/plugins/filetypeinterface.cpp
     src/plugins/guiinterface.cpp

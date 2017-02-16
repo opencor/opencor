@@ -307,12 +307,10 @@ int main(int pArgC, char *pArgV[])
     int res;
 
     if (canExecuteAplication) {
-
-        // Listening slots will receive the signal when exec() is run
-
-        emit guiApp->eventLoopStarting();
-
-        res = guiApp->exec();
+        if (win->hasEventLoopPlugin())
+            res = win->runEventLoopPlugin();
+        else
+            res = guiApp->exec();
     }
     else
         res = 0;
