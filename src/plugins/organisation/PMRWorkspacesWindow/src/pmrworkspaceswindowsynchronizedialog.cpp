@@ -105,6 +105,10 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     QListView *changesValue = new QListView(changesWidget);
 
+#ifdef Q_OS_MAC
+    changesValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+#endif
+
     changesLayout->addWidget(changesLabel);
     changesLayout->addWidget(changesValue);
 
@@ -152,6 +156,24 @@ void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspac
 {
 Q_UNUSED(pFileNode);
 //---GRY--- TO BE DONE...
+
+    foreach (PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
+        if (fileNode->hasChildren()) {
+            populateModel(fileNode);
+        } else {
+            QChar status = fileNode->status().second;
+
+            if ((status != '\0') && (status != ' ')) {
+                QStandardItem *dataItem = new QStandardItem(fileNode->path());
+
+                dataItem->setCheckable(true);
+                dataItem->setCheckState(Qt::Checked);
+                dataItem->setEditable(false);
+
+                mModel->appendRow(dataItem);
+            }
+        }
+    }
 }
 
 //==============================================================================
