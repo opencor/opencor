@@ -23,6 +23,10 @@
         <translation>Message :</translation>
     </message>
     <message>
+        <source>Select all the changes</source>
+        <translation>Sélectionner tous les changements</translation>
+    </message>
+    <message>
         <source>1 change:</source>
         <translation>1 changement :</translation>
     </message>

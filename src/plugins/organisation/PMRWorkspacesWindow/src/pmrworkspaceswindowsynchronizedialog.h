@@ -28,6 +28,7 @@ limitations under the License.
 
 //==============================================================================
 
+class QCheckBox;
 class QLabel;
 class QSortFilterProxyModel;
 class QStandardItemModel;
@@ -78,6 +79,7 @@ private:
     QTextEdit *mMessageValue;
 
     QLabel *mChangesLabel;
+    QCheckBox *mSelectAllChangesCheckBox;
 
     void populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode,
                        const bool &pRootFileNode = false);

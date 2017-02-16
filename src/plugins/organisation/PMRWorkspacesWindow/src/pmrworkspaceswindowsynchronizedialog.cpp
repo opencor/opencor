@@ -28,6 +28,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QCheckBox>
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QListView>
@@ -110,8 +111,13 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
     changesValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
+    mSelectAllChangesCheckBox = new QCheckBox(tr("Select all the changes"), changesWidget);
+
+    mSelectAllChangesCheckBox->setChecked(true);
+
     changesLayout->addWidget(mChangesLabel);
     changesLayout->addWidget(changesValue);
+    changesLayout->addWidget(mSelectAllChangesCheckBox);
 
     mSplitter->addWidget(changesWidget);
 
@@ -187,6 +193,8 @@ void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspac
     mChangesLabel->setText((nbOfChanges == 1)?
                                tr("1 change:"):
                                tr("%1 changes:").arg(nbOfChanges));
+
+    mSelectAllChangesCheckBox->setVisible(nbOfChanges != 1);
 
     // Sort ourselves if we are the root file node
 
