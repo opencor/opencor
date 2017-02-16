@@ -20,6 +20,7 @@ limitations under the License.
 // PMR Workspaces window synchronise dialog
 //==============================================================================
 
+#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "pmrworkspace.h"
 #include "pmrworkspaceswindowsynchronizedialog.h"
@@ -113,6 +114,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     mSplitter->setCollapsible(0, false);
     mSplitter->setCollapsible(1, false);
+    mSplitter->setSizes(QIntList() << 1 << 999);
 
     layout->addWidget(mSplitter);
 
