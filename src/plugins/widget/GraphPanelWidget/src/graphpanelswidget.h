@@ -24,7 +24,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include "corecliutils.h"
 #include "graphpanelwidget.h"
 #include "graphpanelwidgetglobal.h"
 #include "splitterwidget.h"
@@ -58,8 +57,6 @@ public:
     void setActiveGraphPanel(GraphPanelWidget *pGraphPanel);
 
 private:
-    QIntList mSplitterSizes;
-
     GraphPanelWidgets mGraphPanels;
 
     GraphPanelWidget *mActiveGraphPanel;
