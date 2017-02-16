@@ -25,7 +25,6 @@ limitations under the License.
 //==============================================================================
 
 #include "plugininfo.h"
-#include "plugininterface.h"
 
 //==============================================================================
 
@@ -38,16 +37,12 @@ PLUGININFO_FUNC PythonQtAPIPluginInfo();
 
 //==============================================================================
 
-class PythonQtAPIPlugin : public QObject, public PluginInterface
+class PythonQtAPIPlugin : public QObject
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.PythonQtAPIPlugin" FILE "pythonqtapiplugin.json")
 
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
-public:
-#include "plugininterface.inl"
 };
 
 //==============================================================================

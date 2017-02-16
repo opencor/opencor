@@ -136,7 +136,6 @@ SET(PYTHONQT_ROOT_DIR ${FULL_INSTALL_DIR} PARENT_SCOPE)
 ADD_PLUGIN(PythonQtAPI
     SOURCES
         ../../plugininfo.cpp
-        ../../plugininterface.cpp
 
         src/pythonqtapiplugin.cpp
     HEADERS_MOC
