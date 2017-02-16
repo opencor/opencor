@@ -79,7 +79,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our splitter widget
 
-    mSplitter = new QSplitter(Qt::Vertical, this);
+    mSplitter = new Core::SplitterWidget(Qt::Vertical, this);
 
     // Create our details widgets
 
@@ -266,7 +266,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::emitSplitterMoved()
 
 //==============================================================================
 
-QSplitter * CellmlAnnotationViewMetadataDetailsWidget::splitter() const
+Core::SplitterWidget * CellmlAnnotationViewMetadataDetailsWidget::splitter() const
 {
     // Return our splitter widget
 

@@ -51,7 +51,6 @@ limitations under the License.
 #include <QMainWindow>
 #include <QMenu>
 #include <QSettings>
-#include <QSplitter>
 #include <QTextEdit>
 #include <QTimer>
 #include <QToolButton>
@@ -312,7 +311,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     //       work fine even when mContentsWidget is not visible (which happens
     //       when a CellML file cannot be run for some reason or another)...
 
-    mSplitterWidget = new QSplitter(Qt::Vertical, this);
+    mSplitterWidget = new Core::SplitterWidget(Qt::Vertical, this);
 
     connect(mSplitterWidget, SIGNAL(splitterMoved(int, int)),
             this, SLOT(emitSplitterMoved()));

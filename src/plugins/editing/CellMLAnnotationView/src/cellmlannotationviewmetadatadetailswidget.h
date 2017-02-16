@@ -30,16 +30,13 @@ limitations under the License.
 
 //==============================================================================
 
-class QSplitter;
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
 
 namespace Core {
     class BorderedWidget;
+    class SplitterWidget;
     class UserMessageWidget;
 }   // namespace Core
 
@@ -76,7 +73,7 @@ public:
 
     virtual void retranslateUi();
 
-    QSplitter * splitter() const;
+    Core::SplitterWidget * splitter() const;
 
     CellmlAnnotationViewMetadataEditDetailsWidget * metadataEditDetails() const;
     CellmlAnnotationViewMetadataViewDetailsWidget * metadataViewDetails() const;
@@ -92,7 +89,7 @@ private:
     Core::BorderedWidget *mBorderedUnsupportedMetadataMessage;
     Core::UserMessageWidget *mUnsupportedMetadataMessage;
 
-    QSplitter *mSplitter;
+    Core::SplitterWidget *mSplitter;
 
     Core::BorderedWidget *mBorderedMetadataEditDetails;
     Core::BorderedWidget *mBorderedMetadataViewDetails;
