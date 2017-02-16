@@ -85,7 +85,9 @@ private:
                        const bool &pRootFileNode = false);
 
 private slots:
-    void on_buttonBox_accepted();
+    void saveSplitterSizes();
+
+    void acceptSynchronization();
 };
 
 //==============================================================================

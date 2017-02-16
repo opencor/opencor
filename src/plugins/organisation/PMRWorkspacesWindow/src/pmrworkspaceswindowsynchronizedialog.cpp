@@ -60,9 +60,12 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     setLayout(layout);
 
-    // Create our splitter
+    // Create our splitter and make sure we can keep track of its sizes
 
     mSplitter = new Core::SplitterWidget(Qt::Vertical, this);
+
+    connect(mSplitter, SIGNAL(splitterMoved(int, int)),
+            this, SLOT(saveSplitterSizes()));
 
     // Create our message-related widget, populate it, and add it to our
     // splitter
@@ -136,6 +139,9 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
     QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
 
     buttonBox->setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+
+    connect(buttonBox, SIGNAL(accepted()),
+            this, SLOT(acceptSynchronization()));
 
     layout->addWidget(buttonBox);
 
@@ -231,9 +237,17 @@ QStringList PmrWorkspacesWindowSynchronizeDialog::fileNames() const
 
 //==============================================================================
 
-void PmrWorkspacesWindowSynchronizeDialog::on_buttonBox_accepted()
+void PmrWorkspacesWindowSynchronizeDialog::saveSplitterSizes()
 {
-    // Confirm that we accepted the changes
+    // Keep track of our splitter's sizes
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowSynchronizeDialog::acceptSynchronization()
+{
+    // Confirm that we accept the synchronisation
 
     done(QMessageBox::Ok);
 }
