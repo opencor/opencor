@@ -17,66 +17,56 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view contents widget
+// Splitter widget
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "corecliutils.h"
 #include "splitterwidget.h"
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace Core {
 
 //==============================================================================
 
-namespace GraphPanelWidget {
-    class GraphPanelsWidget;
-}   // namespace GraphPanelWidget
-
-//==============================================================================
-
-namespace SingleCellView {
-
-//==============================================================================
-
-class SingleCellViewInformationWidget;
-class SingleCellViewPlugin;
-class SingleCellViewSimulationWidget;
-
-//==============================================================================
-
-class SingleCellViewContentsWidget : public Core::SplitterWidget
+void SplitterWidget::constructor(const Qt::Orientation &pOrientation)
 {
-    Q_OBJECT
+    // Customise ourselves so that we are as thin as possible and without an
+    // image for our handle
 
-public:
-    explicit SingleCellViewContentsWidget(SingleCellViewPlugin *pPlugin,
-                                          SingleCellViewSimulationWidget *pSimulationWidget,
-                                          QWidget *pParent);
-
-    virtual void retranslateUi();
-
-    SingleCellViewInformationWidget * informationWidget() const;
-    GraphPanelWidget::GraphPanelsWidget * graphPanelsWidget() const;
-
-private:
-    SingleCellViewInformationWidget *mInformationWidget;
-    GraphPanelWidget::GraphPanelsWidget *mGraphPanelsWidget;
-
-signals:
-    void splitterMoved(const QIntList &pSizes);
-
-private slots:
-    void emitSplitterMoved();
-};
+    setHandleWidth(2);
+    setOrientation(pOrientation);
+    setStyleSheet("QSplitter::handle {"
+                  "    image: none;"
+                  "}");
+}
 
 //==============================================================================
 
-}   // namespace SingleCellView
+SplitterWidget::SplitterWidget(const Qt::Orientation &pOrientation,
+                               QWidget *pParent) :
+    QSplitter(pParent),
+    CommonWidget(this)
+{
+    // Construct ourselves
+
+    constructor(pOrientation);
+}
+
+//==============================================================================
+
+SplitterWidget::SplitterWidget(QWidget *pParent) :
+    QSplitter(pParent),
+    CommonWidget(this)
+{
+    // Construct ourselves
+
+    constructor(Qt::Horizontal);
+}
+
+//==============================================================================
+
+}   // namespace Core
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -17,78 +17,40 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML Editing view widget
+// Splitter widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "corecliutils.h"
-#include "sedmleditingviewglobal.h"
-#include "splitterwidget.h"
+#include "commonwidget.h"
 
 //==============================================================================
 
-#include <QString>
-
-//==============================================================================
-
-class QsciLexer;
+#include <QSplitter>
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace Core {
 
 //==============================================================================
 
-namespace EditorWidget {
-    class EditorListItem;
-    class EditorListWidget;
-    class EditorWidget;
-}   // namespace EditorWidget
-
-//==============================================================================
-
-namespace SEDMLEditingView {
-
-//==============================================================================
-
-class SEDMLEDITINGVIEW_EXPORT SedmlEditingViewWidget : public Core::SplitterWidget
+class CORE_EXPORT SplitterWidget : public QSplitter, public CommonWidget
 {
-    Q_OBJECT
-
 public:
-    explicit SedmlEditingViewWidget(const QString &pContents,
-                                    const bool &pReadOnly, QsciLexer *pLexer,
-                                    QWidget *pParent);
-
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
-    virtual void retranslateUi();
-
-    void updateSettings(SedmlEditingViewWidget *pSedmlEditingViewWidget);
-
-    EditorWidget::EditorWidget * editorWidget() const;
-    EditorWidget::EditorListWidget * editorListWidget() const;
-
-    QIntList editingWidgetSizes() const;
+    explicit SplitterWidget(const Qt::Orientation &pOrientation,
+                            QWidget *pParent);
+    explicit SplitterWidget(QWidget *pParent);
 
 private:
-    EditorWidget::EditorWidget *mEditorWidget;
-    EditorWidget::EditorListWidget *mEditorListWidget;
-
-    QIntList mEditingWidgetSizes;
-
-private slots:
-    void splitterMoved();
-    void itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem);
+    void constructor(const Qt::Orientation &pOrientation);
 };
 
 //==============================================================================
 
-}   // namespace SEDMLEditingView
+}   // namespace Core
 }   // namespace OpenCOR
 
 //==============================================================================

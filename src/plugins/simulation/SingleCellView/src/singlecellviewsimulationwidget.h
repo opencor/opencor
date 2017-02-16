@@ -36,7 +36,6 @@ limitations under the License.
 class QFrame;
 class QLabel;
 class QMenu;
-class QSplitter;
 class QTextEdit;
 
 //==============================================================================
@@ -73,6 +72,7 @@ namespace COMBINESupport {
 namespace Core {
     class Property;
     class ProgressBarWidget;
+    class SplitterWidget;
     class ToolBarWidget;
     class UserMessageWidget;
 }   // namespace Core
@@ -193,7 +193,7 @@ private:
     QwtWheel *mDelayWidget;
     QLabel *mDelayValueWidget;
 
-    QSplitter *mSplitterWidget;
+    Core::SplitterWidget *mSplitterWidget;
 
     SingleCellViewContentsWidget *mContentsWidget;
 

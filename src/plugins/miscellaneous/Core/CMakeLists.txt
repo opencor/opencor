@@ -34,6 +34,7 @@ ADD_PLUGIN(Core
         src/organisationwidget.cpp
         src/progressbarwidget.cpp
         src/propertyeditorwidget.cpp
+        src/splitterwidget.cpp
         src/tabbarwidget.cpp
         src/toolbarwidget.cpp
         src/treeviewwidget.cpp
