@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "coreguiutils.h"
 #include "graphpanelwidgetcustomaxesdialog.h"
+#include "plugin.h"
 
 //==============================================================================
 
@@ -31,6 +32,7 @@ limitations under the License.
 
 #include <QPushButton>
 #include <QRegularExpressionValidator>
+#include <QSettings>
 
 //==============================================================================
 
@@ -44,7 +46,7 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(const double 
                                                                    const double &pMinY,
                                                                    const double &pMaxY,
                                                                    QWidget *pParent) :
-    QDialog(pParent),
+    Core::Dialog(pParent),
     mGui(new Ui::GraphPanelWidgetCustomAxesDialog)
 {
     // Set up the GUI
@@ -53,6 +55,16 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(const double 
 
     connect(mGui->buttonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
+
+    // Create our 'special' settings
+    // Note: special in the sense that we don't retrieve them from the plugin
+    //       itself since this is not a view, a window or anything like that...
+
+    mSettings = new QSettings();
+
+    mSettings->beginGroup(SettingsPlugins);
+    mSettings->beginGroup("GraphPanelWidget");
+    mSettings->beginGroup("GraphPanelWidgetCustomAxesDialog");
 
     // Only allow double numbers
 
