@@ -24,6 +24,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include "guiutils.h"
+
+//==============================================================================
+
 #include <QDialog>
 #include <QString>
 
@@ -72,12 +76,13 @@ private:
 
 //==============================================================================
 
-class CheckForUpdatesDialog : public QDialog
+class CheckForUpdatesDialog : public Dialog
 {
     Q_OBJECT
 
 public:
-    explicit CheckForUpdatesDialog(const QString &pApplicationDate,
+    explicit CheckForUpdatesDialog(QSettings *pSettings,
+                                   const QString &pApplicationDate,
                                    QWidget *pParent);
     explicit CheckForUpdatesDialog(CheckForUpdatesEngine *pEngine);
     ~CheckForUpdatesDialog();
