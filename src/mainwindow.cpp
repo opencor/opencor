@@ -1173,9 +1173,12 @@ void MainWindow::showPreferencesDialog(const QString &pPluginName)
 
     if (mPluginManager->plugins().count()) {
         if (mLoadedPreferencesPlugins.count()) {
-            PreferencesDialog preferencesDialog(mPluginManager, pPluginName, this);
+            mSettings->beginGroup("PreferencesDialog");
+                PreferencesDialog preferencesDialog(mSettings, mPluginManager,
+                                                    pPluginName, this);
 
-            preferencesDialog.exec();
+                preferencesDialog.exec();
+            mSettings->endGroup();
 
             // Let people know about the plugins that had their preferences
             // changed, if any and if requested
