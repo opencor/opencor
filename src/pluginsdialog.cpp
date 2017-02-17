@@ -83,9 +83,10 @@ static const auto SettingsShowOnlySelectablePlugins = QStringLiteral("ShowOnlySe
 
 //==============================================================================
 
-PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
+PluginsDialog::PluginsDialog(QSettings *pSettings,
+                             PluginManager *pPluginManager,
                              QWidget *pParent) :
-    QDialog(pParent),
+    Dialog(pSettings, pParent),
     mGui(new Ui::PluginsDialog),
     mPluginManager(pPluginManager),
     mSelectablePluginItems(QList<QStandardItem *>()),
@@ -230,11 +231,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 
     // Retrieve whether to show selectable plugins
 
-    QSettings settings;
-
-    settings.beginGroup(objectName());
-
-    mGui->selectablePluginsCheckBox->setChecked(settings.value(SettingsShowOnlySelectablePlugins, true).toBool());
+    mGui->selectablePluginsCheckBox->setChecked(mSettings->value(SettingsShowOnlySelectablePlugins, true).toBool());
 
     // Show/hide our unselectable plugins
 
@@ -245,15 +242,6 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
 
 PluginsDialog::~PluginsDialog()
 {
-    // Keep track of whether to show selectable plugins
-
-    QSettings settings;
-
-    settings.beginGroup(objectName());
-
-    settings.setValue(SettingsShowOnlySelectablePlugins,
-                      mGui->selectablePluginsCheckBox->isChecked());
-
     // Delete the GUI
 
     delete mGui;
@@ -646,6 +634,11 @@ void PluginsDialog::on_treeView_collapsed(const QModelIndex &pIndex)
 
 void PluginsDialog::on_selectablePluginsCheckBox_toggled(bool pChecked)
 {
+    // Keep track of whether to show selectable plugins
+
+    mSettings->setValue(SettingsShowOnlySelectablePlugins,
+                        mGui->selectablePluginsCheckBox->isChecked());
+
     // Show/hide our unselectable plugins
 
     foreach (QStandardItem *unselectablePluginItem, mUnselectablePluginItems) {

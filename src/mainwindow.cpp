@@ -1147,9 +1147,11 @@ void MainWindow::on_actionPlugins_triggered()
     if (mPluginManager->plugins().count()) {
         // There are some plugins, so we can show the plugins dialog
 
-        PluginsDialog pluginsDialog(mPluginManager, this);
+        mSettings->beginGroup("PluginsDialog");
+            PluginsDialog pluginsDialog(mSettings, mPluginManager, this);
 
-        pluginsDialog.exec();
+            pluginsDialog.exec();
+        mSettings->endGroup();
 
         // Restart OpenCOR (after having saved its settings) in case the user
         // asked for his/her plugin-related settings to be  applied
