@@ -49,7 +49,6 @@ limitations under the License.
 #include <QPainter>
 #include <QPalette>
 #include <QPushButton>
-#include <QSettings>
 #include <QSizePolicy>
 
 //==============================================================================

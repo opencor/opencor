@@ -114,7 +114,6 @@ SET(HEADERS_MOC
 
     src/misc/cliutils.h
     src/misc/guiapplication.h
-    src/misc/guiutils.h
 
     src/plugins/datastoreinterface.h
     src/plugins/plugin.h

@@ -35,7 +35,6 @@ limitations under the License.
 
 class QAction;
 class QMainWindow;
-class QSettings;
 
 //==============================================================================
 
@@ -44,25 +43,6 @@ namespace OpenCOR {
 //==============================================================================
 
 #include "coreguiutils.h.inl"
-
-//==============================================================================
-// Note: both guiutils.h and coreguiutils.h must specifically define
-//       Dialog. To have it in guiutils.h.inl is NOT good enough since the MOC
-//       won't pick it up...
-
-class Dialog : public QDialog
-{
-    Q_OBJECT
-
-public:
-    explicit Dialog(QSettings *pSettings = 0, QWidget *pParent = 0);
-
-protected:
-    QSettings *mSettings;
-
-public slots:
-    virtual int exec();
-};
 
 //==============================================================================
 

@@ -1217,19 +1217,13 @@ void MainWindow::on_actionHomePage_triggered()
 
 //==============================================================================
 
-static const auto SettingsCheckForUpdatesDialog = QStringLiteral("CheckForUpdatesDialog");
-
-//==============================================================================
-
 void MainWindow::on_actionCheckForUpdates_triggered()
 {
     // Show the check for updates dialog
 
-    mSettings->beginGroup(SettingsCheckForUpdatesDialog);
-        CheckForUpdatesDialog checkForUpdatesDialog(mSettings, mApplicationDate, this);
+    CheckForUpdatesDialog checkForUpdatesDialog(mApplicationDate, this);
 
-        checkForUpdatesDialog.exec();
-    mSettings->endGroup();
+    checkForUpdatesDialog.exec();
 }
 
 //==============================================================================

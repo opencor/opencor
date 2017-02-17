@@ -186,8 +186,12 @@ void CheckForUpdatesDialog::constructor(const QString &pApplicationDate,
 
     // Retrieve and set some properties
 
-    mGui->checkForUpdatesAtStartupCheckBox->setChecked(mSettings->value(SettingsCheckForUpdatesAtStartup, true).toBool());
-    mGui->includeSnapshotsCheckBox->setChecked(mSettings->value(SettingsIncludeSnapshots, false).toBool());
+    QSettings settings;
+
+    settings.beginGroup(objectName());
+
+    mGui->checkForUpdatesAtStartupCheckBox->setChecked(settings.value(SettingsCheckForUpdatesAtStartup, true).toBool());
+    mGui->includeSnapshotsCheckBox->setChecked(settings.value(SettingsIncludeSnapshots, false).toBool());
 
     // Update our GUI
 
@@ -198,10 +202,9 @@ void CheckForUpdatesDialog::constructor(const QString &pApplicationDate,
 
 //==============================================================================
 
-CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
-                                             const QString &pApplicationDate,
+CheckForUpdatesDialog::CheckForUpdatesDialog(const QString &pApplicationDate,
                                              QWidget *pParent) :
-    Dialog(pSettings, pParent)
+    QDialog(pParent)
 {
     // Construct our dialog
 
@@ -211,7 +214,7 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
 //==============================================================================
 
 CheckForUpdatesDialog::CheckForUpdatesDialog(CheckForUpdatesEngine *pEngine) :
-    Dialog()
+    QDialog()
 {
     // Construct our dialog
 
@@ -224,10 +227,14 @@ CheckForUpdatesDialog::~CheckForUpdatesDialog()
 {
     // Keep track of some properties
 
-    mSettings->setValue(SettingsCheckForUpdatesAtStartup,
-                        mGui->checkForUpdatesAtStartupCheckBox->isChecked());
-    mSettings->setValue(SettingsIncludeSnapshots,
-                        mGui->includeSnapshotsCheckBox->isChecked());
+    QSettings settings;
+
+    settings.beginGroup(objectName());
+
+    settings.setValue(SettingsCheckForUpdatesAtStartup,
+                      mGui->checkForUpdatesAtStartupCheckBox->isChecked());
+    settings.setValue(SettingsIncludeSnapshots,
+                      mGui->includeSnapshotsCheckBox->isChecked());
 
     // Delete some internal objects
 
