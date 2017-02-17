@@ -109,8 +109,6 @@ public:
 private:
     SingleCellViewPlugin *mPlugin;
 
-    QString mSettingsGroup;
-
     QIntList mSimulationWidgetSizes;
     QIntList mContentsWidgetSizes;
 

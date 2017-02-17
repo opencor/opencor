@@ -78,6 +78,8 @@ private:
     QDialog *mWebViewerDialog;
     WebViewerWidget::WebViewerWidget *mWebViewer;
 
+    bool mWebViewerUsed;
+
 signals:
     void busy(const bool &pBusy);
     void authenticated(const bool &pAuthenticated);

@@ -54,7 +54,8 @@ PmrWebServiceManager::PmrWebServiceManager(const QString &pPmrUrl,
     mPmrWebService(pPmrWebService),
     mPmrAuthentication(0),
     mWebViewerDialog(0),
-    mWebViewer(0)
+    mWebViewer(0),
+    mWebViewerUsed(false)
 {
     // Make sure that we get told when there are SSL errors (which would happen
     // if the website's certificate is invalid, e.g. it has expired)
@@ -82,6 +83,8 @@ void PmrWebServiceManager::authenticate(const bool &pAuthenticate)
 {
     // Authenticate ourselves to PMR
 
+    mWebViewerUsed = false;
+
     if (pAuthenticate)
         mPmrAuthentication->link();
     else
@@ -101,6 +104,15 @@ void PmrWebServiceManager::authenticationSucceeded()
 
 void PmrWebServiceManager::authenticationFailed()
 {
+    // Let the user know if s/he tried to authenticate him/herself but was just
+    // not able to do so
+
+    if (!mWebViewerUsed) {
+        Core::warningMessageBox(tr("PMR Authentication"),
+                                 tr("PMR Authentication could not be performed.")+"<br/><br/>"
+                                +tr("<strong>Note:</strong> you might want to check that your system time is correct."));
+    }
+
     // Let people know that authentication failed
 
     emit authenticated(false);
@@ -111,6 +123,8 @@ void PmrWebServiceManager::authenticationFailed()
 void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 {
     // Open the given URL in a temporary web browser of ours
+
+    mWebViewerUsed = true;
 
     if (!mWebViewerDialog) {
         mWebViewerDialog = new QDialog(Core::mainWindow());
@@ -131,6 +145,8 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
         layout->addWidget(mWebViewer);
 
         mWebViewerDialog->setLayout(layout);
+    } else {
+        mWebViewer->goToHomePage();
     }
 
     mWebViewerDialog->setWindowTitle(tr("PMR Authentication"));
