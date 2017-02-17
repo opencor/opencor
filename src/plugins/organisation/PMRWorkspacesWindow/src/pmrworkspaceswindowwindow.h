@@ -80,6 +80,8 @@ protected:
 private:
     Ui::PmrWorkspacesWindowWindow *mGui;
 
+    QString mSettingsGroup;
+
     PMRSupport::PmrWebService *mPmrWebService;
     PmrWorkspacesWindowWidget *mPmrWorkspacesWindowWidget;
 

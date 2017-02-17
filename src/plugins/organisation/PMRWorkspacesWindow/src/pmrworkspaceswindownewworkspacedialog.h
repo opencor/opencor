@@ -24,7 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QDialog>
+#include "coreguiutils.h"
 
 //==============================================================================
 
@@ -39,12 +39,13 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-class PmrWorkspacesWindowNewWorkspaceDialog : public QDialog
+class PmrWorkspacesWindowNewWorkspaceDialog : public Core::Dialog
 {
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowNewWorkspaceDialog(QWidget *pParent);
+    explicit PmrWorkspacesWindowNewWorkspaceDialog(QSettings *pSettings,
+                                                   QWidget *pParent);
     ~PmrWorkspacesWindowNewWorkspaceDialog();
 
     virtual void retranslateUi();

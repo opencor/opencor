@@ -57,6 +57,7 @@ namespace PMRWorkspacesWindow {
 PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::PmrWorkspacesWindowWindow),
+    mSettingsGroup(QString()),
     mAuthenticated(false),
     mWaitingForPmrWebService(false)
 {
@@ -200,6 +201,10 @@ void PmrWorkspacesWindowWindow::retranslateUi()
 
 void PmrWorkspacesWindowWindow::loadSettings(QSettings *pSettings)
 {
+    // Keep track of our settings' group
+
+    mSettingsGroup = pSettings->group();
+
     // Retrieve the settings of the workspaces window widget
 
     pSettings->beginGroup(mPmrWorkspacesWindowWidget->objectName());
@@ -394,16 +399,22 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
 {
     // Create a new (owned) workspace
 
-    PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(Core::mainWindow());
+    QSettings settings;
 
-    if (newWorkspaceDialog.exec() == QDialog::Accepted) {
-        // Ask the PMR web service to create a new workspace, resulting in the
-        // (empty) workspace being cloned into its folder
+    settings.beginGroup(mSettingsGroup);
+        settings.beginGroup("PmrWorkspacesWindowNewWorkspaceDialog");
+            PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(&settings, Core::mainWindow());
 
-        mPmrWebService->requestNewWorkspace(newWorkspaceDialog.title(),
-                                            newWorkspaceDialog.description(),
-                                            newWorkspaceDialog.path());
-    }
+            if (newWorkspaceDialog.exec() == QDialog::Accepted) {
+                // Ask the PMR web service to create a new workspace, resulting
+                // in the (empty) workspace being cloned into its folder
+
+                mPmrWebService->requestNewWorkspace(newWorkspaceDialog.title(),
+                                                    newWorkspaceDialog.description(),
+                                                    newWorkspaceDialog.path());
+            }
+        settings.endGroup();
+    settings.endGroup();
 }
 
 //==============================================================================

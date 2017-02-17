@@ -24,11 +24,8 @@ limitations under the License.
 
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "pmrworkspace.h"
-
-//==============================================================================
-
-#include <QDialog>
 
 //==============================================================================
 
@@ -43,12 +40,13 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-class PmrWorkspacesWindowCommitDialog : public QDialog
+class PmrWorkspacesWindowCommitDialog : public Core::Dialog
 {
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowCommitDialog(const PMRSupport::StagedFiles &pStagedFiles,
+    explicit PmrWorkspacesWindowCommitDialog(QSettings *pSettings,
+                                             const PMRSupport::StagedFiles &pStagedFiles,
                                              QWidget *pParent);
     ~PmrWorkspacesWindowCommitDialog();
 
