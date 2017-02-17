@@ -60,6 +60,8 @@ public:
 protected:
     QSettings *mSettings;
 
+    virtual void resizeEvent(QResizeEvent *pEvent);
+
 public slots:
     virtual int exec();
 };

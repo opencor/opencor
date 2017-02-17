@@ -249,19 +249,6 @@ PluginsDialog::~PluginsDialog()
 
 //==============================================================================
 
-void PluginsDialog::resizeEvent(QResizeEvent *pEvent)
-{
-    // Default handling of the event
-
-    QDialog::resizeEvent(pEvent);
-
-    // Set our minimum size
-
-    setMinimumSize(minimumWidgetSize(this));
-}
-
-//==============================================================================
-
 QString PluginsDialog::statusDescription(Plugin *pPlugin) const
 {
     // Return the plugin's status' description, if any

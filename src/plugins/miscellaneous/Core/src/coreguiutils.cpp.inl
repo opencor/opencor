@@ -35,6 +35,19 @@ Dialog::Dialog(QSettings *pSettings, QWidget *pParent) :
 
 //==============================================================================
 
+void Dialog::resizeEvent(QResizeEvent *pEvent)
+{
+    // Default handling of the event
+
+    QDialog::resizeEvent(pEvent);
+
+    // Set our minimum size
+
+    setMinimumSize(minimumWidgetSize(this));
+}
+
+//==============================================================================
+
 int Dialog::exec()
 {
     // Retrieve our position and size, if possible

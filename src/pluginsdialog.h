@@ -74,9 +74,6 @@ public:
                            QWidget *pParent);
     ~PluginsDialog();
 
-protected:
-    virtual void resizeEvent(QResizeEvent *pEvent);
-
 private:
     Ui::PluginsDialog *mGui;
 
