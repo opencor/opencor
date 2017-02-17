@@ -35,6 +35,14 @@ Dialog::Dialog(QSettings *pSettings, QWidget *pParent) :
 
 //==============================================================================
 
+Dialog::Dialog(QWidget *pParent) :
+    QDialog(pParent),
+    mSettings(0)
+{
+}
+
+//==============================================================================
+
 void Dialog::resizeEvent(QResizeEvent *pEvent)
 {
     // Default handling of the event
@@ -52,14 +60,16 @@ int Dialog::exec()
 {
     // Retrieve our position and size, if possible
 
-    int dialogTop = mSettings->value(SettingsTop).toInt();
-    int dialogLeft = mSettings->value(SettingsLeft).toInt();
-    int dialogWidth = mSettings->value(SettingsWidth).toInt();
-    int dialogHeight = mSettings->value(SettingsHeight).toInt();
+    if (mSettings) {
+        int dialogTop = mSettings->value(SettingsTop).toInt();
+        int dialogLeft = mSettings->value(SettingsLeft).toInt();
+        int dialogWidth = mSettings->value(SettingsWidth).toInt();
+        int dialogHeight = mSettings->value(SettingsHeight).toInt();
 
-    if (dialogTop && dialogLeft && dialogWidth && dialogHeight) {
-        move(dialogLeft, dialogTop);
-        resize(dialogWidth, dialogHeight);
+        if (dialogTop && dialogLeft && dialogWidth && dialogHeight) {
+            move(dialogLeft, dialogTop);
+            resize(dialogWidth, dialogHeight);
+        }
     }
 
     // Execute ourselves
@@ -68,14 +78,27 @@ int Dialog::exec()
 
     // Keep track of our position and size, if possible
 
-    mSettings->setValue(SettingsTop, pos().y());
-    mSettings->setValue(SettingsLeft, pos().x());
-    mSettings->setValue(SettingsWidth, width());
-    mSettings->setValue(SettingsHeight, height());
+    if (mSettings) {
+        mSettings->setValue(SettingsTop, pos().y());
+        mSettings->setValue(SettingsLeft, pos().x());
+        mSettings->setValue(SettingsWidth, width());
+        mSettings->setValue(SettingsHeight, height());
+    }
 
     // Return the result of our execution
 
     return res;
+}
+
+//==============================================================================
+
+int Dialog::exec(QSettings *pSettings)
+{
+    // Keep track of the given settings and execute ourselves
+
+    mSettings = pSettings;
+
+    return exec();
 }
 
 //==============================================================================

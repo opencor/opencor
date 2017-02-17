@@ -69,6 +69,9 @@ class Dialog : public QDialog
 
 public:
     explicit Dialog(QSettings *pSettings, QWidget *pParent);
+    explicit Dialog(QWidget *pParent);
+
+    int exec(QSettings *pSettings);
 
 protected:
     QSettings *mSettings;
