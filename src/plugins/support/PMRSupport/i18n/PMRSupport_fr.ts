@@ -65,6 +65,14 @@
         <source>PMR Authentication</source>
         <translation>Authentification PMR</translation>
     </message>
+    <message>
+        <source>PMR Authentication could not be performed.</source>
+        <translation>L&apos;authentification PMR n&apos;a pas pu être faite.</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;Note:&lt;/strong&gt; you might want to check that your system time is correct.</source>
+        <translation>&lt;strong&gt;Note :&lt;/strong&gt; vous voudrez peut-être vérifier que l&apos;heure système est correcte.</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PMRSupport::PmrWebServiceResponse</name>
