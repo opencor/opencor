@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> keep track of the position and size of dialogs (see issue <a href=\"https://github.com/opencor/opencor/issues/1224\">#1224</a>)." },
                        { "change": "<strong>PMR support:</strong> let the user know if we simply cannot authenticate (see issue <a href=\"https://github.com/opencor/opencor/issues/1223\">#1223</a>)." },
                        { "change": "<strong>PMR-based windows:</strong> only reload them (upon changes to preferences) if the PMR URL is different (see issue <a href=\"https://github.com/opencor/opencor/issues/1222\">#1222</a>)." }
                      ]
