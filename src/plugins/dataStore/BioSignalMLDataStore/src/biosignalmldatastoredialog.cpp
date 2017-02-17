@@ -29,6 +29,7 @@ limitations under the License.
 #include <QFormLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QSettings>
 #include <QTextEdit>
 
 //==============================================================================
@@ -44,6 +45,16 @@ BiosignalmlDataStoreDialog::BiosignalmlDataStoreDialog(DataStore::DataStore *pDa
     // Customise our GUI
 
     setWindowTitle(tr("Export Data"));
+
+    // Create our 'special' settings
+    // Note: special in the sense that we don't retrieve them from the plugin
+    //       itself since this is not a view, a window or anything like that...
+
+    mSettings = new QSettings();
+
+    mSettings->beginGroup(SettingsPlugins);
+    mSettings->beginGroup("BioSignalMLDataStore");
+    mSettings->beginGroup("DataStoreDialog");
 
     // Create a form-like widget
 

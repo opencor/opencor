@@ -24,12 +24,12 @@ limitations under the License.
 
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "datastoreglobal.h"
 #include "datastoreinterface.h"
 
 //==============================================================================
 
-#include <QDialog>
 #include <QStyledItemDelegate>
 
 //==============================================================================
@@ -65,7 +65,7 @@ public:
 
 //==============================================================================
 
-class DATASTORE_EXPORT DataStoreDialog : public QDialog
+class DATASTORE_EXPORT DataStoreDialog : public Core::Dialog
 {
     Q_OBJECT
 
