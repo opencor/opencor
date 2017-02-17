@@ -20,10 +20,8 @@ limitations under the License.
 // Core GUI utilities
 //==============================================================================
 
-static const auto SettingsTop    = QStringLiteral("Top");
-static const auto SettingsLeft   = QStringLiteral("Left");
-static const auto SettingsWidth  = QStringLiteral("Width");
-static const auto SettingsHeight = QStringLiteral("Height");
+static const auto SettingsPosition = QStringLiteral("Position");
+static const auto SettingsSize     = QStringLiteral("Size");
 
 //==============================================================================
 
@@ -61,14 +59,12 @@ int Dialog::exec()
     // Retrieve our position and size, if possible
 
     if (mSettings) {
-        int dialogTop = mSettings->value(SettingsTop).toInt();
-        int dialogLeft = mSettings->value(SettingsLeft).toInt();
-        int dialogWidth = mSettings->value(SettingsWidth).toInt();
-        int dialogHeight = mSettings->value(SettingsHeight).toInt();
+        QPoint position = mSettings->value(SettingsPosition).toPoint();
+        QSize size = mSettings->value(SettingsSize).toSize();
 
-        if (dialogTop && dialogLeft && dialogWidth && dialogHeight) {
-            move(dialogLeft, dialogTop);
-            resize(dialogWidth, dialogHeight);
+        if (!position.isNull() && !size.isNull()) {
+            move(position);
+            resize(size);
         }
     }
 
@@ -79,10 +75,8 @@ int Dialog::exec()
     // Keep track of our position and size, if possible
 
     if (mSettings) {
-        mSettings->setValue(SettingsTop, pos().y());
-        mSettings->setValue(SettingsLeft, pos().x());
-        mSettings->setValue(SettingsWidth, width());
-        mSettings->setValue(SettingsHeight, height());
+        mSettings->setValue(SettingsPosition, pos());
+        mSettings->setValue(SettingsSize, size());
     }
 
     // Return the result of our execution
