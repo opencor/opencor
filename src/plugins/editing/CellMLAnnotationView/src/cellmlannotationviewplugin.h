@@ -32,10 +32,6 @@ limitations under the License.
 
 //==============================================================================
 
-class QSettings;
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
