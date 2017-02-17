@@ -1221,9 +1221,11 @@ void MainWindow::on_actionCheckForUpdates_triggered()
 {
     // Show the check for updates dialog
 
-    CheckForUpdatesDialog checkForUpdatesDialog(mApplicationDate, this);
+    mSettings->beginGroup(SettingsCheckForUpdatesDialog);
+        CheckForUpdatesDialog checkForUpdatesDialog(mSettings, mApplicationDate, this);
 
-    checkForUpdatesDialog.exec();
+        checkForUpdatesDialog.exec();
+    mSettings->endGroup();
 }
 
 //==============================================================================

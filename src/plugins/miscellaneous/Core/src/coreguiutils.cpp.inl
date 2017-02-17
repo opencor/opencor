@@ -20,6 +20,53 @@ limitations under the License.
 // Core GUI utilities
 //==============================================================================
 
+static const auto SettingsTop    = QStringLiteral("Top");
+static const auto SettingsLeft   = QStringLiteral("Left");
+static const auto SettingsWidth  = QStringLiteral("Width");
+static const auto SettingsHeight = QStringLiteral("Height");
+
+//==============================================================================
+
+Dialog::Dialog(QSettings *pSettings, QWidget *pParent) :
+    QDialog(pParent),
+    mSettings(pSettings)
+{
+}
+
+//==============================================================================
+
+int Dialog::exec()
+{
+    // Retrieve our position and size, if possible
+
+    int dialogTop = mSettings->value(SettingsTop).toInt();
+    int dialogLeft = mSettings->value(SettingsLeft).toInt();
+    int dialogWidth = mSettings->value(SettingsWidth).toInt();
+    int dialogHeight = mSettings->value(SettingsHeight).toInt();
+
+    if (dialogTop && dialogLeft && dialogWidth && dialogHeight) {
+        move(dialogLeft, dialogTop);
+        resize(dialogWidth, dialogHeight);
+    }
+
+    // Execute ourselves
+
+    int res = QDialog::exec();
+
+    // Keep track of our position and size, if possible
+
+    mSettings->setValue(SettingsTop, pos().y());
+    mSettings->setValue(SettingsLeft, pos().x());
+    mSettings->setValue(SettingsWidth, width());
+    mSettings->setValue(SettingsHeight, height());
+
+    // Return the result of our execution
+
+    return res;
+}
+
+//==============================================================================
+
 QMainWindow * mainWindow()
 {
     // Retrieve and return our main window

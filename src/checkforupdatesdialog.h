@@ -24,6 +24,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include "guiutils.h"
+
+//==============================================================================
+
 #include <QDialog>
 #include <QString>
 
@@ -43,6 +47,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
+static const auto SettingsCheckForUpdatesDialog    = QStringLiteral("CheckForUpdatesDialog");
 static const auto SettingsCheckForUpdatesAtStartup = QStringLiteral("CheckForUpdatesAtStartup");
 static const auto SettingsIncludeSnapshots         = QStringLiteral("IncludeSnapshots");
 
@@ -72,14 +77,16 @@ private:
 
 //==============================================================================
 
-class CheckForUpdatesDialog : public QDialog
+class CheckForUpdatesDialog : public Dialog
 {
     Q_OBJECT
 
 public:
-    explicit CheckForUpdatesDialog(const QString &pApplicationDate,
+    explicit CheckForUpdatesDialog(QSettings *pSettings,
+                                   const QString &pApplicationDate,
                                    QWidget *pParent);
-    explicit CheckForUpdatesDialog(CheckForUpdatesEngine *pEngine);
+    explicit CheckForUpdatesDialog(QSettings *pSettings,
+                                   CheckForUpdatesEngine *pEngine);
     ~CheckForUpdatesDialog();
 
 private:
@@ -98,6 +105,7 @@ private slots:
     void on_buttonBox_accepted();
     void on_statusLabel_linkActivated(const QString &pLink);
     void on_recheckButton_clicked();
+    void on_checkForUpdatesAtStartupCheckBox_toggled(bool pChecked);
     void on_includeSnapshotsCheckBox_toggled(bool pChecked);
 };
 
