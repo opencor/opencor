@@ -131,6 +131,8 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
         layout->addWidget(mWebViewer);
 
         mWebViewerDialog->setLayout(layout);
+    } else {
+        mWebViewer->goToHomePage();
     }
 
     mWebViewerDialog->setWindowTitle(tr("PMR Authentication"));
