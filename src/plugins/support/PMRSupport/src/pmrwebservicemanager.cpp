@@ -23,6 +23,7 @@ limitations under the License.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "pmrauthentication.h"
+#include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrwebservicemanager.h"
 #include "pmrwebserviceresponse.h"
@@ -31,9 +32,9 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QDialog>
 #include <QLayout>
 #include <QMainWindow>
+#include <QSettings>
 #include <QTimer>
 #include <QWebView>
 
@@ -57,6 +58,16 @@ PmrWebServiceManager::PmrWebServiceManager(const QString &pPmrUrl,
     mWebViewer(0),
     mWebViewerUsed(false)
 {
+    // Create our 'special' settings
+    // Note: special in the sense that we don't retrieve them from the plugin
+    //       itself since this is not a view, a window or anything like that...
+
+    mSettings = new QSettings();
+
+    mSettings->beginGroup(SettingsPlugins);
+    mSettings->beginGroup(PluginName);
+    mSettings->beginGroup("WebViewerDialog");
+
     // Make sure that we get told when there are SSL errors (which would happen
     // if the website's certificate is invalid, e.g. it has expired)
 
@@ -66,6 +77,15 @@ PmrWebServiceManager::PmrWebServiceManager(const QString &pPmrUrl,
     // Create, by updating ourselves, our PMR authentication object
 
     update(pPmrUrl);
+}
+
+//==============================================================================
+
+PmrWebServiceManager::~PmrWebServiceManager()
+{
+    // Delete some interal objects
+
+    delete mSettings;
 }
 
 //==============================================================================
@@ -127,7 +147,7 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
     mWebViewerUsed = true;
 
     if (!mWebViewerDialog) {
-        mWebViewerDialog = new QDialog(Core::mainWindow());
+        mWebViewerDialog = new Core::Dialog(mSettings, Core::mainWindow());
 
         connect(mWebViewerDialog, SIGNAL(rejected()),
                 this, SIGNAL(cancelled()));

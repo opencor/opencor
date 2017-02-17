@@ -29,11 +29,17 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QDialog>
+class QSettings;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class Dialog;
+}   // namespace Core
 
 //==============================================================================
 
@@ -60,6 +66,7 @@ class PmrWebServiceManager : public QNetworkAccessManager
 public:
     explicit PmrWebServiceManager(const QString &pPmrUrl,
                                   PmrWebService *pPmrWebService);
+    ~PmrWebServiceManager();
 
     bool isAuthenticated() const;
     void authenticate(const bool &pAuthenticate);
@@ -72,10 +79,12 @@ public:
     void update(const QString &pPmrUrl);
 
 private:
+    QSettings *mSettings;
+
     PmrWebService *mPmrWebService;
     PmrAuthentication *mPmrAuthentication;
 
-    QDialog *mWebViewerDialog;
+    Core::Dialog *mWebViewerDialog;
     WebViewerWidget::WebViewerWidget *mWebViewer;
 
     bool mWebViewerUsed;
