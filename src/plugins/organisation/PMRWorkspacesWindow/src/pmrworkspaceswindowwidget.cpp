@@ -532,7 +532,7 @@ static const auto SettingsClonedWorkspaceFolders = QStringLiteral("ClonedWorkspa
 
 void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 {
-    // Keep track of the settings' group
+    // Keep track of our settings' group
 
     mSettingsGroup = pSettings->group();
 
@@ -1404,11 +1404,18 @@ void PmrWorkspacesWindowWidget::commit()
     if (workspace->isMerging()) {
         workspace->commitMerge();
     } else {
-        PmrWorkspacesWindowCommitDialog commitDialog(workspace->stagedFiles(),
-                                                     Core::mainWindow());
+        QSettings settings;
 
-        if (commitDialog.exec() == QDialog::Accepted)
-            workspace->commit(commitDialog.message());
+        settings.beginGroup(mSettingsGroup);
+            settings.beginGroup("PmrWorkspacesWindowCommitDialog");
+                PmrWorkspacesWindowCommitDialog commitDialog(&settings,
+                                                             workspace->stagedFiles(),
+                                                             Core::mainWindow());
+
+                if (commitDialog.exec() == QDialog::Accepted)
+                    workspace->commit(commitDialog.message());
+            settings.endGroup();
+        settings.endGroup();
     }
 
     refreshWorkspace(workspace);

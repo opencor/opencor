@@ -34,9 +34,10 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowCommitDialog::PmrWorkspacesWindowCommitDialog(const PMRSupport::StagedFiles &pStagedFiles,
+PmrWorkspacesWindowCommitDialog::PmrWorkspacesWindowCommitDialog(QSettings *pSettings,
+                                                                 const PMRSupport::StagedFiles &pStagedFiles,
                                                                  QWidget *pParent) :
-    QDialog(pParent),
+    Core::Dialog(pSettings, pParent),
     mGui(new Ui::PmrWorkspacesWindowCommitDialog)
 {
     // Set up the GUI

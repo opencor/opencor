@@ -35,7 +35,6 @@ limitations under the License.
 
 #include <QApplication>
 #include <QDesktopWidget>
-#include <QDialog>
 #include <QDialogButtonBox>
 #include <QDragEnterEvent>
 #include <QFile>
@@ -131,6 +130,7 @@ void CentralWidgetMode::addViewPlugin(Plugin *pViewPlugin)
 CentralWidget::CentralWidget(QWidget *pParent) :
     Widget(pParent),
     mState(Starting),
+    mSettings(0),
     mLoadedFileHandlingPlugins(Plugins()),
     mLoadedFileTypePlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
@@ -271,7 +271,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 //          QRegularExpressionValidator, SO WE SIMPLY ALLOW FREE TEXT FOR NOW
 //          (SEE https://bugreports.qt.io/browse/QTBUG-38034)
 
-    mRemoteFileDialog = new QDialog(this);
+    mRemoteFileDialog = new Dialog(this);
     QGridLayout *dialogLayout = new QGridLayout(mRemoteFileDialog);
 
     mRemoteFileDialog->setLayout(dialogLayout);
@@ -338,6 +338,10 @@ static const auto SettingsFileModeView         = QStringLiteral("FileModeView%1%
 
 void CentralWidget::loadSettings(QSettings *pSettings)
 {
+    // Keep track of our settings
+
+    mSettings = pSettings;
+
     // Some connections to handle an external change in the state of a file
     // Note: we do it here because we want other plugins to get a chance to
     //       handle our file manager's signals before us. Indeed, in the case of
@@ -920,7 +924,9 @@ void CentralWidget::openRemoteFile()
 
     mRemoteFileDialogUrlValue->setText(QString());
 
-    mRemoteFileDialog->exec();
+    mSettings->beginGroup("RemoteFileDialog");
+        mRemoteFileDialog->exec(mSettings);
+    mSettings->endGroup();
 }
 
 //==============================================================================

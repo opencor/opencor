@@ -43,8 +43,8 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QWidget *pParent) :
-    QDialog(pParent),
+PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QSettings *pSettings, QWidget *pParent) :
+    Core::Dialog(pSettings, pParent),
     mGui(new Ui::PmrWorkspacesWindowNewWorkspaceDialog)
 {
     // Set up the GUI
