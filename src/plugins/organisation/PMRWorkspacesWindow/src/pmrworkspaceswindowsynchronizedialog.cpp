@@ -54,7 +54,7 @@ static const auto SettingsSplitterSizes = QStringLiteral("SplitterSizes");
 PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const QString &pSettingsGroup,
                                                                            PMRSupport::PmrWorkspace *pWorkspace,
                                                                            QWidget *pParent) :
-    QDialog(pParent),
+    Core::Dialog(pParent),
     mSettingsGroup(pSettingsGroup)
 {
     // Set both our object name and title
@@ -184,16 +184,21 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
             this, SLOT(reject()));
 
     // Set our minimum size and adjust our initial size
+    // Note: the size adjustment is just so that it looks 'better' the very
+    //       first time round. From there, it will indeed be up to the user to
+    //       decide about the (position and) size of the dialog...
 
     QSize minimumSize = Core::minimumWidgetSize(this);
 
     setMinimumSize(minimumSize);
 
-    QSize size = minimumSize;
+    if (!hasPositionAndSize()) {
+        QSize size = minimumSize;
 
-    size.setWidth(qMax(size.width(), int(0.85*size.height())));
+        size.setWidth(qMax(size.width(), int(0.85*size.height())));
 
-    resize(size);
+        resize(size);
+    }
 }
 
 //==============================================================================

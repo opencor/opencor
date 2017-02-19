@@ -1363,7 +1363,7 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
             PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
             PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(mSettingsGroup, workspace, Core::mainWindow());
 
-            synchronizeDialog.exec();
+            synchronizeDialog.exec(&settings);
 
             if (synchronizeDialog.result() == QMessageBox::Ok) {
                 QStringList fileNames = synchronizeDialog.fileNames();

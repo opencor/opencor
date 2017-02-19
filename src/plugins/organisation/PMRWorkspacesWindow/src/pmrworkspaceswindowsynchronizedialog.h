@@ -58,7 +58,7 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-<<<<<<< HEAD:src/plugins/organisation/PMRWorkspacesWindow/src/pmrworkspaceswindowsynchronizedialog.hclass PmrWorkspacesWindowSynchronizeDialog : public Core::Dialog
+class PmrWorkspacesWindowSynchronizeDialog : public Core::Dialog
 {
     Q_OBJECT
 

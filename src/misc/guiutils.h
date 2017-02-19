@@ -60,6 +60,8 @@ public:
 
     int exec(QSettings *pSettings);
 
+    bool hasPositionAndSize();
+
 protected:
     QSettings *mSettings;
 
