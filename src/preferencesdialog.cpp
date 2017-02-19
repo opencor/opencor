@@ -130,20 +130,19 @@ void PreferencesItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-void PreferencesDialog::constructor(PluginManager *pPluginManager,
-                                    const QString &pPluginName)
+PreferencesDialog::PreferencesDialog(QSettings *pSettings,
+                                     PluginManager *pPluginManager,
+                                     const QString &pPluginName,
+                                     QWidget *pParent) :
+    Dialog(pSettings, pParent),
+    mGui(new Ui::PreferencesDialog()),
+    mPluginManager(pPluginManager),
+    mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>()),
+    mItemCategories(QMap<QStandardItem *, PluginInfo::Category>()),
+    mItemPreferencesWidgets(QMap<QStandardItem *, Preferences::PreferencesWidget *>()),
+    mPreferencesWidgetPluginNames(QMap<Preferences::PreferencesWidget *, QString>()),
+    mPluginNames(QStringList())
 {
-    // Some initialisations
-
-    mGui = new Ui::PreferencesDialog();
-
-    mPluginManager = pPluginManager;
-    mCategoryItems = QMap<PluginInfo::Category, QStandardItem *>();
-    mItemCategories = QMap<QStandardItem *, PluginInfo::Category>();
-    mItemPreferencesWidgets = QMap<QStandardItem *, Preferences::PreferencesWidget *>();
-    mPreferencesWidgetPluginNames = QMap<Preferences::PreferencesWidget *, QString>();
-    mPluginNames = QStringList();
-
     // Set up the GUI
 
     mGui->setupUi(this);
@@ -250,47 +249,11 @@ void PreferencesDialog::constructor(PluginManager *pPluginManager,
 
 //==============================================================================
 
-PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
-                                     const QString &pPluginName,
-                                     QWidget *pParent) :
-    QDialog(pParent)
-{
-    // Construct ourselves
-
-    constructor(pPluginManager, pPluginName);
-}
-
-//==============================================================================
-
-PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
-                                     QWidget *pParent) :
-    QDialog(pParent)
-{
-    // Construct ourselves
-
-    constructor(pPluginManager, QString());
-}
-
-//==============================================================================
-
 PreferencesDialog::~PreferencesDialog()
 {
     // Delete the GUI
 
     delete mGui;
-}
-
-//==============================================================================
-
-void PreferencesDialog::resizeEvent(QResizeEvent *pEvent)
-{
-    // Default handling of the event
-
-    QDialog::resizeEvent(pEvent);
-
-    // Set our minimum size
-
-    setMinimumSize(minimumWidgetSize(this));
 }
 
 //==============================================================================

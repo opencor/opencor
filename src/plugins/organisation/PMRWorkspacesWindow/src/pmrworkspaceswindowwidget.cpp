@@ -494,7 +494,7 @@ static const auto SettingsClonedWorkspaceFolders = QStringLiteral("ClonedWorkspa
 
 void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 {
-    // Keep track of the settings' group
+    // Keep track of our settings' group
 
     mSettingsGroup = pSettings->group();
 
@@ -1356,23 +1356,29 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
     // and, if we own the workspace, push things to PMR before refreshing our
     // workspace
 
-    PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
-    PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(mSettingsGroup, workspace, Core::mainWindow());
+    QSettings settings;
 
-    synchronizeDialog.exec();
+    settings.beginGroup(mSettingsGroup);
+        settings.beginGroup("PmrWorkspacesWindowSynchronizeDialog");
+            PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
+            PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(mSettingsGroup, workspace, Core::mainWindow());
 
-    if (synchronizeDialog.result() == QMessageBox::Ok) {
-        QStringList fileNames = synchronizeDialog.fileNames();
+            synchronizeDialog.exec();
 
-        for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
-            workspace->stageFile(fileNames[i], true);
+            if (synchronizeDialog.result() == QMessageBox::Ok) {
+                QStringList fileNames = synchronizeDialog.fileNames();
 
-        workspace->commit(synchronizeDialog.message());
+                for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
+                    workspace->stageFile(fileNames[i], true);
 
-        mPmrWebService->requestWorkspaceSynchronize(currentItem()->workspace(), workspace->isOwned());
-    }
+                workspace->commit(synchronizeDialog.message());
 
-    refreshWorkspace(workspace);
+                mPmrWebService->requestWorkspaceSynchronize(currentItem()->workspace(), workspace->isOwned());
+            }
+
+            refreshWorkspace(workspace);
+        settings.endGroup();
+    settings.endGroup();
 }
 
 //==============================================================================

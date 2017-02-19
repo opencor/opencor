@@ -24,7 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QDialog>
+#include "coreguiutils.h"
 
 //==============================================================================
 
@@ -58,7 +58,7 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-class PmrWorkspacesWindowSynchronizeDialog : public QDialog
+<<<<<<< HEAD:src/plugins/organisation/PMRWorkspacesWindow/src/pmrworkspaceswindowsynchronizedialog.hclass PmrWorkspacesWindowSynchronizeDialog : public Core::Dialog
 {
     Q_OBJECT
 

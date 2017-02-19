@@ -20,6 +20,83 @@ limitations under the License.
 // Core GUI utilities
 //==============================================================================
 
+static const auto SettingsPosition = QStringLiteral("Position");
+static const auto SettingsSize     = QStringLiteral("Size");
+
+//==============================================================================
+
+Dialog::Dialog(QSettings *pSettings, QWidget *pParent) :
+    QDialog(pParent),
+    mSettings(pSettings)
+{
+}
+
+//==============================================================================
+
+Dialog::Dialog(QWidget *pParent) :
+    QDialog(pParent),
+    mSettings(0)
+{
+}
+
+//==============================================================================
+
+void Dialog::resizeEvent(QResizeEvent *pEvent)
+{
+    // Default handling of the event
+
+    QDialog::resizeEvent(pEvent);
+
+    // Set our minimum size
+
+    setMinimumSize(minimumWidgetSize(this));
+}
+
+//==============================================================================
+
+int Dialog::exec()
+{
+    // Retrieve our position and size, if possible
+
+    if (mSettings) {
+        QPoint position = mSettings->value(SettingsPosition).toPoint();
+        QSize size = mSettings->value(SettingsSize).toSize();
+
+        if (!position.isNull() && !size.isNull()) {
+            move(position);
+            resize(size);
+        }
+    }
+
+    // Execute ourselves
+
+    int res = QDialog::exec();
+
+    // Keep track of our position and size, if possible
+
+    if (mSettings) {
+        mSettings->setValue(SettingsPosition, pos());
+        mSettings->setValue(SettingsSize, size());
+    }
+
+    // Return the result of our execution
+
+    return res;
+}
+
+//==============================================================================
+
+int Dialog::exec(QSettings *pSettings)
+{
+    // Keep track of the given settings and execute ourselves
+
+    mSettings = pSettings;
+
+    return exec();
+}
+
+//==============================================================================
+
 QMainWindow * mainWindow()
 {
     // Retrieve and return our main window

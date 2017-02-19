@@ -24,11 +24,11 @@ limitations under the License.
 
 //==============================================================================
 
+#include "guiutils.h"
 #include "plugininfo.h"
 
 //==============================================================================
 
-#include <QDialog>
 #include <QStyledItemDelegate>
 
 //==============================================================================
@@ -91,20 +91,17 @@ public:
 
 //==============================================================================
 
-class PreferencesDialog : public QDialog
+class PreferencesDialog : public Dialog
 {
     Q_OBJECT
 
 public:
-    explicit PreferencesDialog(PluginManager *pPluginManager,
+    explicit PreferencesDialog(QSettings *pSettings,
+                               PluginManager *pPluginManager,
                                const QString &pPluginName, QWidget *pParent);
-    explicit PreferencesDialog(PluginManager *pPluginManager, QWidget *pParent);
     ~PreferencesDialog();
 
     QStringList pluginNames() const;
-
-protected:
-    virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
     Ui::PreferencesDialog *mGui;
@@ -124,8 +121,6 @@ private:
     QPushButton *mResetPluginButton;
 
     QStringList mPluginNames;
-
-    void constructor(PluginManager *pPluginManager, const QString &pPluginName);
 
     QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
 

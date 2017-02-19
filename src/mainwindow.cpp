@@ -1147,9 +1147,11 @@ void MainWindow::on_actionPlugins_triggered()
     if (mPluginManager->plugins().count()) {
         // There are some plugins, so we can show the plugins dialog
 
-        PluginsDialog pluginsDialog(mPluginManager, this);
+        mSettings->beginGroup("PluginsDialog");
+            PluginsDialog pluginsDialog(mSettings, mPluginManager, this);
 
-        pluginsDialog.exec();
+            pluginsDialog.exec();
+        mSettings->endGroup();
 
         // Restart OpenCOR (after having saved its settings) in case the user
         // asked for his/her plugin-related settings to be  applied
@@ -1171,9 +1173,12 @@ void MainWindow::showPreferencesDialog(const QString &pPluginName)
 
     if (mPluginManager->plugins().count()) {
         if (mLoadedPreferencesPlugins.count()) {
-            PreferencesDialog preferencesDialog(mPluginManager, pPluginName, this);
+            mSettings->beginGroup("PreferencesDialog");
+                PreferencesDialog preferencesDialog(mSettings, mPluginManager,
+                                                    pPluginName, this);
 
-            preferencesDialog.exec();
+                preferencesDialog.exec();
+            mSettings->endGroup();
 
             // Let people know about the plugins that had their preferences
             // changed, if any and if requested
@@ -1221,9 +1226,11 @@ void MainWindow::on_actionCheckForUpdates_triggered()
 {
     // Show the check for updates dialog
 
-    CheckForUpdatesDialog checkForUpdatesDialog(mApplicationDate, this);
+    mSettings->beginGroup(SettingsCheckForUpdatesDialog);
+        CheckForUpdatesDialog checkForUpdatesDialog(mSettings, mApplicationDate, this);
 
-    checkForUpdatesDialog.exec();
+        checkForUpdatesDialog.exec();
+    mSettings->endGroup();
 }
 
 //==============================================================================

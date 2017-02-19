@@ -24,7 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QDialog>
+#include "coreguiutils.h"
 
 //==============================================================================
 
@@ -43,7 +43,7 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-class GraphPanelWidgetCustomAxesDialog : public QDialog
+class GraphPanelWidgetCustomAxesDialog : public Core::Dialog
 {
     Q_OBJECT
 
