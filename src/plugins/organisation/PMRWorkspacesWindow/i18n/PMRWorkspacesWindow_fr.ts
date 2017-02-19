@@ -13,6 +13,29 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowSynchronizeDialog</name>
+    <message>
+        <source>Synchronise With PMR</source>
+        <translation type="unfinished">Synchroniser Avec PMR</translation>
+    </message>
+    <message>
+        <source>Message:</source>
+        <translation type="unfinished">Message :</translation>
+    </message>
+    <message>
+        <source>Select all the changes</source>
+        <translation type="unfinished">Sélectionner tous les changements</translation>
+    </message>
+    <message>
+        <source>1 change:</source>
+        <translation type="unfinished">1 changement :</translation>
+    </message>
+    <message>
+        <source>%1 changes:</source>
+        <translation type="unfinished">%1 changements :</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWidget</name>
     <message>
         <source>New Workspace...</source>
@@ -167,29 +190,6 @@
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note:&lt;/span&gt; the folder must exist and be empty.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note :&lt;/span&gt; le répertoire doit exister et être vide.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>PmrWorkspacesWindowSynchronizeDialog</name>
-    <message>
-        <source>Synchronise With PMR</source>
-        <translation>Synchroniser Avec PMR</translation>
-    </message>
-    <message>
-        <source>Message:</source>
-        <translation>Message :</translation>
-    </message>
-    <message>
-        <source>Select all the changes</source>
-        <translation>Sélectionner tous les changements</translation>
-    </message>
-    <message>
-        <source>1 change:</source>
-        <translation>1 changement :</translation>
-    </message>
-    <message>
-        <source>%1 changes:</source>
-        <translation>%1 changements :</translation>
     </message>
 </context>
 <context>
