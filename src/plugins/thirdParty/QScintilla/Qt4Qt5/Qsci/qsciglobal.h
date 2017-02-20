@@ -1,6 +1,6 @@
 // This module defines various things common to all of the Scintilla Qt port.
 //
-// Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 //
 // This file is part of QScintilla.
 //
@@ -21,15 +21,11 @@
 #ifndef QSCIGLOBAL_H
 #define QSCIGLOBAL_H
 
-#ifdef __APPLE__
-extern "C++" {
-#endif
-
 #include <qglobal.h>
 
 
-#define QSCINTILLA_VERSION      0x020904
-#define QSCINTILLA_VERSION_STR  "2.9.4"
+#define QSCINTILLA_VERSION      0x020a00
+#define QSCINTILLA_VERSION_STR  "2.10"
 
 
 // Define QSCINTILLA_MAKE_DLL to create a QScintilla shared library, or
@@ -47,10 +43,6 @@ extern "C++" {
 #if !defined(QT_BEGIN_NAMESPACE)
 #define QT_BEGIN_NAMESPACE
 #define QT_END_NAMESPACE
-#endif
-
-#ifdef __APPLE__
-}
 #endif
 
 #endif
