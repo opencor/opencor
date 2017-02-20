@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PMR Workspaces window commit dialog
+// PMR Workspaces window synchronise dialog
 //==============================================================================
 
 #pragma once
@@ -25,37 +25,86 @@ limitations under the License.
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "pmrworkspace.h"
 
 //==============================================================================
 
-namespace Ui {
-    class PmrWorkspacesWindowCommitDialog;
-}
+class QCheckBox;
+class QDialogButtonBox;
+class QLabel;
+class QListView;
+class QSortFilterProxyModel;
+class QStandardItem;
+class QStandardItemModel;
+class QTextEdit;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class SplitterWidget;
+}   // namespace Core
+
+
+//==============================================================================
+
+namespace PMRSupport {
+    class PmrWorkspace;
+    class PmrWorkspaceFileNode;
+}   // namespace PMRSupport
+
+//==============================================================================
+
 namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-class PmrWorkspacesWindowCommitDialog : public Core::Dialog
+class PmrWorkspacesWindowSynchronizeDialog : public Core::Dialog
 {
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowCommitDialog(QSettings *pSettings,
-                                             const PMRSupport::StagedFiles &pStagedFiles,
-                                             QWidget *pParent);
-    ~PmrWorkspacesWindowCommitDialog();
-
-    virtual void retranslateUi();
+    explicit PmrWorkspacesWindowSynchronizeDialog(const QString &pSettingsGroup,
+                                                  PMRSupport::PmrWorkspace *pWorkspace,
+                                                  QWidget *pParent);
+    ~PmrWorkspacesWindowSynchronizeDialog();
 
     QString message() const;
 
+    QStringList fileNames() const;
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *pEvent);
+
 private:
-    Ui::PmrWorkspacesWindowCommitDialog *mGui;
+    QString mSettingsGroup;
+
+    Core::SplitterWidget *mSplitter;
+
+    QStandardItemModel *mModel;
+    QSortFilterProxyModel *mProxyModel;
+
+    QTextEdit *mMessageValue;
+
+    QLabel *mChangesLabel;
+    QListView *mChangesValue;
+
+    QCheckBox *mSelectAllChangesCheckBox;
+
+    QDialogButtonBox *mButtonBox;
+
+    void populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                       const bool &pRootFileNode = false);
+
+private slots:
+    void updateSelectAllChangesCheckBox(QStandardItem *pItem = 0);
+    void selectAllChangesCheckBoxClicked();
+
+    void updateOkButton();
+
+    void acceptSynchronization();
 };
 
 //==============================================================================

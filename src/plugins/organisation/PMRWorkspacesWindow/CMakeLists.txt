@@ -10,21 +10,20 @@ ADD_PLUGIN(PMRWorkspacesWindow
         ../../preferencesinterface.cpp
         ../../windowinterface.cpp
 
-        src/pmrworkspaceswindowcommitdialog.cpp
         src/pmrworkspaceswindownewworkspacedialog.cpp
         src/pmrworkspaceswindowplugin.cpp
+        src/pmrworkspaceswindowsynchronizedialog.cpp
         src/pmrworkspaceswindowwidget.cpp
         src/pmrworkspaceswindowwindow.cpp
     HEADERS_MOC
         ../../preferencesinterface.h
 
-        src/pmrworkspaceswindowcommitdialog.h
         src/pmrworkspaceswindownewworkspacedialog.h
         src/pmrworkspaceswindowplugin.h
+        src/pmrworkspaceswindowsynchronizedialog.h
         src/pmrworkspaceswindowwidget.h
         src/pmrworkspaceswindowwindow.h
     UIS
-        src/pmrworkspaceswindowcommitdialog.ui
         src/pmrworkspaceswindownewworkspacedialog.ui
         src/pmrworkspaceswindowwindow.ui
     INCLUDE_DIRS

@@ -97,6 +97,18 @@ int Dialog::exec(QSettings *pSettings)
 
 //==============================================================================
 
+bool Dialog::hasPositionAndSize()
+{
+    // Return whether we already have a position and size, if possible
+
+    return mSettings?
+                   !mSettings->value(SettingsPosition).toPoint().isNull()
+                && !mSettings->value(SettingsSize).toSize().isNull():
+                false;
+}
+
+//==============================================================================
+
 QMainWindow * mainWindow()
 {
     // Retrieve and return our main window
