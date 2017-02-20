@@ -28,6 +28,7 @@ limitations under the License.
 #include "combinearchive.h"
 #include "corecliutils.h"
 #include "sedmlfile.h"
+#include "singlecellviewglobal.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -49,7 +50,7 @@ class SingleCellViewSimulationWidget;
 
 //==============================================================================
 
-class SingleCellViewWidget : public Core::ViewWidget
+class SINGLECELLVIEW_EXPORT SingleCellViewWidget : public Core::ViewWidget
 {
     Q_OBJECT
 

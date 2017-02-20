@@ -25,6 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include "datastoreinterface.h"
+#include "singlecellviewglobal.h"
 #include "singlecellviewsimulationworker.h"
 #include "solverinterface.h"
 
@@ -58,7 +59,7 @@ class SingleCellViewSimulation;
 
 //==============================================================================
 
-class SingleCellViewSimulationData : public QObject
+class SINGLECELLVIEW_EXPORT SingleCellViewSimulationData : public QObject
 {
     Q_OBJECT
 
@@ -179,7 +180,7 @@ signals:
 
 //==============================================================================
 
-class SingleCellViewSimulationResults : public QObject
+class SINGLECELLVIEW_EXPORT SingleCellViewSimulationResults : public QObject
 {
     Q_OBJECT
 
@@ -229,7 +230,7 @@ private:
 
 //==============================================================================
 
-class SingleCellViewSimulation : public QObject
+class SINGLECELLVIEW_EXPORT SingleCellViewSimulation : public QObject
 {
     Q_OBJECT
 

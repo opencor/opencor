@@ -30,6 +30,7 @@ limitations under the License.
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
+#include "singlecellviewglobal.h"
 #include "solverinterface.h"
 #include "viewinterface.h"
 
@@ -48,9 +49,9 @@ class SingleCellViewWidget;
 
 //==============================================================================
 
-class SingleCellViewPlugin : public QObject, public FileHandlingInterface,
-                             public I18nInterface, public PluginInterface,
-                             public ViewInterface
+class SINGLECELLVIEW_EXPORT SingleCellViewPlugin : public QObject, public FileHandlingInterface,
+                                                   public I18nInterface, public PluginInterface,
+                                                   public ViewInterface
 {
     Q_OBJECT
 

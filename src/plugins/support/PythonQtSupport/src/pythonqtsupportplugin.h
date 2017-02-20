@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 
 #include "plugininfo.h"
 #include "plugininterface.h"
+#include "pythonqtsupportglobal.h"
 
 //==============================================================================
 
@@ -41,7 +42,7 @@ PLUGININFO_FUNC PythonQtSupportPluginInfo();
 
 //==============================================================================
 
-class PythonQtSupportPlugin : public QObject, public PluginInterface
+class PYTHONQTSUPPORT_EXPORT PythonQtSupportPlugin : public QObject, public PluginInterface
 {
     Q_OBJECT
 

@@ -28,6 +28,7 @@ limitations under the License.
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
 #include "sedmlfileissue.h"
+#include "singlecellviewglobal.h"
 #include "singlecellviewwidget.h"
 #include "widget.h"
 
@@ -101,7 +102,7 @@ class SingleCellViewSimulation;
 
 //==============================================================================
 
-class SingleCellViewSimulationWidget : public Core::Widget
+class SINGLECELLVIEW_EXPORT SingleCellViewSimulationWidget : public Core::Widget
 {
     Q_OBJECT
 
