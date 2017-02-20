@@ -75,6 +75,9 @@ public:
 
     QStringList fileNames() const;
 
+protected:
+    virtual void keyPressEvent(QKeyEvent *pEvent);
+
 private:
     QString mSettingsGroup;
 

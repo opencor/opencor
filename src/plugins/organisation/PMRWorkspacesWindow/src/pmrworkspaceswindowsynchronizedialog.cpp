@@ -32,6 +32,7 @@ limitations under the License.
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QDialogButtonBox>
+#include <QKeyEvent>
 #include <QLabel>
 #include <QListView>
 #include <QPushButton>
@@ -228,6 +229,29 @@ PmrWorkspacesWindowSynchronizeDialog::~PmrWorkspacesWindowSynchronizeDialog()
             settings.setValue(SettingsSplitterSizes, qIntListToVariantList(mSplitter->sizes()));
         settings.endGroup();
     settings.endGroup();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowSynchronizeDialog::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Check whether we are trying to quick synchronise
+
+    if (   (pEvent->modifiers() & Qt::ControlModifier)
+        && (pEvent->key() == Qt::Key_Return)) {
+        // Pretend that we clicked on the Ok button, if possible
+
+        if (mButtonBox->button(QDialogButtonBox::Ok)->isEnabled())
+            acceptSynchronization();
+
+        // Accept the event
+
+        pEvent->accept();
+    } else {
+        // Default handling of the event
+
+        Core::Dialog::keyPressEvent(pEvent);
+    }
 }
 
 //==============================================================================
