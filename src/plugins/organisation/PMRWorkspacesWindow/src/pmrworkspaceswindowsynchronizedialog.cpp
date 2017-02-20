@@ -116,18 +116,19 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     mChangesLabel->setFont(changesLabelFont);
 
-    QListView *changesValue = new QListView(changesWidget);
+    mChangesValue = new QListView(changesWidget);
 
 #ifdef Q_OS_MAC
-    changesValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+    mChangesValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
+    mChangesValue->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     mSelectAllChangesCheckBox = new QCheckBox(tr("Select all the changes"), changesWidget);
 
     mSelectAllChangesCheckBox->setTristate(true);
 
     changesLayout->addWidget(mChangesLabel);
-    changesLayout->addWidget(changesValue);
+    changesLayout->addWidget(mChangesValue);
     changesLayout->addWidget(mSelectAllChangesCheckBox);
 
     mSplitter->addWidget(changesWidget);
@@ -167,12 +168,12 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     mProxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     mProxyModel->setSourceModel(mModel);
 
-    changesValue->setModel(mProxyModel);
+    mChangesValue->setModel(mProxyModel);
 
     populateModel(pWorkspace->rootFileNode(), true);
 
-    changesValue->setMinimumWidth(qMin(qApp->desktop()->availableGeometry().width() >> 1,
-                                       changesValue->sizeHintForColumn(0)+2));
+    mChangesValue->setMinimumWidth(qMin(qApp->desktop()->availableGeometry().width() >> 1,
+                                        mChangesValue->sizeHintForColumn(0)+2));
 
     // Connect some signals
 
@@ -180,7 +181,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
             this, SLOT(updateOkButton()));
 
     connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-            this, SLOT(updateSelectAllChangesCheckBox()));
+            this, SLOT(updateSelectAllChangesCheckBox(QStandardItem *)));
 
     connect(mSelectAllChangesCheckBox, SIGNAL(toggled(bool)),
             this, SLOT(updateOkButton()));
@@ -295,17 +296,32 @@ QStringList PmrWorkspacesWindowSynchronizeDialog::fileNames() const
 
 //==============================================================================
 
-void PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox()
+void PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox(QStandardItem *pItem)
 {
-    // Update the selected state of all our hierarchies
+    // Un/check the selected items, if any
+    // Note: we temporally disable the handling of the itemChanged() signal
+    //       since we 'manually' set everything ourselves...
 
-    int nbOfSelectedFiles = 0;
+    if (pItem) {
+        disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
+                   this, SLOT(updateSelectAllChangesCheckBox(QStandardItem *)));
+
+        foreach (const QModelIndex &fileIndex, mChangesValue->selectionModel()->selectedIndexes())
+            mModel->itemFromIndex(mProxyModel->mapToSource(fileIndex))->setCheckState(pItem->checkState());
+
+        connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
+                this, SLOT(updateSelectAllChangesCheckBox(QStandardItem *)));
+    }
+
+    // Update the checked state of our Select All check box
+
+    int nbOfCheckedFiles = 0;
 
     for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
-        nbOfSelectedFiles += mModel->invisibleRootItem()->child(i)->checkState() == Qt::Checked;
+        nbOfCheckedFiles += mModel->invisibleRootItem()->child(i)->checkState() == Qt::Checked;
 
-    mSelectAllChangesCheckBox->setCheckState(nbOfSelectedFiles?
-                                                 (nbOfSelectedFiles == mModel->rowCount())?
+    mSelectAllChangesCheckBox->setCheckState(nbOfCheckedFiles?
+                                                 (nbOfCheckedFiles == mModel->rowCount())?
                                                      Qt::Checked:
                                                      Qt::PartiallyChecked:
                                                  Qt::Unchecked);
