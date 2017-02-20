@@ -29,6 +29,7 @@ limitations under the License.
 //==============================================================================
 
 class QCheckBox;
+class QDialogButtonBox;
 class QLabel;
 class QSortFilterProxyModel;
 class QStandardItemModel;
@@ -85,10 +86,17 @@ private:
     QLabel *mChangesLabel;
     QCheckBox *mSelectAllChangesCheckBox;
 
+    QDialogButtonBox *mButtonBox;
+
     void populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode,
                        const bool &pRootFileNode = false);
 
 private slots:
+    void updateSelectAllChangesCheckBox();
+    void selectAllChangesCheckBoxClicked();
+
+    void updateOkButton();
+
     void acceptSynchronization();
 };
 

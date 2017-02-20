@@ -34,6 +34,7 @@ limitations under the License.
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QListView>
+#include <QPushButton>
 #include <QSettings>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
@@ -123,7 +124,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     mSelectAllChangesCheckBox = new QCheckBox(tr("Select all the changes"), changesWidget);
 
-    mSelectAllChangesCheckBox->setChecked(true);
+    mSelectAllChangesCheckBox->setTristate(true);
 
     changesLayout->addWidget(mChangesLabel);
     changesLayout->addWidget(changesValue);
@@ -149,14 +150,11 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     // Add some dialog buttons
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
+    mButtonBox = new QDialogButtonBox(this);
 
-    buttonBox->setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    mButtonBox->setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
 
-    connect(buttonBox, SIGNAL(accepted()),
-            this, SLOT(acceptSynchronization()));
-
-    layout->addWidget(buttonBox);
+    layout->addWidget(mButtonBox);
 
     // Populate ourselves with the list of files that have changed and make sure
     // that the width of our list view is always such that we can see all of its
@@ -178,10 +176,25 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     // Connect some signals
 
-    connect(buttonBox, SIGNAL(accepted()),
-            this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()),
+    connect(mMessageValue, SIGNAL(textChanged()),
+            this, SLOT(updateOkButton()));
+
+    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
+            this, SLOT(updateSelectAllChangesCheckBox()));
+
+    connect(mSelectAllChangesCheckBox, SIGNAL(toggled(bool)),
+            this, SLOT(updateOkButton()));
+    connect(mSelectAllChangesCheckBox, SIGNAL(clicked(bool)),
+            this, SLOT(selectAllChangesCheckBoxClicked()));
+
+    connect(mButtonBox, SIGNAL(accepted()),
+            this, SLOT(acceptSynchronization()));
+    connect(mButtonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
+
+    // Initialise (update) the checked state of our Select All check box
+
+    updateSelectAllChangesCheckBox();
 
     // Set our minimum size and adjust our initial size
     // Note: the size adjustment is just so that it looks 'better' the very
@@ -237,13 +250,13 @@ void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspac
             if ((status != '\0') && (status != ' ')) {
                 ++nbOfChanges;
 
-                QStandardItem *dataItem = new QStandardItem(fileNode->path());
+                QStandardItem *fileItem = new QStandardItem(fileNode->path());
 
-                dataItem->setCheckable(true);
-                dataItem->setCheckState(Qt::Checked);
-                dataItem->setEditable(false);
+                fileItem->setCheckable(true);
+                fileItem->setCheckState(Qt::Checked);
+                fileItem->setEditable(false);
 
-                mModel->appendRow(dataItem);
+                mModel->appendRow(fileItem);
             }
         }
     }
@@ -278,6 +291,52 @@ QStringList PmrWorkspacesWindowSynchronizeDialog::fileNames() const
 //---GRY--- TO BE DONE...
 
     return QStringList();
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox()
+{
+    // Update the selected state of all our hierarchies
+
+    int nbOfSelectedFiles = 0;
+
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
+        nbOfSelectedFiles += mModel->invisibleRootItem()->child(i)->checkState() == Qt::Checked;
+
+    mSelectAllChangesCheckBox->setCheckState(nbOfSelectedFiles?
+                                                 (nbOfSelectedFiles == mModel->rowCount())?
+                                                     Qt::Checked:
+                                                     Qt::PartiallyChecked:
+                                                 Qt::Unchecked);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowSynchronizeDialog::selectAllChangesCheckBoxClicked()
+{
+    // If our checked state is partially checked, then we want to make it fully
+    // so
+
+    if (mSelectAllChangesCheckBox->checkState() == Qt::PartiallyChecked)
+        mSelectAllChangesCheckBox->setCheckState(Qt::Checked);
+
+    // Un/select all the files
+
+    Qt::CheckState checkState = mSelectAllChangesCheckBox->isChecked()?Qt::Checked:Qt::Unchecked;
+
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
+        mModel->invisibleRootItem()->child(i)->setCheckState(checkState);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowSynchronizeDialog::updateOkButton()
+{
+    // Update the state of our Ok button
+
+    mButtonBox->button(QDialogButtonBox::Ok)->setEnabled(   !message().isEmpty()
+                                                         &&  (mSelectAllChangesCheckBox->checkState() != Qt::Unchecked));
 }
 
 //==============================================================================
