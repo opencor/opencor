@@ -130,18 +130,6 @@
         <translation>Voir les espaces de travail actuels sur l&apos;ordinateur</translation>
     </message>
     <message>
-        <source>Owner:</source>
-        <translation>Propriétaire :</translation>
-    </message>
-    <message>
-        <source>PMR:</source>
-        <translation>PMR :</translation>
-    </message>
-    <message>
-        <source>Path:</source>
-        <translation>Chemin :</translation>
-    </message>
-    <message>
         <source>Synchronise With PMR</source>
         <translation>Synchroniser Avec PMR</translation>
     </message>
@@ -156,6 +144,18 @@
     <message>
         <source>An &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;email&lt;/a&gt; must be set before you can synchronise with PMR.</source>
         <translation>Un &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;email&lt;/a&gt; doit être spécifié avant de pouvoir synchroniser avec PMR.</translation>
+    </message>
+    <message>
+        <source>Owner:</source>
+        <translation>Propriétaire :</translation>
+    </message>
+    <message>
+        <source>PMR:</source>
+        <translation>PMR :</translation>
+    </message>
+    <message>
+        <source>Path:</source>
+        <translation>Chemin :</translation>
     </message>
 </context>
 <context>
