@@ -574,7 +574,7 @@ void PmrWorkspacesWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     //       everything...
 
     QStringList fileNames = QStringList();
-    QModelIndexList items = mTreeViewWidget->selectedIndexes();
+    QModelIndexList items = mTreeViewWidget->selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = items.count(); i < iMax; ++i) {
         PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(items[i])));
@@ -1077,7 +1077,7 @@ QStringList PmrWorkspacesWindowWidget::selectedWorkspaceUrls() const
     // our tree view widget
 
     QStringList res = QStringList();
-    QModelIndexList items = mTreeViewWidget->selectedIndexes();
+    QModelIndexList items = mTreeViewWidget->selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = items.count(); i < iMax; ++i)
         res << static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(items[i])))->workspace()->url();
@@ -1095,7 +1095,7 @@ QStringList PmrWorkspacesWindowWidget::selectedWorkspacePaths() const
     // in our tree view widget
 
     QStringList res = QStringList();
-    QModelIndexList items = mTreeViewWidget->selectedIndexes();
+    QModelIndexList items = mTreeViewWidget->selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = items.count(); i < iMax; ++i) {
         QString workspacePath = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(items[i])))->workspace()->path();
@@ -1115,7 +1115,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
 {
     // Customise our context menu and show it
 
-    QModelIndexList items = mTreeViewWidget->selectedIndexes();
+    QModelIndexList items = mTreeViewWidget->selectionModel()->selectedIndexes();
     bool oneItem = (items.count() == 1);
     PMRSupport::PmrWorkspaces workspaces = PMRSupport::PmrWorkspaces();
     int nbOfWorkspacePaths = selectedWorkspacePaths().count();
