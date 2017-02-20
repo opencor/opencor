@@ -384,6 +384,12 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
+    # We specify where to build external projects because the default
+    # (to build external projects under their plugin's build directory)
+    # can result in path names being too long for Windows...
+
+    SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${CMAKE_BINARY_DIR}/external)
+
     # Show the build information
 
     MESSAGE("${BUILD_INFORMATION} using Qt ${QT_VERSION}...")
