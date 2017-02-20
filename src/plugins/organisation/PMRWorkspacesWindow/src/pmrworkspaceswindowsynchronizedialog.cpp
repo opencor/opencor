@@ -289,9 +289,17 @@ QString PmrWorkspacesWindowSynchronizeDialog::message() const
 QStringList PmrWorkspacesWindowSynchronizeDialog::fileNames() const
 {
     // Return our file names
-//---GRY--- TO BE DONE...
 
-    return QStringList();
+    QStringList res = QStringList();
+
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        QStandardItem *fileItem = mModel->invisibleRootItem()->child(i);
+
+        if (fileItem->checkState() == Qt::Checked)
+            res << mModel->invisibleRootItem()->child(i)->text();
+    }
+
+    return res;
 }
 
 //==============================================================================

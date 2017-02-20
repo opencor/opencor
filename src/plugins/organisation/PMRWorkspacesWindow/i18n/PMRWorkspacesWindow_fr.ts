@@ -16,23 +16,23 @@
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowSynchronizeDialog</name>
     <message>
         <source>Synchronise With PMR</source>
-        <translation type="unfinished">Synchroniser Avec PMR</translation>
+        <translation>Synchroniser Avec PMR</translation>
     </message>
     <message>
         <source>Message:</source>
-        <translation type="unfinished">Message :</translation>
+        <translation>Message :</translation>
     </message>
     <message>
         <source>Select all the changes</source>
-        <translation type="unfinished">Sélectionner tous les changements</translation>
+        <translation>Sélectionner tous les changements</translation>
     </message>
     <message>
         <source>1 change:</source>
-        <translation type="unfinished">1 changement :</translation>
+        <translation>1 changement :</translation>
     </message>
     <message>
         <source>%1 changes:</source>
-        <translation type="unfinished">%1 changements :</translation>
+        <translation>%1 changements :</translation>
     </message>
 </context>
 <context>
@@ -140,6 +140,22 @@
     <message>
         <source>Path:</source>
         <translation>Chemin :</translation>
+    </message>
+    <message>
+        <source>Synchronise With PMR</source>
+        <translation>Synchroniser Avec PMR</translation>
+    </message>
+    <message>
+        <source>Both a &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;name&lt;/a&gt; and an &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;email&lt;/a&gt; must be set before you can synchronise with PMR.</source>
+        <translation>À la fois un &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;nom&lt;/a&gt; et un &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;email&lt;/a&gt; doivent être spécifiés avant de pouvoir synchroniser avec PMR.</translation>
+    </message>
+    <message>
+        <source>A &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;name&lt;/a&gt; must be set before you can synchronise with PMR.</source>
+        <translation>Un &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;nom&lt;/a&gt; doit être spécifié avant de pouvoir synchroniser avec PMR.</translation>
+    </message>
+    <message>
+        <source>An &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;email&lt;/a&gt; must be set before you can synchronise with PMR.</source>
+        <translation>Un &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;email&lt;/a&gt; doit être spécifié avant de pouvoir synchroniser avec PMR.</translation>
     </message>
 </context>
 <context>

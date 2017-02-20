@@ -23,11 +23,13 @@ limitations under the License.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "i18ninterface.h"
+#include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrworkspacemanager.h"
 #include "pmrworkspaceswindowsynchronizedialog.h"
 #include "pmrworkspaceswindowwidget.h"
 #include "pmrworkspaceswindowwindow.h"
+#include "preferencesinterface.h"
 #include "treeviewwidget.h"
 #include "usermessagewidget.h"
 
@@ -1351,34 +1353,50 @@ void PmrWorkspacesWindowWidget::makeLocalWorkspaceCopy()
 
 void PmrWorkspacesWindowWidget::synchronizeWorkspace()
 {
-    // Synchronise the current workspace, which involves letting the user decide
-    // which files should be staged, commit those files, pull things from PMR
-    // and, if we own the workspace, push things to PMR before refreshing our
-    // workspace
+    // Make sure that the user provided both a user name and email address
 
-    QSettings settings;
+    bool hasName = !PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesName).toByteArray().isEmpty();
+    bool hasEmail = !PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesEmail).toByteArray().isEmpty();
 
-    settings.beginGroup(mSettingsGroup);
-        settings.beginGroup("PmrWorkspacesWindowSynchronizeDialog");
-            PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
-            PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(mSettingsGroup, workspace, Core::mainWindow());
+    if (!hasName) {
+        if (!hasEmail) {
+            Core::warningMessageBox(tr("Synchronise With PMR"),
+                                    tr("Both a <a href=\"opencor://openPreferencesDialog/PMRSupport\">name</a> and an <a href=\"opencor://openPreferencesDialog/PMRSupport\">email</a> must be set before you can synchronise with PMR."));
+        } else {
+            Core::warningMessageBox(tr("Synchronise With PMR"),
+                                    tr("A <a href=\"opencor://openPreferencesDialog/PMRSupport\">name</a> must be set before you can synchronise with PMR."));
+        }
+    } else if (!hasEmail) {
+        Core::warningMessageBox(tr("Synchronise With PMR"),
+                                tr("An <a href=\"opencor://openPreferencesDialog/PMRSupport\">email</a> must be set before you can synchronise with PMR."));
+    } else {
+        // Synchronise the current workspace, which involves letting the user
+        // decide which files should be staged, commit those files, pull things
+        // from PMR and, if we own the workspace, push things to PMR before
+        // refreshing our workspace
 
-            synchronizeDialog.exec(&settings);
+        QSettings settings;
 
-            if (synchronizeDialog.result() == QMessageBox::Ok) {
-                QStringList fileNames = synchronizeDialog.fileNames();
+        settings.beginGroup(mSettingsGroup);
+            settings.beginGroup("PmrWorkspacesWindowSynchronizeDialog");
+                PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
+                PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(mSettingsGroup, workspace, Core::mainWindow());
 
-                for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
-                    workspace->stageFile(fileNames[i], true);
+                synchronizeDialog.exec(&settings);
 
-                workspace->commit(synchronizeDialog.message());
+                if (synchronizeDialog.result() == QMessageBox::Ok) {
+                    QStringList fileNames = synchronizeDialog.fileNames();
 
-                mPmrWebService->requestWorkspaceSynchronize(currentItem()->workspace(), workspace->isOwned());
-            }
+                    for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
+                        workspace->stageFile(fileNames[i], true);
 
-            refreshWorkspace(workspace);
+                    workspace->commit(synchronizeDialog.message());
+
+                    mPmrWebService->requestWorkspaceSynchronize(currentItem()->workspace(), workspace->isOwned());
+                }
+            settings.endGroup();
         settings.endGroup();
-    settings.endGroup();
+    }
 }
 
 //==============================================================================
