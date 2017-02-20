@@ -23,13 +23,13 @@ SET(PYTHONQT_GIT_TAG "opencor")
 # The names of the libraries built by PythonQt's build process.
 
 IF(WIN32)
-    SET(PYTHONQT_LIBRARY PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(PYTHONQT_GENERATED_LIBRARY PythonQt.lib)
+    SET(PYTHONQT_SHARED_LIBRARY PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(PYTHONQT_LINK_LIBRARY PythonQt${CMAKE_IMPORT_LIBRARY_SUFFIX})
 ELSE()
-    SET(PYTHONQT_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(PYTHONQT_GENERATED_LIBRARY ${PYTHONQT_LIBRARY})
+    SET(PYTHONQT_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(PYTHONQT_LINK_LIBRARY ${PYTHONQT_SHARED_LIBRARY})
 ENDIF()
-SET(EXTERNAL_BINARIES ${PYTHONQT_LIBRARY})
+SET(EXTERNAL_BINARIES ${PYTHONQT_SHARED_LIBRARY})
 
 # Specify where our PythonQt will be installed.
 
@@ -38,15 +38,15 @@ SET(FULL_INSTALL_DIR ${PROJECT_SOURCE_DIR}/${RELATIVE_INSTALL_DIR})
 
 # Specify the files that will have their SHA1 checked when packaged.
 
-SET(CHECKED_FILES lib/${PYTHONQT_LIBRARY})
+SET(CHECKED_FILES lib/${PYTHONQT_SHARED_LIBRARY})
 
 # We need to check the link library for Windows.
 
 IF(WIN32)
-    LIST(APPEND CHECKED_FILES lib/${PYTHONQT_GENERATED_LIBRARY})
+    LIST(APPEND CHECKED_FILES lib/${PYTHONQT_LINK_LIBRARY})
 ENDIF()
 
-# Add headers and... to the package archive
+# Add headers and checked files to the package archive
 
 SET(PACKAGED_FILES
     include
@@ -103,7 +103,7 @@ ELSE()
             -DPythonQt_Wrap_QtAll=1
             -DQt5_DIR=1
         BUILD_BYPRODUCTS
-            <INSTALL_DIR>/lib/${PYTHONQT_GENERATED_LIBRARY}
+            <INSTALL_DIR>/bin/${PYTHONQT_LINK_LIBRARY}
     )
 
     IF(APPLE)
@@ -111,7 +111,7 @@ ELSE()
 
         ExternalProject_Add_Step(PythonQtAPIBuild set_rpath
             # Set RPATH in library to enable linking independent of location
-            COMMAND install_name_tool -id @rpath/${PYTHONQT_LIBRARY} ${PYTHONQT_LIBRARY}
+            COMMAND install_name_tool -id @rpath/${PYTHONQT_SHARED_LIBRARY} ${PYTHONQT_SHARED_LIBRARY}
             WORKING_DIRECTORY ${FULL_INSTALL_DIR}/lib
             DEPENDEES install
             )
