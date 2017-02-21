@@ -41,6 +41,12 @@ IF(USE_PREBUILT_QSCINTILLA_PLUGIN)
             src
     )
 ELSE()
+    # Ignore some warnings on Windows
+
+    IF(WIN32)
+        SET(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} /wd4996")
+    ENDIF()
+
     # Add the plugin
 
     IF(APPLE)
