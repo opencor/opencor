@@ -410,13 +410,21 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelInd
 
 //---GRY--- TO BE DONE...
 
-    QString fileName = QDir(mWorkspace->path()).relativeFilePath(mModel->itemFromIndex(mProxyModel->mapToSource(pNewIndex))->text());
+    QString fullFileName = mModel->itemFromIndex(mProxyModel->mapToSource(pNewIndex))->text();
+    QString relativeFileName = QDir(mWorkspace->path()).relativeFilePath(fullFileName);
 
-    qDebug("---[%s]---", qPrintable(fileName));
+    qDebug("---[%s]---[BEFORE]", qPrintable(fullFileName));
 
-    QByteArray fileContents = mWorkspace->headFileContents(fileName);
+    QByteArray headFileContents = mWorkspace->headFileContents(relativeFileName);
 
-    qDebug("%s", fileContents.constData());
+    qDebug("%s", headFileContents.constData());
+
+    QByteArray workingFileContents;
+
+    Core::readFileContentsFromFile(fullFileName, workingFileContents);
+
+    qDebug("---[%s]---[BEFORE]", qPrintable(fullFileName));
+    qDebug("%s", workingFileContents.constData());
 }
 
 //==============================================================================
