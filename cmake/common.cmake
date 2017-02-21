@@ -81,6 +81,10 @@ MACRO(INITIALISE_PROJECT)
         FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
     ENDFOREACH()
 
+    # Make sure that anyone can access diff_match_patch
+
+    INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch)
+
     # Some initialisations related to our copy of QtWebKit
 
     IF(WIN32)

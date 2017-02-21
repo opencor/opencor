@@ -45,6 +45,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include "diff_match_patch.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace PMRWorkspacesWindow {
 
