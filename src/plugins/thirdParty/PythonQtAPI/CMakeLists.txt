@@ -125,6 +125,8 @@ ELSE()
         CHECKED_FILES ${CHECKED_FILES}
         DEPENDENCY PythonQtAPIBuild
         )
+
+    SET(PLUGIN_DEPENDS_ON PythonQtAPIBuild)
 ENDIF()
 
 # Ensure other plugins can find us
@@ -150,10 +152,6 @@ ADD_PLUGIN(PythonQtAPI
         ${EXTERNAL_BINARIES}
     EXTERNAL_BINARIES_DIR
         ${FULL_INSTALL_DIR}/lib
+    DEPENDS
+        ${PLUGIN_DEPENDS_ON}
 )
-
-# We depend on PythonQt being built if we are not using the prebuilt package
-
-IF(NOT USE_PREBUILT_PYTHONQT_PACKAGE)
-    ADD_DEPENDENCIES(PythonQtAPIPlugin PythonQtAPIBuild)
-ENDIF()

@@ -466,6 +466,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         QT_MODULES
         EXTERNAL_BINARIES
         SYSTEM_BINARIES
+        DEPENDS
         TESTS
     )
 
@@ -710,6 +711,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ${ARG_SYSTEM_BINARY}
         )
     ENDFOREACH()
+
+    # What must be built before the plugin is built
+
+    IF(NOT "${ARG_DEPENDS}" STREQUAL "")
+        ADD_DEPENDENCIES(${PROJECT_NAME} ${ARG_DEPENDS})
+    ENDIF()
 
     # Some settings
 

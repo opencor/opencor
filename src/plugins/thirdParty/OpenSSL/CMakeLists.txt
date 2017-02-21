@@ -209,6 +209,8 @@ ELSE()
         CHECKED_FILES ${CHECKED_FILES}
         DEPENDENCY OpenSSLBuild
         )
+
+    SET(PLUGIN_DEPENDS_ON OpenSSLBuild)
 ENDIF()
 
 # Allow other external projects to find our OpenSSL
@@ -240,10 +242,6 @@ ADD_PLUGIN(OpenSSL
         ${EXTERNAL_BINARIES}
     EXTERNAL_BINARIES_DIR
         ${FULL_INSTALL_DIR}/lib
+    DEPENDS
+        ${PLUGIN_DEPENDS_ON}
     )
-
-# We depend on OpenSSL being built if we are not using the prebuilt version
-
-IF(NOT USE_PREBUILT_OPENSSL_PLUGIN)
-    ADD_DEPENDENCIES(OpenSSLPlugin OpenSSLBuild)
-ENDIF()

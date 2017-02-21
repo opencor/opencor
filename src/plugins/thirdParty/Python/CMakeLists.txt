@@ -275,6 +275,8 @@ ELSE()
         CHECKED_FILES ${CHECKED_FILES}
         DEPENDENCY PythonBuild
         )
+
+    SET(PLUGIN_DEPENDS_ON PythonBuild)
 ENDIF()
 
 # Ensure other plugins can find our Python installation
@@ -323,10 +325,6 @@ ADD_PLUGIN(Python
         ${EXTERNAL_DEST_DIR}
     EXTERNAL_SOURCE_DIR
         ${FULL_INSTALL_DIR}
+    DEPENDS
+        ${PLUGIN_DEPENDS_ON}
 )
-
-# We depend on Python being built if we are not using the prebuilt package
-
-IF(NOT USE_PREBUILT_PYTHON_PACKAGE)
-    ADD_DEPENDENCIES(PythonPlugin PythonBuild)
-ENDIF()

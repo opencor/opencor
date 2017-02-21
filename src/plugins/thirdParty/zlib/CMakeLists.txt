@@ -145,6 +145,8 @@ ELSE()
         CHECKED_FILES ${CHECKED_FILES}
         DEPENDENCY zlibBuild
         )
+
+    SET(PLUGIN_DEPENDS_ON zlibBuild)
 ENDIF()
 
 # Allow other external projects to find our zlib
@@ -172,10 +174,6 @@ ADD_PLUGIN(zlib
         ${FULL_INSTALL_DIR}/lib
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
+    DEPENDS
+        ${PLUGIN_DEPENDS_ON}
 )
-
-# We depend on zlib being built if we are not using the prebuilt version
-
-IF(NOT USE_PREBUILT_ZLIB_PLUGIN)
-    ADD_DEPENDENCIES(zlibPlugin zlibBuild)
-ENDIF()
