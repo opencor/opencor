@@ -273,7 +273,7 @@ ELSE()
         Python ${PYTHON_PACKAGE_VERSION}
         PACKAGED_FILES ${PACKAGED_FILES}
         CHECKED_FILES ${CHECKED_FILES}
-        DEPENDENCY PythonBuild
+        TARGET PythonBuild
         )
 
     SET(PLUGIN_DEPENDS_ON PythonBuild)

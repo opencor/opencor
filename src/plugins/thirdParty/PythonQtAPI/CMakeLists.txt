@@ -123,7 +123,7 @@ ELSE()
         PythonQtAPI ${PYTHONQTAPI_PACKAGE_VERSION}
         PACKAGED_FILES ${PACKAGED_FILES}
         CHECKED_FILES ${CHECKED_FILES}
-        DEPENDENCY PythonQtAPIBuild
+        TARGET PythonQtAPIBuild
         )
 
     SET(PLUGIN_DEPENDS_ON PythonQtAPIBuild)

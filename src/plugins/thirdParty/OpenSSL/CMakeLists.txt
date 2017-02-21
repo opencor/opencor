@@ -207,7 +207,7 @@ ELSE()
         OpenSSL ${OPENSSL_PACKAGE_VERSION}
         PACKAGED_FILES include ${CHECKED_FILES}
         CHECKED_FILES ${CHECKED_FILES}
-        DEPENDENCY OpenSSLBuild
+        TARGET OpenSSLBuild
         )
 
     SET(PLUGIN_DEPENDS_ON OpenSSLBuild)
