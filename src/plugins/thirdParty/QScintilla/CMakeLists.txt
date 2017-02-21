@@ -44,7 +44,7 @@ ELSE()
     # Ignore some warnings on Windows
 
     IF(WIN32)
-        SET(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} /wd4996")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4996")
     ENDIF()
 
     # Add the plugin
