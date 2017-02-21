@@ -63,7 +63,7 @@ class CentralWidget;
 //       Dialog. To have it in guiutils.h.inl is NOT good enough since the MOC
 //       won't pick it up...
 
-class Dialog : public QDialog
+class CORE_EXPORT Dialog : public QDialog
 {
     Q_OBJECT
 
@@ -72,6 +72,8 @@ public:
     explicit Dialog(QWidget *pParent);
 
     int exec(QSettings *pSettings);
+
+    bool hasPositionAndSize();
 
 protected:
     QSettings *mSettings;

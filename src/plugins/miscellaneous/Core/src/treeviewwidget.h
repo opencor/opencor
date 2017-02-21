@@ -52,8 +52,6 @@ public:
 
     bool isEditing() const;
 
-    virtual QModelIndexList selectedIndexes() const;
-
 protected:
     virtual QSize sizeHint() const;
 
