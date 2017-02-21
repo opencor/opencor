@@ -19,7 +19,7 @@
 
 
 #ifndef SCINTILLAQT_H
-#define	SCINTILLAQT_H
+#define SCINTILLAQT_H
 
 
 #include <QClipboard>
@@ -88,15 +88,15 @@ class QsciScintillaQt : public QObject, public QSCI_SCI_NAMESPACE(ScintillaBase)
 {
     Q_OBJECT
 
-	friend class QsciScintillaBase;
-	friend class QsciSciCallTip;
-	friend class QsciSciPopup;
+    friend class QsciScintillaBase;
+    friend class QsciSciCallTip;
+    friend class QsciSciPopup;
 
 public:
-	QsciScintillaQt(QsciScintillaBase *qsb_);
-	virtual ~QsciScintillaQt();
+    QsciScintillaQt(QsciScintillaBase *qsb_);
+    virtual ~QsciScintillaQt();
 
-	virtual sptr_t WndProc(unsigned int iMessage, uptr_t wParam,
+    virtual sptr_t WndProc(unsigned int iMessage, uptr_t wParam,
             sptr_t lParam);
 
 protected:
@@ -106,33 +106,33 @@ private slots:
     void onIdle();
 
 private:
-	void Initialise();
-	void Finalise();
+    void Initialise();
+    void Finalise();
     bool SetIdle(bool on);
-	void StartDrag();
-	sptr_t DefWndProc(unsigned int, uptr_t, sptr_t);
-	void SetMouseCapture(bool on);
-	bool HaveMouseCapture();
-	void SetVerticalScrollPos();
-	void SetHorizontalScrollPos();
-	bool ModifyScrollBars(int nMax, int nPage);
-	void ReconfigureScrollBars();
-	void NotifyChange();
-	void NotifyParent(SCNotification scn);
-	void CopyToClipboard(
+    void StartDrag();
+    sptr_t DefWndProc(unsigned int, uptr_t, sptr_t);
+    void SetMouseCapture(bool on);
+    bool HaveMouseCapture();
+    void SetVerticalScrollPos();
+    void SetHorizontalScrollPos();
+    bool ModifyScrollBars(int nMax, int nPage);
+    void ReconfigureScrollBars();
+    void NotifyChange();
+    void NotifyParent(SCNotification scn);
+    void CopyToClipboard(
             const QSCI_SCI_NAMESPACE(SelectionText) &selectedText);
-	void Copy();
-	void Paste();
-	void CreateCallTipWindow(QSCI_SCI_NAMESPACE(PRectangle) rc);
-	void AddToPopUp(const char *label, int cmd = 0, bool enabled = true);
-	void ClaimSelection();
-	void UnclaimSelection();
-	static sptr_t DirectFunction(QsciScintillaQt *sci, unsigned int iMessage,
+    void Copy();
+    void Paste();
+    void CreateCallTipWindow(QSCI_SCI_NAMESPACE(PRectangle) rc);
+    void AddToPopUp(const char *label, int cmd = 0, bool enabled = true);
+    void ClaimSelection();
+    void UnclaimSelection();
+    static sptr_t DirectFunction(QsciScintillaQt *sci, unsigned int iMessage,
             uptr_t wParam,sptr_t lParam);
 
-	QMimeData *mimeSelection(
+    QMimeData *mimeSelection(
             const QSCI_SCI_NAMESPACE(SelectionText) &text) const;
-	void paintEvent(QPaintEvent *e);
+    void paintEvent(QPaintEvent *e);
     void pasteFromClipboard(QClipboard::Mode mode);
 
     // tickPlatform is the last of the TickReason members.

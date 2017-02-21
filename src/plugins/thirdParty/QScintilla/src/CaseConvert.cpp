@@ -25,7 +25,7 @@ using namespace Scintilla;
 #endif
 
 namespace {
-	// Use an unnamed namespace to protect the declarations from name conflicts
+    // Use an unnamed namespace to protect the declarations from name conflicts
 
 // Unicode code points are ordered by groups and follow patterns.
 // Most characters (pitch==1) are in ranges for a particular alphabet and their
@@ -366,104 +366,104 @@ const char *complexCaseConversions =
 ;
 
 class CaseConverter : public ICaseConverter {
-	// Maximum length of a case conversion result is 6 bytes in UTF-8
-	enum { maxConversionLength=6 };
-	struct ConversionString {
-		char conversion[maxConversionLength+1];
-		ConversionString() {
-			conversion[0] = '\0';
-		}
-	};
-	// Conversions are initially store in a vector of structs but then decomposed into
-	// parallel arrays as that is about 10% faster to search.
-	struct CharacterConversion {
-		int character;
-		ConversionString conversion;
-		CharacterConversion(int character_=0, const char *conversion_="") : character(character_) {
-			StringCopy(conversion.conversion, conversion_);
-		}
-		bool operator<(const CharacterConversion &other) const {
-			return character < other.character;
-		}
-	};
-	typedef std::vector<CharacterConversion> CharacterToConversion;
-	CharacterToConversion characterToConversion;
-	// The parallel arrays
-	std::vector<int> characters;
-	std::vector<ConversionString> conversions;
+    // Maximum length of a case conversion result is 6 bytes in UTF-8
+    enum { maxConversionLength=6 };
+    struct ConversionString {
+        char conversion[maxConversionLength+1];
+        ConversionString() {
+            conversion[0] = '\0';
+        }
+    };
+    // Conversions are initially store in a vector of structs but then decomposed into
+    // parallel arrays as that is about 10% faster to search.
+    struct CharacterConversion {
+        int character;
+        ConversionString conversion;
+        CharacterConversion(int character_=0, const char *conversion_="") : character(character_) {
+            StringCopy(conversion.conversion, conversion_);
+        }
+        bool operator<(const CharacterConversion &other) const {
+            return character < other.character;
+        }
+    };
+    typedef std::vector<CharacterConversion> CharacterToConversion;
+    CharacterToConversion characterToConversion;
+    // The parallel arrays
+    std::vector<int> characters;
+    std::vector<ConversionString> conversions;
 
 public:
-	CaseConverter() {
-	}
-	bool Initialised() const {
-		return characters.size() > 0;
-	}
-	void Add(int character, const char *conversion) {
-		characterToConversion.push_back(CharacterConversion(character, conversion));
-	}
-	const char *Find(int character) {
-		const std::vector<int>::iterator it = std::lower_bound(characters.begin(), characters.end(), character);
-		if (it == characters.end())
-			return 0;
-		else if (*it == character)
-			return conversions[it - characters.begin()].conversion;
-		else
-			return 0;
-	}
-	size_t CaseConvertString(char *converted, size_t sizeConverted, const char *mixed, size_t lenMixed) {
-		size_t lenConverted = 0;
-		size_t mixedPos = 0;
-		unsigned char bytes[UTF8MaxBytes + 1];
-		while (mixedPos < lenMixed) {
-			const unsigned char leadByte = static_cast<unsigned char>(mixed[mixedPos]);
-			const char *caseConverted = 0;
-			size_t lenMixedChar = 1;
-			if (UTF8IsAscii(leadByte)) {
-				caseConverted = Find(leadByte);
-			} else {
-				bytes[0] = leadByte;
-				const int widthCharBytes = UTF8BytesOfLead[leadByte];
-				for (int b=1; b<widthCharBytes; b++) {
-					bytes[b] = (mixedPos+b < lenMixed) ? mixed[mixedPos+b] : 0;
-				}
-				int classified = UTF8Classify(bytes, widthCharBytes);
-				if (!(classified & UTF8MaskInvalid)) {
-					// valid UTF-8
-					lenMixedChar = classified & UTF8MaskWidth;
-					int character = UnicodeFromUTF8(bytes);
-					caseConverted = Find(character);
-				}
-			}
-			if (caseConverted) {
-				// Character has a conversion so copy that conversion in
-				while (*caseConverted) {
-					converted[lenConverted++] = *caseConverted++;
-					if (lenConverted >= sizeConverted)
-						return 0;
-				}
-			} else {
-				// Character has no conversion so copy the input to output
-				for (size_t i=0; i<lenMixedChar; i++) {
-					converted[lenConverted++] = mixed[mixedPos+i];
-					if (lenConverted >= sizeConverted)
-						return 0;
-				}
-			}
-			mixedPos += lenMixedChar;
-		}
-		return lenConverted;
-	}
-	void FinishedAdding() {
-		std::sort(characterToConversion.begin(), characterToConversion.end());
-		characters.reserve(characterToConversion.size());
-		conversions.reserve(characterToConversion.size());
-		for (CharacterToConversion::iterator it = characterToConversion.begin(); it != characterToConversion.end(); ++it) {
-			characters.push_back(it->character);
-			conversions.push_back(it->conversion);
-		}
-		// Empty the original calculated data completely
-		CharacterToConversion().swap(characterToConversion);
-	}
+    CaseConverter() {
+    }
+    bool Initialised() const {
+        return characters.size() > 0;
+    }
+    void Add(int character, const char *conversion) {
+        characterToConversion.push_back(CharacterConversion(character, conversion));
+    }
+    const char *Find(int character) {
+        const std::vector<int>::iterator it = std::lower_bound(characters.begin(), characters.end(), character);
+        if (it == characters.end())
+            return 0;
+        else if (*it == character)
+            return conversions[it - characters.begin()].conversion;
+        else
+            return 0;
+    }
+    size_t CaseConvertString(char *converted, size_t sizeConverted, const char *mixed, size_t lenMixed) {
+        size_t lenConverted = 0;
+        size_t mixedPos = 0;
+        unsigned char bytes[UTF8MaxBytes + 1];
+        while (mixedPos < lenMixed) {
+            const unsigned char leadByte = static_cast<unsigned char>(mixed[mixedPos]);
+            const char *caseConverted = 0;
+            size_t lenMixedChar = 1;
+            if (UTF8IsAscii(leadByte)) {
+                caseConverted = Find(leadByte);
+            } else {
+                bytes[0] = leadByte;
+                const int widthCharBytes = UTF8BytesOfLead[leadByte];
+                for (int b=1; b<widthCharBytes; b++) {
+                    bytes[b] = (mixedPos+b < lenMixed) ? mixed[mixedPos+b] : 0;
+                }
+                int classified = UTF8Classify(bytes, widthCharBytes);
+                if (!(classified & UTF8MaskInvalid)) {
+                    // valid UTF-8
+                    lenMixedChar = classified & UTF8MaskWidth;
+                    int character = UnicodeFromUTF8(bytes);
+                    caseConverted = Find(character);
+                }
+            }
+            if (caseConverted) {
+                // Character has a conversion so copy that conversion in
+                while (*caseConverted) {
+                    converted[lenConverted++] = *caseConverted++;
+                    if (lenConverted >= sizeConverted)
+                        return 0;
+                }
+            } else {
+                // Character has no conversion so copy the input to output
+                for (size_t i=0; i<lenMixedChar; i++) {
+                    converted[lenConverted++] = mixed[mixedPos+i];
+                    if (lenConverted >= sizeConverted)
+                        return 0;
+                }
+            }
+            mixedPos += lenMixedChar;
+        }
+        return lenConverted;
+    }
+    void FinishedAdding() {
+        std::sort(characterToConversion.begin(), characterToConversion.end());
+        characters.reserve(characterToConversion.size());
+        conversions.reserve(characterToConversion.size());
+        for (CharacterToConversion::iterator it = characterToConversion.begin(); it != characterToConversion.end(); ++it) {
+            characters.push_back(it->character);
+            conversions.push_back(it->conversion);
+        }
+        // Empty the original calculated data completely
+        CharacterToConversion().swap(characterToConversion);
+    }
 };
 
 CaseConverter caseConvFold;
@@ -471,137 +471,137 @@ CaseConverter caseConvUp;
 CaseConverter caseConvLow;
 
 void UTF8FromUTF32Character(int uch, char *putf) {
-	size_t k = 0;
-	if (uch < 0x80) {
-		putf[k++] = static_cast<char>(uch);
-	} else if (uch < 0x800) {
-		putf[k++] = static_cast<char>(0xC0 | (uch >> 6));
-		putf[k++] = static_cast<char>(0x80 | (uch & 0x3f));
-	} else if (uch < 0x10000) {
-		putf[k++] = static_cast<char>(0xE0 | (uch >> 12));
-		putf[k++] = static_cast<char>(0x80 | ((uch >> 6) & 0x3f));
-		putf[k++] = static_cast<char>(0x80 | (uch & 0x3f));
-	} else {
-		putf[k++] = static_cast<char>(0xF0 | (uch >> 18));
-		putf[k++] = static_cast<char>(0x80 | ((uch >> 12) & 0x3f));
-		putf[k++] = static_cast<char>(0x80 | ((uch >> 6) & 0x3f));
-		putf[k++] = static_cast<char>(0x80 | (uch & 0x3f));
-	}
-	putf[k] = 0;
+    size_t k = 0;
+    if (uch < 0x80) {
+        putf[k++] = static_cast<char>(uch);
+    } else if (uch < 0x800) {
+        putf[k++] = static_cast<char>(0xC0 | (uch >> 6));
+        putf[k++] = static_cast<char>(0x80 | (uch & 0x3f));
+    } else if (uch < 0x10000) {
+        putf[k++] = static_cast<char>(0xE0 | (uch >> 12));
+        putf[k++] = static_cast<char>(0x80 | ((uch >> 6) & 0x3f));
+        putf[k++] = static_cast<char>(0x80 | (uch & 0x3f));
+    } else {
+        putf[k++] = static_cast<char>(0xF0 | (uch >> 18));
+        putf[k++] = static_cast<char>(0x80 | ((uch >> 12) & 0x3f));
+        putf[k++] = static_cast<char>(0x80 | ((uch >> 6) & 0x3f));
+        putf[k++] = static_cast<char>(0x80 | (uch & 0x3f));
+    }
+    putf[k] = 0;
 }
 
 void AddSymmetric(enum CaseConversion conversion, int lower,int upper) {
-	char lowerUTF8[UTF8MaxBytes+1];
-	UTF8FromUTF32Character(lower, lowerUTF8);
-	char upperUTF8[UTF8MaxBytes+1];
-	UTF8FromUTF32Character(upper, upperUTF8);
+    char lowerUTF8[UTF8MaxBytes+1];
+    UTF8FromUTF32Character(lower, lowerUTF8);
+    char upperUTF8[UTF8MaxBytes+1];
+    UTF8FromUTF32Character(upper, upperUTF8);
 
-	switch (conversion) {
-	case CaseConversionFold:
-		caseConvFold.Add(upper, lowerUTF8);
-		break;
-	case CaseConversionUpper:
-		caseConvUp.Add(lower, upperUTF8);
-		break;
-	case CaseConversionLower:
-		caseConvLow.Add(upper, lowerUTF8);
-		break;
-	}
+    switch (conversion) {
+    case CaseConversionFold:
+        caseConvFold.Add(upper, lowerUTF8);
+        break;
+    case CaseConversionUpper:
+        caseConvUp.Add(lower, upperUTF8);
+        break;
+    case CaseConversionLower:
+        caseConvLow.Add(upper, lowerUTF8);
+        break;
+    }
 }
 
 void SetupConversions(enum CaseConversion conversion) {
-	// First initialize for the symmetric ranges
-	for (size_t i=0; i<ELEMENTS(symmetricCaseConversionRanges);) {
-		int lower = symmetricCaseConversionRanges[i++];
-		int upper = symmetricCaseConversionRanges[i++];
-		int length = symmetricCaseConversionRanges[i++];
-		int pitch = symmetricCaseConversionRanges[i++];
-		for (int j=0; j<length*pitch; j+=pitch) {
-			AddSymmetric(conversion, lower+j, upper+j);
-		}
-	}
-	// Add the symmetric singletons
-	for (size_t i=0; i<ELEMENTS(symmetricCaseConversions);) {
-		int lower = symmetricCaseConversions[i++];
-		int upper = symmetricCaseConversions[i++];
-		AddSymmetric(conversion, lower, upper);
-	}
-	// Add the complex cases
-	const char *sComplex = complexCaseConversions;
-	while (*sComplex) {
-		// Longest ligature is 3 character so 5 for safety
-		const size_t lenUTF8 = 5*UTF8MaxBytes+1;
-		char originUTF8[lenUTF8];
-		char foldedUTF8[lenUTF8];
-		char lowerUTF8[lenUTF8];
-		char upperUTF8[lenUTF8];
-		size_t i = 0;
-		while (*sComplex && *sComplex != '|') {
-			originUTF8[i++] = *sComplex;
-			sComplex++;
-		}
-		sComplex++;
-		originUTF8[i] = 0;
-		i = 0;
-		while (*sComplex && *sComplex != '|') {
-			foldedUTF8[i++] = *sComplex;
-			sComplex++;
-		}
-		sComplex++;
-		foldedUTF8[i] = 0;
-		i = 0;
-		while (*sComplex && *sComplex != '|') {
-			upperUTF8[i++] = *sComplex;
-			sComplex++;
-		}
-		sComplex++;
-		upperUTF8[i] = 0;
-		i = 0;
-		while (*sComplex && *sComplex != '|') {
-			lowerUTF8[i++] = *sComplex;
-			sComplex++;
-		}
-		sComplex++;
-		lowerUTF8[i] = 0;
+    // First initialize for the symmetric ranges
+    for (size_t i=0; i<ELEMENTS(symmetricCaseConversionRanges);) {
+        int lower = symmetricCaseConversionRanges[i++];
+        int upper = symmetricCaseConversionRanges[i++];
+        int length = symmetricCaseConversionRanges[i++];
+        int pitch = symmetricCaseConversionRanges[i++];
+        for (int j=0; j<length*pitch; j+=pitch) {
+            AddSymmetric(conversion, lower+j, upper+j);
+        }
+    }
+    // Add the symmetric singletons
+    for (size_t i=0; i<ELEMENTS(symmetricCaseConversions);) {
+        int lower = symmetricCaseConversions[i++];
+        int upper = symmetricCaseConversions[i++];
+        AddSymmetric(conversion, lower, upper);
+    }
+    // Add the complex cases
+    const char *sComplex = complexCaseConversions;
+    while (*sComplex) {
+        // Longest ligature is 3 character so 5 for safety
+        const size_t lenUTF8 = 5*UTF8MaxBytes+1;
+        char originUTF8[lenUTF8];
+        char foldedUTF8[lenUTF8];
+        char lowerUTF8[lenUTF8];
+        char upperUTF8[lenUTF8];
+        size_t i = 0;
+        while (*sComplex && *sComplex != '|') {
+            originUTF8[i++] = *sComplex;
+            sComplex++;
+        }
+        sComplex++;
+        originUTF8[i] = 0;
+        i = 0;
+        while (*sComplex && *sComplex != '|') {
+            foldedUTF8[i++] = *sComplex;
+            sComplex++;
+        }
+        sComplex++;
+        foldedUTF8[i] = 0;
+        i = 0;
+        while (*sComplex && *sComplex != '|') {
+            upperUTF8[i++] = *sComplex;
+            sComplex++;
+        }
+        sComplex++;
+        upperUTF8[i] = 0;
+        i = 0;
+        while (*sComplex && *sComplex != '|') {
+            lowerUTF8[i++] = *sComplex;
+            sComplex++;
+        }
+        sComplex++;
+        lowerUTF8[i] = 0;
 
-		int character = UnicodeFromUTF8(reinterpret_cast<unsigned char *>(originUTF8));
+        int character = UnicodeFromUTF8(reinterpret_cast<unsigned char *>(originUTF8));
 
-		if (conversion == CaseConversionFold && foldedUTF8[0]) {
-			caseConvFold.Add(character, foldedUTF8);
-		}
+        if (conversion == CaseConversionFold && foldedUTF8[0]) {
+            caseConvFold.Add(character, foldedUTF8);
+        }
 
-		if (conversion == CaseConversionUpper && upperUTF8[0]) {
-			caseConvUp.Add(character, upperUTF8);
-		}
+        if (conversion == CaseConversionUpper && upperUTF8[0]) {
+            caseConvUp.Add(character, upperUTF8);
+        }
 
-		if (conversion == CaseConversionLower && lowerUTF8[0]) {
-			caseConvLow.Add(character, lowerUTF8);
-		}
-	}
+        if (conversion == CaseConversionLower && lowerUTF8[0]) {
+            caseConvLow.Add(character, lowerUTF8);
+        }
+    }
 
-	switch (conversion) {
-	case CaseConversionFold:
-		caseConvFold.FinishedAdding();
-		break;
-	case CaseConversionUpper:
-		caseConvUp.FinishedAdding();
-		break;
-	case CaseConversionLower:
-		caseConvLow.FinishedAdding();
-		break;
-	}
+    switch (conversion) {
+    case CaseConversionFold:
+        caseConvFold.FinishedAdding();
+        break;
+    case CaseConversionUpper:
+        caseConvUp.FinishedAdding();
+        break;
+    case CaseConversionLower:
+        caseConvLow.FinishedAdding();
+        break;
+    }
 }
 
 CaseConverter *ConverterForConversion(enum CaseConversion conversion) {
-	switch (conversion) {
-	case CaseConversionFold:
-		return &caseConvFold;
-	case CaseConversionUpper:
-		return &caseConvUp;
-	case CaseConversionLower:
-		return &caseConvLow;
-	}
-	return 0;
+    switch (conversion) {
+    case CaseConversionFold:
+        return &caseConvFold;
+    case CaseConversionUpper:
+        return &caseConvUp;
+    case CaseConversionLower:
+        return &caseConvLow;
+    }
+    return 0;
 }
 
 }
@@ -611,32 +611,32 @@ namespace Scintilla {
 #endif
 
 ICaseConverter *ConverterFor(enum CaseConversion conversion) {
-	CaseConverter *pCaseConv = ConverterForConversion(conversion);
-	if (!pCaseConv->Initialised())
-		SetupConversions(conversion);
-	return pCaseConv;
+    CaseConverter *pCaseConv = ConverterForConversion(conversion);
+    if (!pCaseConv->Initialised())
+        SetupConversions(conversion);
+    return pCaseConv;
 }
 
 const char *CaseConvert(int character, enum CaseConversion conversion) {
-	CaseConverter *pCaseConv = ConverterForConversion(conversion);
-	if (!pCaseConv->Initialised())
-		SetupConversions(conversion);
-	return pCaseConv->Find(character);
+    CaseConverter *pCaseConv = ConverterForConversion(conversion);
+    if (!pCaseConv->Initialised())
+        SetupConversions(conversion);
+    return pCaseConv->Find(character);
 }
 
 size_t CaseConvertString(char *converted, size_t sizeConverted, const char *mixed, size_t lenMixed, enum CaseConversion conversion) {
-	CaseConverter *pCaseConv = ConverterForConversion(conversion);
-	if (!pCaseConv->Initialised())
-		SetupConversions(conversion);
-	return pCaseConv->CaseConvertString(converted, sizeConverted, mixed, lenMixed);
+    CaseConverter *pCaseConv = ConverterForConversion(conversion);
+    if (!pCaseConv->Initialised())
+        SetupConversions(conversion);
+    return pCaseConv->CaseConvertString(converted, sizeConverted, mixed, lenMixed);
 }
 
 std::string CaseConvertString(const std::string &s, enum CaseConversion conversion) {
-	std::string retMapped(s.length() * maxExpansionCaseConversion, 0);
-	size_t lenMapped = CaseConvertString(&retMapped[0], retMapped.length(), s.c_str(), s.length(),
-		conversion);
-	retMapped.resize(lenMapped);
-	return retMapped;
+    std::string retMapped(s.length() * maxExpansionCaseConversion, 0);
+    size_t lenMapped = CaseConvertString(&retMapped[0], retMapped.length(), s.c_str(), s.length(),
+        conversion);
+    retMapped.resize(lenMapped);
+    return retMapped;
 }
 
 #ifdef SCI_NAMESPACE

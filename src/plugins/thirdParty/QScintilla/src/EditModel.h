@@ -16,52 +16,52 @@ namespace Scintilla {
 */
 class Caret {
 public:
-	bool active;
-	bool on;
-	int period;
+    bool active;
+    bool on;
+    int period;
 
-	Caret();
+    Caret();
 };
 
 class EditModel {
-	// Private so EditModel objects can not be copied
-	explicit EditModel(const EditModel &);
-	EditModel &operator=(const EditModel &);
+    // Private so EditModel objects can not be copied
+    explicit EditModel(const EditModel &);
+    EditModel &operator=(const EditModel &);
 
 public:
-	bool inOverstrike;
-	int xOffset;		///< Horizontal scrolled amount in pixels
-	bool trackLineWidth;
+    bool inOverstrike;
+    int xOffset;        ///< Horizontal scrolled amount in pixels
+    bool trackLineWidth;
 
-	SpecialRepresentations reprs;
-	Caret caret;
-	SelectionPosition posDrag;
-	Position braces[2];
-	int bracesMatchStyle;
-	int highlightGuideColumn;
-	Selection sel;
-	bool primarySelection;
+    SpecialRepresentations reprs;
+    Caret caret;
+    SelectionPosition posDrag;
+    Position braces[2];
+    int bracesMatchStyle;
+    int highlightGuideColumn;
+    Selection sel;
+    bool primarySelection;
 
-	enum IMEInteraction { imeWindowed, imeInline } imeInteraction;
+    enum IMEInteraction { imeWindowed, imeInline } imeInteraction;
 
-	int foldFlags;
-	int foldDisplayTextStyle;
-	ContractionState cs;
-	// Hotspot support
-	Range hotspot;
-	int hoverIndicatorPos;
+    int foldFlags;
+    int foldDisplayTextStyle;
+    ContractionState cs;
+    // Hotspot support
+    Range hotspot;
+    int hoverIndicatorPos;
 
-	// Wrapping support
-	int wrapWidth;
+    // Wrapping support
+    int wrapWidth;
 
-	Document *pdoc;
+    Document *pdoc;
 
-	EditModel();
-	virtual ~EditModel();
-	virtual int TopLineOfMain() const = 0;
-	virtual Point GetVisibleOriginInMain() const = 0;
-	virtual int LinesOnScreen() const = 0;
-	virtual Range GetHotSpotRange() const = 0;
+    EditModel();
+    virtual ~EditModel();
+    virtual int TopLineOfMain() const = 0;
+    virtual Point GetVisibleOriginInMain() const = 0;
+    virtual int LinesOnScreen() const = 0;
+    virtual Range GetHotSpotRange() const = 0;
 };
 
 #ifdef SCI_NAMESPACE

@@ -23,51 +23,51 @@ using namespace Scintilla;
 #endif
 
 bool StyleContext::MatchIgnoreCase(const char *s) {
-	if (MakeLowerCase(ch) != static_cast<unsigned char>(*s))
-		return false;
-	s++;
-	if (MakeLowerCase(chNext) != static_cast<unsigned char>(*s))
-		return false;
-	s++;
-	for (int n = 2; *s; n++) {
-		if (static_cast<unsigned char>(*s) !=
-			MakeLowerCase(static_cast<unsigned char>(styler.SafeGetCharAt(currentPos + n, 0))))
-			return false;
-		s++;
-	}
-	return true;
+    if (MakeLowerCase(ch) != static_cast<unsigned char>(*s))
+        return false;
+    s++;
+    if (MakeLowerCase(chNext) != static_cast<unsigned char>(*s))
+        return false;
+    s++;
+    for (int n = 2; *s; n++) {
+        if (static_cast<unsigned char>(*s) !=
+            MakeLowerCase(static_cast<unsigned char>(styler.SafeGetCharAt(currentPos + n, 0))))
+            return false;
+        s++;
+    }
+    return true;
 }
 
 static void getRange(Sci_PositionU start,
-		Sci_PositionU end,
-		LexAccessor &styler,
-		char *s,
-		Sci_PositionU len) {
-	Sci_PositionU i = 0;
-	while ((i < end - start + 1) && (i < len-1)) {
-		s[i] = styler[start + i];
-		i++;
-	}
-	s[i] = '\0';
+        Sci_PositionU end,
+        LexAccessor &styler,
+        char *s,
+        Sci_PositionU len) {
+    Sci_PositionU i = 0;
+    while ((i < end - start + 1) && (i < len-1)) {
+        s[i] = styler[start + i];
+        i++;
+    }
+    s[i] = '\0';
 }
 
 void StyleContext::GetCurrent(char *s, Sci_PositionU len) {
-	getRange(styler.GetStartSegment(), currentPos - 1, styler, s, len);
+    getRange(styler.GetStartSegment(), currentPos - 1, styler, s, len);
 }
 
 static void getRangeLowered(Sci_PositionU start,
-		Sci_PositionU end,
-		LexAccessor &styler,
-		char *s,
-		Sci_PositionU len) {
-	Sci_PositionU i = 0;
-	while ((i < end - start + 1) && (i < len-1)) {
-		s[i] = static_cast<char>(tolower(styler[start + i]));
-		i++;
-	}
-	s[i] = '\0';
+        Sci_PositionU end,
+        LexAccessor &styler,
+        char *s,
+        Sci_PositionU len) {
+    Sci_PositionU i = 0;
+    while ((i < end - start + 1) && (i < len-1)) {
+        s[i] = static_cast<char>(tolower(styler[start + i]));
+        i++;
+    }
+    s[i] = '\0';
 }
 
 void StyleContext::GetCurrentLowered(char *s, Sci_PositionU len) {
-	getRangeLowered(styler.GetStartSegment(), currentPos - 1, styler, s, len);
+    getRangeLowered(styler.GetStartSegment(), currentPos - 1, styler, s, len);
 }

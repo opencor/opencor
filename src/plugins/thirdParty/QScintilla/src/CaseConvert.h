@@ -15,14 +15,14 @@ namespace Scintilla {
 #endif
 
 enum CaseConversion {
-	CaseConversionFold,
-	CaseConversionUpper,
-	CaseConversionLower
+    CaseConversionFold,
+    CaseConversionUpper,
+    CaseConversionLower
 };
 
 class ICaseConverter {
 public:
-	virtual size_t CaseConvertString(char *converted, size_t sizeConverted, const char *mixed, size_t lenMixed) = 0;
+    virtual size_t CaseConvertString(char *converted, size_t sizeConverted, const char *mixed, size_t lenMixed) = 0;
 };
 
 ICaseConverter *ConverterFor(enum CaseConversion conversion);

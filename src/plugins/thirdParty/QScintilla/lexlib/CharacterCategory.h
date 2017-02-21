@@ -13,13 +13,13 @@ namespace Scintilla {
 #endif
 
 enum CharacterCategory {
-	ccLu, ccLl, ccLt, ccLm, ccLo,
-	ccMn, ccMc, ccMe,
-	ccNd, ccNl, ccNo,
-	ccPc, ccPd, ccPs, ccPe, ccPi, ccPf, ccPo,
-	ccSm, ccSc, ccSk, ccSo,
-	ccZs, ccZl, ccZp,
-	ccCc, ccCf, ccCs, ccCo, ccCn
+    ccLu, ccLl, ccLt, ccLm, ccLo,
+    ccMn, ccMc, ccMe,
+    ccNd, ccNl, ccNo,
+    ccPc, ccPd, ccPs, ccPe, ccPi, ccPf, ccPo,
+    ccSm, ccSc, ccSk, ccSo,
+    ccZs, ccZl, ccZp,
+    ccCc, ccCf, ccCs, ccCo, ccCn
 };
 
 CharacterCategory CategoriseCharacter(int character);

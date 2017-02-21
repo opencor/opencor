@@ -56,13 +56,117 @@ ELSE()
         SOURCES
             ../../plugininfo.cpp
 
+            lexers/LexA68k.cpp
+            lexers/LexAbaqus.cpp
+            lexers/LexAda.cpp
+            lexers/LexAPDL.cpp
+            lexers/LexAsm.cpp
+            lexers/LexAsn1.cpp
+            lexers/LexASY.cpp
+            lexers/LexAU3.cpp
+            lexers/LexAVE.cpp
+            lexers/LexAVS.cpp
+            lexers/LexBaan.cpp
+            lexers/LexBash.cpp
+            lexers/LexBasic.cpp
+            lexers/LexBatch.cpp
+            lexers/LexBibTeX.cpp
+            lexers/LexBullant.cpp
+            lexers/LexCaml.cpp
+            lexers/LexCLW.cpp
+            lexers/LexCmake.cpp
+            lexers/LexCOBOL.cpp
+            lexers/LexCoffeeScript.cpp
+            lexers/LexConf.cpp
+            lexers/LexCPP.cpp
+            lexers/LexCrontab.cpp
+            lexers/LexCsound.cpp
+            lexers/LexCSS.cpp
+            lexers/LexD.cpp
+            lexers/LexDiff.cpp
+            lexers/LexDMAP.cpp
+            lexers/LexDMIS.cpp
+            lexers/LexECL.cpp
+            lexers/LexEDIFACT.cpp
+            lexers/LexEiffel.cpp
+            lexers/LexErlang.cpp
+            lexers/LexErrorList.cpp
+            lexers/LexEScript.cpp
+            lexers/LexFlagship.cpp
+            lexers/LexForth.cpp
+            lexers/LexFortran.cpp
+            lexers/LexGAP.cpp
+            lexers/LexGui4Cli.cpp
+            lexers/LexHaskell.cpp
+            lexers/LexHex.cpp
             lexers/LexHTML.cpp
+            lexers/LexInno.cpp
+            lexers/LexJSON.cpp
+            lexers/LexKix.cpp
+            lexers/LexKVIrc.cpp
+            lexers/LexLaTeX.cpp
+            lexers/LexLisp.cpp
+            lexers/LexLout.cpp
+            lexers/LexLua.cpp
+            lexers/LexMagik.cpp
+            lexers/LexMake.cpp
+            lexers/LexMarkdown.cpp
+            lexers/LexMatlab.cpp
+            lexers/LexMetapost.cpp
+            lexers/LexMMIXAL.cpp
+            lexers/LexModula.cpp
+            lexers/LexMPT.cpp
+            lexers/LexMSSQL.cpp
+            lexers/LexMySQL.cpp
+            lexers/LexNimrod.cpp
+            lexers/LexNsis.cpp
+            lexers/LexNull.cpp
+            lexers/LexOpal.cpp
+            lexers/LexOScript.cpp
+            lexers/LexPascal.cpp
+            lexers/LexPB.cpp
+            lexers/LexPerl.cpp
+            lexers/LexPLM.cpp
+            lexers/LexPO.cpp
+            lexers/LexPOV.cpp
+            lexers/LexPowerPro.cpp
+            lexers/LexPowerShell.cpp
+            lexers/LexProgress.cpp
+            lexers/LexProps.cpp
+            lexers/LexPS.cpp
+            lexers/LexPython.cpp
+            lexers/LexR.cpp
+            lexers/LexRebol.cpp
+            lexers/LexRegistry.cpp
+            lexers/LexRuby.cpp
+            lexers/LexRust.cpp
+            lexers/LexScriptol.cpp
+            lexers/LexSmalltalk.cpp
+            lexers/LexSML.cpp
+            lexers/LexSorcus.cpp
+            lexers/LexSpecman.cpp
+            lexers/LexSpice.cpp
+            lexers/LexSQL.cpp
+            lexers/LexSTTXT.cpp
+            lexers/LexTACL.cpp
+            lexers/LexTADS3.cpp
+            lexers/LexTAL.cpp
+            lexers/LexTCL.cpp
+            lexers/LexTCMD.cpp
+            lexers/LexTeX.cpp
+            lexers/LexTxt2tags.cpp
+            lexers/LexVB.cpp
+            lexers/LexVerilog.cpp
+            lexers/LexVHDL.cpp
+            lexers/LexVisualProlog.cpp
+            lexers/LexYAML.cpp
 
             lexlib/Accessor.cpp
             lexlib/CharacterCategory.cpp
             lexlib/CharacterSet.cpp
             lexlib/LexerBase.cpp
             lexlib/LexerModule.cpp
+            lexlib/LexerNoExceptions.cpp
             lexlib/LexerSimple.cpp
             lexlib/PropSetSimple.cpp
             lexlib/StyleContext.cpp
@@ -78,12 +182,47 @@ ELSE()
             Qt4Qt5/qscicommandset.cpp
             Qt4Qt5/qscidocument.cpp
             Qt4Qt5/qscilexer.cpp
+            Qt4Qt5/qscilexeravs.cpp
+            Qt4Qt5/qscilexerbash.cpp
+            Qt4Qt5/qscilexerbatch.cpp
+            Qt4Qt5/qscilexercmake.cpp
+            Qt4Qt5/qscilexercoffeescript.cpp
             Qt4Qt5/qscilexercpp.cpp
+            Qt4Qt5/qscilexercsharp.cpp
+            Qt4Qt5/qscilexercss.cpp
             Qt4Qt5/qscilexercustom.cpp
+            Qt4Qt5/qscilexerd.cpp
+            Qt4Qt5/qscilexerdiff.cpp
+            Qt4Qt5/qscilexerfortran.cpp
+            Qt4Qt5/qscilexerfortran77.cpp
             Qt4Qt5/qscilexerhtml.cpp
+            Qt4Qt5/qscilexeridl.cpp
+            Qt4Qt5/qscilexerjava.cpp
             Qt4Qt5/qscilexerjavascript.cpp
+            Qt4Qt5/qscilexerjson.cpp
+            Qt4Qt5/qscilexerlua.cpp
+            Qt4Qt5/qscilexermakefile.cpp
+            Qt4Qt5/qscilexermarkdown.cpp
+            Qt4Qt5/qscilexermatlab.cpp
+            Qt4Qt5/qscilexeroctave.cpp
+            Qt4Qt5/qscilexerpascal.cpp
+            Qt4Qt5/qscilexerperl.cpp
+            Qt4Qt5/qscilexerpo.cpp
+            Qt4Qt5/qscilexerpostscript.cpp
+            Qt4Qt5/qscilexerpov.cpp
+            Qt4Qt5/qscilexerproperties.cpp
             Qt4Qt5/qscilexerpython.cpp
+            Qt4Qt5/qscilexerruby.cpp
+            Qt4Qt5/qscilexerspice.cpp
+            Qt4Qt5/qscilexersql.cpp
+            Qt4Qt5/qscilexertcl.cpp
+            Qt4Qt5/qscilexertex.cpp
+            Qt4Qt5/qscilexerverilog.cpp
+            Qt4Qt5/qscilexervhdl.cpp
             Qt4Qt5/qscilexerxml.cpp
+            Qt4Qt5/qscilexeryaml.cpp
+            Qt4Qt5/qscimacro.cpp
+            Qt4Qt5/qsciprinter.cpp
             Qt4Qt5/qsciscintilla.cpp
             Qt4Qt5/qsciscintillabase.cpp
             Qt4Qt5/qscistyle.cpp
@@ -104,6 +243,7 @@ ELSE()
             src/EditModel.cpp
             src/Editor.cpp
             src/EditView.cpp
+            src/ExternalLexer.cpp
             src/Indicator.cpp
             src/KeyMap.cpp
             src/LineMarker.cpp
@@ -121,19 +261,51 @@ ELSE()
             src/XPM.cpp
         HEADERS_MOC
             Qt4Qt5/SciClasses.h
-
-            Qt4Qt5/SciClasses.h
             Qt4Qt5/ScintillaQt.h
 
             Qt4Qt5/Qsci/qsciabstractapis.h
             Qt4Qt5/Qsci/qsciapis.h
             Qt4Qt5/Qsci/qscilexer.h
+            Qt4Qt5/Qsci/qscilexeravs.h
+            Qt4Qt5/Qsci/qscilexerbash.h
+            Qt4Qt5/Qsci/qscilexerbatch.h
+            Qt4Qt5/Qsci/qscilexercmake.h
+            Qt4Qt5/Qsci/qscilexercoffeescript.h
             Qt4Qt5/Qsci/qscilexercpp.h
+            Qt4Qt5/Qsci/qscilexercsharp.h
+            Qt4Qt5/Qsci/qscilexercss.h
             Qt4Qt5/Qsci/qscilexercustom.h
+            Qt4Qt5/Qsci/qscilexerd.h
+            Qt4Qt5/Qsci/qscilexerdiff.h
+            Qt4Qt5/Qsci/qscilexerfortran.h
+            Qt4Qt5/Qsci/qscilexerfortran77.h
             Qt4Qt5/Qsci/qscilexerhtml.h
+            Qt4Qt5/Qsci/qscilexeridl.h
+            Qt4Qt5/Qsci/qscilexerjava.h
             Qt4Qt5/Qsci/qscilexerjavascript.h
+            Qt4Qt5/Qsci/qscilexerjson.h
+            Qt4Qt5/Qsci/qscilexerlua.h
+            Qt4Qt5/Qsci/qscilexermakefile.h
+            Qt4Qt5/Qsci/qscilexermarkdown.h
+            Qt4Qt5/Qsci/qscilexermatlab.h
+            Qt4Qt5/Qsci/qscilexeroctave.h
+            Qt4Qt5/Qsci/qscilexerpascal.h
+            Qt4Qt5/Qsci/qscilexerperl.h
+            Qt4Qt5/Qsci/qscilexerpo.h
+            Qt4Qt5/Qsci/qscilexerpostscript.h
+            Qt4Qt5/Qsci/qscilexerpov.h
+            Qt4Qt5/Qsci/qscilexerproperties.h
             Qt4Qt5/Qsci/qscilexerpython.h
+            Qt4Qt5/Qsci/qscilexerruby.h
+            Qt4Qt5/Qsci/qscilexerspice.h
+            Qt4Qt5/Qsci/qscilexersql.h
+            Qt4Qt5/Qsci/qscilexertcl.h
+            Qt4Qt5/Qsci/qscilexertex.h
+            Qt4Qt5/Qsci/qscilexerverilog.h
+            Qt4Qt5/Qsci/qscilexervhdl.h
             Qt4Qt5/Qsci/qscilexerxml.h
+            Qt4Qt5/Qsci/qscilexeryaml.h
+            Qt4Qt5/Qsci/qscimacro.h
             Qt4Qt5/Qsci/qsciscintilla.h
             Qt4Qt5/Qsci/qsciscintillabase.h
 
@@ -149,6 +321,7 @@ ELSE()
             SCI_LEXER
         QT_MODULES
             ${MAC_EXTRAS}
+            PrintSupport
             Widgets
     )
 ENDIF()

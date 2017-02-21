@@ -26,43 +26,43 @@ typedef ILexer *(*LexerFactoryFunction)();
  */
 class LexerModule {
 protected:
-	int language;
-	LexerFunction fnLexer;
-	LexerFunction fnFolder;
-	LexerFactoryFunction fnFactory;
-	const char * const * wordListDescriptions;
+    int language;
+    LexerFunction fnLexer;
+    LexerFunction fnFolder;
+    LexerFactoryFunction fnFactory;
+    const char * const * wordListDescriptions;
 
 public:
-	const char *languageName;
-	LexerModule(int language_,
-		LexerFunction fnLexer_,
-		const char *languageName_=0,
-		LexerFunction fnFolder_=0,
-		const char * const wordListDescriptions_[] = NULL);
-	LexerModule(int language_,
-		LexerFactoryFunction fnFactory_,
-		const char *languageName_,
-		const char * const wordListDescriptions_[] = NULL);
-	virtual ~LexerModule() {
-	}
-	int GetLanguage() const { return language; }
+    const char *languageName;
+    LexerModule(int language_,
+        LexerFunction fnLexer_,
+        const char *languageName_=0,
+        LexerFunction fnFolder_=0,
+        const char * const wordListDescriptions_[] = NULL);
+    LexerModule(int language_,
+        LexerFactoryFunction fnFactory_,
+        const char *languageName_,
+        const char * const wordListDescriptions_[] = NULL);
+    virtual ~LexerModule() {
+    }
+    int GetLanguage() const { return language; }
 
-	// -1 is returned if no WordList information is available
-	int GetNumWordLists() const;
-	const char *GetWordListDescription(int index) const;
+    // -1 is returned if no WordList information is available
+    int GetNumWordLists() const;
+    const char *GetWordListDescription(int index) const;
 
-	ILexer *Create() const;
+    ILexer *Create() const;
 
-	virtual void Lex(Sci_PositionU startPos, Sci_Position length, int initStyle,
+    virtual void Lex(Sci_PositionU startPos, Sci_Position length, int initStyle,
                   WordList *keywordlists[], Accessor &styler) const;
-	virtual void Fold(Sci_PositionU startPos, Sci_Position length, int initStyle,
+    virtual void Fold(Sci_PositionU startPos, Sci_Position length, int initStyle,
                   WordList *keywordlists[], Accessor &styler) const;
 
-	friend class Catalogue;
+    friend class Catalogue;
 };
 
 inline int Maximum(int a, int b) {
-	return (a > b) ? a : b;
+    return (a > b) ? a : b;
 }
 
 // Shut up annoying Visual C++ warnings:

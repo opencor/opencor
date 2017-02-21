@@ -28,65 +28,65 @@ using namespace Scintilla;
 #endif
 
 LexerBase::LexerBase() {
-	for (int wl = 0; wl < numWordLists; wl++)
-		keyWordLists[wl] = new WordList;
-	keyWordLists[numWordLists] = 0;
+    for (int wl = 0; wl < numWordLists; wl++)
+        keyWordLists[wl] = new WordList;
+    keyWordLists[numWordLists] = 0;
 }
 
 LexerBase::~LexerBase() {
-	for (int wl = 0; wl < numWordLists; wl++) {
-		delete keyWordLists[wl];
-		keyWordLists[wl] = 0;
-	}
-	keyWordLists[numWordLists] = 0;
+    for (int wl = 0; wl < numWordLists; wl++) {
+        delete keyWordLists[wl];
+        keyWordLists[wl] = 0;
+    }
+    keyWordLists[numWordLists] = 0;
 }
 
 void SCI_METHOD LexerBase::Release() {
-	delete this;
+    delete this;
 }
 
 int SCI_METHOD LexerBase::Version() const {
-	return lvOriginal;
+    return lvOriginal;
 }
 
 const char * SCI_METHOD LexerBase::PropertyNames() {
-	return "";
+    return "";
 }
 
 int SCI_METHOD LexerBase::PropertyType(const char *) {
-	return SC_TYPE_BOOLEAN;
+    return SC_TYPE_BOOLEAN;
 }
 
 const char * SCI_METHOD LexerBase::DescribeProperty(const char *) {
-	return "";
+    return "";
 }
 
 Sci_Position SCI_METHOD LexerBase::PropertySet(const char *key, const char *val) {
-	const char *valOld = props.Get(key);
-	if (strcmp(val, valOld) != 0) {
-		props.Set(key, val);
-		return 0;
-	} else {
-		return -1;
-	}
+    const char *valOld = props.Get(key);
+    if (strcmp(val, valOld) != 0) {
+        props.Set(key, val);
+        return 0;
+    } else {
+        return -1;
+    }
 }
 
 const char * SCI_METHOD LexerBase::DescribeWordListSets() {
-	return "";
+    return "";
 }
 
 Sci_Position SCI_METHOD LexerBase::WordListSet(int n, const char *wl) {
-	if (n < numWordLists) {
-		WordList wlNew;
-		wlNew.Set(wl);
-		if (*keyWordLists[n] != wlNew) {
-			keyWordLists[n]->Set(wl);
-			return 0;
-		}
-	}
-	return -1;
+    if (n < numWordLists) {
+        WordList wlNew;
+        wlNew.Set(wl);
+        if (*keyWordLists[n] != wlNew) {
+            keyWordLists[n]->Set(wl);
+            return 0;
+        }
+    }
+    return -1;
 }
 
 void * SCI_METHOD LexerBase::PrivateCall(int, void *) {
-	return 0;
+    return 0;
 }

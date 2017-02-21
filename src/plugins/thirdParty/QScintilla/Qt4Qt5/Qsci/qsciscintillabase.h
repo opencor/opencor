@@ -2324,14 +2324,14 @@ public:
         SCI_GETSUBSTYLEBASES = 4026,
     };
 
-	enum
-	{
-		SC_AC_FILLUP = 1,
-		SC_AC_DOUBLECLICK = 2,
-		SC_AC_TAB = 3,
-		SC_AC_NEWLINE = 4,
-		SC_AC_COMMAND = 5,
-	};
+    enum
+    {
+        SC_AC_FILLUP = 1,
+        SC_AC_DOUBLECLICK = 2,
+        SC_AC_TAB = 3,
+        SC_AC_NEWLINE = 4,
+        SC_AC_COMMAND = 5,
+    };
 
     enum
     {

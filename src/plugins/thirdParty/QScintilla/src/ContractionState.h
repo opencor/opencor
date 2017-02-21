@@ -18,56 +18,56 @@ class SparseVector;
 /**
  */
 class ContractionState {
-	// These contain 1 element for every document line.
-	RunStyles *visible;
-	RunStyles *expanded;
-	RunStyles *heights;
-	SparseVector<const char *> *foldDisplayTexts;
-	Partitioning *displayLines;
-	int linesInDocument;
+    // These contain 1 element for every document line.
+    RunStyles *visible;
+    RunStyles *expanded;
+    RunStyles *heights;
+    SparseVector<const char *> *foldDisplayTexts;
+    Partitioning *displayLines;
+    int linesInDocument;
 
-	void EnsureData();
+    void EnsureData();
 
-	bool OneToOne() const {
-		// True when each document line is exactly one display line so need for
-		// complex data structures.
-		return visible == 0;
-	}
+    bool OneToOne() const {
+        // True when each document line is exactly one display line so need for
+        // complex data structures.
+        return visible == 0;
+    }
 
 public:
-	ContractionState();
-	virtual ~ContractionState();
+    ContractionState();
+    virtual ~ContractionState();
 
-	void Clear();
+    void Clear();
 
-	int LinesInDoc() const;
-	int LinesDisplayed() const;
-	int DisplayFromDoc(int lineDoc) const;
-	int DisplayLastFromDoc(int lineDoc) const;
-	int DocFromDisplay(int lineDisplay) const;
+    int LinesInDoc() const;
+    int LinesDisplayed() const;
+    int DisplayFromDoc(int lineDoc) const;
+    int DisplayLastFromDoc(int lineDoc) const;
+    int DocFromDisplay(int lineDisplay) const;
 
-	void InsertLine(int lineDoc);
-	void InsertLines(int lineDoc, int lineCount);
-	void DeleteLine(int lineDoc);
-	void DeleteLines(int lineDoc, int lineCount);
+    void InsertLine(int lineDoc);
+    void InsertLines(int lineDoc, int lineCount);
+    void DeleteLine(int lineDoc);
+    void DeleteLines(int lineDoc, int lineCount);
 
-	bool GetVisible(int lineDoc) const;
-	bool SetVisible(int lineDocStart, int lineDocEnd, bool isVisible);
-	bool HiddenLines() const;
+    bool GetVisible(int lineDoc) const;
+    bool SetVisible(int lineDocStart, int lineDocEnd, bool isVisible);
+    bool HiddenLines() const;
 
-	const char *GetFoldDisplayText(int lineDoc) const;
-	bool SetFoldDisplayText(int lineDoc, const char *text);
+    const char *GetFoldDisplayText(int lineDoc) const;
+    bool SetFoldDisplayText(int lineDoc, const char *text);
 
-	bool GetExpanded(int lineDoc) const;
-	bool SetExpanded(int lineDoc, bool isExpanded);
-	bool GetFoldDisplayTextShown(int lineDoc) const;
-	int ContractedNext(int lineDocStart) const;
+    bool GetExpanded(int lineDoc) const;
+    bool SetExpanded(int lineDoc, bool isExpanded);
+    bool GetFoldDisplayTextShown(int lineDoc) const;
+    int ContractedNext(int lineDocStart) const;
 
-	int GetHeight(int lineDoc) const;
-	bool SetHeight(int lineDoc, int height);
+    int GetHeight(int lineDoc) const;
+    bool SetHeight(int lineDoc, int height);
 
-	void ShowAll();
-	void Check() const;
+    void ShowAll();
+    void Check() const;
 };
 
 #ifdef SCI_NAMESPACE
