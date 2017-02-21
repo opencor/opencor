@@ -32,6 +32,7 @@ limitations under the License.
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QDialogButtonBox>
+#include <QDir>
 #include <QKeyEvent>
 #include <QLabel>
 #include <QListView>
@@ -57,7 +58,8 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
                                                                            PMRSupport::PmrWorkspace *pWorkspace,
                                                                            QWidget *pParent) :
     Core::Dialog(pParent),
-    mSettingsGroup(pSettingsGroup)
+    mSettingsGroup(pSettingsGroup),
+    mWorkspace(pWorkspace)
 {
     // Set both our object name and title
 
@@ -193,6 +195,9 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
             this, SLOT(acceptSynchronization()));
     connect(mButtonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
+
+    connect(mChangesValue->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(updateDiffInformation(const QModelIndex &, const QModelIndex &)));
 
     // Initialise (update) the checked state of our Select All check box
 
@@ -394,6 +399,24 @@ void PmrWorkspacesWindowSynchronizeDialog::acceptSynchronization()
     // Confirm that we accept the synchronisation
 
     done(QMessageBox::Ok);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelIndex &pNewIndex,
+                                                                 const QModelIndex &pOldIndex)
+{
+    Q_UNUSED(pOldIndex);
+
+//---GRY--- TO BE DONE...
+
+    QString fileName = QDir(mWorkspace->path()).relativeFilePath(mModel->itemFromIndex(mProxyModel->mapToSource(pNewIndex))->text());
+
+    qDebug("---[%s]---", qPrintable(fileName));
+
+    QByteArray fileContents = mWorkspace->headFileContents(fileName);
+
+    qDebug("%s", fileContents.constData());
 }
 
 //==============================================================================

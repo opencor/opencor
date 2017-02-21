@@ -81,6 +81,8 @@ protected:
 private:
     QString mSettingsGroup;
 
+    PMRSupport::PmrWorkspace *mWorkspace;
+
     Core::SplitterWidget *mSplitter;
 
     QStandardItemModel *mModel;
@@ -105,6 +107,9 @@ private slots:
     void updateOkButton();
 
     void acceptSynchronization();
+
+    void updateDiffInformation(const QModelIndex &pNewIndex,
+                               const QModelIndex &pOldIndex);
 };
 
 //==============================================================================
