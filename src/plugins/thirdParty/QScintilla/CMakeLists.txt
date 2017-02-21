@@ -59,6 +59,7 @@ ELSE()
             lexers/LexHTML.cpp
 
             lexlib/Accessor.cpp
+            lexlib/CharacterCategory.cpp
             lexlib/CharacterSet.cpp
             lexlib/LexerBase.cpp
             lexlib/LexerModule.cpp
