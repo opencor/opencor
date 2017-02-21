@@ -843,13 +843,13 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
                 // We need to add a "reset stage" to the index, which means
                 // getting the tree for HEAD and tree_entry for the file
 
-                git_reference *headReference;
+                git_reference *head;
 
-                if (!git_repository_head(&headReference, mGitRepository)) {
+                if (!git_repository_head(&head, mGitRepository)) {
                     git_tree *headTree;
 
                     if (!git_reference_peel((git_object **) &headTree,
-                                            headReference, GIT_OBJ_TREE)) {
+                                            head, GIT_OBJ_TREE)) {
                         git_tree_entry *headEntry;
 
                         if (!git_tree_entry_bypath(&headEntry, headTree,
@@ -874,7 +874,7 @@ void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
                         git_tree_free(headTree);
                     }
 
-                    git_reference_free(headReference);
+                    git_reference_free(head);
                 }
             }
 
