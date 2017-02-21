@@ -419,16 +419,22 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelInd
 
     qDebug("---[%s]---[BEFORE]", qPrintable(fullFileName));
 
-    QByteArray headFileContents = mWorkspace->headFileContents(relativeFileName);
+    QString headFileContents = mWorkspace->headFileContents(relativeFileName);
 
-    qDebug("%s", headFileContents.constData());
+    qDebug("%s", qPrintable(headFileContents));
 
-    QByteArray workingFileContents;
+    QString workingFileContents;
 
     Core::readFileContentsFromFile(fullFileName, workingFileContents);
 
     qDebug("---[%s]---[BEFORE]", qPrintable(fullFileName));
-    qDebug("%s", workingFileContents.constData());
+    qDebug("%s", qPrintable(workingFileContents));
+
+    diff_match_patch<std::wstring> dmp;
+    diff_match_patch<std::wstring>::Diffs diffs = dmp.diff_main(headFileContents.toStdWString(), workingFileContents.toStdWString());
+
+    qDebug("---[%s]---[DIFF]", qPrintable(fullFileName));
+    qDebug("%s", qPrintable(QString::fromStdWString(dmp.diff_prettyHtml(diffs))));
 }
 
 //==============================================================================
