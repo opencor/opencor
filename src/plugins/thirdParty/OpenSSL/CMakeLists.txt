@@ -125,6 +125,7 @@ ELSE()
         SET(PLATFORM "VC-WIN64A")
         SET(MAKE_EXECUTABLE nmake)
         SET(MAKEFILE ms/ntdll.mak)
+        SET(QUIET_MAKE -c)
         SET(INSTALL_TARGET install)
     ELSE()
         IF(APPLE)
@@ -135,6 +136,7 @@ ELSE()
         ENDIF()
         SET(MAKE_EXECUTABLE make)
         SET(MAKEFILE Makefile)
+        SET(QUIET_MAKE --quiet)
         SET(INSTALL_TARGET install_sw)
     ENDIF()
 
@@ -149,8 +151,8 @@ ELSE()
         GIT_REPOSITORY https://github.com/openssl/openssl
         GIT_TAG ${OPENSSL_GIT_TAG}
         CONFIGURE_COMMAND ${PERL_EXECUTABLE} ./Configure ${PLATFORM} ${CONFIG_OPTIONS}
-        BUILD_COMMAND ${MAKE_EXECUTABLE} -f ${MAKEFILE} --quiet
-        INSTALL_COMMAND ${MAKE_EXECUTABLE} -f ${MAKEFILE} --quiet ${INSTALL_TARGET}
+        BUILD_COMMAND ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE}
+        INSTALL_COMMAND ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE} ${INSTALL_TARGET}
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${CRYPTO_LINK_LIBRARY}
             <INSTALL_DIR>/lib/${SSL_LINK_LIBRARY}
