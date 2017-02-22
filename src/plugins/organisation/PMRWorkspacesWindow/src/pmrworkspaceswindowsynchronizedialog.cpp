@@ -450,11 +450,88 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelInd
 
     Core::readFileContentsFromFile(fullFileName, workingFileContents);
 
-    diff_match_patch<std::wstring> dmp;
-    diff_match_patch<std::wstring>::Diffs diffs = dmp.diff_main(headFileContents.toStdWString(), workingFileContents.toStdWString());
+    typedef diff_match_patch<std::wstring> DiffMatchPatch;
+    typedef diff_match_patch_traits<std::wstring::value_type> DiffMatchPatchTraits;
 
-    mWebViewer->webView()->setHtml("<code>"+QString::fromStdWString(dmp.diff_prettyHtml(diffs))+"</code>");
-qDebug("---------\n%s\n---------", qPrintable(QString::fromStdWString(dmp.diff_prettyHtml(diffs))));
+    DiffMatchPatch diffMatchPatch;
+    DiffMatchPatch::Diffs diffs = diffMatchPatch.diff_main(headFileContents.toStdWString(), workingFileContents.toStdWString());
+
+    diffMatchPatch.diff_cleanupEfficiency(diffs);
+
+    std::wstring html = L"<code>";
+    std::wstring text = std::wstring();
+
+    for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
+         diffIterator != endDiffIterator; ++diffIterator) {
+        std::wstring::size_type textSize = (*diffIterator).text.size();
+        std::wstring::const_pointer i;
+        std::wstring::const_pointer iMax;
+
+        for (i = (*diffIterator).text.c_str(), iMax = i+textSize; i != iMax; ++i) {
+            switch (DiffMatchPatchTraits::to_wchar(*i)) {
+            case L'&':
+                textSize += 4;
+
+                break;
+            case L'<':
+            case L'>':
+                textSize += 3;
+
+                break;
+            case L'\n':
+                textSize += 9;
+
+                break;
+            }
+        }
+
+        if (textSize == (*diffIterator).text.size()) {
+            text = (*diffIterator).text;
+        } else {
+            text.clear();
+            text.reserve(textSize);
+
+            for (i = (*diffIterator).text.c_str(); i != iMax; ++i) {
+                switch (DiffMatchPatchTraits::to_wchar(*i)) {
+                case L'&':
+                    text += DiffMatchPatchTraits::cs(L"&amp;");
+
+                    break;
+                case L'<':
+                    text += DiffMatchPatchTraits::cs(L"&lt;");
+
+                    break;
+                case L'>':
+                    text += DiffMatchPatchTraits::cs(L"&gt;");
+
+                    break;
+                case L'\n':
+                    text += DiffMatchPatchTraits::cs(L"&para;<br>");
+
+                    break;
+                default:
+                    text += *i;
+                }
+            }
+        }
+
+        switch ((*diffIterator).operation) {
+        case DiffMatchPatch::INSERT:
+            html += DiffMatchPatchTraits::cs(L"<ins style=\"background:#e6ffe6;\">")+text+DiffMatchPatchTraits::cs(L"</ins>");
+
+            break;
+        case DiffMatchPatch::DELETE:
+            html += DiffMatchPatchTraits::cs(L"<del style=\"background:#ffe6e6;\">")+text+DiffMatchPatchTraits::cs(L"</del>");
+
+            break;
+        case DiffMatchPatch::EQUAL:
+            html += DiffMatchPatchTraits::cs(L"<span>")+text+DiffMatchPatchTraits::cs(L"</span>");
+
+            break;
+        }
+    }
+
+    mWebViewer->webView()->setHtml(QString::fromStdWString(html));
 }
 
 //==============================================================================
