@@ -20,6 +20,7 @@ limitations under the License.
 // PMR Workspaces window synchronise dialog
 //==============================================================================
 
+#include "borderedwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "pmrworkspace.h"
@@ -159,7 +160,8 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     mWebViewer->setOverrideCursor(true);
     mWebViewer->setZoomingEnabled(false);
 
-    mHorizontalSplitter->addWidget(mWebViewer);
+    mHorizontalSplitter->addWidget(new Core::BorderedWidget(mWebViewer,
+                                                            true, true, true, true));
 
     // Now, we can customise our horizontal splitter and add it to our layout
 
@@ -234,6 +236,10 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     connect(mChangesValue->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updateDiffInformation(const QModelIndex &, const QModelIndex &)));
+
+    // Select our first changes
+
+    mChangesValue->setCurrentIndex(mProxyModel->index(0, 0));
 
     // Initialise (update) the checked state of our Select All check box
 
