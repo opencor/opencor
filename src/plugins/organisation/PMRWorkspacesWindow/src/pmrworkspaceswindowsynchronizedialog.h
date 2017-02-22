@@ -83,7 +83,7 @@ private:
 
     PMRSupport::PmrWorkspace *mWorkspace;
 
-    Core::SplitterWidget *mSplitter;
+    Core::SplitterWidget *mVerticalSplitter;
 
     QStandardItemModel *mModel;
     QSortFilterProxyModel *mProxyModel;

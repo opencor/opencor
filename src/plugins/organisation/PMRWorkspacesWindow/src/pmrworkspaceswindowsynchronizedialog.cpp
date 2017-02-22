@@ -54,7 +54,7 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-static const auto SettingsSplitterSizes = QStringLiteral("SplitterSizes");
+static const auto SettingsVerticalSplitterSizes = QStringLiteral("VerticalSplitterSizes");
 
 //==============================================================================
 
@@ -76,14 +76,14 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     setLayout(layout);
 
-    // Create our splitter and make sure we can keep track of its sizes
+    // Create our vertical splitter and make sure we can keep track of its sizes
 
-    mSplitter = new Core::SplitterWidget(Qt::Vertical, this);
+    mVerticalSplitter = new Core::SplitterWidget(Qt::Vertical, this);
 
     // Create our message-related widget, populate it, and add it to our
-    // splitter
+    // vertical splitter
 
-    QWidget *messageWidget = new QWidget(mSplitter);
+    QWidget *messageWidget = new QWidget(mVerticalSplitter);
     QVBoxLayout *messageLayout = new QVBoxLayout(messageWidget);
     int margin;
 
@@ -104,12 +104,12 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     messageLayout->addWidget(messageLabel);
     messageLayout->addWidget(mMessageValue);
 
-    mSplitter->addWidget(messageWidget);
+    mVerticalSplitter->addWidget(messageWidget);
 
     // Create our changes-related widget, populate it, and add it to our
-    // splitter
+    // vertical splitter
 
-    QWidget *changesWidget = new QWidget(mSplitter);
+    QWidget *changesWidget = new QWidget(mVerticalSplitter);
     QVBoxLayout *changesLayout = new QVBoxLayout(changesWidget);
 
     changesLayout->setContentsMargins(0, margin >> 1, 0, 0);
@@ -138,23 +138,23 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     changesLayout->addWidget(mChangesValue);
     changesLayout->addWidget(mSelectAllChangesCheckBox);
 
-    mSplitter->addWidget(changesWidget);
+    mVerticalSplitter->addWidget(changesWidget);
 
-    // Customise our splitter and add it to our layout
+    // Customise our vertical splitter and add it to our layout
 
-    mSplitter->setCollapsible(0, false);
-    mSplitter->setCollapsible(1, false);
+    mVerticalSplitter->setCollapsible(0, false);
+    mVerticalSplitter->setCollapsible(1, false);
 
     QSettings settings;
 
     settings.beginGroup(mSettingsGroup);
         settings.beginGroup(objectName());
-            mSplitter->setSizes(qVariantListToIntList(settings.value(SettingsSplitterSizes,
-                                                                     QVariantList() << 222 << 555).toList()));
+            mVerticalSplitter->setSizes(qVariantListToIntList(settings.value(SettingsVerticalSplitterSizes,
+                                                                             QVariantList() << 222 << 555).toList()));
         settings.endGroup();
     settings.endGroup();
 
-    layout->addWidget(mSplitter);
+    layout->addWidget(mVerticalSplitter);
 
     // Add some dialog buttons
 
@@ -229,13 +229,14 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
 PmrWorkspacesWindowSynchronizeDialog::~PmrWorkspacesWindowSynchronizeDialog()
 {
-    // Keep track of our splitter's sizes
+    // Keep track of our veritcal splitter's sizes
 
     QSettings settings;
 
     settings.beginGroup(mSettingsGroup);
         settings.beginGroup(objectName());
-            settings.setValue(SettingsSplitterSizes, qIntListToVariantList(mSplitter->sizes()));
+            settings.setValue(SettingsVerticalSplitterSizes,
+                              qIntListToVariantList(mVerticalSplitter->sizes()));
         settings.endGroup();
     settings.endGroup();
 }
