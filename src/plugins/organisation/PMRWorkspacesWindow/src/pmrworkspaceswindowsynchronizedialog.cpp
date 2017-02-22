@@ -245,6 +245,10 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     connect(mChangesValue->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updateDiffInformation(const QModelIndex &, const QModelIndex &)));
 
+    // Retrieve the diff template
+
+    Core::readFileContentsFromFile(":/PMRWorkspacesWindow/diff.html", mDiffTemplate);
+
     // Select our first changes
 
     mChangesValue->setCurrentIndex(mProxyModel->index(0, 0));
@@ -451,7 +455,6 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelInd
     Core::readFileContentsFromFile(fullFileName, workingFileContents);
 
     typedef diff_match_patch<std::wstring> DiffMatchPatch;
-    typedef diff_match_patch_traits<std::wstring::value_type> DiffMatchPatchTraits;
 
     DiffMatchPatch diffMatchPatch;
     DiffMatchPatch::Diffs diffs = diffMatchPatch.diff_main(headFileContents.toStdWString(), workingFileContents.toStdWString());
@@ -468,18 +471,19 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelInd
         std::wstring::const_pointer iMax;
 
         for (i = (*diffIterator).text.c_str(), iMax = i+textSize; i != iMax; ++i) {
-            switch (DiffMatchPatchTraits::to_wchar(*i)) {
+            switch (*i) {
+            case L'<':
+            case L'>':
+            case L'\n':
+                textSize += 3;
+
+                break;
             case L'&':
                 textSize += 4;
 
                 break;
-            case L'<':
-            case L'>':
-                textSize += 3;
-
-                break;
-            case L'\n':
-                textSize += 9;
+            case L' ':
+                textSize += 5;
 
                 break;
             }
@@ -492,21 +496,25 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelInd
             text.reserve(textSize);
 
             for (i = (*diffIterator).text.c_str(); i != iMax; ++i) {
-                switch (DiffMatchPatchTraits::to_wchar(*i)) {
-                case L'&':
-                    text += DiffMatchPatchTraits::cs(L"&amp;");
-
-                    break;
+                switch (*i) {
                 case L'<':
-                    text += DiffMatchPatchTraits::cs(L"&lt;");
+                    text += L"&lt;";
 
                     break;
                 case L'>':
-                    text += DiffMatchPatchTraits::cs(L"&gt;");
+                    text += L"&gt;";
 
                     break;
                 case L'\n':
-                    text += DiffMatchPatchTraits::cs(L"&para;<br>");
+                    text += L"<br>";
+
+                    break;
+                case L'&':
+                    text += L"&amp;";
+
+                    break;
+                case L' ':
+                    text += L"&nbsp;";
 
                     break;
                 default:
@@ -516,22 +524,24 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelInd
         }
 
         switch ((*diffIterator).operation) {
+        case DiffMatchPatch::EQUAL:
+            html += text;
+
+            break;
         case DiffMatchPatch::INSERT:
-            html += DiffMatchPatchTraits::cs(L"<ins style=\"background:#e6ffe6;\">")+text+DiffMatchPatchTraits::cs(L"</ins>");
+            html += L"<span style=\"background:#e6ffe6;\">"+text+L"</span>";
 
             break;
         case DiffMatchPatch::DELETE:
-            html += DiffMatchPatchTraits::cs(L"<del style=\"background:#ffe6e6;\">")+text+DiffMatchPatchTraits::cs(L"</del>");
-
-            break;
-        case DiffMatchPatch::EQUAL:
-            html += DiffMatchPatchTraits::cs(L"<span>")+text+DiffMatchPatchTraits::cs(L"</span>");
+            html += L"<span style=\"background:#ffe6e6;\">"+text+L"</span>";
 
             break;
         }
     }
 
-    mWebViewer->webView()->setHtml(QString::fromStdWString(html));
+    html += L"</code>";
+
+    mWebViewer->webView()->setHtml(mDiffTemplate.arg(QString::fromStdWString(html)));
 }
 
 //==============================================================================

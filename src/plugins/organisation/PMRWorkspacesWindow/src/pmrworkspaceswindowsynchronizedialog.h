@@ -88,6 +88,8 @@ private:
 
     PMRSupport::PmrWorkspace *mWorkspace;
 
+    QString mDiffTemplate;
+
     Core::SplitterWidget *mHorizontalSplitter;
     Core::SplitterWidget *mVerticalSplitter;
 

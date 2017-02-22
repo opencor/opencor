@@ -34,6 +34,10 @@
         <source>%1 changes:</source>
         <translation>%1 changements :</translation>
     </message>
+    <message>
+        <source>Changes:</source>
+        <translation>Changements :</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWidget</name>

@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/PMRWorkspacesWindow">
+        <file>diff.html</file>
         <file>pull.png</file>
         <file>synchronize.png</file>
         <file>wA.png</file>
