@@ -123,8 +123,7 @@ private slots:
 
     void acceptSynchronization();
 
-    void updateDiffInformation(const QModelIndex &pNewIndex,
-                               const QModelIndex &pOldIndex);
+    void updateDiffInformation();
 };
 
 //==============================================================================

@@ -244,8 +244,8 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     connect(mButtonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
 
-    connect(mChangesValue->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(updateDiffInformation(const QModelIndex &, const QModelIndex &)));
+    connect(mChangesValue->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+            this, SLOT(updateDiffInformation()));
 
     // Retrieve our diff template
 
@@ -474,16 +474,11 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
             switch (*i) {
             case L'<':
             case L'>':
-            case L'\n':
                 textSize += 3;
 
                 break;
             case L'&':
                 textSize += 4;
-
-                break;
-            case L' ':
-                textSize += 5;
 
                 break;
             }
@@ -505,16 +500,8 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
                     text += L"&gt;";
 
                     break;
-                case L'\n':
-                    text += L"<br>";
-
-                    break;
                 case L'&':
                     text += L"&amp;";
-
-                    break;
-                case L' ':
-                    text += L"&nbsp;";
 
                     break;
                 default:
@@ -546,21 +533,42 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
 
 //==============================================================================
 
-void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelIndex &pNewIndex,
-                                                                 const QModelIndex &pOldIndex)
+void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
 {
-    Q_UNUSED(pOldIndex);
+    // Retrieve the file name of the selected items and see whether we have
+    // already computed the differences for them, and then show them
 
-    // Determine the name of the new item and see whether we have already
-    // computed the differences for it, and then show them
+    QModelIndexList indexes = mChangesValue->selectionModel()->selectedIndexes();
+    QString html = QString();
+    bool oneFile = indexes.count() == 1;
+    bool firstFile = true;
 
-    QString fileName = mModel->itemFromIndex(mProxyModel->mapToSource(pNewIndex))->text();
-    QString html = mDiffHtmls.value(fileName);
+    for (int i = 0, iMax = mProxyModel->rowCount(); i < iMax; ++i) {
+        QModelIndex index = mProxyModel->index(i, 0);
 
-    if (html.isEmpty()) {
-        html = diffHtml(fileName);
+        if (indexes.contains(index)) {
+            QString fileName = mModel->itemFromIndex(mProxyModel->mapToSource(index))->text();
+            QString fileHtml = mDiffHtmls.value(fileName);
 
-        mDiffHtmls.insert(fileName, html);
+            if (fileHtml.isEmpty()) {
+                if (Core::isTextFile(fileName))
+                    fileHtml = diffHtml(fileName);
+                else
+                    fileHtml = "<pre><span class=\"warning\">BINARY</span></pre>";
+
+                mDiffHtmls.insert(fileName, fileHtml);
+            }
+
+            if (!oneFile && !firstFile)
+                html += "</br>";
+
+            if (!oneFile)
+                html += "<div>"+fileName+"</div>";
+
+            html += fileHtml;
+
+            firstFile = false;
+        }
     }
 
     mWebViewer->webView()->setHtml(mDiffTemplate.arg(html));
