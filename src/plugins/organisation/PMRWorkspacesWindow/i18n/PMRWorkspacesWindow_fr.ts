@@ -38,6 +38,30 @@
         <source>Changes:</source>
         <translation>Changements :</translation>
     </message>
+    <message>
+        <source>Normal Size</source>
+        <translation>Taille Normale</translation>
+    </message>
+    <message>
+        <source>Reset the size of the changes</source>
+        <translation>Réinitialiser la taille des changements</translation>
+    </message>
+    <message>
+        <source>Zoom In</source>
+        <translation>Aggrandir</translation>
+    </message>
+    <message>
+        <source>Zoom in the changes</source>
+        <translation>Aggrandir les changements</translation>
+    </message>
+    <message>
+        <source>Zoom Out</source>
+        <translation>Réduire</translation>
+    </message>
+    <message>
+        <source>Zoom out the changes</source>
+        <translation>Réduire les changements</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWidget</name>

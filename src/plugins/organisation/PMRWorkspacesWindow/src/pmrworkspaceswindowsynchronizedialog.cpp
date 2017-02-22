@@ -23,9 +23,11 @@ limitations under the License.
 #include "borderedwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
+#include "i18ninterface.h"
 #include "pmrworkspace.h"
 #include "pmrworkspaceswindowsynchronizedialog.h"
 #include "splitterwidget.h"
+#include "toolbarwidget.h"
 #include "webviewerwidget.h"
 
 //==============================================================================
@@ -163,16 +165,38 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     webViewerWidget->setLayout(webViewerLayout);
 
+    Core::ToolBarWidget *webViewerToolBarWidget = new Core::ToolBarWidget(webViewerWidget);
     QLabel *webViewerLabel = new QLabel(tr("Changes:"), webViewerWidget);
+    QWidget *webViewerSpacer = new QWidget(webViewerToolBarWidget);
+    QAction *webViewerNormalSizeAction = Core::newAction(QIcon(":/oxygen/actions/zoom-original.png"), webViewerToolBarWidget);
+    QAction *webViewerZoomInAction = Core::newAction(QIcon(":/oxygen/actions/zoom-in.png"), webViewerToolBarWidget);
+    QAction *webViewerZoomOutAction = Core::newAction(QIcon(":/oxygen/actions/zoom-out.png"), webViewerToolBarWidget);
 
+    webViewerLabel->setAlignment(Qt::AlignBottom);
     webViewerLabel->setFont(labelFont);
+
+    webViewerSpacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    I18nInterface::retranslateAction(webViewerNormalSizeAction, tr("Normal Size"),
+                                     tr("Reset the size of the changes"));
+    I18nInterface::retranslateAction(webViewerZoomInAction, tr("Zoom In"),
+                                     tr("Zoom in the changes"));
+    I18nInterface::retranslateAction(webViewerZoomOutAction, tr("Zoom Out"),
+                                     tr("Zoom out the changes"));
+
+    webViewerToolBarWidget->addWidget(webViewerLabel);
+    webViewerToolBarWidget->addWidget(webViewerSpacer);
+    webViewerToolBarWidget->addAction(webViewerNormalSizeAction);
+    webViewerToolBarWidget->addSeparator();
+    webViewerToolBarWidget->addAction(webViewerZoomInAction);
+    webViewerToolBarWidget->addAction(webViewerZoomOutAction);
 
     mWebViewer = new WebViewerWidget::WebViewerWidget(mHorizontalSplitter);
 
     mWebViewer->setContextMenuPolicy(Qt::CustomContextMenu);
     mWebViewer->setOverrideCursor(true);
 
-    webViewerLayout->addWidget(webViewerLabel);
+    webViewerLayout->addWidget(webViewerToolBarWidget);
     webViewerLayout->addWidget(new Core::BorderedWidget(mWebViewer,
                                                         true, true, true, true));
 
@@ -247,6 +271,13 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     connect(mChangesValue->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
             this, SLOT(updateDiffInformation()));
+
+    connect(webViewerNormalSizeAction, SIGNAL(triggered(bool)),
+            mWebViewer, SLOT(resetZoom()));
+    connect(webViewerZoomInAction, SIGNAL(triggered(bool)),
+            mWebViewer, SLOT(zoomIn()));
+    connect(webViewerZoomOutAction, SIGNAL(triggered(bool)),
+            mWebViewer, SLOT(zoomOut()));
 
     // Retrieve our diff template
 
