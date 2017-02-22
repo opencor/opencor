@@ -25,6 +25,7 @@ limitations under the License.
 #include "pmrworkspace.h"
 #include "pmrworkspaceswindowsynchronizedialog.h"
 #include "splitterwidget.h"
+#include "webviewerwidget.h"
 
 //==============================================================================
 
@@ -42,6 +43,7 @@ limitations under the License.
 #include <QStandardItemModel>
 #include <QTextEdit>
 #include <QVBoxLayout>
+#include <QWebView>
 
 //==============================================================================
 
@@ -54,7 +56,8 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-static const auto SettingsVerticalSplitterSizes = QStringLiteral("VerticalSplitterSizes");
+static const auto SettingsHorizontalSplitterSizes = QStringLiteral("HorizontalSplitterSizes");
+static const auto SettingsVerticalSplitterSizes   = QStringLiteral("VerticalSplitterSizes");
 
 //==============================================================================
 
@@ -76,9 +79,10 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     setLayout(layout);
 
-    // Create our vertical splitter and make sure we can keep track of its sizes
+    // Create both our horizontal and vertical splitters
 
-    mVerticalSplitter = new Core::SplitterWidget(Qt::Vertical, this);
+    mHorizontalSplitter = new Core::SplitterWidget(this);
+    mVerticalSplitter = new Core::SplitterWidget(Qt::Vertical, mHorizontalSplitter);
 
     // Create our message-related widget, populate it, and add it to our
     // vertical splitter
@@ -140,21 +144,41 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     mVerticalSplitter->addWidget(changesWidget);
 
-    // Customise our vertical splitter and add it to our layout
+    // Customise our vertical splitter and add it to our horizontal splitter
 
     mVerticalSplitter->setCollapsible(0, false);
     mVerticalSplitter->setCollapsible(1, false);
+
+    mHorizontalSplitter->addWidget(mVerticalSplitter);
+
+    // Create our Web viewer and add it to our horizontal splitter
+
+    mWebViewer = new WebViewerWidget::WebViewerWidget(mHorizontalSplitter);
+
+    mWebViewer->setContextMenuPolicy(Qt::CustomContextMenu);
+    mWebViewer->setOverrideCursor(true);
+    mWebViewer->setZoomingEnabled(false);
+
+    mHorizontalSplitter->addWidget(mWebViewer);
+
+    // Now, we can customise our horizontal splitter and add it to our layout
+
+    mHorizontalSplitter->setCollapsible(0, false);
+    mHorizontalSplitter->setCollapsible(1, false);
+
+    layout->addWidget(mHorizontalSplitter);
+
+    // Set the original sizes of our splitters
 
     QSettings settings;
 
     settings.beginGroup(mSettingsGroup);
         settings.beginGroup(objectName());
+            mHorizontalSplitter->setSizes(qVariantListToIntList(settings.value(SettingsHorizontalSplitterSizes).toList()));
             mVerticalSplitter->setSizes(qVariantListToIntList(settings.value(SettingsVerticalSplitterSizes,
                                                                              QVariantList() << 222 << 555).toList()));
         settings.endGroup();
     settings.endGroup();
-
-    layout->addWidget(mVerticalSplitter);
 
     // Add some dialog buttons
 
@@ -177,7 +201,15 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     mChangesValue->setModel(mProxyModel);
 
-    populateModel(pWorkspace->rootFileNode(), true);
+    populateModel(pWorkspace->rootFileNode());
+
+    mProxyModel->sort(0);
+
+    mChangesLabel->setText((mModel->rowCount() == 1)?
+                               tr("1 change:"):
+                               tr("%1 changes:").arg(mModel->rowCount()));
+
+    mSelectAllChangesCheckBox->setVisible(mModel->rowCount() != 1);
 
     mChangesValue->setMinimumWidth(qMin(qApp->desktop()->availableGeometry().width() >> 1,
                                         mChangesValue->sizeHintForColumn(0)+2));
@@ -235,6 +267,8 @@ PmrWorkspacesWindowSynchronizeDialog::~PmrWorkspacesWindowSynchronizeDialog()
 
     settings.beginGroup(mSettingsGroup);
         settings.beginGroup(objectName());
+            settings.setValue(SettingsHorizontalSplitterSizes,
+                              qIntListToVariantList(mHorizontalSplitter->sizes()));
             settings.setValue(SettingsVerticalSplitterSizes,
                               qIntListToVariantList(mVerticalSplitter->sizes()));
         settings.endGroup();
@@ -266,15 +300,9 @@ void PmrWorkspacesWindowSynchronizeDialog::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode,
-                                                         const bool &pRootFileNode)
+void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     // List all the files that have changed
-
-    static int nbOfChanges;
-
-    if (pRootFileNode)
-        nbOfChanges = 0;
 
     foreach (PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
         if (fileNode->hasChildren()) {
@@ -283,8 +311,6 @@ void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspac
             QChar status = fileNode->status().second;
 
             if ((status != '\0') && (status != ' ')) {
-                ++nbOfChanges;
-
                 QStandardItem *fileItem = new QStandardItem(fileNode->path());
 
                 fileItem->setCheckable(true);
@@ -294,18 +320,6 @@ void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspac
                 mModel->appendRow(fileItem);
             }
         }
-    }
-
-    // Finalise a few things if we are the root file node
-
-    if (pRootFileNode) {
-        mProxyModel->sort(0);
-
-        mChangesLabel->setText((nbOfChanges == 1)?
-                                   tr("1 change:"):
-                                   tr("%1 changes:").arg(nbOfChanges));
-
-        mSelectAllChangesCheckBox->setVisible(nbOfChanges != 1);
     }
 }
 
@@ -417,25 +431,15 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelInd
 
     QString fullFileName = mModel->itemFromIndex(mProxyModel->mapToSource(pNewIndex))->text();
     QString relativeFileName = QDir(mWorkspace->path()).relativeFilePath(fullFileName);
-
-    qDebug("---[%s]---[BEFORE]", qPrintable(fullFileName));
-
     QString headFileContents = mWorkspace->headFileContents(relativeFileName);
-
-    qDebug("%s", qPrintable(headFileContents));
-
     QString workingFileContents;
 
     Core::readFileContentsFromFile(fullFileName, workingFileContents);
 
-    qDebug("---[%s]---[BEFORE]", qPrintable(fullFileName));
-    qDebug("%s", qPrintable(workingFileContents));
-
     diff_match_patch<std::wstring> dmp;
     diff_match_patch<std::wstring>::Diffs diffs = dmp.diff_main(headFileContents.toStdWString(), workingFileContents.toStdWString());
 
-    qDebug("---[%s]---[DIFF]", qPrintable(fullFileName));
-    qDebug("%s", qPrintable(QString::fromStdWString(dmp.diff_prettyHtml(diffs))));
+    mWebViewer->webView()->setHtml(QString::fromStdWString(dmp.diff_prettyHtml(diffs)));
 }
 
 //==============================================================================

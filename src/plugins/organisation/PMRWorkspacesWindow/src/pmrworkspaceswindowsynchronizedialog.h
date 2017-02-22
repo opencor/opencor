@@ -57,6 +57,12 @@ namespace PMRSupport {
 
 //==============================================================================
 
+namespace WebViewerWidget {
+    class WebViewerWidget;
+}   // namespace WebViewerWidget
+
+//==============================================================================
+
 namespace PMRWorkspacesWindow {
 
 //==============================================================================
@@ -83,6 +89,7 @@ private:
 
     PMRSupport::PmrWorkspace *mWorkspace;
 
+    Core::SplitterWidget *mHorizontalSplitter;
     Core::SplitterWidget *mVerticalSplitter;
 
     QStandardItemModel *mModel;
@@ -93,12 +100,13 @@ private:
     QLabel *mChangesLabel;
     QListView *mChangesValue;
 
+    WebViewerWidget::WebViewerWidget *mWebViewer;
+
     QCheckBox *mSelectAllChangesCheckBox;
 
     QDialogButtonBox *mButtonBox;
 
-    void populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode,
-                       const bool &pRootFileNode = false);
+    void populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
 private slots:
     void updateSelectAllChangesCheckBox(QStandardItem *pItem = 0);
