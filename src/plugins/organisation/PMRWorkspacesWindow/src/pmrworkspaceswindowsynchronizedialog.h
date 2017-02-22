@@ -30,7 +30,6 @@ limitations under the License.
 
 class QCheckBox;
 class QDialogButtonBox;
-class QLabel;
 class QListView;
 class QSortFilterProxyModel;
 class QStandardItem;
@@ -96,8 +95,6 @@ private:
     QSortFilterProxyModel *mProxyModel;
 
     QTextEdit *mMessageValue;
-
-    QLabel *mChangesLabel;
     QListView *mChangesValue;
 
     WebViewerWidget::WebViewerWidget *mWebViewer;

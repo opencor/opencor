@@ -93,16 +93,19 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     int margin;
 
     messageLayout->getContentsMargins(0, 0, 0, &margin);
-    messageLayout->setContentsMargins(0, 0, 0, margin >> 1);
+
+    int halfMargin = margin >> 1;
+
+    messageLayout->setContentsMargins(0, 0, halfMargin, halfMargin);
 
     messageWidget->setLayout(messageLayout);
 
     QLabel *messageLabel = new QLabel(tr("Message:"), messageWidget);
-    QFont messageLabelFont = messageLabel->font();
+    QFont labelFont = messageLabel->font();
 
-    messageLabelFont.setBold(true);
+    labelFont.setBold(true);
 
-    messageLabel->setFont(messageLabelFont);
+    messageLabel->setFont(labelFont);
 
     mMessageValue = new QTextEdit(messageWidget);
 
@@ -117,16 +120,13 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     QWidget *changesWidget = new QWidget(mVerticalSplitter);
     QVBoxLayout *changesLayout = new QVBoxLayout(changesWidget);
 
-    changesLayout->setContentsMargins(0, margin >> 1, 0, 0);
+    changesLayout->setContentsMargins(0, halfMargin, halfMargin, 0);
 
     changesWidget->setLayout(changesLayout);
 
-    mChangesLabel = new QLabel(changesWidget);
-    QFont changesLabelFont = mChangesLabel->font();
+    QLabel *changesLabel = new QLabel(changesWidget);
 
-    changesLabelFont.setBold(true);
-
-    mChangesLabel->setFont(changesLabelFont);
+    changesLabel->setFont(labelFont);
 
     mChangesValue = new QListView(changesWidget);
 
@@ -139,7 +139,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     mSelectAllChangesCheckBox->setTristate(true);
 
-    changesLayout->addWidget(mChangesLabel);
+    changesLayout->addWidget(changesLabel);
     changesLayout->addWidget(mChangesValue);
     changesLayout->addWidget(mSelectAllChangesCheckBox);
 
@@ -154,14 +154,28 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     // Create our Web viewer and add it to our horizontal splitter
 
+    QWidget *webViewerWidget = new QWidget(mVerticalSplitter);
+    QVBoxLayout *webViewerLayout = new QVBoxLayout(webViewerWidget);
+
+    webViewerLayout->setContentsMargins(halfMargin, 0, 0, 0);
+
+    webViewerWidget->setLayout(webViewerLayout);
+
+    QLabel *webViewerLabel = new QLabel(tr("Changes:"), webViewerWidget);
+
+    webViewerLabel->setFont(labelFont);
+
     mWebViewer = new WebViewerWidget::WebViewerWidget(mHorizontalSplitter);
 
     mWebViewer->setContextMenuPolicy(Qt::CustomContextMenu);
     mWebViewer->setOverrideCursor(true);
     mWebViewer->setZoomingEnabled(false);
 
-    mHorizontalSplitter->addWidget(new Core::BorderedWidget(mWebViewer,
-                                                            true, true, true, true));
+    webViewerLayout->addWidget(webViewerLabel);
+    webViewerLayout->addWidget(new Core::BorderedWidget(mWebViewer,
+                                                        true, true, true, true));
+
+    mHorizontalSplitter->addWidget(webViewerWidget);
 
     // Now, we can customise our horizontal splitter and add it to our layout
 
@@ -207,7 +221,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     mProxyModel->sort(0);
 
-    mChangesLabel->setText((mModel->rowCount() == 1)?
+    changesLabel->setText((mModel->rowCount() == 1)?
                                tr("1 change:"):
                                tr("%1 changes:").arg(mModel->rowCount()));
 
@@ -445,7 +459,8 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelInd
     diff_match_patch<std::wstring> dmp;
     diff_match_patch<std::wstring>::Diffs diffs = dmp.diff_main(headFileContents.toStdWString(), workingFileContents.toStdWString());
 
-    mWebViewer->webView()->setHtml(QString::fromStdWString(dmp.diff_prettyHtml(diffs)));
+    mWebViewer->webView()->setHtml("<code>"+QString::fromStdWString(dmp.diff_prettyHtml(diffs))+"</code>");
+qDebug("---------\n%s\n---------", qPrintable(QString::fromStdWString(dmp.diff_prettyHtml(diffs))));
 }
 
 //==============================================================================
