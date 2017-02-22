@@ -204,10 +204,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     layout->addWidget(mButtonBox);
 
-    // Populate ourselves with the list of files that have changed and make sure
-    // that the width of our list view is always such that we can see all of its
-    // contents (though up to a point!)
-    // Note: the +2 is to avoid getting a horizontal scroll bar...
+    // Populate ourselves with the list of files that have changed
 
     mModel = new QStandardItemModel(this);
     mProxyModel = new QSortFilterProxyModel(this);
@@ -226,9 +223,6 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
                                tr("%1 changes:").arg(mModel->rowCount()));
 
     mSelectAllChangesCheckBox->setVisible(mModel->rowCount() != 1);
-
-    mChangesValue->setMinimumWidth(qMin(qApp->desktop()->availableGeometry().width() >> 1,
-                                        mChangesValue->sizeHintForColumn(0)+2));
 
     // Connect some signals
 
@@ -336,6 +330,7 @@ void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspac
                 fileItem->setCheckable(true);
                 fileItem->setCheckState(Qt::Checked);
                 fileItem->setEditable(false);
+                fileItem->setToolTip(fileNode->path());
 
                 mModel->appendRow(fileItem);
             }
@@ -445,9 +440,8 @@ void PmrWorkspacesWindowSynchronizeDialog::acceptSynchronization()
 void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelIndex &pNewIndex,
                                                                  const QModelIndex &pOldIndex)
 {
-    Q_UNUSED(pOldIndex);
-
 //---GRY--- TO BE DONE...
+    Q_UNUSED(pOldIndex);
 
     QString fullFileName = mModel->itemFromIndex(mProxyModel->mapToSource(pNewIndex))->text();
     QString relativeFileName = QDir(mWorkspace->path()).relativeFilePath(fullFileName);
