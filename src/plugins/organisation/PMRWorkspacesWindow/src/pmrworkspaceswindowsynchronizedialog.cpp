@@ -170,7 +170,6 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     mWebViewer->setContextMenuPolicy(Qt::CustomContextMenu);
     mWebViewer->setOverrideCursor(true);
-    mWebViewer->setZoomingEnabled(false);
 
     webViewerLayout->addWidget(webViewerLabel);
     webViewerLayout->addWidget(new Core::BorderedWidget(mWebViewer,
@@ -186,7 +185,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     layout->addWidget(mHorizontalSplitter);
 
-    // Set the original sizes of our splitters
+    // Retrieve our user's settings
 
     QSettings settings;
 
@@ -195,6 +194,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
             mHorizontalSplitter->setSizes(qVariantListToIntList(settings.value(SettingsHorizontalSplitterSizes).toList()));
             mVerticalSplitter->setSizes(qVariantListToIntList(settings.value(SettingsVerticalSplitterSizes,
                                                                              QVariantList() << 222 << 555).toList()));
+            mWebViewer->loadSettings(&settings);
         settings.endGroup();
     settings.endGroup();
 
@@ -281,7 +281,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
 PmrWorkspacesWindowSynchronizeDialog::~PmrWorkspacesWindowSynchronizeDialog()
 {
-    // Keep track of our veritcal splitter's sizes
+    // Keep track of our user's settings
 
     QSettings settings;
 
@@ -291,6 +291,7 @@ PmrWorkspacesWindowSynchronizeDialog::~PmrWorkspacesWindowSynchronizeDialog()
                               qIntListToVariantList(mHorizontalSplitter->sizes()));
             settings.setValue(SettingsVerticalSplitterSizes,
                               qIntListToVariantList(mVerticalSplitter->sizes()));
+            mWebViewer->saveSettings(&settings);
         settings.endGroup();
     settings.endGroup();
 }
