@@ -21,6 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "borderedwidget.h"
+#include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "i18ninterface.h"
@@ -599,10 +600,14 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
                 QString fileHtml = mDiffHtmls.value(fileName);
 
                 if (fileHtml.isEmpty()) {
-                    if (Core::isTextFile(fileName))
-                        fileHtml = diffHtml(fileName);
-                    else
+                    if (Core::isTextFile(fileName)) {
+                        if (CellMLSupport::CellmlFileManager::instance()->isCellmlFile(fileName))
+                            fileHtml = "<pre><span class=\"warning\">CellML file</span></pre>";
+                        else
+                            fileHtml = diffHtml(fileName);
+                    } else {
                         fileHtml = "<pre><span class=\"warning\">BINARY</span></pre>";
+                    }
 
                     mDiffHtmls.insert(fileName, fileHtml);
                 }
