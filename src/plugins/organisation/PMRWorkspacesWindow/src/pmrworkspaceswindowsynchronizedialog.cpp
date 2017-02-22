@@ -461,7 +461,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
 
     diffMatchPatch.diff_cleanupEfficiency(diffs);
 
-    std::wstring html = L"<code>";
+    std::wstring html = L"<pre>";
     std::wstring text = std::wstring();
 
     for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
@@ -529,17 +529,17 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
 
             break;
         case DiffMatchPatch::INSERT:
-            html += L"<span style=\"background:#e6ffe6;\">"+text+L"</span>";
+            html += L"<span class=\"insert\">"+text+L"</span>";
 
             break;
         case DiffMatchPatch::DELETE:
-            html += L"<span style=\"background:#ffe6e6;\">"+text+L"</span>";
+            html += L"<span class=\"delete\">"+text+L"</span>";
 
             break;
         }
     }
 
-    html += L"</code>";
+    html += L"</pre>";
 
     return QString::fromStdWString(html);
 }
