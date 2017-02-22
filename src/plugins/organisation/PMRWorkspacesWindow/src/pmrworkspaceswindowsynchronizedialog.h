@@ -28,6 +28,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QMap>
+
+//==============================================================================
+
 class QCheckBox;
 class QDialogButtonBox;
 class QListView;
@@ -105,7 +109,11 @@ private:
 
     QDialogButtonBox *mButtonBox;
 
+    QMap<QString, QString> mDiffHtmls;
+
     void populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode);
+
+    QString diffHtml(const QString &pFileName);
 
 private slots:
     void updateSelectAllChangesCheckBox(QStandardItem *pItem = 0);

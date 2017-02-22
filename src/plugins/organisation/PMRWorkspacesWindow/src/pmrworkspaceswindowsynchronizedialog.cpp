@@ -67,7 +67,8 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
                                                                            QWidget *pParent) :
     Core::Dialog(pParent),
     mSettingsGroup(pSettingsGroup),
-    mWorkspace(pWorkspace)
+    mWorkspace(pWorkspace),
+    mDiffHtmls(QMap<QString, QString>())
 {
     // Set both our object name and title
 
@@ -181,6 +182,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     mHorizontalSplitter->setCollapsible(0, false);
     mHorizontalSplitter->setCollapsible(1, false);
+    mHorizontalSplitter->setStretchFactor(1, 1);
 
     layout->addWidget(mHorizontalSplitter);
 
@@ -245,7 +247,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     connect(mChangesValue->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updateDiffInformation(const QModelIndex &, const QModelIndex &)));
 
-    // Retrieve the diff template
+    // Retrieve our diff template
 
     Core::readFileContentsFromFile(":/PMRWorkspacesWindow/diff.html", mDiffTemplate);
 
@@ -441,18 +443,15 @@ void PmrWorkspacesWindowSynchronizeDialog::acceptSynchronization()
 
 //==============================================================================
 
-void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelIndex &pNewIndex,
-                                                                 const QModelIndex &pOldIndex)
+QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
 {
-//---GRY--- TO BE DONE...
-    Q_UNUSED(pOldIndex);
+    // Return the diff for the given file name
 
-    QString fullFileName = mModel->itemFromIndex(mProxyModel->mapToSource(pNewIndex))->text();
-    QString relativeFileName = QDir(mWorkspace->path()).relativeFilePath(fullFileName);
+    QString relativeFileName = QDir(mWorkspace->path()).relativeFilePath(pFileName);
     QString headFileContents = mWorkspace->headFileContents(relativeFileName);
     QString workingFileContents;
 
-    Core::readFileContentsFromFile(fullFileName, workingFileContents);
+    Core::readFileContentsFromFile(pFileName, workingFileContents);
 
     typedef diff_match_patch<std::wstring> DiffMatchPatch;
 
@@ -541,7 +540,29 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelInd
 
     html += L"</code>";
 
-    mWebViewer->webView()->setHtml(mDiffTemplate.arg(QString::fromStdWString(html)));
+    return QString::fromStdWString(html);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation(const QModelIndex &pNewIndex,
+                                                                 const QModelIndex &pOldIndex)
+{
+    Q_UNUSED(pOldIndex);
+
+    // Determine the name of the new item and see whether we have already
+    // computed the differences for it, and then show them
+
+    QString fileName = mModel->itemFromIndex(mProxyModel->mapToSource(pNewIndex))->text();
+    QString html = mDiffHtmls.value(fileName);
+
+    if (html.isEmpty()) {
+        html = diffHtml(fileName);
+
+        mDiffHtmls.insert(fileName, html);
+    }
+
+    mWebViewer->webView()->setHtml(mDiffTemplate.arg(html));
 }
 
 //==============================================================================
