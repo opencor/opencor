@@ -29,6 +29,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QMap>
+#include <QModelIndexList>
 
 //==============================================================================
 
@@ -110,6 +111,8 @@ private:
     QDialogButtonBox *mButtonBox;
 
     QMap<QString, QString> mDiffHtmls;
+
+    QModelIndexList mPreviouslySelectedIndexes;
 
     void populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode);
 

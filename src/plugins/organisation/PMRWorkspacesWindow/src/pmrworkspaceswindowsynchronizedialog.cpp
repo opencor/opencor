@@ -68,7 +68,8 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     Core::Dialog(pParent),
     mSettingsGroup(pSettingsGroup),
     mWorkspace(pWorkspace),
-    mDiffHtmls(QMap<QString, QString>())
+    mDiffHtmls(QMap<QString, QString>()),
+    mPreviouslySelectedIndexes(QModelIndexList())
 {
     // Set both our object name and title
 
@@ -535,43 +536,60 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
 
 void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
 {
-    // Retrieve the file name of the selected items and see whether we have
-    // already computed the differences for them, and then show them
+    // If there are no selected indexes then select the indexes that were
+    // previously selected otherwise retrieve the file name of the selected
+    // indexes and see whether we have already computed their differences, and
+    // then show those differences
 
     QModelIndexList indexes = mChangesValue->selectionModel()->selectedIndexes();
-    QString html = QString();
-    bool oneFile = indexes.count() == 1;
-    bool firstFile = true;
 
-    for (int i = 0, iMax = mProxyModel->rowCount(); i < iMax; ++i) {
-        QModelIndex index = mProxyModel->index(i, 0);
+    if (indexes.isEmpty()) {
+        // No selected indexes, so select the previously selected indexes
 
-        if (indexes.contains(index)) {
-            QString fileName = mModel->itemFromIndex(mProxyModel->mapToSource(index))->text();
-            QString fileHtml = mDiffHtmls.value(fileName);
+        foreach (const QModelIndex &index, mPreviouslySelectedIndexes)
+            mChangesValue->selectionModel()->select(index, QItemSelectionModel::Select);
+    } else {
+        // We have some selected indexes, so keep track of them
 
-            if (fileHtml.isEmpty()) {
-                if (Core::isTextFile(fileName))
-                    fileHtml = diffHtml(fileName);
-                else
-                    fileHtml = "<pre><span class=\"warning\">BINARY</span></pre>";
+        mPreviouslySelectedIndexes = indexes;
 
-                mDiffHtmls.insert(fileName, fileHtml);
+        // Go through each selected index and retrieve its differences, if it
+        // hasn't already been done, and show them
+
+        QString html = QString();
+        bool oneFile = indexes.count() == 1;
+        bool firstFile = true;
+
+        for (int i = 0, iMax = mProxyModel->rowCount(); i < iMax; ++i) {
+            QModelIndex index = mProxyModel->index(i, 0);
+
+            if (indexes.contains(index)) {
+                QString fileName = mModel->itemFromIndex(mProxyModel->mapToSource(index))->text();
+                QString fileHtml = mDiffHtmls.value(fileName);
+
+                if (fileHtml.isEmpty()) {
+                    if (Core::isTextFile(fileName))
+                        fileHtml = diffHtml(fileName);
+                    else
+                        fileHtml = "<pre><span class=\"warning\">BINARY</span></pre>";
+
+                    mDiffHtmls.insert(fileName, fileHtml);
+                }
+
+                if (!oneFile && !firstFile)
+                    html += "</br>";
+
+                if (!oneFile)
+                    html += "<div>"+fileName+"</div>";
+
+                html += fileHtml;
+
+                firstFile = false;
             }
-
-            if (!oneFile && !firstFile)
-                html += "</br>";
-
-            if (!oneFile)
-                html += "<div>"+fileName+"</div>";
-
-            html += fileHtml;
-
-            firstFile = false;
         }
-    }
 
-    mWebViewer->webView()->setHtml(mDiffTemplate.arg(html));
+        mWebViewer->webView()->setHtml(mDiffTemplate.arg(html));
+    }
 }
 
 //==============================================================================
