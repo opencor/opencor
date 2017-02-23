@@ -105,12 +105,14 @@ private:
     QListView *mChangesValue;
 
     WebViewerWidget::WebViewerWidget *mWebViewer;
+    QAction *mWebViewerCellmlTextFormatAction;
 
     QCheckBox *mSelectAllChangesCheckBox;
 
     QDialogButtonBox *mButtonBox;
 
     QMap<QString, QString> mDiffHtmls;
+    QMap<QString, QString> mCellmlDiffHtmls;
 
     QModelIndexList mPreviouslySelectedIndexes;
 

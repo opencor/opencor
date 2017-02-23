@@ -60,6 +60,7 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
+static const auto SettingsCellmlTextFormatSupport = QStringLiteral("CellmlTextFormatSupport");
 static const auto SettingsHorizontalSplitterSizes = QStringLiteral("HorizontalSplitterSizes");
 static const auto SettingsVerticalSplitterSizes   = QStringLiteral("VerticalSplitterSizes");
 
@@ -72,6 +73,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     mSettingsGroup(pSettingsGroup),
     mWorkspace(pWorkspace),
     mDiffHtmls(QMap<QString, QString>()),
+    mCellmlDiffHtmls(QMap<QString, QString>()),
     mPreviouslySelectedIndexes(QModelIndexList())
 {
     // Set both our object name and title
@@ -173,11 +175,15 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     QAction *webViewerZoomInAction = Core::newAction(QIcon(":/oxygen/actions/zoom-in.png"), webViewerToolBarWidget);
     QAction *webViewerZoomOutAction = Core::newAction(QIcon(":/oxygen/actions/zoom-out.png"), webViewerToolBarWidget);
 
+    mWebViewerCellmlTextFormatAction = Core::newAction(QIcon(":/CellMLSupport/logo.png"), webViewerToolBarWidget);
+
     webViewerLabel->setAlignment(Qt::AlignBottom);
     webViewerLabel->setFont(labelFont);
 
     webViewerSpacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
+    I18nInterface::retranslateAction(mWebViewerCellmlTextFormatAction, tr("CellML Text Format"),
+                                     tr("Try to use the CellML Text format whenever possible"));
     I18nInterface::retranslateAction(webViewerNormalSizeAction, tr("Normal Size"),
                                      tr("Reset the size of the changes"));
     I18nInterface::retranslateAction(webViewerZoomInAction, tr("Zoom In"),
@@ -185,8 +191,12 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     I18nInterface::retranslateAction(webViewerZoomOutAction, tr("Zoom Out"),
                                      tr("Zoom out the changes"));
 
+    mWebViewerCellmlTextFormatAction->setCheckable(true);
+
     webViewerToolBarWidget->addWidget(webViewerLabel);
     webViewerToolBarWidget->addWidget(webViewerSpacer);
+    webViewerToolBarWidget->addAction(mWebViewerCellmlTextFormatAction);
+    webViewerToolBarWidget->addSeparator();
     webViewerToolBarWidget->addAction(webViewerNormalSizeAction);
     webViewerToolBarWidget->addSeparator();
     webViewerToolBarWidget->addAction(webViewerZoomInAction);
@@ -217,10 +227,13 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     settings.beginGroup(mSettingsGroup);
         settings.beginGroup(objectName());
+            mWebViewer->loadSettings(&settings);
+
+            mWebViewerCellmlTextFormatAction->setChecked(settings.value(SettingsCellmlTextFormatSupport, true).toBool());
+
             mHorizontalSplitter->setSizes(qVariantListToIntList(settings.value(SettingsHorizontalSplitterSizes).toList()));
             mVerticalSplitter->setSizes(qVariantListToIntList(settings.value(SettingsVerticalSplitterSizes,
                                                                              QVariantList() << 222 << 555).toList()));
-            mWebViewer->loadSettings(&settings);
         settings.endGroup();
     settings.endGroup();
 
@@ -273,6 +286,8 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     connect(mChangesValue->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
             this, SLOT(updateDiffInformation()));
 
+    connect(mWebViewerCellmlTextFormatAction, SIGNAL(toggled(bool)),
+            this, SLOT(updateDiffInformation()));
     connect(webViewerNormalSizeAction, SIGNAL(triggered(bool)),
             mWebViewer, SLOT(resetZoom()));
     connect(webViewerZoomInAction, SIGNAL(triggered(bool)),
@@ -320,11 +335,15 @@ PmrWorkspacesWindowSynchronizeDialog::~PmrWorkspacesWindowSynchronizeDialog()
 
     settings.beginGroup(mSettingsGroup);
         settings.beginGroup(objectName());
+            mWebViewer->saveSettings(&settings);
+
+            settings.setValue(SettingsCellmlTextFormatSupport,
+                              mWebViewerCellmlTextFormatAction->isChecked());
+
             settings.setValue(SettingsHorizontalSplitterSizes,
                               qIntListToVariantList(mHorizontalSplitter->sizes()));
             settings.setValue(SettingsVerticalSplitterSizes,
                               qIntListToVariantList(mVerticalSplitter->sizes()));
-            mWebViewer->saveSettings(&settings);
         settings.endGroup();
     settings.endGroup();
 }
@@ -662,28 +681,35 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
 
             if (indexes.contains(index)) {
                 QString fileName = mModel->itemFromIndex(mProxyModel->mapToSource(index))->text();
-                QString fileHtml = mDiffHtmls.value(fileName);
+                bool textFile = Core::isTextFile(fileName);
+                bool cellmlFile = textFile && CellMLSupport::CellmlFileManager::instance()->isCellmlFile(fileName);
+                QString fileDiffHtml = (cellmlFile && mWebViewerCellmlTextFormatAction->isChecked())?
+                                           mCellmlDiffHtmls.value(fileName):
+                                           mDiffHtmls.value(fileName);
 
-                if (fileHtml.isEmpty()) {
-                    if (Core::isTextFile(fileName)) {
-                        if (CellMLSupport::CellmlFileManager::instance()->isCellmlFile(fileName))
-                            fileHtml = cellmlDiffHtml(fileName);
+                if (fileDiffHtml.isEmpty()) {
+                    if (textFile) {
+                        if (cellmlFile && mWebViewerCellmlTextFormatAction->isChecked())
+                            fileDiffHtml = cellmlDiffHtml(fileName);
                         else
-                            fileHtml = diffHtml(fileName);
+                            fileDiffHtml = diffHtml(fileName);
                     } else {
-                        fileHtml = "<pre><span class=\"warning\">BINARY</span></pre>";
+                        fileDiffHtml = "<pre><span class=\"warning\">BINARY</span></pre>";
                     }
 
-                    mDiffHtmls.insert(fileName, fileHtml);
+                    if (cellmlFile && mWebViewerCellmlTextFormatAction->isChecked())
+                        mCellmlDiffHtmls.insert(fileName, fileDiffHtml);
+                    else
+                        mDiffHtmls.insert(fileName, fileDiffHtml);
                 }
 
                 if (!oneFile && !firstFile)
-                    html += "</br>";
+                    html += "<br>";
 
                 if (!oneFile)
                     html += "<div>"+fileName+"</div>";
 
-                html += fileHtml;
+                html += fileDiffHtml;
 
                 firstFile = false;
             }
