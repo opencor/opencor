@@ -93,7 +93,8 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     mWorkspace(pWorkspace),
     mDiffHtmls(QMap<QString, QString>()),
     mCellmlDiffHtmls(QMap<QString, QString>()),
-    mPreviouslySelectedIndexes(QModelIndexList())
+    mPreviouslySelectedIndexes(QModelIndexList()),
+    mInvalidCellmlCode(QStringList())
 {
     // Set both our object name and title
 
@@ -688,21 +689,33 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
 
     Core::writeFileContentsToFile(oldFileName, oldFileContents);
 
+    // Retrieve the contents of the working version of the given file
+
+    QString newFileContents;
+
+    Core::readFileContentsFromFile(pFileName, newFileContents);
+
     // Check whether both the head and working versions of the given file are
     // text files
+    // Note: to retrieve the contents of a binary file may result in an empty
+    //       string, so if we both the old and new contents is empty it means
+    //       that we are dealing with a binary file...
 
     QString res = QString();
     bool oldFileEmpty = oldFileContents.isEmpty();
-    bool newFileExists = QFile::exists(pFileName);
+    bool newFileEmpty = newFileContents.isEmpty();
 
-    if (   Core::isTextFile(oldFileName)
-        && (!newFileExists || Core::isTextFile(pFileName))) {
+    if (   !(oldFileEmpty && newFileEmpty)
+        &&  (oldFileEmpty || Core::isTextFile(oldFileName))
+        &&  (newFileEmpty || Core::isTextFile(pFileName))) {
         // Both versions of the given file are not text files, so check whether
         // they are also CellML files
 
         if (   mWebViewerCellmlTextFormatAction->isChecked()
+            && !mInvalidCellmlCode.contains(oldFileContents)
+            && !mInvalidCellmlCode.contains(newFileContents)
             && (oldFileEmpty || CellMLSupport::CellmlFileManager::instance()->isCellmlFile(oldFileName))
-            && (!newFileExists ||  CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName))) {
+            && (newFileEmpty || CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName))) {
             // We are dealing with a CellML file, so generate the CellML Text
             // version of the file, this for both its head and working versions,
             // and if successful then diff them
@@ -711,10 +724,19 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
             QString newCellmlTextContents = QString();
 
             if (   (oldFileEmpty || cellmlText(oldFileName, oldCellmlTextContents))
-                && (!newFileExists || cellmlText(pFileName, newCellmlTextContents))) {
+                && (newFileEmpty || cellmlText(pFileName, newCellmlTextContents))) {
                 res = diffHtml(oldCellmlTextContents, newCellmlTextContents);
 
                 mCellmlDiffHtmls.insert(pFileName, res);
+            } else {
+                // The conversion failed, so keep track of that fact (so as not
+                // to try to convert everytime this file gets selected)
+
+                if (!oldFileEmpty)
+                    mInvalidCellmlCode << oldFileContents;
+
+                if (!newFileEmpty)
+                    mInvalidCellmlCode << newFileContents;
             }
         }
 
@@ -725,10 +747,6 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
         // we diff their raw contents
 
         if (res.isEmpty()) {
-            QString newFileContents;
-
-            Core::readFileContentsFromFile(pFileName, newFileContents);
-
             res = diffHtml(oldFileContents, newFileContents);
 
             mDiffHtmls.insert(pFileName, res);

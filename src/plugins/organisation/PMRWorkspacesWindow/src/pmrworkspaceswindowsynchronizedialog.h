@@ -133,6 +133,8 @@ private:
 
     QModelIndexList mPreviouslySelectedIndexes;
 
+    QStringList mInvalidCellmlCode;
+
     PmrWorkspacesWindowSynchronizeDialogItems populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
     bool cellmlText(const QString &pFileName, QString &pCellmlText);
