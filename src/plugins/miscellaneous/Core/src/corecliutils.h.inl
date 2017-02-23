@@ -37,6 +37,7 @@ QStringList CORE_EXPORT nativeCanonicalFileNames(const QStringList &pFileNames);
 
 int CORE_EXPORT exec(const QString &pProgram, const QStringList &pArgs,
                      QString &pOutput);
+int CORE_EXPORT exec(const QString &pProgram, const QStringList &pArgs);
 
 bool CORE_EXPORT internetConnectionAvailable();
 QString CORE_EXPORT noInternetConnectionAvailableMessage();

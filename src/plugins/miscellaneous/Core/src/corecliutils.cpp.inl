@@ -290,7 +290,7 @@ void SynchronousFileDownloader::networkAccessManagerSslErrors(QNetworkReply *pNe
 
 int exec(const QString &pProgram, const QStringList &pArgs, QString &pOutput)
 {
-    // Execute and return the output of a program given its arguments
+    // Execute the given program with the given arguments and track its output
 
     QProcess process;
 
@@ -300,6 +300,17 @@ int exec(const QString &pProgram, const QStringList &pArgs, QString &pOutput)
     pOutput = process.readAll().trimmed();
 
     return process.exitCode();
+}
+
+//==============================================================================
+
+int exec(const QString &pProgram, const QStringList &pArgs)
+{
+    // Execute the given program with the given arguments and track its output
+
+    QString dummy;
+
+    return exec(pProgram, pArgs, dummy);
 }
 
 //==============================================================================
