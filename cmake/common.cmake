@@ -384,6 +384,12 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
+    # We specify where to build external projects because the default
+    # (to build external projects under their plugin's build directory)
+    # can result in path names being too long for Windows...
+
+    SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${CMAKE_BINARY_DIR}/external)
+
     # Show the build information
 
     MESSAGE("${BUILD_INFORMATION} using Qt ${QT_VERSION}...")
@@ -460,6 +466,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         QT_MODULES
         EXTERNAL_BINARIES
         SYSTEM_BINARIES
+        DEPENDS
         TESTS
     )
 
@@ -618,7 +625,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             SET(FULL_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}")
 
-            IF(EXISTS ${FULL_EXTERNAL_BINARY})
+            # Only do a direct copy if the file exists and the plugin doesn't depend on any targets
+
+            IF(EXISTS ${FULL_EXTERNAL_BINARY} AND NOT "${ARG_DEPENDS}" STREQUAL "")
                 SET(COPY_TARGET DIRECT)
             ELSE()
                 SET(COPY_TARGET ${PROJECT_NAME})
@@ -704,6 +713,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ${ARG_SYSTEM_BINARY}
         )
     ENDFOREACH()
+
+    # What must be built before the plugin is built
+
+    IF(NOT "${ARG_DEPENDS}" STREQUAL "")
+        ADD_DEPENDENCIES(${PROJECT_NAME} ${ARG_DEPENDS})
+    ENDIF()
 
     # Some settings
 
@@ -1284,7 +1299,7 @@ MACRO(CREATE_PACKAGE_FILE DIRNAME PACKAGE_NAME PACKAGE_VERSION)
 
     SET(OPTIONS "")
     SET(ONE_VALUE_KEYWORDS
-        DEPENDENCY
+        TARGET
         )
     SET(MULTI_VALUE_KEYWORDS
         PACKAGED_FILES
@@ -1386,7 +1401,7 @@ RETRIEVE_PACKAGE_FILE(\\$\\{RELATIVE_PROJECT_SOURCE_DIR\\}
 
     # Run the packaging script once the dependency target has been satisfied
 
-    ADD_CUSTOM_COMMAND(TARGET ${ARG_DEPENDENCY} POST_BUILD
+    ADD_CUSTOM_COMMAND(TARGET ${ARG_TARGET} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -P ${PACKAGING_SCRIPT}
                        VERBATIM)
 ENDMACRO()

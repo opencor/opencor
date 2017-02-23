@@ -23,13 +23,13 @@ SET(PYTHONQT_GIT_TAG "opencor")
 # The names of the libraries built by PythonQt's build process.
 
 IF(WIN32)
-    SET(PYTHONQT_LIBRARY PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(PYTHONQT_GENERATED_LIBRARY PythonQt.lib)
+    SET(PYTHONQT_SHARED_LIBRARY PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(PYTHONQT_LINK_LIBRARY PythonQt${CMAKE_IMPORT_LIBRARY_SUFFIX})
 ELSE()
-    SET(PYTHONQT_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(PYTHONQT_GENERATED_LIBRARY ${PYTHONQT_LIBRARY})
+    SET(PYTHONQT_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(PYTHONQT_LINK_LIBRARY ${PYTHONQT_SHARED_LIBRARY})
 ENDIF()
-SET(EXTERNAL_BINARIES ${PYTHONQT_LIBRARY})
+SET(EXTERNAL_BINARIES ${PYTHONQT_SHARED_LIBRARY})
 
 # Specify where our PythonQt will be installed.
 
@@ -38,15 +38,15 @@ SET(FULL_INSTALL_DIR ${PROJECT_SOURCE_DIR}/${RELATIVE_INSTALL_DIR})
 
 # Specify the files that will have their SHA1 checked when packaged.
 
-SET(CHECKED_FILES lib/${PYTHONQT_LIBRARY})
+SET(CHECKED_FILES lib/${PYTHONQT_SHARED_LIBRARY})
 
 # We need to check the link library for Windows.
 
 IF(WIN32)
-    LIST(APPEND CHECKED_FILES lib/${PYTHONQT_GENERATED_LIBRARY})
+    LIST(APPEND CHECKED_FILES lib/${PYTHONQT_LINK_LIBRARY})
 ENDIF()
 
-# Add headers and... to the package archive
+# Add headers and checked files to the package archive
 
 SET(PACKAGED_FILES
     include
@@ -62,12 +62,11 @@ IF(USE_PREBUILT_PYTHONQT_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-                PythonQtAPI ${PYTHONQTAPI_PACKAGE_VERSION} 3351428b9aef566ce5ba3441ad5d7b5256e63280
+                PythonQtAPI ${PYTHONQTAPI_PACKAGE_VERSION} ed02490f37869a8e4ee5ac665c758b091517a32f
                 CHECKED_FILES ${CHECKED_FILES}
-                SHA1_VALUES 710a0520607377a1429933cd91399a3200f45314
-                )
-        ELSE()
-            RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Sample sha...)
+                SHA1_VALUES fb88a31eabe31ff1a0e781c7f20899d4de7103ba
+                            0ecda8d0289c9574b4282587b688856f206c5bd6
+            )
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
@@ -103,7 +102,7 @@ ELSE()
             -DPythonQt_Wrap_QtAll=1
             -DQt5_DIR=1
         BUILD_BYPRODUCTS
-            <INSTALL_DIR>/lib/${PYTHONQT_GENERATED_LIBRARY}
+            <INSTALL_DIR>/bin/${PYTHONQT_LINK_LIBRARY}
     )
 
     IF(APPLE)
@@ -111,7 +110,7 @@ ELSE()
 
         ExternalProject_Add_Step(PythonQtAPIBuild set_rpath
             # Set RPATH in library to enable linking independent of location
-            COMMAND install_name_tool -id @rpath/${PYTHONQT_LIBRARY} ${PYTHONQT_LIBRARY}
+            COMMAND install_name_tool -id @rpath/${PYTHONQT_SHARED_LIBRARY} ${PYTHONQT_SHARED_LIBRARY}
             WORKING_DIRECTORY ${FULL_INSTALL_DIR}/lib
             DEPENDEES install
             )
@@ -123,8 +122,10 @@ ELSE()
         PythonQtAPI ${PYTHONQTAPI_PACKAGE_VERSION}
         PACKAGED_FILES ${PACKAGED_FILES}
         CHECKED_FILES ${CHECKED_FILES}
-        DEPENDENCY PythonQtAPIBuild
+        TARGET PythonQtAPIBuild
         )
+
+    SET(PLUGIN_DEPENDS_ON PythonQtAPIBuild)
 ENDIF()
 
 # Ensure other plugins can find us
@@ -150,10 +151,6 @@ ADD_PLUGIN(PythonQtAPI
         ${EXTERNAL_BINARIES}
     EXTERNAL_BINARIES_DIR
         ${FULL_INSTALL_DIR}/lib
+    DEPENDS
+        ${PLUGIN_DEPENDS_ON}
 )
-
-# We depend on PythonQt being built if we are not using the prebuilt package
-
-IF(NOT USE_PREBUILT_PYTHONQT_PACKAGE)
-    ADD_DEPENDENCIES(PythonQtAPIPlugin PythonQtAPIBuild)
-ENDIF()

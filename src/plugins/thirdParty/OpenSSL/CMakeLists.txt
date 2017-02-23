@@ -19,27 +19,22 @@ SET(OPENSSL_GIT_TAG "OpenSSL_1_0_2k")
 # The names of the libraries built by OpenSSL's build process
 
 IF(WIN32)
-    IF(RELEASE_MODE)
-        SET(CRYPTO_LIBRARY libeay32${CMAKE_SHARED_LIBRARY_SUFFIX})
-        SET(CRYPTO_GENERATED_LIBRARY libeay32.lib)
-        SET(OPENSSL_LIBRARY ssleay32${CMAKE_SHARED_LIBRARY_SUFFIX})
-        SET(OPENSSL_GENERATED_LIBRARY ssleay32.lib)
-    ELSE()
-        SET(OPENSSL_LIBRARY OpenSSLd${CMAKE_SHARED_LIBRARY_SUFFIX})
-        SET(OPENSSL_GENERATED_LIBRARY OpenSSLd.lib)
-    ENDIF()
+    SET(CRYPTO_SHARED_LIBRARY libeay32${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(CRYPTO_LINK_LIBRARY libeay32${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    SET(SSL_SHARED_LIBRARY ssleay32${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(SSL_LINK_LIBRARY ssleay32${CMAKE_IMPORT_LIBRARY_SUFFIX})
 ELSEIF(APPLE)
-    SET(CRYPTO_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}crypto.${OPENSSL_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(CRYPTO_GENERATED_LIBRARY ${CRYPTO_LIBRARY})
-    SET(OPENSSL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}ssl.${OPENSSL_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(OPENSSL_GENERATED_LIBRARY ${OPENSSL_LIBRARY})
+    SET(CRYPTO_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}crypto.${OPENSSL_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(CRYPTO_LINK_LIBRARY ${CRYPTO_SHARED_LIBRARY})
+    SET(SSL_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}ssl.${OPENSSL_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(SSL_LINK_LIBRARY ${SSL_SHARED_LIBRARY})
 ELSE()
-    SET(CRYPTO_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}crypto${CMAKE_SHARED_LIBRARY_SUFFIX}.${OPENSSL_VERSION})
-    SET(CRYPTO_GENERATED_LIBRARY ${CRYPTO_LIBRARY})
-    SET(OPENSSL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}ssl${CMAKE_SHARED_LIBRARY_SUFFIX}.${OPENSSL_VERSION})
-    SET(OPENSSL_GENERATED_LIBRARY ${OPENSSL_LIBRARY})
+    SET(CRYPTO_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}crypto${CMAKE_SHARED_LIBRARY_SUFFIX}.${OPENSSL_VERSION})
+    SET(CRYPTO_LINK_LIBRARY ${CRYPTO_SHARED_LIBRARY})
+    SET(SSL_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}ssl${CMAKE_SHARED_LIBRARY_SUFFIX}.${OPENSSL_VERSION})
+    SET(SSL_LINK_LIBRARY ${SSL_SHARED_LIBRARY})
 ENDIF()
-SET(EXTERNAL_BINARIES ${CRYPTO_LIBRARY} ${OPENSSL_LIBRARY})
+SET(EXTERNAL_BINARIES ${CRYPTO_SHARED_LIBRARY} ${SSL_SHARED_LIBRARY})
 
 # Specify where our local OpenSSL will be installed
 
@@ -48,11 +43,16 @@ SET(FULL_INSTALL_DIR ${PROJECT_SOURCE_DIR}/${RELATIVE_INSTALL_DIR})
 
 # Specify the files that will have their SHA1 checked when packaged
 
-SET(CHECKED_FILES lib/${CRYPTO_LIBRARY})
-LIST(APPEND CHECKED_FILES lib/${OPENSSL_LIBRARY})
+SET(CHECKED_FILES
+    lib/${CRYPTO_SHARED_LIBRARY}
+    lib/${SSL_SHARED_LIBRARY}
+)
+
 IF(WIN32)
-    LIST(APPEND CHECKED_FILES lib/${CRYPTO_GENERATED_LIBRARY})
-    LIST(APPEND CHECKED_FILES lib/${OPENSSL_GENERATED_LIBRARY})
+    LIST(APPEND CHECKED_FILES
+        lib/${CRYPTO_LINK_LIBRARY}
+        lib/${SSL_LINK_LIBRARY}
+    )
 ENDIF()
 
 # Use our pre-built version unless instructed otherwise
@@ -66,16 +66,23 @@ IF(USE_PREBUILT_OPENSSL_PLUGIN)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(${RELATIVE_ROOT_DIR}
-                OpenSSL ${OPENSSL_PACKAGE_VERSION} 3351428b9aef566ce5ba3441ad5d7b5256e63280
+            RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
+                OpenSSL ${OPENSSL_PACKAGE_VERSION} 214d07f2b61c24018514213d4945883d0fbc32f9
                 CHECKED_FILES ${CHECKED_FILES}
-                SHA1_VALUES 710a0520607377a1429933cd91399a3200f45314
-                    b9895617dc6c321eaaa7d5eef7e4a922f6fb226a
-                    2efcf11e3e8a2a92280c2e267fc1ff3049cb577d
-                    a18cbb0332fcef7ce3f3a73fbeb9b463a69632f7
-                )
+                SHA1_VALUES 97ee464e4c5c8a73e1f4530f009bee9792ce5ce8
+                            eb96ee3dd2bf200cc8a322c29632ab91425b345e
+                            427d0649f695509638939f2a34f315ef8a470c2b
+                            6d304ee7cf50c8d3df2ce5bae44f68973757b0f5
+            )
         ELSE()
-            RETRIEVE_PACKAGE_FILE(${RELATIVE_ROOT_DIR} Sample sha...)
+            RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
+                OpenSSL ${OPENSSL_PACKAGE_VERSION} e99a1ac8ec6680d1375b9def950c18b59ac715ea
+                CHECKED_FILES ${CHECKED_FILES}
+                SHA1_VALUES 4af9b1613f3489a753df9690f01c7a16f883d40b
+                            53240b1fc6d9ddcdacff79b1847c921c8e2673ce
+                            45639be11e00eeb34c3890089d3ef218c0862301
+                            10e33f1e800269c5136ce9f0b07deda72ff34513
+            )
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
@@ -125,6 +132,7 @@ ELSE()
         SET(PLATFORM "VC-WIN64A")
         SET(MAKE_EXECUTABLE nmake)
         SET(MAKEFILE ms/ntdll.mak)
+        SET(QUIET_MAKE -c)
         SET(INSTALL_TARGET install)
     ELSE()
         IF(APPLE)
@@ -135,26 +143,35 @@ ELSE()
         ENDIF()
         SET(MAKE_EXECUTABLE make)
         SET(MAKEFILE Makefile)
+        SET(QUIET_MAKE --quiet)
         SET(INSTALL_TARGET install_sw)
     ENDIF()
 
     SET(OPENSSL_BUILD_DIR ${PROJECT_SOURCE_DIR}/OpenSSL)
 
-    ExternalProject_Add(
-        OpenSSLBuild
-        DOWNLOAD_DIR ${OPENSSL_BUILD_DIR}
-        SOURCE_DIR ${OPENSSL_BUILD_DIR}
-        BINARY_DIR ${OPENSSL_BUILD_DIR}
-        INSTALL_DIR ${FULL_INSTALL_DIR}
-        GIT_REPOSITORY https://github.com/openssl/openssl
-        GIT_TAG ${OPENSSL_GIT_TAG}
-        CONFIGURE_COMMAND ${PERL_EXECUTABLE} ./Configure ${PLATFORM} ${CONFIG_OPTIONS}
-        BUILD_COMMAND ${MAKE_EXECUTABLE} -f ${MAKEFILE} --quiet
-        INSTALL_COMMAND ${MAKE_EXECUTABLE} -f ${MAKEFILE} --quiet ${INSTALL_TARGET}
+    ExternalProject_Add(OpenSSLBuild
+        DOWNLOAD_DIR
+            ${OPENSSL_BUILD_DIR}
+        SOURCE_DIR
+            ${OPENSSL_BUILD_DIR}
+        BINARY_DIR
+            ${OPENSSL_BUILD_DIR}
+        INSTALL_DIR
+            ${FULL_INSTALL_DIR}
+        GIT_REPOSITORY
+            https://github.com/openssl/openssl
+        GIT_TAG
+            ${OPENSSL_GIT_TAG}
+        CONFIGURE_COMMAND
+            ${PERL_EXECUTABLE} ./Configure ${PLATFORM} ${CONFIG_OPTIONS}
+        BUILD_COMMAND
+            ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE}
+        INSTALL_COMMAND
+            ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE} ${INSTALL_TARGET}
         BUILD_BYPRODUCTS
-            <INSTALL_DIR>/lib/${CRYPTO_GENERATED_LIBRARY}
-            <INSTALL_DIR>/lib/${OPENSSL_GENERATED_LIBRARY}
-        )
+            <INSTALL_DIR>/lib/${CRYPTO_LINK_LIBRARY}
+            <INSTALL_DIR>/lib/${SSL_LINK_LIBRARY}
+    )
 
     IF(WIN32)
         # Windows build has a post configuration step
@@ -166,38 +183,38 @@ ELSE()
             WORKING_DIRECTORY ${OPENSSL_BUILD_DIR}
             DEPENDEES configure
             DEPENDERS build
-            )
+        )
 
         # Our plugin code expects the DLLs in the same directory as the import libraries.
 
         ExternalProject_Add_Step(OpenSSLBuild CopyDLL
-            COMMAND ${CMAKE_COMMAND} -E copy bin/${CRYPTO_LIBRARY} lib
-            COMMAND ${CMAKE_COMMAND} -E copy bin/${OPENSSL_LIBRARY} lib
+            COMMAND ${CMAKE_COMMAND} -E copy bin/${CRYPTO_SHARED_LIBRARY} lib
+            COMMAND ${CMAKE_COMMAND} -E copy bin/${SSL_SHARED_LIBRARY} lib
             WORKING_DIRECTORY ${FULL_INSTALL_DIR}
             DEPENDEES install
-            )
+        )
     ELSE()
         # Fix up the newly created libraries
 
         ExternalProject_Add_Step(OpenSSLBuild FixupLibrary
             # The build process creates write-protected libraries
-            COMMAND chmod 755 ${CRYPTO_LIBRARY}
-            COMMAND chmod 755 ${OPENSSL_LIBRARY}
+            COMMAND chmod 755 ${CRYPTO_SHARED_LIBRARY}
+            COMMAND chmod 755 ${SSL_SHARED_LIBRARY}
             WORKING_DIRECTORY ${FULL_INSTALL_DIR}/lib
             DEPENDEES install
-            )
+        )
 
         IF(APPLE)
             ExternalProject_Add_Step(OpenSSLBuild SetRPath
                 # Set RPATH to enable linking independent of library location
-                COMMAND install_name_tool -id @rpath/${CRYPTO_LIBRARY} ${CRYPTO_LIBRARY}
-                COMMAND install_name_tool -id @rpath/${OPENSSL_LIBRARY} ${OPENSSL_LIBRARY}
-                COMMAND install_name_tool -change ${FULL_INSTALL_DIR}/lib/${CRYPTO_LIBRARY}
-                                                  @rpath/${CRYPTO_LIBRARY}
-                                                  ${OPENSSL_LIBRARY}
+                COMMAND install_name_tool -id @rpath/${CRYPTO_SHARED_LIBRARY} ${CRYPTO_SHARED_LIBRARY}
+                COMMAND install_name_tool -id @rpath/${SSL_SHARED_LIBRARY} ${SSL_SHARED_LIBRARY}
+                COMMAND install_name_tool -change ${FULL_INSTALL_DIR}/lib/${CRYPTO_SHARED_LIBRARY}
+                                                  @rpath/${CRYPTO_SHARED_LIBRARY}
+                                                  ${SSL_SHARED_LIBRARY}
                 WORKING_DIRECTORY ${FULL_INSTALL_DIR}/lib
                 DEPENDEES FixupLibrary
-                )
+            )
         ENDIF()
     ENDIF()
 
@@ -207,16 +224,20 @@ ELSE()
         OpenSSL ${OPENSSL_PACKAGE_VERSION}
         PACKAGED_FILES include ${CHECKED_FILES}
         CHECKED_FILES ${CHECKED_FILES}
-        DEPENDENCY OpenSSLBuild
-        )
+        TARGET OpenSSLBuild
+    )
+
+    SET(PLUGIN_DEPENDS_ON OpenSSLBuild)
 ENDIF()
 
 # Allow other external projects to find our OpenSSL
 
 SET(OPENSSL_ROOT_DIR ${FULL_INSTALL_DIR} PARENT_SCOPE)
 SET(OPENSSL_INCLUDE_DIR ${FULL_INSTALL_DIR}/include PARENT_SCOPE)
-SET(OPENSSL_CRYPTO_LIBRARY ${FULL_INSTALL_DIR}/lib/${CRYPTO_LIBRARY} PARENT_SCOPE)
-SET(OPENSSL_SSL_LIBRARY ${FULL_INSTALL_DIR}/lib/${OPENSSL_LIBRARY} PARENT_SCOPE)
+SET(OPENSSL_CRYPTO_LIBRARY ${FULL_INSTALL_DIR}/lib/${CRYPTO_LINK_LIBRARY} PARENT_SCOPE)
+SET(OPENSSL_SSL_LIBRARY ${FULL_INSTALL_DIR}/lib/${SSL_LINK_LIBRARY} PARENT_SCOPE)
+SET(OPENSSL_LIBRARIES ${FULL_INSTALL_DIR}/lib/${CRYPTO_LINK_LIBRARY}
+                      ${FULL_INSTALL_DIR}/lib/${SSL_LINK_LIBRARY} PARENT_SCOPE)
 
 # Add the plugin
 
@@ -238,10 +259,6 @@ ADD_PLUGIN(OpenSSL
         ${EXTERNAL_BINARIES}
     EXTERNAL_BINARIES_DIR
         ${FULL_INSTALL_DIR}/lib
-    )
-
-# We depend on OpenSSL being built if we are not using the prebuilt version
-
-IF(NOT USE_PREBUILT_OPENSSL_PLUGIN)
-    ADD_DEPENDENCIES(OpenSSLPlugin OpenSSLBuild)
-ENDIF()
+    DEPENDS
+        ${PLUGIN_DEPENDS_ON}
+)

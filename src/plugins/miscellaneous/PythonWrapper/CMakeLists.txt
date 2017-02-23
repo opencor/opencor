@@ -4,13 +4,17 @@ PROJECT(PythonWrapperPlugin)
 
 ADD_PLUGIN(PythonWrapper
     SOURCES
+        ../../datastoreinterface.cpp
+        ../../plugin.cpp
         ../../plugininfo.cpp
         ../../plugininterface.cpp
+        ../../pluginmanager.cpp
 
         src/pythonwrapperdatastore.cpp
         src/pythonwrapperplugin.cpp
         src/pythonwrappersinglecellview.cpp
     HEADERS_MOC
+        ../../datastoreinterface.h
         ../../plugin.h
         ../../pluginmanager.h
 
