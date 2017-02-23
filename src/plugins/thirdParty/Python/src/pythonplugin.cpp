@@ -38,10 +38,15 @@ limitations under the License.
 
 #include <clocale>
 #include <iostream>
-#include <unistd.h>
+
+#ifdef _WIN32
+    #include <io.h>
+#else
+    #include <unistd.h>
+#endif
 
 #ifdef __FreeBSD__
-#include <fenv.h>
+    #include <fenv.h>
 #endif
 
 //==============================================================================
@@ -134,6 +139,8 @@ void PythonPlugin::initializePlugin()
     auto pythonHome = QString();
 #if __APPLE__
     pythonHome = (applicationDirectories << "Frameworks" << "Python").join("/");
+#elif _WIN32
+    pythonHome = (applicationDirectories << "Python").join("/");
 #else
     pythonHome = applicationDirectories.join("/");
 #endif
