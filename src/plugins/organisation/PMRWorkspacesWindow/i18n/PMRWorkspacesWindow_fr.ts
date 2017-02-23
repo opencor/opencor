@@ -62,6 +62,14 @@
         <source>Zoom out the changes</source>
         <translation>Réduire les changements</translation>
     </message>
+    <message>
+        <source>CellML Text Format</source>
+        <translation>Format CellML Text</translation>
+    </message>
+    <message>
+        <source>Try to use the CellML Text format whenever possible</source>
+        <translation>Essayer d&apos;utiliser le format CellML Text à chaque fois que c&apos;est possible</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWidget</name>
