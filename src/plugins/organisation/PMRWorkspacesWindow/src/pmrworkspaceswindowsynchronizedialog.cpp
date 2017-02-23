@@ -477,20 +477,15 @@ void PmrWorkspacesWindowSynchronizeDialog::acceptSynchronization()
 
 //==============================================================================
 
-QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
+QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
+                                                       const QString &pNew)
 {
-    // Return the diff for the given file name
-
-    QString relativeFileName = QDir(mWorkspace->path()).relativeFilePath(pFileName);
-    QString headFileContents = mWorkspace->headFileContents(relativeFileName);
-    QString workingFileContents;
-
-    Core::readFileContentsFromFile(pFileName, workingFileContents);
+    // Return the diff between the given old and new strings
 
     typedef diff_match_patch<std::wstring> DiffMatchPatch;
 
     DiffMatchPatch diffMatchPatch;
-    DiffMatchPatch::Diffs diffs = diffMatchPatch.diff_main(headFileContents.toStdWString(), workingFileContents.toStdWString());
+    DiffMatchPatch::Diffs diffs = diffMatchPatch.diff_main(pOld.toStdWString(), pNew.toStdWString());
 
     diffMatchPatch.diff_cleanupEfficiency(diffs);
 
@@ -566,6 +561,76 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
 
 //==============================================================================
 
+QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
+{
+    // Return the diff between the head and working versions of the given file
+
+    QString fileContents;
+
+    Core::readFileContentsFromFile(pFileName, fileContents);
+
+    return diffHtml(mWorkspace->headFileContents(QDir(mWorkspace->path()).relativeFilePath(pFileName)), fileContents);
+}
+
+//==============================================================================
+
+bool PmrWorkspacesWindowSynchronizeDialog::cellmlText(const QString &pFileName,
+                                                      QString &pCellmlText)
+{
+    // Try to generate the CellML Text version of the given CellML file
+
+    if (!Core::exec(qApp->applicationFilePath(),
+                    QStringList() << "-c"
+                                  << "CellMLTextView::import"
+                                  << pFileName,
+                    pCellmlText)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWindowSynchronizeDialog::cellmlDiffHtml(const QString &pFileName)
+{
+    // Return the diff between the CellML Text version of the head and working
+    // versions of the given file
+
+    // Retrieve the file contents of the old (i.e. head) version of the given
+    // file and save it to a temporary file
+
+    QString oldFileName = Core::temporaryFileName();
+    QString oldFileContents = mWorkspace->headFileContents(QDir(mWorkspace->path()).relativeFilePath(pFileName));
+
+    Core::writeFileContentsToFile(oldFileName, oldFileContents);
+
+    // Generate the CellML Text version of those head and working versions, if
+    // possible
+
+    QString oldCellmlTextContents;
+    QString newCellmlTextContents;
+    bool oldCellmlTextOk = cellmlText(oldFileName, oldCellmlTextContents);
+    bool newCellmlTextOk = cellmlText(pFileName, newCellmlTextContents);
+
+    QFile::remove(oldFileName);
+
+    // Return the diff between the two CellML Text versions of the given file
+    // or, if it's not possible, the two raw versions
+
+    if (oldCellmlTextOk && newCellmlTextOk) {
+        return diffHtml(oldCellmlTextContents, newCellmlTextContents);
+    } else {
+        QString newFileContents;
+
+        Core::readFileContentsFromFile(pFileName, newFileContents);
+
+        return diffHtml(oldFileContents, newFileContents);
+    }
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
 {
     // If there are no selected indexes then select the indexes that were
@@ -602,7 +667,7 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
                 if (fileHtml.isEmpty()) {
                     if (Core::isTextFile(fileName)) {
                         if (CellMLSupport::CellmlFileManager::instance()->isCellmlFile(fileName))
-                            fileHtml = "<pre><span class=\"warning\">CellML file</span></pre>";
+                            fileHtml = cellmlDiffHtml(fileName);
                         else
                             fileHtml = diffHtml(fileName);
                     } else {

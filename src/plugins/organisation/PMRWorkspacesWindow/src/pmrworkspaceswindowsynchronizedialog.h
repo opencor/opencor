@@ -116,7 +116,11 @@ private:
 
     void populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
+    QString diffHtml(const QString &pOld, const QString &pNew);
     QString diffHtml(const QString &pFileName);
+
+    bool cellmlText(const QString &pFileName, QString &pCellmlText);
+    QString cellmlDiffHtml(const QString &pFileName);
 
 private slots:
     void updateSelectAllChangesCheckBox(QStandardItem *pItem = 0);
