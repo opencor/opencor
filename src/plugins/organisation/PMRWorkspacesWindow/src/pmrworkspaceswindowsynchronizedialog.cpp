@@ -20,11 +20,17 @@ limitations under the License.
 // PMR Workspaces window synchronise dialog
 //==============================================================================
 
+#include "borderedwidget.h"
+#include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
+#include "file.h"
+#include "i18ninterface.h"
 #include "pmrworkspace.h"
 #include "pmrworkspaceswindowsynchronizedialog.h"
 #include "splitterwidget.h"
+#include "toolbarwidget.h"
+#include "webviewerwidget.h"
 
 //==============================================================================
 
@@ -32,6 +38,7 @@ limitations under the License.
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QDialogButtonBox>
+#include <QDir>
 #include <QKeyEvent>
 #include <QLabel>
 #include <QListView>
@@ -40,7 +47,13 @@ limitations under the License.
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include <QTextEdit>
+#include <QTimer>
 #include <QVBoxLayout>
+#include <QWebView>
+
+//==============================================================================
+
+#include "diff_match_patch.h"
 
 //==============================================================================
 
@@ -49,15 +62,42 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-static const auto SettingsSplitterSizes = QStringLiteral("SplitterSizes");
+PmrWorkspacesWindowSynchronizeDialogItem::PmrWorkspacesWindowSynchronizeDialogItem(PMRSupport::PmrWorkspaceFileNode *pFileNode) :
+    QStandardItem(pFileNode->path()),
+    mFileNode(pFileNode)
+{
+}
+
+//==============================================================================
+
+PMRSupport::PmrWorkspaceFileNode * PmrWorkspacesWindowSynchronizeDialogItem::fileNode() const
+{
+    // Return our file node
+
+    return mFileNode;
+}
+
+//==============================================================================
+
+static const auto SettingsCellmlTextFormatSupport = QStringLiteral("CellmlTextFormatSupport");
+static const auto SettingsHorizontalSplitterSizes = QStringLiteral("HorizontalSplitterSizes");
+static const auto SettingsVerticalSplitterSizes   = QStringLiteral("VerticalSplitterSizes");
 
 //==============================================================================
 
 PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const QString &pSettingsGroup,
                                                                            PMRSupport::PmrWorkspace *pWorkspace,
+                                                                           QTimer *pTimer,
                                                                            QWidget *pParent) :
     Core::Dialog(pParent),
-    mSettingsGroup(pSettingsGroup)
+    mSettingsGroup(pSettingsGroup),
+    mWorkspace(pWorkspace),
+    mSha1s(QMap<QString, QString>()),
+    mDiffHtmls(QMap<QString, QString>()),
+    mCellmlDiffHtmls(QMap<QString, QString>()),
+    mPreviouslySelectedIndexes(QModelIndexList()),
+    mInvalidCellmlCode(QStringList()),
+    mNeedUpdateDiffInformation(false)
 {
     // Set both our object name and title
 
@@ -70,52 +110,53 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     setLayout(layout);
 
-    // Create our splitter and make sure we can keep track of its sizes
+    // Create both our horizontal and vertical splitters
 
-    mSplitter = new Core::SplitterWidget(Qt::Vertical, this);
+    mHorizontalSplitter = new Core::SplitterWidget(this);
+    mVerticalSplitter = new Core::SplitterWidget(Qt::Vertical, mHorizontalSplitter);
 
     // Create our message-related widget, populate it, and add it to our
-    // splitter
+    // vertical splitter
 
-    QWidget *messageWidget = new QWidget(mSplitter);
+    QWidget *messageWidget = new QWidget(mVerticalSplitter);
     QVBoxLayout *messageLayout = new QVBoxLayout(messageWidget);
     int margin;
 
     messageLayout->getContentsMargins(0, 0, 0, &margin);
-    messageLayout->setContentsMargins(0, 0, 0, margin >> 1);
+
+    int halfMargin = margin >> 1;
+
+    messageLayout->setContentsMargins(0, 0, halfMargin, halfMargin);
 
     messageWidget->setLayout(messageLayout);
 
     QLabel *messageLabel = new QLabel(tr("Message:"), messageWidget);
-    QFont messageLabelFont = messageLabel->font();
+    QFont labelFont = messageLabel->font();
 
-    messageLabelFont.setBold(true);
+    labelFont.setBold(true);
 
-    messageLabel->setFont(messageLabelFont);
+    messageLabel->setFont(labelFont);
 
     mMessageValue = new QTextEdit(messageWidget);
 
     messageLayout->addWidget(messageLabel);
     messageLayout->addWidget(mMessageValue);
 
-    mSplitter->addWidget(messageWidget);
+    mVerticalSplitter->addWidget(messageWidget);
 
     // Create our changes-related widget, populate it, and add it to our
-    // splitter
+    // vertical splitter
 
-    QWidget *changesWidget = new QWidget(mSplitter);
+    QWidget *changesWidget = new QWidget(mVerticalSplitter);
     QVBoxLayout *changesLayout = new QVBoxLayout(changesWidget);
 
-    changesLayout->setContentsMargins(0, margin >> 1, 0, 0);
+    changesLayout->setContentsMargins(0, halfMargin, halfMargin, 0);
 
     changesWidget->setLayout(changesLayout);
 
-    mChangesLabel = new QLabel(changesWidget);
-    QFont changesLabelFont = mChangesLabel->font();
+    QLabel *changesLabel = new QLabel(changesWidget);
 
-    changesLabelFont.setBold(true);
-
-    mChangesLabel->setFont(changesLabelFont);
+    changesLabel->setFont(labelFont);
 
     mChangesValue = new QListView(changesWidget);
 
@@ -128,27 +169,96 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     mSelectAllChangesCheckBox->setTristate(true);
 
-    changesLayout->addWidget(mChangesLabel);
+    changesLayout->addWidget(changesLabel);
     changesLayout->addWidget(mChangesValue);
     changesLayout->addWidget(mSelectAllChangesCheckBox);
 
-    mSplitter->addWidget(changesWidget);
+    mVerticalSplitter->addWidget(changesWidget);
 
-    // Customise our splitter and add it to our layout
+    // Customise our vertical splitter and add it to our horizontal splitter
 
-    mSplitter->setCollapsible(0, false);
-    mSplitter->setCollapsible(1, false);
+    mVerticalSplitter->setCollapsible(0, false);
+    mVerticalSplitter->setCollapsible(1, false);
+
+    mHorizontalSplitter->addWidget(mVerticalSplitter);
+
+    // Create our Web viewer and add it to our horizontal splitter
+
+    QWidget *webViewerWidget = new QWidget(mVerticalSplitter);
+    QVBoxLayout *webViewerLayout = new QVBoxLayout(webViewerWidget);
+
+    webViewerLayout->setContentsMargins(halfMargin, 0, 0, 0);
+
+    webViewerWidget->setLayout(webViewerLayout);
+
+    Core::ToolBarWidget *webViewerToolBarWidget = new Core::ToolBarWidget(webViewerWidget);
+    QLabel *webViewerLabel = new QLabel(tr("Changes:"), webViewerWidget);
+    QWidget *webViewerSpacer = new QWidget(webViewerToolBarWidget);
+    QAction *webViewerNormalSizeAction = Core::newAction(QIcon(":/oxygen/actions/zoom-original.png"), webViewerToolBarWidget);
+    QAction *webViewerZoomInAction = Core::newAction(QIcon(":/oxygen/actions/zoom-in.png"), webViewerToolBarWidget);
+    QAction *webViewerZoomOutAction = Core::newAction(QIcon(":/oxygen/actions/zoom-out.png"), webViewerToolBarWidget);
+
+    mWebViewerCellmlTextFormatAction = Core::newAction(QIcon(":/CellMLSupport/logo.png"), webViewerToolBarWidget);
+
+    webViewerLabel->setAlignment(Qt::AlignBottom);
+    webViewerLabel->setFont(labelFont);
+
+    webViewerSpacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    I18nInterface::retranslateAction(mWebViewerCellmlTextFormatAction, tr("CellML Text Format"),
+                                     tr("Try to use the CellML Text format whenever possible"));
+    I18nInterface::retranslateAction(webViewerNormalSizeAction, tr("Normal Size"),
+                                     tr("Reset the size of the changes"));
+    I18nInterface::retranslateAction(webViewerZoomInAction, tr("Zoom In"),
+                                     tr("Zoom in the changes"));
+    I18nInterface::retranslateAction(webViewerZoomOutAction, tr("Zoom Out"),
+                                     tr("Zoom out the changes"));
+
+    mWebViewerCellmlTextFormatAction->setCheckable(true);
+
+    webViewerToolBarWidget->addWidget(webViewerLabel);
+    webViewerToolBarWidget->addWidget(webViewerSpacer);
+    webViewerToolBarWidget->addAction(mWebViewerCellmlTextFormatAction);
+    webViewerToolBarWidget->addSeparator();
+    webViewerToolBarWidget->addAction(webViewerNormalSizeAction);
+    webViewerToolBarWidget->addSeparator();
+    webViewerToolBarWidget->addAction(webViewerZoomInAction);
+    webViewerToolBarWidget->addAction(webViewerZoomOutAction);
+
+    mWebViewer = new WebViewerWidget::WebViewerWidget(mHorizontalSplitter);
+
+    mWebViewer->setContextMenuPolicy(Qt::CustomContextMenu);
+    mWebViewer->setOverrideCursor(true);
+
+    webViewerLayout->addWidget(webViewerToolBarWidget);
+    webViewerLayout->addWidget(new Core::BorderedWidget(mWebViewer,
+                                                        true, true, true, true));
+
+    mHorizontalSplitter->addWidget(webViewerWidget);
+
+    // Now, we can customise our horizontal splitter and add it to our layout
+
+    mHorizontalSplitter->setCollapsible(0, false);
+    mHorizontalSplitter->setCollapsible(1, false);
+    mHorizontalSplitter->setStretchFactor(1, 1);
+
+    layout->addWidget(mHorizontalSplitter);
+
+    // Retrieve our user's settings
 
     QSettings settings;
 
     settings.beginGroup(mSettingsGroup);
         settings.beginGroup(objectName());
-            mSplitter->setSizes(qVariantListToIntList(settings.value(SettingsSplitterSizes,
-                                                                     QVariantList() << 222 << 555).toList()));
+            mWebViewer->loadSettings(&settings);
+
+            mWebViewerCellmlTextFormatAction->setChecked(settings.value(SettingsCellmlTextFormatSupport, true).toBool());
+
+            mHorizontalSplitter->setSizes(qVariantListToIntList(settings.value(SettingsHorizontalSplitterSizes).toList()));
+            mVerticalSplitter->setSizes(qVariantListToIntList(settings.value(SettingsVerticalSplitterSizes,
+                                                                             QVariantList() << 222 << 555).toList()));
         settings.endGroup();
     settings.endGroup();
-
-    layout->addWidget(mSplitter);
 
     // Add some dialog buttons
 
@@ -158,10 +268,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     layout->addWidget(mButtonBox);
 
-    // Populate ourselves with the list of files that have changed and make sure
-    // that the width of our list view is always such that we can see all of its
-    // contents (though up to a point!)
-    // Note: the +2 is to avoid getting a horizontal scroll bar...
+    // Populate ourselves with the list of files that have changed
 
     mModel = new QStandardItemModel(this);
     mProxyModel = new QSortFilterProxyModel(this);
@@ -171,12 +278,20 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     mChangesValue->setModel(mProxyModel);
 
-    populateModel(pWorkspace->rootFileNode(), true);
+    populateModel(pWorkspace->rootFileNode());
 
-    mChangesValue->setMinimumWidth(qMin(qApp->desktop()->availableGeometry().width() >> 1,
-                                        mChangesValue->sizeHintForColumn(0)+2));
+    mProxyModel->sort(0);
+
+    changesLabel->setText((mModel->rowCount() == 1)?
+                               tr("1 change:"):
+                               tr("%1 changes:").arg(mModel->rowCount()));
+
+    mSelectAllChangesCheckBox->setVisible(mModel->rowCount() != 1);
 
     // Connect some signals
+
+    connect(pTimer, SIGNAL(timeout()),
+            this, SLOT(refreshChanges()));
 
     connect(mMessageValue, SIGNAL(textChanged()),
             this, SLOT(updateOkButton()));
@@ -193,6 +308,26 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
             this, SLOT(acceptSynchronization()));
     connect(mButtonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
+
+    connect(mChangesValue->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+            this, SLOT(updateDiffInformation()));
+
+    connect(mWebViewerCellmlTextFormatAction, SIGNAL(toggled(bool)),
+            this, SLOT(updateDiffInformation()));
+    connect(webViewerNormalSizeAction, SIGNAL(triggered(bool)),
+            mWebViewer, SLOT(resetZoom()));
+    connect(webViewerZoomInAction, SIGNAL(triggered(bool)),
+            mWebViewer, SLOT(zoomIn()));
+    connect(webViewerZoomOutAction, SIGNAL(triggered(bool)),
+            mWebViewer, SLOT(zoomOut()));
+
+    // Retrieve our diff template
+
+    Core::readFileContentsFromFile(":/PMRWorkspacesWindow/diff.html", mDiffTemplate);
+
+    // Select our first changes
+
+    mChangesValue->setCurrentIndex(mProxyModel->index(0, 0));
 
     // Initialise (update) the checked state of our Select All check box
 
@@ -220,13 +355,21 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
 PmrWorkspacesWindowSynchronizeDialog::~PmrWorkspacesWindowSynchronizeDialog()
 {
-    // Keep track of our splitter's sizes
+    // Keep track of our user's settings
 
     QSettings settings;
 
     settings.beginGroup(mSettingsGroup);
         settings.beginGroup(objectName());
-            settings.setValue(SettingsSplitterSizes, qIntListToVariantList(mSplitter->sizes()));
+            mWebViewer->saveSettings(&settings);
+
+            settings.setValue(SettingsCellmlTextFormatSupport,
+                              mWebViewerCellmlTextFormatAction->isChecked());
+
+            settings.setValue(SettingsHorizontalSplitterSizes,
+                              qIntListToVariantList(mHorizontalSplitter->sizes()));
+            settings.setValue(SettingsVerticalSplitterSizes,
+                              qIntListToVariantList(mVerticalSplitter->sizes()));
         settings.endGroup();
     settings.endGroup();
 }
@@ -256,47 +399,72 @@ void PmrWorkspacesWindowSynchronizeDialog::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode,
-                                                         const bool &pRootFileNode)
+PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     // List all the files that have changed
 
-    static int nbOfChanges;
-
-    if (pRootFileNode)
-        nbOfChanges = 0;
+    PmrWorkspacesWindowSynchronizeDialogItems res = PmrWorkspacesWindowSynchronizeDialogItems();
 
     foreach (PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
         if (fileNode->hasChildren()) {
-            populateModel(fileNode);
+            // This is a folder, so populate ourselves with its children
+
+            res << populateModel(fileNode);
         } else {
+            // This is a file, so check whether it has changes
+
             QChar status = fileNode->status().second;
 
             if ((status != '\0') && (status != ' ')) {
-                ++nbOfChanges;
+                // This is a changed file, so check whether we already know
+                // about it and, if so, whether its SHA-1 is still the same and
+                // if that's not the case then reset a few things
 
-                QStandardItem *fileItem = new QStandardItem(fileNode->path());
+                PmrWorkspacesWindowSynchronizeDialogItem *fileItem = 0;
+                QString fileName = fileNode->path();
+                QString sha1 = Core::File::sha1(fileName);
 
-                fileItem->setCheckable(true);
-                fileItem->setCheckState(Qt::Checked);
-                fileItem->setEditable(false);
+                for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+                    PmrWorkspacesWindowSynchronizeDialogItem *item = static_cast<PmrWorkspacesWindowSynchronizeDialogItem *>(mModel->invisibleRootItem()->child(i));
 
-                mModel->appendRow(fileItem);
+                    if (item->fileNode() == fileNode) {
+                        fileItem = item;
+
+                        if (sha1.compare(mSha1s.value(fileName))) {
+                            mSha1s.insert(fileName, sha1);
+
+                            mDiffHtmls.remove(fileName);
+                            mCellmlDiffHtmls.remove(fileName);
+
+                            if (mChangesValue->selectionModel()->isSelected(mProxyModel->mapFromSource(item->index())))
+                                mNeedUpdateDiffInformation = true;
+                        }
+
+                        break;
+                    }
+                }
+
+                // Create a new item, if needed
+
+                if (!fileItem) {
+                    fileItem = new PmrWorkspacesWindowSynchronizeDialogItem(fileNode);
+
+                    fileItem->setCheckable(true);
+                    fileItem->setCheckState(Qt::Checked);
+                    fileItem->setEditable(false);
+                    fileItem->setToolTip(fileName);
+
+                    mModel->appendRow(fileItem);
+
+                    mSha1s.insert(fileName, sha1);
+                }
+
+                res << fileItem;
             }
         }
     }
 
-    // Finalise a few things if we are the root file node
-
-    if (pRootFileNode) {
-        mProxyModel->sort(0);
-
-        mChangesLabel->setText((nbOfChanges == 1)?
-                                   tr("1 change:"):
-                                   tr("%1 changes:").arg(nbOfChanges));
-
-        mSelectAllChangesCheckBox->setVisible(nbOfChanges != 1);
-    }
+    return res;
 }
 
 //==============================================================================
@@ -324,6 +492,48 @@ QStringList PmrWorkspacesWindowSynchronizeDialog::fileNames() const
     }
 
     return res;
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowSynchronizeDialog::refreshChanges()
+{
+    // Keep track of our existing items
+
+    PmrWorkspacesWindowSynchronizeDialogItems oldItems = PmrWorkspacesWindowSynchronizeDialogItems();
+
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
+        oldItems << static_cast<PmrWorkspacesWindowSynchronizeDialogItem *>(mModel->invisibleRootItem()->child(i));
+
+    // Update our model by (re)populating it
+    // Note: we don't need to refresh the status of our workspace since it has
+    //       been done in PmrWorkspacesWindowWidget::refreshWorkspace()...
+
+    PmrWorkspacesWindowSynchronizeDialogItems newItems = populateModel(mWorkspace->rootFileNode());
+
+    // Delete old unused items
+
+    PmrWorkspacesWindowSynchronizeDialogItems oldItemsToDelete = PmrWorkspacesWindowSynchronizeDialogItems();
+
+    foreach (PmrWorkspacesWindowSynchronizeDialogItem *oldItem, oldItems) {
+        if (!newItems.contains(oldItem))
+            oldItemsToDelete << oldItem;
+    }
+
+    foreach (PmrWorkspacesWindowSynchronizeDialogItem *oldItemsToDelete, oldItemsToDelete) {
+        mModel->invisibleRootItem()->removeRow(oldItemsToDelete->row());
+
+        mDiffHtmls.remove(oldItemsToDelete->text());
+        mCellmlDiffHtmls.remove(oldItemsToDelete->text());
+    }
+
+    // Update our diff information, if needed
+
+    if (mNeedUpdateDiffInformation) {
+        mNeedUpdateDiffInformation = false;
+
+        updateDiffInformation();
+    }
 }
 
 //==============================================================================
@@ -394,6 +604,260 @@ void PmrWorkspacesWindowSynchronizeDialog::acceptSynchronization()
     // Confirm that we accept the synchronisation
 
     done(QMessageBox::Ok);
+}
+
+//==============================================================================
+
+bool PmrWorkspacesWindowSynchronizeDialog::cellmlText(const QString &pFileName,
+                                                      QString &pCellmlText)
+{
+    // Try to generate the CellML Text version of the given CellML file
+
+    if (!Core::exec(qApp->applicationFilePath(),
+                    QStringList() << "-c"
+                                  << "CellMLTextView::import"
+                                  << pFileName,
+                    pCellmlText)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
+                                                       const QString &pNew)
+{
+    // Return the diff between the given old and new strings
+
+    typedef diff_match_patch<std::wstring> DiffMatchPatch;
+
+    DiffMatchPatch diffMatchPatch;
+    DiffMatchPatch::Diffs diffs = diffMatchPatch.diff_main(pOld.toStdWString(), pNew.toStdWString());
+
+    diffMatchPatch.diff_cleanupEfficiency(diffs);
+
+    std::wstring html = L"<pre>";
+    std::wstring text = std::wstring();
+
+    for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
+         diffIterator != endDiffIterator; ++diffIterator) {
+        std::wstring::size_type textSize = (*diffIterator).text.size();
+        std::wstring::const_pointer i;
+        std::wstring::const_pointer iMax;
+
+        for (i = (*diffIterator).text.c_str(), iMax = i+textSize; i != iMax; ++i) {
+            switch (*i) {
+            case L'<':
+            case L'>':
+                textSize += 3;
+
+                break;
+            case L'&':
+                textSize += 4;
+
+                break;
+            }
+        }
+
+        if (textSize == (*diffIterator).text.size()) {
+            text = (*diffIterator).text;
+        } else {
+            text.clear();
+            text.reserve(textSize);
+
+            for (i = (*diffIterator).text.c_str(); i != iMax; ++i) {
+                switch (*i) {
+                case L'<':
+                    text += L"&lt;";
+
+                    break;
+                case L'>':
+                    text += L"&gt;";
+
+                    break;
+                case L'&':
+                    text += L"&amp;";
+
+                    break;
+                default:
+                    text += *i;
+                }
+            }
+        }
+
+        switch ((*diffIterator).operation) {
+        case DiffMatchPatch::EQUAL:
+            html += text;
+
+            break;
+        case DiffMatchPatch::INSERT:
+            html += L"<span class=\"insert\">"+text+L"</span>";
+
+            break;
+        case DiffMatchPatch::DELETE:
+            html += L"<span class=\"delete\">"+text+L"</span>";
+
+            break;
+        }
+    }
+
+    html += L"</pre>";
+
+    return QString::fromStdWString(html);
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
+{
+    // Temporarily save the contents of the head version of the given file
+
+    QString oldFileName = Core::temporaryFileName();
+    QString oldFileContents = mWorkspace->headFileContents(QDir(mWorkspace->path()).relativeFilePath(pFileName));
+
+    Core::writeFileContentsToFile(oldFileName, oldFileContents);
+
+    // Retrieve the contents of the working version of the given file
+
+    QString newFileContents;
+
+    Core::readFileContentsFromFile(pFileName, newFileContents);
+
+    // Check whether both the head and working versions of the given file are
+    // text files
+    // Note: to retrieve the contents of a binary file may result in an empty
+    //       string, so if we both the old and new contents is empty it means
+    //       that we are dealing with a binary file...
+
+    QString res = QString();
+    bool oldFileEmpty = oldFileContents.isEmpty();
+    bool newFileEmpty = newFileContents.isEmpty();
+
+    if (   !(oldFileEmpty && newFileEmpty)
+        &&  (oldFileEmpty || Core::isTextFile(oldFileName))
+        &&  (newFileEmpty || Core::isTextFile(pFileName))) {
+        // Both versions of the given file are not text files, so check whether
+        // they are also CellML files
+
+        if (   mWebViewerCellmlTextFormatAction->isChecked()
+            && !mInvalidCellmlCode.contains(oldFileContents)
+            && !mInvalidCellmlCode.contains(newFileContents)
+            && (oldFileEmpty || CellMLSupport::CellmlFileManager::instance()->isCellmlFile(oldFileName))
+            && (newFileEmpty || CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName))) {
+            // We are dealing with a CellML file, so generate the CellML Text
+            // version of the file, this for both its head and working versions,
+            // and if successful then diff them
+
+            QString oldCellmlTextContents = QString();
+            QString newCellmlTextContents = QString();
+
+            if (   (oldFileEmpty || cellmlText(oldFileName, oldCellmlTextContents))
+                && (newFileEmpty || cellmlText(pFileName, newCellmlTextContents))) {
+                res = diffHtml(oldCellmlTextContents, newCellmlTextContents);
+
+                mCellmlDiffHtmls.insert(pFileName, res);
+            } else {
+                // The conversion failed, so keep track of that fact (so as not
+                // to try to convert everytime this file gets selected)
+
+                if (!oldFileEmpty)
+                    mInvalidCellmlCode << oldFileContents;
+
+                if (!newFileEmpty)
+                    mInvalidCellmlCode << newFileContents;
+            }
+        }
+
+        // At this stage, if we haven't got any diff information then it means
+        // that we are either dealing with a text file, that we don't want to
+        // use the CellML Text format or that we couldn't convert both the head
+        // and working versions of the file to CellML Text format, in which case
+        // we diff their raw contents
+
+        if (res.isEmpty()) {
+            res = diffHtml(oldFileContents, newFileContents);
+
+            mDiffHtmls.insert(pFileName, res);
+        }
+    } else {
+        // We are dealing with a binary file
+
+        res = "<pre><span class=\"warning\">["+tr("Binary File")+"]</span></pre>";
+
+        mDiffHtmls.insert(pFileName, res);
+    }
+
+    QFile::remove(oldFileName);
+
+    return res;
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
+{
+    // If there are no selected indexes then select the indexes that were
+    // previously selected otherwise retrieve the file name of the selected
+    // indexes and see whether we have already computed their differences, and
+    // then show those differences
+
+    QModelIndexList indexes = mChangesValue->selectionModel()->selectedIndexes();
+
+    if (indexes.isEmpty()) {
+        // No selected indexes, so select the previously selected indexes
+
+        foreach (const QModelIndex &index, mPreviouslySelectedIndexes)
+            mChangesValue->selectionModel()->select(index, QItemSelectionModel::Select);
+    } else {
+        // We have some selected indexes, so keep track of them
+
+        mPreviouslySelectedIndexes = indexes;
+
+        // Go through each selected index and retrieve its differences, if it
+        // hasn't already been done, and show them (respecting the order in whic
+        // they are listed)
+
+        QString html = QString();
+        bool oneFile = indexes.count() == 1;
+        bool firstFile = true;
+
+        for (int i = 0, iMax = mProxyModel->rowCount(); i < iMax; ++i) {
+            QModelIndex index = mProxyModel->index(i, 0);
+
+            if (indexes.contains(index)) {
+                // Try to retrieve the diff for the CellML Text based version
+                // or, failing that, the diff for the raw version and if that
+                // still fails, we compute the diff
+
+                QString fileName = mModel->itemFromIndex(mProxyModel->mapToSource(index))->text();
+                QString fileDiffHtml = mWebViewerCellmlTextFormatAction->isChecked()?
+                                           mCellmlDiffHtmls.value(fileName):
+                                           mDiffHtmls.value(fileName);
+
+                if (   !mWebViewerCellmlTextFormatAction->isChecked()
+                    &&  fileDiffHtml.isEmpty()) {
+                    fileDiffHtml = mDiffHtmls.value(fileName);
+                }
+
+                if (fileDiffHtml.isEmpty())
+                    fileDiffHtml = diffHtml(fileName);
+
+                if (!oneFile && !firstFile)
+                    html += "<br>";
+
+                if (!oneFile)
+                    html += "<div>"+fileName+"</div>";
+
+                html += fileDiffHtml;
+
+                firstFile = false;
+            }
+        }
+
+        mWebViewer->webView()->setHtml(mDiffTemplate.arg(html));
+    }
 }
 
 //==============================================================================

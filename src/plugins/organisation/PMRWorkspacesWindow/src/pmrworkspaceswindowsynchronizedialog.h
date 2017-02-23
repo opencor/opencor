@@ -28,13 +28,16 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QMap>
+#include <QModelIndexList>
+#include <QStandardItem>
+
+//==============================================================================
+
 class QCheckBox;
 class QDialogButtonBox;
-class QLabel;
 class QListView;
 class QSortFilterProxyModel;
-class QStandardItem;
-class QStandardItemModel;
 class QTextEdit;
 
 //==============================================================================
@@ -57,7 +60,30 @@ namespace PMRSupport {
 
 //==============================================================================
 
+namespace WebViewerWidget {
+    class WebViewerWidget;
+}   // namespace WebViewerWidget
+
+//==============================================================================
+
 namespace PMRWorkspacesWindow {
+
+//==============================================================================
+
+class PmrWorkspacesWindowSynchronizeDialogItem : public QStandardItem
+{
+public:
+    explicit PmrWorkspacesWindowSynchronizeDialogItem(PMRSupport::PmrWorkspaceFileNode *pFileNode);
+
+    PMRSupport::PmrWorkspaceFileNode * fileNode() const;
+
+private:
+    PMRSupport::PmrWorkspaceFileNode *mFileNode;
+};
+
+//==============================================================================
+
+typedef QList<PmrWorkspacesWindowSynchronizeDialogItem *> PmrWorkspacesWindowSynchronizeDialogItems;
 
 //==============================================================================
 
@@ -68,6 +94,7 @@ class PmrWorkspacesWindowSynchronizeDialog : public Core::Dialog
 public:
     explicit PmrWorkspacesWindowSynchronizeDialog(const QString &pSettingsGroup,
                                                   PMRSupport::PmrWorkspace *pWorkspace,
+                                                  QTimer *pTimer,
                                                   QWidget *pParent);
     ~PmrWorkspacesWindowSynchronizeDialog();
 
@@ -81,30 +108,55 @@ protected:
 private:
     QString mSettingsGroup;
 
-    Core::SplitterWidget *mSplitter;
+    PMRSupport::PmrWorkspace *mWorkspace;
+
+    QString mDiffTemplate;
+
+    Core::SplitterWidget *mHorizontalSplitter;
+    Core::SplitterWidget *mVerticalSplitter;
 
     QStandardItemModel *mModel;
     QSortFilterProxyModel *mProxyModel;
 
     QTextEdit *mMessageValue;
-
-    QLabel *mChangesLabel;
     QListView *mChangesValue;
+
+    WebViewerWidget::WebViewerWidget *mWebViewer;
+    QAction *mWebViewerCellmlTextFormatAction;
 
     QCheckBox *mSelectAllChangesCheckBox;
 
     QDialogButtonBox *mButtonBox;
 
-    void populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode,
-                       const bool &pRootFileNode = false);
+    QMap<QString, QString> mSha1s;
+
+    QMap<QString, QString> mDiffHtmls;
+    QMap<QString, QString> mCellmlDiffHtmls;
+
+    QModelIndexList mPreviouslySelectedIndexes;
+
+    QStringList mInvalidCellmlCode;
+
+    bool mNeedUpdateDiffInformation;
+
+    PmrWorkspacesWindowSynchronizeDialogItems populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode);
+
+    bool cellmlText(const QString &pFileName, QString &pCellmlText);
+
+    QString diffHtml(const QString &pOld, const QString &pNew);
+    QString diffHtml(const QString &pFileName);
 
 private slots:
+    void refreshChanges();
+
     void updateSelectAllChangesCheckBox(QStandardItem *pItem = 0);
     void selectAllChangesCheckBoxClicked();
 
     void updateOkButton();
 
     void acceptSynchronization();
+
+    void updateDiffInformation();
 };
 
 //==============================================================================

@@ -33,6 +33,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include "git2/blob.h"
 #include "git2/clone.h"
 #include "git2/commit.h"
 #include "git2/errors.h"
@@ -718,6 +719,64 @@ void PmrWorkspace::synchronize(const bool &pPush)
     }
 
     emit workspaceSynchronized(this);
+}
+
+//==============================================================================
+
+QByteArray PmrWorkspace::headFileContents(const QString &pFileName)
+{
+    // Retrieve the contents of the given file name at the HEAD revision
+    // Note: the below code is based on Repository::GetHeadBlob() from git-utils
+    //       (see https://github.com/atom/git-utils)...
+
+    git_reference *head;
+
+    if (git_repository_head(&head, mGitRepository) != GIT_OK)
+        return QByteArray();
+
+    const git_oid *sha = git_reference_target(head);
+    git_commit *commit;
+    int commitStatus = git_commit_lookup(&commit, mGitRepository, sha);
+
+    git_reference_free(head);
+
+    if (commitStatus != GIT_OK)
+        return QByteArray();
+
+    git_tree *tree;
+    int treeStatus = git_commit_tree(&tree, commit);
+
+    git_commit_free(commit);
+
+    if (treeStatus != GIT_OK)
+        return QByteArray();
+
+    git_tree_entry *treeEntry;
+    QByteArray fileNameByteArray = pFileName.toUtf8();
+
+    if (git_tree_entry_bypath(&treeEntry, tree, fileNameByteArray.constData()) != GIT_OK) {
+        git_tree_free(tree);
+
+        return QByteArray();
+    }
+
+    git_blob *blob = 0;
+    const git_oid *blobSha = git_tree_entry_id(treeEntry);
+
+    if (blobSha && (git_blob_lookup(&blob, mGitRepository, blobSha) != GIT_OK))
+        blob = 0;
+
+    git_tree_entry_free(treeEntry);
+    git_tree_free(tree);
+
+    if (!blob)
+        return QByteArray();
+
+    QByteArray res(static_cast<const char *>(git_blob_rawcontent(blob)), git_blob_rawsize(blob));
+
+    git_blob_free(blob);
+
+    return res;
 }
 
 //==============================================================================

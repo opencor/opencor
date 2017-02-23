@@ -121,7 +121,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        position: fixed;");
     document.write("        top: 29px;");
     document.write("        right: 0px;");
-    document.write("        background-color: rgb(249, 249, 249);");
+    document.write("        background: rgb(249, 249, 249);");
     document.write("        border: 2px solid rgb("+r+", "+g+", "+b+");");
     document.write("        border-top-style: none;");
     document.write("        border-radius: 0px 0px 5px 5px;");
@@ -140,7 +140,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("    }");
     document.write("");
     document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover {");
-    document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.79);");
+    document.write("        background: rgba("+r+", "+g+", "+b+", 0.79);");
     document.write("    }");
     document.write("");
     document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover,");
@@ -149,11 +149,11 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("    }");
     document.write("");
     document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem.clickableMenuItem:hover {");
-    document.write("        background-color: rgb(249, 249, 249);");
+    document.write("        background: rgb(249, 249, 249);");
     document.write("    }");
     document.write("");
     document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem.clickableMenuItem > div:hover {");
-    document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.79);");
+    document.write("        background: rgba("+r+", "+g+", "+b+", 0.79);");
     document.write("    }");
     document.write("");
     document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem.clickableMenuItem > div:hover,");
@@ -178,7 +178,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("");
     document.write("    ul.contentsMenu > li > ul > li div.nonClickableMenuItem > div a {");
     document.write("        cursor: default;");
-    document.write("        background-color: rgb(249, 249, 249);");
+    document.write("        background: rgb(249, 249, 249);");
     document.write("        color: rgb(0, 0, 0);");
     document.write("    }");
     document.write("");
@@ -188,7 +188,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("");
     document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div a,");
     document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div.subMenuButton {");
-    document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.13);");
+    document.write("        background: rgba("+r+", "+g+", "+b+", 0.13);");
     document.write("        color: rgb("+r+", "+g+", "+b+");");
     document.write("    }");
     document.write("");

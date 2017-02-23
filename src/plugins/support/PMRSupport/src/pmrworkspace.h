@@ -90,6 +90,8 @@ public:
     bool open(const QString &pPath, const bool &pRefreshStatus = true);
     void synchronize(const bool &pPush);
 
+    QByteArray headFileContents(const QString &pFileName);
+
     enum WorkspaceStatus {
         StatusUnknown  = 0,
         StatusAhead    = 1,

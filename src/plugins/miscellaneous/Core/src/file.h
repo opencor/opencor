@@ -74,7 +74,9 @@ public:
 
     Status check();
 
-    QString sha1(const QString &pFileName = QString()) const;
+    static QString sha1(const QString &pFileName);
+
+    QString sha1() const;
 
     void reset(const bool &pResetDependencies = true);
 
