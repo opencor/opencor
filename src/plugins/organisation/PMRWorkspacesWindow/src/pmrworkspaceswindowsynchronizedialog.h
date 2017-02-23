@@ -128,12 +128,16 @@ private:
 
     QDialogButtonBox *mButtonBox;
 
+    QMap<QString, QString> mSha1s;
+
     QMap<QString, QString> mDiffHtmls;
     QMap<QString, QString> mCellmlDiffHtmls;
 
     QModelIndexList mPreviouslySelectedIndexes;
 
     QStringList mInvalidCellmlCode;
+
+    bool mNeedUpdateDiffInformation;
 
     PmrWorkspacesWindowSynchronizeDialogItems populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode);
 

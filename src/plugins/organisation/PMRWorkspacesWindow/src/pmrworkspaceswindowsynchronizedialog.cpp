@@ -24,6 +24,7 @@ limitations under the License.
 #include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
+#include "file.h"
 #include "i18ninterface.h"
 #include "pmrworkspace.h"
 #include "pmrworkspaceswindowsynchronizedialog.h"
@@ -91,10 +92,12 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     Core::Dialog(pParent),
     mSettingsGroup(pSettingsGroup),
     mWorkspace(pWorkspace),
+    mSha1s(QMap<QString, QString>()),
     mDiffHtmls(QMap<QString, QString>()),
     mCellmlDiffHtmls(QMap<QString, QString>()),
     mPreviouslySelectedIndexes(QModelIndexList()),
-    mInvalidCellmlCode(QStringList())
+    mInvalidCellmlCode(QStringList()),
+    mNeedUpdateDiffInformation(false)
 {
     // Set both our object name and title
 
@@ -414,15 +417,28 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
 
             if ((status != '\0') && (status != ' ')) {
                 // This is a changed file, so check whether we already know
-                // about it
+                // about it and, if so, whether its SHA-1 is still the same and
+                // if that's not the case then reset a few things
 
                 PmrWorkspacesWindowSynchronizeDialogItem *fileItem = 0;
+                QString fileName = fileNode->path();
+                QString sha1 = Core::File::sha1(fileName);
 
                 for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
                     PmrWorkspacesWindowSynchronizeDialogItem *item = static_cast<PmrWorkspacesWindowSynchronizeDialogItem *>(mModel->invisibleRootItem()->child(i));
 
                     if (item->fileNode() == fileNode) {
                         fileItem = item;
+
+                        if (sha1.compare(mSha1s.value(fileName))) {
+                            mSha1s.insert(fileName, sha1);
+
+                            mDiffHtmls.remove(fileName);
+                            mCellmlDiffHtmls.remove(fileName);
+
+                            if (mChangesValue->selectionModel()->isSelected(mProxyModel->mapFromSource(item->index())))
+                                mNeedUpdateDiffInformation = true;
+                        }
 
                         break;
                     }
@@ -436,9 +452,11 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
                     fileItem->setCheckable(true);
                     fileItem->setCheckState(Qt::Checked);
                     fileItem->setEditable(false);
-                    fileItem->setToolTip(fileNode->path());
+                    fileItem->setToolTip(fileName);
 
                     mModel->appendRow(fileItem);
+
+                    mSha1s.insert(fileName, sha1);
                 }
 
                 res << fileItem;
@@ -507,6 +525,14 @@ void PmrWorkspacesWindowSynchronizeDialog::refreshChanges()
 
         mDiffHtmls.remove(oldItemsToDelete->text());
         mCellmlDiffHtmls.remove(oldItemsToDelete->text());
+    }
+
+    // Update our diff information, if needed
+
+    if (mNeedUpdateDiffInformation) {
+        mNeedUpdateDiffInformation = false;
+
+        updateDiffInformation();
     }
 }
 
