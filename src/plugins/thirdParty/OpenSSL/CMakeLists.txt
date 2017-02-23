@@ -43,11 +43,16 @@ SET(FULL_INSTALL_DIR ${PROJECT_SOURCE_DIR}/${RELATIVE_INSTALL_DIR})
 
 # Specify the files that will have their SHA1 checked when packaged
 
-SET(CHECKED_FILES lib/${CRYPTO_SHARED_LIBRARY})
-LIST(APPEND CHECKED_FILES lib/${SSL_SHARED_LIBRARY})
+SET(CHECKED_FILES
+    lib/${CRYPTO_SHARED_LIBRARY}
+    lib/${SSL_SHARED_LIBRARY}
+)
+
 IF(WIN32)
-    LIST(APPEND CHECKED_FILES lib/${CRYPTO_LINK_LIBRARY})
-    LIST(APPEND CHECKED_FILES lib/${SSL_LINK_LIBRARY})
+    LIST(APPEND CHECKED_FILES
+        lib/${CRYPTO_LINK_LIBRARY}
+        lib/${SSL_LINK_LIBRARY}
+    )
 ENDIF()
 
 # Use our pre-built version unless instructed otherwise
@@ -137,21 +142,29 @@ ELSE()
 
     SET(OPENSSL_BUILD_DIR ${PROJECT_SOURCE_DIR}/OpenSSL)
 
-    ExternalProject_Add(
-        OpenSSLBuild
-        DOWNLOAD_DIR ${OPENSSL_BUILD_DIR}
-        SOURCE_DIR ${OPENSSL_BUILD_DIR}
-        BINARY_DIR ${OPENSSL_BUILD_DIR}
-        INSTALL_DIR ${FULL_INSTALL_DIR}
-        GIT_REPOSITORY https://github.com/openssl/openssl
-        GIT_TAG ${OPENSSL_GIT_TAG}
-        CONFIGURE_COMMAND ${PERL_EXECUTABLE} ./Configure ${PLATFORM} ${CONFIG_OPTIONS}
-        BUILD_COMMAND ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE}
-        INSTALL_COMMAND ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE} ${INSTALL_TARGET}
+    ExternalProject_Add(OpenSSLBuild
+        DOWNLOAD_DIR
+            ${OPENSSL_BUILD_DIR}
+        SOURCE_DIR
+            ${OPENSSL_BUILD_DIR}
+        BINARY_DIR
+            ${OPENSSL_BUILD_DIR}
+        INSTALL_DIR
+            ${FULL_INSTALL_DIR}
+        GIT_REPOSITORY
+            https://github.com/openssl/openssl
+        GIT_TAG
+            ${OPENSSL_GIT_TAG}
+        CONFIGURE_COMMAND
+            ${PERL_EXECUTABLE} ./Configure ${PLATFORM} ${CONFIG_OPTIONS}
+        BUILD_COMMAND
+            ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE}
+        INSTALL_COMMAND
+            ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE} ${INSTALL_TARGET}
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${CRYPTO_LINK_LIBRARY}
             <INSTALL_DIR>/lib/${SSL_LINK_LIBRARY}
-        )
+    )
 
     IF(WIN32)
         # Windows build has a post configuration step
@@ -163,7 +176,7 @@ ELSE()
             WORKING_DIRECTORY ${OPENSSL_BUILD_DIR}
             DEPENDEES configure
             DEPENDERS build
-            )
+        )
 
         # Our plugin code expects the DLLs in the same directory as the import libraries.
 
@@ -172,7 +185,7 @@ ELSE()
             COMMAND ${CMAKE_COMMAND} -E copy bin/${SSL_SHARED_LIBRARY} lib
             WORKING_DIRECTORY ${FULL_INSTALL_DIR}
             DEPENDEES install
-            )
+        )
     ELSE()
         # Fix up the newly created libraries
 
@@ -182,7 +195,7 @@ ELSE()
             COMMAND chmod 755 ${SSL_SHARED_LIBRARY}
             WORKING_DIRECTORY ${FULL_INSTALL_DIR}/lib
             DEPENDEES install
-            )
+        )
 
         IF(APPLE)
             ExternalProject_Add_Step(OpenSSLBuild SetRPath
@@ -194,7 +207,7 @@ ELSE()
                                                   ${SSL_SHARED_LIBRARY}
                 WORKING_DIRECTORY ${FULL_INSTALL_DIR}/lib
                 DEPENDEES FixupLibrary
-                )
+            )
         ENDIF()
     ENDIF()
 
@@ -205,7 +218,7 @@ ELSE()
         PACKAGED_FILES include ${CHECKED_FILES}
         CHECKED_FILES ${CHECKED_FILES}
         TARGET OpenSSLBuild
-        )
+    )
 
     SET(PLUGIN_DEPENDS_ON OpenSSLBuild)
 ENDIF()
@@ -241,4 +254,4 @@ ADD_PLUGIN(OpenSSL
         ${FULL_INSTALL_DIR}/lib
     DEPENDS
         ${PLUGIN_DEPENDS_ON}
-    )
+)

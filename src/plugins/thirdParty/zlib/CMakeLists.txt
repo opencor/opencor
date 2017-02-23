@@ -95,13 +95,17 @@ ELSE()
 
     # Build zlib as an external project
 
-    ExternalProject_Add(
-        zlibBuild
-        SOURCE_DIR ${PROJECT_SOURCE_DIR}/zlib
-        INSTALL_DIR ${FULL_INSTALL_DIR}
-        GIT_REPOSITORY https://github.com/madler/zlib.git
-        GIT_TAG ${ZLIB_GIT_TAG}
-        PATCH_COMMAND ${CMAKE_COMMAND} -E remove <SOURCE_DIR>/zconf.h
+    ExternalProject_Add(zlibBuild
+        SOURCE_DIR
+            ${PROJECT_SOURCE_DIR}/zlib
+        INSTALL_DIR
+            ${FULL_INSTALL_DIR}
+        GIT_REPOSITORY
+            https://github.com/madler/zlib.git
+        GIT_TAG
+            ${ZLIB_GIT_TAG}
+        PATCH_COMMAND
+            ${CMAKE_COMMAND} -E remove <SOURCE_DIR>/zconf.h
         CMAKE_CACHE_ARGS
             -DCMAKE_C_FLAGS:STRING=${ZLIB_C_FLAGS}
         CMAKE_ARGS
