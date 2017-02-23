@@ -57,17 +57,17 @@ IF(USE_PREBUILT_ZLIB_PLUGIN)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-                zlib ${ZLIB_PACKAGE_VERSION} 7194c3b2dd6bd7ff0527f2233d2af79b4a14e5ba
+                zlib ${ZLIB_PACKAGE_VERSION} 7889eca3e358a6c54642f01483fa0999f9f3f717
                 CHECKED_FILES ${CHECKED_FILES}
-                SHA1_VALUES 6a20d25d86b04f05ce3a7522b55e0aa72b371d67
-                            44029c49007f9f4763cc24697f5a844703fc60e3
+                SHA1_VALUES 03b94c543a4651377bd005a561ca853dab903c9f
+                            f5b50d90adbb9086d01367200e455b45021c8256
             )
         ELSE()
             RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-                zlib ${ZLIB_PACKAGE_VERSION} 247cc1f804aa2e39ca12639428cab963ed5a2288
+                zlib ${ZLIB_PACKAGE_VERSION} 874238c4e904377e93e5d09a63381c0b8b117a4e
                 CHECKED_FILES ${CHECKED_FILES}
-                SHA1_VALUES 28c247df6eb273f0054307a2e7eb8acf15b56509
-                            7bca1863a471c08a27bca8d5a6739cc835966195
+                SHA1_VALUES 542a8569e38fdeff822089873de4b43860cf2aed
+                            f9f37ea9e9e5f13ae47d86c094e36f0caae77755
             )
         ENDIF()
     ELSEIF(APPLE)
