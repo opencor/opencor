@@ -5,7 +5,7 @@ PROJECT(PythonPlugin)
 # that the correct package archive is retrieved when the build configuration
 # is changed (e.g. by changing the git branch).
 
-SET(BUILD_NUMBER 1)
+SET(BUILD_NUMBER 3)
 
 # Specify the version of Python we are using.
 
@@ -15,8 +15,8 @@ SET(PYTHON_NUMERIC_VERSION 35)
 
 # The versions of the Python packages we bundle.
 
+SET(NUMPY_VERSION 1.12.0)
 SET(MATPLOTLIB_VERSION 1.5.3)
-SET(NUMPY_VERSION 1.11.2)
 SET(SCIPY_VERSION 0.18.1)
 
 # We use our own copies of some Windows packages from
