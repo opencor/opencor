@@ -30,6 +30,7 @@ limitations under the License.
 
 #include <QMap>
 #include <QModelIndexList>
+#include <QStandardItem>
 
 //==============================================================================
 
@@ -37,8 +38,6 @@ class QCheckBox;
 class QDialogButtonBox;
 class QListView;
 class QSortFilterProxyModel;
-class QStandardItem;
-class QStandardItemModel;
 class QTextEdit;
 
 //==============================================================================
@@ -71,6 +70,23 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
+class PmrWorkspacesWindowSynchronizeDialogItem : public QStandardItem
+{
+public:
+    explicit PmrWorkspacesWindowSynchronizeDialogItem(PMRSupport::PmrWorkspaceFileNode *pFileNode);
+
+    PMRSupport::PmrWorkspaceFileNode * fileNode() const;
+
+private:
+    PMRSupport::PmrWorkspaceFileNode *mFileNode;
+};
+
+//==============================================================================
+
+typedef QList<PmrWorkspacesWindowSynchronizeDialogItem *> PmrWorkspacesWindowSynchronizeDialogItems;
+
+//==============================================================================
+
 class PmrWorkspacesWindowSynchronizeDialog : public Core::Dialog
 {
     Q_OBJECT
@@ -78,6 +94,7 @@ class PmrWorkspacesWindowSynchronizeDialog : public Core::Dialog
 public:
     explicit PmrWorkspacesWindowSynchronizeDialog(const QString &pSettingsGroup,
                                                   PMRSupport::PmrWorkspace *pWorkspace,
+                                                  QTimer *pTimer,
                                                   QWidget *pParent);
     ~PmrWorkspacesWindowSynchronizeDialog();
 
@@ -116,7 +133,7 @@ private:
 
     QModelIndexList mPreviouslySelectedIndexes;
 
-    void populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode);
+    PmrWorkspacesWindowSynchronizeDialogItems populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode);
 
     QString diffHtml(const QString &pOld, const QString &pNew);
     QString diffHtml(const QString &pFileName);
@@ -125,6 +142,8 @@ private:
     QString cellmlDiffHtml(const QString &pFileName);
 
 private slots:
+    void refreshChanges();
+
     void updateSelectAllChangesCheckBox(QStandardItem *pItem = 0);
     void selectAllChangesCheckBoxClicked();
 

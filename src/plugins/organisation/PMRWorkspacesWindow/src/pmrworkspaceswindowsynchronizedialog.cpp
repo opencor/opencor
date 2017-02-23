@@ -46,6 +46,7 @@ limitations under the License.
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include <QTextEdit>
+#include <QTimer>
 #include <QVBoxLayout>
 #include <QWebView>
 
@@ -60,6 +61,23 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
+PmrWorkspacesWindowSynchronizeDialogItem::PmrWorkspacesWindowSynchronizeDialogItem(PMRSupport::PmrWorkspaceFileNode *pFileNode) :
+    QStandardItem(pFileNode->path()),
+    mFileNode(pFileNode)
+{
+}
+
+//==============================================================================
+
+PMRSupport::PmrWorkspaceFileNode * PmrWorkspacesWindowSynchronizeDialogItem::fileNode() const
+{
+    // Return our file node
+
+    return mFileNode;
+}
+
+//==============================================================================
+
 static const auto SettingsCellmlTextFormatSupport = QStringLiteral("CellmlTextFormatSupport");
 static const auto SettingsHorizontalSplitterSizes = QStringLiteral("HorizontalSplitterSizes");
 static const auto SettingsVerticalSplitterSizes   = QStringLiteral("VerticalSplitterSizes");
@@ -68,6 +86,7 @@ static const auto SettingsVerticalSplitterSizes   = QStringLiteral("VerticalSpli
 
 PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const QString &pSettingsGroup,
                                                                            PMRSupport::PmrWorkspace *pWorkspace,
+                                                                           QTimer *pTimer,
                                                                            QWidget *pParent) :
     Core::Dialog(pParent),
     mSettingsGroup(pSettingsGroup),
@@ -267,6 +286,9 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     // Connect some signals
 
+    connect(pTimer, SIGNAL(timeout()),
+            this, SLOT(refreshChanges()));
+
     connect(mMessageValue, SIGNAL(textChanged()),
             this, SLOT(updateOkButton()));
 
@@ -373,28 +395,57 @@ void PmrWorkspacesWindowSynchronizeDialog::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode)
+PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::populateModel(PMRSupport::PmrWorkspaceFileNode *pFileNode)
 {
     // List all the files that have changed
 
+    PmrWorkspacesWindowSynchronizeDialogItems res = PmrWorkspacesWindowSynchronizeDialogItems();
+
     foreach (PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
         if (fileNode->hasChildren()) {
-            populateModel(fileNode);
+            // This is a folder, so populate ourselves with its children
+
+            res << populateModel(fileNode);
         } else {
+            // This is a file, so check whether it has changes
+
             QChar status = fileNode->status().second;
 
             if ((status != '\0') && (status != ' ')) {
-                QStandardItem *fileItem = new QStandardItem(fileNode->path());
+                // This is a changed file, so check whether we already know
+                // about it
 
-                fileItem->setCheckable(true);
-                fileItem->setCheckState(Qt::Checked);
-                fileItem->setEditable(false);
-                fileItem->setToolTip(fileNode->path());
+                PmrWorkspacesWindowSynchronizeDialogItem *fileItem = 0;
 
-                mModel->appendRow(fileItem);
+                for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+                    PmrWorkspacesWindowSynchronizeDialogItem *item = static_cast<PmrWorkspacesWindowSynchronizeDialogItem *>(mModel->invisibleRootItem()->child(i));
+
+                    if (item->fileNode() == fileNode) {
+                        fileItem = item;
+
+                        break;
+                    }
+                }
+
+                // Create a new item, if needed
+
+                if (!fileItem) {
+                    fileItem = new PmrWorkspacesWindowSynchronizeDialogItem(fileNode);
+
+                    fileItem->setCheckable(true);
+                    fileItem->setCheckState(Qt::Checked);
+                    fileItem->setEditable(false);
+                    fileItem->setToolTip(fileNode->path());
+
+                    mModel->appendRow(fileItem);
+                }
+
+                res << fileItem;
             }
         }
     }
+
+    return res;
 }
 
 //==============================================================================
@@ -422,6 +473,36 @@ QStringList PmrWorkspacesWindowSynchronizeDialog::fileNames() const
     }
 
     return res;
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowSynchronizeDialog::refreshChanges()
+{
+    // Keep track of our existing items
+
+    PmrWorkspacesWindowSynchronizeDialogItems oldItems = PmrWorkspacesWindowSynchronizeDialogItems();
+
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
+        oldItems << static_cast<PmrWorkspacesWindowSynchronizeDialogItem *>(mModel->invisibleRootItem()->child(i));
+
+    // Update our model by (re)populating it
+    // Note: we don't need to refresh the status of our workspace since it has
+    //       been done in PmrWorkspacesWindowWidget::refreshWorkspace()...
+
+    PmrWorkspacesWindowSynchronizeDialogItems newItems = populateModel(mWorkspace->rootFileNode());
+
+    // Delete old unused items
+
+    PmrWorkspacesWindowSynchronizeDialogItems oldItemsToDelete = PmrWorkspacesWindowSynchronizeDialogItems();
+
+    foreach (PmrWorkspacesWindowSynchronizeDialogItem *oldItem, oldItems) {
+        if (!newItems.contains(oldItem))
+            oldItemsToDelete << oldItem;
+    }
+
+    foreach (PmrWorkspacesWindowSynchronizeDialogItem *oldItemsToDelete, oldItemsToDelete)
+        mModel->invisibleRootItem()->removeRow(oldItemsToDelete->row());
 }
 
 //==============================================================================
