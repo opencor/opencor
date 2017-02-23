@@ -5,7 +5,7 @@ PROJECT(PythonPlugin)
 # that the correct package archive is retrieved when the build configuration
 # is changed (e.g. by changing the git branch).
 
-SET(BUILD_NUMBER 1)
+SET(BUILD_NUMBER 2)
 
 # Specify the version of Python we are using.
 
@@ -15,12 +15,11 @@ SET(PYTHON_NUMERIC_VERSION 35)
 
 # The versions of the Python packages we bundle.
 
+SET(IPYKERNEL_VERSION 4.5.2)
+SET(IPYTHON_VERSION 5.2.2)
 SET(MATPLOTLIB_VERSION 1.5.3)
 SET(NUMPY_VERSION 1.11.2)
 SET(SCIPY_VERSION 0.18.1)
-
-SET(IPYKERNEL_VERSION 4.5.2)
-SET(IPYTHON_VERSION 5.2.2)
 
 # Set the ABI flag and version identifier
 
@@ -101,10 +100,10 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            Python ${PYTHON_PACKAGE_VERSION} 313e10e8cb3e531eebbd784f42cda86b2ab6d19e
+            Python ${PYTHON_PACKAGE_VERSION} 7e5b5652a73413640f0e9e78eb55ac8fcc76c70f
             CHECKED_FILES ${CHECKED_FILES}
-            SHA1_VALUES 1adde662a808499970c2a3e3a34cce32195e5d7d
-                        025e6b1103c045c732e26a4215ca5d098d2357a1
+            SHA1_VALUES a0bd4e8fbe3e9aaf4d43f5211ffb03c07df50a72
+                        668d3b8c7948827a9b8fabf467e26f393bed4f0e
         )
     ELSE()
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
@@ -258,11 +257,15 @@ ELSE()
 
     # Patch matplotlib backend so that it works with PythonQt
 
-    ExternalProject_Add_Step(PythonBuild patch_matplotlib
+    ExternalProject_Add_Step(PythonBuild patch_packages
         COMMAND "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ./python -s ${PROJECT_SOURCE_DIR}/bin/patch.py
             --strip=2
             --directory=${FULL_INSTALL_DIR}/${PYTHON_LIBRARY_DIR}/site-packages/matplotlib
             ${PROJECT_SOURCE_DIR}/src/matplotlib_${MATPLOTLIB_VERSION}.diff
+        COMMAND "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ./python -s ${PROJECT_SOURCE_DIR}/bin/patch.py
+            --strip=1
+            --directory=${FULL_INSTALL_DIR}/${PYTHON_LIBRARY_DIR}/site-packages/IPython
+            ${PROJECT_SOURCE_DIR}/src/ipython_${IPYTHON_VERSION}.diff
         WORKING_DIRECTORY ${FULL_INSTALL_DIR}/bin
         DEPENDEES install_packages
         )
@@ -278,7 +281,7 @@ ELSE()
         COMMAND ${CMAKE_COMMAND} -E
             rename ${FULL_INSTALL_DIR}/lib/library.zip ${FULL_INSTALL_DIR}/lib/python${PYTHON_NUMERIC_VERSION}.zip
         WORKING_DIRECTORY ${FULL_INSTALL_DIR}/bin
-        DEPENDEES patch_matplotlib
+        DEPENDEES patch_packages
         )
 
     # Package Python's include files and libraries
