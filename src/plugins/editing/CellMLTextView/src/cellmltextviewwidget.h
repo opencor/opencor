@@ -160,7 +160,7 @@ private:
 
     QString mContentMathmlEquation;
 
-    void commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
+    bool commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
                                 const int &pLineNumber,
                                 const bool &pCommentLine);
 

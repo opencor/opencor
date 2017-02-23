@@ -700,7 +700,7 @@ static const int EndMultilineCommentLength    = EndMultilineCommentString.length
 
 //==============================================================================
 
-void CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
+bool CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
                                                   const int &pLineNumber,
                                                   const bool &pCommentLine)
 {
@@ -708,28 +708,31 @@ void CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaW
 
     QString line = pEditorWidget->text(pLineNumber).trimmed();
 
-    if (!line.isEmpty()) {
-        // We are not dealing with an empty line, so we can (un)comment it
+    if (line.isEmpty())
+        return false;
 
-        if (pCommentLine) {
-            pEditorWidget->insertAt(SingleLineCommentString, pLineNumber, 0);
-        } else {
-            // Uncomment the line, should it be commented
+    // We are not dealing with an empty line, so we can (un)comment it
 
-            if (line.startsWith(SingleLineCommentString)) {
-                int commentLineNumber, commentColumnNumber;
+    if (pCommentLine) {
+        pEditorWidget->insertAt(SingleLineCommentString, pLineNumber, 0);
+    } else {
+        // Uncomment the line, should it be commented
 
-                pEditorWidget->lineIndexFromPosition(pEditorWidget->findTextInRange(pEditorWidget->positionFromLineIndex(pLineNumber, 0),
-                                                                                    pEditorWidget->contentsSize(), SingleLineCommentString,
-                                                                                    false, false, false),
-                                                     &commentLineNumber, &commentColumnNumber);
+        if (line.startsWith(SingleLineCommentString)) {
+            int commentLineNumber, commentColumnNumber;
 
-                pEditorWidget->setSelection(commentLineNumber, commentColumnNumber,
-                                            commentLineNumber, commentColumnNumber+SingleLineCommentLength);
-                pEditorWidget->removeSelectedText();
-            }
+            pEditorWidget->lineIndexFromPosition(pEditorWidget->findTextInRange(pEditorWidget->positionFromLineIndex(pLineNumber, 0),
+                                                                                pEditorWidget->contentsSize(), SingleLineCommentString,
+                                                                                false, false, false),
+                                                 &commentLineNumber, &commentColumnNumber);
+
+            pEditorWidget->setSelection(commentLineNumber, commentColumnNumber,
+                                        commentLineNumber, commentColumnNumber+SingleLineCommentLength);
+            pEditorWidget->removeSelectedText();
         }
     }
+
+    return true;
 }
 
 //==============================================================================
@@ -896,20 +899,21 @@ void CellmlTextViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 
             bool commentLine = !editor->text(lineNumber).trimmed().startsWith(SingleLineCommentString);
 
-            commentOrUncommentLine(editor, lineNumber, commentLine);
+            if (commentOrUncommentLine(editor, lineNumber, commentLine)) {
+                if (commentLine) {
+                    // We commented the line, so our position will be fine
+                    // unless we were at the beginning of the line, in which
+                    // case we need to update it
 
-            if (commentLine) {
-                // We commented the line, so our position will be fine unless we
-                // were at the beginning of the line, in which case we need to
-                // update it
+                    if (!columnNumber)
+                        editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber+SingleLineCommentLength);
+                } else {
+                    // We uncommented the line, so go back to our original
+                    // position (since uncommenting the line will have shifted
+                    // it a bit)
 
-                if (!columnNumber)
-                    editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber+SingleLineCommentLength);
-            } else {
-                // We uncommented the line, so go back to our original position
-                // (since uncommenting the line will have shifted it a bit)
-
-                editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber-SingleLineCommentLength);
+                    editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber-SingleLineCommentLength);
+                }
             }
         }
 
