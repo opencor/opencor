@@ -20,7 +20,11 @@ limitations under the License.
 // Main
 //==============================================================================
 
-// The Python header must be included before Qt headers because of name clashes
+// We need to know the state of Q_OS_LINUX
+
+#include <Qt>
+
+// The Python header must be included before <QObject> because of name clashes
 
 #ifdef Q_OS_LINUX
     #include "Python.h"
