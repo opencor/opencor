@@ -625,7 +625,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             SET(FULL_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}")
 
-            IF(EXISTS ${FULL_EXTERNAL_BINARY})
+            # Only do a direct copy if the file exists and the plugin doesn't depend on any targets
+
+            IF(EXISTS ${FULL_EXTERNAL_BINARY} AND NOT "${ARG_DEPENDS}" STREQUAL "")
                 SET(COPY_TARGET DIRECT)
             ELSE()
                 SET(COPY_TARGET ${PROJECT_NAME})
