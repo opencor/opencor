@@ -345,7 +345,6 @@ ELSE()
 
     ExternalProject_Add_Step(PythonBuild install_matplotlib
         COMMAND ${PIP_EXECUTABLE} install --only-binary all
-            numpy==${NUMPY_VERSION}
             matplotlib==${MATPLOTLIB_VERSION}
         COMMAND ${PYTHON_EXECUTABLE} -s ${PROJECT_SOURCE_DIR}/bin/patch.py
             --strip=2
