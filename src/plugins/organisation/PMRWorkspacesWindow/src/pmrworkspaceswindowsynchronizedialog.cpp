@@ -181,6 +181,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     mVerticalSplitter->setCollapsible(0, false);
     mVerticalSplitter->setCollapsible(1, false);
+    mVerticalSplitter->setStretchFactor(1, 1);
 
     mHorizontalSplitter->addWidget(mVerticalSplitter);
 
