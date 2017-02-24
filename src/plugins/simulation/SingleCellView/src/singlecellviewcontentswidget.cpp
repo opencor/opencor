@@ -39,8 +39,7 @@ namespace SingleCellView {
 SingleCellViewContentsWidget::SingleCellViewContentsWidget(SingleCellViewPlugin *pPlugin,
                                                            SingleCellViewSimulationWidget *pSimulationWidget,
                                                            QWidget *pParent) :
-    QSplitter(pParent),
-    Core::CommonWidget(this)
+    Core::SplitterWidget(pParent)
 {
     // Keep track of our movement
 

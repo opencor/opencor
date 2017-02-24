@@ -1,6 +1,6 @@
 // The implementation of the Qt specific subclass of ScintillaBase.
 //
-// Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 //
 // This file is part of QScintilla.
 //
@@ -38,6 +38,7 @@
 #undef  SCEN_CHANGE
 #undef  SCN_AUTOCCANCELLED
 #undef  SCN_AUTOCCHARDELETED
+#undef  SCN_AUTOCCOMPLETED
 #undef  SCN_AUTOCSELECTION
 #undef  SCN_CALLTIPCLICK
 #undef  SCN_CHARADDED
@@ -53,6 +54,7 @@
 #undef  SCN_INDICATORRELEASE
 #undef  SCN_MACRORECORD
 #undef  SCN_MARGINCLICK
+#undef  SCN_MARGINRIGHTCLICK
 #undef  SCN_MODIFIED
 #undef  SCN_MODIFYATTEMPTRO
 #undef  SCN_NEEDSHOWN
@@ -69,6 +71,7 @@ enum
     SCEN_CHANGE = 768,
     SCN_AUTOCCANCELLED = 2025,
     SCN_AUTOCCHARDELETED = 2026,
+    SCN_AUTOCCOMPLETED = 2030,
     SCN_AUTOCSELECTION = 2022,
     SCN_CALLTIPCLICK = 2021,
     SCN_CHARADDED = 2001,
@@ -84,6 +87,7 @@ enum
     SCN_INDICATORRELEASE = 2024,
     SCN_MACRORECORD = 2009,
     SCN_MARGINCLICK = 2010,
+    SCN_MARGINRIGHTCLICK = 2031,
     SCN_MODIFIED = 2008,
     SCN_MODIFYATTEMPTRO = 2004,
     SCN_NEEDSHOWN = 2011,
@@ -290,7 +294,7 @@ void QsciScintillaQt::NotifyChange()
 
 // Notify interested parties of various events.  This is the main mapping
 // between Scintilla notifications and Qt signals.
-void QsciScintillaQt::NotifyParent(QSCI_SCI_NAMESPACE(SCNotification) scn)
+void QsciScintillaQt::NotifyParent(SCNotification scn)
 {
     switch (scn.nmhdr.code)
     {
@@ -306,7 +310,14 @@ void QsciScintillaQt::NotifyParent(QSCI_SCI_NAMESPACE(SCNotification) scn)
         emit qsb->SCN_AUTOCCHARDELETED();
         break;
 
+    case SCN_AUTOCCOMPLETED:
+        emit qsb->SCN_AUTOCCOMPLETED(scn.text, scn.lParam, scn.ch,
+                scn.listCompletionMethod);
+        break;
+
     case SCN_AUTOCSELECTION:
+        emit qsb->SCN_AUTOCSELECTION(scn.text, scn.lParam, scn.ch,
+                scn.listCompletionMethod);
         emit qsb->SCN_AUTOCSELECTION(scn.text, scn.lParam);
         break;
 
@@ -361,6 +372,11 @@ void QsciScintillaQt::NotifyParent(QSCI_SCI_NAMESPACE(SCNotification) scn)
 
     case SCN_MARGINCLICK:
         emit qsb->SCN_MARGINCLICK(scn.position, scn.modifiers, scn.margin);
+        break;
+
+    case SCN_MARGINRIGHTCLICK:
+        emit qsb->SCN_MARGINRIGHTCLICK(scn.position, scn.modifiers,
+                scn.margin);
         break;
 
     case SCN_MODIFIED:
@@ -418,6 +434,8 @@ void QsciScintillaQt::NotifyParent(QSCI_SCI_NAMESPACE(SCNotification) scn)
         break;
 
     case SCN_USERLISTSELECTION:
+        emit qsb->SCN_USERLISTSELECTION(scn.text, scn.wParam, scn.ch,
+                scn.listCompletionMethod);
         emit qsb->SCN_USERLISTSELECTION(scn.text, scn.wParam);
         break;
 

@@ -13,48 +13,48 @@ namespace Scintilla {
 
 class Decoration {
 public:
-	Decoration *next;
-	RunStyles rs;
-	int indicator;
+    Decoration *next;
+    RunStyles rs;
+    int indicator;
 
-	explicit Decoration(int indicator_);
-	~Decoration();
+    explicit Decoration(int indicator_);
+    ~Decoration();
 
-	bool Empty() const;
+    bool Empty() const;
 };
 
 class DecorationList {
-	int currentIndicator;
-	int currentValue;
-	Decoration *current;
-	int lengthDocument;
-	Decoration *DecorationFromIndicator(int indicator);
-	Decoration *Create(int indicator, int length);
-	void Delete(int indicator);
-	void DeleteAnyEmpty();
+    int currentIndicator;
+    int currentValue;
+    Decoration *current;
+    int lengthDocument;
+    Decoration *DecorationFromIndicator(int indicator);
+    Decoration *Create(int indicator, int length);
+    void Delete(int indicator);
+    void DeleteAnyEmpty();
 public:
-	Decoration *root;
-	bool clickNotified;
+    Decoration *root;
+    bool clickNotified;
 
-	DecorationList();
-	~DecorationList();
+    DecorationList();
+    ~DecorationList();
 
-	void SetCurrentIndicator(int indicator);
-	int GetCurrentIndicator() const { return currentIndicator; }
+    void SetCurrentIndicator(int indicator);
+    int GetCurrentIndicator() const { return currentIndicator; }
 
-	void SetCurrentValue(int value);
-	int GetCurrentValue() const { return currentValue; }
+    void SetCurrentValue(int value);
+    int GetCurrentValue() const { return currentValue; }
 
-	// Returns true if some values may have changed
-	bool FillRange(int &position, int value, int &fillLength);
+    // Returns true if some values may have changed
+    bool FillRange(int &position, int value, int &fillLength);
 
-	void InsertSpace(int position, int insertLength);
-	void DeleteRange(int position, int deleteLength);
+    void InsertSpace(int position, int insertLength);
+    void DeleteRange(int position, int deleteLength);
 
-	int AllOnFor(int position) const;
-	int ValueAt(int indicator, int position);
-	int Start(int indicator, int position);
-	int End(int indicator, int position);
+    int AllOnFor(int position) const;
+    int ValueAt(int indicator, int position);
+    int Start(int indicator, int position);
+    int End(int indicator, int position);
 };
 
 #ifdef SCI_NAMESPACE

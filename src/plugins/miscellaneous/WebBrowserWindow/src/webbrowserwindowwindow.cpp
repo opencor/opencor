@@ -241,15 +241,6 @@ void WebBrowserWindowWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void WebBrowserWindowWindow::resizeEvent(QResizeEvent *pEvent)
-{
-    // Default handling of the event
-
-    Core::WindowWidget::resizeEvent(pEvent);
-}
-
-//==============================================================================
-
 void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
 {
     // The URL has changed, so update our URL value

@@ -14,9 +14,9 @@ namespace Scintilla {
 
 class Catalogue {
 public:
-	static const LexerModule *Find(int language);
-	static const LexerModule *Find(const char *languageName);
-	static void AddLexerModule(LexerModule *plm);
+    static const LexerModule *Find(int language);
+    static const LexerModule *Find(const char *languageName);
+    static void AddLexerModule(LexerModule *plm);
 };
 
 #ifdef SCI_NAMESPACE

@@ -25,13 +25,12 @@ limitations under the License.
 //==============================================================================
 
 #include "pmrworkspace.h"
-#include "pmrworkspaceswindowitem.h"
 #include "widget.h"
 
 //==============================================================================
 
-#include <QMap>
-#include <QStandardItemModel>
+#include <QSortFilterProxyModel>
+#include <QStandardItem>
 
 //==============================================================================
 
@@ -57,6 +56,77 @@ namespace PMRSupport {
 //==============================================================================
 
 namespace PMRWorkspacesWindow {
+
+//==============================================================================
+
+class PmrWorkspacesWindowItem : public QStandardItem
+{
+public:
+    enum Type {
+        OwnedWorkspace = QStandardItem::UserType,
+        Workspace      = QStandardItem::UserType+1,
+        Folder         = QStandardItem::UserType+2,
+        File           = QStandardItem::UserType+3
+    };
+
+    explicit PmrWorkspacesWindowItem(const Type &pType,
+                                     PMRSupport::PmrWorkspace *pWorkspace,
+                                     const QIcon &pCollapsedIcon,
+                                     const QIcon &pExpandedIcon);
+    explicit PmrWorkspacesWindowItem(const Type &pType,
+                                     PMRSupport::PmrWorkspace *pWorkspace,
+                                     PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                     const QIcon &pCollapsedIcon,
+                                     const QIcon &pExpandedIcon);
+    explicit PmrWorkspacesWindowItem(const Type &pType,
+                                     PMRSupport::PmrWorkspace *pWorkspace,
+                                     PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                     const QIcon &pIcon);
+
+    virtual int type() const;
+
+    PMRSupport::PmrWorkspace * workspace() const;
+    PMRSupport::PmrWorkspaceFileNode * fileNode() const;
+
+    QIcon collapsedIcon() const;
+    void setCollapsedIcon(const QIcon &pCollapsedIcon);
+
+    QIcon expandedIcon() const;
+    void setExpandedIcon(const QIcon &pExpandedIcon);
+
+private:
+    Type mType;
+
+    PMRSupport::PmrWorkspace *mWorkspace;
+    PMRSupport::PmrWorkspaceFileNode *mFileNode;
+
+    QIcon mCollapsedIcon;
+    QIcon mExpandedIcon;
+
+    void constructor(const Type &pType, PMRSupport::PmrWorkspace *pWorkspace,
+                     PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                     const QIcon &pCollapsedIcon, const QIcon &pExpandedIcon);
+};
+
+//==============================================================================
+
+typedef QList<PmrWorkspacesWindowItem *> PmrWorkspacesWindowItems;
+
+//==============================================================================
+
+class PmrWorkspacesWindowProxyModel : public QSortFilterProxyModel
+{
+public:
+    explicit PmrWorkspacesWindowProxyModel(QStandardItemModel *pModel,
+                                           QObject *pParent);
+
+protected:
+    virtual bool lessThan(const QModelIndex &pSourceLeft,
+                          const QModelIndex &pSourceRight) const;
+
+private:
+    QStandardItemModel *mModel;
+};
 
 //==============================================================================
 
@@ -106,23 +176,20 @@ private:
     QAction *mParentNewAction;
     QAction *mParentReloadAction;
 
-    QAction *mNewAction;
+    QAction *mNewWorkspaceAction;
     QAction *mViewInPmrAction;
     QAction *mViewOncomputerAction;
-    QAction *mCopyUrlAction;
-    QAction *mCopyPathAction;
-    QAction *mCloneAction;
-    QAction *mCommitAction;
-    QAction *mPullAction;
-    QAction *mPullAndPushAction;
-    QAction *mStageAction;
-    QAction *mUnstageAction;
-    QAction *mReloadAction;
-    QAction *mAboutAction;
+    QAction *mCopyWorkspaceUrlAction;
+    QAction *mCopyWorkspacePathAction;
+    QAction *mMakeLocalCopyAction;
+    QAction *mSynchronizeWorkspaceAction;
+    QAction *mReloadWorkspacesAction;
+    QAction *mAboutWorkspaceAction;
 
     Core::UserMessageWidget *mUserMessageWidget;
 
     QStandardItemModel *mTreeViewModel;
+    PmrWorkspacesWindowProxyModel *mTreeViewProxyModel;
     Core::TreeViewWidget *mTreeViewWidget;
 
     QIcon mCollapsedWorkspaceIcon;
@@ -144,12 +211,6 @@ private:
     QIcon mConflictExpandedOwnedWorkspaceIcon;
 
     QIcon mFileIcon;
-
-    QIcon mIaFileIcon;
-    QIcon mIdFileIcon;
-    QIcon mImFileIcon;
-    QIcon mIrFileIcon;
-    QIcon mItFileIcon;
 
     QIcon mWaFileIcon;
     QIcon mWcFileIcon;
@@ -184,9 +245,10 @@ private:
     void duplicateCloneMessage(const QString &pUrl, const QString &pPath1,
                                const QString &pPath2);
 
-    void stageUnstage(const bool &pStage);
-
     void sortAndResizeTreeViewToContents();
+
+    QStringList selectedWorkspaceUrls() const;
+    QStringList selectedWorkspacePaths() const;
 
 signals:
     void information(const QString &pMessage);
@@ -201,10 +263,10 @@ public slots:
                     const bool &pAuthenticated = true);
 
 private slots:
-    void showCustomContextMenu(const QPoint &pPosition) const;
-    void itemDoubleClicked(const QModelIndex &pIndex);
-    void itemExpanded(const QModelIndex &pIndex);
-    void itemCollapsed(const QModelIndex &pIndex);
+    void showCustomContextMenu() const;
+    void itemDoubleClicked();
+    void itemExpanded();
+    void itemCollapsed();
 
     void resizeTreeViewToContents();
 
@@ -216,15 +278,11 @@ private slots:
 
     void viewInPmr();
     void viewOnComputer();
-    void copyUrl();
-    void copyPath();
-    void clone();
-    void commit();
-    void pull();
-    void pullAndPush();
-    void stage();
-    void unstage();
-    void about();
+    void copyWorkspaceUrl();
+    void copyWorkspacePath();
+    void makeLocalWorkspaceCopy();
+    void synchronizeWorkspace();
+    void aboutWorkspace();
 };
 
 //==============================================================================

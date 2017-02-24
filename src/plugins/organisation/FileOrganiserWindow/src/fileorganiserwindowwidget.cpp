@@ -21,20 +21,16 @@ limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
-#include "fileorganiserwindowitem.h"
+#include "filemanager.h"
 #include "fileorganiserwindowwidget.h"
 
 //==============================================================================
 
-#include <QDir>
-#include <QFile>
 #include <QFileIconProvider>
 #include <QFileInfo>
-#include <QHelpEvent>
+#include <QKeyEvent>
 #include <QMimeData>
-#include <QModelIndex>
 #include <QSettings>
-#include <QUrl>
 
 //==============================================================================
 
@@ -43,17 +39,268 @@ namespace FileOrganiserWindow {
 
 //==============================================================================
 
+FileOrganiserWindowItem::FileOrganiserWindowItem(const QIcon &pIcon,
+                                                 const QString &pTextOrPath,
+                                                 const bool &pFolder) :
+    QStandardItem(pIcon,
+                  pFolder?
+                      pTextOrPath:
+                      QFileInfo(pTextOrPath).fileName()),
+    mFolder(pFolder),
+    mExpanded(false),
+    mPath(pFolder?QString():pTextOrPath)
+{
+    // Customise ourselves
+
+    setToolTip(pFolder?
+                   pTextOrPath:
+                   Core::nativeCanonicalDirName(pTextOrPath));
+}
+
+//==============================================================================
+
+bool FileOrganiserWindowItem::isFolder() const
+{
+    // Return whether we are a folder
+
+    return mFolder;
+}
+
+//==============================================================================
+
+bool FileOrganiserWindowItem::isExpanded() const
+{
+    // Return whether we are expanded
+
+    return mExpanded;
+}
+
+//==============================================================================
+
+void FileOrganiserWindowItem::setExpanded(const bool &pExpanded)
+{
+    // Set our expanded state
+
+    mExpanded = mFolder?pExpanded:false;
+}
+
+//==============================================================================
+
+QString FileOrganiserWindowItem::path() const
+{
+    // Return our path
+
+    return mPath;
+}
+
+//==============================================================================
+
+static const auto FileOrganiserWindowMimeType = QStringLiteral("opencor/file-organiser-window");
+
+//==============================================================================
+
+FileOrganiserWindowModel::FileOrganiserWindowModel(QObject *pParent) :
+    QStandardItemModel(pParent)
+{
+}
+
+//==============================================================================
+
+QStringList FileOrganiserWindowModel::mimeTypes() const
+{
+    // Return the MIME types supported by our model
+
+    return QStringList() << Core::FileSystemMimeType << FileOrganiserWindowMimeType;
+}
+
+//==============================================================================
+
+void FileOrganiserWindowModel::encodeHierarchyData(const QModelIndex &pIndex,
+                                                   QDataStream &pStream,
+                                                   const int &pLevel) const
+{
+    // Encode the item's hierarchy
+
+    if (pIndex.isValid()) {
+        // The current index is valid, try to encode its parent's hierarchy
+
+        encodeHierarchyData(pIndex.parent(), pStream, pLevel+1);
+
+        // Now, we can encode the current index's hierarchy information
+
+        pStream << pIndex.row();
+    } else {
+        // We are the top of the hierarchy, so encode the number of levels
+        // (essential if we want to be able to decode the hierarchy)
+
+        pStream << pLevel;
+    }
+}
+
+//==============================================================================
+
+QByteArray FileOrganiserWindowModel::encodeHierarchyData(const QModelIndex &pIndex) const
+{
+    // Encode the hierarchy data
+
+    QByteArray res;
+    QDataStream stream(&res, QIODevice::WriteOnly);
+
+    encodeHierarchyData(pIndex, stream);
+
+    return res;
+}
+
+//==============================================================================
+
+QByteArray FileOrganiserWindowModel::encodeData(const QModelIndexList &pIndexes) const
+{
+    QByteArray res;
+
+    if (pIndexes.count()) {
+        // Encode the MIME data
+
+        QDataStream stream(&res, QIODevice::WriteOnly);
+
+        // The number of items
+
+        stream << pIndexes.count();
+
+        // Hierarchy to reach the various items
+
+        foreach (const QModelIndex &index, pIndexes) {
+            // Hierarchy to reach the current item
+
+            encodeHierarchyData(index, stream);
+        }
+    }
+
+    return res;
+}
+
+//==============================================================================
+
+QModelIndex FileOrganiserWindowModel::decodeHierarchyData(QDataStream &pStream) const
+{
+    // Decode the hierarchy data
+
+    // The number of levels
+
+    int levelsCount;
+
+    pStream >> levelsCount;
+
+    // Hierarchy to reach the item
+
+    int row;
+    QStandardItem *crtItem = invisibleRootItem();
+
+    for (int j = 0; j < levelsCount; ++j) {
+        pStream >> row;
+
+        crtItem = crtItem->child(row, 0);
+    }
+
+    return indexFromItem(crtItem);
+}
+
+//==============================================================================
+
+QModelIndex FileOrganiserWindowModel::decodeHierarchyData(QByteArray &pData) const
+{
+    // Decode the hierarchy data
+
+    QDataStream stream(&pData, QIODevice::ReadOnly);
+
+    return decodeHierarchyData(stream);
+}
+
+//==============================================================================
+
+QModelIndexList FileOrganiserWindowModel::decodeData(QByteArray &pData) const
+{
+    QModelIndexList res;
+
+    if (!pData.isEmpty()) {
+        // Decode the MIME data
+
+        QDataStream stream(&pData, QIODevice::ReadOnly);
+
+        // The number of items
+
+        int itemsCount;
+
+        stream >> itemsCount;
+
+        // Hierarchy to reach the various items
+
+        for (int i = 0; i < itemsCount; ++i)
+            res << decodeHierarchyData(stream);
+    }
+
+    return res;
+}
+
+//==============================================================================
+
+QMimeData * FileOrganiserWindowModel::mimeData(const QModelIndexList &pIndexes) const
+{
+    QMimeData *res = new QMimeData();
+    QList<QUrl> urls = QList<QUrl>();
+
+    // Retrieve the URL of the different file (not folder) items
+    // Note: this list of URLs is useful with regards to the FileSystemMimeType
+    //       MIME type on which external widgets (e.g. the central widget) rely
+    //       on to extract the name of the vavarious files the MIME data
+    //       contains
+
+    foreach (const QModelIndex &index, pIndexes) {
+        QString crtFilePath = filePath(index);
+
+        if (!crtFilePath.isEmpty())
+            urls << QUrl::fromLocalFile(crtFilePath);
+    }
+
+    res->setUrls(urls);
+
+    // Set the data that contains information on both the folder and file items
+    // Note: this data is useful with regards to the FileOrganiserWindowMimeType
+    //       MIME type on which the file organiser widget relies for moving
+    //       folder and file items around
+
+    res->setData(FileOrganiserWindowMimeType, encodeData(pIndexes));
+
+    return res;
+}
+
+//==============================================================================
+
+QString FileOrganiserWindowModel::filePath(const QModelIndex &pFileIndex) const
+{
+    // Return the file path of pFileIndex, if it exists and corresponds to a
+    // file
+
+    FileOrganiserWindowItem *fileItem = static_cast<FileOrganiserWindowItem *>(itemFromIndex(pFileIndex));
+
+    if (fileItem && !fileItem->isFolder())
+        return fileItem->path();
+    else
+        return QString();
+}
+
+//==============================================================================
+
 FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
     TreeViewWidget(pParent)
 {
-    // Create an instance of the data model that we want to view
-
-    mModel = new FileOrganiserWindowModel(this);
-
     // Create our 'local' file manager (as opposed to the 'global' file manager
     // that comes with the FileManager class)
 
     mFileManager = new Core::FileManager();
+
+    // Create an instance of the data model that we want to view
+
+    mModel = new FileOrganiserWindowModel(this);
 
     // Set some properties
 

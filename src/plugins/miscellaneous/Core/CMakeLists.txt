@@ -34,6 +34,7 @@ ADD_PLUGIN(Core
         src/organisationwidget.cpp
         src/progressbarwidget.cpp
         src/propertyeditorwidget.cpp
+        src/splitterwidget.cpp
         src/tabbarwidget.cpp
         src/toolbarwidget.cpp
         src/treeviewwidget.cpp
@@ -54,6 +55,7 @@ ADD_PLUGIN(Core
         src/centralwidget.h
         src/collapsiblewidget.h
         src/corecliutils.h
+        src/coreguiutils.h
         src/coreplugin.h
         src/filemanager.h
         src/mathmlconverter.h

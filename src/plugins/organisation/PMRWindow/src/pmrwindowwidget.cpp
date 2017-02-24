@@ -194,7 +194,7 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     //       everything...
 
     QStringList exposureFileUrls = QStringList();
-    QModelIndexList selectedIndexes = mTreeViewWidget->selectedIndexes();
+    QModelIndexList selectedIndexes = mTreeViewWidget->selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i) {
         PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]));
@@ -408,7 +408,7 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
 
         mCloneWorkspaceAction->setVisible(item->type() == PmrWindowItem::Exposure);
 
-        bool onlyOneItem = mTreeViewWidget->selectedIndexes().count() == 1;
+        bool onlyOneItem = mTreeViewWidget->selectionModel()->selectedIndexes().count() == 1;
 
         mCopyUrlAction->setEnabled(onlyOneItem);
         mCloneWorkspaceAction->setEnabled(onlyOneItem);
@@ -440,7 +440,7 @@ void PmrWindowWidget::viewInPmr()
 {
     // Show the selected items in PMR
 
-    QModelIndexList selectedIndexes = mTreeViewWidget->selectedIndexes();
+    QModelIndexList selectedIndexes = mTreeViewWidget->selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i)
         QDesktopServices::openUrl(static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]))->url());

@@ -1,6 +1,6 @@
 // This defines the interface to the QsciLexerPython class.
 //
-// Copyright (c) 2016 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 //
 // This file is part of QScintilla.
 //
@@ -20,10 +20,6 @@
 
 #ifndef QSCILEXERPYTHON_H
 #define QSCILEXERPYTHON_H
-
-#ifdef __APPLE__
-extern "C++" {
-#endif
 
 #include <QObject>
 
@@ -321,9 +317,5 @@ private:
     QsciLexerPython(const QsciLexerPython &);
     QsciLexerPython &operator=(const QsciLexerPython &);
 };
-
-#ifdef __APPLE__
-}
-#endif
 
 #endif

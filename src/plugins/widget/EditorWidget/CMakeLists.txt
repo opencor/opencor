@@ -7,7 +7,6 @@ ADD_PLUGIN(EditorWidget
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/editorlistitem.cpp
         src/editorlistwidget.cpp
         src/editorwidget.cpp
         src/editorwidgetfindreplacewidget.cpp

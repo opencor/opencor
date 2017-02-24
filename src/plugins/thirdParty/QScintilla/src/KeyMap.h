@@ -17,6 +17,7 @@ namespace Scintilla {
 #define SCI_CTRL SCMOD_CTRL
 #define SCI_ALT SCMOD_ALT
 #define SCI_META SCMOD_META
+#define SCI_SUPER SCMOD_SUPER
 #define SCI_CSHIFT (SCI_CTRL | SCI_SHIFT)
 #define SCI_ASHIFT (SCI_ALT | SCI_SHIFT)
 
@@ -24,39 +25,39 @@ namespace Scintilla {
  */
 class KeyModifiers {
 public:
-	int key;
-	int modifiers;
-	KeyModifiers(int key_, int modifiers_) : key(key_), modifiers(modifiers_) {
-	}
-	bool operator<(const KeyModifiers &other) const {
-		if (key == other.key)
-			return modifiers < other.modifiers;
-		else
-			return key < other.key;
-	}
+    int key;
+    int modifiers;
+    KeyModifiers(int key_, int modifiers_) : key(key_), modifiers(modifiers_) {
+    }
+    bool operator<(const KeyModifiers &other) const {
+        if (key == other.key)
+            return modifiers < other.modifiers;
+        else
+            return key < other.key;
+    }
 };
 
 /**
  */
 class KeyToCommand {
 public:
-	int key;
-	int modifiers;
-	unsigned int msg;
+    int key;
+    int modifiers;
+    unsigned int msg;
 };
 
 /**
  */
 class KeyMap {
-	std::map<KeyModifiers, unsigned int> kmap;
-	static const KeyToCommand MapDefault[];
+    std::map<KeyModifiers, unsigned int> kmap;
+    static const KeyToCommand MapDefault[];
 
 public:
-	KeyMap();
-	~KeyMap();
-	void Clear();
-	void AssignCmdKey(int key, int modifiers, unsigned int msg);
-	unsigned int Find(int key, int modifiers) const;	// 0 returned on failure
+    KeyMap();
+    ~KeyMap();
+    void Clear();
+    void AssignCmdKey(int key, int modifiers, unsigned int msg);
+    unsigned int Find(int key, int modifiers) const;    // 0 returned on failure
 };
 
 #ifdef SCI_NAMESPACE

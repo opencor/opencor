@@ -20,6 +20,7 @@ limitations under the License.
 // Single Cell view graph panels widget
 //==============================================================================
 
+#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "graphpanelswidget.h"
 #include "i18ninterface.h"
@@ -43,9 +44,7 @@ namespace GraphPanelWidget {
 //==============================================================================
 
 GraphPanelsWidget::GraphPanelsWidget(QWidget *pParent) :
-    QSplitter(pParent),
-    Core::CommonWidget(this),
-    mSplitterSizes(QIntList()),
+    Core::SplitterWidget(pParent),
     mGraphPanels(GraphPanelWidgets()),
     mActiveGraphPanel(0)
 {

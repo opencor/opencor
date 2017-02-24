@@ -32,6 +32,7 @@ limitations under the License.
 #include <QMainWindow>
 #include <QPointer>
 #include <QPushButton>
+#include <QSettings>
 
 //==============================================================================
 

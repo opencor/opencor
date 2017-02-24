@@ -24,12 +24,12 @@ limitations under the License.
 
 //==============================================================================
 
+#include "guiutils.h"
 #include "coreinterface.h"
 #include "plugininfo.h"
 
 //==============================================================================
 
-#include <QDialog>
 #include <QStyledItemDelegate>
 
 //==============================================================================
@@ -65,12 +65,13 @@ public:
 
 //==============================================================================
 
-class PluginsDialog : public QDialog
+class PluginsDialog : public Dialog
 {
     Q_OBJECT
 
 public:
-    explicit PluginsDialog(PluginManager *pPluginManager, QWidget *pParent);
+    explicit PluginsDialog(QSettings *pSettings, PluginManager *pPluginManager,
+                           QWidget *pParent);
     ~PluginsDialog();
 
 private:

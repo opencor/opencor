@@ -37,6 +37,11 @@ namespace PMRSupport {
 
 //==============================================================================
 
+static const auto StagingInstance  = QStringLiteral("https://staging.physiomeproject.org");
+static const auto TeachingInstance = QStringLiteral("https://teaching.physiomeproject.org");
+
+//==============================================================================
+
 PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
     Preferences::PreferencesWidget(PluginName, pParent),
     mGui(new Ui::PmrSupportPreferencesWidget)
@@ -46,7 +51,8 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
     mGui->setupUi(this);
 
     mGui->pmrUrlValue->addItems(QStringList() << SettingsPreferencesPmrUrlDefault
-                                              << "https://staging.physiomeproject.org");
+                                              << StagingInstance
+                                              << TeachingInstance);
 
 #ifdef Q_OS_MAC
     mGui->nameValue->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -112,6 +118,24 @@ void PmrSupportPreferencesWidget::savePreferences()
     mSettings->setValue(SettingsPreferencesPmrUrl, mPmrUrl);
     mSettings->setValue(SettingsPreferencesName, mName);
     mSettings->setValue(SettingsPreferencesEmail, mEmail);
+}
+
+//==============================================================================
+
+void PmrSupportPreferencesWidget::on_pmrUrlValue_currentTextChanged(const QString &pCurrentText)
+{
+    // Update our PMR URL note based on the PMR URL that is currently selected
+
+    if (!pCurrentText.compare(SettingsPreferencesPmrUrlDefault))
+        mGui->noteValue->setText(tr("the primary site is selected. Everything on this site is permanent and persistent. It is always up and always stable."));
+    else if (!pCurrentText.compare(StagingInstance))
+        mGui->noteValue->setText(tr("the staging site is selected. It is used for public testing/preview of PMR developments. A warning is always sent before wiping clean and starting with a fresh copy of the primary site (workspaces, exposures and user accounts). The content of this site is never migrated to the primary site, but users can synchronise across if desired."));
+    else if (!pCurrentText.compare(TeachingInstance))
+        mGui->noteValue->setText(tr("the teaching site is selected. It is randomly wiped with little or no warning. It mostly matches the primary site in terms of functionality. It may be synchronised with the primary site (workspaces, exposures and user accounts) or it may simply be empty."));
+    else
+        mGui->noteValue->setText(QString());
+
+    mGui->noteLabel->setVisible(!mGui->noteValue->text().isEmpty());
 }
 
 //==============================================================================
