@@ -35,6 +35,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QVBoxLayout>
+#include <QWebView>
 
 //==============================================================================
 
@@ -90,7 +91,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     mWebViewer->showProgressBar();
 
-    mWebViewer->setContextMenuPolicy(Qt::NoContextMenu);
+    mWebViewer->webView()->setContextMenuPolicy(Qt::NoContextMenu);
     mWebViewer->setOverrideCursor(true);
     mWebViewer->setZoomingEnabled(false);
 

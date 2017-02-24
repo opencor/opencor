@@ -227,7 +227,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     mWebViewer = new WebViewerWidget::WebViewerWidget(mHorizontalSplitter);
 
-    mWebViewer->setContextMenuPolicy(Qt::CustomContextMenu);
+    mWebViewer->webView()->setContextMenuPolicy(Qt::CustomContextMenu);
     mWebViewer->setOverrideCursor(true);
 
     webViewerLayout->addWidget(webViewerToolBarWidget);

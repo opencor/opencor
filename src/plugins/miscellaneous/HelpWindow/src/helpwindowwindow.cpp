@@ -115,9 +115,9 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
     // want the default one, which has the reload menu item and not the other
     // actions that we have in our tool bar widget)
 
-    mHelpWindowWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    mHelpWindowWidget->webView()->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mHelpWindowWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+    connect(mHelpWindowWidget->webView(), SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu()));
 
     // Some connections to update the enabled state of our various actions
