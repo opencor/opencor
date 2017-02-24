@@ -612,8 +612,21 @@ bool PmrWorkspacesWindowSynchronizeDialog::cellmlText(const QString &pFileName,
                                                       QString &pCellmlText)
 {
     // Try to generate the CellML Text version of the given CellML file
+    // Note: we want to run the CLI version of OpenCOR, so on Windows this means
+    //       that we need to replace the program's file extension from ".exe" to
+    //       ".com"...
 
-    if (!Core::exec(qApp->applicationFilePath(),
+#ifdef Q_OS_WIN
+    static const QRegularExpression ExeExtensionRegEx = QRegularExpression("\\.exe$");
+#endif
+
+    QString program = qApp->applicationFilePath();
+
+#ifdef Q_OS_WIN
+    program.replace(ExeExtensionRegEx, ".com");
+#endif
+
+    if (!Core::exec(program,
                     QStringList() << "-c"
                                   << "CellMLTextView::import"
                                   << pFileName,
