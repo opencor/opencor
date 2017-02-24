@@ -24,6 +24,7 @@ QMainWindow CORE_EXPORT * mainWindow();
 
 bool CORE_EXPORT aboutToQuit();
 
+QSize CORE_EXPORT minimumWidgetSize(QWidget *pWidget);
 void CORE_EXPORT adjustWidgetSize(QWidget *pWidget);
 
 void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pVisible,

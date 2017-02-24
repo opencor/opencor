@@ -165,8 +165,10 @@ bool CellMLTextViewConverter::execute(const QString &pRawCellml)
 
                     return false;
                 }
-            } else {
-                processUnknownNode(domNode);
+            } else if (!processUnknownNode(domNode)) {
+                mOutput = pRawCellml;
+
+                return false;
             }
         }
 
@@ -441,8 +443,8 @@ bool CellMLTextViewConverter::processModelNode(const QDomNode &pDomNode)
         } else if (cellmlNode(domNode, "connection")) {
             if (!processConnectionNode(domNode))
                 return false;
-        } else {
-            processUnknownNode(domNode);
+        } else if (!processUnknownNode(domNode)) {
+            return false;
         }
     }
 
@@ -552,8 +554,8 @@ bool CellMLTextViewConverter::processImportNode(const QDomNode &pDomNode)
         } else if (cellmlNode(domNode, "component")) {
             if (!processComponentNode(domNode, true))
                 return false;
-        } else {
-            processUnknownNode(domNode);
+        } else if (!processUnknownNode(domNode)) {
+            return false;
         }
     }
 
@@ -602,14 +604,16 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
 
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
-        if (domNode.isComment())
+        if (domNode.isComment()) {
             processCommentNode(domNode);
-        else if (rdfNode(domNode))
+        } else if (rdfNode(domNode)) {
             processRdfNode(domNode);
-        else if (!isBaseUnits && !pInImportNode && cellmlNode(domNode, "unit"))
-            processUnitNode(domNode);
-        else
-            processUnknownNode(domNode);
+        } else if (!isBaseUnits && !pInImportNode && cellmlNode(domNode, "unit")) {
+            if (!processUnitNode(domNode))
+                return false;
+        } else if (!processUnknownNode(domNode)) {
+            return false;
+        }
     }
 
     // Finish processing the given units node
@@ -645,7 +649,7 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
 
 //==============================================================================
 
-void CellMLTextViewConverter::processUnitNode(const QDomNode &pDomNode)
+bool CellMLTextViewConverter::processUnitNode(const QDomNode &pDomNode)
 {
     // Process the given unit node's children
     // Note #1: unlike for most nodes, we process the node's children before
@@ -661,8 +665,8 @@ void CellMLTextViewConverter::processUnitNode(const QDomNode &pDomNode)
             processCommentNode(domNode);
         else if (rdfNode(domNode))
             processRdfNode(domNode);
-        else
-            processUnknownNode(domNode);
+        else if (!processUnknownNode(domNode))
+            return false;
     }
 
     // Process the given unit node
@@ -692,6 +696,8 @@ void CellMLTextViewConverter::processUnitNode(const QDomNode &pDomNode)
                  QString("unit%1 %2%3;").arg(cmetaId(pDomNode))
                                         .arg(cellmlAttributeNodeValue(pDomNode, "units"))
                                         .arg(parameters.isEmpty()?QString():" {"+parameters+"}"));
+
+    return true;
 }
 
 //==============================================================================
@@ -726,15 +732,16 @@ bool CellMLTextViewConverter::processComponentNode(const QDomNode &pDomNode,
             if (!processUnitsNode(domNode))
                 return false;
         } else if (!pInImportNode && cellmlNode(domNode, "variable")) {
-            processVariableNode(domNode);
+            if (!processVariableNode(domNode))
+                return false;
         } else if (!pInImportNode && mathmlNode(domNode, "math")) {
             if (!processMathNode(domNode))
                 return false;
         } else if (!pInImportNode && cellmlNode(domNode, "reaction")) {
             if (!processReactionNode(domNode))
                 return false;
-        } else {
-            processUnknownNode(domNode);
+        } else if (!processUnknownNode(domNode)) {
+            return false;
         }
     }
 
@@ -761,7 +768,7 @@ bool CellMLTextViewConverter::processComponentNode(const QDomNode &pDomNode,
 
 //==============================================================================
 
-void CellMLTextViewConverter::processVariableNode(const QDomNode &pDomNode)
+bool CellMLTextViewConverter::processVariableNode(const QDomNode &pDomNode)
 {
     // Process the given variable node's children
     // Note #1: unlike for most nodes, we process the node's children before
@@ -777,8 +784,8 @@ void CellMLTextViewConverter::processVariableNode(const QDomNode &pDomNode)
             processCommentNode(domNode);
         else if (rdfNode(domNode))
             processRdfNode(domNode);
-        else
-            processUnknownNode(domNode);
+        else if (!processUnknownNode(domNode))
+            return false;
     }
 
     // Process the given variable node
@@ -808,6 +815,8 @@ void CellMLTextViewConverter::processVariableNode(const QDomNode &pDomNode)
                                            .arg(cellmlAttributeNodeValue(pDomNode, "name"))
                                            .arg(cellmlAttributeNodeValue(pDomNode, "units"))
                                            .arg(parameters.isEmpty()?QString():" {"+parameters+"}"));
+
+    return true;
 }
 
 //==============================================================================
@@ -1065,9 +1074,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
 
             // Unknown node
 
-            } else {
-                processUnknownNode(domNode);
-
+            } else if (processUnknownNode(domNode)) {
                 return QString();
             }
         }
@@ -1202,9 +1209,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
 
     // Unknown node
 
-    } else {
-        processUnknownNode(domNode);
-
+    } else if (processUnknownNode(domNode)) {
         return QString();
     }
 
@@ -2087,9 +2092,10 @@ bool CellMLTextViewConverter::processGroupNode(const QDomNode &pDomNode)
             if (!processRelationshipRefNode(domNode, relationshipReference))
                 return false;
         } else if (cellmlNode(domNode, "component_ref")) {
-            processComponentRefNode(domNode);
-        } else {
-            processUnknownNode(domNode);
+            if (!processComponentRefNode(domNode))
+                return false;
+        } else if (!processUnknownNode(domNode)) {
+            return false;
         }
     }
 
@@ -2123,8 +2129,8 @@ bool CellMLTextViewConverter::processRelationshipRefNode(const QDomNode &pDomNod
             processCommentNode(domNode);
         else if (rdfNode(domNode))
             processRdfNode(domNode);
-        else
-            processUnknownNode(domNode);
+        else if (!processUnknownNode(domNode))
+            return false;
     }
 
     // Process the given relationship ref node
@@ -2162,7 +2168,7 @@ bool CellMLTextViewConverter::processRelationshipRefNode(const QDomNode &pDomNod
 
 //==============================================================================
 
-void CellMLTextViewConverter::processComponentRefNode(const QDomNode &pDomNode)
+bool CellMLTextViewConverter::processComponentRefNode(const QDomNode &pDomNode)
 {
     // Determine whether the given component ref node has component ref children
 
@@ -2195,14 +2201,16 @@ void CellMLTextViewConverter::processComponentRefNode(const QDomNode &pDomNode)
 
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
-        if (domNode.isComment())
+        if (domNode.isComment()) {
             processCommentNode(domNode);
-        else if (rdfNode(domNode))
+        } else if (rdfNode(domNode)) {
             processRdfNode(domNode);
-        else if (cellmlNode(domNode, "component_ref"))
-            processComponentRefNode(domNode);
-        else
-            processUnknownNode(domNode);
+        } else if (cellmlNode(domNode, "component_ref")) {
+            if (!processComponentRefNode(domNode))
+                return false;
+        } else if (!processUnknownNode(domNode)) {
+            return false;
+        }
     }
 
     // Finish processing the given component ref node
@@ -2222,6 +2230,7 @@ void CellMLTextViewConverter::processComponentRefNode(const QDomNode &pDomNode)
                                           .arg(cellmlAttributeNodeValue(pDomNode, "component")));
     }
 
+    return true;
 }
 
 //==============================================================================
@@ -2257,9 +2266,10 @@ bool CellMLTextViewConverter::processConnectionNode(const QDomNode &pDomNode)
             if (!processMapComponentsNode(domNode, mapComponents))
                 return false;
         } else if (cellmlNode(domNode, "map_variables")) {
-            processMapVariablesNode(domNode);
-        } else {
-            processUnknownNode(domNode);
+            if (!processMapVariablesNode(domNode))
+                return false;
+        } else if (!processUnknownNode(domNode)) {
+            return false;
         }
     }
 
@@ -2302,8 +2312,8 @@ bool CellMLTextViewConverter::processMapComponentsNode(const QDomNode &pDomNode,
             processCommentNode(domNode);
         else if (rdfNode(domNode))
             processRdfNode(domNode);
-        else
-            processUnknownNode(domNode);
+        else if (!processUnknownNode(domNode))
+            return false;
     }
 
     // Process the given map components node
@@ -2317,7 +2327,7 @@ bool CellMLTextViewConverter::processMapComponentsNode(const QDomNode &pDomNode,
 
 //==============================================================================
 
-void CellMLTextViewConverter::processMapVariablesNode(const QDomNode &pDomNode)
+bool CellMLTextViewConverter::processMapVariablesNode(const QDomNode &pDomNode)
 {
     // Process the given map variables node's children
     // Note #1: unlike for most nodes, we process the node's children before
@@ -2333,8 +2343,8 @@ void CellMLTextViewConverter::processMapVariablesNode(const QDomNode &pDomNode)
             processCommentNode(domNode);
         else if (rdfNode(domNode))
             processRdfNode(domNode);
-        else
-            processUnknownNode(domNode);
+        else if (!processUnknownNode(domNode))
+            return false;
     }
 
     // Process the given unit node
@@ -2346,22 +2356,21 @@ void CellMLTextViewConverter::processMapVariablesNode(const QDomNode &pDomNode)
                  QString("vars%1 %2 and %3;").arg(cmetaId(pDomNode))
                                              .arg(cellmlAttributeNodeValue(pDomNode, "variable_1"))
                                              .arg(cellmlAttributeNodeValue(pDomNode, "variable_2")));
+
+    return true;
 }
 
 //==============================================================================
 
-void CellMLTextViewConverter::processUnknownNode(const QDomNode &pDomNode)
+bool CellMLTextViewConverter::processUnknownNode(const QDomNode &pDomNode)
 {
     // The given node is unknown, so warn the user about it
 
     switch (pDomNode.nodeType()) {
     case QDomNode::ElementNode:
-        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    QObject::tr("A '%1' element was found%2, but it is not known and cannot therefore be processed.").arg(pDomNode.prefix().isEmpty()?
-                                                                                                                                                              pDomNode.localName():
-                                                                                                                                                              pDomNode.prefix()+":"+pDomNode.localName()));
+        processUnsupportedNode(pDomNode, true);
 
-        break;
+        return false;
     case QDomNode::AttributeNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
                                                     QObject::tr("An attribute was found%1, but it was not processed."));
@@ -2428,6 +2437,8 @@ void CellMLTextViewConverter::processUnknownNode(const QDomNode &pDomNode)
 
         break;
     }
+
+    return true;
 }
 
 //==============================================================================

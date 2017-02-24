@@ -98,11 +98,6 @@ public:
 
     void goToHomePage();
 
-    void resetZoom();
-
-    void zoomIn();
-    void zoomOut();
-
     void setZoomingEnabled(const bool &pZoomingEnabled);
 
     void setOverrideCursor(const bool &pOverrideCursor);
@@ -146,6 +141,12 @@ signals:
 
     void defaultZoomLevel(const bool &pDefault);
     void zoomingOutEnabled(const bool &pEnabled);
+
+public slots:
+    void resetZoom();
+
+    void zoomIn();
+    void zoomOut();
 
 private slots:
     void urlChanged(const QUrl &pUrl);

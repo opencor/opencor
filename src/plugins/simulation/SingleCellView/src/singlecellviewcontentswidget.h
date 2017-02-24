@@ -24,12 +24,8 @@ limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
 #include "corecliutils.h"
-
-//==============================================================================
-
-#include <QSplitter>
+#include "splitterwidget.h"
 
 //==============================================================================
 
@@ -53,7 +49,7 @@ class SingleCellViewSimulationWidget;
 
 //==============================================================================
 
-class SingleCellViewContentsWidget : public QSplitter, public Core::CommonWidget
+class SingleCellViewContentsWidget : public Core::SplitterWidget
 {
     Q_OBJECT
 

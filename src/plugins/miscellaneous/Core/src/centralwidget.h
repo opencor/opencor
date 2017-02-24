@@ -39,7 +39,6 @@ limitations under the License.
 
 //==============================================================================
 
-class QDialog;
 class QDialogButtonBox;
 class QLabel;
 class QLineEdit;
@@ -60,6 +59,7 @@ namespace Core {
 //==============================================================================
 
 class CentralWidget;
+class Dialog;
 class UserMessageWidget;
 class TabBarWidget;
 
@@ -141,6 +141,8 @@ private:
 
     State mState;
 
+    QSettings *mSettings;
+
     Plugins mLoadedFileHandlingPlugins;
     Plugins mLoadedFileTypePlugins;
     Plugins mLoadedGuiPlugins;
@@ -167,7 +169,7 @@ private:
 
     QMap<ViewInterface::Mode, CentralWidgetMode *> mModes;
 
-    QDialog *mRemoteFileDialog;
+    Dialog *mRemoteFileDialog;
     QLabel *mRemoteFileDialogUrlLabel;
     QLineEdit *mRemoteFileDialogUrlValue;
     QDialogButtonBox *mRemoteFileDialogButtonBox;

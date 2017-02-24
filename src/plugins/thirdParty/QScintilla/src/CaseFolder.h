@@ -14,28 +14,28 @@ namespace Scintilla {
 
 class CaseFolder {
 public:
-	virtual ~CaseFolder();
-	virtual size_t Fold(char *folded, size_t sizeFolded, const char *mixed, size_t lenMixed) = 0;
+    virtual ~CaseFolder();
+    virtual size_t Fold(char *folded, size_t sizeFolded, const char *mixed, size_t lenMixed) = 0;
 };
 
 class CaseFolderTable : public CaseFolder {
 protected:
-	char mapping[256];
+    char mapping[256];
 public:
-	CaseFolderTable();
-	virtual ~CaseFolderTable();
-	virtual size_t Fold(char *folded, size_t sizeFolded, const char *mixed, size_t lenMixed);
-	void SetTranslation(char ch, char chTranslation);
-	void StandardASCII();
+    CaseFolderTable();
+    virtual ~CaseFolderTable();
+    virtual size_t Fold(char *folded, size_t sizeFolded, const char *mixed, size_t lenMixed);
+    void SetTranslation(char ch, char chTranslation);
+    void StandardASCII();
 };
 
 class ICaseConverter;
 
 class CaseFolderUnicode : public CaseFolderTable {
-	ICaseConverter *converter;
+    ICaseConverter *converter;
 public:
-	CaseFolderUnicode();
-	virtual size_t Fold(char *folded, size_t sizeFolded, const char *mixed, size_t lenMixed);
+    CaseFolderUnicode();
+    virtual size_t Fold(char *folded, size_t sizeFolded, const char *mixed, size_t lenMixed);
 };
 
 #ifdef SCI_NAMESPACE

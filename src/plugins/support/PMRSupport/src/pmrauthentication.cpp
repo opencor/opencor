@@ -22,6 +22,7 @@ limitations under the License.
 
 #include "corecliutils.h"
 #include "pmrauthentication.h"
+#include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 
 //==============================================================================
@@ -86,7 +87,7 @@ PmrAuthentication::PmrAuthentication(const QString &pPmrUrl, QObject *pParent) :
 
     O0SettingsStore *store = new O0SettingsStore("hgh189;;099!@7878");
 
-    store->setGroupKey("Plugins/PMRSupport/Credentials/"+QUrl(pPmrUrl).host());
+    store->setGroupKey(SettingsPlugins+"/"+PluginName+"/Credentials/"+QUrl(pPmrUrl).host());
 
     setStore(store);
 }

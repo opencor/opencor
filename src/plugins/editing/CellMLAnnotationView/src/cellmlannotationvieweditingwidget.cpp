@@ -48,8 +48,7 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
                                                                      const QString &pFileName,
                                                                      CellmlAnnotationViewWidget *pViewWidget,
                                                                      QWidget *pParent) :
-    QSplitter(pParent),
-    Core::CommonWidget(this)
+    Core::SplitterWidget(pParent)
 {
     // Retrieve some SVG diagrams
 

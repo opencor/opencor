@@ -24,13 +24,12 @@ limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
 #include "corecliutils.h"
+#include "splitterwidget.h"
 
 //==============================================================================
 
 #include <QMap>
-#include <QSplitter>
 
 //==============================================================================
 
@@ -61,8 +60,7 @@ class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewEditingWidget : public QSplitter,
-                                          public Core::CommonWidget
+class CellmlAnnotationViewEditingWidget : public Core::SplitterWidget
 {
     Q_OBJECT
 

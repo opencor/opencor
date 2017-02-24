@@ -31,24 +31,19 @@ limitations under the License.
 #include <QAction>
 #include <QApplication>
 #include <QBuffer>
-#include <QColor>
 #include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QFileDialog>
-#include <QFileInfo>
-#include <QFont>
 #include <QFrame>
 #include <QGraphicsColorizeEffect>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
-#include <QIODevice>
-#include <QLabel>
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
 #include <QPainter>
-#include <QPalette>
 #include <QPushButton>
+#include <QSettings>
 #include <QSizePolicy>
 
 //==============================================================================

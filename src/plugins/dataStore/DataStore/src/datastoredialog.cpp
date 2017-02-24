@@ -70,7 +70,7 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
 DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
                                  QWidget *pParent) :
-    QDialog(pParent),
+    Core::Dialog(pParent),
     mGui(new Ui::DataStoreDialog),
     mData(QMap<QStandardItem *, DataStoreVariable*>()),
     mNbOfData(0)
@@ -173,6 +173,10 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
     mGui->treeView->expandAll();
 
     updateDataSelectedState();
+
+    // Set our minimum size
+
+    setMinimumSize(Core::minimumWidgetSize(this));
 }
 
 //==============================================================================

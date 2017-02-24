@@ -123,10 +123,10 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
         )
     ELSE()
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            Python ${PYTHON_PACKAGE_VERSION} 129d11e3f6a7bf4452e2afc748a8b759947b1cf4
+            Python ${PYTHON_PACKAGE_VERSION} 6e2c28287d5aa2ddfd8e29c771a156260043efbe
             CHECKED_FILES ${CHECKED_FILES}
-            SHA1_VALUES 79919deb65bfe038d17122def0fbbb132e0de2a0
-                        54a3aab285b64741df54f8e5fd2d8a2416b70608
+            SHA1_VALUES ec521f0c01310d8ef52600cec739bb338c7b2a97
+                        2a12cbf6a5996b109e8c6205fe67e3b40b9b70c5
         )
     ENDIF()
 ELSE()
@@ -220,10 +220,6 @@ ELSE()
             # Use our OpenSSL
             -DUSE_SYSTEM_OpenSSL=ON
             -DOPENSSL_ROOT_DIR=${OPENSSL_ROOT_DIR}
-#            -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
-#            -DOPENSSL_CRYPTO_LIBRARY=${OPENSSL_CRYPTO_LIBRARY}
-#            -DOPENSSL_SSL_LIBRARY=${OPENSSL_SSL_LIBRARY}
-#            -DOPENSSL_LIBRARIES=${OPENSSL_LIBRARIES}
 
             # Use our zlib
             -DUSE_SYSTEM_ZLIB=ON

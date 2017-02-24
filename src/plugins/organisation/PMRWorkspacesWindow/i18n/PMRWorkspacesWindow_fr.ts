@@ -13,113 +13,113 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowCommitDialog</name>
+    <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowSynchronizeDialog</name>
     <message>
-        <source>; Changes to be committed:</source>
-        <translation>; Changements sur le point d&apos;être validés :</translation>
+        <source>Synchronise With PMR</source>
+        <translation>Synchroniser Avec PMR</translation>
     </message>
     <message>
-        <source>new</source>
-        <translation>nouveau</translation>
+        <source>Message:</source>
+        <translation>Message :</translation>
     </message>
     <message>
-        <source>modified</source>
-        <translation>modifié</translation>
+        <source>Select all the changes</source>
+        <translation>Sélectionner tous les changements</translation>
     </message>
     <message>
-        <source>deleted</source>
-        <translation>supprimé</translation>
+        <source>1 change:</source>
+        <translation>1 changement :</translation>
     </message>
     <message>
-        <source>renamed</source>
-        <translation>renommé</translation>
+        <source>%1 changes:</source>
+        <translation>%1 changements :</translation>
     </message>
     <message>
-        <source>type change</source>
-        <translation>changement de type</translation>
+        <source>Changes:</source>
+        <translation>Changements :</translation>
     </message>
     <message>
-        <source>;   - %1 (%2).</source>
-        <translation>;   - %1 (%2).</translation>
+        <source>Normal Size</source>
+        <translation>Taille Normale</translation>
     </message>
     <message>
-        <source>;   - %1 (%2); and</source>
-        <translation>;   - %1 (%2) ; et</translation>
+        <source>Reset the size of the changes</source>
+        <translation>Réinitialiser la taille des changements</translation>
     </message>
     <message>
-        <source>;   - %1 (%2);</source>
-        <translation>;   - %1 (%2) ;</translation>
+        <source>Zoom In</source>
+        <translation>Aggrandir</translation>
+    </message>
+    <message>
+        <source>Zoom in the changes</source>
+        <translation>Aggrandir les changements</translation>
+    </message>
+    <message>
+        <source>Zoom Out</source>
+        <translation>Réduire</translation>
+    </message>
+    <message>
+        <source>Zoom out the changes</source>
+        <translation>Réduire les changements</translation>
+    </message>
+    <message>
+        <source>CellML Text Format</source>
+        <translation>Format CellML Text</translation>
+    </message>
+    <message>
+        <source>Try to use the CellML Text format whenever possible</source>
+        <translation>Essayer d&apos;utiliser le format CellML Text à chaque fois que c&apos;est possible</translation>
+    </message>
+    <message>
+        <source>Binary File</source>
+        <translation>Fichier Binaire</translation>
     </message>
 </context>
 <context>
     <name>OpenCOR::PMRWorkspacesWindow::PmrWorkspacesWindowWidget</name>
     <message>
-        <source>View In PMR</source>
-        <translation>Voir Dans PMR</translation>
+        <source>New Workspace...</source>
+        <translation>Nouvel Espaces De Travail...</translation>
     </message>
     <message>
-        <source>View in PMR</source>
-        <translation>Voir dans PMR</translation>
+        <source>Copy Workspace URL</source>
+        <translation>Copier URL Espace De Travail</translation>
     </message>
     <message>
-        <source>View On Computer</source>
-        <translation>Voir Sur Ordinateur</translation>
+        <source>Copy the current workspace URL to the clipboard</source>
+        <translation>Copier l&apos;URL de l&apos;espace de travail actuel dans le presse-papier</translation>
     </message>
     <message>
-        <source>View on computer</source>
-        <translation>Voir sur l&apos;ordinateur</translation>
+        <source>Copy Workspace Path</source>
+        <translation>Copier Chemin Espace De Travail</translation>
     </message>
     <message>
-        <source>Copy URL</source>
-        <translation>Copier URL</translation>
+        <source>Copy the current workspace path to the clipboard</source>
+        <translation>Copier le chemin de l&apos;espace de travail actuel dans le presse-papier</translation>
     </message>
     <message>
-        <source>Copy the URL to the clipboard</source>
-        <translation>Copier l&apos;URL dans le presse-papier</translation>
+        <source>Make Local Workspace Copy...</source>
+        <translation>Faire Copie Locale Espace De Travail...</translation>
     </message>
     <message>
-        <source>Copy Path</source>
-        <translation>Copier Chemin</translation>
+        <source>Make a local copy of the current workspace</source>
+        <translation>Faire une copie locale de l&apos;espace de travail actuel</translation>
     </message>
     <message>
-        <source>Copy the path to the clipboard</source>
-        <translation>Copier le chemin dans le presse-papier</translation>
+        <source>Synchronise Workspace...</source>
+        <translation>Synchroniser Espace De Travail...</translation>
     </message>
     <message>
-        <source>Clone...</source>
-        <translation>Cloner...</translation>
+        <source>Synchronise the curent workspace with PMR</source>
+        <translation>Synchroniser l&apos;espace de travail actuel avec PMR</translation>
     </message>
     <message>
-        <source>Clone the current workspace</source>
-        <translation>Cloner l&apos;espace de travail actuel</translation>
+        <source>Reload Workspaces</source>
+        <translation>Recharger Espaces De Travail</translation>
     </message>
     <message>
-        <source>Commit...</source>
-        <translation>Valider...</translation>
-    </message>
-    <message>
-        <source>Commit staged changes</source>
-        <translation>Valider les changements indexés</translation>
-    </message>
-    <message>
-        <source>Pull</source>
-        <translation>Tirer</translation>
-    </message>
-    <message>
-        <source>Pull changes from PMR</source>
-        <translation>Tirer les changements de PMR</translation>
-    </message>
-    <message>
-        <source>Pull And Push</source>
-        <translation>Tirer Et Pousser</translation>
-    </message>
-    <message>
-        <source>Pull and push changes from/to PMR</source>
-        <translation>Tirer et pousser les changements de/vers PMR</translation>
-    </message>
-    <message>
-        <source>About...</source>
-        <translation>À Propos...</translation>
+        <source>About Workspace</source>
+        <translation>À Propos Espace De Travail</translation>
     </message>
     <message>
         <source>Some information about the current workspace</source>
@@ -138,28 +138,52 @@
         <translation>Aucuns espaces de travail n&apos;ont été trouvés...</translation>
     </message>
     <message>
-        <source>Stage</source>
-        <translation>Indexer</translation>
+        <source>View Workspace In PMR</source>
+        <translation>Voir Espace De Travail Dans PMR</translation>
     </message>
     <message>
-        <source>Stage the file for commit</source>
-        <translation>Indexer le fichier pour validation</translation>
+        <source>View Workspaces In PMR</source>
+        <translation>Voir Espaces De Travail Dans PMR</translation>
     </message>
     <message>
-        <source>Stage the files for commit</source>
-        <translation>Indexer les fichiers pour validation</translation>
+        <source>View the current workspace in PMR</source>
+        <translation>Voir l&apos;espace de travail actuel dans PMR</translation>
     </message>
     <message>
-        <source>Unstage</source>
-        <translation>Désindexer</translation>
+        <source>View the current workspaces in PMR</source>
+        <translation>Voir les espaces de travail actuels dans PMR</translation>
     </message>
     <message>
-        <source>Unstage the file from commit</source>
-        <translation>Désindexer le fichier de la validation</translation>
+        <source>View Workspace On Computer</source>
+        <translation>Voir Espace De Travail Sur Ordinateur</translation>
     </message>
     <message>
-        <source>Unstage the files from commit</source>
-        <translation>Désindexer les fichiers de la validation</translation>
+        <source>View Workspaces On Computer</source>
+        <translation>Voir Espaces De Travail Sur Ordinateur</translation>
+    </message>
+    <message>
+        <source>View the current workspace on the computer</source>
+        <translation>Voir l&apos;espace de travail actuel sur l&apos;ordinateur</translation>
+    </message>
+    <message>
+        <source>View the current workspaces on the computer</source>
+        <translation>Voir les espaces de travail actuels sur l&apos;ordinateur</translation>
+    </message>
+    <message>
+        <source>Synchronise With PMR</source>
+        <translation>Synchroniser Avec PMR</translation>
+    </message>
+    <message>
+        <source>Both a &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;name&lt;/a&gt; and an &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;email&lt;/a&gt; must be set before you can synchronise with PMR.</source>
+        <translation>À la fois un &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;nom&lt;/a&gt; et un &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;email&lt;/a&gt; doivent être spécifiés avant de pouvoir synchroniser avec PMR.</translation>
+    </message>
+    <message>
+        <source>A &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;name&lt;/a&gt; must be set before you can synchronise with PMR.</source>
+        <translation>Un &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;nom&lt;/a&gt; doit être spécifié avant de pouvoir synchroniser avec PMR.</translation>
+    </message>
+    <message>
+        <source>An &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;email&lt;/a&gt; must be set before you can synchronise with PMR.</source>
+        <translation>Un &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;email&lt;/a&gt; doit être spécifié avant de pouvoir synchroniser avec PMR.</translation>
     </message>
     <message>
         <source>Owner:</source>
@@ -195,21 +219,6 @@
     <message>
         <source>You are about to log off PMR. Do you want to proceed?</source>
         <translation>Vous êtes sur le point de vous déconnecter de PMR. Voulez-vous continuer ?</translation>
-    </message>
-</context>
-<context>
-    <name>PmrWorkspacesWindowCommitDialog</name>
-    <message>
-        <source>Commit staged files</source>
-        <translation>Valider les fichiers indexés</translation>
-    </message>
-    <message>
-        <source>Commit message:</source>
-        <translation>Message de validation :</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note:&lt;/span&gt; lines starting with &apos;;&apos; will be ignored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline;&quot;&gt;Note :&lt;/span&gt; les lignes commençant par &apos;;&apos; seront ignorées.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>

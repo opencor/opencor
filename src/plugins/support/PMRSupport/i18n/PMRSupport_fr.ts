@@ -2,6 +2,21 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>OpenCOR::PMRSupport::PmrSupportPreferencesWidget</name>
+    <message>
+        <source>the primary site is selected. Everything on this site is permanent and persistent. It is always up and always stable.</source>
+        <translation>le site principal est sélectionné. Tout sur ce site est permanent et persistant. Il est toujours disponible et toujours stable.</translation>
+    </message>
+    <message>
+        <source>the staging site is selected. It is used for public testing/preview of PMR developments. A warning is always sent before wiping clean and starting with a fresh copy of the primary site (workspaces, exposures and user accounts). The content of this site is never migrated to the primary site, but users can synchronise across if desired.</source>
+        <translation>le site de test est sélectionné. Il est utilisé pour publiquement tester/consulter les développements de PMR. Un avertissement est toujours envoyé avant de nettoyer et réinitialiser à l&apos;aide du site principal (espaces de travail, expositions et comptes utilisateurs). Le contenu de ce site n&apos;est jamais migré vers le site principal, mais les utilisateurs peuvent synchroniser si nécessaire.</translation>
+    </message>
+    <message>
+        <source>the teaching site is selected. It is randomly wiped with little or no warning. It mostly matches the primary site in terms of functionality. It may be synchronised with the primary site (workspaces, exposures and user accounts) or it may simply be empty.</source>
+        <translation>le site d&apos;enseignement est sélectionné. Il est irrégulièrement nettoyé avec peu ou pas d&apos;avertissement. Il correspond essentiellement au site principal en termes de fonctionnalité. Il peut être synchronisé avec le site principal (espaces de travail, expositions et comptes utilisateurs) ou il peut tout simplement être vide.</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::PMRSupport::PmrWebService</name>
     <message>
         <source>** Unknown name **</source>
@@ -49,6 +64,14 @@
     <message>
         <source>PMR Authentication</source>
         <translation>Authentification PMR</translation>
+    </message>
+    <message>
+        <source>PMR Authentication could not be performed.</source>
+        <translation>L&apos;authentification PMR n&apos;a pas pu être faite.</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;Note:&lt;/strong&gt; you might want to check that your system time is correct.</source>
+        <translation>&lt;strong&gt;Note :&lt;/strong&gt; vous voudrez peut-être vérifier que l&apos;heure système est correcte.</translation>
     </message>
 </context>
 <context>
@@ -138,6 +161,10 @@
     <message>
         <source>PMR:</source>
         <translation>PMR :</translation>
+    </message>
+    <message>
+        <source>Note:</source>
+        <translation>Note :</translation>
     </message>
 </context>
 </TS>

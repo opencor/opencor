@@ -504,13 +504,15 @@ bool FileBrowserWindowWidget::viewportEvent(QEvent *pEvent)
 
 //==============================================================================
 
-void FileBrowserWindowWidget::itemChanged(const QModelIndex &,
-                                          const QModelIndex &pPrevItem)
+void FileBrowserWindowWidget::itemChanged(const QModelIndex &pNewIndex,
+                                          const QModelIndex &pOldIndex)
 {
+    Q_UNUSED(pNewIndex);
+
     // A new item has been selected, so we need to keep track of the old one in
     // case we want to go back to it
 
-    mPreviousItems << pathOf(pPrevItem);
+    mPreviousItems << pathOf(pOldIndex);
 
     // Reset the list of next items since that list doesn't make sense anymore
 

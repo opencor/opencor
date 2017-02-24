@@ -29,6 +29,7 @@ limitations under the License.
 #include "cellmlannotationviewplugin.h"
 #include "filemanager.h"
 #include "usermessagewidget.h"
+#include "progressbarwidget.h"
 #include "webviewerwidget.h"
 
 //==============================================================================
@@ -79,13 +80,15 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our splitter widget
 
-    mSplitter = new QSplitter(Qt::Vertical, this);
+    mSplitter = new Core::SplitterWidget(Qt::Vertical, this);
 
     // Create our details widgets
 
     mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pViewWidget, pViewEditingWidget, pCellmlFile, mSplitter);
     mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pCellmlFile, mSplitter);
     mWebViewer = new WebViewerWidget::WebViewerWidget(mSplitter);
+
+    mWebViewer->showProgressBar();
 
     mWebViewer->setContextMenuPolicy(Qt::NoContextMenu);
     mWebViewer->setOverrideCursor(true);
@@ -264,7 +267,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::emitSplitterMoved()
 
 //==============================================================================
 
-QSplitter * CellmlAnnotationViewMetadataDetailsWidget::splitter() const
+Core::SplitterWidget * CellmlAnnotationViewMetadataDetailsWidget::splitter() const
 {
     // Return our splitter widget
 
@@ -296,6 +299,8 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookUpQualifier(const QString &p
     // Let people know that we want our web viewer to be updated with some
     // details about the given qualifier
 
+    mWebViewer->progressBarWidget()->setEnabled(true);
+
     emit qualifierDetailsRequested(mWebViewer, pQualifier);
 }
 
@@ -305,6 +310,8 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookUpResource(const QString &pR
 {
     // Let people know that we want our web viewer to be updated with some
     // details about the given resource
+
+    mWebViewer->progressBarWidget()->setEnabled(true);
 
     emit resourceDetailsRequested(mWebViewer, pResource);
 }
@@ -317,6 +324,8 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookUpId(const QString &pResourc
     // Let people know that we want our web viewer to be updated with some
     // details about the given id
 
+    mWebViewer->progressBarWidget()->setEnabled(true);
+
     emit idDetailsRequested(mWebViewer, pResource, pId);
 }
 
@@ -326,6 +335,8 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookUpNothing()
 {
     // We are 'asked' to look nothing up, so 'clean up' our web viewer by going
     // to our home page (i.e. blank page)
+
+    mWebViewer->progressBarWidget()->setEnabled(false);
 
     mWebViewer->goToHomePage();
 }

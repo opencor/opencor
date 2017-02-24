@@ -57,6 +57,7 @@ namespace PMRWorkspacesWindow {
 PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::PmrWorkspacesWindowWindow),
+    mSettingsGroup(QString()),
     mAuthenticated(false),
     mWaitingForPmrWebService(false)
 {
@@ -108,15 +109,14 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     // Create an instance of our PMR web service
 
-    QString pmrUrl = PreferencesInterface::preference(PMRSupport::PluginName,
-                                                      PMRSupport::SettingsPreferencesPmrUrl,
-                                                      PMRSupport::SettingsPreferencesPmrUrlDefault).toString();
-
-    mPmrWebService = new PMRSupport::PmrWebService(pmrUrl, this);
+    mPmrUrl = PreferencesInterface::preference(PMRSupport::PluginName,
+                                               PMRSupport::SettingsPreferencesPmrUrl,
+                                               PMRSupport::SettingsPreferencesPmrUrlDefault).toString();
+    mPmrWebService = new PMRSupport::PmrWebService(mPmrUrl, this);
 
     // Create and add our workspaces widget
 
-    mPmrWorkspacesWindowWidget = new PmrWorkspacesWindowWidget(pmrUrl, mPmrWebService, this);
+    mPmrWorkspacesWindowWidget = new PmrWorkspacesWindowWidget(mPmrUrl, mPmrWebService, this);
 
     mPmrWorkspacesWindowWidget->setObjectName("PmrWorkspacesWindowWidget");
 
@@ -201,6 +201,10 @@ void PmrWorkspacesWindowWindow::retranslateUi()
 
 void PmrWorkspacesWindowWindow::loadSettings(QSettings *pSettings)
 {
+    // Keep track of our settings' group
+
+    mSettingsGroup = pSettings->group();
+
     // Retrieve the settings of the workspaces window widget
 
     pSettings->beginGroup(mPmrWorkspacesWindowWidget->objectName());
@@ -246,12 +250,17 @@ Ui::PmrWorkspacesWindowWindow * PmrWorkspacesWindowWindow::gui() const
 void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 {
     // Update both our PMR web service and workspaces widget, and then update
-    // our GUI (which will, as a result, also update our workspaces widget)
+    // our GUI (which will, as a result, also update our workspaces widget), if
+    // needed
 
-    mPmrWebService->update(pPmrUrl);
-    mPmrWorkspacesWindowWidget->update(pPmrUrl);
+    if (pPmrUrl.compare(mPmrUrl)) {
+        mPmrUrl = pPmrUrl;
 
-    updateGui();
+        mPmrWebService->update(pPmrUrl);
+        mPmrWorkspacesWindowWidget->update(pPmrUrl);
+
+        updateGui();
+    }
 }
 
 //==============================================================================
@@ -390,16 +399,22 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
 {
     // Create a new (owned) workspace
 
-    PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(Core::mainWindow());
+    QSettings settings;
 
-    if (newWorkspaceDialog.exec() == QDialog::Accepted) {
-        // Ask the PMR web service to create a new workspace, resulting in the
-        // (empty) workspace being cloned into its folder
+    settings.beginGroup(mSettingsGroup);
+        settings.beginGroup("PmrWorkspacesWindowNewWorkspaceDialog");
+            PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(&settings, Core::mainWindow());
 
-        mPmrWebService->requestNewWorkspace(newWorkspaceDialog.title(),
-                                            newWorkspaceDialog.description(),
-                                            newWorkspaceDialog.path());
-    }
+            if (newWorkspaceDialog.exec() == QDialog::Accepted) {
+                // Ask the PMR web service to create a new workspace, resulting
+                // in the (empty) workspace being cloned into its folder
+
+                mPmrWebService->requestNewWorkspace(newWorkspaceDialog.title(),
+                                                    newWorkspaceDialog.description(),
+                                                    newWorkspaceDialog.path());
+            }
+        settings.endGroup();
+    settings.endGroup();
 }
 
 //==============================================================================

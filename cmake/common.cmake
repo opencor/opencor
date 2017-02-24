@@ -73,6 +73,10 @@ MACRO(INITIALISE_PROJECT)
         FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
     ENDFOREACH()
 
+    # Make sure that anyone can access diff_match_patch
+
+    INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch)
+
     # Some initialisations related to our copy of QtWebKit
 
     IF(WIN32)
@@ -627,7 +631,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             # Only do a direct copy if the file exists and the plugin doesn't depend on any targets
 
-            IF(EXISTS ${FULL_EXTERNAL_BINARY} AND NOT "${ARG_DEPENDS}" STREQUAL "")
+            IF(EXISTS ${FULL_EXTERNAL_BINARY} AND "${ARG_DEPENDS}" STREQUAL "")
                 SET(COPY_TARGET DIRECT)
             ELSE()
                 SET(COPY_TARGET ${PROJECT_NAME})
@@ -660,24 +664,22 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${IMPORT_EXTERNAL_BINARY}
                 )
-            ELSEIF(${COPY_TARGET} STREQUAL "DIRECT")
+            ELSE()
                 IF(APPLE)
-                    EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
-                                    WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-                    )
-                ENDIF()
+                    IF(${COPY_TARGET} STREQUAL "DIRECT")
+                        EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
+                                        WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                        )
+                    ELSE()
+                        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
+                            COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
+                            WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                        )
+                    ENDIF()
+
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                 )
-            ELSE()
-                TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                    ${FULL_EXTERNAL_BINARY}
-                )
-                IF(APPLE)
-                    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                        COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
-                        WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-                    )
                 ENDIF()
             ENDIF()
 
@@ -991,7 +993,7 @@ MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
             EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                              ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
         ELSE()
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} PRE_BUILD
                                COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                                 ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
         ENDIF()
@@ -1003,7 +1005,7 @@ MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
             EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                              ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
         ELSE()
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} PRE_BUILD
                                COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                                 ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
         ENDIF()
@@ -1170,35 +1172,6 @@ MACRO(MACOS_CLEAN_UP_FILE PROJECT_TARGET DIRNAME FILENAME)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND install_name_tool -id @rpath/${FILENAME} ${FULL_FILENAME})
     ENDIF()
-
-    # Make sure that the file refers to our embedded copy of OpenSSL
-    # Note: we try two different paths for a given OpenSSL library since the
-    #       former path will be used by libssl.1.0.0.dylib while the latter path
-    #       will be used by our plugins...
-
-    FOREACH(OPENSSL_LIBRARY ${OPENSSL_LIBRARIES})
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY ${OPENSSL_LIBRARY} REALPATH)
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_DIRNAME ${OPENSSL_LIBRARY} DIRECTORY)
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_FILENAME ${REAL_OPENSSL_LIBRARY} NAME)
-
-        IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            EXECUTE_PROCESS(COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY}
-                                                              @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                              ${FULL_FILENAME})
-            EXECUTE_PROCESS(COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY_DIRNAME}/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                              @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                              ${FULL_FILENAME})
-        ELSE()
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY}
-                                                                 @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                                 ${FULL_FILENAME})
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY_DIRNAME}/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                                 @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                                 ${FULL_FILENAME})
-        ENDIF()
-    ENDFOREACH()
 ENDMACRO()
 
 #===============================================================================

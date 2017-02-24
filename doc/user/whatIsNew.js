@@ -1,11 +1,12 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 8, "month": 2, "year": 2017,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 10, "month": 2, "year": 2017,
                      "categories": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "Preferences dialog." },
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Linux\">Linux</a>." },
-                           { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a>." }
+                           { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a>." },
+                           { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." }
                          ]
                        },
                        { "name": "Data store",
@@ -15,8 +16,15 @@ var jsonData = { "versions": [
                        },
                        { "name": "Editing",
                          "entries": [
+                           { "type": "subCategory", "name": "CellML Annotation view",
+                             "entries": [
+                               { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
+                               { "type": "Improved", "description": "Conversion of <a href=\"https://www.cellml.org/\">CellML</a> files to the <a href=\"http://www.opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format\">CellML Text format</a>." },
+                               { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "Fixed", "description": "Saving of a new file." }
                              ]
                            }

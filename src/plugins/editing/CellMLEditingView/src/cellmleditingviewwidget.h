@@ -25,12 +25,11 @@ limitations under the License.
 //==============================================================================
 
 #include "cellmleditingviewglobal.h"
-#include "commonwidget.h"
 #include "corecliutils.h"
+#include "splitterwidget.h"
 
 //==============================================================================
 
-#include <QSplitter>
 #include <QString>
 
 //==============================================================================
@@ -61,8 +60,7 @@ namespace CellMLEditingView {
 
 //==============================================================================
 
-class CELLMLEDITINGVIEW_EXPORT CellmlEditingViewWidget : public QSplitter,
-                                                         public Core::CommonWidget
+class CELLMLEDITINGVIEW_EXPORT CellmlEditingViewWidget : public Core::SplitterWidget
 {
     Q_OBJECT
 

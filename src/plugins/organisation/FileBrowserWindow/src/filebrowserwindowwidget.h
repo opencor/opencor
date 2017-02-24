@@ -95,7 +95,8 @@ signals:
     void goToNextFileOrFolderEnabled(const bool &pEnabled);
 
 private slots:
-    void itemChanged(const QModelIndex &, const QModelIndex &pPrevItem);
+    void itemChanged(const QModelIndex &pNewIndex,
+                     const QModelIndex &pOldIndex);
 
     void directoryLoaded(const QString &pPath);
 };

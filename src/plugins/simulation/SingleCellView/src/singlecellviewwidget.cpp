@@ -75,7 +75,6 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
                                            QWidget *pParent) :
     ViewWidget(pParent),
     mPlugin(pPlugin),
-    mSettingsGroup(QString()),
     mSimulationWidgetSizes(QIntList()),
     mContentsWidgetSizes(QIntList()),
     mCollapsibleWidgetCollapsed(QBoolList()),
@@ -106,13 +105,6 @@ static const auto SettingsParametersColumnWidths = QStringLiteral("ParametersCol
 
 void SingleCellViewWidget::loadSettings(QSettings *pSettings)
 {
-    // Normally, we would retrieve the simulation widget's settings, but
-    // mSimulationWidget is not set at this stage. So, instead, we keep track of
-    // our settings' group and load them when initialising ourselves (see
-    // initialize())...
-
-    mSettingsGroup = pSettings->group();
-
     // Retrieve the sizes of our simulation widget and of its contents widget
 
     QVariantList defaultContentsSizes = QVariantList() << 0.25*qApp->desktop()->screenGeometry().width()

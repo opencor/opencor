@@ -156,10 +156,10 @@ private:
     bool processImportNode(const QDomNode &pDomNode);
     bool processUnitsNode(const QDomNode &pDomNode,
                           const bool &pInImportNode = false);
-    void processUnitNode(const QDomNode &pDomNode);
+    bool processUnitNode(const QDomNode &pDomNode);
     bool processComponentNode(const QDomNode &pDomNode,
                               const bool &pInImportNode = false);
-    void processVariableNode(const QDomNode &pDomNode);
+    bool processVariableNode(const QDomNode &pDomNode);
     bool processMathNode(const QDomNode &pDomNode);
     int childNodesCount(const QDomNode &pDomNode) const;
     QDomNode childNode(const QDomNode &pDomNode,
@@ -183,12 +183,12 @@ private:
     bool processGroupNode(const QDomNode &pDomNode);
     bool processRelationshipRefNode(const QDomNode &pDomNode,
                                     QString &pRelationshipRef);
-    void processComponentRefNode(const QDomNode &pDomNode);
+    bool processComponentRefNode(const QDomNode &pDomNode);
     bool processConnectionNode(const QDomNode &pDomNode);
     bool processMapComponentsNode(const QDomNode &pDomNode,
                                   QString &pMapComponents);
-    void processMapVariablesNode(const QDomNode &pDomNode);
-    void processUnknownNode(const QDomNode &pDomNode);
+    bool processMapVariablesNode(const QDomNode &pDomNode);
+    bool processUnknownNode(const QDomNode &pDomNode);
     void processUnsupportedNode(const QDomNode &pDomNode, const bool &pError,
                                 const QString &pExtra = QString());
 };

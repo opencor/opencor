@@ -20,6 +20,7 @@ limitations under the License.
 // PMR Workspaces window commit dialog
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "pmrworkspaceswindowcommitdialog.h"
 
 //==============================================================================
@@ -33,9 +34,10 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowCommitDialog::PmrWorkspacesWindowCommitDialog(const PMRSupport::StagedFiles &pStagedFiles,
+PmrWorkspacesWindowCommitDialog::PmrWorkspacesWindowCommitDialog(QSettings *pSettings,
+                                                                 const PMRSupport::StagedFiles &pStagedFiles,
                                                                  QWidget *pParent) :
-    QDialog(pParent),
+    Core::Dialog(pSettings, pParent),
     mGui(new Ui::PmrWorkspacesWindowCommitDialog)
 {
     // Set up the GUI
@@ -95,6 +97,10 @@ PmrWorkspacesWindowCommitDialog::PmrWorkspacesWindowCommitDialog(const PMRSuppor
             this, SLOT(accept()));
     connect(mGui->buttonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
+
+    // Set our minimum size
+
+    setMinimumSize(Core::minimumWidgetSize(this));
 }
 
 //==============================================================================

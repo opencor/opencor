@@ -24,16 +24,12 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QIcon>
-#include <QList>
-#include <QKeySequence>
-#include <QString>
+#include <QtPlugin>
 
 //==============================================================================
 
 class QAction;
 class QMenu;
-class QWidget;
 
 //==============================================================================
 

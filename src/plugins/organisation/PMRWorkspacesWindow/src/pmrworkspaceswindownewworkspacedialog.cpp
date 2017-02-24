@@ -43,8 +43,8 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QWidget *pParent) :
-    QDialog(pParent),
+PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QSettings *pSettings, QWidget *pParent) :
+    Core::Dialog(pSettings, pParent),
     mGui(new Ui::PmrWorkspacesWindowNewWorkspaceDialog)
 {
     // Set up the GUI
@@ -74,6 +74,10 @@ PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QWi
             this, SLOT(accept()));
     connect(mGui->buttonBox, SIGNAL(rejected()),
             this, SLOT(reject()));
+
+    // Set our minimum size
+
+    setMinimumSize(Core::minimumWidgetSize(this));
 }
 
 //==============================================================================

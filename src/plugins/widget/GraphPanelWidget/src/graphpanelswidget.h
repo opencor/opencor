@@ -24,13 +24,9 @@ limitations under the License.
 
 //==============================================================================
 
-#include "corecliutils.h"
 #include "graphpanelwidget.h"
 #include "graphpanelwidgetglobal.h"
-
-//==============================================================================
-
-#include <QSplitter>
+#include "splitterwidget.h"
 
 //==============================================================================
 
@@ -39,8 +35,7 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-class GRAPHPANELWIDGET_EXPORT GraphPanelsWidget : public QSplitter,
-                                                  public Core::CommonWidget
+class GRAPHPANELWIDGET_EXPORT GraphPanelsWidget : public Core::SplitterWidget
 {
     Q_OBJECT
 
@@ -62,8 +57,6 @@ public:
     void setActiveGraphPanel(GraphPanelWidget *pGraphPanel);
 
 private:
-    QIntList mSplitterSizes;
-
     GraphPanelWidgets mGraphPanels;
 
     GraphPanelWidget *mActiveGraphPanel;

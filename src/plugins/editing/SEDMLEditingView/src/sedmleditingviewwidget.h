@@ -24,13 +24,12 @@ limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
 #include "corecliutils.h"
 #include "sedmleditingviewglobal.h"
+#include "splitterwidget.h"
 
 //==============================================================================
 
-#include <QSplitter>
 #include <QString>
 
 //==============================================================================
@@ -55,8 +54,7 @@ namespace SEDMLEditingView {
 
 //==============================================================================
 
-class SEDMLEDITINGVIEW_EXPORT SedmlEditingViewWidget : public QSplitter,
-                                                       public Core::CommonWidget
+class SEDMLEDITINGVIEW_EXPORT SedmlEditingViewWidget : public Core::SplitterWidget
 {
     Q_OBJECT
 

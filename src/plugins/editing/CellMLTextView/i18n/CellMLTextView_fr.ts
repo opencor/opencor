@@ -178,10 +178,6 @@
         <translation>Un élément &apos;connection&apos; doit contenir exactement un élément &apos;map_components&apos;.</translation>
     </message>
     <message>
-        <source>A &apos;%1&apos; element was found%2, but it is not known and cannot therefore be processed.</source>
-        <translation>Un élément &apos;%1&apos; a été trouvé%2, mais il n&apos;est pas reconnu et ne peut donc pas être traité.</translation>
-    </message>
-    <message>
         <source>An attribute was found%1, but it was not processed.</source>
         <translation>Un attribut a été trouvé%1, mais il n&apos;a pas été traité.</translation>
     </message>

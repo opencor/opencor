@@ -31,27 +31,27 @@ using namespace Scintilla;
 #endif
 
 LexerSimple::LexerSimple(const LexerModule *module_) : module(module_) {
-	for (int wl = 0; wl < module->GetNumWordLists(); wl++) {
-		if (!wordLists.empty())
-			wordLists += "\n";
-		wordLists += module->GetWordListDescription(wl);
-	}
+    for (int wl = 0; wl < module->GetNumWordLists(); wl++) {
+        if (!wordLists.empty())
+            wordLists += "\n";
+        wordLists += module->GetWordListDescription(wl);
+    }
 }
 
 const char * SCI_METHOD LexerSimple::DescribeWordListSets() {
-	return wordLists.c_str();
+    return wordLists.c_str();
 }
 
-void SCI_METHOD LexerSimple::Lex(unsigned int startPos, int lengthDoc, int initStyle, IDocument *pAccess) {
-	Accessor astyler(pAccess, &props);
-	module->Lex(startPos, lengthDoc, initStyle, keyWordLists, astyler);
-	astyler.Flush();
+void SCI_METHOD LexerSimple::Lex(Sci_PositionU startPos, Sci_Position lengthDoc, int initStyle, IDocument *pAccess) {
+    Accessor astyler(pAccess, &props);
+    module->Lex(startPos, lengthDoc, initStyle, keyWordLists, astyler);
+    astyler.Flush();
 }
 
-void SCI_METHOD LexerSimple::Fold(unsigned int startPos, int lengthDoc, int initStyle, IDocument *pAccess) {
-	if (props.GetInt("fold")) {
-		Accessor astyler(pAccess, &props);
-		module->Fold(startPos, lengthDoc, initStyle, keyWordLists, astyler);
-		astyler.Flush();
-	}
+void SCI_METHOD LexerSimple::Fold(Sci_PositionU startPos, Sci_Position lengthDoc, int initStyle, IDocument *pAccess) {
+    if (props.GetInt("fold")) {
+        Accessor astyler(pAccess, &props);
+        module->Fold(startPos, lengthDoc, initStyle, keyWordLists, astyler);
+        astyler.Flush();
+    }
 }

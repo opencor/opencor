@@ -21,26 +21,26 @@ typedef void (*DrawWrapMarkerFn)(Surface *surface, PRectangle rcPlace, bool isEn
 */
 class MarginView {
 public:
-	Surface *pixmapSelMargin;
-	Surface *pixmapSelPattern;
-	Surface *pixmapSelPatternOffset1;
-	// Highlight current folding block
-	HighlightDelimiter highlightDelimiter;
+    Surface *pixmapSelMargin;
+    Surface *pixmapSelPattern;
+    Surface *pixmapSelPatternOffset1;
+    // Highlight current folding block
+    HighlightDelimiter highlightDelimiter;
 
-	int wrapMarkerPaddingRight; // right-most pixel padding of wrap markers
-	/** Some platforms, notably PLAT_CURSES, do not support Scintilla's native
-	 * DrawWrapMarker function for drawing wrap markers. Allow those platforms to
-	 * override it instead of creating a new method in the Surface class that
-	 * existing platforms must implement as empty. */
-	DrawWrapMarkerFn customDrawWrapMarker;
+    int wrapMarkerPaddingRight; // right-most pixel padding of wrap markers
+    /** Some platforms, notably PLAT_CURSES, do not support Scintilla's native
+     * DrawWrapMarker function for drawing wrap markers. Allow those platforms to
+     * override it instead of creating a new method in the Surface class that
+     * existing platforms must implement as empty. */
+    DrawWrapMarkerFn customDrawWrapMarker;
 
-	MarginView();
+    MarginView();
 
-	void DropGraphics(bool freeObjects);
-	void AllocateGraphics(const ViewStyle &vsDraw);
-	void RefreshPixMaps(Surface *surfaceWindow, WindowID wid, const ViewStyle &vsDraw);
-	void PaintMargin(Surface *surface, int topLine, PRectangle rc, PRectangle rcMargin,
-		const EditModel &model, const ViewStyle &vs);
+    void DropGraphics(bool freeObjects);
+    void AllocateGraphics(const ViewStyle &vsDraw);
+    void RefreshPixMaps(Surface *surfaceWindow, WindowID wid, const ViewStyle &vsDraw);
+    void PaintMargin(Surface *surface, int topLine, PRectangle rc, PRectangle rcMargin,
+        const EditModel &model, const ViewStyle &vs);
 };
 
 #ifdef SCI_NAMESPACE
