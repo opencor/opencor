@@ -474,7 +474,7 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("Copy the current workspace path to the clipboard"));
     I18nInterface::retranslateAction(mMakeLocalCopyAction, tr("Make Local Workspace Copy..."),
                                      tr("Make a local copy of the current workspace"));
-    I18nInterface::retranslateAction(mSynchronizeWorkspaceAction, tr("Synchronise Workspace..."),
+    I18nInterface::retranslateAction(mSynchronizeWorkspaceAction, tr("Synchronise Workspace With PMR..."),
                                      tr("Synchronise the curent workspace with PMR"));
     I18nInterface::retranslateAction(mReloadWorkspacesAction, tr("Reload Workspaces"),
                                      mParentReloadAction->statusTip());
