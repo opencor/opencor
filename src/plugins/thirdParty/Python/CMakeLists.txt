@@ -144,8 +144,12 @@ ELSE()
     ENDIF()
 
     IF(APPLE)                   # Use Homebrew's SQLite
-        SET(SQLITE3_INCLUDE_PATH /usr/local/opt/sqlite/include)
+        SET(SQLITE3_INCLUDE_DIR /usr/local/opt/sqlite/include)
         SET(SQLITE3_LIBRARY /usr/local/opt/sqlite/lib/libsqlite3.a)
+    ELSE()
+        SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+        FIND_PACKAGE(SQLite3 REQUIRED)
+## Need to copy into our lib directory...
     ENDIF()
 
     IF(WIN32)
@@ -194,7 +198,7 @@ ELSE()
 
             # IPython and Jupyter need SQLite
             -DENABLE_SQLITE3=ON
-            -DSQLITE3_INCLUDE_PATH=${SQLITE3_INCLUDE_PATH}
+            -DSQLITE3_INCLUDE_PATH=${SQLITE3_INCLUDE_DIR}
             -DSQLITE3_LIBRARY=${SQLITE3_LIBRARY}
 
             # Turn off things we don't want
