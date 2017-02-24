@@ -660,24 +660,22 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${IMPORT_EXTERNAL_BINARY}
                 )
-            ELSEIF(${COPY_TARGET} STREQUAL "DIRECT")
+            ELSE()
                 IF(APPLE)
-                    EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
-                                    WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-                    )
-                ENDIF()
+                    IF(${COPY_TARGET} STREQUAL "DIRECT")
+                        EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
+                                        WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                        )
+                    ELSE()
+                        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
+                            COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
+                            WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                        )
+                    ENDIF()
+
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                 )
-            ELSE()
-                TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                    ${FULL_EXTERNAL_BINARY}
-                )
-                IF(APPLE)
-                    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                        COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
-                        WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-                    )
                 ENDIF()
             ENDIF()
 
@@ -991,7 +989,7 @@ MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
             EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                              ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
         ELSE()
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} PRE_BUILD
                                COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                                 ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
         ENDIF()
@@ -1003,7 +1001,7 @@ MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
             EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                              ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
         ELSE()
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} PRE_BUILD
                                COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                                 ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
         ENDIF()
