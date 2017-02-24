@@ -388,7 +388,7 @@ ELSE()
             ipykernel==${IPYKERNEL_VERSION}
         COMMAND ${PYTHON_EXECUTABLE} -s ${PROJECT_SOURCE_DIR}/bin/patch.py
             --strip=1
-            --directory=${FULL_INSTALL_DIR}/${PYTHON_LIBRARY_DIR}/site-packages/IPython
+            --directory=${FULL_INSTALL_DIR}/${PYTHON_RUNTIME_DIR}/site-packages/IPython
             ${PROJECT_SOURCE_DIR}/src/ipython_${IPYTHON_VERSION}.diff
         WORKING_DIRECTORY ${FULL_INSTALL_DIR}/bin
         DEPENDEES install_scipy
