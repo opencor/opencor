@@ -49,6 +49,8 @@ limitations under the License.
 #include <QTextEdit>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <QWebElement>
+#include <QWebFrame>
 #include <QWebView>
 
 //==============================================================================
@@ -870,6 +872,22 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
         }
 
         mWebViewer->webView()->setHtml(mDiffTemplate.arg(html));
+
+        // Make sure that the width of our DIV elements, if any, is that of our
+        // frame's contents
+        // Note: indeed, by default, it will have the width of our viewport, so
+        //       it will look odd if our frame's contents is much wider and that
+        //       the user was to decide to scroll to the right... (Could that be
+        //       a bug in QtWebKit?)
+
+        QWebElementCollection divElements = mWebViewer->webView()->page()->mainFrame()->documentElement().findAll("div");
+
+        if (divElements.count()) {
+            QString divWidth = QString("%1px").arg(mWebViewer->webView()->page()->mainFrame()->contentsSize().width());
+
+            for (int i = 0, iMax = divElements.count(); i < iMax; ++i)
+                divElements[i].setStyleProperty("width", divWidth);
+        }
     }
 }
 
