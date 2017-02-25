@@ -123,10 +123,10 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
         )
     ELSE()
         RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            Python ${PYTHON_PACKAGE_VERSION} 6e2c28287d5aa2ddfd8e29c771a156260043efbe
+            Python ${PYTHON_PACKAGE_VERSION} 0c8b8b07d6af7cdc8e6746cb472d9be5f45f20f0
             CHECKED_FILES ${CHECKED_FILES}
-            SHA1_VALUES ec521f0c01310d8ef52600cec739bb338c7b2a97
-                        2a12cbf6a5996b109e8c6205fe67e3b40b9b70c5
+            SHA1_VALUES d755a6bc25f4864a57ade7fa9666f628fd6b24b9
+                        d17857a22bd55fe4146169a1f64a9a696b5265ab
         )
     ENDIF()
 ELSE()
