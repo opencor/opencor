@@ -624,6 +624,21 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # External binaries
 
     IF(NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
+        # We need a custom target for copying binaries as otherwise
+        # Ninja can get confused with circular references...
+
+        SET(COPY_EXTERNAL_BINARIES_TARGET "COPY_${PROJECT_NAME}_EXTERNAL_BINARIES")
+        ADD_CUSTOM_TARGET(${COPY_EXTERNAL_BINARIES_TARGET}
+            COMMENT "Copying external binaries for ${PROJECT_NAME}"
+            )
+        ADD_DEPENDENCIES(${PROJECT_NAME} ${COPY_EXTERNAL_BINARIES_TARGET})
+
+        # What must be built before external binaries can be copied
+
+        IF(NOT "${ARG_DEPENDS}" STREQUAL "")
+            ADD_DEPENDENCIES(${COPY_EXTERNAL_BINARIES_TARGET} ${ARG_DEPENDS})
+        ENDIF()
+
         FOREACH(ARG_EXTERNAL_BINARY ${ARG_EXTERNAL_BINARIES})
             # Make sure that the external binary exists
 
@@ -634,7 +649,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             IF(EXISTS ${FULL_EXTERNAL_BINARY} AND "${ARG_DEPENDS}" STREQUAL "")
                 SET(COPY_TARGET DIRECT)
             ELSE()
-                SET(COPY_TARGET ${PROJECT_NAME})
+                SET(COPY_TARGET ${COPY_EXTERNAL_BINARIES_TARGET})
             ENDIF()
 
             # Copy the external binary to its destination directory, so we can
@@ -643,10 +658,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             #       so that we can test things from within Qt Creator...
 
             IF(WIN32)
-                COPY_FILE_TO_BUILD_DIR(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} . ${ARG_EXTERNAL_BINARY} PRE_BUILD)
+                COPY_FILE_TO_BUILD_DIR(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} . ${ARG_EXTERNAL_BINARY})
             ENDIF()
 
-            COPY_FILE_TO_BUILD_DIR(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY} PRE_BUILD)
+            COPY_FILE_TO_BUILD_DIR(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
 
             # Strip the external library of all its local symbols, if possible
 
@@ -671,7 +686,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                         WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
                         )
                     ELSE()
-                        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
+                        ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
                             COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
                             WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
                         )
@@ -988,29 +1003,22 @@ MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
     #       since the command might otherwise end up being too long for Windows
     #       to handle...
 
-    # An optional PRE_BUILD argument means to copy the file before the target is built.
-
-    CMAKE_PARSE_ARGUMENTS(ARG "PRE_BUILD" "" "" ${ARGN})
-
-    IF("${ARG_UNPARSED_ARGUMENTS}" STREQUAL "")
+    IF("${ARGN}" STREQUAL "")
         SET(FULL_DEST_FILENAME ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
     ELSE()
         # An argument was passed so use it to rename the file, which is to be
         # copied
-        SET(FULL_DEST_FILENAME ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARG_UNPARSED_ARGUMENTS})
+        SET(FULL_DEST_FILENAME ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
     ENDIF()
 
     IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
         EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                          ${FULL_DEST_FILENAME})
-    ELSEIF(ARG_PRE_BUILD)
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} PRE_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
-                                                            ${FULL_DEST_FILENAME})
     ELSE()
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
-                                                            ${FULL_DEST_FILENAME})
+                                                            ${FULL_DEST_FILENAME}
+                           BYPRODUCTS ${FULL_DEST_FILENAME})
     ENDIF()
 ENDMACRO()
 
