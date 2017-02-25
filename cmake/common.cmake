@@ -676,11 +676,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                             WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
                         )
                     ENDIF()
+                ENDIF()
 
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                 )
-                ENDIF()
             ENDIF()
 
             # Package the external library, if needed
