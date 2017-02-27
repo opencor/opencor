@@ -318,6 +318,7 @@ SET(PLUGINS
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
+    api/ZincAPI
 
     miscellaneous/Core
 
