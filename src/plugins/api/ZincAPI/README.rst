@@ -2,7 +2,7 @@ We build our own copy of the `Zinc API <http://physiomeproject.org/software/open
 
 ::
 
-  git clone https://github.com/OpenCMISS/manage.git OpenCMISS
-  cd OpenCMISS/build
-  ccmake -DOC_USE_IRON=NO -DMPI=none ..
-  cmake --build .
+  git clone https://github.com/OpenCMISS/manage.git OpenCMISS/manage
+  cd OpenCMISS/manage/build
+  cmake -DOC_USE_IRON=NO -DMPI=none ..
+  make
