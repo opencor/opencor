@@ -29,9 +29,6 @@ specific language governing permissions and limitations under the License.
 #include <QSettings>
 #include <QTimer>
 
-#include <QDebug>
-#include <QTime>
-
 //==============================================================================
 
 namespace OpenCOR {
@@ -196,7 +193,6 @@ if __name__ == '__main__':
 int JupyterKernelPlugin::runKernel()
 {
     // Run the the kernel using our connection file
-qDebug() << QTime::currentTime().toString("hh:mm:ss.zzz") << "Starting Jupyter kernel...";
 
     PythonQtSupport::PythonQtSupportPlugin::pythonManager()->executeString(jupyterKernel.arg(mConnectionFile));
 
