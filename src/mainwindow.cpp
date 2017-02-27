@@ -286,16 +286,14 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     loadSettings();
 
-    // Check if any plugin is running the main event loop
+    // Check if any plugin may want to run the main event loop
 
     foreach (Plugin *plugin, mLoadedPluginPlugins) {
 
         EventLoopInterface *eventLoopInterface = qobject_cast<EventLoopInterface *>(plugin->instance());
 
-        if (eventLoopInterface && eventLoopInterface->hasEventLoop()) {
-
+        if (eventLoopInterface) {
             mEventLoopPlugin = plugin;
-
             break;
         }
     }
@@ -1038,21 +1036,29 @@ void MainWindow::handleArguments(const QStringList &pArguments)
 
 //==============================================================================
 
-bool MainWindow::hasEventLoopPlugin()
-{
-    return (mEventLoopPlugin != 0);
-}
-
-//==============================================================================
-
-int MainWindow::runEventLoopPlugin()
+bool MainWindow::eventLoopPluginUseExec()
 {
     if (mEventLoopPlugin) {
 
         EventLoopInterface *eventLoopInterface = qobject_cast<EventLoopInterface *>(mEventLoopPlugin->instance());
 
         if (eventLoopInterface)
-            return eventLoopInterface->runEventLoop();
+            return eventLoopInterface->useExec();
+    }
+
+    return false;
+}
+
+//==============================================================================
+
+int MainWindow::eventLoopPluginExec()
+{
+    if (mEventLoopPlugin) {
+
+        EventLoopInterface *eventLoopInterface = qobject_cast<EventLoopInterface *>(mEventLoopPlugin->instance());
+
+        if (eventLoopInterface)
+            return eventLoopInterface->exec();
     }
 
     return 0;

@@ -55,17 +55,16 @@ PLUGININFO_FUNC JupyterKernelPluginInfo()
 // Event loop interface
 //==============================================================================
 
-bool JupyterKernelPlugin::hasEventLoop()
+bool JupyterKernelPlugin::useExec()
 {
-    return true;
-//    return false;
+    return !mConnectionFile.isEmpty();
 }
 
 //==============================================================================
 
-int JupyterKernelPlugin::runEventLoop()
+int JupyterKernelPlugin::exec()
 {
-    if (not mConnectionFile.isEmpty())
+    if (!mConnectionFile.isEmpty())
         return runKernel();
 
     return 0;

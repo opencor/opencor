@@ -29,8 +29,8 @@ limitations under the License.
     // Note: make sure to update eventLoopInterfaceVersion() whenever you update
     //       this interface...
 
-    virtual bool hasEventLoop() PURE;
-    virtual int runEventLoop() PURE;
+    virtual bool useExec() PURE;
+    virtual int exec() PURE;
 
 #undef PURE
 

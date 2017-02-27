@@ -311,8 +311,8 @@ int main(int pArgC, char *pArgV[])
     int res;
 
     if (canExecuteAplication) {
-        if (win->hasEventLoopPlugin())
-            res = win->runEventLoopPlugin();
+        if (win->eventLoopPluginUseExec())
+            res = win->eventLoopPluginExec();
         else
             res = guiApp->exec();
     }

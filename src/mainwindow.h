@@ -74,8 +74,8 @@ public:
 
     void showSelf();
 
-    bool hasEventLoopPlugin();
-    int runEventLoopPlugin();
+    bool eventLoopPluginUseExec();
+    int eventLoopPluginExec();
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
