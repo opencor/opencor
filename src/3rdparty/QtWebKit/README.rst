@@ -15,10 +15,15 @@
       **Note:** the `GnuWin32 <http://gnuwin32.sourceforge.net/>`__ version of `Flex <http://gnuwin32.sourceforge.net/packages/flex.htm>`__ is not suitable, hence we use `Win flex-bison <https://sourceforge.net/projects/winflexbison/>`__ instead.
 
   - **Linux**, i.e. running the following command from the terminal:
+
     ::
+
       sudo apt-get install bison flex gperf libicu-dev libsqlite3-dev libxrender-dev
+
     as well as building ICU from `source <http://site.icu-project.org/download/>`__ (make sure to get the version used by `Qt <https://www.qt.io/>`__; ``find /opt/Qt -name *icu*``) and from there:
+
     ::
+
       cd [ICU]
       mkdir build
       cd build
@@ -29,7 +34,9 @@
 From there, do the following from the command prompt or terminal:
 
 - **Command prompt:**
+
   ::
+
     cd [QtWebKit]
     SET INCLUDE=C:\icu\include;%INCLUDE%
     SET LIB=C:\icu\lib64;%LIB%
@@ -37,14 +44,20 @@ From there, do the following from the command prompt or terminal:
     SET SQLITE3SRCDIR=C:\Qt\5.6\Src\qtbase\src\3rdparty\sqlite
     qmake
     jom
+
 - **Terminal (Linux):**
+
   ::
+
     cd [QtWebKit]
     export PKG_CONFIG_PATH=[ICU]/install/lib/pkgconfig:$PKG_CONFIG_PATH
     qmake
     make -j 2
+
 - **Terminal (macOS):**
+
   ::
+
     cd [QtWebKit]
     qmake
     make -j 4 release
@@ -55,18 +68,30 @@ Once `QtWebKit <https://wiki.qt.io/QtWebKit>`__ is fully built:
 
   - Copy the contents of ``[QtWebKit]/lib/cmake`` to ``[OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir]``;
   - Replace
+
     ::
+
       get_filename_component(_qt5WebKit_install_prefix "${CMAKE_CURRENT_LIST_DIR}/../../../" ABSOLUTE)
+
     with
+
     ::
+
       set(_qt5WebKit_install_prefix ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
+
     in `[OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir]/Qt5WebKit/Qt5WebKitConfig.cmake`; and
   - Replace
+
     ::
+
       get_filename_component(_qt5WebKitWidgets_install_prefix "${CMAKE_CURRENT_LIST_DIR}/../../../" ABSOLUTE)
+
     with
+
     ::
+
       set(_qt5WebKitWidgets_install_prefix ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
+
     in ``[OpenCOR]/src/3rdparty/QtWebKit/cmake/[PlatformDir]/Qt5WebKitWidgets/Qt5WebKitWidgetsConfig.cmake``.
 
 - Copy the **macOS** contents of ``[QtWebKit]/lib/QtWebKit.framework/Headers`` to ``[OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKit`` and the **macOS** contents of ``[QtWebKit]/lib/QtWebKitWidgets.framework/Headers`` to ``[OpenCOR]/src/3rdparty/QtWebKit/include/QtWebKitWidgets``; and
