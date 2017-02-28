@@ -103,18 +103,6 @@ bool TreeViewWidget::isEditing() const
 
 //==============================================================================
 
-QSize TreeViewWidget::sizeHint() const
-{
-    // Suggest a default size for our tree view widget
-    // Note: this is critical if we want a docked widget, with a tree view
-    //       widget on it, to have a decent size when docked to the main
-    //       window...
-
-    return defaultSize(0.15);
-}
-
-//==============================================================================
-
 void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check some key combinations
@@ -231,6 +219,18 @@ void TreeViewWidget::mousePressEvent(QMouseEvent *pEvent)
         if (!selectedIndexes().contains(indexAtPosition))
             setCurrentIndex(indexAtPosition);
     }
+}
+
+//==============================================================================
+
+QSize TreeViewWidget::sizeHint() const
+{
+    // Suggest a default size for our tree view widget
+    // Note: this is critical if we want a docked widget, with a tree view
+    //       widget on it, to have a decent size when docked to the main
+    //       window...
+
+    return defaultSize(0.15);
 }
 
 //==============================================================================

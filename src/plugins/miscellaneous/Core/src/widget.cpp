@@ -93,18 +93,6 @@ void Widget::createLayout(const LayoutType &pLayoutType)
 
 //==============================================================================
 
-QSize Widget::sizeHint() const
-{
-    // Suggest our default size for the widget
-
-    if (mSizeHint.isValid())
-        return mSizeHint;
-    else
-        return QWidget::sizeHint();
-}
-
-//==============================================================================
-
 void Widget::resizeEvent(QResizeEvent *pEvent)
 {
     // Default handling of the event
@@ -114,6 +102,18 @@ void Widget::resizeEvent(QResizeEvent *pEvent)
     // Resize our busy widget
 
     resizeBusyWidget();
+}
+
+//==============================================================================
+
+QSize Widget::sizeHint() const
+{
+    // Suggest our default size for the widget
+
+    if (mSizeHint.isValid())
+        return mSizeHint;
+    else
+        return QWidget::sizeHint();
 }
 
 //==============================================================================
