@@ -49,6 +49,8 @@ limitations under the License.
 #include <QTextEdit>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <QWebElement>
+#include <QWebFrame>
 #include <QWebView>
 
 //==============================================================================
@@ -179,6 +181,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     mVerticalSplitter->setCollapsible(0, false);
     mVerticalSplitter->setCollapsible(1, false);
+    mVerticalSplitter->setStretchFactor(1, 1);
 
     mHorizontalSplitter->addWidget(mVerticalSplitter);
 
@@ -227,7 +230,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     mWebViewer = new WebViewerWidget::WebViewerWidget(mHorizontalSplitter);
 
-    mWebViewer->setContextMenuPolicy(Qt::CustomContextMenu);
+    mWebViewer->webView()->setContextMenuPolicy(Qt::CustomContextMenu);
     mWebViewer->setOverrideCursor(true);
 
     webViewerLayout->addWidget(webViewerToolBarWidget);
@@ -612,8 +615,21 @@ bool PmrWorkspacesWindowSynchronizeDialog::cellmlText(const QString &pFileName,
                                                       QString &pCellmlText)
 {
     // Try to generate the CellML Text version of the given CellML file
+    // Note: we want to run the CLI version of OpenCOR, so on Windows this means
+    //       that we need to replace the program's file extension from ".exe" to
+    //       ".com"...
 
-    if (!Core::exec(qApp->applicationFilePath(),
+#ifdef Q_OS_WIN
+    static const QRegularExpression ExeExtensionRegEx = QRegularExpression("\\.exe$");
+#endif
+
+    QString program = qApp->applicationFilePath();
+
+#ifdef Q_OS_WIN
+    program.replace(ExeExtensionRegEx, ".com");
+#endif
+
+    if (!Core::exec(program,
                     QStringList() << "-c"
                                   << "CellMLTextView::import"
                                   << pFileName,
@@ -857,6 +873,22 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
         }
 
         mWebViewer->webView()->setHtml(mDiffTemplate.arg(html));
+
+        // Make sure that the width of our DIV elements, if any, is that of our
+        // frame's contents
+        // Note: indeed, by default, it will have the width of our viewport, so
+        //       it will look odd if our frame's contents is much wider and that
+        //       the user was to decide to scroll to the right... (Could that be
+        //       a bug in QtWebKit?)
+
+        QWebElementCollection divElements = mWebViewer->webView()->page()->mainFrame()->documentElement().findAll("div");
+
+        if (divElements.count()) {
+            QString divWidth = QString("%1px").arg(mWebViewer->webView()->page()->mainFrame()->contentsSize().width());
+
+            for (int i = 0, iMax = divElements.count(); i < iMax; ++i)
+                divElements[i].setStyleProperty("width", divWidth);
+        }
     }
 }
 

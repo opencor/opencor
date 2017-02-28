@@ -8,21 +8,35 @@ In case `LLVM <http://www.llvm.org/>`__ is to be built (by setting the ``USE_PRE
 - Extract their corresponding ``.tar.xz`` file;
 - Move the contents of ``[Clang]`` to ``[LLVM]/tools/clang``;
 - From the command line:
+
   ::
+
     cd [LLVM]
     mkdir build
     cd build
+
   and then
+
   ::
+
     ccmake -G "Ninja" ..
-  or\
+
+  or
+
   ::
+
     ccmake -G "Unix Makefiles" ..
-  or\
+
+  or
+
   ::
+
     ccmake -G "NMake Makefiles JOM" ..
+
 - Configure the build with the following options:
+
   ::
+
     CLANG_ENABLE_ARCMT:             OFF
     CLANG_ENABLE_STATIC_ANALYZER:   OFF
     CLANG_INCLUDE_DOCS:             OFF
@@ -40,9 +54,13 @@ In case `LLVM <http://www.llvm.org/>`__ is to be built (by setting the ``USE_PRE
     LLVM_INCLUDE_TESTS:             OFF
     LLVM_INCLUDE_UTILS:             OFF
     LLVM_TARGETS_TO_BUILD:          X86
+
   **Note:** to enable ``TERMINFO`` and ``ZLIB`` would require a more complicated build process and it is not worth it...
+
 - From the command line:
+
   ::
+
     cmake --build .
 
 From there, the configuration files are to be manually copied over to the ``windows``, ``linux`` and ``macos`` folders of the various folders. When it comes to ``[LLVM]/include/llvm/Config/[PLATFORM_DIR]/config.h``, we should make sure that ``HAVE_LIBEDIT`` is not set (this is part of keeping the `LLVM <http://www.llvm.org/>`__ build as simple as possible).

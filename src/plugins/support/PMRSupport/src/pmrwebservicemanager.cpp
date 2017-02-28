@@ -154,7 +154,7 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 
         mWebViewer = new WebViewerWidget::WebViewerWidget(mWebViewerDialog);
 
-        mWebViewer->setContextMenuPolicy(Qt::NoContextMenu);
+        mWebViewer->webView()->setContextMenuPolicy(Qt::NoContextMenu);
 
         mWebViewer->showProgressBar();
 

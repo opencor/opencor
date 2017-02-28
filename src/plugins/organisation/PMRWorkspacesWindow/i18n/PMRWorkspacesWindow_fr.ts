@@ -106,8 +106,8 @@
         <translation>Faire une copie locale de l&apos;espace de travail actuel</translation>
     </message>
     <message>
-        <source>Synchronise Workspace...</source>
-        <translation>Synchroniser Espace De Travail...</translation>
+        <source>Synchronise Workspace With PMR...</source>
+        <translation>Synchroniser Espace De Travail Avec PMR...</translation>
     </message>
     <message>
         <source>Synchronise the curent workspace with PMR</source>

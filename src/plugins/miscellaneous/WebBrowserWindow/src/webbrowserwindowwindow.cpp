@@ -156,9 +156,9 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     // we don't want the default one, which has the reload menu item and not the
     // other actions that we have in our tool bar widget)
 
-    mWebBrowserWindowWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    mWebBrowserWindowWidget->webView()->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mWebBrowserWindowWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+    connect(mWebBrowserWindowWidget->webView(), SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu()));
 
     // Some connections to update the enabled state of our various actions
