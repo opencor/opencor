@@ -22,5 +22,5 @@ ADD_PLUGIN(ZincWindow
         src
     PLUGINS
         Core
-        ZincAPI
+        Zinc
 )

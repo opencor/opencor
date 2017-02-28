@@ -17,33 +17,33 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Zinc API plugin
+// Zinc plugin
 //==============================================================================
 
-#include "zincapiplugin.h"
+#include "zincplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace ZincAPI {
+namespace Zinc {
 
 //==============================================================================
 
-PLUGININFO_FUNC ZincAPIPluginInfo()
+PLUGININFO_FUNC ZincPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"http://physiomeproject.org/software/opencmiss/zinc\">Zinc API</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder l'<a href=\"http://physiomeproject.org/software/opencmiss/zinc\">API Zinc</a>."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"http://physiomeproject.org/software/opencmiss/zinc\">Zinc</a> library."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder la librairie <a href=\"http://physiomeproject.org/software/opencmiss/zinc\">Zinc</a>."));
 
-    return new PluginInfo(PluginInfo::Api, false, false,
+    return new PluginInfo(PluginInfo::ThirdParty, false, false,
                           QStringList(),
                           descriptions);
 }
 
 //==============================================================================
 
-}   // namespace ZincAPI
+}   // namespace Zinc
 }   // namespace OpenCOR
 
 //==============================================================================

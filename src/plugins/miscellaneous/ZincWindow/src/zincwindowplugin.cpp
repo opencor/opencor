@@ -43,7 +43,7 @@ PLUGININFO_FUNC ZincWindowPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour Zinc."));
 
     return new PluginInfo(PluginInfo::Miscellaneous, true, false,
-                          QStringList() << "Core" << "ZincAPI",
+                          QStringList() << "Core" << "Zinc",
                           descriptions);
 }
 

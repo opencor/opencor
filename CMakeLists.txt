@@ -318,7 +318,6 @@ SET(PLUGINS
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
-    api/ZincAPI
 
     miscellaneous/Core
 
@@ -330,6 +329,7 @@ SET(PLUGINS
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
+    thirdParty/Zinc
     thirdParty/zlib
 
     # Plugins that build on top of some third-party libraries

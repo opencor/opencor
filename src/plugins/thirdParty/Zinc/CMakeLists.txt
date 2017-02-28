@@ -1,4 +1,4 @@
-PROJECT(ZincAPIPlugin)
+PROJECT(ZincPlugin)
 
 # Retrieve the plugin's binary file(s)
 
@@ -19,7 +19,7 @@ ELSE()
 #   RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libzinc.so.3 sha1value)
 ENDIF()
 
-# Retrieve the Zinc API external binaries
+# Retrieve the Zinc external binary
 
 SET(EXTERNAL_BINARIES_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR})
 
@@ -39,13 +39,13 @@ ENDIF()
 
 # Add the plugin
 
-ADD_PLUGIN(ZincAPI
+ADD_PLUGIN(Zinc
     SOURCES
         ../../plugininfo.cpp
 
-        src/zincapiplugin.cpp
+        src/zincplugin.cpp
     HEADERS_MOC
-        src/zincapiplugin.h
+        src/zincplugin.h
     INCLUDE_DIRS
         include
         src

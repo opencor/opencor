@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Zinc API plugin
+// Zinc plugin
 //==============================================================================
 
 #pragma once
@@ -29,24 +29,24 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace ZincAPI {
+namespace Zinc {
 
 //==============================================================================
 
-PLUGININFO_FUNC ZincAPIPluginInfo();
+PLUGININFO_FUNC ZincPluginInfo();
 
 //==============================================================================
 
-class ZincAPIPlugin : public QObject
+class ZincPlugin : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.ZincAPIPlugin" FILE "zincapiplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.ZincPlugin" FILE "zincplugin.json")
 };
 
 //==============================================================================
 
-}   // namespace ZincAPI
+}   // namespace Zinc
 }   // namespace OpenCOR
 
 //==============================================================================
