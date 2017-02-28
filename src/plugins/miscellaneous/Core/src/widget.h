@@ -57,9 +57,9 @@ public:
     void createLayout(const LayoutType &pLayoutType = VerticalLayout);
 
 protected:
-    virtual QSize sizeHint() const;
-
     virtual void resizeEvent(QResizeEvent *pEvent);
+
+    virtual QSize sizeHint() const;
 
 private:
     QSize mSizeHint;

@@ -43,9 +43,6 @@ public:
     virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
 
     void clear();
-
-protected:
-    virtual QSize sizeHint() const;
 };
 
 //==============================================================================

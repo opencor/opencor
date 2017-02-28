@@ -111,6 +111,8 @@ protected:
     virtual bool event(QEvent *pEvent);
     virtual void wheelEvent(QWheelEvent *pEvent);
 
+    virtual QSize sizeHint() const;
+
 private:
     QString mToolTip;
 
