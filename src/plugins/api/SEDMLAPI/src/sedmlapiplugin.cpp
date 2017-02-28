@@ -37,7 +37,7 @@ PLUGININFO_FUNC SEDMLAPIPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>."));
 
     return new PluginInfo(PluginInfo::Api, false, false,
-                          QStringList() << "SBMLAPI",
+                          QStringList(),
                           descriptions);
 }
 

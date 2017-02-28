@@ -37,12 +37,6 @@ ADD_PLUGIN(CellMLAnnotationView
     INCLUDE_DIRS
         src
     PLUGINS
-        CellMLAPI
         CellMLSupport
-        Compiler
-        Core
-        ${LLVM_PLUGIN}
         WebViewerWidget
-    PLUGIN_BINARIES
-        ${LLVM_PLUGIN_BINARY}
 )

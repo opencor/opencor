@@ -21,13 +21,7 @@ ADD_PLUGIN(CellMLTools
     INCLUDE_DIRS
         src
     PLUGINS
-        CellMLAPI
         CellMLSupport
-        Compiler
-        Core
-        ${LLVM_PLUGIN}
-    PLUGIN_BINARIES
-        ${LLVM_PLUGIN_BINARY}
     TESTS
         tests
 )

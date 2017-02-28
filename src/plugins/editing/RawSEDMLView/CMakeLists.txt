@@ -21,19 +21,5 @@ ADD_PLUGIN(RawSEDMLView
     INCLUDE_DIRS
         src
     PLUGINS
-        CellMLAPI
-        CellMLSupport
-        Core
-        EditingView
-        EditorWidget
-        ${LLVM_PLUGIN}
-        ${QSCINTILLA_PLUGIN}
-        QScintillaSupport
-        SBMLAPI
-        SEDMLAPI
         SEDMLEditingView
-        SEDMLSupport
-    PLUGIN_BINARIES
-        ${LLVM_PLUGIN_BINARY}
-        ${QSCINTILLA_PLUGIN_BINARY}
 )

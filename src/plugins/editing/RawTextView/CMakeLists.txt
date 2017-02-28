@@ -20,10 +20,5 @@ ADD_PLUGIN(RawTextView
     INCLUDE_DIRS
         src
     PLUGINS
-        Core
-        EditorWidget
-        ${QSCINTILLA_PLUGIN}
-        QScintillaSupport
-    PLUGIN_BINARIES
-        ${QSCINTILLA_PLUGIN_BINARY}
+        EditingView
 )

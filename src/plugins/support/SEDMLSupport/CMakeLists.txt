@@ -21,13 +21,8 @@ ADD_PLUGIN(SEDMLSupport
     INCLUDE_DIRS
         src
     PLUGINS
-        CellMLAPI
         CellMLSupport
-        Core
-        ${LLVM_PLUGIN}
         SBMLAPI
         SEDMLAPI
         StandardSupport
-    PLUGIN_BINARIES
-        ${LLVM_PLUGIN_BINARY}
 )

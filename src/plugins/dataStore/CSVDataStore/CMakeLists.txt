@@ -17,6 +17,5 @@ ADD_PLUGIN(CSVDataStore
     INCLUDE_DIRS
         src
     PLUGINS
-        Core
         DataStore
 )
