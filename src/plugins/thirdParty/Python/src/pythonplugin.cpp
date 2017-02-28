@@ -87,10 +87,6 @@ int PythonPlugin::executeCommand(const QString &pCommand,
         // Run the Python interpreter
 
         return runPythonShell(pArguments);
-    } else if (!pCommand.compare("pip")) {
-        // Run the pip package installer
-
-        return runPipInstaller(pArguments);
     } else {
         // Not a CLI command that we support
 
@@ -207,77 +203,6 @@ void PythonPlugin::runHelpCommand()
     std::cout << "      help" << std::endl;
     std::cout << " * Run a Python interpreter:" << std::endl;
     std::cout << "      shell ..." << std::endl;
-    std::cout << " * Install Python packages from PyPi:" << std::endl;
-    std::cout << "      pip ..." << std::endl;
-}
-
-//==============================================================================
-
-int PythonPlugin::runPipInstaller(const QStringList &pArguments)
-{
-// A helper macro
-#define SET_AND_CHECK_PY_OBJECT(obj, value) \
-    obj = (value);                          \
-    if (obj == nullptr) {                   \
-        PyErr_PrintEx(0);                   \
-        break;                              \
-    }
-
-    // In case of failure
-
-    int result = -1;
-
-    // Python objects we create and use
-
-    PyObject
-        *argList = nullptr,
-        *pipModule = nullptr,
-        *pipMain = nullptr,
-        *argTuple = nullptr,
-        *pipMainResult = nullptr;
-
-    // Initialise the Python interpreter
-
-    Py_Initialize();
-
-    do {
-        const int argc = pArguments.size();
-
-        // Create a Python list for the arguments
-
-        SET_AND_CHECK_PY_OBJECT(argList, PyList_New(argc));
-
-        // Copy arguments into the list
-
-        for (int i = 0; i < argc; i++) {
-            PyList_SET_ITEM(argList, i, PyUnicode_FromString(pArguments[i].toUtf8().constData()));
-        }
-
-        // import pip
-        // pip.main(argList)
-
-        SET_AND_CHECK_PY_OBJECT(argTuple, PyTuple_Pack(1, argList));
-        SET_AND_CHECK_PY_OBJECT(pipModule, PyImport_ImportModule("pip"))
-        SET_AND_CHECK_PY_OBJECT(pipMain, PyObject_GetAttrString(pipModule, "main"))
-        SET_AND_CHECK_PY_OBJECT(pipMainResult, PyObject_CallObject(pipMain, argTuple));
-
-        // All was well
-
-        result = 0;
-    } while (0);
-
-    // Decrement the reference count of our Python objects
-
-    Py_XDECREF(pipMain);
-    Py_XDECREF(pipModule);
-    Py_XDECREF(argTuple);
-    Py_XDECREF(argList);
-
-    // Finished with the interpreter
-
-    Py_Finalize();
-
-    return result;
 }
 
 //==============================================================================

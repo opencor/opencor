@@ -108,9 +108,10 @@ ELSE()
 ENDIF()
 LIST(APPEND CHECKED_FILES ${PYTHON_ZIPPED_LIBRARY})
 
-# Add headers and... to the package archive
+# Add headers, scripts and libraries to the package archive
 
 SET(PACKAGED_FILES
+    bin
     include
     ${PYTHON_RUNTIME_DIR}/lib2to3
     ${PYTHON_RUNTIME_DIR}/lib-dynload
@@ -120,6 +121,8 @@ SET(PACKAGED_FILES
 
 IF(UNIX)
     LIST(APPEND PACKAGED_FILES ${PYTHON_RUNTIME_DIR}/config-${PYTHON_BUILT_VERSION})
+ELSEIF(WIN32)
+    LIST(APPEND PACKAGED_FILES Scripts)
 ENDIF()
 
 IF(USE_PREBUILT_PYTHON_PACKAGE)
@@ -225,6 +228,7 @@ ELSE()
     ENDIF()
 
     # What our Python plugin depends upon being built
+
     IF(WIN32)
         SET(BUILD_TYPE Release)
         SET(BUILD_BYPRODUCTS ${FULL_INSTALL_DIR}/Libs/${PYTHON_LINK_LIBRARY})
@@ -232,6 +236,8 @@ ELSE()
         SET(BUILD_TYPE ${CMAKE_BUILD_TYPE})
         SET(BUILD_BYPRODUCTS ${FULL_INSTALL_DIR}/lib/${PYTHON_LINK_LIBRARY})
     ENDIF()
+
+    # Download, configure, build and install Python
 
     ExternalProject_Add(PythonBuild
         DEPENDS
@@ -401,11 +407,7 @@ ELSE()
 
     # Use our newly installed pip
 
-    IF(WIN32)
-        SET(PIP_EXECUTABLE ${FULL_INSTALL_DIR}/Scripts/pip.exe)
-    ELSE()
-        SET(PIP_EXECUTABLE ${PYTHON_EXECUTABLE} -s ${FULL_INSTALL_DIR}/bin/pip)
-    ENDIF()
+    SET(PIP_EXECUTABLE ${PYTHON_EXECUTABLE} -s -m pip)
 
     # Install numpy
 
