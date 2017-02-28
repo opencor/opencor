@@ -17,16 +17,18 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Zinc window
+// Zinc window widget
 //==============================================================================
 
-#include "borderedwidget.h"
-#include "zincwindowwidget.h"
-#include "zincwindowwindow.h"
+#pragma once
 
 //==============================================================================
 
-#include "ui_zincwindowwindow.h"
+#include "commonwidget.h"
+
+//==============================================================================
+
+#include <QOpenGLWidget>
 
 //==============================================================================
 
@@ -35,47 +37,18 @@ namespace ZincWindow {
 
 //==============================================================================
 
-ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
-    Core::WindowWidget(pParent),
-    mGui(new Ui::ZincWindowWindow)
+class ZincWindowWidget : public QOpenGLWidget, public Core::CommonWidget
 {
-    // Set up the GUI
+    Q_OBJECT
 
-    mGui->setupUi(this);
+public:
+    explicit ZincWindowWidget(QWidget *pParent);
 
-    // Create and add a Zinc window widget
+protected:
+    virtual void paintEvent(QPaintEvent *pEvent);
 
-    mZincWindowWidget = new ZincWindowWidget(this);
-
-    mZincWindowWidget->setObjectName("ZincWindowWidget");
-
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mGui->layout->addWidget(new Core::BorderedWidget(mZincWindowWidget,
-                                                     false, true, true, true));
-#elif defined(Q_OS_MAC)
-    mGui->layout->addWidget(mZincWindowWidget);
-#else
-    #error Unsupported platform
-#endif
-}
-
-//==============================================================================
-
-ZincWindowWindow::~ZincWindowWindow()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
-void ZincWindowWindow::retranslateUi()
-{
-    // Retranslate our whole window
-
-    mGui->retranslateUi(this);
-}
+    virtual QSize sizeHint() const;
+};
 
 //==============================================================================
 
