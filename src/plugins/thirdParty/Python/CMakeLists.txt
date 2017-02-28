@@ -143,7 +143,45 @@ ELSE()
         SET(PYTHON_READLINE_OPTION -DBUILTIN_READLINE=ON)
     ENDIF()
 
-    IF(APPLE)                   # Use Homebrew's SQLite
+    # Jupyter and IPython require SQLite3
+    # This could/should be in its own plugin...
+
+    IF(WIN32)
+        SET(SQLITE3_VERSION "3170000")
+        SET(SQLITE3_DIR ${PROJECT_BINARY_DIR}/sqlite3)
+
+        IF(NOT EXISTS ${SQLITE3_DIR}/sqlite-amalgamation-${SQLITE3_VERSION}/sqlite3.h)
+            SET(SQLITE3_SOURCES_ZIP sqlite-amalgamation-${SQLITE3_VERSION}.zip)
+            MESSAGE(STATUS "Downloading ${SQLITE3_SOURCES_ZIP}")
+            FILE(DOWNLOAD https://sqlite.org/2017/${SQLITE3_SOURCES_ZIP}
+                ${SQLITE3_DIR}/zips/${SQLITE3_SOURCES_ZIP}
+                SHOW_PROGRESS
+                )
+            EXECUTE_PROCESS(
+                COMMAND ${CMAKE_COMMAND} -E tar xf zips/${SQLITE3_SOURCES_ZIP}
+                                                   sqlite-amalgamation-${SQLITE3_VERSION}/sqlite3.h
+                WORKING_DIRECTORY ${SQLITE3_DIR}
+                )
+        ENDIF()
+
+        IF(NOT EXISTS ${SQLITE3_DIR}/sqlite3.lib)
+            SET(SQLITE3_DLL_ZIP sqlite-dll-win64-x64-${SQLITE3_VERSION}.zip)
+            MESSAGE(STATUS "Downloading ${SQLITE3_DLL_ZIP}")
+            FILE(DOWNLOAD https://sqlite.org/2017/${SQLITE3_DLL_ZIP}
+                ${SQLITE3_DIR}/zips/${SQLITE3_DLL_ZIP}
+                SHOW_PROGRESS
+                )
+            EXECUTE_PROCESS(
+                COMMAND ${CMAKE_COMMAND} -E tar xf zips/${SQLITE3_DLL_ZIP} --format=zip
+                COMMAND lib /verbose /def:sqlite3.def /out:sqlite3.lib /machine:x64
+                WORKING_DIRECTORY ${SQLITE3_DIR}
+                )
+        ENDIF()
+
+        SET(SQLITE3_INCLUDE_DIR ${SQLITE3_DIR}/sqlite-amalgamation-${SQLITE3_VERSION})
+        SET(SQLITE3_LIBRARY ${SQLITE3_DIR}/sqlite3${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    ELSEIF(APPLE)                   # Use Homebrew's SQLite
+
         SET(SQLITE3_INCLUDE_DIR /usr/local/opt/sqlite/include)
         SET(SQLITE3_LIBRARY /usr/local/opt/sqlite/lib/libsqlite3.a)
     ELSE()
