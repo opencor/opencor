@@ -759,6 +759,18 @@ void FileOrganiserWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
+QSize FileOrganiserWindowWidget::sizeHint() const
+{
+    // Suggest a default size for our file organiser widget
+    // Note: this is critical if we want a docked widget, with a file organiser
+    //       widget on it, to have a decent size when docked to the main
+    //       window...
+
+    return defaultSize(0.15);
+}
+
+//==============================================================================
+
 bool FileOrganiserWindowWidget::parentIndexExists(const QModelIndex &pIndex,
                                                   const QModelIndexList &pIndexes) const
 {

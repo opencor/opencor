@@ -44,6 +44,18 @@ WebBrowserWindowWidget::WebBrowserWindowWidget(QWidget *pParent) :
 
 //==============================================================================
 
+QSize WebBrowserWindowWidget::sizeHint() const
+{
+    // Suggest a default size for the web browser widget
+    // Note: this is critical if we want a docked widget, with a web browser
+    //       widget on it, to have a decent size when docked to the main
+    //       window...
+
+    return defaultSize(0.15);
+}
+
+//==============================================================================
+
 bool WebBrowserWindowWidget::isUrlSchemeSupported(const QString &pUrlScheme)
 {
     // We support all URL schemes, but the OpenCOR one (opencor://...), which we

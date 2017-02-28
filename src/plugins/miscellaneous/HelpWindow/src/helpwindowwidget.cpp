@@ -235,7 +235,7 @@ QSize HelpWindowWidget::sizeHint() const
     // Note: this is critical if we want a docked widget, with a help widget on
     //       it, to have a decent size when docked to the main window...
 
-    return defaultSize(0.2);
+    return defaultSize(0.15);
 }
 
 //==============================================================================
