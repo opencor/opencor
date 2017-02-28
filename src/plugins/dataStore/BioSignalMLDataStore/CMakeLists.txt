@@ -21,8 +21,5 @@ ADD_PLUGIN(BioSignalMLDataStore
         src
     PLUGINS
         BioSignalMLAPI
-        Core
         DataStore
-    QT_MODULES
-        Widgets
 )

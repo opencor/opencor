@@ -20,5 +20,5 @@ ADD_PLUGIN(KINSOLSolver
     PLUGIN_BINARIES
         ${SUNDIALS_PLUGIN_BINARY}
     QT_MODULES
-        Widgets
+        Core
 )

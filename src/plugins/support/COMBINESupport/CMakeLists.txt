@@ -20,12 +20,8 @@ ADD_PLUGIN(COMBINESupport
     INCLUDE_DIRS
         src
     PLUGINS
-        Core
         StandardSupport
         ZIPSupport
-        ${ZLIB_PLUGIN}
-    PLUGIN_BINARIES
-        ${ZLIB_PLUGIN_BINARY}
     TESTS
         tests
 )
