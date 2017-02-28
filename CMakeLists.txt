@@ -381,6 +381,7 @@ SET(PLUGINS
 
     miscellaneous/HelpWindow
     miscellaneous/WebBrowserWindow
+    miscellaneous/ZincWindow
 
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
