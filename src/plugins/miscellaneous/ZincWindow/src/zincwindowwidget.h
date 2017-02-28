@@ -32,6 +32,14 @@ limitations under the License.
 
 //==============================================================================
 
+namespace OpenCMISS {
+namespace Zinc {
+    class Context;
+}   // namespace Zinc
+}   // namespace OpenCMISS
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace ZincWindow {
 
@@ -43,9 +51,13 @@ class ZincWindowWidget : public QOpenGLWidget, public Core::CommonWidget
 
 public:
     explicit ZincWindowWidget(QWidget *pParent);
+    ~ZincWindowWidget();
 
 protected:
     virtual QSize sizeHint() const;
+
+private:
+    OpenCMISS::Zinc::Context *mContext;
 };
 
 //==============================================================================

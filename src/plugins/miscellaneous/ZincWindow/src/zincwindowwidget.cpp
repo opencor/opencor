@@ -29,6 +29,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include "opencmiss/zinc/context.hpp"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace ZincWindow {
 
@@ -38,6 +42,18 @@ ZincWindowWidget::ZincWindowWidget(QWidget *pParent) :
     QOpenGLWidget(pParent),
     Core::CommonWidget(this)
 {
+    // Create our context
+
+    mContext = new OpenCMISS::Zinc::Context("ZincWindowWidget");
+}
+
+//==============================================================================
+
+ZincWindowWidget::~ZincWindowWidget()
+{
+    // Delete some internal objects
+
+    delete mContext;
 }
 
 //==============================================================================
