@@ -5,7 +5,7 @@ PROJECT(PythonPlugin)
 # that the correct package archive is retrieved when the build configuration
 # is changed (e.g. by changing the git branch).
 
-SET(BUILD_NUMBER 4)
+SET(BUILD_NUMBER 5)
 
 # Specify the version of Python we are using.
 
@@ -50,7 +50,6 @@ ELSE()
     SET(PYTHON_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(PYTHON_LINK_LIBRARY ${PYTHON_SHARED_LIBRARY})
 ENDIF()
-SET(EXTERNAL_BINARIES ${PYTHON_SHARED_LIBRARY})
 
 # Specify where our Python will be installed.
 
@@ -69,20 +68,45 @@ ELSE()
     SET(PYTHON_ZIPPED_LIBRARY bin/python${PYTHON_NUMERIC_VERSION}.zip)
 ENDIF()
 
+# The plugin's external binaries
+
+SET(EXTERNAL_BINARIES ${PYTHON_SHARED_LIBRARY})
+
+# And where they are
+
+IF(WIN32)
+    SET(EXTERNAL_BINARIES_DIR ${FULL_INSTALL_DIR}/Libs)
+    SET(EXTERNAL_DEST_DIR Python)
+ELSE()
+    SET(EXTERNAL_BINARIES_DIR ${FULL_INSTALL_DIR}/lib)
+    IF(APPLE)
+        SET(EXTERNAL_DEST_DIR Python)
+    ELSE()
+        SET(EXTERNAL_DEST_DIR .)
+    ENDIF()
+ENDIF()
+
+
+# We bundle SQLite3 with Python (we links statically when APPLE)
+
+IF(NOT APPLE)
+    SET(SQLITE3_SHARED_LIBRARY sqlite3${CMAKE_SHARED_LIBRARY_SUFFIX})
+ENDIF()
+
 # Specify the files that will have their SHA1 checked when packaged
 
 IF(WIN32)
-    SET(CHECKED_FILES Libs/${PYTHON_SHARED_LIBRARY})
+    SET(CHECKED_FILES Libs/${PYTHON_SHARED_LIBRARY}
+                      Libs/${PYTHON_LINK_LIBRARY}
+                      Libs/${SQLITE3_SHARED_LIBRARY}
+        )
 ELSE()
     SET(CHECKED_FILES lib/${PYTHON_SHARED_LIBRARY})
+    IF (NOT APPLE)
+        LIST(APPEND CHECKED_FILES lib/${SQLITE3_SHARED_LIBRARY})
+    ENDIF()
 ENDIF()
 LIST(APPEND CHECKED_FILES ${PYTHON_ZIPPED_LIBRARY})
-
-# We need to also bundle and check the Windows link library
-
-IF(WIN32)
-    LIST(APPEND CHECKED_FILES Libs/${PYTHON_LINK_LIBRARY})
-ENDIF()
 
 # Add headers and... to the package archive
 
@@ -107,11 +131,12 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-                Python ${PYTHON_PACKAGE_VERSION} affd722bb504da1b3d9ba7123829a3c06f0fabfb
+                Python ${PYTHON_PACKAGE_VERSION} 1c833ffa55c9cb0ff589193d67b5f46bc131398e
                 CHECKED_FILES ${CHECKED_FILES}
-                SHA1_VALUES 01b3f1c4d8b71c44a556ec78fcc175f9bbe868e3
+                SHA1_VALUES fbb6cc35d424cb52b571dc1e0c8005a578a25db7
+                            3027decc9b74d5868aef26025648cdd3f52d7366
+                            3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
                             d551ee5fd523dc61d823e7ef6d2b76ae9934f0c8
-                            aed8e767b7640b8b3a302d8223af2c3bc2bb5a54
             )
         ENDIF()
     ELSEIF(APPLE)
@@ -183,13 +208,23 @@ ELSE()
     ELSEIF(APPLE)                   # Use Homebrew's SQLite
 
         SET(SQLITE3_INCLUDE_DIR /usr/local/opt/sqlite/include)
+        # Use static library so there is no need to copy it
         SET(SQLITE3_LIBRARY /usr/local/opt/sqlite/lib/libsqlite3.a)
     ELSE()
+
         SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
         FIND_PACKAGE(SQLite3 REQUIRED)
-## Need to copy into our lib directory...
     ENDIF()
 
+    # Put the SQLite3 library into the python runtime install directory
+
+    IF(NOT APPLE)
+        GET_FILENAME_COMPONENT(SQLITE3_LIBRARY_PATH ${SQLITE3_LIBRARY} DIRECTORY)
+        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_PATH}/${SQLITE3_SHARED_LIBRARY}
+                                                         ${FULL_INSTALL_DIR}/bin/${SQLITE3_SHARED_LIBRARY})
+    ENDIF()
+
+    # What our Python plugin depends upon being built
     IF(WIN32)
         SET(BUILD_TYPE Release)
         SET(BUILD_BYPRODUCTS ${FULL_INSTALL_DIR}/Libs/${PYTHON_LINK_LIBRARY})
@@ -462,18 +497,6 @@ ENDIF()
 
 SET(NUMPY_INCLUDE_DIR ${FULL_INSTALL_DIR}/${PYTHON_RUNTIME_DIR}/site-packages/numpy/core/include PARENT_SCOPE)
 
-IF(WIN32)
-    SET(EXTERNAL_BINARIES_DIR ${FULL_INSTALL_DIR}/Libs)
-    SET(EXTERNAL_DEST_DIR Python)
-ELSE()
-    SET(EXTERNAL_BINARIES_DIR ${FULL_INSTALL_DIR}/lib)
-    IF(APPLE)
-        SET(EXTERNAL_DEST_DIR Python)
-    ELSE()
-        SET(EXTERNAL_DEST_DIR .)
-    ENDIF()
-ENDIF()
-
 # Add the plugin
 
 ADD_PLUGIN(Python
@@ -503,3 +526,13 @@ ADD_PLUGIN(Python
     DEPENDS
         ${PLUGIN_DEPENDS_ON}
 )
+
+# Copy the SQLite3 shared library to our runtime directory
+
+IF(NOT APPLE)
+    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME}
+        ${FULL_INSTALL_DIR}/bin
+        ${DEST_EXTERNAL_BINARIES_DIR}
+        ${SQLITE3_SHARED_LIBRARY}
+    )
+ENDIF()
