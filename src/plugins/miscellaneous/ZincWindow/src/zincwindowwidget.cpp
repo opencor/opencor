@@ -42,50 +42,6 @@ ZincWindowWidget::ZincWindowWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void ZincWindowWidget::paintEvent(QPaintEvent *pEvent)
-{
-    QPainter painter;
-    painter.begin(this);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.fillRect(pEvent->rect(), QBrush(QColor(64, 32, 64)));
-    painter.translate(100, 100);
-
-    QLinearGradient gradient(QPointF(50, -20), QPointF(80, 20));
-    gradient.setColorAt(0.0, Qt::white);
-    gradient.setColorAt(1.0, QColor(0xa6, 0xce, 0x39));
-
-    painter.save();
-    painter.setBrush(QBrush(gradient));
-    painter.setPen(Qt::black);
-//    painter.rotate(elapsed * 0.030);
-
-    qreal r = 0;//elapsed / 1000.0;
-    int n = 30;
-    for (int i = 0; i < n; ++i) {
-        painter.rotate(30);
-        qreal factor = (i + r) / n;
-        qreal radius = 0 + 120.0 * factor;
-        qreal circleRadius = 1 + factor * 20;
-        painter.drawEllipse(QRectF(radius, -circleRadius,
-                                    circleRadius * 2, circleRadius * 2));
-    }
-    painter.restore();
-
-    QFont textFont;
-    textFont.setPixelSize(50);
-
-    painter.setPen(Qt::white);
-    painter.setFont(textFont);
-    painter.drawText(QRect(-50, -50, 100, 100), Qt::AlignCenter, QStringLiteral("Qt"));
-    painter.end();
-
-    // Accept the event
-
-    pEvent->accept();
-}
-
-//==============================================================================
-
 QSize ZincWindowWidget::sizeHint() const
 {
     // Suggest a default size for the Zinc widget

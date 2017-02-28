@@ -45,8 +45,6 @@ public:
     explicit ZincWindowWidget(QWidget *pParent);
 
 protected:
-    virtual void paintEvent(QPaintEvent *pEvent);
-
     virtual QSize sizeHint() const;
 };
 
