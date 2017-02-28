@@ -17,60 +17,54 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Zinc window
+// Zinc widget
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "windowwidget.h"
+#include "zincwidget.h"
 
 //==============================================================================
 
-namespace Ui {
-    class ZincWindowWindow;
-}
+#include "opencmiss/zinc/context.hpp"
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
 namespace ZincWidget {
-    class ZincWidget;
-}   // namespace ZincWidget
 
 //==============================================================================
 
-namespace ZincWindow {
-
-//==============================================================================
-
-class ZincWindowWidget;
-
-//==============================================================================
-
-class ZincWindowWindow : public Core::WindowWidget
+ZincWidget::ZincWidget(QWidget *pParent) :
+    QOpenGLWidget(pParent),
+    Core::CommonWidget(this)
 {
-    Q_OBJECT
+    // Create our context
 
-public:
-    explicit ZincWindowWindow(QWidget *pParent);
-    ~ZincWindowWindow();
-
-    virtual void retranslateUi();
-
-private:
-    Ui::ZincWindowWindow *mGui;
-
-    ZincWidget::ZincWidget *mZincWidget;
-};
+    mContext = new OpenCMISS::Zinc::Context("ZincWindowWidget");
+}
 
 //==============================================================================
 
-}   // namespace ZincWindow
+ZincWidget::~ZincWidget()
+{
+    // Delete some internal objects
+
+    delete mContext;
+}
+
+//==============================================================================
+
+QSize ZincWidget::sizeHint() const
+{
+    // Suggest a default size for ourselves
+    // Note: this is critical if we want a docked widget, with ourselves on it,
+    //       to have a decent size when docked to the main window...
+
+    return defaultSize(0.15);
+}
+
+//==============================================================================
+
+}   // namespace WebViewerWidget
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -17,59 +17,36 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Zinc window widget
+// Zinc widget plugin
 //==============================================================================
 
-#include "zincwindowwidget.h"
-
-//==============================================================================
-
-#include <QPainter>
-#include <QPaintEvent>
+#pragma once
 
 //==============================================================================
 
-#include "opencmiss/zinc/context.hpp"
+#include "plugininfo.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace ZincWindow {
+namespace ZincWidget {
 
 //==============================================================================
 
-ZincWindowWidget::ZincWindowWidget(QWidget *pParent) :
-    QOpenGLWidget(pParent),
-    Core::CommonWidget(this)
+PLUGININFO_FUNC ZincWidgetPluginInfo();
+
+//==============================================================================
+
+class ZincWidgetPlugin : public QObject
 {
-    // Create our context
+    Q_OBJECT
 
-    mContext = new OpenCMISS::Zinc::Context("ZincWindowWidget");
-}
-
-//==============================================================================
-
-ZincWindowWidget::~ZincWindowWidget()
-{
-    // Delete some internal objects
-
-    delete mContext;
-}
+    Q_PLUGIN_METADATA(IID "OpenCOR.ZincWidgetPlugin" FILE "zincwidgetplugin.json")
+};
 
 //==============================================================================
 
-QSize ZincWindowWidget::sizeHint() const
-{
-    // Suggest a default size for the Zinc widget
-    // Note: this is critical if we want a docked widget, with a Zinc widget on
-    //       it, to have a decent size when docked to the main window...
-
-    return defaultSize(0.15);
-}
-
-//==============================================================================
-
-}   // namespace ZincWindow
+}   // namespace ZincWidget
 }   // namespace OpenCOR
 
 //==============================================================================

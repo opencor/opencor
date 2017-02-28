@@ -17,60 +17,33 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Zinc window
+// Zinc widget plugin
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "windowwidget.h"
-
-//==============================================================================
-
-namespace Ui {
-    class ZincWindowWindow;
-}
+#include "zincwidgetplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
 namespace ZincWidget {
-    class ZincWidget;
-}   // namespace ZincWidget
 
 //==============================================================================
 
-namespace ZincWindow {
-
-//==============================================================================
-
-class ZincWindowWidget;
-
-//==============================================================================
-
-class ZincWindowWindow : public Core::WindowWidget
+PLUGININFO_FUNC ZincWidgetPluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-public:
-    explicit ZincWindowWindow(QWidget *pParent);
-    ~ZincWindowWindow();
+    descriptions.insert("en", QString::fromUtf8("a plugin to visualise a Zinc scene."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser une scène Zinc."));
 
-    virtual void retranslateUi();
-
-private:
-    Ui::ZincWindowWindow *mGui;
-
-    ZincWidget::ZincWidget *mZincWidget;
-};
+    return new PluginInfo(PluginInfo::Widget, false, false,
+                          QStringList() << "Core" << "Zinc",
+                          descriptions);
+}
 
 //==============================================================================
 
-}   // namespace ZincWindow
+}   // namespace ZincWidget
 }   // namespace OpenCOR
 
 //==============================================================================

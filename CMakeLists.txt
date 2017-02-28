@@ -354,6 +354,7 @@ SET(PLUGINS
     widget/GraphPanelWidget
     widget/MathMLViewerWidget
     widget/WebViewerWidget
+    widget/ZincWidget
 
     # Plugins that provide some generic features
 

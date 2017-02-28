@@ -10,17 +10,14 @@ ADD_PLUGIN(ZincWindow
         ../../windowinterface.cpp
 
         src/zincwindowplugin.cpp
-        src/zincwindowwidget.cpp
         src/zincwindowwindow.cpp
     HEADERS_MOC
         src/zincwindowplugin.h
-        src/zincwindowwidget.h
         src/zincwindowwindow.h
     UIS
         src/zincwindowwindow.ui
     INCLUDE_DIRS
         src
     PLUGINS
-        Core
-        Zinc
+        ZincWidget
 )

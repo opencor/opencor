@@ -17,53 +17,22 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Zinc window widget
+// Zinc global
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "commonwidget.h"
-
-//==============================================================================
-
-#include <QOpenGLWidget>
-
-//==============================================================================
-
-namespace OpenCMISS {
-namespace Zinc {
-    class Context;
-}   // namespace Zinc
-}   // namespace OpenCMISS
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace ZincWindow {
-
-//==============================================================================
-
-class ZincWindowWidget : public QOpenGLWidget, public Core::CommonWidget
-{
-    Q_OBJECT
-
-public:
-    explicit ZincWindowWidget(QWidget *pParent);
-    ~ZincWindowWidget();
-
-protected:
-    virtual QSize sizeHint() const;
-
-private:
-    OpenCMISS::Zinc::Context *mContext;
-};
-
-//==============================================================================
-
-}   // namespace ZincWindow
-}   // namespace OpenCOR
+#ifdef _WIN32
+    #ifdef ZincWidget_PLUGIN
+        #define ZINCWIDGET_EXPORT __declspec(dllexport)
+    #else
+        #define ZINCWIDGET_EXPORT __declspec(dllimport)
+    #endif
+#else
+    #define ZINCWIDGET_EXPORT
+#endif
 
 //==============================================================================
 // End of file

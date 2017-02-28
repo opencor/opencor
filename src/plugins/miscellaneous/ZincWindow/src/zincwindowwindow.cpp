@@ -21,7 +21,7 @@ limitations under the License.
 //==============================================================================
 
 #include "borderedwidget.h"
-#include "zincwindowwidget.h"
+#include "zincwidget.h"
 #include "zincwindowwindow.h"
 
 //==============================================================================
@@ -45,15 +45,15 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
 
     // Create and add a Zinc window widget
 
-    mZincWindowWidget = new ZincWindowWidget(this);
+    mZincWidget = new ZincWidget::ZincWidget(this);
 
-    mZincWindowWidget->setObjectName("ZincWindowWidget");
+    mZincWidget->setObjectName("ZincWindowWidget");
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mZincWindowWidget,
                                                      false, true, true, true));
 #elif defined(Q_OS_MAC)
-    mGui->layout->addWidget(mZincWindowWidget);
+    mGui->layout->addWidget(mZincWidget);
 #else
     #error Unsupported platform
 #endif

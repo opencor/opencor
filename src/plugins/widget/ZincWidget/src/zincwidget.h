@@ -17,60 +17,54 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Zinc window
+// Zinc widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "windowwidget.h"
+#include "commonwidget.h"
+#include "zincwidgetglobal.h"
 
 //==============================================================================
 
-namespace Ui {
-    class ZincWindowWindow;
-}
+#include <QOpenGLWidget>
+
+//==============================================================================
+
+namespace OpenCMISS {
+namespace Zinc {
+    class Context;
+}   // namespace Zinc
+}   // namespace OpenCMISS
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
 namespace ZincWidget {
-    class ZincWidget;
-}   // namespace ZincWidget
 
 //==============================================================================
 
-namespace ZincWindow {
-
-//==============================================================================
-
-class ZincWindowWidget;
-
-//==============================================================================
-
-class ZincWindowWindow : public Core::WindowWidget
+class ZINCWIDGET_EXPORT ZincWidget : public QOpenGLWidget,
+                                     public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit ZincWindowWindow(QWidget *pParent);
-    ~ZincWindowWindow();
+    explicit ZincWidget(QWidget *pParent);
+    ~ZincWidget();
 
-    virtual void retranslateUi();
+protected:
+    virtual QSize sizeHint() const;
 
 private:
-    Ui::ZincWindowWindow *mGui;
-
-    ZincWidget::ZincWidget *mZincWidget;
+    OpenCMISS::Zinc::Context *mContext;
 };
 
 //==============================================================================
 
-}   // namespace ZincWindow
+}   // namespace ZincWidget
 }   // namespace OpenCOR
 
 //==============================================================================
