@@ -28,7 +28,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QObject>
 #include <QString>
 
 //==============================================================================
@@ -44,10 +43,8 @@ namespace Compiler {
 
 //==============================================================================
 
-class COMPILER_EXPORT CompilerEngine : public QObject
+class COMPILER_EXPORT CompilerEngine
 {
-    Q_OBJECT
-
 public:
     explicit CompilerEngine();
 

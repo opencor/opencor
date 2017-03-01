@@ -20,6 +20,12 @@ limitations under the License.
 // CellML file runtime
 //==============================================================================
 
+#ifdef _WIN32
+    #define _SCL_SECURE_NO_WARNINGS
+#endif
+
+//==============================================================================
+
 #include "cellmlfile.h"
 #include "cellmlfileruntime.h"
 #include "compilerengine.h"

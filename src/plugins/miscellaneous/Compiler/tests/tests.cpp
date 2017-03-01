@@ -20,6 +20,12 @@ limitations under the License.
 // Compiler tests
 //==============================================================================
 
+#ifdef _WIN32
+    #define _SCL_SECURE_NO_WARNINGS
+#endif
+
+//==============================================================================
+
 #include "compilerengine.h"
 #include "compilermath.h"
 #include "tests.h"

@@ -32,8 +32,6 @@ IF(WIN32)
     )
 ENDIF()
 
-SET(LLVM_DEFINITIONS ${DEFINITIONS} PARENT_SCOPE)
-
 # Use our pre-built version unless instructed otherwise
 
 IF(USE_PREBUILT_LLVM_PLUGIN)
