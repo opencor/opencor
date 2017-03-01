@@ -414,7 +414,7 @@ void MainWindow::registerOpencorUrlScheme()
 
     SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
 #elif defined(Q_OS_LINUX)
-    if (exec("which", QStringList() << "xdg-mime")) {
+    if (!exec("which", QStringList() << "xdg-mime")) {
         QString iconPath = nativeCanonicalFileName(QString("%1/.local/share/%2/%3/%3.png").arg(QDir::homePath(),
                                                                                                qApp->organizationName(),
                                                                                                qApp->applicationName()));
