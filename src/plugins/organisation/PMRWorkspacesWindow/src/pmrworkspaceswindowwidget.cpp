@@ -511,10 +511,10 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
         // folder
 
         QString clonedWorkspaceUrl = QString();
-        QByteArray folderByteArray = clonedWorkspaceFolder.toUtf8();
         git_repository *gitRepository = 0;
 
-        if (!git_repository_open(&gitRepository, folderByteArray.constData())) {
+        if (!git_repository_open(&gitRepository,
+                                 clonedWorkspaceFolder.toUtf8().constData())) {
             git_strarray remotes;
 
             if (!git_remote_list(&remotes, gitRepository)) {

@@ -249,9 +249,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Map our dummy file to a memory buffer
 
-    QByteArray codeByteArray = code.toUtf8();
-
-    compilerInvocation->getPreprocessorOpts().addRemappedFile(dummyFileName, llvm::MemoryBuffer::getMemBuffer(codeByteArray.constData()).release());
+    compilerInvocation->getPreprocessorOpts().addRemappedFile(dummyFileName, llvm::MemoryBuffer::getMemBuffer(code.toUtf8().constData()).release());
 
     // Create a compiler instance to handle the actual work
 

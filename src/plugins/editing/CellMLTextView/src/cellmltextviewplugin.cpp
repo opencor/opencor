@@ -464,9 +464,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
                                                                                             QString::number(converter.errorColumn()),
                                                                                             Core::formatMessage(converter.errorMessage(), false));
             } else {
-                QByteArray converterOutputByteArray = converter.output().toUtf8();
-
-                std::cout << converterOutputByteArray.constData();
+                std::cout << converter.output().toUtf8().constData();
             }
         } else {
             CellMLTextView::CellmlTextViewParser parser;

@@ -244,8 +244,7 @@ NlaSolver * nlaSolver(const QString &pRuntimeAddress)
 {
     // Return the runtime's NLA solver
 
-    QByteArray runtimeAddress = pRuntimeAddress.toUtf8();
-    QVariant res = qApp->property(runtimeAddress.constData());
+    QVariant res = qApp->property(pRuntimeAddress.toUtf8().constData());
 
     return res.isValid()?static_cast<NlaSolver *>((void *) res.toULongLong()):0;
 }
@@ -256,9 +255,8 @@ void setNlaSolver(const QString &pRuntimeAddress, NlaSolver *pGlobalNlaSolver)
 {
     // Keep track of the runtime's NLA solver
 
-    QByteArray runtimeAddress = pRuntimeAddress.toUtf8();
-
-    qApp->setProperty(runtimeAddress.constData(), qulonglong(pGlobalNlaSolver));
+    qApp->setProperty(pRuntimeAddress.toUtf8().constData(),
+                      qulonglong(pGlobalNlaSolver));
 }
 
 //==============================================================================
@@ -267,9 +265,7 @@ void unsetNlaSolver(const QString &pRuntimeAddress)
 {
     // Stop tracking the runtime's NLA solver
 
-    QByteArray runtimeAddress = pRuntimeAddress.toUtf8();
-
-    qApp->setProperty(runtimeAddress.constData(), QVariant::Invalid);
+    qApp->setProperty(pRuntimeAddress.toUtf8().constData(), QVariant::Invalid);
 }
 
 //==============================================================================

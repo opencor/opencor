@@ -245,8 +245,6 @@ void PmrWorkspace::clone(const QString &pPath)
 {
     // Clone the workspace to the given directory, using basic authentication
 
-    QByteArray workspaceByteArray = mUrl.toUtf8();
-    QByteArray pathByteArray = pPath.toUtf8();
     git_clone_options cloneOptions;
     git_strarray authorizationStrArray = { 0, 0 };
 
@@ -262,8 +260,8 @@ void PmrWorkspace::clone(const QString &pPath)
 
     // Perform the cloning itself and let people know whether it didn't work
 
-    if (git_clone(&mGitRepository, workspaceByteArray.constData(),
-                  pathByteArray.constData(), &cloneOptions)) {
+    if (git_clone(&mGitRepository, mUrl.toUtf8().constData(),
+                  pPath.toUtf8().constData(), &cloneOptions)) {
         emitGitError(tr("An error occurred while trying to clone the workspace."));
     }
 
@@ -352,9 +350,7 @@ bool PmrWorkspace::commit(const QString &pMessage)
 
     // Clean up the message and remove comments (which start with ";")
 
-    QByteArray messageByteArray = pMessage.toUtf8();
-
-    git_message_prettify(&message, messageByteArray.constData(), true, ';');
+    git_message_prettify(&message, pMessage.toUtf8().constData(), true, ';');
 
     bool res = true;
 
@@ -493,9 +489,7 @@ bool PmrWorkspace::open(const QString &pPath, const bool &pRefreshStatus)
     mRootFileNode->setPath(pPath);
 
     if (!pPath.isEmpty()) {
-        QByteArray pathByteArray = pPath.toUtf8();
-
-        if (!git_repository_open(&mGitRepository, pathByteArray.constData())) {
+        if (!git_repository_open(&mGitRepository, pPath.toUtf8().constData())) {
             if (pRefreshStatus)
                 refreshStatus();
 
@@ -752,9 +746,8 @@ QByteArray PmrWorkspace::headFileContents(const QString &pFileName)
         return QByteArray();
 
     git_tree_entry *treeEntry;
-    QByteArray fileNameByteArray = pFileName.toUtf8();
 
-    if (git_tree_entry_bypath(&treeEntry, tree, fileNameByteArray.constData()) != GIT_OK) {
+    if (git_tree_entry_bypath(&treeEntry, tree, pFileName.toUtf8().constData()) != GIT_OK) {
         git_tree_free(tree);
 
         return QByteArray();
@@ -789,9 +782,9 @@ CharPair PmrWorkspace::gitFileStatus(const QString &pPath) const
 
     if (isOpen()) {
         unsigned int statusFlags = 0;
-        QByteArray relativePathByteArray = QDir(mPath).relativeFilePath(pPath).toUtf8();
 
-        if (!git_status_file(&statusFlags, mGitRepository, relativePathByteArray.constData())) {
+        if (!git_status_file(&statusFlags, mGitRepository,
+                             QDir(mPath).relativeFilePath(pPath).toUtf8().constData())) {
              // Retrieve the status itself
 
              res = gitStatusChars(statusFlags);
@@ -1015,7 +1008,8 @@ void PmrWorkspace::setGitAuthorization(git_strarray *pAuthorizationStrArray)
         char *authorizationStrArrayData = (char *) malloc(authorisationHeader.count()+1);
         char **authorizationStrArrayArray = (char **) malloc(sizeof(char *));
 
-        memcpy(authorizationStrArrayData, authorisationHeader.constData(), authorisationHeader.count()+1);
+        memcpy(authorizationStrArrayData, authorisationHeader.constData(),
+               authorisationHeader.count()+1);
 
         authorizationStrArrayArray[0] = authorizationStrArrayData;
 
