@@ -39,13 +39,15 @@ limitations under the License.
 
 //==============================================================================
 
-#include "qwt_painter.h"
-#include "qwt_plot_canvas.h"
-#include "qwt_plot_directpainter.h"
-#include "qwt_plot_grid.h"
-#include "qwt_plot_layout.h"
-#include "qwt_scale_engine.h"
-#include "qwt_scale_widget.h"
+#include "qwtbegin.h"
+    #include "qwt_painter.h"
+    #include "qwt_plot_canvas.h"
+    #include "qwt_plot_directpainter.h"
+    #include "qwt_plot_grid.h"
+    #include "qwt_plot_layout.h"
+    #include "qwt_scale_engine.h"
+    #include "qwt_scale_widget.h"
+#include "qwtend.h"
 
 //==============================================================================
 
