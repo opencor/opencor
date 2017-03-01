@@ -37,12 +37,12 @@ limitations under the License.
 
 //==============================================================================
 
-#include "cellmlapidisablewarnings.h"
+#include "cellmlapibegin.h"
     #include "cellml-api-cxx-support.hpp"
 
     #include "IfaceCCGS.hxx"
     #include "IfaceCellML_APISPEC.hxx"
-#include "cellmlapienablewarnings.h"
+#include "cellmlapiend.h"
 
 //==============================================================================
 

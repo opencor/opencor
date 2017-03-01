@@ -30,9 +30,9 @@ limitations under the License.
 
 //==============================================================================
 
-#include "llvmdisablewarnings.h"
+#include "llvmbegin.h"
     #include "llvm/ExecutionEngine/ExecutionEngine.h"
-#include "llvmenablewarnings.h"
+#include "llvmend.h"
 
 //==============================================================================
 

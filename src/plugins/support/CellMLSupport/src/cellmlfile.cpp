@@ -55,14 +55,14 @@ limitations under the License.
 
 //==============================================================================
 
-#include "cellmlapidisablewarnings.h"
+#include "cellmlapibegin.h"
     #include "IfaceCeLEDSExporter.hxx"
     #include "IfaceVACSS.hxx"
 
     #include "CeLEDSExporterBootstrap.hpp"
     #include "CellMLBootstrap.hpp"
     #include "VACSSBootstrap.hpp"
-#include "cellmlapienablewarnings.h"
+#include "cellmlapiend.h"
 
 //==============================================================================
 

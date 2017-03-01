@@ -17,15 +17,19 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML API enable warnings
+// LLVM begin
 //==============================================================================
 
 #if defined(Q_OS_WIN)
-    #pragma warning(pop)
+    #pragma warning(push)
+    #pragma warning(disable: 4146)
+    #pragma warning(disable: 4624)
 #elif defined(Q_OS_LINUX)
-    #pragma GCC diagnostic pop
+    #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+    #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+    #pragma GCC diagnostic ignored "-Wunused-parameter"
 #elif defined(Q_OS_MAC)
-    #pragma clang diagnostic pop
+    #pragma GCC diagnostic ignored "-Wunused-parameter"
 #else
     #error Unsupported platform
 #endif

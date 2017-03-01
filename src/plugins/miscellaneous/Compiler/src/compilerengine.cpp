@@ -26,7 +26,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include "llvmdisablewarnings.h"
+#include "llvmbegin.h"
     #include "llvm/Support/TargetSelect.h"
 
     #include "llvm-c/Core.h"
@@ -37,7 +37,7 @@ limitations under the License.
     #include "clang/Driver/Driver.h"
     #include "clang/Driver/Tool.h"
     #include "clang/Frontend/CompilerInstance.h"
-#include "llvmenablewarnings.h"
+#include "llvmend.h"
 
 //==============================================================================
 

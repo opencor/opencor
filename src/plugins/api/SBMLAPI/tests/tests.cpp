@@ -28,10 +28,10 @@ limitations under the License.
 
 //==============================================================================
 
-#include "sbmlapidisablewarnings.h"
+#include "sbmlapibegin.h"
     #include "sbml/common/libsbml-version.h"
     #include "sbml/SBMLDocument.h"
-#include "sbmlapienablewarnings.h"
+#include "sbmlapiend.h"
 
 //==============================================================================
 

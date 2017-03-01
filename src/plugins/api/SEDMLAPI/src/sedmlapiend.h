@@ -17,13 +17,17 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML API disable warnings
+// SED-ML API end
 //==============================================================================
 
-#ifdef Q_OS_WIN
-    #pragma warning(push)
-    #pragma warning(disable: 4091)
-    #pragma warning(disable: 4290)
+#if defined(Q_OS_WIN)
+    #pragma warning(pop)
+#elif defined(Q_OS_LINUX)
+    #pragma GCC diagnostic pop
+#elif defined(Q_OS_MAC)
+    #pragma clang diagnostic pop
+#else
+    #error Unsupported platform
 #endif
 
 //==============================================================================

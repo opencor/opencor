@@ -34,16 +34,16 @@ limitations under the License.
 
 //==============================================================================
 
-#include "cellmlapidisablewarnings.h"
+#include "cellmlapibegin.h"
     #include "CCGSBootstrap.hpp"
-#include "cellmlapienablewarnings.h"
+#include "cellmlapiend.h"
 
 //==============================================================================
 
-#include "llvmdisablewarnings.h"
+#include "llvmbegin.h"
     #include "llvm/ADT/StringRef.h"
     #include "llvm/Support/DynamicLibrary.h"
-#include "llvmenablewarnings.h"
+#include "llvmend.h"
 
 //==============================================================================
 

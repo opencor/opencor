@@ -32,9 +32,9 @@ limitations under the License.
 
 //==============================================================================
 
-#include "sedmlapidisablewarnings.h"
+#include "sedmlapibegin.h"
     #include "sedml/SedDocument.h"
-#include "sedmlapienablewarnings.h"
+#include "sedmlapiend.h"
 
 //==============================================================================
 
