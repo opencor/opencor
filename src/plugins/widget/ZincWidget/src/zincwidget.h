@@ -50,6 +50,23 @@ namespace ZincWidget {
 
 //==============================================================================
 
+class ZincWidget;
+
+//==============================================================================
+
+class ZincWidgetSceneViewerCallback : public OpenCMISS::Zinc::Sceneviewercallback
+{
+public:
+    explicit ZincWidgetSceneViewerCallback(ZincWidget *pZincWidget);
+
+private:
+    ZincWidget *mZincWidget;
+
+    virtual void operator()(const OpenCMISS::Zinc::Sceneviewerevent &pSceneViewerEvent);
+};
+
+//==============================================================================
+
 class ZINCWIDGET_EXPORT ZincWidget : public QOpenGLWidget,
                                      public Core::CommonWidget
 {
@@ -70,6 +87,9 @@ protected:
 private:
     OpenCMISS::Zinc::Context *mContext;
     OpenCMISS::Zinc::Sceneviewer mSceneViewer;
+    OpenCMISS::Zinc::Sceneviewernotifier mSceneViewerNotifier;
+
+    ZincWidgetSceneViewerCallback mZincWidgetSceneViewerCallback;
 };
 
 //==============================================================================

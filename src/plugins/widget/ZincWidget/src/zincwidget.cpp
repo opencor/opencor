@@ -24,6 +24,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QTimer>
+
+//==============================================================================
+
 #include "opencmiss/zinc/context.hpp"
 
 //==============================================================================
@@ -33,9 +37,27 @@ namespace ZincWidget {
 
 //==============================================================================
 
+ZincWidgetSceneViewerCallback::ZincWidgetSceneViewerCallback(ZincWidget *pZincWidget) :
+    mZincWidget(pZincWidget)
+{
+}
+
+//==============================================================================
+
+void ZincWidgetSceneViewerCallback::operator()(const OpenCMISS::Zinc::Sceneviewerevent &pSceneViewerEvent)
+{
+    // Ask our Zinc widget to update itself if repainting is required
+
+    if (pSceneViewerEvent.getChangeFlags() & OpenCMISS::Zinc::Sceneviewerevent::CHANGE_FLAG_REPAINT_REQUIRED)
+        QTimer::singleShot(0, mZincWidget, SLOT(update()));
+}
+
+//==============================================================================
+
 ZincWidget::ZincWidget(const QString &pName, QWidget *pParent) :
     QOpenGLWidget(pParent),
-    Core::CommonWidget(this)
+    Core::CommonWidget(this),
+    mZincWidgetSceneViewerCallback(this)
 {
     // Create our context
 
@@ -63,6 +85,22 @@ void ZincWidget::initializeGL()
 
     mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE);
     mSceneViewer.setViewportSize(width(), height());
+
+    // Further customise our scene viewer
+
+    mSceneViewer.setScene(mContext->getDefaultRegion().getScene());
+    mSceneViewer.setScenefilter(mContext->getScenefiltermodule().getDefaultScenefilter());
+
+    // Get ourselves a scene viewer notifier and have it update ourselves
+    // whenever it gets a repaint notification
+
+    mSceneViewerNotifier = mSceneViewer.createSceneviewernotifier();
+
+    mSceneViewerNotifier.setCallback(mZincWidgetSceneViewerCallback);
+
+    // We are all set, so view all of our scene viewer
+
+    mSceneViewer.viewAll();
 }
 
 //==============================================================================
