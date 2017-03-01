@@ -156,11 +156,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     }
 
     // Set up the GUI
-    // Note: the application icon (which needs to be set for Linux, but not for
-    //       Windows or macOS, since it's set through CMake in those cases (see
-    //       CMakeLists.txt)) is set within the GUI file. This being said, it's
-    //       good to have it set for all three platforms, since it can then be
-    //       used in, for example, the about box...
 
     mGui->setupUi(this);
 
