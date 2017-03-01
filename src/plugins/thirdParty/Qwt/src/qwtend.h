@@ -23,8 +23,6 @@ limitations under the License.
 #undef MML_TEST
 
 #ifdef Q_OS_WIN
-    #undef _SCL_SECURE_NO_WARNINGS
-
     #undef QWT_DLL
 #endif
 
