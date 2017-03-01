@@ -53,6 +53,38 @@ ZincWidget::~ZincWidget()
 
 //==============================================================================
 
+void ZincWidget::initializeGL()
+{
+    // Create a scene viewer and have it have the same OpenGL properties as
+    // QOpenGLWidget
+
+    mSceneViewer = mContext->getSceneviewermodule().createSceneviewer(OpenCMISS::Zinc::Sceneviewer::BUFFERING_MODE_DOUBLE,
+                                                                      OpenCMISS::Zinc::Sceneviewer::STEREO_MODE_DEFAULT);
+
+    mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE);
+    mSceneViewer.setViewportSize(width(), height());
+}
+
+//==============================================================================
+
+void ZincWidget::paintGL()
+{
+    // Have our scene viewer render its scene
+
+    mSceneViewer.renderScene();
+}
+
+//==============================================================================
+
+void ZincWidget::resizeGL(int pWidth, int pHeight)
+{
+    // Have our scene viewer resize its viewport
+
+    mSceneViewer.setViewportSize(pWidth, pHeight);
+}
+
+//==============================================================================
+
 QSize ZincWidget::sizeHint() const
 {
     // Suggest a default size for ourselves

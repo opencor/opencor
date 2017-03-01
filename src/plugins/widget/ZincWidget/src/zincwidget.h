@@ -33,6 +33,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include "opencmiss/zinc/sceneviewer.hpp"
+
+//==============================================================================
+
 namespace OpenCMISS {
 namespace Zinc {
     class Context;
@@ -55,11 +59,17 @@ public:
     explicit ZincWidget(const QString &pName, QWidget *pParent);
     ~ZincWidget();
 
+
 protected:
+    virtual void initializeGL();
+    virtual void paintGL();
+    virtual void resizeGL(int pWidth, int pHeight);
+
     virtual QSize sizeHint() const;
 
 private:
     OpenCMISS::Zinc::Context *mContext;
+    OpenCMISS::Zinc::Sceneviewer mSceneViewer;
 };
 
 //==============================================================================
