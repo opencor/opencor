@@ -14,8 +14,6 @@ IF(WIN32)
     )
 ENDIF()
 
-SET(QWT_DEFINITIONS ${DEFINITIONS} PARENT_SCOPE)
-
 # Use our pre-built version unless instructed otherwise
 
 IF(USE_PREBUILT_QWT_PLUGIN)

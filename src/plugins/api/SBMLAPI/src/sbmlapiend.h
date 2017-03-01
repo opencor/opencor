@@ -17,17 +17,11 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML API enable warnings
+// SBML API end
 //==============================================================================
 
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
     #pragma warning(pop)
-#elif defined(Q_OS_LINUX)
-    #pragma GCC diagnostic pop
-#elif defined(Q_OS_MAC)
-    #pragma clang diagnostic pop
-#else
-    #error Unsupported platform
 #endif
 
 //==============================================================================

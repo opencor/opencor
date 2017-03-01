@@ -20,6 +20,12 @@ limitations under the License.
 // CellML file runtime
 //==============================================================================
 
+#ifdef _WIN32
+    #define _SCL_SECURE_NO_WARNINGS
+#endif
+
+//==============================================================================
+
 #include "cellmlfile.h"
 #include "cellmlfileruntime.h"
 #include "compilerengine.h"
@@ -34,16 +40,16 @@ limitations under the License.
 
 //==============================================================================
 
-#include "cellmlapidisablewarnings.h"
+#include "cellmlapibegin.h"
     #include "CCGSBootstrap.hpp"
-#include "cellmlapienablewarnings.h"
+#include "cellmlapiend.h"
 
 //==============================================================================
 
-#include "llvmdisablewarnings.h"
+#include "llvmbegin.h"
     #include "llvm/ADT/StringRef.h"
     #include "llvm/Support/DynamicLibrary.h"
-#include "llvmenablewarnings.h"
+#include "llvmend.h"
 
 //==============================================================================
 

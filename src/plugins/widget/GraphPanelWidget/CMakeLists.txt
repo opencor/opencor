@@ -22,8 +22,6 @@ ADD_PLUGIN(GraphPanelWidget
         src/graphpanelwidgetcustomaxesdialog.ui
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${QWT_DEFINITIONS}
     PLUGINS
         Core
         ${QWT_PLUGIN}

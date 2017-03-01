@@ -11,12 +11,9 @@ ADD_PLUGIN(Compiler
         src/compilermath.cpp
         src/compilerplugin.cpp
     HEADERS_MOC
-        src/compilerengine.h
         src/compilerplugin.h
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     PLUGINS
         Core
         ${LLVM_PLUGIN}

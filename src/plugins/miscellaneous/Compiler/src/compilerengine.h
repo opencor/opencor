@@ -28,14 +28,13 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QObject>
 #include <QString>
 
 //==============================================================================
 
-#include "llvmdisablewarnings.h"
+#include "llvmbegin.h"
     #include "llvm/ExecutionEngine/ExecutionEngine.h"
-#include "llvmenablewarnings.h"
+#include "llvmend.h"
 
 //==============================================================================
 
@@ -44,10 +43,8 @@ namespace Compiler {
 
 //==============================================================================
 
-class COMPILER_EXPORT CompilerEngine : public QObject
+class COMPILER_EXPORT CompilerEngine
 {
-    Q_OBJECT
-
 public:
     explicit CompilerEngine();
 

@@ -48,13 +48,13 @@ limitations under the License.
 
 //==============================================================================
 
-#include "sbmlapidisablewarnings.h"
+#include "sbmlapibegin.h"
     #include "sbml/math/ASTNode.h"
-#include "sbmlapienablewarnings.h"
+#include "sbmlapiend.h"
 
 //==============================================================================
 
-#include "sedmlapidisablewarnings.h"
+#include "sedmlapibegin.h"
     #include "sedml/SedAlgorithm.h"
     #include "sedml/SedDocument.h"
     #include "sedml/SedOneStep.h"
@@ -62,7 +62,7 @@ limitations under the License.
     #include "sedml/SedRepeatedTask.h"
     #include "sedml/SedUniformTimeCourse.h"
     #include "sedml/SedVectorRange.h"
-#include "sedmlapienablewarnings.h"
+#include "sedmlapiend.h"
 
 //==============================================================================
 

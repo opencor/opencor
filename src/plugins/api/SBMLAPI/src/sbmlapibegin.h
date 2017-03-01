@@ -17,40 +17,13 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file CellML exporter
+// SBML API begin
 //==============================================================================
 
-#include "cellmlfilecellmlexporter.h"
-
-//==============================================================================
-
-#include "cellmlapibegin.h"
-    #include "CellMLBootstrap.hpp"
-#include "cellmlapiend.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace CellMLSupport {
-
-//==============================================================================
-
-CellmlFileCellmlExporter::CellmlFileCellmlExporter(iface::cellml_api::Model *pModel,
-                                                   const std::wstring &pVersion) :
-    CellmlFileExporter(),
-    mModel(pModel)
-{
-    // Create an empty CellML model of the required version
-
-    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
-
-    mExportedModel = cellmlBootstrap->createModel(pVersion);
-}
-
-//==============================================================================
-
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+#ifdef Q_OS_WIN
+    #pragma warning(push)
+    #pragma warning(disable: 4005)
+#endif
 
 //==============================================================================
 // End of file

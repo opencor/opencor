@@ -17,19 +17,13 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// LLVM enable warnings
+// Qwt begin
 //==============================================================================
 
-#if defined(Q_OS_WIN)
-    #pragma warning(pop)
-#elif defined(Q_OS_LINUX)
-    #pragma GCC diagnostic error "-Wmissing-field-initializers"
-    #pragma GCC diagnostic error "-Wstrict-aliasing"
-    #pragma GCC diagnostic error "-Wunused-parameter"
-#elif defined(Q_OS_MAC)
-    #pragma GCC diagnostic error "-Wunused-parameter"
-#else
-    #error Unsupported platform
+#define MML_TEST
+
+#ifdef Q_OS_WIN
+    #define QWT_DLL
 #endif
 
 //==============================================================================

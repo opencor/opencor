@@ -26,9 +26,9 @@ limitations under the License.
 
 //==============================================================================
 
-#include "cellmlapidisablewarnings.h"
+#include "cellmlapibegin.h"
     #include "CellMLBootstrap.hpp"
-#include "cellmlapienablewarnings.h"
+#include "cellmlapiend.h"
 
 //==============================================================================
 
