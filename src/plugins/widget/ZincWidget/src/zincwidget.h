@@ -52,7 +52,7 @@ class ZINCWIDGET_EXPORT ZincWidget : public QOpenGLWidget,
     Q_OBJECT
 
 public:
-    explicit ZincWidget(QWidget *pParent);
+    explicit ZincWidget(const QString &pName, QWidget *pParent);
     ~ZincWidget();
 
 protected:

@@ -33,13 +33,13 @@ namespace ZincWidget {
 
 //==============================================================================
 
-ZincWidget::ZincWidget(QWidget *pParent) :
+ZincWidget::ZincWidget(const QString &pName, QWidget *pParent) :
     QOpenGLWidget(pParent),
     Core::CommonWidget(this)
 {
     // Create our context
 
-    mContext = new OpenCMISS::Zinc::Context("ZincWindowWidget");
+    mContext = new OpenCMISS::Zinc::Context(pName.toUtf8().constData());
 }
 
 //==============================================================================

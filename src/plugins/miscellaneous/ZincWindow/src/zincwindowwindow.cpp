@@ -45,9 +45,7 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
 
     // Create and add a Zinc window widget
 
-    mZincWidget = new ZincWidget::ZincWidget(this);
-
-    mZincWidget->setObjectName("ZincWindowWidget");
+    mZincWidget = new ZincWidget::ZincWidget("ZincWidget", this);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mZincWindowWidget,
