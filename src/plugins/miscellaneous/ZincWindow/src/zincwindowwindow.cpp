@@ -54,7 +54,7 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
     mZincWidget->setContext(mZincContext);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mGui->layout->addWidget(new Core::BorderedWidget(mZincWindowWidget,
+    mGui->layout->addWidget(new Core::BorderedWidget(mZincWidget,
                                                      false, true, true, true));
 #elif defined(Q_OS_MAC)
     mGui->layout->addWidget(mZincWidget);
