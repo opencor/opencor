@@ -24,6 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QMouseEvent>
 #include <QTimer>
 
 //==============================================================================
@@ -267,6 +268,48 @@ void ZincWidget::createSceneViewer()
 
 //==============================================================================
 
+OpenCMISS::Zinc::Sceneviewerinput::ButtonType ZincWidget::buttonMap(const Qt::MouseButton &pButton) const
+{
+    // Map the given button to a Zinc button
+
+    switch (pButton) {
+    case Qt::LeftButton:
+        return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_LEFT;
+    case Qt::MiddleButton:
+        return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_MIDDLE;
+    case Qt::XButton1:
+        return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_SCROLL_DOWN;
+    case Qt::XButton2:
+            return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_SCROLL_UP;
+    case Qt::RightButton:
+        return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_RIGHT;
+    default:
+        return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_INVALID;
+    }
+}
+
+//==============================================================================
+
+OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags ZincWidget::modifierMap(const Qt::KeyboardModifiers &pModifiers) const
+{
+    // Map the given modifiers to Zinc modifiers
+
+    OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags res = OpenCMISS::Zinc::Sceneviewerinput::MODIFIER_FLAG_NONE;
+
+    if (pModifiers & Qt::ShiftModifier)
+        res = res|OpenCMISS::Zinc::Sceneviewerinput::MODIFIER_FLAG_SHIFT;
+
+    if (pModifiers & Qt::ControlModifier)
+        res = res|OpenCMISS::Zinc::Sceneviewerinput::MODIFIER_FLAG_CONTROL;
+
+    if (pModifiers & Qt::AltModifier)
+        res = res|OpenCMISS::Zinc::Sceneviewerinput::MODIFIER_FLAG_ALT;
+
+    return res;
+}
+
+//==============================================================================
+
 void ZincWidget::initializeGL()
 {
     // Create our scene viewer if we have a context
@@ -295,6 +338,55 @@ void ZincWidget::resizeGL(int pWidth, int pHeight)
     // Have our scene viewer resize its viewport
 
     mSceneViewer.setViewportSize(pWidth, pHeight);
+}
+
+//==============================================================================
+
+void ZincWidget::mouseMoveEvent(QMouseEvent *pEvent)
+{
+    // Get our scene viewer to handle the given mouse move event
+
+    OpenCMISS::Zinc::Sceneviewerinput sceneInput = mSceneViewer.createSceneviewerinput();
+
+    sceneInput.setEventType(OpenCMISS::Zinc::Sceneviewerinput::EVENT_TYPE_MOTION_NOTIFY);
+
+    if (pEvent->type() == QEvent::Leave)
+        sceneInput.setPosition(-1, -1);
+    else
+        sceneInput.setPosition(pEvent->x(), pEvent->y());
+
+    mSceneViewer.processSceneviewerinput(sceneInput);
+}
+
+//==============================================================================
+
+void ZincWidget::mousePressEvent(QMouseEvent *pEvent)
+{
+    // Get our scene viewer to handle the given mouse press event
+
+    OpenCMISS::Zinc::Sceneviewerinput sceneInput = mSceneViewer.createSceneviewerinput();
+
+    sceneInput.setButtonType(buttonMap(pEvent->button()));
+    sceneInput.setEventType(OpenCMISS::Zinc::Sceneviewerinput::EVENT_TYPE_BUTTON_PRESS);
+    sceneInput.setModifierFlags(modifierMap(pEvent->modifiers()));
+    sceneInput.setPosition(pEvent->x(), pEvent->y());
+
+    mSceneViewer.processSceneviewerinput(sceneInput);
+}
+
+//==============================================================================
+
+void ZincWidget::mouseReleaseEvent(QMouseEvent *pEvent)
+{
+    // Get our scene viewer to handle the given mouse release event
+
+    OpenCMISS::Zinc::Sceneviewerinput sceneInput = mSceneViewer.createSceneviewerinput();
+
+    sceneInput.setButtonType(buttonMap(pEvent->button()));
+    sceneInput.setEventType(OpenCMISS::Zinc::Sceneviewerinput::EVENT_TYPE_BUTTON_RELEASE);
+    sceneInput.setPosition(pEvent->x(), pEvent->y());
+
+    mSceneViewer.processSceneviewerinput(sceneInput);
 }
 
 //==============================================================================

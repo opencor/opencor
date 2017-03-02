@@ -34,6 +34,7 @@ limitations under the License.
 //==============================================================================
 
 #include "opencmiss/zinc/sceneviewer.hpp"
+#include "opencmiss/zinc/sceneviewerinput.hpp"
 
 //==============================================================================
 
@@ -110,6 +111,10 @@ protected:
     virtual void paintGL();
     virtual void resizeGL(int pWidth, int pHeight);
 
+    virtual void mouseMoveEvent(QMouseEvent *pEvent);
+    virtual void mousePressEvent(QMouseEvent *pEvent);
+    virtual void mouseReleaseEvent(QMouseEvent *pEvent);
+
     virtual QSize sizeHint() const;
 
 private:
@@ -121,7 +126,12 @@ private:
 
     ZincWidgetSceneViewerCallback mZincWidgetSceneViewerCallback;
 
+    bool mHandleMouseEvents;
+
     void createSceneViewer();
+
+    OpenCMISS::Zinc::Sceneviewerinput::ButtonType buttonMap(const Qt::MouseButton &pButton) const;
+    OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags modifierMap(const Qt::KeyboardModifiers &pModifiers) const;
 
 signals:
     void graphicsInitialized();
