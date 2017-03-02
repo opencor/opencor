@@ -75,7 +75,7 @@ ZincWidget::~ZincWidget()
 
 //==============================================================================
 
-ZincWidget::ProjectionMode ZincWidget::projectionMode() const
+ZincWidget::ProjectionMode ZincWidget::projectionMode()
 {
     // Return our project mode
 
@@ -95,7 +95,7 @@ void ZincWidget::setProjectionMode(const ProjectionMode &pProjectionMode)
 {
     // Set our project mode
 
-    switch () {
+    switch (pProjectionMode) {
     case Parallel:
         mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PARALLEL);
 

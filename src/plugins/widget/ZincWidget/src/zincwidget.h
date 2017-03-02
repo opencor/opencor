@@ -82,7 +82,7 @@ public:
     explicit ZincWidget(const QString &pName, QWidget *pParent);
     ~ZincWidget();
 
-    ProjectionMode projectionMode() const;
+    ProjectionMode projectionMode();
     void setProjectionMode(const ProjectionMode &pProjectionMode);
 
 protected:
