@@ -75,6 +75,44 @@ ZincWidget::~ZincWidget()
 
 //==============================================================================
 
+ZincWidget::ProjectionMode ZincWidget::projectionMode() const
+{
+    // Return our project mode
+
+    switch (mSceneViewer.getProjectionMode()) {
+    case OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PARALLEL:
+        return Parallel;
+    case OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE:
+        return Perspective;
+    default:
+        return Invalid;
+    }
+}
+
+//==============================================================================
+
+void ZincWidget::setProjectionMode(const ProjectionMode &pProjectionMode)
+{
+    // Set our project mode
+
+    switch () {
+    case Parallel:
+        mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PARALLEL);
+
+        break;
+    case Perspective:
+        mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE);
+
+        break;
+    default:
+        // Invalid, so do nothing
+
+        ;
+    }
+}
+
+//==============================================================================
+
 void ZincWidget::initializeGL()
 {
     // Create a scene viewer and have it have the same OpenGL properties as
@@ -91,8 +129,7 @@ void ZincWidget::initializeGL()
     mSceneViewer.setScene(mContext->getDefaultRegion().getScene());
     mSceneViewer.setScenefilter(mContext->getScenefiltermodule().getDefaultScenefilter());
 
-    // Get ourselves a scene viewer notifier and have it update ourselves
-    // whenever it gets a repaint notification
+    // Get ourselves a scene viewer notifier and set to it our callback class
 
     mSceneViewerNotifier = mSceneViewer.createSceneviewernotifier();
 
