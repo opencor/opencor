@@ -51,6 +51,8 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
     connect(mZincWidget, SIGNAL(graphicsInitialized()),
             this, SLOT(graphicsInitialized()));
 
+    mZincWidget->setContext(mZincContext);
+
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mZincWindowWidget,
                                                      false, true, true, true));
