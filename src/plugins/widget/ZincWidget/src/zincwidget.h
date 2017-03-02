@@ -79,11 +79,17 @@ public:
         Perspective
     };
 
-    explicit ZincWidget(const QString &pName, QWidget *pParent);
-    ~ZincWidget();
+    explicit ZincWidget(QWidget *pParent);
+
+    OpenCMISS::Zinc::Context * context() const;
+    void setContext(OpenCMISS::Zinc::Context *pContext);
+
+    OpenCMISS::Zinc::Sceneviewer sceneViewer() const;
 
     ProjectionMode projectionMode();
     void setProjectionMode(const ProjectionMode &pProjectionMode);
+
+    void viewAll();
 
 protected:
     virtual void initializeGL();
@@ -93,11 +99,18 @@ protected:
     virtual QSize sizeHint() const;
 
 private:
+    bool mGraphicsInitialized;
+
     OpenCMISS::Zinc::Context *mContext;
     OpenCMISS::Zinc::Sceneviewer mSceneViewer;
     OpenCMISS::Zinc::Sceneviewernotifier mSceneViewerNotifier;
 
     ZincWidgetSceneViewerCallback mZincWidgetSceneViewerCallback;
+
+    void createSceneViewer();
+
+signals:
+    void graphicsInitialized();
 };
 
 //==============================================================================

@@ -54,23 +54,45 @@ void ZincWidgetSceneViewerCallback::operator()(const OpenCMISS::Zinc::Sceneviewe
 
 //==============================================================================
 
-ZincWidget::ZincWidget(const QString &pName, QWidget *pParent) :
+ZincWidget::ZincWidget(QWidget *pParent) :
     QOpenGLWidget(pParent),
     Core::CommonWidget(this),
+    mGraphicsInitialized(false),
+    mContext(0),
+    mSceneViewer(OpenCMISS::Zinc::Sceneviewer()),
+    mSceneViewerNotifier(OpenCMISS::Zinc::Sceneviewernotifier()),
     mZincWidgetSceneViewerCallback(this)
 {
-    // Create our context
-
-    mContext = new OpenCMISS::Zinc::Context(pName.toUtf8().constData());
 }
 
 //==============================================================================
 
-ZincWidget::~ZincWidget()
+OpenCMISS::Zinc::Context * ZincWidget::context() const
 {
-    // Delete some internal objects
+    // Return our context
 
-    delete mContext;
+    return mContext;
+}
+
+//==============================================================================
+
+void ZincWidget::setContext(OpenCMISS::Zinc::Context *pContext)
+{
+    // Set our context
+
+    mContext = pContext;
+
+    if (mGraphicsInitialized)
+        createSceneViewer();
+}
+
+//==============================================================================
+
+OpenCMISS::Zinc::Sceneviewer ZincWidget::sceneViewer() const
+{
+    // Return our scene viewer
+
+    return mSceneViewer;
 }
 
 //==============================================================================
@@ -113,9 +135,18 @@ void ZincWidget::setProjectionMode(const ProjectionMode &pProjectionMode)
 
 //==============================================================================
 
-void ZincWidget::initializeGL()
+void ZincWidget::viewAll()
 {
-    // Create a scene viewer and have it have the same OpenGL properties as
+    // View all of our scene viewer
+
+    mSceneViewer.viewAll();
+}
+
+//==============================================================================
+
+void ZincWidget::createSceneViewer()
+{
+    // Create our scene viewer and have it have the same OpenGL properties as
     // QOpenGLWidget
 
     mSceneViewer = mContext->getSceneviewermodule().createSceneviewer(OpenCMISS::Zinc::Sceneviewer::BUFFERING_MODE_DOUBLE,
@@ -129,7 +160,8 @@ void ZincWidget::initializeGL()
     mSceneViewer.setScene(mContext->getDefaultRegion().getScene());
     mSceneViewer.setScenefilter(mContext->getScenefiltermodule().getDefaultScenefilter());
 
-    // Get ourselves a scene viewer notifier and set to it our callback class
+    // Get ourselves a scene viewer notifier and set its callback to our
+    // callback class
 
     mSceneViewerNotifier = mSceneViewer.createSceneviewernotifier();
 
@@ -138,6 +170,20 @@ void ZincWidget::initializeGL()
     // We are all set, so view all of our scene viewer
 
     mSceneViewer.viewAll();
+}
+
+//==============================================================================
+
+void ZincWidget::initializeGL()
+{
+    // Create our scene viewer if we have a context
+
+    mGraphicsInitialized = true;
+
+    if (mContext)
+        createSceneViewer();
+
+    emit graphicsInitialized();
 }
 
 //==============================================================================
