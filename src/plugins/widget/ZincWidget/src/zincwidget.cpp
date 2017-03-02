@@ -160,6 +160,24 @@ void ZincWidget::setViewParameters(const double *pEye, const double *pLookAt,
 
 //==============================================================================
 
+OpenCMISS::Zinc::Scenefilter ZincWidget::sceneFilter()
+{
+    // Return our scene filter
+
+    return mSceneViewer.getScenefilter();
+}
+
+//==============================================================================
+
+void ZincWidget::setSceneFilter(const OpenCMISS::Zinc::Scenefilter &pSceneFilter)
+{
+    // Set our scene filter
+
+    mSceneViewer.setScenefilter(pSceneFilter);
+}
+
+//==============================================================================
+
 void ZincWidget::viewAll()
 {
     // View all of our scene viewer

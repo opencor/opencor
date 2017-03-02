@@ -94,6 +94,9 @@ public:
     void setViewParameters(const double *pEye, const double *pLookAt,
                            const double *pUp, const double &pAngle);
 
+    OpenCMISS::Zinc::Scenefilter sceneFilter();
+    void setSceneFilter(const OpenCMISS::Zinc::Scenefilter &pSceneFilter);
+
     void viewAll();
 
 protected:
