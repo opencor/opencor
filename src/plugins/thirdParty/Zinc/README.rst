@@ -1,4 +1,4 @@
-We build our own copy of the `Zinc <http://physiomeproject.org/software/opencmiss/zinc>`__ library, which requires doing the following from a command prompt:
+We build our own copy of the `Zinc <http://physiomeproject.org/software/opencmiss/zinc>`__ library, which requires doing the following from the command line:
 
 ::
 
@@ -6,3 +6,5 @@ We build our own copy of the `Zinc <http://physiomeproject.org/software/opencmis
   cd OpenCMISS/manage/build
   cmake -DOC_USE_IRON=NO -DMPI=none ..
   cmake --build .
+
+From there, we simply need to get the generated library file(s).
