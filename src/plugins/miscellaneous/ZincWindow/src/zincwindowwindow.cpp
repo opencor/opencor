@@ -46,6 +46,10 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
     // Create and add a Zinc window widget
 
     mZincWidget = new ZincWidget::ZincWidget(this);
+    mZincContext = new OpenCMISS::Zinc::Context("ZincWindowWindow");
+
+    connect(mZincWidget, SIGNAL(graphicsInitialized()),
+            this, SLOT(graphicsInitialized()));
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mZincWindowWidget,
@@ -61,6 +65,10 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
 
 ZincWindowWindow::~ZincWindowWindow()
 {
+    // Delete some internal objects
+
+    delete mZincContext;
+
     // Delete the GUI
 
     delete mGui;
@@ -73,6 +81,18 @@ void ZincWindowWindow::retranslateUi()
     // Retranslate our whole window
 
     mGui->retranslateUi(this);
+}
+
+//==============================================================================
+
+void ZincWindowWindow::graphicsInitialized()
+{
+    // Our Zinc widget has had its graphics initialised, so we can now set its
+    // background colour
+
+    double backgroundColor[3] = {0.0, 0.0, 0.0};
+
+    mZincWidget->sceneViewer().setBackgroundColourRGB(backgroundColor);
 }
 
 //==============================================================================

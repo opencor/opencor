@@ -34,6 +34,14 @@ namespace Ui {
 
 //==============================================================================
 
+namespace OpenCMISS {
+namespace Zinc {
+    class Context;
+}   // namespace Zinc
+}   // namespace OpenCMISS
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -66,6 +74,10 @@ private:
     Ui::ZincWindowWindow *mGui;
 
     ZincWidget::ZincWidget *mZincWidget;
+    OpenCMISS::Zinc::Context *mZincContext;
+
+private slots:
+    void graphicsInitialized();
 };
 
 //==============================================================================
