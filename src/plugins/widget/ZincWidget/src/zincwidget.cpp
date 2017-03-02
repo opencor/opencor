@@ -147,8 +147,8 @@ void ZincWidget::viewParameters(double *pEye, double *pLookAt, double *pUp,
 
 //==============================================================================
 
-void ZincWidget::setViewParameters(const double *pEye, const double *pLookAt,
-                                   const double *pUp, const double &pAngle)
+void ZincWidget::setViewParameters(double *pEye, double *pLookAt, double *pUp,
+                                   double &pAngle)
 {
     // Set our view parameters
 
@@ -174,6 +174,34 @@ void ZincWidget::setSceneFilter(const OpenCMISS::Zinc::Scenefilter &pSceneFilter
     // Set our scene filter
 
     mSceneViewer.setScenefilter(pSceneFilter);
+}
+
+//==============================================================================
+
+int ZincWidget::project(double *pInCoordinates, double *pOutCoordinates)
+{
+    // Project the given point in global coordinates into window pixel
+    // coordinates with the origin at the window's top left pixel
+    // Note: the Z pixel coordinate is a depth, which is mapped so that -1 is on
+    //       the far clipping plane and +1 is on the near clipping plane...
+
+    return mSceneViewer.transformCoordinates(OpenCMISS::Zinc::SCENECOORDINATESYSTEM_WORLD,
+                                             OpenCMISS::Zinc::SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
+                                             OpenCMISS::Zinc::Scene(), pInCoordinates, pOutCoordinates);
+}
+
+//==============================================================================
+
+int ZincWidget::unproject(double *pInCoordinates, double *pOutCoordinates)
+{
+    // Unproject the given point in window pixel coordinates where the origin is
+    // at the window's top left pixel into global coordinates
+    // Note: the Z pixel coordinate is a depth, which is mapped so that -1 is on
+    //       the far clipping plane, and +1 is on the near clipping plane...
+
+    return mSceneViewer.transformCoordinates(OpenCMISS::Zinc::SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
+                                             OpenCMISS::Zinc::SCENECOORDINATESYSTEM_WORLD,
+                                             OpenCMISS::Zinc::Scene(), pInCoordinates, pOutCoordinates);
 }
 
 //==============================================================================

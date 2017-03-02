@@ -91,11 +91,14 @@ public:
 
     void viewParameters(double *pEye, double *pLookAt, double *pUp,
                         double &pAngle);
-    void setViewParameters(const double *pEye, const double *pLookAt,
-                           const double *pUp, const double &pAngle);
+    void setViewParameters(double *pEye, double *pLookAt, double *pUp,
+                           double &pAngle);
 
     OpenCMISS::Zinc::Scenefilter sceneFilter();
     void setSceneFilter(const OpenCMISS::Zinc::Scenefilter &pSceneFilter);
+
+    int project(double *pInCoordinates, double *pOutCoordinates);
+    int unproject(double *pInCoordinates, double *pOutCoordinates);
 
     void viewAll();
 
