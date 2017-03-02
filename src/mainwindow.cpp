@@ -544,7 +544,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                 case Gui::Menu::View:
                     // Not a relevant type, so do nothing
 
-                    ;
+                    break;
                 }
             }
         }
