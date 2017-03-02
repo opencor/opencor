@@ -97,6 +97,9 @@ public:
     OpenCMISS::Zinc::Scenefilter sceneFilter();
     void setSceneFilter(const OpenCMISS::Zinc::Scenefilter &pSceneFilter);
 
+    double tumbleRate();
+    void setTumbleRate(const double &pTumbleRate);
+
     int project(double *pInCoordinates, double *pOutCoordinates);
     int unproject(double *pInCoordinates, double *pOutCoordinates);
 

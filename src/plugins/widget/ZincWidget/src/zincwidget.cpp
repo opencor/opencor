@@ -182,6 +182,24 @@ void ZincWidget::setSceneFilter(const OpenCMISS::Zinc::Scenefilter &pSceneFilter
 
 //==============================================================================
 
+double ZincWidget::tumbleRate()
+{
+    // Return our tumble rate
+
+    return mSceneViewer.getTumbleRate();
+}
+
+//==============================================================================
+
+void ZincWidget::setTumbleRate(const double &pTumbleRate)
+{
+    // Set our tumble rate
+
+    mSceneViewer.setTumbleRate(pTumbleRate);
+}
+
+//==============================================================================
+
 int ZincWidget::project(double *pInCoordinates, double *pOutCoordinates)
 {
     // Project the given point in global coordinates into window pixel
