@@ -135,6 +135,31 @@ void ZincWidget::setProjectionMode(const ProjectionMode &pProjectionMode)
 
 //==============================================================================
 
+void ZincWidget::viewParameters(double *pEye, double *pLookAt, double *pUp,
+                                double &pAngle)
+{
+    // Return our view parameters
+
+    mSceneViewer.getLookatParameters(pEye, pLookAt, pUp);
+
+    pAngle = mSceneViewer.getViewAngle();
+}
+
+//==============================================================================
+
+void ZincWidget::setViewParameters(const double *pEye, const double *pLookAt,
+                                   const double *pUp, const double &pAngle)
+{
+    // Set our view parameters
+
+    mSceneViewer.beginChange();
+        mSceneViewer.setLookatParametersNonSkew(pEye, pLookAt, pUp);
+        mSceneViewer.setViewAngle(pAngle);
+    mSceneViewer.endChange();
+}
+
+//==============================================================================
+
 void ZincWidget::viewAll()
 {
     // View all of our scene viewer
