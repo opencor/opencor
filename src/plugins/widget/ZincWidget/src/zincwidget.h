@@ -89,8 +89,8 @@ public:
     ProjectionMode projectionMode();
     void setProjectionMode(const ProjectionMode &pProjectionMode);
 
-    void viewParameters(double *pEye, double *pLookAt, double *pUp,
-                        double &pAngle);
+    int viewParameters(double *pEye, double *pLookAt, double *pUp,
+                       double &pAngle);
     void setViewParameters(double *pEye, double *pLookAt, double *pUp,
                            double &pAngle);
 
