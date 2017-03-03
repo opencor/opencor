@@ -865,17 +865,17 @@ void PmrWorkspacesWindowWidget::deleteItems(PmrWorkspacesWindowItem *pItem,
         // owned and the folder where it was cloned has been deleted
 
         if (!pItem->hasChildren()) {
+            pItems.removeOne(pItem);
+
             if (pItem->parent())
                 pItem->parent()->removeRow(pItem->row());
             else if (!pItem->workspace()->isOwned())
                 mTreeViewModel->invisibleRootItem()->removeRow(pItem->row());
-
-            pItems.removeOne(pItem);
         }
     } else if (pItems.contains(pItem)) {
-        pItem->parent()->removeRow(pItem->row());
-
         pItems.removeOne(pItem);
+
+        pItem->parent()->removeRow(pItem->row());
     }
 }
 
