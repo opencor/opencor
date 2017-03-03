@@ -130,27 +130,25 @@ QString PmrWorkspacesWindowNewWorkspaceDialog::path() const
 void PmrWorkspacesWindowNewWorkspaceDialog::updateOkButton()
 {
     // Enable the Ok button, but only if we have a title and a folder that both
-    // exists and is empty
+    // exists and isn't already a Git repository
+
+    QString dirName = mGui->folderValue->text().trimmed();
 
     mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(   !mGui->titleValue->text().trimmed().isEmpty()
-                                                              &&  Core::isEmptyDirectory(mGui->folderValue->text().trimmed()));
+                                                              &&  Core::isDirectory(dirName)
+                                                              && !PMRSupport::PmrWebService::isGitDirectory(dirName));
 }
 
 //==============================================================================
 
 void PmrWorkspacesWindowNewWorkspaceDialog::choosePath()
 {
-    // Choose an empty path for our new workspace
+    // Choose a non-Git directory for our new workspace
 
-    QString dirName = PMRSupport::PmrWebService::getEmptyDirectory();
+    QString dirName = PMRSupport::PmrWebService::getNonGitDirectory();
 
-    if (!dirName.isEmpty()) {
+    if (!dirName.isEmpty())
         mGui->folderValue->setText(dirName);
-
-        mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!title().isEmpty());
-    } else {
-        mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
-    }
 }
 
 //==============================================================================

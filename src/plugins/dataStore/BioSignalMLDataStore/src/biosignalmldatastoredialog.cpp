@@ -133,11 +133,11 @@ QLabel * BiosignalmlDataStoreDialog::boldLabel(const QString &pText)
     // Create and return a label after having made it bold
 
     QLabel *res = new QLabel(pText, this);
-    QFont font = res->font();
+    QFont newFont = res->font();
 
-    font.setBold(true);
+    newFont.setBold(true);
 
-    res->setFont(font);
+    res->setFont(newFont);
 
     return res;
 }
