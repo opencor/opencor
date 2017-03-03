@@ -390,7 +390,7 @@ int git_clone(
 */
 //---OPENCOR--- BEGIN
 	const git_clone_options *_options,
-	bool allow_non_empty_dir)
+	int allow_non_empty_dir)
 //---OPENCOR--- END
 {
 	int error = 0;
