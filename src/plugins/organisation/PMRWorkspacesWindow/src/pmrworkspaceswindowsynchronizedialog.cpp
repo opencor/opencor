@@ -133,11 +133,11 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     messageWidget->setLayout(messageLayout);
 
     QLabel *messageLabel = new QLabel(tr("Message:"), messageWidget);
-    QFont labelFont = messageLabel->font();
+    QFont newFont = messageLabel->font();
 
-    labelFont.setBold(true);
+    newFont.setBold(true);
 
-    messageLabel->setFont(labelFont);
+    messageLabel->setFont(newFont);
 
     mMessageValue = new QTextEdit(messageWidget);
 
@@ -158,7 +158,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     QLabel *changesLabel = new QLabel(changesWidget);
 
-    changesLabel->setFont(labelFont);
+    changesLabel->setFont(newFont);
 
     mChangesValue = new QListView(changesWidget);
 
@@ -204,7 +204,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     mWebViewerCellmlTextFormatAction = Core::newAction(QIcon(":/CellMLSupport/logo.png"), webViewerToolBarWidget);
 
     webViewerLabel->setAlignment(Qt::AlignBottom);
-    webViewerLabel->setFont(labelFont);
+    webViewerLabel->setFont(newFont);
 
     webViewerSpacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
