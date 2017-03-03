@@ -7,6 +7,9 @@
 #ifndef INCLUDE_git_clone_h__
 #define INCLUDE_git_clone_h__
 
+//---OPENCOR--- BEGIN
+#include "cc-compat.h"
+//---OPENCOR--- END
 #include "common.h"
 #include "types.h"
 #include "indexer.h"
@@ -200,7 +203,13 @@ GIT_EXTERN(int) git_clone(
 	git_repository **out,
 	const char *url,
 	const char *local_path,
+/*---OPENCOR---
 	const git_clone_options *options);
+*/
+//---OPENCOR--- BEGIN
+	const git_clone_options *options,
+	bool allow_non_empty_dir);
+//---OPENCOR--- END
 
 /** @} */
 GIT_END_DECL

@@ -263,7 +263,7 @@ void PmrWorkspace::clone(const QString &pPath)
     bool cloned = true;
 
     if (git_clone(&mGitRepository, mUrl.toUtf8().constData(),
-                  pPath.toUtf8().constData(), &cloneOptions) < 0) {
+                  pPath.toUtf8().constData(), &cloneOptions, true) < 0) {
         emitGitError(tr("An error occurred while trying to clone the workspace."));
 
         cloned = false;
