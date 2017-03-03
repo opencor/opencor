@@ -150,7 +150,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     connect(mPmrWebService, SIGNAL(authenticated(const bool &)),
             this, SLOT(updateGui()));
-    connect(mPmrWebService, SIGNAL(cancelled()),
+    connect(mPmrWebService, SIGNAL(authenticationCancelled()),
             this, SLOT(updateGui()));
 
     connect(mPmrWebService, SIGNAL(workspaces(const PMRSupport::PmrWorkspaces &)),

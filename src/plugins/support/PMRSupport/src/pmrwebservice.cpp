@@ -20,6 +20,7 @@ limitations under the License.
 // PMR web service
 //==============================================================================
 
+#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "pmrwebservice.h"
 #include "pmrwebservicemanager.h"
@@ -28,11 +29,17 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QFileDialog>
 #include <QJsonObject>
+#include <QMainWindow>
 
 //==============================================================================
 
 #include <QtConcurrent/QtConcurrent>
+
+//==============================================================================
+
+#include "git2/repository.h"
 
 //==============================================================================
 
@@ -60,8 +67,8 @@ PmrWebService::PmrWebService(const QString &pPmrUrl, QObject *pParent) :
             this, SIGNAL(authenticated(const bool &)));
     connect(mPmrWebServiceManager, SIGNAL(error(const QString &)),
             this, SIGNAL(error(const QString &)));
-    connect(mPmrWebServiceManager, SIGNAL(cancelled()),
-            this, SIGNAL(cancelled()));
+    connect(mPmrWebServiceManager, SIGNAL(authenticationCancelled()),
+            this, SIGNAL(authenticationCancelled()));
 }
 
 //==============================================================================
@@ -423,6 +430,8 @@ void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace,
 
     // Clone the given workspace to the given path
 
+    connect(pWorkspace, SIGNAL(warning(const QString &)),
+            this, SLOT(workspaceErrored()));
     connect(pWorkspace, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloneFinished(PMRSupport::PmrWorkspace *)));
 
@@ -431,9 +440,19 @@ void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace,
 
 //==============================================================================
 
-void PmrWebService::workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWebService::workspaceErrored()
 {
     // Let people know that we are not busy anymore
+
+    emit busy(false);
+}
+
+//==============================================================================
+
+void PmrWebService::workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace)
+{
+    // Let people know that we are not busy anymore and that a workspace has
+    // been cloned
 
     emit busy(false);
     emit workspaceCloned(pWorkspace);
@@ -489,6 +508,66 @@ QString PmrWebService::getEmptyDirectory()
     // Retrieve and return the name of an empty directory
 
     return Core::getEmptyDirectory(tr("Select Empty Directory"));
+}
+
+//==============================================================================
+
+QString PmrWebService::getNonGitDirectory()
+{
+    // Retrieve and return the name of a non-Git directory
+
+    QFileDialog dialog(Core::mainWindow(), tr("Select Directory"),
+                       Core::activeDirectory());
+
+    dialog.setFileMode(QFileDialog::DirectoryOnly);
+    dialog.setOption(QFileDialog::ShowDirsOnly);
+
+    forever {
+        if (dialog.exec() != QDialog::Accepted)
+            break;
+
+        QString res = Core::nativeCanonicalDirName(dialog.selectedFiles().first());
+
+        if (!res.isEmpty()) {
+            // We have retrieved a file name, so update our active directory
+
+            Core::setActiveDirectory(res);
+
+            // Check whether the directory is a Git directory
+
+            if (isGitDirectory(res)) {
+                Core::warningMessageBox(tr("Select Directory"),
+                                        tr("Please choose a non-Git directory."));
+
+                continue;
+            }
+        }
+
+        return res;
+    }
+
+    return QString();
+}
+
+//==============================================================================
+
+bool PmrWebService::isGitDirectory(const QString &pDirName)
+{
+    // Return whether the given directory is a Git directory
+
+    if (pDirName.isEmpty()) {
+        return false;
+    } else {
+        git_repository *gitRepository = 0;
+
+        if (!git_repository_open(&gitRepository, pDirName.toUtf8().constData())) {
+            git_repository_free(gitRepository);
+
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 //==============================================================================

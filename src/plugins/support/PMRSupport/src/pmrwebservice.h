@@ -70,6 +70,9 @@ public:
     void update(const QString &pPmrUrl);
 
     static QString getEmptyDirectory();
+    static QString getNonGitDirectory();
+
+    static bool isGitDirectory(const QString &pDirName);
 
 private:
     enum Action {
@@ -102,7 +105,8 @@ signals:
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
     void error(const QString &pMessage);
-    void cancelled();
+
+    void authenticationCancelled();
 
     void workspaces(const PMRSupport::PmrWorkspaces &pWorkspaces);
 
@@ -129,6 +133,7 @@ private slots:
 
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
 
+    void workspaceErrored();
     void workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *pWorkspace);
 

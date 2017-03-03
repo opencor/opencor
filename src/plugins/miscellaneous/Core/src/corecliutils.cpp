@@ -396,6 +396,15 @@ void setActiveDirectory(const QString &pDirName)
 
 //==============================================================================
 
+bool isDirectory(const QString &pDirName)
+{
+    // Return whether the given directory exists
+
+    return !pDirName.isEmpty() && QDir(pDirName).exists();
+}
+
+//==============================================================================
+
 bool isEmptyDirectory(const QString &pDirName)
 {
     // Return whether the given directory exists and is empty

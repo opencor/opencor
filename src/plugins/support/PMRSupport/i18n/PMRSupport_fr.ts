@@ -39,6 +39,14 @@
         <translation>Sélectionner Répertoire Vide</translation>
     </message>
     <message>
+        <source>Select Directory</source>
+        <translation>Sélectionner Répertoire</translation>
+    </message>
+    <message>
+        <source>Please choose a non-Git directory.</source>
+        <translation>Veuillez choisir un répertoire non Git.</translation>
+    </message>
+    <message>
         <source>No exposure file information could be found for %1.</source>
         <translation>Aucunes informations de fichier d&apos;exposition n&apos;ont pu être trouvées pour %1.</translation>
     </message>
