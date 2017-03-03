@@ -523,11 +523,11 @@ void PmrWorkspacesWindowSynchronizeDialog::refreshChanges()
             oldItemsToDelete << oldItem;
     }
 
-    foreach (PmrWorkspacesWindowSynchronizeDialogItem *oldItemsToDelete, oldItemsToDelete) {
-        mModel->invisibleRootItem()->removeRow(oldItemsToDelete->row());
+    foreach (PmrWorkspacesWindowSynchronizeDialogItem *oldItemToDelete, oldItemsToDelete) {
+        mDiffHtmls.remove(oldItemToDelete->text());
+        mCellmlDiffHtmls.remove(oldItemToDelete->text());
 
-        mDiffHtmls.remove(oldItemsToDelete->text());
-        mCellmlDiffHtmls.remove(oldItemsToDelete->text());
+        mModel->invisibleRootItem()->removeRow(oldItemToDelete->row());
     }
 
     // Update our diff information, if needed
