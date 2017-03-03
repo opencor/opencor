@@ -70,6 +70,9 @@ public:
     void update(const QString &pPmrUrl);
 
     static QString getEmptyDirectory();
+    static QString getNonGitDirectory();
+
+    static bool isGitDirectory(const QString &pDirName);
 
 private:
     enum Action {
