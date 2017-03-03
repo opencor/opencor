@@ -149,7 +149,6 @@ void JupyterKernelPlugin::handleUrl(const QUrl &pUrl)
 
 static QString jupyterKernel = R"PYTHON(
 import os
-import logging
 
 from ipykernel.eventloops import register_integration, enable_gui, loop_qt4
 from ipykernel.ipkernel import IPythonKernel
@@ -175,17 +174,19 @@ class OpenCORKernel(IPythonKernel):
         matplotlib.use('nbagg')
         # Work nicely with OpenCOR's Qt exec() loop
         enable_gui('opencor', self)
-        logging.debug("Kernel inited...")
 
+    def do_shutdown(self, restart):
+        from PythonQt import QtGui
+        QtGui.QApplication.instance().exit(0)
+        return super().do_shutdown(restart)
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG, format='%(asctime)-15s %(message)s')
+    import sys
+    sys.argv.append('--debug')
 
     from ipykernel.kernelapp import IPKernelApp
     IPKernelApp.connection_file = '%1'
-    logging.debug("Launching kernel...")
     IPKernelApp.launch_instance(kernel_class=OpenCORKernel)
-    logging.debug("Running python...")
     )PYTHON";
 
 //==============================================================================
