@@ -430,6 +430,8 @@ void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace,
 
     // Clone the given workspace to the given path
 
+    connect(pWorkspace, SIGNAL(warning(const QString &)),
+            this, SLOT(workspaceErrored()));
     connect(pWorkspace, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
             this, SLOT(workspaceCloneFinished(PMRSupport::PmrWorkspace *)));
 
@@ -438,9 +440,19 @@ void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace,
 
 //==============================================================================
 
-void PmrWebService::workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWebService::workspaceErrored()
 {
     // Let people know that we are not busy anymore
+
+    emit busy(false);
+}
+
+//==============================================================================
+
+void PmrWebService::workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace)
+{
+    // Let people know that we are not busy anymore and that a workspace has
+    // been cloned
 
     emit busy(false);
     emit workspaceCloned(pWorkspace);

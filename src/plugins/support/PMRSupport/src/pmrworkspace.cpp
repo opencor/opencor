@@ -260,25 +260,29 @@ void PmrWorkspace::clone(const QString &pPath)
 
     // Perform the cloning itself and let people know whether it didn't work
 
+    bool cloned = true;
+
     if (git_clone(&mGitRepository, mUrl.toUtf8().constData(),
                   pPath.toUtf8().constData(), &cloneOptions)) {
         emitGitError(tr("An error occurred while trying to clone the workspace."));
+
+        cloned = false;
     }
 
     git_strarray_free(&authorizationStrArray);
 
     // Open ourselves in the given path and ask the workspace manager to keep
-    // track of us
+    // track of us, if we have been successfully cloned
     // Note: we don't want to refresh our status as part of opening ourselves.
     //       Indeed, this may require updating the GUI and there is no guarantee
     //       that cloning is being done in the same thread as our GUI (see
     //       PmrWebService::requestWorkspaceClone() for example)...
 
-    open(pPath, false);
+    if (cloned && open(pPath, false)) {
+        PmrWorkspaceManager::instance()->addWorkspace(this);
 
-    PmrWorkspaceManager::instance()->addWorkspace(this);
-
-    emit workspaceCloned(this);
+        emit workspaceCloned(this);
+    }
 }
 
 //==============================================================================
