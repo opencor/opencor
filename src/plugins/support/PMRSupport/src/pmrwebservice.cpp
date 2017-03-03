@@ -48,12 +48,14 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWebService::PmrWebService(const QString &pPmrUrl, QObject *pParent) :
-    QObject(pParent),
-    mPmrUrl(pPmrUrl),
-    mUrlExposures(QMap<QString, PmrExposure *>()),
-    mFileExposuresLeftCount(QMap<PmrExposure *, int>())
+void PmrWebService::constructor(const QString &pPmrUrl)
 {
+    // Some initialisations
+
+    mPmrUrl = pPmrUrl;
+    mUrlExposures = QMap<QString, PmrExposure *>();
+    mFileExposuresLeftCount = QMap<PmrExposure *, int>();
+
     // Create a PMR web service manager so that we can retrieve various things
     // from PMR
 
@@ -69,6 +71,26 @@ PmrWebService::PmrWebService(const QString &pPmrUrl, QObject *pParent) :
             this, SIGNAL(error(const QString &)));
     connect(mPmrWebServiceManager, SIGNAL(authenticationCancelled()),
             this, SIGNAL(authenticationCancelled()));
+}
+
+//==============================================================================
+
+PmrWebService::PmrWebService(const QString &pPmrUrl, QObject *pParent) :
+    QObject(pParent)
+{
+    // Construct our object
+
+    constructor(pPmrUrl);
+}
+
+//==============================================================================
+
+PmrWebService::PmrWebService(QObject *pParent) :
+    QObject(pParent)
+{
+    // Construct our object
+
+    constructor(QString());
 }
 
 //==============================================================================
@@ -499,6 +521,15 @@ void PmrWebService::update(const QString &pPmrUrl)
     mPmrUrl = pPmrUrl;
 
     mPmrWebServiceManager->update(pPmrUrl);
+}
+
+//==============================================================================
+
+QString PmrWebService::siteName() const
+{
+    // Determine and return the name of our PMR site
+
+    return tr("%1 Site").arg(Core::formatMessage(QUrl(mPmrUrl).host().split(".").first(), false));
 }
 
 //==============================================================================

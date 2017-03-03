@@ -50,6 +50,7 @@ class PMRSUPPORT_EXPORT PmrWebService : public QObject
 
 public:
     explicit PmrWebService(const QString &pPmrUrl, QObject *pParent);
+    explicit PmrWebService(QObject *pParent);
 
     bool isAuthenticated() const;
     void authenticate(const bool &pAuthenticate = true);
@@ -69,6 +70,8 @@ public:
 
     void update(const QString &pPmrUrl);
 
+    QString siteName() const;
+
     static QString getEmptyDirectory();
     static QString getNonGitDirectory();
 
@@ -87,6 +90,8 @@ private:
 
     QMap<QString, PmrExposure *> mUrlExposures;
     QMap<PmrExposure *, int> mFileExposuresLeftCount;
+
+    void constructor(const QString &pPmrUrl);
 
     void requestWorkspaceInformation(const QString &pUrl,
                                      const QString &pPath,

@@ -94,6 +94,23 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     setFocusProxy(mFilterValue);
 
+    // Create and add a label to highlight the repository we are using
+
+    mPmrInstanceLabel = new QLabel(this);
+
+    QFont newFont = mPmrInstanceLabel->font();
+
+    newFont.setPointSize(0.75*newFont.pointSize());
+
+    mPmrInstanceLabel->setAlignment(Qt::AlignCenter);
+    mPmrInstanceLabel->setEnabled(false);
+    mPmrInstanceLabel->setFont(newFont);
+
+    mGui->layout->addWidget(new Core::BorderedWidget(mPmrInstanceLabel,
+                                                     true, false, false, false));
+
+    mGui->layout->setStretch(mGui->layout->count()-1, 1);
+
     // Create and add our PMR widget
 
     mPmrWindowWidget = new PmrWindowWidget(this);
@@ -108,6 +125,8 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     #error Unsupported platform
 #endif
 
+    mGui->layout->setStretch(mGui->layout->count()-1, 99999);
+
     // Keep track of the window's visibility, so that we can request the list of
     // exposures, if necessary
 
@@ -116,10 +135,13 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     // Create an instance of our PMR web service
 
-    mPmrUrl = PreferencesInterface::preference(PMRSupport::PluginName,
-                                               PMRSupport::SettingsPreferencesPmrUrl,
-                                               PMRSupport::SettingsPreferencesPmrUrlDefault).toString();
-    mPmrWebService = new PMRSupport::PmrWebService(mPmrUrl, this);
+    mPmrWebService = new PMRSupport::PmrWebService(this);
+
+    // Initialise (update) our PMR URL
+
+    update(PreferencesInterface::preference(PMRSupport::PluginName,
+                                            PMRSupport::SettingsPreferencesPmrUrl,
+                                            PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
 
     // Some connections to process responses from our PMR web service
 
@@ -205,6 +227,8 @@ void PmrWindowWindow::update(const QString &pPmrUrl)
         mPmrUrl = pPmrUrl;
 
         mPmrWebService->update(pPmrUrl);
+
+        mPmrInstanceLabel->setText(mPmrWebService->siteName());
 
         on_actionReload_triggered();
     }
