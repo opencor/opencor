@@ -35,6 +35,10 @@
         <translation>Aucunes informations d&apos;espace de travail n&apos;ont pu être trouvées pour %1.</translation>
     </message>
     <message>
+        <source>%1 Site</source>
+        <translation>Site %1</translation>
+    </message>
+    <message>
         <source>Select Empty Directory</source>
         <translation>Sélectionner Répertoire Vide</translation>
     </message>

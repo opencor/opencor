@@ -81,6 +81,8 @@ private:
     QLabel *mFilterLabel;
     QLineEdit *mFilterValue;
 
+    QLabel *mPmrInstanceLabel;
+
     QString mPmrUrl;
 
     PMRSupport::PmrWebService *mPmrWebService;
