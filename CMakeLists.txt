@@ -311,6 +311,16 @@ ELSE()
     SET(SAMPLE_PLUGINS)
 ENDIF()
 
+IF(WIN32)
+    SET(ZINC_PLUGIN)
+    SET(ZINCWIDGET_PLUGIN)
+    SET(ZINCWINDOW_PLUGIN)
+ELSE()
+    SET(ZINC_PLUGIN thirdParty/Zinc)
+    SET(ZINCWIDGET_PLUGIN widget/ZincWidget)
+    SET(ZINCWINDOW_PLUGIN miscellaneous/ZincWindow)
+ENDIF()
+
 SET(PLUGINS
     # Plugins that have no dependencies
 
@@ -329,7 +339,7 @@ SET(PLUGINS
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
-    thirdParty/Zinc
+    ${ZINC_PLUGIN}
     thirdParty/zlib
 
     # Plugins that build on top of some third-party libraries
@@ -354,7 +364,7 @@ SET(PLUGINS
     widget/GraphPanelWidget
     widget/MathMLViewerWidget
     widget/WebViewerWidget
-    widget/ZincWidget
+    ${ZINCWIDGET_PLUGIN}
 
     # Plugins that provide some generic features
 
@@ -382,7 +392,7 @@ SET(PLUGINS
 
     miscellaneous/HelpWindow
     miscellaneous/WebBrowserWindow
-    miscellaneous/ZincWindow
+    ${ZINCWINDOW_PLUGIN}
 
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
