@@ -95,7 +95,7 @@ signals:
 
     void error(const QString &pErrorMessage);
 
-    void cancelled();
+    void authenticationCancelled();
 
 private slots:
     void authenticationSucceeded();

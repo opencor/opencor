@@ -105,7 +105,8 @@ signals:
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
     void error(const QString &pMessage);
-    void cancelled();
+
+    void authenticationCancelled();
 
     void workspaces(const PMRSupport::PmrWorkspaces &pWorkspaces);
 
