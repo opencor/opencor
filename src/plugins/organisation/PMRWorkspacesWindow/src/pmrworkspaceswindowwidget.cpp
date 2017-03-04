@@ -1174,7 +1174,7 @@ void PmrWorkspacesWindowWidget::itemDoubleClicked()
 
 void PmrWorkspacesWindowWidget::itemExpanded()
 {
-    // Update the icon of the item, if its type is that an owned workspace
+    // Update the icon of the item, if its type is that of an owned workspace
 
     PmrWorkspacesWindowItem *item = currentItem();
 
@@ -1185,7 +1185,7 @@ void PmrWorkspacesWindowWidget::itemExpanded()
 
 void PmrWorkspacesWindowWidget::itemCollapsed()
 {
-    // Update the icon of the item, if its type is that an owned workspace
+    // Update the icon of the item, if its type is that of an owned workspace
 
     PmrWorkspacesWindowItem *item = currentItem();
 
