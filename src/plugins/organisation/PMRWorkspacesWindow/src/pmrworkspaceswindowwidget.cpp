@@ -258,12 +258,12 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(resizeTreeViewToContents()));
     connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(itemExpanded()));
+            this, SLOT(itemExpanded(const QModelIndex &)));
 
     connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(resizeTreeViewToContents()));
     connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(itemCollapsed()));
+            this, SLOT(itemCollapsed(const QModelIndex &)));
 
     // Create our various non-owned workspace icons
 
@@ -783,7 +783,15 @@ PmrWorkspacesWindowItem * PmrWorkspacesWindowWidget::currentItem() const
 {
     // Return our current item
 
-    return static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(mTreeViewWidget->currentIndex())));
+    PmrWorkspacesWindowItem *res = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(mTreeViewWidget->currentIndex())));
+
+    if (!res) {
+        // There is no current item, so return the one under our mouse pointer
+
+        res = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(mTreeViewWidget->indexAt(mTreeViewWidget->mapFromGlobal(QCursor::pos())))));
+    }
+
+    return res;
 }
 
 //==============================================================================
@@ -1040,7 +1048,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWork
         item->setCollapsedIcon(collapsedIcon);
         item->setExpandedIcon(expandedIcon);
 
-        item->setIcon(mTreeViewWidget->isExpanded(item->index())?expandedIcon:collapsedIcon);
+        item->setIcon(mTreeViewWidget->isExpanded(mTreeViewProxyModel->mapFromSource(item->index()))?expandedIcon:collapsedIcon);
 
         // Keep track of existing items
 
@@ -1172,22 +1180,22 @@ void PmrWorkspacesWindowWidget::itemDoubleClicked()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::itemExpanded()
+void PmrWorkspacesWindowWidget::itemExpanded(const QModelIndex &pIndex)
 {
     // Update the icon of the item
 
-    PmrWorkspacesWindowItem *item = currentItem();
+    PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(pIndex)));
 
     item->setIcon(item->expandedIcon());
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::itemCollapsed()
+void PmrWorkspacesWindowWidget::itemCollapsed(const QModelIndex &pIndex)
 {
     // Update the icon of the item
 
-    PmrWorkspacesWindowItem *item = currentItem();
+    PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(pIndex)));
 
     item->setIcon(item->collapsedIcon());
 }

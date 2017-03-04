@@ -266,8 +266,8 @@ public slots:
 private slots:
     void showCustomContextMenu() const;
     void itemDoubleClicked();
-    void itemExpanded();
-    void itemCollapsed();
+    void itemExpanded(const QModelIndex &pIndex);
+    void itemCollapsed(const QModelIndex &pIndex);
 
     void resizeTreeViewToContents();
 
