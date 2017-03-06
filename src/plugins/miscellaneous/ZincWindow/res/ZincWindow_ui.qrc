@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/ZincWindow">
+        <file>trilinearCube.exfile</file>
+    </qresource>
+</RCC>
