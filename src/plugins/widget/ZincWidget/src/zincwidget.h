@@ -126,8 +126,6 @@ private:
 
     ZincWidgetSceneViewerCallback mZincWidgetSceneViewerCallback;
 
-    bool mHandleMouseEvents;
-
     void createSceneViewer();
 
     OpenCMISS::Zinc::Sceneviewerinput::ButtonType buttonMap(const Qt::MouseButton &pButton) const;
