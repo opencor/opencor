@@ -137,24 +137,24 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
                                        this);
     mCopyUrlAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                      this);
-    mCloneWorkspaceAction = Core::newAction(Core::overlayedIcon(folderIcon, ArrowDownIcon,
-                                                                folderIconSize, folderIconSize,
-                                                                folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
-                                                                overlayIconSize, overlayIconSize),
-                                            this);
+    mMakeLocalCopyAction = Core::newAction(Core::overlayedIcon(folderIcon, ArrowDownIcon,
+                                                               folderIconSize, folderIconSize,
+                                                               folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
+                                                               overlayIconSize, overlayIconSize),
+                                           this);
 
     connect(mViewInPmrAction, SIGNAL(triggered(bool)),
             this, SLOT(viewInPmr()));
     connect(mCopyUrlAction, SIGNAL(triggered(bool)),
             this, SLOT(copyUrl()));
-    connect(mCloneWorkspaceAction, SIGNAL(triggered(bool)),
+    connect(mMakeLocalCopyAction, SIGNAL(triggered(bool)),
             this, SLOT(clone()));
 
     mContextMenu->addAction(mViewInPmrAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyUrlAction);
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mCloneWorkspaceAction);
+    mContextMenu->addAction(mMakeLocalCopyAction);
 
     // Make our tree view widget our focus proxy
 
@@ -169,7 +169,7 @@ void PmrWindowWidget::retranslateUi()
 
     I18nInterface::retranslateAction(mCopyUrlAction, tr("Copy URL"),
                                      tr("Copy the current workspace URL to the clipboard"));
-    I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Make Local Copy..."),
+    I18nInterface::retranslateAction(mMakeLocalCopyAction, tr("Make Local Copy..."),
                                      tr("Make a local copy of the current workspace"));
 
     // Retranslate the rest of our GUI by updating it, if we have been
@@ -404,7 +404,7 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
     if (item) {
         // We are over an item, so update our context menu and show it
 
-        mCloneWorkspaceAction->setVisible(item->type() == PmrWindowItem::Exposure);
+        mMakeLocalCopyAction->setVisible(item->type() == PmrWindowItem::Exposure);
 
         bool onlyOneItem = mTreeViewWidget->selectionModel()->selectedIndexes().count() == 1;
 
@@ -415,7 +415,7 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
                                              tr("View the current workspaces in PMR"));
 
         mCopyUrlAction->setEnabled(onlyOneItem);
-        mCloneWorkspaceAction->setEnabled(onlyOneItem);
+        mMakeLocalCopyAction->setEnabled(onlyOneItem);
 
         mContextMenu->exec(QCursor::pos());
     }

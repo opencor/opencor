@@ -102,7 +102,7 @@ private:
 
     QAction *mViewInPmrAction;
     QAction *mCopyUrlAction;
-    QAction *mCloneWorkspaceAction;
+    QAction *mMakeLocalCopyAction;
 
     Core::UserMessageWidget *mUserMessageWidget;
 
