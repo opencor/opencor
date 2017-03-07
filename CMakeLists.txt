@@ -784,19 +784,17 @@ ELSE()
 
     INSTALL(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
 
-    # System libraries required by OpenCOR
+    # Libraries needed on (at least) Ubuntu 16.04 LTS, but not on Ubuntu 14.04
+    # LTS
 
-    FOREACH(SYSTEM_LIBRARY app base interfaces pbutils reamer video)
-        # Library not needed on Ubuntu 14.04 LTS, but it is on (at least) Ubuntu
-        # 16.04 LTS
+    FOREACH(LIBRARY app base interfaces pbutils reamer video)
+        SET(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}gst${LIBRARY}-0.10${CMAKE_SHARED_LIBRARY_SUFFIX}.0)
 
-        SET(FULL_SYSTEM_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}gst${SYSTEM_LIBRARY}-0.10${CMAKE_SHARED_LIBRARY_SUFFIX}.0)
+        GET_FILENAME_COMPONENT(REAL_FULL_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
 
-        GET_FILENAME_COMPONENT(REAL_FULL_SYSTEM_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_SYSTEM_LIBRARY} REALPATH)
-
-        INSTALL(FILES ${REAL_FULL_SYSTEM_LIBRARY}
+        INSTALL(FILES ${REAL_FULL_LIBRARY}
                 DESTINATION lib
-                RENAME ${FULL_SYSTEM_LIBRARY})
+                RENAME ${FULL_LIBRARY})
     ENDFOREACH()
 
     # Library needed on Ubuntu 14.04 LTS, but not on Ubuntu 16.06 LTS
