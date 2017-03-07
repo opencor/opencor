@@ -805,6 +805,18 @@ ELSE()
             DESTINATION lib
             RENAME libstdc++.so.6)
 
+    # Libraries needed on Fedora, but not on Ubuntu
+
+    FOREACH(LIBRARY bz2.so.1.0 crypto.so.1.0.0 ssl.so.1.0.0)
+        SET(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
+
+        GET_FILENAME_COMPONENT(REAL_FULL_LIBRARY /lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
+
+        INSTALL(FILES ${REAL_FULL_LIBRARY}
+                DESTINATION lib
+                RENAME ${FULL_LIBRARY})
+    ENDFOREACH()
+
     # Qt libraries required by OpenCOR
     # Note: unlike for Windows and macOS, we don't have a macro for deploying
     #       all of our Qt libraries at once. Indeed, on Linux, the version of a
