@@ -102,7 +102,7 @@ private:
 
     QAction *mViewInPmrAction;
     QAction *mCopyUrlAction;
-    QAction *mCloneWorkspaceAction;
+    QAction *mMakeLocalCopyAction;
 
     Core::UserMessageWidget *mUserMessageWidget;
 
@@ -144,7 +144,7 @@ private slots:
 
     void viewInPmr();
     void copyUrl();
-    void clone();
+    void makeLocalCopy();
 };
 
 //==============================================================================

@@ -37,7 +37,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>PMR Workspaces window:</strong> fixed a crash that used to occur when expanding a workspace by clicking on its arrow (\">\") when nothing else was selected (see issue <a href=\"https://github.com/opencor/opencor/issues/1242\">#1242</a>)." }
+                       { "change": "<strong>General:</strong> added some libraries to the Linux package for OpenCOR to work on Fedora (see issue <a href=\"https://github.com/opencor/opencor/issues/1244\">#1244</a>)." },
+                       { "change": "<strong>PMR window:</strong> prevented exposure files from being retrieved (and listed) twice (see issue <a href=\"https://github.com/opencor/opencor/issues/1243\">#1243</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,

@@ -812,8 +812,13 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
             }
         }
 
-        foreach (const QString &exposureFileUrl, exposureFileUrls)
-            requestExposureFileInformation(exposureFileUrl, exposure);
+        // Retrieve some information about the exposure files, but only if it
+        // hasn't already been done
+
+        if (exposure->exposureFiles().isEmpty()) {
+            foreach (const QString &exposureFileUrl, exposureFileUrls)
+                requestExposureFileInformation(exposureFileUrl, exposure);
+        }
     }
 }
 

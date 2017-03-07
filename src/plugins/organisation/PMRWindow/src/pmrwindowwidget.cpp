@@ -137,24 +137,24 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
                                        this);
     mCopyUrlAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                      this);
-    mCloneWorkspaceAction = Core::newAction(Core::overlayedIcon(folderIcon, ArrowDownIcon,
-                                                                folderIconSize, folderIconSize,
-                                                                folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
-                                                                overlayIconSize, overlayIconSize),
-                                            this);
+    mMakeLocalCopyAction = Core::newAction(Core::overlayedIcon(folderIcon, ArrowDownIcon,
+                                                               folderIconSize, folderIconSize,
+                                                               folderIconSize-overlayIconSize, folderIconSize-overlayIconSize,
+                                                               overlayIconSize, overlayIconSize),
+                                           this);
 
     connect(mViewInPmrAction, SIGNAL(triggered(bool)),
             this, SLOT(viewInPmr()));
     connect(mCopyUrlAction, SIGNAL(triggered(bool)),
             this, SLOT(copyUrl()));
-    connect(mCloneWorkspaceAction, SIGNAL(triggered(bool)),
-            this, SLOT(clone()));
+    connect(mMakeLocalCopyAction, SIGNAL(triggered(bool)),
+            this, SLOT(makeLocalCopy()));
 
     mContextMenu->addAction(mViewInPmrAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyUrlAction);
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mCloneWorkspaceAction);
+    mContextMenu->addAction(mMakeLocalCopyAction);
 
     // Make our tree view widget our focus proxy
 
@@ -167,12 +167,10 @@ void PmrWindowWidget::retranslateUi()
 {
     // Retranslate our actions
 
-    I18nInterface::retranslateAction(mViewInPmrAction, tr("View In PMR"),
-                                     tr("View in PMR"));
     I18nInterface::retranslateAction(mCopyUrlAction, tr("Copy URL"),
-                                     tr("Copy the URL to the clipboard"));
-    I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone..."),
-                                     tr("Clone the current workspace"));
+                                     tr("Copy the current workspace URL to the clipboard"));
+    I18nInterface::retranslateAction(mMakeLocalCopyAction, tr("Make Local Copy..."),
+                                     tr("Make a local copy of the current workspace"));
 
     // Retranslate the rest of our GUI by updating it, if we have been
     // initialised
@@ -406,12 +404,18 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
     if (item) {
         // We are over an item, so update our context menu and show it
 
-        mCloneWorkspaceAction->setVisible(item->type() == PmrWindowItem::Exposure);
+        mMakeLocalCopyAction->setVisible(item->type() == PmrWindowItem::Exposure);
 
         bool onlyOneItem = mTreeViewWidget->selectionModel()->selectedIndexes().count() == 1;
 
+        I18nInterface::retranslateAction(mViewInPmrAction,
+                                         tr("View In PMR"),
+                                         onlyOneItem?
+                                             tr("View the current workspace in PMR"):
+                                             tr("View the current workspaces in PMR"));
+
         mCopyUrlAction->setEnabled(onlyOneItem);
-        mCloneWorkspaceAction->setEnabled(onlyOneItem);
+        mMakeLocalCopyAction->setEnabled(onlyOneItem);
 
         mContextMenu->exec(QCursor::pos());
     }
@@ -457,9 +461,10 @@ void PmrWindowWidget::copyUrl()
 
 //==============================================================================
 
-void PmrWindowWidget::clone()
+void PmrWindowWidget::makeLocalCopy()
 {
-    // Let people know that we want to clone the current exposure's workspace
+    // Let people know that we want to make a local copy of the current
+    // exposure's workspace
 
     QString url = currentItem()->url();
 

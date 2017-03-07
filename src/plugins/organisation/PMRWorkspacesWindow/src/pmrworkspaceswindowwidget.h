@@ -178,11 +178,11 @@ private:
     QAction *mParentReloadAction;
 
     QAction *mNewWorkspaceAction;
-    QAction *mViewInPmrAction;
-    QAction *mViewOncomputerAction;
+    QAction *mViewWorkspaceInPmrAction;
+    QAction *mViewWorkspaceOncomputerAction;
     QAction *mCopyWorkspaceUrlAction;
     QAction *mCopyWorkspacePathAction;
-    QAction *mMakeLocalCopyAction;
+    QAction *mMakeLocalWorkspaceCopyAction;
     QAction *mSynchronizeWorkspaceAction;
     QAction *mReloadWorkspacesAction;
     QAction *mAboutWorkspaceAction;
@@ -277,8 +277,8 @@ private slots:
     void workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
 
-    void viewInPmr();
-    void viewOnComputer();
+    void viewWorkspaceInPmr();
+    void viewWorkspaceOncomputer();
     void copyWorkspaceUrl();
     void copyWorkspacePath();
     void makeLocalWorkspaceCopy();
