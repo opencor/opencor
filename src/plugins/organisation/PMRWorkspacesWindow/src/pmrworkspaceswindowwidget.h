@@ -277,8 +277,8 @@ private slots:
     void workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
 
-    void viewInPmr();
-    void viewOnComputer();
+    void viewWorkspaceInPmr();
+    void viewWorkspaceOncomputer();
     void copyWorkspaceUrl();
     void copyWorkspacePath();
     void makeLocalWorkspaceCopy();

@@ -144,7 +144,7 @@ private slots:
 
     void viewInPmr();
     void copyUrl();
-    void clone();
+    void makeLocalCopy();
 };
 
 //==============================================================================

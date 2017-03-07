@@ -412,9 +412,9 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     connect(mNewWorkspaceAction, SIGNAL(triggered(bool)),
             mParentNewAction, SIGNAL(triggered(bool)));
     connect(mViewWorkspaceInPmrAction, SIGNAL(triggered(bool)),
-            this, SLOT(viewInPmr()));
+            this, SLOT(viewWorkspaceInPmr()));
     connect(mViewWorkspaceOncomputerAction, SIGNAL(triggered(bool)),
-            this, SLOT(viewOnComputer()));
+            this, SLOT(viewWorkspaceOncomputer()));
     connect(mCopyWorkspaceUrlAction, SIGNAL(triggered(bool)),
             this, SLOT(copyWorkspaceUrl()));
     connect(mCopyWorkspacePathAction, SIGNAL(triggered(bool)),
@@ -1293,7 +1293,7 @@ void PmrWorkspacesWindowWidget::workspaceSynchronized(PMRSupport::PmrWorkspace *
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::viewInPmr()
+void PmrWorkspacesWindowWidget::viewWorkspaceInPmr()
 {
     // Show in PMR the workspace(s) corresponding to the selected items
 
@@ -1305,7 +1305,7 @@ void PmrWorkspacesWindowWidget::viewInPmr()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::viewOnComputer()
+void PmrWorkspacesWindowWidget::viewWorkspaceOncomputer()
 {
     // Show on the user's computer the workspace(s) corresponding to the
     // selected items

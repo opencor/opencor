@@ -148,7 +148,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     connect(mCopyUrlAction, SIGNAL(triggered(bool)),
             this, SLOT(copyUrl()));
     connect(mMakeLocalCopyAction, SIGNAL(triggered(bool)),
-            this, SLOT(clone()));
+            this, SLOT(makeLocalCopy()));
 
     mContextMenu->addAction(mViewInPmrAction);
     mContextMenu->addSeparator();
@@ -461,9 +461,10 @@ void PmrWindowWidget::copyUrl()
 
 //==============================================================================
 
-void PmrWindowWidget::clone()
+void PmrWindowWidget::makeLocalCopy()
 {
-    // Let people know that we want to clone the current exposure's workspace
+    // Let people know that we want to make a local copy of the current
+    // exposure's workspace
 
     QString url = currentItem()->url();
 
