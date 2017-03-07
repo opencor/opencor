@@ -167,12 +167,10 @@ void PmrWindowWidget::retranslateUi()
 {
     // Retranslate our actions
 
-    I18nInterface::retranslateAction(mViewInPmrAction, tr("View In PMR"),
-                                     tr("View in PMR"));
     I18nInterface::retranslateAction(mCopyUrlAction, tr("Copy URL"),
-                                     tr("Copy the URL to the clipboard"));
-    I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Clone..."),
-                                     tr("Clone the current workspace"));
+                                     tr("Copy the current workspace URL to the clipboard"));
+    I18nInterface::retranslateAction(mCloneWorkspaceAction, tr("Make Local Copy..."),
+                                     tr("Make a local copy of the current workspace"));
 
     // Retranslate the rest of our GUI by updating it, if we have been
     // initialised
@@ -409,6 +407,12 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
         mCloneWorkspaceAction->setVisible(item->type() == PmrWindowItem::Exposure);
 
         bool onlyOneItem = mTreeViewWidget->selectionModel()->selectedIndexes().count() == 1;
+
+        I18nInterface::retranslateAction(mViewInPmrAction,
+                                         tr("View In PMR"),
+                                         onlyOneItem?
+                                             tr("View the current workspace in PMR"):
+                                             tr("View the current workspaces in PMR"));
 
         mCopyUrlAction->setEnabled(onlyOneItem);
         mCloneWorkspaceAction->setEnabled(onlyOneItem);
