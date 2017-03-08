@@ -43,18 +43,31 @@ void ConversionTests::successfulConversionTests()
     // Test the conversion of a CellML file that works with COR...
 
     QStringList cellmlCorCellmlContents = OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.cellml"));
+    QString cellmlCorCellmlContentsString = cellmlCorCellmlContents.join("\n");
 
-    QVERIFY(converter.execute(cellmlCorCellmlContents.join("\n")));
+    QVERIFY(converter.execute(cellmlCorCellmlContentsString));
     QCOMPARE(converter.output().split("\n"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.out")));
 
-    // ...and back
+    // ...and back (after removing the documentation element from the original
+    // CellML file since it doesn't get converted)
 
     OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.out")).join("\n"),
                            OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
     QVERIFY(!parser.domDocument().isNull());
+
+    QDomDocument domDocument;
+
+    domDocument.setContent(cellmlCorCellmlContentsString);
+
+    QDomNode domNode = domDocument.firstChild().nextSibling();
+
+    domNode.removeChild(domNode.firstChild());
+
+    cellmlCorCellmlContents = QString(OpenCOR::Core::serialiseDomDocument(domDocument)).split("\n");
+
     QCOMPARE(QString(OpenCOR::Core::serialiseDomDocument(parser.domDocument())).split("\n"),
              cellmlCorCellmlContents);
 
