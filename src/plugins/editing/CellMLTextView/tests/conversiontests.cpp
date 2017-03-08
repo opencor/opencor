@@ -54,9 +54,9 @@ void ConversionTests::successfulConversionTests()
 
     QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.out")).join("\n"),
                            OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
+    QVERIFY(!parser.domDocument().isNull());
     QCOMPARE(QString(OpenCOR::Core::serialiseDomDocument(parser.domDocument())).split("\n"),
              cellmlCorCellmlContents);
-    QVERIFY(!parser.domDocument().isNull());
 
     // Test the conversion of a CellML file that only works with OpenCOR
 
@@ -72,9 +72,10 @@ void ConversionTests::successfulConversionTests()
     QStringList cellmlCorWithCommentsCellmlContents = QStringList() << cellmlCorCellmlContents[0];
     QString currentLine;
     int commentNumber = 0;
+    int i = 0;
 
-    for (int i = 1;; ++i) {
-        currentLine = cellmlCorCellmlContents[i];
+    forever {
+        currentLine = cellmlCorCellmlContents[++i];
 
         cellmlCorWithCommentsCellmlContents << currentLine;
 
