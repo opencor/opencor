@@ -1,5 +1,19 @@
 <?xml version='1.0'?>
 <model name="cellml_1_0" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
+    <documentation xmlns="http://cellml.org/tmp-documentation">
+        <article>
+            <articleinfo>
+                <title>CellML COR</title>
+                <author>
+                    <firstname>Alan</firstname>
+                    <surname>Garny</surname>
+                    <affiliation>
+                        <shortaffil>Auckland Bioengineering Institute, The University of Auckland</shortaffil>
+                    </affiliation>
+                </author>
+            </articleinfo>
+        </article>
+    </documentation>
     <units base_units="yes" name="my_base_unit1"/>
     <units base_units="yes" name="my_base_unit2"/>
     <units base_units="yes" name="my_base_unit3"/>

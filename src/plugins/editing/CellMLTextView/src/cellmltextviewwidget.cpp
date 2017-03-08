@@ -283,7 +283,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
                 editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Warning,
                                                            successfulConversion?-1:warning.line(),
                                                            successfulConversion?
-                                                               QString("[%1] %2").arg(QString::number(warning.line()), warning.message().arg(tr(" in the original CellML file"))):
+                                                               QString("[%1] %2").arg(QString::number(warning.line()), warning.message()):
                                                                warning.message().arg(QString()));
             }
         }
