@@ -25,6 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QMouseEvent>
+#include <QOpenGLContext>
 #include <QTimer>
 
 //==============================================================================
@@ -312,6 +313,11 @@ OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags ZincWidget::modifierMap(const Q
 
 void ZincWidget::initializeGL()
 {
+    // Forward the fact that our context is going to be destroyed
+
+    connect(QOpenGLWidget::context(), SIGNAL(aboutToBeDestroyed()),
+            this, SIGNAL(contextAboutToBeDestroyed()));
+
     // Create our scene viewer if we have a context
 
     mGraphicsInitialized = true;

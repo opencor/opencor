@@ -76,7 +76,10 @@ private:
     ZincWidget::ZincWidget *mZincWidget;
     OpenCMISS::Zinc::Context *mZincContext;
 
+    char *mZincSceneViewerDescription;
+
 private slots:
+    void createAndSetZincContext();
     void graphicsInitialized();
 };
 

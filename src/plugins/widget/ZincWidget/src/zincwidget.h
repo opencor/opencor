@@ -133,6 +133,8 @@ private:
     OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags modifierMap(const Qt::KeyboardModifiers &pModifiers) const;
 
 signals:
+    void contextAboutToBeDestroyed();
+
     void graphicsInitialized();
 };
 

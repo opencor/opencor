@@ -48,7 +48,8 @@ namespace ZincWindow {
 
 ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
-    mGui(new Ui::ZincWindowWindow)
+    mGui(new Ui::ZincWindowWindow),
+    mZincSceneViewerDescription(0)
 {
     // Set up the GUI
 
@@ -57,15 +58,11 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
     // Create and add a Zinc widget
 
     mZincWidget = new ZincWidget::ZincWidget(this);
-    mZincContext = new OpenCMISS::Zinc::Context("ZincWindowWindow");
 
-    mZincContext->getMaterialmodule().defineStandardMaterials();
-    mZincContext->getGlyphmodule().defineStandardGlyphs();
-
+    connect(mZincWidget, SIGNAL(contextAboutToBeDestroyed()),
+            this, SLOT(createAndSetZincContext()));
     connect(mZincWidget, SIGNAL(graphicsInitialized()),
             this, SLOT(graphicsInitialized()));
-
-    mZincWidget->setContext(mZincContext);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mZincWidget,
@@ -76,7 +73,51 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
     #error Unsupported platform
 #endif
 
-    // Add a tri-linear cube to our Zinc widget
+    // Create and set our Zinc context
+
+    createAndSetZincContext();
+}
+
+//==============================================================================
+
+ZincWindowWindow::~ZincWindowWindow()
+{
+    // Delete some internal objects
+
+    delete mZincContext;
+
+    // Delete the GUI
+
+    delete mGui;
+}
+
+//==============================================================================
+
+void ZincWindowWindow::retranslateUi()
+{
+    // Retranslate our whole window
+
+    mGui->retranslateUi(this);
+}
+
+//==============================================================================
+
+void ZincWindowWindow::createAndSetZincContext()
+{
+    // Keep track of our current scene viewer's description
+
+    mZincSceneViewerDescription = mZincWidget->sceneViewer().writeDescription();
+
+    // Create and set our Zinc context
+
+    mZincContext = new OpenCMISS::Zinc::Context("ZincWindowWindow");
+
+    mZincContext->getMaterialmodule().defineStandardMaterials();
+    mZincContext->getGlyphmodule().defineStandardGlyphs();
+
+    mZincWidget->setContext(mZincContext);
+
+    // Add a tri-linear cube to our Zinc context
 
     // Make a temporary copy of our .exfile file
 
@@ -175,30 +216,12 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
 
 //==============================================================================
 
-ZincWindowWindow::~ZincWindowWindow()
-{
-    // Delete some internal objects
-
-    delete mZincContext;
-
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
-void ZincWindowWindow::retranslateUi()
-{
-    // Retranslate our whole window
-
-    mGui->retranslateUi(this);
-}
-
-//==============================================================================
-
 void ZincWindowWindow::graphicsInitialized()
 {
+    // Set our 'new' scene viewer's description
+
+    mZincWidget->sceneViewer().readDescription(mZincSceneViewerDescription);
+
     // Our Zinc widget has had its graphics initialised, so we can now set its
     // background colour
 
