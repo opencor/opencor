@@ -410,7 +410,7 @@ void ZincWidget::wheelEvent(QWheelEvent *pEvent)
 
     mSceneViewer.processSceneviewerinput(sceneInput);
 
-    // Now, pretend to move the right mouse button
+    // Next, pretend to move the right mouse button
 
     sceneInput = mSceneViewer.createSceneviewerinput();
 
