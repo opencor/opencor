@@ -391,6 +391,41 @@ void ZincWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
+void ZincWidget::wheelEvent(QWheelEvent *pEvent)
+{
+    // Get our scene viewer to handle the given wheel event by first pretending
+    // to press the right mouse button
+
+    OpenCMISS::Zinc::Sceneviewerinput sceneInput = mSceneViewer.createSceneviewerinput();
+
+    sceneInput.setButtonType(OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_RIGHT);
+    sceneInput.setEventType(OpenCMISS::Zinc::Sceneviewerinput::EVENT_TYPE_BUTTON_PRESS);
+    sceneInput.setPosition(pEvent->x(), pEvent->y());
+
+    mSceneViewer.processSceneviewerinput(sceneInput);
+
+    // Now, pretend to move the right mouse button
+
+    sceneInput = mSceneViewer.createSceneviewerinput();
+
+    sceneInput.setEventType(OpenCMISS::Zinc::Sceneviewerinput::EVENT_TYPE_MOTION_NOTIFY);
+    sceneInput.setPosition(pEvent->x(), pEvent->y()-0.1*pEvent->delta());
+
+    mSceneViewer.processSceneviewerinput(sceneInput);
+
+    // Finally, pretend to release the right mouse button
+
+    sceneInput = mSceneViewer.createSceneviewerinput();
+
+    sceneInput.setButtonType(OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_RIGHT);
+    sceneInput.setEventType(OpenCMISS::Zinc::Sceneviewerinput::EVENT_TYPE_BUTTON_RELEASE);
+    sceneInput.setPosition(pEvent->x(), pEvent->y());
+
+    mSceneViewer.processSceneviewerinput(sceneInput);
+}
+
+//==============================================================================
+
 QSize ZincWidget::sizeHint() const
 {
     // Suggest a default size for ourselves
