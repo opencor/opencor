@@ -143,7 +143,6 @@ void ZincWindowWindow::createAndSetZincContext()
         OpenCMISS::Zinc::FieldMagnitude magnitude = fieldModule.createFieldMagnitude(coordinates);
 
         magnitude.setManaged(true);
-        magnitude.setName("magnitude");
     fieldModule.endChange();
 
     // Customise the scene of our default region
@@ -199,7 +198,6 @@ void ZincWindowWindow::createAndSetZincContext()
 
         fineTessellation.setManaged(true);
         fineTessellation.setMinimumDivisions(1, &intValue);
-        fineTessellation.setName("fine");
 
         // Isosurfaces for our scene
 
