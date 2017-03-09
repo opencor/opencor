@@ -158,11 +158,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     }
 
     // Set up the GUI
-    // Note: the application icon (which needs to be set for Linux, but not for
-    //       Windows or macOS, since it's set through CMake in those cases (see
-    //       CMakeLists.txt)) is set within the GUI file. This being said, it's
-    //       good to have it set for all three platforms, since it can then be
-    //       used in, for example, the about box...
 
     mGui->setupUi(this);
 
@@ -433,7 +428,7 @@ void MainWindow::registerOpencorUrlScheme()
 
     SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
 #elif defined(Q_OS_LINUX)
-    if (exec("which", QStringList() << "xdg-mime")) {
+    if (!exec("which", QStringList() << "xdg-mime")) {
         QString iconPath = nativeCanonicalFileName(QString("%1/.local/share/%2/%3/%3.png").arg(QDir::homePath(),
                                                                                                qApp->organizationName(),
                                                                                                qApp->applicationName()));
@@ -563,7 +558,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                 case Gui::Menu::View:
                     // Not a relevant type, so do nothing
 
-                    ;
+                    break;
                 }
             }
         }

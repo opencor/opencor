@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::Compiler::CompilerEngine</name>
+    <name>QObject</name>
     <message>
         <source>the compilation object could not be created</source>
         <translation>l&apos;objet compilation n&apos;a pas pu être créé</translation>

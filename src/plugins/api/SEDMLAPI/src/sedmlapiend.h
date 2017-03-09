@@ -17,34 +17,18 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML API plugin
+// SED-ML API end
 //==============================================================================
 
-#include "sedmlapiplugin.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace SEDMLAPI {
-
-//==============================================================================
-
-PLUGININFO_FUNC SEDMLAPIPluginInfo()
-{
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>."));
-
-    return new PluginInfo(PluginInfo::Api, false, false,
-                          QStringList(),
-                          descriptions);
-}
-
-//==============================================================================
-
-}   // namespace SEDMLAPI
-}   // namespace OpenCOR
+#if defined(Q_OS_WIN)
+    #pragma warning(pop)
+#elif defined(Q_OS_LINUX)
+    #pragma GCC diagnostic pop
+#elif defined(Q_OS_MAC)
+    #pragma clang diagnostic pop
+#else
+    #error Unsupported platform
+#endif
 
 //==============================================================================
 // End of file

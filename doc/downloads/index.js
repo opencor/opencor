@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 24, "month": 2, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 4, "month": 3, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -37,13 +37,9 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> keep track of the position and size of dialogs (see issue <a href=\"https://github.com/opencor/opencor/issues/1224\">#1224</a>)." },
-                       { "change": "<strong>PMR support:</strong> let the user know if we simply cannot authenticate (see issue <a href=\"https://github.com/opencor/opencor/issues/1223\">#1223</a>)." },
-                       { "change": "<strong>PMR-based windows:</strong> only reload them (upon changes to preferences) if the PMR URL is different (see issue <a href=\"https://github.com/opencor/opencor/issues/1222\">#1222</a>)." },
-                       { "change": "<strong>PMR Workspaces window:</strong> got rid of the stage/unstage context menu item (for a file; see issue <a href=\"https://github.com/opencor/opencor/issues/1212\">#1212</a>). Use the same context menu for the workspace, folders and files (see issue <a href=\"https://github.com/opencor/opencor/issues/1213\">#1213</a>). Offer a way to see the differences in the files that are to be synchronised with PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/1229\">#1229</a>)." },
-                       { "change": "<strong>CellML Text view:</strong> unknown elements (e.g. `int`) now result in an error during conversion to the CellML Text format (see issue <a href=\"https://github.com/opencor/opencor/issues/1230\">#1230</a>). Fixed a small problem with trying to comment out an empty line moving the caret to the next line (see issue <a href=\"https://github.com/opencor/opencor/issues/1232\">#1232</a>)." },
-                       { "change": "<strong>WebViewer widget based plugins:</strong> fixed a small ‘regression’ issue with the default context menu always being shown (see issue <a href=\"https://github.com/opencor/opencor/issues/1233\">#1233</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10 (see issue <a href=\"https://github.com/opencor/opencor/issues/1227\">#1227</a>)." }
+                       { "change": "<strong>General:</strong> added some libraries to the Linux package for OpenCOR to work on Fedora (see issue <a href=\"https://github.com/opencor/opencor/issues/1244\">#1244</a>)." },
+                       { "change": "<strong>PMR window:</strong> prevented exposure files from being retrieved (and listed) twice (see issue <a href=\"https://github.com/opencor/opencor/issues/1243\">#1243</a>)." },
+                       { "change": "<strong>CellML Text view:</strong> now ignore `documentation` elements rather than consider them as unknown (and therefore 'fail'; see issue <a href=\"https://github.com/opencor/opencor/issues/1245\">#1245</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,

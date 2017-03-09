@@ -24,12 +24,5 @@ ADD_PLUGIN(PMRWindow
     INCLUDE_DIRS
         src
     PLUGINS
-        Core
-        ${LIBGIT2_PLUGIN}
-        ${OAUTH_PLUGIN}
         PMRSupport
-        ${ZLIB_PLUGIN}
-    PLUGIN_BINARIES
-        ${LIBGIT2_PLUGIN_BINARY}
-        ${OAUTH_PLUGIN_BINARY}
 )

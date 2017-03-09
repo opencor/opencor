@@ -42,6 +42,7 @@ limitations under the License.
 #include <QDesktopServices>
 #include <QDir>
 #include <QGraphicsColorizeEffect>
+#include <QLabel>
 #include <QMainWindow>
 #include <QSettings>
 #include <QTimer>
@@ -107,12 +108,26 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     mGui->layout->addWidget(toolBarWidget);
 
+    // Create and add a label to highlight the repository we are using
+
+    mPmrInstanceLabel = new QLabel(this);
+
+    QFont newFont = mPmrInstanceLabel->font();
+
+    newFont.setPointSize(0.75*newFont.pointSize());
+
+    mPmrInstanceLabel->setAlignment(Qt::AlignCenter);
+    mPmrInstanceLabel->setEnabled(false);
+    mPmrInstanceLabel->setFont(newFont);
+
+    mGui->layout->addWidget(new Core::BorderedWidget(mPmrInstanceLabel,
+                                                     true, false, false, false));
+
+    mGui->layout->setStretch(mGui->layout->count()-1, 1);
+
     // Create an instance of our PMR web service
 
-    mPmrUrl = PreferencesInterface::preference(PMRSupport::PluginName,
-                                               PMRSupport::SettingsPreferencesPmrUrl,
-                                               PMRSupport::SettingsPreferencesPmrUrlDefault).toString();
-    mPmrWebService = new PMRSupport::PmrWebService(mPmrUrl, this);
+    mPmrWebService = new PMRSupport::PmrWebService(this);
 
     // Create and add our workspaces widget
 
@@ -129,6 +144,14 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 #else
     #error Unsupported platform
 #endif
+
+    mGui->layout->setStretch(mGui->layout->count()-1, 99999);
+
+    // Initialise (update) our PMR URL
+
+    update(PreferencesInterface::preference(PMRSupport::PluginName,
+                                            PMRSupport::SettingsPreferencesPmrUrl,
+                                            PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
 
     // Keep track of the window's visibility, so that we can request the list of
     // workspaces, if necessary
@@ -150,7 +173,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     connect(mPmrWebService, SIGNAL(authenticated(const bool &)),
             this, SLOT(updateGui()));
-    connect(mPmrWebService, SIGNAL(cancelled()),
+    connect(mPmrWebService, SIGNAL(authenticationCancelled()),
             this, SLOT(updateGui()));
 
     connect(mPmrWebService, SIGNAL(workspaces(const PMRSupport::PmrWorkspaces &)),
@@ -258,6 +281,8 @@ void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 
         mPmrWebService->update(pPmrUrl);
         mPmrWorkspacesWindowWidget->update(pPmrUrl);
+
+        mPmrInstanceLabel->setText(mPmrWebService->siteName());
 
         updateGui();
     }

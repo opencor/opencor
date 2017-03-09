@@ -44,22 +44,8 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewwidget.h
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${QWT_DEFINITIONS}
     PLUGINS
-        CellMLAPI
-        CellMLSupport
         COMBINESupport
-        Compiler
-        Core
         GraphPanelWidget
-        ${LLVM_PLUGIN}
-        ${QWT_PLUGIN}
-        SBMLAPI
-        SEDMLAPI
         SEDMLSupport
-        ${ZLIB_PLUGIN}
-    PLUGIN_BINARIES
-        ${LLVM_PLUGIN_BINARY}
-        ${QWT_PLUGIN_BINARY}
 )

@@ -17,20 +17,13 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML API disable warnings
+// Qwt end
 //==============================================================================
 
-#if defined(Q_OS_WIN)
-    #pragma warning(push)
-    #pragma warning(disable: 4005)
-#elif defined(Q_OS_LINUX)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wignored-qualifiers"
-#elif defined(Q_OS_MAC)
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wignored-qualifiers"
-#else
-    #error Unsupported platform
+#undef MML_TEST
+
+#ifdef Q_OS_WIN
+    #undef QWT_DLL
 #endif
 
 //==============================================================================

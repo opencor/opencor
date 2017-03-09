@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view graph panel plot widget
+// Graph panel plot widget
 //==============================================================================
 
 #pragma once
@@ -29,10 +29,12 @@ limitations under the License.
 
 //==============================================================================
 
-#include "qwt_plot.h"
-#include "qwt_plot_curve.h"
-#include "qwt_scale_draw.h"
-#include "qwt_text.h"
+#include "qwtbegin.h"
+    #include "qwt_plot.h"
+    #include "qwt_plot_curve.h"
+    #include "qwt_scale_draw.h"
+    #include "qwt_text.h"
+#include "qwtend.h"
 
 //==============================================================================
 

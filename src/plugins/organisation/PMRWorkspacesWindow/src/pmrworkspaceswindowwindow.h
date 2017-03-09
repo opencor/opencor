@@ -38,6 +38,10 @@ namespace Ui {
 
 //==============================================================================
 
+class QLabel;
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -81,6 +85,8 @@ private:
     Ui::PmrWorkspacesWindowWindow *mGui;
 
     QString mSettingsGroup;
+
+    QLabel *mPmrInstanceLabel;
 
     PMRSupport::PmrWebService *mPmrWebService;
     PmrWorkspacesWindowWidget *mPmrWorkspacesWindowWidget;

@@ -30,16 +30,10 @@ ADD_PLUGIN(CellMLSupport
         src/cellmlsupportplugin.h
     INCLUDE_DIRS
         src
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     PLUGINS
         CellMLAPI
         Compiler
-        Core
-        ${LLVM_PLUGIN}
         StandardSupport
-    PLUGIN_BINARIES
-        ${LLVM_PLUGIN_BINARY}
     TESTS
         tests
 )

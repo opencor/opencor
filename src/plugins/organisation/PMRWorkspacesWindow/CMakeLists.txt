@@ -29,18 +29,6 @@ ADD_PLUGIN(PMRWorkspacesWindow
     INCLUDE_DIRS
         src
     PLUGINS
-        CellMLAPI
         CellMLSupport
-        Compiler
-        Core
-        ${LIBGIT2_PLUGIN}
-        ${LLVM_PLUGIN}
-        ${OAUTH_PLUGIN}
         PMRSupport
-        StandardSupport
-        ${ZLIB_PLUGIN}
-    PLUGIN_BINARIES
-        ${LIBGIT2_PLUGIN_BINARY}
-        ${LLVM_PLUGIN_BINARY}
-        ${OAUTH_PLUGIN_BINARY}
 )

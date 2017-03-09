@@ -153,6 +153,7 @@ public:
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
+
     virtual QSize sizeHint() const;
 
 private:
@@ -177,11 +178,11 @@ private:
     QAction *mParentReloadAction;
 
     QAction *mNewWorkspaceAction;
-    QAction *mViewInPmrAction;
-    QAction *mViewOncomputerAction;
+    QAction *mViewWorkspaceInPmrAction;
+    QAction *mViewWorkspaceOncomputerAction;
     QAction *mCopyWorkspaceUrlAction;
     QAction *mCopyWorkspacePathAction;
-    QAction *mMakeLocalCopyAction;
+    QAction *mMakeLocalWorkspaceCopyAction;
     QAction *mSynchronizeWorkspaceAction;
     QAction *mReloadWorkspacesAction;
     QAction *mAboutWorkspaceAction;
@@ -265,8 +266,8 @@ public slots:
 private slots:
     void showCustomContextMenu() const;
     void itemDoubleClicked();
-    void itemExpanded();
-    void itemCollapsed();
+    void itemExpanded(const QModelIndex &pIndex);
+    void itemCollapsed(const QModelIndex &pIndex);
 
     void resizeTreeViewToContents();
 
@@ -276,8 +277,8 @@ private slots:
     void workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
 
-    void viewInPmr();
-    void viewOnComputer();
+    void viewWorkspaceInPmr();
+    void viewWorkspaceOncomputer();
     void copyWorkspaceUrl();
     void copyWorkspacePath();
     void makeLocalWorkspaceCopy();

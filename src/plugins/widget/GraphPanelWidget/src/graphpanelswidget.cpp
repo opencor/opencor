@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view graph panels widget
+// Graph panels widget
 //==============================================================================
 
 #include "corecliutils.h"
@@ -32,9 +32,9 @@ limitations under the License.
 
 //==============================================================================
 
-#include "sedmlapidisablewarnings.h"
+#include "sedmlapibegin.h"
     #include "sedml/SedDocument.h"
-#include "sedmlapienablewarnings.h"
+#include "sedmlapiend.h"
 
 //==============================================================================
 

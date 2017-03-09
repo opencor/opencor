@@ -15,32 +15,36 @@
 <context>
     <name>OpenCOR::PMRWindow::PmrWindowWidget</name>
     <message>
-        <source>View In PMR</source>
-        <translation>Voir Dans PMR</translation>
-    </message>
-    <message>
-        <source>View in PMR</source>
-        <translation>Voir dans PMR</translation>
-    </message>
-    <message>
         <source>Copy URL</source>
         <translation>Copier URL</translation>
     </message>
     <message>
-        <source>Copy the URL to the clipboard</source>
-        <translation>Copier l&apos;URL dans le presse-papier</translation>
-    </message>
-    <message>
-        <source>Clone...</source>
-        <translation>Cloner...</translation>
-    </message>
-    <message>
-        <source>Clone the current workspace</source>
-        <translation>Cloner l&apos;espace de travail actuel</translation>
+        <source>Copy the current workspace URL to the clipboard</source>
+        <translation>Copier l&apos;URL de l&apos;espace de travail actuel dans le presse-papier</translation>
     </message>
     <message>
         <source>No exposures match your criteria...</source>
         <translation>Aucunes expositions ne correspondent à votre critère...</translation>
+    </message>
+    <message>
+        <source>Make Local Copy...</source>
+        <translation>Faire Copie Locale...</translation>
+    </message>
+    <message>
+        <source>Make a local copy of the current workspace</source>
+        <translation>Faire une copie locale de l&apos;espace de travail actuel</translation>
+    </message>
+    <message>
+        <source>View In PMR</source>
+        <translation>Voir Dans PMR</translation>
+    </message>
+    <message>
+        <source>View the current workspace in PMR</source>
+        <translation>Voir l&apos;espace de travail actuel dans PMR</translation>
+    </message>
+    <message>
+        <source>View the current workspaces in PMR</source>
+        <translation>Voir les espaces de travail actuels dans PMR</translation>
     </message>
 </context>
 <context>

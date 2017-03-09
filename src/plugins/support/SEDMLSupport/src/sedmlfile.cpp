@@ -31,11 +31,11 @@ limitations under the License.
 
 //==============================================================================
 
-#include "sedmlapidisablewarnings.h"
+#include "sedmlapibegin.h"
     #include "sedml/SedDocument.h"
     #include "sedml/SedReader.h"
     #include "sedml/SedWriter.h"
-#include "sedmlapienablewarnings.h"
+#include "sedmlapiend.h"
 
 //==============================================================================
 
@@ -101,13 +101,10 @@ bool SedmlFile::load()
 
     // Create a new SED-ML document, if needed, or try to load our file
 
-    if (mNew) {
+    if (mNew)
         mSedmlDocument = new libsedml::SedDocument();
-    } else {
-        QByteArray fileNameByteArray = mFileName.toUtf8();
-
-        mSedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
-    }
+    else
+        mSedmlDocument = libsedml::readSedML(mFileName.toUtf8().constData());
 
     return !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
 }
@@ -162,8 +159,7 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
     file.write(fileContentsByteArray);
     file.flush();
 
-    QByteArray fileNameByteArray = file.fileName().toUtf8();
-    libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileNameByteArray.constData());
+    libsedml::SedDocument *sedmlDocument = libsedml::readSedML(file.fileName().toUtf8().constData());
     libsedml::SedErrorLog *errorLog = sedmlDocument->getErrorLog();
 
     for (uint i = 0, iMax = errorLog->getNumErrors(); i < iMax; ++i) {

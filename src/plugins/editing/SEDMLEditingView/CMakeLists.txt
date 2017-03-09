@@ -24,18 +24,6 @@ ADD_PLUGIN(SEDMLEditingView
     INCLUDE_DIRS
         src
     PLUGINS
-        CellMLAPI
-        CellMLSupport
-        Core
         EditingView
-        EditorWidget
-        ${LLVM_PLUGIN}
-        ${QSCINTILLA_PLUGIN}
-        QScintillaSupport
-        SBMLAPI
-        SEDMLAPI
         SEDMLSupport
-    PLUGIN_BINARIES
-        ${LLVM_PLUGIN_BINARY}
-        ${QSCINTILLA_PLUGIN_BINARY}
 )

@@ -21,9 +21,5 @@ ADD_PLUGIN(EditorWidget
     INCLUDE_DIRS
         src
     PLUGINS
-        Core
-        ${QSCINTILLA_PLUGIN}
         QScintillaSupport
-    PLUGIN_BINARIES
-        ${QSCINTILLA_PLUGIN_BINARY}
 )

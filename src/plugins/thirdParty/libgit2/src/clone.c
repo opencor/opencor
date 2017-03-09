@@ -385,7 +385,13 @@ int git_clone(
 	git_repository **out,
 	const char *url,
 	const char *local_path,
+/*---OPENCOR---
 	const git_clone_options *_options)
+*/
+//---OPENCOR--- BEGIN
+	const git_clone_options *_options,
+	int allow_non_empty_dir)
+//---OPENCOR--- END
 {
 	int error = 0;
 	git_repository *repo = NULL;
@@ -402,7 +408,12 @@ int git_clone(
 	GITERR_CHECK_VERSION(&options, GIT_CLONE_OPTIONS_VERSION, "git_clone_options");
 
 	/* Only clone to a new directory or an empty directory */
+/*---OPENCOR---
 	if (git_path_exists(local_path) && !git_path_is_empty_dir(local_path)) {
+*/
+//---OPENCOR--- BEGIN
+	if (!allow_non_empty_dir && git_path_exists(local_path) && !git_path_is_empty_dir(local_path)) {
+//---OPENCOR--- END
 		giterr_set(GITERR_INVALID,
 			"'%s' exists and is not an empty directory", local_path);
 		return GIT_EEXISTS;

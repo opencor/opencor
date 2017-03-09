@@ -258,12 +258,12 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(resizeTreeViewToContents()));
     connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(itemExpanded()));
+            this, SLOT(itemExpanded(const QModelIndex &)));
 
     connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(resizeTreeViewToContents()));
     connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(itemCollapsed()));
+            this, SLOT(itemCollapsed(const QModelIndex &)));
 
     // Create our various non-owned workspace icons
 
@@ -388,20 +388,20 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     mNewWorkspaceAction = Core::newAction(mParentNewAction->icon(),
                                           this);
-    mViewInPmrAction = Core::newAction(QIcon(":/oxygen/categories/applications-internet.png"),
-                                       this);
-    mViewOncomputerAction = Core::newAction(QIcon(":/oxygen/devices/computer.png"),
-                                            this);
+    mViewWorkspaceInPmrAction = Core::newAction(QIcon(":/oxygen/categories/applications-internet.png"),
+                                                this);
+    mViewWorkspaceOncomputerAction = Core::newAction(QIcon(":/oxygen/devices/computer.png"),
+                                                     this);
     mCopyWorkspaceUrlAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                               this);
     mCopyWorkspacePathAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                                this);
-    mMakeLocalCopyAction = Core::newAction(Core::overlayedIcon(mCollapsedWorkspaceIcon,
-                                                               QIcon(":/PMRWorkspacesWindow/pull.png"),
-                                                               folderIconSize, folderIconSize,
-                                                               overlayIconPos, overlayIconPos,
-                                                               overlayIconSize, overlayIconSize),
-                                           this);
+    mMakeLocalWorkspaceCopyAction = Core::newAction(Core::overlayedIcon(mCollapsedWorkspaceIcon,
+                                                                        QIcon(":/PMRWorkspacesWindow/pull.png"),
+                                                                        folderIconSize, folderIconSize,
+                                                                        overlayIconPos, overlayIconPos,
+                                                                        overlayIconSize, overlayIconSize),
+                                                    this);
     mSynchronizeWorkspaceAction = Core::newAction(QIcon(":/PMRWorkspacesWindow/synchronize.png"),
                                                   this);
     mReloadWorkspacesAction = Core::newAction(mParentReloadAction->icon(),
@@ -411,15 +411,15 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     connect(mNewWorkspaceAction, SIGNAL(triggered(bool)),
             mParentNewAction, SIGNAL(triggered(bool)));
-    connect(mViewInPmrAction, SIGNAL(triggered(bool)),
-            this, SLOT(viewInPmr()));
-    connect(mViewOncomputerAction, SIGNAL(triggered(bool)),
-            this, SLOT(viewOnComputer()));
+    connect(mViewWorkspaceInPmrAction, SIGNAL(triggered(bool)),
+            this, SLOT(viewWorkspaceInPmr()));
+    connect(mViewWorkspaceOncomputerAction, SIGNAL(triggered(bool)),
+            this, SLOT(viewWorkspaceOncomputer()));
     connect(mCopyWorkspaceUrlAction, SIGNAL(triggered(bool)),
             this, SLOT(copyWorkspaceUrl()));
     connect(mCopyWorkspacePathAction, SIGNAL(triggered(bool)),
             this, SLOT(copyWorkspacePath()));
-    connect(mMakeLocalCopyAction, SIGNAL(triggered(bool)),
+    connect(mMakeLocalWorkspaceCopyAction, SIGNAL(triggered(bool)),
             this, SLOT(makeLocalWorkspaceCopy()));
     connect(mSynchronizeWorkspaceAction, SIGNAL(triggered(bool)),
             this, SLOT(synchronizeWorkspace()));
@@ -430,13 +430,13 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     mContextMenu->addAction(mNewWorkspaceAction);
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mViewInPmrAction);
-    mContextMenu->addAction(mViewOncomputerAction);
+    mContextMenu->addAction(mViewWorkspaceInPmrAction);
+    mContextMenu->addAction(mViewWorkspaceOncomputerAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyWorkspaceUrlAction);
     mContextMenu->addAction(mCopyWorkspacePathAction);
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mMakeLocalCopyAction);
+    mContextMenu->addAction(mMakeLocalWorkspaceCopyAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mSynchronizeWorkspaceAction);
     mContextMenu->addSeparator();
@@ -472,7 +472,7 @@ void PmrWorkspacesWindowWidget::retranslateUi()
                                      tr("Copy the current workspace URL to the clipboard"));
     I18nInterface::retranslateAction(mCopyWorkspacePathAction, tr("Copy Workspace Path"),
                                      tr("Copy the current workspace path to the clipboard"));
-    I18nInterface::retranslateAction(mMakeLocalCopyAction, tr("Make Local Workspace Copy..."),
+    I18nInterface::retranslateAction(mMakeLocalWorkspaceCopyAction, tr("Make Local Workspace Copy..."),
                                      tr("Make a local copy of the current workspace"));
     I18nInterface::retranslateAction(mSynchronizeWorkspaceAction, tr("Synchronise Workspace With PMR..."),
                                      tr("Synchronise the curent workspace with PMR"));
@@ -511,10 +511,10 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
         // folder
 
         QString clonedWorkspaceUrl = QString();
-        QByteArray folderByteArray = clonedWorkspaceFolder.toUtf8();
         git_repository *gitRepository = 0;
 
-        if (!git_repository_open(&gitRepository, folderByteArray.constData())) {
+        if (!git_repository_open(&gitRepository,
+                                 clonedWorkspaceFolder.toUtf8().constData())) {
             git_strarray remotes;
 
             if (!git_remote_list(&remotes, gitRepository)) {
@@ -783,7 +783,15 @@ PmrWorkspacesWindowItem * PmrWorkspacesWindowWidget::currentItem() const
 {
     // Return our current item
 
-    return static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(mTreeViewWidget->currentIndex())));
+    PmrWorkspacesWindowItem *res = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(mTreeViewWidget->currentIndex())));
+
+    if (!res) {
+        // There is no current item, so return the one under our mouse pointer
+
+        res = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(mTreeViewWidget->indexAt(mTreeViewWidget->mapFromGlobal(QCursor::pos())))));
+    }
+
+    return res;
 }
 
 //==============================================================================
@@ -865,17 +873,17 @@ void PmrWorkspacesWindowWidget::deleteItems(PmrWorkspacesWindowItem *pItem,
         // owned and the folder where it was cloned has been deleted
 
         if (!pItem->hasChildren()) {
+            pItems.removeOne(pItem);
+
             if (pItem->parent())
                 pItem->parent()->removeRow(pItem->row());
             else if (!pItem->workspace()->isOwned())
                 mTreeViewModel->invisibleRootItem()->removeRow(pItem->row());
-
-            pItems.removeOne(pItem);
         }
     } else if (pItems.contains(pItem)) {
-        pItem->parent()->removeRow(pItem->row());
-
         pItems.removeOne(pItem);
+
+        pItem->parent()->removeRow(pItem->row());
     }
 }
 
@@ -1040,7 +1048,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWork
         item->setCollapsedIcon(collapsedIcon);
         item->setExpandedIcon(expandedIcon);
 
-        item->setIcon(mTreeViewWidget->isExpanded(item->index())?expandedIcon:collapsedIcon);
+        item->setIcon(mTreeViewWidget->isExpanded(mTreeViewProxyModel->mapFromSource(item->index()))?expandedIcon:collapsedIcon);
 
         // Keep track of existing items
 
@@ -1131,14 +1139,14 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
             workspaces << workspace;
     }
 
-    I18nInterface::retranslateAction(mViewInPmrAction,
+    I18nInterface::retranslateAction(mViewWorkspaceInPmrAction,
                                      oneWorkspaceUrl?
                                          tr("View Workspace In PMR"):
                                          tr("View Workspaces In PMR"),
                                      oneWorkspaceUrl?
                                          tr("View the current workspace in PMR"):
                                          tr("View the current workspaces in PMR"));
-    I18nInterface::retranslateAction(mViewOncomputerAction,
+    I18nInterface::retranslateAction(mViewWorkspaceOncomputerAction,
                                      (oneItem || oneWorkspacePath)?
                                          tr("View Workspace On Computer"):
                                          tr("View Workspaces On Computer"),
@@ -1146,11 +1154,11 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
                                          tr("View the current workspace on the computer"):
                                          tr("View the current workspaces on the computer"));
 
-    mViewInPmrAction->setEnabled(items.count());
-    mViewOncomputerAction->setEnabled(nbOfWorkspacePaths && (nbOfWorkspacePaths == workspaces.count()));
+    mViewWorkspaceInPmrAction->setEnabled(items.count());
+    mViewWorkspaceOncomputerAction->setEnabled(nbOfWorkspacePaths && (nbOfWorkspacePaths == workspaces.count()));
     mCopyWorkspaceUrlAction->setEnabled(oneWorkspaceUrl);
     mCopyWorkspacePathAction->setEnabled(oneWorkspacePath);
-    mMakeLocalCopyAction->setEnabled(oneItem && !nbOfWorkspacePaths);
+    mMakeLocalWorkspaceCopyAction->setEnabled(oneItem && !nbOfWorkspacePaths);
     mSynchronizeWorkspaceAction->setEnabled(   oneWorkspacePath
                                             && (currentItem()->workspace()->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusUnstaged));
     mAboutWorkspaceAction->setEnabled(oneWorkspaceUrl);
@@ -1172,22 +1180,22 @@ void PmrWorkspacesWindowWidget::itemDoubleClicked()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::itemExpanded()
+void PmrWorkspacesWindowWidget::itemExpanded(const QModelIndex &pIndex)
 {
-    // Update the icon of the item, if its type is that an owned workspace
+    // Update the icon of the item
 
-    PmrWorkspacesWindowItem *item = currentItem();
+    PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(pIndex)));
 
     item->setIcon(item->expandedIcon());
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::itemCollapsed()
+void PmrWorkspacesWindowWidget::itemCollapsed(const QModelIndex &pIndex)
 {
-    // Update the icon of the item, if its type is that an owned workspace
+    // Update the icon of the item
 
-    PmrWorkspacesWindowItem *item = currentItem();
+    PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(pIndex)));
 
     item->setIcon(item->collapsedIcon());
 }
@@ -1285,7 +1293,7 @@ void PmrWorkspacesWindowWidget::workspaceSynchronized(PMRSupport::PmrWorkspace *
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::viewInPmr()
+void PmrWorkspacesWindowWidget::viewWorkspaceInPmr()
 {
     // Show in PMR the workspace(s) corresponding to the selected items
 
@@ -1297,7 +1305,7 @@ void PmrWorkspacesWindowWidget::viewInPmr()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::viewOnComputer()
+void PmrWorkspacesWindowWidget::viewWorkspaceOncomputer()
 {
     // Show on the user's computer the workspace(s) corresponding to the
     // selected items

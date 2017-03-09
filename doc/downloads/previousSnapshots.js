@@ -1,4 +1,77 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 4, "month": 3, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>PMR Workspaces window:</strong> fixed a crash that used to occur when expanding a workspace by clicking on its arrow (\">\") when nothing else was selected (see issue <a href=\"https://github.com/opencor/opencor/issues/1242\">#1242</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 3, "month": 3, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> fixed a small problem with the desktop icon not showing on Ubuntu (see issue <a href=\"https://github.com/opencor/opencor/issues/1235\">#1235</a>)." },
+                       { "change": "<strong>PMR Workspaces window:</strong> fixed a small problem with synchronising potentially resulting in a segmentation fault on Linux (see issue <a href=\"https://github.com/opencor/opencor/issues/1236\">#1236</a>). Can now create a workspace from a non-empty (and non-Git) folder (see issue <a href=\"https://github.com/opencor/opencor/issues/1237\">#1237</a>). Now make it obvious which PMR site is being used (see issue <a href=\"https://github.com/opencor/opencor/issues/1239\">#1239</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 24, "month": 2, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> keep track of the position and size of dialogs (see issue <a href=\"https://github.com/opencor/opencor/issues/1224\">#1224</a>)." },
+                       { "change": "<strong>PMR support:</strong> let the user know if we simply cannot authenticate (see issue <a href=\"https://github.com/opencor/opencor/issues/1223\">#1223</a>)." },
+                       { "change": "<strong>PMR-based windows:</strong> only reload them (upon changes to preferences) if the PMR URL is different (see issue <a href=\"https://github.com/opencor/opencor/issues/1222\">#1222</a>)." },
+                       { "change": "<strong>PMR Workspaces window:</strong> got rid of the stage/unstage context menu item (for a file; see issue <a href=\"https://github.com/opencor/opencor/issues/1212\">#1212</a>). Use the same context menu for the workspace, folders and files (see issue <a href=\"https://github.com/opencor/opencor/issues/1213\">#1213</a>). Offer a way to see the differences in the files that are to be synchronised with PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/1229\">#1229</a>)." },
+                       { "change": "<strong>CellML Text view:</strong> unknown elements (e.g. `int`) now result in an error during conversion to the CellML Text format (see issue <a href=\"https://github.com/opencor/opencor/issues/1230\">#1230</a>). Fixed a small problem with trying to comment out an empty line moving the caret to the next line (see issue <a href=\"https://github.com/opencor/opencor/issues/1232\">#1232</a>)." },
+                       { "change": "<strong>WebViewer widget based plugins:</strong> fixed a small ‘regression’ issue with the default context menu always being shown (see issue <a href=\"https://github.com/opencor/opencor/issues/1233\">#1233</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10 (see issue <a href=\"https://github.com/opencor/opencor/issues/1227\">#1227</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 10, "month": 2, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",

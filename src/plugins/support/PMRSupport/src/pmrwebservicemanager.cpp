@@ -150,7 +150,7 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
         mWebViewerDialog = new Core::Dialog(mSettings, Core::mainWindow());
 
         connect(mWebViewerDialog, SIGNAL(rejected()),
-                this, SIGNAL(cancelled()));
+                this, SIGNAL(authenticationCancelled()));
 
         mWebViewer = new WebViewerWidget::WebViewerWidget(mWebViewerDialog);
 
@@ -170,6 +170,10 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
     }
 
     mWebViewerDialog->setWindowTitle(tr("PMR Authentication"));
+
+    QMainWindow *mainWindow = Core::mainWindow();
+
+    mWebViewerDialog->resize(0.7*mainWindow->width(), 0.7*mainWindow->height());
 
     mWebViewer->webView()->load(pUrl);
 

@@ -17,21 +17,11 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// LLVM disable warnings
+// CellML API end
 //==============================================================================
 
-#if defined(Q_OS_WIN)
-    #pragma warning(push)
-    #pragma warning(disable: 4146)
-    #pragma warning(disable: 4624)
-#elif defined(Q_OS_LINUX)
-    #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-    #pragma GCC diagnostic ignored "-Wstrict-aliasing"
-    #pragma GCC diagnostic ignored "-Wunused-parameter"
-#elif defined(Q_OS_MAC)
-    #pragma GCC diagnostic ignored "-Wunused-parameter"
-#else
-    #error Unsupported platform
+#ifdef Q_OS_WIN
+    #pragma warning(pop)
 #endif
 
 //==============================================================================

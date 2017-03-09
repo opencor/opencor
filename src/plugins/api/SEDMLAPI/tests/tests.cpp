@@ -28,10 +28,10 @@ limitations under the License.
 
 //==============================================================================
 
-#include "sedmlapidisablewarnings.h"
+#include "sedmlapibegin.h"
     #include "sedml/common/libsedml-version.h"
     #include "sedml/SedDocument.h"
-#include "sedmlapienablewarnings.h"
+#include "sedmlapiend.h"
 
 //==============================================================================
 
