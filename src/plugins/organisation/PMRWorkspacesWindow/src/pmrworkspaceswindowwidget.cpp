@@ -963,7 +963,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
             // Note: it may happen (e.g. when deleting a folder) that the Git
             //       status is not up to date, hence we need to check for the
             //       I and W values not to be '\0' (which would be the case for
-            //       a folder that doesn't have any files anymore)...
+            //       a folder that doesn't contain any files anymore)...
 
             PMRSupport::CharPair status = fileNode->status();
 
@@ -972,24 +972,22 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
 
             QIcon icon = mFileIcon;
 
-            if (status.second != ' ') {
-                if (status.second == 'A')
-                    icon = mWaFileIcon;
-                else if (status.second == 'C')
-                    icon = mWcFileIcon;
-                else if (status.second == 'D')
-                    icon = mWdFileIcon;
-                else if (status.second == 'E')
-                    icon = mWeFileIcon;
-                else if (status.second == 'M')
-                    icon = mWmFileIcon;
-                else if (status.second == 'Q')
-                    icon = mWqFileIcon;
-                else if (status.second == 'R')
-                    icon = mWrFileIcon;
-                else if (status.second == 'T')
-                    icon = mWtFileIcon;
-            }
+            if (status.second == 'A')
+                icon = mWaFileIcon;
+            else if (status.second == 'C')
+                icon = mWcFileIcon;
+            else if (status.second == 'D')
+                icon = mWdFileIcon;
+            else if (status.second == 'E')
+                icon = mWeFileIcon;
+            else if (status.second == 'M')
+                icon = mWmFileIcon;
+            else if (status.second == 'Q')
+                icon = mWqFileIcon;
+            else if (status.second == 'R')
+                icon = mWrFileIcon;
+            else if (status.second == 'T')
+                icon = mWtFileIcon;
 
             if (newItem) {
                 // We already have an item, so just update its icon
