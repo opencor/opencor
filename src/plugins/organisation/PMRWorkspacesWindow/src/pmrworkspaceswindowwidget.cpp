@@ -63,6 +63,8 @@ namespace PMRWorkspacesWindow {
 //==============================================================================
 
 void PmrWorkspacesWindowItem::constructor(const Type &pType,
+                                          Core::TreeViewWidget *pTreeViewWidget,
+                                          PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                           PMRSupport::PmrWorkspace *pWorkspace,
                                           PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                           const QIcon &pCollapsedIcon,
@@ -71,6 +73,8 @@ void PmrWorkspacesWindowItem::constructor(const Type &pType,
     // Some initialisations
 
     mType = pType;
+    mTreeViewWidget = pTreeViewWidget;
+    mTreeViewProxyModel = pTreeViewProxyModel;
     mWorkspace = pWorkspace;
     mFileNode = pFileNode;
     mCollapsedIcon = pCollapsedIcon;
@@ -84,6 +88,8 @@ void PmrWorkspacesWindowItem::constructor(const Type &pType,
 //==============================================================================
 
 PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+                                                 Core::TreeViewWidget *pTreeViewWidget,
+                                                 PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                                  PMRSupport::PmrWorkspace *pWorkspace,
                                                  const QIcon &pCollapsedIcon,
                                                  const QIcon &pExpandedIcon) :
@@ -91,12 +97,15 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
 {
     // Construct our object
 
-    constructor(pType, pWorkspace, 0, pCollapsedIcon, pExpandedIcon);
+    constructor(pType, pTreeViewWidget, pTreeViewProxyModel,
+                pWorkspace, 0, pCollapsedIcon, pExpandedIcon);
 }
 
 //==============================================================================
 
 PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+                                                 Core::TreeViewWidget *pTreeViewWidget,
+                                                 PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                                  PMRSupport::PmrWorkspace *pWorkspace,
                                                  PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                                  const QIcon &pCollapsedIcon,
@@ -105,12 +114,15 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
 {
     // Construct our object
 
-    constructor(pType, pWorkspace, pFileNode, pCollapsedIcon, pExpandedIcon);
+    constructor(pType, pTreeViewWidget, pTreeViewProxyModel,
+                pWorkspace, pFileNode, pCollapsedIcon, pExpandedIcon);
 }
 
 //==============================================================================
 
 PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+                                                 Core::TreeViewWidget *pTreeViewWidget,
+                                                 PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                                  PMRSupport::PmrWorkspace *pWorkspace,
                                                  PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                                  const QIcon &pIcon) :
@@ -118,7 +130,8 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
 {
     // Construct our object
 
-    constructor(pType, pWorkspace, pFileNode, QIcon(), QIcon());
+    constructor(pType, pTreeViewWidget, pTreeViewProxyModel,
+                pWorkspace, pFileNode, QIcon(), QIcon());
 }
 
 //==============================================================================
@@ -164,6 +177,8 @@ void PmrWorkspacesWindowItem::setCollapsedIcon(const QIcon &pCollapsedIcon)
     // Set our collapsed icon
 
     mCollapsedIcon = pCollapsedIcon;
+
+    setIcon(mTreeViewWidget->isExpanded(mTreeViewProxyModel->mapFromSource(index()))?mExpandedIcon:mCollapsedIcon);
 }
 
 //==============================================================================
@@ -182,6 +197,8 @@ void PmrWorkspacesWindowItem::setExpandedIcon(const QIcon &pExpandedIcon)
     // Set our expanded icon
 
     mExpandedIcon = pExpandedIcon;
+
+    setIcon(mTreeViewWidget->isExpanded(mTreeViewProxyModel->mapFromSource(index()))?mExpandedIcon:mCollapsedIcon);
 }
 
 //==============================================================================
@@ -901,6 +918,8 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
     PmrWorkspacesWindowItem *item = new PmrWorkspacesWindowItem(pWorkspace->isOwned()?
                                                                     PmrWorkspacesWindowItem::OwnedWorkspace:
                                                                     PmrWorkspacesWindowItem::Workspace,
+                                                                mTreeViewWidget,
+                                                                mTreeViewProxyModel,
                                                                 pWorkspace,
                                                                 collapsedIcon, expandedIcon);
 
@@ -918,12 +937,17 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
 
 PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                                                                       PmrWorkspacesWindowItem *pFolderItem,
-                                                                      PMRSupport::PmrWorkspaceFileNode *pFileNode)
+                                                                      PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                                                      bool &pIsUnstaged,
+                                                                      bool &pHasConflicts)
 {
     // Populate the given folder item with its children, which are referenced in
     // the given file node
 
     PmrWorkspacesWindowItems res = PmrWorkspacesWindowItems();
+
+    pIsUnstaged = false;
+    pHasConflicts = false;
 
     foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
         // Check whether we already know about the file node
@@ -947,6 +971,8 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
             PmrWorkspacesWindowItem *folderItem = newItem?
                                                       newItem:
                                                       new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Folder,
+                                                                                  mTreeViewWidget,
+                                                                                  mTreeViewProxyModel,
                                                                                   pWorkspace,
                                                                                   fileNode,
                                                                                   mCollapsedWorkspaceIcon,
@@ -955,8 +981,23 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
             if (!newItem)
                 pFolderItem->appendRow(folderItem);
 
+            bool isUnstaged;
+            bool hasConflicts;
+
             res << folderItem
-                << populateWorkspace(pWorkspace, folderItem, fileNode);
+                << populateWorkspace(pWorkspace, folderItem, fileNode,
+                                     isUnstaged, hasConflicts);
+
+            folderItem->setCollapsedIcon(hasConflicts?
+                                             mConflictCollapsedWorkspaceIcon:
+                                             isUnstaged?
+                                                 mUnstagedCollapsedWorkspaceIcon:
+                                                 mCollapsedWorkspaceIcon);
+            folderItem->setExpandedIcon(hasConflicts?
+                                            mConflictExpandedWorkspaceIcon:
+                                            isUnstaged?
+                                                mUnstagedExpandedWorkspaceIcon:
+                                                mExpandedWorkspaceIcon);
         } else {
             // We are dealing with a file, so retrieve its status and use the
             // corresponding icon for it, if needed
@@ -989,6 +1030,9 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
             else if (status.second == 'T')
                 icon = mWtFileIcon;
 
+            pIsUnstaged = pIsUnstaged || ((status.second != ' ') && (status.second != 'C'));
+            pHasConflicts = pHasConflicts || (status.second == 'C');
+
             if (newItem) {
                 // We already have an item, so just update its icon
 
@@ -997,6 +1041,8 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
                 // We don't already have an item, so create one and add it
 
                 newItem = new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::File,
+                                                      mTreeViewWidget,
+                                                      mTreeViewProxyModel,
                                                       pWorkspace, fileNode, icon);
 
                 pFolderItem->appendRow(newItem);
@@ -1007,6 +1053,21 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
     }
 
     return res;
+}
+
+//==============================================================================
+
+PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
+                                                                      PmrWorkspacesWindowItem *pFolderItem,
+                                                                      PMRSupport::PmrWorkspaceFileNode *pFileNode)
+{
+    // Populate the given folder item with its children, which are referenced in
+    // the given file node
+
+    bool isUnstaged;
+    bool hasConflicts;
+
+    return populateWorkspace(pWorkspace, pFolderItem, pFileNode, isUnstaged, hasConflicts);
 }
 
 //==============================================================================
