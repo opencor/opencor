@@ -4,9 +4,9 @@ We build our own copy of the `Zinc <http://physiomeproject.org/software/opencmis
 
   git clone https://github.com/OpenCMISS/manage.git OpenCMISS/manage
 
-On Windows, we then need to use CMake's GUI client (to ensure that we can build a 64-bit version of Zinc), making sure that `OC_USE_IRON` is set to `NO` and `MPI` to `none`.
+On Windows, we then need to use CMake's GUI client (to ensure that we can build a 64-bit version of Zinc), making sure that ``OC_USE_IRON`` is set to ``NO`` and ``MPI`` to ``none``.
 
-From there, we need to remove the following lines from `[OpenCMISS]/manage/build/hdf5-download.vcxproj`:
+From there, we need to remove the following lines from ``[OpenCMISS]/manage/build/hdf5-download.vcxproj``:
 
 ::
 
