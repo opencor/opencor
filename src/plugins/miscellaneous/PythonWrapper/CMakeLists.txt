@@ -10,6 +10,7 @@ ADD_PLUGIN(PythonWrapper
         ../../plugininterface.cpp
         ../../pluginmanager.cpp
 
+        src/pythonwrappercore.cpp
         src/pythonwrapperdatastore.cpp
         src/pythonwrapperplugin.cpp
         src/pythonwrappersinglecellview.cpp
@@ -18,6 +19,7 @@ ADD_PLUGIN(PythonWrapper
         ../../plugin.h
         ../../pluginmanager.h
 
+        src/pythonwrappercore.h
         src/pythonwrapperdatastore.h
         src/pythonwrapperplugin.h
         src/pythonwrappersinglecellview.h

@@ -17,71 +17,32 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Python wrapper plugin
+// Python wrapper for Core plugin
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "plugininfo.h"
-#include "plugininterface.h"
+#include "PythonQtPythonInclude.h"
 
 //==============================================================================
 
-#include "PythonQt.h"
+#include <QObject>
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace SingleCellView {
-    class SingleCellViewWidget;
-};
-
-//==============================================================================
-
 namespace PythonWrapper {
 
 //==============================================================================
 
-class PythonWrapperCore;
-class PythonWrapperDataStore;
-class PythonWrapperSingleCellView;
-
-//==============================================================================
-
-PLUGININFO_FUNC PythonWrapperPluginInfo();
-
-//==============================================================================
-
-class PythonWrapperPlugin : public QObject, public PluginInterface
+class PythonWrapperCore : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonWrapperPlugin" FILE "pythonwrapperplugin.json")
-
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
 public:
-    explicit PythonWrapperPlugin();
-
-#include "plugininterface.inl"
-
-    static PythonWrapperPlugin *instance();
-
-    SingleCellView::SingleCellViewWidget *singleCellViewWidget();
-
-private:
-    PythonQtObjectPtr mOpenCORModule;
-
-    PythonWrapperCore *mPythonWrapperCore;
-    PythonWrapperDataStore *mPythonWrapperDataStore;
-    PythonWrapperSingleCellView *mPythonWrapperSingleCellView;
-
-    SingleCellView::SingleCellViewWidget *mSingleCellViewWidget;
+    explicit PythonWrapperCore(PyObject *pModule, QObject *pParent=0);
 };
 
 //==============================================================================
