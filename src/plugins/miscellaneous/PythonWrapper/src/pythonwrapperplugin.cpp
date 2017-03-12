@@ -79,15 +79,12 @@ bool PythonWrapperPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void PythonWrapperPlugin::initializePlugin()
 {
-// Create a Python module to access OpenCOR's objects
+    // Create a Python module to access OpenCOR's objects
 
     mOpenCORModule = PythonQt::self()->createModuleFromScript("OpenCOR");
 
-    auto pythonWrapperDataStore = new PythonWrapperDataStore();
-    pythonWrapperDataStore->initialise(mOpenCORModule);
-
-    auto pythonWrapperSingleCellView = new PythonWrapperSingleCellView();
-    pythonWrapperSingleCellView->initialise(mOpenCORModule);
+    mPythonWrapperDataStore = new PythonWrapperDataStore(mOpenCORModule);
+    mPythonWrapperSingleCellView = new PythonWrapperSingleCellView(mOpenCORModule);
 }
 
 //==============================================================================

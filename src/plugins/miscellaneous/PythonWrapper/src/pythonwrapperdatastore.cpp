@@ -41,7 +41,7 @@ static bool init_numpy()
 
 //==============================================================================
 
-void PythonWrapperDataStore::initialise(PyObject *pModule)
+PythonWrapperDataStore::PythonWrapperDataStore(PyObject *pModule, QObject *pParent) : QObject(pParent)
 {
     Q_UNUSED(pModule);
 

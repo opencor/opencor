@@ -60,11 +60,7 @@ class PythonWrapperSingleCellView : public QObject
     Q_OBJECT
 
 public:
-    void initialise(PyObject *pModule);
-
-private:
-    static PyObject * OpenCOR_simulation(PyObject *self,  PyObject *args);
-    static PyObject * OpenCOR_simulations(PyObject *self, PyObject *args);
+    explicit PythonWrapperSingleCellView(PyObject *pModule, QObject *pParent=0);
 
 public slots:
     bool run(OpenCOR::SingleCellView::SingleCellViewSimulation *pSingleCellViewSimulation);

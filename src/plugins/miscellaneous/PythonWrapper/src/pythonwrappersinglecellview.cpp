@@ -45,8 +45,8 @@ static PyObject *OpenCOR_simulations(PyObject *self,  PyObject *args)
     Q_UNUSED(self);
     Q_UNUSED(args);
 
-    auto simulationDict = PyDict_New();
-    auto singleCellViewWidget = PythonWrapperPlugin::instance()->singleCellViewWidget();
+    PyObject *simulationDict = PyDict_New();
+    SingleCellView::SingleCellViewWidget *singleCellViewWidget = PythonWrapperPlugin::instance()->singleCellViewWidget();
 
     if (singleCellViewWidget) {
         foreach (const QString &fileName, singleCellViewWidget->fileNames()) {
@@ -65,7 +65,7 @@ PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
     Q_UNUSED(self);
     Q_UNUSED(args);
 
-    auto singleCellViewWidget = PythonWrapperPlugin::instance()->singleCellViewWidget();
+    SingleCellView::SingleCellViewWidget *singleCellViewWidget = PythonWrapperPlugin::instance()->singleCellViewWidget();
     if (singleCellViewWidget) {
         auto simulation = singleCellViewWidget->simulation(Core::centralWidget()->currentFileName());
         return PythonQt::priv()->wrapQObject(simulation);
@@ -85,7 +85,7 @@ static PyMethodDef wrappedSingleCellViewMethods[] = {
 
 //==============================================================================
 
-void PythonWrapperSingleCellView::initialise(PyObject *pModule)
+PythonWrapperSingleCellView::PythonWrapperSingleCellView(PyObject *pModule, QObject *pParent) : QObject(pParent)
 {
     PythonQt::self()->registerClass(&OpenCOR::SingleCellView::SingleCellViewSimulation::staticMetaObject);
     PythonQt::self()->registerClass(&OpenCOR::SingleCellView::SingleCellViewSimulationData::staticMetaObject);

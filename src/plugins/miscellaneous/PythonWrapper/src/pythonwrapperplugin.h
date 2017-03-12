@@ -47,6 +47,11 @@ namespace PythonWrapper {
 
 //==============================================================================
 
+class PythonWrapperDataStore;
+class PythonWrapperSingleCellView;
+
+//==============================================================================
+
 PLUGININFO_FUNC PythonWrapperPluginInfo();
 
 //==============================================================================
@@ -70,6 +75,9 @@ public:
 
 private:
     PythonQtObjectPtr mOpenCORModule;
+
+    PythonWrapperDataStore *mPythonWrapperDataStore;
+    PythonWrapperSingleCellView *mPythonWrapperSingleCellView;
 
     SingleCellView::SingleCellViewWidget *mSingleCellViewWidget;
 };

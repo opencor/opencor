@@ -53,7 +53,8 @@ class PythonWrapperDataStore : public QObject
     Q_OBJECT
 
 public:
-    void initialise(PyObject *pModule);
+    explicit PythonWrapperDataStore(PyObject *pModule, QObject *pParent=0);
+
     static PyObject * newNumPyArray(DataStore::DataStoreArray *pDataStoreArray);
     static PyObject * newNumPyArray(DataStore::DataStoreVariable *pDataStoreVariable);
 
