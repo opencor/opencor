@@ -142,7 +142,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
         signalArray->extend(data, selectedVariables.count()*rowCount);
 
         delete[] data;
-    } catch (bsml::data::Exception e) {
+    } catch (const std::exception &e) {
         // Something went wrong, so retrieve the error message and delete our
         // BioSignalML file
 
