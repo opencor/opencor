@@ -62,7 +62,7 @@ DataStoreArray::DataStoreArray(const qulonglong &pCapacity) :
 
 DataStoreArray::~DataStoreArray()
 {
-    delete[] mValues;
+    decReference();
 }
 
 //==============================================================================
@@ -70,7 +70,10 @@ DataStoreArray::~DataStoreArray()
 void DataStoreArray::decReference()
 {
     --mReferences;
-    if (mReferences == 0) delete this;
+    if (mReferences == 0) {
+        delete[] mValues;
+        mValues = 0;
+    }
 }
 
 //==============================================================================
@@ -128,6 +131,7 @@ DataStoreVariable::~DataStoreVariable()
 void DataStoreVariable::createArray(const qulonglong &pCapacity)
 {
     mCapacity = pCapacity;
+    mSize = 0;
 
     // Create our array of values
 
@@ -144,6 +148,7 @@ void DataStoreVariable::deleteArray()
     if (mArray) mArray->decReference();
 
     mCapacity = 0;
+    mSize = 0;
 }
 
 //==============================================================================
@@ -419,6 +424,7 @@ DataStore::~DataStore()
 void DataStore::createArrays(const qulonglong &pCapacity)
 {
     mCapacity = pCapacity;
+    mSize = 0;
 
     mVoi->createArray(pCapacity);
 
@@ -436,6 +442,7 @@ void DataStore::deleteArrays()
         variable->deleteArray();
 
     mCapacity = 0;
+    mSize = 0;
 }
 
 //==============================================================================
