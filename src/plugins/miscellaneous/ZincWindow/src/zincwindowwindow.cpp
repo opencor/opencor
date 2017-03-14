@@ -224,9 +224,9 @@ void ZincWindowWindow::graphicsInitialized()
     // Our Zinc widget has had its graphics initialised, so now we can set its
     // background colour
 
-    double backgroundColor[3] = { 1.0, 1.0, 1.0 };
+    double backgroundColor[4] = { 1.0, 1.0, 1.0, 1.0 };
 
-    mZincWidget->sceneViewer().setBackgroundColourRGB(backgroundColor);
+    mZincWidget->sceneViewer().setBackgroundColourRGBA(backgroundColor);
 }
 
 //==============================================================================

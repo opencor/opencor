@@ -391,6 +391,17 @@ ZINC_API int cmzn_sceneviewer_get_background_colour_rgb(
 	cmzn_sceneviewer_id sceneviewer, double *valuesOut3);
 
 /**
+ * Returns the background_colour of the scene viewer.
+ * The component order in the array is [red, green, blue, alpha]
+ *
+ * @param sceneviewer The handle to the scene viewer
+ * @param valuesOut4 The rgba components of the colour with values between [0, 1.0]
+ * @return CMZN_OK if successful, any other value otherwise
+ */
+ZINC_API int cmzn_sceneviewer_get_background_colour_rgba(
+	cmzn_sceneviewer_id sceneviewer, double *valuesOut4);
+
+/**
  * Sets the background_colour of the scene viewer by individual component.
  * Each component should be in the range [0, 1.0].
  *
@@ -404,6 +415,20 @@ ZINC_API int cmzn_sceneviewer_set_background_colour_component_rgb(
 	cmzn_sceneviewer_id sceneviewer, double red, double green, double blue);
 
 /**
+ * Sets the background_colour of the scene viewer by individual component.
+ * Each component should be in the range [0, 1.0].
+ *
+ * @param sceneviewer The handle to the scene viewer
+ * @param red The red component value between [0, 1.0]
+ * @param green The green component value between [0, 1.0]
+ * @param blue The blue component value between [0, 1.0]
+ * @param alpha The alpha component value between [0, 1.0]
+ * @return CMZN_OK if successful, any other value otherwise
+ */
+ZINC_API int cmzn_sceneviewer_set_background_colour_component_rgba(
+	cmzn_sceneviewer_id sceneviewer, double red, double green, double blue, double alpha);
+
+/**
  * Sets the background_colour of the scene viewer.
  * Each component should be in the range [0, 1.0].
  * The component order is [red, green, blue]
@@ -414,6 +439,18 @@ ZINC_API int cmzn_sceneviewer_set_background_colour_component_rgb(
  */
 ZINC_API int cmzn_sceneviewer_set_background_colour_rgb(
 	cmzn_sceneviewer_id sceneviewer, const double *valuesIn3);
+
+/**
+ * Sets the background_colour of the scene viewer.
+ * Each component should be in the range [0, 1.0].
+ * The component order is [red, green, blue, alpha]
+ *
+ * @param sceneviewer The handle to the scene viewer
+ * @param valuesIn4 The rgba components of the colour
+ * @return CMZN_OK if successful, any other value otherwise
+ */
+ZINC_API int cmzn_sceneviewer_set_background_colour_rgba(
+	cmzn_sceneviewer_id sceneviewer, const double *valuesIn4);
 
 /**
  * If there is a background_texture in the scene viewer, these values specify the
@@ -684,6 +721,18 @@ ZINC_API int cmzn_sceneviewermodule_get_default_background_colour_rgb(
 	cmzn_sceneviewermodule_id sceneviewermodule, double *valuesOut3);
 
 /**
+* Gets the default background colour for new scene viewers created from this
+* scene viewer module.
+* The component order in the array is [red, green, blue, alpha]
+*
+* @param sceneviewermodule  The handle to the scene viewer module.
+* @param valuesOut4  The rgba components of the colour with values in [0, 1.0].
+* @return  CMZN_OK if successful, otherwise CMZN_ERROR_ARGUMENT.
+*/
+ZINC_API int cmzn_sceneviewermodule_get_default_background_colour_rgba(
+	cmzn_sceneviewermodule_id sceneviewermodule, double *valuesOut4);
+
+/**
 * Sets the default background colour for new scene viewers created from this
 * scene viewer module.
 * Each component should be in the range [0, 1.0].
@@ -695,6 +744,19 @@ ZINC_API int cmzn_sceneviewermodule_get_default_background_colour_rgb(
 */
 ZINC_API int cmzn_sceneviewermodule_set_default_background_colour_rgb(
 	cmzn_sceneviewermodule_id sceneviewermodule, const double *valuesIn3);
+
+/**
+* Sets the default background colour for new scene viewers created from this
+* scene viewer module.
+* Each component should be in the range [0, 1.0].
+* The component order is [red, green, blue, alpha].
+*
+* @param sceneviewermodule  The handle to the scene viewer module.
+* @param valuesIn4  The RGBA components of the colour.
+* @return  CMZN_OK if successful, otherwise CMZN_ERROR_ARGUMENT.
+*/
+ZINC_API int cmzn_sceneviewermodule_set_default_background_colour_rgba(
+	cmzn_sceneviewermodule_id sceneviewermodule, const double *valuesIn4);
 
 /**
  * Returns a new handle to the scene viewer module with the reference counter
