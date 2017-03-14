@@ -28,7 +28,6 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QList>
 #include <QObject>
 
 //==============================================================================
@@ -38,8 +37,10 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace DataStore {
+    class DataStore;
     class DataStoreArray;
     class DataStoreVariable;
+    class DataStoreVariables;
 };
 
 //==============================================================================
@@ -58,11 +59,13 @@ public:
     static PyObject * newNumPyArray(DataStore::DataStoreArray *pDataStoreArray);
     static PyObject * newNumPyArray(DataStore::DataStoreVariable *pDataStoreVariable);
 
-private:
-    PyObject * variablesList(QList<DataStore::DataStoreVariable *> pVariables) const;
+    static PyObject *dataStoreVariablesDict(const DataStore::DataStoreVariables &pDataStoreVariables);
 
 public slots:
     PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable) const;
+
+    PyObject * variables(OpenCOR::DataStore::DataStore *pDataStore);
+    PyObject * voiAndVariables(OpenCOR::DataStore::DataStore *pDataStore);
 };
 
 //==============================================================================

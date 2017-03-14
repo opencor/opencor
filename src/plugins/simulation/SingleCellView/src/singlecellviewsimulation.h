@@ -104,6 +104,15 @@ public:
     void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
                               const bool &pReset = true);
 
+    DataStore::DataStore * resultsDataStore() const;
+
+    DataStore::DataStoreVariable * pointVariable() const;
+
+    DataStore::DataStoreVariables constantVariables() const;
+    DataStore::DataStoreVariables rateVariables() const;
+    DataStore::DataStoreVariables stateVariables() const;
+    DataStore::DataStoreVariables algebraicVariables() const;
+
 public slots:
     OpenCOR::SingleCellView::SingleCellViewSimulation * simulation() const;
 
@@ -151,23 +160,31 @@ private:
     QString mNlaSolverName;
     Solver::Solver::Properties mNlaSolverProperties;
 
+    DataStore::DataStore *mResultsDataStore;
+
+    DataStore::DataStoreVariable *mPointVariable;
+
+    DataStore::DataStoreVariables mConstantVariables;
+    DataStore::DataStoreVariables mRateVariables;
+    DataStore::DataStoreVariables mStateVariables;
+    DataStore::DataStoreVariables mAlgebraicVariables;
+
     double *mConstants;
-    DataStore::DataStoreArray *mConstantsArray;
     double *mRates;
-    DataStore::DataStoreArray *mRatesArray;
     double *mStates;
-    DataStore::DataStoreArray *mStatesArray;
     double *mDummyStates;
     double *mAlgebraic;
-    DataStore::DataStoreArray *mAlgebraicArray;
     double *mCondVar;
-    DataStore::DataStoreArray *mCondVarArray;
 
     double *mInitialConstants;
     double *mInitialStates;
 
     void createArrays();
     void deleteArrays();
+
+    void createResultsDataStore();
+
+    QString uri(const QStringList &pComponentHierarchy, const QString &pName);
 
     SolverInterface * solverInterface(const QString &pSolverName) const;
 
@@ -202,7 +219,7 @@ public:
     double * algebraic(const int &pIndex) const;
 
 public slots:
-    bool reset(const bool &pCreateDataStore = true);
+    bool reset(const bool &pAllocateArrays = true);
 
     qulonglong size() const;
 
@@ -215,17 +232,15 @@ private:
 
     DataStore::DataStore *mDataStore;
 
-    DataStore::DataStoreVariable *mPoints;
+    const DataStore::DataStoreVariable *mPointVariable;
 
-    DataStore::DataStoreVariables mConstants;
-    DataStore::DataStoreVariables mRates;
-    DataStore::DataStoreVariables mStates;
-    DataStore::DataStoreVariables mAlgebraic;
+    const DataStore::DataStoreVariables mConstantVariables;
+    const DataStore::DataStoreVariables mRateVariables;
+    const DataStore::DataStoreVariables mStateVariables;
+    const DataStore::DataStoreVariables mAlgebraicVariables;
 
-    bool createDataStore();
-    void deleteDataStore();
-
-    QString uri(const QStringList &pComponentHierarchy, const QString &pName);
+    bool createArrays();
+    void deleteArrays();
 };
 
 //==============================================================================

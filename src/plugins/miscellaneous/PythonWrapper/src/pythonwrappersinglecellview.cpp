@@ -143,72 +143,42 @@ bool PythonWrapperSingleCellView::run(SingleCellView::SingleCellViewSimulation *
 
 //==============================================================================
 
-PyObject * PythonWrapperSingleCellView::constants(SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const
+const OpenCOR::DataStore::DataStoreVariable * PythonWrapperSingleCellView::points(
+    SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
 {
-    return PythonWrapperDataStore::newNumPyArray(pSingleCellViewSimulationData->mConstantsArray);
+    return pSingleCellViewSimulationResults->mPointVariable;
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperSingleCellView::rates(SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const
+PyObject * PythonWrapperSingleCellView::constants(
+    SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
 {
-    return PythonWrapperDataStore::newNumPyArray(pSingleCellViewSimulationData->mRatesArray);
+    return PythonWrapperDataStore::dataStoreVariablesDict(pSingleCellViewSimulationResults->mConstantVariables);
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperSingleCellView::states(SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const
+PyObject * PythonWrapperSingleCellView::rates(
+    SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
 {
-    return PythonWrapperDataStore::newNumPyArray(pSingleCellViewSimulationData->mStatesArray);
+    return PythonWrapperDataStore::dataStoreVariablesDict(pSingleCellViewSimulationResults->mRateVariables);
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperSingleCellView::algebraic(SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const
+PyObject * PythonWrapperSingleCellView::states(
+    SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
 {
-    return PythonWrapperDataStore::newNumPyArray(pSingleCellViewSimulationData->mAlgebraicArray);
+    return PythonWrapperDataStore::dataStoreVariablesDict(pSingleCellViewSimulationResults->mStateVariables);
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperSingleCellView::condVar(SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const
+PyObject * PythonWrapperSingleCellView::algebraic(
+    SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
 {
-    return PythonWrapperDataStore::newNumPyArray(pSingleCellViewSimulationData->mCondVarArray);
-}
-
-//==============================================================================
-
-OpenCOR::DataStore::DataStoreVariable * PythonWrapperSingleCellView::points(SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
-{
-    return pSingleCellViewSimulationResults->mPoints;
-}
-
-//==============================================================================
-
-QList<OpenCOR::DataStore::DataStoreVariable *> PythonWrapperSingleCellView::constants(SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
-{
-    return pSingleCellViewSimulationResults->mConstants;
-}
-
-//==============================================================================
-
-QList<OpenCOR::DataStore::DataStoreVariable *> PythonWrapperSingleCellView::rates(SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
-{
-    return pSingleCellViewSimulationResults->mRates;
-}
-
-//==============================================================================
-
-QList<OpenCOR::DataStore::DataStoreVariable *> PythonWrapperSingleCellView::states(SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
-{
-    return pSingleCellViewSimulationResults->mStates;
-}
-
-//==============================================================================
-
-QList<OpenCOR::DataStore::DataStoreVariable *> PythonWrapperSingleCellView::algebraic(SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
-{
-    return pSingleCellViewSimulationResults->mAlgebraic;
+    return PythonWrapperDataStore::dataStoreVariablesDict(pSingleCellViewSimulationResults->mAlgebraicVariables);
 }
 
 //==============================================================================

@@ -65,8 +65,11 @@ class DataStoreVariable : public QObject
     Q_OBJECT
 
 public:
-    explicit DataStoreVariable(const qulonglong &pCapacity, double *pValue = 0);
+    explicit DataStoreVariable(const qulonglong &pCapacity = 0, double *pValuePtr = 0);
     ~DataStoreVariable();
+
+    void createArray(const qulonglong &pCapacity);
+    void deleteArray();
 
     static bool compare(DataStoreVariable *pVariable1,
                         DataStoreVariable *pVariable2);
@@ -86,6 +89,9 @@ public:
 
     qulonglong size() const;
 
+    void clearValuePtr();
+    void setValuePtr(double *pValuePtr);
+
     void addValue();
     void addValue(const double &pValue);
 
@@ -100,6 +106,8 @@ public slots:
 
     QString unit() const;
 
+    double nextValue() const;
+    void setNextValue(const double &pValue);
     double value(const qulonglong &pPosition) const;
 
 private:
@@ -110,17 +118,25 @@ private:
     QString mName;
     QString mUnit;
 
-    const qulonglong mCapacity;
+    qulonglong mCapacity;
     qulonglong mSize;
 
     DataStoreArray *mArray;
-    double *mValue;
+    double *mValuePtr;
     double *mValues;
 };
 
 //==============================================================================
 
-typedef QList<DataStoreVariable *> DataStoreVariables;
+//typedef QList<DataStoreVariable *> DataStoreVariables;
+
+
+class DataStoreVariables : public QList<DataStoreVariable *>
+{
+public:
+    void clearValuePtrs();
+    void setValuePtrs(double *pValuePtrs);
+};
 
 //==============================================================================
 
@@ -145,13 +161,19 @@ class DataStore : public QObject
     Q_OBJECT
 
 public:
-    explicit DataStore(const QString &pUri, const qulonglong &pCapacity);
+    explicit DataStore(const QString &pUri);
     ~DataStore();
+
+    void createArrays(const qulonglong &pCapacity);
+    void deleteArrays();
+
+    DataStoreVariables voiAndVariables();
 
     DataStoreVariable * addVoi();
 
-    DataStoreVariable * addVariable(double *pValue = 0);
-    DataStoreVariables addVariables(const int &pCount, double *pValues);
+    DataStoreVariables variables();
+    DataStoreVariable * addVariable(double *pValuePtr = 0);
+    DataStoreVariables addVariables(const int &pCount, double *pValuePtrs);
 
     void addValues(const double &pVoiValue);
 
@@ -161,16 +183,12 @@ public slots:
     qulonglong capacity() const;
     qulonglong size() const;
 
-    QList<OpenCOR::DataStore::DataStoreVariable *> voiAndVariables();
-
     OpenCOR::DataStore::DataStoreVariable * voi() const;
-
-    QList<OpenCOR::DataStore::DataStoreVariable *> variables();
 
 private:
     QString mlUri;
 
-    const qulonglong mCapacity;
+    qulonglong mCapacity;
     qulonglong mSize;
 
     DataStoreVariable *mVoi;

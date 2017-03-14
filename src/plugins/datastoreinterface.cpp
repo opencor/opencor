@@ -100,31 +100,50 @@ double * DataStoreArray::values() const
 
 //==============================================================================
 
-DataStoreVariable::DataStoreVariable(const qulonglong &pCapacity,
-                                     double *pValue) :
+DataStoreVariable::DataStoreVariable(const qulonglong &pCapacity, double *pValuePtr) :
 #ifndef CLI_VERSION
     mIcon(QIcon()),
 #endif
     mUri(QString()),
     mName(QString()),
     mUnit(QString()),
-    mCapacity(pCapacity),
+    mCapacity(0),
     mSize(0),
-    mValue(pValue)
+    mArray(0),
+    mValuePtr(pValuePtr),
+    mValues(0)
 {
-    // Create our array of values
-
-    mArray = new DataStoreArray(pCapacity);
-    mValues = mArray->values();
+    if (pCapacity) createArray(pCapacity);
 }
 
 //==============================================================================
 
 DataStoreVariable::~DataStoreVariable()
 {
+    if (mCapacity) deleteArray();
+}
+
+//==============================================================================
+
+void DataStoreVariable::createArray(const qulonglong &pCapacity)
+{
+    mCapacity = pCapacity;
+
+    // Create our array of values
+
+    mArray = new DataStoreArray(mCapacity);
+    mValues = mArray->values();
+}
+
+//==============================================================================
+
+void DataStoreVariable::deleteArray()
+{
     // Delete some internal objects
 
-    mArray->decReference();
+    if (mArray) mArray->decReference();
+
+    mCapacity = 0;
 }
 
 //==============================================================================
@@ -244,9 +263,9 @@ void DataStoreVariable::addValue()
     // Set the value of the variable at the given position
 
     Q_ASSERT(mSize < mCapacity);
-    Q_ASSERT(mValue);
+    Q_ASSERT(mValuePtr);
 
-    mValues[mSize] = *mValue;
+    mValues[mSize] = *mValuePtr;
 
     ++mSize;
 }
@@ -275,6 +294,37 @@ DataStoreArray * DataStoreVariable::array() const
 
 //==============================================================================
 
+void DataStoreVariable::clearValuePtr()
+{
+    mValuePtr = 0;
+}
+
+//==============================================================================
+
+void DataStoreVariable::setValuePtr(double *pValuePtr)
+{
+    mValuePtr = pValuePtr;
+}
+
+//==============================================================================
+
+double DataStoreVariable::nextValue() const
+{
+    Q_ASSERT(mValuePtr);
+    return *mValuePtr;
+}
+
+//==============================================================================
+
+void DataStoreVariable::setNextValue(const double &pValue)
+{
+    Q_ASSERT(mValuePtr);
+
+    *mValuePtr = pValue;
+}
+
+//==============================================================================
+
 double DataStoreVariable::value(const qulonglong &pPosition) const
 {
     // Return our value at the given position
@@ -291,6 +341,24 @@ double * DataStoreVariable::values() const
     // Return our values
 
     return mValues;
+}
+
+//==============================================================================
+
+void DataStoreVariables::clearValuePtrs()
+{
+    foreach (DataStoreVariable *variable, *this)
+        variable->clearValuePtr();
+}
+
+//==============================================================================
+
+void DataStoreVariables::setValuePtrs(double *pValuePtrs)
+{
+    foreach (DataStoreVariable *variable, *this) {
+        variable->setValuePtr(pValuePtrs);
+        ++pValuePtrs;
+    }
 }
 
 //==============================================================================
@@ -322,10 +390,9 @@ DataStoreVariables DataStoreData::selectedVariables() const
 
 //==============================================================================
 
-DataStore::DataStore(const QString &pUri,
-                     const qulonglong &pCapacity) :
+DataStore::DataStore(const QString &pUri) :
     mlUri(pUri),
-    mCapacity(pCapacity),
+    mCapacity(0),
     mSize(0),
     mVoi(0),
     mVariables(DataStoreVariables())
@@ -345,6 +412,30 @@ DataStore::~DataStore()
 #else
     Core::resetList(mVariables);
 #endif
+}
+
+//==============================================================================
+
+void DataStore::createArrays(const qulonglong &pCapacity)
+{
+    mCapacity = pCapacity;
+
+    mVoi->createArray(pCapacity);
+
+    foreach (DataStoreVariable *variable, mVariables)
+        variable->createArray(pCapacity);
+}
+
+//==============================================================================
+
+void DataStore::deleteArrays()
+{
+    if (mVoi) mVoi->deleteArray();
+
+    foreach (DataStoreVariable *variable, mVariables)
+        variable->deleteArray();
+
+    mCapacity = 0;
 }
 
 //==============================================================================

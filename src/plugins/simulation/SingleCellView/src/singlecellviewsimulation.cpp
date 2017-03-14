@@ -50,11 +50,14 @@ SingleCellViewSimulationData::SingleCellViewSimulationData(SingleCellViewSimulat
     mDaeSolverName(QString()),
     mDaeSolverProperties(Solver::Solver::Properties()),
     mNlaSolverName(QString()),
-    mNlaSolverProperties(Solver::Solver::Properties())
+    mNlaSolverProperties(Solver::Solver::Properties()),
+    mResultsDataStore(0)
 {
     // Create our various arrays
 
     createArrays();
+
+    createResultsDataStore();
 }
 
 //==============================================================================
@@ -575,22 +578,25 @@ void SingleCellViewSimulationData::createArrays()
     if (mRuntime) {
         // Create our various arrays to compute our model
 
-        mConstantsArray = new DataStore::DataStoreArray(mRuntime->constantsCount());
-        mConstants = mConstantsArray->values();
-        mRatesArray = new DataStore::DataStoreArray(mRuntime->ratesCount());
-        mRates = mRatesArray->values();
-        mStatesArray = new DataStore::DataStoreArray(mRuntime->statesCount());
-        mStates = mStatesArray->values();
+        mConstants = new double[mRuntime->constantsCount()];
+        mRates = new double[mRuntime->ratesCount()];
+        mStates = new double[mRuntime->statesCount()];
         mDummyStates = new double[mRuntime->statesCount()];
-        mAlgebraicArray = new DataStore::DataStoreArray(mRuntime->algebraicCount());
-        mAlgebraic = mAlgebraicArray->values();
-        mCondVarArray = new DataStore::DataStoreArray(mRuntime->condVarCount());
-        mCondVar = mCondVarArray->values();
+        mAlgebraic = new double[mRuntime->algebraicCount()];
+        mCondVar = new double[mRuntime->condVarCount()];
 
         // Create our various arrays to keep track of our various initial values
 
         mInitialConstants = new double[mRuntime->constantsCount()];
         mInitialStates = new double[mRuntime->statesCount()];
+
+        if (mResultsDataStore) {
+            mConstantVariables.setValuePtrs(mConstants);
+            mRateVariables.setValuePtrs(mRates);
+            mStateVariables.setValuePtrs(mStates);
+            mAlgebraicVariables.setValuePtrs(mAlgebraic);
+        }
+
     } else {
         mConstants = mRates = mStates = mDummyStates = mAlgebraic = mCondVar = 0;
         mInitialConstants = mInitialStates = 0;
@@ -603,43 +609,27 @@ void SingleCellViewSimulationData::deleteArrays()
 {
     // Delete our various arrays
 
-    mConstantsArray->decReference();
-    mRatesArray->decReference();
-    mStatesArray->decReference();
+    delete[] mConstants;
+    delete[] mRates;
+    delete[] mStates;
     delete[] mDummyStates;
-    mAlgebraicArray->decReference();
-    mCondVarArray->decReference();
+    delete[] mAlgebraic;
+    delete[] mCondVar;
 
     delete[] mInitialConstants;
     delete[] mInitialStates;
+
+    if (mResultsDataStore) {
+        mConstantVariables.clearValuePtrs();
+        mRateVariables.clearValuePtrs();
+        mStateVariables.clearValuePtrs();
+        mAlgebraicVariables.clearValuePtrs();
+    }
 }
 
 //==============================================================================
 
-SingleCellViewSimulationResults::SingleCellViewSimulationResults(SingleCellViewSimulation *pSimulation) :
-    mSimulation(pSimulation),
-    mRuntime(pSimulation->runtime()),
-    mDataStore(0),
-    mPoints(0),
-    mConstants(DataStore::DataStoreVariables()),
-    mRates(DataStore::DataStoreVariables()),
-    mStates(DataStore::DataStoreVariables()),
-    mAlgebraic(DataStore::DataStoreVariables())
-{
-}
-
-//==============================================================================
-
-SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
-{
-    // Delete some internal objects
-
-    deleteDataStore();
-}
-
-//==============================================================================
-
-QString SingleCellViewSimulationResults::uri(const QStringList &pComponentHierarchy,
+QString SingleCellViewSimulationData::uri(const QStringList &pComponentHierarchy,
                                              const QString &pName)
 {
     // Generate an URI using the given component hierarchy and name
@@ -651,46 +641,18 @@ QString SingleCellViewSimulationResults::uri(const QStringList &pComponentHierar
 
 //==============================================================================
 
-bool SingleCellViewSimulationResults::createDataStore()
+void SingleCellViewSimulationData::createResultsDataStore()
 {
-    // Note: the boolean value we return is true if we have had no problem
-    //       creating our data store, false otherwise. This is the reason, for
-    //       example, we return true when there is either no runtime or if the
-    //       simulation size is zero...
-
-    // Delete the previous data store, if any
-
-    deleteDataStore();
-
-    // Make sure that we have a runtime
-
-    if (!mRuntime)
-        return true;
-
-    // Retrieve the size of our data and make sure that it is valid
-
-    qulonglong simulationSize = qulonglong(mSimulation->size());
-
-    if (!simulationSize)
-        return true;
-
     // Create our data store and populate it with a variable of integration, as
     // well as with constant, rate, state and algebraic variables
 
-    try {
-        mDataStore = new DataStore::DataStore(mRuntime->cellmlFile()->xmlBase(),
-                                              simulationSize);
+    mResultsDataStore = new DataStore::DataStore(mRuntime->cellmlFile()->xmlBase());
 
-        mPoints = mDataStore->addVoi();
-        mConstants = mDataStore->addVariables(mRuntime->constantsCount(), mSimulation->data()->constants());
-        mRates = mDataStore->addVariables(mRuntime->ratesCount(), mSimulation->data()->rates());
-        mStates = mDataStore->addVariables(mRuntime->statesCount(), mSimulation->data()->states());
-        mAlgebraic = mDataStore->addVariables(mRuntime->algebraicCount(), mSimulation->data()->algebraic());
-    } catch (...) {
-        deleteDataStore();
-
-        return false;
-    }
+    mPointVariable = mResultsDataStore->addVoi();
+    mConstantVariables = mResultsDataStore->addVariables(mRuntime->constantsCount(), mConstants);
+    mRateVariables = mResultsDataStore->addVariables(mRuntime->ratesCount(), mRates);
+    mStateVariables = mResultsDataStore->addVariables(mRuntime->statesCount(), mStates);
+    mAlgebraicVariables = mResultsDataStore->addVariables(mRuntime->algebraicCount(), mAlgebraic);
 
     // Customise our variable of integration, as well as our constant, rate,
     // state and algebraic variables
@@ -701,28 +663,28 @@ bool SingleCellViewSimulationResults::createDataStore()
 
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-            mPoints->setIcon(SingleCellViewSimulationWidget::parameterIcon(parameter->type()));
-            mPoints->setUri(uri(mRuntime->variableOfIntegration()->componentHierarchy(),
-                                mRuntime->variableOfIntegration()->name()));
-            mPoints->setLabel(mRuntime->variableOfIntegration()->name());
-            mPoints->setUnit(mRuntime->variableOfIntegration()->unit());
+            mPointVariable->setIcon(SingleCellViewSimulationWidget::parameterIcon(parameter->type()));
+            mPointVariable->setUri(uri(mRuntime->variableOfIntegration()->componentHierarchy(),
+                                   mRuntime->variableOfIntegration()->name()));
+            mPointVariable->setLabel(mRuntime->variableOfIntegration()->name());
+            mPointVariable->setUnit(mRuntime->variableOfIntegration()->unit());
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::Constant:
         case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-            variable = mConstants[parameter->index()];
+            variable = mConstantVariables[parameter->index()];
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-            variable = mRates[parameter->index()];
+            variable = mRateVariables[parameter->index()];
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::State:
-            variable = mStates[parameter->index()];
+            variable = mStateVariables[parameter->index()];
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-            variable = mAlgebraic[parameter->index()];
+            variable = mAlgebraicVariables[parameter->index()];
 
             break;
         default:
@@ -739,42 +701,142 @@ bool SingleCellViewSimulationResults::createDataStore()
             variable->setUnit(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()));
         }
     }
+}
+
+//==============================================================================
+
+DataStore::DataStore * SingleCellViewSimulationData::resultsDataStore() const
+{
+    return mResultsDataStore;
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariable * SingleCellViewSimulationData::pointVariable() const
+{
+    return mPointVariable;
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariables SingleCellViewSimulationData::constantVariables() const
+{
+    return mConstantVariables;
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariables SingleCellViewSimulationData::rateVariables() const
+{
+    return mRateVariables;
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariables SingleCellViewSimulationData::stateVariables() const
+{
+    return mStateVariables;
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariables SingleCellViewSimulationData::algebraicVariables() const
+{
+    return mAlgebraicVariables;
+}
+
+//==============================================================================
+
+SingleCellViewSimulationResults::SingleCellViewSimulationResults(SingleCellViewSimulation *pSimulation) :
+    mSimulation(pSimulation),
+    mRuntime(pSimulation->runtime()),
+    mDataStore(pSimulation->data()->resultsDataStore()),
+    mPointVariable(pSimulation->data()->pointVariable()),
+    mConstantVariables(pSimulation->data()->constantVariables()),
+    mRateVariables(pSimulation->data()->rateVariables()),
+    mStateVariables(pSimulation->data()->stateVariables()),
+    mAlgebraicVariables(pSimulation->data()->algebraicVariables())
+{
+}
+
+//==============================================================================
+
+SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
+{
+    // Delete some internal objects
+
+    deleteArrays();
+}
+
+//==============================================================================
+
+bool SingleCellViewSimulationResults::createArrays()
+{
+    // Note: the boolean value we return is true if we have had no problem
+    //       allocating our data store arrays, false otherwise. This is the
+    //       reason, for example, we return true when there is either no
+    //       runtime or if the simulation size is zero...
+
+    // Delete the previous data store arrays, if any
+
+    mDataStore->deleteArrays();
+
+    // Make sure that we have a runtime
+
+    if (!mRuntime)
+        return true;
+
+    // Retrieve the size of our data and make sure that it is valid
+
+    qulonglong simulationSize = qulonglong(mSimulation->size());
+
+    if (!simulationSize)
+        return true;
+
+    // Allocate our data store arrays
+
+    try {
+        mDataStore->createArrays(simulationSize);
+
+    } catch (...) {
+        mDataStore->deleteArrays();
+
+        return false;
+    }
 
     return true;
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationResults::deleteDataStore()
+void SingleCellViewSimulationResults::deleteArrays()
 {
-    // Delete our data store
+    // Deallocate our data store arrays
 
-    delete mDataStore;
-
-    mDataStore = 0;
+    mDataStore->deleteArrays();
 }
 
 //==============================================================================
 
 void SingleCellViewSimulationResults::update()
 {
-    // Update ourselves by updating our runtime and deleting our data store
+    // Update ourselves by updating our runtime and deleting our data store arrays
 
     mRuntime = mSimulation->runtime();
 
-    deleteDataStore();
+    deleteArrays();
 }
 
 //==============================================================================
 
-bool SingleCellViewSimulationResults::reset(const bool &pCreateDataStore)
+bool SingleCellViewSimulationResults::reset(const bool &pAllocateArrays)
 {
-    // Reset our data store
+    // Reset our data store arrays
 
-    if (pCreateDataStore) {
-        return createDataStore();
+    if (pAllocateArrays) {
+        return createArrays();
     } else {
-        deleteDataStore();
+        deleteArrays();
 
         return true;
     }
@@ -813,7 +875,7 @@ double * SingleCellViewSimulationResults::points() const
 {
     // Return our points
 
-    return mPoints?mPoints->values():0;
+    return mPointVariable?mPointVariable->values():0;
 }
 
 //==============================================================================
@@ -822,7 +884,7 @@ double * SingleCellViewSimulationResults::constants(const int &pIndex) const
 {
     // Return our constants data at the given index
 
-    return mConstants.isEmpty()?0:mConstants[pIndex]->values();
+    return mConstantVariables.isEmpty()?0:mConstantVariables[pIndex]->values();
 }
 
 //==============================================================================
@@ -831,7 +893,7 @@ double * SingleCellViewSimulationResults::rates(const int &pIndex) const
 {
     // Return our rates data at the given index
 
-    return mRates.isEmpty()?0:mRates[pIndex]->values();
+    return mRateVariables.isEmpty()?0:mRateVariables[pIndex]->values();
 }
 
 //==============================================================================
@@ -840,7 +902,7 @@ double * SingleCellViewSimulationResults::states(const int &pIndex) const
 {
     // Return our states data at the given index
 
-    return mStates.isEmpty()?0:mStates[pIndex]->values();
+    return mStateVariables.isEmpty()?0:mStateVariables[pIndex]->values();
 }
 
 //==============================================================================
@@ -849,7 +911,7 @@ double * SingleCellViewSimulationResults::algebraic(const int &pIndex) const
 {
     // Return our algebraic data at the given index
 
-    return mAlgebraic.isEmpty()?0:mAlgebraic[pIndex]->values();
+    return mAlgebraicVariables.isEmpty()?0:mAlgebraicVariables[pIndex]->values();
 }
 
 //==============================================================================

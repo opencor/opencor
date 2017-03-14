@@ -92,6 +92,32 @@ PyObject * PythonWrapperDataStore::values(DataStore::DataStoreVariable *pDataSto
 
 //==============================================================================
 
+PyObject * PythonWrapperDataStore::dataStoreVariablesDict(
+    const DataStore::DataStoreVariables &pDataStoreVariables)
+{
+    PyObject *variablesDict = PyDict_New();
+    foreach (DataStore::DataStoreVariable *variable, pDataStoreVariables)
+        PythonQt::self()->addObject(variablesDict, variable->uri(), variable);
+
+    return variablesDict;
+}
+
+//==============================================================================
+
+PyObject * PythonWrapperDataStore::variables(DataStore::DataStore *pDataStore)
+{
+    return dataStoreVariablesDict(pDataStore->variables());
+}
+
+//==============================================================================
+
+PyObject * PythonWrapperDataStore::voiAndVariables(DataStore::DataStore *pDataStore)
+{
+    return dataStoreVariablesDict(pDataStore->voiAndVariables());
+}
+
+//==============================================================================
+
 PythonWrapperNumPy::PythonWrapperNumPy(DataStore::DataStoreArray *pDataStoreArray, qulonglong pSize) :
     mArray(pDataStoreArray)
 {

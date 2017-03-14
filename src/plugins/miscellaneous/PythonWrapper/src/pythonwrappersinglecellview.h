@@ -40,6 +40,7 @@ namespace OpenCOR {
 
 namespace DataStore {
     class DataStoreVariable;
+    class DataStoreVariables;
 }
 
 namespace SingleCellView {
@@ -66,21 +67,15 @@ public slots:
     bool run(OpenCOR::SingleCellView::SingleCellViewSimulation *pSingleCellViewSimulation);
     OpenCOR::SingleCellView::SingleCellViewSimulationWidget * widget(OpenCOR::SingleCellView::SingleCellViewSimulation *pSingleCellViewSimulation) const;
 
-    PyObject * constants(OpenCOR::SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const;
-    PyObject * rates(OpenCOR::SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const;
-    PyObject * states(OpenCOR::SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const;
-    PyObject * algebraic(OpenCOR::SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const;
-    PyObject * condVar(OpenCOR::SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const;
-
-    OpenCOR::DataStore::DataStoreVariable * points(
+    const OpenCOR::DataStore::DataStoreVariable * points(
         OpenCOR::SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const;
-    QList<OpenCOR::DataStore::DataStoreVariable *> constants(
+    PyObject * constants(
         OpenCOR::SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const;
-    QList<OpenCOR::DataStore::DataStoreVariable *> rates(
+    PyObject * rates(
         OpenCOR::SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const;
-    QList<OpenCOR::DataStore::DataStoreVariable *> states(
+    PyObject * states(
         OpenCOR::SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const;
-    QList<OpenCOR::DataStore::DataStoreVariable *> algebraic(
+    PyObject * algebraic(
         OpenCOR::SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const;
 };
 
