@@ -591,10 +591,10 @@ void SingleCellViewSimulationData::createArrays()
         mInitialStates = new double[mRuntime->statesCount()];
 
         if (mResultsDataStore) {
-            mConstantVariables.setValuePtrs(mConstants);
-            mRateVariables.setValuePtrs(mRates);
-            mStateVariables.setValuePtrs(mStates);
-            mAlgebraicVariables.setValuePtrs(mAlgebraic);
+            mConstantVariables.setNextValuePtrs(mConstants);
+            mRateVariables.setNextValuePtrs(mRates);
+            mStateVariables.setNextValuePtrs(mStates);
+            mAlgebraicVariables.setNextValuePtrs(mAlgebraic);
         }
 
     } else {
@@ -620,10 +620,10 @@ void SingleCellViewSimulationData::deleteArrays()
     delete[] mInitialStates;
 
     if (mResultsDataStore) {
-        mConstantVariables.clearValuePtrs();
-        mRateVariables.clearValuePtrs();
-        mStateVariables.clearValuePtrs();
-        mAlgebraicVariables.clearValuePtrs();
+        mConstantVariables.clearNextValuePtrs();
+        mRateVariables.clearNextValuePtrs();
+        mStateVariables.clearNextValuePtrs();
+        mAlgebraicVariables.clearNextValuePtrs();
     }
 }
 

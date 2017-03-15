@@ -103,7 +103,7 @@ double * DataStoreArray::values() const
 
 //==============================================================================
 
-DataStoreVariable::DataStoreVariable(const qulonglong &pCapacity, double *pValuePtr) :
+DataStoreVariable::DataStoreVariable(const qulonglong &pCapacity, double *pNextValuePtr) :
 #ifndef CLI_VERSION
     mIcon(QIcon()),
 #endif
@@ -113,7 +113,7 @@ DataStoreVariable::DataStoreVariable(const qulonglong &pCapacity, double *pValue
     mCapacity(0),
     mSize(0),
     mArray(0),
-    mValuePtr(pValuePtr),
+    mNextValuePtr(pNextValuePtr),
     mValues(0)
 {
     if (pCapacity) createArray(pCapacity);
@@ -268,9 +268,9 @@ void DataStoreVariable::addValue()
     // Set the value of the variable at the given position
 
     Q_ASSERT(mSize < mCapacity);
-    Q_ASSERT(mValuePtr);
+    Q_ASSERT(mNextValuePtr);
 
-    mValues[mSize] = *mValuePtr;
+    mValues[mSize] = *mNextValuePtr;
 
     ++mSize;
 }
@@ -299,33 +299,33 @@ DataStoreArray * DataStoreVariable::array() const
 
 //==============================================================================
 
-void DataStoreVariable::clearValuePtr()
+void DataStoreVariable::clearNextValuePtr()
 {
-    mValuePtr = 0;
+    mNextValuePtr = 0;
 }
 
 //==============================================================================
 
-void DataStoreVariable::setValuePtr(double *pValuePtr)
+void DataStoreVariable::setNextValuePtr(double *pNextValuePtr)
 {
-    mValuePtr = pValuePtr;
+    mNextValuePtr = pNextValuePtr;
 }
 
 //==============================================================================
 
 double DataStoreVariable::nextValue() const
 {
-    Q_ASSERT(mValuePtr);
-    return *mValuePtr;
+    Q_ASSERT(mNextValuePtr);
+    return *mNextValuePtr;
 }
 
 //==============================================================================
 
 void DataStoreVariable::setNextValue(const double &pValue)
 {
-    Q_ASSERT(mValuePtr);
+    Q_ASSERT(mNextValuePtr);
 
-    *mValuePtr = pValue;
+    *mNextValuePtr = pValue;
 }
 
 //==============================================================================
@@ -350,19 +350,19 @@ double * DataStoreVariable::values() const
 
 //==============================================================================
 
-void DataStoreVariables::clearValuePtrs()
+void DataStoreVariables::clearNextValuePtrs()
 {
     foreach (DataStoreVariable *variable, *this)
-        variable->clearValuePtr();
+        variable->clearNextValuePtr();
 }
 
 //==============================================================================
 
-void DataStoreVariables::setValuePtrs(double *pValuePtrs)
+void DataStoreVariables::setNextValuePtrs(double *pNextValuePtrs)
 {
     foreach (DataStoreVariable *variable, *this) {
-        variable->setValuePtr(pValuePtrs);
-        ++pValuePtrs;
+        variable->setNextValuePtr(pNextValuePtrs);
+        ++pNextValuePtrs;
     }
 }
 
@@ -523,11 +523,11 @@ DataStoreVariables DataStore::variables()
 
 //==============================================================================
 
-DataStoreVariable * DataStore::addVariable(double *pValue)
+DataStoreVariable * DataStore::addVariable(double *pNextValuePtr)
 {
     // Add a variable to our data store
 
-    DataStoreVariable *variable = new DataStoreVariable(mCapacity, pValue);
+    DataStoreVariable *variable = new DataStoreVariable(mCapacity, pNextValuePtr);
 
     mVariables << variable;
 
@@ -537,14 +537,14 @@ DataStoreVariable * DataStore::addVariable(double *pValue)
 //==============================================================================
 
 DataStoreVariables DataStore::addVariables(const int &pCount,
-                                           double *pValues)
+                                           double *pNextValuePtrs)
 {
     // Add some variables to our data store
 
     DataStoreVariables variables = DataStoreVariables();
 
-    for (int i = 0; i < pCount; ++i, ++pValues)
-        variables << new DataStoreVariable(mCapacity, pValues);
+    for (int i = 0; i < pCount; ++i, ++pNextValuePtrs)
+        variables << new DataStoreVariable(mCapacity, pNextValuePtrs);
 
     mVariables << variables;
 
