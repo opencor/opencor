@@ -24,6 +24,7 @@ limitations under the License.
 
 //==============================================================================
 
+#include "commonwidget.h"
 #include "coreglobal.h"
 
 //==============================================================================
@@ -42,7 +43,7 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT UserMessageWidget : public QLabel
+class CORE_EXPORT UserMessageWidget : public QLabel, public CommonWidget
 {
     Q_OBJECT
 
@@ -62,6 +63,9 @@ public:
     void setMessage(const QString &pMessage,
                     const QString &pExtraMessage = QString());
     void resetMessage();
+
+protected:
+    virtual QSize sizeHint() const;
 
 private:
     double mScale;

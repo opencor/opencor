@@ -68,7 +68,8 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon,
                                      const QString &pMessage,
                                      const QString &pExtraMessage,
                                      QWidget *pParent) :
-    QLabel(pParent)
+    QLabel(pParent),
+    CommonWidget(this)
 {
     // Construct our object
 
@@ -80,7 +81,8 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon,
 UserMessageWidget::UserMessageWidget(const QString &pIcon,
                                      const QString &pMessage,
                                      QWidget *pParent) :
-    QLabel(pParent)
+    QLabel(pParent),
+    CommonWidget(this)
 {
     // Construct our object
 
@@ -90,7 +92,8 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon,
 //==============================================================================
 
 UserMessageWidget::UserMessageWidget(const QString &pIcon, QWidget *pParent) :
-    QLabel(pParent)
+    QLabel(pParent),
+    CommonWidget(this)
 {
     // Construct our object
 
@@ -100,11 +103,24 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon, QWidget *pParent) :
 //==============================================================================
 
 UserMessageWidget::UserMessageWidget(QWidget *pParent) :
-    QLabel(pParent)
+    QLabel(pParent),
+    CommonWidget(this)
 {
     // Construct our object
 
     constructor();
+}
+
+//==============================================================================
+
+QSize UserMessageWidget::sizeHint() const
+{
+    // Suggest a default size for our user message widget
+    // Note: this is critical if we want a docked widget, with a user message
+    //       widget on it, to have a decent size when docked to the main
+    //       window...
+
+    return defaultSize(0.15);
 }
 
 //==============================================================================

@@ -118,10 +118,10 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     // Populate ourselves
 
-    createLayout();
+    QLayout *layout = createLayout();
 
-    layout()->addWidget(mUserMessageWidget);
-    layout()->addWidget(mTreeViewWidget);
+    layout->addWidget(mUserMessageWidget);
+    layout->addWidget(mTreeViewWidget);
 
     // Create and populate our context menu
 
@@ -216,17 +216,6 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 
         emit openExposureFilesRequested(exposureFileUrls);
     }
-}
-
-//==============================================================================
-
-QSize PmrWindowWidget::sizeHint() const
-{
-    // Suggest a default size for our PMR widget
-    // Note: this is critical if we want a docked widget, with a PMR widget on
-    //       it, to have a decent size when docked to the main window...
-
-    return defaultSize(0.15);
 }
 
 //==============================================================================

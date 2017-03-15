@@ -59,10 +59,7 @@ BiosignalmlDataStoreDialog::BiosignalmlDataStoreDialog(DataStore::DataStore *pDa
     // Create a form-like widget
 
     Core::Widget *widget = new Core::Widget(this);
-
-    widget->createLayout(Core::Widget::FormLayout);
-
-    QFormLayout *formLayout = qobject_cast<QFormLayout *>(widget->layout());
+    QFormLayout *formLayout = qobject_cast<QFormLayout *>(widget->createLayout(Core::Widget::FormLayout));
 
     formLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
 

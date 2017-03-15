@@ -199,6 +199,8 @@ void PmrWindowWindow::retranslateUi()
 
     mFilterLabel->setText(tr("Filter:"));
 
+    mPmrInstanceLabel->setText(mPmrWebService->siteName());
+
     // Retranslate our PMR widget
 
     mPmrWindowWidget->retranslateUi();

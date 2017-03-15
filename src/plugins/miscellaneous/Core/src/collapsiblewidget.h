@@ -35,9 +35,6 @@ limitations under the License.
 //==============================================================================
 
 class QFrame;
-class QLabel;
-class QScrollArea;
-class QSpacerItem;
 class QToolButton;
 class QVBoxLayout;
 

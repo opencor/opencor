@@ -59,6 +59,10 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
+class PmrWorkspacesWindowProxyModel;
+
+//==============================================================================
+
 class PmrWorkspacesWindowItem : public QStandardItem
 {
 public:
@@ -70,15 +74,21 @@ public:
     };
 
     explicit PmrWorkspacesWindowItem(const Type &pType,
+                                     Core::TreeViewWidget *pTreeViewWidget,
+                                     PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                      PMRSupport::PmrWorkspace *pWorkspace,
                                      const QIcon &pCollapsedIcon,
                                      const QIcon &pExpandedIcon);
     explicit PmrWorkspacesWindowItem(const Type &pType,
+                                     Core::TreeViewWidget *pTreeViewWidget,
+                                     PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                      PMRSupport::PmrWorkspace *pWorkspace,
                                      PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                      const QIcon &pCollapsedIcon,
                                      const QIcon &pExpandedIcon);
     explicit PmrWorkspacesWindowItem(const Type &pType,
+                                     Core::TreeViewWidget *pTreeViewWidget,
+                                     PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                      PMRSupport::PmrWorkspace *pWorkspace,
                                      PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                      const QIcon &pIcon);
@@ -97,13 +107,18 @@ public:
 private:
     Type mType;
 
+    Core::TreeViewWidget *mTreeViewWidget;
+    PmrWorkspacesWindowProxyModel *mTreeViewProxyModel;
+
     PMRSupport::PmrWorkspace *mWorkspace;
     PMRSupport::PmrWorkspaceFileNode *mFileNode;
 
     QIcon mCollapsedIcon;
     QIcon mExpandedIcon;
 
-    void constructor(const Type &pType, PMRSupport::PmrWorkspace *pWorkspace,
+    void constructor(const Type &pType, Core::TreeViewWidget *pTreeViewWidget,
+                     PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
+                     PMRSupport::PmrWorkspace *pWorkspace,
                      PMRSupport::PmrWorkspaceFileNode *pFileNode,
                      const QIcon &pCollapsedIcon, const QIcon &pExpandedIcon);
 };
@@ -153,8 +168,6 @@ public:
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
-
-    virtual QSize sizeHint() const;
 
 private:
     QString mSettingsGroup;
@@ -237,6 +250,11 @@ private:
                      PmrWorkspacesWindowItems &pItems);
 
     void addWorkspace(PMRSupport::PmrWorkspace *pWorkspace);
+    PmrWorkspacesWindowItems populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
+                                               PmrWorkspacesWindowItem *pFolderItem,
+                                               PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                               bool &pIsUnstaged,
+                                               bool &pHasConflicts);
     PmrWorkspacesWindowItems populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                                                PmrWorkspacesWindowItem *pFolderItem,
                                                PMRSupport::PmrWorkspaceFileNode *pFileNode);

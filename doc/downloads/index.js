@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 4, "month": 3, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 15, "month": 3, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -39,6 +39,7 @@ var jsonData = { "versions": [
                      "changes": [
                        { "change": "<strong>General:</strong> added some libraries to the Linux package for OpenCOR to work on Fedora (see issue <a href=\"https://github.com/opencor/opencor/issues/1244\">#1244</a>)." },
                        { "change": "<strong>PMR window:</strong> prevented exposure files from being retrieved (and listed) twice (see issue <a href=\"https://github.com/opencor/opencor/issues/1243\">#1243</a>)." },
+                       { "change": "<strong>PMR Workspaces window:</strong> now propagate the state of a workspace in the icon used for a folder (see issue <a href=\"https://github.com/opencor/opencor/issues/1246\">#1246</a>)." },
                        { "change": "<strong>CellML Text view:</strong> now ignore `documentation` elements rather than consider them as unknown (and therefore 'fail'; see issue <a href=\"https://github.com/opencor/opencor/issues/1245\">#1245</a>)." }
                      ]
                    },

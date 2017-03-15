@@ -110,10 +110,6 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mNeedUpdatePlots(false),
     mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong>())
 {
-    // Create our layout
-
-    createLayout();
-
     // Create a tool bar
 
     mToolBarWidget = new Core::ToolBarWidget(this);
@@ -297,14 +293,16 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     mTopSeparator = Core::newLineWidget(this);
 
-    layout()->addWidget(mToolBarWidget);
-    layout()->addWidget(mTopSeparator);
+    QLayout *layout = createLayout();
+
+    layout->addWidget(mToolBarWidget);
+    layout->addWidget(mTopSeparator);
 
     // Create and add our invalid simulation message widget
 
     mInvalidModelMessageWidget = new Core::UserMessageWidget(":/oxygen/actions/help-about.png", this);
 
-    layout()->addWidget(mInvalidModelMessageWidget);
+    layout->addWidget(mInvalidModelMessageWidget);
 
     // Create our splitter widget and keep track of its movement
     // Note: we need to keep track of its movement so that saveSettings() can
@@ -425,7 +423,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     mSplitterWidget->setSizes(QIntList() << qApp->desktop()->screenGeometry().height() << 1);
 
-    layout()->addWidget(mSplitterWidget);
+    layout->addWidget(mSplitterWidget);
 
     // Create our (thin) simulation progress widget
 
@@ -435,8 +433,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mProgressBarWidget->setFixedHeight(3);
     mProgressBarWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
-    layout()->addWidget(mBottomSeparator);
-    layout()->addWidget(mProgressBarWidget);
+    layout->addWidget(mBottomSeparator);
+    layout->addWidget(mProgressBarWidget);
 
     // Make our contents widget our focus proxy
 
