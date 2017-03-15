@@ -59,6 +59,7 @@ public:
     static PyObject * newNumPyArray(DataStore::DataStoreArray *pDataStoreArray);
     static PyObject * newNumPyArray(DataStore::DataStoreVariable *pDataStoreVariable);
 
+    static PyObject *dataStoreValuesDict(const DataStore::DataStoreVariables &pDataStoreVariables);
     static PyObject *dataStoreVariablesDict(const DataStore::DataStoreVariables &pDataStoreVariables);
 
 public slots:

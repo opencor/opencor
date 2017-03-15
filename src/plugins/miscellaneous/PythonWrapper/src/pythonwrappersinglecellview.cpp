@@ -145,6 +145,38 @@ bool PythonWrapperSingleCellView::run(SingleCellView::SingleCellViewSimulation *
 
 //==============================================================================
 
+PyObject * PythonWrapperSingleCellView::constants(
+    SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const
+{
+    return PythonWrapperDataStore::dataStoreValuesDict(pSingleCellViewSimulationData->mConstantVariables);
+}
+
+//==============================================================================
+
+PyObject * PythonWrapperSingleCellView::rates(
+    SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const
+{
+    return PythonWrapperDataStore::dataStoreValuesDict(pSingleCellViewSimulationData->mRateVariables);
+}
+
+//==============================================================================
+
+PyObject * PythonWrapperSingleCellView::states(
+    SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const
+{
+    return PythonWrapperDataStore::dataStoreValuesDict(pSingleCellViewSimulationData->mStateVariables);
+}
+
+//==============================================================================
+
+PyObject * PythonWrapperSingleCellView::algebraic(
+    SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const
+{
+    return PythonWrapperDataStore::dataStoreValuesDict(pSingleCellViewSimulationData->mAlgebraicVariables);
+}
+
+//==============================================================================
+
 const OpenCOR::DataStore::DataStoreVariable * PythonWrapperSingleCellView::points(
     SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const
 {

@@ -65,7 +65,21 @@ public:
 
 public slots:
     bool run(OpenCOR::SingleCellView::SingleCellViewSimulation *pSingleCellViewSimulation);
+
     OpenCOR::SingleCellView::SingleCellViewSimulationWidget * widget(OpenCOR::SingleCellView::SingleCellViewSimulation *pSingleCellViewSimulation) const;
+
+    // Access a simulation's parameter data
+
+    PyObject * constants(
+        OpenCOR::SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const;
+    PyObject * rates(
+        OpenCOR::SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const;
+    PyObject * states(
+        OpenCOR::SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const;
+    PyObject * algebraic(
+        OpenCOR::SingleCellView::SingleCellViewSimulationData *pSingleCellViewSimulationData) const;
+
+    // Access a simulation's result data
 
     const OpenCOR::DataStore::DataStoreVariable * points(
         OpenCOR::SingleCellView::SingleCellViewSimulationResults *pSingleCellViewSimulationResults) const;
