@@ -295,8 +295,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mOutput = new Core::Widget(this);
 
-    mOutput->createLayout();
-
     // Create our output message
 
     mOutputMessage = new Core::UserMessageWidget(this);
@@ -324,16 +322,18 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     // Add our output message and output for ontological terms to our output
     // widget
 
-    mOutput->layout()->addWidget(mOutputMessage);
-    mOutput->layout()->addWidget(mOutputOntologicalTerms);
+    QLayout *outputLayout = mOutput->createLayout();
+
+    outputLayout->addWidget(mOutputMessage);
+    outputLayout->addWidget(mOutputOntologicalTerms);
 
     // Add our 'internal' widgets to our main layout
 
-    createLayout();
+    QLayout *layout = createLayout();
 
-    layout()->addWidget(formWidget);
-    layout()->addWidget(Core::newLineWidget(this));
-    layout()->addWidget(mOutput);
+    layout->addWidget(formWidget);
+    layout->addWidget(Core::newLineWidget(this));
+    layout->addWidget(mOutput);
 
     // Update our GUI (incl. its enabled state)
 

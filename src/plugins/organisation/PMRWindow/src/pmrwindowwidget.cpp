@@ -118,10 +118,10 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     // Populate ourselves
 
-    createLayout();
+    QLayout *layout = createLayout();
 
-    layout()->addWidget(mUserMessageWidget);
-    layout()->addWidget(mTreeViewWidget);
+    layout->addWidget(mUserMessageWidget);
+    layout->addWidget(mTreeViewWidget);
 
     // Create and populate our context menu
 

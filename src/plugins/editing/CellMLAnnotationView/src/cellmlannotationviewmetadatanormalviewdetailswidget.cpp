@@ -87,8 +87,6 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
 
     mOutput = new Core::Widget(this);
 
-    mOutput->createLayout();
-
     // Create our output message
 
     mOutputMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png", this);
@@ -116,14 +114,14 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     // Add our output message and output for ontological terms to our output
     // widget
 
-    mOutput->layout()->addWidget(mOutputMessage);
-    mOutput->layout()->addWidget(mOutputOntologicalTerms);
+    QLayout *outputLayout = mOutput->createLayout();
+
+    outputLayout->addWidget(mOutputMessage);
+    outputLayout->addWidget(mOutputOntologicalTerms);
 
     // Add our output widget to our main layout
 
-    createLayout();
-
-    layout()->addWidget(mOutput);
+    createLayout()->addWidget(mOutput);
 }
 
 //==============================================================================

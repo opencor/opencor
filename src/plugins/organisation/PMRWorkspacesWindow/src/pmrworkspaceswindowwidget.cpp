@@ -371,10 +371,10 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     // Populate ourselves
 
-    createLayout();
+    QLayout *layout = createLayout();
 
-    layout()->addWidget(mUserMessageWidget);
-    layout()->addWidget(mTreeViewWidget);
+    layout->addWidget(mUserMessageWidget);
+    layout->addWidget(mTreeViewWidget);
 
     // Connection to handle a response from our workspace manager
 
