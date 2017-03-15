@@ -215,6 +215,8 @@ void PmrWorkspacesWindowWindow::retranslateUi()
 
     retranslateActionPmr();
 
+    mPmrInstanceLabel->setText(mPmrWebService->siteName());
+
     // Retranslate our workspaces widget
 
     mPmrWorkspacesWindowWidget->retranslateUi();
