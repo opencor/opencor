@@ -116,8 +116,9 @@ bool PythonWrapperSingleCellView::run(SingleCellView::SingleCellViewSimulation *
     double requiredMemory = pSingleCellViewSimulation->requiredMemory();
 
     if (requiredMemory > freeMemory) {
-        Core::warningMessageBox(tr("Run Simulation"),
-                                tr("The simulation requires %1 of memory and you have only %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
+        throw std::runtime_error(
+            tr("The simulation requires %1 of memory and you have only %2 left.")
+                .arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)).toStdString());
     } else {
         // Theoretically speaking, we have enough memory to run the
         // simulation, so try to allocate all the memory we need for the
@@ -134,8 +135,9 @@ bool PythonWrapperSingleCellView::run(SingleCellView::SingleCellViewSimulation *
         if (runSimulation) {
             return pSingleCellViewSimulation->run();
         } else {
-            Core::warningMessageBox(tr("Run Simulation"),
-                                    tr("We could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
+            throw std::runtime_error(
+                tr("We could not allocate the %1 of memory required for the simulation.")
+                    .arg(Core::sizeAsString(requiredMemory)).toStdString());
         }
     }
     return false;
