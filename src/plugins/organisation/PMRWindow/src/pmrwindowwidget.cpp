@@ -220,17 +220,6 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-QSize PmrWindowWidget::sizeHint() const
-{
-    // Suggest a default size for our PMR widget
-    // Note: this is critical if we want a docked widget, with a PMR widget on
-    //       it, to have a decent size when docked to the main window...
-
-    return defaultSize(0.15);
-}
-
-//==============================================================================
-
 void PmrWindowWidget::updateGui()
 {
     // Update the message to be displayed, if any

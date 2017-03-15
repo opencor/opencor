@@ -621,18 +621,6 @@ void PmrWorkspacesWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-QSize PmrWorkspacesWindowWidget::sizeHint() const
-{
-    // Suggest a default size for our PMR workspaces widget
-    // Note: this is critical if we want a docked widget, with a PMR workspaces
-    //       widget on it, to have a decent size when docked to the main
-    //       window...
-
-    return defaultSize(0.15);
-}
-
-//==============================================================================
-
 void PmrWorkspacesWindowWidget::update(const QString &pPmrUrl)
 {
     // Save our settings using the 'old' PMR URL, reset ourselves and load our
