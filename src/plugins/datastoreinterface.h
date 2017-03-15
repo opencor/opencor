@@ -87,8 +87,6 @@ public:
 
     void setUnit(const QString &pUnit);
 
-    qulonglong size() const;
-
     void clearNextValuePtr();
     void setNextValuePtr(double *pNextValuePtr);
 
@@ -105,6 +103,8 @@ public slots:
     QString label() const;
 
     QString unit() const;
+
+    qulonglong size() const;
 
     double nextValue() const;
     void setNextValue(const double &pValue);
