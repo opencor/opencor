@@ -169,6 +169,8 @@ public:
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
+    virtual QSize minimumSizeHint() const;
+
 private:
     QString mSettingsGroup;
     QString mPmrUrl;

@@ -58,6 +58,8 @@ protected:
     virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual bool viewportEvent(QEvent *pEvent);
 
+    virtual QSize minimumSizeHint() const;
+
 private:
     FileBrowserWindowModel *mModel;
 

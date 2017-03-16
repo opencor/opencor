@@ -620,6 +620,17 @@ void PmrWorkspacesWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
+QSize PmrWorkspacesWindowWidget::minimumSizeHint() const
+{
+    // Suggest a minimum size for ourselves
+    // Note: this is useful if we want our window to have a decent size,
+    //       especially when docked to the main window...
+
+    return defaultSize(0.15);
+}
+
+//==============================================================================
+
 void PmrWorkspacesWindowWidget::update(const QString &pPmrUrl)
 {
     // Save our settings using the 'old' PMR URL, reset ourselves and load our

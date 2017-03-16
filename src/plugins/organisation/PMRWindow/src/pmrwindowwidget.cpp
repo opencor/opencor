@@ -220,6 +220,17 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
+QSize PmrWindowWidget::minimumSizeHint() const
+{
+    // Suggest a minimum size for ourselves
+    // Note: this is useful if we want our window to have a decent size,
+    //       especially when docked to the main window...
+
+    return defaultSize(0.15);
+}
+
+//==============================================================================
+
 void PmrWindowWidget::updateGui()
 {
     // Update the message to be displayed, if any

@@ -96,6 +96,9 @@ public:
 
     virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
 
+protected:
+    virtual QSize minimumSizeHint() const;
+
 private:
     QHelpEngine *mHelpEngine;
 
