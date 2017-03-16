@@ -120,10 +120,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     mPmrInstanceLabel->setEnabled(false);
     mPmrInstanceLabel->setFont(newFont);
 
-    mGui->layout->addWidget(new Core::BorderedWidget(mPmrInstanceLabel,
-                                                     true, false, false, false));
-
-    mGui->layout->setStretch(mGui->layout->count()-1, 1);
+    mGui->layout->addWidget(mPmrInstanceLabel);
 
     // Create an instance of our PMR web service
 
@@ -144,8 +141,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 #else
     #error Unsupported platform
 #endif
-
-    mGui->layout->setStretch(mGui->layout->count()-1, 99999);
 
     // Initialise (update) our PMR URL
 
