@@ -1155,6 +1155,7 @@ ELSE()
             tools/clang/lib/Analysis/CFG.cpp
             tools/clang/lib/Analysis/CFGReachabilityAnalysis.cpp
             tools/clang/lib/Analysis/CFGStmtMap.cpp
+            tools/clang/lib/Analysis/CloneDetection.cpp
             tools/clang/lib/Analysis/CocoaConventions.cpp
             tools/clang/lib/Analysis/CodeInjector.cpp
             tools/clang/lib/Analysis/Consumed.cpp
@@ -1162,6 +1163,7 @@ ELSE()
             tools/clang/lib/Analysis/FormatString.cpp
             tools/clang/lib/Analysis/LiveVariables.cpp
             tools/clang/lib/Analysis/ObjCNoReturn.cpp
+            tools/clang/lib/Analysis/OSLog.cpp
             tools/clang/lib/Analysis/PostOrderCFGView.cpp
             tools/clang/lib/Analysis/PrintfFormatString.cpp
             tools/clang/lib/Analysis/ProgramPoint.cpp
@@ -1281,6 +1283,7 @@ ELSE()
             tools/clang/lib/CodeGen/CGCall.cpp
             tools/clang/lib/CodeGen/CGClass.cpp
             tools/clang/lib/CodeGen/CGCleanup.cpp
+            tools/clang/lib/CodeGen/CGCoroutine.cpp
             tools/clang/lib/CodeGen/CGCUDABuiltin.cpp
             tools/clang/lib/CodeGen/CGCUDANV.cpp
             tools/clang/lib/CodeGen/CGCUDARuntime.cpp
@@ -1324,10 +1327,12 @@ ELSE()
             tools/clang/lib/CodeGen/SanitizerMetadata.cpp
             tools/clang/lib/CodeGen/SwiftCallingConv.cpp
             tools/clang/lib/CodeGen/TargetInfo.cpp
+            tools/clang/lib/CodeGen/VarBypassDetector.cpp
 
             tools/clang/lib/Driver/Action.cpp
             tools/clang/lib/Driver/Compilation.cpp
             tools/clang/lib/Driver/CrossWindowsToolChain.cpp
+            tools/clang/lib/Driver/Distro.cpp
             tools/clang/lib/Driver/Driver.cpp
             tools/clang/lib/Driver/DriverOptions.cpp
             tools/clang/lib/Driver/Job.cpp
@@ -1348,6 +1353,7 @@ ELSE()
 
             tools/clang/lib/Format/AffectedRangeManager.cpp
             tools/clang/lib/Format/BreakableToken.cpp
+            tools/clang/lib/Format/Comments.cpp
             tools/clang/lib/Format/ContinuationIndenter.cpp
             tools/clang/lib/Format/Format.cpp
             tools/clang/lib/Format/FormatToken.cpp
@@ -1534,6 +1540,7 @@ ELSE()
             tools/clang/lib/Tooling/RefactoringCallbacks.cpp
             tools/clang/lib/Tooling/Tooling.cpp
 
+            tools/clang/lib/Tooling/Core/Diagnostic.cpp
             tools/clang/lib/Tooling/Core/Lookup.cpp
             tools/clang/lib/Tooling/Core/QualTypeNames.cpp
             tools/clang/lib/Tooling/Core/Replacement.cpp
