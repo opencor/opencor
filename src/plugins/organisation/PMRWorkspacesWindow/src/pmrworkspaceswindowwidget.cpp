@@ -264,7 +264,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     mTreeViewWidget->setHeaderHidden(true);
     mTreeViewWidget->setModel(mTreeViewProxyModel);
     mTreeViewWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    mTreeViewWidget->setVisible(false);
 
     connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu()));
