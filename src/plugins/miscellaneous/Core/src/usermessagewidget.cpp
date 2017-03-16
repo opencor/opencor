@@ -113,18 +113,6 @@ UserMessageWidget::UserMessageWidget(QWidget *pParent) :
 
 //==============================================================================
 
-QSize UserMessageWidget::sizeHint() const
-{
-    // Suggest a default size for our user message widget
-    // Note: this is critical if we want a docked widget, with a user message
-    //       widget on it, to have a decent size when docked to the main
-    //       window...
-
-    return defaultSize(0.15);
-}
-
-//==============================================================================
-
 void UserMessageWidget::setScale(const double &pScale)
 {
     // Scale ourselves, if needed

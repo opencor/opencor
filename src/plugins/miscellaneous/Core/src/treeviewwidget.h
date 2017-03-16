@@ -56,8 +56,6 @@ protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
 
-    virtual QSize sizeHint() const;
-
     virtual void startDrag(Qt::DropActions pSupportedActions);
 };
 
