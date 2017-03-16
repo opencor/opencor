@@ -157,14 +157,15 @@ ELSE()
             lib/Analysis/IteratedDominanceFrontier.cpp
             lib/Analysis/IVUsers.cpp
             lib/Analysis/LazyBlockFrequencyInfo.cpp
+            lib/Analysis/LazyBranchProbabilityInfo.cpp
             lib/Analysis/LazyCallGraph.cpp
             lib/Analysis/LazyValueInfo.cpp
             lib/Analysis/Lint.cpp
             lib/Analysis/Loads.cpp
             lib/Analysis/LoopAccessAnalysis.cpp
+            lib/Analysis/LoopAnalysisManager.cpp
             lib/Analysis/LoopInfo.cpp
             lib/Analysis/LoopPass.cpp
-            lib/Analysis/LoopPassManager.cpp
             lib/Analysis/LoopUnrollAnalyzer.cpp
             lib/Analysis/MemDepPrinter.cpp
             lib/Analysis/MemDerefPrinter.cpp
@@ -206,6 +207,8 @@ ELSE()
             lib/Bitcode/Reader/BitcodeReader.cpp
             lib/Bitcode/Reader/BitReader.cpp
             lib/Bitcode/Reader/BitstreamReader.cpp
+            lib/Bitcode/Reader/MetadataLoader.cpp
+            lib/Bitcode/Reader/ValueList.cpp
 
             lib/Bitcode/Writer/BitcodeWriter.cpp
             lib/Bitcode/Writer/BitcodeWriterPass.cpp
@@ -218,11 +221,13 @@ ELSE()
             lib/CodeGen/AtomicExpandPass.cpp
             lib/CodeGen/BasicTargetTransformInfo.cpp
             lib/CodeGen/BranchFolding.cpp
+            lib/CodeGen/BranchRelaxation.cpp
             lib/CodeGen/BuiltinGCs.cpp
             lib/CodeGen/CalcSpillWeights.cpp
             lib/CodeGen/CallingConvLower.cpp
             lib/CodeGen/CodeGen.cpp
             lib/CodeGen/CodeGenPrepare.cpp
+            lib/CodeGen/CountingFunctionInserter.cpp
             lib/CodeGen/CriticalAntiDepBreaker.cpp
             lib/CodeGen/DeadMachineInstructionElim.cpp
             lib/CodeGen/DetectDeadLanes.cpp
@@ -262,6 +267,7 @@ ELSE()
             lib/CodeGen/LLVMTargetMachine.cpp
             lib/CodeGen/LocalStackSlotAllocation.cpp
             lib/CodeGen/LowerEmuTLS.cpp
+            lib/CodeGen/LowLevelType.cpp
             lib/CodeGen/MachineBasicBlock.cpp
             lib/CodeGen/MachineBlockFrequencyInfo.cpp
             lib/CodeGen/MachineBlockPlacement.cpp
@@ -272,7 +278,6 @@ ELSE()
             lib/CodeGen/MachineDominanceFrontier.cpp
             lib/CodeGen/MachineDominators.cpp
             lib/CodeGen/MachineFunction.cpp
-            lib/CodeGen/MachineFunctionAnalysis.cpp
             lib/CodeGen/MachineFunctionPass.cpp
             lib/CodeGen/MachineFunctionPrinterPass.cpp
             lib/CodeGen/MachineInstr.cpp
@@ -282,6 +287,7 @@ ELSE()
             lib/CodeGen/MachineModuleInfo.cpp
             lib/CodeGen/MachineModuleInfoImpls.cpp
             lib/CodeGen/MachinePassRegistry.cpp
+            lib/CodeGen/MachinePipeliner.cpp
             lib/CodeGen/MachinePostDominators.cpp
             lib/CodeGen/MachineRegionInfo.cpp
             lib/CodeGen/MachineRegisterInfo.cpp
@@ -317,6 +323,7 @@ ELSE()
             lib/CodeGen/RegUsageInfoCollector.cpp
             lib/CodeGen/RegUsageInfoPropagate.cpp
             lib/CodeGen/RenameIndependentSubregs.cpp
+            lib/CodeGen/ResetMachineFunctionPass.cpp
             lib/CodeGen/SafeStack.cpp
             lib/CodeGen/SafeStackColoring.cpp
             lib/CodeGen/SafeStackLayout.cpp
@@ -345,6 +352,7 @@ ELSE()
             lib/CodeGen/TargetPassConfig.cpp
             lib/CodeGen/TargetRegisterInfo.cpp
             lib/CodeGen/TargetSchedule.cpp
+            lib/CodeGen/TargetSubtargetInfo.cpp
             lib/CodeGen/TwoAddressInstructionPass.cpp
             lib/CodeGen/UnreachableBlockElim.cpp
             lib/CodeGen/VirtRegMap.cpp
@@ -375,12 +383,19 @@ ELSE()
             lib/CodeGen/AsmPrinter/OcamlGCPrinter.cpp
             lib/CodeGen/AsmPrinter/WinException.cpp
 
+            lib/CodeGen/GlobalISel/CallLowering.cpp
             lib/CodeGen/GlobalISel/GlobalISel.cpp
+            lib/CodeGen/GlobalISel/InstructionSelect.cpp
+            lib/CodeGen/GlobalISel/InstructionSelector.cpp
             lib/CodeGen/GlobalISel/IRTranslator.cpp
+            lib/CodeGen/GlobalISel/Legalizer.cpp
+            lib/CodeGen/GlobalISel/LegalizerHelper.cpp
+            lib/CodeGen/GlobalISel/LegalizerInfo.cpp
             lib/CodeGen/GlobalISel/MachineIRBuilder.cpp
             lib/CodeGen/GlobalISel/RegBankSelect.cpp
             lib/CodeGen/GlobalISel/RegisterBank.cpp
             lib/CodeGen/GlobalISel/RegisterBankInfo.cpp
+            lib/CodeGen/GlobalISel/Utils.cpp
 
             lib/CodeGen/MIRParser/MILexer.cpp
             lib/CodeGen/MIRParser/MIParser.cpp
@@ -411,26 +426,25 @@ ELSE()
             lib/CodeGen/SelectionDAG/StatepointLowering.cpp
             lib/CodeGen/SelectionDAG/TargetLowering.cpp
 
-            lib/DebugInfo/CodeView/ByteStream.cpp
             lib/DebugInfo/CodeView/CodeViewError.cpp
+            lib/DebugInfo/CodeView/CodeViewRecordIO.cpp
+            lib/DebugInfo/CodeView/CVSymbolVisitor.cpp
+            lib/DebugInfo/CodeView/CVTypeDumper.cpp
             lib/DebugInfo/CodeView/CVTypeVisitor.cpp
             lib/DebugInfo/CodeView/EnumTables.cpp
-            lib/DebugInfo/CodeView/FieldListRecordBuilder.cpp
             lib/DebugInfo/CodeView/Line.cpp
-            lib/DebugInfo/CodeView/ListRecordBuilder.cpp
-            lib/DebugInfo/CodeView/MemoryTypeTableBuilder.cpp
-            lib/DebugInfo/CodeView/MethodListRecordBuilder.cpp
             lib/DebugInfo/CodeView/ModuleSubstream.cpp
             lib/DebugInfo/CodeView/ModuleSubstreamVisitor.cpp
             lib/DebugInfo/CodeView/RecordSerialization.cpp
-            lib/DebugInfo/CodeView/StreamReader.cpp
-            lib/DebugInfo/CodeView/StreamWriter.cpp
             lib/DebugInfo/CodeView/SymbolDumper.cpp
-            lib/DebugInfo/CodeView/TypeDumper.cpp
+            lib/DebugInfo/CodeView/SymbolRecordMapping.cpp
+            lib/DebugInfo/CodeView/TypeDatabase.cpp
+            lib/DebugInfo/CodeView/TypeDatabaseVisitor.cpp
+            lib/DebugInfo/CodeView/TypeDumpVisitor.cpp
             lib/DebugInfo/CodeView/TypeRecord.cpp
-            lib/DebugInfo/CodeView/TypeRecordBuilder.cpp
+            lib/DebugInfo/CodeView/TypeRecordMapping.cpp
+            lib/DebugInfo/CodeView/TypeSerializer.cpp
             lib/DebugInfo/CodeView/TypeStreamMerger.cpp
-            lib/DebugInfo/CodeView/TypeTableBuilder.cpp
 
             lib/DebugInfo/DWARF/DWARFAbbreviationDeclaration.cpp
             lib/DebugInfo/DWARF/DWARFAcceleratorTable.cpp
@@ -444,12 +458,22 @@ ELSE()
             lib/DebugInfo/DWARF/DWARFDebugLine.cpp
             lib/DebugInfo/DWARF/DWARFDebugLoc.cpp
             lib/DebugInfo/DWARF/DWARFDebugMacro.cpp
+            lib/DebugInfo/DWARF/DWARFDebugPubTable.cpp
             lib/DebugInfo/DWARF/DWARFDebugRangeList.cpp
+            lib/DebugInfo/DWARF/DWARFDie.cpp
             lib/DebugInfo/DWARF/DWARFFormValue.cpp
+            lib/DebugInfo/DWARF/DWARFGdbIndex.cpp
             lib/DebugInfo/DWARF/DWARFTypeUnit.cpp
             lib/DebugInfo/DWARF/DWARFUnit.cpp
             lib/DebugInfo/DWARF/DWARFUnitIndex.cpp
             lib/DebugInfo/DWARF/SyntaxHighlighting.cpp
+
+            lib/DebugInfo/MSF/MappedBlockStream.cpp
+            lib/DebugInfo/MSF/MSFBuilder.cpp
+            lib/DebugInfo/MSF/MSFCommon.cpp
+            lib/DebugInfo/MSF/MSFError.cpp
+            lib/DebugInfo/MSF/StreamReader.cpp
+            lib/DebugInfo/MSF/StreamWriter.cpp
 
             lib/DebugInfo/PDB/GenericError.cpp
             lib/DebugInfo/PDB/IPDBSourceFile.cpp
@@ -499,15 +523,13 @@ ELSE()
             lib/DebugInfo/PDB/Raw/DbiStream.cpp
             lib/DebugInfo/PDB/Raw/DbiStreamBuilder.cpp
             lib/DebugInfo/PDB/Raw/EnumTables.cpp
+            lib/DebugInfo/PDB/Raw/GlobalsStream.cpp
+            lib/DebugInfo/PDB/Raw/GSI.cpp
             lib/DebugInfo/PDB/Raw/Hash.cpp
-            lib/DebugInfo/PDB/Raw/IndexedStreamData.cpp
             lib/DebugInfo/PDB/Raw/InfoStream.cpp
             lib/DebugInfo/PDB/Raw/InfoStreamBuilder.cpp
-            lib/DebugInfo/PDB/Raw/MappedBlockStream.cpp
             lib/DebugInfo/PDB/Raw/ModInfo.cpp
             lib/DebugInfo/PDB/Raw/ModStream.cpp
-            lib/DebugInfo/PDB/Raw/MsfBuilder.cpp
-            lib/DebugInfo/PDB/Raw/MsfCommon.cpp
             lib/DebugInfo/PDB/Raw/NameHashTable.cpp
             lib/DebugInfo/PDB/Raw/NameMap.cpp
             lib/DebugInfo/PDB/Raw/NameMapBuilder.cpp
@@ -517,11 +539,15 @@ ELSE()
             lib/DebugInfo/PDB/Raw/RawError.cpp
             lib/DebugInfo/PDB/Raw/RawSession.cpp
             lib/DebugInfo/PDB/Raw/SymbolStream.cpp
+            lib/DebugInfo/PDB/Raw/TpiHashing.cpp
             lib/DebugInfo/PDB/Raw/TpiStream.cpp
+            lib/DebugInfo/PDB/Raw/TpiStreamBuilder.cpp
 
             lib/DebugInfo/Symbolize/DIPrinter.cpp
             lib/DebugInfo/Symbolize/SymbolizableObjectFile.cpp
             lib/DebugInfo/Symbolize/Symbolize.cpp
+
+            lib/Demangle/ItaniumDemangle.cpp
 
             lib/ExecutionEngine/ExecutionEngine.cpp
             lib/ExecutionEngine/ExecutionEngineBindings.cpp
@@ -554,8 +580,10 @@ ELSE()
             lib/ExecutionEngine/Orc/OrcCBindings.cpp
             lib/ExecutionEngine/Orc/OrcError.cpp
             lib/ExecutionEngine/Orc/OrcMCJITReplacement.cpp
-            lib/ExecutionEngine/Orc/OrcRemoteTargetRPCAPI.cpp
 
+            lib/ExecutionEngine/RuntimeDyld/Targets/RuntimeDyldELFMips.cpp
+
+            lib/ExecutionEngine/RuntimeDyld/JITSymbol.cpp
             lib/ExecutionEngine/RuntimeDyld/RTDyldMemoryManager.cpp
             lib/ExecutionEngine/RuntimeDyld/RuntimeDyld.cpp
             lib/ExecutionEngine/RuntimeDyld/RuntimeDyldChecker.cpp
@@ -628,7 +656,9 @@ ELSE()
             lib/Linker/IRMover.cpp
             lib/Linker/LinkModules.cpp
 
+            lib/LTO/Caching.cpp
             lib/LTO/LTO.cpp
+            lib/LTO/LTOBackend.cpp
             lib/LTO/LTOCodeGenerator.cpp
             lib/LTO/LTOModule.cpp
             lib/LTO/ThinLTOCodeGenerator.cpp
@@ -703,20 +733,24 @@ ELSE()
             lib/Object/ArchiveWriter.cpp
             lib/Object/Binary.cpp
             lib/Object/COFFObjectFile.cpp
+            lib/Object/Decompressor.cpp
             lib/Object/ELF.cpp
             lib/Object/ELFObjectFile.cpp
             lib/Object/Error.cpp
             lib/Object/IRObjectFile.cpp
             lib/Object/MachOObjectFile.cpp
             lib/Object/MachOUniversal.cpp
+            lib/Object/ModuleSummaryIndexObjectFile.cpp
+            lib/Object/ModuleSymbolTable.cpp
             lib/Object/Object.cpp
             lib/Object/ObjectFile.cpp
             lib/Object/RecordStreamer.cpp
             lib/Object/SymbolicFile.cpp
-            lib/Object/ModuleSummaryIndexObjectFile.cpp
             lib/Object/SymbolSize.cpp
+            lib/Object/WasmObjectFile.cpp
 
             lib/ObjectYAML/COFFYAML.cpp
+            lib/ObjectYAML/DWARFYAML.cpp
             lib/ObjectYAML/ELFYAML.cpp
             lib/ObjectYAML/MachOYAML.cpp
             lib/ObjectYAML/ObjectYAML.cpp
@@ -751,16 +785,16 @@ ELSE()
             lib/Support/BlockFrequency.cpp
             lib/Support/BranchProbability.cpp
             lib/Support/CachePruning.cpp
+            lib/Support/Chrono.cpp
             lib/Support/circular_raw_ostream.cpp
             lib/Support/COM.cpp
             lib/Support/CommandLine.cpp
             lib/Support/Compression.cpp
-            lib/Support/ConvertUTF.c
+            lib/Support/ConvertUTF.cpp
             lib/Support/ConvertUTFWrapper.cpp
             lib/Support/CrashRecoveryContext.cpp
             lib/Support/DAGDeltaAlgorithm.cpp
             lib/Support/DataExtractor.cpp
-            lib/Support/DataStream.cpp
             lib/Support/Debug.cpp
             lib/Support/DeltaAlgorithm.cpp
             lib/Support/Dwarf.cpp
@@ -772,12 +806,13 @@ ELSE()
             lib/Support/FileUtilities.cpp
             lib/Support/FoldingSet.cpp
             lib/Support/FormattedStream.cpp
+            lib/Support/FormatVariadic.cpp
+            lib/Support/GlobPattern.cpp
             lib/Support/GraphWriter.cpp
             lib/Support/Hashing.cpp
             lib/Support/Host.cpp
             lib/Support/IntEqClasses.cpp
             lib/Support/IntervalMap.cpp
-            lib/Support/IntrusiveRefCntPtr.cpp
             lib/Support/JamCRC.cpp
             lib/Support/LEB128.cpp
             lib/Support/LineIterator.cpp
@@ -788,8 +823,8 @@ ELSE()
             lib/Support/MD5.cpp
             lib/Support/Memory.cpp
             lib/Support/MemoryBuffer.cpp
-            lib/Support/MemoryObject.cpp
             lib/Support/Mutex.cpp
+            lib/Support/NativeFormatting.cpp
             lib/Support/Options.cpp
             lib/Support/Path.cpp
             lib/Support/PluginLoader.cpp
@@ -816,7 +851,6 @@ ELSE()
             lib/Support/SourceMgr.cpp
             lib/Support/SpecialCaseList.cpp
             lib/Support/Statistic.cpp
-            lib/Support/StreamingMemoryObject.cpp
             lib/Support/StringExtras.cpp
             lib/Support/StringMap.cpp
             lib/Support/StringPool.cpp
@@ -825,17 +859,19 @@ ELSE()
             lib/Support/SystemUtils.cpp
             lib/Support/TargetParser.cpp
             lib/Support/TargetRegistry.cpp
+            lib/Support/TarWriter.cpp
             lib/Support/Threading.cpp
             lib/Support/ThreadLocal.cpp
             lib/Support/ThreadPool.cpp
             lib/Support/Timer.cpp
-            lib/Support/TimeValue.cpp
             lib/Support/ToolOutputFile.cpp
+            lib/Support/TrigramIndex.cpp
             lib/Support/Triple.cpp
             lib/Support/Twine.cpp
             lib/Support/Unicode.cpp
             lib/Support/Valgrind.cpp
             lib/Support/Watchdog.cpp
+            lib/Support/xxhash.cpp
             lib/Support/YAMLParser.cpp
             lib/Support/YAMLTraits.cpp
 
@@ -853,11 +889,12 @@ ELSE()
             lib/Target/TargetLoweringObjectFile.cpp
             lib/Target/TargetMachine.cpp
             lib/Target/TargetMachineC.cpp
-            lib/Target/TargetRecip.cpp
-            lib/Target/TargetSubtargetInfo.cpp
 
             lib/Target/X86/X86AsmPrinter.cpp
             lib/Target/X86/X86CallFrameOptimization.cpp
+            lib/Target/X86/X86CallingConv.cpp
+            lib/Target/X86/X86CallLowering.cpp
+            lib/Target/X86/X86EvexToVex.cpp
             lib/Target/X86/X86ExpandPseudo.cpp
             lib/Target/X86/X86FastISel.cpp
             lib/Target/X86/X86FixupBWInsts.cpp
@@ -865,7 +902,9 @@ ELSE()
             lib/Target/X86/X86FixupSetCC.cpp
             lib/Target/X86/X86FloatingPoint.cpp
             lib/Target/X86/X86FrameLowering.cpp
+            lib/Target/X86/X86InstrFMA3Info.cpp
             lib/Target/X86/X86InstrInfo.cpp
+            lib/Target/X86/X86InterleavedAccess.cpp
             lib/Target/X86/X86ISelDAGToDAG.cpp
             lib/Target/X86/X86ISelLowering.cpp
             lib/Target/X86/X86MachineFunctionInfo.cpp
@@ -906,6 +945,13 @@ ELSE()
 
             lib/Target/X86/Utils/X86ShuffleDecode.cpp
 
+            lib/Transforms/Coroutines/CoroCleanup.cpp
+            lib/Transforms/Coroutines/CoroEarly.cpp
+            lib/Transforms/Coroutines/CoroElide.cpp
+            lib/Transforms/Coroutines/CoroFrame.cpp
+            lib/Transforms/Coroutines/CoroSplit.cpp
+            lib/Transforms/Coroutines/Coroutines.cpp
+
 #            lib/Transforms/Hello/...
 # Note: we don't need the above, but we leave it so we know about it next time
 #       we update LLVM...
@@ -937,6 +983,7 @@ ELSE()
             lib/Transforms/Instrumentation/SanitizerCoverage.cpp
             lib/Transforms/Instrumentation/ThreadSanitizer.cpp
 
+            lib/Transforms/IPO/AlwaysInliner.cpp
             lib/Transforms/IPO/ArgumentPromotion.cpp
             lib/Transforms/IPO/BarrierNoopPass.cpp
             lib/Transforms/IPO/ConstantMerge.cpp
@@ -949,8 +996,8 @@ ELSE()
             lib/Transforms/IPO/FunctionImport.cpp
             lib/Transforms/IPO/GlobalDCE.cpp
             lib/Transforms/IPO/GlobalOpt.cpp
+            lib/Transforms/IPO/GlobalSplit.cpp
             lib/Transforms/IPO/InferFunctionAttrs.cpp
-            lib/Transforms/IPO/InlineAlways.cpp
             lib/Transforms/IPO/Inliner.cpp
             lib/Transforms/IPO/InlineSimple.cpp
             lib/Transforms/IPO/Internalize.cpp
@@ -965,6 +1012,7 @@ ELSE()
             lib/Transforms/IPO/SampleProfile.cpp
             lib/Transforms/IPO/StripDeadPrototypes.cpp
             lib/Transforms/IPO/StripSymbols.cpp
+            lib/Transforms/IPO/ThinLTOBitcodeWriter.cpp
             lib/Transforms/IPO/WholeProgramDevirt.cpp
 
             lib/Transforms/ObjCARC/DependencyAnalysis.cpp
@@ -993,9 +1041,11 @@ ELSE()
             lib/Transforms/Scalar/GVNHoist.cpp
             lib/Transforms/Scalar/InductiveRangeCheckElimination.cpp
             lib/Transforms/Scalar/IndVarSimplify.cpp
+            lib/Transforms/Scalar/IVUsersPrinter.cpp
             lib/Transforms/Scalar/JumpThreading.cpp
             lib/Transforms/Scalar/LICM.cpp
             lib/Transforms/Scalar/LoadCombine.cpp
+            lib/Transforms/Scalar/LoopAccessAnalysisPrinter.cpp
             lib/Transforms/Scalar/LoopDataPrefetch.cpp
             lib/Transforms/Scalar/LoopDeletion.cpp
             lib/Transforms/Scalar/LoopDistribute.cpp
@@ -1003,9 +1053,11 @@ ELSE()
             lib/Transforms/Scalar/LoopInstSimplify.cpp
             lib/Transforms/Scalar/LoopInterchange.cpp
             lib/Transforms/Scalar/LoopLoadElimination.cpp
+            lib/Transforms/Scalar/LoopPassManager.cpp
             lib/Transforms/Scalar/LoopRerollPass.cpp
             lib/Transforms/Scalar/LoopRotation.cpp
             lib/Transforms/Scalar/LoopSimplifyCFG.cpp
+            lib/Transforms/Scalar/LoopSink.cpp
             lib/Transforms/Scalar/LoopStrengthReduce.cpp
             lib/Transforms/Scalar/LoopUnrollPass.cpp
             lib/Transforms/Scalar/LoopUnswitch.cpp
@@ -1016,6 +1068,7 @@ ELSE()
             lib/Transforms/Scalar/MemCpyOptimizer.cpp
             lib/Transforms/Scalar/MergedLoadStoreMotion.cpp
             lib/Transforms/Scalar/NaryReassociate.cpp
+            lib/Transforms/Scalar/NewGVN.cpp
             lib/Transforms/Scalar/PartiallyInlineLibCalls.cpp
             lib/Transforms/Scalar/PlaceSafepoints.cpp
             lib/Transforms/Scalar/Reassociate.cpp
@@ -1045,17 +1098,22 @@ ELSE()
             lib/Transforms/Utils/CodeExtractor.cpp
             lib/Transforms/Utils/CtorUtils.cpp
             lib/Transforms/Utils/DemoteRegToStack.cpp
+            lib/Transforms/Utils/EscapeEnumerator.cpp
             lib/Transforms/Utils/Evaluator.cpp
             lib/Transforms/Utils/FlattenCFG.cpp
+            lib/Transforms/Utils/FunctionComparator.cpp
             lib/Transforms/Utils/FunctionImportUtils.cpp
             lib/Transforms/Utils/GlobalStatus.cpp
+            lib/Transforms/Utils/ImportedFunctionsInliningStatistics.cpp
             lib/Transforms/Utils/InlineFunction.cpp
             lib/Transforms/Utils/InstructionNamer.cpp
             lib/Transforms/Utils/IntegerDivision.cpp
             lib/Transforms/Utils/LCSSA.cpp
+            lib/Transforms/Utils/LibCallsShrinkWrap.cpp
             lib/Transforms/Utils/Local.cpp
             lib/Transforms/Utils/LoopSimplify.cpp
             lib/Transforms/Utils/LoopUnroll.cpp
+            lib/Transforms/Utils/LoopUnrollPeel.cpp
             lib/Transforms/Utils/LoopUnrollRuntime.cpp
             lib/Transforms/Utils/LoopUtils.cpp
             lib/Transforms/Utils/LoopVersioning.cpp
@@ -1065,7 +1123,7 @@ ELSE()
             lib/Transforms/Utils/MemorySSA.cpp
             lib/Transforms/Utils/MetaRenamer.cpp
             lib/Transforms/Utils/ModuleUtils.cpp
-            lib/Transforms/Utils/NameAnonFunctions.cpp
+            lib/Transforms/Utils/NameAnonGlobals.cpp
             lib/Transforms/Utils/PromoteMemoryToRegister.cpp
             lib/Transforms/Utils/SanitizerStats.cpp
             lib/Transforms/Utils/SimplifyCFG.cpp
@@ -1074,6 +1132,8 @@ ELSE()
             lib/Transforms/Utils/SimplifyLibCalls.cpp
             lib/Transforms/Utils/SplitModule.cpp
             lib/Transforms/Utils/SSAUpdater.cpp
+            lib/Transforms/Utils/StripGCRelocates.cpp
+            lib/Transforms/Utils/StripNonLineTableDebugInfo.cpp
             lib/Transforms/Utils/SymbolRewriter.cpp
             lib/Transforms/Utils/UnifyFunctionExitNodes.cpp
             lib/Transforms/Utils/Utils.cpp
@@ -1084,6 +1144,8 @@ ELSE()
             lib/Transforms/Vectorize/LoopVectorize.cpp
             lib/Transforms/Vectorize/SLPVectorizer.cpp
             lib/Transforms/Vectorize/Vectorize.cpp
+
+            lib/XRay/Trace.cpp
 
             src/llvmplugin.cpp
 
