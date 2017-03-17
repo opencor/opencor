@@ -1,3 +1,4 @@
+/include/llvm/Config/abi-breaking.h
 /include/llvm/Config/config.h
 /include/llvm/Config/llvm-config.h
 

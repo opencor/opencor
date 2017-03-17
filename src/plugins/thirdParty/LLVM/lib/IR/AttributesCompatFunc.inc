@@ -407,27 +407,27 @@ struct ZExtAttr : EnumAttr {
 
 // StrBoolAttr classes
 struct LessPreciseFPMADAttr : StrBoolAttr {
-  static const char *getKind() {
+  static StringRef getKind() {
     return "less-precise-fpmad";
   }
 };
 struct NoInfsFPMathAttr : StrBoolAttr {
-  static const char *getKind() {
+  static StringRef getKind() {
     return "no-infs-fp-math";
   }
 };
 struct NoJumpTablesAttr : StrBoolAttr {
-  static const char *getKind() {
+  static StringRef getKind() {
     return "no-jump-tables";
   }
 };
 struct NoNansFPMathAttr : StrBoolAttr {
-  static const char *getKind() {
+  static StringRef getKind() {
     return "no-nans-fp-math";
   }
 };
 struct UnsafeFPMathAttr : StrBoolAttr {
-  static const char *getKind() {
+  static StringRef getKind() {
     return "unsafe-fp-math";
   }
 };
