@@ -12,6 +12,9 @@
 
 #include "clang/Basic/Diagnostic.h"
 #include "clang/Basic/LLVM.h"
+//---OPENCOR--- BEGIN
+#include "clang/Basic/VirtualFileSystem.h"
+//---OPENCOR--- END
 #include "clang/Driver/Action.h"
 #include "clang/Driver/Phases.h"
 #include "clang/Driver/Types.h"
