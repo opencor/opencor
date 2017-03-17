@@ -40,9 +40,11 @@ namespace opt {
 
 namespace clang {
 
+/*---OPENCOR---
 namespace vfs {
 class FileSystem;
 }
+*/
 
 namespace driver {
 
