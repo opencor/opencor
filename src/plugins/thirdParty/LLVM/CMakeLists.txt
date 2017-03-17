@@ -3,6 +3,7 @@ PROJECT(LLVMPlugin)
 # Retrieve some header files that were generated on each of our target platforms
 
 RETRIEVE_CONFIG_FILES(
+    include/llvm/Config/PLATFORM_DIR/abi-breaking.h
     include/llvm/Config/PLATFORM_DIR/config.h
     include/llvm/Config/PLATFORM_DIR/llvm-config.h
 
@@ -1553,6 +1554,7 @@ ELSE()
             tools/clang/include
         DEFINITIONS
             ${DEFINITIONS}
+            LLVM_BUILD_GLOBAL_ISEL
         QT_MODULES
             Core
         SYSTEM_BINARIES
