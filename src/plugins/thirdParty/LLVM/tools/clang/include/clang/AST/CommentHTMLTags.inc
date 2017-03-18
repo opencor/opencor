@@ -98,11 +98,11 @@ bool isHTMLTagName(StringRef Name) {
     switch (Name[0]) {
     default: break;
     case 'b':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ig", 2))
+      if (memcmp(Name.data()+1, "ig", 2) != 0)
         break;
       return true;	 // "big"
     case 'c':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ol", 2))
+      if (memcmp(Name.data()+1, "ol", 2) != 0)
         break;
       return true;	 // "col"
     case 'd':	 // 2 strings to match.
@@ -132,7 +132,7 @@ bool isHTMLTagName(StringRef Name) {
       }
       break;
     case 'p':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "re", 2))
+      if (memcmp(Name.data()+1, "re", 2) != 0)
         break;
       return true;	 // "pre"
     case 's':	 // 2 strings to match.
@@ -152,15 +152,15 @@ bool isHTMLTagName(StringRef Name) {
     switch (Name[0]) {
     default: break;
     case 'c':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ode", 3))
+      if (memcmp(Name.data()+1, "ode", 3) != 0)
         break;
       return true;	 // "code"
     case 'f':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ont", 3))
+      if (memcmp(Name.data()+1, "ont", 3) != 0)
         break;
       return true;	 // "font"
     case 's':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "pan", 3))
+      if (memcmp(Name.data()+1, "pan", 3) != 0)
         break;
       return true;	 // "span"
     }
@@ -169,26 +169,26 @@ bool isHTMLTagName(StringRef Name) {
     switch (Name[0]) {
     default: break;
     case 's':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "mall", 4))
+      if (memcmp(Name.data()+1, "mall", 4) != 0)
         break;
       return true;	 // "small"
     case 't':	 // 4 strings to match.
       switch (Name[1]) {
       default: break;
       case 'a':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "ble", 3))
+        if (memcmp(Name.data()+2, "ble", 3) != 0)
           break;
         return true;	 // "table"
       case 'b':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "ody", 3))
+        if (memcmp(Name.data()+2, "ody", 3) != 0)
           break;
         return true;	 // "tbody"
       case 'f':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "oot", 3))
+        if (memcmp(Name.data()+2, "oot", 3) != 0)
           break;
         return true;	 // "tfoot"
       case 'h':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "ead", 3))
+        if (memcmp(Name.data()+2, "ead", 3) != 0)
           break;
         return true;	 // "thead"
       }
@@ -196,30 +196,30 @@ bool isHTMLTagName(StringRef Name) {
     }
     break;
   case 6:	 // 2 strings to match.
-    if (memcmp(Name.data()+0, "str", 3))
+    if (memcmp(Name.data()+0, "str", 3) != 0)
       break;
     switch (Name[3]) {
     default: break;
     case 'i':	 // 1 string to match.
-      if (memcmp(Name.data()+4, "ke", 2))
+      if (memcmp(Name.data()+4, "ke", 2) != 0)
         break;
       return true;	 // "strike"
     case 'o':	 // 1 string to match.
-      if (memcmp(Name.data()+4, "ng", 2))
+      if (memcmp(Name.data()+4, "ng", 2) != 0)
         break;
       return true;	 // "strong"
     }
     break;
   case 7:	 // 1 string to match.
-    if (memcmp(Name.data()+0, "caption", 7))
+    if (memcmp(Name.data()+0, "caption", 7) != 0)
       break;
     return true;	 // "caption"
   case 8:	 // 1 string to match.
-    if (memcmp(Name.data()+0, "colgroup", 8))
+    if (memcmp(Name.data()+0, "colgroup", 8) != 0)
       break;
     return true;	 // "colgroup"
   case 10:	 // 1 string to match.
-    if (memcmp(Name.data()+0, "blockquote", 10))
+    if (memcmp(Name.data()+0, "blockquote", 10) != 0)
       break;
     return true;	 // "blockquote"
   }

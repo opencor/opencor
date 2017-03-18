@@ -33,16 +33,18 @@ limitations under the License.
 //==============================================================================
 
 #include "llvmbegin.h"
+    #include "llvm/ADT/IntrusiveRefCntPtr.h"
     #include "llvm/Support/TargetSelect.h"
 
     #include "llvm-c/Core.h"
 
-    #include "clang/Basic/DiagnosticOptions.h"
+    #include "clang/Basic/Diagnostic.h"
     #include "clang/CodeGen/CodeGenAction.h"
     #include "clang/Driver/Compilation.h"
     #include "clang/Driver/Driver.h"
     #include "clang/Driver/Tool.h"
     #include "clang/Frontend/CompilerInstance.h"
+    #include "clang/Lex/PreprocessorOptions.h"
 #include "llvmend.h"
 
 //==============================================================================
@@ -257,7 +259,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     clang::CompilerInstance compilerInstance;
 
-    compilerInstance.setInvocation(compilerInvocation.release());
+    compilerInstance.setInvocation(std::move(compilerInvocation));
 
     // Create the compiler instance's diagnostics engine
 

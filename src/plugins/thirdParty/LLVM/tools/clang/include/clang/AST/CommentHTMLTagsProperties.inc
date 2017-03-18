@@ -48,21 +48,21 @@ bool isHTMLEndTagOptional(StringRef Name) {
     switch (Name[1]) {
     default: break;
     case 'b':	 // 1 string to match.
-      if (memcmp(Name.data()+2, "ody", 3))
+      if (memcmp(Name.data()+2, "ody", 3) != 0)
         break;
       return true;	 // "tbody"
     case 'f':	 // 1 string to match.
-      if (memcmp(Name.data()+2, "oot", 3))
+      if (memcmp(Name.data()+2, "oot", 3) != 0)
         break;
       return true;	 // "tfoot"
     case 'h':	 // 1 string to match.
-      if (memcmp(Name.data()+2, "ead", 3))
+      if (memcmp(Name.data()+2, "ead", 3) != 0)
         break;
       return true;	 // "thead"
     }
     break;
   case 8:	 // 1 string to match.
-    if (memcmp(Name.data()+0, "colgroup", 8))
+    if (memcmp(Name.data()+0, "colgroup", 8) != 0)
       break;
     return true;	 // "colgroup"
   }
@@ -89,11 +89,11 @@ bool isHTMLEndTagForbidden(StringRef Name) {
     switch (Name[0]) {
     default: break;
     case 'c':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ol", 2))
+      if (memcmp(Name.data()+1, "ol", 2) != 0)
         break;
       return true;	 // "col"
     case 'i':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "mg", 2))
+      if (memcmp(Name.data()+1, "mg", 2) != 0)
         break;
       return true;	 // "img"
     }

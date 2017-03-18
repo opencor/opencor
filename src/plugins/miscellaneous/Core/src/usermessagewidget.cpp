@@ -68,7 +68,8 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon,
                                      const QString &pMessage,
                                      const QString &pExtraMessage,
                                      QWidget *pParent) :
-    QLabel(pParent)
+    QLabel(pParent),
+    CommonWidget(this)
 {
     // Construct our object
 
@@ -80,7 +81,8 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon,
 UserMessageWidget::UserMessageWidget(const QString &pIcon,
                                      const QString &pMessage,
                                      QWidget *pParent) :
-    QLabel(pParent)
+    QLabel(pParent),
+    CommonWidget(this)
 {
     // Construct our object
 
@@ -90,7 +92,8 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon,
 //==============================================================================
 
 UserMessageWidget::UserMessageWidget(const QString &pIcon, QWidget *pParent) :
-    QLabel(pParent)
+    QLabel(pParent),
+    CommonWidget(this)
 {
     // Construct our object
 
@@ -100,7 +103,8 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon, QWidget *pParent) :
 //==============================================================================
 
 UserMessageWidget::UserMessageWidget(QWidget *pParent) :
-    QLabel(pParent)
+    QLabel(pParent),
+    CommonWidget(this)
 {
     // Construct our object
 

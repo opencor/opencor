@@ -360,9 +360,7 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
 
     // Populate ourselves
 
-    createLayout();
-
-    layout()->addWidget(mTreeViewWidget);
+    createLayout()->addWidget(mTreeViewWidget);
 
     // We want a context menu for our tree view widget
 

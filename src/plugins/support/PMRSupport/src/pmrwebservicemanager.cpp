@@ -188,7 +188,7 @@ void PmrWebServiceManager::closeBrowser()
     // finished loading otherwise try again in a bit
 
     if (mWebViewer->progressBarWidget()->value())
-        QTimer::singleShot(0, this, SLOT(closeBrowser()));
+        QTimer::singleShot(1, this, SLOT(closeBrowser()));
     else
         mWebViewerDialog->close();
 }

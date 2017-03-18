@@ -83,7 +83,6 @@ protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
     virtual QSize minimumSizeHint() const;
-    virtual QSize sizeHint() const;
 
 private:
     QwtMathMLDocument mMathmlDocument;

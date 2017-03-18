@@ -305,8 +305,6 @@ public:
 
     virtual void retranslateUi();
 
-    virtual QSize sizeHint() const;
-
     void clear();
 
     void selectFirstProperty();
@@ -351,6 +349,8 @@ protected:
     virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual void mouseReleaseEvent(QMouseEvent *pEvent);
     virtual void resizeEvent(QResizeEvent *pEvent);
+
+    virtual QSize sizeHint() const;
 
 private:
     bool mShowUnits;

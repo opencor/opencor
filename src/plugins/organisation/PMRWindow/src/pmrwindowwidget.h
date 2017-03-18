@@ -95,7 +95,7 @@ public:
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
-    virtual QSize sizeHint() const;
+    virtual QSize minimumSizeHint() const;
 
 private:
     QMenu *mContextMenu;

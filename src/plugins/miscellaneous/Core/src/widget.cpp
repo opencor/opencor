@@ -54,9 +54,9 @@ Widget::Widget(const QSize &pSizeHint, QWidget *pParent) :
 
 //==============================================================================
 
-void Widget::createLayout(const LayoutType &pLayoutType)
+QLayout * Widget::createLayout(const LayoutType &pLayoutType)
 {
-    // Create and set a vertical layout
+    // Create and set a layout
 
     QLayout *layout = 0;
 
@@ -89,6 +89,8 @@ void Widget::createLayout(const LayoutType &pLayoutType)
         layout->setSpacing(0);
 
     setLayout(layout);
+
+    return layout;
 }
 
 //==============================================================================

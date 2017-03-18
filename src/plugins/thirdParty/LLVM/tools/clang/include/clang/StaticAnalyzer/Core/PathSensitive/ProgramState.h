@@ -24,7 +24,6 @@
 #include "clang/StaticAnalyzer/Core/PathSensitive/TaintTag.h"
 #include "llvm/ADT/FoldingSet.h"
 #include "llvm/ADT/ImmutableMap.h"
-#include "llvm/ADT/PointerIntPair.h"
 #include "llvm/Support/Allocator.h"
 #include <utility>
 
@@ -198,10 +197,10 @@ public:
   ///
   /// This returns a new state with the added constraint on \p cond.
   /// If no new state is feasible, NULL is returned.
-  ProgramStateRef assumeWithinInclusiveRange(DefinedOrUnknownSVal Val,
-                                             const llvm::APSInt &From,
-                                             const llvm::APSInt &To,
-                                             bool assumption) const;
+  ProgramStateRef assumeInclusiveRange(DefinedOrUnknownSVal Val,
+                                       const llvm::APSInt &From,
+                                       const llvm::APSInt &To,
+                                       bool assumption) const;
 
   /// Assumes given range both "true" and "false" for \p Val, and returns both
   /// corresponding states (respectively).
@@ -209,9 +208,8 @@ public:
   /// This is more efficient than calling assume() twice. Note that one (but not
   /// both) of the returned states may be NULL.
   std::pair<ProgramStateRef, ProgramStateRef>
-  assumeWithinInclusiveRange(DefinedOrUnknownSVal Val, const llvm::APSInt &From,
-                             const llvm::APSInt &To) const;
-
+  assumeInclusiveRange(DefinedOrUnknownSVal Val, const llvm::APSInt &From,
+                       const llvm::APSInt &To) const;
 
   /// \brief Check if the given SVal is constrained to zero or is a zero
   ///        constant.
@@ -658,31 +656,29 @@ ProgramState::assume(DefinedOrUnknownSVal Cond) const {
       ->assumeDual(this, Cond.castAs<DefinedSVal>());
 }
 
-inline ProgramStateRef
-ProgramState::assumeWithinInclusiveRange(DefinedOrUnknownSVal Val,
-                                         const llvm::APSInt &From,
-                                         const llvm::APSInt &To,
-                                         bool Assumption) const {
+inline ProgramStateRef ProgramState::assumeInclusiveRange(
+    DefinedOrUnknownSVal Val, const llvm::APSInt &From, const llvm::APSInt &To,
+    bool Assumption) const {
   if (Val.isUnknown())
     return this;
 
   assert(Val.getAs<NonLoc>() && "Only NonLocs are supported!");
 
-  return getStateManager().ConstraintMgr->assumeWithinInclusiveRange(
-        this, Val.castAs<NonLoc>(), From, To, Assumption);
+  return getStateManager().ConstraintMgr->assumeInclusiveRange(
+      this, Val.castAs<NonLoc>(), From, To, Assumption);
 }
 
 inline std::pair<ProgramStateRef, ProgramStateRef>
-ProgramState::assumeWithinInclusiveRange(DefinedOrUnknownSVal Val,
-                                         const llvm::APSInt &From,
-                                         const llvm::APSInt &To) const {
+ProgramState::assumeInclusiveRange(DefinedOrUnknownSVal Val,
+                                   const llvm::APSInt &From,
+                                   const llvm::APSInt &To) const {
   if (Val.isUnknown())
     return std::make_pair(this, this);
 
   assert(Val.getAs<NonLoc>() && "Only NonLocs are supported!");
 
-  return getStateManager().ConstraintMgr
-      ->assumeWithinInclusiveRangeDual(this, Val.castAs<NonLoc>(), From, To);
+  return getStateManager().ConstraintMgr->assumeInclusiveRangeDual(
+      this, Val.castAs<NonLoc>(), From, To);
 }
 
 inline ProgramStateRef ProgramState::bindLoc(SVal LV, SVal V) const {
@@ -828,8 +824,9 @@ CB ProgramState::scanReachableSymbols(const MemRegion * const *beg,
 }
 
 /// \class ScanReachableSymbols
-/// A Utility class that allows to visit the reachable symbols using a custom
-/// SymbolVisitor.
+/// A utility class that visits the reachable symbols using a custom
+/// SymbolVisitor. Terminates recursive traversal when the visitor function
+/// returns false.
 class ScanReachableSymbols {
   typedef llvm::DenseSet<const void*> VisitedItems;
 

@@ -81,6 +81,10 @@ namespace ento {
       return F.remove(B, K);
     }
 
+    static bool Contains(data_type B, key_type K) {
+      return B.contains(K);
+    }
+
     static inline context_type MakeContext(void *p) {
       return *((typename data_type::Factory*) p);
     }

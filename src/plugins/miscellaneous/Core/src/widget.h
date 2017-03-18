@@ -54,7 +54,7 @@ public:
     explicit Widget(QWidget *pParent);
     explicit Widget(const QSize &pSizeHint, QWidget *pParent);
 
-    void createLayout(const LayoutType &pLayoutType = VerticalLayout);
+    QLayout * createLayout(const LayoutType &pLayoutType = VerticalLayout);
 
 protected:
     virtual void resizeEvent(QResizeEvent *pEvent);

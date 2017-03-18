@@ -229,6 +229,17 @@ bool HelpWindowWidget::isUrlSchemeSupported(const QString &pUrlScheme)
 
 //==============================================================================
 
+QSize HelpWindowWidget::minimumSizeHint() const
+{
+    // Suggest a minimum size for ourselves
+    // Note: this is useful if we want our window to have a decent size,
+    //       especially when docked to the main window...
+
+    return defaultSize(0.15);
+}
+
+//==============================================================================
+
 }   // namespace HelpWindow
 }   // namespace OpenCOR
 
