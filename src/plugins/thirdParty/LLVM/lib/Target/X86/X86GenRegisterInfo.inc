@@ -462,11 +462,11 @@ extern const MCPhysReg X86RegDiffLists[] = {
   /* 149 */ 65520, 65520, 65535, 65535, 0,
 };
 
-extern const unsigned X86LaneMaskLists[] = {
-  /* 0 */ 0x00000000, ~0u,
-  /* 2 */ 0x00000002, 0x00000001, ~0u,
-  /* 5 */ 0x00000003, ~0u,
-  /* 7 */ 0x00000004, ~0u,
+extern const LaneBitmask X86LaneMaskLists[] = {
+  /* 0 */ LaneBitmask(0x00000000), LaneBitmask::getAll(),
+  /* 2 */ LaneBitmask(0x00000002), LaneBitmask(0x00000001), LaneBitmask::getAll(),
+  /* 5 */ LaneBitmask(0x00000003), LaneBitmask::getAll(),
+  /* 7 */ LaneBitmask(0x00000004), LaneBitmask::getAll(),
 };
 
 extern const uint16_t X86SubRegIdxLists[] = {
@@ -4032,14 +4032,14 @@ static const MVT::SimpleValueType VTLists[] = {
 static const char *const SubRegIndexNameTable[] = { "sub_8bit", "sub_8bit_hi", "sub_16bit", "sub_32bit", "sub_xmm", "sub_ymm", "" };
 
 
-static const unsigned SubRegIndexLaneMaskTable[] = {
-  ~0u,
-  0x00000001, // sub_8bit
-  0x00000002, // sub_8bit_hi
-  0x00000003, // sub_16bit
-  0x00000003, // sub_32bit
-  0x00000004, // sub_xmm
-  0x00000004, // sub_ymm
+static const LaneBitmask SubRegIndexLaneMaskTable[] = {
+  LaneBitmask::getAll(),
+  LaneBitmask(0x00000001), // sub_8bit
+  LaneBitmask(0x00000002), // sub_8bit_hi
+  LaneBitmask(0x00000003), // sub_16bit
+  LaneBitmask(0x00000003), // sub_32bit
+  LaneBitmask(0x00000004), // sub_xmm
+  LaneBitmask(0x00000004), // sub_ymm
  };
 
 
@@ -5420,7 +5420,7 @@ namespace X86 {   // Register class instances
     VTLists + 2,
     GR8SubClassMask,
     SuperRegIdxSeqs + 2,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5433,7 +5433,7 @@ namespace X86 {   // Register class instances
     VTLists + 2,
     GR8_NOREXSubClassMask,
     SuperRegIdxSeqs + 2,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5446,7 +5446,7 @@ namespace X86 {   // Register class instances
     VTLists + 2,
     GR8_ABCD_HSubClassMask,
     SuperRegIdxSeqs + 3,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5459,7 +5459,7 @@ namespace X86 {   // Register class instances
     VTLists + 2,
     GR8_ABCD_LSubClassMask,
     SuperRegIdxSeqs + 0,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5472,7 +5472,7 @@ namespace X86 {   // Register class instances
     VTLists + 4,
     GR16SubClassMask,
     SuperRegIdxSeqs + 5,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5485,7 +5485,7 @@ namespace X86 {   // Register class instances
     VTLists + 4,
     GR16_NOREXSubClassMask,
     SuperRegIdxSeqs + 5,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5498,7 +5498,7 @@ namespace X86 {   // Register class instances
     VTLists + 0,
     VK1SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5511,7 +5511,7 @@ namespace X86 {   // Register class instances
     VTLists + 27,
     VK16SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5524,7 +5524,7 @@ namespace X86 {   // Register class instances
     VTLists + 21,
     VK2SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5537,7 +5537,7 @@ namespace X86 {   // Register class instances
     VTLists + 23,
     VK4SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5550,7 +5550,7 @@ namespace X86 {   // Register class instances
     VTLists + 25,
     VK8SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5563,7 +5563,7 @@ namespace X86 {   // Register class instances
     VTLists + 27,
     VK16WMSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5576,7 +5576,7 @@ namespace X86 {   // Register class instances
     VTLists + 0,
     VK1WMSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5589,7 +5589,7 @@ namespace X86 {   // Register class instances
     VTLists + 21,
     VK2WMSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5602,7 +5602,7 @@ namespace X86 {   // Register class instances
     VTLists + 23,
     VK4WMSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5615,7 +5615,7 @@ namespace X86 {   // Register class instances
     VTLists + 25,
     VK8WMSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5628,7 +5628,7 @@ namespace X86 {   // Register class instances
     VTLists + 4,
     SEGMENT_REGSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5641,7 +5641,7 @@ namespace X86 {   // Register class instances
     VTLists + 4,
     GR16_ABCDSubClassMask,
     SuperRegIdxSeqs + 5,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     true, /* CoveredBySubRegs */
@@ -5654,7 +5654,7 @@ namespace X86 {   // Register class instances
     VTLists + 4,
     FPCCRSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5667,7 +5667,7 @@ namespace X86 {   // Register class instances
     VTLists + 12,
     FR32XSubClassMask,
     SuperRegIdxSeqs + 9,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5680,7 +5680,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     LOW32_ADDR_ACCESS_RBPSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5693,7 +5693,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     LOW32_ADDR_ACCESSSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5706,7 +5706,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     LOW32_ADDR_ACCESS_RBP_with_sub_8bitSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5719,7 +5719,7 @@ namespace X86 {   // Register class instances
     VTLists + 12,
     FR32SubClassMask,
     SuperRegIdxSeqs + 9,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5732,7 +5732,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     GR32SubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5745,7 +5745,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     GR32_NOAXSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5758,7 +5758,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     GR32_NOSPSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5771,7 +5771,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     GR32_NOAX_and_GR32_NOSPSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5784,7 +5784,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     LOW32_ADDR_ACCESS_RBP_with_sub_16bit_in_GR16_NOREXSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5797,7 +5797,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     DEBUG_REGSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5810,7 +5810,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     GR32_NOREXSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5823,7 +5823,7 @@ namespace X86 {   // Register class instances
     VTLists + 29,
     VK32SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5836,7 +5836,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     GR32_NOAX_and_GR32_NOREXSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5849,7 +5849,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     GR32_NOREX_NOSPSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5862,7 +5862,7 @@ namespace X86 {   // Register class instances
     VTLists + 12,
     RFP32SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5875,7 +5875,7 @@ namespace X86 {   // Register class instances
     VTLists + 29,
     VK32WMSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5888,7 +5888,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     GR32_NOAX_and_GR32_NOREX_NOSPSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5901,7 +5901,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     GR32_ABCDSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5914,7 +5914,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     GR32_ABCD_and_GR32_NOAXSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5927,7 +5927,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     GR32_TCSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5940,7 +5940,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     GR32_ADSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5953,7 +5953,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     GR32_NOAX_and_GR32_TCSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5966,7 +5966,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     LOW32_ADDR_ACCESS_RBP_with_sub_32bitSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5979,7 +5979,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     CCRSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -5992,7 +5992,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     GR32_AD_and_GR32_NOAXSubClassMask,
     SuperRegIdxSeqs + 7,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6005,7 +6005,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     LOW32_ADDR_ACCESS_RBP_with_sub_8bit_with_sub_32bitSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6018,7 +6018,7 @@ namespace X86 {   // Register class instances
     VTLists + 6,
     LOW32_ADDR_ACCESS_with_sub_32bitSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6031,7 +6031,7 @@ namespace X86 {   // Register class instances
     VTLists + 14,
     RFP64SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6044,7 +6044,7 @@ namespace X86 {   // Register class instances
     VTLists + 14,
     FR64XSubClassMask,
     SuperRegIdxSeqs + 9,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6057,7 +6057,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6070,7 +6070,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     CONTROL_REGSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6083,7 +6083,7 @@ namespace X86 {   // Register class instances
     VTLists + 14,
     FR64SubClassMask,
     SuperRegIdxSeqs + 9,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6096,7 +6096,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_with_sub_8bitSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6109,7 +6109,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_NOSPSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6122,7 +6122,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_with_sub_32bit_in_GR32_NOAXSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6135,7 +6135,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOSPSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6148,7 +6148,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_NOREXSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6161,7 +6161,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_TCSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6174,7 +6174,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_NOSP_and_GR64_TCSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6187,7 +6187,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_TCW64SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6200,7 +6200,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_with_sub_16bit_in_GR16_NOREXSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6213,7 +6213,7 @@ namespace X86 {   // Register class instances
     VTLists + 31,
     VK64SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6226,7 +6226,7 @@ namespace X86 {   // Register class instances
     VTLists + 54,
     VR64SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6239,7 +6239,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_NOREX_NOSPSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6252,7 +6252,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_NOSP_and_GR64_TCW64SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6265,7 +6265,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_TC_and_GR64_TCW64SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6278,7 +6278,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAXSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6291,7 +6291,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREXSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6304,7 +6304,7 @@ namespace X86 {   // Register class instances
     VTLists + 31,
     VK64WMSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6317,7 +6317,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_NOREX_and_GR64_TCSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6330,7 +6330,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_TCW64_and_GR64_with_sub_32bit_in_GR32_NOAXSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6343,7 +6343,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_TC_and_GR64_NOSP_and_GR64_TCW64SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6356,7 +6356,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX_NOSPSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6369,7 +6369,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_NOREX_NOSP_and_GR64_TCSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6382,7 +6382,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_TCW64_and_GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAXSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6395,7 +6395,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_ABCDSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6408,7 +6408,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_NOREX_and_GR64_TCW64SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6421,7 +6421,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREXSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6434,7 +6434,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_with_sub_32bit_in_GR32_ABCD_and_GR32_NOAXSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6447,7 +6447,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_with_sub_32bit_in_GR32_TCSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6460,7 +6460,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_and_LOW32_ADDR_ACCESS_RBPSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6473,7 +6473,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_with_sub_32bit_in_GR32_ADSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6486,7 +6486,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_TCSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6499,7 +6499,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_NOREX_NOSP_and_LOW32_ADDR_ACCESS_RBPSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6512,7 +6512,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_and_LOW32_ADDR_ACCESSSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6525,7 +6525,7 @@ namespace X86 {   // Register class instances
     VTLists + 8,
     GR64_with_sub_32bit_in_GR32_AD_and_GR32_NOAXSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000003,
+    LaneBitmask(0x00000003),
     0,
     true, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6538,7 +6538,7 @@ namespace X86 {   // Register class instances
     VTLists + 10,
     RSTSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6551,7 +6551,7 @@ namespace X86 {   // Register class instances
     VTLists + 16,
     RFP80SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6564,7 +6564,7 @@ namespace X86 {   // Register class instances
     VTLists + 33,
     VR128XSubClassMask,
     SuperRegIdxSeqs + 9,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6577,7 +6577,7 @@ namespace X86 {   // Register class instances
     VTLists + 18,
     FR128SubClassMask,
     SuperRegIdxSeqs + 9,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6590,7 +6590,7 @@ namespace X86 {   // Register class instances
     VTLists + 33,
     VR128SubClassMask,
     SuperRegIdxSeqs + 9,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6603,7 +6603,7 @@ namespace X86 {   // Register class instances
     VTLists + 33,
     VR128HSubClassMask,
     SuperRegIdxSeqs + 9,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6616,7 +6616,7 @@ namespace X86 {   // Register class instances
     VTLists + 33,
     VR128LSubClassMask,
     SuperRegIdxSeqs + 9,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6629,7 +6629,7 @@ namespace X86 {   // Register class instances
     VTLists + 38,
     BNDRSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000001,
+    LaneBitmask(0x00000001),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6642,7 +6642,7 @@ namespace X86 {   // Register class instances
     VTLists + 40,
     VR256XSubClassMask,
     SuperRegIdxSeqs + 11,
-    0x00000004,
+    LaneBitmask(0x00000004),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6655,7 +6655,7 @@ namespace X86 {   // Register class instances
     VTLists + 40,
     VR256SubClassMask,
     SuperRegIdxSeqs + 11,
-    0x00000004,
+    LaneBitmask(0x00000004),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6668,7 +6668,7 @@ namespace X86 {   // Register class instances
     VTLists + 40,
     VR256HSubClassMask,
     SuperRegIdxSeqs + 11,
-    0x00000004,
+    LaneBitmask(0x00000004),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6681,7 +6681,7 @@ namespace X86 {   // Register class instances
     VTLists + 40,
     VR256LSubClassMask,
     SuperRegIdxSeqs + 11,
-    0x00000004,
+    LaneBitmask(0x00000004),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6694,7 +6694,7 @@ namespace X86 {   // Register class instances
     VTLists + 47,
     VR512SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000004,
+    LaneBitmask(0x00000004),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6707,7 +6707,7 @@ namespace X86 {   // Register class instances
     VTLists + 47,
     VR512_with_sub_xmm_in_FR128SubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000004,
+    LaneBitmask(0x00000004),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6720,7 +6720,7 @@ namespace X86 {   // Register class instances
     VTLists + 47,
     VR512_with_sub_xmm_in_VR128HSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000004,
+    LaneBitmask(0x00000004),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -6733,7 +6733,7 @@ namespace X86 {   // Register class instances
     VTLists + 47,
     VR512_with_sub_xmm_in_VR128LSubClassMask,
     SuperRegIdxSeqs + 1,
-    0x00000004,
+    LaneBitmask(0x00000004),
     0,
     false, /* HasDisjunctSubRegs */
     false, /* CoveredBySubRegs */
@@ -7109,13 +7109,13 @@ unsigned X86GenRegisterInfo::composeSubRegIndicesImpl(unsigned IdxA, unsigned Id
 }
 
   struct MaskRolOp {
-    unsigned Mask;
+    LaneBitmask Mask;
     uint8_t  RotateLeft;
   };
   static const MaskRolOp LaneMaskComposeSequences[] = {
-    { 0xFFFFFFFF,  0 }, { 0, 0 },   // Sequence 0
-    { 0xFFFFFFFF,  1 }, { 0, 0 },   // Sequence 2
-    { 0xFFFFFFFF,  2 }, { 0, 0 }  // Sequence 4
+    { LaneBitmask(0xFFFFFFFF),  0 }, { LaneBitmask::getNone(), 0 },   // Sequence 0
+    { LaneBitmask(0xFFFFFFFF),  1 }, { LaneBitmask::getNone(), 0 },   // Sequence 2
+    { LaneBitmask(0xFFFFFFFF),  2 }, { LaneBitmask::getNone(), 0 }  // Sequence 4
   };
   static const MaskRolOp *const CompositeSequences[] = {
     &LaneMaskComposeSequences[0], // to sub_8bit
@@ -7128,11 +7128,13 @@ unsigned X86GenRegisterInfo::composeSubRegIndicesImpl(unsigned IdxA, unsigned Id
 
 LaneBitmask X86GenRegisterInfo::composeSubRegIndexLaneMaskImpl(unsigned IdxA, LaneBitmask LaneMask) const {
   --IdxA; assert(IdxA < 6 && "Subregister index out of bounds");
-  LaneBitmask Result = 0;
-  for (const MaskRolOp *Ops = CompositeSequences[IdxA]; Ops->Mask != 0; ++Ops) {
-    LaneBitmask Masked = LaneMask & Ops->Mask;
-    Result |= (Masked << Ops->RotateLeft) & 0xFFFFFFFF;
-    Result |= (Masked >> ((32 - Ops->RotateLeft) & 0x1F));
+  LaneBitmask Result;
+  for (const MaskRolOp *Ops = CompositeSequences[IdxA]; Ops->Mask.any(); ++Ops) {
+    LaneBitmask::Type M = LaneMask.getAsInteger() & Ops->Mask.getAsInteger();
+    if (unsigned S = Ops->RotateLeft)
+      Result |= LaneBitmask((M << S) | (M >> (LaneBitmask::BitWidth - S)));
+    else
+      Result |= LaneBitmask(M);
   }
   return Result;
 }
@@ -7140,11 +7142,13 @@ LaneBitmask X86GenRegisterInfo::composeSubRegIndexLaneMaskImpl(unsigned IdxA, La
 LaneBitmask X86GenRegisterInfo::reverseComposeSubRegIndexLaneMaskImpl(unsigned IdxA,  LaneBitmask LaneMask) const {
   LaneMask &= getSubRegIndexLaneMask(IdxA);
   --IdxA; assert(IdxA < 6 && "Subregister index out of bounds");
-  LaneBitmask Result = 0;
-  for (const MaskRolOp *Ops = CompositeSequences[IdxA]; Ops->Mask != 0; ++Ops) {
-    LaneBitmask Rotated = (LaneMask >> Ops->RotateLeft) |
-                          ((LaneMask << ((32 - Ops->RotateLeft) & 0x1F)) & 0xFFFFFFFF);
-    Result |= Rotated & Ops->Mask;
+  LaneBitmask Result;
+  for (const MaskRolOp *Ops = CompositeSequences[IdxA]; Ops->Mask.any(); ++Ops) {
+    LaneBitmask::Type M = LaneMask.getAsInteger();
+    if (unsigned S = Ops->RotateLeft)
+      Result |= LaneBitmask((M >> S) | (M << (LaneBitmask::BitWidth - S)));
+    else
+      Result |= LaneBitmask(M);
   }
   return Result;
 }
@@ -8227,7 +8231,7 @@ getRegUnitPressureSets(unsigned RegUnit) const {
 
 extern const MCRegisterDesc X86RegDesc[];
 extern const MCPhysReg X86RegDiffLists[];
-extern const unsigned X86LaneMaskLists[];
+extern const LaneBitmask X86LaneMaskLists[];
 extern const char X86RegStrings[];
 extern const char X86RegClassStrings[];
 extern const MCPhysReg X86RegUnitRoots[][2];
@@ -8274,7 +8278,7 @@ extern const unsigned X86EHFlavour2L2DwarfSize;
 X86GenRegisterInfo::
 X86GenRegisterInfo(unsigned RA, unsigned DwarfFlavour, unsigned EHFlavour, unsigned PC)
   : TargetRegisterInfo(X86RegInfoDesc, RegisterClasses, RegisterClasses+102,
-             SubRegIndexNameTable, SubRegIndexLaneMaskTable, 0xfffffff8) {
+             SubRegIndexNameTable, SubRegIndexLaneMaskTable, LaneBitmask(0xFFFFFFF8)) {
   InitMCRegisterInfo(X86RegDesc, 246, RA, PC,
                      X86MCRegisterClasses, 102,
                      X86RegUnitRoots,
@@ -8354,6 +8358,10 @@ static const MCPhysReg CSR_32_AllRegs_AVX512_SaveList[] = { X86::EAX, X86::EBX, 
 static const uint32_t CSR_32_AllRegs_AVX512_RegMask[] = { 0x21fdf7fe, 0x00006000, 0xc0000000, 0xc000003f, 0xc000003f, 0xc000003f, 0x0000003f, 0x00000000, };
 static const MCPhysReg CSR_32_AllRegs_SSE_SaveList[] = { X86::EAX, X86::EBX, X86::ECX, X86::EDX, X86::EBP, X86::ESI, X86::EDI, X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, 0 };
 static const uint32_t CSR_32_AllRegs_SSE_RegMask[] = { 0x21fdf7fe, 0x00006000, 0x00000000, 0xc0000000, 0x0000003f, 0x00000000, 0x00000000, 0x00000000, };
+static const MCPhysReg CSR_32_RegCall_SaveList[] = { X86::ESI, X86::EDI, X86::EBX, X86::EBP, X86::ESP, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, 0 };
+static const uint32_t CSR_32_RegCall_RegMask[] = { 0x60b0c1f0, 0x0001e000, 0x00000000, 0x00000000, 0x0000003c, 0x00000000, 0x00000000, 0x00000000, };
+static const MCPhysReg CSR_32_RegCall_NoSSE_SaveList[] = { X86::ESI, X86::EDI, X86::EBX, X86::EBP, X86::ESP, 0 };
+static const uint32_t CSR_32_RegCall_NoSSE_RegMask[] = { 0x60b0c1f0, 0x0001e000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, };
 static const MCPhysReg CSR_64_SaveList[] = { X86::RBX, X86::R12, X86::R13, X86::R14, X86::R15, X86::RBP, 0 };
 static const uint32_t CSR_64_RegMask[] = { 0x003001f0, 0x00000030, 0x00000000, 0x003c0000, 0x00000000, 0x00000000, 0x00000000, 0x003c3c3c, };
 static const MCPhysReg CSR_64EHRet_SaveList[] = { X86::RAX, X86::RDX, X86::RBX, X86::R12, X86::R13, X86::R14, X86::R15, X86::RBP, 0 };
@@ -8390,12 +8398,22 @@ static const MCPhysReg CSR_64_TLS_Darwin_SaveList[] = { X86::RBX, X86::R12, X86:
 static const uint32_t CSR_64_TLS_Darwin_RegMask[] = { 0x217537f0, 0x00006970, 0x00000000, 0x003fc000, 0x00000000, 0x00000000, 0xc0000000, 0x003fffff, };
 static const MCPhysReg CSR_NoRegs_SaveList[] = { 0 };
 static const uint32_t CSR_NoRegs_RegMask[] = { 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, };
+static const MCPhysReg CSR_SysV64_RegCall_SaveList[] = { X86::RBX, X86::RBP, X86::RSP, X86::R12, X86::R13, X86::R14, X86::R15, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, 0 };
+static const uint32_t CSR_SysV64_RegCall_RegMask[] = { 0x403001f0, 0x00019030, 0x00000000, 0x003c0000, 0x00003fc0, 0x00000000, 0x00000000, 0x003c3c3c, };
+static const MCPhysReg CSR_SysV64_RegCall_NoSSE_SaveList[] = { X86::RBX, X86::RBP, X86::RSP, X86::R12, X86::R13, X86::R14, X86::R15, 0 };
+static const uint32_t CSR_SysV64_RegCall_NoSSE_RegMask[] = { 0x403001f0, 0x00019030, 0x00000000, 0x003c0000, 0x00000000, 0x00000000, 0x00000000, 0x003c3c3c, };
 static const MCPhysReg CSR_Win64_SaveList[] = { X86::RBX, X86::RBP, X86::RDI, X86::RSI, X86::R12, X86::R13, X86::R14, X86::R15, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, 0 };
 static const uint32_t CSR_Win64_RegMask[] = { 0x20b0c1f0, 0x000068b0, 0x00000000, 0x003c0000, 0x00003ff0, 0x00000000, 0x00000000, 0x003c3c3c, };
 static const MCPhysReg CSR_Win64_Intel_OCL_BI_AVX_SaveList[] = { X86::RBX, X86::RBP, X86::RDI, X86::RSI, X86::R12, X86::R13, X86::R14, X86::R15, X86::YMM6, X86::YMM7, X86::YMM8, X86::YMM9, X86::YMM10, X86::YMM11, X86::YMM12, X86::YMM13, X86::YMM14, X86::YMM15, 0 };
 static const uint32_t CSR_Win64_Intel_OCL_BI_AVX_RegMask[] = { 0x20b0c1f0, 0x000068b0, 0x00000000, 0x003c0000, 0x00003ff0, 0x00003ff0, 0x00000000, 0x003c3c3c, };
 static const MCPhysReg CSR_Win64_Intel_OCL_BI_AVX512_SaveList[] = { X86::RBX, X86::RBP, X86::RDI, X86::RSI, X86::R12, X86::R13, X86::R14, X86::R15, X86::ZMM6, X86::ZMM7, X86::ZMM8, X86::ZMM9, X86::ZMM10, X86::ZMM11, X86::ZMM12, X86::ZMM13, X86::ZMM14, X86::ZMM15, X86::ZMM16, X86::ZMM17, X86::ZMM18, X86::ZMM19, X86::ZMM20, X86::ZMM21, X86::K4, X86::K5, X86::K6, X86::K7, 0 };
 static const uint32_t CSR_Win64_Intel_OCL_BI_AVX512_RegMask[] = { 0x20b0c1f0, 0x000068b0, 0x00000000, 0x003c003c, 0x000ffff0, 0x000ffff0, 0x000ffff0, 0x003c3c3c, };
+static const MCPhysReg CSR_Win64_NoSSE_SaveList[] = { X86::RBX, X86::RBP, X86::RDI, X86::RSI, X86::R12, X86::R13, X86::R14, X86::R15, 0 };
+static const uint32_t CSR_Win64_NoSSE_RegMask[] = { 0x20b0c1f0, 0x000068b0, 0x00000000, 0x003c0000, 0x00000000, 0x00000000, 0x00000000, 0x003c3c3c, };
+static const MCPhysReg CSR_Win64_RegCall_SaveList[] = { X86::RBX, X86::RBP, X86::RSP, X86::R10, X86::R11, X86::R12, X86::R13, X86::R14, X86::R15, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, 0 };
+static const uint32_t CSR_Win64_RegCall_RegMask[] = { 0x403001f0, 0x00019030, 0x00000000, 0x003f0000, 0x00003fc0, 0x00000000, 0x00000000, 0x003f3f3f, };
+static const MCPhysReg CSR_Win64_RegCall_NoSSE_SaveList[] = { X86::RBX, X86::RBP, X86::RSP, X86::R10, X86::R11, X86::R12, X86::R13, X86::R14, X86::R15, 0 };
+static const uint32_t CSR_Win64_RegCall_NoSSE_RegMask[] = { 0x403001f0, 0x00019030, 0x00000000, 0x003f0000, 0x00000000, 0x00000000, 0x00000000, 0x003f3f3f, };
 
 
 ArrayRef<const uint32_t *> X86GenRegisterInfo::getRegMasks() const {
@@ -8406,6 +8424,8 @@ ArrayRef<const uint32_t *> X86GenRegisterInfo::getRegMasks() const {
     CSR_32_AllRegs_AVX_RegMask,
     CSR_32_AllRegs_AVX512_RegMask,
     CSR_32_AllRegs_SSE_RegMask,
+    CSR_32_RegCall_RegMask,
+    CSR_32_RegCall_NoSSE_RegMask,
     CSR_64_RegMask,
     CSR_64EHRet_RegMask,
     CSR_64_AllRegs_RegMask,
@@ -8424,9 +8444,14 @@ ArrayRef<const uint32_t *> X86GenRegisterInfo::getRegMasks() const {
     CSR_64_SwiftError_RegMask,
     CSR_64_TLS_Darwin_RegMask,
     CSR_NoRegs_RegMask,
+    CSR_SysV64_RegCall_RegMask,
+    CSR_SysV64_RegCall_NoSSE_RegMask,
     CSR_Win64_RegMask,
     CSR_Win64_Intel_OCL_BI_AVX_RegMask,
     CSR_Win64_Intel_OCL_BI_AVX512_RegMask,
+    CSR_Win64_NoSSE_RegMask,
+    CSR_Win64_RegCall_RegMask,
+    CSR_Win64_RegCall_NoSSE_RegMask,
   };
   return makeArrayRef(Masks);
 }
@@ -8439,6 +8464,8 @@ ArrayRef<const char *> X86GenRegisterInfo::getRegMaskNames() const {
     "CSR_32_AllRegs_AVX",
     "CSR_32_AllRegs_AVX512",
     "CSR_32_AllRegs_SSE",
+    "CSR_32_RegCall",
+    "CSR_32_RegCall_NoSSE",
     "CSR_64",
     "CSR_64EHRet",
     "CSR_64_AllRegs",
@@ -8457,9 +8484,14 @@ ArrayRef<const char *> X86GenRegisterInfo::getRegMaskNames() const {
     "CSR_64_SwiftError",
     "CSR_64_TLS_Darwin",
     "CSR_NoRegs",
+    "CSR_SysV64_RegCall",
+    "CSR_SysV64_RegCall_NoSSE",
     "CSR_Win64",
     "CSR_Win64_Intel_OCL_BI_AVX",
     "CSR_Win64_Intel_OCL_BI_AVX512",
+    "CSR_Win64_NoSSE",
+    "CSR_Win64_RegCall",
+    "CSR_Win64_RegCall_NoSSE",
   };
   return makeArrayRef(Names);
 }

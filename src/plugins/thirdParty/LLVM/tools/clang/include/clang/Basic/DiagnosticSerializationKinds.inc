@@ -3,6 +3,8 @@ __SERIALIZATIONSTART = DIAG_START_SERIALIZATION,
 #undef SERIALIZATIONSTART
 #endif
 
+DIAG(err_fe_ast_file_modified, CLASS_ERROR, (unsigned)diag::Severity::Fatal, "file '%0' has been modified since the AST file '%1' was built", 0, SFINAE_SubstitutionFailure, false, true, 15)
+DIAG(err_fe_module_file_modified, CLASS_ERROR, (unsigned)diag::Severity::Fatal, "file '%0' has been modified since the module file '%1' was built", 0, SFINAE_SubstitutionFailure, false, true, 15)
 DIAG(err_fe_not_a_pch_file, CLASS_ERROR, (unsigned)diag::Severity::Error, "input is not a PCH file: '%0'", 0, SFINAE_SubstitutionFailure, false, true, 15)
 DIAG(err_fe_pch_file_modified, CLASS_ERROR, (unsigned)diag::Severity::Fatal, "file '%0' has been modified since the precompiled header '%1' was built", 0, SFINAE_SubstitutionFailure, false, true, 15)
 DIAG(err_fe_pch_file_overridden, CLASS_ERROR, (unsigned)diag::Severity::Error, "file '%0' from the precompiled header has been overridden", 0, SFINAE_SubstitutionFailure, false, true, 15)
@@ -42,5 +44,5 @@ DIAG(note_module_odr_violation_no_possible_decls, CLASS_NOTE, (unsigned)diag::Se
 DIAG(note_module_odr_violation_possible_decl, CLASS_NOTE, (unsigned)diag::Severity::Fatal, "declaration of %0 does not match", 0, SFINAE_Suppress, false, false, 15)
 DIAG(note_pch_rebuild_required, CLASS_NOTE, (unsigned)diag::Severity::Fatal, "please rebuild precompiled header '%0'", 0, SFINAE_Suppress, false, false, 15)
 DIAG(note_pch_required_by, CLASS_NOTE, (unsigned)diag::Severity::Fatal, "'%0' required by '%1'", 0, SFINAE_Suppress, false, false, 15)
-DIAG(warn_duplicate_module_file_extension, CLASS_WARNING, (unsigned)diag::Severity::Warning, "duplicate module file extension block name '%0'", 360, SFINAE_Suppress, false, false, 15)
-DIAG(warn_module_uses_date_time, CLASS_WARNING, (unsigned)diag::Severity::Warning, "%select{precompiled header|module}0 uses __DATE__ or __TIME__", 448, SFINAE_Suppress, false, false, 15)
+DIAG(warn_duplicate_module_file_extension, CLASS_WARNING, (unsigned)diag::Severity::Warning, "duplicate module file extension block name '%0'", 373, SFINAE_Suppress, false, false, 15)
+DIAG(warn_module_uses_date_time, CLASS_WARNING, (unsigned)diag::Severity::Warning, "%select{precompiled header|module}0 uses __DATE__ or __TIME__", 464, SFINAE_Suppress, false, false, 15)

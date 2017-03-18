@@ -6,6 +6,36 @@
 |*                                                                            *|
 \*===----------------------------------------------------------------------===*/
 
+AMDGPUFlatWorkGroupSizeAttr *AMDGPUFlatWorkGroupSizeAttr::clone(ASTContext &C) const {
+  auto *A = new (C) AMDGPUFlatWorkGroupSizeAttr(getLocation(), C, min, max, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void AMDGPUFlatWorkGroupSizeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((amdgpu_flat_work_group_size(" << getMin() << ", " << getMax() << ")))";
+    break;
+  }
+}
+}
+
+const char *AMDGPUFlatWorkGroupSizeAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "amdgpu_flat_work_group_size";
+  }
+}
+
 AMDGPUNumSGPRAttr *AMDGPUNumSGPRAttr::clone(ASTContext &C) const {
   auto *A = new (C) AMDGPUNumSGPRAttr(getLocation(), C, numSGPR, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -63,6 +93,36 @@ const char *AMDGPUNumVGPRAttr::getSpelling() const {
     return "(No spelling)";
   case 0:
     return "amdgpu_num_vgpr";
+  }
+}
+
+AMDGPUWavesPerEUAttr *AMDGPUWavesPerEUAttr::clone(ASTContext &C) const {
+  auto *A = new (C) AMDGPUWavesPerEUAttr(getLocation(), C, min, max, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void AMDGPUWavesPerEUAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((amdgpu_waves_per_eu(" << getMin() << ", " << getMax() << ")))";
+    break;
+  }
+}
+}
+
+const char *AMDGPUWavesPerEUAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "amdgpu_waves_per_eu";
   }
 }
 
@@ -485,6 +545,42 @@ const char *AlignedAttr::getSpelling() const {
   }
 }
 
+AllocSizeAttr *AllocSizeAttr::clone(ASTContext &C) const {
+  auto *A = new (C) AllocSizeAttr(getLocation(), C, elemSizeParam, numElemsParam, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void AllocSizeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((alloc_size(" << getElemSizeParam() << ", " << getNumElemsParam() << ")))";
+    break;
+  }
+  case 1 : {
+    OS << " [[gnu::alloc_size(" << getElemSizeParam() << ", " << getNumElemsParam() << ")]]";
+    break;
+  }
+}
+}
+
+const char *AllocSizeAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "alloc_size";
+  case 1:
+    return "alloc_size";
+  }
+}
+
 AlwaysInlineAttr *AlwaysInlineAttr::clone(ASTContext &C) const {
   auto *A = new (C) AlwaysInlineAttr(getLocation(), C, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -661,11 +757,15 @@ void ArgumentWithTypeTagAttr::printPretty(raw_ostream &OS, const PrintingPolicy 
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((argument_with_type_tag(" << getArgumentKind()->getName() << ", " << getArgumentIdx() << ", " << getTypeTagIdx() << ", " << getIsPointer() << ")))";
+    OS << " __attribute__((argument_with_type_tag(";
+    OS << getArgumentKind()->getName();
+    OS << ", " << getArgumentIdx() << ", " << getTypeTagIdx() << ", " << getIsPointer() << ")))";
     break;
   }
   case 1 : {
-    OS << " __attribute__((pointer_with_type_tag(" << getArgumentKind()->getName() << ", " << getArgumentIdx() << ", " << getTypeTagIdx() << ", " << getIsPointer() << ")))";
+    OS << " __attribute__((pointer_with_type_tag(";
+    OS << getArgumentKind()->getName();
+    OS << ", " << getArgumentIdx() << ", " << getTypeTagIdx() << ", " << getIsPointer() << ")))";
     break;
   }
 }
@@ -1188,6 +1288,10 @@ void CUDAConstantAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy
     OS << " __attribute__((constant))";
     break;
   }
+  case 1 : {
+    OS << " __declspec(__constant__)";
+    break;
+  }
 }
 }
 
@@ -1198,6 +1302,8 @@ const char *CUDAConstantAttr::getSpelling() const {
     return "(No spelling)";
   case 0:
     return "constant";
+  case 1:
+    return "__constant__";
   }
 }
 
@@ -1218,6 +1324,10 @@ void CUDADeviceAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
     OS << " __attribute__((device))";
     break;
   }
+  case 1 : {
+    OS << " __declspec(__device__)";
+    break;
+  }
 }
 }
 
@@ -1228,6 +1338,8 @@ const char *CUDADeviceAttr::getSpelling() const {
     return "(No spelling)";
   case 0:
     return "device";
+  case 1:
+    return "__device__";
   }
 }
 
@@ -1248,6 +1360,10 @@ void CUDAGlobalAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
     OS << " __attribute__((global))";
     break;
   }
+  case 1 : {
+    OS << " __declspec(__global__)";
+    break;
+  }
 }
 }
 
@@ -1258,6 +1374,8 @@ const char *CUDAGlobalAttr::getSpelling() const {
     return "(No spelling)";
   case 0:
     return "global";
+  case 1:
+    return "__global__";
   }
 }
 
@@ -1278,6 +1396,10 @@ void CUDAHostAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
     OS << " __attribute__((host))";
     break;
   }
+  case 1 : {
+    OS << " __declspec(__host__)";
+    break;
+  }
 }
 }
 
@@ -1288,6 +1410,8 @@ const char *CUDAHostAttr::getSpelling() const {
     return "(No spelling)";
   case 0:
     return "host";
+  case 1:
+    return "__host__";
   }
 }
 
@@ -1323,6 +1447,10 @@ void CUDALaunchBoundsAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Po
     OS << " __attribute__((launch_bounds(" << getMaxThreads() << ", " << getMinBlocks() << ")))";
     break;
   }
+  case 1 : {
+    OS << " __declspec(__launch_bounds__(" << getMaxThreads() << ", " << getMinBlocks() << "))";
+    break;
+  }
 }
 }
 
@@ -1333,6 +1461,8 @@ const char *CUDALaunchBoundsAttr::getSpelling() const {
     return "(No spelling)";
   case 0:
     return "launch_bounds";
+  case 1:
+    return "__launch_bounds__";
   }
 }
 
@@ -1353,6 +1483,10 @@ void CUDASharedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
     OS << " __attribute__((shared))";
     break;
   }
+  case 1 : {
+    OS << " __declspec(__shared__)";
+    break;
+  }
 }
 }
 
@@ -1363,6 +1497,8 @@ const char *CUDASharedAttr::getSpelling() const {
     return "(No spelling)";
   case 0:
     return "shared";
+  case 1:
+    return "__shared__";
   }
 }
 
@@ -1814,6 +1950,42 @@ const char *ConsumableSetOnReadAttr::getSpelling() const {
   }
 }
 
+ConvergentAttr *ConvergentAttr::clone(ASTContext &C) const {
+  auto *A = new (C) ConvergentAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void ConvergentAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((convergent))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::convergent]]";
+    break;
+  }
+}
+}
+
+const char *ConvergentAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "convergent";
+  case 1:
+    return "convergent";
+  }
+}
+
 DLLExportAttr *DLLExportAttr::clone(ASTContext &C) const {
   auto *A = new (C) DLLExportAttr(getLocation(), C, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -1984,6 +2156,36 @@ const char *DestructorAttr::getSpelling() const {
     return "destructor";
   case 1:
     return "destructor";
+  }
+}
+
+DiagnoseIfAttr *DiagnoseIfAttr::clone(ASTContext &C) const {
+  auto *A = new (C) DiagnoseIfAttr(getLocation(), C, cond, getMessage(), diagnosticType, argDependent, parent, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void DiagnoseIfAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((diagnose_if(" << getCond() << ", \"" << getMessage() << "\", \"" << DiagnoseIfAttr::ConvertDiagnosticTypeToStr(getDiagnosticType()) << "\")))";
+    break;
+  }
+}
+}
+
+const char *DiagnoseIfAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "diagnose_if";
   }
 }
 
@@ -2320,11 +2522,15 @@ void FormatAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) cons
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((format(" << getType()->getName() << ", " << getFormatIdx() << ", " << getFirstArg() << ")))";
+    OS << " __attribute__((format(";
+    OS << getType()->getName();
+    OS << ", " << getFormatIdx() << ", " << getFirstArg() << ")))";
     break;
   }
   case 1 : {
-    OS << " [[gnu::format(" << getType()->getName() << ", " << getFormatIdx() << ", " << getFirstArg() << ")]]";
+    OS << " [[gnu::format(";
+    OS << getType()->getName();
+    OS << ", " << getFormatIdx() << ", " << getFirstArg() << ")]]";
     break;
   }
 }
@@ -3291,11 +3497,15 @@ void ModeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const 
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((mode(" << getMode()->getName() << ")))";
+    OS << " __attribute__((mode(";
+    OS << getMode()->getName();
+    OS << ")))";
     break;
   }
   case 1 : {
-    OS << " [[gnu::mode(" << getMode()->getName() << ")]]";
+    OS << " [[gnu::mode(";
+    OS << getMode()->getName();
+    OS << ")]]";
     break;
   }
 }
@@ -4179,7 +4389,9 @@ void ObjCBridgeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((objc_bridge(" << getBridgedType()->getName() << ")))";
+    OS << " __attribute__((objc_bridge(";
+    OS << getBridgedType()->getName();
+    OS << ")))";
     break;
   }
 }
@@ -4209,7 +4421,9 @@ void ObjCBridgeMutableAttr::printPretty(raw_ostream &OS, const PrintingPolicy &P
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((objc_bridge_mutable(" << getBridgedType()->getName() << ")))";
+    OS << " __attribute__((objc_bridge_mutable(";
+    OS << getBridgedType()->getName();
+    OS << ")))";
     break;
   }
 }
@@ -4239,7 +4453,13 @@ void ObjCBridgeRelatedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &P
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((objc_bridge_related(" << getRelatedClass()->getName() << ", " << getClassMethod()->getName() << ", " << getInstanceMethod()->getName() << ")))";
+    OS << " __attribute__((objc_bridge_related(";
+    OS << getRelatedClass()->getName();
+    OS << ", ";
+    if (getClassMethod()) OS << getClassMethod()->getName();
+    OS << ", ";
+    if (getInstanceMethod()) OS << getInstanceMethod()->getName();
+    OS << ")))";
     break;
   }
 }
@@ -4645,6 +4865,36 @@ const char *ObjCRuntimeVisibleAttr::getSpelling() const {
   }
 }
 
+ObjCSubclassingRestrictedAttr *ObjCSubclassingRestrictedAttr::clone(ASTContext &C) const {
+  auto *A = new (C) ObjCSubclassingRestrictedAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void ObjCSubclassingRestrictedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((objc_subclassing_restricted))";
+    break;
+  }
+}
+}
+
+const char *ObjCSubclassingRestrictedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_subclassing_restricted";
+  }
+}
+
 OpenCLAccessAttr *OpenCLAccessAttr::clone(ASTContext &C) const {
   auto *A = new (C) OpenCLAccessAttr(getLocation(), C, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -4881,7 +5131,9 @@ void OwnershipAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((ownership_holds(" << getModule()->getName() << ", ";
+    OS << " __attribute__((ownership_holds(";
+    OS << getModule()->getName();
+    OS << ", ";
   bool isFirst = true;
   for (const auto &Val : args()) {
     if (isFirst) isFirst = false;
@@ -4892,7 +5144,9 @@ void OwnershipAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
     break;
   }
   case 1 : {
-    OS << " __attribute__((ownership_returns(" << getModule()->getName() << ", ";
+    OS << " __attribute__((ownership_returns(";
+    OS << getModule()->getName();
+    OS << ", ";
   bool isFirst = true;
   for (const auto &Val : args()) {
     if (isFirst) isFirst = false;
@@ -4903,7 +5157,9 @@ void OwnershipAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
     break;
   }
   case 2 : {
-    OS << " __attribute__((ownership_takes(" << getModule()->getName() << ", ";
+    OS << " __attribute__((ownership_takes(";
+    OS << getModule()->getName();
+    OS << ", ";
   bool isFirst = true;
   for (const auto &Val : args()) {
     if (isFirst) isFirst = false;
@@ -5260,6 +5516,48 @@ const char *PureAttr::getSpelling() const {
   }
 }
 
+RegCallAttr *RegCallAttr::clone(ASTContext &C) const {
+  auto *A = new (C) RegCallAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void RegCallAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((regcall))";
+    break;
+  }
+  case 1 : {
+    OS << " [[gnu::regcall]]";
+    break;
+  }
+  case 2 : {
+    OS << " __regcall";
+    break;
+  }
+}
+}
+
+const char *RegCallAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "regcall";
+  case 1:
+    return "regcall";
+  case 2:
+    return "__regcall";
+  }
+}
+
 ReleaseCapabilityAttr *ReleaseCapabilityAttr::clone(ASTContext &C) const {
   auto *A = new (C) ReleaseCapabilityAttr(getLocation(), C, args_, args_Size, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -5432,6 +5730,42 @@ const char *ReqdWorkGroupSizeAttr::getSpelling() const {
     return "(No spelling)";
   case 0:
     return "reqd_work_group_size";
+  }
+}
+
+RequireConstantInitAttr *RequireConstantInitAttr::clone(ASTContext &C) const {
+  auto *A = new (C) RequireConstantInitAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void RequireConstantInitAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((require_constant_initialization))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::require_constant_initialization]]";
+    break;
+  }
+}
+}
+
+const char *RequireConstantInitAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "require_constant_initialization";
+  case 1:
+    return "require_constant_initialization";
   }
 }
 
@@ -6420,7 +6754,9 @@ void TypeTagForDatatypeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((type_tag_for_datatype(" << getArgumentKind()->getName() << ", " << getMatchingCType().getAsString() << ", " << getLayoutCompatible() << ", " << getMustBeNull() << ")))";
+    OS << " __attribute__((type_tag_for_datatype(";
+    OS << getArgumentKind()->getName();
+    OS << ", " << getMatchingCType().getAsString() << ", " << getLayoutCompatible() << ", " << getMustBeNull() << ")))";
     break;
   }
 }
@@ -6597,6 +6933,10 @@ void UuidAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const 
     OS << " __declspec(uuid(\"" << getGuid() << "\"))";
     break;
   }
+  case 1 : {
+    OS << "[uuid(\"" << getGuid() << "\")]";
+    break;
+  }
 }
 }
 
@@ -6606,6 +6946,8 @@ const char *UuidAttr::getSpelling() const {
     llvm_unreachable("Unknown attribute spelling!");
     return "(No spelling)";
   case 0:
+    return "uuid";
+  case 1:
     return "uuid";
   }
 }
@@ -7038,10 +7380,14 @@ const char *XRayInstrumentAttr::getSpelling() const {
 
 const char *Attr::getSpelling() const {
   switch (getKind()) {
+  case attr::AMDGPUFlatWorkGroupSize:
+    return cast<AMDGPUFlatWorkGroupSizeAttr>(this)->getSpelling();
   case attr::AMDGPUNumSGPR:
     return cast<AMDGPUNumSGPRAttr>(this)->getSpelling();
   case attr::AMDGPUNumVGPR:
     return cast<AMDGPUNumVGPRAttr>(this)->getSpelling();
+  case attr::AMDGPUWavesPerEU:
+    return cast<AMDGPUWavesPerEUAttr>(this)->getSpelling();
   case attr::ARMInterrupt:
     return cast<ARMInterruptAttr>(this)->getSpelling();
   case attr::AbiTag:
@@ -7060,6 +7406,8 @@ const char *Attr::getSpelling() const {
     return cast<AlignValueAttr>(this)->getSpelling();
   case attr::Aligned:
     return cast<AlignedAttr>(this)->getSpelling();
+  case attr::AllocSize:
+    return cast<AllocSizeAttr>(this)->getSpelling();
   case attr::AlwaysInline:
     return cast<AlwaysInlineAttr>(this)->getSpelling();
   case attr::AnalyzerNoReturn:
@@ -7140,6 +7488,8 @@ const char *Attr::getSpelling() const {
     return cast<ConsumableAutoCastAttr>(this)->getSpelling();
   case attr::ConsumableSetOnRead:
     return cast<ConsumableSetOnReadAttr>(this)->getSpelling();
+  case attr::Convergent:
+    return cast<ConvergentAttr>(this)->getSpelling();
   case attr::DLLExport:
     return cast<DLLExportAttr>(this)->getSpelling();
   case attr::DLLImport:
@@ -7148,6 +7498,8 @@ const char *Attr::getSpelling() const {
     return cast<DeprecatedAttr>(this)->getSpelling();
   case attr::Destructor:
     return cast<DestructorAttr>(this)->getSpelling();
+  case attr::DiagnoseIf:
+    return cast<DiagnoseIfAttr>(this)->getSpelling();
   case attr::DisableTailCalls:
     return cast<DisableTailCallsAttr>(this)->getSpelling();
   case attr::EmptyBases:
@@ -7310,6 +7662,8 @@ const char *Attr::getSpelling() const {
     return cast<ObjCRuntimeNameAttr>(this)->getSpelling();
   case attr::ObjCRuntimeVisible:
     return cast<ObjCRuntimeVisibleAttr>(this)->getSpelling();
+  case attr::ObjCSubclassingRestricted:
+    return cast<ObjCSubclassingRestrictedAttr>(this)->getSpelling();
   case attr::OpenCLAccess:
     return cast<OpenCLAccessAttr>(this)->getSpelling();
   case attr::OpenCLKernel:
@@ -7344,12 +7698,16 @@ const char *Attr::getSpelling() const {
     return cast<PtGuardedVarAttr>(this)->getSpelling();
   case attr::Pure:
     return cast<PureAttr>(this)->getSpelling();
+  case attr::RegCall:
+    return cast<RegCallAttr>(this)->getSpelling();
   case attr::ReleaseCapability:
     return cast<ReleaseCapabilityAttr>(this)->getSpelling();
   case attr::RenderScriptKernel:
     return cast<RenderScriptKernelAttr>(this)->getSpelling();
   case attr::ReqdWorkGroupSize:
     return cast<ReqdWorkGroupSizeAttr>(this)->getSpelling();
+  case attr::RequireConstantInit:
+    return cast<RequireConstantInitAttr>(this)->getSpelling();
   case attr::RequiresCapability:
     return cast<RequiresCapabilityAttr>(this)->getSpelling();
   case attr::Restrict:
@@ -7440,10 +7798,14 @@ const char *Attr::getSpelling() const {
 
 Attr *Attr::clone(ASTContext &C) const {
   switch (getKind()) {
+  case attr::AMDGPUFlatWorkGroupSize:
+    return cast<AMDGPUFlatWorkGroupSizeAttr>(this)->clone(C);
   case attr::AMDGPUNumSGPR:
     return cast<AMDGPUNumSGPRAttr>(this)->clone(C);
   case attr::AMDGPUNumVGPR:
     return cast<AMDGPUNumVGPRAttr>(this)->clone(C);
+  case attr::AMDGPUWavesPerEU:
+    return cast<AMDGPUWavesPerEUAttr>(this)->clone(C);
   case attr::ARMInterrupt:
     return cast<ARMInterruptAttr>(this)->clone(C);
   case attr::AbiTag:
@@ -7462,6 +7824,8 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<AlignValueAttr>(this)->clone(C);
   case attr::Aligned:
     return cast<AlignedAttr>(this)->clone(C);
+  case attr::AllocSize:
+    return cast<AllocSizeAttr>(this)->clone(C);
   case attr::AlwaysInline:
     return cast<AlwaysInlineAttr>(this)->clone(C);
   case attr::AnalyzerNoReturn:
@@ -7542,6 +7906,8 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<ConsumableAutoCastAttr>(this)->clone(C);
   case attr::ConsumableSetOnRead:
     return cast<ConsumableSetOnReadAttr>(this)->clone(C);
+  case attr::Convergent:
+    return cast<ConvergentAttr>(this)->clone(C);
   case attr::DLLExport:
     return cast<DLLExportAttr>(this)->clone(C);
   case attr::DLLImport:
@@ -7550,6 +7916,8 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<DeprecatedAttr>(this)->clone(C);
   case attr::Destructor:
     return cast<DestructorAttr>(this)->clone(C);
+  case attr::DiagnoseIf:
+    return cast<DiagnoseIfAttr>(this)->clone(C);
   case attr::DisableTailCalls:
     return cast<DisableTailCallsAttr>(this)->clone(C);
   case attr::EmptyBases:
@@ -7712,6 +8080,8 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<ObjCRuntimeNameAttr>(this)->clone(C);
   case attr::ObjCRuntimeVisible:
     return cast<ObjCRuntimeVisibleAttr>(this)->clone(C);
+  case attr::ObjCSubclassingRestricted:
+    return cast<ObjCSubclassingRestrictedAttr>(this)->clone(C);
   case attr::OpenCLAccess:
     return cast<OpenCLAccessAttr>(this)->clone(C);
   case attr::OpenCLKernel:
@@ -7746,12 +8116,16 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<PtGuardedVarAttr>(this)->clone(C);
   case attr::Pure:
     return cast<PureAttr>(this)->clone(C);
+  case attr::RegCall:
+    return cast<RegCallAttr>(this)->clone(C);
   case attr::ReleaseCapability:
     return cast<ReleaseCapabilityAttr>(this)->clone(C);
   case attr::RenderScriptKernel:
     return cast<RenderScriptKernelAttr>(this)->clone(C);
   case attr::ReqdWorkGroupSize:
     return cast<ReqdWorkGroupSizeAttr>(this)->clone(C);
+  case attr::RequireConstantInit:
+    return cast<RequireConstantInitAttr>(this)->clone(C);
   case attr::RequiresCapability:
     return cast<RequiresCapabilityAttr>(this)->clone(C);
   case attr::Restrict:
@@ -7842,10 +8216,14 @@ Attr *Attr::clone(ASTContext &C) const {
 
 void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
   switch (getKind()) {
+  case attr::AMDGPUFlatWorkGroupSize:
+    return cast<AMDGPUFlatWorkGroupSizeAttr>(this)->printPretty(OS, Policy);
   case attr::AMDGPUNumSGPR:
     return cast<AMDGPUNumSGPRAttr>(this)->printPretty(OS, Policy);
   case attr::AMDGPUNumVGPR:
     return cast<AMDGPUNumVGPRAttr>(this)->printPretty(OS, Policy);
+  case attr::AMDGPUWavesPerEU:
+    return cast<AMDGPUWavesPerEUAttr>(this)->printPretty(OS, Policy);
   case attr::ARMInterrupt:
     return cast<ARMInterruptAttr>(this)->printPretty(OS, Policy);
   case attr::AbiTag:
@@ -7864,6 +8242,8 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<AlignValueAttr>(this)->printPretty(OS, Policy);
   case attr::Aligned:
     return cast<AlignedAttr>(this)->printPretty(OS, Policy);
+  case attr::AllocSize:
+    return cast<AllocSizeAttr>(this)->printPretty(OS, Policy);
   case attr::AlwaysInline:
     return cast<AlwaysInlineAttr>(this)->printPretty(OS, Policy);
   case attr::AnalyzerNoReturn:
@@ -7944,6 +8324,8 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<ConsumableAutoCastAttr>(this)->printPretty(OS, Policy);
   case attr::ConsumableSetOnRead:
     return cast<ConsumableSetOnReadAttr>(this)->printPretty(OS, Policy);
+  case attr::Convergent:
+    return cast<ConvergentAttr>(this)->printPretty(OS, Policy);
   case attr::DLLExport:
     return cast<DLLExportAttr>(this)->printPretty(OS, Policy);
   case attr::DLLImport:
@@ -7952,6 +8334,8 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<DeprecatedAttr>(this)->printPretty(OS, Policy);
   case attr::Destructor:
     return cast<DestructorAttr>(this)->printPretty(OS, Policy);
+  case attr::DiagnoseIf:
+    return cast<DiagnoseIfAttr>(this)->printPretty(OS, Policy);
   case attr::DisableTailCalls:
     return cast<DisableTailCallsAttr>(this)->printPretty(OS, Policy);
   case attr::EmptyBases:
@@ -8114,6 +8498,8 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<ObjCRuntimeNameAttr>(this)->printPretty(OS, Policy);
   case attr::ObjCRuntimeVisible:
     return cast<ObjCRuntimeVisibleAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCSubclassingRestricted:
+    return cast<ObjCSubclassingRestrictedAttr>(this)->printPretty(OS, Policy);
   case attr::OpenCLAccess:
     return cast<OpenCLAccessAttr>(this)->printPretty(OS, Policy);
   case attr::OpenCLKernel:
@@ -8148,12 +8534,16 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<PtGuardedVarAttr>(this)->printPretty(OS, Policy);
   case attr::Pure:
     return cast<PureAttr>(this)->printPretty(OS, Policy);
+  case attr::RegCall:
+    return cast<RegCallAttr>(this)->printPretty(OS, Policy);
   case attr::ReleaseCapability:
     return cast<ReleaseCapabilityAttr>(this)->printPretty(OS, Policy);
   case attr::RenderScriptKernel:
     return cast<RenderScriptKernelAttr>(this)->printPretty(OS, Policy);
   case attr::ReqdWorkGroupSize:
     return cast<ReqdWorkGroupSizeAttr>(this)->printPretty(OS, Policy);
+  case attr::RequireConstantInit:
+    return cast<RequireConstantInitAttr>(this)->printPretty(OS, Policy);
   case attr::RequiresCapability:
     return cast<RequiresCapabilityAttr>(this)->printPretty(OS, Policy);
   case attr::Restrict:

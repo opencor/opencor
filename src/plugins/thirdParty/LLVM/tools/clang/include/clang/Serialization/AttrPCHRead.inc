@@ -7,6 +7,17 @@
 \*===----------------------------------------------------------------------===*/
 
   switch (Kind) {
+  case attr::AMDGPUFlatWorkGroupSize: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    unsigned min = Record[Idx++];
+    unsigned max = Record[Idx++];
+    New = new (Context) AMDGPUFlatWorkGroupSizeAttr(Range, Context, min, max, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
   case attr::AMDGPUNumSGPR: {
     bool isInherited = Record[Idx++];
     bool isImplicit = Record[Idx++];
@@ -23,6 +34,17 @@
     unsigned Spelling = Record[Idx++];
     unsigned numVGPR = Record[Idx++];
     New = new (Context) AMDGPUNumVGPRAttr(Range, Context, numVGPR, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
+  case attr::AMDGPUWavesPerEU: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    unsigned min = Record[Idx++];
+    unsigned max = Record[Idx++];
+    New = new (Context) AMDGPUWavesPerEUAttr(Range, Context, min, max, Spelling);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     New->setImplicit(isImplicit);
     break;
@@ -131,6 +153,17 @@
     else
       alignmentPtr = GetTypeSourceInfo(F, Record, Idx);
     New = new (Context) AlignedAttr(Range, Context, isalignmentExpr, alignmentPtr, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
+  case attr::AllocSize: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    int elemSizeParam = Record[Idx++];
+    int numElemsParam = Record[Idx++];
+    New = new (Context) AllocSizeAttr(Range, Context, elemSizeParam, numElemsParam, Spelling);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     New->setImplicit(isImplicit);
     break;
@@ -534,6 +567,15 @@
     New->setImplicit(isImplicit);
     break;
   }
+  case attr::Convergent: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    New = new (Context) ConvergentAttr(Range, Context, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
   case attr::DLLExport: {
     bool isInherited = Record[Idx++];
     bool isImplicit = Record[Idx++];
@@ -569,6 +611,20 @@
     unsigned Spelling = Record[Idx++];
     int priority = Record[Idx++];
     New = new (Context) DestructorAttr(Range, Context, priority, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
+  case attr::DiagnoseIf: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    Expr * cond = ReadExpr(F);
+    std::string message= ReadString(Record, Idx);
+    DiagnoseIfAttr::DiagnosticType diagnosticType(static_cast<DiagnoseIfAttr::DiagnosticType>(Record[Idx++]));
+    bool argDependent = Record[Idx++];
+    FunctionDecl * parent = GetLocalDeclAs<FunctionDecl >(F, Record[Idx++]);
+    New = new (Context) DiagnoseIfAttr(Range, Context, cond, message, diagnosticType, argDependent, parent, Spelling);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     New->setImplicit(isImplicit);
     break;
@@ -1367,6 +1423,15 @@
     New->setImplicit(isImplicit);
     break;
   }
+  case attr::ObjCSubclassingRestricted: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    New = new (Context) ObjCSubclassingRestrictedAttr(Range, Context, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
   case attr::OpenCLAccess: {
     bool isImplicit = Record[Idx++];
     unsigned Spelling = Record[Idx++];
@@ -1527,6 +1592,15 @@
     New->setImplicit(isImplicit);
     break;
   }
+  case attr::RegCall: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    New = new (Context) RegCallAttr(Range, Context, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
   case attr::ReleaseCapability: {
     bool isInherited = Record[Idx++];
     bool isImplicit = Record[Idx++];
@@ -1556,6 +1630,15 @@
     unsigned yDim = Record[Idx++];
     unsigned zDim = Record[Idx++];
     New = new (Context) ReqdWorkGroupSizeAttr(Range, Context, xDim, yDim, zDim, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
+  case attr::RequireConstantInit: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    New = new (Context) RequireConstantInitAttr(Range, Context, Spelling);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     New->setImplicit(isImplicit);
     break;

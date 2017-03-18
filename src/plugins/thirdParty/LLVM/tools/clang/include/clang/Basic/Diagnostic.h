@@ -23,25 +23,36 @@
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/IntrusiveRefCntPtr.h"
 #include "llvm/ADT/iterator_range.h"
+#include "llvm/ADT/SmallVector.h"
+#include "llvm/ADT/StringRef.h"
+#include <algorithm>
+#include <cassert>
+#include <cstdint>
 #include <list>
+#include <memory>
+#include <string>
+#include <type_traits>
+#include <utility>
 #include <vector>
 //---OPENCOR--- BEGIN
 #include "llvmglobal.h"
 //---OPENCOR--- END
 
 namespace clang {
-  class DeclContext;
-  class DiagnosticBuilder;
-  class DiagnosticConsumer;
-  class DiagnosticErrorTrap;
-  class DiagnosticOptions;
-  class IdentifierInfo;
-  class LangOptions;
-  class Preprocessor;
-  class StoredDiagnostic;
-  namespace tok {
+
+class DeclContext;
+class DiagnosticBuilder;
+class DiagnosticConsumer;
+class IdentifierInfo;
+class LangOptions;
+class Preprocessor;
+class StoredDiagnostic;
+
+namespace tok {
+
   enum TokenKind : unsigned short;
-  }
+
+} // end namespace tok
 
 /// \brief Annotates a diagnostic with some code that should be
 /// inserted, removed, or replaced to fix the problem.
@@ -141,9 +152,6 @@ class DiagnosticsEngine : public RefCountedBase<DiagnosticsEngine> {
 //---OPENCOR--- BEGIN
 class LLVM_EXPORT DiagnosticsEngine : public RefCountedBase<DiagnosticsEngine> {
 //---OPENCOR--- END
-  DiagnosticsEngine(const DiagnosticsEngine &) = delete;
-  void operator=(const DiagnosticsEngine &) = delete;
-
 public:
   /// \brief The level of the diagnostic, after it has been through mapping.
   enum Level {
@@ -352,11 +360,12 @@ private:
   std::string FlagValue;
 
 public:
-  explicit DiagnosticsEngine(
-                      const IntrusiveRefCntPtr<DiagnosticIDs> &Diags,
-                      DiagnosticOptions *DiagOpts,
-                      DiagnosticConsumer *client = nullptr,
-                      bool ShouldOwnClient = true);
+  explicit DiagnosticsEngine(IntrusiveRefCntPtr<DiagnosticIDs> Diags,
+                             DiagnosticOptions *DiagOpts,
+                             DiagnosticConsumer *client = nullptr,
+                             bool ShouldOwnClient = true);
+  DiagnosticsEngine(const DiagnosticsEngine &) = delete;
+  DiagnosticsEngine &operator=(const DiagnosticsEngine &) = delete;
   ~DiagnosticsEngine();
 
   const IntrusiveRefCntPtr<DiagnosticIDs> &getDiagnosticIDs() const {
@@ -893,7 +902,6 @@ class DiagnosticBuilder {
   /// call to ForceEmit.
   mutable bool IsForceEmit = false;
 
-  void operator=(const DiagnosticBuilder &) = delete;
   friend class DiagnosticsEngine;
 
   DiagnosticBuilder() = default;
@@ -958,14 +966,16 @@ public:
     NumArgs = D.NumArgs;
   }
 
-  /// \brief Retrieve an empty diagnostic builder.
-  static DiagnosticBuilder getEmpty() {
-    return DiagnosticBuilder();
-  }
+  DiagnosticBuilder &operator=(const DiagnosticBuilder &) = delete;
 
   /// \brief Emits the diagnostic.
   ~DiagnosticBuilder() {
     Emit();
+  }
+
+  /// \brief Retrieve an empty diagnostic builder.
+  static DiagnosticBuilder getEmpty() {
+    return DiagnosticBuilder();
   }
 
   /// \brief Forces the diagnostic to be emitted.
@@ -1152,6 +1162,7 @@ inline DiagnosticBuilder DiagnosticsEngine::Report(unsigned DiagID) {
 class Diagnostic {
   const DiagnosticsEngine *DiagObj;
   StringRef StoredDiagMessage;
+
 public:
   explicit Diagnostic(const DiagnosticsEngine *DO) : DiagObj(DO) {}
   Diagnostic(const DiagnosticsEngine *DO, StringRef storedDiagMessage)
@@ -1288,7 +1299,7 @@ public:
                    ArrayRef<FixItHint> Fixits);
 
   /// \brief Evaluates true when this object stores a diagnostic.
-  explicit operator bool() const { return Message.size() > 0; }
+  explicit operator bool() const { return !Message.empty(); }
 
   unsigned getID() const { return ID; }
   DiagnosticsEngine::Level getLevel() const { return Level; }
@@ -1306,7 +1317,6 @@ public:
     return llvm::makeArrayRef(Ranges);
   }
 
-
   typedef std::vector<FixItHint>::const_iterator fixit_iterator;
   fixit_iterator fixit_begin() const { return FixIts.begin(); }
   fixit_iterator fixit_end() const { return FixIts.end(); }
@@ -1321,17 +1331,17 @@ public:
 /// formats and prints fully processed diagnostics.
 class DiagnosticConsumer {
 protected:
-  unsigned NumWarnings;       ///< Number of warnings reported
-  unsigned NumErrors;         ///< Number of errors reported
+  unsigned NumWarnings = 0;       ///< Number of warnings reported
+  unsigned NumErrors = 0;         ///< Number of errors reported
 
 public:
-  DiagnosticConsumer() : NumWarnings(0), NumErrors(0) { }
+  DiagnosticConsumer() = default;
+
+  virtual ~DiagnosticConsumer();
 
   unsigned getNumErrors() const { return NumErrors; }
   unsigned getNumWarnings() const { return NumWarnings; }
   virtual void clear() { NumWarnings = NumErrors = 0; }
-
-  virtual ~DiagnosticConsumer();
 
   /// \brief Callback to inform the diagnostic client that processing
   /// of a source file is beginning.
@@ -1377,6 +1387,7 @@ public:
 /// \brief A diagnostic client that ignores all diagnostics.
 class IgnoringDiagConsumer : public DiagnosticConsumer {
   virtual void anchor();
+
   void HandleDiagnostic(DiagnosticsEngine::Level DiagLevel,
                         const Diagnostic &Info) override {
     // Just ignore it.
@@ -1424,6 +1435,6 @@ void ProcessWarningOptions(DiagnosticsEngine &Diags,
                            const DiagnosticOptions &Opts,
                            bool ReportDiags = true);
 
-}  // end namespace clang
+} // end namespace clang
 
-#endif
+#endif // LLVM_CLANG_BASIC_DIAGNOSTIC_H

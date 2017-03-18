@@ -188,11 +188,11 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
     switch (Name[0]) {
     default: break;
     case 'a':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "rg", 2))
+      if (memcmp(Name.data()+1, "rg", 2) != 0)
         break;
       return &Commands[3];	 // "arg"
     case 'b':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ug", 2))
+      if (memcmp(Name.data()+1, "ug", 2) != 0)
         break;
       return &Commands[9];	 // "bug"
     case 'd':	 // 2 strings to match.
@@ -209,7 +209,7 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
       }
       break;
     case 'm':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "sc", 2))
+      if (memcmp(Name.data()+1, "sc", 2) != 0)
         break;
       return &Commands[62];	 // "msc"
     case 'p':	 // 2 strings to match.
@@ -226,15 +226,15 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
       }
       break;
     case 'r':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ef", 2))
+      if (memcmp(Name.data()+1, "ef", 2) != 0)
         break;
       return &Commands[78];	 // "ref"
     case 's':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ee", 2))
+      if (memcmp(Name.data()+1, "ee", 2) != 0)
         break;
       return &Commands[93];	 // "see"
     case 'v':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ar", 2))
+      if (memcmp(Name.data()+1, "ar", 2) != 0)
         break;
       return &Commands[112];	 // "var"
     }
@@ -243,40 +243,40 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
     switch (Name[0]) {
     default: break;
     case 'c':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ode", 3))
+      if (memcmp(Name.data()+1, "ode", 3) != 0)
         break;
       return &Commands[16];	 // "code"
     case 'd':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ate", 3))
+      if (memcmp(Name.data()+1, "ate", 3) != 0)
         break;
       return &Commands[21];	 // "date"
     case 'e':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "num", 3))
+      if (memcmp(Name.data()+1, "num", 3) != 0)
         break;
       return &Commands[32];	 // "enum"
     case 'l':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ink", 3))
+      if (memcmp(Name.data()+1, "ink", 3) != 0)
         break;
       return &Commands[55];	 // "link"
     case 'n':	 // 2 strings to match.
       switch (Name[1]) {
       default: break;
       case 'a':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "me", 2))
+        if (memcmp(Name.data()+2, "me", 2) != 0)
           break;
         return &Commands[64];	 // "name"
       case 'o':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "te", 2))
+        if (memcmp(Name.data()+2, "te", 2) != 0)
           break;
         return &Commands[66];	 // "note"
       }
       break;
     case 'p':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ost", 3))
+      if (memcmp(Name.data()+1, "ost", 3) != 0)
         break;
       return &Commands[74];	 // "post"
     case 't':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "odo", 3))
+      if (memcmp(Name.data()+1, "odo", 3) != 0)
         break;
       return &Commands[108];	 // "todo"
     }
@@ -285,53 +285,53 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
     switch (Name[0]) {
     default: break;
     case '/':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "link", 4))
+      if (memcmp(Name.data()+1, "link", 4) != 0)
         break;
       return &Commands[56];	 // "/link"
     case 'b':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "rief", 4))
+      if (memcmp(Name.data()+1, "rief", 4) != 0)
         break;
       return &Commands[8];	 // "brief"
     case 'c':	 // 2 strings to match.
       switch (Name[1]) {
       default: break;
       case 'l':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "ass", 3))
+        if (memcmp(Name.data()+2, "ass", 3) != 0)
           break;
         return &Commands[13];	 // "class"
       case 'o':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "nst", 3))
+        if (memcmp(Name.data()+2, "nst", 3) != 0)
           break;
         return &Commands[18];	 // "const"
       }
       break;
     case 'h':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "elps", 4))
+      if (memcmp(Name.data()+1, "elps", 4) != 0)
         break;
       return &Commands[45];	 // "helps"
     case 'p':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "aram", 4))
+      if (memcmp(Name.data()+1, "aram", 4) != 0)
         break;
       return &Commands[72];	 // "param"
     case 's':	 // 2 strings to match.
       switch (Name[1]) {
       default: break;
       case 'h':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "ort", 3))
+        if (memcmp(Name.data()+2, "ort", 3) != 0)
           break;
         return &Commands[95];	 // "short"
       case 'i':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "nce", 3))
+        if (memcmp(Name.data()+2, "nce", 3) != 0)
           break;
         return &Commands[96];	 // "since"
       }
       break;
     case 't':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "hrow", 4))
+      if (memcmp(Name.data()+1, "hrow", 4) != 0)
         break;
       return &Commands[106];	 // "throw"
     case 'u':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "nion", 4))
+      if (memcmp(Name.data()+1, "nion", 4) != 0)
         break;
       return &Commands[111];	 // "union"
     }
@@ -340,30 +340,30 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
     switch (Name[0]) {
     default: break;
     case 'a':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "uthor", 5))
+      if (memcmp(Name.data()+1, "uthor", 5) != 0)
         break;
       return &Commands[5];	 // "author"
     case 'e':	 // 2 strings to match.
-      if (memcmp(Name.data()+1, "nd", 2))
+      if (memcmp(Name.data()+1, "nd", 2) != 0)
         break;
       switch (Name[3]) {
       default: break;
       case 'd':	 // 1 string to match.
-        if (memcmp(Name.data()+4, "ot", 2))
+        if (memcmp(Name.data()+4, "ot", 2) != 0)
           break;
         return &Commands[29];	 // "enddot"
       case 'm':	 // 1 string to match.
-        if (memcmp(Name.data()+4, "sc", 2))
+        if (memcmp(Name.data()+4, "sc", 2) != 0)
           break;
         return &Commands[63];	 // "endmsc"
       }
       break;
     case 'h':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "elper", 5))
+      if (memcmp(Name.data()+1, "elper", 5) != 0)
         break;
       return &Commands[43];	 // "helper"
     case 'm':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ethod", 5))
+      if (memcmp(Name.data()+1, "ethod", 5) != 0)
         break;
       return &Commands[60];	 // "method"
     case 'r':	 // 3 strings to match.
@@ -372,32 +372,32 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
       switch (Name[2]) {
       default: break;
       case 'm':	 // 1 string to match.
-        if (memcmp(Name.data()+3, "ark", 3))
+        if (memcmp(Name.data()+3, "ark", 3) != 0)
           break;
         return &Commands[83];	 // "remark"
       case 's':	 // 1 string to match.
-        if (memcmp(Name.data()+3, "ult", 3))
+        if (memcmp(Name.data()+3, "ult", 3) != 0)
           break;
         return &Commands[85];	 // "result"
       case 't':	 // 1 string to match.
-        if (memcmp(Name.data()+3, "urn", 3))
+        if (memcmp(Name.data()+3, "urn", 3) != 0)
           break;
         return &Commands[86];	 // "return"
       }
       break;
     case 's':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "truct", 5))
+      if (memcmp(Name.data()+1, "truct", 5) != 0)
         break;
       return &Commands[97];	 // "struct"
     case 't':	 // 2 strings to match.
       switch (Name[1]) {
       default: break;
       case 'h':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "rows", 4))
+        if (memcmp(Name.data()+2, "rows", 4) != 0)
           break;
         return &Commands[107];	 // "throws"
       case 'p':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "aram", 4))
+        if (memcmp(Name.data()+2, "aram", 4) != 0)
           break;
         return &Commands[109];	 // "tparam"
       }
@@ -408,27 +408,27 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
     switch (Name[0]) {
     default: break;
     case 'a':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "uthors", 6))
+      if (memcmp(Name.data()+1, "uthors", 6) != 0)
         break;
       return &Commands[6];	 // "authors"
     case 'c':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "oclass", 6))
+      if (memcmp(Name.data()+1, "oclass", 6) != 0)
         break;
       return &Commands[15];	 // "coclass"
     case 'd':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "etails", 6))
+      if (memcmp(Name.data()+1, "etails", 6) != 0)
         break;
       return &Commands[26];	 // "details"
     case 'e':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ndcode", 6))
+      if (memcmp(Name.data()+1, "ndcode", 6) != 0)
         break;
       return &Commands[17];	 // "endcode"
     case 'i':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ngroup", 6))
+      if (memcmp(Name.data()+1, "ngroup", 6) != 0)
         break;
       return &Commands[48];	 // "ingroup"
     case 'm':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "anonly", 6))
+      if (memcmp(Name.data()+1, "anonly", 6) != 0)
         break;
       return &Commands[58];	 // "manonly"
     case 'r':	 // 5 strings to match.
@@ -438,7 +438,7 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
         switch (Name[2]) {
         default: break;
         case 'l':	 // 2 strings to match.
-          if (memcmp(Name.data()+3, "ate", 3))
+          if (memcmp(Name.data()+3, "ate", 3) != 0)
             break;
           switch (Name[6]) {
           default: break;
@@ -449,17 +449,17 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
           }
           break;
         case 'm':	 // 1 string to match.
-          if (memcmp(Name.data()+3, "arks", 4))
+          if (memcmp(Name.data()+3, "arks", 4) != 0)
             break;
           return &Commands[84];	 // "remarks"
         case 't':	 // 1 string to match.
-          if (memcmp(Name.data()+3, "urns", 4))
+          if (memcmp(Name.data()+3, "urns", 4) != 0)
             break;
           return &Commands[87];	 // "returns"
         }
         break;
       case 't':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "fonly", 5))
+        if (memcmp(Name.data()+2, "fonly", 5) != 0)
           break;
         return &Commands[88];	 // "rtfonly"
       }
@@ -471,35 +471,35 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
         switch (Name[2]) {
         default: break;
         case 'c':	 // 1 string to match.
-          if (memcmp(Name.data()+3, "tion", 4))
+          if (memcmp(Name.data()+3, "tion", 4) != 0)
             break;
           return &Commands[91];	 // "section"
         case 'e':	 // 1 string to match.
-          if (memcmp(Name.data()+3, "also", 4))
+          if (memcmp(Name.data()+3, "also", 4) != 0)
             break;
           return &Commands[94];	 // "seealso"
         }
         break;
       case 'u':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "bpage", 5))
+        if (memcmp(Name.data()+2, "bpage", 5) != 0)
           break;
         return &Commands[98];	 // "subpage"
       }
       break;
     case 't':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ypedef", 6))
+      if (memcmp(Name.data()+1, "ypedef", 6) != 0)
         break;
       return &Commands[110];	 // "typedef"
     case 'v':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ersion", 6))
+      if (memcmp(Name.data()+1, "ersion", 6) != 0)
         break;
       return &Commands[115];	 // "version"
     case 'w':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "arning", 6))
+      if (memcmp(Name.data()+1, "arning", 6) != 0)
         break;
       return &Commands[116];	 // "warning"
     case 'x':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "mlonly", 6))
+      if (memcmp(Name.data()+1, "mlonly", 6) != 0)
         break;
       return &Commands[118];	 // "xmlonly"
     }
@@ -508,7 +508,7 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
     switch (Name[0]) {
     default: break;
     case 'a':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "bstract", 7))
+      if (memcmp(Name.data()+1, "bstract", 7) != 0)
         break;
       return &Commands[1];	 // "abstract"
     case 'c':	 // 3 strings to match.
@@ -518,66 +518,66 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
         switch (Name[2]) {
         default: break;
         case 'l':	 // 1 string to match.
-          if (memcmp(Name.data()+3, "lback", 5))
+          if (memcmp(Name.data()+3, "lback", 5) != 0)
             break;
           return &Commands[11];	 // "callback"
         case 't':	 // 1 string to match.
-          if (memcmp(Name.data()+3, "egory", 5))
+          if (memcmp(Name.data()+3, "egory", 5) != 0)
             break;
           return &Commands[12];	 // "category"
         }
         break;
       case 'o':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "nstant", 6))
+        if (memcmp(Name.data()+2, "nstant", 6) != 0)
           break;
         return &Commands[19];	 // "constant"
       }
       break;
     case 'd':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "efgroup", 7))
+      if (memcmp(Name.data()+1, "efgroup", 7) != 0)
         break;
       return &Commands[23];	 // "defgroup"
     case 'f':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "unction", 7))
+      if (memcmp(Name.data()+1, "unction", 7) != 0)
         break;
       return &Commands[40];	 // "function"
     case 'h':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "tmlonly", 7))
+      if (memcmp(Name.data()+1, "tmlonly", 7) != 0)
         break;
       return &Commands[46];	 // "htmlonly"
     case 'm':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ainpage", 7))
+      if (memcmp(Name.data()+1, "ainpage", 7) != 0)
         break;
       return &Commands[57];	 // "mainpage"
     case 'o':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "verload", 7))
+      if (memcmp(Name.data()+1, "verload", 7) != 0)
         break;
       return &Commands[67];	 // "overload"
     case 'p':	 // 2 strings to match.
-      if (memcmp(Name.data()+1, "ro", 2))
+      if (memcmp(Name.data()+1, "ro", 2) != 0)
         break;
       switch (Name[3]) {
       default: break;
       case 'p':	 // 1 string to match.
-        if (memcmp(Name.data()+4, "erty", 4))
+        if (memcmp(Name.data()+4, "erty", 4) != 0)
           break;
         return &Commands[76];	 // "property"
       case 't':	 // 1 string to match.
-        if (memcmp(Name.data()+4, "ocol", 4))
+        if (memcmp(Name.data()+4, "ocol", 4) != 0)
           break;
         return &Commands[77];	 // "protocol"
       }
       break;
     case 's':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ecurity", 7))
+      if (memcmp(Name.data()+1, "ecurity", 7) != 0)
         break;
       return &Commands[92];	 // "security"
     case 't':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "emplate", 7))
+      if (memcmp(Name.data()+1, "emplate", 7) != 0)
         break;
       return &Commands[102];	 // "template"
     case 'v':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "erbatim", 7))
+      if (memcmp(Name.data()+1, "erbatim", 7) != 0)
         break;
       return &Commands[113];	 // "verbatim"
     }
@@ -586,15 +586,15 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
     switch (Name[0]) {
     default: break;
     case 'a':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ttention", 8))
+      if (memcmp(Name.data()+1, "ttention", 8) != 0)
         break;
       return &Commands[4];	 // "attention"
     case 'c':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "opyright", 8))
+      if (memcmp(Name.data()+1, "opyright", 8) != 0)
         break;
       return &Commands[20];	 // "copyright"
     case 'e':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "xception", 8))
+      if (memcmp(Name.data()+1, "xception", 8) != 0)
         break;
       return &Commands[33];	 // "exception"
     case 'i':	 // 2 strings to match.
@@ -603,37 +603,37 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
       switch (Name[2]) {
       default: break;
       case 't':	 // 1 string to match.
-        if (memcmp(Name.data()+3, "erface", 6))
+        if (memcmp(Name.data()+3, "erface", 6) != 0)
           break;
         return &Commands[50];	 // "interface"
       case 'v':	 // 1 string to match.
-        if (memcmp(Name.data()+3, "ariant", 6))
+        if (memcmp(Name.data()+3, "ariant", 6) != 0)
           break;
         return &Commands[51];	 // "invariant"
       }
       break;
     case 'l':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "atexonly", 8))
+      if (memcmp(Name.data()+1, "atexonly", 8) != 0)
         break;
       return &Commands[52];	 // "latexonly"
     case 'n':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "amespace", 8))
+      if (memcmp(Name.data()+1, "amespace", 8) != 0)
         break;
       return &Commands[65];	 // "namespace"
     case 'o':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "wnership", 8))
+      if (memcmp(Name.data()+1, "wnership", 8) != 0)
         break;
       return &Commands[68];	 // "ownership"
     case 'p':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "aragraph", 8))
+      if (memcmp(Name.data()+1, "aragraph", 8) != 0)
         break;
       return &Commands[71];	 // "paragraph"
     case 't':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "extblock", 8))
+      if (memcmp(Name.data()+1, "extblock", 8) != 0)
         break;
       return &Commands[104];	 // "textblock"
     case 'w':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "eakgroup", 8))
+      if (memcmp(Name.data()+1, "eakgroup", 8) != 0)
         break;
       return &Commands[117];	 // "weakgroup"
     }
@@ -642,11 +642,11 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
     switch (Name[0]) {
     default: break;
     case '/':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "textblock", 9))
+      if (memcmp(Name.data()+1, "textblock", 9) != 0)
         break;
       return &Commands[105];	 // "/textblock"
     case 'a':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ddtogroup", 9))
+      if (memcmp(Name.data()+1, "ddtogroup", 9) != 0)
         break;
       return &Commands[2];	 // "addtogroup"
     case 'd':	 // 3 strings to match.
@@ -658,42 +658,42 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
         switch (Name[3]) {
         default: break;
         case 'e':	 // 1 string to match.
-          if (memcmp(Name.data()+4, "ndency", 6))
+          if (memcmp(Name.data()+4, "ndency", 6) != 0)
             break;
           return &Commands[24];	 // "dependency"
         case 'r':	 // 1 string to match.
-          if (memcmp(Name.data()+4, "ecated", 6))
+          if (memcmp(Name.data()+4, "ecated", 6) != 0)
             break;
           return &Commands[25];	 // "deprecated"
         }
         break;
       case 'i':	 // 1 string to match.
-        if (memcmp(Name.data()+2, "scussion", 8))
+        if (memcmp(Name.data()+2, "scussion", 8) != 0)
           break;
         return &Commands[27];	 // "discussion"
       }
       break;
     case 'e':	 // 3 strings to match.
-      if (memcmp(Name.data()+1, "nd", 2))
+      if (memcmp(Name.data()+1, "nd", 2) != 0)
         break;
       switch (Name[3]) {
       default: break;
       case 'm':	 // 1 string to match.
-        if (memcmp(Name.data()+4, "anonly", 6))
+        if (memcmp(Name.data()+4, "anonly", 6) != 0)
           break;
         return &Commands[59];	 // "endmanonly"
       case 'r':	 // 1 string to match.
-        if (memcmp(Name.data()+4, "tfonly", 6))
+        if (memcmp(Name.data()+4, "tfonly", 6) != 0)
           break;
         return &Commands[89];	 // "endrtfonly"
       case 'x':	 // 1 string to match.
-        if (memcmp(Name.data()+4, "mlonly", 6))
+        if (memcmp(Name.data()+4, "mlonly", 6) != 0)
           break;
         return &Commands[119];	 // "endxmlonly"
       }
       break;
     case 'h':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "eaderfile", 9))
+      if (memcmp(Name.data()+1, "eaderfile", 9) != 0)
         break;
       return &Commands[42];	 // "headerfile"
     case 's':	 // 2 strings to match.
@@ -702,11 +702,11 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
       switch (Name[2]) {
       default: break;
       case 'b':	 // 1 string to match.
-        if (memcmp(Name.data()+3, "section", 7))
+        if (memcmp(Name.data()+3, "section", 7) != 0)
           break;
         return &Commands[99];	 // "subsection"
       case 'p':	 // 1 string to match.
-        if (memcmp(Name.data()+3, "erclass", 7))
+        if (memcmp(Name.data()+3, "erclass", 7) != 0)
           break;
         return &Commands[101];	 // "superclass"
       }
@@ -717,47 +717,47 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
     switch (Name[0]) {
     default: break;
     case 'c':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "lassdesign", 10))
+      if (memcmp(Name.data()+1, "lassdesign", 10) != 0)
         break;
       return &Commands[14];	 // "classdesign"
     case 'e':	 // 2 strings to match.
-      if (memcmp(Name.data()+1, "nd", 2))
+      if (memcmp(Name.data()+1, "nd", 2) != 0)
         break;
       switch (Name[3]) {
       default: break;
       case 'h':	 // 1 string to match.
-        if (memcmp(Name.data()+4, "tmlonly", 7))
+        if (memcmp(Name.data()+4, "tmlonly", 7) != 0)
           break;
         return &Commands[47];	 // "endhtmlonly"
       case 'v':	 // 1 string to match.
-        if (memcmp(Name.data()+4, "erbatim", 7))
+        if (memcmp(Name.data()+4, "erbatim", 7) != 0)
           break;
         return &Commands[114];	 // "endverbatim"
       }
       break;
     case 'h':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "elperclass", 10))
+      if (memcmp(Name.data()+1, "elperclass", 10) != 0)
         break;
       return &Commands[44];	 // "helperclass"
     case 'm':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ethodgroup", 10))
+      if (memcmp(Name.data()+1, "ethodgroup", 10) != 0)
         break;
       return &Commands[61];	 // "methodgroup"
     case 'p':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "erformance", 10))
+      if (memcmp(Name.data()+1, "erformance", 10) != 0)
         break;
       return &Commands[73];	 // "performance"
     case 'r':	 // 2 strings to match.
-      if (memcmp(Name.data()+1, "elate", 5))
+      if (memcmp(Name.data()+1, "elate", 5) != 0)
         break;
       switch (Name[6]) {
       default: break;
       case 'd':	 // 1 string to match.
-        if (memcmp(Name.data()+7, "also", 4))
+        if (memcmp(Name.data()+7, "also", 4) != 0)
           break;
         return &Commands[80];	 // "relatedalso"
       case 's':	 // 1 string to match.
-        if (memcmp(Name.data()+7, "also", 4))
+        if (memcmp(Name.data()+7, "also", 4) != 0)
           break;
         return &Commands[82];	 // "relatesalso"
       }
@@ -768,11 +768,11 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
     switch (Name[0]) {
     default: break;
     case 'e':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ndlatexonly", 11))
+      if (memcmp(Name.data()+1, "ndlatexonly", 11) != 0)
         break;
       return &Commands[53];	 // "endlatexonly"
     case 'i':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "nstancesize", 11))
+      if (memcmp(Name.data()+1, "nstancesize", 11) != 0)
         break;
       return &Commands[49];	 // "instancesize"
     }
@@ -781,15 +781,15 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
     switch (Name[0]) {
     default: break;
     case 'f':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "unctiongroup", 12))
+      if (memcmp(Name.data()+1, "unctiongroup", 12) != 0)
         break;
       return &Commands[41];	 // "functiongroup"
     case 's':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ubsubsection", 12))
+      if (memcmp(Name.data()+1, "ubsubsection", 12) != 0)
         break;
       return &Commands[100];	 // "subsubsection"
     case 't':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "emplatefield", 12))
+      if (memcmp(Name.data()+1, "emplatefield", 12) != 0)
         break;
       return &Commands[103];	 // "templatefield"
     }
