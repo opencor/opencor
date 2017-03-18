@@ -26,7 +26,6 @@ limitations under the License.
     #pragma warning(disable: 4146)
 #elif defined(Q_OS_LINUX)
     #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-    #pragma GCC diagnostic ignored "-Wstrict-aliasing"
     #pragma GCC diagnostic ignored "-Wunused-parameter"
 #elif defined(Q_OS_MAC)
     #pragma GCC diagnostic ignored "-Wunused-parameter"
