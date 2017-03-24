@@ -190,7 +190,7 @@ private:
     bool processMapComponentsNode(const QDomNode &pDomNode,
                                   QString &pMapComponents);
     bool processMapVariablesNode(const QDomNode &pDomNode);
-    bool processUnknownNode(const QDomNode &pDomNode);
+    bool processUnknownNode(const QDomNode &pDomNode, const bool &pError);
     void processUnsupportedNode(const QDomNode &pDomNode, const bool &pError,
                                 const QString &pExtra = QString());
 };
