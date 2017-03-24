@@ -307,16 +307,6 @@ bool CellMLTextViewConverter::rdfNode(const QDomNode &pDomNode) const
 
 //==============================================================================
 
-bool CellMLTextViewConverter::documentationNode(const QDomNode &pDomNode) const
-{
-    // Return whether the given node is a documentation node
-
-    return    !pDomNode.localName().compare("documentation")
-           && !pDomNode.namespaceURI().compare(CellMLSupport::CellmlDocumentationNamespace);
-}
-
-//==============================================================================
-
 bool CellMLTextViewConverter::cellmlNode(const QDomNode &pDomNode,
                                          const QString &pName) const
 {
@@ -438,11 +428,6 @@ bool CellMLTextViewConverter::processModelNode(const QDomNode &pDomNode)
             processCommentNode(domNode);
         } else if (rdfNode(domNode)) {
             processRdfNode(domNode);
-        } else if (documentationNode(domNode)) {
-            // A documentation node shouldn't be processed as being unknown, yet
-            // we don't want to process it as such, so we just let it through
-
-            processUnsupportedNode(domNode, false);
         } else if (cellmlNode(domNode, "import")) {
             if (!processImportNode(domNode))
                 return false;

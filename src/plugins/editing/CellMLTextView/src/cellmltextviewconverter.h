@@ -138,7 +138,6 @@ private:
                       const QString &pString = QString());
 
     bool rdfNode(const QDomNode &pDomNode) const;
-    bool documentationNode(const QDomNode &pDomNode) const;
     bool cellmlNode(const QDomNode &pDomNode, const QString &pName) const;
     bool mathmlNode(const QDomNode &pDomNode, const QString &pName) const;
 
