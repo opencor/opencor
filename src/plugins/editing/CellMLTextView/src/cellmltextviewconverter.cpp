@@ -136,15 +136,6 @@ bool CellMLTextViewConverter::execute(const QString &pRawCellml)
 
     if (domDocument.setContent(pRawCellml, true,
                                &mErrorMessage, &mErrorLine, &mErrorColumn)) {
-        mOutput = QString();
-        mIndent = QString();
-
-        mLastOutputType = None;
-
-        mWarnings = CellMLTextViewConverterWarnings();
-
-        mRdfNodes = QDomDocument(QString());
-
         // Process the DOM document's children, skipping the first one since
         // it corresponds to a CellML file's processing instruction
 
