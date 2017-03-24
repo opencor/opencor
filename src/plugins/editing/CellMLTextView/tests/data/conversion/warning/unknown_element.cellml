@@ -1,0 +1,4 @@
+<?xml version='1.0'?>
+<model name="my_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
+    <unknown_element xmlns="http://cellml.org/unknown_element" />
+</model>

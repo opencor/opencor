@@ -574,6 +574,14 @@ void ConversionTests::warningConversionTests()
     QCOMPARE(converter.warnings().first().line(), 5);
     QCOMPARE(converter.warnings().first().message(),
              QString("An 'annotation-xml' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
+
+    // Unknown element
+
+    QVERIFY(converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/warning/unknown_element.cellml")).join("\n")));
+    QCOMPARE(converter.warnings().count(), 1);
+    QCOMPARE(converter.warnings().first().line(), 3);
+    QCOMPARE(converter.warnings().first().message(),
+             QString("A 'unknown_element' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
 }
 
 //==============================================================================
