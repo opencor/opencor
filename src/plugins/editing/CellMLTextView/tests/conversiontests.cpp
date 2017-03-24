@@ -548,14 +548,14 @@ void ConversionTests::failingConversionTests()
 
     // Unknown CellML element
 
-    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/warning/cellml_unknown_element.cellml")).join("\n")));
+    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/cellml_unknown_element.cellml")).join("\n")));
     QCOMPARE(converter.errorLine(), 3);
     QCOMPARE(converter.errorMessage(),
              QString("A 'unknown_element' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
 
     // Unknown MathML element
 
-    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/warning/mathml_unknown_element.cellml")).join("\n")));
+    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_unknown_element.cellml")).join("\n")));
     QCOMPARE(converter.errorLine(), 5);
     QCOMPARE(converter.errorMessage(),
              QString("A 'unknown_element' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
