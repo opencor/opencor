@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>CellML Text view:</strong> properly process unknown elements (see issue <a href=\"https://github.com/opencor/opencor/issues/1253\">#1253</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 3.2.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1252\">#1252</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a> to version 4.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1248\">#1248</a>)." }
                      ]
                    },
