@@ -131,6 +131,8 @@ private:
     QMap<QString, QString> mMappings;
     QMap<QString, MathmlNodeType> mMathmlNodeTypes;
 
+    void reset();
+
     void indent(const bool &pForceTracking = true);
     void unindent();
 
@@ -138,7 +140,6 @@ private:
                       const QString &pString = QString());
 
     bool rdfNode(const QDomNode &pDomNode) const;
-    bool documentationNode(const QDomNode &pDomNode) const;
     bool cellmlNode(const QDomNode &pDomNode, const QString &pName) const;
     bool mathmlNode(const QDomNode &pDomNode, const QString &pName) const;
 
@@ -189,7 +190,7 @@ private:
     bool processMapComponentsNode(const QDomNode &pDomNode,
                                   QString &pMapComponents);
     bool processMapVariablesNode(const QDomNode &pDomNode);
-    bool processUnknownNode(const QDomNode &pDomNode);
+    bool processUnknownNode(const QDomNode &pDomNode, const bool &pError);
     void processUnsupportedNode(const QDomNode &pDomNode, const bool &pError,
                                 const QString &pExtra = QString());
 };
