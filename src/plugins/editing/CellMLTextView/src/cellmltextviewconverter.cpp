@@ -64,22 +64,13 @@ QString CellMLTextViewConverterWarning::message() const
 //==============================================================================
 
 CellMLTextViewConverter::CellMLTextViewConverter() :
-    mOutput(QString()),
-    mPrevIndent(QString()),
-    mIndent(QString()),
-    mLastOutputType(None),
-    mErrorLine(-1),
-    mErrorColumn(-1),
-    mErrorMessage(QString()),
-    mWarnings(CellMLTextViewConverterWarnings()),
-    mRdfNodes(QDomDocument()),
-    mTopMathmlNode(QDomNode()),
-    mAssignmentDone(false),
-    mOldPiecewiseStatementUsed(false),
-    mPiecewiseStatementUsed(false),
     mMappings(QMap<QString, QString>()),
     mMathmlNodeTypes(QMap<QString, MathmlNodeType>())
 {
+    // Reset our internals
+
+    reset();
+
     // Mappings for relational operators
 
                                            mMathmlNodeTypes.insert("eq", EqMathmlNode);
@@ -134,6 +125,10 @@ CellMLTextViewConverter::CellMLTextViewConverter() :
 
 bool CellMLTextViewConverter::execute(const QString &pRawCellml)
 {
+    // Reset our internals
+
+    reset();
+
     // Convert the raw CellML to CellML text by first getting a DOM
     // representation of it
 

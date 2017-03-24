@@ -131,6 +131,8 @@ private:
     QMap<QString, QString> mMappings;
     QMap<QString, MathmlNodeType> mMathmlNodeTypes;
 
+    void reset();
+
     void indent(const bool &pForceTracking = true);
     void unindent();
 
