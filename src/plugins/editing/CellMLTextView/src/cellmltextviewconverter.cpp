@@ -231,6 +231,33 @@ QDomDocument CellMLTextViewConverter::rdfNodes() const
 
 //==============================================================================
 
+void CellMLTextViewConverter::reset()
+{
+    // Reset our internals
+
+    mOutput = QString();
+    mPrevIndent = QString();
+    mIndent = QString();
+
+    mLastOutputType = None;
+
+    mErrorLine = -1;
+    mErrorColumn = -1;
+    mErrorMessage = QString();
+
+    mWarnings = CellMLTextViewConverterWarnings();
+
+    mRdfNodes = QDomDocument(QString());
+
+    mTopMathmlNode = QDomNode();
+
+    mAssignmentDone = false;
+    mOldPiecewiseStatementUsed = false;
+    mPiecewiseStatementUsed = false;
+}
+
+//==============================================================================
+
 static const auto Indent = QStringLiteral("    ");
 
 //==============================================================================
