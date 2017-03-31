@@ -37,7 +37,6 @@ limitations under the License.
 
 #include "opencmiss/zinc/fieldmodule.hpp"
 #include "opencmiss/zinc/fieldvectoroperators.hpp"
-#include "opencmiss/zinc/status.hpp"
 
 //==============================================================================
 
