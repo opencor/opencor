@@ -120,13 +120,12 @@ void ZincWindowWindow::createAndSetZincContext()
 
     // Add a tri-linear cube to our Zinc context
 
-    // Make a temporary copy of our .exfile file
+    // Load our .exfile to our default region using a temporary copy of our
+    // .exfile file
 
     QString exFile = QDir::tempPath()+QDir::separator()+"ZincWindow/trilinearCube.exfile";
 
     Core::writeResourceToFile(exFile, ":/ZincWindow/trilinearCube.exfile");
-
-    // Load the .exfile to our default region
 
     OpenCMISS::Zinc::Region region = mZincContext->getDefaultRegion();
 
