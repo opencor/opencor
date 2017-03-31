@@ -95,6 +95,7 @@ class FieldCrossProduct;
 class FieldCrossProduct3D;
 class FieldDotProduct;
 class FieldMagnitude;
+class FieldNodeLookup;
 class FieldNormalise;
 class FieldImagefilterBinaryDilate;
 class FieldImagefilterBinaryErode;
@@ -223,6 +224,16 @@ public:
 	Mesh findMeshByName(const char *meshName)
 	{
 		return Mesh(cmzn_fieldmodule_find_mesh_by_name(id, meshName));
+	}
+
+	char *writeDescription()
+	{
+		return cmzn_fieldmodule_write_description(id);
+	}
+
+	int readDescription(const char *description)
+	{
+		return cmzn_fieldmodule_read_description(id, description);
 	}
 
 	inline Timesequence getMatchingTimesequence(int timesCount, const double *timesIn)
@@ -394,6 +405,8 @@ public:
 	inline FieldDotProduct createFieldDotProduct(const Field& sourceField1, const Field& sourceField2);
 
 	inline FieldMagnitude createFieldMagnitude(const Field& sourceField);
+
+	inline FieldNodeLookup createFieldNodeLookup(const Field& sourceField, const Node& lookupNode);
 
 	inline FieldNormalise createFieldNormalise(const Field& sourceField);
 

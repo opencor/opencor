@@ -152,6 +152,13 @@ public:
 		return Graphics(cmzn_scene_find_graphics_by_name(id, name));
 	}
 
+	int getCoordinatesRange(const Scenefilter& filter, double *minimumValuesOut3,
+		double *maximumValuesOut3)
+	{
+		return cmzn_scene_get_coordinates_range(id, filter.getId(),
+			minimumValuesOut3, maximumValuesOut3);
+	}
+
 	Graphics getFirstGraphics()
 	{
 		return Graphics(cmzn_scene_get_first_graphics(id));
@@ -234,6 +241,36 @@ public:
 	{
 		return cmzn_scene_get_spectrum_data_range(id, filter.getId(),
 			spectrum.getId(), valuesCount, minimumValuesOut, maximumValuesOut);
+	}
+
+	int clearTransformation()
+	{
+		return cmzn_scene_clear_transformation(id);
+	}
+
+	bool hasTransformation() const
+	{
+		return cmzn_scene_has_transformation(id);
+	}
+
+	Field getTransformationField() const
+	{
+		return Field(cmzn_scene_get_transformation_field(id));
+	}
+
+	int setTransformationField(const Field& transformationField)
+	{
+		return cmzn_scene_set_transformation_field(id, transformationField.getId());
+	}
+
+	int getTransformationMatrix(double *valuesOut16) const
+	{
+		return cmzn_scene_get_transformation_matrix(this->getId(), valuesOut16);
+	}
+
+	int setTransformationMatrix(const double *valuesIn16)
+	{
+		return cmzn_scene_set_transformation_matrix(this->getId(), valuesIn16);
 	}
 
 	bool getVisibilityFlag()

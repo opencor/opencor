@@ -20,6 +20,8 @@ extern "C" {
 
 /**
  * Generic status codes returned by API functions to indicate success or error.
+ * DEPRECATED: Please use 'result' codes defined in result header instead.
+ * @see cmzn_result
  *
  * WARNING: Planned future binary compatibility break.
  * At a future date we will change the value of CMZN_OK to 0, and
@@ -30,6 +32,9 @@ extern "C" {
  */
 enum cmzn_status
 {
+	CMZN_ERROR_IN_USE = -8,
+		/*!< Operation failed or partially completed due to object(s) being in use.
+		 * e.g. returned when attempting to destroy node in use by elements */
 	CMZN_ERROR_ARGUMENT_CONTEXT = -7,
 		/*!< An argument is from a different Zinc context */
 	CMZN_ERROR_NOT_IMPLEMENTED = -6,

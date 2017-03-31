@@ -334,6 +334,46 @@ public:
 		return cmzn_sceneviewer_set_antialias_sampling(id, numberOfSamples);
 	}
 
+	double getBackgroundColourAlpha()
+	{
+		return cmzn_sceneviewer_get_background_colour_alpha(id);
+	}
+
+	int setBackgroundColourAlpha(const double alpha)
+	{
+		return cmzn_sceneviewer_set_background_colour_alpha(id, alpha);
+	}
+
+	int setBackgroundColourComponentRGB(double red, double green, double blue)
+	{
+		return cmzn_sceneviewer_set_background_colour_component_rgb(id, red, green, blue);
+	}
+
+	int setBackgroundColourComponentRGBA(double red, double green, double blue, double alpha)
+	{
+		return cmzn_sceneviewer_set_background_colour_component_rgba(id, red, green, blue, alpha);
+	}
+
+	int getBackgroundColourRGB(double *valuesOut3)
+	{
+		return cmzn_sceneviewer_get_background_colour_rgb(id, valuesOut3);
+	}
+
+	int setBackgroundColourRGB(const double *valuesIn3)
+	{
+		return cmzn_sceneviewer_set_background_colour_rgb(id, valuesIn3);
+	}
+
+	int getBackgroundColourRGBA(double *valuesOut4)
+	{
+		return cmzn_sceneviewer_get_background_colour_rgba(id, valuesOut4);
+	}
+
+	int setBackgroundColourRGBA(const double *valuesIn4)
+	{
+		return cmzn_sceneviewer_set_background_colour_rgba(id, valuesIn4);
+	}
+
 	int getEyePosition(double *eyeValuesOut3)
 	{
 		return cmzn_sceneviewer_get_eye_position(id, eyeValuesOut3);
@@ -450,36 +490,6 @@ public:
 	{
 		return cmzn_sceneviewer_set_viewing_volume(id, left, right, bottom, top,
 			near_plane, far_plane);
-	}
-
-	int setBackgroundColourComponentRGB(double red, double green, double blue)
-	{
-		return cmzn_sceneviewer_set_background_colour_component_rgb(id, red, green, blue);
-	}
-
-	int setBackgroundColourComponentRGBA(double red, double green, double blue, double alpha)
-	{
-		return cmzn_sceneviewer_set_background_colour_component_rgba(id, red, green, blue, alpha);
-	}
-
-	int setBackgroundColourRGB(const double *valuesIn3)
-	{
-		return cmzn_sceneviewer_set_background_colour_rgb(id, valuesIn3);
-	}
-
-	int setBackgroundColourRGBA(const double *valuesIn4)
-	{
-		return cmzn_sceneviewer_set_background_colour_rgba(id, valuesIn4);
-	}
-
-	int getBackgroundColourRGB(double *valuesOut3)
-	{
-		return cmzn_sceneviewer_get_background_colour_rgb(id, valuesOut3);
-	}
-
-	int getBackgroundColourRGBA(double *valuesOut4)
-	{
-		return cmzn_sceneviewer_get_background_colour_rgba(id, valuesOut4);
 	}
 
 	int viewAll()
@@ -673,19 +683,29 @@ public:
 			static_cast<cmzn_sceneviewer_stereo_mode>(stereo_mode)));
 	}
 
+	double getDefaultBackgroundColourAlpha()
+	{
+		return cmzn_sceneviewermodule_get_default_background_colour_alpha(id);
+	}
+
+	int setDefaultBackgroundColourAlpha(const double alpha)
+	{
+		return cmzn_sceneviewermodule_set_default_background_colour_alpha(id, alpha);
+	}
+
 	int getDefaultBackgroundColourRGB(double *valuesOut3)
 	{
 		return cmzn_sceneviewermodule_get_default_background_colour_rgb(id, valuesOut3);
 	}
 
-	int getDefaultBackgroundColourRGBA(double *valuesOut4)
-	{
-		return cmzn_sceneviewermodule_get_default_background_colour_rgba(id, valuesOut4);
-	}
-
 	int setDefaultBackgroundColourRGB(const double *valuesIn3)
 	{
 		return cmzn_sceneviewermodule_set_default_background_colour_rgb(id, valuesIn3);
+	}
+
+	int getDefaultBackgroundColourRGBA(double *valuesOut4)
+	{
+		return cmzn_sceneviewermodule_get_default_background_colour_rgba(id, valuesOut4);
 	}
 
 	int setDefaultBackgroundColourRGBA(const double *valuesIn4)

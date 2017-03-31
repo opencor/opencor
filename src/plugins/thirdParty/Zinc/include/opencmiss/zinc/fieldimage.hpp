@@ -108,6 +108,11 @@ public:
 		return cmzn_field_image_get_size_in_pixels(getDerivedId(), valuesCount, valuesOut);
 	}
 
+	int setSizeInPixels(int valuesCount, const int *valuesIn)
+	{
+		return cmzn_field_image_set_size_in_pixels(getDerivedId(), valuesCount, valuesIn);
+	}
+
 	double getTextureCoordinateWidth()
 	{
 		return cmzn_field_image_get_texture_coordinate_width(getDerivedId());

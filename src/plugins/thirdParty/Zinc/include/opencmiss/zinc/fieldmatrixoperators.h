@@ -11,6 +11,7 @@
 #ifndef CMZN_FIELDMATRIXOPERATORS_H__
 #define CMZN_FIELDMATRIXOPERATORS_H__
 
+#include "types/fieldmatrixoperatorsid.h"
 #include "types/fieldid.h"
 #include "types/fieldmoduleid.h"
 
@@ -43,6 +44,43 @@ ZINC_API cmzn_field_id cmzn_fieldmodule_create_field_determinant(
 ZINC_API cmzn_field_id cmzn_fieldmodule_create_field_eigenvalues(
 	cmzn_fieldmodule_id field_module,
 	cmzn_field_id source_field);
+
+/**
+ * If the field is a eigenvalues type field, return the derived field handle.
+ *
+ * @param field  The field to be cast.
+ * @return  Handle to derived eigenvalues field, or NULL/invalid handle if
+ * wrong type or failed.
+ */
+ZINC_API cmzn_field_eigenvalues_id cmzn_field_cast_eigenvalues(cmzn_field_id field);
+
+/**
+ * Cast eigenvalues field back to its base field and return the field.
+ * IMPORTANT NOTE: Returned field does not have incremented reference count and
+ * must not be destroyed. Use cmzn_field_access() to add a reference if
+ * maintaining returned handle beyond the lifetime of the derived field.
+ * Use this function to call base-class API, e.g.:
+ * cmzn_field_set_name(cmzn_field_derived_base_cast(derived_field), "bob");
+ *
+ * @param eigenvalues_field  Handle to the eigenvalues field to cast.
+ * @return  Non-accessed handle to the base field or NULL if failed.
+ */
+ZINC_C_INLINE cmzn_field_id cmzn_field_eigenvalues_base_cast(
+	cmzn_field_eigenvalues_id eigenvalues_field)
+{
+	return (cmzn_field_id)(eigenvalues_field);
+}
+
+/**
+ * Destroys handle to the eigenvalues field (and sets it to NULL).
+ * Internally this decrements the reference count.
+ *
+ * @param eigenvalues_field_address  Address of handle to the field to
+ * destroy.
+ * @return  Status CMZN_OK on success, any other value on failure.
+ */
+ZINC_API int cmzn_field_eigenvalues_destroy(
+	cmzn_field_eigenvalues_id *eigenvalues_field_address);
 
 /**
  * Creates a field returning the N, N-dimensional eigenvectors computed with the

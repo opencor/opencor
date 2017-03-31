@@ -538,6 +538,8 @@ protected:
 	cmzn_graphicslineattributes_id id;
 
 public:
+	Graphicslineattributes() : id(0)
+	{}
 
 	// takes ownership of C handle, responsibility for destroying it
 	explicit Graphicslineattributes(cmzn_graphicslineattributes_id line_attributes_id) :
@@ -629,15 +631,17 @@ protected:
 	cmzn_graphicspointattributes_id id;
 
 public:
+	Graphicspointattributes() : id(0)
+	{}
 
 	// takes ownership of C handle, responsibility for destroying it
 	explicit Graphicspointattributes(cmzn_graphicspointattributes_id point_attributes_id) :
 		id(point_attributes_id)
-	  {}
+	{}
 
 	Graphicspointattributes(const Graphicspointattributes& pointAttributes) :
 		id(cmzn_graphicspointattributes_access(pointAttributes.id))
-		{}
+	{}
 
 	Graphicspointattributes& operator=(const Graphicspointattributes& graphicspointattributes)
 	{
@@ -793,15 +797,17 @@ protected:
 	cmzn_graphicssamplingattributes_id id;
 
 public:
+	Graphicssamplingattributes() : id(0)
+	{}
 
 	// takes ownership of C handle, responsibility for destroying it
 	explicit Graphicssamplingattributes(cmzn_graphicssamplingattributes_id sampling_attributes_id) :
 		id(sampling_attributes_id)
-	  {}
+	{}
 
 	Graphicssamplingattributes(const Graphicssamplingattributes& samplingAttributes) :
 		id(cmzn_graphicssamplingattributes_access(samplingAttributes.id))
-		{}
+	{}
 
 	Graphicssamplingattributes& operator=(const Graphicssamplingattributes& graphicssamplingattributes)
 	{

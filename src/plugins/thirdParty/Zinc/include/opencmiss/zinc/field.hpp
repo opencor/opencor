@@ -22,6 +22,7 @@ class Element;
 class Fieldcache;
 class FieldComponent;
 class FieldEdgeDiscontinuity;
+class FieldEigenvalues;
 class FieldElementGroup;
 class FieldFindMeshLocation;
 class FieldFiniteElement;
@@ -252,6 +253,7 @@ public:
 	// casting functions: must check isValid()
 	inline FieldComponent castComponent();
 	inline FieldEdgeDiscontinuity castEdgeDiscontinuity();
+	inline FieldEigenvalues castEigenvalues();
 	inline FieldElementGroup castElementGroup();
 	inline FieldFindMeshLocation castFindMeshLocation();
 	inline FieldFiniteElement castFiniteElement();

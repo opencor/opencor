@@ -380,74 +380,93 @@ ZINC_API int cmzn_sceneviewer_set_perturb_lines_flag(
 	cmzn_sceneviewer_id sceneviewer, bool value);
 
 /**
- * Returns the background_colour of the scene viewer.
- * The component order in the array is [red, green, blue]
+ * Get the alpha opacity component of the scene viewer background colour.
  *
- * @param sceneviewer The handle to the scene viewer
- * @param valuesOut3 The rgb components of the colour with values between [0, 1.0]
- * @return CMZN_OK if successful, any other value otherwise
+ * @param sceneviewer  The scene viewer to query.
+ * @return  Alpha value in [0.0, 1.0].
  */
-ZINC_API int cmzn_sceneviewer_get_background_colour_rgb(
-	cmzn_sceneviewer_id sceneviewer, double *valuesOut3);
+ZINC_API double cmzn_sceneviewer_get_background_colour_alpha(
+	cmzn_sceneviewer_id sceneviewer);
 
 /**
- * Returns the background_colour of the scene viewer.
- * The component order in the array is [red, green, blue, alpha]
+ * Set the alpha opacity component of the scene viewer background colour.
+ * The remaining components of the background colour are unchanged.
  *
- * @param sceneviewer The handle to the scene viewer
- * @param valuesOut4 The rgba components of the colour with values between [0, 1.0]
- * @return CMZN_OK if successful, any other value otherwise
+ * @param sceneviewer  The scene viewer to modify.
+ * @param alpha  The alpha value in [0, 1.0] where 0.0 is transparent, 1.0 is
+ * opaque.
+ * @return  Result OK if successful, otherwise ERROR_ARGUMENT.
  */
-ZINC_API int cmzn_sceneviewer_get_background_colour_rgba(
-	cmzn_sceneviewer_id sceneviewer, double *valuesOut4);
+ZINC_API int cmzn_sceneviewer_set_background_colour_alpha(
+	cmzn_sceneviewer_id sceneviewer, double alpha);
 
 /**
- * Sets the background_colour of the scene viewer by individual component.
+ * Set the background colour of the scene viewer by individual component.
  * Each component should be in the range [0, 1.0].
  *
- * @param sceneviewer The handle to the scene viewer
- * @param red The red component value between [0, 1.0]
- * @param green The green component value between [0, 1.0]
- * @param blue The blue component value between [0, 1.0]
- * @return CMZN_OK if successful, any other value otherwise
+ * @param sceneviewer  The scene viewer to modify.
+ * @param red  The red component value between [0, 1.0].
+ * @param green  The green component value between [0, 1.0].
+ * @param blue  The blue component value between [0, 1.0].
+ * @return  Result OK if successful, otherwise ERROR_ARGUMENT.
  */
 ZINC_API int cmzn_sceneviewer_set_background_colour_component_rgb(
 	cmzn_sceneviewer_id sceneviewer, double red, double green, double blue);
 
 /**
- * Sets the background_colour of the scene viewer by individual component.
+ * Set the background colour of the scene viewer by individual component.
  * Each component should be in the range [0, 1.0].
  *
- * @param sceneviewer The handle to the scene viewer
- * @param red The red component value between [0, 1.0]
- * @param green The green component value between [0, 1.0]
- * @param blue The blue component value between [0, 1.0]
- * @param alpha The alpha component value between [0, 1.0]
- * @return CMZN_OK if successful, any other value otherwise
+ * @param sceneviewer  The scene viewer to modify.
+ * @param red  The red component value between [0, 1.0]
+ * @param green  The green component value between [0, 1.0]
+ * @param blue  The blue component value between [0, 1.0]
+ * @param alpha  The alpha component value between [0, 1.0]
+ * @return  Result OK if successful, otherwise ERROR_ARGUMENT.
  */
 ZINC_API int cmzn_sceneviewer_set_background_colour_component_rgba(
 	cmzn_sceneviewer_id sceneviewer, double red, double green, double blue, double alpha);
 
 /**
- * Sets the background_colour of the scene viewer.
- * Each component should be in the range [0, 1.0].
- * The component order is [red, green, blue]
+ * Get the background colour of the scene viewer.
  *
- * @param sceneviewer The handle to the scene viewer
- * @param valuesIn3 The rgb components of the colour
- * @return CMZN_OK if successful, any other value otherwise
+ * @param sceneviewer  The scene viewer to query.
+ * @param valuesOut3  Three colour components in order [red, green, blue],
+ * with values in [0, 1.0].
+ * @return  Result OK if successful, otherwise ERROR_ARGUMENT.
+ */
+ZINC_API int cmzn_sceneviewer_get_background_colour_rgb(
+	cmzn_sceneviewer_id sceneviewer, double *valuesOut3);
+
+/**
+ * Set the background colour of the scene viewer.
+ *
+ * @param sceneviewer  The scene viewer to modify.
+ * @param valuesIn3  Three colour components in order [red, green, blue],
+ * with values in [0, 1.0].
+ * @return  Result OK if successful, otherwise ERROR_ARGUMENT.
  */
 ZINC_API int cmzn_sceneviewer_set_background_colour_rgb(
 	cmzn_sceneviewer_id sceneviewer, const double *valuesIn3);
 
 /**
- * Sets the background_colour of the scene viewer.
- * Each component should be in the range [0, 1.0].
- * The component order is [red, green, blue, alpha]
+ * Get the background colour of the scene viewer, including alpha opacity.
  *
- * @param sceneviewer The handle to the scene viewer
- * @param valuesIn4 The rgba components of the colour
- * @return CMZN_OK if successful, any other value otherwise
+ * @param sceneviewer  The scene viewer to query.
+ * @param valuesOut4  Four colour components in order
+ * [red, green, blue, alpha], with values in [0, 1.0].
+ * @return  Result OK if successful, otherwise ERROR_ARGUMENT.
+ */
+ZINC_API int cmzn_sceneviewer_get_background_colour_rgba(
+	cmzn_sceneviewer_id sceneviewer, double *valuesOut4);
+
+/**
+ * Set the background colour of the scene viewer, including alpha opacity.
+ *
+ * @param sceneviewer  The scene viewer to modify.
+ * @param valuesIn4  Four colour components in order
+ * [red, green, blue, alpha], with values in [0, 1.0].
+ * @return  Result OK if successful, otherwise ERROR_ARGUMENT.
  */
 ZINC_API int cmzn_sceneviewer_set_background_colour_rgba(
 	cmzn_sceneviewer_id sceneviewer, const double *valuesIn4);
@@ -709,52 +728,76 @@ ZINC_API cmzn_sceneviewer_id cmzn_sceneviewermodule_create_sceneviewer(
 	enum cmzn_sceneviewer_stereo_mode stereo_mode);
 
 /**
-* Gets the default background colour for new scene viewers created from this
-* scene viewer module.
-* The component order in the array is [red, green, blue]
-*
-* @param sceneviewermodule  The handle to the scene viewer module.
-* @param valuesOut3  The rgb components of the colour with values in [0, 1.0].
-* @return  CMZN_OK if successful, otherwise CMZN_ERROR_ARGUMENT.
-*/
+ * Get the alpha opacity component of the default background colour for new
+ * scene viewers created from this scene viewer module.
+ * The initial default is 1.0 i.e. opaque.
+ *
+ * @param sceneviewermodule  The scene viewer module to query.
+ * @return  Alpha value in [0.0, 1.0].
+ */
+ZINC_API double cmzn_sceneviewermodule_get_default_background_colour_alpha(
+	cmzn_sceneviewermodule_id sceneviewermodule);
+
+/**
+ * Set the alpha opacity component of the default background colour for new scene
+ * viewers created from this scene viewer module. The remaining components of
+ * the default background colour are unchanged.
+ *
+ * @param sceneviewermodule  The scene viewer module to modify.
+ * @param alpha  The alpha value in [0, 1.0] where 0.0 is transparent, 1.0 is
+ * opaque.
+ * @return  Result OK if successful, otherwise ERROR_ARGUMENT.
+ */
+ZINC_API int cmzn_sceneviewermodule_set_default_background_colour_alpha(
+	cmzn_sceneviewermodule_id sceneviewermodule, double alpha);
+
+/**
+ * Get the default background colour for new scene viewers created from this
+ * scene viewer module.
+ * The initial defaults are [0.0, 0.0, 0.0] i.e. black.
+ *
+ * @param sceneviewermodule  The scene viewer module to query.
+ * @param valuesOut3  Three colour components in order
+ * [red, green, blue], with values in [0, 1.0].
+ * @return  Result OK if successful, otherwise ERROR_ARGUMENT.
+ */
 ZINC_API int cmzn_sceneviewermodule_get_default_background_colour_rgb(
 	cmzn_sceneviewermodule_id sceneviewermodule, double *valuesOut3);
 
 /**
-* Gets the default background colour for new scene viewers created from this
-* scene viewer module.
-* The component order in the array is [red, green, blue, alpha]
-*
-* @param sceneviewermodule  The handle to the scene viewer module.
-* @param valuesOut4  The rgba components of the colour with values in [0, 1.0].
-* @return  CMZN_OK if successful, otherwise CMZN_ERROR_ARGUMENT.
-*/
-ZINC_API int cmzn_sceneviewermodule_get_default_background_colour_rgba(
-	cmzn_sceneviewermodule_id sceneviewermodule, double *valuesOut4);
-
-/**
-* Sets the default background colour for new scene viewers created from this
-* scene viewer module.
-* Each component should be in the range [0, 1.0].
-* The component order is [red, green, blue].
-*
-* @param sceneviewermodule  The handle to the scene viewer module.
-* @param valuesIn3  The RGB components of the colour.
-* @return  CMZN_OK if successful, otherwise CMZN_ERROR_ARGUMENT.
-*/
+ * Set the default background colour for new scene viewers created from this
+ * scene viewer module. Background colour alpha is unchanged.
+ *
+ * @param sceneviewermodule  The scene viewer module to modify.
+ * @param valuesIn3  Three colour components in order
+ * [red, green, blue], with values in [0, 1.0].
+ * @return  Result OK if successful, otherwise ERROR_ARGUMENT.
+ */
 ZINC_API int cmzn_sceneviewermodule_set_default_background_colour_rgb(
 	cmzn_sceneviewermodule_id sceneviewermodule, const double *valuesIn3);
 
 /**
-* Sets the default background colour for new scene viewers created from this
-* scene viewer module.
-* Each component should be in the range [0, 1.0].
-* The component order is [red, green, blue, alpha].
-*
-* @param sceneviewermodule  The handle to the scene viewer module.
-* @param valuesIn4  The RGBA components of the colour.
-* @return  CMZN_OK if successful, otherwise CMZN_ERROR_ARGUMENT.
-*/
+ * Get the default background colour for new scene viewers created from this
+ * scene viewer module, including alpha opacity.
+ * The initial defaults are [0.0, 0.0, 0.0, 1.0] i.e. opaque black.
+ *
+ * @param sceneviewermodule  The scene viewer module to query.
+ * @param valuesOut4  Four colour components in order
+ * [red, green, blue, alpha], with values in [0, 1.0].
+ * @return  Result OK if successful, otherwise ERROR_ARGUMENT.
+ */
+ZINC_API int cmzn_sceneviewermodule_get_default_background_colour_rgba(
+	cmzn_sceneviewermodule_id sceneviewermodule, double *valuesOut4);
+
+/**
+ * Set the default background colour for new scene viewers created from this
+ * scene viewer module, including alpha opacity.
+ *
+ * @param sceneviewermodule  The scene viewer module to modify.
+ * @param valuesIn4  Four colour components in order
+ * [red, green, blue, alpha], with values in [0, 1.0].
+ * @return  Result OK if successful, otherwise ERROR_ARGUMENT.
+ */
 ZINC_API int cmzn_sceneviewermodule_set_default_background_colour_rgba(
 	cmzn_sceneviewermodule_id sceneviewermodule, const double *valuesIn4);
 

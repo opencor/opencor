@@ -120,6 +120,8 @@ ZINC_API cmzn_field_id cmzn_fieldmodule_create_field_image(
  * field. The source field is typically an image or image-processing field, and
  * its dimension, native resolution and domain field are used as defaults for
  * the new field, or may be changed via image field functions.
+ * Non-image source fields give an initial resolution of 1 texel in each image
+ * dimension.
  * Texture format will depend on the number of components of the source field:
  * 1 component field creates a LUMINANCE image
  * 2 component field creates a LUMINANCE_ALPHA image
@@ -194,18 +196,34 @@ ZINC_API int cmzn_field_image_get_height_in_pixels(cmzn_field_image_id image);
 ZINC_API int cmzn_field_image_get_depth_in_pixels(cmzn_field_image_id image);
 
 /**
- * Get the pixel sizes of the image.
+ * Get the image size/resolution in pixels.
  *
  * @param image  The image to query.
- * @param valuesCount  The size of the sizes array to fill. Values
- * for dimensions beyond the size have the value of 1.
+ * @param valuesCount  The size of the valuesOut array to fill, from 1 to 3.
+ * Values for dimensions beyond this size have the value of 1.
  * @param valuesOut  Array to receive pixel sizes.
- * @return  The actual dimension that have been read. This can be
- * more than the number requested, so a second call may be needed with a
- * larger array. Returns 0 on error.
+ * @return  The actual dimension of the image, or 0 on error. This can be more
+ * than valuesCount, in which case a second call with a larger array is needed.
  */
 ZINC_API int cmzn_field_image_get_size_in_pixels(cmzn_field_image_id image,
 	int valuesCount, int *valuesOut);
+
+/**
+ * Set the image size/resolution in pixels. Images from source are recomputed
+ * when next used. Otherwise the contents of the buffer are unchanged if the
+ * new size matches the previous size, or undefined if different.
+ * For images from source: after successful call to this function the image
+ * field maintains an independent resolution from any source image; up until
+ * then it maintains the same resolution as the source image.
+ *
+ * @param image  The image to modify.
+ * @param valuesCount  The size of the sizes array, giving the dimension of the
+ * image, from 1 to 3.
+ * @param valuesIn  The resolution to set for each dimension, all >= 1.
+ * @return  Standard result code.
+ */
+ZINC_API int cmzn_field_image_set_size_in_pixels(cmzn_field_image_id image,
+	int valuesCount, const int *valuesIn);
 
 /**
  * Get the physical width of the image.

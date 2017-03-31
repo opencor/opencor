@@ -144,34 +144,43 @@ ZINC_API cmzn_nodeiterator_id cmzn_nodeset_create_nodeiterator(
 
 /**
  * Destroy all nodes in nodeset, also removing them from any related groups.
+ * Any nodes in use by elements are prevented from being destroyed.
  * All handles to the destroyed nodes become invalid.
  *
  * @param nodeset  Handle to nodeset to destroy nodes from.
- * @return  Status CMZN_OK if all nodes destroyed, any other value if failed.
+ * @return  Result OK if all nodes destroyed, ERROR_IN_USE if partial success
+ * with some nodes not destroyed due to being in use by elements, or any other
+ * error if more serious failure.
  */
 ZINC_API int cmzn_nodeset_destroy_all_nodes(cmzn_nodeset_id nodeset);
 
 /**
- * Destroy the node if it is in the nodeset. Removes node from any related
- * groups it is in. All handles to the destroyed node become invalid.
+ * Destroy the node if it is in the nodeset and not in use by elements.
+ * Removes node from any related groups it is in.
+ * All handles to the destroyed node become invalid.
  *
  * @param nodeset  Handle to the nodeset whose node is to be destroyed.
  * @param node  The node to destroy.
- * @return  Status CMZN_OK on success, any other value on failure.
+ * @return  Result OK if node destroyed, ERROR_IN_USE if it could not be
+ * destroyed due to being in use by elements, or any other error if more
+ * serious failure.
  */
 ZINC_API int cmzn_nodeset_destroy_node(cmzn_nodeset_id nodeset, cmzn_node_id node);
 
 /**
  * Destroy all nodes in the nodeset for which the conditional field is true i.e.
  * non-zero valued. These nodes are removed from any related groups they are in.
- * All handles to removed nodes become invalid.
  * Nodes are only removed if not in use by elements in region.
+ * All handles to destroyed nodes become invalid.
  * Note that group and node_group fields are valid conditional fields.
  *
  * @param nodeset  Handle to the nodeset to destroy nodes from.
  * @param conditional_field  Field which if non-zero at any node indicates it
  * is to be destroyed.
  * @return  Status CMZN_OK on success, any other value on failure.
+ * @return  Result OK if all nodes passing condition destroyed, ERROR_IN_USE if
+ * partial success with some nodes not destroyed due to being in use by
+ * elements, or any other error if more serious failure.
  */
 ZINC_API int cmzn_nodeset_destroy_nodes_conditional(cmzn_nodeset_id nodeset,
 	cmzn_field_id conditional_field);
