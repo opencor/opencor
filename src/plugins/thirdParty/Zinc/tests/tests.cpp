@@ -33,7 +33,7 @@ limitations under the License.
 //==============================================================================
 
 #include "opencmiss/zinc/context.hpp"
-#include "opencmiss/zinc/status.hpp"
+#include "opencmiss/zinc/result.hpp"
 
 //==============================================================================
 
@@ -52,7 +52,7 @@ void Tests::basicTests()
 
     int version[3];
 
-    QCOMPARE(context.getVersion(&version[0]), int(OpenCMISS::Zinc::OK));
+    QCOMPARE(context.getVersion(&version[0]), int(OpenCMISS::Zinc::Result::RESULT_OK));
     QCOMPARE(version[0], 3);
     QCOMPARE(version[1], 1);
     QCOMPARE(version[2], 1);

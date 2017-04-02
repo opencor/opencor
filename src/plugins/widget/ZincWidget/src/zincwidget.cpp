@@ -31,7 +31,7 @@ limitations under the License.
 //==============================================================================
 
 #include "opencmiss/zinc/context.hpp"
-#include "opencmiss/zinc/status.hpp"
+#include "opencmiss/zinc/result.hpp"
 
 //==============================================================================
 
@@ -145,7 +145,7 @@ int ZincWidget::viewParameters(double *pEye, double *pLookAt, double *pUp,
 
     int res = mSceneViewer.getLookatParameters(pEye, pLookAt, pUp);
 
-    if (res == OpenCMISS::Zinc::Status::OK)
+    if (res == OpenCMISS::Zinc::Result::RESULT_OK)
         pAngle = mSceneViewer.getViewAngle();
 
     return res;
