@@ -136,18 +136,6 @@ int main(int pArgC, char *pArgV[])
         //       the GUI version of OpenCOR this time...
     }
 
-    // Make sure that we always use indirect rendering on Linux
-    // Note: indeed, depending on which plugins are selected, OpenCOR may need
-    //       LLVM. If that's the case, and in case the user's video card uses a
-    //       driver that relies on LLVM (e.g. Gallium3D and Mesa 3D), then there
-    //       may be a conflict between the version of LLVM used by OpenCOR and
-    //       the one used by the video card. One way to address this issue is by
-    //       using indirect rendering...
-
-#ifdef Q_OS_LINUX
-    qputenv("LIBGL_ALWAYS_INDIRECT", "1");
-#endif
-
     // Initialise the plugins path
 
     OpenCOR::initPluginsPath(pArgV[0]);
