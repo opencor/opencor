@@ -141,9 +141,6 @@ signals:
     void contextAboutToBeDestroyed();
     void graphicsInitialized();
     void devicePixelRatioChanged(const int &pDevicePixelRatio);
-
-private slots:
-    void screenResized();
 };
 
 //==============================================================================
