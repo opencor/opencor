@@ -121,6 +121,8 @@ protected:
 private:
     bool mGraphicsInitialized;
 
+    int mDevicePixelRatio;
+
     OpenCMISS::Zinc::Context *mContext;
     OpenCMISS::Zinc::Sceneviewer mSceneViewer;
     OpenCMISS::Zinc::Sceneviewernotifier mSceneViewerNotifier;
@@ -128,6 +130,9 @@ private:
     ZincWidgetSceneViewerCallback mZincWidgetSceneViewerCallback;
 
     void createSceneViewer();
+
+    void updateSceneViewerViewerportSize(const int &pWidth, const int &pHeight,
+                                         const bool &pCheckDevicePixelRatio = false);
 
     OpenCMISS::Zinc::Sceneviewerinput::ButtonType buttonMap(const Qt::MouseButton &pButton) const;
     OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags modifierMap(const Qt::KeyboardModifiers &pModifiers) const;

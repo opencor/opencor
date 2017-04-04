@@ -61,6 +61,7 @@ ZincWidget::ZincWidget(QWidget *pParent) :
     QOpenGLWidget(pParent),
     Core::CommonWidget(this),
     mGraphicsInitialized(false),
+    mDevicePixelRatio(-1),
     mContext(0),
     mSceneViewer(OpenCMISS::Zinc::Sceneviewer()),
     mSceneViewerNotifier(OpenCMISS::Zinc::Sceneviewernotifier()),
@@ -269,6 +270,25 @@ void ZincWidget::createSceneViewer()
 
 //==============================================================================
 
+void ZincWidget::updateSceneViewerViewerportSize(const int &pWidth,
+                                                 const int &pHeight,
+                                                 const bool &pCheckDevicePixelRatio)
+{
+    // Update the viewport size of our scene viewer, keeping in mind our device
+    // pixel ratio
+
+    int newDevicePixelRatio = devicePixelRatio();
+
+    if (pCheckDevicePixelRatio && (newDevicePixelRatio == mDevicePixelRatio))
+        return;
+    else
+        mDevicePixelRatio = newDevicePixelRatio;
+
+    mSceneViewer.setViewportSize(newDevicePixelRatio*pWidth, newDevicePixelRatio*pHeight);
+}
+
+//==============================================================================
+
 OpenCMISS::Zinc::Sceneviewerinput::ButtonType ZincWidget::buttonMap(const Qt::MouseButton &pButton) const
 {
     // Map the given button to a Zinc button
@@ -334,6 +354,8 @@ void ZincWidget::paintGL()
 {
     // Have our scene viewer render its scene
 
+    updateSceneViewerViewerportSize(width(), height(), true);
+
     mSceneViewer.renderScene();
 }
 
@@ -341,9 +363,9 @@ void ZincWidget::paintGL()
 
 void ZincWidget::resizeGL(int pWidth, int pHeight)
 {
-    // Have our scene viewer resize its viewport
+    // Update the viewport size of our scene viewer
 
-    mSceneViewer.setViewportSize(pWidth, pHeight);
+    updateSceneViewerViewerportSize(pWidth, pHeight);
 }
 
 //==============================================================================
