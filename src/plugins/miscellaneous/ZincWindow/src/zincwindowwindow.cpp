@@ -49,7 +49,8 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
     mGui(new Ui::ZincWindowWindow),
     mZincContext(0),
-    mZincSceneViewerDescription(0)
+    mZincSceneViewerDescription(0),
+    mAxesFontPointSize(0)
 {
     // Set up the GUI
 
@@ -63,6 +64,8 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
             this, SLOT(createAndSetZincContext()));
     connect(mZincWidget, SIGNAL(graphicsInitialized()),
             this, SLOT(graphicsInitialized()));
+    connect(mZincWidget, SIGNAL(devicePixelRatioChanged(const int &)),
+            this, SLOT(devicePixelRatioChanged(const int &)));
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mZincWidget,
@@ -180,6 +183,8 @@ void ZincWindowWindow::createAndSetZincContext()
         axes.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_POINT);
         axes.setMaterial(materialModule.findMaterialByName("blue"));
 
+        mAxesFontPointSize = axes.getGraphicspointattributes().getFont().getPointSize();
+
         // Length of our axes
 
         pointAttr = axes.getGraphicspointattributes();
@@ -225,6 +230,19 @@ void ZincWindowWindow::graphicsInitialized()
     double backgroundColor[4] = { 1.0, 1.0, 1.0, 1.0 };
 
     mZincWidget->sceneViewer().setBackgroundColourRGBA(backgroundColor);
+}
+
+//==============================================================================
+
+void ZincWindowWindow::devicePixelRatioChanged(const int &pDevicePixelRatio)
+{
+    // Update our scene using the given devide pixel ratio
+
+    OpenCMISS::Zinc::Scene scene = mZincContext->getDefaultRegion().getScene();
+
+    scene.beginChange();
+        scene.createGraphicsPoints().getGraphicspointattributes().getFont().setPointSize(pDevicePixelRatio*mAxesFontPointSize);
+    scene.endChange();
 }
 
 //==============================================================================

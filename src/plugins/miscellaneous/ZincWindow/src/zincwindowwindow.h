@@ -78,9 +78,12 @@ private:
 
     char *mZincSceneViewerDescription;
 
+    int mAxesFontPointSize;
+
 private slots:
     void createAndSetZincContext();
     void graphicsInitialized();
+    void devicePixelRatioChanged(const int &pDevicePixelRatio);
 };
 
 //==============================================================================
