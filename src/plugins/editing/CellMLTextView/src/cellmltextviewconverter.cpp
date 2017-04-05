@@ -590,7 +590,7 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
 
     QString baseUnits = cellmlAttributeNodeValue(pDomNode, "base_units", false);
 
-    if (baseUnits.compare(QString()) && baseUnits.compare("yes") && baseUnits.compare("no")) {
+    if (!baseUnits.isEmpty() && baseUnits.compare("yes") && baseUnits.compare("no")) {
         mErrorLine = pDomNode.lineNumber();
         mErrorMessage = QObject::tr("A 'base_units' attribute must have a value of 'yes' or 'no'.");
 
