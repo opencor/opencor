@@ -17,18 +17,15 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view information widget
+// Simulation Experiment view simulation worker
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "commonwidget.h"
-
-//==============================================================================
-
-#include <QScrollArea>
+#include <QObject>
+#include <QWaitCondition>
 
 //==============================================================================
 
@@ -36,58 +33,77 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace Core {
-    class CollapsibleWidget;
-}   // namespace Core
+namespace CellMLSupport {
+    class CellmlFileRuntime;
+}   // namespace CellMLSupport
 
 //==============================================================================
 
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SingleCellViewInformationGraphsWidget;
-class SingleCellViewInformationParametersWidget;
-class SingleCellViewInformationSimulationWidget;
-class SingleCellViewInformationSolversWidget;
-class SingleCellViewPlugin;
-class SingleCellViewSimulationWidget;
+class SimulationExperimentViewSimulation;
 
 //==============================================================================
 
-class SingleCellViewInformationWidget : public QScrollArea,
-                                        public Core::CommonWidget
+class SimulationExperimentViewSimulationWorker : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationWidget(SingleCellViewPlugin *pPlugin,
-                                             SingleCellViewSimulationWidget *pSimulationWidget,
-                                             QWidget *pParent);
+    explicit SimulationExperimentViewSimulationWorker(SimulationExperimentViewSimulation *pSimulation,
+                                                      SimulationExperimentViewSimulationWorker *&pSelf);
 
-    virtual void retranslateUi();
+    bool isRunning() const;
+    bool isPaused() const;
 
-    Core::CollapsibleWidget * collapsibleWidget() const;
+    double currentPoint() const;
 
-    SingleCellViewInformationSimulationWidget * simulationWidget() const;
-    SingleCellViewInformationSolversWidget * solversWidget() const;
-    SingleCellViewInformationGraphsWidget * graphsWidget() const;
-    SingleCellViewInformationParametersWidget * parametersWidget() const;
+    bool run();
+    bool pause();
+    bool resume();
+    bool stop();
 
-    void finishEditing(const bool &pPausedSimulation);
+    bool reset();
 
 private:
-    Core::CollapsibleWidget *mCollapsibleWidget;
+    QThread *mThread;
 
-    SingleCellViewInformationSimulationWidget *mSimulationWidget;
-    SingleCellViewInformationSolversWidget *mSolversWidget;
-    SingleCellViewInformationGraphsWidget *mGraphsWidget;
-    SingleCellViewInformationParametersWidget *mParametersWidget;
+    SimulationExperimentViewSimulation *mSimulation;
+
+    CellMLSupport::CellmlFileRuntime *mRuntime;
+
+    double mCurrentPoint;
+
+    bool mPaused;
+    bool mStopped;
+
+    bool mReset;
+
+    QWaitCondition mPausedCondition;
+
+    bool mError;
+
+    SimulationExperimentViewSimulationWorker *&mSelf;
+
+signals:
+    void running(const bool &pIsResuming);
+    void paused();
+
+    void finished(const qint64 &pElapsedTime);
+
+    void error(const QString &pMessage);
+
+private slots:
+    void started();
+
+    void emitError(const QString &pMessage);
 };
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

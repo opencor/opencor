@@ -17,14 +17,15 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view information parameters widget
+// Simulation Experiment view contents widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "propertyeditorwidget.h"
+#include "corecliutils.h"
+#include "splitterwidget.h"
 
 //==============================================================================
 
@@ -32,73 +33,50 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace CellMLSupport {
-    class CellmlFileRuntime;
-    class CellmlFileRuntimeParameter;
-}   // namespace CellMLSupport
+namespace GraphPanelWidget {
+    class GraphPanelsWidget;
+}   // namespace GraphPanelWidget
 
 //==============================================================================
 
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SingleCellViewSimulation;
+class SimulationExperimentViewInformationWidget;
+class SimulationExperimentViewPlugin;
+class SimulationExperimentViewSimulationWidget;
 
 //==============================================================================
 
-class SingleCellViewInformationParametersWidget : public Core::PropertyEditorWidget
+class SimulationExperimentViewContentsWidget : public Core::SplitterWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationParametersWidget(QWidget *pParent);
+    explicit SimulationExperimentViewContentsWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                    SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                                    QWidget *pParent);
 
     virtual void retranslateUi();
 
-    void initialize(SingleCellViewSimulation *pSimulation,
-                    const bool &pReloadingView = false);
-    void finalize();
-
-    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
-
-protected:
-    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
+    SimulationExperimentViewInformationWidget * informationWidget() const;
+    GraphPanelWidget::GraphPanelsWidget * graphPanelsWidget() const;
 
 private:
-    QMenu *mContextMenu;
-
-    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
-    QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
-
-    SingleCellViewSimulation *mSimulation;
-
-    bool mNeedClearing;
-    bool mVoiAccessible;
-
-    void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
-    void populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
-
-    void updateExtraInfos();
-
-    void retranslateContextMenu();
+    SimulationExperimentViewInformationWidget *mInformationWidget;
+    GraphPanelWidget::GraphPanelsWidget *mGraphPanelsWidget;
 
 signals:
-    void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                       CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
-
-public slots:
-    void updateParameters(const double &pCurrentPoint);
+    void splitterMoved(const QIntList &pSizes);
 
 private slots:
-    void propertyChanged(Core::Property *pProperty);
-
-    void emitGraphRequired();
+    void emitSplitterMoved();
 };
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

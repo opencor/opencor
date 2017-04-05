@@ -266,13 +266,13 @@ void CellMLTextViewPlugin::initializePlugin()
     if (!Core::mainWindow())
         return;
 
-    // Create our CellML text view widget
+    // Create our CellML Text view widget
 
     mViewWidget = new CellmlTextViewWidget(Core::mainWindow());
 
     mViewWidget->setObjectName("CellmlTextViewWidget");
 
-    // Hide our CellML text view widget since it may not initially be shown in
+    // Hide our CellML Text view widget since it may not initially be shown in
     // our central widget
 
     mViewWidget->setVisible(false);
@@ -304,7 +304,7 @@ void CellMLTextViewPlugin::loadSettings(QSettings *pSettings)
     if (!Core::mainWindow())
         return;
 
-    // Retrieve our CellML text view widget settings
+    // Retrieve our CellML Text view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
@@ -321,7 +321,7 @@ void CellMLTextViewPlugin::saveSettings(QSettings *pSettings) const
     if (!Core::mainWindow())
         return;
 
-    // Keep track of our generic CellML text view widget settings
+    // Keep track of our generic CellML Text view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
@@ -377,7 +377,7 @@ QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         return 0;
 
-    // Update and return our CellML text view widget using the given CellML
+    // Update and return our CellML Text view widget using the given CellML
     // file
 
     mViewWidget->initialize(pFileName);
@@ -389,7 +389,7 @@ QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
 
 void CellMLTextViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    // Ask our CellML text view widget to finalise the given CellML file
+    // Ask our CellML Text view widget to finalise the given CellML file
 
     mViewWidget->finalize(pFileName);
 }
@@ -398,7 +398,7 @@ void CellMLTextViewPlugin::removeViewWidget(const QString &pFileName)
 
 QString CellMLTextViewPlugin::viewName() const
 {
-    // Return our CellML text view's name
+    // Return our CellML Text view's name
 
     return tr("CellML Text");
 }

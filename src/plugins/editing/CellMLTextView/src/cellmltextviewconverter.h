@@ -147,6 +147,10 @@ private:
 
     MathmlNodeType mathmlNodeType(const QDomNode &pDomNode) const;
 
+    QString attributeNodeValue(const QDomNode &pDomNode,
+                               const QString &pNamespace,
+                               const QString &pName,
+                               const bool &pMustBePresent = true) const;
     QString cellmlAttributeNodeValue(const QDomNode &pDomNode,
                                      const QString &pName,
                                      const bool &pMustBePresent = true) const;

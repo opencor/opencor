@@ -351,11 +351,11 @@ bool SampleViewPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void SampleViewPlugin::initializePlugin()
 {
-    // Create our sample view widget
+    // Create our Sample view widget
 
     mViewWidget = new SampleViewWidget(Core::mainWindow());
 
-    // Hide our sample view widget since it may not initially be shown in our
+    // Hide our Sample view widget since it may not initially be shown in our
     // central widget
 
     mViewWidget->setVisible(false);
@@ -449,7 +449,7 @@ QString SampleViewPlugin::viewDefaultFileExtension() const
 
 QWidget * SampleViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Update and return our sample view widget using the given file
+    // Update and return our Sample view widget using the given file
 
     mFileName = pFileName;
 
@@ -473,7 +473,7 @@ void SampleViewPlugin::removeViewWidget(const QString &pFileName)
 
 QString SampleViewPlugin::viewName() const
 {
-    // Return our sample view's name
+    // Return our Sample view's name
 
     return tr("Sample");
 }

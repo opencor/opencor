@@ -17,18 +17,18 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view information graphs widget
+// Simulation Experiment view information graphs widget
 //==============================================================================
 
 #include "cellmlfileruntime.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "graphpanelwidget.h"
-#include "singlecellviewinformationgraphswidget.h"
-#include "singlecellviewplugin.h"
-#include "singlecellviewsimulation.h"
-#include "singlecellviewsimulationwidget.h"
-#include "singlecellviewwidget.h"
+#include "simulationexperimentviewinformationgraphswidget.h"
+#include "simulationexperimentviewplugin.h"
+#include "simulationexperimentviewsimulation.h"
+#include "simulationexperimentviewsimulationwidget.h"
+#include "simulationexperimentviewwidget.h"
 
 //==============================================================================
 
@@ -41,13 +41,13 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(SingleCellViewPlugin *pPlugin,
-                                                                             SingleCellViewSimulationWidget *pSimulationWidget,
-                                                                             QWidget *pParent) :
+SimulationExperimentViewInformationGraphsWidget::SimulationExperimentViewInformationGraphsWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                                                                 SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                                                                                 QWidget *pParent) :
     QStackedWidget(pParent),
     Core::CommonWidget(this),
     mPlugin(pPlugin),
@@ -98,7 +98,7 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(Sin
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::retranslateUi()
+void SimulationExperimentViewInformationGraphsWidget::retranslateUi()
 {
     // Retranslate our actions
 
@@ -129,7 +129,7 @@ void SingleCellViewInformationGraphsWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewSimulation *pSimulation)
+void SimulationExperimentViewInformationGraphsWidget::initialize(SimulationExperimentViewSimulation *pSimulation)
 {
     // Populate our parameters context menu
 
@@ -142,7 +142,7 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewSimulation 
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::finalize()
+void SimulationExperimentViewInformationGraphsWidget::finalize()
 {
     // Clear our parameters context menu
 
@@ -151,8 +151,8 @@ void SingleCellViewInformationGraphsWidget::finalize()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                       const bool &pActive)
+void SimulationExperimentViewInformationGraphsWidget::initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                                 const bool &pActive)
 {
     // Retrieve the property editor for the given file name or create one, if
     // none exists
@@ -226,7 +226,7 @@ void SingleCellViewInformationGraphsWidget::initialize(OpenCOR::GraphPanelWidget
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
+void SimulationExperimentViewInformationGraphsWidget::finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
     // Remove track of the link betwen our graph panel and our property editor
 
@@ -236,8 +236,8 @@ void SingleCellViewInformationGraphsWidget::finalize(OpenCOR::GraphPanelWidget::
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                     OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                               OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
 {
     // Make sure that we have a property editor
 
@@ -289,8 +289,8 @@ void SingleCellViewInformationGraphsWidget::addGraph(OpenCOR::GraphPanelWidget::
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                         const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
+void SimulationExperimentViewInformationGraphsWidget::removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                                   const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
     // Make sure that we have a property editor
 
@@ -314,7 +314,7 @@ void SingleCellViewInformationGraphsWidget::removeGraphs(OpenCOR::GraphPanelWidg
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::addGraph()
+void SimulationExperimentViewInformationGraphsWidget::addGraph()
 {
     // Ask the graph panel associated with our current property editor to add an
     // 'empty' graph
@@ -324,7 +324,7 @@ void SingleCellViewInformationGraphsWidget::addGraph()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::removeCurrentGraph()
+void SimulationExperimentViewInformationGraphsWidget::removeCurrentGraph()
 {
     // Ask the graph panel associated with our current property editor to remove
     // the current graph
@@ -334,7 +334,7 @@ void SingleCellViewInformationGraphsWidget::removeCurrentGraph()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::removeAllGraphs()
+void SimulationExperimentViewInformationGraphsWidget::removeAllGraphs()
 {
     // Ask the graph panel associated with our current property editor to remove
     // all the graphs
@@ -344,7 +344,7 @@ void SingleCellViewInformationGraphsWidget::removeAllGraphs()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::selectAllGraphs(const bool &pSelect)
+void SimulationExperimentViewInformationGraphsWidget::selectAllGraphs(const bool &pSelect)
 {
     // (Un)select all the graphs
     // Note: normally, we would only update the checked state of our graph
@@ -377,7 +377,7 @@ void SingleCellViewInformationGraphsWidget::selectAllGraphs(const bool &pSelect)
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::selectAllGraphs()
+void SimulationExperimentViewInformationGraphsWidget::selectAllGraphs()
 {
     // Select all the graphs
 
@@ -386,7 +386,7 @@ void SingleCellViewInformationGraphsWidget::selectAllGraphs()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::unselectAllGraphs()
+void SimulationExperimentViewInformationGraphsWidget::unselectAllGraphs()
 {
     // Unselect all the graphs
 
@@ -395,7 +395,7 @@ void SingleCellViewInformationGraphsWidget::unselectAllGraphs()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::updateGui()
+void SimulationExperimentViewInformationGraphsWidget::updateGui()
 {
     // Update our graphs information
     // Note: this is useful, for example, if we created a graph for a file that
@@ -408,7 +408,7 @@ void SingleCellViewInformationGraphsWidget::updateGui()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::finishEditing()
+void SimulationExperimentViewInformationGraphsWidget::finishEditing()
 {
     // Make sure that we have a property editor
 
@@ -426,8 +426,8 @@ static const auto PropertySeparator = QStringLiteral(" | ");
 
 //==============================================================================
 
-Core::Properties SingleCellViewInformationGraphsWidget::graphProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                                        const QString &pFileName) const
+Core::Properties SimulationExperimentViewInformationGraphsWidget::graphProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                                                  const QString &pFileName) const
 {
     // Retrieve and return all the graph properties associated with the given
     // graph and file name, if any
@@ -459,7 +459,7 @@ Core::Properties SingleCellViewInformationGraphsWidget::graphProperties(GraphPan
 
 //==============================================================================
 
-int SingleCellViewInformationGraphsWidget::headerCount() const
+int SimulationExperimentViewInformationGraphsWidget::headerCount() const
 {
     // Return the number of headers in our property editors
 
@@ -468,7 +468,7 @@ int SingleCellViewInformationGraphsWidget::headerCount() const
 
 //==============================================================================
 
-int SingleCellViewInformationGraphsWidget::columnWidth(const int &pIndex) const
+int SimulationExperimentViewInformationGraphsWidget::columnWidth(const int &pIndex) const
 {
     // Return the width of the given column
 
@@ -477,8 +477,8 @@ int SingleCellViewInformationGraphsWidget::columnWidth(const int &pIndex) const
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::setColumnWidth(const int &pIndex,
-                                                           const int &pColumnWidth)
+void SimulationExperimentViewInformationGraphsWidget::setColumnWidth(const int &pIndex,
+                                                                     const int &pColumnWidth)
 {
     // Make sure that we have a property editor
 
@@ -492,7 +492,7 @@ void SingleCellViewInformationGraphsWidget::setColumnWidth(const int &pIndex,
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoint &pPosition) const
+void SimulationExperimentViewInformationGraphsWidget::propertyEditorContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
 
@@ -537,7 +537,7 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::propertyEditorHorizontalScrollBarValueChanged(const int &pValue)
+void SimulationExperimentViewInformationGraphsWidget::propertyEditorHorizontalScrollBarValueChanged(const int &pValue)
 {
     // Keep track of the property editor's horizontal scroll bar value
 
@@ -546,9 +546,9 @@ void SingleCellViewInformationGraphsWidget::propertyEditorHorizontalScrollBarVal
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const int &pIndex,
-                                                                         const int &pOldSize,
-                                                                         const int &pNewSize)
+void SimulationExperimentViewInformationGraphsWidget::propertyEditorSectionResized(const int &pIndex,
+                                                                                   const int &pOldSize,
+                                                                                   const int &pNewSize)
 {
     Q_UNUSED(pOldSize);
 
@@ -559,7 +559,7 @@ void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const i
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::populateParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime)
+void SimulationExperimentViewInformationGraphsWidget::populateParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime)
 {
     // Populate our parameters context menu with the contents of our main
     // context menu
@@ -628,7 +628,7 @@ void SingleCellViewInformationGraphsWidget::populateParametersContextMenu(CellML
 
         // Add the current parameter to the 'current' component menu
 
-        QAction *parameterAction = componentMenu->addAction(SingleCellViewSimulationWidget::parameterIcon(parameter->type()),
+        QAction *parameterAction = componentMenu->addAction(SimulationExperimentViewSimulationWidget::parameterIcon(parameter->type()),
                                                             parameter->formattedName());
 
         // Create a connection to handle the parameter value update
@@ -645,10 +645,10 @@ void SingleCellViewInformationGraphsWidget::populateParametersContextMenu(CellML
 
 //==============================================================================
 
-bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                           GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                           Core::Property *pParameterProperty,
-                                                           const bool &pParameterX) const
+bool SimulationExperimentViewInformationGraphsWidget::checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
+                                                                     GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                                     Core::Property *pParameterProperty,
+                                                                     const bool &pParameterX) const
 {
     // Check that the information held by the given property corresponds to
     // an existing parameter in our runtime
@@ -688,7 +688,7 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
     // Update our parameter property based on whether it corresponds to an
     // existing parameter in our runtime
 
-    static const QIcon BlankIcon   = QIcon(":/SingleCellView/blank.png");
+    static const QIcon BlankIcon   = QIcon(":/SimulationExperimentView/blank.png");
     static const QIcon WarningIcon = QIcon(":/oxygen/status/task-attention.png");
 
     pParameterProperty->setIcon(res?BlankIcon:WarningIcon);
@@ -711,8 +711,8 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty,
-                                                            const QString &pFileName)
+void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty,
+                                                                      const QString &pFileName)
 {
     // Make sure that we have a property
 
@@ -773,7 +773,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
 
     // Update the status (i.e. icon) of our (section) property
 
-    static const QIcon BlankIcon   = QIcon(":/SingleCellView/blank.png");
+    static const QIcon BlankIcon   = QIcon(":/SimulationExperimentView/blank.png");
     static const QIcon WarningIcon = QIcon(":/oxygen/status/task-attention.png");
 
     pProperty->setIcon(graphOk?BlankIcon:WarningIcon);
@@ -794,7 +794,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::graphChanged(Core::Property *pProperty)
+void SimulationExperimentViewInformationGraphsWidget::graphChanged(Core::Property *pProperty)
 {
     // The graph has changed, which means that either it has been un/selected or
     // that the value of its model, X or Y parameter property has changed
@@ -825,7 +825,7 @@ void SingleCellViewInformationGraphsWidget::graphChanged(Core::Property *pProper
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSectionProperty)
+void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSectionProperty)
 {
     // Make sure that we have a property editor
 
@@ -923,7 +923,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::updateAllGraphsInfo()
+void SimulationExperimentViewInformationGraphsWidget::updateAllGraphsInfo()
 {
     // Update the information about our graphs properties and this for all our
     // property editors, so first keep track of our active property editor
@@ -946,7 +946,7 @@ void SingleCellViewInformationGraphsWidget::updateAllGraphsInfo()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::updateParameterValue()
+void SimulationExperimentViewInformationGraphsWidget::updateParameterValue()
 {
     // Update the current property's value
 
@@ -955,7 +955,7 @@ void SingleCellViewInformationGraphsWidget::updateParameterValue()
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

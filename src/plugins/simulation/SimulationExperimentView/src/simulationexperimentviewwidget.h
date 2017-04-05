@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view widget
+// Simulation Experiment view widget
 //==============================================================================
 
 #pragma once
@@ -39,17 +39,17 @@ namespace libsedml {
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SingleCellViewPlugin;
-class SingleCellViewSimulation;
-class SingleCellViewSimulationWidget;
+class SimulationExperimentViewPlugin;
+class SimulationExperimentViewSimulation;
+class SimulationExperimentViewSimulationWidget;
 
 //==============================================================================
 
-class SingleCellViewWidget : public Core::ViewWidget
+class SimulationExperimentViewWidget : public Core::ViewWidget
 {
     Q_OBJECT
 
@@ -60,8 +60,8 @@ public:
         CombineArchive
     };
 
-    explicit SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
-                                  QWidget *pParent);
+    explicit SimulationExperimentViewWidget(SimulationExperimentViewPlugin *pPlugin,
+                                            QWidget *pParent);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -86,8 +86,8 @@ public:
 
     QStringList fileNames() const;
 
-    SingleCellViewSimulationWidget * simulationWidget(const QString &pFileName) const;
-    SingleCellViewSimulation * simulation(const QString &pFileName) const;
+    SimulationExperimentViewSimulationWidget * simulationWidget(const QString &pFileName) const;
+    SimulationExperimentViewSimulation * simulation(const QString &pFileName) const;
     CellMLSupport::CellmlFileRuntime * runtime(const QString &pFileName) const;
 
     virtual QWidget * widget(const QString &pFileName);
@@ -107,7 +107,7 @@ public:
                              bool *pIsDirectOrIndirectRemoteFile = 0);
 
 private:
-    SingleCellViewPlugin *mPlugin;
+    SimulationExperimentViewPlugin *mPlugin;
 
     QIntList mSimulationWidgetSizes;
     QIntList mContentsWidgetSizes;
@@ -119,8 +119,8 @@ private:
     QIntList mGraphsWidgetColumnWidths;
     QIntList mParametersWidgetColumnWidths;
 
-    SingleCellViewSimulationWidget *mSimulationWidget;
-    QMap<QString, SingleCellViewSimulationWidget *> mSimulationWidgets;
+    SimulationExperimentViewSimulationWidget *mSimulationWidget;
+    QMap<QString, SimulationExperimentViewSimulationWidget *> mSimulationWidgets;
 
     QStringList mFileNames;
 
@@ -130,7 +130,7 @@ private:
     QMap<QString, QString> mLocallyManagedCellmlFiles;
     QMap<QString, QString> mLocallyManagedSedmlFiles;
 
-    void updateContentsInformationGui(SingleCellViewSimulationWidget *pSimulationWidget);
+    void updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget);
 
     bool sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
                                  SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
@@ -174,7 +174,7 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

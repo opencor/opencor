@@ -399,7 +399,7 @@ SET(PLUGINS
     organisation/PMRWindow
     organisation/PMRWorkspacesWindow
 
-    simulation/SingleCellView
+    simulation/SimulationExperimentView
 
     solver/CVODESolver
     solver/ForwardEulerSolver

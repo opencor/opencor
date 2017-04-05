@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewInformationGraphsWidget</name>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphsWidget</name>
     <message>
         <source>Add Graph</source>
         <translation>Ajouter Courbe</translation>
@@ -69,7 +69,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewInformationParametersWidget</name>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationParametersWidget</name>
     <message>
         <source>Plot Against Variable Of Integration</source>
         <translation>Tracer En Fonction De Variable D&apos;Intégration</translation>
@@ -104,7 +104,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewInformationSimulationWidget</name>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationSimulationWidget</name>
     <message>
         <source>Starting point</source>
         <translation>Point de départ</translation>
@@ -119,7 +119,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewInformationSolversWidget</name>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationSolversWidget</name>
     <message>
         <source>ODE solver</source>
         <translation>Solveur EDO</translation>
@@ -142,7 +142,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewInformationWidget</name>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationWidget</name>
     <message>
         <source>Simulation</source>
         <translation></translation>
@@ -161,14 +161,14 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewPlugin</name>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewPlugin</name>
     <message>
-        <source>Single Cell</source>
-        <translation>Unicellulaire</translation>
+        <source>Simulation Experiment</source>
+        <translation>Expérience De Simulation</translation>
     </message>
 </context>
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewSimulation</name>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulation</name>
     <message>
         <source>the starting and ending points cannot have the same value</source>
         <translation>les points de départ et d&apos;arrivée ne peuvent pas avoir la même valeur</translation>
@@ -191,7 +191,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewSimulationWidget</name>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulationWidget</name>
     <message>
         <source>Run Simulation</source>
         <translation>Lancer Simulation</translation>
@@ -207,6 +207,22 @@
     <message>
         <source>Stop the simulation</source>
         <translation>Arrêter la simulation</translation>
+    </message>
+    <message>
+        <source>Reset Model Parameters</source>
+        <translation>Réinitialiser Paramètres Modèle</translation>
+    </message>
+    <message>
+        <source>Reset all the model parameters</source>
+        <translation>Réinitialiser tous les paramètres du modèle</translation>
+    </message>
+    <message>
+        <source>Clear Simulation Data</source>
+        <translation>Supprimer Données Simulation</translation>
+    </message>
+    <message>
+        <source>Clear the simulation data</source>
+        <translation>Supprimer les données de la simulation</translation>
     </message>
     <message>
         <source>Development Mode</source>
@@ -249,28 +265,12 @@
         <translation>Supprimer tous les panneaux graphiques</translation>
     </message>
     <message>
-        <source>Reset Model Parameters</source>
-        <translation>Réinitialiser Paramètres Modèle</translation>
+        <source>Referenced CellML File</source>
+        <translation>Fichier CellML Référencé</translation>
     </message>
     <message>
-        <source>Reset all the model parameters</source>
-        <translation>Réinitialiser tous les paramètres du modèle</translation>
-    </message>
-    <message>
-        <source>Clear Simulation Data</source>
-        <translation>Supprimer Données Simulation</translation>
-    </message>
-    <message>
-        <source>Clear the simulation data</source>
-        <translation>Supprimer les données de la simulation</translation>
-    </message>
-    <message>
-        <source>Simulation Data Export</source>
-        <translation>Exporter Données Simulation</translation>
-    </message>
-    <message>
-        <source>Export the simulation data</source>
-        <translation>Exporter les données de la simulation</translation>
+        <source>Open the referenced CellML file</source>
+        <translation>Ouvrir le fichier CellML référencé</translation>
     </message>
     <message>
         <source>SED-ML Export</source>
@@ -297,12 +297,12 @@
         <translation>Exporter la simulation vers SED-ML en utilisant une archive COMBINE</translation>
     </message>
     <message>
-        <source>Referenced CellML File</source>
-        <translation>Fichier CellML Référencé</translation>
+        <source>Simulation Data Export</source>
+        <translation>Exporter Données Simulation</translation>
     </message>
     <message>
-        <source>Open the referenced CellML file</source>
-        <translation>Ouvrir le fichier CellML référencé</translation>
+        <source>Export the simulation data</source>
+        <translation>Exporter les données de la simulation</translation>
     </message>
     <message>
         <source>Simulation Delay</source>
@@ -506,7 +506,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewWidget</name>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewWidget</name>
     <message>
         <source>only SED-ML files with one or two simulations with an algorithm are supported</source>
         <translation>seulement les fichiers SED-ML avec une ou deux simulations avec un algorithme sont supportés</translation>

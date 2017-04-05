@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view simulation widget
+// Simulation Experiment view simulation widget
 //==============================================================================
 
 #include "centralwidget.h"
@@ -27,16 +27,16 @@ limitations under the License.
 #include "graphpanelswidget.h"
 #include "progressbarwidget.h"
 #include "sedmlsupportplugin.h"
-#include "singlecellviewcontentswidget.h"
-#include "singlecellviewinformationgraphswidget.h"
-#include "singlecellviewinformationparameterswidget.h"
-#include "singlecellviewinformationsimulationwidget.h"
-#include "singlecellviewinformationsolverswidget.h"
-#include "singlecellviewinformationwidget.h"
-#include "singlecellviewplugin.h"
-#include "singlecellviewsimulation.h"
-#include "singlecellviewsimulationwidget.h"
-#include "singlecellviewwidget.h"
+#include "simulationexperimentviewcontentswidget.h"
+#include "simulationexperimentviewinformationgraphswidget.h"
+#include "simulationexperimentviewinformationparameterswidget.h"
+#include "simulationexperimentviewinformationsimulationwidget.h"
+#include "simulationexperimentviewinformationsolverswidget.h"
+#include "simulationexperimentviewinformationwidget.h"
+#include "simulationexperimentviewplugin.h"
+#include "simulationexperimentviewsimulation.h"
+#include "simulationexperimentviewsimulationwidget.h"
+#include "simulationexperimentviewwidget.h"
 #include "toolbarwidget.h"
 #include "usermessagewidget.h"
 
@@ -81,13 +81,13 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlugin *pPlugin,
-                                                               const QString &pFileName,
-                                                               QWidget *pParent) :
+SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                                                   const QString &pFileName,
+                                                                                   QWidget *pParent) :
     Widget(pParent),
     mPlugin(pPlugin),
     mFileName(pFileName),
@@ -99,7 +99,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     mCellmlFile(0),
     mSedmlFile(0),
     mCombineArchive(0),
-    mFileType(SingleCellViewWidget::CellmlFile),
+    mFileType(SimulationExperimentViewWidget::CellmlFile),
     mSedmlFileIssues(SEDMLSupport::SedmlFileIssues()),
     mCombineArchiveIssues(COMBINESupport::CombineArchiveIssues()),
     mErrorType(General),
@@ -316,13 +316,13 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Create our contents widget
 
-    mContentsWidget = new SingleCellViewContentsWidget(pPlugin, this, this);
+    mContentsWidget = new SimulationExperimentViewContentsWidget(pPlugin, this, this);
 
     mContentsWidget->setObjectName("Contents");
 
     // Keep track of changes to some of our simulation and solvers properties
 
-    SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+    SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
     connect(informationWidget->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(simulationPropertyChanged(Core::Property *)));
@@ -338,7 +338,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Keep track of the addition and removal of a graph panel
 
-    SingleCellViewInformationGraphsWidget *graphsWidget = informationWidget->graphsWidget();
+    SimulationExperimentViewInformationGraphsWidget *graphsWidget = informationWidget->graphsWidget();
 
     connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
             graphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)));
@@ -416,7 +416,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Populate our splitter and use as much space as possible for it by asking
     // for its height to be that of the desktop's, and then add our splitter to
-    // our single cell view widget
+    // our Simulation Experiment view widget
 
     mSplitterWidget->addWidget(mContentsWidget);
     mSplitterWidget->addWidget(simulationOutputWidget);
@@ -448,8 +448,8 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
                                                mSedmlFileIssues,
                                                mCombineArchiveIssues);
 
-    mSimulation = new SingleCellViewSimulation(mCellmlFile?mCellmlFile->runtime(true):0,
-                                               pPlugin->solverInterfaces());
+    mSimulation = new SimulationExperimentViewSimulation(mCellmlFile?mCellmlFile->runtime(true):0,
+                                                         pPlugin->solverInterfaces());
 
     connect(mSimulation, SIGNAL(running(const bool &)),
             this, SLOT(simulationRunning(const bool &)));
@@ -468,7 +468,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
     // is readable/writable and of CellML type
 
     mDevelopmentModeAction->setEnabled(   Core::FileManager::instance()->isReadableAndWritable(pFileName)
-                                       && (mFileType == SingleCellViewWidget::CellmlFile));
+                                       && (mFileType == SimulationExperimentViewWidget::CellmlFile));
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -478,22 +478,22 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
 //==============================================================================
 
-SingleCellViewSimulationWidget::~SingleCellViewSimulationWidget()
+SimulationExperimentViewSimulationWidget::~SimulationExperimentViewSimulationWidget()
 {
     // Delete some internal objects
 
     delete mSimulation;
 
-    if (mFileType != SingleCellViewWidget::CellmlFile)
+    if (mFileType != SimulationExperimentViewWidget::CellmlFile)
         delete mCellmlFile;
 
-    if (mFileType != SingleCellViewWidget::SedmlFile)
+    if (mFileType != SimulationExperimentViewWidget::SedmlFile)
         delete mSedmlFile;
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::retranslateUi()
+void SimulationExperimentViewSimulationWidget::retranslateUi()
 {
     // Retranslate our actions
 
@@ -568,7 +568,7 @@ void SingleCellViewSimulationWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateDataStoreActions()
+void SimulationExperimentViewSimulationWidget::updateDataStoreActions()
 {
     // Update our data store actions
 
@@ -581,7 +581,7 @@ void SingleCellViewSimulationWidget::updateDataStoreActions()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::output(const QString &pMessage)
+void SimulationExperimentViewSimulationWidget::output(const QString &pMessage)
 {
     // Move to the end of the output
     // Note: this is just in case the user clicked somewhere in the output and
@@ -597,7 +597,7 @@ void SingleCellViewSimulationWidget::output(const QString &pMessage)
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateSimulationMode()
+void SimulationExperimentViewSimulationWidget::updateSimulationMode()
 {
     // Update our run/pause action
 
@@ -621,8 +621,8 @@ void SingleCellViewSimulationWidget::updateSimulationMode()
     mSimulationDataExportAction->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
                                             &&  mSimulation->results()->size()
                                             && !simulationModeEnabled);
-    mCellmlOpenAction->setEnabled(mFileType != SingleCellViewWidget::CellmlFile);
-    mSedmlExportAction->setEnabled(    (mFileType == SingleCellViewWidget::CellmlFile)
+    mCellmlOpenAction->setEnabled(mFileType != SimulationExperimentViewWidget::CellmlFile);
+    mSedmlExportAction->setEnabled(    (mFileType == SimulationExperimentViewWidget::CellmlFile)
                                    &&  mSimulation->results()->size()
                                    && !simulationModeEnabled);
 
@@ -635,7 +635,7 @@ void SingleCellViewSimulationWidget::updateSimulationMode()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateRunPauseAction(const bool &pRunActionEnabled)
+void SimulationExperimentViewSimulationWidget::updateRunPauseAction(const bool &pRunActionEnabled)
 {
     // Update our various actions
 
@@ -663,7 +663,7 @@ void SingleCellViewSimulationWidget::updateRunPauseAction(const bool &pRunAction
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateInvalidModelMessageWidget()
+void SimulationExperimentViewSimulationWidget::updateInvalidModelMessageWidget()
 {
     // Update our invalid model message
 
@@ -683,14 +683,14 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
+void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloadingView)
 {
     // Stop keeping track of certain things (so that updatePlot() doesn't get
     // called unnecessarily)
     // Note: see the corresponding code towards the end of this method...
 
-    SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
-    SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
+    SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+    SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
 
     disconnect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(simulationPropertyChanged(Core::Property *)));
@@ -857,7 +857,7 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     // type(s) of solvers
 
     bool validSimulationEnvironment = false;
-    SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
+    SimulationExperimentViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
 
     if (variableOfIntegration) {
         // Show our contents widget in case it got previously hidden
@@ -989,19 +989,19 @@ void SingleCellViewSimulationWidget::initialize(const bool &pReloadingView)
     //       that all the other events have been properly handled...
 
     if (    validSimulationEnvironment
-        && (mFileType != SingleCellViewWidget::CellmlFile)) {
+        && (mFileType != SimulationExperimentViewWidget::CellmlFile)) {
         QTimer::singleShot(0, this, SLOT(furtherInitialize()));
     }
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::finalize()
+void SimulationExperimentViewSimulationWidget::finalize()
 {
     // Finalize/backup a few things in our GUI's solvers, graphs, parameters and
     // graph panels widgets
 
-    SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+    SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
     informationWidget->graphsWidget()->finalize();
     informationWidget->parametersWidget()->finalize();
@@ -1009,7 +1009,7 @@ void SingleCellViewSimulationWidget::finalize()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::setSizes(const QIntList &pSizes)
+void SimulationExperimentViewSimulationWidget::setSizes(const QIntList &pSizes)
 {
     // Set the sizes of our spliter widget, but only if there effectively are
     // some
@@ -1020,7 +1020,7 @@ void SingleCellViewSimulationWidget::setSizes(const QIntList &pSizes)
 
 //==============================================================================
 
-SingleCellViewContentsWidget * SingleCellViewSimulationWidget::contentsWidget() const
+SimulationExperimentViewContentsWidget * SimulationExperimentViewSimulationWidget::contentsWidget() const
 {
     // Return our contents widget
 
@@ -1029,7 +1029,7 @@ SingleCellViewContentsWidget * SingleCellViewSimulationWidget::contentsWidget() 
 
 //==============================================================================
 
-int SingleCellViewSimulationWidget::tabBarPixmapSize() const
+int SimulationExperimentViewSimulationWidget::tabBarPixmapSize() const
 {
     // Return the size of a file tab icon
 
@@ -1038,7 +1038,7 @@ int SingleCellViewSimulationWidget::tabBarPixmapSize() const
 
 //==============================================================================
 
-QIcon SingleCellViewSimulationWidget::fileTabIcon() const
+QIcon SimulationExperimentViewSimulationWidget::fileTabIcon() const
 {
     // Return a file tab icon that shows the given file's simulation progress
 
@@ -1069,7 +1069,7 @@ QIcon SingleCellViewSimulationWidget::fileTabIcon() const
 
 //==============================================================================
 
-bool SingleCellViewSimulationWidget::save(const QString &pFileName)
+bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
 {
     // In case of a CellML file that is in development mode, retrieve all the
     // state and constant parameters which value has changed and update our
@@ -1078,7 +1078,7 @@ bool SingleCellViewSimulationWidget::save(const QString &pFileName)
 
     QString importedParameters = QString();
 
-    if (   (mFileType == SingleCellViewWidget::CellmlFile)
+    if (   (mFileType == SimulationExperimentViewWidget::CellmlFile)
         && mDevelopmentModeAction->isChecked()) {
         ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellmlFile->model()->localComponents();
         QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
@@ -1104,16 +1104,16 @@ bool SingleCellViewSimulationWidget::save(const QString &pFileName)
     // Now, we can effectively save our given file and let the user know if some
     // parameter values couldn't be saved
 
-    bool res = (mFileType == SingleCellViewWidget::CellmlFile)?
+    bool res = (mFileType == SimulationExperimentViewWidget::CellmlFile)?
                    mCellmlFile->save(pFileName):
-                   (mFileType == SingleCellViewWidget::SedmlFile)?
+                   (mFileType == SimulationExperimentViewWidget::SedmlFile)?
                        mSedmlFile->save(pFileName):
                        mCombineArchive->save(pFileName);
 
     if (res) {
-        mFileName = (mFileType == SingleCellViewWidget::CellmlFile)?
+        mFileName = (mFileType == SimulationExperimentViewWidget::CellmlFile)?
                         mCellmlFile->fileName():
-                        (mFileType == SingleCellViewWidget::SedmlFile)?
+                        (mFileType == SimulationExperimentViewWidget::SedmlFile)?
                             mSedmlFile->fileName():
                             mCombineArchive->fileName();
 
@@ -1128,13 +1128,13 @@ bool SingleCellViewSimulationWidget::save(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::filePermissionsChanged()
+void SimulationExperimentViewSimulationWidget::filePermissionsChanged()
 {
     // We have been un/locked, so enable/disable the development mode and keep
     // track of its checked status or recheck it, as necessary
 
      if (Core::FileManager::instance()->isReadableAndWritable(mFileName)) {
-         mDevelopmentModeAction->setEnabled(mFileType == SingleCellViewWidget::CellmlFile);
+         mDevelopmentModeAction->setEnabled(mFileType == SimulationExperimentViewWidget::CellmlFile);
          mDevelopmentModeAction->setChecked(mLockedDevelopmentMode);
      } else {
          mLockedDevelopmentMode = mDevelopmentModeAction->isChecked();
@@ -1146,7 +1146,7 @@ void SingleCellViewSimulationWidget::filePermissionsChanged()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileModified()
+void SimulationExperimentViewSimulationWidget::fileModified()
 {
     // Update our reset action
 
@@ -1155,7 +1155,7 @@ void SingleCellViewSimulationWidget::fileModified()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::reloadView()
+void SimulationExperimentViewSimulationWidget::reloadView()
 {
     // Reload ourselves, i.e. finalise and (re)initialise ourselves, meaning
     // that we have effectively been closed and (re)opened
@@ -1173,7 +1173,7 @@ void SingleCellViewSimulationWidget::reloadView()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::fileReloaded()
+void SimulationExperimentViewSimulationWidget::fileReloaded()
 {
     // The given file has been reloaded, so stop its current simulation
 
@@ -1198,7 +1198,7 @@ void SingleCellViewSimulationWidget::fileReloaded()
 
 //==============================================================================
 
-QString SingleCellViewSimulationWidget::fileName() const
+QString SimulationExperimentViewSimulationWidget::fileName() const
 {
     // Return our file name
 
@@ -1207,7 +1207,7 @@ QString SingleCellViewSimulationWidget::fileName() const
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::setFileName(const QString &pFileName)
+void SimulationExperimentViewSimulationWidget::setFileName(const QString &pFileName)
 {
     // Set our file name
 
@@ -1216,7 +1216,7 @@ void SingleCellViewSimulationWidget::setFileName(const QString &pFileName)
 
 //==============================================================================
 
-SEDMLSupport::SedmlFile * SingleCellViewSimulationWidget::sedmlFile() const
+SEDMLSupport::SedmlFile * SimulationExperimentViewSimulationWidget::sedmlFile() const
 {
     // Return our SED-ML file
 
@@ -1225,7 +1225,7 @@ SEDMLSupport::SedmlFile * SingleCellViewSimulationWidget::sedmlFile() const
 
 //==============================================================================
 
-SingleCellViewWidget::FileType SingleCellViewSimulationWidget::fileType() const
+SimulationExperimentViewWidget::FileType SimulationExperimentViewSimulationWidget::fileType() const
 {
     // Return our file type
 
@@ -1234,7 +1234,7 @@ SingleCellViewWidget::FileType SingleCellViewSimulationWidget::fileType() const
 
 //==============================================================================
 
-SingleCellViewSimulation * SingleCellViewSimulationWidget::simulation() const
+SimulationExperimentViewSimulation * SimulationExperimentViewSimulationWidget::simulation() const
 {
     // Return our simulation
 
@@ -1243,7 +1243,7 @@ SingleCellViewSimulation * SingleCellViewSimulationWidget::simulation() const
 
 //==============================================================================
 
-QVariant SingleCellViewSimulationWidget::value(Core::Property *pProperty) const
+QVariant SimulationExperimentViewSimulationWidget::value(Core::Property *pProperty) const
 {
     switch (pProperty->type()) {
     case Core::Property::Integer:
@@ -1264,7 +1264,7 @@ QVariant SingleCellViewSimulationWidget::value(Core::Property *pProperty) const
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::runPauseResumeSimulation()
+void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
 {
     // Run/resume our simulation or pause it
 
@@ -1336,7 +1336,7 @@ void SingleCellViewSimulationWidget::runPauseResumeSimulation()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::stopSimulation()
+void SimulationExperimentViewSimulationWidget::stopSimulation()
 {
     // Stop our simulation
 
@@ -1345,7 +1345,7 @@ void SingleCellViewSimulationWidget::stopSimulation()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::resetModelParameters()
+void SimulationExperimentViewSimulationWidget::resetModelParameters()
 {
     // Reset our model parameters
 
@@ -1354,7 +1354,7 @@ void SingleCellViewSimulationWidget::resetModelParameters()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::clearSimulationData()
+void SimulationExperimentViewSimulationWidget::clearSimulationData()
 {
     // Clear our simulation data
 
@@ -1369,7 +1369,7 @@ void SingleCellViewSimulationWidget::clearSimulationData()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::developmentMode()
+void SimulationExperimentViewSimulationWidget::developmentMode()
 {
     // The development mode has just been enabled/disabled, so update the
     // modified state of our current file accordingly
@@ -1385,7 +1385,7 @@ void SingleCellViewSimulationWidget::developmentMode()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::addGraphPanel()
+void SimulationExperimentViewSimulationWidget::addGraphPanel()
 {
     // Ask our graph panels widget to add a new graph panel
 
@@ -1394,7 +1394,7 @@ void SingleCellViewSimulationWidget::addGraphPanel()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::removeGraphPanel()
+void SimulationExperimentViewSimulationWidget::removeGraphPanel()
 {
     // Default action for our removing of graph panel, i.e. remove the current
     // graph panel
@@ -1404,7 +1404,7 @@ void SingleCellViewSimulationWidget::removeGraphPanel()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::removeCurrentGraphPanel()
+void SimulationExperimentViewSimulationWidget::removeCurrentGraphPanel()
 {
     // Ask our graph panels widget to remove the current graph panel
 
@@ -1417,7 +1417,7 @@ void SingleCellViewSimulationWidget::removeCurrentGraphPanel()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::removeAllGraphPanels()
+void SimulationExperimentViewSimulationWidget::removeAllGraphPanels()
 {
     // Ask our graph panels widget to remove the current graph panel
 
@@ -1426,11 +1426,11 @@ void SingleCellViewSimulationWidget::removeAllGraphPanels()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
-                                                        libsedml::SedModel *pSedmlModel,
-                                                        libsedml::SedRepeatedTask *pSedmlRepeatedTask,
-                                                        libsedml::SedSimulation *pSedmlSimulation,
-                                                        const int &pOrder)
+void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
+                                                                  libsedml::SedModel *pSedmlModel,
+                                                                  libsedml::SedRepeatedTask *pSedmlRepeatedTask,
+                                                                  libsedml::SedSimulation *pSedmlSimulation,
+                                                                  const int &pOrder)
 {
     // Create, customise and add an algorithm (i.e. an ODE or DAE solver) to our
     // given SED-ML simulation
@@ -1512,9 +1512,9 @@ void SingleCellViewSimulationWidget::addSedmlSimulation(libsedml::SedDocument *p
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
-                                                            const QString &pComponent,
-                                                            const QString &pVariable)
+void SimulationExperimentViewSimulationWidget::addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
+                                                                      const QString &pComponent,
+                                                                      const QString &pVariable)
 {
     // Set the target for the given SED-ML variable
 
@@ -1542,8 +1542,8 @@ void SingleCellViewSimulationWidget::addSedmlVariableTarget(libsedml::SedVariabl
 
 //==============================================================================
 
-bool SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
-                                                     const QString &pModelSource)
+bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pFileName,
+                                                               const QString &pModelSource)
 {
     // Create a SED-ML document and add the CellML namespace to it
 
@@ -1630,7 +1630,7 @@ bool SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
     // Retrieve all the graphs that are to be plotted, if any
 
     QList<Core::Properties> graphsList = QList<Core::Properties>();
-    SingleCellViewInformationGraphsWidget *graphsWidget = mContentsWidget->informationWidget()->graphsWidget();
+    SimulationExperimentViewInformationGraphsWidget *graphsWidget = mContentsWidget->informationWidget()->graphsWidget();
 
     foreach (GraphPanelWidget::GraphPanelWidget *graphPanel,
              mContentsWidget->graphPanelsWidget()->graphPanels()) {
@@ -1711,7 +1711,7 @@ bool SingleCellViewSimulationWidget::createSedmlFile(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::sedmlExportSedmlFile()
+void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
 {
     // Export ourselves to SED-ML using a SED-ML file, but first get a file name
 
@@ -1764,7 +1764,7 @@ void SingleCellViewSimulationWidget::sedmlExportSedmlFile()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::sedmlExportCombineArchive()
+void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
 {
     // Export ourselves to SED-ML using a COMBINE archive, but first get a file
     // name
@@ -1913,12 +1913,12 @@ void SingleCellViewSimulationWidget::sedmlExportCombineArchive()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateSimulationProperties(Core::Property *pProperty)
+void SimulationExperimentViewSimulationWidget::updateSimulationProperties(Core::Property *pProperty)
 {
     // Update all the properties, or a particular property (if it exists), of
     // our simulation
 
-    SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
+    SimulationExperimentViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
     if (!pProperty || (pProperty == simulationWidget->startingPointProperty())) {
         mSimulation->data()->setStartingPoint(simulationWidget->startingPointProperty()->doubleValue());
@@ -1944,12 +1944,12 @@ void SingleCellViewSimulationWidget::updateSimulationProperties(Core::Property *
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pProperty)
+void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Property *pProperty)
 {
     // Update all of our solver(s) properties (and solvers widget) or a
     // particular solver property (and the corresponding GUI for that solver)
 
-    SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
+    SimulationExperimentViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
     // ODE solver properties
 
@@ -2050,7 +2050,7 @@ void SingleCellViewSimulationWidget::updateSolversProperties(Core::Property *pPr
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewSimulationWidget::runtimeParameter(libsedml::SedVariable *pSedmlVariable)
+CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWidget::runtimeParameter(libsedml::SedVariable *pSedmlVariable)
 {
     // Retrieve the CellML runtime parameter corresponding to the given SED-ML
     // variable
@@ -2106,12 +2106,12 @@ CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewSimulationWidget::runt
 
 //==============================================================================
 
-bool SingleCellViewSimulationWidget::doFurtherInitialize()
+bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
 {
     // Customise our simulation widget
 
-    SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
-    SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
+    SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+    SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
 
     libsedml::SedDocument *sedmlDocument = mSedmlFile->sedmlDocument();
     libsedml::SedUniformTimeCourse *uniformTimeCourseSimulation = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
@@ -2135,9 +2135,9 @@ bool SingleCellViewSimulationWidget::doFurtherInitialize()
     //    (this shouldn't happen, but better be safe than sorry)
     //  - Specifying the NLA solver, if any
 
-    SingleCellViewInformationSolversWidgetData *solverData = (mCellmlFile->runtime()->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?
-                                                                 informationWidget->solversWidget()->odeSolverData():
-                                                                 informationWidget->solversWidget()->daeSolverData();
+    SimulationExperimentViewInformationSolversWidgetData *solverData = (mCellmlFile->runtime()->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?
+                                                                           informationWidget->solversWidget()->odeSolverData():
+                                                                           informationWidget->solversWidget()->daeSolverData();
     const libsedml::SedAlgorithm *algorithm = uniformTimeCourseSimulation->getAlgorithm();
     SolverInterface *usedSolverInterface = 0;
     Core::Properties solverProperties = Core::Properties();
@@ -2348,7 +2348,7 @@ bool SingleCellViewSimulationWidget::doFurtherInitialize()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::initializeGui(const bool &pValidSimulationEnvironment)
+void SimulationExperimentViewSimulationWidget::initializeGui(const bool &pValidSimulationEnvironment)
 {
     // Show/hide some widgets based on whether we have a valid simulation
     // environment
@@ -2365,7 +2365,7 @@ void SingleCellViewSimulationWidget::initializeGui(const bool &pValidSimulationE
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::furtherInitialize()
+void SimulationExperimentViewSimulationWidget::furtherInitialize()
 {
     // Further initialise ourselves, update our GUI (by reinitialising it) and
     // initialise our simulation, if we still have a valid simulation
@@ -2381,7 +2381,7 @@ void SingleCellViewSimulationWidget::furtherInitialize()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::initializeSimulation()
+void SimulationExperimentViewSimulationWidget::initializeSimulation()
 {
     // Reset both the simulation's data and results (well, initialise in the
     // case of its data)
@@ -2399,7 +2399,7 @@ void SingleCellViewSimulationWidget::initializeSimulation()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::emitSplitterMoved()
+void SimulationExperimentViewSimulationWidget::emitSplitterMoved()
 {
     // Let people know that our splitter has been moved
 
@@ -2408,7 +2408,7 @@ void SingleCellViewSimulationWidget::emitSplitterMoved()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::simulationDataExport()
+void SimulationExperimentViewSimulationWidget::simulationDataExport()
 {
     // Retrieve some data so that we can effectively export our simulation data
     // results
@@ -2435,7 +2435,7 @@ void SingleCellViewSimulationWidget::simulationDataExport()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateDelayValue(const double &pDelayValue)
+void SimulationExperimentViewSimulationWidget::updateDelayValue(const double &pDelayValue)
 {
     // Update our delay value widget
 
@@ -2461,7 +2461,7 @@ void SingleCellViewSimulationWidget::updateDelayValue(const double &pDelayValue)
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::simulationRunning(const bool &pIsResuming)
+void SimulationExperimentViewSimulationWidget::simulationRunning(const bool &pIsResuming)
 {
     Q_UNUSED(pIsResuming);
 
@@ -2475,7 +2475,7 @@ void SingleCellViewSimulationWidget::simulationRunning(const bool &pIsResuming)
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::simulationPaused()
+void SimulationExperimentViewSimulationWidget::simulationPaused()
 {
     // Our simulation is paused, so update our simulation mode and parameters,
     // and check for results
@@ -2489,7 +2489,7 @@ void SingleCellViewSimulationWidget::simulationPaused()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTime)
+void SimulationExperimentViewSimulationWidget::simulationStopped(const qint64 &pElapsedTime)
 {
     // Output the given elapsed time, if valid
 
@@ -2523,16 +2523,17 @@ void SingleCellViewSimulationWidget::simulationStopped(const qint64 &pElapsedTim
         reloadView();
 
     // Note: our simulation progress gets reset in resetSimulationProgress(),
-    //       which is called by SingleCellViewWidget::checkSimulationResults().
-    //       To reset our simulation progress here might not always work since
-    //       our simulation is run in a different thread, meaning that a call
-    //       to updateSimulationResults() might occur after we have reset our
+    //       which is called by
+    //       SimulationExperimentViewWidget::checkSimulationResults(). To reset
+    //       our simulation progress here might not always work since our
+    //       simulation is run in a different thread, meaning that a call to
+    //       updateSimulationResults() might occur after we have reset our
     //       simulation progress...
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::resetProgressBar()
+void SimulationExperimentViewSimulationWidget::resetProgressBar()
 {
     // Reset our progress bar
 
@@ -2541,7 +2542,7 @@ void SingleCellViewSimulationWidget::resetProgressBar()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::resetFileTabIcon()
+void SimulationExperimentViewSimulationWidget::resetFileTabIcon()
 {
     // Stop tracking our simulation progress and let people know that our file
     // tab icon should be reset
@@ -2553,7 +2554,7 @@ void SingleCellViewSimulationWidget::resetFileTabIcon()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::resetSimulationProgress()
+void SimulationExperimentViewSimulationWidget::resetSimulationProgress()
 {
     // Reset our progress bar or tab icon, in case we are not visible, and this
     // with a short delay
@@ -2588,8 +2589,8 @@ void SingleCellViewSimulationWidget::resetSimulationProgress()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::simulationError(const QString &pMessage,
-                                                     const ErrorType &pErrorType)
+void SimulationExperimentViewSimulationWidget::simulationError(const QString &pMessage,
+                                                               const ErrorType &pErrorType)
 {
     // Output the simulation error
 
@@ -2602,7 +2603,7 @@ void SingleCellViewSimulationWidget::simulationError(const QString &pMessage,
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::checkSimulationDataModified(const bool &pIsModified)
+void SimulationExperimentViewSimulationWidget::checkSimulationDataModified(const bool &pIsModified)
 {
     // We are dealing with the current simulation
 
@@ -2614,7 +2615,7 @@ void SingleCellViewSimulationWidget::checkSimulationDataModified(const bool &pIs
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::simulationDataModified(const bool &pIsModified)
+void SimulationExperimentViewSimulationWidget::simulationDataModified(const bool &pIsModified)
 {
     // Update our modified state
 
@@ -2623,14 +2624,14 @@ void SingleCellViewSimulationWidget::simulationDataModified(const bool &pIsModif
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::simulationPropertyChanged(Core::Property *pProperty)
+void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::Property *pProperty)
 {
     // Update our simulation properties, as well as our plots, if it's not the
     // point interval property that has been updated
 
     updateSimulationProperties(pProperty);
 
-    SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
+    SimulationExperimentViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
     if (pProperty != simulationWidget->pointIntervalProperty()) {
         bool needProcessingEvents = false;
@@ -2649,7 +2650,7 @@ void SingleCellViewSimulationWidget::simulationPropertyChanged(Core::Property *p
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::solversPropertyChanged(Core::Property *pProperty)
+void SimulationExperimentViewSimulationWidget::solversPropertyChanged(Core::Property *pProperty)
 {
     // Update our solvers properties
 
@@ -2658,8 +2659,8 @@ void SingleCellViewSimulationWidget::solversPropertyChanged(Core::Property *pPro
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                     const bool &pActive)
+void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                               const bool &pActive)
 {
     Q_UNUSED(pActive);
 
@@ -2679,7 +2680,7 @@ void SingleCellViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPanelWidget::
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
+void SimulationExperimentViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
     // A graph panel has been removed, so stop tracking its plot and the fact
     // that we wanted to know if its axes had been changed
@@ -2695,8 +2696,8 @@ void SingleCellViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphPanelWidget
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                                              CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
+void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
     // Ask the current graph panel to add a new graph for the given parameters
 
@@ -2705,8 +2706,8 @@ void SingleCellViewSimulationWidget::addGraph(CellMLSupport::CellmlFileRuntimePa
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                          OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
 {
     // A new graph has been added, so keep track of it and update its plot
     // Note: updating the plot will, if needed, update the plot's axes and, as
@@ -2732,8 +2733,8 @@ void SingleCellViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWidget::Graph
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                   const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
+void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                             const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
     Q_UNUSED(pGraphs);
 
@@ -2756,8 +2757,8 @@ void SingleCellViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanelWidget::Gr
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                                                   const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
+void SimulationExperimentViewSimulationWidget::graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
+                                                             const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
     Q_UNUSED(pPlot);
 
@@ -2776,7 +2777,7 @@ void SingleCellViewSimulationWidget::graphsUpdated(OpenCOR::GraphPanelWidget::Gr
         //       indeed refer to a file that has not yet been activated and
         //       therefore doesn't yet have a simulation associated with it...
 
-        SingleCellViewSimulation *simulation = mPlugin->viewWidget()->simulation(graph->fileName());
+        SimulationExperimentViewSimulation *simulation = mPlugin->viewWidget()->simulation(graph->fileName());
 
         updateGraphData(graph, simulation?simulation->results()->size():0);
 
@@ -2802,9 +2803,9 @@ void SingleCellViewSimulationWidget::graphsUpdated(OpenCOR::GraphPanelWidget::Gr
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::checkAxisValue(double &pValue,
-                                                    const double &pOrigValue,
-                                                    const QList<double> &pTestValues)
+void SimulationExperimentViewSimulationWidget::checkAxisValue(double &pValue,
+                                                              const double &pOrigValue,
+                                                              const QList<double> &pTestValues)
 {
     // Check whether pOrigValue is equal to one of the values in pTestValues and
     // if so then update pValue with pOrigValue
@@ -2820,8 +2821,8 @@ void SingleCellViewSimulationWidget::checkAxisValue(double &pValue,
 
 //==============================================================================
 
-bool SingleCellViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                                                const bool &pForceReplot)
+bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
+                                                          const bool &pForceReplot)
 {
     // Retrieve the current axes' values or use some default ones, if none are
     // available
@@ -2860,7 +2861,7 @@ bool SingleCellViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlot
 
     foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, pPlot->graphs()) {
         if (graph->isValid() && graph->isSelected()) {
-            SingleCellViewSimulation *simulation = mPlugin->viewWidget()->simulation(graph->fileName());
+            SimulationExperimentViewSimulation *simulation = mPlugin->viewWidget()->simulation(graph->fileName());
             double startingPoint = simulation->data()->startingPoint();
             double endingPoint = simulation->data()->endingPoint();
 
@@ -2941,8 +2942,8 @@ bool SingleCellViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlot
 
 //==============================================================================
 
-double * SingleCellViewSimulationWidget::dataPoints(SingleCellViewSimulation *pSimulation,
-                                                    CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
+double * SimulationExperimentViewSimulationWidget::dataPoints(SimulationExperimentViewSimulation *pSimulation,
+                                                              CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
 {
     // Return the array of data points associated with the given parameter
 
@@ -2968,13 +2969,13 @@ double * SingleCellViewSimulationWidget::dataPoints(SingleCellViewSimulation *pS
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                     const qulonglong &pSize)
+void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                               const qulonglong &pSize)
 {
     // Update our graph's data
 
     if (pGraph->isValid()) {
-        SingleCellViewSimulation *simulation = mPlugin->viewWidget()->simulation(pGraph->fileName());
+        SimulationExperimentViewSimulation *simulation = mPlugin->viewWidget()->simulation(pGraph->fileName());
 
         pGraph->setRawSamples(dataPoints(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
                               dataPoints(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
@@ -2984,7 +2985,7 @@ void SingleCellViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPane
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateGui(const bool &pCheckVisibility)
+void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisibility)
 {
     // Make sure that we are visible, if requested
 
@@ -3020,20 +3021,21 @@ void SingleCellViewSimulationWidget::updateGui(const bool &pCheckVisibility)
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
-                                                             const qulonglong &pSimulationResultsSize,
-                                                             const bool &pClearGraphs)
+void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                                                       const qulonglong &pSimulationResultsSize,
+                                                                       const bool &pClearGraphs)
 {
     // Update the modified state of our simulation's corresponding file, if
     // needed
     // Note: normally, our simulation worker would, for each point interval,
-    //       call SingleCellViewSimulationData::checkForModifications(), but
-    //       this would result in a signal being emitted (and then handled by
-    //       SingleCellViewSimulationWidget::simulationDataModified()),
-    //       resulting in some time overhead, so we check things here
-    //       instead...
+    //       call
+    //       SimulationExperimentViewSimulationData::checkForModifications(),
+    //       but this would result in a signal being emitted (and then handled
+    //       by
+    //       SimulationExperimentViewSimulationWidget::simulationDataModified()),
+    //       resulting in some time overhead, so we check things here instead...
 
-    SingleCellViewSimulation *simulation = pSimulationWidget->simulation();
+    SimulationExperimentViewSimulation *simulation = pSimulationWidget->simulation();
 
     if (simulation == mSimulation)
         checkSimulationDataModified(simulation->data()->isModified());
@@ -3203,16 +3205,16 @@ void SingleCellViewSimulationWidget::updateSimulationResults(SingleCellViewSimul
 
 //==============================================================================
 
-QIcon SingleCellViewSimulationWidget::parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType)
+QIcon SimulationExperimentViewSimulationWidget::parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType)
 {
     // Return an icon that illustrates the type of a parameter
 
-    static const QIcon VoiIcon              = QIcon(":/SingleCellView/voi.png");
-    static const QIcon ConstantIcon         = QIcon(":/SingleCellView/constant.png");
-    static const QIcon ComputedConstantIcon = QIcon(":/SingleCellView/computedConstant.png");
-    static const QIcon RateIcon             = QIcon(":/SingleCellView/rate.png");
-    static const QIcon StateIcon            = QIcon(":/SingleCellView/state.png");
-    static const QIcon AlgebraicIcon        = QIcon(":/SingleCellView/algebraic.png");
+    static const QIcon VoiIcon              = QIcon(":/SimulationExperimentView/voi.png");
+    static const QIcon ConstantIcon         = QIcon(":/SimulationExperimentView/constant.png");
+    static const QIcon ComputedConstantIcon = QIcon(":/SimulationExperimentView/computedConstant.png");
+    static const QIcon RateIcon             = QIcon(":/SimulationExperimentView/rate.png");
+    static const QIcon StateIcon            = QIcon(":/SimulationExperimentView/state.png");
+    static const QIcon AlgebraicIcon        = QIcon(":/SimulationExperimentView/algebraic.png");
     static const QIcon ErrorNodeIcon        = QIcon(":/oxygen/emblems/emblem-important.png");
 
     switch (pParameterType) {
@@ -3238,7 +3240,7 @@ QIcon SingleCellViewSimulationWidget::parameterIcon(const CellMLSupport::CellmlF
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::openCellmlFile()
+void SimulationExperimentViewSimulationWidget::openCellmlFile()
 {
     // Ask OpenCOR to open our referenced CellML file
 
@@ -3258,7 +3260,7 @@ void SingleCellViewSimulationWidget::openCellmlFile()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::plotAxesChanged()
+void SimulationExperimentViewSimulationWidget::plotAxesChanged()
 {
     // A plot has had its axes changed (e.g. its contents was panned), which
     // means that we don't want to allow its viewport to be updated anymore
@@ -3270,7 +3272,7 @@ void SingleCellViewSimulationWidget::plotAxesChanged()
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::dataStoreExportDone(const QString &pErrorMessage)
+void SimulationExperimentViewSimulationWidget::dataStoreExportDone(const QString &pErrorMessage)
 {
     // We are done with the export, so hide our busy widget
 
@@ -3286,7 +3288,7 @@ void SingleCellViewSimulationWidget::dataStoreExportDone(const QString &pErrorMe
 
 //==============================================================================
 
-void SingleCellViewSimulationWidget::dataStoreExportProgress(const double &pProgress)
+void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(const double &pProgress)
 {
     // There has been some progress with our export, so update our busy widget
 
@@ -3295,7 +3297,7 @@ void SingleCellViewSimulationWidget::dataStoreExportProgress(const double &pProg
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -17,21 +17,21 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view information simulation widget
+// Simulation Experiment view information simulation widget
 //==============================================================================
 
 #include "cellmlfileruntime.h"
-#include "singlecellviewinformationsimulationwidget.h"
-#include "singlecellviewsimulation.h"
+#include "simulationexperimentviewinformationsimulationwidget.h"
+#include "simulationexperimentviewsimulation.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-SingleCellViewInformationSimulationWidget::SingleCellViewInformationSimulationWidget(QWidget *pParent) :
+SimulationExperimentViewInformationSimulationWidget::SimulationExperimentViewInformationSimulationWidget(QWidget *pParent) :
     PropertyEditorWidget(true, pParent)
 {
     // Populate our property editor
@@ -43,7 +43,7 @@ SingleCellViewInformationSimulationWidget::SingleCellViewInformationSimulationWi
 
 //==============================================================================
 
-void SingleCellViewInformationSimulationWidget::retranslateUi()
+void SimulationExperimentViewInformationSimulationWidget::retranslateUi()
 {
     // Default retranslation
 
@@ -58,7 +58,7 @@ void SingleCellViewInformationSimulationWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellViewInformationSimulationWidget::initialize(SingleCellViewSimulation *pSimulation)
+void SimulationExperimentViewInformationSimulationWidget::initialize(SimulationExperimentViewSimulation *pSimulation)
 {
     // Iniialise the unit of our different properties
 
@@ -76,7 +76,7 @@ void SingleCellViewInformationSimulationWidget::initialize(SingleCellViewSimulat
 
 //==============================================================================
 
-Core::Property * SingleCellViewInformationSimulationWidget::startingPointProperty() const
+Core::Property * SimulationExperimentViewInformationSimulationWidget::startingPointProperty() const
 {
     // Return our starting point property
 
@@ -85,7 +85,7 @@ Core::Property * SingleCellViewInformationSimulationWidget::startingPointPropert
 
 //==============================================================================
 
-Core::Property * SingleCellViewInformationSimulationWidget::endingPointProperty() const
+Core::Property * SimulationExperimentViewInformationSimulationWidget::endingPointProperty() const
 {
     // Return our ending point property
 
@@ -94,7 +94,7 @@ Core::Property * SingleCellViewInformationSimulationWidget::endingPointProperty(
 
 //==============================================================================
 
-Core::Property * SingleCellViewInformationSimulationWidget::pointIntervalProperty() const
+Core::Property * SimulationExperimentViewInformationSimulationWidget::pointIntervalProperty() const
 {
     // Return our point interval property
 
@@ -103,7 +103,7 @@ Core::Property * SingleCellViewInformationSimulationWidget::pointIntervalPropert
 
 //==============================================================================
 
-double SingleCellViewInformationSimulationWidget::startingPoint() const
+double SimulationExperimentViewInformationSimulationWidget::startingPoint() const
 {
     // Return our starting point
 
@@ -112,7 +112,7 @@ double SingleCellViewInformationSimulationWidget::startingPoint() const
 
 //==============================================================================
 
-double SingleCellViewInformationSimulationWidget::endingPoint() const
+double SimulationExperimentViewInformationSimulationWidget::endingPoint() const
 {
     // Return our ending point
 
@@ -121,7 +121,7 @@ double SingleCellViewInformationSimulationWidget::endingPoint() const
 
 //==============================================================================
 
-double SingleCellViewInformationSimulationWidget::pointInterval() const
+double SimulationExperimentViewInformationSimulationWidget::pointInterval() const
 {
     // Return our point interval
 
@@ -130,7 +130,7 @@ double SingleCellViewInformationSimulationWidget::pointInterval() const
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

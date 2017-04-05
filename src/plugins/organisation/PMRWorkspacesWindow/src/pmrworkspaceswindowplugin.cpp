@@ -60,12 +60,12 @@ PLUGININFO_FUNC PMRWorkspacesWindowPluginInfo()
 
 void PMRWorkspacesWindowPlugin::retranslateUi()
 {
-    // Retranslate our workspaces window action
+    // Retranslate our PMR Workspaces window action
 
     retranslateAction(mPmrWorkspacesWindowAction, tr("PMR Workspaces"),
                       tr("Show/hide the PMR Workspaces window"));
 
-    // Retranslate our workspaces window
+    // Retranslate our PMR Workspaces window
 
     mPmrWorkspacesWindowWindow->retranslateUi();
 }
@@ -98,11 +98,11 @@ bool PMRWorkspacesWindowPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void PMRWorkspacesWindowPlugin::initializePlugin()
 {
-    // Create an action to show/hide our workspaces window
+    // Create an action to show/hide our PMR Workspaces window
 
     mPmrWorkspacesWindowAction = Core::newAction(true, Core::mainWindow());
 
-    // Create our workspaces window
+    // Create our PMR Workspaces window
 
     mPmrWorkspacesWindowWindow = new PmrWorkspacesWindowWindow(Core::mainWindow());
 }
@@ -127,7 +127,7 @@ void PMRWorkspacesWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins
 
 void PMRWorkspacesWindowPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our workspaces window settings
+    // Retrieve our PMR Workspaces window settings
 
     pSettings->beginGroup(mPmrWorkspacesWindowWindow->objectName());
         mPmrWorkspacesWindowWindow->loadSettings(pSettings);
@@ -138,7 +138,7 @@ void PMRWorkspacesWindowPlugin::loadSettings(QSettings *pSettings)
 
 void PMRWorkspacesWindowPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our workspaces window settings
+    // Keep track of our PMR Workspaces window settings
 
     pSettings->beginGroup(mPmrWorkspacesWindowWindow->objectName());
         mPmrWorkspacesWindowWindow->saveSettings(pSettings);
@@ -194,7 +194,7 @@ Qt::DockWidgetArea PMRWorkspacesWindowPlugin::windowDefaultDockArea() const
 
 QAction * PMRWorkspacesWindowPlugin::windowAction() const
 {
-    // Return our window action
+    // Return our PMR Workspaces window action
 
     return mPmrWorkspacesWindowAction;
 }
@@ -203,7 +203,7 @@ QAction * PMRWorkspacesWindowPlugin::windowAction() const
 
 QDockWidget * PMRWorkspacesWindowPlugin::windowWidget() const
 {
-    // Return our window widget
+    // Return our PMR Workspaces window widget
 
     return mPmrWorkspacesWindowWindow;
 }

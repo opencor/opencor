@@ -214,13 +214,13 @@ bool RawSEDMLViewPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void RawSEDMLViewPlugin::initializePlugin()
 {
-    // Create our raw SED-ML view widget
+    // Create our Raw SED-ML view widget
 
     mViewWidget = new RawSedmlViewWidget(Core::mainWindow());
 
     mViewWidget->setObjectName("RawSedmlViewWidget");
 
-    // Hide our raw SED-ML view widget since it may not initially be shown in
+    // Hide our Raw SED-ML view widget since it may not initially be shown in
     // our central widget
 
     mViewWidget->setVisible(false);
@@ -246,7 +246,7 @@ void RawSEDMLViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void RawSEDMLViewPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our raw SED-ML view widget settings
+    // Retrieve our Raw SED-ML view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
@@ -257,7 +257,7 @@ void RawSEDMLViewPlugin::loadSettings(QSettings *pSettings)
 
 void RawSEDMLViewPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our raw SED-ML view widget settings
+    // Keep track of our Raw SED-ML view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
@@ -336,7 +336,7 @@ QWidget * RawSEDMLViewPlugin::viewWidget(const QString &pFileName)
     if (!SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName))
         return 0;
 
-    // Update and return our raw SED-ML view widget using the given SED-ML file
+    // Update and return our Raw SED-ML view widget using the given SED-ML file
 
     mViewWidget->initialize(pFileName);
 
@@ -347,7 +347,7 @@ QWidget * RawSEDMLViewPlugin::viewWidget(const QString &pFileName)
 
 void RawSEDMLViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    // Ask our raw SED-ML view widget to finalise the given SED-ML file
+    // Ask our Raw SED-ML view widget to finalise the given SED-ML file
 
     mViewWidget->finalize(pFileName);
 }
@@ -356,7 +356,7 @@ void RawSEDMLViewPlugin::removeViewWidget(const QString &pFileName)
 
 QString RawSEDMLViewPlugin::viewName() const
 {
-    // Return our raw SED-ML view's name
+    // Return our Raw SED-ML view's name
 
     return tr("Raw SED-ML");
 }

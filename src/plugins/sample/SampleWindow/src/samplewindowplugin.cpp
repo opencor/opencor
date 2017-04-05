@@ -53,7 +53,7 @@ PLUGININFO_FUNC SampleWindowPluginInfo()
 
 void SampleWindowPlugin::retranslateUi()
 {
-    // Retranslate our sample window action
+    // Retranslate our Sample window action
 
     retranslateAction(mSampleWindowAction,
                       tr("Sample"),
@@ -88,11 +88,11 @@ bool SampleWindowPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void SampleWindowPlugin::initializePlugin()
 {
-    // Create an action to show/hide our sample window
+    // Create an action to show/hide our Sample window
 
     mSampleWindowAction = Core::newAction(true, Core::mainWindow());
 
-    // Create our sample window
+    // Create our Sample window
 
     mSampleWindowWindow = new SampleWindowWindow(Core::mainWindow());
 }

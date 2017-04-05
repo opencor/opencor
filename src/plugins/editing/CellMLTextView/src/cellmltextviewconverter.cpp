@@ -129,7 +129,7 @@ bool CellMLTextViewConverter::execute(const QString &pRawCellml)
 
     reset();
 
-    // Convert the raw CellML to CellML text by first getting a DOM
+    // Convert the raw CellML to CellML Text by first getting a DOM
     // representation of it
 
     QDomDocument domDocument;
@@ -347,31 +347,40 @@ QString CellMLTextViewConverter::cmetaId(const QDomNode &pDomNode) const
 {
     // Return the converted cmeta:id, if any, of the given node
 
-    QDomNamedNodeMap domNodeAttributes = pDomNode.attributes();
-    QDomNode cmetaIdAttributeNode = domNodeAttributes.namedItemNS(CellMLSupport::CmetaIdNamespace, "id");
+    QString cmetaIdValue = attributeNodeValue(pDomNode, CellMLSupport::CmetaIdNamespace, "id", false);
 
-    if (cmetaIdAttributeNode.isNull()) {
-        // We couldn't find an id in the cmeta:id namespace, so try without the
-        // namespace
-        // Note: this seems to be an issue QDomNode & Co. Indeed, it would seem
-        //       that if the attribute that defines the cmeta:id namespace is
-        //       after the cmeta:id attribute (the case with the model element),
-        //       then the cmeta:id will only be accessible without using a
-        //       namespace...
-
-        cmetaIdAttributeNode = domNodeAttributes.namedItem("id");
-    }
-
-    if (!cmetaIdAttributeNode.isNull()) {
-        QString cmetaIdValue = cmetaIdAttributeNode.nodeValue().trimmed();
-
-        if (!cmetaIdValue.isEmpty())
-            return QString("{%1}").arg(cmetaIdValue);
-        else
-            return QString();
-    } else {
+    if (!cmetaIdValue.isEmpty())
+        return QString("{%1}").arg(cmetaIdValue);
+    else
         return QString();
-    }
+}
+
+//==============================================================================
+
+QString CellMLTextViewConverter::attributeNodeValue(const QDomNode &pDomNode,
+                                                    const QString &pNamespace,
+                                                    const QString &pName,
+                                                    const bool &pMustBePresent) const
+{
+    // Return the trimmed value of the requested attribute using the given
+    // namespace
+    // Note: there is an issue with QDomNamedNodeMap::namedItemNS(). Indeed, if
+    //       the attribute that defines the namespace is after the attribute
+    //       itself, then the attribute will only be accessible without using a
+    //       namespace (see https://bugreports.qt.io/browse/QTBUG-59932)...
+
+    QDomNamedNodeMap domNodeAttributes = pDomNode.attributes();
+    QDomNode attributeNode = domNodeAttributes.namedItemNS(pNamespace, pName);
+
+    if (attributeNode.isNull())
+        attributeNode = domNodeAttributes.namedItem(pName);
+
+    QString res = attributeNode.nodeValue().trimmed();
+
+    if (res.isEmpty())
+        return pMustBePresent?"???":res;
+    else
+        return res;
 }
 
 //==============================================================================
@@ -380,24 +389,18 @@ QString CellMLTextViewConverter::cellmlAttributeNodeValue(const QDomNode &pDomNo
                                                           const QString &pName,
                                                           const bool &pMustBePresent) const
 {
-    // Return the trimmed value of the requested CellML attribute using the
-    // CellML 1.0 namespace or, if needed, the CellML 1.1 namespace or even
-    // without using a namespace (see cmetaId() for why not using a namespace)
+    // Return the requested CellML attribute using the CellML 1.0 namespace or,
+    // if needed, the CellML 1.1 namespace
 
-    QDomNamedNodeMap domNodeAttributes = pDomNode.attributes();
-    QDomNode cellmlAttributeNode = domNodeAttributes.namedItemNS(CellMLSupport::Cellml_1_0_Namespace, pName);
+    QString res = attributeNodeValue(pDomNode, CellMLSupport::Cellml_1_0_Namespace, pName, false);
 
-    if (cellmlAttributeNode.isNull()) {
-        cellmlAttributeNode = domNodeAttributes.namedItemNS(CellMLSupport::Cellml_1_1_Namespace, pName);
+    if (res.isEmpty())
+        res = attributeNodeValue(pDomNode, CellMLSupport::Cellml_1_1_Namespace, pName, false);
 
-        if (cellmlAttributeNode.isNull())
-            cellmlAttributeNode = domNodeAttributes.namedItem(pName);
-    }
-
-    if (!cellmlAttributeNode.isNull())
-        return cellmlAttributeNode.nodeValue().trimmed();
+    if (res.isEmpty())
+        return pMustBePresent?"???":res;
     else
-        return pMustBePresent?"???":QString();
+        return res;
 }
 
 //==============================================================================
@@ -549,7 +552,7 @@ bool CellMLTextViewConverter::processImportNode(const QDomNode &pDomNode)
 
     outputString(DefImport,
                  QString("def import%1 using \"%2\" for").arg(cmetaId(pDomNode))
-                                                         .arg(pDomNode.attributes().namedItemNS(CellMLSupport::XlinkNamespace, "href").nodeValue().trimmed()));
+                                                         .arg(attributeNodeValue(pDomNode, CellMLSupport::XlinkNamespace, "href")));
 
     indent();
 
@@ -590,7 +593,7 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
 
     QString baseUnits = cellmlAttributeNodeValue(pDomNode, "base_units", false);
 
-    if (baseUnits.compare(QString()) && baseUnits.compare("yes") && baseUnits.compare("no")) {
+    if (!baseUnits.isEmpty() && baseUnits.compare("yes") && baseUnits.compare("no")) {
         mErrorLine = pDomNode.lineNumber();
         mErrorMessage = QObject::tr("A 'base_units' attribute must have a value of 'yes' or 'no'.");
 

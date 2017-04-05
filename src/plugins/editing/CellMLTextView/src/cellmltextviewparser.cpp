@@ -305,7 +305,7 @@ CellmlTextViewParser::StatementType CellmlTextViewParser::statementType() const
 
 void CellmlTextViewParser::initialize(const QString &pCellmlText)
 {
-    // Initialize ourselves with the given CellML text
+    // Initialize ourselves with the given CellML Text string
 
     mScanner.setText(pCellmlText);
 

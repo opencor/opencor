@@ -140,7 +140,7 @@ void CellMLAnnotationViewPlugin::fileClosed(const QString &pFileName)
 
 void CellMLAnnotationViewPlugin::retranslateUi()
 {
-    // Retranslate our CellML annotation view widget
+    // Retranslate our CellML Annotation view widget
 
     mViewWidget->retranslateUi();
 }
@@ -173,13 +173,13 @@ bool CellMLAnnotationViewPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void CellMLAnnotationViewPlugin::initializePlugin()
 {
-    // Create our CellML annotation view widget
+    // Create our CellML Annotation view widget
 
     mViewWidget = new CellmlAnnotationViewWidget(this, Core::mainWindow());
 
     mViewWidget->setObjectName("CellmlAnnotationViewWidget");
 
-    // Hide our CellML annotation view widget since it may not initially be
+    // Hide our CellML Annotation view widget since it may not initially be
     // shown in our central widget
 
     mViewWidget->setVisible(false);
@@ -205,7 +205,7 @@ void CellMLAnnotationViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugin
 
 void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our CellML annotation view widget settings
+    // Retrieve our CellML Annotation view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
@@ -216,7 +216,7 @@ void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
 
 void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our CellML annotation view widget settings
+    // Keep track of our CellML Annotation view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
@@ -272,7 +272,7 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         return 0;
 
-    // Update and return our CellML annotation view widget using the given
+    // Update and return our CellML Annotation view widget using the given
     // CellML file
 
     mViewWidget->initialize(pFileName);
@@ -284,7 +284,7 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
 
 void CellMLAnnotationViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    // Ask our CellML annotation view widget to finalise the given CellML file
+    // Ask our CellML Annotation view widget to finalise the given CellML file
 
     mViewWidget->finalize(pFileName);
 }
@@ -293,7 +293,7 @@ void CellMLAnnotationViewPlugin::removeViewWidget(const QString &pFileName)
 
 QString CellMLAnnotationViewPlugin::viewName() const
 {
-    // Return our CellML annotation view's name
+    // Return our CellML Annotation view's name
 
     return tr("CellML Annotation");
 }

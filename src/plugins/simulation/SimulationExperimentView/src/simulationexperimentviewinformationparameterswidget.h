@@ -17,15 +17,14 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view simulation worker
+// Simulation Experiment view information parameters widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include <QObject>
-#include <QWaitCondition>
+#include "propertyeditorwidget.h"
 
 //==============================================================================
 
@@ -35,75 +34,71 @@ namespace OpenCOR {
 
 namespace CellMLSupport {
     class CellmlFileRuntime;
+    class CellmlFileRuntimeParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================
 
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SingleCellViewSimulation;
+class SimulationExperimentViewSimulation;
 
 //==============================================================================
 
-class SingleCellViewSimulationWorker : public QObject
+class SimulationExperimentViewInformationParametersWidget : public Core::PropertyEditorWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewSimulationWorker(SingleCellViewSimulation *pSimulation,
-                                            SingleCellViewSimulationWorker *&pSelf);
+    explicit SimulationExperimentViewInformationParametersWidget(QWidget *pParent);
 
-    bool isRunning() const;
-    bool isPaused() const;
+    virtual void retranslateUi();
 
-    double currentPoint() const;
+    void initialize(SimulationExperimentViewSimulation *pSimulation,
+                    const bool &pReloadingView = false);
+    void finalize();
 
-    bool run();
-    bool pause();
-    bool resume();
-    bool stop();
+    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
 
-    bool reset();
+protected:
+    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
 
 private:
-    QThread *mThread;
+    QMenu *mContextMenu;
 
-    SingleCellViewSimulation *mSimulation;
+    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
+    QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
-    CellMLSupport::CellmlFileRuntime *mRuntime;
+    SimulationExperimentViewSimulation *mSimulation;
 
-    double mCurrentPoint;
+    bool mNeedClearing;
+    bool mVoiAccessible;
 
-    bool mPaused;
-    bool mStopped;
+    void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
+    void populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
 
-    bool mReset;
+    void updateExtraInfos();
 
-    QWaitCondition mPausedCondition;
-
-    bool mError;
-
-    SingleCellViewSimulationWorker *&mSelf;
+    void retranslateContextMenu();
 
 signals:
-    void running(const bool &pIsResuming);
-    void paused();
+    void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                       CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
-    void finished(const qint64 &pElapsedTime);
-
-    void error(const QString &pMessage);
+public slots:
+    void updateParameters(const double &pCurrentPoint);
 
 private slots:
-    void started();
+    void propertyChanged(Core::Property *pProperty);
 
-    void emitError(const QString &pMessage);
+    void emitGraphRequired();
 };
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

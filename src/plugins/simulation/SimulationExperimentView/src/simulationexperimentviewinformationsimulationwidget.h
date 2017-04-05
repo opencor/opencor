@@ -17,66 +17,56 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view contents widget
+// Simulation Experiment view information simulation widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "corecliutils.h"
-#include "splitterwidget.h"
+#include "propertyeditorwidget.h"
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-namespace GraphPanelWidget {
-    class GraphPanelsWidget;
-}   // namespace GraphPanelWidget
+class SimulationExperimentViewSimulation;
 
 //==============================================================================
 
-namespace SingleCellView {
-
-//==============================================================================
-
-class SingleCellViewInformationWidget;
-class SingleCellViewPlugin;
-class SingleCellViewSimulationWidget;
-
-//==============================================================================
-
-class SingleCellViewContentsWidget : public Core::SplitterWidget
+class SimulationExperimentViewInformationSimulationWidget : public Core::PropertyEditorWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewContentsWidget(SingleCellViewPlugin *pPlugin,
-                                          SingleCellViewSimulationWidget *pSimulationWidget,
-                                          QWidget *pParent);
+    explicit SimulationExperimentViewInformationSimulationWidget(QWidget *pParent);
 
     virtual void retranslateUi();
 
-    SingleCellViewInformationWidget * informationWidget() const;
-    GraphPanelWidget::GraphPanelsWidget * graphPanelsWidget() const;
+    void initialize(SimulationExperimentViewSimulation *pSimulation);
+
+    Core::Property * startingPointProperty() const;
+    Core::Property * endingPointProperty() const;
+    Core::Property * pointIntervalProperty() const;
+
+    double startingPoint() const;
+    double endingPoint() const;
+    double pointInterval() const;
 
 private:
-    SingleCellViewInformationWidget *mInformationWidget;
-    GraphPanelWidget::GraphPanelsWidget *mGraphPanelsWidget;
+    Core::Property *mStartingPointProperty;
+    Core::Property *mEndingPointProperty;
+    Core::Property *mPointIntervalProperty;
 
-signals:
-    void splitterMoved(const QIntList &pSizes);
-
-private slots:
-    void emitSplitterMoved();
+    void updateToolTips();
 };
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================
