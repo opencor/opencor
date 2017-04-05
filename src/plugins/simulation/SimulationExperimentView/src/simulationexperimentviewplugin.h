@@ -36,25 +36,27 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-PLUGININFO_FUNC SingleCellViewPluginInfo();
+PLUGININFO_FUNC SimulationExperimentViewPluginInfo();
 
 //==============================================================================
 
-class SingleCellViewWidget;
+class SimulationExperimentViewWidget;
 
 //==============================================================================
 
-class SingleCellViewPlugin : public QObject, public FileHandlingInterface,
-                             public I18nInterface, public PluginInterface,
-                             public ViewInterface
+class SimulationExperimentViewPlugin : public QObject,
+                                       public FileHandlingInterface,
+                                       public I18nInterface,
+                                       public PluginInterface,
+                                       public ViewInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.SingleCellViewPlugin" FILE "singlecellviewplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.SimulationExperimentViewPlugin" FILE "simulationexperimentviewplugin.json")
 
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
@@ -62,14 +64,14 @@ class SingleCellViewPlugin : public QObject, public FileHandlingInterface,
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
-    explicit SingleCellViewPlugin();
+    explicit SimulationExperimentViewPlugin();
 
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
 #include "viewinterface.inl"
 
-    SingleCellViewWidget * viewWidget() const;
+    SimulationExperimentViewWidget * viewWidget() const;
 
     SolverInterfaces solverInterfaces() const;
     DataStoreInterfaces dataStoreInterfaces() const;
@@ -81,7 +83,7 @@ public:
     FileTypeInterface * combineFileTypeInterface() const;
 
 private:
-    SingleCellViewWidget *mViewWidget;
+    SimulationExperimentViewWidget *mViewWidget;
 
     SolverInterfaces mSolverInterfaces;
     DataStoreInterfaces mDataStoreInterfaces;
@@ -94,7 +96,7 @@ private:
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -17,18 +17,15 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Simulation Experiment view information widget
+// Simulation Experiment view contents widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "commonwidget.h"
-
-//==============================================================================
-
-#include <QScrollArea>
+#include "corecliutils.h"
+#include "splitterwidget.h"
 
 //==============================================================================
 
@@ -36,58 +33,50 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace Core {
-    class CollapsibleWidget;
-}   // namespace Core
+namespace GraphPanelWidget {
+    class GraphPanelsWidget;
+}   // namespace GraphPanelWidget
 
 //==============================================================================
 
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SingleCellViewInformationGraphsWidget;
-class SingleCellViewInformationParametersWidget;
-class SingleCellViewInformationSimulationWidget;
-class SingleCellViewInformationSolversWidget;
-class SingleCellViewPlugin;
-class SingleCellViewSimulationWidget;
+class SimulationExperimentViewInformationWidget;
+class SimulationExperimentViewPlugin;
+class SimulationExperimentViewSimulationWidget;
 
 //==============================================================================
 
-class SingleCellViewInformationWidget : public QScrollArea,
-                                        public Core::CommonWidget
+class SimulationExperimentViewContentsWidget : public Core::SplitterWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationWidget(SingleCellViewPlugin *pPlugin,
-                                             SingleCellViewSimulationWidget *pSimulationWidget,
-                                             QWidget *pParent);
+    explicit SimulationExperimentViewContentsWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                    SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                                    QWidget *pParent);
 
     virtual void retranslateUi();
 
-    Core::CollapsibleWidget * collapsibleWidget() const;
-
-    SingleCellViewInformationSimulationWidget * simulationWidget() const;
-    SingleCellViewInformationSolversWidget * solversWidget() const;
-    SingleCellViewInformationGraphsWidget * graphsWidget() const;
-    SingleCellViewInformationParametersWidget * parametersWidget() const;
-
-    void finishEditing(const bool &pPausedSimulation);
+    SimulationExperimentViewInformationWidget * informationWidget() const;
+    GraphPanelWidget::GraphPanelsWidget * graphPanelsWidget() const;
 
 private:
-    Core::CollapsibleWidget *mCollapsibleWidget;
+    SimulationExperimentViewInformationWidget *mInformationWidget;
+    GraphPanelWidget::GraphPanelsWidget *mGraphPanelsWidget;
 
-    SingleCellViewInformationSimulationWidget *mSimulationWidget;
-    SingleCellViewInformationSolversWidget *mSolversWidget;
-    SingleCellViewInformationGraphsWidget *mGraphsWidget;
-    SingleCellViewInformationParametersWidget *mParametersWidget;
+signals:
+    void splitterMoved(const QIntList &pSizes);
+
+private slots:
+    void emitSplitterMoved();
 };
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

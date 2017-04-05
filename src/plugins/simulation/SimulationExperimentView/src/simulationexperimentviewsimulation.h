@@ -25,7 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include "datastoreinterface.h"
-#include "singlecellviewsimulationworker.h"
+#include "simulationexperimentviewsimulationworker.h"
 #include "solverinterface.h"
 
 //==============================================================================
@@ -44,26 +44,26 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SingleCellViewSimulation;
+class SimulationExperimentViewSimulation;
 
 //==============================================================================
 
-class SingleCellViewSimulationData : public QObject
+class SimulationExperimentViewSimulationData : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewSimulationData(SingleCellViewSimulation *pSimulation,
-                                          const SolverInterfaces &pSolverInterfaces);
-    ~SingleCellViewSimulationData();
+    explicit SimulationExperimentViewSimulationData(SimulationExperimentViewSimulation *pSimulation,
+                                                    const SolverInterfaces &pSolverInterfaces);
+    ~SimulationExperimentViewSimulationData();
 
     void update();
 
-    SingleCellViewSimulation * simulation() const;
+    SimulationExperimentViewSimulation * simulation() const;
 
     double * constants() const;
     double * rates() const;
@@ -120,7 +120,7 @@ public:
     void checkForModifications();
 
 private:
-    SingleCellViewSimulation *mSimulation;
+    SimulationExperimentViewSimulation *mSimulation;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 
@@ -165,13 +165,13 @@ signals:
 
 //==============================================================================
 
-class SingleCellViewSimulationResults : public QObject
+class SimulationExperimentViewSimulationResults : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewSimulationResults(SingleCellViewSimulation *pSimulation);
-    ~SingleCellViewSimulationResults();
+    explicit SimulationExperimentViewSimulationResults(SimulationExperimentViewSimulation *pSimulation);
+    ~SimulationExperimentViewSimulationResults();
 
     void update();
 
@@ -191,7 +191,7 @@ public:
     double * algebraic(const int &pIndex) const;
 
 private:
-    SingleCellViewSimulation *mSimulation;
+    SimulationExperimentViewSimulation *mSimulation;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 
@@ -212,23 +212,23 @@ private:
 
 //==============================================================================
 
-class SingleCellViewSimulation : public QObject
+class SimulationExperimentViewSimulation : public QObject
 {
     Q_OBJECT
 
-    friend class SingleCellViewSimulationWorker;
+    friend class SimulationExperimentViewSimulationWorker;
 
 public:
-    explicit SingleCellViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                      const SolverInterfaces &pSolverInterfaces);
-    ~SingleCellViewSimulation();
+    explicit SimulationExperimentViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime,
+                                                const SolverInterfaces &pSolverInterfaces);
+    ~SimulationExperimentViewSimulation();
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
     QString fileName() const;
 
-    SingleCellViewSimulationData * data() const;
-    SingleCellViewSimulationResults * results() const;
+    SimulationExperimentViewSimulationData * data() const;
+    SimulationExperimentViewSimulationResults * results() const;
 
     void update(CellMLSupport::CellmlFileRuntime *pRuntime);
 
@@ -252,14 +252,14 @@ public:
     bool reset();
 
 private:
-    SingleCellViewSimulationWorker *mWorker;
+    SimulationExperimentViewSimulationWorker *mWorker;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 
     SolverInterfaces mSolverInterfaces;
 
-    SingleCellViewSimulationData *mData;
-    SingleCellViewSimulationResults *mResults;
+    SimulationExperimentViewSimulationData *mData;
+    SimulationExperimentViewSimulationResults *mResults;
 
     bool simulationSettingsOk(const bool &pEmitSignal = true);
 
@@ -273,7 +273,7 @@ signals:
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -29,24 +29,24 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SingleCellViewSimulation;
+class SimulationExperimentViewSimulation;
 
 //==============================================================================
 
-class SingleCellViewInformationSimulationWidget : public Core::PropertyEditorWidget
+class SimulationExperimentViewInformationSimulationWidget : public Core::PropertyEditorWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationSimulationWidget(QWidget *pParent);
+    explicit SimulationExperimentViewInformationSimulationWidget(QWidget *pParent);
 
     virtual void retranslateUi();
 
-    void initialize(SingleCellViewSimulation *pSimulation);
+    void initialize(SimulationExperimentViewSimulation *pSimulation);
 
     Core::Property * startingPointProperty() const;
     Core::Property * endingPointProperty() const;
@@ -66,7 +66,7 @@ private:
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

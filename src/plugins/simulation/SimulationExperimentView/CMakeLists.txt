@@ -1,8 +1,8 @@
-PROJECT(SingleCellViewPlugin)
+PROJECT(SimulationExperimentViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(SingleCellView
+ADD_PLUGIN(SimulationExperimentView
     SOURCES
         ../../datastoreinterface.cpp
         ../../filehandlinginterface.cpp
@@ -14,34 +14,34 @@ ADD_PLUGIN(SingleCellView
         ../../solverinterface.cpp
         ../../viewinterface.cpp
 
-        src/singlecellviewcontentswidget.cpp
-        src/singlecellviewinformationgraphswidget.cpp
-        src/singlecellviewinformationparameterswidget.cpp
-        src/singlecellviewinformationsimulationwidget.cpp
-        src/singlecellviewinformationsolverswidget.cpp
-        src/singlecellviewinformationwidget.cpp
-        src/singlecellviewplugin.cpp
-        src/singlecellviewsimulation.cpp
-        src/singlecellviewsimulationworker.cpp
-        src/singlecellviewsimulationwidget.cpp
-        src/singlecellviewwidget.cpp
+        src/simulationexperimentviewcontentswidget.cpp
+        src/simulationexperimentviewinformationgraphswidget.cpp
+        src/simulationexperimentviewinformationparameterswidget.cpp
+        src/simulationexperimentviewinformationsimulationwidget.cpp
+        src/simulationexperimentviewinformationsolverswidget.cpp
+        src/simulationexperimentviewinformationwidget.cpp
+        src/simulationexperimentviewplugin.cpp
+        src/simulationexperimentviewsimulation.cpp
+        src/simulationexperimentviewsimulationworker.cpp
+        src/simulationexperimentviewsimulationwidget.cpp
+        src/simulationexperimentviewwidget.cpp
     HEADERS_MOC
         ../../datastoreinterface.h
         ../../plugin.h
         ../../pluginmanager.h
         ../../solverinterface.h
 
-        src/singlecellviewcontentswidget.h
-        src/singlecellviewinformationgraphswidget.h
-        src/singlecellviewinformationparameterswidget.h
-        src/singlecellviewinformationsimulationwidget.h
-        src/singlecellviewinformationsolverswidget.h
-        src/singlecellviewinformationwidget.h
-        src/singlecellviewplugin.h
-        src/singlecellviewsimulation.h
-        src/singlecellviewsimulationworker.h
-        src/singlecellviewsimulationwidget.h
-        src/singlecellviewwidget.h
+        src/simulationexperimentviewcontentswidget.h
+        src/simulationexperimentviewinformationgraphswidget.h
+        src/simulationexperimentviewinformationparameterswidget.h
+        src/simulationexperimentviewinformationsimulationwidget.h
+        src/simulationexperimentviewinformationsolverswidget.h
+        src/simulationexperimentviewinformationwidget.h
+        src/simulationexperimentviewplugin.h
+        src/simulationexperimentviewsimulation.h
+        src/simulationexperimentviewsimulationworker.h
+        src/simulationexperimentviewsimulationwidget.h
+        src/simulationexperimentviewwidget.h
     INCLUDE_DIRS
         src
     PLUGINS

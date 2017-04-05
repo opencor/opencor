@@ -22,8 +22,8 @@ limitations under the License.
 
 #include "borderedwidget.h"
 #include "graphpanelswidget.h"
-#include "singlecellviewcontentswidget.h"
-#include "singlecellviewinformationwidget.h"
+#include "simulationexperimentviewcontentswidget.h"
+#include "simulationexperimentviewinformationwidget.h"
 
 //==============================================================================
 
@@ -32,13 +32,13 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-SingleCellViewContentsWidget::SingleCellViewContentsWidget(SingleCellViewPlugin *pPlugin,
-                                                           SingleCellViewSimulationWidget *pSimulationWidget,
-                                                           QWidget *pParent) :
+SimulationExperimentViewContentsWidget::SimulationExperimentViewContentsWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                                               SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                                                               QWidget *pParent) :
     Core::SplitterWidget(pParent)
 {
     // Keep track of our movement
@@ -48,7 +48,7 @@ SingleCellViewContentsWidget::SingleCellViewContentsWidget(SingleCellViewPlugin 
 
     // Create our information widget
 
-    mInformationWidget = new SingleCellViewInformationWidget(pPlugin, pSimulationWidget, this);
+    mInformationWidget = new SimulationExperimentViewInformationWidget(pPlugin, pSimulationWidget, this);
 
     mInformationWidget->setObjectName("Information");
 
@@ -72,7 +72,7 @@ SingleCellViewContentsWidget::SingleCellViewContentsWidget(SingleCellViewPlugin 
 
 //==============================================================================
 
-void SingleCellViewContentsWidget::retranslateUi()
+void SimulationExperimentViewContentsWidget::retranslateUi()
 {
     // Retranslate our information and graph panels widgets
 
@@ -82,7 +82,7 @@ void SingleCellViewContentsWidget::retranslateUi()
 
 //==============================================================================
 
-SingleCellViewInformationWidget * SingleCellViewContentsWidget::informationWidget() const
+SimulationExperimentViewInformationWidget * SimulationExperimentViewContentsWidget::informationWidget() const
 {
     // Return our information widget
 
@@ -91,7 +91,7 @@ SingleCellViewInformationWidget * SingleCellViewContentsWidget::informationWidge
 
 //==============================================================================
 
-GraphPanelWidget::GraphPanelsWidget * SingleCellViewContentsWidget::graphPanelsWidget() const
+GraphPanelWidget::GraphPanelsWidget * SimulationExperimentViewContentsWidget::graphPanelsWidget() const
 {
     // Return our graph panels widget
 
@@ -100,7 +100,7 @@ GraphPanelWidget::GraphPanelsWidget * SingleCellViewContentsWidget::graphPanelsW
 
 //==============================================================================
 
-void SingleCellViewContentsWidget::emitSplitterMoved()
+void SimulationExperimentViewContentsWidget::emitSplitterMoved()
 {
     // Let people know that our splitter has been moved
 
@@ -109,7 +109,7 @@ void SingleCellViewContentsWidget::emitSplitterMoved()
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

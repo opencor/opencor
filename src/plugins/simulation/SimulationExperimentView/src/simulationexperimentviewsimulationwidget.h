@@ -28,7 +28,7 @@ limitations under the License.
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
 #include "sedmlfileissue.h"
-#include "singlecellviewwidget.h"
+#include "simulationexperimentviewwidget.h"
 #include "widget.h"
 
 //==============================================================================
@@ -91,25 +91,25 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SingleCellViewContentsWidget;
-class SingleCellViewPlugin;
-class SingleCellViewSimulation;
+class SimulationExperimentViewContentsWidget;
+class SimulationExperimentViewPlugin;
+class SimulationExperimentViewSimulation;
 
 //==============================================================================
 
-class SingleCellViewSimulationWidget : public Core::Widget
+class SimulationExperimentViewSimulationWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewSimulationWidget(SingleCellViewPlugin *pPlugin,
-                                            const QString &pFileName,
-                                            QWidget *pParent);
-    ~SingleCellViewSimulationWidget();
+    explicit SimulationExperimentViewSimulationWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                      const QString &pFileName,
+                                                      QWidget *pParent);
+    ~SimulationExperimentViewSimulationWidget();
 
     virtual void retranslateUi();
 
@@ -118,7 +118,7 @@ public:
 
     void setSizes(const QIntList &pSizes);
 
-    SingleCellViewContentsWidget * contentsWidget() const;
+    SimulationExperimentViewContentsWidget * contentsWidget() const;
 
     QIcon fileTabIcon() const;
 
@@ -133,12 +133,12 @@ public:
 
     SEDMLSupport::SedmlFile * sedmlFile() const;
 
-    SingleCellViewWidget::FileType fileType() const;
+    SimulationExperimentViewWidget::FileType fileType() const;
 
-    SingleCellViewSimulation *simulation() const;
+    SimulationExperimentViewSimulation *simulation() const;
 
     void updateGui(const bool &pCheckVisibility = false);
-    void updateSimulationResults(SingleCellViewSimulationWidget *pSimulationWidget,
+    void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                  const qulonglong &pSimulationResultsSize,
                                  const bool &pClearGraphs);
 
@@ -153,7 +153,7 @@ private:
         InvalidSimulationEnvironment
     };
 
-    SingleCellViewPlugin *mPlugin;
+    SimulationExperimentViewPlugin *mPlugin;
 
     QString mFileName;
 
@@ -161,7 +161,7 @@ private:
 
     QMap<QAction *, Plugin *> mCellmlBasedViewPlugins;
 
-    SingleCellViewSimulation *mSimulation;
+    SimulationExperimentViewSimulation *mSimulation;
 
     Core::ProgressBarWidget *mProgressBarWidget;
 
@@ -195,7 +195,7 @@ private:
 
     Core::SplitterWidget *mSplitterWidget;
 
-    SingleCellViewContentsWidget *mContentsWidget;
+    SimulationExperimentViewContentsWidget *mContentsWidget;
 
     bool mRunActionEnabled;
 
@@ -207,7 +207,7 @@ private:
     SEDMLSupport::SedmlFile *mSedmlFile;
     COMBINESupport::CombineArchive *mCombineArchive;
 
-    SingleCellViewWidget::FileType mFileType;
+    SimulationExperimentViewWidget::FileType mFileType;
 
     SEDMLSupport::SedmlFileIssues mSedmlFileIssues;
     COMBINESupport::CombineArchiveIssues mCombineArchiveIssues;
@@ -245,7 +245,7 @@ private:
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                     const bool &pForceReplot = false);
 
-    double * dataPoints(SingleCellViewSimulation *pSimulation,
+    double * dataPoints(SimulationExperimentViewSimulation *pSimulation,
                         CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
@@ -338,7 +338,7 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

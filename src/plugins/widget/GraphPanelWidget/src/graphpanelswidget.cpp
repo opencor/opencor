@@ -195,7 +195,7 @@ bool GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
     // Note: we let people know before we actually delete the graph panel,
     //       because some people interested in that signal might have used the
     //       pointer to keep track of some information, as is done in
-    //       SingleCellViewInformationGraphsWidget for example...
+    //       SimulationExperimentViewInformationGraphsWidget for example...
 
     emit graphPanelRemoved(pGraphPanel);
 

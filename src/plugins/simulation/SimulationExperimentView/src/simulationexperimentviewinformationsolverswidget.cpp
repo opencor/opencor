@@ -22,21 +22,21 @@ limitations under the License.
 
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
-#include "singlecellviewinformationsolverswidget.h"
-#include "singlecellviewplugin.h"
-#include "singlecellviewsimulation.h"
+#include "simulationexperimentviewinformationsolverswidget.h"
+#include "simulationexperimentviewplugin.h"
+#include "simulationexperimentviewsimulation.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-SingleCellViewInformationSolversWidgetData::SingleCellViewInformationSolversWidgetData(const QMap<QString, SolverInterface *> &pSolversInterfaces,
-                                                                                       Core::Property *pSolversProperty,
-                                                                                       Core::Property *pSolversListProperty,
-                                                                                       const QMap<QString, Core::Properties> &pSolversProperties) :
+SimulationExperimentViewInformationSolversWidgetData::SimulationExperimentViewInformationSolversWidgetData(const QMap<QString, SolverInterface *> &pSolversInterfaces,
+                                                                                                           Core::Property *pSolversProperty,
+                                                                                                           Core::Property *pSolversListProperty,
+                                                                                                           const QMap<QString, Core::Properties> &pSolversProperties) :
     mSolversInterfaces(pSolversInterfaces),
     mSolversProperty(pSolversProperty),
     mSolversListProperty(pSolversListProperty),
@@ -46,7 +46,7 @@ SingleCellViewInformationSolversWidgetData::SingleCellViewInformationSolversWidg
 
 //==============================================================================
 
-QMap<QString, SolverInterface *> SingleCellViewInformationSolversWidgetData::solversInterfaces() const
+QMap<QString, SolverInterface *> SimulationExperimentViewInformationSolversWidgetData::solversInterfaces() const
 {
     // Return our solvers interfaces
 
@@ -55,7 +55,7 @@ QMap<QString, SolverInterface *> SingleCellViewInformationSolversWidgetData::sol
 
 //==============================================================================
 
-Core::Property * SingleCellViewInformationSolversWidgetData::solversProperty() const
+Core::Property * SimulationExperimentViewInformationSolversWidgetData::solversProperty() const
 {
     // Return our solvers property
 
@@ -64,7 +64,7 @@ Core::Property * SingleCellViewInformationSolversWidgetData::solversProperty() c
 
 //==============================================================================
 
-Core::Property * SingleCellViewInformationSolversWidgetData::solversListProperty() const
+Core::Property * SimulationExperimentViewInformationSolversWidgetData::solversListProperty() const
 {
     // Return our solvers list property
 
@@ -73,7 +73,7 @@ Core::Property * SingleCellViewInformationSolversWidgetData::solversListProperty
 
 //==============================================================================
 
-QMap<QString, Core::Properties> SingleCellViewInformationSolversWidgetData::solversProperties() const
+QMap<QString, Core::Properties> SimulationExperimentViewInformationSolversWidgetData::solversProperties() const
 {
     // Return our solvers properties
 
@@ -82,8 +82,8 @@ QMap<QString, Core::Properties> SingleCellViewInformationSolversWidgetData::solv
 
 //==============================================================================
 
-SingleCellViewInformationSolversWidget::SingleCellViewInformationSolversWidget(SingleCellViewPlugin *pPlugin,
-                                                                               QWidget *pParent) :
+SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInformationSolversWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                                                                   QWidget *pParent) :
     PropertyEditorWidget(true, pParent),
     mDescriptions(QMap<Core::Property *, Descriptions>())
 {
@@ -120,7 +120,7 @@ SingleCellViewInformationSolversWidget::SingleCellViewInformationSolversWidget(S
 
 //==============================================================================
 
-SingleCellViewInformationSolversWidget::~SingleCellViewInformationSolversWidget()
+SimulationExperimentViewInformationSolversWidget::~SimulationExperimentViewInformationSolversWidget()
 {
     // Delete some internal objects
 
@@ -131,7 +131,7 @@ SingleCellViewInformationSolversWidget::~SingleCellViewInformationSolversWidget(
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::retranslateUi()
+void SimulationExperimentViewInformationSolversWidget::retranslateUi()
 {
     // Update our property names
 
@@ -191,8 +191,8 @@ void SingleCellViewInformationSolversWidget::retranslateUi()
 
 //==============================================================================
 
-SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWidget::addSolverProperties(const SolverInterfaces &pSolverInterfaces,
-                                                                                                         const Solver::Type &pSolverType)
+SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewInformationSolversWidget::addSolverProperties(const SolverInterfaces &pSolverInterfaces,
+                                                                                                                             const Solver::Type &pSolverType)
 {
     // Make sure that we have at least one solver interface
 
@@ -300,10 +300,10 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
         // Create and return our solver data
 
-        return new SingleCellViewInformationSolversWidgetData(solversInterfaces,
-                                                              solversProperty,
-                                                              solversListProperty,
-                                                              solversProperties);
+        return new SimulationExperimentViewInformationSolversWidgetData(solversInterfaces,
+                                                                        solversProperty,
+                                                                        solversListProperty,
+                                                                        solversProperties);
     } else {
         return 0;
     }
@@ -311,8 +311,8 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::setPropertiesUnit(SingleCellViewInformationSolversWidgetData *pSolverData,
-                                                               const QString &pVoiUnit)
+void SimulationExperimentViewInformationSolversWidget::setPropertiesUnit(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
+                                                                         const QString &pVoiUnit)
 {
     // Make sure that we have some solver's data
 
@@ -331,7 +331,7 @@ void SingleCellViewInformationSolversWidget::setPropertiesUnit(SingleCellViewInf
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::initialize(SingleCellViewSimulation *pSimulation)
+void SimulationExperimentViewInformationSolversWidget::initialize(SimulationExperimentViewSimulation *pSimulation)
 {
     // Make sure that the CellML file runtime is valid
 
@@ -374,7 +374,7 @@ void SingleCellViewInformationSolversWidget::initialize(SingleCellViewSimulation
 
 //==============================================================================
 
-QStringList SingleCellViewInformationSolversWidget::odeSolvers() const
+QStringList SimulationExperimentViewInformationSolversWidget::odeSolvers() const
 {
     // Return the available ODE solvers, if any
 
@@ -383,7 +383,7 @@ QStringList SingleCellViewInformationSolversWidget::odeSolvers() const
 
 //==============================================================================
 
-QStringList SingleCellViewInformationSolversWidget::daeSolvers() const
+QStringList SimulationExperimentViewInformationSolversWidget::daeSolvers() const
 {
     // Return the available DAE solvers, if any
 
@@ -392,7 +392,7 @@ QStringList SingleCellViewInformationSolversWidget::daeSolvers() const
 
 //==============================================================================
 
-QStringList SingleCellViewInformationSolversWidget::nlaSolvers() const
+QStringList SimulationExperimentViewInformationSolversWidget::nlaSolvers() const
 {
     // Return the available NLA solvers, if any
 
@@ -401,7 +401,7 @@ QStringList SingleCellViewInformationSolversWidget::nlaSolvers() const
 
 //==============================================================================
 
-SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWidget::odeSolverData() const
+SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewInformationSolversWidget::odeSolverData() const
 {
     // Return our ODE solver data
 
@@ -410,7 +410,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
 //==============================================================================
 
-SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWidget::daeSolverData() const
+SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewInformationSolversWidget::daeSolverData() const
 {
     // Return our DAE solver data
 
@@ -419,7 +419,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
 //==============================================================================
 
-SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWidget::nlaSolverData() const
+SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewInformationSolversWidget::nlaSolverData() const
 {
     // Return our NLA solver data
 
@@ -428,7 +428,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::updateSolverGui(SingleCellViewInformationSolversWidgetData *pSolverData)
+void SimulationExperimentViewInformationSolversWidget::updateSolverGui(SimulationExperimentViewInformationSolversWidgetData *pSolverData)
 {
     // Make sure that we have some solver data
 
@@ -463,7 +463,7 @@ void SingleCellViewInformationSolversWidget::updateSolverGui(SingleCellViewInfor
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::updateGui(SingleCellViewInformationSolversWidgetData *pSolverData)
+void SimulationExperimentViewInformationSolversWidget::updateGui(SimulationExperimentViewInformationSolversWidgetData *pSolverData)
 {
     // Update our solver(s) properties visibility
 
@@ -479,8 +479,8 @@ void SingleCellViewInformationSolversWidget::updateGui(SingleCellViewInformation
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::doSolverChanged(SingleCellViewInformationSolversWidgetData *pSolverData,
-                                                             const QString &pSolverName)
+void SimulationExperimentViewInformationSolversWidget::doSolverChanged(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
+                                                                       const QString &pSolverName)
 {
     // Make sure that we have some solver data
 
@@ -502,7 +502,7 @@ void SingleCellViewInformationSolversWidget::doSolverChanged(SingleCellViewInfor
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::solverChanged(Core::Property *pProperty)
+void SimulationExperimentViewInformationSolversWidget::solverChanged(Core::Property *pProperty)
 {
     // Try, for the ODE/DAE/NLA solvers list property, to handle the change in
     // the list property
@@ -523,7 +523,7 @@ void SingleCellViewInformationSolversWidget::solverChanged(Core::Property *pProp
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

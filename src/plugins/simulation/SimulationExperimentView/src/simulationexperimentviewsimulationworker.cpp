@@ -22,8 +22,8 @@ limitations under the License.
 
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
-#include "singlecellviewsimulation.h"
-#include "singlecellviewsimulationworker.h"
+#include "simulationexperimentviewsimulation.h"
+#include "simulationexperimentviewsimulationworker.h"
 
 //==============================================================================
 
@@ -34,12 +34,12 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-SingleCellViewSimulationWorker::SingleCellViewSimulationWorker(SingleCellViewSimulation *pSimulation,
-                                                               SingleCellViewSimulationWorker *&pSelf) :
+SimulationExperimentViewSimulationWorker::SimulationExperimentViewSimulationWorker(SimulationExperimentViewSimulation *pSimulation,
+                                                                                   SimulationExperimentViewSimulationWorker *&pSelf) :
     mSimulation(pSimulation),
     mRuntime(pSimulation->runtime()),
     mCurrentPoint(0.0),
@@ -73,7 +73,7 @@ SingleCellViewSimulationWorker::SingleCellViewSimulationWorker(SingleCellViewSim
 
 //==============================================================================
 
-bool SingleCellViewSimulationWorker::isRunning() const
+bool SimulationExperimentViewSimulationWorker::isRunning() const
 {
     // Return whether our thread is running
 
@@ -82,7 +82,7 @@ bool SingleCellViewSimulationWorker::isRunning() const
 
 //==============================================================================
 
-bool SingleCellViewSimulationWorker::isPaused() const
+bool SimulationExperimentViewSimulationWorker::isPaused() const
 {
     // Return whether our thread is paused
 
@@ -91,7 +91,7 @@ bool SingleCellViewSimulationWorker::isPaused() const
 
 //==============================================================================
 
-double SingleCellViewSimulationWorker::currentPoint() const
+double SimulationExperimentViewSimulationWorker::currentPoint() const
 {
     // Return our current point
 
@@ -102,7 +102,7 @@ double SingleCellViewSimulationWorker::currentPoint() const
 
 //==============================================================================
 
-bool SingleCellViewSimulationWorker::run()
+bool SimulationExperimentViewSimulationWorker::run()
 {
     // Start our thread, but only if we are not already running
 
@@ -117,7 +117,7 @@ bool SingleCellViewSimulationWorker::run()
 
 //==============================================================================
 
-bool SingleCellViewSimulationWorker::pause()
+bool SimulationExperimentViewSimulationWorker::pause()
 {
     // Pause ourselves, but only if we are currently running
 
@@ -134,7 +134,7 @@ bool SingleCellViewSimulationWorker::pause()
 
 //==============================================================================
 
-bool SingleCellViewSimulationWorker::resume()
+bool SimulationExperimentViewSimulationWorker::resume()
 {
     // Resume ourselves, but only if are currently paused
 
@@ -151,7 +151,7 @@ bool SingleCellViewSimulationWorker::resume()
 
 //==============================================================================
 
-bool SingleCellViewSimulationWorker::stop()
+bool SimulationExperimentViewSimulationWorker::stop()
 {
     // Check that we are either running or paused
 
@@ -178,7 +178,7 @@ bool SingleCellViewSimulationWorker::stop()
 
 //==============================================================================
 
-bool SingleCellViewSimulationWorker::reset()
+bool SimulationExperimentViewSimulationWorker::reset()
 {
     // Check that we are either running or paused
 
@@ -195,7 +195,7 @@ bool SingleCellViewSimulationWorker::reset()
 
 //==============================================================================
 
-void SingleCellViewSimulationWorker::started()
+void SimulationExperimentViewSimulationWorker::started()
 {
     // Let people know that we are running
 
@@ -444,7 +444,7 @@ void SingleCellViewSimulationWorker::started()
 
 //==============================================================================
 
-void SingleCellViewSimulationWorker::emitError(const QString &pMessage)
+void SimulationExperimentViewSimulationWorker::emitError(const QString &pMessage)
 {
     // A solver error occurred, so keep track of it and let people know about it
 
@@ -455,7 +455,7 @@ void SingleCellViewSimulationWorker::emitError(const QString &pMessage)
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

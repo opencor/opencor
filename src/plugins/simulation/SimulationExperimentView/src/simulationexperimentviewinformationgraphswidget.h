@@ -52,29 +52,29 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SingleCellViewPlugin;
-class SingleCellViewSimulation;
-class SingleCellViewSimulationWidget;
+class SimulationExperimentViewPlugin;
+class SimulationExperimentViewSimulation;
+class SimulationExperimentViewSimulationWidget;
 
 //==============================================================================
 
-class SingleCellViewInformationGraphsWidget : public QStackedWidget,
-                                              public Core::CommonWidget
+class SimulationExperimentViewInformationGraphsWidget : public QStackedWidget,
+                                                        public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationGraphsWidget(SingleCellViewPlugin *pPlugin,
-                                                   SingleCellViewSimulationWidget *pSimulationWidget,
-                                                   QWidget *pParent);
+    explicit SimulationExperimentViewInformationGraphsWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                             SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                                             QWidget *pParent);
 
     virtual void retranslateUi();
 
-    void initialize(SingleCellViewSimulation *pSimulation);
+    void initialize(SimulationExperimentViewSimulation *pSimulation);
     void finalize();
 
     void updateGui();
@@ -90,8 +90,8 @@ public:
     void setColumnWidth(const int &pIndex, const int &pColumnWidth);
 
 private:
-    SingleCellViewPlugin *mPlugin;
-    SingleCellViewSimulationWidget *mSimulationWidget;
+    SimulationExperimentViewPlugin *mPlugin;
+    SimulationExperimentViewSimulationWidget *mSimulationWidget;
 
     QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *> mGraphPanels;
     QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
@@ -166,7 +166,7 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

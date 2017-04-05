@@ -25,16 +25,16 @@ limitations under the License.
 #include "combinefilemanager.h"
 #include "filemanager.h"
 #include "sedmlfilemanager.h"
-#include "singlecellviewcontentswidget.h"
-#include "singlecellviewinformationgraphswidget.h"
-#include "singlecellviewinformationparameterswidget.h"
-#include "singlecellviewinformationsimulationwidget.h"
-#include "singlecellviewinformationsolverswidget.h"
-#include "singlecellviewinformationwidget.h"
-#include "singlecellviewplugin.h"
-#include "singlecellviewsimulation.h"
-#include "singlecellviewsimulationwidget.h"
-#include "singlecellviewwidget.h"
+#include "simulationexperimentviewcontentswidget.h"
+#include "simulationexperimentviewinformationgraphswidget.h"
+#include "simulationexperimentviewinformationparameterswidget.h"
+#include "simulationexperimentviewinformationsimulationwidget.h"
+#include "simulationexperimentviewinformationsolverswidget.h"
+#include "simulationexperimentviewinformationwidget.h"
+#include "simulationexperimentviewplugin.h"
+#include "simulationexperimentviewsimulation.h"
+#include "simulationexperimentviewsimulationwidget.h"
+#include "simulationexperimentviewwidget.h"
 
 //==============================================================================
 
@@ -67,12 +67,12 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
-                                           QWidget *pParent) :
+SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                               QWidget *pParent) :
     ViewWidget(pParent),
     mPlugin(pPlugin),
     mSimulationWidgetSizes(QIntList()),
@@ -83,7 +83,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPlugin,
     mGraphsWidgetColumnWidths(QIntList()),
     mParametersWidgetColumnWidths(QIntList()),
     mSimulationWidget(0),
-    mSimulationWidgets(QMap<QString, SingleCellViewSimulationWidget *>()),
+    mSimulationWidgets(QMap<QString, SimulationExperimentViewSimulationWidget *>()),
     mFileNames(QStringList()),
     mSimulationResultsSizes(QMap<QString, qulonglong>()),
     mSimulationCheckResults(QStringList()),
@@ -103,7 +103,7 @@ static const auto SettingsParametersColumnWidths = QStringLiteral("ParametersCol
 
 //==============================================================================
 
-void SingleCellViewWidget::loadSettings(QSettings *pSettings)
+void SimulationExperimentViewWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve the sizes of our simulation widget and of its contents widget
 
@@ -131,7 +131,7 @@ void SingleCellViewWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void SingleCellViewWidget::saveSettings(QSettings *pSettings) const
+void SimulationExperimentViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the sizes of our simulation widget and those of its
     // contents widget
@@ -153,17 +153,17 @@ void SingleCellViewWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SingleCellViewWidget::retranslateUi()
+void SimulationExperimentViewWidget::retranslateUi()
 {
     // Retranslate our simulation widgets
 
-    foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets)
+    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets)
         simulationWidget->retranslateUi();
 }
 
 //==============================================================================
 
-bool SingleCellViewWidget::isIndirectRemoteFile(const QString &pFileName)
+bool SimulationExperimentViewWidget::isIndirectRemoteFile(const QString &pFileName)
 {
     // Return whether the given file is an indirect remote file by retrieving
     // its details
@@ -197,7 +197,7 @@ bool SingleCellViewWidget::isIndirectRemoteFile(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewWidget::initialize(const QString &pFileName)
+void SimulationExperimentViewWidget::initialize(const QString &pFileName)
 {
     // Stop tracking changes in our 'old' simulation widget's property editors'
     // columns' width
@@ -210,7 +210,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     //       width that is too big for our units column, resulting in a
     //       horizontal scrollbar being shown, which we don't want...
 
-    SingleCellViewSimulationWidget *oldSimulationWidget = mSimulationWidget;
+    SimulationExperimentViewSimulationWidget *oldSimulationWidget = mSimulationWidget;
 
     if (oldSimulationWidget) {
         disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
@@ -230,7 +230,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     if (!mSimulationWidget) {
         // No simulation widget exists for the given file, so create one
 
-        mSimulationWidget = new SingleCellViewSimulationWidget(mPlugin, pFileName, this);
+        mSimulationWidget = new SimulationExperimentViewSimulationWidget(mPlugin, pFileName, this);
 
         // Keep track of our editing widget
 
@@ -289,11 +289,11 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewWidget::finalize(const QString &pFileName)
+void SimulationExperimentViewWidget::finalize(const QString &pFileName)
 {
     // Remove the simulation widget, should there be one for the given file
 
-    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
     if (simulationWidget) {
         // Finalise our simulation widget
@@ -326,11 +326,11 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
-QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
+QIcon SimulationExperimentViewWidget::fileTabIcon(const QString &pFileName) const
 {
     // Return, if possible, the tab icon for the given file
 
-    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
     if (simulationWidget) {
         return simulationWidget->fileTabIcon();
@@ -343,12 +343,12 @@ QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-bool SingleCellViewWidget::saveFile(const QString &pOldFileName,
-                                    const QString &pNewFileName)
+bool SimulationExperimentViewWidget::saveFile(const QString &pOldFileName,
+                                              const QString &pNewFileName)
 {
     // Save the given file, if possible
 
-    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pOldFileName);
+    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pOldFileName);
 
     if (simulationWidget)
         return simulationWidget->save(pNewFileName);
@@ -358,7 +358,7 @@ bool SingleCellViewWidget::saveFile(const QString &pOldFileName,
 
 //==============================================================================
 
-void SingleCellViewWidget::fileOpened(const QString &pFileName)
+void SimulationExperimentViewWidget::fileOpened(const QString &pFileName)
 {
     // Track the given file name
 
@@ -366,18 +366,18 @@ void SingleCellViewWidget::fileOpened(const QString &pFileName)
 
     // Make sure that the GUI of our simulation widgets is up to date
 
-    foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
         simulationWidget->updateGui(true);
 }
 
 //==============================================================================
 
-void SingleCellViewWidget::filePermissionsChanged(const QString &pFileName)
+void SimulationExperimentViewWidget::filePermissionsChanged(const QString &pFileName)
 {
     // Let the simulation widget, if any, associated with the given file name
     // know that a file has been un/locked
 
-    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
     if (simulationWidget)
         simulationWidget->filePermissionsChanged();
@@ -385,12 +385,12 @@ void SingleCellViewWidget::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewWidget::fileModified(const QString &pFileName)
+void SimulationExperimentViewWidget::fileModified(const QString &pFileName)
 {
     // Let the simulation widget, if any, associated with the given file name
     // know that a file has been modified
 
-    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
     if (simulationWidget)
         simulationWidget->fileModified();
@@ -398,12 +398,12 @@ void SingleCellViewWidget::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewWidget::fileReloaded(const QString &pFileName)
+void SimulationExperimentViewWidget::fileReloaded(const QString &pFileName)
 {
     // Let the simulation widget, if any, associated with the given file name
     // know that a file has been reloaded
 
-    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
     if (simulationWidget) {
         simulationWidget->fileReloaded();
@@ -417,15 +417,15 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 
         // Make sure that the GUI of our simulation widgets is up to date
 
-        foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+        foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
             simulationWidget->updateGui(true);
     }
 }
 
 //==============================================================================
 
-void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
-                                       const QString &pNewFileName)
+void SimulationExperimentViewWidget::fileRenamed(const QString &pOldFileName,
+                                                 const QString &pNewFileName)
 {
     // Stop tracking the old given file name and track the given new one instead
 
@@ -435,7 +435,7 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
 
     // The given file has been renamed, so update our simulation widgets mapping
 
-    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pOldFileName);
+    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pOldFileName);
 
     if (simulationWidget) {
         simulationWidget->setFileName(pNewFileName);
@@ -446,13 +446,13 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
 
     // Make sure that the GUI of our simulation widgets is up to date
 
-    foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
         simulationWidget->updateGui(true);
 }
 
 //==============================================================================
 
-void SingleCellViewWidget::fileClosed(const QString &pFileName)
+void SimulationExperimentViewWidget::fileClosed(const QString &pFileName)
 {
     // Stop tracking the given file name
 
@@ -460,13 +460,13 @@ void SingleCellViewWidget::fileClosed(const QString &pFileName)
 
     // Make sure that the GUI of our simulation widgets is up to date
 
-    foreach (SingleCellViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
         simulationWidget->updateGui(true);
 }
 
 //==============================================================================
 
-QStringList SingleCellViewWidget::fileNames() const
+QStringList SimulationExperimentViewWidget::fileNames() const
 {
     // Return our file names
 
@@ -475,7 +475,7 @@ QStringList SingleCellViewWidget::fileNames() const
 
 //==============================================================================
 
-SingleCellViewSimulationWidget * SingleCellViewWidget::simulationWidget(const QString &pFileName) const
+SimulationExperimentViewSimulationWidget * SimulationExperimentViewWidget::simulationWidget(const QString &pFileName) const
 {
     // Return the requested simulation widget
 
@@ -484,11 +484,11 @@ SingleCellViewSimulationWidget * SingleCellViewWidget::simulationWidget(const QS
 
 //==============================================================================
 
-SingleCellViewSimulation * SingleCellViewWidget::simulation(const QString &pFileName) const
+SimulationExperimentViewSimulation * SimulationExperimentViewWidget::simulation(const QString &pFileName) const
 {
     // Return the simulation for the given file name
 
-    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
     if (simulationWidget)
         return simulationWidget->simulation();
@@ -498,11 +498,11 @@ SingleCellViewSimulation * SingleCellViewWidget::simulation(const QString &pFile
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntime * SingleCellViewWidget::runtime(const QString &pFileName) const
+CellMLSupport::CellmlFileRuntime * SimulationExperimentViewWidget::runtime(const QString &pFileName) const
 {
     // Return the runtime for the given file name
 
-    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
     if (simulationWidget)
         return simulationWidget->simulation()->runtime();
@@ -512,7 +512,7 @@ CellMLSupport::CellmlFileRuntime * SingleCellViewWidget::runtime(const QString &
 
 //==============================================================================
 
-QWidget * SingleCellViewWidget::widget(const QString &pFileName)
+QWidget * SimulationExperimentViewWidget::widget(const QString &pFileName)
 {
     // Return the requested (simulation) widget
 
@@ -521,7 +521,7 @@ QWidget * SingleCellViewWidget::widget(const QString &pFileName)
 
 //==============================================================================
 
-qulonglong SingleCellViewWidget::simulationResultsSize(const QString &pFileName) const
+qulonglong SimulationExperimentViewWidget::simulationResultsSize(const QString &pFileName) const
 {
     // Return the results size for the given file name
 
@@ -530,13 +530,13 @@ qulonglong SingleCellViewWidget::simulationResultsSize(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewWidget::checkSimulationResults(const QString &pFileName,
-                                                  const bool &pClearGraphs)
+void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFileName,
+                                                            const bool &pClearGraphs)
 {
     // Make sure that we can still check results (i.e. we are not closing down
     // with some simulations still running)
 
-    SingleCellViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
     if (!simulationWidget)
         return;
@@ -546,14 +546,14 @@ void SingleCellViewWidget::checkSimulationResults(const QString &pFileName,
     //       since another simulation widget may have graphs that refer to the
     //       given simulation widget...
 
-    SingleCellViewSimulation *simulation = simulationWidget->simulation();
+    SimulationExperimentViewSimulation *simulation = simulationWidget->simulation();
     qulonglong simulationResultsSize = simulation->results()->size();
 
     if (   pClearGraphs
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
         mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
 
-        foreach (SingleCellViewSimulationWidget *currentSimulationWidget, mSimulationWidgets)
+        foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets)
             currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize, pClearGraphs);
     }
 
@@ -584,7 +584,7 @@ void SingleCellViewWidget::checkSimulationResults(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellViewWidget::callCheckSimulationResults()
+void SimulationExperimentViewWidget::callCheckSimulationResults()
 {
     // Retrieve the simulation widget for which we want to call checkResults()
     // and then call checkResults() for it
@@ -598,7 +598,7 @@ void SingleCellViewWidget::callCheckSimulationResults()
 
 //==============================================================================
 
-void SingleCellViewWidget::simulationWidgetSplitterMoved(const QIntList &pSizes)
+void SimulationExperimentViewWidget::simulationWidgetSplitterMoved(const QIntList &pSizes)
 {
     // The splitter of our simulation widget has moved, so keep track of its new
     // sizes
@@ -608,7 +608,7 @@ void SingleCellViewWidget::simulationWidgetSplitterMoved(const QIntList &pSizes)
 
 //==============================================================================
 
-void SingleCellViewWidget::contentsWidgetSplitterMoved(const QIntList &pSizes)
+void SimulationExperimentViewWidget::contentsWidgetSplitterMoved(const QIntList &pSizes)
 {
     // The splitter of our contents widget has moved, so keep track of its new
     // sizes
@@ -618,8 +618,8 @@ void SingleCellViewWidget::contentsWidgetSplitterMoved(const QIntList &pSizes)
 
 //==============================================================================
 
-void SingleCellViewWidget::collapsibleWidgetCollapsed(const int &pIndex,
-                                                      const bool &pCollapsed)
+void SimulationExperimentViewWidget::collapsibleWidgetCollapsed(const int &pIndex,
+                                                                const bool &pCollapsed)
 {
     // One of the widgets in our collapsible widget has been collapsed or
     // expanded, so keep track of that fact
@@ -629,9 +629,9 @@ void SingleCellViewWidget::collapsibleWidgetCollapsed(const int &pIndex,
 
 //==============================================================================
 
-void SingleCellViewWidget::simulationWidgetHeaderSectionResized(const int &pIndex,
-                                                                const int &pOldSize,
-                                                                const int &pNewSize)
+void SimulationExperimentViewWidget::simulationWidgetHeaderSectionResized(const int &pIndex,
+                                                                          const int &pOldSize,
+                                                                          const int &pNewSize)
 {
     Q_UNUSED(pOldSize);
 
@@ -643,9 +643,9 @@ void SingleCellViewWidget::simulationWidgetHeaderSectionResized(const int &pInde
 
 //==============================================================================
 
-void SingleCellViewWidget::solversWidgetHeaderSectionResized(const int &pIndex,
-                                                             const int &pOldSize,
-                                                             const int &pNewSize)
+void SimulationExperimentViewWidget::solversWidgetHeaderSectionResized(const int &pIndex,
+                                                                       const int &pOldSize,
+                                                                       const int &pNewSize)
 {
     Q_UNUSED(pOldSize);
 
@@ -657,23 +657,23 @@ void SingleCellViewWidget::solversWidgetHeaderSectionResized(const int &pIndex,
 
 //==============================================================================
 
-void SingleCellViewWidget::graphsWidgetHeaderSectionResized(const int &pIndex,
-                                                            const int &pOldSize,
-                                                            const int &pNewSize)
+void SimulationExperimentViewWidget::graphsWidgetHeaderSectionResized(const int &pIndex,
+                                                                      const int &pOldSize,
+                                                                      const int &pNewSize)
 {
     Q_UNUSED(pOldSize);
 
     // Keep track of the new column width
 
-    if (qobject_cast<SingleCellViewInformationGraphsWidget *>(sender())->isVisible())
+    if (qobject_cast<SimulationExperimentViewInformationGraphsWidget *>(sender())->isVisible())
         mGraphsWidgetColumnWidths[pIndex] = pNewSize;
 }
 
 //==============================================================================
 
-void SingleCellViewWidget::parametersWidgetHeaderSectionResized(const int &pIndex,
-                                                                const int &pOldSize,
-                                                                const int &pNewSize)
+void SimulationExperimentViewWidget::parametersWidgetHeaderSectionResized(const int &pIndex,
+                                                                          const int &pOldSize,
+                                                                          const int &pNewSize)
 {
     Q_UNUSED(pOldSize);
 
@@ -685,7 +685,7 @@ void SingleCellViewWidget::parametersWidgetHeaderSectionResized(const int &pInde
 
 //==============================================================================
 
-void SingleCellViewWidget::updateContentsInformationGui(SingleCellViewSimulationWidget *pSimulationWidget)
+void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget)
 {
     // Update some of our simulation's contents' information GUI
 
@@ -707,8 +707,8 @@ void SingleCellViewWidget::updateContentsInformationGui(SingleCellViewSimulation
 
 //==============================================================================
 
-bool SingleCellViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
-                                                   SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const
+bool SimulationExperimentViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
+                                                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const
 {
     // Make sure that we have an algorithm
 
@@ -803,8 +803,8 @@ bool SingleCellViewWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm 
 
 //==============================================================================
 
-bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
-                                              SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const
+bool SimulationExperimentViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
+                                                        SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const
 {
     // Make sure that there is only one model
 
@@ -1218,8 +1218,8 @@ bool SingleCellViewWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFil
 
 //==============================================================================
 
-bool SingleCellViewWidget::combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
-                                                   COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const
+bool SimulationExperimentViewWidget::combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
+                                                             COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const
 {
     // Load and make sure that our COMBINE archive is valid
 
@@ -1242,12 +1242,12 @@ bool SingleCellViewWidget::combineArchiveSupported(COMBINESupport::CombineArchiv
 
 //==============================================================================
 
-void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
-                                              CellMLSupport::CellmlFile *&pCellmlFile,
-                                              SEDMLSupport::SedmlFile *pSedmlFile,
-                                              const FileType &pFileType,
-                                              SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                                              bool *pIsDirectOrIndirectRemoteFile)
+void SimulationExperimentViewWidget::retrieveCellmlFile(const QString &pFileName,
+                                                        CellMLSupport::CellmlFile *&pCellmlFile,
+                                                        SEDMLSupport::SedmlFile *pSedmlFile,
+                                                        const FileType &pFileType,
+                                                        SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
+                                                        bool *pIsDirectOrIndirectRemoteFile)
 {
     // Make sure that we support our SED-ML file
 
@@ -1355,9 +1355,9 @@ void SingleCellViewWidget::retrieveCellmlFile(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellViewWidget::retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
-                                             COMBINESupport::CombineArchive *pCombineArchive,
-                                             COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues)
+void SimulationExperimentViewWidget::retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
+                                                       COMBINESupport::CombineArchive *pCombineArchive,
+                                                       COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues)
 {
     // Make sure that we support our COMBINE archive
 
@@ -1371,14 +1371,14 @@ void SingleCellViewWidget::retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFil
 
 //==============================================================================
 
-void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
-                                               CellMLSupport::CellmlFile *&pCellmlFile,
-                                               SEDMLSupport::SedmlFile *&pSedmlFile,
-                                               COMBINESupport::CombineArchive *&pCombineArchive,
-                                               FileType &pFileType,
-                                               SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                                               COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues,
-                                               bool *pIsDirectOrIndirectRemoteFile)
+void SimulationExperimentViewWidget::retrieveFileDetails(const QString &pFileName,
+                                                         CellMLSupport::CellmlFile *&pCellmlFile,
+                                                         SEDMLSupport::SedmlFile *&pSedmlFile,
+                                                         COMBINESupport::CombineArchive *&pCombineArchive,
+                                                         FileType &pFileType,
+                                                         SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
+                                                         COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues,
+                                                         bool *pIsDirectOrIndirectRemoteFile)
 {
     // Determine the type of file we are dealing with
 
@@ -1406,7 +1406,7 @@ void SingleCellViewWidget::retrieveFileDetails(const QString &pFileName,
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

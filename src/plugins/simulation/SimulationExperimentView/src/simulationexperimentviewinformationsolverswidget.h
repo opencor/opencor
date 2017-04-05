@@ -33,22 +33,22 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SingleCellViewPlugin;
-class SingleCellViewSimulation;
+class SimulationExperimentViewPlugin;
+class SimulationExperimentViewSimulation;
 
 //==============================================================================
 
-class SingleCellViewInformationSolversWidgetData
+class SimulationExperimentViewInformationSolversWidgetData
 {
 public:
-    explicit SingleCellViewInformationSolversWidgetData(const QMap<QString, SolverInterface *> &pSolversInterfaces,
-                                                        Core::Property *pSolversProperty,
-                                                        Core::Property *pSolversListProperty,
-                                                        const QMap<QString, Core::Properties> &pSolversProperties);
+    explicit SimulationExperimentViewInformationSolversWidgetData(const QMap<QString, SolverInterface *> &pSolversInterfaces,
+                                                                  Core::Property *pSolversProperty,
+                                                                  Core::Property *pSolversListProperty,
+                                                                  const QMap<QString, Core::Properties> &pSolversProperties);
 
     QMap<QString, SolverInterface *> solversInterfaces() const;
 
@@ -68,45 +68,45 @@ private:
 
 //==============================================================================
 
-class SingleCellViewInformationSolversWidget : public Core::PropertyEditorWidget
+class SimulationExperimentViewInformationSolversWidget : public Core::PropertyEditorWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationSolversWidget(SingleCellViewPlugin *pPlugin,
-                                                    QWidget *pParent);
-    ~SingleCellViewInformationSolversWidget();
+    explicit SimulationExperimentViewInformationSolversWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                              QWidget *pParent);
+    ~SimulationExperimentViewInformationSolversWidget();
 
     virtual void retranslateUi();
 
-    void initialize(SingleCellViewSimulation *pSimulation);
+    void initialize(SimulationExperimentViewSimulation *pSimulation);
 
     QStringList odeSolvers() const;
     QStringList daeSolvers() const;
     QStringList nlaSolvers() const;
 
-    SingleCellViewInformationSolversWidgetData * odeSolverData() const;
-    SingleCellViewInformationSolversWidgetData * daeSolverData() const;
-    SingleCellViewInformationSolversWidgetData * nlaSolverData() const;
+    SimulationExperimentViewInformationSolversWidgetData * odeSolverData() const;
+    SimulationExperimentViewInformationSolversWidgetData * daeSolverData() const;
+    SimulationExperimentViewInformationSolversWidgetData * nlaSolverData() const;
 
-    void updateGui(SingleCellViewInformationSolversWidgetData *pSolverData);
+    void updateGui(SimulationExperimentViewInformationSolversWidgetData *pSolverData);
 
 private:
-    SingleCellViewInformationSolversWidgetData *mOdeSolverData;
-    SingleCellViewInformationSolversWidgetData *mDaeSolverData;
-    SingleCellViewInformationSolversWidgetData *mNlaSolverData;
+    SimulationExperimentViewInformationSolversWidgetData *mOdeSolverData;
+    SimulationExperimentViewInformationSolversWidgetData *mDaeSolverData;
+    SimulationExperimentViewInformationSolversWidgetData *mNlaSolverData;
 
     QMap<Core::Property *, Descriptions> mDescriptions;
 
-    void updateSolverGui(SingleCellViewInformationSolversWidgetData *pSolverData);
+    void updateSolverGui(SimulationExperimentViewInformationSolversWidgetData *pSolverData);
 
-    SingleCellViewInformationSolversWidgetData * addSolverProperties(const SolverInterfaces &pSolverInterfaces,
-                                                                     const Solver::Type &pSolverType);
+    SimulationExperimentViewInformationSolversWidgetData * addSolverProperties(const SolverInterfaces &pSolverInterfaces,
+                                                                               const Solver::Type &pSolverType);
 
-    void doSolverChanged(SingleCellViewInformationSolversWidgetData *pSolverData,
+    void doSolverChanged(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
                          const QString &pSolverName);
 
-    void setPropertiesUnit(SingleCellViewInformationSolversWidgetData *pSolverData,
+    void setPropertiesUnit(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
                            const QString &pVoiUnit);
 
 private slots:
@@ -115,7 +115,7 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

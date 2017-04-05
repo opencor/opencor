@@ -22,8 +22,8 @@ limitations under the License.
 
 #include "cellmlfile.h"
 #include "cellmlfileruntime.h"
-#include "singlecellviewsimulation.h"
-#include "singlecellviewsimulationwidget.h"
+#include "simulationexperimentviewsimulation.h"
+#include "simulationexperimentviewsimulationwidget.h"
 
 //==============================================================================
 
@@ -32,12 +32,12 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-SingleCellViewSimulationData::SingleCellViewSimulationData(SingleCellViewSimulation *pSimulation,
-                                                           const SolverInterfaces &pSolverInterfaces) :
+SimulationExperimentViewSimulationData::SimulationExperimentViewSimulationData(SimulationExperimentViewSimulation *pSimulation,
+                                                                               const SolverInterfaces &pSolverInterfaces) :
     mSimulation(pSimulation),
     mRuntime(pSimulation->runtime()),
     mSolverInterfaces(pSolverInterfaces),
@@ -59,7 +59,7 @@ SingleCellViewSimulationData::SingleCellViewSimulationData(SingleCellViewSimulat
 
 //==============================================================================
 
-SingleCellViewSimulationData::~SingleCellViewSimulationData()
+SimulationExperimentViewSimulationData::~SimulationExperimentViewSimulationData()
 {
     // Delete some internal objects
 
@@ -68,7 +68,7 @@ SingleCellViewSimulationData::~SingleCellViewSimulationData()
 
 //==============================================================================
 
-void SingleCellViewSimulationData::update()
+void SimulationExperimentViewSimulationData::update()
 {
     // Update ourselves by updating our runtime, and deleting and recreating our
     // arrays
@@ -81,7 +81,7 @@ void SingleCellViewSimulationData::update()
 
 //==============================================================================
 
-SingleCellViewSimulation * SingleCellViewSimulationData::simulation() const
+SimulationExperimentViewSimulation * SimulationExperimentViewSimulationData::simulation() const
 {
     // Return our simulation
 
@@ -90,7 +90,7 @@ SingleCellViewSimulation * SingleCellViewSimulationData::simulation() const
 
 //==============================================================================
 
-double * SingleCellViewSimulationData::constants() const
+double * SimulationExperimentViewSimulationData::constants() const
 {
     // Return our constants array
 
@@ -99,7 +99,7 @@ double * SingleCellViewSimulationData::constants() const
 
 //==============================================================================
 
-double * SingleCellViewSimulationData::rates() const
+double * SimulationExperimentViewSimulationData::rates() const
 {
     // Return our rates array
 
@@ -108,7 +108,7 @@ double * SingleCellViewSimulationData::rates() const
 
 //==============================================================================
 
-double * SingleCellViewSimulationData::states() const
+double * SimulationExperimentViewSimulationData::states() const
 {
     // Return our states array
 
@@ -117,7 +117,7 @@ double * SingleCellViewSimulationData::states() const
 
 //==============================================================================
 
-double * SingleCellViewSimulationData::algebraic() const
+double * SimulationExperimentViewSimulationData::algebraic() const
 {
     // Return our algebraic array
 
@@ -126,7 +126,7 @@ double * SingleCellViewSimulationData::algebraic() const
 
 //==============================================================================
 
-double * SingleCellViewSimulationData::condVar() const
+double * SimulationExperimentViewSimulationData::condVar() const
 {
     // Return our condVar array
 
@@ -135,7 +135,7 @@ double * SingleCellViewSimulationData::condVar() const
 
 //==============================================================================
 
-int SingleCellViewSimulationData::delay() const
+int SimulationExperimentViewSimulationData::delay() const
 {
     // Return our delay
 
@@ -144,7 +144,7 @@ int SingleCellViewSimulationData::delay() const
 
 //==============================================================================
 
-void SingleCellViewSimulationData::setDelay(const int &pDelay)
+void SimulationExperimentViewSimulationData::setDelay(const int &pDelay)
 {
     // Set our delay
 
@@ -153,7 +153,7 @@ void SingleCellViewSimulationData::setDelay(const int &pDelay)
 
 //==============================================================================
 
-double SingleCellViewSimulationData::startingPoint() const
+double SimulationExperimentViewSimulationData::startingPoint() const
 {
     // Return our starting point
 
@@ -162,8 +162,8 @@ double SingleCellViewSimulationData::startingPoint() const
 
 //==============================================================================
 
-void SingleCellViewSimulationData::setStartingPoint(const double &pStartingPoint,
-                                                    const bool &pRecompute)
+void SimulationExperimentViewSimulationData::setStartingPoint(const double &pStartingPoint,
+                                                              const bool &pRecompute)
 {
     // Set our starting point
 
@@ -178,7 +178,7 @@ void SingleCellViewSimulationData::setStartingPoint(const double &pStartingPoint
 
 //==============================================================================
 
-double SingleCellViewSimulationData::endingPoint() const
+double SimulationExperimentViewSimulationData::endingPoint() const
 {
     // Return our ending point
 
@@ -187,7 +187,7 @@ double SingleCellViewSimulationData::endingPoint() const
 
 //==============================================================================
 
-void SingleCellViewSimulationData::setEndingPoint(const double &pEndingPoint)
+void SimulationExperimentViewSimulationData::setEndingPoint(const double &pEndingPoint)
 {
     // Set our ending point
 
@@ -196,7 +196,7 @@ void SingleCellViewSimulationData::setEndingPoint(const double &pEndingPoint)
 
 //==============================================================================
 
-double SingleCellViewSimulationData::pointInterval() const
+double SimulationExperimentViewSimulationData::pointInterval() const
 {
     // Return our point interval
 
@@ -205,7 +205,7 @@ double SingleCellViewSimulationData::pointInterval() const
 
 //==============================================================================
 
-void SingleCellViewSimulationData::setPointInterval(const double &pPointInterval)
+void SimulationExperimentViewSimulationData::setPointInterval(const double &pPointInterval)
 {
     // Set our point interval
 
@@ -214,7 +214,7 @@ void SingleCellViewSimulationData::setPointInterval(const double &pPointInterval
 
 //==============================================================================
 
-SolverInterface * SingleCellViewSimulationData::solverInterface(const QString &pSolverName) const
+SolverInterface * SimulationExperimentViewSimulationData::solverInterface(const QString &pSolverName) const
 {
     // Return the named solver interface, if any
 
@@ -228,7 +228,7 @@ SolverInterface * SingleCellViewSimulationData::solverInterface(const QString &p
 
 //==============================================================================
 
-SolverInterface * SingleCellViewSimulationData::odeSolverInterface() const
+SolverInterface * SimulationExperimentViewSimulationData::odeSolverInterface() const
 {
     // Return our ODE solver interface, if any
 
@@ -237,7 +237,7 @@ SolverInterface * SingleCellViewSimulationData::odeSolverInterface() const
 
 //==============================================================================
 
-QString SingleCellViewSimulationData::odeSolverName() const
+QString SimulationExperimentViewSimulationData::odeSolverName() const
 {
     // Return our ODE solver name
 
@@ -246,7 +246,7 @@ QString SingleCellViewSimulationData::odeSolverName() const
 
 //==============================================================================
 
-void SingleCellViewSimulationData::setOdeSolverName(const QString &pOdeSolverName)
+void SimulationExperimentViewSimulationData::setOdeSolverName(const QString &pOdeSolverName)
 {
     if (!mRuntime)
         return;
@@ -262,7 +262,7 @@ void SingleCellViewSimulationData::setOdeSolverName(const QString &pOdeSolverNam
 
 //==============================================================================
 
-Solver::Solver::Properties SingleCellViewSimulationData::odeSolverProperties() const
+Solver::Solver::Properties SimulationExperimentViewSimulationData::odeSolverProperties() const
 {
     // Return our ODE solver's properties
 
@@ -271,8 +271,8 @@ Solver::Solver::Properties SingleCellViewSimulationData::odeSolverProperties() c
 
 //==============================================================================
 
-void SingleCellViewSimulationData::addOdeSolverProperty(const QString &pName,
-                                                        const QVariant &pValue)
+void SimulationExperimentViewSimulationData::addOdeSolverProperty(const QString &pName,
+                                                                  const QVariant &pValue)
 {
     if (!mRuntime)
         return;
@@ -285,7 +285,7 @@ void SingleCellViewSimulationData::addOdeSolverProperty(const QString &pName,
 
 //==============================================================================
 
-SolverInterface * SingleCellViewSimulationData::daeSolverInterface() const
+SolverInterface * SimulationExperimentViewSimulationData::daeSolverInterface() const
 {
     // Return our DAE solver interface, if any
 
@@ -294,7 +294,7 @@ SolverInterface * SingleCellViewSimulationData::daeSolverInterface() const
 
 //==============================================================================
 
-QString SingleCellViewSimulationData::daeSolverName() const
+QString SimulationExperimentViewSimulationData::daeSolverName() const
 {
     // Return our DAE solver name
 
@@ -303,7 +303,7 @@ QString SingleCellViewSimulationData::daeSolverName() const
 
 //==============================================================================
 
-void SingleCellViewSimulationData::setDaeSolverName(const QString &pDaeSolverName)
+void SimulationExperimentViewSimulationData::setDaeSolverName(const QString &pDaeSolverName)
 {
     if (!mRuntime)
         return;
@@ -319,7 +319,7 @@ void SingleCellViewSimulationData::setDaeSolverName(const QString &pDaeSolverNam
 
 //==============================================================================
 
-Solver::Solver::Properties SingleCellViewSimulationData::daeSolverProperties() const
+Solver::Solver::Properties SimulationExperimentViewSimulationData::daeSolverProperties() const
 {
     // Return our DAE solver's properties
 
@@ -328,8 +328,8 @@ Solver::Solver::Properties SingleCellViewSimulationData::daeSolverProperties() c
 
 //==============================================================================
 
-void SingleCellViewSimulationData::addDaeSolverProperty(const QString &pName,
-                                                        const QVariant &pValue)
+void SimulationExperimentViewSimulationData::addDaeSolverProperty(const QString &pName,
+                                                                  const QVariant &pValue)
 {
     if (!mRuntime)
         return;
@@ -342,7 +342,7 @@ void SingleCellViewSimulationData::addDaeSolverProperty(const QString &pName,
 
 //==============================================================================
 
-SolverInterface * SingleCellViewSimulationData::nlaSolverInterface() const
+SolverInterface * SimulationExperimentViewSimulationData::nlaSolverInterface() const
 {
     // Return our NLA solver interface, if any
 
@@ -351,7 +351,7 @@ SolverInterface * SingleCellViewSimulationData::nlaSolverInterface() const
 
 //==============================================================================
 
-QString SingleCellViewSimulationData::nlaSolverName() const
+QString SimulationExperimentViewSimulationData::nlaSolverName() const
 {
     // Return our NLA solver name
 
@@ -360,8 +360,8 @@ QString SingleCellViewSimulationData::nlaSolverName() const
 
 //==============================================================================
 
-void SingleCellViewSimulationData::setNlaSolverName(const QString &pNlaSolverName,
-                                                    const bool &pReset)
+void SimulationExperimentViewSimulationData::setNlaSolverName(const QString &pNlaSolverName,
+                                                              const bool &pReset)
 {
     if (!mRuntime)
         return;
@@ -385,7 +385,7 @@ void SingleCellViewSimulationData::setNlaSolverName(const QString &pNlaSolverNam
 
 //==============================================================================
 
-Solver::Solver::Properties SingleCellViewSimulationData::nlaSolverProperties() const
+Solver::Solver::Properties SimulationExperimentViewSimulationData::nlaSolverProperties() const
 {
     // Return our NLA solver's properties
 
@@ -394,9 +394,9 @@ Solver::Solver::Properties SingleCellViewSimulationData::nlaSolverProperties() c
 
 //==============================================================================
 
-void SingleCellViewSimulationData::addNlaSolverProperty(const QString &pName,
-                                                        const QVariant &pValue,
-                                                        const bool &pReset)
+void SimulationExperimentViewSimulationData::addNlaSolverProperty(const QString &pName,
+                                                                  const QVariant &pValue,
+                                                                  const bool &pReset)
 {
     if (!mRuntime)
         return;
@@ -418,7 +418,7 @@ void SingleCellViewSimulationData::addNlaSolverProperty(const QString &pName,
 
 //==============================================================================
 
-void SingleCellViewSimulationData::reset(const bool &pInitialize)
+void SimulationExperimentViewSimulationData::reset(const bool &pInitialize)
 {
     if (!mRuntime)
         return;
@@ -489,8 +489,8 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
 
 //==============================================================================
 
-void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
-                                                                          const bool &pInitialize)
+void SimulationExperimentViewSimulationData::recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
+                                                                                    const bool &pInitialize)
 {
     if (!mRuntime)
         return;
@@ -520,7 +520,7 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const 
 
 //==============================================================================
 
-void SingleCellViewSimulationData::recomputeVariables(const double &pCurrentPoint)
+void SimulationExperimentViewSimulationData::recomputeVariables(const double &pCurrentPoint)
 {
     if (!mRuntime)
         return;
@@ -535,7 +535,7 @@ void SingleCellViewSimulationData::recomputeVariables(const double &pCurrentPoin
 
 //==============================================================================
 
-bool SingleCellViewSimulationData::isModified() const
+bool SimulationExperimentViewSimulationData::isModified() const
 {
     if (!mRuntime)
         return false;
@@ -559,7 +559,7 @@ bool SingleCellViewSimulationData::isModified() const
 
 //==============================================================================
 
-void SingleCellViewSimulationData::checkForModifications()
+void SimulationExperimentViewSimulationData::checkForModifications()
 {
     // Let people know whether any of our constants or states has been modified
 
@@ -568,7 +568,7 @@ void SingleCellViewSimulationData::checkForModifications()
 
 //==============================================================================
 
-void SingleCellViewSimulationData::createArrays()
+void SimulationExperimentViewSimulationData::createArrays()
 {
     // Create our various arrays, if possible
 
@@ -594,7 +594,7 @@ void SingleCellViewSimulationData::createArrays()
 
 //==============================================================================
 
-void SingleCellViewSimulationData::deleteArrays()
+void SimulationExperimentViewSimulationData::deleteArrays()
 {
     // Delete our various arrays
 
@@ -611,7 +611,7 @@ void SingleCellViewSimulationData::deleteArrays()
 
 //==============================================================================
 
-SingleCellViewSimulationResults::SingleCellViewSimulationResults(SingleCellViewSimulation *pSimulation) :
+SimulationExperimentViewSimulationResults::SimulationExperimentViewSimulationResults(SimulationExperimentViewSimulation *pSimulation) :
     mSimulation(pSimulation),
     mRuntime(pSimulation->runtime()),
     mDataStore(0),
@@ -625,7 +625,7 @@ SingleCellViewSimulationResults::SingleCellViewSimulationResults(SingleCellViewS
 
 //==============================================================================
 
-SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
+SimulationExperimentViewSimulationResults::~SimulationExperimentViewSimulationResults()
 {
     // Delete some internal objects
 
@@ -634,8 +634,8 @@ SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
 
 //==============================================================================
 
-QString SingleCellViewSimulationResults::uri(const QStringList &pComponentHierarchy,
-                                             const QString &pName)
+QString SimulationExperimentViewSimulationResults::uri(const QStringList &pComponentHierarchy,
+                                                       const QString &pName)
 {
     // Generate an URI using the given component hierarchy and name
 
@@ -646,7 +646,7 @@ QString SingleCellViewSimulationResults::uri(const QStringList &pComponentHierar
 
 //==============================================================================
 
-bool SingleCellViewSimulationResults::createDataStore()
+bool SimulationExperimentViewSimulationResults::createDataStore()
 {
     // Note: the boolean value we return is true if we have had no problem
     //       creating our data store, false otherwise. This is the reason, for
@@ -696,7 +696,7 @@ bool SingleCellViewSimulationResults::createDataStore()
 
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-            mPoints->setIcon(SingleCellViewSimulationWidget::parameterIcon(parameter->type()));
+            mPoints->setIcon(SimulationExperimentViewSimulationWidget::parameterIcon(parameter->type()));
             mPoints->setUri(uri(mRuntime->variableOfIntegration()->componentHierarchy(),
                                 mRuntime->variableOfIntegration()->name()));
             mPoints->setLabel(mRuntime->variableOfIntegration()->name());
@@ -727,7 +727,7 @@ bool SingleCellViewSimulationResults::createDataStore()
         }
 
         if (variable) {
-            variable->setIcon(SingleCellViewSimulationWidget::parameterIcon(parameter->type()));
+            variable->setIcon(SimulationExperimentViewSimulationWidget::parameterIcon(parameter->type()));
             variable->setUri(uri(parameter->componentHierarchy(),
                                  parameter->formattedName()));
             variable->setLabel(parameter->formattedName());
@@ -740,7 +740,7 @@ bool SingleCellViewSimulationResults::createDataStore()
 
 //==============================================================================
 
-void SingleCellViewSimulationResults::deleteDataStore()
+void SimulationExperimentViewSimulationResults::deleteDataStore()
 {
     // Delete our data store
 
@@ -751,7 +751,7 @@ void SingleCellViewSimulationResults::deleteDataStore()
 
 //==============================================================================
 
-void SingleCellViewSimulationResults::update()
+void SimulationExperimentViewSimulationResults::update()
 {
     // Update ourselves by updating our runtime and deleting our data store
 
@@ -762,7 +762,7 @@ void SingleCellViewSimulationResults::update()
 
 //==============================================================================
 
-bool SingleCellViewSimulationResults::reset(const bool &pCreateDataStore)
+bool SimulationExperimentViewSimulationResults::reset(const bool &pCreateDataStore)
 {
     // Reset our data store
 
@@ -777,7 +777,7 @@ bool SingleCellViewSimulationResults::reset(const bool &pCreateDataStore)
 
 //==============================================================================
 
-void SingleCellViewSimulationResults::addPoint(const double &pPoint)
+void SimulationExperimentViewSimulationResults::addPoint(const double &pPoint)
 {
     // Add the data to our data store
 
@@ -786,7 +786,7 @@ void SingleCellViewSimulationResults::addPoint(const double &pPoint)
 
 //==============================================================================
 
-qulonglong SingleCellViewSimulationResults::size() const
+qulonglong SimulationExperimentViewSimulationResults::size() const
 {
     // Return our size
 
@@ -795,7 +795,7 @@ qulonglong SingleCellViewSimulationResults::size() const
 
 //==============================================================================
 
-DataStore::DataStore * SingleCellViewSimulationResults::dataStore() const
+DataStore::DataStore * SimulationExperimentViewSimulationResults::dataStore() const
 {
     // Return our data store
 
@@ -804,7 +804,7 @@ DataStore::DataStore * SingleCellViewSimulationResults::dataStore() const
 
 //==============================================================================
 
-double * SingleCellViewSimulationResults::points() const
+double * SimulationExperimentViewSimulationResults::points() const
 {
     // Return our points
 
@@ -813,7 +813,7 @@ double * SingleCellViewSimulationResults::points() const
 
 //==============================================================================
 
-double * SingleCellViewSimulationResults::constants(const int &pIndex) const
+double * SimulationExperimentViewSimulationResults::constants(const int &pIndex) const
 {
     // Return our constants data at the given index
 
@@ -822,7 +822,7 @@ double * SingleCellViewSimulationResults::constants(const int &pIndex) const
 
 //==============================================================================
 
-double * SingleCellViewSimulationResults::rates(const int &pIndex) const
+double * SimulationExperimentViewSimulationResults::rates(const int &pIndex) const
 {
     // Return our rates data at the given index
 
@@ -831,7 +831,7 @@ double * SingleCellViewSimulationResults::rates(const int &pIndex) const
 
 //==============================================================================
 
-double * SingleCellViewSimulationResults::states(const int &pIndex) const
+double * SimulationExperimentViewSimulationResults::states(const int &pIndex) const
 {
     // Return our states data at the given index
 
@@ -840,7 +840,7 @@ double * SingleCellViewSimulationResults::states(const int &pIndex) const
 
 //==============================================================================
 
-double * SingleCellViewSimulationResults::algebraic(const int &pIndex) const
+double * SimulationExperimentViewSimulationResults::algebraic(const int &pIndex) const
 {
     // Return our algebraic data at the given index
 
@@ -849,13 +849,13 @@ double * SingleCellViewSimulationResults::algebraic(const int &pIndex) const
 
 //==============================================================================
 
-SingleCellViewSimulation::SingleCellViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                   const SolverInterfaces &pSolverInterfaces) :
+SimulationExperimentViewSimulation::SimulationExperimentViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime,
+                                                                       const SolverInterfaces &pSolverInterfaces) :
     mWorker(0),
     mRuntime(pRuntime),
     mSolverInterfaces(pSolverInterfaces),
-    mData(new SingleCellViewSimulationData(this, pSolverInterfaces)),
-    mResults(new SingleCellViewSimulationResults(this))
+    mData(new SimulationExperimentViewSimulationData(this, pSolverInterfaces)),
+    mResults(new SimulationExperimentViewSimulationResults(this))
 {
     // Keep track of any error occurring in our data
 
@@ -865,7 +865,7 @@ SingleCellViewSimulation::SingleCellViewSimulation(CellMLSupport::CellmlFileRunt
 
 //==============================================================================
 
-SingleCellViewSimulation::~SingleCellViewSimulation()
+SimulationExperimentViewSimulation::~SimulationExperimentViewSimulation()
 {
     // Stop our worker
     // Note: we don't need to delete mWorker since it will be done as part of
@@ -881,7 +881,7 @@ SingleCellViewSimulation::~SingleCellViewSimulation()
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntime * SingleCellViewSimulation::runtime() const
+CellMLSupport::CellmlFileRuntime * SimulationExperimentViewSimulation::runtime() const
 {
     // Return our runtime
 
@@ -890,7 +890,7 @@ CellMLSupport::CellmlFileRuntime * SingleCellViewSimulation::runtime() const
 
 //==============================================================================
 
-QString SingleCellViewSimulation::fileName() const
+QString SimulationExperimentViewSimulation::fileName() const
 {
     // Return the name of the CellML file
 
@@ -899,7 +899,7 @@ QString SingleCellViewSimulation::fileName() const
 
 //==============================================================================
 
-SingleCellViewSimulationData * SingleCellViewSimulation::data() const
+SimulationExperimentViewSimulationData * SimulationExperimentViewSimulation::data() const
 {
     // Return our data
 
@@ -908,7 +908,7 @@ SingleCellViewSimulationData * SingleCellViewSimulation::data() const
 
 //==============================================================================
 
-SingleCellViewSimulationResults * SingleCellViewSimulation::results() const
+SimulationExperimentViewSimulationResults * SimulationExperimentViewSimulation::results() const
 {
     // Return our results
 
@@ -917,7 +917,7 @@ SingleCellViewSimulationResults * SingleCellViewSimulation::results() const
 
 //==============================================================================
 
-void SingleCellViewSimulation::update(CellMLSupport::CellmlFileRuntime *pRuntime)
+void SimulationExperimentViewSimulation::update(CellMLSupport::CellmlFileRuntime *pRuntime)
 {
     // Update ourselves by first stopping ourselves, then by by updating our
     // runtime, and asking our data and results to update themselves too
@@ -932,7 +932,7 @@ void SingleCellViewSimulation::update(CellMLSupport::CellmlFileRuntime *pRuntime
 
 //==============================================================================
 
-bool SingleCellViewSimulation::isRunning() const
+bool SimulationExperimentViewSimulation::isRunning() const
 {
     // Return whether we are running
 
@@ -941,7 +941,7 @@ bool SingleCellViewSimulation::isRunning() const
 
 //==============================================================================
 
-bool SingleCellViewSimulation::isPaused() const
+bool SimulationExperimentViewSimulation::isPaused() const
 {
     // Return whether we are paused
 
@@ -950,7 +950,7 @@ bool SingleCellViewSimulation::isPaused() const
 
 //==============================================================================
 
-double SingleCellViewSimulation::currentPoint() const
+double SimulationExperimentViewSimulation::currentPoint() const
 {
     // Return our current point
 
@@ -959,7 +959,7 @@ double SingleCellViewSimulation::currentPoint() const
 
 //==============================================================================
 
-int SingleCellViewSimulation::delay() const
+int SimulationExperimentViewSimulation::delay() const
 {
     // Return our delay
 
@@ -968,7 +968,7 @@ int SingleCellViewSimulation::delay() const
 
 //==============================================================================
 
-void SingleCellViewSimulation::setDelay(const int &pDelay)
+void SimulationExperimentViewSimulation::setDelay(const int &pDelay)
 {
     // Set our delay
 
@@ -977,14 +977,15 @@ void SingleCellViewSimulation::setDelay(const int &pDelay)
 
 //==============================================================================
 
-double SingleCellViewSimulation::requiredMemory()
+double SimulationExperimentViewSimulation::requiredMemory()
 {
     // Determine and return the amount of required memory to run our simulation
     // Note #1: we return the amount as a double rather than a qulonglong (as we
     //          do when retrieving the total/free amount of memory available;
     //          see [OpenCOR]/src/plugins/miscellaneous/Core/src/guiutils.cpp)
     //          in case a simulation requires an insane amount of memory...
-    // Note #2: the 1.0 is for mPoints in SingleCellViewSimulationResults...
+    // Note #2: the 1.0 is for mPoints in
+    //          SimulationExperimentViewSimulationResults...
 
     if (mRuntime) {
         return  size()
@@ -1001,7 +1002,7 @@ double SingleCellViewSimulation::requiredMemory()
 
 //==============================================================================
 
-bool SingleCellViewSimulation::simulationSettingsOk(const bool &pEmitSignal)
+bool SimulationExperimentViewSimulation::simulationSettingsOk(const bool &pEmitSignal)
 {
     // Check and return whether our simulation settings are sound
 
@@ -1034,7 +1035,7 @@ bool SingleCellViewSimulation::simulationSettingsOk(const bool &pEmitSignal)
 
 //==============================================================================
 
-double SingleCellViewSimulation::size()
+double SimulationExperimentViewSimulation::size()
 {
     // Return the size of our simulation (i.e. the number of data points that
     // should be generated), if possible
@@ -1049,7 +1050,7 @@ double SingleCellViewSimulation::size()
 
 //==============================================================================
 
-bool SingleCellViewSimulation::run()
+bool SimulationExperimentViewSimulation::run()
 {
     if (!mRuntime)
         return false;
@@ -1066,7 +1067,7 @@ bool SingleCellViewSimulation::run()
 
         // Create our worker
 
-        mWorker = new SingleCellViewSimulationWorker(this, mWorker);
+        mWorker = new SimulationExperimentViewSimulationWorker(this, mWorker);
 
         if (!mWorker) {
             emit error(tr("the simulation worker could not be created"));
@@ -1095,7 +1096,7 @@ bool SingleCellViewSimulation::run()
 
 //==============================================================================
 
-bool SingleCellViewSimulation::pause()
+bool SimulationExperimentViewSimulation::pause()
 {
     // Pause our worker
 
@@ -1104,7 +1105,7 @@ bool SingleCellViewSimulation::pause()
 
 //==============================================================================
 
-bool SingleCellViewSimulation::resume()
+bool SimulationExperimentViewSimulation::resume()
 {
     // Resume our worker
 
@@ -1113,7 +1114,7 @@ bool SingleCellViewSimulation::resume()
 
 //==============================================================================
 
-bool SingleCellViewSimulation::stop()
+bool SimulationExperimentViewSimulation::stop()
 {
     // Stop our worker
 
@@ -1122,7 +1123,7 @@ bool SingleCellViewSimulation::stop()
 
 //==============================================================================
 
-bool SingleCellViewSimulation::reset()
+bool SimulationExperimentViewSimulation::reset()
 {
     // Reset our data
 
@@ -1135,7 +1136,7 @@ bool SingleCellViewSimulation::reset()
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================
