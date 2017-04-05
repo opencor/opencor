@@ -54,13 +54,13 @@ PLUGININFO_FUNC WebBrowserWindowPluginInfo()
 
 void WebBrowserWindowPlugin::retranslateUi()
 {
-    // Retranslate our web browser window action
+    // Retranslate our Web Browser window action
 
     retranslateAction(mWebBrowserWindowAction,
                       tr("Web Browser"),
                       tr("Show/hide the Web Browser window"));
 
-    // Retranslate our web browser window
+    // Retranslate our Web Browser window
 
     mWebBrowserWindowWindow->retranslateUi();
 }
@@ -93,11 +93,11 @@ bool WebBrowserWindowPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void WebBrowserWindowPlugin::initializePlugin()
 {
-    // Create an action to show/hide our web browser window
+    // Create an action to show/hide our Web Browser window
 
     mWebBrowserWindowAction = Core::newAction(true, Core::mainWindow());
 
-    // Create our web browser window
+    // Create our Web Browser window
 
     mWebBrowserWindowWindow = new WebBrowserWindowWindow(Core::mainWindow());
 }
@@ -122,7 +122,7 @@ void WebBrowserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void WebBrowserWindowPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our Web browser window settings
+    // Retrieve our Web Browser window settings
 
     pSettings->beginGroup(mWebBrowserWindowWindow->objectName());
         mWebBrowserWindowWindow->loadSettings(pSettings);
@@ -133,7 +133,7 @@ void WebBrowserWindowPlugin::loadSettings(QSettings *pSettings)
 
 void WebBrowserWindowPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our Web browser window settings
+    // Keep track of our Web Browser window settings
 
     pSettings->beginGroup(mWebBrowserWindowWindow->objectName());
         mWebBrowserWindowWindow->saveSettings(pSettings);
@@ -164,7 +164,7 @@ Qt::DockWidgetArea WebBrowserWindowPlugin::windowDefaultDockArea() const
 
 QAction * WebBrowserWindowPlugin::windowAction() const
 {
-    // Return our window action
+    // Return our Web Browser window action
 
     return mWebBrowserWindowAction;
 }
@@ -173,7 +173,7 @@ QAction * WebBrowserWindowPlugin::windowAction() const
 
 QDockWidget * WebBrowserWindowPlugin::windowWidget() const
 {
-    // Return our window widget
+    // Return our Web Browser window widget
 
     return mWebBrowserWindowWindow;
 }

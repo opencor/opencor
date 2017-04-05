@@ -239,13 +239,13 @@ bool RawCellMLViewPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void RawCellMLViewPlugin::initializePlugin()
 {
-    // Create our raw CellML view widget
+    // Create our Raw CellML view widget
 
     mViewWidget = new RawCellmlViewWidget(Core::mainWindow());
 
     mViewWidget->setObjectName("RawCellmlViewWidget");
 
-    // Hide our raw CellML view widget since it may not initially be shown in
+    // Hide our Raw CellML view widget since it may not initially be shown in
     // our central widget
 
     mViewWidget->setVisible(false);
@@ -271,7 +271,7 @@ void RawCellMLViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void RawCellMLViewPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our raw CellML view widget settings
+    // Retrieve our Raw CellML view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
@@ -282,7 +282,7 @@ void RawCellMLViewPlugin::loadSettings(QSettings *pSettings)
 
 void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our raw CellML view widget settings
+    // Keep track of our Raw CellML view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
@@ -338,7 +338,7 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         return 0;
 
-    // Update and return our raw CellML view widget using the given CellML file
+    // Update and return our Raw CellML view widget using the given CellML file
 
     mViewWidget->initialize(pFileName);
 
@@ -349,7 +349,7 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
 
 void RawCellMLViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    // Ask our raw CellML view widget to finalise the given CellML file
+    // Ask our Raw CellML view widget to finalise the given CellML file
 
     mViewWidget->finalize(pFileName);
 }
@@ -358,7 +358,7 @@ void RawCellMLViewPlugin::removeViewWidget(const QString &pFileName)
 
 QString RawCellMLViewPlugin::viewName() const
 {
-    // Return our raw CellML view's name
+    // Return our Raw CellML view's name
 
     return tr("Raw CellML");
 }

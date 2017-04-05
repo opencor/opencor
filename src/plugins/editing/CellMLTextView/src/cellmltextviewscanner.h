@@ -46,7 +46,7 @@ public:
         StringToken, IdentifierOrCmetaIdToken, ProperCmetaIdToken, NumberToken,
         InvalidToken,
 
-        // CellML text keywords
+        // CellML Text keywords
 
         AndToken, AsToken, BetweenToken, CaseToken, CompToken, DefToken,
         EndCompToken, EndDefToken, EndSelToken, ForToken, GroupToken,
@@ -103,7 +103,7 @@ public:
         FirstUnitToken = AmpereToken,
         LastUnitToken = WeberToken,
 
-        // CellML text parameter keywords
+        // CellML Text parameter keywords
 
         PrefToken, ExpoToken, MultToken, OffToken,
 

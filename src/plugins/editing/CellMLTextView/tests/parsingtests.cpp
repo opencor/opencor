@@ -157,7 +157,7 @@ void ParsingTests::fileTests()
 {
     OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
-    // Parsing of some CellML text code and converting to raw CellML...
+    // Parsing of some CellML Text code and converting to raw CellML...
 
     QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.in")).join("\n"),
                            OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
@@ -173,9 +173,9 @@ void ParsingTests::fileTests()
     QCOMPARE(converter.output().split("\n"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.in")));
 
-    // Parsing of some CellML text code (with some in between comments) and
+    // Parsing of some CellML Text code (with some in between comments) and
     // converting it to raw CellML
-    // Note: we can't convert it back to CellML text code since the in between
+    // Note: we can't convert it back to CellML Text code since the in between
     //       comments won't, as expected, be in their original location. This is
     //       because those in between comments are within a definition itself
     //       while we would normally have them before and/or after...

@@ -190,7 +190,7 @@ Qt::DockWidgetArea PMRWindowPlugin::windowDefaultDockArea() const
 
 QAction * PMRWindowPlugin::windowAction() const
 {
-    // Return our window action
+    // Return our PMR window action
 
     return mPmrWindowAction;
 }
@@ -199,7 +199,7 @@ QAction * PMRWindowPlugin::windowAction() const
 
 QDockWidget * PMRWindowPlugin::windowWidget() const
 {
-    // Return our window widget
+    // Return our PMR window widget
 
     return mPmrWindowWindow;
 }
