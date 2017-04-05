@@ -163,8 +163,8 @@
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewPlugin</name>
     <message>
-        <source>Single Cell</source>
-        <translation>Unicellulaire</translation>
+        <source>Simulation Experiment</source>
+        <translation>Expérience De Simulation</translation>
     </message>
 </context>
 <context>

@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view information solvers widget
+// Simulation Experiment view information solvers widget
 //==============================================================================
 
 #include "cellmlfileruntime.h"

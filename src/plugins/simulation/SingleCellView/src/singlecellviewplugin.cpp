@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view plugin
+// Simulation Experiment view plugin
 //==============================================================================
 
 #include "cellmlfilemanager.h"
@@ -47,8 +47,8 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to run single cell simulations."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour exécuter des simulations unicellulaires."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to run a simulation experiment."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour exécuter une expérience de simulation."));
 
     return new PluginInfo(PluginInfo::Simulation, true, false,
                           QStringList() << "COMBINESupport"<< "GraphPanelWidget" << "Qwt" << "SEDMLSupport",
@@ -156,7 +156,7 @@ void SingleCellViewPlugin::fileClosed(const QString &pFileName)
 
 void SingleCellViewPlugin::retranslateUi()
 {
-    // Retranslate our single cell view widget
+    // Retranslate our Simulation Experiment view widget
 
     mViewWidget->retranslateUi();
 }
@@ -189,14 +189,14 @@ bool SingleCellViewPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void SingleCellViewPlugin::initializePlugin()
 {
-    // Create our single cell view widget
+    // Create our Simulation Experiment view widget
 
     mViewWidget = new SingleCellViewWidget(this, Core::mainWindow());
 
     mViewWidget->setObjectName("SingleCellViewWidget");
 
-    // Hide our single cell view widget since it may not initially be shown in
-    // our central widget
+    // Hide our Simulation Experiment view widget since it may not initially be
+    // shown in  our central widget
 
     mViewWidget->setVisible(false);
 }
@@ -266,7 +266,7 @@ void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void SingleCellViewPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our single cell view settings
+    // Retrieve our Simulation Experiment view settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
@@ -277,7 +277,7 @@ void SingleCellViewPlugin::loadSettings(QSettings *pSettings)
 
 void SingleCellViewPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our single cell view settings
+    // Keep track of our Simulation Experiment view settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
@@ -362,9 +362,9 @@ void SingleCellViewPlugin::removeViewWidget(const QString &pFileName)
 
 QString SingleCellViewPlugin::viewName() const
 {
-    // Return our single cell view's name
+    // Return our Simulation Experiment view's name
 
-    return tr("Single Cell");
+    return tr("Simulation Experiment");
 }
 
 //==============================================================================

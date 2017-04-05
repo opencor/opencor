@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view simulation widget
+// Simulation Experiment view simulation widget
 //==============================================================================
 
 #include "centralwidget.h"
@@ -416,7 +416,7 @@ SingleCellViewSimulationWidget::SingleCellViewSimulationWidget(SingleCellViewPlu
 
     // Populate our splitter and use as much space as possible for it by asking
     // for its height to be that of the desktop's, and then add our splitter to
-    // our single cell view widget
+    // our Simulation Experiment view widget
 
     mSplitterWidget->addWidget(mContentsWidget);
     mSplitterWidget->addWidget(simulationOutputWidget);

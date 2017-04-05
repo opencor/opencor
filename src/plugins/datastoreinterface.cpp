@@ -95,8 +95,9 @@ bool DataStoreVariable::isVisible() const
     // Return whether we are visible, i.e. we have a non-empty URI
     // Note: this applies to CellML 1.1 file where we keep track of all the
     //       model parameters (including imported ones), but should only export
-    //       those that the user can see in the GUI (e.g. in the Single Cell
-    //       view). See issues #568 and #808 for some background on this...
+    //       those that the user can see in the GUI (e.g. in the Simulation
+    //       Experiment view). See issues #568 and #808 for some background on
+    //       this...
 
     return !mUri.isEmpty();
 }

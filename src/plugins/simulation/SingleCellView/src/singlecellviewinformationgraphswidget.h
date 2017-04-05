@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view information graphs widget
+// Simulation Experiment view information graphs widget
 //==============================================================================
 
 #pragma once
