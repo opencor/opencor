@@ -86,7 +86,7 @@ QStringList COMBINESupportPlugin::fileTypeDefaultViews() const
 {
     // Return the default views to use for the type of file we support
 
-    return QStringList() << "SingleCellView";
+    return QStringList() << "SimulationExperimentView";
 }
 
 //==============================================================================

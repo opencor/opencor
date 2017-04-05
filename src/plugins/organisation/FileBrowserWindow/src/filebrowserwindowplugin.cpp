@@ -54,12 +54,12 @@ PLUGININFO_FUNC FileBrowserWindowPluginInfo()
 
 void FileBrowserWindowPlugin::retranslateUi()
 {
-    // Retranslate our file browser window action
+    // Retranslate our File Browser window action
 
     retranslateAction(mFileBrowserWindowAction, tr("File Browser"),
                       tr("Show/hide the File Browser window"));
 
-    // Retranslate our file browser window
+    // Retranslate our File Browser window
 
     mFileBrowserWindowWindow->retranslateUi();
 }
@@ -92,11 +92,11 @@ bool FileBrowserWindowPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void FileBrowserWindowPlugin::initializePlugin()
 {
-    // Create an action to show/hide our file browser window
+    // Create an action to show/hide our File Browser window
 
     mFileBrowserWindowAction = Core::newAction(true, Core::mainWindow());
 
-    // Create our file browser window
+    // Create our File Browser window
 
     mFileBrowserWindowWindow = new FileBrowserWindowWindow(Core::mainWindow());
 }
@@ -121,7 +121,7 @@ void FileBrowserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void FileBrowserWindowPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our file browser window settings
+    // Retrieve our File Browser window settings
 
     pSettings->beginGroup(mFileBrowserWindowWindow->objectName());
         mFileBrowserWindowWindow->loadSettings(pSettings);
@@ -132,7 +132,7 @@ void FileBrowserWindowPlugin::loadSettings(QSettings *pSettings)
 
 void FileBrowserWindowPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our file browser window settings
+    // Keep track of our File Browser window settings
 
     pSettings->beginGroup(mFileBrowserWindowWindow->objectName());
         mFileBrowserWindowWindow->saveSettings(pSettings);
@@ -163,7 +163,7 @@ Qt::DockWidgetArea FileBrowserWindowPlugin::windowDefaultDockArea() const
 
 QAction * FileBrowserWindowPlugin::windowAction() const
 {
-    // Return our window action
+    // Return our File Browser window action
 
     return mFileBrowserWindowAction;
 }
@@ -172,7 +172,7 @@ QAction * FileBrowserWindowPlugin::windowAction() const
 
 QDockWidget * FileBrowserWindowPlugin::windowWidget() const
 {
-    // Return our window widget
+    // Return our File Browser window widget
 
     return mFileBrowserWindowWindow;
 }

@@ -382,7 +382,7 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
 
         static const QRegularExpression KeywordsRegEx = QRegularExpression(
             "\\b("
-                // CellML text keywords
+                // CellML Text keywords
 
                 "and|as|between|case|comp|def|endcomp|enddef|endsel|for|group|"
                 "import|incl|map|model|otherwise|sel|unit|using|var|vars|"

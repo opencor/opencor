@@ -17,13 +17,13 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view information parameters widget
+// Simulation Experiment view information parameters widget
 //==============================================================================
 
 #include "cellmlfileruntime.h"
-#include "singlecellviewinformationparameterswidget.h"
-#include "singlecellviewsimulation.h"
-#include "singlecellviewsimulationwidget.h"
+#include "simulationexperimentviewinformationparameterswidget.h"
+#include "simulationexperimentviewsimulation.h"
+#include "simulationexperimentviewsimulationwidget.h"
 
 //==============================================================================
 
@@ -33,11 +33,11 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWidget(QWidget *pParent) :
+SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInformationParametersWidget(QWidget *pParent) :
     PropertyEditorWidget(false, pParent),
     mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
@@ -57,7 +57,7 @@ SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWi
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::retranslateContextMenu()
+void SimulationExperimentViewInformationParametersWidget::retranslateContextMenu()
 {
     // Retranslate our context menu, in case it has been populated
 
@@ -71,7 +71,7 @@ void SingleCellViewInformationParametersWidget::retranslateContextMenu()
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::retranslateUi()
+void SimulationExperimentViewInformationParametersWidget::retranslateUi()
 {
     // Default retranslation
 
@@ -88,7 +88,7 @@ void SingleCellViewInformationParametersWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::contextMenuEvent(QContextMenuEvent *pEvent)
+void SimulationExperimentViewInformationParametersWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 {
     // Make sure that we have a current property
 
@@ -109,8 +109,8 @@ void SingleCellViewInformationParametersWidget::contextMenuEvent(QContextMenuEve
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::initialize(SingleCellViewSimulation *pSimulation,
-                                                           const bool &pReloadingView)
+void SimulationExperimentViewInformationParametersWidget::initialize(SimulationExperimentViewSimulation *pSimulation,
+                                                                     const bool &pReloadingView)
 {
     // Keep track of the simulation
 
@@ -153,7 +153,7 @@ void SingleCellViewInformationParametersWidget::initialize(SingleCellViewSimulat
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::finalize()
+void SimulationExperimentViewInformationParametersWidget::finalize()
 {
     // Clear ourselves, as well as our context menu, parameters and parameter
     // actions
@@ -168,7 +168,7 @@ void SingleCellViewInformationParametersWidget::finalize()
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::updateParameters(const double &pCurrentPoint)
+void SimulationExperimentViewInformationParametersWidget::updateParameters(const double &pCurrentPoint)
 {
     // Update our data
 
@@ -213,7 +213,7 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *pProperty)
+void SimulationExperimentViewInformationParametersWidget::propertyChanged(Core::Property *pProperty)
 {
     // Update our simulation data
 
@@ -253,7 +253,7 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 
 //==============================================================================
 
-QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> SingleCellViewInformationParametersWidget::parameters() const
+QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> SimulationExperimentViewInformationParametersWidget::parameters() const
 {
     // Return our parameters
 
@@ -262,7 +262,7 @@ QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> SingleCellVi
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::CellmlFileRuntime *pRuntime)
+void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSupport::CellmlFileRuntime *pRuntime)
 {
     // Populate our property editor with the parameters
 
@@ -371,7 +371,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
         property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
                               || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State));
 
-        property->setIcon(SingleCellViewSimulationWidget::parameterIcon(parameter->type()));
+        property->setIcon(SimulationExperimentViewSimulationWidget::parameterIcon(parameter->type()));
 
         property->setName(parameter->formattedName(), false);
         property->setUnit(parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()), false);
@@ -392,7 +392,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime)
+void SimulationExperimentViewInformationParametersWidget::populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime)
 {
     // Create our two main menu items
 
@@ -478,7 +478,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(CellMLSuppor
 
         // Add the current parameter to the 'current' component menu
 
-        QAction *parameterAction = componentMenu->addAction(SingleCellViewSimulationWidget::parameterIcon(parameter->type()),
+        QAction *parameterAction = componentMenu->addAction(SimulationExperimentViewSimulationWidget::parameterIcon(parameter->type()),
                                                             parameter->formattedName());
 
         // Create a connection to handle the graph requirement against our
@@ -496,7 +496,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(CellMLSuppor
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::updateExtraInfos()
+void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
 {
     // Update the extra info of all our properties
 
@@ -544,7 +544,7 @@ void SingleCellViewInformationParametersWidget::updateExtraInfos()
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::emitGraphRequired()
+void SimulationExperimentViewInformationParametersWidget::emitGraphRequired()
 {
     // Let people know that we want to plot the current parameter against
     // another
@@ -555,7 +555,7 @@ void SingleCellViewInformationParametersWidget::emitGraphRequired()
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

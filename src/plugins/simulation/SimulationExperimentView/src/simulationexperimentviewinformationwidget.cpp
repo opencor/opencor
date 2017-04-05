@@ -17,15 +17,15 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Single Cell view information widget
+// Simulation Experiment view information widget
 //==============================================================================
 
 #include "collapsiblewidget.h"
-#include "singlecellviewinformationgraphswidget.h"
-#include "singlecellviewinformationparameterswidget.h"
-#include "singlecellviewinformationsimulationwidget.h"
-#include "singlecellviewinformationsolverswidget.h"
-#include "singlecellviewinformationwidget.h"
+#include "simulationexperimentviewinformationgraphswidget.h"
+#include "simulationexperimentviewinformationparameterswidget.h"
+#include "simulationexperimentviewinformationsimulationwidget.h"
+#include "simulationexperimentviewinformationsolverswidget.h"
+#include "simulationexperimentviewinformationwidget.h"
 
 //==============================================================================
 
@@ -35,13 +35,13 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-SingleCellViewInformationWidget::SingleCellViewInformationWidget(SingleCellViewPlugin *pPlugin,
-                                                                 SingleCellViewSimulationWidget *pSimulationWidget,
-                                                                 QWidget *pParent) :
+SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                                                     SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                                                                     QWidget *pParent) :
     QScrollArea(pParent),
     Core::CommonWidget(this)
 {
@@ -66,25 +66,25 @@ SingleCellViewInformationWidget::SingleCellViewInformationWidget(SingleCellViewP
 
     // Create our simulation widget
 
-    mSimulationWidget = new SingleCellViewInformationSimulationWidget(mCollapsibleWidget);
+    mSimulationWidget = new SimulationExperimentViewInformationSimulationWidget(mCollapsibleWidget);
 
     mSimulationWidget->setObjectName("Simulation");
 
     // Create our solvers widget
 
-    mSolversWidget = new SingleCellViewInformationSolversWidget(pPlugin, mCollapsibleWidget);
+    mSolversWidget = new SimulationExperimentViewInformationSolversWidget(pPlugin, mCollapsibleWidget);
 
     mSolversWidget->setObjectName("Solvers");
 
     // Create our graphs widget
 
-    mGraphsWidget = new SingleCellViewInformationGraphsWidget(pPlugin, pSimulationWidget, mCollapsibleWidget);
+    mGraphsWidget = new SimulationExperimentViewInformationGraphsWidget(pPlugin, pSimulationWidget, mCollapsibleWidget);
 
     mGraphsWidget->setObjectName("Graphs");
 
     // Create our parameters widget
 
-    mParametersWidget = new SingleCellViewInformationParametersWidget(mCollapsibleWidget);
+    mParametersWidget = new SimulationExperimentViewInformationParametersWidget(mCollapsibleWidget);
 
     mParametersWidget->setObjectName("Parameters");
 
@@ -103,7 +103,7 @@ SingleCellViewInformationWidget::SingleCellViewInformationWidget(SingleCellViewP
 
 //==============================================================================
 
-void SingleCellViewInformationWidget::retranslateUi()
+void SimulationExperimentViewInformationWidget::retranslateUi()
 {
     // Retranslate the different titles of our collapsible widget
 
@@ -122,7 +122,7 @@ void SingleCellViewInformationWidget::retranslateUi()
 
 //==============================================================================
 
-Core::CollapsibleWidget * SingleCellViewInformationWidget::collapsibleWidget() const
+Core::CollapsibleWidget * SimulationExperimentViewInformationWidget::collapsibleWidget() const
 {
     // Return our collapsible widget
 
@@ -131,7 +131,7 @@ Core::CollapsibleWidget * SingleCellViewInformationWidget::collapsibleWidget() c
 
 //==============================================================================
 
-SingleCellViewInformationSimulationWidget * SingleCellViewInformationWidget::simulationWidget() const
+SimulationExperimentViewInformationSimulationWidget * SimulationExperimentViewInformationWidget::simulationWidget() const
 {
     // Return our simulation widget
 
@@ -140,7 +140,7 @@ SingleCellViewInformationSimulationWidget * SingleCellViewInformationWidget::sim
 
 //==============================================================================
 
-SingleCellViewInformationSolversWidget * SingleCellViewInformationWidget::solversWidget() const
+SimulationExperimentViewInformationSolversWidget * SimulationExperimentViewInformationWidget::solversWidget() const
 {
     // Return our solvers widget
 
@@ -149,7 +149,7 @@ SingleCellViewInformationSolversWidget * SingleCellViewInformationWidget::solver
 
 //==============================================================================
 
-SingleCellViewInformationGraphsWidget * SingleCellViewInformationWidget::graphsWidget() const
+SimulationExperimentViewInformationGraphsWidget * SimulationExperimentViewInformationWidget::graphsWidget() const
 {
     // Return our graphs widget
 
@@ -158,7 +158,7 @@ SingleCellViewInformationGraphsWidget * SingleCellViewInformationWidget::graphsW
 
 //==============================================================================
 
-SingleCellViewInformationParametersWidget * SingleCellViewInformationWidget::parametersWidget() const
+SimulationExperimentViewInformationParametersWidget * SimulationExperimentViewInformationWidget::parametersWidget() const
 {
     // Return our parameters widget
 
@@ -167,7 +167,7 @@ SingleCellViewInformationParametersWidget * SingleCellViewInformationWidget::par
 
 //==============================================================================
 
-void SingleCellViewInformationWidget::finishEditing(const bool &pPausedSimulation)
+void SimulationExperimentViewInformationWidget::finishEditing(const bool &pPausedSimulation)
 {
     // Finish the editing of any of the information we support
     // Note: when a simulation is paused, the simulation and solvers widgets are
@@ -184,7 +184,7 @@ void SingleCellViewInformationWidget::finishEditing(const bool &pPausedSimulatio
 
 //==============================================================================
 
-}   // namespace SingleCellView
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

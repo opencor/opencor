@@ -212,13 +212,13 @@ bool RawTextViewPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void RawTextViewPlugin::initializePlugin()
 {
-    // Create our raw text view widget
+    // Create our Raw Text view widget
 
     mViewWidget = new RawTextViewWidget(Core::mainWindow());
 
     mViewWidget->setObjectName("RawTextViewWidget");
 
-    // Hide our raw text view widget since it may not initially be shown in our
+    // Hide our Raw Text view widget since it may not initially be shown in our
     // central widget
 
     mViewWidget->setVisible(false);
@@ -244,7 +244,7 @@ void RawTextViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void RawTextViewPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our raw text view widget settings
+    // Retrieve our Raw Text view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
@@ -255,7 +255,7 @@ void RawTextViewPlugin::loadSettings(QSettings *pSettings)
 
 void RawTextViewPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our raw text view widget settings
+    // Keep track of our Raw Text view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
@@ -311,7 +311,7 @@ QWidget * RawTextViewPlugin::viewWidget(const QString &pFileName)
     if (!Core::isTextFile(pFileName))
         return 0;
 
-    // Update and return our raw text view widget using the given file
+    // Update and return our Raw Text view widget using the given file
 
     mViewWidget->initialize(pFileName);
 
@@ -322,7 +322,7 @@ QWidget * RawTextViewPlugin::viewWidget(const QString &pFileName)
 
 void RawTextViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    // Ask our raw text view widget to finalise the given file
+    // Ask our Raw Text view widget to finalise the given file
 
     mViewWidget->finalize(pFileName);
 }
@@ -331,7 +331,7 @@ void RawTextViewPlugin::removeViewWidget(const QString &pFileName)
 
 QString RawTextViewPlugin::viewName() const
 {
-    // Return our raw text view's name
+    // Return our Raw Text view's name
 
     return tr("Raw Text");
 }

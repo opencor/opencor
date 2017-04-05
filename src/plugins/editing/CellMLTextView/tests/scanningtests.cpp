@@ -39,7 +39,7 @@ void ScanningTests::basicScanningTests()
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-    // CellML text keyword
+    // CellML Text keyword
 
     scanner.setText("def");
 
@@ -47,7 +47,7 @@ void ScanningTests::basicScanningTests()
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-    // Non-CellML text keyword, but identifier, since within a parameter block
+    // Non-CellML Text keyword, but identifier, since within a parameter block
 
     scanner.setText("{ def }");
 
@@ -59,7 +59,7 @@ void ScanningTests::basicScanningTests()
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-    // Non-CellML text keyword, but identifier, since outside a parameter block
+    // Non-CellML Text keyword, but identifier, since outside a parameter block
 
     scanner.setText("pref");
 
@@ -67,7 +67,7 @@ void ScanningTests::basicScanningTests()
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-    // CellML text parameter keyword
+    // CellML Text parameter keyword
 
     scanner.setText("{ pref }");
 

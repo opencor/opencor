@@ -47,7 +47,7 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
     mTokenComment(QString()),
     mWithinParameterBlock(false)
 {
-    // Our various CellML text keywords
+    // Our various CellML Text keywords
 
     mKeywords.insert("and", AndToken);
     mKeywords.insert("as", AsToken);
@@ -133,7 +133,7 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
     mKeywords.insert("encapsulation", EncapsulationToken);
     mKeywords.insert("containment", ContainmentToken);
 
-    // Our various CellML text SI unit keywords
+    // Our various CellML Text SI unit keywords
 
     mSiUnitKeywords.insert("ampere", AmpereToken);
     mSiUnitKeywords.insert("becquerel", BecquerelToken);
@@ -170,7 +170,7 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
     mSiUnitKeywords.insert("watt", WattToken);
     mSiUnitKeywords.insert("weber", WeberToken);
 
-    // Our various CellML text parameter keywords
+    // Our various CellML Text parameter keywords
 
     mParameterKeywords.insert("pref", PrefToken);
     mParameterKeywords.insert("expo", ExpoToken);
