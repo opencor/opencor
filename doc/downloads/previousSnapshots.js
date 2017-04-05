@@ -1,4 +1,27 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 24, "month": 3, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>CellML Text view:</strong> properly process unknown elements (see issue <a href=\"https://github.com/opencor/opencor/issues/1253\">#1253</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 3.2.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1252\">#1252</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a> to version 4.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1248\">#1248</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 15, "month": 3, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
