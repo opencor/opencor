@@ -30,7 +30,7 @@ IF(WIN32)
         )
     ELSE()
         SET(EXTERNAL_BINARIES
-            zinc.3.1.1d${CMAKE_SHARED_LIBRARY_SUFFIX}
+            zincd.3.1.1d${CMAKE_SHARED_LIBRARY_SUFFIX}
         )
     ENDIF()
 ELSEIF(APPLE)
