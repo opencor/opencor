@@ -504,17 +504,6 @@ bool FileBrowserWindowWidget::viewportEvent(QEvent *pEvent)
 
 //==============================================================================
 
-QSize FileBrowserWindowWidget::minimumSizeHint() const
-{
-    // Suggest a minimum size for ourselves
-    // Note: this is useful if we want our window to have a decent size,
-    //       especially when docked to the main window...
-
-    return defaultSize(0.15);
-}
-
-//==============================================================================
-
 void FileBrowserWindowWidget::itemChanged(const QModelIndex &pNewIndex,
                                           const QModelIndex &pOldIndex)
 {

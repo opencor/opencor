@@ -65,17 +65,6 @@ void WebBrowserWindowWidget::clear()
 
 //==============================================================================
 
-QSize WebBrowserWindowWidget::minimumSizeHint() const
-{
-    // Suggest a minimum size for ourselves
-    // Note: this is useful if we want our window to have a decent size,
-    //       especially when docked to the main window...
-
-    return defaultSize(0.15);
-}
-
-//==============================================================================
-
 }   // namespace WebBrowserWindow
 }   // namespace OpenCOR
 
