@@ -125,7 +125,7 @@ void ZincWindowWindow::createAndSetZincContext()
     // Load our .exfile to our default region using a temporary copy of our
     // .exfile file
 
-    QString exFile = QDir::tempPath()+QDir::separator()+"ZincWindow/trilinearCube.exfile";
+    QString exFile = Core::nativeCanonicalFileName(QDir::tempPath()+QDir::separator()+"ZincWindow/trilinearCube.exfile");
 
     Core::writeResourceToFile(exFile, ":/ZincWindow/trilinearCube.exfile");
 
