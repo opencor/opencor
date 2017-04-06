@@ -25,7 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include "pmrexposure.h"
-#include "widget.h"
+#include "treeviewwidget.h"
 
 //==============================================================================
 
@@ -75,7 +75,7 @@ private:
 
 //==============================================================================
 
-class PmrWindowWidget : public Core::Widget
+class PmrWindowWidget : public Core::TreeViewWidget
 {
     Q_OBJECT
 
@@ -105,7 +105,6 @@ private:
     Core::UserMessageWidget *mUserMessageWidget;
 
     QStandardItemModel *mTreeViewModel;
-    Core::TreeViewWidget *mTreeViewWidget;
 
     QStringList mExposureNames;
 

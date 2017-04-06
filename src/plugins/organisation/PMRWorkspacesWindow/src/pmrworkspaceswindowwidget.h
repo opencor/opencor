@@ -25,7 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include "pmrworkspace.h"
-#include "widget.h"
+#include "treeviewwidget.h"
 
 //==============================================================================
 
@@ -149,7 +149,7 @@ class PmrWorkspacesWindowWindow;
 
 //==============================================================================
 
-class PmrWorkspacesWindowWidget : public Core::Widget
+class PmrWorkspacesWindowWidget : public Core::TreeViewWidget
 {
     Q_OBJECT
 
@@ -165,6 +165,8 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     void update(const QString &pPmrUrl);
+
+    using QTreeView::reset;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -204,7 +206,6 @@ private:
 
     QStandardItemModel *mTreeViewModel;
     PmrWorkspacesWindowProxyModel *mTreeViewProxyModel;
-    Core::TreeViewWidget *mTreeViewWidget;
 
     QIcon mCollapsedWorkspaceIcon;
     QIcon mExpandedWorkspaceIcon;

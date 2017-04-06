@@ -237,7 +237,7 @@ bool PmrWorkspacesWindowProxyModel::lessThan(const QModelIndex &pSourceLeft,
 PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                                      PMRSupport::PmrWebService *pPmrWebService,
                                                      PmrWorkspacesWindowWindow *pParent) :
-    Core::Widget(pParent),
+    Core::TreeViewWidget(pParent),
     mSettingsGroup(QString()),
     mPmrWebService(pPmrWebService)
 {
@@ -245,11 +245,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     reset(pPmrUrl);
 
-    // Create and customise some objects
-
-    mUserMessageWidget = new Core::UserMessageWidget(this);
-
-    mUserMessageWidget->setScale(0.85);
+    // Customise ourselves
 
     mTreeViewModel = new QStandardItemModel(this);
     mTreeViewProxyModel = new PmrWorkspacesWindowProxyModel(mTreeViewModel, this);
@@ -257,29 +253,33 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     mTreeViewProxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     mTreeViewProxyModel->setSourceModel(mTreeViewModel);
 
-    mTreeViewWidget = new Core::TreeViewWidget(this);
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
+    setHeaderHidden(true);
+    setModel(mTreeViewProxyModel);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-    mTreeViewWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-    mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    mTreeViewWidget->setHeaderHidden(true);
-    mTreeViewWidget->setModel(mTreeViewProxyModel);
-    mTreeViewWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
-
-    connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu()));
 
-    connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
+    connect(this, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(itemDoubleClicked()));
 
-    connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
+    connect(this, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(resizeTreeViewToContents()));
-    connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
+    connect(this, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(itemExpanded(const QModelIndex &)));
 
-    connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
+    connect(this, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(resizeTreeViewToContents()));
-    connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
+    connect(this, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(itemCollapsed(const QModelIndex &)));
+
+    // Create and customise our user menssage
+
+    mUserMessageWidget = new Core::UserMessageWidget(this);
+
+    mUserMessageWidget->setScale(0.85);
 
     // Create our various non-owned workspace icons
 
@@ -368,13 +368,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                       fileIconSize, fileIconSize,
                                       0, 0, overlayIconSize, overlayIconSize);
 
-    // Populate ourselves
-
-    QLayout *layout = createLayout();
-
-    layout->addWidget(mUserMessageWidget);
-    layout->addWidget(mTreeViewWidget);
-
     // Connection to handle a response from our workspace manager
 
     PMRSupport::PmrWorkspaceManager *workspaceManager = PMRSupport::PmrWorkspaceManager::instance();
@@ -459,10 +452,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     mContextMenu->addAction(mReloadWorkspacesAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mAboutWorkspaceAction);
-
-    // Make our tree view widget our focus proxy
-
-    setFocusProxy(mTreeViewWidget);
 }
 
 //==============================================================================
@@ -585,14 +574,14 @@ void PmrWorkspacesWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Default handling of the event
 
-    Core::Widget::keyPressEvent(pEvent);
+    Core::TreeViewWidget::keyPressEvent(pEvent);
 
     // Retrieve all the files that are currently selected
     // Note: if there is a folder among the selected items, then ignore
     //       everything...
 
     QStringList fileNames = QStringList();
-    QModelIndexList items = mTreeViewWidget->selectionModel()->selectedIndexes();
+    QModelIndexList items = selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = items.count(); i < iMax; ++i) {
         PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(items[i])));
@@ -675,10 +664,9 @@ void PmrWorkspacesWindowWidget::updateGui()
                                            Core::formatMessage(mErrorMessage, false, true));
     }
 
-    // Show/hide our user message widget and our tree view widget
+    // Show/hide our user message widget
 
     mUserMessageWidget->setVisible(!mUserMessageWidget->text().isEmpty());
-    mTreeViewWidget->setVisible(mUserMessageWidget->text().isEmpty());
 }
 
 //==============================================================================
@@ -778,7 +766,7 @@ void PmrWorkspacesWindowWidget::resizeTreeViewToContents()
 {
     // Resize our tree view widget so that all of its contents is visible
 
-    mTreeViewWidget->resizeColumnToContents(0);
+    resizeColumnToContents(0);
 }
 
 //==============================================================================
@@ -787,12 +775,12 @@ PmrWorkspacesWindowItem * PmrWorkspacesWindowWidget::currentItem() const
 {
     // Return our current item
 
-    PmrWorkspacesWindowItem *res = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(mTreeViewWidget->currentIndex())));
+    PmrWorkspacesWindowItem *res = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(currentIndex())));
 
     if (!res) {
         // There is no current item, so return the one under our mouse pointer
 
-        res = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(mTreeViewWidget->indexAt(mTreeViewWidget->mapFromGlobal(QCursor::pos())))));
+        res = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(indexAt(mapFromGlobal(QCursor::pos())))));
     }
 
     return res;
@@ -905,7 +893,7 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
     PmrWorkspacesWindowItem *item = new PmrWorkspacesWindowItem(pWorkspace->isOwned()?
                                                                     PmrWorkspacesWindowItem::OwnedWorkspace:
                                                                     PmrWorkspacesWindowItem::Workspace,
-                                                                mTreeViewWidget,
+                                                                this,
                                                                 mTreeViewProxyModel,
                                                                 pWorkspace,
                                                                 collapsedIcon, expandedIcon);
@@ -958,7 +946,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
             PmrWorkspacesWindowItem *folderItem = newItem?
                                                       newItem:
                                                       new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Folder,
-                                                                                  mTreeViewWidget,
+                                                                                  this,
                                                                                   mTreeViewProxyModel,
                                                                                   pWorkspace,
                                                                                   fileNode,
@@ -1028,8 +1016,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
                 // We don't already have an item, so create one and add it
 
                 newItem = new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::File,
-                                                      mTreeViewWidget,
-                                                      mTreeViewProxyModel,
+                                                      this, mTreeViewProxyModel,
                                                       pWorkspace, fileNode, icon);
 
                 pFolderItem->appendRow(newItem);
@@ -1094,7 +1081,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWork
         item->setCollapsedIcon(collapsedIcon);
         item->setExpandedIcon(expandedIcon);
 
-        item->setIcon(mTreeViewWidget->isExpanded(mTreeViewProxyModel->mapFromSource(item->index()))?expandedIcon:collapsedIcon);
+        item->setIcon(isExpanded(mTreeViewProxyModel->mapFromSource(item->index()))?expandedIcon:collapsedIcon);
 
         // Keep track of existing items
 
@@ -1133,7 +1120,7 @@ QStringList PmrWorkspacesWindowWidget::selectedWorkspaceUrls() const
     // our tree view widget
 
     QStringList res = QStringList();
-    QModelIndexList items = mTreeViewWidget->selectionModel()->selectedIndexes();
+    QModelIndexList items = selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = items.count(); i < iMax; ++i)
         res << static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(items[i])))->workspace()->url();
@@ -1151,7 +1138,7 @@ QStringList PmrWorkspacesWindowWidget::selectedWorkspacePaths() const
     // in our tree view widget
 
     QStringList res = QStringList();
-    QModelIndexList items = mTreeViewWidget->selectionModel()->selectedIndexes();
+    QModelIndexList items = selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = items.count(); i < iMax; ++i) {
         QString workspacePath = static_cast<PmrWorkspacesWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewProxyModel->mapToSource(items[i])))->workspace()->path();
@@ -1171,7 +1158,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
 {
     // Customise our context menu and show it
 
-    QModelIndexList items = mTreeViewWidget->selectionModel()->selectedIndexes();
+    QModelIndexList items = selectionModel()->selectedIndexes();
     bool oneItem = (items.count() == 1);
     PMRSupport::PmrWorkspaces workspaces = PMRSupport::PmrWorkspaces();
     int nbOfWorkspacePaths = selectedWorkspacePaths().count();
