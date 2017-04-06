@@ -275,11 +275,21 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     connect(this, SIGNAL(collapsed(const QModelIndex &)),
             this, SLOT(itemCollapsed(const QModelIndex &)));
 
+    // Create and set ourselves a layout
+
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    setLayout(layout);
+
     // Create and customise our user menssage
 
     mUserMessageWidget = new Core::UserMessageWidget(this);
 
     mUserMessageWidget->setScale(0.85);
+
+    layout->addWidget(mUserMessageWidget);
 
     // Create our various non-owned workspace icons
 
