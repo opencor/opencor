@@ -84,6 +84,8 @@ protected:
 private:
     Ui::PmrWorkspacesWindowWindow *mGui;
 
+    bool mInitialized;
+
     QString mSettingsGroup;
 
     QLabel *mPmrInstanceLabel;
