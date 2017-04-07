@@ -509,15 +509,6 @@ void MathmlViewerWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-QSize MathmlViewerWidget::minimumSizeHint() const
-{
-    // Suggest a default minimum size for our MathML viewer widget
-
-    return defaultSize(0.03);
-}
-
-//==============================================================================
-
 QAction * MathmlViewerWidget::newAction()
 {
     // Create and return a checkable and checked action

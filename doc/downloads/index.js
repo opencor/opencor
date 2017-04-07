@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> don't make our windows have a minimum size <a href=\"https://github.com/opencor/opencor/issues/1260\">#1260</a>)." },
                        { "change": "<strong>CellML Text view:</strong> the import of a CellML file is now always properly converted (see issue <a href=\"https://github.com/opencor/opencor/issues/1257\">#1257</a>)." },
                        { "change": "<strong>Single Cell view:</strong> renamed the view to Simulation Experiment view (see issue <a href=\"https://github.com/opencor/opencor/issues/1256\">#1256</a>)." }
                      ]

@@ -80,48 +80,51 @@ QString PmrWindowItem::url() const
 //==============================================================================
 
 PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
-    Core::Widget(pParent),
+    Core::TreeViewWidget(pParent),
     mExposureNames(QStringList()),
     mInitialized(false),
     mErrorMessage(QString()),
     mNumberOfFilteredExposures(0),
     mDontExpandExposures(QStringList())
 {
-    // Create and customise some objects
+    // Customise ourselves
+
+    mTreeViewModel = new QStandardItemModel(this);
+
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
+    setHeaderHidden(true);
+    setModel(mTreeViewModel);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
+
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showCustomContextMenu(const QPoint &)));
+
+    connect(this, SIGNAL(doubleClicked(const QModelIndex &)),
+            this, SLOT(itemDoubleClicked(const QModelIndex &)));
+    connect(this, SIGNAL(doubleClicked(const QModelIndex &)),
+            this, SIGNAL(itemDoubleClicked()));
+
+    connect(this, SIGNAL(expanded(const QModelIndex &)),
+            this, SLOT(resizeTreeViewToContents()));
+    connect(this, SIGNAL(collapsed(const QModelIndex &)),
+            this, SLOT(resizeTreeViewToContents()));
+
+    // Create and set ourselves a layout
+
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    setLayout(layout);
+
+    // Create and customise our user menssage
 
     mUserMessageWidget = new Core::UserMessageWidget(this);
 
     mUserMessageWidget->setScale(0.85);
 
-    mTreeViewModel = new QStandardItemModel(this);
-    mTreeViewWidget = new Core::TreeViewWidget(this);
-
-    mTreeViewWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-    mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    mTreeViewWidget->setHeaderHidden(true);
-    mTreeViewWidget->setModel(mTreeViewModel);
-    mTreeViewWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    mTreeViewWidget->setVisible(false);
-
-    connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
-
-    connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SLOT(itemDoubleClicked(const QModelIndex &)));
-    connect(mTreeViewWidget, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SIGNAL(itemDoubleClicked()));
-
-    connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(resizeTreeViewToContents()));
-    connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(resizeTreeViewToContents()));
-
-    // Populate ourselves
-
-    QLayout *layout = createLayout();
-
     layout->addWidget(mUserMessageWidget);
-    layout->addWidget(mTreeViewWidget);
 
     // Create and populate our context menu
 
@@ -155,10 +158,6 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     mContextMenu->addAction(mCopyUrlAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mMakeLocalCopyAction);
-
-    // Make our tree view widget our focus proxy
-
-    setFocusProxy(mTreeViewWidget);
 }
 
 //==============================================================================
@@ -185,14 +184,14 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Default handling of the event
 
-    Core::Widget::keyPressEvent(pEvent);
+    Core::TreeViewWidget::keyPressEvent(pEvent);
 
     // Retrieve all the exposure files that are currently selected
     // Note: if there is an exposure among the selected items, then ignore
     //       everything...
 
     QStringList exposureFileUrls = QStringList();
-    QModelIndexList selectedIndexes = mTreeViewWidget->selectionModel()->selectedIndexes();
+    QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i) {
         PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]));
@@ -220,17 +219,6 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-QSize PmrWindowWidget::minimumSizeHint() const
-{
-    // Suggest a minimum size for ourselves
-    // Note: this is useful if we want our window to have a decent size,
-    //       especially when docked to the main window...
-
-    return defaultSize(0.15);
-}
-
-//==============================================================================
-
 void PmrWindowWidget::updateGui()
 {
     // Update the message to be displayed, if any
@@ -247,10 +235,9 @@ void PmrWindowWidget::updateGui()
                                            Core::formatMessage(mErrorMessage, false, true));
     }
 
-    // Show/hide our user message widget and our tree view widget
+    // Show/hide our user message widget
 
     mUserMessageWidget->setVisible(!mUserMessageWidget->text().isEmpty());
-    mTreeViewWidget->setVisible(mUserMessageWidget->text().isEmpty());
 }
 
 //==============================================================================
@@ -281,9 +268,8 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
 
         mTreeViewModel->invisibleRootItem()->appendRow(item);
 
-        mTreeViewWidget->setRowHidden(item->row(),
-                                      mTreeViewModel->invisibleRootItem()->index(),
-                                      !exposureDisplayed);
+        setRowHidden(item->row(), mTreeViewModel->invisibleRootItem()->index(),
+                     !exposureDisplayed);
 
         mExposureNames << exposureName;
 
@@ -317,9 +303,8 @@ void PmrWindowWidget::filter(const QString &pFilter)
     for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         QStandardItem *item = mTreeViewModel->invisibleRootItem()->child(i);
 
-        mTreeViewWidget->setRowHidden(item->row(),
-                                      mTreeViewModel->invisibleRootItem()->index(),
-                                      !filteredExposureNames.contains(item->text()));
+        setRowHidden(item->row(), mTreeViewModel->invisibleRootItem()->index(),
+                     !filteredExposureNames.contains(item->text()));
     }
 
     resizeTreeViewToContents();
@@ -369,7 +354,7 @@ void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
     if (mDontExpandExposures.contains(pUrl))
         mDontExpandExposures.removeOne(pUrl);
     else
-        mTreeViewWidget->expand(item->index());
+        expand(item->index());
 
     resizeTreeViewToContents();
 }
@@ -380,7 +365,7 @@ void PmrWindowWidget::resizeTreeViewToContents()
 {
     // Resize our tree view widget so that all of its contents is visible
 
-    mTreeViewWidget->resizeColumnToContents(0);
+    resizeColumnToContents(0);
 }
 
 //==============================================================================
@@ -389,7 +374,7 @@ PmrWindowItem * PmrWindowWidget::currentItem() const
 {
     // Return our current item
 
-    return static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->currentIndex()));
+    return static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(currentIndex()));
 }
 
 //==============================================================================
@@ -399,14 +384,14 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
     // Determine whether to show the context menu based on whether we are over
     // an item
 
-    PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
+    PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(indexAt(pPosition)));
 
     if (item) {
         // We are over an item, so update our context menu and show it
 
         mMakeLocalCopyAction->setVisible(item->type() == PmrWindowItem::Exposure);
 
-        bool onlyOneItem = mTreeViewWidget->selectionModel()->selectedIndexes().count() == 1;
+        bool onlyOneItem = selectionModel()->selectedIndexes().count() == 1;
 
         I18nInterface::retranslateAction(mViewInPmrAction,
                                          tr("View In PMR"),
@@ -444,7 +429,7 @@ void PmrWindowWidget::viewInPmr()
 {
     // Show the selected items in PMR
 
-    QModelIndexList selectedIndexes = mTreeViewWidget->selectionModel()->selectedIndexes();
+    QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i)
         QDesktopServices::openUrl(static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]))->url());
