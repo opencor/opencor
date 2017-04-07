@@ -345,11 +345,7 @@ void CheckForUpdatesDialog::on_includeSnapshotsCheckBox_toggled(bool pChecked)
     mSettings->setValue(SettingsIncludeSnapshots,
                         mGui->includeSnapshotsCheckBox->isChecked());
 
-    // Update the GUI, but only if we are initialised (since updateGui() gets
-    // called when initialising ourselves)
-
-    if (mInitialized)
-        updateGui();
+    updateGui();
 }
 
 //==============================================================================

@@ -118,8 +118,6 @@ protected:
     virtual void dropEvent(QDropEvent *pEvent);
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
-    virtual QSize minimumSizeHint() const;
-
 private:
     Core::FileManager *mFileManager;
     FileOrganiserWindowModel *mModel;
