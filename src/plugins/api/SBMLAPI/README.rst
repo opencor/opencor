@@ -12,13 +12,8 @@ From there, using ``cmake-gui`` on **Windows** or ``ccmake`` on **Linux**/**macO
 
   ::
 
-    WITH_BZIP2=ON
     WITH_CPP_NAMESPACE=ON
-    WITH_EXPAT=OFF
-    WITH_LIBXML=ON
     WITH_SWIG=OFF
-    WITH_XERCES=OFF
-    WITH_ZLIB=ON
 
 - Ask for a ``Release`` build (or a ``Debug`` build on **Windows** since both ``Release`` and ``Debug`` binaries are needed on that platform):
 
