@@ -303,6 +303,8 @@ ELSE()
             # Use our OpenSSL
             -DUSE_SYSTEM_OpenSSL=ON
             -DOPENSSL_ROOT_DIR=${OPENSSL_ROOT_DIR}
+            -DOPENSSL_CRYPTO_LIBRARY=${OPENSSL_CRYPTO_LIBRARY}
+            -DOPENSSL_SSL_LIBRARY=${OPENSSL_SSL_LIBRARY}
 
             # Use our zlib
             -DUSE_SYSTEM_ZLIB=ON
