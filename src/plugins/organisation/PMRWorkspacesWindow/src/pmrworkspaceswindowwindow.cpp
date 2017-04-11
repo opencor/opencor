@@ -58,6 +58,7 @@ namespace PMRWorkspacesWindow {
 PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::PmrWorkspacesWindowWindow),
+    mInitialized(false),
     mSettingsGroup(QString()),
     mAuthenticated(false),
     mWaitingForPmrWebService(false)
@@ -120,10 +121,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     mPmrInstanceLabel->setEnabled(false);
     mPmrInstanceLabel->setFont(newFont);
 
-    mGui->layout->addWidget(new Core::BorderedWidget(mPmrInstanceLabel,
-                                                     true, false, false, false));
-
-    mGui->layout->setStretch(mGui->layout->count()-1, 1);
+    mGui->layout->addWidget(mPmrInstanceLabel);
 
     // Create an instance of our PMR web service
 
@@ -144,8 +142,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 #else
     #error Unsupported platform
 #endif
-
-    mGui->layout->setStretch(mGui->layout->count()-1, 99999);
 
     // Initialise (update) our PMR URL
 
@@ -194,6 +190,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     // Retranslate our GUI
 
     retranslateUi();
+
+    mInitialized = true;
 }
 
 //==============================================================================
@@ -401,7 +399,7 @@ void PmrWorkspacesWindowWindow::updateGui()
 
     if (mAuthenticated)
         on_actionReload_triggered();
-    else
+    else if (mInitialized)
         mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), QString(), false);
 }
 

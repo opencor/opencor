@@ -1249,7 +1249,7 @@ QSize PropertyEditorWidget::sizeHint() const
         return QSize(hintWidth, hintHeight);
     } else {
         // We don't automatically resize our height, so our ideal size is our
-        // maximum size...
+        // maximum size
 
         return maximumSize();
     }

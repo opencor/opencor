@@ -94,7 +94,7 @@ QStringList SEDMLSupportPlugin::fileTypeDefaultViews() const
 {
     // Return the default views to use for the type of file we support
 
-    return QStringList() << "SingleCellView" << "RawSEDMLView" << "RawTextView";
+    return QStringList() << "SimulationExperimentView" << "RawSEDMLView" << "RawTextView";
 }
 
 //==============================================================================

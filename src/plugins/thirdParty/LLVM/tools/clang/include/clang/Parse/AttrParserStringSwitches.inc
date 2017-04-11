@@ -86,6 +86,7 @@
 .Case("assert_shared_capability", 1)
 .Case("assert_exclusive_lock", 1)
 .Case("assert_shared_lock", 1)
+.Case("diagnose_if", 1)
 .Case("exclusive_trylock_function", 1)
 .Case("guarded_by", 1)
 .Case("lock_returned", 1)

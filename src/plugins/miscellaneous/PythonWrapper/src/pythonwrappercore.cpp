@@ -23,8 +23,8 @@ specific language governing permissions and limitations under the License.
 #include "coreguiutils.h"
 #include "pythonwrappercore.h"
 #include "pythonwrapperplugin.h"
-#include "singlecellviewsimulation.h"
-#include "singlecellviewsimulationwidget.h"
+#include "simulationexperimentviewsimulation.h"
+#include "simulationexperimentviewsimulationwidget.h"
 
 //==============================================================================
 
@@ -39,10 +39,10 @@ namespace PythonWrapper {
 
 static PyObject *initializeSimulation(const QString &pFileName)
 {
-    SingleCellView::SingleCellViewWidget *singleCellViewWidget = PythonWrapperPlugin::instance()->singleCellViewWidget();
-    if (singleCellViewWidget) {
-        singleCellViewWidget->initialize(pFileName);
-        auto simulation = singleCellViewWidget->simulation(pFileName);
+    SimulationExperimentView::SimulationExperimentViewWidget *simulationExperimentViewWidget = PythonWrapperPlugin::instance()->simulationExperimentViewWidget();
+    if (simulationExperimentViewWidget) {
+        simulationExperimentViewWidget->initialize(pFileName);
+        auto simulation = simulationExperimentViewWidget->simulation(pFileName);
         if (simulation) return PythonQt::priv()->wrapQObject(simulation);
     }
     Py_RETURN_NONE;

@@ -64,9 +64,6 @@ public:
                     const QString &pExtraMessage = QString());
     void resetMessage();
 
-protected:
-    virtual QSize sizeHint() const;
-
 private:
     double mScale;
     double mDefaultFontScale;

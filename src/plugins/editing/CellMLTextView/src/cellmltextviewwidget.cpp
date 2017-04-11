@@ -288,11 +288,11 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
             }
         }
 
-        // Populate our editing widget with the CellML text version of the
+        // Populate our editing widget with the CellML Text version of the
         // given CellML file
 
         if (successfulConversion) {
-            // The conversion was successful, so we can apply our CellML text
+            // The conversion was successful, so we can apply our CellML Text
             // lexer to our editor
 
             editingWidget->editorWidget()->editor()->setLexer(new CellmlTextViewLexer(this));
@@ -1149,7 +1149,7 @@ void CellmlTextViewWidget::updateViewer()
             // version of our statement and check whether it's the same as our
             // previous one
 
-            QString contentMathmlEquation =  "<math xmlns=\"http://www.w3.org/1998/Math/MathML\">"
+            QString contentMathmlEquation =  "<math xmlns=\""+CellMLSupport::MathmlNamespace+"\">"
                                             +Core::cleanContentMathml(Core::serialiseDomDocument(mParser.domDocument()))
                                             +"</math>";
 

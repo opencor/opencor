@@ -64,22 +64,13 @@ QString CellMLTextViewConverterWarning::message() const
 //==============================================================================
 
 CellMLTextViewConverter::CellMLTextViewConverter() :
-    mOutput(QString()),
-    mPrevIndent(QString()),
-    mIndent(QString()),
-    mLastOutputType(None),
-    mErrorLine(-1),
-    mErrorColumn(-1),
-    mErrorMessage(QString()),
-    mWarnings(CellMLTextViewConverterWarnings()),
-    mRdfNodes(QDomDocument()),
-    mTopMathmlNode(QDomNode()),
-    mAssignmentDone(false),
-    mOldPiecewiseStatementUsed(false),
-    mPiecewiseStatementUsed(false),
     mMappings(QMap<QString, QString>()),
     mMathmlNodeTypes(QMap<QString, MathmlNodeType>())
 {
+    // Reset our internals
+
+    reset();
+
     // Mappings for relational operators
 
                                            mMathmlNodeTypes.insert("eq", EqMathmlNode);
@@ -134,22 +125,17 @@ CellMLTextViewConverter::CellMLTextViewConverter() :
 
 bool CellMLTextViewConverter::execute(const QString &pRawCellml)
 {
-    // Convert the raw CellML to CellML text by first getting a DOM
+    // Reset our internals
+
+    reset();
+
+    // Convert the raw CellML to CellML Text by first getting a DOM
     // representation of it
 
     QDomDocument domDocument;
 
     if (domDocument.setContent(pRawCellml, true,
                                &mErrorMessage, &mErrorLine, &mErrorColumn)) {
-        mOutput = QString();
-        mIndent = QString();
-
-        mLastOutputType = None;
-
-        mWarnings = CellMLTextViewConverterWarnings();
-
-        mRdfNodes = QDomDocument(QString());
-
         // Process the DOM document's children, skipping the first one since
         // it corresponds to a CellML file's processing instruction
 
@@ -165,7 +151,7 @@ bool CellMLTextViewConverter::execute(const QString &pRawCellml)
 
                     return false;
                 }
-            } else if (!processUnknownNode(domNode)) {
+            } else if (!processUnknownNode(domNode, true)) {
                 mOutput = pRawCellml;
 
                 return false;
@@ -245,6 +231,33 @@ QDomDocument CellMLTextViewConverter::rdfNodes() const
 
 //==============================================================================
 
+void CellMLTextViewConverter::reset()
+{
+    // Reset our internals
+
+    mOutput = QString();
+    mPrevIndent = QString();
+    mIndent = QString();
+
+    mLastOutputType = None;
+
+    mErrorLine = -1;
+    mErrorColumn = -1;
+    mErrorMessage = QString();
+
+    mWarnings = CellMLTextViewConverterWarnings();
+
+    mRdfNodes = QDomDocument(QString());
+
+    mTopMathmlNode = QDomNode();
+
+    mAssignmentDone = false;
+    mOldPiecewiseStatementUsed = false;
+    mPiecewiseStatementUsed = false;
+}
+
+//==============================================================================
+
 static const auto Indent = QStringLiteral("    ");
 
 //==============================================================================
@@ -307,16 +320,6 @@ bool CellMLTextViewConverter::rdfNode(const QDomNode &pDomNode) const
 
 //==============================================================================
 
-bool CellMLTextViewConverter::documentationNode(const QDomNode &pDomNode) const
-{
-    // Return whether the given node is a documentation node
-
-    return    !pDomNode.localName().compare("documentation")
-           && !pDomNode.namespaceURI().compare(CellMLSupport::CellmlDocumentationNamespace);
-}
-
-//==============================================================================
-
 bool CellMLTextViewConverter::cellmlNode(const QDomNode &pDomNode,
                                          const QString &pName) const
 {
@@ -344,31 +347,40 @@ QString CellMLTextViewConverter::cmetaId(const QDomNode &pDomNode) const
 {
     // Return the converted cmeta:id, if any, of the given node
 
-    QDomNamedNodeMap domNodeAttributes = pDomNode.attributes();
-    QDomNode cmetaIdAttributeNode = domNodeAttributes.namedItemNS(CellMLSupport::CmetaIdNamespace, "id");
+    QString cmetaIdValue = attributeNodeValue(pDomNode, CellMLSupport::CmetaIdNamespace, "id", false);
 
-    if (cmetaIdAttributeNode.isNull()) {
-        // We couldn't find an id in the cmeta:id namespace, so try without the
-        // namespace
-        // Note: this seems to be an issue QDomNode & Co. Indeed, it would seem
-        //       that if the attribute that defines the cmeta:id namespace is
-        //       after the cmeta:id attribute (the case with the model element),
-        //       then the cmeta:id will only be accessible without using a
-        //       namespace...
-
-        cmetaIdAttributeNode = domNodeAttributes.namedItem("id");
-    }
-
-    if (!cmetaIdAttributeNode.isNull()) {
-        QString cmetaIdValue = cmetaIdAttributeNode.nodeValue().trimmed();
-
-        if (!cmetaIdValue.isEmpty())
-            return QString("{%1}").arg(cmetaIdValue);
-        else
-            return QString();
-    } else {
+    if (!cmetaIdValue.isEmpty())
+        return QString("{%1}").arg(cmetaIdValue);
+    else
         return QString();
-    }
+}
+
+//==============================================================================
+
+QString CellMLTextViewConverter::attributeNodeValue(const QDomNode &pDomNode,
+                                                    const QString &pNamespace,
+                                                    const QString &pName,
+                                                    const bool &pMustBePresent) const
+{
+    // Return the trimmed value of the requested attribute using the given
+    // namespace
+    // Note: there is an issue with QDomNamedNodeMap::namedItemNS(). Indeed, if
+    //       the attribute that defines the namespace is after the attribute
+    //       itself, then the attribute will only be accessible without using a
+    //       namespace (see https://bugreports.qt.io/browse/QTBUG-59932)...
+
+    QDomNamedNodeMap domNodeAttributes = pDomNode.attributes();
+    QDomNode attributeNode = domNodeAttributes.namedItemNS(pNamespace, pName);
+
+    if (attributeNode.isNull())
+        attributeNode = domNodeAttributes.namedItem(pName);
+
+    QString res = attributeNode.nodeValue().trimmed();
+
+    if (res.isEmpty())
+        return pMustBePresent?"???":res;
+    else
+        return res;
 }
 
 //==============================================================================
@@ -377,24 +389,18 @@ QString CellMLTextViewConverter::cellmlAttributeNodeValue(const QDomNode &pDomNo
                                                           const QString &pName,
                                                           const bool &pMustBePresent) const
 {
-    // Return the trimmed value of the requested CellML attribute using the
-    // CellML 1.0 namespace or, if needed, the CellML 1.1 namespace or even
-    // without using a namespace (see cmetaId() for why not using a namespace)
+    // Return the requested CellML attribute using the CellML 1.0 namespace or,
+    // if needed, the CellML 1.1 namespace
 
-    QDomNamedNodeMap domNodeAttributes = pDomNode.attributes();
-    QDomNode cellmlAttributeNode = domNodeAttributes.namedItemNS(CellMLSupport::Cellml_1_0_Namespace, pName);
+    QString res = attributeNodeValue(pDomNode, CellMLSupport::Cellml_1_0_Namespace, pName, false);
 
-    if (cellmlAttributeNode.isNull()) {
-        cellmlAttributeNode = domNodeAttributes.namedItemNS(CellMLSupport::Cellml_1_1_Namespace, pName);
+    if (res.isEmpty())
+        res = attributeNodeValue(pDomNode, CellMLSupport::Cellml_1_1_Namespace, pName, false);
 
-        if (cellmlAttributeNode.isNull())
-            cellmlAttributeNode = domNodeAttributes.namedItem(pName);
-    }
-
-    if (!cellmlAttributeNode.isNull())
-        return cellmlAttributeNode.nodeValue().trimmed();
+    if (res.isEmpty())
+        return pMustBePresent?"???":res;
     else
-        return pMustBePresent?"???":QString();
+        return res;
 }
 
 //==============================================================================
@@ -438,11 +444,6 @@ bool CellMLTextViewConverter::processModelNode(const QDomNode &pDomNode)
             processCommentNode(domNode);
         } else if (rdfNode(domNode)) {
             processRdfNode(domNode);
-        } else if (documentationNode(domNode)) {
-            // A documentation node shouldn't be processed as being unknown, yet
-            // we don't want to process it as such, so we just let it through
-
-            processUnsupportedNode(domNode, false);
         } else if (cellmlNode(domNode, "import")) {
             if (!processImportNode(domNode))
                 return false;
@@ -458,7 +459,7 @@ bool CellMLTextViewConverter::processModelNode(const QDomNode &pDomNode)
         } else if (cellmlNode(domNode, "connection")) {
             if (!processConnectionNode(domNode))
                 return false;
-        } else if (!processUnknownNode(domNode)) {
+        } else if (!processUnknownNode(domNode, false)) {
             return false;
         }
     }
@@ -551,7 +552,7 @@ bool CellMLTextViewConverter::processImportNode(const QDomNode &pDomNode)
 
     outputString(DefImport,
                  QString("def import%1 using \"%2\" for").arg(cmetaId(pDomNode))
-                                                         .arg(pDomNode.attributes().namedItemNS(CellMLSupport::XlinkNamespace, "href").nodeValue().trimmed()));
+                                                         .arg(attributeNodeValue(pDomNode, CellMLSupport::XlinkNamespace, "href")));
 
     indent();
 
@@ -569,7 +570,7 @@ bool CellMLTextViewConverter::processImportNode(const QDomNode &pDomNode)
         } else if (cellmlNode(domNode, "component")) {
             if (!processComponentNode(domNode, true))
                 return false;
-        } else if (!processUnknownNode(domNode)) {
+        } else if (!processUnknownNode(domNode, false)) {
             return false;
         }
     }
@@ -592,7 +593,7 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
 
     QString baseUnits = cellmlAttributeNodeValue(pDomNode, "base_units", false);
 
-    if (baseUnits.compare(QString()) && baseUnits.compare("yes") && baseUnits.compare("no")) {
+    if (!baseUnits.isEmpty() && baseUnits.compare("yes") && baseUnits.compare("no")) {
         mErrorLine = pDomNode.lineNumber();
         mErrorMessage = QObject::tr("A 'base_units' attribute must have a value of 'yes' or 'no'.");
 
@@ -626,7 +627,7 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
         } else if (!isBaseUnits && !pInImportNode && cellmlNode(domNode, "unit")) {
             if (!processUnitNode(domNode))
                 return false;
-        } else if (!processUnknownNode(domNode)) {
+        } else if (!processUnknownNode(domNode, false)) {
             return false;
         }
     }
@@ -680,7 +681,7 @@ bool CellMLTextViewConverter::processUnitNode(const QDomNode &pDomNode)
             processCommentNode(domNode);
         else if (rdfNode(domNode))
             processRdfNode(domNode);
-        else if (!processUnknownNode(domNode))
+        else if (!processUnknownNode(domNode, false))
             return false;
     }
 
@@ -755,7 +756,7 @@ bool CellMLTextViewConverter::processComponentNode(const QDomNode &pDomNode,
         } else if (!pInImportNode && cellmlNode(domNode, "reaction")) {
             if (!processReactionNode(domNode))
                 return false;
-        } else if (!processUnknownNode(domNode)) {
+        } else if (!processUnknownNode(domNode, false)) {
             return false;
         }
     }
@@ -799,7 +800,7 @@ bool CellMLTextViewConverter::processVariableNode(const QDomNode &pDomNode)
             processCommentNode(domNode);
         else if (rdfNode(domNode))
             processRdfNode(domNode);
-        else if (!processUnknownNode(domNode))
+        else if (!processUnknownNode(domNode, false))
             return false;
     }
 
@@ -1089,7 +1090,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
 
             // Unknown node
 
-            } else if (processUnknownNode(domNode)) {
+            } else if (processUnknownNode(domNode, true)) {
                 return QString();
             }
         }
@@ -1224,7 +1225,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
 
     // Unknown node
 
-    } else if (processUnknownNode(domNode)) {
+    } else if (processUnknownNode(domNode, true)) {
         return QString();
     }
 
@@ -2109,7 +2110,7 @@ bool CellMLTextViewConverter::processGroupNode(const QDomNode &pDomNode)
         } else if (cellmlNode(domNode, "component_ref")) {
             if (!processComponentRefNode(domNode))
                 return false;
-        } else if (!processUnknownNode(domNode)) {
+        } else if (!processUnknownNode(domNode, false)) {
             return false;
         }
     }
@@ -2144,7 +2145,7 @@ bool CellMLTextViewConverter::processRelationshipRefNode(const QDomNode &pDomNod
             processCommentNode(domNode);
         else if (rdfNode(domNode))
             processRdfNode(domNode);
-        else if (!processUnknownNode(domNode))
+        else if (!processUnknownNode(domNode, false))
             return false;
     }
 
@@ -2223,7 +2224,7 @@ bool CellMLTextViewConverter::processComponentRefNode(const QDomNode &pDomNode)
         } else if (cellmlNode(domNode, "component_ref")) {
             if (!processComponentRefNode(domNode))
                 return false;
-        } else if (!processUnknownNode(domNode)) {
+        } else if (!processUnknownNode(domNode, false)) {
             return false;
         }
     }
@@ -2283,7 +2284,7 @@ bool CellMLTextViewConverter::processConnectionNode(const QDomNode &pDomNode)
         } else if (cellmlNode(domNode, "map_variables")) {
             if (!processMapVariablesNode(domNode))
                 return false;
-        } else if (!processUnknownNode(domNode)) {
+        } else if (!processUnknownNode(domNode, false)) {
             return false;
         }
     }
@@ -2327,7 +2328,7 @@ bool CellMLTextViewConverter::processMapComponentsNode(const QDomNode &pDomNode,
             processCommentNode(domNode);
         else if (rdfNode(domNode))
             processRdfNode(domNode);
-        else if (!processUnknownNode(domNode))
+        else if (!processUnknownNode(domNode, false))
             return false;
     }
 
@@ -2358,7 +2359,7 @@ bool CellMLTextViewConverter::processMapVariablesNode(const QDomNode &pDomNode)
             processCommentNode(domNode);
         else if (rdfNode(domNode))
             processRdfNode(domNode);
-        else if (!processUnknownNode(domNode))
+        else if (!processUnknownNode(domNode, false))
             return false;
     }
 
@@ -2377,15 +2378,19 @@ bool CellMLTextViewConverter::processMapVariablesNode(const QDomNode &pDomNode)
 
 //==============================================================================
 
-bool CellMLTextViewConverter::processUnknownNode(const QDomNode &pDomNode)
+bool CellMLTextViewConverter::processUnknownNode(const QDomNode &pDomNode,
+                                                 const bool &pError)
 {
     // The given node is unknown, so warn the user about it
 
     switch (pDomNode.nodeType()) {
     case QDomNode::ElementNode:
-        processUnsupportedNode(pDomNode, true);
+        processUnsupportedNode(pDomNode, pError);
 
-        return false;
+        if (pError)
+            return false;
+
+        break;
     case QDomNode::AttributeNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
                                                     QObject::tr("An attribute was found in the original CellML file, but it was not processed."));

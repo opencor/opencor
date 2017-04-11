@@ -106,10 +106,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     mPmrInstanceLabel->setEnabled(false);
     mPmrInstanceLabel->setFont(newFont);
 
-    mGui->layout->addWidget(new Core::BorderedWidget(mPmrInstanceLabel,
-                                                     true, false, false, false));
-
-    mGui->layout->setStretch(mGui->layout->count()-1, 1);
+    mGui->layout->addWidget(mPmrInstanceLabel);
 
     // Create and add our PMR widget
 
@@ -124,8 +121,6 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 #else
     #error Unsupported platform
 #endif
-
-    mGui->layout->setStretch(mGui->layout->count()-1, 99999);
 
     // Keep track of the window's visibility, so that we can request the list of
     // exposures, if necessary

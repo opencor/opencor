@@ -7,6 +7,15 @@
 \*===----------------------------------------------------------------------===*/
 
   switch (A->getKind()) {
+  case attr::AMDGPUFlatWorkGroupSize: {
+    const auto *SA = cast<AMDGPUFlatWorkGroupSizeAttr>(A);
+    Record.push_back(SA->isInherited());
+    Record.push_back(A->isImplicit());
+    Record.push_back(A->getSpellingListIndex());
+    Record.push_back(SA->getMin());
+    Record.push_back(SA->getMax());
+    break;
+  }
   case attr::AMDGPUNumSGPR: {
     const auto *SA = cast<AMDGPUNumSGPRAttr>(A);
     Record.push_back(SA->isInherited());
@@ -21,6 +30,15 @@
     Record.push_back(A->isImplicit());
     Record.push_back(A->getSpellingListIndex());
     Record.push_back(SA->getNumVGPR());
+    break;
+  }
+  case attr::AMDGPUWavesPerEU: {
+    const auto *SA = cast<AMDGPUWavesPerEUAttr>(A);
+    Record.push_back(SA->isInherited());
+    Record.push_back(A->isImplicit());
+    Record.push_back(A->getSpellingListIndex());
+    Record.push_back(SA->getMin());
+    Record.push_back(SA->getMax());
     break;
   }
   case attr::ARMInterrupt: {
@@ -101,6 +119,15 @@ Record.push_back(SA->getInterrupt());
       Record.AddStmt(SA->getAlignmentExpr());
     else
       Record.AddTypeSourceInfo(SA->getAlignmentType());
+    break;
+  }
+  case attr::AllocSize: {
+    const auto *SA = cast<AllocSizeAttr>(A);
+    Record.push_back(SA->isInherited());
+    Record.push_back(A->isImplicit());
+    Record.push_back(A->getSpellingListIndex());
+    Record.push_back(SA->getElemSizeParam());
+    Record.push_back(SA->getNumElemsParam());
     break;
   }
   case attr::AlwaysInline: {
@@ -416,6 +443,13 @@ Record.push_back(SA->getDefaultState());
     Record.push_back(A->getSpellingListIndex());
     break;
   }
+  case attr::Convergent: {
+    const auto *SA = cast<ConvergentAttr>(A);
+    Record.push_back(SA->isInherited());
+    Record.push_back(A->isImplicit());
+    Record.push_back(A->getSpellingListIndex());
+    break;
+  }
   case attr::DLLExport: {
     const auto *SA = cast<DLLExportAttr>(A);
     Record.push_back(SA->isInherited());
@@ -445,6 +479,18 @@ Record.push_back(SA->getDefaultState());
     Record.push_back(A->isImplicit());
     Record.push_back(A->getSpellingListIndex());
     Record.push_back(SA->getPriority());
+    break;
+  }
+  case attr::DiagnoseIf: {
+    const auto *SA = cast<DiagnoseIfAttr>(A);
+    Record.push_back(SA->isInherited());
+    Record.push_back(A->isImplicit());
+    Record.push_back(A->getSpellingListIndex());
+    Record.AddStmt(SA->getCond());
+    Record.AddString(SA->getMessage());
+Record.push_back(SA->getDiagnosticType());
+    Record.push_back(SA->getArgDependent());
+    Record.AddDeclRef(SA->getParent());
     break;
   }
   case attr::DisableTailCalls: {
@@ -1062,6 +1108,13 @@ Record.push_back(SA->getFamily());
     Record.push_back(A->getSpellingListIndex());
     break;
   }
+  case attr::ObjCSubclassingRestricted: {
+    const auto *SA = cast<ObjCSubclassingRestrictedAttr>(A);
+    Record.push_back(SA->isInherited());
+    Record.push_back(A->isImplicit());
+    Record.push_back(A->getSpellingListIndex());
+    break;
+  }
   case attr::OpenCLAccess: {
     Record.push_back(A->isImplicit());
     Record.push_back(A->getSpellingListIndex());
@@ -1186,6 +1239,13 @@ Record.push_back(SA->getPCS());
     Record.push_back(A->getSpellingListIndex());
     break;
   }
+  case attr::RegCall: {
+    const auto *SA = cast<RegCallAttr>(A);
+    Record.push_back(SA->isInherited());
+    Record.push_back(A->isImplicit());
+    Record.push_back(A->getSpellingListIndex());
+    break;
+  }
   case attr::ReleaseCapability: {
     const auto *SA = cast<ReleaseCapabilityAttr>(A);
     Record.push_back(SA->isInherited());
@@ -1209,6 +1269,13 @@ Record.push_back(SA->getPCS());
     Record.push_back(SA->getXDim());
     Record.push_back(SA->getYDim());
     Record.push_back(SA->getZDim());
+    break;
+  }
+  case attr::RequireConstantInit: {
+    const auto *SA = cast<RequireConstantInitAttr>(A);
+    Record.push_back(SA->isInherited());
+    Record.push_back(A->isImplicit());
+    Record.push_back(A->getSpellingListIndex());
     break;
   }
   case attr::RequiresCapability: {

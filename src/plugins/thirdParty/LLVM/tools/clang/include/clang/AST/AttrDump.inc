@@ -7,6 +7,12 @@
 \*===----------------------------------------------------------------------===*/
 
   switch (A->getKind()) {
+  case attr::AMDGPUFlatWorkGroupSize: {
+    const auto *SA = cast<AMDGPUFlatWorkGroupSizeAttr>(A);
+    OS << " " << SA->getMin();
+    OS << " " << SA->getMax();
+    break;
+  }
   case attr::AMDGPUNumSGPR: {
     const auto *SA = cast<AMDGPUNumSGPRAttr>(A);
     OS << " " << SA->getNumSGPR();
@@ -15,6 +21,12 @@
   case attr::AMDGPUNumVGPR: {
     const auto *SA = cast<AMDGPUNumVGPRAttr>(A);
     OS << " " << SA->getNumVGPR();
+    break;
+  }
+  case attr::AMDGPUWavesPerEU: {
+    const auto *SA = cast<AMDGPUWavesPerEUAttr>(A);
+    OS << " " << SA->getMin();
+    OS << " " << SA->getMax();
     break;
   }
   case attr::ARMInterrupt: {
@@ -86,6 +98,12 @@
       dumpStmt(SA->getAlignmentExpr());
     else
       dumpType(SA->getAlignmentType()->getType());
+    break;
+  }
+  case attr::AllocSize: {
+    const auto *SA = cast<AllocSizeAttr>(A);
+    OS << " " << SA->getElemSizeParam();
+    OS << " " << SA->getNumElemsParam();
     break;
   }
   case attr::AlwaysInline: {
@@ -283,6 +301,9 @@
   case attr::ConsumableSetOnRead: {
     break;
   }
+  case attr::Convergent: {
+    break;
+  }
   case attr::DLLExport: {
     break;
   }
@@ -298,6 +319,23 @@
   case attr::Destructor: {
     const auto *SA = cast<DestructorAttr>(A);
     OS << " " << SA->getPriority();
+    break;
+  }
+  case attr::DiagnoseIf: {
+    const auto *SA = cast<DiagnoseIfAttr>(A);
+    OS << " \"" << SA->getMessage() << "\"";
+    switch(SA->getDiagnosticType()) {
+    case DiagnoseIfAttr::DT_Error:
+      OS << " DT_Error";
+      break;
+    case DiagnoseIfAttr::DT_Warning:
+      OS << " DT_Warning";
+      break;
+    }
+    if (SA->getArgDependent()) OS << " ArgDependent";
+    OS << " ";
+    dumpBareDeclRef(SA->getParent());
+    dumpStmt(SA->getCond());
     break;
   }
   case attr::DisableTailCalls: {
@@ -731,6 +769,9 @@
   case attr::ObjCRuntimeVisible: {
     break;
   }
+  case attr::ObjCSubclassingRestricted: {
+    break;
+  }
   case attr::OpenCLAccess: {
     OS << " " << A->getSpelling();
     break;
@@ -815,6 +856,9 @@
   case attr::Pure: {
     break;
   }
+  case attr::RegCall: {
+    break;
+  }
   case attr::ReleaseCapability: {
     OS << " " << A->getSpelling();
     const auto *SA = cast<ReleaseCapabilityAttr>(A);
@@ -830,6 +874,9 @@
     OS << " " << SA->getXDim();
     OS << " " << SA->getYDim();
     OS << " " << SA->getZDim();
+    break;
+  }
+  case attr::RequireConstantInit: {
     break;
   }
   case attr::RequiresCapability: {

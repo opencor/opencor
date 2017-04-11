@@ -37,64 +37,68 @@ enum {
   FeatureFMA4 = 21,
   FeatureFSGSBase = 22,
   FeatureFXSR = 23,
-  FeatureFastPartialYMMWrite = 24,
-  FeatureHLE = 25,
-  FeatureIFMA = 26,
-  FeatureINVPCID = 27,
-  FeatureLAHFSAHF = 28,
-  FeatureLEAForSP = 29,
-  FeatureLEAUsesAG = 30,
-  FeatureLZCNT = 31,
-  FeatureMMX = 32,
-  FeatureMOVBE = 33,
-  FeatureMPX = 34,
-  FeatureMWAITX = 35,
-  FeaturePCLMUL = 36,
-  FeaturePCOMMIT = 37,
-  FeaturePFI = 38,
-  FeaturePKU = 39,
-  FeaturePOPCNT = 40,
-  FeaturePREFETCHWT1 = 41,
-  FeaturePRFCHW = 42,
-  FeaturePadShortFunctions = 43,
-  FeatureRDRAND = 44,
-  FeatureRDSEED = 45,
-  FeatureRTM = 46,
-  FeatureSGX = 47,
-  FeatureSHA = 48,
-  FeatureSMAP = 49,
-  FeatureSSE1 = 50,
-  FeatureSSE2 = 51,
-  FeatureSSE3 = 52,
-  FeatureSSE4A = 53,
-  FeatureSSE41 = 54,
-  FeatureSSE42 = 55,
-  FeatureSSEUnalignedMem = 56,
-  FeatureSSSE3 = 57,
-  FeatureSlowBTMem = 58,
-  FeatureSlowDivide32 = 59,
-  FeatureSlowDivide64 = 60,
-  FeatureSlowIncDec = 61,
-  FeatureSlowLEA = 62,
-  FeatureSlowSHLD = 63,
-  FeatureSlowUAMem16 = 64,
-  FeatureSlowUAMem32 = 65,
-  FeatureSoftFloat = 66,
-  FeatureTBM = 67,
-  FeatureVBMI = 68,
-  FeatureVLX = 69,
-  FeatureVMFUNC = 70,
-  FeatureX87 = 71,
-  FeatureXOP = 72,
-  FeatureXSAVE = 73,
-  FeatureXSAVEC = 74,
-  FeatureXSAVEOPT = 75,
-  FeatureXSAVES = 76,
-  Mode16Bit = 77,
-  Mode32Bit = 78,
-  Mode64Bit = 79,
-  ProcIntelAtom = 80,
-  ProcIntelSLM = 81
+  FeatureFastLZCNT = 24,
+  FeatureFastPartialYMMWrite = 25,
+  FeatureFastScalarFSQRT = 26,
+  FeatureFastVectorFSQRT = 27,
+  FeatureHLE = 28,
+  FeatureIFMA = 29,
+  FeatureINVPCID = 30,
+  FeatureLAHFSAHF = 31,
+  FeatureLEAForSP = 32,
+  FeatureLEAUsesAG = 33,
+  FeatureLZCNT = 34,
+  FeatureMMX = 35,
+  FeatureMOVBE = 36,
+  FeatureMPX = 37,
+  FeatureMWAITX = 38,
+  FeaturePCLMUL = 39,
+  FeaturePCOMMIT = 40,
+  FeaturePFI = 41,
+  FeaturePKU = 42,
+  FeaturePOPCNT = 43,
+  FeaturePREFETCHWT1 = 44,
+  FeaturePRFCHW = 45,
+  FeaturePadShortFunctions = 46,
+  FeatureRDRAND = 47,
+  FeatureRDSEED = 48,
+  FeatureRTM = 49,
+  FeatureSGX = 50,
+  FeatureSHA = 51,
+  FeatureSMAP = 52,
+  FeatureSSE1 = 53,
+  FeatureSSE2 = 54,
+  FeatureSSE3 = 55,
+  FeatureSSE4A = 56,
+  FeatureSSE41 = 57,
+  FeatureSSE42 = 58,
+  FeatureSSEUnalignedMem = 59,
+  FeatureSSSE3 = 60,
+  FeatureSlowBTMem = 61,
+  FeatureSlowDivide32 = 62,
+  FeatureSlowDivide64 = 63,
+  FeatureSlowIncDec = 64,
+  FeatureSlowLEA = 65,
+  FeatureSlowPMULLD = 66,
+  FeatureSlowSHLD = 67,
+  FeatureSlowUAMem16 = 68,
+  FeatureSlowUAMem32 = 69,
+  FeatureSoftFloat = 70,
+  FeatureTBM = 71,
+  FeatureVBMI = 72,
+  FeatureVLX = 73,
+  FeatureVMFUNC = 74,
+  FeatureX87 = 75,
+  FeatureXOP = 76,
+  FeatureXSAVE = 77,
+  FeatureXSAVEC = 78,
+  FeatureXSAVEOPT = 79,
+  FeatureXSAVES = 80,
+  Mode16Bit = 81,
+  Mode32Bit = 82,
+  Mode64Bit = 83,
+  ProcIntelAtom = 84,
+  ProcIntelSLM = 85
 };
 } // end namespace X86
 } // end namespace llvm
@@ -126,7 +130,7 @@ extern const llvm::SubtargetFeatureKV X86FeatureKV[] = {
   { "avx512f", "Enable AVX-512 instructions", { X86::FeatureAVX512 }, { X86::FeatureAVX2 } },
   { "avx512ifma", "Enable AVX-512 Integer Fused Multiple-Add", { X86::FeatureIFMA }, { X86::FeatureAVX512 } },
   { "avx512pf", "Enable AVX-512 PreFetch Instructions", { X86::FeaturePFI }, { X86::FeatureAVX512 } },
-  { "avx512vbmi", "Enable AVX-512 Vector Bit Manipulation Instructions", { X86::FeatureVBMI }, { X86::FeatureAVX512 } },
+  { "avx512vbmi", "Enable AVX-512 Vector Byte Manipulation Instructions", { X86::FeatureVBMI }, { X86::FeatureBWI } },
   { "avx512vl", "Enable AVX-512 Vector Length eXtensions", { X86::FeatureVLX }, { X86::FeatureAVX512 } },
   { "bmi", "Support BMI instructions", { X86::FeatureBMI }, { } },
   { "bmi2", "Support BMI2 instructions", { X86::FeatureBMI2 }, { } },
@@ -136,14 +140,17 @@ extern const llvm::SubtargetFeatureKV X86FeatureKV[] = {
   { "cmov", "Enable conditional move instructions", { X86::FeatureCMOV }, { } },
   { "cx16", "64-bit with cmpxchg16b", { X86::FeatureCMPXCHG16B }, { X86::Feature64Bit } },
   { "f16c", "Support 16-bit floating point conversion instructions", { X86::FeatureF16C }, { X86::FeatureAVX } },
+  { "fast-lzcnt", "LZCNT instructions are as fast as most simple integer ops", { X86::FeatureFastLZCNT }, { } },
   { "fast-partial-ymm-write", "Partial writes to YMM registers are fast", { X86::FeatureFastPartialYMMWrite }, { } },
+  { "fast-scalar-fsqrt", "Scalar SQRT is fast (disable Newton-Raphson)", { X86::FeatureFastScalarFSQRT }, { } },
+  { "fast-vector-fsqrt", "Vector SQRT is fast (disable Newton-Raphson)", { X86::FeatureFastVectorFSQRT }, { } },
   { "fma", "Enable three-operand fused multiple-add", { X86::FeatureFMA }, { X86::FeatureAVX } },
   { "fma4", "Enable four-operand fused multiple-add", { X86::FeatureFMA4 }, { X86::FeatureAVX, X86::FeatureSSE4A } },
   { "fsgsbase", "Support FS/GS Base instructions", { X86::FeatureFSGSBase }, { } },
   { "fxsr", "Support fxsave/fxrestore instructions", { X86::FeatureFXSR }, { } },
   { "hle", "Support HLE", { X86::FeatureHLE }, { } },
   { "idivl-to-divb", "Use 8-bit divide for positive values less than 256", { X86::FeatureSlowDivide32 }, { } },
-  { "idivq-to-divw", "Use 16-bit divide for positive values less than 65536", { X86::FeatureSlowDivide64 }, { } },
+  { "idivq-to-divl", "Use 32-bit divide for positive values less than 2^32", { X86::FeatureSlowDivide64 }, { } },
   { "invpcid", "Invalidate Process-Context Identifier", { X86::FeatureINVPCID }, { } },
   { "lea-sp", "Use LEA for adjusting the stack pointer", { X86::FeatureLEAForSP }, { } },
   { "lea-uses-ag", "LEA instruction needs inputs at AG stage", { X86::FeatureLEAUsesAG }, { } },
@@ -169,6 +176,7 @@ extern const llvm::SubtargetFeatureKV X86FeatureKV[] = {
   { "slow-bt-mem", "Bit testing of memory is slow", { X86::FeatureSlowBTMem }, { } },
   { "slow-incdec", "INC and DEC instructions are slower than ADD and SUB", { X86::FeatureSlowIncDec }, { } },
   { "slow-lea", "LEA instruction with certain arguments is slow", { X86::FeatureSlowLEA }, { } },
+  { "slow-pmulld", "PMULLD instruction is slow", { X86::FeatureSlowPMULLD }, { } },
   { "slow-shld", "SHLD instruction is slow", { X86::FeatureSlowSHLD }, { } },
   { "slow-unaligned-mem-16", "Slow unaligned 16-byte memory access", { X86::FeatureSlowUAMem16 }, { } },
   { "slow-unaligned-mem-32", "Slow unaligned 32-byte memory access", { X86::FeatureSlowUAMem32 }, { } },
@@ -208,33 +216,33 @@ extern const llvm::SubtargetFeatureKV X86SubTypeKV[] = {
   { "bdver1", "Select the bdver1 processor", { X86::FeatureX87, X86::FeatureXOP, X86::FeatureFMA4, X86::FeatureCMPXCHG16B, X86::FeatureAES, X86::FeaturePRFCHW, X86::FeaturePCLMUL, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureSSE4A, X86::FeatureLZCNT, X86::FeaturePOPCNT, X86::FeatureXSAVE, X86::FeatureSlowSHLD, X86::FeatureLAHFSAHF }, { } },
   { "bdver2", "Select the bdver2 processor", { X86::FeatureX87, X86::FeatureXOP, X86::FeatureFMA4, X86::FeatureCMPXCHG16B, X86::FeatureAES, X86::FeaturePRFCHW, X86::FeaturePCLMUL, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureSSE4A, X86::FeatureF16C, X86::FeatureLZCNT, X86::FeaturePOPCNT, X86::FeatureXSAVE, X86::FeatureBMI, X86::FeatureTBM, X86::FeatureFMA, X86::FeatureSlowSHLD, X86::FeatureLAHFSAHF }, { } },
   { "bdver3", "Select the bdver3 processor", { X86::FeatureX87, X86::FeatureXOP, X86::FeatureFMA4, X86::FeatureCMPXCHG16B, X86::FeatureAES, X86::FeaturePRFCHW, X86::FeaturePCLMUL, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureSSE4A, X86::FeatureF16C, X86::FeatureLZCNT, X86::FeaturePOPCNT, X86::FeatureXSAVE, X86::FeatureBMI, X86::FeatureTBM, X86::FeatureFMA, X86::FeatureXSAVEOPT, X86::FeatureSlowSHLD, X86::FeatureFSGSBase, X86::FeatureLAHFSAHF }, { } },
-  { "bdver4", "Select the bdver4 processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX2, X86::FeatureFXSR, X86::FeatureXOP, X86::FeatureFMA4, X86::FeatureCMPXCHG16B, X86::FeatureAES, X86::FeaturePRFCHW, X86::FeaturePCLMUL, X86::FeatureF16C, X86::FeatureLZCNT, X86::FeaturePOPCNT, X86::FeatureXSAVE, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureTBM, X86::FeatureFMA, X86::FeatureXSAVEOPT, X86::FeatureFSGSBase, X86::FeatureLAHFSAHF, X86::FeatureMWAITX }, { } },
+  { "bdver4", "Select the bdver4 processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX2, X86::FeatureFXSR, X86::FeatureXOP, X86::FeatureFMA4, X86::FeatureCMPXCHG16B, X86::FeatureAES, X86::FeaturePRFCHW, X86::FeaturePCLMUL, X86::FeatureF16C, X86::FeatureLZCNT, X86::FeaturePOPCNT, X86::FeatureXSAVE, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureTBM, X86::FeatureFMA, X86::FeatureXSAVEOPT, X86::FeatureSlowSHLD, X86::FeatureFSGSBase, X86::FeatureLAHFSAHF, X86::FeatureMWAITX }, { } },
   { "bonnell", "Select the bonnell processor", { X86::ProcIntelAtom, X86::FeatureX87, X86::FeatureSlowUAMem16, X86::FeatureMMX, X86::FeatureSSSE3, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeatureMOVBE, X86::FeatureSlowBTMem, X86::FeatureLEAForSP, X86::FeatureSlowDivide32, X86::FeatureSlowDivide64, X86::FeatureCallRegIndirect, X86::FeatureLEAUsesAG, X86::FeaturePadShortFunctions, X86::FeatureLAHFSAHF }, { } },
-  { "broadwell", "Select the broadwell processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA, X86::FeatureLZCNT, X86::FeatureMOVBE, X86::FeatureINVPCID, X86::FeatureVMFUNC, X86::FeatureRTM, X86::FeatureHLE, X86::FeatureSlowIncDec, X86::FeatureADX, X86::FeatureRDSEED, X86::FeatureSMAP }, { } },
+  { "broadwell", "Select the broadwell processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureFastScalarFSQRT, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA, X86::FeatureLZCNT, X86::FeatureMOVBE, X86::FeatureINVPCID, X86::FeatureVMFUNC, X86::FeatureRTM, X86::FeatureHLE, X86::FeatureSlowIncDec, X86::FeatureADX, X86::FeatureRDSEED, X86::FeatureSMAP }, { } },
   { "btver1", "Select the btver1 processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureSSSE3, X86::FeatureSSE4A, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePRFCHW, X86::FeatureLZCNT, X86::FeaturePOPCNT, X86::FeatureSlowSHLD, X86::FeatureLAHFSAHF }, { } },
-  { "btver2", "Select the btver2 processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureSSE4A, X86::FeatureCMPXCHG16B, X86::FeaturePRFCHW, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureBMI, X86::FeatureF16C, X86::FeatureMOVBE, X86::FeatureLZCNT, X86::FeaturePOPCNT, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureSlowSHLD, X86::FeatureLAHFSAHF, X86::FeatureFastPartialYMMWrite }, { } },
+  { "btver2", "Select the btver2 processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureSSE4A, X86::FeatureCMPXCHG16B, X86::FeaturePRFCHW, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureBMI, X86::FeatureF16C, X86::FeatureMOVBE, X86::FeatureLZCNT, X86::FeatureFastLZCNT, X86::FeaturePOPCNT, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureSlowSHLD, X86::FeatureLAHFSAHF, X86::FeatureFastPartialYMMWrite }, { } },
   { "c3", "Select the c3 processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::Feature3DNow }, { } },
   { "c3-2", "Select the c3-2 processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::FeatureMMX, X86::FeatureSSE1, X86::FeatureFXSR }, { } },
-  { "cannonlake", "Select the cannonlake processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA, X86::FeatureLZCNT, X86::FeatureMOVBE, X86::FeatureINVPCID, X86::FeatureVMFUNC, X86::FeatureRTM, X86::FeatureHLE, X86::FeatureSlowIncDec, X86::FeatureADX, X86::FeatureRDSEED, X86::FeatureSMAP, X86::FeatureMPX, X86::FeatureXSAVEC, X86::FeatureXSAVES, X86::FeatureSGX, X86::FeatureCLFLUSHOPT, X86::FeatureAVX512, X86::FeatureCDI, X86::FeatureDQI, X86::FeatureBWI, X86::FeatureVLX, X86::FeaturePKU, X86::FeaturePCOMMIT, X86::FeatureCLWB, X86::FeatureVBMI, X86::FeatureIFMA, X86::FeatureSHA }, { } },
-  { "core-avx-i", "Select the core-avx-i processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureSlowBTMem, X86::FeatureSlowUAMem32 }, { } },
-  { "core-avx2", "Select the core-avx2 processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA, X86::FeatureLZCNT, X86::FeatureMOVBE, X86::FeatureINVPCID, X86::FeatureVMFUNC, X86::FeatureRTM, X86::FeatureHLE, X86::FeatureSlowIncDec }, { } },
+  { "cannonlake", "Select the cannonlake processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureFastScalarFSQRT, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA, X86::FeatureLZCNT, X86::FeatureMOVBE, X86::FeatureINVPCID, X86::FeatureVMFUNC, X86::FeatureRTM, X86::FeatureHLE, X86::FeatureSlowIncDec, X86::FeatureADX, X86::FeatureRDSEED, X86::FeatureSMAP, X86::FeatureMPX, X86::FeatureXSAVEC, X86::FeatureXSAVES, X86::FeatureSGX, X86::FeatureCLFLUSHOPT, X86::FeatureFastVectorFSQRT, X86::FeatureAVX512, X86::FeatureCDI, X86::FeatureDQI, X86::FeatureBWI, X86::FeatureVLX, X86::FeaturePKU, X86::FeaturePCOMMIT, X86::FeatureCLWB, X86::FeatureVBMI, X86::FeatureIFMA, X86::FeatureSHA }, { } },
+  { "core-avx-i", "Select the core-avx-i processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureFastScalarFSQRT, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureSlowBTMem, X86::FeatureSlowUAMem32 }, { } },
+  { "core-avx2", "Select the core-avx2 processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureFastScalarFSQRT, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA, X86::FeatureLZCNT, X86::FeatureMOVBE, X86::FeatureINVPCID, X86::FeatureVMFUNC, X86::FeatureRTM, X86::FeatureHLE, X86::FeatureSlowIncDec }, { } },
   { "core2", "Select the core2 processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::FeatureMMX, X86::FeatureSSSE3, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeatureSlowBTMem, X86::FeatureLAHFSAHF }, { } },
   { "corei7", "Select the corei7 processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureSSE42, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeatureSlowBTMem, X86::FeaturePOPCNT, X86::FeatureLAHFSAHF }, { } },
-  { "corei7-avx", "Select the corei7-avx processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureSlowBTMem, X86::FeatureSlowUAMem32 }, { } },
+  { "corei7-avx", "Select the corei7-avx processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureFastScalarFSQRT, X86::FeatureSlowBTMem, X86::FeatureSlowUAMem32 }, { } },
   { "generic", "Select the generic processor", { X86::FeatureX87, X86::FeatureSlowUAMem16 }, { } },
   { "geode", "Select the geode processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::Feature3DNowA }, { } },
-  { "haswell", "Select the haswell processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA, X86::FeatureLZCNT, X86::FeatureMOVBE, X86::FeatureINVPCID, X86::FeatureVMFUNC, X86::FeatureRTM, X86::FeatureHLE, X86::FeatureSlowIncDec }, { } },
+  { "haswell", "Select the haswell processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureFastScalarFSQRT, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA, X86::FeatureLZCNT, X86::FeatureMOVBE, X86::FeatureINVPCID, X86::FeatureVMFUNC, X86::FeatureRTM, X86::FeatureHLE, X86::FeatureSlowIncDec }, { } },
   { "i386", "Select the i386 processor", { X86::FeatureX87, X86::FeatureSlowUAMem16 }, { } },
   { "i486", "Select the i486 processor", { X86::FeatureX87, X86::FeatureSlowUAMem16 }, { } },
   { "i586", "Select the i586 processor", { X86::FeatureX87, X86::FeatureSlowUAMem16 }, { } },
   { "i686", "Select the i686 processor", { X86::FeatureX87, X86::FeatureSlowUAMem16 }, { } },
-  { "ivybridge", "Select the ivybridge processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureSlowBTMem, X86::FeatureSlowUAMem32 }, { } },
+  { "ivybridge", "Select the ivybridge processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureFastScalarFSQRT, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureSlowBTMem, X86::FeatureSlowUAMem32 }, { } },
   { "k6", "Select the k6 processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::FeatureMMX }, { } },
   { "k6-2", "Select the k6-2 processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::Feature3DNow }, { } },
   { "k6-3", "Select the k6-3 processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::Feature3DNow }, { } },
   { "k8", "Select the k8 processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::FeatureSSE2, X86::Feature3DNowA, X86::FeatureFXSR, X86::Feature64Bit, X86::FeatureSlowBTMem, X86::FeatureSlowSHLD }, { } },
   { "k8-sse3", "Select the k8-sse3 processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::FeatureSSE3, X86::Feature3DNowA, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeatureSlowBTMem, X86::FeatureSlowSHLD }, { } },
-  { "knl", "Select the knl processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX512, X86::FeatureERI, X86::FeatureCDI, X86::FeaturePFI, X86::FeaturePREFETCHWT1, X86::FeatureADX, X86::FeatureRDSEED, X86::FeatureMOVBE, X86::FeatureLZCNT, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA }, { } },
+  { "knl", "Select the knl processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureFastScalarFSQRT, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX512, X86::FeatureERI, X86::FeatureCDI, X86::FeaturePFI, X86::FeaturePREFETCHWT1, X86::FeatureADX, X86::FeatureRDSEED, X86::FeatureMOVBE, X86::FeatureLZCNT, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA }, { } },
   { "lakemont", "Select the lakemont processor", { }, { } },
   { "nehalem", "Select the nehalem processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureSSE42, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeatureSlowBTMem, X86::FeaturePOPCNT, X86::FeatureLAHFSAHF }, { } },
   { "nocona", "Select the nocona processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::FeatureMMX, X86::FeatureSSE3, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeatureSlowBTMem }, { } },
@@ -251,17 +259,18 @@ extern const llvm::SubtargetFeatureKV X86SubTypeKV[] = {
   { "pentium4m", "Select the pentium4m processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::FeatureMMX, X86::FeatureSSE2, X86::FeatureFXSR, X86::FeatureSlowBTMem }, { } },
   { "pentiumpro", "Select the pentiumpro processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::FeatureCMOV }, { } },
   { "prescott", "Select the prescott processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::FeatureMMX, X86::FeatureSSE3, X86::FeatureFXSR, X86::FeatureSlowBTMem }, { } },
-  { "sandybridge", "Select the sandybridge processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureSlowBTMem, X86::FeatureSlowUAMem32 }, { } },
-  { "silvermont", "Select the silvermont processor", { X86::ProcIntelSLM, X86::FeatureX87, X86::FeatureMMX, X86::FeatureSSE42, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeatureMOVBE, X86::FeaturePOPCNT, X86::FeaturePCLMUL, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeatureCallRegIndirect, X86::FeaturePRFCHW, X86::FeatureSlowLEA, X86::FeatureSlowIncDec, X86::FeatureSlowBTMem, X86::FeatureLAHFSAHF }, { } },
-  { "skx", "Select the skx processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA, X86::FeatureLZCNT, X86::FeatureMOVBE, X86::FeatureINVPCID, X86::FeatureVMFUNC, X86::FeatureRTM, X86::FeatureHLE, X86::FeatureSlowIncDec, X86::FeatureADX, X86::FeatureRDSEED, X86::FeatureSMAP, X86::FeatureMPX, X86::FeatureXSAVEC, X86::FeatureXSAVES, X86::FeatureSGX, X86::FeatureCLFLUSHOPT, X86::FeatureAVX512, X86::FeatureCDI, X86::FeatureDQI, X86::FeatureBWI, X86::FeatureVLX, X86::FeaturePKU, X86::FeaturePCOMMIT, X86::FeatureCLWB }, { } },
-  { "skylake", "Select the skylake processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA, X86::FeatureLZCNT, X86::FeatureMOVBE, X86::FeatureINVPCID, X86::FeatureVMFUNC, X86::FeatureRTM, X86::FeatureHLE, X86::FeatureSlowIncDec, X86::FeatureADX, X86::FeatureRDSEED, X86::FeatureSMAP, X86::FeatureMPX, X86::FeatureXSAVEC, X86::FeatureXSAVES, X86::FeatureSGX, X86::FeatureCLFLUSHOPT }, { } },
-  { "skylake-avx512", "Select the skylake-avx512 processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA, X86::FeatureLZCNT, X86::FeatureMOVBE, X86::FeatureINVPCID, X86::FeatureVMFUNC, X86::FeatureRTM, X86::FeatureHLE, X86::FeatureSlowIncDec, X86::FeatureADX, X86::FeatureRDSEED, X86::FeatureSMAP, X86::FeatureMPX, X86::FeatureXSAVEC, X86::FeatureXSAVES, X86::FeatureSGX, X86::FeatureCLFLUSHOPT, X86::FeatureAVX512, X86::FeatureCDI, X86::FeatureDQI, X86::FeatureBWI, X86::FeatureVLX, X86::FeaturePKU, X86::FeaturePCOMMIT, X86::FeatureCLWB }, { } },
-  { "slm", "Select the slm processor", { X86::ProcIntelSLM, X86::FeatureX87, X86::FeatureMMX, X86::FeatureSSE42, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeatureMOVBE, X86::FeaturePOPCNT, X86::FeaturePCLMUL, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeatureCallRegIndirect, X86::FeaturePRFCHW, X86::FeatureSlowLEA, X86::FeatureSlowIncDec, X86::FeatureSlowBTMem, X86::FeatureLAHFSAHF }, { } },
+  { "sandybridge", "Select the sandybridge processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureFastScalarFSQRT, X86::FeatureSlowBTMem, X86::FeatureSlowUAMem32 }, { } },
+  { "silvermont", "Select the silvermont processor", { X86::ProcIntelSLM, X86::FeatureX87, X86::FeatureMMX, X86::FeatureSSE42, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeatureMOVBE, X86::FeaturePOPCNT, X86::FeaturePCLMUL, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeatureCallRegIndirect, X86::FeaturePRFCHW, X86::FeatureSlowLEA, X86::FeatureSlowIncDec, X86::FeatureSlowBTMem, X86::FeatureSlowPMULLD, X86::FeatureLAHFSAHF }, { } },
+  { "skx", "Select the skx processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureFastScalarFSQRT, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA, X86::FeatureLZCNT, X86::FeatureMOVBE, X86::FeatureINVPCID, X86::FeatureVMFUNC, X86::FeatureRTM, X86::FeatureHLE, X86::FeatureSlowIncDec, X86::FeatureADX, X86::FeatureRDSEED, X86::FeatureSMAP, X86::FeatureMPX, X86::FeatureXSAVEC, X86::FeatureXSAVES, X86::FeatureSGX, X86::FeatureCLFLUSHOPT, X86::FeatureFastVectorFSQRT, X86::FeatureAVX512, X86::FeatureCDI, X86::FeatureDQI, X86::FeatureBWI, X86::FeatureVLX, X86::FeaturePKU, X86::FeaturePCOMMIT, X86::FeatureCLWB }, { } },
+  { "skylake", "Select the skylake processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureFastScalarFSQRT, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA, X86::FeatureLZCNT, X86::FeatureMOVBE, X86::FeatureINVPCID, X86::FeatureVMFUNC, X86::FeatureRTM, X86::FeatureHLE, X86::FeatureSlowIncDec, X86::FeatureADX, X86::FeatureRDSEED, X86::FeatureSMAP, X86::FeatureMPX, X86::FeatureXSAVEC, X86::FeatureXSAVES, X86::FeatureSGX, X86::FeatureCLFLUSHOPT, X86::FeatureFastVectorFSQRT }, { } },
+  { "skylake-avx512", "Select the skylake-avx512 processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureAVX, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeaturePCLMUL, X86::FeatureXSAVE, X86::FeatureXSAVEOPT, X86::FeatureLAHFSAHF, X86::FeatureFastScalarFSQRT, X86::FeatureRDRAND, X86::FeatureF16C, X86::FeatureFSGSBase, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureFMA, X86::FeatureLZCNT, X86::FeatureMOVBE, X86::FeatureINVPCID, X86::FeatureVMFUNC, X86::FeatureRTM, X86::FeatureHLE, X86::FeatureSlowIncDec, X86::FeatureADX, X86::FeatureRDSEED, X86::FeatureSMAP, X86::FeatureMPX, X86::FeatureXSAVEC, X86::FeatureXSAVES, X86::FeatureSGX, X86::FeatureCLFLUSHOPT, X86::FeatureFastVectorFSQRT, X86::FeatureAVX512, X86::FeatureCDI, X86::FeatureDQI, X86::FeatureBWI, X86::FeatureVLX, X86::FeaturePKU, X86::FeaturePCOMMIT, X86::FeatureCLWB }, { } },
+  { "slm", "Select the slm processor", { X86::ProcIntelSLM, X86::FeatureX87, X86::FeatureMMX, X86::FeatureSSE42, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeatureMOVBE, X86::FeaturePOPCNT, X86::FeaturePCLMUL, X86::FeatureAES, X86::FeatureSlowDivide64, X86::FeatureCallRegIndirect, X86::FeaturePRFCHW, X86::FeatureSlowLEA, X86::FeatureSlowIncDec, X86::FeatureSlowBTMem, X86::FeatureSlowPMULLD, X86::FeatureLAHFSAHF }, { } },
   { "westmere", "Select the westmere processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureSSE42, X86::FeatureFXSR, X86::FeatureCMPXCHG16B, X86::FeatureSlowBTMem, X86::FeaturePOPCNT, X86::FeatureAES, X86::FeaturePCLMUL, X86::FeatureLAHFSAHF }, { } },
   { "winchip-c6", "Select the winchip-c6 processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::FeatureMMX }, { } },
   { "winchip2", "Select the winchip2 processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::Feature3DNow }, { } },
   { "x86-64", "Select the x86-64 processor", { X86::FeatureX87, X86::FeatureMMX, X86::FeatureSSE2, X86::FeatureFXSR, X86::Feature64Bit, X86::FeatureSlowBTMem }, { } },
-  { "yonah", "Select the yonah processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::FeatureMMX, X86::FeatureSSE3, X86::FeatureFXSR, X86::FeatureSlowBTMem }, { } }
+  { "yonah", "Select the yonah processor", { X86::FeatureX87, X86::FeatureSlowUAMem16, X86::FeatureMMX, X86::FeatureSSE3, X86::FeatureFXSR, X86::FeatureSlowBTMem }, { } },
+  { "znver1", "Select the znver1 processor", { X86::FeatureADX, X86::FeatureAES, X86::FeatureAVX2, X86::FeatureBMI, X86::FeatureBMI2, X86::FeatureCLFLUSHOPT, X86::FeatureCMPXCHG16B, X86::FeatureF16C, X86::FeatureFMA, X86::FeatureFSGSBase, X86::FeatureFXSR, X86::FeatureFastLZCNT, X86::FeatureLAHFSAHF, X86::FeatureLZCNT, X86::FeatureMMX, X86::FeatureMOVBE, X86::FeatureMWAITX, X86::FeaturePCLMUL, X86::FeaturePOPCNT, X86::FeaturePRFCHW, X86::FeatureRDRAND, X86::FeatureRDSEED, X86::FeatureSHA, X86::FeatureSMAP, X86::FeatureSSE4A, X86::FeatureSlowSHLD, X86::FeatureX87, X86::FeatureXSAVE, X86::FeatureXSAVEC, X86::FeatureXSAVEOPT, X86::FeatureXSAVES }, { } }
 };
 
 #ifdef DBGFIELD
@@ -541,796 +550,802 @@ static const llvm::InstrItinerary AtomItineraries[] = {
   { 1, 44, 45, 0, 0 }, // 155 IIC_FXTRACT_WriteMicrocoded
   { 1, 55, 56, 0, 0 }, // 156 IIC_FYL2X_WriteMicrocoded
   { 1, 56, 57, 0, 0 }, // 157 IIC_FYL2XP1_WriteMicrocoded
-  { 1, 5, 6, 0, 0 }, // 158 IIC_SSE_BIT_P_RM_WriteFAddLd_ReadAfterLd
-  { 1, 4, 5, 0, 0 }, // 159 IIC_SSE_BIT_P_RR_WriteFAdd
-  { 1, 5, 6, 0, 0 }, // 160 IIC_SSE_MOVA_P_RM_WriteLoad
-  { 1, 14, 15, 0, 0 }, // 161 IIC_SSE_HADDSUB_RM_WriteFAddLd_ReadAfterLd
-  { 1, 28, 29, 0, 0 }, // 162 IIC_SSE_HADDSUB_RR_WriteFAdd
-  { 1, 27, 28, 0, 0 }, // 163 IIC_HLT_WriteSystem
-  { 1, 35, 36, 0, 0 }, // 164 IIC_IDIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
-  { 1, 35, 36, 0, 0 }, // 165 IIC_IDIV16_WriteIDiv
-  { 1, 35, 36, 0, 0 }, // 166 IIC_IDIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
-  { 1, 35, 36, 0, 0 }, // 167 IIC_IDIV32_WriteIDiv
-  { 1, 31, 32, 0, 0 }, // 168 IIC_IDIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
-  { 1, 31, 32, 0, 0 }, // 169 IIC_IDIV64_WriteIDiv
-  { 1, 35, 36, 0, 0 }, // 170 IIC_IDIV8_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
-  { 1, 35, 36, 0, 0 }, // 171 IIC_IDIV8_WriteIDiv
-  { 1, 7, 9, 0, 0 }, // 172 IIC_FILD_WriteLoad
-  { 1, 28, 29, 0, 0 }, // 173 IIC_IMUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
-  { 1, 6, 7, 0, 0 }, // 174 IIC_IMUL16_RR_WriteIMul
-  { 1, 2, 3, 0, 0 }, // 175 IIC_IMUL16_RM_WriteIMulLd_ReadAfterLd
-  { 1, 2, 3, 0, 0 }, // 176 IIC_IMUL16_RMI_WriteIMulLd
-  { 1, 6, 7, 0, 0 }, // 177 IIC_IMUL16_RRI_WriteIMul
-  { 1, 2, 3, 0, 0 }, // 178 IIC_IMUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
-  { 1, 57, 58, 0, 0 }, // 179 IIC_IMUL32_RR_WriteIMul
-  { 1, 57, 58, 0, 0 }, // 180 IIC_IMUL32_RM_WriteIMulLd_ReadAfterLd
-  { 1, 57, 58, 0, 0 }, // 181 IIC_IMUL32_RMI_WriteIMulLd
-  { 1, 57, 58, 0, 0 }, // 182 IIC_IMUL32_RRI_WriteIMul
-  { 1, 58, 59, 0, 0 }, // 183 IIC_IMUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
-  { 1, 58, 59, 0, 0 }, // 184 IIC_IMUL64_RR_WriteIMul
-  { 1, 58, 59, 0, 0 }, // 185 IIC_IMUL64_RM_WriteIMulLd_ReadAfterLd
-  { 1, 22, 23, 0, 0 }, // 186 IIC_IMUL64_RMI_WriteIMulLd
-  { 1, 22, 23, 0, 0 }, // 187 IIC_IMUL64_RRI_WriteIMul
-  { 1, 2, 3, 0, 0 }, // 188 IIC_IMUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
-  { 1, 2, 3, 0, 0 }, // 189 IIC_IMUL8_WriteIMul
-  { 1, 59, 60, 0, 0 }, // 190 IIC_IN_RI_WriteSystem
-  { 1, 60, 61, 0, 0 }, // 191 IIC_IN_RR_WriteSystem
-  { 1, 61, 62, 0, 0 }, // 192 IIC_INS_WriteSystem
-  { 0, 0, 0, 0, 0 }, // 193 IIC_SSE_INSERTPS_RM_WriteFShuffleLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 194 IIC_SSE_INSERTPS_RR_WriteFShuffle
-  { 1, 62, 63, 0, 0 }, // 195 IIC_INT_WriteSystem
-  { 1, 31, 32, 0, 0 }, // 196 IIC_INT3_WriteSystem
-  { 1, 63, 64, 0, 0 }, // 197 IIC_INVD_WriteSystem
-  { 1, 48, 49, 0, 0 }, // 198 IIC_INVLPG_WriteSystem
-  { 0, 0, 0, 0, 0 }, // 199 WriteJumpLd
-  { 1, 64, 65, 0, 0 }, // 200 IIC_IRET_WriteJumpLd
-  { 1, 16, 17, 0, 0 }, // 201 IIC_FST_WriteStore
-  { 1, 6, 7, 0, 0 }, // 202 IIC_FIST_WriteStore
-  { 1, 2, 3, 0, 0 }, // 203 IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd_ReadAfterLd
-  { 1, 2, 3, 0, 0 }, // 204 IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 205 WriteLoad
-  { 1, 15, 16, 0, 0 }, // 206 IIC_Jcc_WriteJump
-  { 1, 20, 21, 0, 0 }, // 207 IIC_JCXZ_WriteJump
-  { 1, 16, 17, 0, 0 }, // 208 IIC_JMP_MEM_WriteJumpLd
-  { 1, 15, 16, 0, 0 }, // 209 IIC_JMP_REG_WriteJump
-  { 1, 15, 16, 0, 0 }, // 210 IIC_JMP_REL_WriteJump
-  { 1, 4, 5, 0, 0 }, // 211 IIC_AHF_WriteALU
-  { 1, 30, 31, 0, 0 }, // 212 IIC_LAR_RM_WriteSystem
-  { 1, 65, 66, 0, 0 }, // 213 IIC_LAR_RR_WriteSystem
-  { 1, 22, 23, 0, 0 }, // 214 IIC_CMPX_LOCK_WriteALULd_WriteRMW
-  { 1, 24, 25, 0, 0 }, // 215 IIC_CMPX_LOCK_16B_WriteALULd_WriteRMW
-  { 1, 6, 7, 0, 0 }, // 216 IIC_CMPX_LOCK_8_WriteALULd_WriteRMW
-  { 1, 25, 26, 0, 0 }, // 217 IIC_CMPX_LOCK_8B_WriteALULd_WriteRMW
-  { 1, 21, 22, 0, 0 }, // 218 IIC_SSE_LDDQU_WriteLoad
-  { 1, 43, 44, 0, 0 }, // 219 IIC_SSE_LDMXCSR_WriteLoad
-  { 1, 26, 27, 0, 0 }, // 220 IIC_LXS_WriteSystem
-  { 1, 4, 5, 0, 0 }, // 221 IIC_FLDZ_WriteZero
-  { 1, 6, 7, 0, 0 }, // 222 IIC_FIST_WriteZero
-  { 1, 5, 6, 0, 0 }, // 223 IIC_FLD_WriteLoad
-  { 1, 20, 21, 0, 0 }, // 224 IIC_FLD80_WriteLoad
-  { 1, 5, 6, 0, 0 }, // 225 IIC_FLD_WriteMove
-  { 1, 16, 17, 0, 0 }, // 226 IIC_LEA_16_WriteLEA
-  { 1, 15, 16, 0, 0 }, // 227 IIC_LEA_WriteLEA
-  { 1, 16, 17, 0, 0 }, // 228 IIC_LEAVE_WriteALU
-  { 1, 4, 5, 0, 0 }, // 229 IIC_SSE_LFENCE_WriteFence
-  { 1, 66, 67, 0, 0 }, // 230 IIC_LGDT_WriteSystem
-  { 1, 66, 67, 0, 0 }, // 231 IIC_LIDT_WriteSystem
-  { 1, 67, 68, 0, 0 }, // 232 IIC_LLDT_MEM_WriteSystem
-  { 1, 68, 69, 0, 0 }, // 233 IIC_LLDT_REG_WriteSystem
-  { 1, 69, 70, 0, 0 }, // 234 IIC_LMSW_REG_WriteSystem
-  { 1, 70, 71, 0, 0 }, // 235 IIC_LMSW_MEM_WriteSystem
-  { 1, 5, 6, 0, 0 }, // 236 IIC_ALU_MEM_WriteALULd_WriteRMW
-  { 1, 4, 5, 0, 0 }, // 237 IIC_ALU_NONMEM_WriteALULd_WriteRMW
-  { 1, 16, 17, 0, 0 }, // 238 IIC_LODS_WriteMicrocoded
-  { 1, 25, 26, 0, 0 }, // 239 IIC_LOOP_WriteJump
-  { 1, 28, 29, 0, 0 }, // 240 IIC_LOOPE_WriteJump
-  { 1, 71, 72, 0, 0 }, // 241 IIC_LOOPNE_WriteJump
-  { 1, 37, 38, 0, 0 }, // 242 IIC_RET_WriteJumpLd
-  { 1, 50, 51, 0, 0 }, // 243 IIC_LSL_RM_WriteSystem
-  { 1, 72, 73, 0, 0 }, // 244 IIC_LSL_RR_WriteSystem
-  { 1, 73, 74, 0, 0 }, // 245 IIC_LTR_WriteSystem
-  { 1, 21, 22, 0, 0 }, // 246 IIC_XADD_LOCK_MEM_WriteALULd_WriteRMW
-  { 0, 0, 0, 0, 0 }, // 247 IIC_XADD_LOCK_MEM8_WriteALULd_WriteRMW
-  { 1, 16, 17, 0, 0 }, // 248 IIC_SSE_MASKMOV_WriteStore
-  { 1, 5, 6, 0, 0 }, // 249 IIC_SSE_MFENCE_WriteFence
-  { 1, 28, 29, 0, 0 }, // 250 IIC_MMX_CVT_PD_RM_WriteCvtF2ILd
-  { 1, 2, 3, 0, 0 }, // 251 IIC_MMX_CVT_PD_RR_WriteCvtF2I
-  { 0, 0, 0, 0, 0 }, // 252 WriteCvtI2FLd
-  { 0, 0, 0, 0, 0 }, // 253 WriteCvtI2F
-  { 1, 7, 9, 0, 0 }, // 254 IIC_MMX_CVT_PS_RM_WriteCvtF2ILd
-  { 1, 9, 10, 0, 0 }, // 255 IIC_MMX_CVT_PS_RR_WriteCvtF2I
-  { 1, 43, 44, 0, 0 }, // 256 IIC_MMX_EMMS
-  { 1, 5, 6, 0, 0 }, // 257 IIC_MMX_MASKMOV_WriteShuffle
-  { 1, 74, 75, 0, 0 }, // 258 IIC_MMX_MOV_REG_MM_WriteStore
-  { 1, 74, 75, 0, 0 }, // 259 IIC_MMX_MOV_REG_MM_WriteMove
-  { 1, 5, 6, 0, 0 }, // 260 IIC_MMX_MOV_MM_RM_WriteStore
-  { 1, 5, 6, 0, 0 }, // 261 IIC_MMX_MOV_MM_RM_WriteLoad
-  { 1, 5, 6, 0, 0 }, // 262 IIC_MMX_MOV_MM_RM_WriteMove
-  { 1, 5, 6, 0, 0 }, // 263 IIC_MMX_MOVQ_RM_WriteLoad
-  { 1, 4, 5, 0, 0 }, // 264 IIC_MMX_MOVQ_RR_WriteMove
-  { 1, 5, 6, 0, 0 }, // 265 IIC_MMX_MOVQ_RM_WriteStore
-  { 0, 0, 0, 0, 0 }, // 266 WriteMove
-  { 1, 5, 6, 0, 0 }, // 267 IIC_MMX_ALU_RM_WriteVecALULd
-  { 1, 4, 5, 0, 0 }, // 268 IIC_MMX_ALU_RR_WriteVecALU
-  { 1, 5, 6, 0, 0 }, // 269 IIC_MMX_PCK_RM_WriteShuffleLd_ReadAfterLd
-  { 1, 4, 5, 0, 0 }, // 270 IIC_MMX_PCK_RR_WriteShuffle
-  { 1, 5, 6, 0, 0 }, // 271 IIC_MMX_ALU_RM_WriteVecALULd_ReadAfterLd
-  { 1, 21, 22, 0, 0 }, // 272 IIC_MMX_ALUQ_RM_WriteVecALULd_ReadAfterLd
-  { 1, 16, 17, 0, 0 }, // 273 IIC_MMX_ALUQ_RR_WriteVecALU
-  { 0, 0, 0, 0, 0 }, // 274 WriteShuffleLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 275 WriteShuffle
-  { 1, 5, 6, 0, 0 }, // 276 IIC_MMX_ALU_RM_WriteVecLogicLd_ReadAfterLd
-  { 1, 4, 5, 0, 0 }, // 277 IIC_MMX_ALU_RR_WriteVecLogic
-  { 1, 4, 5, 0, 0 }, // 278 IIC_MMX_MISC_FUNC_REG_WriteVecIMulLd_ReadAfterLd
-  { 1, 5, 6, 0, 0 }, // 279 IIC_MMX_MISC_FUNC_MEM_WriteVecIMul
-  { 1, 20, 21, 0, 0 }, // 280 IIC_MMX_PEXTR_WriteShuffle
-  { 1, 6, 7, 0, 0 }, // 281 IIC_MMX_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd
-  { 1, 43, 44, 0, 0 }, // 282 IIC_MMX_PHADDSUBW_RR_WriteVecALU
-  { 1, 20, 21, 0, 0 }, // 283 IIC_MMX_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd
-  { 1, 21, 22, 0, 0 }, // 284 IIC_MMX_PHADDSUBD_RR_WriteVecALU
-  { 1, 5, 6, 0, 0 }, // 285 IIC_MMX_PINSRW_WriteShuffleLd_ReadAfterLd
-  { 1, 5, 6, 0, 0 }, // 286 IIC_MMX_PINSRW_WriteShuffle
-  { 1, 75, 76, 0, 0 }, // 287 IIC_MMX_PMUL_WriteVecIMulLd_ReadAfterLd
-  { 1, 75, 76, 0, 0 }, // 288 IIC_MMX_PMUL_WriteVecIMul
-  { 1, 20, 21, 0, 0 }, // 289 IIC_MMX_PSADBW_WriteVecIMulLd_ReadAfterLd
-  { 1, 20, 21, 0, 0 }, // 290 IIC_MMX_PSADBW_WriteVecIMul
-  { 1, 5, 6, 0, 0 }, // 291 IIC_MMX_PSHUF_WriteShuffleLd_ReadAfterLd
-  { 1, 5, 6, 0, 0 }, // 292 IIC_MMX_PSHUF_WriteShuffle
-  { 1, 5, 6, 0, 0 }, // 293 IIC_MMX_PSHUF_WriteShuffleLd
-  { 1, 4, 5, 0, 0 }, // 294 IIC_MMX_SHIFT_RI_WriteVecShift
-  { 1, 21, 22, 0, 0 }, // 295 IIC_MMX_SHIFT_RM_WriteVecShiftLd_ReadAfterLd
-  { 1, 16, 17, 0, 0 }, // 296 IIC_MMX_SHIFT_RR_WriteVecShift
-  { 1, 5, 6, 0, 0 }, // 297 IIC_MMX_UNPCK_H_RM_WriteShuffleLd_ReadAfterLd
-  { 1, 4, 5, 0, 0 }, // 298 IIC_MMX_UNPCK_H_RR_WriteShuffle
-  { 1, 5, 6, 0, 0 }, // 299 IIC_MMX_UNPCK_L_WriteShuffleLd_ReadAfterLd
-  { 1, 5, 6, 0, 0 }, // 300 IIC_MMX_UNPCK_L_WriteShuffle
-  { 0, 0, 0, 0, 0 }, // 301 IIC_SSE_MONITORX_WriteSystem
-  { 1, 76, 77, 0, 0 }, // 302 IIC_SSE_MONITOR_WriteSystem
-  { 1, 5, 6, 0, 0 }, // 303 IIC_MOV_MEM_WriteALU
-  { 1, 5, 6, 0, 0 }, // 304 IIC_MOV_MEM_WriteStore
-  { 1, 16, 17, 0, 0 }, // 305 IIC_MOV_MEM_SR_WriteMove
-  { 1, 4, 5, 0, 0 }, // 306 IIC_MOV_WriteMove
-  { 1, 5, 6, 0, 0 }, // 307 IIC_MOV_MEM_WriteLoad
-  { 1, 5, 6, 0, 0 }, // 308 IIC_MOV_REG_SR_WriteMove
-  { 1, 77, 78, 0, 0 }, // 309 IIC_MOV_SR_MEM_WriteMove
-  { 1, 3, 4, 0, 0 }, // 310 IIC_MOV_SR_REG_WriteMove
-  { 1, 78, 79, 0, 0 }, // 311 IIC_MOV_CR_REG_WriteSystem
-  { 1, 79, 80, 0, 0 }, // 312 IIC_MOV_DR_REG_WriteSystem
-  { 1, 4, 5, 0, 0 }, // 313 IIC_ALU_NONMEM_WriteZero
-  { 1, 58, 59, 0, 0 }, // 314 IIC_MOV_REG_CR_WriteSystem
-  { 1, 80, 81, 0, 0 }, // 315 IIC_MOV_REG_DR_WriteSystem
-  { 1, 5, 6, 0, 0 }, // 316 IIC_SSE_MOVDQ_WriteLoad
-  { 1, 5, 6, 0, 0 }, // 317 IIC_SSE_MOVDQ_WriteMove
-  { 1, 5, 6, 0, 0 }, // 318 IIC_SSE_MOVA_P_MR_WriteStore
-  { 1, 4, 5, 0, 0 }, // 319 IIC_SSE_MOVA_P_RR_WriteFShuffle
-  { 1, 5, 6, 0, 0 }, // 320 IIC_MOVBE_WriteStore
-  { 1, 5, 6, 0, 0 }, // 321 IIC_MOVBE_WriteALULd
-  { 1, 5, 6, 0, 0 }, // 322 IIC_SSE_MOV_LH_WriteLoad
-  { 1, 5, 6, 0, 0 }, // 323 IIC_SSE_MOV_LH_WriteFShuffle
-  { 1, 4, 5, 0, 0 }, // 324 IIC_SSE_MOVA_P_RR_WriteMove
-  { 1, 16, 17, 0, 0 }, // 325 IIC_SSE_MOVU_P_MR_WriteStore
-  { 1, 21, 22, 0, 0 }, // 326 IIC_SSE_MOVU_P_RM_WriteLoad
-  { 1, 4, 5, 0, 0 }, // 327 IIC_SSE_MOVU_P_RR_WriteMove
-  { 1, 5, 6, 0, 0 }, // 328 IIC_SSE_MOV_LH_WriteStore
-  { 1, 5, 6, 0, 0 }, // 329 IIC_SSE_MOV_LH_WriteFShuffleLd_ReadAfterLd
-  { 1, 74, 75, 0, 0 }, // 330 IIC_SSE_MOVMSK_WriteVecLogic
-  { 1, 5, 6, 0, 0 }, // 331 IIC_SSE_MOVNT_WriteStore
-  { 1, 5, 6, 0, 0 }, // 332 IIC_SSE_MOVDQ_WriteStore
-  { 1, 74, 75, 0, 0 }, // 333 IIC_SSE_MOVD_ToGP_WriteMove
-  { 1, 4, 5, 0, 0 }, // 334 IIC_SSE_MOVQ_RR_WriteVecLogic
-  { 1, 21, 22, 0, 0 }, // 335 IIC_MOVS_WriteMicrocoded
-  { 1, 5, 6, 0, 0 }, // 336 IIC_SSE_MOV_S_MR_WriteStore
-  { 1, 5, 6, 0, 0 }, // 337 IIC_SSE_MOV_S_RM_WriteLoad
-  { 1, 4, 5, 0, 0 }, // 338 IIC_SSE_MOV_S_RR_WriteFShuffle
-  { 1, 21, 22, 0, 0 }, // 339 IIC_MOVSX_R16_M8_WriteALULd
-  { 1, 16, 17, 0, 0 }, // 340 IIC_MOVSX_R16_R8_WriteALU
-  { 1, 5, 6, 0, 0 }, // 341 IIC_MOVSX_WriteALULd
-  { 1, 5, 6, 0, 0 }, // 342 IIC_MOVSX_WriteALU
-  { 1, 4, 5, 0, 0 }, // 343 IIC_SSE_MOVU_P_RR_WriteFShuffle
-  { 1, 5, 6, 0, 0 }, // 344 IIC_SSE_MOVDQ_WriteVecLogicLd
-  { 1, 21, 22, 0, 0 }, // 345 IIC_MOVZX_R16_M8_WriteALULd
-  { 1, 16, 17, 0, 0 }, // 346 IIC_MOVZX_R16_R8_WriteALU
-  { 1, 5, 6, 0, 0 }, // 347 IIC_MOVZX_WriteALULd
-  { 1, 5, 6, 0, 0 }, // 348 IIC_MOVZX_WriteALU
-  { 0, 0, 0, 0, 0 }, // 349 IIC_SSE_MPSADBW_RM_WriteMPSADLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 350 IIC_SSE_MPSADBW_RR_WriteMPSAD
-  { 1, 28, 29, 0, 0 }, // 351 IIC_MUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
-  { 1, 2, 3, 0, 0 }, // 352 IIC_MUL16_REG_WriteIMul
-  { 1, 2, 3, 0, 0 }, // 353 IIC_MUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
-  { 1, 6, 7, 0, 0 }, // 354 IIC_MUL32_REG_WriteIMul
-  { 1, 58, 59, 0, 0 }, // 355 IIC_MUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
-  { 1, 58, 59, 0, 0 }, // 356 IIC_MUL64_WriteIMul
-  { 1, 2, 3, 0, 0 }, // 357 IIC_MUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
-  { 1, 2, 3, 0, 0 }, // 358 IIC_MUL8_WriteIMul
-  { 1, 26, 27, 0, 0 }, // 359 IIC_SSE_MUL_F64P_RM_WriteFMulLd_ReadAfterLd
-  { 1, 14, 15, 0, 0 }, // 360 IIC_SSE_MUL_F64P_RR_WriteFMul
-  { 1, 57, 58, 0, 0 }, // 361 IIC_SSE_MUL_F32P_RR_WriteFMul
-  { 1, 57, 58, 0, 0 }, // 362 IIC_SSE_MUL_F64S_RM_WriteFMulLd_ReadAfterLd
-  { 1, 57, 58, 0, 0 }, // 363 IIC_SSE_MUL_F64S_RR_WriteFMul
-  { 1, 75, 76, 0, 0 }, // 364 IIC_SSE_MUL_F32S_RR_WriteFMul
-  { 1, 2, 3, 0, 0 }, // 365 IIC_MUL8_WriteIMulLd_WriteIMulH
-  { 1, 2, 3, 0, 0 }, // 366 IIC_MUL8_WriteIMul_WriteIMulH
-  { 0, 0, 0, 0, 0 }, // 367 WriteFMulLd
-  { 0, 0, 0, 0, 0 }, // 368 WriteFMul
-  { 0, 0, 0, 0, 0 }, // 369 IIC_SSE_MWAITX_WriteSystem
-  { 1, 50, 51, 0, 0 }, // 370 IIC_SSE_MWAIT_WriteSystem
-  { 1, 4, 5, 0, 0 }, // 371 IIC_NOP_WriteZero
-  { 1, 81, 82, 0, 0 }, // 372 IIC_OUT_IR_WriteSystem
-  { 1, 32, 33, 0, 0 }, // 373 IIC_OUT_RR_WriteSystem
-  { 1, 82, 83, 0, 0 }, // 374 IIC_OUTS_WriteSystem
-  { 1, 5, 6, 0, 0 }, // 375 IIC_SSE_PABS_RM_WriteVecALULd
-  { 1, 4, 5, 0, 0 }, // 376 IIC_SSE_PABS_RR_WriteVecALU
-  { 1, 5, 6, 0, 0 }, // 377 IIC_SSE_INTALU_P_RM_WriteVecALULd_ReadAfterLd
-  { 1, 4, 5, 0, 0 }, // 378 IIC_SSE_INTALU_P_RR_WriteVecALU
-  { 1, 21, 22, 0, 0 }, // 379 IIC_SSE_INTALUQ_P_RM_WriteVecALULd_ReadAfterLd
-  { 1, 16, 17, 0, 0 }, // 380 IIC_SSE_INTALUQ_P_RR_WriteVecALU
-  { 1, 5, 6, 0, 0 }, // 381 IIC_SSE_PALIGNRM_WriteShuffleLd_ReadAfterLd
-  { 1, 5, 6, 0, 0 }, // 382 IIC_SSE_PALIGNRR_WriteShuffle
-  { 1, 5, 6, 0, 0 }, // 383 IIC_SSE_BIT_P_RM_WriteVecLogicLd_ReadAfterLd
-  { 1, 4, 5, 0, 0 }, // 384 IIC_SSE_BIT_P_RR_WriteVecLogic
-  { 1, 71, 72, 0, 0 }, // 385 IIC_SSE_PAUSE_WriteNop
-  { 1, 5, 6, 0, 0 }, // 386 IIC_ALU_MEM_WriteVarBlendLd_ReadAfterLd
-  { 1, 4, 5, 0, 0 }, // 387 IIC_ALU_NONMEM_WriteVarBlend
-  { 1, 5, 6, 0, 0 }, // 388 IIC_SSE_INTALU_P_RM_WriteBlendLd_ReadAfterLd
-  { 1, 4, 5, 0, 0 }, // 389 IIC_SSE_INTALU_P_RR_WriteBlend
-  { 0, 0, 0, 0, 0 }, // 390 IIC_SSE_PCLMULQDQ_RM_WriteCLMulLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 391 IIC_SSE_PCLMULQDQ_RR_WriteCLMul
-  { 0, 0, 0, 0, 0 }, // 392 WriteVecALULd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 393 WriteVecALU
-  { 0, 0, 0, 0, 0 }, // 394 WritePCmpEStrILd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 395 WritePCmpEStrI
-  { 0, 0, 0, 0, 0 }, // 396 WritePCmpEStrMLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 397 WritePCmpEStrM
-  { 0, 0, 0, 0, 0 }, // 398 WritePCmpIStrILd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 399 WritePCmpIStrI
-  { 0, 0, 0, 0, 0 }, // 400 WritePCmpIStrMLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 401 WritePCmpIStrM
-  { 0, 0, 0, 0, 0 }, // 402 WriteShuffleLd_WriteRMW
-  { 1, 20, 21, 0, 0 }, // 403 IIC_SSE_PEXTRW_WriteShuffleLd_ReadAfterLd
-  { 1, 20, 21, 0, 0 }, // 404 IIC_SSE_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd
-  { 1, 21, 22, 0, 0 }, // 405 IIC_SSE_PHADDSUBD_RR_WriteVecALU
-  { 1, 28, 29, 0, 0 }, // 406 IIC_SSE_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd
-  { 1, 2, 3, 0, 0 }, // 407 IIC_SSE_PHADDSUBW_RR_WriteVecALU
-  { 0, 0, 0, 0, 0 }, // 408 WriteVecIMulLd
-  { 0, 0, 0, 0, 0 }, // 409 WriteVecIMul
-  { 1, 5, 6, 0, 0 }, // 410 IIC_SSE_PINSRW_WriteShuffleLd_ReadAfterLd
-  { 1, 5, 6, 0, 0 }, // 411 IIC_SSE_PINSRW_WriteShuffle
-  { 0, 0, 0, 0, 0 }, // 412 WriteVecIMulLd_ReadAfterLd
-  { 1, 57, 58, 0, 0 }, // 413 IIC_SSE_PMADD_WriteVecIMulLd_ReadAfterLd
-  { 1, 57, 58, 0, 0 }, // 414 IIC_SSE_PMADD_WriteVecIMul
-  { 1, 5, 6, 0, 0 }, // 415 IIC_SSE_INTALU_P_RM_WriteShuffleLd
-  { 1, 4, 5, 0, 0 }, // 416 IIC_SSE_INTALU_P_RR_WriteShuffle
-  { 1, 57, 58, 0, 0 }, // 417 IIC_SSE_INTMUL_P_RM_WriteVecIMulLd_ReadAfterLd
-  { 1, 57, 58, 0, 0 }, // 418 IIC_SSE_INTMUL_P_RR_WriteVecIMul
-  { 1, 16, 17, 0, 0 }, // 419 IIC_POP_REG16_WriteLoad
-  { 1, 21, 22, 0, 0 }, // 420 IIC_POP_MEM_WriteLoad
-  { 1, 18, 20, 0, 0 }, // 421 IIC_POP_REG_WriteLoad
-  { 1, 14, 15, 0, 0 }, // 422 IIC_POP_A_WriteLoad
-  { 0, 0, 0, 0, 0 }, // 423 IIC_SSE_POPCNT_RM_WriteFAddLd
-  { 0, 0, 0, 0, 0 }, // 424 IIC_SSE_POPCNT_RR_WriteFAdd
-  { 1, 83, 84, 0, 0 }, // 425 IIC_POP_SR_WriteSystem
-  { 1, 38, 39, 0, 0 }, // 426 IIC_POP_F_WriteLoad
-  { 1, 77, 78, 0, 0 }, // 427 IIC_POP_FD_WriteLoad
-  { 1, 84, 85, 0, 0 }, // 428 IIC_POP_SR_SS_WriteSystem
-  { 1, 43, 44, 0, 0 }, // 429 IIC_SSE_PSHUFB_RM_WriteShuffleLd_ReadAfterLd
-  { 1, 20, 21, 0, 0 }, // 430 IIC_SSE_PSHUFB_RR_WriteShuffle
-  { 1, 5, 6, 0, 0 }, // 431 IIC_SSE_PSHUF_MI_WriteShuffleLd_ReadAfterLd
-  { 1, 5, 6, 0, 0 }, // 432 IIC_SSE_PSHUF_RI_WriteShuffle
-  { 1, 4, 5, 0, 0 }, // 433 IIC_SSE_INTSHDQ_P_RI_WriteVecShift
-  { 1, 4, 5, 0, 0 }, // 434 IIC_SSE_INTSH_P_RI_WriteVecShift
-  { 1, 21, 22, 0, 0 }, // 435 IIC_SSE_INTSH_P_RM_WriteVecShiftLd_ReadAfterLd
-  { 1, 16, 17, 0, 0 }, // 436 IIC_SSE_INTSH_P_RR_WriteVecShift
-  { 1, 5, 6, 0, 0 }, // 437 IIC_SSE_UNPCK_WriteShuffleLd_ReadAfterLd
-  { 1, 5, 6, 0, 0 }, // 438 IIC_SSE_UNPCK_WriteShuffle
-  { 1, 18, 20, 0, 0 }, // 439 IIC_PUSH_IMM_WriteStore
-  { 1, 18, 20, 0, 0 }, // 440 IIC_PUSH_REG_WriteStore
-  { 1, 16, 17, 0, 0 }, // 441 IIC_PUSH_MEM_WriteRMW
-  { 1, 28, 29, 0, 0 }, // 442 IIC_PUSH_A_WriteStore
-  { 1, 16, 17, 0, 0 }, // 443 IIC_PUSH_SR_WriteSystem
-  { 1, 16, 17, 0, 0 }, // 444 IIC_PUSH_CS_WriteSystem
-  { 1, 14, 15, 0, 0 }, // 445 IIC_PUSH_F_WriteStore
-  { 1, 5, 6, 0, 0 }, // 446 IIC_SR_WriteShiftLd_WriteRMW
-  { 1, 5, 6, 0, 0 }, // 447 IIC_SR_WriteShift
-  { 1, 26, 27, 0, 0 }, // 448 IIC_SSE_RCPP_RM_WriteFRcpLd
-  { 1, 14, 15, 0, 0 }, // 449 IIC_SSE_RCPP_RR_WriteFRcp
-  { 1, 75, 76, 0, 0 }, // 450 IIC_SSE_RCPS_RM_WriteFRcpLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 451 WriteFRcpLd_ReadAfterLd
-  { 1, 75, 76, 0, 0 }, // 452 IIC_SSE_RCPS_RR_WriteFRcp
-  { 0, 0, 0, 0, 0 }, // 453 WriteRMW
-  { 1, 85, 86, 0, 0 }, // 454 IIC_RDMSR_WriteSystem
-  { 1, 50, 51, 0, 0 }, // 455 IIC_RDPMC_WriteSystem
-  { 1, 86, 87, 0, 0 }, // 456 IIC_RDTSC_WriteSystem
-  { 1, 87, 88, 0, 0 }, // 457 IIC_REP_MOVS_WriteMicrocoded
-  { 1, 82, 83, 0, 0 }, // 458 IIC_REP_STOS_WriteMicrocoded
-  { 1, 18, 20, 0, 0 }, // 459 IIC_RET_IMM_WriteJumpLd
-  { 0, 0, 0, 0, 0 }, // 460 WriteShiftLd
-  { 0, 0, 0, 0, 0 }, // 461 WriteShift
-  { 0, 0, 0, 0, 0 }, // 462 IIC_SSE_ROUNDPS_REG_WriteFAddLd
-  { 0, 0, 0, 0, 0 }, // 463 IIC_SSE_ROUNDPS_REG_WriteFAdd
-  { 0, 0, 0, 0, 0 }, // 464 IIC_SSE_ROUNDPS_MEM_WriteFAddLd
-  { 0, 0, 0, 0, 0 }, // 465 WriteFAddLd_ReadAfterLd
-  { 1, 88, 89, 0, 0 }, // 466 IIC_RSM_WriteSystem
-  { 1, 26, 27, 0, 0 }, // 467 IIC_SSE_RSQRTPS_RM_WriteFRsqrtLd
-  { 1, 14, 15, 0, 0 }, // 468 IIC_SSE_RSQRTPS_RR_WriteFRsqrt
-  { 1, 75, 76, 0, 0 }, // 469 IIC_SSE_RSQRTSS_RM_WriteFRsqrtLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 470 WriteFRsqrtLd_ReadAfterLd
-  { 1, 75, 76, 0, 0 }, // 471 IIC_SSE_RSQRTSS_RR_WriteFRsqrt
-  { 0, 0, 0, 0, 0 }, // 472 WriteShiftLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd
-  { 1, 16, 17, 0, 0 }, // 473 IIC_SCAS_WriteMicrocoded
-  { 1, 16, 17, 0, 0 }, // 474 IIC_SET_M_WriteALU_WriteStore
-  { 1, 4, 5, 0, 0 }, // 475 IIC_SET_R_WriteALU
-  { 1, 5, 6, 0, 0 }, // 476 IIC_SSE_SFENCE_WriteFence
-  { 1, 20, 21, 0, 0 }, // 477 IIC_SGDT_WriteSystem
-  { 1, 6, 7, 0, 0 }, // 478 IIC_SHD16_MEM_CL_WriteShiftLd_WriteRMW
-  { 1, 6, 7, 0, 0 }, // 479 IIC_SHD16_MEM_IM_WriteShiftLd_WriteRMW
-  { 1, 6, 7, 0, 0 }, // 480 IIC_SHD16_REG_CL_WriteShift
-  { 1, 6, 7, 0, 0 }, // 481 IIC_SHD16_REG_IM_WriteShift
-  { 1, 20, 21, 0, 0 }, // 482 IIC_SHD32_MEM_CL_WriteShiftLd_WriteRMW
-  { 1, 20, 21, 0, 0 }, // 483 IIC_SHD32_MEM_IM_WriteShiftLd_WriteRMW
-  { 1, 16, 17, 0, 0 }, // 484 IIC_SHD32_REG_CL_WriteShift
-  { 1, 16, 17, 0, 0 }, // 485 IIC_SHD32_REG_IM_WriteShift
-  { 1, 14, 15, 0, 0 }, // 486 IIC_SHD64_MEM_CL_WriteShiftLd_WriteRMW
-  { 1, 14, 15, 0, 0 }, // 487 IIC_SHD64_MEM_IM_WriteShiftLd_WriteRMW
-  { 1, 28, 29, 0, 0 }, // 488 IIC_SHD64_REG_CL_WriteShift
-  { 1, 14, 15, 0, 0 }, // 489 IIC_SHD64_REG_IM_WriteShift
-  { 1, 5, 6, 0, 0 }, // 490 IIC_SSE_SHUFP_WriteFShuffleLd_ReadAfterLd
-  { 1, 5, 6, 0, 0 }, // 491 IIC_SSE_SHUFP_WriteFShuffle
-  { 1, 20, 21, 0, 0 }, // 492 IIC_SIDT_WriteSystem
-  { 1, 21, 22, 0, 0 }, // 493 IIC_SLDT_WriteSystem
-  { 1, 14, 15, 0, 0 }, // 494 IIC_SMSW_WriteSystem
-  { 1, 33, 34, 0, 0 }, // 495 IIC_SSE_SQRTPD_RM_WriteFSqrtLd
-  { 1, 33, 34, 0, 0 }, // 496 IIC_SSE_SQRTPD_RR_WriteFSqrt
-  { 1, 34, 35, 0, 0 }, // 497 IIC_SSE_SQRTPS_RM_WriteFSqrtLd
-  { 1, 34, 35, 0, 0 }, // 498 IIC_SSE_SQRTPS_RR_WriteFSqrt
-  { 1, 35, 36, 0, 0 }, // 499 IIC_SSE_SQRTSD_RM_WriteFSqrtLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 500 WriteFSqrtLd_ReadAfterLd
-  { 1, 35, 36, 0, 0 }, // 501 IIC_SSE_SQRTSD_RR_WriteFSqrt
-  { 1, 36, 37, 0, 0 }, // 502 IIC_SSE_SQRTSS_RM_WriteFSqrtLd_ReadAfterLd
-  { 1, 36, 37, 0, 0 }, // 503 IIC_SSE_SQRTSS_RR_WriteFSqrt
-  { 0, 0, 0, 0, 0 }, // 504 WriteFSqrt
-  { 1, 4, 5, 0, 0 }, // 505 IIC_STC_WriteALU
-  { 1, 3, 4, 0, 0 }, // 506 IIC_STD_WriteALU
-  { 1, 71, 72, 0, 0 }, // 507 IIC_STI_WriteALU
-  { 1, 17, 18, 0, 0 }, // 508 IIC_SSE_STMXCSR_WriteStore
-  { 1, 4, 5, 0, 0 }, // 509 IIC_STOS_WriteMicrocoded
-  { 1, 21, 22, 0, 0 }, // 510 IIC_STR_WriteSystem
-  { 1, 43, 44, 0, 0 }, // 511 IIC_FST80_WriteStore
-  { 1, 16, 17, 0, 0 }, // 512 IIC_FST_WriteMove
-  { 1, 24, 25, 0, 0 }, // 513 IIC_SWAPGS_WriteSystem
-  { 1, 89, 90, 0, 0 }, // 514 IIC_SYSCALL_WriteSystem
-  { 1, 80, 81, 0, 0 }, // 515 IIC_SYS_ENTER_EXIT_WriteSystem
-  { 1, 15, 16, 0, 0 }, // 516 IIC_JMP_REL_WriteJumpLd
-  { 1, 16, 17, 0, 0 }, // 517 IIC_JMP_MEM_WriteJump
-  { 1, 15, 16, 0, 0 }, // 518 IIC_JMP_REG_WriteJumpLd
-  { 0, 0, 0, 0, 0 }, // 519 WriteJump
-  { 1, 14, 15, 0, 0 }, // 520 IIC_FUCOMI_WriteFAdd
-  { 1, 15, 16, 0, 0 }, // 521 IIC_FUCOM_WriteFAdd
-  { 1, 5, 6, 0, 0 }, // 522 IIC_SSE_UNPCK_WriteFShuffleLd_ReadAfterLd
-  { 1, 5, 6, 0, 0 }, // 523 IIC_SSE_UNPCK_WriteFShuffle
-  { 1, 7, 9, 0, 0 }, // 524 IIC_SSE_ALU_F64S_RM
-  { 1, 9, 10, 0, 0 }, // 525 IIC_SSE_ALU_F64S_RR
-  { 1, 7, 9, 0, 0 }, // 526 IIC_SSE_ALU_F32S_RM
-  { 1, 9, 10, 0, 0 }, // 527 IIC_SSE_ALU_F32S_RR
-  { 0, 0, 0, 0, 0 }, // 528 WriteFVarBlendLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 529 WriteFVarBlend
-  { 0, 0, 0, 0, 0 }, // 530 WriteFShuffleLd
-  { 0, 0, 0, 0, 0 }, // 531 WriteFShuffle256
-  { 0, 0, 0, 0, 0 }, // 532 WriteFShuffle
-  { 1, 7, 9, 0, 0 }, // 533 IIC_SSE_ALU_F32P_RM
-  { 0, 0, 0, 0, 0 }, // 534 WriteCvtF2ILd
-  { 0, 0, 0, 0, 0 }, // 535 WriteCvtF2I
-  { 0, 0, 0, 0, 0 }, // 536 WriteCvtF2FLd
-  { 0, 0, 0, 0, 0 }, // 537 WriteCvtF2F
-  { 0, 0, 0, 0, 0 }, // 538 WriteCvtF2FLd_WriteRMW
-  { 0, 0, 0, 0, 0 }, // 539 WriteCvtF2FLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 540 WriteCvtI2FLd_ReadAfterLd
-  { 1, 90, 91, 0, 0 }, // 541 IIC_VERR_WriteSystem
-  { 1, 91, 92, 0, 0 }, // 542 IIC_VERW_REG_WriteSystem
-  { 1, 30, 31, 0, 0 }, // 543 IIC_VERW_MEM_WriteSystem
-  { 0, 0, 0, 0, 0 }, // 544 WriteStore
-  { 0, 0, 0, 0, 0 }, // 545 WriteShuffle256
-  { 1, 5, 6, 0, 0 }, // 546 IIC_ALU_MEM_WriteFBlendLd_WriteRMW
-  { 0, 0, 0, 0, 0 }, // 547 WriteFShuffleLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 548 WriteShuffle256Ld_ReadAfterLd
-  { 1, 5, 6, 0, 0 }, // 549 IIC_ALU_MEM_WriteFShuffleLd_ReadAfterLd
-  { 1, 4, 5, 0, 0 }, // 550 IIC_ALU_NONMEM_WriteFShuffle
-  { 1, 5, 6, 0, 0 }, // 551 IIC_SSE_MOVDQ
-  { 1, 5, 6, 0, 0 }, // 552 IIC_SSE_MOV_LH
-  { 1, 74, 75, 0, 0 }, // 553 IIC_SSE_MOVD_ToGP
-  { 1, 5, 6, 0, 0 }, // 554 IIC_SSE_MOV_S_MR
-  { 1, 5, 6, 0, 0 }, // 555 IIC_SSE_MOV_S_RM
-  { 1, 4, 5, 0, 0 }, // 556 IIC_SSE_MOV_S_RR
-  { 1, 4, 5, 0, 0 }, // 557 IIC_SSE_MOVQ_RR
-  { 1, 5, 6, 0, 0 }, // 558 IIC_ALU_MEM_WriteMPSADLd_ReadAfterLd
-  { 1, 4, 5, 0, 0 }, // 559 IIC_ALU_NONMEM_WriteMPSAD
-  { 0, 0, 0, 0, 0 }, // 560 WriteVecALULd
-  { 0, 0, 0, 0, 0 }, // 561 WriteBlendLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 562 WriteBlend
-  { 0, 0, 0, 0, 0 }, // 563 WriteVarBlendLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 564 WriteVarBlend
-  { 1, 5, 6, 0, 0 }, // 565 IIC_ALU_MEM_WriteBlendLd_ReadAfterLd
-  { 1, 4, 5, 0, 0 }, // 566 IIC_ALU_NONMEM_WriteBlend
-  { 0, 0, 0, 0, 0 }, // 567 WriteCLMulLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 568 WriteCLMul
-  { 1, 9, 10, 0, 0 }, // 569 IIC_SSE_ALU_F32P_RR
-  { 0, 0, 0, 0, 0 }, // 570 WriteFShuffle256Ld_ReadAfterLd
-  { 1, 5, 6, 0, 0 }, // 571 IIC_ALU_MEM_WriteShuffleLd
-  { 1, 4, 5, 0, 0 }, // 572 IIC_ALU_NONMEM_WriteShuffle
-  { 0, 0, 0, 0, 0 }, // 573 WriteVarVecShift_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 574 WriteVarVecShift
-  { 1, 5, 6, 0, 0 }, // 575 IIC_SSE_PSHUF_MI_WriteShuffleLd
-  { 0, 0, 0, 0, 0 }, // 576 WriteVecShift
-  { 0, 0, 0, 0, 0 }, // 577 WriteVarVecShiftLd_ReadAfterLd
-  { 0, 0, 0, 0, 0 }, // 578 WriteFRcpLd
-  { 0, 0, 0, 0, 0 }, // 579 WriteFRsqrtLd
-  { 0, 0, 0, 0, 0 }, // 580 WriteFSqrtLd
-  { 1, 4, 5, 0, 0 }, // 581 IIC_WAIT_WriteMicrocoded
-  { 1, 92, 93, 0, 0 }, // 582 IIC_WRMSR_WriteSystem
-  { 1, 21, 22, 0, 0 }, // 583 IIC_XADD_MEM_WriteALULd_WriteRMW
-  { 1, 16, 17, 0, 0 }, // 584 IIC_XADD_REG_WriteALU
-  { 1, 16, 17, 0, 0 }, // 585 IIC_XCHG_REG_WriteALU
-  { 1, 21, 22, 0, 0 }, // 586 IIC_XCHG_MEM_WriteALULd_WriteRMW
-  { 1, 18, 20, 0, 0 }, // 587 IIC_FXCH_WriteMove
-  { 1, 6, 7, 0, 0 }, // 588 IIC_XLAT_WriteLoad
-  { 1, 5, 6, 0, 0 }, // 589 MOV16rm
-  { 1, 5, 6, 0, 0 }, // 590 MOVSX32rm16_MOVSX32rm8
-  { 1, 5, 6, 0, 0 }, // 591 MOVZX32rm16_MOVZX32rm8
-  { 1, 4, 5, 0, 0 }, // 592 CMOVA16rr_CMOVAE16rr_CMOVB16rr_CMOVBE16rr_CMOVE16rr_CMOVG16rr_CMOVGE16rr_CMOVL16rr_CMOVLE16rr_CMOVNE16rr_CMOVNO16rr_CMOVNP16rr_CMOVNS16rr_CMOVO16rr_CMOVP16rr_CMOVS16rr
-  { 1, 4, 5, 0, 0 }, // 593 CMOVA32rr_CMOVA64rr_CMOVAE32rr_CMOVAE64rr_CMOVB32rr_CMOVB64rr_CMOVBE32rr_CMOVBE64rr_CMOVE32rr_CMOVE64rr_CMOVG32rr_CMOVG64rr_CMOVGE32rr_CMOVGE64rr_CMOVL32rr_CMOVL64rr_CMOVLE32rr_CMOVLE64rr_CMOVNE32rr_CMOVNE64rr_CMOVNO32rr_CMOVNO64rr_CMOVNP32rr_CMOVNP64rr_CMOVNS32rr_CMOVNS64rr_CMOVO32rr_CMOVO64rr_CMOVP32rr_CMOVP64rr_CMOVS32rr_CMOVS64rr
-  { 1, 5, 6, 0, 0 }, // 594 CMOVA16rm_CMOVAE16rm_CMOVB16rm_CMOVBE16rm_CMOVE16rm_CMOVG16rm_CMOVGE16rm_CMOVL16rm_CMOVLE16rm_CMOVNE16rm_CMOVNO16rm_CMOVNP16rm_CMOVNS16rm_CMOVO16rm_CMOVP16rm_CMOVS16rm
-  { 1, 5, 6, 0, 0 }, // 595 CMOVA32rm_CMOVA64rm_CMOVAE32rm_CMOVAE64rm_CMOVB32rm_CMOVB64rm_CMOVBE32rm_CMOVBE64rm_CMOVE32rm_CMOVE64rm_CMOVG32rm_CMOVG64rm_CMOVGE32rm_CMOVGE64rm_CMOVL32rm_CMOVL64rm_CMOVLE32rm_CMOVLE64rm_CMOVNE32rm_CMOVNE64rm_CMOVNO32rm_CMOVNO64rm_CMOVNP32rm_CMOVNP64rm_CMOVNS32rm_CMOVNS64rm_CMOVO32rm_CMOVO64rm_CMOVP32rm_CMOVP64rm_CMOVS32rm_CMOVS64rm
-  { 1, 16, 17, 0, 0 }, // 596 XCHG16ar_XCHG16rr_XCHG32ar_XCHG32ar64_XCHG32rr_XCHG64ar_XCHG64rr_XCHG8rr
-  { 1, 21, 22, 0, 0 }, // 597 XCHG16rm_XCHG32rm_XCHG64rm_XCHG8rm
-  { 1, 6, 7, 0, 0 }, // 598 XLAT
-  { 1, 16, 17, 0, 0 }, // 599 PUSH16rmm_PUSH32rmm
-  { 1, 14, 15, 0, 0 }, // 600 PUSHF16_PUSHF32
-  { 1, 28, 29, 0, 0 }, // 601 PUSHA16_PUSHA32
-  { 1, 21, 22, 0, 0 }, // 602 POP16rmm_POP32rmm
-  { 1, 38, 39, 0, 0 }, // 603 POPF16
-  { 1, 77, 78, 0, 0 }, // 604 POPF32
-  { 1, 14, 15, 0, 0 }, // 605 POPA16_POPA32
-  { 1, 4, 5, 0, 0 }, // 606 LAHF_SAHF
-  { 1, 5, 6, 0, 0 }, // 607 BSWAP32r
-  { 1, 5, 6, 0, 0 }, // 608 BSWAP64r
-  { 1, 5, 6, 0, 0 }, // 609 MOVBE16rm_MOVBE64rm
-  { 1, 5, 6, 0, 0 }, // 610 MOVBE32rm
-  { 1, 5, 6, 0, 0 }, // 611 MOVBE16mr
-  { 1, 5, 6, 0, 0 }, // 612 MOVBE32mr
-  { 1, 5, 6, 0, 0 }, // 613 MOVBE64mr
-  { 1, 5, 6, 0, 0 }, // 614 ADD16mi_ADD16mi8_ADD16mr_ADD32mi_ADD32mi8_ADD32mr_ADD64mi32_ADD64mi8_ADD64mr_ADD8mi_ADD8mi8_ADD8mr_SUB16mi_SUB16mi8_SUB16mr_SUB32mi_SUB32mi8_SUB32mr_SUB64mi32_SUB64mi8_SUB64mr_SUB8mi_SUB8mi8_SUB8mr
-  { 1, 4, 5, 0, 0 }, // 615 ADC16ri_ADC16ri8_ADC16rr_ADC16rr_REV_ADC32ri_ADC32ri8_ADC32rr_ADC32rr_REV_ADC64ri32_ADC64ri8_ADC64rr_ADC64rr_REV_ADC8ri_ADC8ri8_ADC8rr_ADC8rr_REV_SBB16ri_SBB16ri8_SBB16rr_SBB16rr_REV_SBB32ri_SBB32ri8_SBB32rr_SBB32rr_REV_SBB64ri32_SBB64ri8_SBB64rr_SBB64rr_REV_SBB8ri_SBB8ri8_SBB8rr_SBB8rr_REV
-  { 1, 5, 6, 0, 0 }, // 616 ADC16rm_ADC32rm_ADC64rm_ADC8rm_SBB16rm_SBB32rm_SBB64rm_SBB8rm
-  { 1, 5, 6, 0, 0 }, // 617 ADC16mi_ADC16mi8_ADC16mr_ADC32mi_ADC32mi8_ADC32mr_ADC64mi32_ADC64mi8_ADC64mr_ADC8mi_ADC8mi8_ADC8mr_SBB16mi_SBB16mi8_SBB16mr_SBB32mi_SBB32mi8_SBB32mr_SBB64mi32_SBB64mi8_SBB64mr_SBB8mi_SBB8mi8_SBB8mr
-  { 1, 5, 6, 0, 0 }, // 618 DEC16m_DEC32m_DEC64m_DEC8m_INC16m_INC32m_INC64m_INC8m_NEG16m_NEG32m_NEG64m_NEG8m_NOT16m_NOT32m_NOT64m_NOT8m
-  { 1, 6, 7, 0, 0 }, // 619 IMUL16r_IMUL16rr
-  { 1, 2, 3, 0, 0 }, // 620 IMUL16rm
-  { 1, 2, 3, 0, 0 }, // 621 IMUL16rmi_IMUL16rmi8
-  { 1, 6, 7, 0, 0 }, // 622 IMUL16rri_IMUL16rri8
-  { 1, 2, 3, 0, 0 }, // 623 MUL16r
-  { 1, 28, 29, 0, 0 }, // 624 IMUL16m
-  { 1, 28, 29, 0, 0 }, // 625 MUL16m
-  { 1, 57, 58, 0, 0 }, // 626 IMUL32r_IMUL32rr
-  { 1, 57, 58, 0, 0 }, // 627 IMUL32rm
-  { 1, 57, 58, 0, 0 }, // 628 IMUL32rmi_IMUL32rmi8
-  { 1, 57, 58, 0, 0 }, // 629 IMUL32rri_IMUL32rri8
-  { 1, 6, 7, 0, 0 }, // 630 MUL32r
-  { 1, 2, 3, 0, 0 }, // 631 IMUL32m
-  { 1, 2, 3, 0, 0 }, // 632 MUL32m
-  { 1, 58, 59, 0, 0 }, // 633 IMUL64r_IMUL64rr
-  { 1, 58, 59, 0, 0 }, // 634 IMUL64rm
-  { 1, 22, 23, 0, 0 }, // 635 IMUL64rmi32_IMUL64rmi8
-  { 1, 22, 23, 0, 0 }, // 636 IMUL64rri32_IMUL64rri8
-  { 1, 58, 59, 0, 0 }, // 637 MUL64r
-  { 1, 58, 59, 0, 0 }, // 638 IMUL64m
-  { 1, 58, 59, 0, 0 }, // 639 MUL64m
-  { 1, 2, 3, 0, 0 }, // 640 MULX32rr
-  { 1, 2, 3, 0, 0 }, // 641 MULX32rm
-  { 1, 2, 3, 0, 0 }, // 642 MULX64rr
-  { 1, 2, 3, 0, 0 }, // 643 MULX64rm
-  { 1, 30, 31, 0, 0 }, // 644 DIV8r
-  { 1, 30, 31, 0, 0 }, // 645 DIV16r
-  { 1, 30, 31, 0, 0 }, // 646 DIV32r
-  { 1, 31, 32, 0, 0 }, // 647 DIV64r
-  { 1, 35, 36, 0, 0 }, // 648 IDIV8r
-  { 1, 35, 36, 0, 0 }, // 649 IDIV16r
-  { 1, 35, 36, 0, 0 }, // 650 IDIV32r
-  { 1, 31, 32, 0, 0 }, // 651 IDIV64r
-  { 1, 5, 6, 0, 0 }, // 652 AND16mi_AND16mi8_AND16mr_AND32mi_AND32mi8_AND32mr_AND64mi32_AND64mi8_AND64mr_AND8mi_AND8mi8_AND8mr_OR16mi_OR16mi8_OR16mr_OR32mi_OR32mi8_OR32mr_OR64mi32_OR64mi8_OR64mr_OR8mi_OR8mi8_OR8mr_XOR16mi_XOR16mi8_XOR16mr_XOR32mi_XOR32mi8_XOR32mr_XOR64mi32_XOR64mi8_XOR64mr_XOR8mi_XOR8mi8_XOR8mr
-  { 1, 5, 6, 0, 0 }, // 653 OR32mrLocked
-  { 1, 5, 6, 0, 0 }, // 654 SAR16m1_SAR16mi_SAR32m1_SAR32mi_SAR64m1_SAR64mi_SAR8m1_SAR8mi_SHL16m1_SHL16mi_SHL32m1_SHL32mi_SHL64m1_SHL64mi_SHL8m1_SHL8mi_SHR16m1_SHR16mi_SHR32m1_SHR32mi_SHR64m1_SHR64mi_SHR8m1_SHR8mi
-  { 1, 5, 6, 0, 0 }, // 655 SAR16rCL_SAR32rCL_SAR64rCL_SAR8rCL_SHL16rCL_SHL32rCL_SHL64rCL_SHL8rCL_SHR16rCL_SHR32rCL_SHR64rCL_SHR8rCL
-  { 1, 5, 6, 0, 0 }, // 656 SAR16mCL_SAR32mCL_SAR64mCL_SAR8mCL_SHL16mCL_SHL32mCL_SHL64mCL_SHL8mCL_SHR16mCL_SHR32mCL_SHR64mCL_SHR8mCL
-  { 1, 5, 6, 0, 0 }, // 657 ROL16r1_ROL32r1_ROL64r1_ROL8r1_ROR16r1_ROR32r1_ROR64r1_ROR8r1
-  { 1, 5, 6, 0, 0 }, // 658 ROL16mi_ROL32mi_ROL64mi_ROL8mi_ROR16mi_ROR32mi_ROR64mi_ROR8mi
-  { 1, 5, 6, 0, 0 }, // 659 ROL16rCL_ROL32rCL_ROL64rCL_ROL8rCL_ROR16rCL_ROR32rCL_ROR64rCL_ROR8rCL
-  { 1, 5, 6, 0, 0 }, // 660 ROL16mCL_ROL32mCL_ROL64mCL_ROL8mCL_ROR16mCL_ROR32mCL_ROR64mCL_ROR8mCL
-  { 1, 5, 6, 0, 0 }, // 661 RCL16r1_RCL32r1_RCL64r1_RCL8r1_RCR16r1_RCR32r1_RCR64r1_RCR8r1
-  { 1, 5, 6, 0, 0 }, // 662 RCL16m1_RCL32m1_RCL64m1_RCL8m1_RCR16m1_RCR32m1_RCR64m1_RCR8m1
-  { 1, 5, 6, 0, 0 }, // 663 RCL16rCL_RCL16ri_RCL32rCL_RCL32ri_RCL64rCL_RCL64ri_RCL8rCL_RCL8ri_RCR16rCL_RCR16ri_RCR32rCL_RCR32ri_RCR64rCL_RCR64ri_RCR8rCL_RCR8ri
-  { 1, 5, 6, 0, 0 }, // 664 RCL16mCL_RCL16mi_RCL32mCL_RCL32mi_RCL64mCL_RCL64mi_RCL8mCL_RCL8mi_RCR16mCL_RCR16mi_RCR32mCL_RCR32mi_RCR64mCL_RCR64mi_RCR8mCL_RCR8mi
-  { 1, 6, 7, 0, 0 }, // 665 SHLD16rri8_SHRD16rri8
-  { 1, 16, 17, 0, 0 }, // 666 SHLD32rri8_SHRD32rri8
-  { 1, 14, 15, 0, 0 }, // 667 SHLD64rri8_SHRD64rri8
-  { 1, 6, 7, 0, 0 }, // 668 SHLD16mri8_SHRD16mri8
-  { 1, 20, 21, 0, 0 }, // 669 SHLD32mri8_SHRD32mri8
-  { 1, 14, 15, 0, 0 }, // 670 SHLD64mri8_SHRD64mri8
-  { 1, 6, 7, 0, 0 }, // 671 SHLD16rrCL
-  { 1, 16, 17, 0, 0 }, // 672 SHLD32rrCL
-  { 1, 28, 29, 0, 0 }, // 673 SHLD64rrCL
-  { 1, 6, 7, 0, 0 }, // 674 SHRD16rrCL
-  { 1, 16, 17, 0, 0 }, // 675 SHRD32rrCL
-  { 1, 28, 29, 0, 0 }, // 676 SHRD64rrCL
-  { 1, 6, 7, 0, 0 }, // 677 SHLD16mrCL_SHRD16mrCL
-  { 1, 20, 21, 0, 0 }, // 678 SHLD32mrCL_SHRD32mrCL
-  { 1, 14, 15, 0, 0 }, // 679 SHLD64mrCL_SHRD64mrCL
-  { 1, 15, 16, 0, 0 }, // 680 BT16ri8_BT32ri8_BT64ri8
-  { 1, 15, 16, 0, 0 }, // 681 BT16rr_BT32rr_BT64rr
-  { 1, 14, 15, 0, 0 }, // 682 BT16mr_BT32mr_BT64mr
-  { 1, 4, 5, 0, 0 }, // 683 BT16mi8_BT32mi8_BT64mi8
-  { 1, 15, 16, 0, 0 }, // 684 BTC16ri8_BTC32ri8_BTC64ri8_BTR16ri8_BTR32ri8_BTR64ri8_BTS16ri8_BTS32ri8_BTS64ri8
-  { 1, 15, 16, 0, 0 }, // 685 BTC16rr_BTC32rr_BTC64rr_BTR16rr_BTR32rr_BTS16rr_BTS32rr_BTS64rr
-  { 0, 0, 0, 0, 0 }, // 686 BTR64rr
-  { 1, 12, 13, 0, 0 }, // 687 BTC16mr_BTC32mr_BTC64mr_BTR16mr_BTR32mr_BTR64mr_BTS16mr_BTS32mr_BTS64mr
-  { 1, 16, 17, 0, 0 }, // 688 BTC16mi8_BTC32mi8_BTC64mi8_BTR16mi8_BTR32mi8_BTR64mi8_BTS16mi8_BTS32mi8_BTS64mi8
-  { 1, 13, 14, 0, 0 }, // 689 BSF16rr_BSF32rr_BSF64rr_BSR16rr_BSR32rr_BSR64rr
-  { 1, 13, 14, 0, 0 }, // 690 BSF16rm_BSF32rm_BSF64rm_BSR16rm_BSR32rm_BSR64rm
-  { 1, 4, 5, 0, 0 }, // 691 SETAEr_SETAr_SETBEr_SETBr_SETEr_SETGEr_SETGr_SETLEr_SETLr_SETNEr_SETNOr_SETNPr_SETNSr_SETOr_SETPr_SETSr
-  { 1, 16, 17, 0, 0 }, // 692 SETAEm_SETAm_SETBEm_SETBm_SETEm_SETGEm_SETGm_SETLEm_SETLm_SETNEm_SETNOm_SETNPm_SETNSm_SETOm_SETPm_SETSm
-  { 1, 21, 22, 0, 0 }, // 693 CLD
-  { 1, 3, 4, 0, 0 }, // 694 STD
-  { 0, 0, 0, 0, 0 }, // 695 TZCNT16rr_TZCNT32rr_TZCNT64rr
-  { 0, 0, 0, 0, 0 }, // 696 TZCNT16rm_TZCNT32rm_TZCNT64rm
-  { 1, 4, 5, 0, 0 }, // 697 ANDN32rr_ANDN64rr
-  { 1, 5, 6, 0, 0 }, // 698 ANDN32rm_ANDN64rm
-  { 0, 0, 0, 0, 0 }, // 699 BLSI32rr_BLSI64rr_BLSMSK32rr_BLSMSK64rr_BLSR32rr_BLSR64rr
-  { 0, 0, 0, 0, 0 }, // 700 BLSI32rm_BLSI64rm_BLSMSK32rm_BLSMSK64rm_BLSR32rm_BLSR64rm
-  { 0, 0, 0, 0, 0 }, // 701 BEXTR32rr_BEXTR64rr
-  { 0, 0, 0, 0, 0 }, // 702 BEXTR32rm_BEXTR64rm
-  { 0, 0, 0, 0, 0 }, // 703 BZHI32rr_BZHI64rr
-  { 0, 0, 0, 0, 0 }, // 704 BZHI32rm_BZHI64rm
-  { 0, 0, 0, 0, 0 }, // 705 PDEP32rr_PDEP64rr_PEXT32rr_PEXT64rr
-  { 0, 0, 0, 0, 0 }, // 706 PDEP32rm_PDEP64rm_PEXT32rm_PEXT64rm
-  { 1, 20, 21, 0, 0 }, // 707 JCXZ_JRCXZ
-  { 1, 25, 26, 0, 0 }, // 708 LOOP
-  { 1, 28, 29, 0, 0 }, // 709 LOOPE
-  { 1, 71, 72, 0, 0 }, // 710 LOOPNE
-  { 1, 18, 20, 0, 0 }, // 711 CALL16r_CALL32r
-  { 1, 17, 18, 0, 0 }, // 712 CALL16m_CALL32m
-  { 1, 37, 38, 0, 0 }, // 713 LRETL_LRETQ_LRETW_RETL_RETQ_RETW
-  { 1, 37, 38, 0, 0 }, // 714 LRETIL_LRETIQ_LRETIW
-  { 1, 18, 20, 0, 0 }, // 715 RETIL_RETIQ_RETIW
-  { 1, 12, 13, 0, 0 }, // 716 BOUNDS16rm_BOUNDS32rm
-  { 0, 0, 0, 0, 0 }, // 717 INTO
-  { 1, 16, 17, 0, 0 }, // 718 LODSB_LODSW
-  { 1, 16, 17, 0, 0 }, // 719 LODSL_LODSQ
-  { 1, 4, 5, 0, 0 }, // 720 STOSB_STOSL_STOSQ_STOSW
-  { 1, 21, 22, 0, 0 }, // 721 MOVSB_MOVSL_MOVSQ_MOVSW
-  { 1, 5, 6, 0, 0 }, // 722 MOVSLDUPrm
-  { 1, 5, 6, 0, 0 }, // 723 MOVSLDUPrr
-  { 1, 16, 17, 0, 0 }, // 724 SCASB_SCASL_SCASQ_SCASW
-  { 1, 21, 22, 0, 0 }, // 725 CMPSB_CMPSL_CMPSQ_CMPSW
-  { 1, 21, 22, 0, 0 }, // 726 XADD16rm_XADD32rm_XADD64rm_XADD8rm
-  { 1, 22, 23, 0, 0 }, // 727 CMPXCHG16rm_CMPXCHG32rm_CMPXCHG64rm
-  { 1, 6, 7, 0, 0 }, // 728 CMPXCHG8rm
-  { 1, 25, 26, 0, 0 }, // 729 CMPXCHG8B
-  { 1, 24, 25, 0, 0 }, // 730 CMPXCHG16B
-  { 1, 71, 72, 0, 0 }, // 731 PAUSE
-  { 1, 16, 17, 0, 0 }, // 732 LEAVE_LEAVE64
-  { 0, 0, 0, 0, 0 }, // 733 XGETBV
-  { 1, 86, 87, 0, 0 }, // 734 RDTSC
-  { 0, 0, 0, 0, 0 }, // 735 RDTSCP
-  { 1, 50, 51, 0, 0 }, // 736 RDPMC
-  { 0, 0, 0, 0, 0 }, // 737 RDRAND16r_RDRAND32r_RDRAND64r
-  { 1, 5, 6, 0, 0 }, // 738 LD_Frr
-  { 1, 20, 21, 0, 0 }, // 739 LD_F80m
-  { 0, 0, 0, 0, 0 }, // 740 FBLDm
-  { 1, 16, 17, 0, 0 }, // 741 ST_FPrr_ST_Frr
-  { 1, 43, 44, 0, 0 }, // 742 ST_FP80m
-  { 0, 0, 0, 0, 0 }, // 743 FBSTPm
-  { 1, 18, 20, 0, 0 }, // 744 XCH_F
-  { 1, 7, 9, 0, 0 }, // 745 ILD_F16m_ILD_F32m_ILD_F64m
-  { 1, 6, 7, 0, 0 }, // 746 IST_F16m_IST_F32m_IST_FP16m_IST_FP32m
-  { 1, 4, 5, 0, 0 }, // 747 LD_F0
-  { 1, 6, 7, 0, 0 }, // 748 LD_F1
-  { 1, 26, 27, 0, 0 }, // 749 FLDPI
-  { 0, 0, 0, 0, 0 }, // 750 CMOVBE_F_CMOVBE_Fp32_CMOVBE_Fp64_CMOVBE_Fp80_CMOVB_F_CMOVB_Fp32_CMOVB_Fp64_CMOVB_Fp80_CMOVNBE_F_CMOVNBE_Fp32_CMOVNBE_Fp64_CMOVNBE_Fp80_CMOVNB_F_CMOVNB_Fp32_CMOVNB_Fp64_CMOVNB_Fp80_CMOVNE_F_CMOVNE_Fp32_CMOVNE_Fp64_CMOVNE_Fp80_CMOVNP_F_CMOVNP_Fp32_CMOVNP_Fp64_CMOVNP_Fp80_CMOVP_F_CMOVP_Fp32_CMOVP_Fp64_CMOVP_Fp80
-  { 1, 26, 27, 0, 0 }, // 751 FNSTSW16r
-  { 0, 0, 0, 0, 0 }, // 752 FNSTSWm
-  { 1, 43, 44, 0, 0 }, // 753 FLDCW16m
-  { 1, 28, 29, 0, 0 }, // 754 FNSTCW16m
-  { 1, 4, 5, 0, 0 }, // 755 FDECSTP_FINCSTP
-  { 1, 4, 5, 0, 0 }, // 756 FFREE
-  { 0, 0, 0, 0, 0 }, // 757 FSAVEm
-  { 0, 0, 0, 0, 0 }, // 758 FRSTORm
-  { 0, 0, 0, 0, 0 }, // 759 ABS_F_ABS_Fp32_ABS_Fp64_ABS_Fp80
-  { 0, 0, 0, 0, 0 }, // 760 CHS_F_CHS_Fp32_CHS_Fp64_CHS_Fp80
-  { 0, 0, 0, 0, 0 }, // 761 COMP_FST0r_COM_FST0r
-  { 1, 15, 16, 0, 0 }, // 762 UCOM_FPr_UCOM_Fr
-  { 0, 0, 0, 0, 0 }, // 763 FCOM32m_FCOM64m_FCOMP32m_FCOMP64m
-  { 1, 15, 16, 0, 0 }, // 764 FCOMPP
-  { 1, 15, 16, 0, 0 }, // 765 UCOM_FPPr
-  { 1, 14, 15, 0, 0 }, // 766 COM_FIPr_COM_FIr
-  { 1, 14, 15, 0, 0 }, // 767 UCOM_FIPr_UCOM_FIr
-  { 0, 0, 0, 0, 0 }, // 768 FICOM16m_FICOM32m_FICOMP16m_FICOMP32m
-  { 0, 0, 0, 0, 0 }, // 769 TST_F_TST_Fp32_TST_Fp64_TST_Fp80
-  { 1, 5, 6, 0, 0 }, // 770 FXAM
-  { 1, 47, 48, 0, 0 }, // 771 FPREM
-  { 1, 48, 49, 0, 0 }, // 772 FPREM1
-  { 1, 50, 51, 0, 0 }, // 773 FRNDINT
-  { 1, 51, 52, 0, 0 }, // 774 FSCALE
-  { 1, 44, 45, 0, 0 }, // 775 FXTRACT
-  { 1, 4, 5, 0, 0 }, // 776 FNOP
-  { 1, 4, 5, 0, 0 }, // 777 WAIT
-  { 1, 44, 45, 0, 0 }, // 778 FNCLEX
-  { 1, 45, 46, 0, 0 }, // 779 FNINIT
-  { 1, 74, 75, 0, 0 }, // 780 MMX_MOVD64from64rr_MMX_MOVD64grr
-  { 1, 74, 75, 0, 0 }, // 781 MOVPDI2DIrr_VMOVPDI2DIrr
-  { 1, 5, 6, 0, 0 }, // 782 MMX_MOVD64rr_MMX_MOVD64to64rr
-  { 1, 5, 6, 0, 0 }, // 783 MOVDI2PDIrr_VMOVDI2PDIrr
-  { 1, 74, 75, 0, 0 }, // 784 VMOVPQIto64rr
-  { 1, 5, 6, 0, 0 }, // 785 VMOV64toPQIrr
-  { 1, 4, 5, 0, 0 }, // 786 MMX_MOVQ64rr_MMX_MOVQ64rr_REV
-  { 1, 4, 5, 0, 0 }, // 787 MOVDQArr_MOVDQArr_REV_VMOVDQAYrr_VMOVDQAYrr_REV_VMOVDQArr_VMOVDQArr_REV
-  { 1, 4, 5, 0, 0 }, // 788 MOVDQUrr_MOVDQUrr_REV_VMOVDQUYrr_VMOVDQUYrr_REV_VMOVDQUrr_VMOVDQUrr_REV
-  { 1, 4, 5, 0, 0 }, // 789 MMX_MOVDQ2Qrr
-  { 0, 0, 0, 0, 0 }, // 790 MMX_MOVQ2DQrr
-  { 1, 4, 5, 0, 0 }, // 791 MMX_PACKSSDWirr_MMX_PACKSSWBirr_MMX_PACKUSWBirr
-  { 1, 5, 6, 0, 0 }, // 792 MMX_PACKSSDWirm_MMX_PACKSSWBirm_MMX_PACKUSWBirm
-  { 1, 4, 5, 0, 0 }, // 793 VPMOVSXBQYrr_VPMOVSXBWYrr_VPMOVSXDQYrr_VPMOVZXBQYrr_VPMOVZXBWYrr_VPMOVZXDQYrr
-  { 1, 4, 5, 0, 0 }, // 794 PBLENDWrri
-  { 1, 4, 5, 0, 0 }, // 795 VPBLENDWYrri_VPBLENDWrri
-  { 1, 5, 6, 0, 0 }, // 796 PBLENDWrmi
-  { 1, 5, 6, 0, 0 }, // 797 VPBLENDWYrmi_VPBLENDWrmi
-  { 0, 0, 0, 0, 0 }, // 798 VPBLENDDYrri_VPBLENDDrri
-  { 0, 0, 0, 0, 0 }, // 799 VPBLENDDYrmi_VPBLENDDrmi
-  { 1, 5, 6, 0, 0 }, // 800 MMX_MASKMOVQ_MMX_MASKMOVQ64
-  { 1, 16, 17, 0, 0 }, // 801 MASKMOVDQU_MASKMOVDQU64_VMASKMOVDQU_VMASKMOVDQU64
-  { 0, 0, 0, 0, 0 }, // 802 VPMASKMOVDYrm_VPMASKMOVDrm_VPMASKMOVQYrm_VPMASKMOVQrm
-  { 0, 0, 0, 0, 0 }, // 803 VPMASKMOVDYmr_VPMASKMOVDmr_VPMASKMOVQYmr_VPMASKMOVQmr
-  { 0, 0, 0, 0, 0 }, // 804 MMX_PMOVMSKBrr
-  { 1, 74, 75, 0, 0 }, // 805 PMOVMSKBrr_VPMOVMSKBrr
-  { 0, 0, 0, 0, 0 }, // 806 VPMOVMSKBYrr
-  { 1, 20, 21, 0, 0 }, // 807 MMX_PEXTRWirri
-  { 0, 0, 0, 0, 0 }, // 808 PEXTRBrr_PEXTRDrr_PEXTRQrr_PEXTRWrr_REV
-  { 0, 0, 0, 0, 0 }, // 809 PEXTRBmr_PEXTRDmr_PEXTRQmr_PEXTRWmr
-  { 0, 0, 0, 0, 0 }, // 810 VPBROADCASTBrm_VPBROADCASTWrm
-  { 0, 0, 0, 0, 0 }, // 811 VPBROADCASTBYrm_VPBROADCASTWYrm
-  { 0, 0, 0, 0, 0 }, // 812 VPGATHERDDrm
-  { 0, 0, 0, 0, 0 }, // 813 VPGATHERDDYrm
-  { 0, 0, 0, 0, 0 }, // 814 VPGATHERQDrm
-  { 0, 0, 0, 0, 0 }, // 815 VPGATHERQDYrm
-  { 0, 0, 0, 0, 0 }, // 816 VPGATHERDQrm
-  { 0, 0, 0, 0, 0 }, // 817 VPGATHERDQYrm
-  { 0, 0, 0, 0, 0 }, // 818 VPGATHERQQrm
-  { 0, 0, 0, 0, 0 }, // 819 VPGATHERQQYrm
-  { 1, 43, 44, 0, 0 }, // 820 MMX_PHADDSWrr64_MMX_PHADDWrr64_MMX_PHSUBSWrr64_MMX_PHSUBWrr64
-  { 1, 21, 22, 0, 0 }, // 821 MMX_PHADDrr64_MMX_PHSUBDrr64
-  { 1, 21, 22, 0, 0 }, // 822 PHADDDrr_PHSUBDrr_VPHADDDrr_VPHSUBDrr
-  { 0, 0, 0, 0, 0 }, // 823 PHADDSWrr128_PHSUBSWrr128_VPHADDSWrr128_VPHADDSWrr256_VPHSUBSWrr128_VPHSUBSWrr256
-  { 1, 2, 3, 0, 0 }, // 824 PHADDWrr_PHSUBWrr_VPHADDDYrr_VPHADDWYrr_VPHADDWrr_VPHSUBDYrr_VPHSUBWYrr_VPHSUBWrr
-  { 1, 6, 7, 0, 0 }, // 825 MMX_PHADDSWrm64_MMX_PHADDWrm64_MMX_PHSUBSWrm64_MMX_PHSUBWrm64
-  { 1, 20, 21, 0, 0 }, // 826 MMX_PHADDrm64_MMX_PHSUBDrm64
-  { 1, 20, 21, 0, 0 }, // 827 PHADDDrm_PHSUBDrm_VPHADDDrm_VPHSUBDrm
-  { 0, 0, 0, 0, 0 }, // 828 PHADDSWrm128_PHSUBSWrm128_VPHADDSWrm128_VPHADDSWrm256_VPHSUBSWrm128_VPHSUBSWrm256
-  { 1, 28, 29, 0, 0 }, // 829 PHADDWrm_PHSUBWrm_VPHADDDYrm_VPHADDWYrm_VPHADDWrm_VPHSUBDYrm_VPHSUBWYrm_VPHSUBWrm
-  { 0, 0, 0, 0, 0 }, // 830 PCMPGTQrr_VPCMPGTQYrr_VPCMPGTQrr
-  { 0, 0, 0, 0, 0 }, // 831 PCMPGTQrm_VPCMPGTQYrm_VPCMPGTQrm
-  { 0, 0, 0, 0, 0 }, // 832 PMULLDrr_VPMULLDYrr_VPMULLDrr
-  { 0, 0, 0, 0, 0 }, // 833 PMULLDrm_VPMULLDYrm_VPMULLDrm
-  { 0, 0, 0, 0, 0 }, // 834 PTESTrr_VPTESTYrr_VPTESTrr
-  { 0, 0, 0, 0, 0 }, // 835 PTESTrm_VPTESTYrm_VPTESTrm
-  { 1, 16, 17, 0, 0 }, // 836 PSLLDrr_PSLLQrr_PSLLWrr_PSRADrr_PSRAWrr_PSRLDrr_PSRLQrr_PSRLWrr_VPSLLDYrr_VPSLLDrr_VPSLLQYrr_VPSLLQrr_VPSLLWYrr_VPSLLWrr_VPSRADYrr_VPSRADrr_VPSRAWYrr_VPSRAWrr_VPSRLDYrr_VPSRLDrr_VPSRLQYrr_VPSRLQrr_VPSRLWYrr_VPSRLWrr
-  { 1, 4, 5, 0, 0 }, // 837 PSLLDQri_PSRLDQri
-  { 0, 0, 0, 0, 0 }, // 838 VPSLLDQYri_VPSLLDQri_VPSRLDQYri_VPSRLDQri
-  { 1, 43, 44, 0, 0 }, // 839 MMX_EMMS
-  { 1, 74, 75, 0, 0 }, // 840 MOVMSKPDrr_MOVMSKPSrr_VMOVMSKPDrr_VMOVMSKPSrr
-  { 1, 74, 75, 0, 0 }, // 841 VMOVMSKPDYrr_VMOVMSKPSYrr
-  { 0, 0, 0, 0, 0 }, // 842 VPERM2F128rr
-  { 0, 0, 0, 0, 0 }, // 843 VPERM2F128rm
-  { 1, 4, 5, 0, 0 }, // 844 BLENDVPDrr0_BLENDVPSrr0
-  { 1, 5, 6, 0, 0 }, // 845 BLENDVPDrm0_BLENDVPSrm0
-  { 0, 0, 0, 0, 0 }, // 846 VBROADCASTF128
-  { 0, 0, 0, 0, 0 }, // 847 EXTRACTPSrr
-  { 1, 4, 5, 0, 0 }, // 848 VEXTRACTPSrr
-  { 0, 0, 0, 0, 0 }, // 849 EXTRACTPSmr
-  { 1, 5, 6, 0, 0 }, // 850 VEXTRACTPSmr
-  { 0, 0, 0, 0, 0 }, // 851 VEXTRACTF128rr
-  { 0, 0, 0, 0, 0 }, // 852 VEXTRACTF128mr
-  { 0, 0, 0, 0, 0 }, // 853 VINSERTF128rr
-  { 0, 0, 0, 0, 0 }, // 854 VINSERTF128rm
-  { 0, 0, 0, 0, 0 }, // 855 VMASKMOVPDYrm_VMASKMOVPDrm_VMASKMOVPSYrm_VMASKMOVPSrm
-  { 0, 0, 0, 0, 0 }, // 856 VMASKMOVPDmr_VMASKMOVPSmr
-  { 0, 0, 0, 0, 0 }, // 857 VMASKMOVPDYmr_VMASKMOVPSYmr
-  { 0, 0, 0, 0, 0 }, // 858 VGATHERDPSrm
-  { 0, 0, 0, 0, 0 }, // 859 VGATHERDPSYrm
-  { 0, 0, 0, 0, 0 }, // 860 VGATHERQPSrm
-  { 0, 0, 0, 0, 0 }, // 861 VGATHERQPSYrm
-  { 0, 0, 0, 0, 0 }, // 862 VGATHERDPDrm
-  { 0, 0, 0, 0, 0 }, // 863 VGATHERDPDYrm
-  { 0, 0, 0, 0, 0 }, // 864 VGATHERQPDrm
-  { 0, 0, 0, 0, 0 }, // 865 VGATHERQPDYrm
-  { 1, 2, 3, 0, 0 }, // 866 CVTPD2PSrr_VCVTPD2PSrr
-  { 1, 28, 29, 0, 0 }, // 867 CVTPD2PSrm_VCVTPD2PSXrm
-  { 1, 2, 3, 0, 0 }, // 868 VCVTPD2PSYrr
-  { 1, 28, 29, 0, 0 }, // 869 VCVTPD2PSYrm
-  { 1, 6, 7, 0, 0 }, // 870 CVTSD2SSrr_Int_CVTSD2SSrr_Int_VCVTSD2SSrr_VCVTSD2SSrr
-  { 1, 2, 3, 0, 0 }, // 871 CVTSD2SSrm
-  { 1, 2, 3, 0, 0 }, // 872 Int_CVTSD2SSrm_Int_VCVTSD2SSrm_VCVTSD2SSrm
-  { 1, 2, 3, 0, 0 }, // 873 CVTPS2PDrr_VCVTPS2PDrr
-  { 1, 28, 29, 0, 0 }, // 874 CVTPS2PDrm_VCVTPS2PDYrm_VCVTPS2PDrm
-  { 1, 2, 3, 0, 0 }, // 875 VCVTPS2PDYrr
-  { 1, 6, 7, 0, 0 }, // 876 CVTSS2SDrr_Int_CVTSS2SDrr_Int_VCVTSS2SDrr_VCVTSS2SDrr
-  { 1, 2, 3, 0, 0 }, // 877 CVTSS2SDrm
-  { 1, 2, 3, 0, 0 }, // 878 Int_CVTSS2SDrm_Int_VCVTSS2SDrm_VCVTSS2SDrm
-  { 1, 28, 29, 0, 0 }, // 879 CVTDQ2PDrr
-  { 0, 0, 0, 0, 0 }, // 880 VCVTDQ2PDrr
-  { 0, 0, 0, 0, 0 }, // 881 VCVTDQ2PDYrr
-  { 1, 2, 3, 0, 0 }, // 882 CVTPD2DQrr_CVTTPD2DQrr_VCVTTPD2DQrr
-  { 0, 0, 0, 0, 0 }, // 883 VCVTPD2DQrr
-  { 1, 28, 29, 0, 0 }, // 884 CVTPD2DQrm_CVTTPD2DQrm
-  { 0, 0, 0, 0, 0 }, // 885 VCVTPD2DQYrr
-  { 1, 2, 3, 0, 0 }, // 886 VCVTTPD2DQYrr
-  { 0, 0, 0, 0, 0 }, // 887 VCVTPD2DQYrm
-  { 1, 28, 29, 0, 0 }, // 888 VCVTTPD2DQYrm
-  { 1, 9, 10, 0, 0 }, // 889 MMX_CVTPS2PIirr_MMX_CVTTPS2PIirr
-  { 1, 2, 3, 0, 0 }, // 890 MMX_CVTPI2PDirr
-  { 1, 2, 3, 0, 0 }, // 891 MMX_CVTPD2PIirr_MMX_CVTTPD2PIirr
-  { 1, 6, 7, 0, 0 }, // 892 CVTSI2SS64rr_CVTSI2SSrr_Int_CVTSI2SS64rr_Int_CVTSI2SSrr_Int_VCVTSI2SS64rr_Int_VCVTSI2SSrr
-  { 0, 0, 0, 0, 0 }, // 893 VCVTSI2SS64rr_VCVTSI2SSrr
-  { 1, 14, 15, 0, 0 }, // 894 CVTSS2SI64rr_CVTTSS2SI64rr_Int_CVTTSS2SI64rr_Int_VCVTTSS2SI64rr_VCVTSS2SI64rr_VCVTTSS2SI64rr
-  { 1, 28, 29, 0, 0 }, // 895 CVTSS2SIrr_CVTTSS2SIrr_Int_CVTTSS2SIrr_Int_VCVTTSS2SIrr_VCVTSS2SIrr_VCVTTSS2SIrr
-  { 1, 26, 27, 0, 0 }, // 896 CVTSS2SI64rm_CVTTSS2SI64rm_Int_CVTTSS2SI64rm_Int_VCVTTSS2SI64rm_VCVTSS2SI64rm_VCVTTSS2SI64rm
-  { 1, 14, 15, 0, 0 }, // 897 CVTSS2SIrm_CVTTSS2SIrm_Int_CVTTSS2SIrm_Int_VCVTTSS2SIrm_VCVTSS2SIrm_VCVTTSS2SIrm
-  { 1, 28, 29, 0, 0 }, // 898 CVTSD2SI64rr_CVTSD2SIrr_CVTTSD2SI64rr_CVTTSD2SIrr_Int_CVTTSD2SI64rr_Int_CVTTSD2SIrr_Int_VCVTTSD2SI64rr_Int_VCVTTSD2SIrr_VCVTSD2SI64rr_VCVTSD2SIrr_VCVTTSD2SI64rr_VCVTTSD2SIrr
-  { 1, 14, 15, 0, 0 }, // 899 CVTSD2SI64rm_CVTSD2SIrm_CVTTSD2SI64rm_CVTTSD2SIrm_Int_CVTTSD2SI64rm_Int_CVTTSD2SIrm_Int_VCVTTSD2SI64rm_Int_VCVTTSD2SIrm_VCVTSD2SI64rm_VCVTSD2SIrm_VCVTTSD2SI64rm_VCVTTSD2SIrm
-  { 0, 0, 0, 0, 0 }, // 900 VCVTPS2PHYrr_VCVTPS2PHrr
-  { 0, 0, 0, 0, 0 }, // 901 VCVTPS2PHYmr_VCVTPS2PHmr
-  { 0, 0, 0, 0, 0 }, // 902 VCVTPH2PSYrr_VCVTPH2PSrr
-  { 1, 28, 29, 0, 0 }, // 903 HADDPDrr_HADDPSrr_HSUBPDrr_HSUBPSrr_VHADDPDYrr_VHADDPDrr_VHADDPSYrr_VHADDPSrr_VHSUBPDYrr_VHSUBPDrr_VHSUBPSYrr_VHSUBPSrr
-  { 1, 14, 15, 0, 0 }, // 904 HADDPDrm_HADDPSrm_HSUBPDrm_HSUBPSrm_VHADDPDYrm_VHADDPDrm_VHADDPSYrm_VHADDPSrm_VHSUBPDYrm_VHSUBPDrm_VHSUBPSYrm_VHSUBPSrm
-  { 1, 14, 15, 0, 0 }, // 905 MULPDrr_VMULPDrr
-  { 1, 57, 58, 0, 0 }, // 906 MULPSrr_VMULPSrr
-  { 1, 57, 58, 0, 0 }, // 907 MULSDrr_MULSDrr_Int_VMULSDrr_VMULSDrr_Int
-  { 1, 75, 76, 0, 0 }, // 908 MULSSrr_MULSSrr_Int_VMULSSrr_VMULSSrr_Int
-  { 1, 26, 27, 0, 0 }, // 909 MULPDrm_MULPSrm_VMULPDrm_VMULPSrm
-  { 1, 57, 58, 0, 0 }, // 910 MULSDrm_MULSDrm_Int_MULSSrm_MULSSrm_Int_VMULSDrm_VMULSDrm_Int_VMULSSrm_VMULSSrm_Int
-  { 1, 34, 35, 0, 0 }, // 911 VDIVPSYrr
-  { 1, 33, 34, 0, 0 }, // 912 VDIVPSYrm
-  { 1, 33, 34, 0, 0 }, // 913 VDIVPDYrr
-  { 1, 33, 34, 0, 0 }, // 914 VDIVPDYrm
-  { 1, 14, 15, 0, 0 }, // 915 VRCPPSYr
-  { 1, 26, 27, 0, 0 }, // 916 VRCPPSYm
-  { 0, 0, 0, 0, 0 }, // 917 ROUNDPDr_ROUNDPSr_VROUNDPDr_VROUNDPSr_VROUNDYPDr_VROUNDYPSr
-  { 0, 0, 0, 0, 0 }, // 918 ROUNDSDr_ROUNDSDr_Int_ROUNDSSr_ROUNDSSr_Int_VROUNDSDr_VROUNDSDr_Int_VROUNDSSr_VROUNDSSr_Int
-  { 0, 0, 0, 0, 0 }, // 919 ROUNDPDm_VROUNDPDm_VROUNDYPDm
-  { 0, 0, 0, 0, 0 }, // 920 ROUNDPSm_VROUNDPSm_VROUNDYPSm
-  { 0, 0, 0, 0, 0 }, // 921 ROUNDSDm_ROUNDSSm_VROUNDSDm_VROUNDSSm
-  { 0, 0, 0, 0, 0 }, // 922 DPPSrri_VDPPSYrri_VDPPSrri
-  { 0, 0, 0, 0, 0 }, // 923 DPPSrmi_VDPPSYrmi_VDPPSrmi
-  { 0, 0, 0, 0, 0 }, // 924 DPPDrri
-  { 0, 0, 0, 0, 0 }, // 925 VDPPDrri
-  { 0, 0, 0, 0, 0 }, // 926 DPPDrmi_VDPPDrmi
-  { 0, 0, 0, 0, 0 }, // 927 VFMADDPD4rr_VFMADDPD4rrY_VFMADDPD4rrY_REV_VFMADDPD4rr_REV_VFMADDPDr132r_VFMADDPDr132rY_VFMADDPDr213r_VFMADDPDr213rY_VFMADDPDr231r_VFMADDPDr231rY_VFMADDPS4rr_VFMADDPS4rrY_VFMADDPS4rrY_REV_VFMADDPS4rr_REV_VFMADDPSr132r_VFMADDPSr132rY_VFMADDPSr213r_VFMADDPSr213rY_VFMADDPSr231r_VFMADDPSr231rY_VFMADDSD4rr_VFMADDSD4rr_Int_VFMADDSD4rr_REV_VFMADDSDr132r_VFMADDSDr132r_Int_VFMADDSDr213r_VFMADDSDr213r_Int_VFMADDSDr231r_VFMADDSDr231r_Int_VFMADDSS4rr_VFMADDSS4rr_Int_VFMADDSS4rr_REV_VFMADDSSr132r_VFMADDSSr132r_Int_VFMADDSSr213r_VFMADDSSr213r_Int_VFMADDSSr231r_VFMADDSSr231r_Int_VFMADDSUBPDr132r_VFMADDSUBPDr132rY_VFMADDSUBPDr213r_VFMADDSUBPDr213rY_VFMADDSUBPDr231r_VFMADDSUBPDr231rY_VFMADDSUBPSr132r_VFMADDSUBPSr132rY_VFMADDSUBPSr213r_VFMADDSUBPSr213rY_VFMADDSUBPSr231r_VFMADDSUBPSr231rY_VFMSUBADDPDr132r_VFMSUBADDPDr132rY_VFMSUBADDPDr213r_VFMSUBADDPDr213rY_VFMSUBADDPDr231r_VFMSUBADDPDr231rY_VFMSUBADDPSr132r_VFMSUBADDPSr132rY_VFMSUBADDPSr213r_VFMSUBADDPSr213rY_VFMSUBADDPSr231r_VFMSUBADDPSr231rY_VFMSUBPD4rr_VFMSUBPD4rrY_VFMSUBPD4rrY_REV_VFMSUBPD4rr_REV_VFMSUBPDr132r_VFMSUBPDr132rY_VFMSUBPDr213r_VFMSUBPDr213rY_VFMSUBPDr231r_VFMSUBPDr231rY_VFMSUBPS4rr_VFMSUBPS4rrY_VFMSUBPS4rrY_REV_VFMSUBPS4rr_REV_VFMSUBPSr132r_VFMSUBPSr132rY_VFMSUBPSr213r_VFMSUBPSr213rY_VFMSUBPSr231r_VFMSUBPSr231rY_VFMSUBSD4rr_VFMSUBSD4rr_Int_VFMSUBSD4rr_REV_VFMSUBSDr132r_VFMSUBSDr132r_Int_VFMSUBSDr213r_VFMSUBSDr213r_Int_VFMSUBSDr231r_VFMSUBSDr231r_Int_VFMSUBSS4rr_VFMSUBSS4rr_Int_VFMSUBSS4rr_REV_VFMSUBSSr132r_VFMSUBSSr132r_Int_VFMSUBSSr213r_VFMSUBSSr213r_Int_VFMSUBSSr231r_VFMSUBSSr231r_Int_VFNMADDPD4rr_VFNMADDPD4rrY_VFNMADDPD4rrY_REV_VFNMADDPD4rr_REV_VFNMADDPDr132r_VFNMADDPDr132rY_VFNMADDPDr213r_VFNMADDPDr213rY_VFNMADDPDr231r_VFNMADDPDr231rY_VFNMADDPS4rr_VFNMADDPS4rrY_VFNMADDPS4rrY_REV_VFNMADDPS4rr_REV_VFNMADDPSr132r_VFNMADDPSr132rY_VFNMADDPSr213r_VFNMADDPSr213rY_VFNMADDPSr231r_VFNMADDPSr231rY_VFNMADDSD4rr_VFNMADDSD4rr_Int_VFNMADDSD4rr_REV_VFNMADDSDr132r_VFNMADDSDr132r_Int_VFNMADDSDr213r_VFNMADDSDr213r_Int_VFNMADDSDr231r_VFNMADDSDr231r_Int_VFNMADDSS4rr_VFNMADDSS4rr_Int_VFNMADDSS4rr_REV_VFNMADDSSr132r_VFNMADDSSr132r_Int_VFNMADDSSr213r_VFNMADDSSr213r_Int_VFNMADDSSr231r_VFNMADDSSr231r_Int_VFNMSUBPD4rr_VFNMSUBPD4rrY_VFNMSUBPD4rrY_REV_VFNMSUBPD4rr_REV_VFNMSUBPDr132r_VFNMSUBPDr132rY_VFNMSUBPDr213r_VFNMSUBPDr213rY_VFNMSUBPDr231r_VFNMSUBPDr231rY_VFNMSUBPS4rr_VFNMSUBPS4rrY_VFNMSUBPS4rrY_REV_VFNMSUBPS4rr_REV_VFNMSUBPSr132r_VFNMSUBPSr132rY_VFNMSUBPSr213r_VFNMSUBPSr213rY_VFNMSUBPSr231r_VFNMSUBPSr231rY_VFNMSUBSD4rr_VFNMSUBSD4rr_Int_VFNMSUBSD4rr_REV_VFNMSUBSDr132r_VFNMSUBSDr132r_Int_VFNMSUBSDr213r_VFNMSUBSDr213r_Int_VFNMSUBSDr231r_VFNMSUBSDr231r_Int_VFNMSUBSS4rr_VFNMSUBSS4rr_Int_VFNMSUBSS4rr_REV_VFNMSUBSSr132r_VFNMSUBSSr132r_Int_VFNMSUBSSr213r_VFNMSUBSSr213r_Int_VFNMSUBSSr231r_VFNMSUBSSr231r_Int
-  { 0, 0, 0, 0, 0 }, // 928 VFMADDPD4mr_VFMADDPD4mrY_VFMADDPD4rm_VFMADDPD4rmY_VFMADDPDr132m_VFMADDPDr132mY_VFMADDPDr213m_VFMADDPDr213mY_VFMADDPDr231m_VFMADDPDr231mY_VFMADDPS4mr_VFMADDPS4mrY_VFMADDPS4rm_VFMADDPS4rmY_VFMADDPSr132m_VFMADDPSr132mY_VFMADDPSr213m_VFMADDPSr213mY_VFMADDPSr231m_VFMADDPSr231mY_VFMADDSD4mr_VFMADDSD4mr_Int_VFMADDSD4rm_VFMADDSD4rm_Int_VFMADDSDr132m_VFMADDSDr132m_Int_VFMADDSDr213m_VFMADDSDr213m_Int_VFMADDSDr231m_VFMADDSDr231m_Int_VFMADDSS4mr_VFMADDSS4mr_Int_VFMADDSS4rm_VFMADDSS4rm_Int_VFMADDSSr132m_VFMADDSSr132m_Int_VFMADDSSr213m_VFMADDSSr213m_Int_VFMADDSSr231m_VFMADDSSr231m_Int_VFMADDSUBPDr132m_VFMADDSUBPDr132mY_VFMADDSUBPDr213m_VFMADDSUBPDr213mY_VFMADDSUBPDr231m_VFMADDSUBPDr231mY_VFMADDSUBPSr132m_VFMADDSUBPSr132mY_VFMADDSUBPSr213m_VFMADDSUBPSr213mY_VFMADDSUBPSr231m_VFMADDSUBPSr231mY_VFMSUBADDPDr132m_VFMSUBADDPDr132mY_VFMSUBADDPDr213m_VFMSUBADDPDr213mY_VFMSUBADDPDr231m_VFMSUBADDPDr231mY_VFMSUBADDPSr132m_VFMSUBADDPSr132mY_VFMSUBADDPSr213m_VFMSUBADDPSr213mY_VFMSUBADDPSr231m_VFMSUBADDPSr231mY_VFMSUBPD4mr_VFMSUBPD4mrY_VFMSUBPD4rm_VFMSUBPD4rmY_VFMSUBPDr132m_VFMSUBPDr132mY_VFMSUBPDr213m_VFMSUBPDr213mY_VFMSUBPDr231m_VFMSUBPDr231mY_VFMSUBPS4mr_VFMSUBPS4mrY_VFMSUBPS4rm_VFMSUBPS4rmY_VFMSUBPSr132m_VFMSUBPSr132mY_VFMSUBPSr213m_VFMSUBPSr213mY_VFMSUBPSr231m_VFMSUBPSr231mY_VFMSUBSD4mr_VFMSUBSD4mr_Int_VFMSUBSD4rm_VFMSUBSD4rm_Int_VFMSUBSDr132m_VFMSUBSDr132m_Int_VFMSUBSDr213m_VFMSUBSDr213m_Int_VFMSUBSDr231m_VFMSUBSDr231m_Int_VFMSUBSS4mr_VFMSUBSS4mr_Int_VFMSUBSS4rm_VFMSUBSS4rm_Int_VFMSUBSSr132m_VFMSUBSSr132m_Int_VFMSUBSSr213m_VFMSUBSSr213m_Int_VFMSUBSSr231m_VFMSUBSSr231m_Int_VFNMADDPD4mr_VFNMADDPD4mrY_VFNMADDPD4rm_VFNMADDPD4rmY_VFNMADDPDr132m_VFNMADDPDr132mY_VFNMADDPDr213m_VFNMADDPDr213mY_VFNMADDPDr231m_VFNMADDPDr231mY_VFNMADDPS4mr_VFNMADDPS4mrY_VFNMADDPS4rm_VFNMADDPS4rmY_VFNMADDPSr132m_VFNMADDPSr132mY_VFNMADDPSr213m_VFNMADDPSr213mY_VFNMADDPSr231m_VFNMADDPSr231mY_VFNMADDSD4mr_VFNMADDSD4mr_Int_VFNMADDSD4rm_VFNMADDSD4rm_Int_VFNMADDSDr132m_VFNMADDSDr132m_Int_VFNMADDSDr213m_VFNMADDSDr213m_Int_VFNMADDSDr231m_VFNMADDSDr231m_Int_VFNMADDSS4mr_VFNMADDSS4mr_Int_VFNMADDSS4rm_VFNMADDSS4rm_Int_VFNMADDSSr132m_VFNMADDSSr132m_Int_VFNMADDSSr213m_VFNMADDSSr213m_Int_VFNMADDSSr231m_VFNMADDSSr231m_Int_VFNMSUBPD4mr_VFNMSUBPD4mrY_VFNMSUBPD4rm_VFNMSUBPD4rmY_VFNMSUBPDr132m_VFNMSUBPDr132mY_VFNMSUBPDr213m_VFNMSUBPDr213mY_VFNMSUBPDr231m_VFNMSUBPDr231mY_VFNMSUBPS4mr_VFNMSUBPS4mrY_VFNMSUBPS4rm_VFNMSUBPS4rmY_VFNMSUBPSr132m_VFNMSUBPSr132mY_VFNMSUBPSr213m_VFNMSUBPSr213mY_VFNMSUBPSr231m_VFNMSUBPSr231mY_VFNMSUBSD4mr_VFNMSUBSD4mr_Int_VFNMSUBSD4rm_VFNMSUBSD4rm_Int_VFNMSUBSDr132m_VFNMSUBSDr132m_Int_VFNMSUBSDr213m_VFNMSUBSDr213m_Int_VFNMSUBSDr231m_VFNMSUBSDr231m_Int_VFNMSUBSS4mr_VFNMSUBSS4mr_Int_VFNMSUBSS4rm_VFNMSUBSS4rm_Int_VFNMSUBSSr132m_VFNMSUBSSr132m_Int_VFNMSUBSSr213m_VFNMSUBSSr213m_Int_VFNMSUBSSr231m_VFNMSUBSSr231m_Int
-  { 1, 34, 35, 0, 0 }, // 929 VSQRTPSYr
-  { 1, 34, 35, 0, 0 }, // 930 VSQRTPSYm
-  { 1, 33, 34, 0, 0 }, // 931 VSQRTPDYr
-  { 1, 33, 34, 0, 0 }, // 932 VSQRTPDYm
-  { 1, 14, 15, 0, 0 }, // 933 RSQRTPSr_VRSQRTPSr
-  { 1, 75, 76, 0, 0 }, // 934 RSQRTSSr_VRSQRTSSr
-  { 0, 0, 0, 0, 0 }, // 935 RSQRTSSr_Int
-  { 0, 0, 0, 0, 0 }, // 936 VRSQRTSSr_Int
-  { 1, 26, 27, 0, 0 }, // 937 RSQRTPSm_VRSQRTPSm
-  { 1, 75, 76, 0, 0 }, // 938 RSQRTSSm_VRSQRTSSm
-  { 0, 0, 0, 0, 0 }, // 939 RSQRTSSm_Int_VRSQRTSSm_Int
-  { 1, 14, 15, 0, 0 }, // 940 VRSQRTPSYr
-  { 1, 26, 27, 0, 0 }, // 941 VRSQRTPSYm
-  { 0, 0, 0, 0, 0 }, // 942 ANDNPDrr_ANDNPSrr_ANDPDrr_ANDPSrr_ORPDrr_ORPSrr_VANDNPDYrr_VANDNPDrr_VANDNPSYrr_VANDNPSrr_VANDPDYrr_VANDPDrr_VANDPSYrr_VANDPSrr_VORPDYrr_VORPDrr_VORPSYrr_VORPSrr_VXORPDYrr_VXORPDrr_VXORPSYrr_VXORPSrr_XORPDrr_XORPSrr
-  { 0, 0, 0, 0, 0 }, // 943 ANDNPDrm_ANDNPSrm_ANDPDrm_ANDPSrm_ORPDrm_ORPSrm_VANDNPDYrm_VANDNPDrm_VANDNPSYrm_VANDNPSrm_VANDPDYrm_VANDPDrm_VANDPSYrm_VANDPSrm_VORPDYrm_VORPDrm_VORPSYrm_VORPSrm_VXORPDYrm_VXORPDrm_VXORPSYrm_VXORPSrm_XORPDrm_XORPSrm
-  { 0, 0, 0, 0, 0 }, // 944 VZEROUPPER
-  { 0, 0, 0, 0, 0 }, // 945 VZEROALL
-  { 1, 43, 44, 0, 0 }, // 946 LDMXCSR_VLDMXCSR
-  { 1, 17, 18, 0, 0 }, // 947 STMXCSR_VSTMXCSR
+  { 1, 14, 15, 0, 0 }, // 158 IIC_SSE_HADDSUB_RM_WriteFAddLd_ReadAfterLd
+  { 1, 28, 29, 0, 0 }, // 159 IIC_SSE_HADDSUB_RR_WriteFAdd
+  { 1, 27, 28, 0, 0 }, // 160 IIC_HLT_WriteSystem
+  { 1, 35, 36, 0, 0 }, // 161 IIC_IDIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 35, 36, 0, 0 }, // 162 IIC_IDIV16_WriteIDiv
+  { 1, 35, 36, 0, 0 }, // 163 IIC_IDIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 35, 36, 0, 0 }, // 164 IIC_IDIV32_WriteIDiv
+  { 1, 31, 32, 0, 0 }, // 165 IIC_IDIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 31, 32, 0, 0 }, // 166 IIC_IDIV64_WriteIDiv
+  { 1, 35, 36, 0, 0 }, // 167 IIC_IDIV8_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 35, 36, 0, 0 }, // 168 IIC_IDIV8_WriteIDiv
+  { 1, 7, 9, 0, 0 }, // 169 IIC_FILD_WriteLoad
+  { 1, 28, 29, 0, 0 }, // 170 IIC_IMUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 6, 7, 0, 0 }, // 171 IIC_IMUL16_RR_WriteIMul
+  { 1, 2, 3, 0, 0 }, // 172 IIC_IMUL16_RM_WriteIMulLd_ReadAfterLd
+  { 1, 2, 3, 0, 0 }, // 173 IIC_IMUL16_RMI_WriteIMulLd
+  { 1, 6, 7, 0, 0 }, // 174 IIC_IMUL16_RRI_WriteIMul
+  { 1, 2, 3, 0, 0 }, // 175 IIC_IMUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 57, 58, 0, 0 }, // 176 IIC_IMUL32_RR_WriteIMul
+  { 1, 57, 58, 0, 0 }, // 177 IIC_IMUL32_RM_WriteIMulLd_ReadAfterLd
+  { 1, 57, 58, 0, 0 }, // 178 IIC_IMUL32_RMI_WriteIMulLd
+  { 1, 57, 58, 0, 0 }, // 179 IIC_IMUL32_RRI_WriteIMul
+  { 1, 58, 59, 0, 0 }, // 180 IIC_IMUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 58, 59, 0, 0 }, // 181 IIC_IMUL64_RR_WriteIMul
+  { 1, 58, 59, 0, 0 }, // 182 IIC_IMUL64_RM_WriteIMulLd_ReadAfterLd
+  { 1, 22, 23, 0, 0 }, // 183 IIC_IMUL64_RMI_WriteIMulLd
+  { 1, 22, 23, 0, 0 }, // 184 IIC_IMUL64_RRI_WriteIMul
+  { 1, 2, 3, 0, 0 }, // 185 IIC_IMUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 2, 3, 0, 0 }, // 186 IIC_IMUL8_WriteIMul
+  { 1, 59, 60, 0, 0 }, // 187 IIC_IN_RI_WriteSystem
+  { 1, 60, 61, 0, 0 }, // 188 IIC_IN_RR_WriteSystem
+  { 1, 61, 62, 0, 0 }, // 189 IIC_INS_WriteSystem
+  { 0, 0, 0, 0, 0 }, // 190 IIC_SSE_INSERTPS_RM_WriteFShuffleLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 191 IIC_SSE_INSERTPS_RR_WriteFShuffle
+  { 1, 62, 63, 0, 0 }, // 192 IIC_INT_WriteSystem
+  { 1, 31, 32, 0, 0 }, // 193 IIC_INT3_WriteSystem
+  { 1, 63, 64, 0, 0 }, // 194 IIC_INVD_WriteSystem
+  { 1, 48, 49, 0, 0 }, // 195 IIC_INVLPG_WriteSystem
+  { 0, 0, 0, 0, 0 }, // 196 WriteJumpLd
+  { 1, 64, 65, 0, 0 }, // 197 IIC_IRET_WriteJumpLd
+  { 1, 16, 17, 0, 0 }, // 198 IIC_FST_WriteStore
+  { 1, 6, 7, 0, 0 }, // 199 IIC_FIST_WriteStore
+  { 1, 2, 3, 0, 0 }, // 200 IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd_ReadAfterLd
+  { 1, 2, 3, 0, 0 }, // 201 IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 202 WriteLoad
+  { 1, 15, 16, 0, 0 }, // 203 IIC_Jcc_WriteJump
+  { 1, 20, 21, 0, 0 }, // 204 IIC_JCXZ_WriteJump
+  { 1, 16, 17, 0, 0 }, // 205 IIC_JMP_MEM_WriteJumpLd
+  { 1, 15, 16, 0, 0 }, // 206 IIC_JMP_REG_WriteJump
+  { 1, 15, 16, 0, 0 }, // 207 IIC_JMP_REL_WriteJump
+  { 1, 4, 5, 0, 0 }, // 208 IIC_AHF_WriteALU
+  { 1, 30, 31, 0, 0 }, // 209 IIC_LAR_RM_WriteSystem
+  { 1, 65, 66, 0, 0 }, // 210 IIC_LAR_RR_WriteSystem
+  { 1, 22, 23, 0, 0 }, // 211 IIC_CMPX_LOCK_WriteALULd_WriteRMW
+  { 1, 24, 25, 0, 0 }, // 212 IIC_CMPX_LOCK_16B_WriteALULd_WriteRMW
+  { 1, 6, 7, 0, 0 }, // 213 IIC_CMPX_LOCK_8_WriteALULd_WriteRMW
+  { 1, 25, 26, 0, 0 }, // 214 IIC_CMPX_LOCK_8B_WriteALULd_WriteRMW
+  { 1, 21, 22, 0, 0 }, // 215 IIC_SSE_LDDQU_WriteLoad
+  { 1, 43, 44, 0, 0 }, // 216 IIC_SSE_LDMXCSR_WriteLoad
+  { 1, 26, 27, 0, 0 }, // 217 IIC_LXS_WriteSystem
+  { 1, 4, 5, 0, 0 }, // 218 IIC_FLDZ_WriteZero
+  { 1, 6, 7, 0, 0 }, // 219 IIC_FIST_WriteZero
+  { 1, 5, 6, 0, 0 }, // 220 IIC_FLD_WriteLoad
+  { 1, 20, 21, 0, 0 }, // 221 IIC_FLD80_WriteLoad
+  { 1, 5, 6, 0, 0 }, // 222 IIC_FLD_WriteMove
+  { 1, 16, 17, 0, 0 }, // 223 IIC_LEA_16_WriteLEA
+  { 1, 15, 16, 0, 0 }, // 224 IIC_LEA_WriteLEA
+  { 1, 16, 17, 0, 0 }, // 225 IIC_LEAVE_WriteALU
+  { 1, 4, 5, 0, 0 }, // 226 IIC_SSE_LFENCE_WriteFence
+  { 1, 66, 67, 0, 0 }, // 227 IIC_LGDT_WriteSystem
+  { 1, 66, 67, 0, 0 }, // 228 IIC_LIDT_WriteSystem
+  { 1, 67, 68, 0, 0 }, // 229 IIC_LLDT_MEM_WriteSystem
+  { 1, 68, 69, 0, 0 }, // 230 IIC_LLDT_REG_WriteSystem
+  { 1, 69, 70, 0, 0 }, // 231 IIC_LMSW_REG_WriteSystem
+  { 1, 70, 71, 0, 0 }, // 232 IIC_LMSW_MEM_WriteSystem
+  { 1, 5, 6, 0, 0 }, // 233 IIC_ALU_MEM_WriteALULd_WriteRMW
+  { 1, 4, 5, 0, 0 }, // 234 IIC_ALU_NONMEM_WriteALULd_WriteRMW
+  { 1, 16, 17, 0, 0 }, // 235 IIC_LODS_WriteMicrocoded
+  { 1, 25, 26, 0, 0 }, // 236 IIC_LOOP_WriteJump
+  { 1, 28, 29, 0, 0 }, // 237 IIC_LOOPE_WriteJump
+  { 1, 71, 72, 0, 0 }, // 238 IIC_LOOPNE_WriteJump
+  { 1, 37, 38, 0, 0 }, // 239 IIC_RET_WriteJumpLd
+  { 1, 50, 51, 0, 0 }, // 240 IIC_LSL_RM_WriteSystem
+  { 1, 72, 73, 0, 0 }, // 241 IIC_LSL_RR_WriteSystem
+  { 1, 73, 74, 0, 0 }, // 242 IIC_LTR_WriteSystem
+  { 1, 21, 22, 0, 0 }, // 243 IIC_XADD_LOCK_MEM_WriteALULd_WriteRMW
+  { 0, 0, 0, 0, 0 }, // 244 IIC_XADD_LOCK_MEM8_WriteALULd_WriteRMW
+  { 1, 16, 17, 0, 0 }, // 245 IIC_SSE_MASKMOV_WriteStore
+  { 1, 5, 6, 0, 0 }, // 246 IIC_SSE_MFENCE_WriteFence
+  { 1, 28, 29, 0, 0 }, // 247 IIC_MMX_CVT_PD_RM_WriteCvtF2ILd
+  { 1, 2, 3, 0, 0 }, // 248 IIC_MMX_CVT_PD_RR_WriteCvtF2I
+  { 0, 0, 0, 0, 0 }, // 249 WriteCvtI2FLd
+  { 0, 0, 0, 0, 0 }, // 250 WriteCvtI2F
+  { 1, 7, 9, 0, 0 }, // 251 IIC_MMX_CVT_PS_RM_WriteCvtF2ILd
+  { 1, 9, 10, 0, 0 }, // 252 IIC_MMX_CVT_PS_RR_WriteCvtF2I
+  { 1, 43, 44, 0, 0 }, // 253 IIC_MMX_EMMS
+  { 1, 5, 6, 0, 0 }, // 254 IIC_MMX_MASKMOV_WriteShuffle
+  { 1, 74, 75, 0, 0 }, // 255 IIC_MMX_MOV_REG_MM_WriteStore
+  { 1, 74, 75, 0, 0 }, // 256 IIC_MMX_MOV_REG_MM_WriteMove
+  { 1, 5, 6, 0, 0 }, // 257 IIC_MMX_MOV_MM_RM_WriteStore
+  { 1, 5, 6, 0, 0 }, // 258 IIC_MMX_MOV_MM_RM_WriteLoad
+  { 1, 5, 6, 0, 0 }, // 259 IIC_MMX_MOV_MM_RM_WriteMove
+  { 1, 5, 6, 0, 0 }, // 260 IIC_MMX_MOVQ_RM_WriteLoad
+  { 1, 4, 5, 0, 0 }, // 261 IIC_MMX_MOVQ_RR_WriteMove
+  { 1, 5, 6, 0, 0 }, // 262 IIC_MMX_MOVQ_RM_WriteStore
+  { 0, 0, 0, 0, 0 }, // 263 WriteMove
+  { 1, 5, 6, 0, 0 }, // 264 IIC_MMX_ALU_RM_WriteVecALULd
+  { 1, 4, 5, 0, 0 }, // 265 IIC_MMX_ALU_RR_WriteVecALU
+  { 1, 5, 6, 0, 0 }, // 266 IIC_MMX_PCK_RM_WriteShuffleLd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 267 IIC_MMX_PCK_RR_WriteShuffle
+  { 1, 5, 6, 0, 0 }, // 268 IIC_MMX_ALU_RM_WriteVecALULd_ReadAfterLd
+  { 1, 21, 22, 0, 0 }, // 269 IIC_MMX_ALUQ_RM_WriteVecALULd_ReadAfterLd
+  { 1, 16, 17, 0, 0 }, // 270 IIC_MMX_ALUQ_RR_WriteVecALU
+  { 0, 0, 0, 0, 0 }, // 271 WriteShuffleLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 272 WriteShuffle
+  { 1, 5, 6, 0, 0 }, // 273 IIC_MMX_ALU_RM_WriteVecLogicLd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 274 IIC_MMX_ALU_RR_WriteVecLogic
+  { 1, 4, 5, 0, 0 }, // 275 IIC_MMX_MISC_FUNC_REG_WriteVecIMulLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 276 IIC_MMX_MISC_FUNC_MEM_WriteVecIMul
+  { 1, 20, 21, 0, 0 }, // 277 IIC_MMX_PEXTR_WriteShuffle
+  { 1, 6, 7, 0, 0 }, // 278 IIC_MMX_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd
+  { 1, 43, 44, 0, 0 }, // 279 IIC_MMX_PHADDSUBW_RR_WriteVecALU
+  { 1, 20, 21, 0, 0 }, // 280 IIC_MMX_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd
+  { 1, 21, 22, 0, 0 }, // 281 IIC_MMX_PHADDSUBD_RR_WriteVecALU
+  { 1, 5, 6, 0, 0 }, // 282 IIC_MMX_PINSRW_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 283 IIC_MMX_PINSRW_WriteShuffle
+  { 1, 75, 76, 0, 0 }, // 284 IIC_MMX_PMUL_WriteVecIMulLd_ReadAfterLd
+  { 1, 75, 76, 0, 0 }, // 285 IIC_MMX_PMUL_WriteVecIMul
+  { 1, 20, 21, 0, 0 }, // 286 IIC_MMX_PSADBW_WriteVecIMulLd_ReadAfterLd
+  { 1, 20, 21, 0, 0 }, // 287 IIC_MMX_PSADBW_WriteVecIMul
+  { 1, 5, 6, 0, 0 }, // 288 IIC_MMX_PSHUF_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 289 IIC_MMX_PSHUF_WriteShuffle
+  { 1, 5, 6, 0, 0 }, // 290 IIC_MMX_PSHUF_WriteShuffleLd
+  { 1, 4, 5, 0, 0 }, // 291 IIC_MMX_SHIFT_RI_WriteVecShift
+  { 1, 21, 22, 0, 0 }, // 292 IIC_MMX_SHIFT_RM_WriteVecShiftLd_ReadAfterLd
+  { 1, 16, 17, 0, 0 }, // 293 IIC_MMX_SHIFT_RR_WriteVecShift
+  { 1, 5, 6, 0, 0 }, // 294 IIC_MMX_UNPCK_H_RM_WriteShuffleLd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 295 IIC_MMX_UNPCK_H_RR_WriteShuffle
+  { 1, 5, 6, 0, 0 }, // 296 IIC_MMX_UNPCK_L_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 297 IIC_MMX_UNPCK_L_WriteShuffle
+  { 0, 0, 0, 0, 0 }, // 298 IIC_SSE_MONITORX_WriteSystem
+  { 1, 76, 77, 0, 0 }, // 299 IIC_SSE_MONITOR_WriteSystem
+  { 1, 5, 6, 0, 0 }, // 300 IIC_MOV_MEM_WriteALU
+  { 1, 5, 6, 0, 0 }, // 301 IIC_MOV_MEM_WriteStore
+  { 1, 16, 17, 0, 0 }, // 302 IIC_MOV_MEM_SR_WriteMove
+  { 1, 4, 5, 0, 0 }, // 303 IIC_MOV_WriteMove
+  { 1, 5, 6, 0, 0 }, // 304 IIC_MOV_MEM_WriteLoad
+  { 1, 5, 6, 0, 0 }, // 305 IIC_MOV_REG_SR_WriteMove
+  { 1, 77, 78, 0, 0 }, // 306 IIC_MOV_SR_MEM_WriteMove
+  { 1, 3, 4, 0, 0 }, // 307 IIC_MOV_SR_REG_WriteMove
+  { 1, 78, 79, 0, 0 }, // 308 IIC_MOV_CR_REG_WriteSystem
+  { 1, 79, 80, 0, 0 }, // 309 IIC_MOV_DR_REG_WriteSystem
+  { 1, 4, 5, 0, 0 }, // 310 IIC_ALU_NONMEM_WriteZero
+  { 1, 58, 59, 0, 0 }, // 311 IIC_MOV_REG_CR_WriteSystem
+  { 1, 80, 81, 0, 0 }, // 312 IIC_MOV_REG_DR_WriteSystem
+  { 1, 5, 6, 0, 0 }, // 313 IIC_SSE_MOVDQ_WriteLoad
+  { 1, 5, 6, 0, 0 }, // 314 IIC_SSE_MOVDQ_WriteMove
+  { 1, 5, 6, 0, 0 }, // 315 IIC_SSE_MOVA_P_MR_WriteStore
+  { 1, 5, 6, 0, 0 }, // 316 IIC_SSE_MOVA_P_RM_WriteLoad
+  { 1, 4, 5, 0, 0 }, // 317 IIC_SSE_MOVA_P_RR_WriteFShuffle
+  { 1, 5, 6, 0, 0 }, // 318 IIC_MOVBE_WriteStore
+  { 1, 5, 6, 0, 0 }, // 319 IIC_MOVBE_WriteALULd
+  { 1, 5, 6, 0, 0 }, // 320 IIC_SSE_MOV_LH_WriteLoad
+  { 1, 5, 6, 0, 0 }, // 321 IIC_SSE_MOV_LH_WriteFShuffle
+  { 1, 4, 5, 0, 0 }, // 322 IIC_SSE_MOVA_P_RR_WriteMove
+  { 1, 16, 17, 0, 0 }, // 323 IIC_SSE_MOVU_P_MR_WriteStore
+  { 1, 21, 22, 0, 0 }, // 324 IIC_SSE_MOVU_P_RM_WriteLoad
+  { 1, 4, 5, 0, 0 }, // 325 IIC_SSE_MOVU_P_RR_WriteMove
+  { 1, 5, 6, 0, 0 }, // 326 IIC_SSE_MOV_LH_WriteStore
+  { 1, 5, 6, 0, 0 }, // 327 IIC_SSE_MOV_LH_WriteFShuffleLd_ReadAfterLd
+  { 1, 74, 75, 0, 0 }, // 328 IIC_SSE_MOVMSK_WriteVecLogic
+  { 1, 5, 6, 0, 0 }, // 329 IIC_SSE_MOVNT_WriteStore
+  { 1, 5, 6, 0, 0 }, // 330 IIC_SSE_MOVDQ_WriteStore
+  { 1, 74, 75, 0, 0 }, // 331 IIC_SSE_MOVD_ToGP_WriteMove
+  { 1, 4, 5, 0, 0 }, // 332 IIC_SSE_MOVQ_RR_WriteVecLogic
+  { 1, 21, 22, 0, 0 }, // 333 IIC_MOVS_WriteMicrocoded
+  { 1, 5, 6, 0, 0 }, // 334 IIC_SSE_MOV_S_MR_WriteStore
+  { 1, 5, 6, 0, 0 }, // 335 IIC_SSE_MOV_S_RM_WriteLoad
+  { 1, 4, 5, 0, 0 }, // 336 IIC_SSE_MOV_S_RR_WriteFShuffle
+  { 1, 21, 22, 0, 0 }, // 337 IIC_MOVSX_R16_M8_WriteALULd
+  { 1, 16, 17, 0, 0 }, // 338 IIC_MOVSX_R16_R8_WriteALU
+  { 1, 5, 6, 0, 0 }, // 339 IIC_MOVSX_WriteALULd
+  { 1, 5, 6, 0, 0 }, // 340 IIC_MOVSX_WriteALU
+  { 1, 4, 5, 0, 0 }, // 341 IIC_SSE_MOVU_P_RR_WriteFShuffle
+  { 1, 21, 22, 0, 0 }, // 342 IIC_MOVZX_R16_M8_WriteALULd
+  { 1, 16, 17, 0, 0 }, // 343 IIC_MOVZX_R16_R8_WriteALU
+  { 1, 5, 6, 0, 0 }, // 344 IIC_MOVZX_WriteALULd
+  { 1, 5, 6, 0, 0 }, // 345 IIC_MOVZX_WriteALU
+  { 0, 0, 0, 0, 0 }, // 346 IIC_SSE_MPSADBW_RM_WriteMPSADLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 347 IIC_SSE_MPSADBW_RR_WriteMPSAD
+  { 1, 28, 29, 0, 0 }, // 348 IIC_MUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 2, 3, 0, 0 }, // 349 IIC_MUL16_REG_WriteIMul
+  { 1, 2, 3, 0, 0 }, // 350 IIC_MUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 6, 7, 0, 0 }, // 351 IIC_MUL32_REG_WriteIMul
+  { 1, 58, 59, 0, 0 }, // 352 IIC_MUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 58, 59, 0, 0 }, // 353 IIC_MUL64_WriteIMul
+  { 1, 2, 3, 0, 0 }, // 354 IIC_MUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 2, 3, 0, 0 }, // 355 IIC_MUL8_WriteIMul
+  { 1, 26, 27, 0, 0 }, // 356 IIC_SSE_MUL_F64P_RM_WriteFMulLd_ReadAfterLd
+  { 1, 14, 15, 0, 0 }, // 357 IIC_SSE_MUL_F64P_RR_WriteFMul
+  { 1, 57, 58, 0, 0 }, // 358 IIC_SSE_MUL_F32P_RR_WriteFMul
+  { 1, 57, 58, 0, 0 }, // 359 IIC_SSE_MUL_F64S_RM_WriteFMulLd_ReadAfterLd
+  { 1, 57, 58, 0, 0 }, // 360 IIC_SSE_MUL_F64S_RR_WriteFMul
+  { 1, 75, 76, 0, 0 }, // 361 IIC_SSE_MUL_F32S_RR_WriteFMul
+  { 1, 2, 3, 0, 0 }, // 362 IIC_MUL8_WriteIMulLd_WriteIMulH
+  { 1, 2, 3, 0, 0 }, // 363 IIC_MUL8_WriteIMul_WriteIMulH
+  { 0, 0, 0, 0, 0 }, // 364 WriteFMulLd
+  { 0, 0, 0, 0, 0 }, // 365 WriteFMul
+  { 0, 0, 0, 0, 0 }, // 366 IIC_SSE_MWAITX_WriteSystem
+  { 1, 50, 51, 0, 0 }, // 367 IIC_SSE_MWAIT_WriteSystem
+  { 1, 4, 5, 0, 0 }, // 368 IIC_NOP_WriteZero
+  { 1, 81, 82, 0, 0 }, // 369 IIC_OUT_IR_WriteSystem
+  { 1, 32, 33, 0, 0 }, // 370 IIC_OUT_RR_WriteSystem
+  { 1, 82, 83, 0, 0 }, // 371 IIC_OUTS_WriteSystem
+  { 1, 5, 6, 0, 0 }, // 372 IIC_SSE_PABS_RM_WriteVecALULd
+  { 1, 4, 5, 0, 0 }, // 373 IIC_SSE_PABS_RR_WriteVecALU
+  { 1, 5, 6, 0, 0 }, // 374 IIC_SSE_INTALU_P_RM_WriteVecALULd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 375 IIC_SSE_INTALU_P_RR_WriteVecALU
+  { 1, 21, 22, 0, 0 }, // 376 IIC_SSE_INTALUQ_P_RM_WriteVecALULd_ReadAfterLd
+  { 1, 16, 17, 0, 0 }, // 377 IIC_SSE_INTALUQ_P_RR_WriteVecALU
+  { 1, 5, 6, 0, 0 }, // 378 IIC_SSE_PALIGNRM_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 379 IIC_SSE_PALIGNRR_WriteShuffle
+  { 1, 5, 6, 0, 0 }, // 380 IIC_SSE_BIT_P_RM_WriteVecLogicLd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 381 IIC_SSE_BIT_P_RR_WriteVecLogic
+  { 1, 71, 72, 0, 0 }, // 382 IIC_SSE_PAUSE_WriteNop
+  { 1, 5, 6, 0, 0 }, // 383 IIC_ALU_MEM_WriteVarBlendLd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 384 IIC_ALU_NONMEM_WriteVarBlend
+  { 1, 5, 6, 0, 0 }, // 385 IIC_SSE_INTALU_P_RM_WriteBlendLd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 386 IIC_SSE_INTALU_P_RR_WriteBlend
+  { 0, 0, 0, 0, 0 }, // 387 IIC_SSE_PCLMULQDQ_RM_WriteCLMulLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 388 IIC_SSE_PCLMULQDQ_RR_WriteCLMul
+  { 0, 0, 0, 0, 0 }, // 389 WriteVecALULd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 390 WriteVecALU
+  { 0, 0, 0, 0, 0 }, // 391 WritePCmpEStrILd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 392 WritePCmpEStrI
+  { 0, 0, 0, 0, 0 }, // 393 WritePCmpEStrMLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 394 WritePCmpEStrM
+  { 0, 0, 0, 0, 0 }, // 395 WritePCmpIStrILd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 396 WritePCmpIStrI
+  { 0, 0, 0, 0, 0 }, // 397 WritePCmpIStrMLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 398 WritePCmpIStrM
+  { 0, 0, 0, 0, 0 }, // 399 WriteShuffleLd_WriteRMW
+  { 1, 20, 21, 0, 0 }, // 400 IIC_SSE_PEXTRW_WriteShuffleLd_ReadAfterLd
+  { 1, 20, 21, 0, 0 }, // 401 IIC_SSE_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd
+  { 1, 21, 22, 0, 0 }, // 402 IIC_SSE_PHADDSUBD_RR_WriteVecALU
+  { 1, 28, 29, 0, 0 }, // 403 IIC_SSE_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd
+  { 1, 2, 3, 0, 0 }, // 404 IIC_SSE_PHADDSUBW_RR_WriteVecALU
+  { 0, 0, 0, 0, 0 }, // 405 WriteVecIMulLd
+  { 0, 0, 0, 0, 0 }, // 406 WriteVecIMul
+  { 1, 5, 6, 0, 0 }, // 407 IIC_SSE_PINSRW_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 408 IIC_SSE_PINSRW_WriteShuffle
+  { 1, 57, 58, 0, 0 }, // 409 IIC_SSE_PMADD_WriteVecIMulLd_ReadAfterLd
+  { 1, 57, 58, 0, 0 }, // 410 IIC_SSE_PMADD_WriteVecIMul
+  { 0, 0, 0, 0, 0 }, // 411 WriteVecIMulLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 412 IIC_SSE_INTALU_P_RM_WriteShuffleLd
+  { 1, 4, 5, 0, 0 }, // 413 IIC_SSE_INTALU_P_RR_WriteShuffle
+  { 1, 57, 58, 0, 0 }, // 414 IIC_SSE_PMULHRSW_WriteVecIMulLd_ReadAfterLd
+  { 1, 57, 58, 0, 0 }, // 415 IIC_SSE_PMULHRSW_WriteVecIMul
+  { 1, 57, 58, 0, 0 }, // 416 IIC_SSE_INTMUL_P_RM_WriteVecIMulLd_ReadAfterLd
+  { 1, 57, 58, 0, 0 }, // 417 IIC_SSE_INTMUL_P_RR_WriteVecIMul
+  { 1, 16, 17, 0, 0 }, // 418 IIC_POP_REG16_WriteLoad
+  { 1, 21, 22, 0, 0 }, // 419 IIC_POP_MEM_WriteLoad
+  { 1, 18, 20, 0, 0 }, // 420 IIC_POP_REG_WriteLoad
+  { 1, 14, 15, 0, 0 }, // 421 IIC_POP_A_WriteLoad
+  { 0, 0, 0, 0, 0 }, // 422 IIC_SSE_POPCNT_RM_WriteFAddLd
+  { 0, 0, 0, 0, 0 }, // 423 IIC_SSE_POPCNT_RR_WriteFAdd
+  { 1, 83, 84, 0, 0 }, // 424 IIC_POP_SR_WriteSystem
+  { 1, 38, 39, 0, 0 }, // 425 IIC_POP_F_WriteLoad
+  { 1, 77, 78, 0, 0 }, // 426 IIC_POP_FD_WriteLoad
+  { 1, 84, 85, 0, 0 }, // 427 IIC_POP_SR_SS_WriteSystem
+  { 1, 43, 44, 0, 0 }, // 428 IIC_SSE_PSHUFB_RM_WriteShuffleLd_ReadAfterLd
+  { 1, 20, 21, 0, 0 }, // 429 IIC_SSE_PSHUFB_RR_WriteShuffle
+  { 1, 5, 6, 0, 0 }, // 430 IIC_SSE_PSHUF_MI_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 431 IIC_SSE_PSHUF_RI_WriteShuffle
+  { 1, 4, 5, 0, 0 }, // 432 IIC_SSE_INTSHDQ_P_RI_WriteVecShift
+  { 1, 4, 5, 0, 0 }, // 433 IIC_SSE_INTSH_P_RI_WriteVecShift
+  { 1, 21, 22, 0, 0 }, // 434 IIC_SSE_INTSH_P_RM_WriteVecShiftLd_ReadAfterLd
+  { 1, 16, 17, 0, 0 }, // 435 IIC_SSE_INTSH_P_RR_WriteVecShift
+  { 1, 5, 6, 0, 0 }, // 436 IIC_SSE_UNPCK_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 437 IIC_SSE_UNPCK_WriteShuffle
+  { 1, 18, 20, 0, 0 }, // 438 IIC_PUSH_IMM_WriteStore
+  { 1, 18, 20, 0, 0 }, // 439 IIC_PUSH_REG_WriteStore
+  { 1, 16, 17, 0, 0 }, // 440 IIC_PUSH_MEM_WriteRMW
+  { 1, 28, 29, 0, 0 }, // 441 IIC_PUSH_A_WriteStore
+  { 1, 16, 17, 0, 0 }, // 442 IIC_PUSH_SR_WriteSystem
+  { 1, 16, 17, 0, 0 }, // 443 IIC_PUSH_CS_WriteSystem
+  { 1, 14, 15, 0, 0 }, // 444 IIC_PUSH_F_WriteStore
+  { 1, 5, 6, 0, 0 }, // 445 IIC_SR_WriteShiftLd_WriteRMW
+  { 1, 5, 6, 0, 0 }, // 446 IIC_SR_WriteShift
+  { 1, 26, 27, 0, 0 }, // 447 IIC_SSE_RCPP_RM_WriteFRcpLd
+  { 1, 14, 15, 0, 0 }, // 448 IIC_SSE_RCPP_RR_WriteFRcp
+  { 1, 75, 76, 0, 0 }, // 449 IIC_SSE_RCPS_RM_WriteFRcpLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 450 WriteFRcpLd_ReadAfterLd
+  { 1, 75, 76, 0, 0 }, // 451 IIC_SSE_RCPS_RR_WriteFRcp
+  { 0, 0, 0, 0, 0 }, // 452 WriteRMW
+  { 1, 85, 86, 0, 0 }, // 453 IIC_RDMSR_WriteSystem
+  { 1, 50, 51, 0, 0 }, // 454 IIC_RDPMC_WriteSystem
+  { 1, 86, 87, 0, 0 }, // 455 IIC_RDTSC_WriteSystem
+  { 1, 87, 88, 0, 0 }, // 456 IIC_REP_MOVS_WriteMicrocoded
+  { 1, 82, 83, 0, 0 }, // 457 IIC_REP_STOS_WriteMicrocoded
+  { 1, 18, 20, 0, 0 }, // 458 IIC_RET_IMM_WriteJumpLd
+  { 0, 0, 0, 0, 0 }, // 459 WriteShiftLd
+  { 0, 0, 0, 0, 0 }, // 460 WriteShift
+  { 0, 0, 0, 0, 0 }, // 461 IIC_SSE_ROUNDPS_REG_WriteFAddLd
+  { 0, 0, 0, 0, 0 }, // 462 IIC_SSE_ROUNDPS_REG_WriteFAdd
+  { 0, 0, 0, 0, 0 }, // 463 IIC_SSE_ROUNDPS_MEM_WriteFAddLd
+  { 0, 0, 0, 0, 0 }, // 464 WriteFAddLd_ReadAfterLd
+  { 1, 88, 89, 0, 0 }, // 465 IIC_RSM_WriteSystem
+  { 1, 26, 27, 0, 0 }, // 466 IIC_SSE_RSQRTPS_RM_WriteFRsqrtLd
+  { 1, 14, 15, 0, 0 }, // 467 IIC_SSE_RSQRTPS_RR_WriteFRsqrt
+  { 1, 75, 76, 0, 0 }, // 468 IIC_SSE_RSQRTSS_RM_WriteFRsqrtLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 469 WriteFRsqrtLd_ReadAfterLd
+  { 1, 75, 76, 0, 0 }, // 470 IIC_SSE_RSQRTSS_RR_WriteFRsqrt
+  { 0, 0, 0, 0, 0 }, // 471 WriteShiftLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd
+  { 1, 16, 17, 0, 0 }, // 472 IIC_SCAS_WriteMicrocoded
+  { 1, 16, 17, 0, 0 }, // 473 IIC_SET_M_WriteALU_WriteStore
+  { 1, 4, 5, 0, 0 }, // 474 IIC_SET_R_WriteALU
+  { 1, 5, 6, 0, 0 }, // 475 IIC_SSE_SFENCE_WriteFence
+  { 1, 20, 21, 0, 0 }, // 476 IIC_SGDT_WriteSystem
+  { 1, 6, 7, 0, 0 }, // 477 IIC_SHD16_MEM_CL_WriteShiftLd_WriteRMW
+  { 1, 6, 7, 0, 0 }, // 478 IIC_SHD16_MEM_IM_WriteShiftLd_WriteRMW
+  { 1, 6, 7, 0, 0 }, // 479 IIC_SHD16_REG_CL_WriteShift
+  { 1, 6, 7, 0, 0 }, // 480 IIC_SHD16_REG_IM_WriteShift
+  { 1, 20, 21, 0, 0 }, // 481 IIC_SHD32_MEM_CL_WriteShiftLd_WriteRMW
+  { 1, 20, 21, 0, 0 }, // 482 IIC_SHD32_MEM_IM_WriteShiftLd_WriteRMW
+  { 1, 16, 17, 0, 0 }, // 483 IIC_SHD32_REG_CL_WriteShift
+  { 1, 16, 17, 0, 0 }, // 484 IIC_SHD32_REG_IM_WriteShift
+  { 1, 14, 15, 0, 0 }, // 485 IIC_SHD64_MEM_CL_WriteShiftLd_WriteRMW
+  { 1, 14, 15, 0, 0 }, // 486 IIC_SHD64_MEM_IM_WriteShiftLd_WriteRMW
+  { 1, 28, 29, 0, 0 }, // 487 IIC_SHD64_REG_CL_WriteShift
+  { 1, 14, 15, 0, 0 }, // 488 IIC_SHD64_REG_IM_WriteShift
+  { 1, 5, 6, 0, 0 }, // 489 IIC_SSE_SHUFP_WriteFShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 490 IIC_SSE_SHUFP_WriteFShuffle
+  { 1, 20, 21, 0, 0 }, // 491 IIC_SIDT_WriteSystem
+  { 1, 21, 22, 0, 0 }, // 492 IIC_SLDT_WriteSystem
+  { 1, 14, 15, 0, 0 }, // 493 IIC_SMSW_WriteSystem
+  { 1, 33, 34, 0, 0 }, // 494 IIC_SSE_SQRTPD_RM_WriteFSqrtLd
+  { 1, 33, 34, 0, 0 }, // 495 IIC_SSE_SQRTPD_RR_WriteFSqrt
+  { 1, 34, 35, 0, 0 }, // 496 IIC_SSE_SQRTPS_RM_WriteFSqrtLd
+  { 1, 34, 35, 0, 0 }, // 497 IIC_SSE_SQRTPS_RR_WriteFSqrt
+  { 1, 35, 36, 0, 0 }, // 498 IIC_SSE_SQRTSD_RM_WriteFSqrtLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 499 WriteFSqrtLd_ReadAfterLd
+  { 1, 35, 36, 0, 0 }, // 500 IIC_SSE_SQRTSD_RR_WriteFSqrt
+  { 1, 36, 37, 0, 0 }, // 501 IIC_SSE_SQRTSS_RM_WriteFSqrtLd_ReadAfterLd
+  { 1, 36, 37, 0, 0 }, // 502 IIC_SSE_SQRTSS_RR_WriteFSqrt
+  { 0, 0, 0, 0, 0 }, // 503 WriteFSqrt
+  { 1, 4, 5, 0, 0 }, // 504 IIC_STC_WriteALU
+  { 1, 3, 4, 0, 0 }, // 505 IIC_STD_WriteALU
+  { 1, 71, 72, 0, 0 }, // 506 IIC_STI_WriteALU
+  { 1, 17, 18, 0, 0 }, // 507 IIC_SSE_STMXCSR_WriteStore
+  { 1, 4, 5, 0, 0 }, // 508 IIC_STOS_WriteMicrocoded
+  { 1, 21, 22, 0, 0 }, // 509 IIC_STR_WriteSystem
+  { 1, 43, 44, 0, 0 }, // 510 IIC_FST80_WriteStore
+  { 1, 16, 17, 0, 0 }, // 511 IIC_FST_WriteMove
+  { 1, 24, 25, 0, 0 }, // 512 IIC_SWAPGS_WriteSystem
+  { 1, 89, 90, 0, 0 }, // 513 IIC_SYSCALL_WriteSystem
+  { 1, 80, 81, 0, 0 }, // 514 IIC_SYS_ENTER_EXIT_WriteSystem
+  { 1, 15, 16, 0, 0 }, // 515 IIC_JMP_REL_WriteJumpLd
+  { 1, 16, 17, 0, 0 }, // 516 IIC_JMP_MEM_WriteJump
+  { 1, 15, 16, 0, 0 }, // 517 IIC_JMP_REG_WriteJumpLd
+  { 0, 0, 0, 0, 0 }, // 518 WriteJump
+  { 1, 14, 15, 0, 0 }, // 519 IIC_FUCOMI_WriteFAdd
+  { 1, 15, 16, 0, 0 }, // 520 IIC_FUCOM_WriteFAdd
+  { 1, 5, 6, 0, 0 }, // 521 IIC_SSE_UNPCK_WriteFShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 522 IIC_SSE_UNPCK_WriteFShuffle
+  { 1, 7, 9, 0, 0 }, // 523 IIC_SSE_ALU_F64S_RM
+  { 1, 9, 10, 0, 0 }, // 524 IIC_SSE_ALU_F64S_RR
+  { 1, 7, 9, 0, 0 }, // 525 IIC_SSE_ALU_F32S_RM
+  { 1, 9, 10, 0, 0 }, // 526 IIC_SSE_ALU_F32S_RR
+  { 0, 0, 0, 0, 0 }, // 527 WriteFVarBlendLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 528 WriteFVarBlend
+  { 0, 0, 0, 0, 0 }, // 529 WriteFShuffleLd
+  { 0, 0, 0, 0, 0 }, // 530 WriteFShuffle256
+  { 0, 0, 0, 0, 0 }, // 531 WriteFShuffle
+  { 1, 7, 9, 0, 0 }, // 532 IIC_SSE_ALU_F32P_RM
+  { 0, 0, 0, 0, 0 }, // 533 WriteCvtF2ILd
+  { 0, 0, 0, 0, 0 }, // 534 WriteCvtF2I
+  { 0, 0, 0, 0, 0 }, // 535 WriteCvtF2FLd
+  { 0, 0, 0, 0, 0 }, // 536 WriteCvtF2F
+  { 0, 0, 0, 0, 0 }, // 537 WriteCvtF2FLd_WriteRMW
+  { 0, 0, 0, 0, 0 }, // 538 WriteCvtF2FLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 539 WriteCvtI2FLd_ReadAfterLd
+  { 1, 35, 36, 0, 0 }, // 540 IIC_SSE_DIV_F64S_RM
+  { 1, 35, 36, 0, 0 }, // 541 IIC_SSE_DIV_F64S_RR
+  { 1, 36, 37, 0, 0 }, // 542 IIC_SSE_DIV_F32S_RR
+  { 1, 90, 91, 0, 0 }, // 543 IIC_VERR_WriteSystem
+  { 1, 91, 92, 0, 0 }, // 544 IIC_VERW_REG_WriteSystem
+  { 1, 30, 31, 0, 0 }, // 545 IIC_VERW_MEM_WriteSystem
+  { 0, 0, 0, 0, 0 }, // 546 WriteStore
+  { 0, 0, 0, 0, 0 }, // 547 WriteShuffle256
+  { 1, 5, 6, 0, 0 }, // 548 IIC_ALU_MEM_WriteFBlendLd_WriteRMW
+  { 0, 0, 0, 0, 0 }, // 549 WriteFShuffleLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 550 WriteShuffle256Ld_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 551 IIC_ALU_MEM_WriteFShuffleLd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 552 IIC_ALU_NONMEM_WriteFShuffle
+  { 1, 5, 6, 0, 0 }, // 553 IIC_SSE_MOVDQ
+  { 1, 5, 6, 0, 0 }, // 554 IIC_SSE_MOV_LH
+  { 1, 74, 75, 0, 0 }, // 555 IIC_SSE_MOVD_ToGP
+  { 1, 5, 6, 0, 0 }, // 556 IIC_SSE_MOV_S_MR
+  { 1, 5, 6, 0, 0 }, // 557 IIC_SSE_MOV_S_RM
+  { 1, 4, 5, 0, 0 }, // 558 IIC_SSE_MOV_S_RR
+  { 1, 4, 5, 0, 0 }, // 559 IIC_SSE_MOVQ_RR
+  { 1, 5, 6, 0, 0 }, // 560 IIC_ALU_MEM_WriteMPSADLd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 561 IIC_ALU_NONMEM_WriteMPSAD
+  { 1, 57, 58, 0, 0 }, // 562 IIC_SSE_MUL_F64S_RM
+  { 1, 57, 58, 0, 0 }, // 563 IIC_SSE_MUL_F64S_RR
+  { 1, 75, 76, 0, 0 }, // 564 IIC_SSE_MUL_F32S_RR
+  { 0, 0, 0, 0, 0 }, // 565 WriteVecALULd
+  { 1, 5, 6, 0, 0 }, // 566 IIC_SSE_INTALU_P_RM
+  { 1, 4, 5, 0, 0 }, // 567 IIC_SSE_INTALU_P_RR
+  { 0, 0, 0, 0, 0 }, // 568 WriteBlendLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 569 WriteBlend
+  { 0, 0, 0, 0, 0 }, // 570 WriteVarBlendLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 571 WriteVarBlend
+  { 1, 5, 6, 0, 0 }, // 572 IIC_ALU_MEM_WriteBlendLd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 573 IIC_ALU_NONMEM_WriteBlend
+  { 0, 0, 0, 0, 0 }, // 574 WriteCLMulLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 575 WriteCLMul
+  { 1, 9, 10, 0, 0 }, // 576 IIC_SSE_ALU_F32P_RR
+  { 0, 0, 0, 0, 0 }, // 577 WriteFShuffle256Ld_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 578 IIC_ALU_MEM_WriteShuffleLd
+  { 1, 4, 5, 0, 0 }, // 579 IIC_ALU_NONMEM_WriteShuffle
+  { 0, 0, 0, 0, 0 }, // 580 WriteVarVecShift_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 581 WriteVarVecShift
+  { 1, 5, 6, 0, 0 }, // 582 IIC_SSE_PSHUF_MI_WriteShuffleLd
+  { 0, 0, 0, 0, 0 }, // 583 WriteVarVecShiftLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 584 WriteFRcpLd
+  { 0, 0, 0, 0, 0 }, // 585 WriteFRsqrtLd
+  { 0, 0, 0, 0, 0 }, // 586 WriteFSqrtLd
+  { 1, 4, 5, 0, 0 }, // 587 IIC_WAIT_WriteMicrocoded
+  { 1, 92, 93, 0, 0 }, // 588 IIC_WRMSR_WriteSystem
+  { 1, 21, 22, 0, 0 }, // 589 IIC_XADD_MEM_WriteALULd_WriteRMW
+  { 1, 16, 17, 0, 0 }, // 590 IIC_XADD_REG_WriteALU
+  { 1, 16, 17, 0, 0 }, // 591 IIC_XCHG_REG_WriteALU
+  { 1, 21, 22, 0, 0 }, // 592 IIC_XCHG_MEM_WriteALULd_WriteRMW
+  { 1, 18, 20, 0, 0 }, // 593 IIC_FXCH_WriteMove
+  { 1, 6, 7, 0, 0 }, // 594 IIC_XLAT_WriteLoad
+  { 1, 5, 6, 0, 0 }, // 595 MOV16rm
+  { 1, 5, 6, 0, 0 }, // 596 MOVSX32rm16_MOVSX32rm8
+  { 1, 5, 6, 0, 0 }, // 597 MOVZX32rm16_MOVZX32rm8
+  { 1, 4, 5, 0, 0 }, // 598 CMOVA16rr_CMOVAE16rr_CMOVB16rr_CMOVBE16rr_CMOVE16rr_CMOVG16rr_CMOVGE16rr_CMOVL16rr_CMOVLE16rr_CMOVNE16rr_CMOVNO16rr_CMOVNP16rr_CMOVNS16rr_CMOVO16rr_CMOVP16rr_CMOVS16rr
+  { 1, 4, 5, 0, 0 }, // 599 CMOVA32rr_CMOVA64rr_CMOVAE32rr_CMOVAE64rr_CMOVB32rr_CMOVB64rr_CMOVBE32rr_CMOVBE64rr_CMOVE32rr_CMOVE64rr_CMOVG32rr_CMOVG64rr_CMOVGE32rr_CMOVGE64rr_CMOVL32rr_CMOVL64rr_CMOVLE32rr_CMOVLE64rr_CMOVNE32rr_CMOVNE64rr_CMOVNO32rr_CMOVNO64rr_CMOVNP32rr_CMOVNP64rr_CMOVNS32rr_CMOVNS64rr_CMOVO32rr_CMOVO64rr_CMOVP32rr_CMOVP64rr_CMOVS32rr_CMOVS64rr
+  { 1, 5, 6, 0, 0 }, // 600 CMOVA16rm_CMOVAE16rm_CMOVB16rm_CMOVBE16rm_CMOVE16rm_CMOVG16rm_CMOVGE16rm_CMOVL16rm_CMOVLE16rm_CMOVNE16rm_CMOVNO16rm_CMOVNP16rm_CMOVNS16rm_CMOVO16rm_CMOVP16rm_CMOVS16rm
+  { 1, 5, 6, 0, 0 }, // 601 CMOVA32rm_CMOVA64rm_CMOVAE32rm_CMOVAE64rm_CMOVB32rm_CMOVB64rm_CMOVBE32rm_CMOVBE64rm_CMOVE32rm_CMOVE64rm_CMOVG32rm_CMOVG64rm_CMOVGE32rm_CMOVGE64rm_CMOVL32rm_CMOVL64rm_CMOVLE32rm_CMOVLE64rm_CMOVNE32rm_CMOVNE64rm_CMOVNO32rm_CMOVNO64rm_CMOVNP32rm_CMOVNP64rm_CMOVNS32rm_CMOVNS64rm_CMOVO32rm_CMOVO64rm_CMOVP32rm_CMOVP64rm_CMOVS32rm_CMOVS64rm
+  { 1, 16, 17, 0, 0 }, // 602 XCHG16ar_XCHG16rr_XCHG32ar_XCHG32ar64_XCHG32rr_XCHG64ar_XCHG64rr_XCHG8rr
+  { 1, 21, 22, 0, 0 }, // 603 XCHG16rm_XCHG32rm_XCHG64rm_XCHG8rm
+  { 1, 6, 7, 0, 0 }, // 604 XLAT
+  { 1, 16, 17, 0, 0 }, // 605 PUSH16rmm_PUSH32rmm
+  { 1, 14, 15, 0, 0 }, // 606 PUSHF16_PUSHF32
+  { 1, 28, 29, 0, 0 }, // 607 PUSHA16_PUSHA32
+  { 1, 21, 22, 0, 0 }, // 608 POP16rmm_POP32rmm
+  { 1, 38, 39, 0, 0 }, // 609 POPF16
+  { 1, 77, 78, 0, 0 }, // 610 POPF32
+  { 1, 14, 15, 0, 0 }, // 611 POPA16_POPA32
+  { 1, 4, 5, 0, 0 }, // 612 LAHF_SAHF
+  { 1, 5, 6, 0, 0 }, // 613 BSWAP32r
+  { 1, 5, 6, 0, 0 }, // 614 BSWAP64r
+  { 1, 5, 6, 0, 0 }, // 615 MOVBE16rm_MOVBE64rm
+  { 1, 5, 6, 0, 0 }, // 616 MOVBE32rm
+  { 1, 5, 6, 0, 0 }, // 617 MOVBE16mr
+  { 1, 5, 6, 0, 0 }, // 618 MOVBE32mr
+  { 1, 5, 6, 0, 0 }, // 619 MOVBE64mr
+  { 1, 5, 6, 0, 0 }, // 620 ADD16mi_ADD16mi8_ADD16mr_ADD32mi_ADD32mi8_ADD32mr_ADD64mi32_ADD64mi8_ADD64mr_ADD8mi_ADD8mi8_ADD8mr_SUB16mi_SUB16mi8_SUB16mr_SUB32mi_SUB32mi8_SUB32mr_SUB64mi32_SUB64mi8_SUB64mr_SUB8mi_SUB8mi8_SUB8mr
+  { 1, 4, 5, 0, 0 }, // 621 ADC16ri_ADC16ri8_ADC16rr_ADC16rr_REV_ADC32ri_ADC32ri8_ADC32rr_ADC32rr_REV_ADC64ri32_ADC64ri8_ADC64rr_ADC64rr_REV_ADC8ri_ADC8ri8_ADC8rr_ADC8rr_REV_SBB16ri_SBB16ri8_SBB16rr_SBB16rr_REV_SBB32ri_SBB32ri8_SBB32rr_SBB32rr_REV_SBB64ri32_SBB64ri8_SBB64rr_SBB64rr_REV_SBB8ri_SBB8ri8_SBB8rr_SBB8rr_REV
+  { 1, 5, 6, 0, 0 }, // 622 ADC16rm_ADC32rm_ADC64rm_ADC8rm_SBB16rm_SBB32rm_SBB64rm_SBB8rm
+  { 1, 5, 6, 0, 0 }, // 623 ADC16mi_ADC16mi8_ADC16mr_ADC32mi_ADC32mi8_ADC32mr_ADC64mi32_ADC64mi8_ADC64mr_ADC8mi_ADC8mi8_ADC8mr_SBB16mi_SBB16mi8_SBB16mr_SBB32mi_SBB32mi8_SBB32mr_SBB64mi32_SBB64mi8_SBB64mr_SBB8mi_SBB8mi8_SBB8mr
+  { 1, 5, 6, 0, 0 }, // 624 DEC16m_DEC32m_DEC64m_DEC8m_INC16m_INC32m_INC64m_INC8m_NEG16m_NEG32m_NEG64m_NEG8m_NOT16m_NOT32m_NOT64m_NOT8m
+  { 1, 6, 7, 0, 0 }, // 625 IMUL16r_IMUL16rr
+  { 1, 2, 3, 0, 0 }, // 626 IMUL16rm
+  { 1, 2, 3, 0, 0 }, // 627 IMUL16rmi_IMUL16rmi8
+  { 1, 6, 7, 0, 0 }, // 628 IMUL16rri_IMUL16rri8
+  { 1, 2, 3, 0, 0 }, // 629 MUL16r
+  { 1, 28, 29, 0, 0 }, // 630 IMUL16m
+  { 1, 28, 29, 0, 0 }, // 631 MUL16m
+  { 1, 57, 58, 0, 0 }, // 632 IMUL32r_IMUL32rr
+  { 1, 57, 58, 0, 0 }, // 633 IMUL32rm
+  { 1, 57, 58, 0, 0 }, // 634 IMUL32rmi_IMUL32rmi8
+  { 1, 57, 58, 0, 0 }, // 635 IMUL32rri_IMUL32rri8
+  { 1, 6, 7, 0, 0 }, // 636 MUL32r
+  { 1, 2, 3, 0, 0 }, // 637 IMUL32m
+  { 1, 2, 3, 0, 0 }, // 638 MUL32m
+  { 1, 58, 59, 0, 0 }, // 639 IMUL64r_IMUL64rr
+  { 1, 58, 59, 0, 0 }, // 640 IMUL64rm
+  { 1, 22, 23, 0, 0 }, // 641 IMUL64rmi32_IMUL64rmi8
+  { 1, 22, 23, 0, 0 }, // 642 IMUL64rri32_IMUL64rri8
+  { 1, 58, 59, 0, 0 }, // 643 MUL64r
+  { 1, 58, 59, 0, 0 }, // 644 IMUL64m
+  { 1, 58, 59, 0, 0 }, // 645 MUL64m
+  { 1, 2, 3, 0, 0 }, // 646 MULX32rr
+  { 1, 2, 3, 0, 0 }, // 647 MULX32rm
+  { 1, 2, 3, 0, 0 }, // 648 MULX64rr
+  { 1, 2, 3, 0, 0 }, // 649 MULX64rm
+  { 1, 30, 31, 0, 0 }, // 650 DIV8r
+  { 1, 30, 31, 0, 0 }, // 651 DIV16r
+  { 1, 30, 31, 0, 0 }, // 652 DIV32r
+  { 1, 31, 32, 0, 0 }, // 653 DIV64r
+  { 1, 35, 36, 0, 0 }, // 654 IDIV8r
+  { 1, 35, 36, 0, 0 }, // 655 IDIV16r
+  { 1, 35, 36, 0, 0 }, // 656 IDIV32r
+  { 1, 31, 32, 0, 0 }, // 657 IDIV64r
+  { 1, 5, 6, 0, 0 }, // 658 AND16mi_AND16mi8_AND16mr_AND32mi_AND32mi8_AND32mr_AND64mi32_AND64mi8_AND64mr_AND8mi_AND8mi8_AND8mr_OR16mi_OR16mi8_OR16mr_OR32mi_OR32mi8_OR32mr_OR64mi32_OR64mi8_OR64mr_OR8mi_OR8mi8_OR8mr_XOR16mi_XOR16mi8_XOR16mr_XOR32mi_XOR32mi8_XOR32mr_XOR64mi32_XOR64mi8_XOR64mr_XOR8mi_XOR8mi8_XOR8mr
+  { 1, 5, 6, 0, 0 }, // 659 OR32mrLocked
+  { 1, 5, 6, 0, 0 }, // 660 SAR16m1_SAR16mi_SAR32m1_SAR32mi_SAR64m1_SAR64mi_SAR8m1_SAR8mi_SHL16m1_SHL16mi_SHL32m1_SHL32mi_SHL64m1_SHL64mi_SHL8m1_SHL8mi_SHR16m1_SHR16mi_SHR32m1_SHR32mi_SHR64m1_SHR64mi_SHR8m1_SHR8mi
+  { 1, 5, 6, 0, 0 }, // 661 SAR16rCL_SAR32rCL_SAR64rCL_SAR8rCL_SHL16rCL_SHL32rCL_SHL64rCL_SHL8rCL_SHR16rCL_SHR32rCL_SHR64rCL_SHR8rCL
+  { 1, 5, 6, 0, 0 }, // 662 SAR16mCL_SAR32mCL_SAR64mCL_SAR8mCL_SHL16mCL_SHL32mCL_SHL64mCL_SHL8mCL_SHR16mCL_SHR32mCL_SHR64mCL_SHR8mCL
+  { 1, 5, 6, 0, 0 }, // 663 ROL16r1_ROL32r1_ROL64r1_ROL8r1_ROR16r1_ROR32r1_ROR64r1_ROR8r1
+  { 1, 5, 6, 0, 0 }, // 664 ROL16mi_ROL32mi_ROL64mi_ROL8mi_ROR16mi_ROR32mi_ROR64mi_ROR8mi
+  { 1, 5, 6, 0, 0 }, // 665 ROL16rCL_ROL32rCL_ROL64rCL_ROL8rCL_ROR16rCL_ROR32rCL_ROR64rCL_ROR8rCL
+  { 1, 5, 6, 0, 0 }, // 666 ROL16mCL_ROL32mCL_ROL64mCL_ROL8mCL_ROR16mCL_ROR32mCL_ROR64mCL_ROR8mCL
+  { 1, 5, 6, 0, 0 }, // 667 RCL16r1_RCL32r1_RCL64r1_RCL8r1_RCR16r1_RCR32r1_RCR64r1_RCR8r1
+  { 1, 5, 6, 0, 0 }, // 668 RCL16m1_RCL32m1_RCL64m1_RCL8m1_RCR16m1_RCR32m1_RCR64m1_RCR8m1
+  { 1, 5, 6, 0, 0 }, // 669 RCL16rCL_RCL16ri_RCL32rCL_RCL32ri_RCL64rCL_RCL64ri_RCL8rCL_RCL8ri_RCR16rCL_RCR16ri_RCR32rCL_RCR32ri_RCR64rCL_RCR64ri_RCR8rCL_RCR8ri
+  { 1, 5, 6, 0, 0 }, // 670 RCL16mCL_RCL16mi_RCL32mCL_RCL32mi_RCL64mCL_RCL64mi_RCL8mCL_RCL8mi_RCR16mCL_RCR16mi_RCR32mCL_RCR32mi_RCR64mCL_RCR64mi_RCR8mCL_RCR8mi
+  { 1, 6, 7, 0, 0 }, // 671 SHLD16rri8_SHRD16rri8
+  { 1, 16, 17, 0, 0 }, // 672 SHLD32rri8_SHRD32rri8
+  { 1, 14, 15, 0, 0 }, // 673 SHLD64rri8_SHRD64rri8
+  { 1, 6, 7, 0, 0 }, // 674 SHLD16mri8_SHRD16mri8
+  { 1, 20, 21, 0, 0 }, // 675 SHLD32mri8_SHRD32mri8
+  { 1, 14, 15, 0, 0 }, // 676 SHLD64mri8_SHRD64mri8
+  { 1, 6, 7, 0, 0 }, // 677 SHLD16rrCL
+  { 1, 16, 17, 0, 0 }, // 678 SHLD32rrCL
+  { 1, 28, 29, 0, 0 }, // 679 SHLD64rrCL
+  { 1, 6, 7, 0, 0 }, // 680 SHRD16rrCL
+  { 1, 16, 17, 0, 0 }, // 681 SHRD32rrCL
+  { 1, 28, 29, 0, 0 }, // 682 SHRD64rrCL
+  { 1, 6, 7, 0, 0 }, // 683 SHLD16mrCL_SHRD16mrCL
+  { 1, 20, 21, 0, 0 }, // 684 SHLD32mrCL_SHRD32mrCL
+  { 1, 14, 15, 0, 0 }, // 685 SHLD64mrCL_SHRD64mrCL
+  { 1, 15, 16, 0, 0 }, // 686 BT16ri8_BT32ri8_BT64ri8
+  { 1, 15, 16, 0, 0 }, // 687 BT16rr_BT32rr_BT64rr
+  { 1, 14, 15, 0, 0 }, // 688 BT16mr_BT32mr_BT64mr
+  { 1, 4, 5, 0, 0 }, // 689 BT16mi8_BT32mi8_BT64mi8
+  { 1, 15, 16, 0, 0 }, // 690 BTC16ri8_BTC32ri8_BTC64ri8_BTR16ri8_BTR32ri8_BTR64ri8_BTS16ri8_BTS32ri8_BTS64ri8
+  { 1, 15, 16, 0, 0 }, // 691 BTC16rr_BTC32rr_BTC64rr_BTR16rr_BTR32rr_BTS16rr_BTS32rr_BTS64rr
+  { 0, 0, 0, 0, 0 }, // 692 BTR64rr
+  { 1, 12, 13, 0, 0 }, // 693 BTC16mr_BTC32mr_BTC64mr_BTR16mr_BTR32mr_BTR64mr_BTS16mr_BTS32mr_BTS64mr
+  { 1, 16, 17, 0, 0 }, // 694 BTC16mi8_BTC32mi8_BTC64mi8_BTR16mi8_BTR32mi8_BTR64mi8_BTS16mi8_BTS32mi8_BTS64mi8
+  { 1, 13, 14, 0, 0 }, // 695 BSF16rr_BSF32rr_BSF64rr_BSR16rr_BSR32rr_BSR64rr
+  { 1, 13, 14, 0, 0 }, // 696 BSF16rm_BSF32rm_BSF64rm_BSR16rm_BSR32rm_BSR64rm
+  { 1, 4, 5, 0, 0 }, // 697 SETAEr_SETAr_SETBEr_SETBr_SETEr_SETGEr_SETGr_SETLEr_SETLr_SETNEr_SETNOr_SETNPr_SETNSr_SETOr_SETPr_SETSr
+  { 1, 16, 17, 0, 0 }, // 698 SETAEm_SETAm_SETBEm_SETBm_SETEm_SETGEm_SETGm_SETLEm_SETLm_SETNEm_SETNOm_SETNPm_SETNSm_SETOm_SETPm_SETSm
+  { 1, 21, 22, 0, 0 }, // 699 CLD
+  { 1, 3, 4, 0, 0 }, // 700 STD
+  { 0, 0, 0, 0, 0 }, // 701 TZCNT16rr_TZCNT32rr_TZCNT64rr
+  { 0, 0, 0, 0, 0 }, // 702 TZCNT16rm_TZCNT32rm_TZCNT64rm
+  { 1, 4, 5, 0, 0 }, // 703 ANDN32rr_ANDN64rr
+  { 1, 5, 6, 0, 0 }, // 704 ANDN32rm_ANDN64rm
+  { 0, 0, 0, 0, 0 }, // 705 BLSI32rr_BLSI64rr_BLSMSK32rr_BLSMSK64rr_BLSR32rr_BLSR64rr
+  { 0, 0, 0, 0, 0 }, // 706 BLSI32rm_BLSI64rm_BLSMSK32rm_BLSMSK64rm_BLSR32rm_BLSR64rm
+  { 0, 0, 0, 0, 0 }, // 707 BEXTR32rr_BEXTR64rr
+  { 0, 0, 0, 0, 0 }, // 708 BEXTR32rm_BEXTR64rm
+  { 0, 0, 0, 0, 0 }, // 709 BZHI32rr_BZHI64rr
+  { 0, 0, 0, 0, 0 }, // 710 BZHI32rm_BZHI64rm
+  { 0, 0, 0, 0, 0 }, // 711 PDEP32rr_PDEP64rr_PEXT32rr_PEXT64rr
+  { 0, 0, 0, 0, 0 }, // 712 PDEP32rm_PDEP64rm_PEXT32rm_PEXT64rm
+  { 1, 20, 21, 0, 0 }, // 713 JCXZ_JRCXZ
+  { 1, 25, 26, 0, 0 }, // 714 LOOP
+  { 1, 28, 29, 0, 0 }, // 715 LOOPE
+  { 1, 71, 72, 0, 0 }, // 716 LOOPNE
+  { 1, 18, 20, 0, 0 }, // 717 CALL16r_CALL32r
+  { 1, 17, 18, 0, 0 }, // 718 CALL16m_CALL32m
+  { 1, 37, 38, 0, 0 }, // 719 LRETL_LRETQ_LRETW_RETL_RETQ_RETW
+  { 1, 37, 38, 0, 0 }, // 720 LRETIL_LRETIQ_LRETIW
+  { 1, 18, 20, 0, 0 }, // 721 RETIL_RETIQ_RETIW
+  { 1, 12, 13, 0, 0 }, // 722 BOUNDS16rm_BOUNDS32rm
+  { 0, 0, 0, 0, 0 }, // 723 INTO
+  { 1, 16, 17, 0, 0 }, // 724 LODSB_LODSW
+  { 1, 16, 17, 0, 0 }, // 725 LODSL_LODSQ
+  { 1, 4, 5, 0, 0 }, // 726 STOSB_STOSL_STOSQ_STOSW
+  { 1, 21, 22, 0, 0 }, // 727 MOVSB_MOVSL_MOVSQ_MOVSW
+  { 1, 5, 6, 0, 0 }, // 728 MOVSLDUPrm
+  { 1, 5, 6, 0, 0 }, // 729 MOVSLDUPrr
+  { 1, 16, 17, 0, 0 }, // 730 SCASB_SCASL_SCASQ_SCASW
+  { 1, 21, 22, 0, 0 }, // 731 CMPSB_CMPSL_CMPSQ_CMPSW
+  { 1, 21, 22, 0, 0 }, // 732 XADD16rm_XADD32rm_XADD64rm_XADD8rm
+  { 1, 22, 23, 0, 0 }, // 733 CMPXCHG16rm_CMPXCHG32rm_CMPXCHG64rm
+  { 1, 6, 7, 0, 0 }, // 734 CMPXCHG8rm
+  { 1, 25, 26, 0, 0 }, // 735 CMPXCHG8B
+  { 1, 24, 25, 0, 0 }, // 736 CMPXCHG16B
+  { 1, 71, 72, 0, 0 }, // 737 PAUSE
+  { 1, 16, 17, 0, 0 }, // 738 LEAVE_LEAVE64
+  { 0, 0, 0, 0, 0 }, // 739 XGETBV
+  { 1, 86, 87, 0, 0 }, // 740 RDTSC
+  { 0, 0, 0, 0, 0 }, // 741 RDTSCP
+  { 1, 50, 51, 0, 0 }, // 742 RDPMC
+  { 0, 0, 0, 0, 0 }, // 743 RDRAND16r_RDRAND32r_RDRAND64r
+  { 1, 5, 6, 0, 0 }, // 744 LD_Frr
+  { 1, 20, 21, 0, 0 }, // 745 LD_F80m
+  { 0, 0, 0, 0, 0 }, // 746 FBLDm
+  { 1, 16, 17, 0, 0 }, // 747 ST_FPrr_ST_Frr
+  { 1, 43, 44, 0, 0 }, // 748 ST_FP80m
+  { 0, 0, 0, 0, 0 }, // 749 FBSTPm
+  { 1, 18, 20, 0, 0 }, // 750 XCH_F
+  { 1, 7, 9, 0, 0 }, // 751 ILD_F16m_ILD_F32m_ILD_F64m
+  { 1, 6, 7, 0, 0 }, // 752 IST_F16m_IST_F32m_IST_FP16m_IST_FP32m
+  { 1, 4, 5, 0, 0 }, // 753 LD_F0
+  { 1, 6, 7, 0, 0 }, // 754 LD_F1
+  { 1, 26, 27, 0, 0 }, // 755 FLDPI
+  { 0, 0, 0, 0, 0 }, // 756 CMOVBE_F_CMOVBE_Fp32_CMOVBE_Fp64_CMOVBE_Fp80_CMOVB_F_CMOVB_Fp32_CMOVB_Fp64_CMOVB_Fp80_CMOVNBE_F_CMOVNBE_Fp32_CMOVNBE_Fp64_CMOVNBE_Fp80_CMOVNB_F_CMOVNB_Fp32_CMOVNB_Fp64_CMOVNB_Fp80_CMOVNE_F_CMOVNE_Fp32_CMOVNE_Fp64_CMOVNE_Fp80_CMOVNP_F_CMOVNP_Fp32_CMOVNP_Fp64_CMOVNP_Fp80_CMOVP_F_CMOVP_Fp32_CMOVP_Fp64_CMOVP_Fp80
+  { 1, 26, 27, 0, 0 }, // 757 FNSTSW16r
+  { 0, 0, 0, 0, 0 }, // 758 FNSTSWm
+  { 1, 43, 44, 0, 0 }, // 759 FLDCW16m
+  { 1, 28, 29, 0, 0 }, // 760 FNSTCW16m
+  { 1, 4, 5, 0, 0 }, // 761 FDECSTP_FINCSTP
+  { 1, 4, 5, 0, 0 }, // 762 FFREE
+  { 0, 0, 0, 0, 0 }, // 763 FSAVEm
+  { 0, 0, 0, 0, 0 }, // 764 FRSTORm
+  { 0, 0, 0, 0, 0 }, // 765 ABS_F_ABS_Fp32_ABS_Fp64_ABS_Fp80
+  { 0, 0, 0, 0, 0 }, // 766 CHS_F_CHS_Fp32_CHS_Fp64_CHS_Fp80
+  { 0, 0, 0, 0, 0 }, // 767 COMP_FST0r_COM_FST0r
+  { 1, 15, 16, 0, 0 }, // 768 UCOM_FPr_UCOM_Fr
+  { 0, 0, 0, 0, 0 }, // 769 FCOM32m_FCOM64m_FCOMP32m_FCOMP64m
+  { 1, 15, 16, 0, 0 }, // 770 FCOMPP
+  { 1, 15, 16, 0, 0 }, // 771 UCOM_FPPr
+  { 1, 14, 15, 0, 0 }, // 772 COM_FIPr_COM_FIr
+  { 1, 14, 15, 0, 0 }, // 773 UCOM_FIPr_UCOM_FIr
+  { 0, 0, 0, 0, 0 }, // 774 FICOM16m_FICOM32m_FICOMP16m_FICOMP32m
+  { 0, 0, 0, 0, 0 }, // 775 TST_F_TST_Fp32_TST_Fp64_TST_Fp80
+  { 1, 5, 6, 0, 0 }, // 776 FXAM
+  { 1, 47, 48, 0, 0 }, // 777 FPREM
+  { 1, 48, 49, 0, 0 }, // 778 FPREM1
+  { 1, 50, 51, 0, 0 }, // 779 FRNDINT
+  { 1, 51, 52, 0, 0 }, // 780 FSCALE
+  { 1, 44, 45, 0, 0 }, // 781 FXTRACT
+  { 1, 4, 5, 0, 0 }, // 782 FNOP
+  { 1, 4, 5, 0, 0 }, // 783 WAIT
+  { 1, 44, 45, 0, 0 }, // 784 FNCLEX
+  { 1, 45, 46, 0, 0 }, // 785 FNINIT
+  { 1, 74, 75, 0, 0 }, // 786 MMX_MOVD64from64rr_MMX_MOVD64grr
+  { 1, 74, 75, 0, 0 }, // 787 MOVPDI2DIrr_VMOVPDI2DIrr
+  { 1, 5, 6, 0, 0 }, // 788 MMX_MOVD64rr_MMX_MOVD64to64rr
+  { 1, 5, 6, 0, 0 }, // 789 MOVDI2PDIrr_VMOVDI2PDIrr
+  { 1, 74, 75, 0, 0 }, // 790 VMOVPQIto64rr
+  { 1, 5, 6, 0, 0 }, // 791 VMOV64toPQIrr
+  { 1, 4, 5, 0, 0 }, // 792 MMX_MOVQ64rr_MMX_MOVQ64rr_REV
+  { 1, 4, 5, 0, 0 }, // 793 MOVDQArr_MOVDQArr_REV_VMOVDQAYrr_VMOVDQAYrr_REV_VMOVDQArr_VMOVDQArr_REV
+  { 1, 4, 5, 0, 0 }, // 794 MOVDQUrr_MOVDQUrr_REV_VMOVDQUYrr_VMOVDQUYrr_REV_VMOVDQUrr_VMOVDQUrr_REV
+  { 1, 4, 5, 0, 0 }, // 795 MMX_MOVDQ2Qrr
+  { 0, 0, 0, 0, 0 }, // 796 MMX_MOVQ2DQrr
+  { 1, 4, 5, 0, 0 }, // 797 MMX_PACKSSDWirr_MMX_PACKSSWBirr_MMX_PACKUSWBirr
+  { 1, 5, 6, 0, 0 }, // 798 MMX_PACKSSDWirm_MMX_PACKSSWBirm_MMX_PACKUSWBirm
+  { 1, 4, 5, 0, 0 }, // 799 VPMOVSXBQYrr_VPMOVSXBWYrr_VPMOVSXDQYrr_VPMOVZXBQYrr_VPMOVZXBWYrr_VPMOVZXDQYrr
+  { 1, 4, 5, 0, 0 }, // 800 PBLENDWrri
+  { 1, 4, 5, 0, 0 }, // 801 VPBLENDWYrri_VPBLENDWrri
+  { 1, 5, 6, 0, 0 }, // 802 PBLENDWrmi
+  { 1, 5, 6, 0, 0 }, // 803 VPBLENDWYrmi_VPBLENDWrmi
+  { 0, 0, 0, 0, 0 }, // 804 VPBLENDDYrri_VPBLENDDrri
+  { 0, 0, 0, 0, 0 }, // 805 VPBLENDDYrmi_VPBLENDDrmi
+  { 1, 5, 6, 0, 0 }, // 806 MMX_MASKMOVQ_MMX_MASKMOVQ64
+  { 1, 16, 17, 0, 0 }, // 807 MASKMOVDQU_MASKMOVDQU64_VMASKMOVDQU_VMASKMOVDQU64
+  { 0, 0, 0, 0, 0 }, // 808 VPMASKMOVDYrm_VPMASKMOVDrm_VPMASKMOVQYrm_VPMASKMOVQrm
+  { 0, 0, 0, 0, 0 }, // 809 VPMASKMOVDYmr_VPMASKMOVDmr_VPMASKMOVQYmr_VPMASKMOVQmr
+  { 0, 0, 0, 0, 0 }, // 810 MMX_PMOVMSKBrr
+  { 1, 74, 75, 0, 0 }, // 811 PMOVMSKBrr_VPMOVMSKBrr
+  { 0, 0, 0, 0, 0 }, // 812 VPMOVMSKBYrr
+  { 1, 20, 21, 0, 0 }, // 813 MMX_PEXTRWirri
+  { 0, 0, 0, 0, 0 }, // 814 PEXTRBrr_PEXTRDrr_PEXTRQrr_PEXTRWrr_REV
+  { 0, 0, 0, 0, 0 }, // 815 PEXTRBmr_PEXTRDmr_PEXTRQmr_PEXTRWmr
+  { 0, 0, 0, 0, 0 }, // 816 VPBROADCASTBrm_VPBROADCASTWrm
+  { 0, 0, 0, 0, 0 }, // 817 VPBROADCASTBYrm_VPBROADCASTWYrm
+  { 0, 0, 0, 0, 0 }, // 818 VPGATHERDDrm
+  { 0, 0, 0, 0, 0 }, // 819 VPGATHERDDYrm
+  { 0, 0, 0, 0, 0 }, // 820 VPGATHERQDrm
+  { 0, 0, 0, 0, 0 }, // 821 VPGATHERQDYrm
+  { 0, 0, 0, 0, 0 }, // 822 VPGATHERDQrm
+  { 0, 0, 0, 0, 0 }, // 823 VPGATHERDQYrm
+  { 0, 0, 0, 0, 0 }, // 824 VPGATHERQQrm
+  { 0, 0, 0, 0, 0 }, // 825 VPGATHERQQYrm
+  { 1, 43, 44, 0, 0 }, // 826 MMX_PHADDSWrr64_MMX_PHADDWrr64_MMX_PHSUBSWrr64_MMX_PHSUBWrr64
+  { 1, 21, 22, 0, 0 }, // 827 MMX_PHADDrr64_MMX_PHSUBDrr64
+  { 1, 21, 22, 0, 0 }, // 828 PHADDDrr_PHSUBDrr_VPHADDDrr_VPHSUBDrr
+  { 0, 0, 0, 0, 0 }, // 829 PHADDSWrr128_PHSUBSWrr128_VPHADDSWrr128_VPHADDSWrr256_VPHSUBSWrr128_VPHSUBSWrr256
+  { 1, 2, 3, 0, 0 }, // 830 PHADDWrr_PHSUBWrr_VPHADDDYrr_VPHADDWYrr_VPHADDWrr_VPHSUBDYrr_VPHSUBWYrr_VPHSUBWrr
+  { 1, 6, 7, 0, 0 }, // 831 MMX_PHADDSWrm64_MMX_PHADDWrm64_MMX_PHSUBSWrm64_MMX_PHSUBWrm64
+  { 1, 20, 21, 0, 0 }, // 832 MMX_PHADDrm64_MMX_PHSUBDrm64
+  { 1, 20, 21, 0, 0 }, // 833 PHADDDrm_PHSUBDrm_VPHADDDrm_VPHSUBDrm
+  { 0, 0, 0, 0, 0 }, // 834 PHADDSWrm128_PHSUBSWrm128_VPHADDSWrm128_VPHADDSWrm256_VPHSUBSWrm128_VPHSUBSWrm256
+  { 1, 28, 29, 0, 0 }, // 835 PHADDWrm_PHSUBWrm_VPHADDDYrm_VPHADDWYrm_VPHADDWrm_VPHSUBDYrm_VPHSUBWYrm_VPHSUBWrm
+  { 0, 0, 0, 0, 0 }, // 836 PCMPGTQrr_VPCMPGTQYrr_VPCMPGTQrr
+  { 0, 0, 0, 0, 0 }, // 837 PCMPGTQrm_VPCMPGTQYrm_VPCMPGTQrm
+  { 0, 0, 0, 0, 0 }, // 838 PMULLDrr_VPMULLDYrr_VPMULLDrr
+  { 0, 0, 0, 0, 0 }, // 839 PMULLDrm_VPMULLDYrm_VPMULLDrm
+  { 0, 0, 0, 0, 0 }, // 840 PTESTrr_VPTESTYrr_VPTESTrr
+  { 0, 0, 0, 0, 0 }, // 841 PTESTrm_VPTESTYrm_VPTESTrm
+  { 1, 16, 17, 0, 0 }, // 842 PSLLDrr_PSLLQrr_PSLLWrr_PSRADrr_PSRAWrr_PSRLDrr_PSRLQrr_PSRLWrr_VPSLLDYrr_VPSLLDrr_VPSLLQYrr_VPSLLQrr_VPSLLWYrr_VPSLLWrr_VPSRADYrr_VPSRADrr_VPSRAWYrr_VPSRAWrr_VPSRLDYrr_VPSRLDrr_VPSRLQYrr_VPSRLQrr_VPSRLWYrr_VPSRLWrr
+  { 1, 4, 5, 0, 0 }, // 843 PSLLDQri_PSRLDQri_VPSLLDQYri_VPSLLDQri_VPSRLDQYri_VPSRLDQri
+  { 1, 43, 44, 0, 0 }, // 844 MMX_EMMS
+  { 1, 74, 75, 0, 0 }, // 845 MOVMSKPDrr_MOVMSKPSrr_VMOVMSKPDrr_VMOVMSKPSrr
+  { 1, 74, 75, 0, 0 }, // 846 VMOVMSKPDYrr_VMOVMSKPSYrr
+  { 0, 0, 0, 0, 0 }, // 847 VPERM2F128rr
+  { 0, 0, 0, 0, 0 }, // 848 VPERM2F128rm
+  { 1, 4, 5, 0, 0 }, // 849 BLENDVPDrr0_BLENDVPSrr0
+  { 1, 5, 6, 0, 0 }, // 850 BLENDVPDrm0_BLENDVPSrm0
+  { 0, 0, 0, 0, 0 }, // 851 VBROADCASTF128
+  { 0, 0, 0, 0, 0 }, // 852 EXTRACTPSrr
+  { 1, 4, 5, 0, 0 }, // 853 VEXTRACTPSrr
+  { 0, 0, 0, 0, 0 }, // 854 EXTRACTPSmr
+  { 1, 5, 6, 0, 0 }, // 855 VEXTRACTPSmr
+  { 0, 0, 0, 0, 0 }, // 856 VEXTRACTF128rr
+  { 0, 0, 0, 0, 0 }, // 857 VEXTRACTF128mr
+  { 0, 0, 0, 0, 0 }, // 858 VINSERTF128rr
+  { 0, 0, 0, 0, 0 }, // 859 VINSERTF128rm
+  { 0, 0, 0, 0, 0 }, // 860 VMASKMOVPDYrm_VMASKMOVPDrm_VMASKMOVPSYrm_VMASKMOVPSrm
+  { 0, 0, 0, 0, 0 }, // 861 VMASKMOVPDmr_VMASKMOVPSmr
+  { 0, 0, 0, 0, 0 }, // 862 VMASKMOVPDYmr_VMASKMOVPSYmr
+  { 0, 0, 0, 0, 0 }, // 863 VGATHERDPSrm
+  { 0, 0, 0, 0, 0 }, // 864 VGATHERDPSYrm
+  { 0, 0, 0, 0, 0 }, // 865 VGATHERQPSrm
+  { 0, 0, 0, 0, 0 }, // 866 VGATHERQPSYrm
+  { 0, 0, 0, 0, 0 }, // 867 VGATHERDPDrm
+  { 0, 0, 0, 0, 0 }, // 868 VGATHERDPDYrm
+  { 0, 0, 0, 0, 0 }, // 869 VGATHERQPDrm
+  { 0, 0, 0, 0, 0 }, // 870 VGATHERQPDYrm
+  { 1, 2, 3, 0, 0 }, // 871 CVTPD2PSrr_VCVTPD2PSrr
+  { 1, 28, 29, 0, 0 }, // 872 CVTPD2PSrm_VCVTPD2PSrm
+  { 1, 2, 3, 0, 0 }, // 873 VCVTPD2PSYrr
+  { 1, 28, 29, 0, 0 }, // 874 VCVTPD2PSYrm
+  { 1, 6, 7, 0, 0 }, // 875 CVTSD2SSrr_Int_CVTSD2SSrr_Int_VCVTSD2SSrr_VCVTSD2SSrr
+  { 1, 2, 3, 0, 0 }, // 876 CVTSD2SSrm
+  { 1, 2, 3, 0, 0 }, // 877 Int_CVTSD2SSrm_Int_VCVTSD2SSrm_VCVTSD2SSrm
+  { 1, 2, 3, 0, 0 }, // 878 CVTPS2PDrr_VCVTPS2PDrr
+  { 1, 28, 29, 0, 0 }, // 879 CVTPS2PDrm_VCVTPS2PDYrm_VCVTPS2PDrm
+  { 1, 2, 3, 0, 0 }, // 880 VCVTPS2PDYrr
+  { 1, 6, 7, 0, 0 }, // 881 CVTSS2SDrr_Int_CVTSS2SDrr_Int_VCVTSS2SDrr_VCVTSS2SDrr
+  { 1, 2, 3, 0, 0 }, // 882 CVTSS2SDrm
+  { 1, 2, 3, 0, 0 }, // 883 Int_CVTSS2SDrm_Int_VCVTSS2SDrm_VCVTSS2SDrm
+  { 1, 28, 29, 0, 0 }, // 884 CVTDQ2PDrr
+  { 0, 0, 0, 0, 0 }, // 885 VCVTDQ2PDrr
+  { 0, 0, 0, 0, 0 }, // 886 VCVTDQ2PDYrr
+  { 1, 2, 3, 0, 0 }, // 887 CVTPD2DQrr_CVTTPD2DQrr_VCVTTPD2DQrr
+  { 0, 0, 0, 0, 0 }, // 888 VCVTPD2DQrr
+  { 1, 28, 29, 0, 0 }, // 889 CVTPD2DQrm_CVTTPD2DQrm_VCVTTPD2DQrm
+  { 0, 0, 0, 0, 0 }, // 890 VCVTPD2DQrm
+  { 0, 0, 0, 0, 0 }, // 891 VCVTPD2DQYrr
+  { 1, 2, 3, 0, 0 }, // 892 VCVTTPD2DQYrr
+  { 0, 0, 0, 0, 0 }, // 893 VCVTPD2DQYrm
+  { 1, 28, 29, 0, 0 }, // 894 VCVTTPD2DQYrm
+  { 1, 9, 10, 0, 0 }, // 895 MMX_CVTPS2PIirr_MMX_CVTTPS2PIirr
+  { 1, 2, 3, 0, 0 }, // 896 MMX_CVTPI2PDirr
+  { 1, 2, 3, 0, 0 }, // 897 MMX_CVTPD2PIirr_MMX_CVTTPD2PIirr
+  { 1, 6, 7, 0, 0 }, // 898 CVTSI2SS64rr_CVTSI2SSrr_Int_CVTSI2SS64rr_Int_CVTSI2SSrr_Int_VCVTSI2SS64rr_Int_VCVTSI2SSrr
+  { 0, 0, 0, 0, 0 }, // 899 VCVTSI2SS64rr_VCVTSI2SSrr
+  { 1, 14, 15, 0, 0 }, // 900 CVTSS2SI64rr_CVTTSS2SI64rr_Int_CVTTSS2SI64rr_Int_VCVTTSS2SI64rr_VCVTSS2SI64rr_VCVTTSS2SI64rr
+  { 1, 28, 29, 0, 0 }, // 901 CVTSS2SIrr_CVTTSS2SIrr_Int_CVTTSS2SIrr_Int_VCVTTSS2SIrr_VCVTSS2SIrr_VCVTTSS2SIrr
+  { 1, 26, 27, 0, 0 }, // 902 CVTSS2SI64rm_CVTTSS2SI64rm_Int_CVTTSS2SI64rm_Int_VCVTTSS2SI64rm_VCVTSS2SI64rm_VCVTTSS2SI64rm
+  { 1, 14, 15, 0, 0 }, // 903 CVTSS2SIrm_CVTTSS2SIrm_Int_CVTTSS2SIrm_Int_VCVTTSS2SIrm_VCVTSS2SIrm_VCVTTSS2SIrm
+  { 1, 28, 29, 0, 0 }, // 904 CVTSD2SI64rr_CVTSD2SIrr_CVTTSD2SI64rr_CVTTSD2SIrr_Int_CVTTSD2SI64rr_Int_CVTTSD2SIrr_Int_VCVTTSD2SI64rr_Int_VCVTTSD2SIrr_VCVTSD2SI64rr_VCVTSD2SIrr_VCVTTSD2SI64rr_VCVTTSD2SIrr
+  { 1, 14, 15, 0, 0 }, // 905 CVTSD2SI64rm_CVTSD2SIrm_CVTTSD2SI64rm_CVTTSD2SIrm_Int_CVTTSD2SI64rm_Int_CVTTSD2SIrm_Int_VCVTTSD2SI64rm_Int_VCVTTSD2SIrm_VCVTSD2SI64rm_VCVTSD2SIrm_VCVTTSD2SI64rm_VCVTTSD2SIrm
+  { 0, 0, 0, 0, 0 }, // 906 VCVTPS2PHYrr_VCVTPS2PHrr
+  { 0, 0, 0, 0, 0 }, // 907 VCVTPS2PHYmr_VCVTPS2PHmr
+  { 0, 0, 0, 0, 0 }, // 908 VCVTPH2PSYrr_VCVTPH2PSrr
+  { 1, 28, 29, 0, 0 }, // 909 HADDPDrr_HADDPSrr_HSUBPDrr_HSUBPSrr_VHADDPDYrr_VHADDPDrr_VHADDPSYrr_VHADDPSrr_VHSUBPDYrr_VHSUBPDrr_VHSUBPSYrr_VHSUBPSrr
+  { 1, 14, 15, 0, 0 }, // 910 HADDPDrm_HADDPSrm_HSUBPDrm_HSUBPSrm_VHADDPDYrm_VHADDPDrm_VHADDPSYrm_VHADDPSrm_VHSUBPDYrm_VHSUBPDrm_VHSUBPSYrm_VHSUBPSrm
+  { 1, 14, 15, 0, 0 }, // 911 MULPDrr_VMULPDrr
+  { 1, 57, 58, 0, 0 }, // 912 MULPSrr_VMULPSrr
+  { 1, 57, 58, 0, 0 }, // 913 MULSDrr_MULSDrr_Int_VMULSDrr_VMULSDrr_Int
+  { 1, 75, 76, 0, 0 }, // 914 MULSSrr_MULSSrr_Int_VMULSSrr_VMULSSrr_Int
+  { 1, 26, 27, 0, 0 }, // 915 MULPDrm_MULPSrm_VMULPDrm_VMULPSrm
+  { 1, 57, 58, 0, 0 }, // 916 MULSDrm_MULSDrm_Int_MULSSrm_MULSSrm_Int_VMULSDrm_VMULSDrm_Int_VMULSSrm_VMULSSrm_Int
+  { 1, 34, 35, 0, 0 }, // 917 VDIVPSYrr
+  { 1, 33, 34, 0, 0 }, // 918 VDIVPSYrm
+  { 1, 33, 34, 0, 0 }, // 919 VDIVPDYrr
+  { 1, 33, 34, 0, 0 }, // 920 VDIVPDYrm
+  { 1, 14, 15, 0, 0 }, // 921 VRCPPSYr
+  { 1, 26, 27, 0, 0 }, // 922 VRCPPSYm
+  { 0, 0, 0, 0, 0 }, // 923 ROUNDPDr_ROUNDPSr_VROUNDPDr_VROUNDPSr_VROUNDYPDr_VROUNDYPSr
+  { 0, 0, 0, 0, 0 }, // 924 ROUNDSDr_ROUNDSDr_Int_ROUNDSSr_ROUNDSSr_Int_VROUNDSDr_VROUNDSDr_Int_VROUNDSSr_VROUNDSSr_Int
+  { 0, 0, 0, 0, 0 }, // 925 ROUNDPDm_VROUNDPDm_VROUNDYPDm
+  { 0, 0, 0, 0, 0 }, // 926 ROUNDPSm_VROUNDPSm_VROUNDYPSm
+  { 0, 0, 0, 0, 0 }, // 927 ROUNDSDm_ROUNDSDm_Int_ROUNDSSm_ROUNDSSm_Int_VROUNDSDm_VROUNDSDm_Int_VROUNDSSm_VROUNDSSm_Int
+  { 0, 0, 0, 0, 0 }, // 928 DPPSrri_VDPPSYrri_VDPPSrri
+  { 0, 0, 0, 0, 0 }, // 929 DPPSrmi_VDPPSYrmi_VDPPSrmi
+  { 0, 0, 0, 0, 0 }, // 930 DPPDrri
+  { 0, 0, 0, 0, 0 }, // 931 VDPPDrri
+  { 0, 0, 0, 0, 0 }, // 932 DPPDrmi_VDPPDrmi
+  { 0, 0, 0, 0, 0 }, // 933 VFMADDPD4rr_VFMADDPD4rr_REV_VFMADDPS4rr_VFMADDPS4rr_REV_VFMADDSD4rr_VFMADDSD4rr_Int_VFMADDSD4rr_REV_VFMADDSS4rr_VFMADDSS4rr_Int_VFMADDSS4rr_REV_VFMSUBPD4rr_VFMSUBPD4rr_REV_VFMSUBPS4rr_VFMSUBPS4rr_REV_VFMSUBSD4rr_VFMSUBSD4rr_Int_VFMSUBSD4rr_REV_VFMSUBSS4rr_VFMSUBSS4rr_Int_VFMSUBSS4rr_REV_VFNMADDPD4rr_VFNMADDPD4rr_REV_VFNMADDPS4rr_VFNMADDPS4rr_REV_VFNMADDSD4rr_VFNMADDSD4rr_Int_VFNMADDSD4rr_REV_VFNMADDSS4rr_VFNMADDSS4rr_Int_VFNMADDSS4rr_REV_VFNMSUBPD4rr_VFNMSUBPD4rr_REV_VFNMSUBPS4rr_VFNMSUBPS4rr_REV_VFNMSUBSD4rr_VFNMSUBSD4rr_Int_VFNMSUBSD4rr_REV_VFNMSUBSS4rr_VFNMSUBSS4rr_Int_VFNMSUBSS4rr_REV
+  { 0, 0, 0, 0, 0 }, // 934 VFMADDPD4mr_VFMADDPD4rm_VFMADDPS4mr_VFMADDPS4rm_VFMADDSD4mr_VFMADDSD4mr_Int_VFMADDSD4rm_VFMADDSD4rm_Int_VFMADDSS4mr_VFMADDSS4mr_Int_VFMADDSS4rm_VFMADDSS4rm_Int_VFMSUBPD4mr_VFMSUBPD4rm_VFMSUBPS4mr_VFMSUBPS4rm_VFMSUBSD4mr_VFMSUBSD4mr_Int_VFMSUBSD4rm_VFMSUBSD4rm_Int_VFMSUBSS4mr_VFMSUBSS4mr_Int_VFMSUBSS4rm_VFMSUBSS4rm_Int_VFNMADDPD4mr_VFNMADDPD4rm_VFNMADDPS4mr_VFNMADDPS4rm_VFNMADDSD4mr_VFNMADDSD4mr_Int_VFNMADDSD4rm_VFNMADDSD4rm_Int_VFNMADDSS4mr_VFNMADDSS4mr_Int_VFNMADDSS4rm_VFNMADDSS4rm_Int_VFNMSUBPD4mr_VFNMSUBPD4rm_VFNMSUBPS4mr_VFNMSUBPS4rm_VFNMSUBSD4mr_VFNMSUBSD4mr_Int_VFNMSUBSD4rm_VFNMSUBSD4rm_Int_VFNMSUBSS4mr_VFNMSUBSS4mr_Int_VFNMSUBSS4rm_VFNMSUBSS4rm_Int
+  { 1, 34, 35, 0, 0 }, // 935 VSQRTPSYr
+  { 1, 34, 35, 0, 0 }, // 936 VSQRTPSYm
+  { 1, 33, 34, 0, 0 }, // 937 VSQRTPDYr
+  { 1, 33, 34, 0, 0 }, // 938 VSQRTPDYm
+  { 1, 14, 15, 0, 0 }, // 939 RSQRTPSr_VRSQRTPSr
+  { 1, 75, 76, 0, 0 }, // 940 RSQRTSSr_VRSQRTSSr
+  { 0, 0, 0, 0, 0 }, // 941 RSQRTSSr_Int
+  { 0, 0, 0, 0, 0 }, // 942 VRSQRTSSr_Int
+  { 1, 26, 27, 0, 0 }, // 943 RSQRTPSm_VRSQRTPSm
+  { 1, 75, 76, 0, 0 }, // 944 RSQRTSSm_VRSQRTSSm
+  { 0, 0, 0, 0, 0 }, // 945 RSQRTSSm_Int_VRSQRTSSm_Int
+  { 1, 14, 15, 0, 0 }, // 946 VRSQRTPSYr
+  { 1, 26, 27, 0, 0 }, // 947 VRSQRTPSYm
+  { 0, 0, 0, 0, 0 }, // 948 ANDNPDrr_ANDNPSrr_ANDPDrr_ANDPSrr_ORPDrr_ORPSrr_VANDNPDYrr_VANDNPDrr_VANDNPSYrr_VANDNPSrr_VANDPDYrr_VANDPDrr_VANDPSYrr_VANDPSrr_VORPDYrr_VORPDrr_VORPSYrr_VORPSrr_VXORPDYrr_VXORPDrr_VXORPSYrr_VXORPSrr_XORPDrr_XORPSrr
+  { 0, 0, 0, 0, 0 }, // 949 ANDNPDrm_ANDNPSrm_ANDPDrm_ANDPSrm_ORPDrm_ORPSrm_VANDNPDYrm_VANDNPDrm_VANDNPSYrm_VANDNPSrm_VANDPDYrm_VANDPDrm_VANDPSYrm_VANDPSrm_VORPDYrm_VORPDrm_VORPSYrm_VORPSrm_VXORPDYrm_VXORPDrm_VXORPSYrm_VXORPSrm_XORPDrm_XORPSrm
+  { 0, 0, 0, 0, 0 }, // 950 VZEROUPPER
+  { 0, 0, 0, 0, 0 }, // 951 VZEROALL
+  { 1, 43, 44, 0, 0 }, // 952 LDMXCSR_VLDMXCSR
+  { 1, 17, 18, 0, 0 }, // 953 STMXCSR_VSTMXCSR
   { 0, ~0U, ~0U, ~0U, ~0U } // end marker
 };
 
@@ -2798,796 +2813,802 @@ static const llvm::MCSchedClassDesc HaswellModelSchedClasses[] = {
   {DBGFIELD("IIC_FXTRACT_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #155
   {DBGFIELD("IIC_FYL2X_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #156
   {DBGFIELD("IIC_FYL2XP1_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #157
-  {DBGFIELD("IIC_SSE_BIT_P_RM_WriteFAddLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #158
-  {DBGFIELD("IIC_SSE_BIT_P_RR_WriteFAdd") 1, false, false, 22, 7,  6, 1,  0, 0}, // #159
-  {DBGFIELD("IIC_SSE_MOVA_P_RM_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #160
-  {DBGFIELD("IIC_SSE_HADDSUB_RM_WriteFAddLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #161
-  {DBGFIELD("IIC_SSE_HADDSUB_RR_WriteFAdd") 1, false, false, 22, 7,  6, 1,  0, 0}, // #162
-  {DBGFIELD("IIC_HLT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #163
-  {DBGFIELD("IIC_IDIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 104, 12, 11, 1,  2, 2}, // #164
-  {DBGFIELD("IIC_IDIV16_WriteIDiv") 1, false, false, 116, 10, 12, 1,  0, 0}, // #165
-  {DBGFIELD("IIC_IDIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 104, 12, 11, 1,  2, 2}, // #166
-  {DBGFIELD("IIC_IDIV32_WriteIDiv") 1, false, false, 116, 10, 12, 1,  0, 0}, // #167
-  {DBGFIELD("IIC_IDIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 104, 12, 11, 1,  2, 2}, // #168
-  {DBGFIELD("IIC_IDIV64_WriteIDiv") 1, false, false, 116, 10, 12, 1,  0, 0}, // #169
-  {DBGFIELD("IIC_IDIV8_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 104, 12, 11, 1,  2, 2}, // #170
-  {DBGFIELD("IIC_IDIV8_WriteIDiv") 1, false, false, 116, 10, 12, 1,  0, 0}, // #171
-  {DBGFIELD("IIC_FILD_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #172
-  {DBGFIELD("IIC_IMUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #173
-  {DBGFIELD("IIC_IMUL16_RR_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #174
-  {DBGFIELD("IIC_IMUL16_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #175
-  {DBGFIELD("IIC_IMUL16_RMI_WriteIMulLd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #176
-  {DBGFIELD("IIC_IMUL16_RRI_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #177
-  {DBGFIELD("IIC_IMUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #178
-  {DBGFIELD("IIC_IMUL32_RR_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #179
-  {DBGFIELD("IIC_IMUL32_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #180
-  {DBGFIELD("IIC_IMUL32_RMI_WriteIMulLd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #181
-  {DBGFIELD("IIC_IMUL32_RRI_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #182
-  {DBGFIELD("IIC_IMUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #183
-  {DBGFIELD("IIC_IMUL64_RR_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #184
-  {DBGFIELD("IIC_IMUL64_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #185
-  {DBGFIELD("IIC_IMUL64_RMI_WriteIMulLd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #186
-  {DBGFIELD("IIC_IMUL64_RRI_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #187
-  {DBGFIELD("IIC_IMUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #188
-  {DBGFIELD("IIC_IMUL8_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #189
-  {DBGFIELD("IIC_IN_RI_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #190
-  {DBGFIELD("IIC_IN_RR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #191
-  {DBGFIELD("IIC_INS_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #192
-  {DBGFIELD("IIC_SSE_INSERTPS_RM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #193
-  {DBGFIELD("IIC_SSE_INSERTPS_RR_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #194
-  {DBGFIELD("IIC_INT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #195
-  {DBGFIELD("IIC_INT3_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #196
-  {DBGFIELD("IIC_INVD_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #197
-  {DBGFIELD("IIC_INVLPG_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #198
-  {DBGFIELD("WriteJumpLd")        1, false, false, 91, 6,  3, 1,  0, 0}, // #199
-  {DBGFIELD("IIC_IRET_WriteJumpLd") 1, false, false, 91, 6,  3, 1,  0, 0}, // #200
-  {DBGFIELD("IIC_FST_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #201
-  {DBGFIELD("IIC_FIST_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #202
-  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #203
-  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd_ReadAfterLd") 1, false, false, 13, 9, 10, 1,  1, 1}, // #204
-  {DBGFIELD("WriteLoad")          1, false, false, 101, 3,  9, 1,  0, 0}, // #205
-  {DBGFIELD("IIC_Jcc_WriteJump")  1, false, false, 97, 4,  2, 1,  0, 0}, // #206
-  {DBGFIELD("IIC_JCXZ_WriteJump") 1, false, false, 97, 4,  2, 1,  0, 0}, // #207
-  {DBGFIELD("IIC_JMP_MEM_WriteJumpLd") 1, false, false, 91, 6,  3, 1,  0, 0}, // #208
-  {DBGFIELD("IIC_JMP_REG_WriteJump") 1, false, false, 97, 4,  2, 1,  0, 0}, // #209
-  {DBGFIELD("IIC_JMP_REL_WriteJump") 1, false, false, 97, 4,  2, 1,  0, 0}, // #210
-  {DBGFIELD("IIC_AHF_WriteALU")   1, false, false,  1, 2,  2, 1,  0, 0}, // #211
-  {DBGFIELD("IIC_LAR_RM_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #212
-  {DBGFIELD("IIC_LAR_RR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #213
-  {DBGFIELD("IIC_CMPX_LOCK_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #214
-  {DBGFIELD("IIC_CMPX_LOCK_16B_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #215
-  {DBGFIELD("IIC_CMPX_LOCK_8_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #216
-  {DBGFIELD("IIC_CMPX_LOCK_8B_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #217
-  {DBGFIELD("IIC_SSE_LDDQU_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #218
-  {DBGFIELD("IIC_SSE_LDMXCSR_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #219
-  {DBGFIELD("IIC_LXS_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #220
-  {DBGFIELD("IIC_FLDZ_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #221
-  {DBGFIELD("IIC_FIST_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #222
-  {DBGFIELD("IIC_FLD_WriteLoad")  1, false, false, 101, 3,  9, 1,  0, 0}, // #223
-  {DBGFIELD("IIC_FLD80_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #224
-  {DBGFIELD("IIC_FLD_WriteMove")  1, false, false,  1, 2,  2, 1,  0, 0}, // #225
-  {DBGFIELD("IIC_LEA_16_WriteLEA") 1, false, false, 137, 4,  2, 1,  0, 0}, // #226
-  {DBGFIELD("IIC_LEA_WriteLEA")   1, false, false, 137, 4,  2, 1,  0, 0}, // #227
-  {DBGFIELD("IIC_LEAVE_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #228
-  {DBGFIELD("IIC_SSE_LFENCE_WriteFence") 1, false, false, 141, 5,  2, 1,  0, 0}, // #229
-  {DBGFIELD("IIC_LGDT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #230
-  {DBGFIELD("IIC_LIDT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #231
-  {DBGFIELD("IIC_LLDT_MEM_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #232
-  {DBGFIELD("IIC_LLDT_REG_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #233
-  {DBGFIELD("IIC_LMSW_REG_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #234
-  {DBGFIELD("IIC_LMSW_MEM_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #235
-  {DBGFIELD("IIC_ALU_MEM_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #236
-  {DBGFIELD("IIC_ALU_NONMEM_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #237
-  {DBGFIELD("IIC_LODS_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #238
-  {DBGFIELD("IIC_LOOP_WriteJump") 1, false, false, 97, 4,  2, 1,  0, 0}, // #239
-  {DBGFIELD("IIC_LOOPE_WriteJump") 1, false, false, 97, 4,  2, 1,  0, 0}, // #240
-  {DBGFIELD("IIC_LOOPNE_WriteJump") 1, false, false, 97, 4,  2, 1,  0, 0}, // #241
-  {DBGFIELD("IIC_RET_WriteJumpLd") 1, false, false, 91, 6,  3, 1,  0, 0}, // #242
-  {DBGFIELD("IIC_LSL_RM_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #243
-  {DBGFIELD("IIC_LSL_RR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #244
-  {DBGFIELD("IIC_LTR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #245
-  {DBGFIELD("IIC_XADD_LOCK_MEM_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #246
-  {DBGFIELD("IIC_XADD_LOCK_MEM8_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #247
-  {DBGFIELD("IIC_SSE_MASKMOV_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #248
-  {DBGFIELD("IIC_SSE_MFENCE_WriteFence") 1, false, false, 141, 5,  2, 1,  0, 0}, // #249
-  {DBGFIELD("IIC_MMX_CVT_PD_RM_WriteCvtF2ILd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #250
-  {DBGFIELD("IIC_MMX_CVT_PD_RR_WriteCvtF2I") 1, false, false, 22, 7,  6, 1,  0, 0}, // #251
-  {DBGFIELD("WriteCvtI2FLd")      1, false, false, 13, 9, 10, 1,  0, 0}, // #252
-  {DBGFIELD("WriteCvtI2F")        1, false, false, 22, 7,  9, 1,  0, 0}, // #253
-  {DBGFIELD("IIC_MMX_CVT_PS_RM_WriteCvtF2ILd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #254
-  {DBGFIELD("IIC_MMX_CVT_PS_RR_WriteCvtF2I") 1, false, false, 22, 7,  6, 1,  0, 0}, // #255
-  {DBGFIELD("IIC_MMX_EMMS")       0, false, false,  0, 0,  0, 0,  0, 0}, // #256
-  {DBGFIELD("IIC_MMX_MASKMOV_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #257
-  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #258
-  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #259
-  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #260
-  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #261
-  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #262
-  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #263
-  {DBGFIELD("IIC_MMX_MOVQ_RR_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #264
-  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #265
-  {DBGFIELD("WriteMove")          1, false, false,  1, 2,  2, 1,  0, 0}, // #266
-  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd") 1, false, false, 146, 6,  3, 1,  0, 0}, // #267
-  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #268
-  {DBGFIELD("IIC_MMX_PCK_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #269
-  {DBGFIELD("IIC_MMX_PCK_RR_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #270
-  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #271
-  {DBGFIELD("IIC_MMX_ALUQ_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #272
-  {DBGFIELD("IIC_MMX_ALUQ_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #273
-  {DBGFIELD("WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #274
-  {DBGFIELD("WriteShuffle")       1, false, false, 39, 8,  2, 1,  0, 0}, // #275
-  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 17, 5,  3, 1,  1, 1}, // #276
-  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecLogic") 1, false, false, 26, 3,  2, 1,  0, 0}, // #277
-  {DBGFIELD("IIC_MMX_MISC_FUNC_REG_WriteVecIMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #278
-  {DBGFIELD("IIC_MMX_MISC_FUNC_MEM_WriteVecIMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #279
-  {DBGFIELD("IIC_MMX_PEXTR_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #280
-  {DBGFIELD("IIC_MMX_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #281
-  {DBGFIELD("IIC_MMX_PHADDSUBW_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #282
-  {DBGFIELD("IIC_MMX_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #283
-  {DBGFIELD("IIC_MMX_PHADDSUBD_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #284
-  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #285
-  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #286
-  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #287
-  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #288
-  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #289
-  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #290
-  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #291
-  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #292
-  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd") 1, false, false, 29, 10,  3, 1,  0, 0}, // #293
-  {DBGFIELD("IIC_MMX_SHIFT_RI_WriteVecShift") 1, false, false, 117, 9,  2, 1,  0, 0}, // #294
-  {DBGFIELD("IIC_MMX_SHIFT_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 105, 11,  3, 1,  1, 1}, // #295
-  {DBGFIELD("IIC_MMX_SHIFT_RR_WriteVecShift") 1, false, false, 117, 9,  2, 1,  0, 0}, // #296
-  {DBGFIELD("IIC_MMX_UNPCK_H_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #297
-  {DBGFIELD("IIC_MMX_UNPCK_H_RR_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #298
-  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #299
-  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #300
-  {DBGFIELD("IIC_SSE_MONITORX_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #301
-  {DBGFIELD("IIC_SSE_MONITOR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #302
-  {DBGFIELD("IIC_MOV_MEM_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #303
-  {DBGFIELD("IIC_MOV_MEM_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #304
-  {DBGFIELD("IIC_MOV_MEM_SR_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #305
-  {DBGFIELD("IIC_MOV_WriteMove")  1, false, false,  1, 2,  2, 1,  0, 0}, // #306
-  {DBGFIELD("IIC_MOV_MEM_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #307
-  {DBGFIELD("IIC_MOV_REG_SR_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #308
-  {DBGFIELD("IIC_MOV_SR_MEM_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #309
-  {DBGFIELD("IIC_MOV_SR_REG_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #310
-  {DBGFIELD("IIC_MOV_CR_REG_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #311
-  {DBGFIELD("IIC_MOV_DR_REG_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #312
-  {DBGFIELD("IIC_ALU_NONMEM_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #313
-  {DBGFIELD("IIC_MOV_REG_CR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #314
-  {DBGFIELD("IIC_MOV_REG_DR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #315
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #316
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #317
-  {DBGFIELD("IIC_SSE_MOVA_P_MR_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #318
-  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #319
-  {DBGFIELD("IIC_MOVBE_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #320
-  {DBGFIELD("IIC_MOVBE_WriteALULd") 1, false, false,  9, 4,  3, 1,  0, 0}, // #321
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #322
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #323
-  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #324
-  {DBGFIELD("IIC_SSE_MOVU_P_MR_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #325
-  {DBGFIELD("IIC_SSE_MOVU_P_RM_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #326
-  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #327
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #328
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #329
-  {DBGFIELD("IIC_SSE_MOVMSK_WriteVecLogic") 1, false, false, 26, 3,  2, 1,  0, 0}, // #330
-  {DBGFIELD("IIC_SSE_MOVNT_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #331
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #332
-  {DBGFIELD("IIC_SSE_MOVD_ToGP_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #333
-  {DBGFIELD("IIC_SSE_MOVQ_RR_WriteVecLogic") 1, false, false, 26, 3,  2, 1,  0, 0}, // #334
-  {DBGFIELD("IIC_MOVS_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #335
-  {DBGFIELD("IIC_SSE_MOV_S_MR_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #336
-  {DBGFIELD("IIC_SSE_MOV_S_RM_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #337
-  {DBGFIELD("IIC_SSE_MOV_S_RR_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #338
-  {DBGFIELD("IIC_MOVSX_R16_M8_WriteALULd") 1, false, false,  9, 4,  3, 1,  0, 0}, // #339
-  {DBGFIELD("IIC_MOVSX_R16_R8_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #340
-  {DBGFIELD("IIC_MOVSX_WriteALULd") 1, false, false,  9, 4,  3, 1,  0, 0}, // #341
-  {DBGFIELD("IIC_MOVSX_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #342
-  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #343
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteVecLogicLd") 1, false, false, 17, 5,  3, 1,  0, 0}, // #344
-  {DBGFIELD("IIC_MOVZX_R16_M8_WriteALULd") 1, false, false,  9, 4,  3, 1,  0, 0}, // #345
-  {DBGFIELD("IIC_MOVZX_R16_R8_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #346
-  {DBGFIELD("IIC_MOVZX_WriteALULd") 1, false, false,  9, 4,  3, 1,  0, 0}, // #347
-  {DBGFIELD("IIC_MOVZX_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #348
-  {DBGFIELD("IIC_SSE_MPSADBW_RM_WriteMPSADLd_ReadAfterLd") 1, false, false, 152, 14, 16, 1,  1, 1}, // #349
-  {DBGFIELD("IIC_SSE_MPSADBW_RR_WriteMPSAD") 1, false, false, 166, 12, 16, 1,  0, 0}, // #350
-  {DBGFIELD("IIC_MUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #351
-  {DBGFIELD("IIC_MUL16_REG_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #352
-  {DBGFIELD("IIC_MUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #353
-  {DBGFIELD("IIC_MUL32_REG_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #354
-  {DBGFIELD("IIC_MUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #355
-  {DBGFIELD("IIC_MUL64_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #356
-  {DBGFIELD("IIC_MUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #357
-  {DBGFIELD("IIC_MUL8_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #358
-  {DBGFIELD("IIC_SSE_MUL_F64P_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #359
-  {DBGFIELD("IIC_SSE_MUL_F64P_RR_WriteFMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #360
-  {DBGFIELD("IIC_SSE_MUL_F32P_RR_WriteFMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #361
-  {DBGFIELD("IIC_SSE_MUL_F64S_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #362
-  {DBGFIELD("IIC_SSE_MUL_F64S_RR_WriteFMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #363
-  {DBGFIELD("IIC_SSE_MUL_F32S_RR_WriteFMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #364
-  {DBGFIELD("IIC_MUL8_WriteIMulLd_WriteIMulH") 2, false, false, 13, 9,  5, 2,  0, 0}, // #365
-  {DBGFIELD("IIC_MUL8_WriteIMul_WriteIMulH") 2, false, false, 22, 7, 17, 2,  0, 0}, // #366
-  {DBGFIELD("WriteFMulLd")        1, false, false, 105, 11, 15, 1,  0, 0}, // #367
-  {DBGFIELD("WriteFMul")          1, false, false, 117, 9,  3, 1,  0, 0}, // #368
-  {DBGFIELD("IIC_SSE_MWAITX_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #369
-  {DBGFIELD("IIC_SSE_MWAIT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #370
-  {DBGFIELD("IIC_NOP_WriteZero")  1, false, false,  0, 0,  2, 1,  0, 0}, // #371
-  {DBGFIELD("IIC_OUT_IR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #372
-  {DBGFIELD("IIC_OUT_RR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #373
-  {DBGFIELD("IIC_OUTS_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #374
-  {DBGFIELD("IIC_SSE_PABS_RM_WriteVecALULd") 1, false, false, 146, 6,  3, 1,  0, 0}, // #375
-  {DBGFIELD("IIC_SSE_PABS_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #376
-  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #377
-  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #378
-  {DBGFIELD("IIC_SSE_INTALUQ_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #379
-  {DBGFIELD("IIC_SSE_INTALUQ_P_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #380
-  {DBGFIELD("IIC_SSE_PALIGNRM_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #381
-  {DBGFIELD("IIC_SSE_PALIGNRR_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #382
-  {DBGFIELD("IIC_SSE_BIT_P_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 17, 5,  3, 1,  1, 1}, // #383
-  {DBGFIELD("IIC_SSE_BIT_P_RR_WriteVecLogic") 1, false, false, 26, 3,  2, 1,  0, 0}, // #384
-  {DBGFIELD("IIC_SSE_PAUSE_WriteNop") 1, false, false,  0, 0,  2, 1,  0, 0}, // #385
-  {DBGFIELD("IIC_ALU_MEM_WriteVarBlendLd_ReadAfterLd") 1, false, false, 47, 10, 16, 1,  1, 1}, // #386
-  {DBGFIELD("IIC_ALU_NONMEM_WriteVarBlend") 1, false, false, 57, 8, 19, 1,  0, 0}, // #387
-  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteBlendLd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #388
-  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteBlend") 1, false, false, 137, 4,  2, 1,  0, 0}, // #389
-  {DBGFIELD("IIC_SSE_PCLMULQDQ_RM_WriteCLMulLd_ReadAfterLd") 1, false, false, 178, 14,  5, 1,  1, 1}, // #390
-  {DBGFIELD("IIC_SSE_PCLMULQDQ_RR_WriteCLMul") 1, false, false, 192, 12,  5, 1,  0, 0}, // #391
-  {DBGFIELD("WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #392
-  {DBGFIELD("WriteVecALU")        1, false, false, 137, 4,  2, 1,  0, 0}, // #393
-  {DBGFIELD("WritePCmpEStrILd_ReadAfterLd") 1, false, false, 204, 15, 20, 1,  1, 1}, // #394
-  {DBGFIELD("WritePCmpEStrI")     1, false, false, 219, 6, 20, 1,  0, 0}, // #395
-  {DBGFIELD("WritePCmpEStrMLd_ReadAfterLd") 1, false, false, 225, 8,  8, 1,  1, 1}, // #396
-  {DBGFIELD("WritePCmpEStrM")     1, false, false, 233, 13,  8, 1,  0, 0}, // #397
-  {DBGFIELD("WritePCmpIStrILd_ReadAfterLd") 1, false, false, 246, 11, 20, 1,  1, 1}, // #398
-  {DBGFIELD("WritePCmpIStrI")     1, false, false, 257, 9, 20, 1,  0, 0}, // #399
-  {DBGFIELD("WritePCmpIStrMLd_ReadAfterLd") 1, false, false, 246, 11,  8, 1,  1, 1}, // #400
-  {DBGFIELD("WritePCmpIStrM")     1, false, false, 257, 9,  8, 1,  0, 0}, // #401
-  {DBGFIELD("WriteShuffleLd_WriteRMW") 2, false, false, 266, 12,  3, 2,  0, 0}, // #402
-  {DBGFIELD("IIC_SSE_PEXTRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #403
-  {DBGFIELD("IIC_SSE_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #404
-  {DBGFIELD("IIC_SSE_PHADDSUBD_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #405
-  {DBGFIELD("IIC_SSE_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #406
-  {DBGFIELD("IIC_SSE_PHADDSUBW_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #407
-  {DBGFIELD("WriteVecIMulLd")     1, false, false, 105, 11, 15, 1,  0, 0}, // #408
-  {DBGFIELD("WriteVecIMul")       1, false, false, 117, 9,  3, 1,  0, 0}, // #409
-  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #410
-  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #411
-  {DBGFIELD("WriteVecIMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #412
-  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #413
-  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #414
-  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteShuffleLd") 1, false, false, 29, 10,  3, 1,  0, 0}, // #415
-  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #416
-  {DBGFIELD("IIC_SSE_INTMUL_P_RM_WriteVecIMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #417
-  {DBGFIELD("IIC_SSE_INTMUL_P_RR_WriteVecIMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #418
-  {DBGFIELD("IIC_POP_REG16_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #419
-  {DBGFIELD("IIC_POP_MEM_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #420
-  {DBGFIELD("IIC_POP_REG_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #421
-  {DBGFIELD("IIC_POP_A_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #422
-  {DBGFIELD("IIC_SSE_POPCNT_RM_WriteFAddLd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #423
-  {DBGFIELD("IIC_SSE_POPCNT_RR_WriteFAdd") 1, false, false, 22, 7,  6, 1,  0, 0}, // #424
-  {DBGFIELD("IIC_POP_SR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #425
-  {DBGFIELD("IIC_POP_F_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #426
-  {DBGFIELD("IIC_POP_FD_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #427
-  {DBGFIELD("IIC_POP_SR_SS_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #428
-  {DBGFIELD("IIC_SSE_PSHUFB_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #429
-  {DBGFIELD("IIC_SSE_PSHUFB_RR_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #430
-  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #431
-  {DBGFIELD("IIC_SSE_PSHUF_RI_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #432
-  {DBGFIELD("IIC_SSE_INTSHDQ_P_RI_WriteVecShift") 1, false, false, 117, 9,  2, 1,  0, 0}, // #433
-  {DBGFIELD("IIC_SSE_INTSH_P_RI_WriteVecShift") 1, false, false, 117, 9,  2, 1,  0, 0}, // #434
-  {DBGFIELD("IIC_SSE_INTSH_P_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 105, 11,  3, 1,  1, 1}, // #435
-  {DBGFIELD("IIC_SSE_INTSH_P_RR_WriteVecShift") 1, false, false, 117, 9,  2, 1,  0, 0}, // #436
-  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #437
-  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #438
-  {DBGFIELD("IIC_PUSH_IMM_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #439
-  {DBGFIELD("IIC_PUSH_REG_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #440
-  {DBGFIELD("IIC_PUSH_MEM_WriteRMW") 1, false, false, 278, 3,  2, 1,  0, 0}, // #441
-  {DBGFIELD("IIC_PUSH_A_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #442
-  {DBGFIELD("IIC_PUSH_SR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #443
-  {DBGFIELD("IIC_PUSH_CS_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #444
-  {DBGFIELD("IIC_PUSH_F_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #445
-  {DBGFIELD("IIC_SR_WriteShiftLd_WriteRMW") 2, false, false, 281, 8,  3, 2,  0, 0}, // #446
-  {DBGFIELD("IIC_SR_WriteShift")  1, false, false, 97, 4,  2, 1,  0, 0}, // #447
-  {DBGFIELD("IIC_SSE_RCPP_RM_WriteFRcpLd") 1, false, false, 105, 11, 15, 1,  0, 0}, // #448
-  {DBGFIELD("IIC_SSE_RCPP_RR_WriteFRcp") 1, false, false, 117, 9,  3, 1,  0, 0}, // #449
-  {DBGFIELD("IIC_SSE_RCPS_RM_WriteFRcpLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #450
-  {DBGFIELD("WriteFRcpLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #451
-  {DBGFIELD("IIC_SSE_RCPS_RR_WriteFRcp") 1, false, false, 117, 9,  3, 1,  0, 0}, // #452
-  {DBGFIELD("WriteRMW")           1, false, false, 278, 3,  2, 1,  0, 0}, // #453
-  {DBGFIELD("IIC_RDMSR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #454
-  {DBGFIELD("IIC_RDPMC_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #455
-  {DBGFIELD("IIC_RDTSC_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #456
-  {DBGFIELD("IIC_REP_MOVS_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #457
-  {DBGFIELD("IIC_REP_STOS_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #458
-  {DBGFIELD("IIC_RET_IMM_WriteJumpLd") 1, false, false, 91, 6,  3, 1,  0, 0}, // #459
-  {DBGFIELD("WriteShiftLd")       1, false, false, 91, 6,  3, 1,  0, 0}, // #460
-  {DBGFIELD("WriteShift")         1, false, false, 97, 4,  2, 1,  0, 0}, // #461
-  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAddLd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #462
-  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAdd") 1, false, false, 22, 7,  6, 1,  0, 0}, // #463
-  {DBGFIELD("IIC_SSE_ROUNDPS_MEM_WriteFAddLd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #464
-  {DBGFIELD("WriteFAddLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #465
-  {DBGFIELD("IIC_RSM_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #466
-  {DBGFIELD("IIC_SSE_RSQRTPS_RM_WriteFRsqrtLd") 1, false, false, 105, 11, 15, 1,  0, 0}, // #467
-  {DBGFIELD("IIC_SSE_RSQRTPS_RR_WriteFRsqrt") 1, false, false, 117, 9,  3, 1,  0, 0}, // #468
-  {DBGFIELD("IIC_SSE_RSQRTSS_RM_WriteFRsqrtLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #469
-  {DBGFIELD("WriteFRsqrtLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #470
-  {DBGFIELD("IIC_SSE_RSQRTSS_RR_WriteFRsqrt") 1, false, false, 117, 9,  3, 1,  0, 0}, // #471
-  {DBGFIELD("WriteShiftLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd") 1, false, false, 91, 6,  3, 1,  2, 1}, // #472
-  {DBGFIELD("IIC_SCAS_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #473
-  {DBGFIELD("IIC_SET_M_WriteALU_WriteStore") 2, false, false, 289, 5, 21, 2,  0, 0}, // #474
-  {DBGFIELD("IIC_SET_R_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #475
-  {DBGFIELD("IIC_SSE_SFENCE_WriteFence") 1, false, false, 141, 5,  2, 1,  0, 0}, // #476
-  {DBGFIELD("IIC_SGDT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #477
-  {DBGFIELD("IIC_SHD16_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 281, 8,  3, 2,  0, 0}, // #478
-  {DBGFIELD("IIC_SHD16_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 281, 8,  3, 2,  0, 0}, // #479
-  {DBGFIELD("IIC_SHD16_REG_CL_WriteShift") 1, false, false, 97, 4,  2, 1,  0, 0}, // #480
-  {DBGFIELD("IIC_SHD16_REG_IM_WriteShift") 1, false, false, 97, 4,  2, 1,  0, 0}, // #481
-  {DBGFIELD("IIC_SHD32_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 281, 8,  3, 2,  0, 0}, // #482
-  {DBGFIELD("IIC_SHD32_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 281, 8,  3, 2,  0, 0}, // #483
-  {DBGFIELD("IIC_SHD32_REG_CL_WriteShift") 1, false, false, 97, 4,  2, 1,  0, 0}, // #484
-  {DBGFIELD("IIC_SHD32_REG_IM_WriteShift") 1, false, false, 97, 4,  2, 1,  0, 0}, // #485
-  {DBGFIELD("IIC_SHD64_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 281, 8,  3, 2,  0, 0}, // #486
-  {DBGFIELD("IIC_SHD64_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 281, 8,  3, 2,  0, 0}, // #487
-  {DBGFIELD("IIC_SHD64_REG_CL_WriteShift") 1, false, false, 97, 4,  2, 1,  0, 0}, // #488
-  {DBGFIELD("IIC_SHD64_REG_IM_WriteShift") 1, false, false, 97, 4,  2, 1,  0, 0}, // #489
-  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #490
-  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #491
-  {DBGFIELD("IIC_SIDT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #492
-  {DBGFIELD("IIC_SLDT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #493
-  {DBGFIELD("IIC_SMSW_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #494
-  {DBGFIELD("IIC_SSE_SQRTPD_RM_WriteFSqrtLd") 1, false, false, 105, 11, 23, 1,  0, 0}, // #495
-  {DBGFIELD("IIC_SSE_SQRTPD_RR_WriteFSqrt") 1, false, false, 117, 9, 24, 1,  0, 0}, // #496
-  {DBGFIELD("IIC_SSE_SQRTPS_RM_WriteFSqrtLd") 1, false, false, 105, 11, 23, 1,  0, 0}, // #497
-  {DBGFIELD("IIC_SSE_SQRTPS_RR_WriteFSqrt") 1, false, false, 117, 9, 24, 1,  0, 0}, // #498
-  {DBGFIELD("IIC_SSE_SQRTSD_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 105, 11, 23, 1,  1, 1}, // #499
-  {DBGFIELD("WriteFSqrtLd_ReadAfterLd") 1, false, false, 105, 11, 23, 1,  1, 1}, // #500
-  {DBGFIELD("IIC_SSE_SQRTSD_RR_WriteFSqrt") 1, false, false, 117, 9, 24, 1,  0, 0}, // #501
-  {DBGFIELD("IIC_SSE_SQRTSS_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 105, 11, 23, 1,  1, 1}, // #502
-  {DBGFIELD("IIC_SSE_SQRTSS_RR_WriteFSqrt") 1, false, false, 117, 9, 24, 1,  0, 0}, // #503
-  {DBGFIELD("WriteFSqrt")         1, false, false, 117, 9, 24, 1,  0, 0}, // #504
-  {DBGFIELD("IIC_STC_WriteALU")   1, false, false,  1, 2,  2, 1,  0, 0}, // #505
-  {DBGFIELD("IIC_STD_WriteALU")   1, false, false,  1, 2,  2, 1,  0, 0}, // #506
-  {DBGFIELD("IIC_STI_WriteALU")   1, false, false,  1, 2,  2, 1,  0, 0}, // #507
-  {DBGFIELD("IIC_SSE_STMXCSR_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #508
-  {DBGFIELD("IIC_STOS_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #509
-  {DBGFIELD("IIC_STR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #510
-  {DBGFIELD("IIC_FST80_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #511
-  {DBGFIELD("IIC_FST_WriteMove")  1, false, false,  1, 2,  2, 1,  0, 0}, // #512
-  {DBGFIELD("IIC_SWAPGS_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #513
-  {DBGFIELD("IIC_SYSCALL_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #514
-  {DBGFIELD("IIC_SYS_ENTER_EXIT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #515
-  {DBGFIELD("IIC_JMP_REL_WriteJumpLd") 1, false, false, 91, 6,  3, 1,  0, 0}, // #516
-  {DBGFIELD("IIC_JMP_MEM_WriteJump") 1, false, false, 97, 4,  2, 1,  0, 0}, // #517
-  {DBGFIELD("IIC_JMP_REG_WriteJumpLd") 1, false, false, 91, 6,  3, 1,  0, 0}, // #518
-  {DBGFIELD("WriteJump")          1, false, false, 97, 4,  2, 1,  0, 0}, // #519
-  {DBGFIELD("IIC_FUCOMI_WriteFAdd") 1, false, false, 22, 7,  6, 1,  0, 0}, // #520
-  {DBGFIELD("IIC_FUCOM_WriteFAdd") 1, false, false, 22, 7,  6, 1,  0, 0}, // #521
-  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #522
-  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #523
-  {DBGFIELD("IIC_SSE_ALU_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #524
-  {DBGFIELD("IIC_SSE_ALU_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #525
-  {DBGFIELD("IIC_SSE_ALU_F32S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #526
-  {DBGFIELD("IIC_SSE_ALU_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #527
-  {DBGFIELD("WriteFVarBlendLd_ReadAfterLd") 1, false, false, 47, 10, 16, 1,  1, 1}, // #528
-  {DBGFIELD("WriteFVarBlend")     1, false, false, 57, 8, 19, 1,  0, 0}, // #529
-  {DBGFIELD("WriteFShuffleLd")    1, false, false, 29, 10,  3, 1,  0, 0}, // #530
-  {DBGFIELD("WriteFShuffle256")   1, false, false, 39, 8,  6, 1,  0, 0}, // #531
-  {DBGFIELD("WriteFShuffle")      1, false, false, 39, 8,  2, 1,  0, 0}, // #532
-  {DBGFIELD("IIC_SSE_ALU_F32P_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #533
-  {DBGFIELD("WriteCvtF2ILd")      1, false, false, 13, 9,  5, 1,  0, 0}, // #534
-  {DBGFIELD("WriteCvtF2I")        1, false, false, 22, 7,  6, 1,  0, 0}, // #535
-  {DBGFIELD("WriteCvtF2FLd")      1, false, false, 13, 9,  5, 1,  0, 0}, // #536
-  {DBGFIELD("WriteCvtF2F")        1, false, false, 22, 7,  6, 1,  0, 0}, // #537
-  {DBGFIELD("WriteCvtF2FLd_WriteRMW") 2, false, false, 294, 11, 25, 2,  0, 0}, // #538
-  {DBGFIELD("WriteCvtF2FLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #539
-  {DBGFIELD("WriteCvtI2FLd_ReadAfterLd") 1, false, false, 13, 9, 10, 1,  1, 1}, // #540
-  {DBGFIELD("IIC_VERR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #541
-  {DBGFIELD("IIC_VERW_REG_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #542
-  {DBGFIELD("IIC_VERW_MEM_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #543
-  {DBGFIELD("WriteStore")         1, false, false, 133, 4,  2, 1,  0, 0}, // #544
-  {DBGFIELD("WriteShuffle256")    1, false, false, 39, 8,  6, 1,  0, 0}, // #545
-  {DBGFIELD("IIC_ALU_MEM_WriteFBlendLd_WriteRMW") 2, false, false, 126, 7,  3, 2,  0, 0}, // #546
-  {DBGFIELD("WriteFShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #547
-  {DBGFIELD("WriteShuffle256Ld_ReadAfterLd") 1, false, false, 29, 10,  5, 1,  1, 1}, // #548
-  {DBGFIELD("IIC_ALU_MEM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #549
-  {DBGFIELD("IIC_ALU_NONMEM_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #550
-  {DBGFIELD("IIC_SSE_MOVDQ")      0, false, false,  0, 0,  0, 0,  0, 0}, // #551
-  {DBGFIELD("IIC_SSE_MOV_LH")     0, false, false,  0, 0,  0, 0,  0, 0}, // #552
-  {DBGFIELD("IIC_SSE_MOVD_ToGP")  0, false, false,  0, 0,  0, 0,  0, 0}, // #553
-  {DBGFIELD("IIC_SSE_MOV_S_MR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #554
-  {DBGFIELD("IIC_SSE_MOV_S_RM")   0, false, false,  0, 0,  0, 0,  0, 0}, // #555
-  {DBGFIELD("IIC_SSE_MOV_S_RR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #556
-  {DBGFIELD("IIC_SSE_MOVQ_RR")    0, false, false,  0, 0,  0, 0,  0, 0}, // #557
-  {DBGFIELD("IIC_ALU_MEM_WriteMPSADLd_ReadAfterLd") 1, false, false, 152, 14, 16, 1,  1, 1}, // #558
-  {DBGFIELD("IIC_ALU_NONMEM_WriteMPSAD") 1, false, false, 166, 12, 16, 1,  0, 0}, // #559
-  {DBGFIELD("WriteVecALULd")      1, false, false, 146, 6,  3, 1,  0, 0}, // #560
-  {DBGFIELD("WriteBlendLd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #561
-  {DBGFIELD("WriteBlend")         1, false, false, 137, 4,  2, 1,  0, 0}, // #562
-  {DBGFIELD("WriteVarBlendLd_ReadAfterLd") 1, false, false, 47, 10, 16, 1,  1, 1}, // #563
-  {DBGFIELD("WriteVarBlend")      1, false, false, 57, 8, 19, 1,  0, 0}, // #564
-  {DBGFIELD("IIC_ALU_MEM_WriteBlendLd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #565
-  {DBGFIELD("IIC_ALU_NONMEM_WriteBlend") 1, false, false, 137, 4,  2, 1,  0, 0}, // #566
-  {DBGFIELD("WriteCLMulLd_ReadAfterLd") 1, false, false, 178, 14,  5, 1,  1, 1}, // #567
-  {DBGFIELD("WriteCLMul")         1, false, false, 192, 12,  5, 1,  0, 0}, // #568
-  {DBGFIELD("IIC_SSE_ALU_F32P_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #569
-  {DBGFIELD("WriteFShuffle256Ld_ReadAfterLd") 1, false, false, 29, 10,  5, 1,  1, 1}, // #570
-  {DBGFIELD("IIC_ALU_MEM_WriteShuffleLd") 1, false, false, 29, 10,  3, 1,  0, 0}, // #571
-  {DBGFIELD("IIC_ALU_NONMEM_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #572
-  {DBGFIELD("WriteVarVecShift_ReadAfterLd") 1, false, false, 192, 12, 19, 1,  1, 1}, // #573
-  {DBGFIELD("WriteVarVecShift")   1, false, false, 192, 12, 19, 1,  0, 0}, // #574
-  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd") 1, false, false, 29, 10,  3, 1,  0, 0}, // #575
-  {DBGFIELD("WriteVecShift")      1, false, false, 117, 9,  2, 1,  0, 0}, // #576
-  {DBGFIELD("WriteVarVecShiftLd_ReadAfterLd") 1, false, false, 178, 14, 16, 1,  1, 1}, // #577
-  {DBGFIELD("WriteFRcpLd")        1, false, false, 105, 11, 15, 1,  0, 0}, // #578
-  {DBGFIELD("WriteFRsqrtLd")      1, false, false, 105, 11, 15, 1,  0, 0}, // #579
-  {DBGFIELD("WriteFSqrtLd")       1, false, false, 105, 11, 23, 1,  0, 0}, // #580
-  {DBGFIELD("IIC_WAIT_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #581
-  {DBGFIELD("IIC_WRMSR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #582
-  {DBGFIELD("IIC_XADD_MEM_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #583
-  {DBGFIELD("IIC_XADD_REG_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #584
-  {DBGFIELD("IIC_XCHG_REG_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #585
-  {DBGFIELD("IIC_XCHG_MEM_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #586
-  {DBGFIELD("IIC_FXCH_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #587
-  {DBGFIELD("IIC_XLAT_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #588
-  {DBGFIELD("MOV16rm")            1, false, false,  9, 4,  3, 1,  0, 0}, // #589
-  {DBGFIELD("MOVSX32rm16_MOVSX32rm8") 1, false, false, 101, 3,  9, 1,  0, 0}, // #590
-  {DBGFIELD("MOVZX32rm16_MOVZX32rm8") 1, false, false, 101, 3,  9, 1,  0, 0}, // #591
-  {DBGFIELD("CMOVA16rr_CMOVAE16rr_CMOVB16rr_CMOVBE16rr_CMOVE16rr_CMOVG16rr_CMOVGE16rr_CMOVL16rr_CMOVLE16rr_CMOVNE16rr_CMOVNO16rr_CMOVNP16rr_CMOVNS16rr_CMOVO16rr_CMOVP16rr_CMOVS16rr") 1, false, false, 63, 2, 19, 1,  0, 0}, // #592
-  {DBGFIELD("CMOVA32rr_CMOVA64rr_CMOVAE32rr_CMOVAE64rr_CMOVB32rr_CMOVB64rr_CMOVBE32rr_CMOVBE64rr_CMOVE32rr_CMOVE64rr_CMOVG32rr_CMOVG64rr_CMOVGE32rr_CMOVGE64rr_CMOVL32rr_CMOVL64rr_CMOVLE32rr_CMOVLE64rr_CMOVNE32rr_CMOVNE64rr_CMOVNO32rr_CMOVNO64rr_CMOVNP32rr_CMOVNP64rr_CMOVNS32rr_CMOVNS64rr_CMOVO32rr_CMOVO64rr_CMOVP32rr_CMOVP64rr_CMOVS32rr_CMOVS64rr") 1, false, false, 63, 2, 19, 1,  0, 0}, // #593
-  {DBGFIELD("CMOVA16rm_CMOVAE16rm_CMOVB16rm_CMOVBE16rm_CMOVE16rm_CMOVG16rm_CMOVGE16rm_CMOVL16rm_CMOVLE16rm_CMOVNE16rm_CMOVNO16rm_CMOVNP16rm_CMOVNS16rm_CMOVO16rm_CMOVP16rm_CMOVS16rm") 1, false, false, 305, 4, 16, 1,  1, 1}, // #594
-  {DBGFIELD("CMOVA32rm_CMOVA64rm_CMOVAE32rm_CMOVAE64rm_CMOVB32rm_CMOVB64rm_CMOVBE32rm_CMOVBE64rm_CMOVE32rm_CMOVE64rm_CMOVG32rm_CMOVG64rm_CMOVGE32rm_CMOVGE64rm_CMOVL32rm_CMOVL64rm_CMOVLE32rm_CMOVLE64rm_CMOVNE32rm_CMOVNE64rm_CMOVNO32rm_CMOVNO64rm_CMOVNP32rm_CMOVNP64rm_CMOVNS32rm_CMOVNS64rm_CMOVO32rm_CMOVO64rm_CMOVP32rm_CMOVP64rm_CMOVS32rm_CMOVS64rm") 1, false, false, 305, 4, 16, 1,  1, 1}, // #595
-  {DBGFIELD("XCHG16ar_XCHG16rr_XCHG32ar_XCHG32ar64_XCHG32rr_XCHG64ar_XCHG64rr_XCHG8rr") 1, false, false, 176, 2, 19, 1,  0, 0}, // #596
-  {DBGFIELD("XCHG16rm_XCHG32rm_XCHG64rm_XCHG8rm") 8, false, false,  0, 0, 27, 1,  0, 0}, // #597
-  {DBGFIELD("XLAT")               3, false, false,  0, 0,  5, 1,  0, 0}, // #598
-  {DBGFIELD("PUSH16rmm_PUSH32rmm") 1, false, false, 309, 4,  2, 1,  0, 0}, // #599
-  {DBGFIELD("PUSHF16_PUSHF32")    4, false, false, 313, 12,  2, 1,  0, 0}, // #600
-  {DBGFIELD("PUSHA16_PUSHA32")    19, false, false,  0, 0,  2, 1,  0, 0}, // #601
-  {DBGFIELD("POP16rmm_POP32rmm")  1, false, false, 309, 4,  2, 1,  0, 0}, // #602
-  {DBGFIELD("POPF16")             9, false, false,  0, 0,  2, 1,  0, 0}, // #603
-  {DBGFIELD("POPF32")             9, false, false,  0, 0,  2, 1,  0, 0}, // #604
-  {DBGFIELD("POPA16_POPA32")      18, false, false,  0, 0,  2, 1,  0, 0}, // #605
-  {DBGFIELD("LAHF_SAHF")          1, false, false, 97, 4,  2, 1,  0, 0}, // #606
-  {DBGFIELD("BSWAP32r")           1, false, false, 137, 4,  2, 1,  0, 0}, // #607
-  {DBGFIELD("BSWAP64r")           2, false, false, 325, 6,  2, 1,  0, 0}, // #608
-  {DBGFIELD("MOVBE16rm_MOVBE64rm") 1, false, false, 305, 4, 16, 1,  0, 0}, // #609
-  {DBGFIELD("MOVBE32rm")          2, false, false, 146, 6,  2, 1,  0, 0}, // #610
-  {DBGFIELD("MOVBE16mr")          3, false, false, 331, 7,  2, 1,  0, 0}, // #611
-  {DBGFIELD("MOVBE32mr")          3, false, false, 338, 7,  2, 1,  0, 0}, // #612
-  {DBGFIELD("MOVBE64mr")          4, false, false, 345, 9,  2, 1,  0, 0}, // #613
-  {DBGFIELD("ADD16mi_ADD16mi8_ADD16mr_ADD32mi_ADD32mi8_ADD32mr_ADD64mi32_ADD64mi8_ADD64mr_ADD8mi_ADD8mi8_ADD8mr_SUB16mi_SUB16mi8_SUB16mr_SUB32mi_SUB32mi8_SUB32mr_SUB64mi32_SUB64mi8_SUB64mr_SUB8mi_SUB8mi8_SUB8mr") 1, false, false, 354, 5,  2, 1,  0, 0}, // #614
-  {DBGFIELD("ADC16ri_ADC16ri8_ADC16rr_ADC16rr_REV_ADC32ri_ADC32ri8_ADC32rr_ADC32rr_REV_ADC64ri32_ADC64ri8_ADC64rr_ADC64rr_REV_ADC8ri_ADC8ri8_ADC8rr_ADC8rr_REV_SBB16ri_SBB16ri8_SBB16rr_SBB16rr_REV_SBB32ri_SBB32ri8_SBB32rr_SBB32rr_REV_SBB64ri32_SBB64ri8_SBB64rr_SBB64rr_REV_SBB8ri_SBB8ri8_SBB8rr_SBB8rr_REV") 1, false, false, 63, 2, 19, 1,  0, 0}, // #615
-  {DBGFIELD("ADC16rm_ADC32rm_ADC64rm_ADC8rm_SBB16rm_SBB32rm_SBB64rm_SBB8rm") 1, false, false, 305, 4, 16, 1,  1, 1}, // #616
-  {DBGFIELD("ADC16mi_ADC16mi8_ADC16mr_ADC32mi_ADC32mi8_ADC32mr_ADC64mi32_ADC64mi8_ADC64mr_ADC8mi_ADC8mi8_ADC8mr_SBB16mi_SBB16mi8_SBB16mr_SBB32mi_SBB32mi8_SBB32mr_SBB64mi32_SBB64mi8_SBB64mr_SBB8mi_SBB8mi8_SBB8mr") 1, false, false, 359, 5,  2, 1,  0, 0}, // #617
-  {DBGFIELD("DEC16m_DEC32m_DEC64m_DEC8m_INC16m_INC32m_INC64m_INC8m_NEG16m_NEG32m_NEG64m_NEG8m_NOT16m_NOT32m_NOT64m_NOT8m") 1, false, false, 364, 5,  2, 1,  0, 0}, // #618
-  {DBGFIELD("IMUL16r_IMUL16rr")   4, false, false, 369, 7,  9, 1,  0, 0}, // #619
-  {DBGFIELD("IMUL16rm")           4, false, false, 369, 7,  9, 1,  0, 0}, // #620
-  {DBGFIELD("IMUL16rmi_IMUL16rmi8") 4, false, false, 369, 7,  9, 1,  0, 0}, // #621
-  {DBGFIELD("IMUL16rri_IMUL16rri8") 4, false, false, 369, 7,  9, 1,  0, 0}, // #622
-  {DBGFIELD("MUL16r")             4, false, false, 369, 7,  9, 1,  0, 0}, // #623
-  {DBGFIELD("IMUL16m")            5, false, false, 376, 9, 10, 1,  0, 0}, // #624
-  {DBGFIELD("MUL16m")             5, false, false, 376, 9, 10, 1,  0, 0}, // #625
-  {DBGFIELD("IMUL32r_IMUL32rr")   3, false, false, 369, 7,  9, 1,  0, 0}, // #626
-  {DBGFIELD("IMUL32rm")           3, false, false, 369, 7,  9, 1,  0, 0}, // #627
-  {DBGFIELD("IMUL32rmi_IMUL32rmi8") 3, false, false, 369, 7,  9, 1,  0, 0}, // #628
-  {DBGFIELD("IMUL32rri_IMUL32rri8") 3, false, false, 369, 7,  9, 1,  0, 0}, // #629
-  {DBGFIELD("MUL32r")             3, false, false, 369, 7,  9, 1,  0, 0}, // #630
-  {DBGFIELD("IMUL32m")            4, false, false, 376, 9, 10, 1,  0, 0}, // #631
-  {DBGFIELD("MUL32m")             4, false, false, 376, 9, 10, 1,  0, 0}, // #632
-  {DBGFIELD("IMUL64r_IMUL64rr")   2, false, false, 385, 11,  6, 1,  0, 0}, // #633
-  {DBGFIELD("IMUL64rm")           2, false, false, 385, 11,  6, 1,  0, 0}, // #634
-  {DBGFIELD("IMUL64rmi32_IMUL64rmi8") 2, false, false, 385, 11,  6, 1,  0, 0}, // #635
-  {DBGFIELD("IMUL64rri32_IMUL64rri8") 2, false, false, 385, 11,  6, 1,  0, 0}, // #636
-  {DBGFIELD("MUL64r")             2, false, false, 385, 11,  6, 1,  0, 0}, // #637
-  {DBGFIELD("IMUL64m")            3, false, false, 396, 13,  5, 1,  0, 0}, // #638
-  {DBGFIELD("MUL64m")             3, false, false, 396, 13,  5, 1,  0, 0}, // #639
-  {DBGFIELD("MULX32rr")           3, false, false, 409, 8,  9, 1,  0, 0}, // #640
-  {DBGFIELD("MULX32rm")           4, false, false, 417, 10, 10, 1,  0, 0}, // #641
-  {DBGFIELD("MULX64rr")           2, false, false, 385, 11,  9, 1,  0, 0}, // #642
-  {DBGFIELD("MULX64rm")           3, false, false, 396, 13, 10, 1,  0, 0}, // #643
-  {DBGFIELD("DIV8r")              9, false, false, 427, 15, 28, 1,  0, 0}, // #644
-  {DBGFIELD("DIV16r")             10, false, false, 427, 15, 29, 1,  0, 0}, // #645
-  {DBGFIELD("DIV32r")             10, false, false, 427, 15, 28, 1,  0, 0}, // #646
-  {DBGFIELD("DIV64r")             36, false, false, 427, 15, 30, 1,  0, 0}, // #647
-  {DBGFIELD("IDIV8r")             9, false, false, 427, 15, 29, 1,  0, 0}, // #648
-  {DBGFIELD("IDIV16r")            10, false, false, 427, 15, 29, 1,  0, 0}, // #649
-  {DBGFIELD("IDIV32r")            9, false, false, 427, 15, 28, 1,  0, 0}, // #650
-  {DBGFIELD("IDIV64r")            59, false, false, 427, 15, 31, 1,  0, 0}, // #651
-  {DBGFIELD("AND16mi_AND16mi8_AND16mr_AND32mi_AND32mi8_AND32mr_AND64mi32_AND64mi8_AND64mr_AND8mi_AND8mi8_AND8mr_OR16mi_OR16mi8_OR16mr_OR32mi_OR32mi8_OR32mr_OR64mi32_OR64mi8_OR64mr_OR8mi_OR8mi8_OR8mr_XOR16mi_XOR16mi8_XOR16mr_XOR32mi_XOR32mi8_XOR32mr_XOR64mi32_XOR64mi8_XOR64mr_XOR8mi_XOR8mi8_XOR8mr") 1, false, false, 354, 5,  2, 1,  0, 0}, // #652
-  {DBGFIELD("OR32mrLocked")       1, false, false, 354, 5,  2, 1,  0, 0}, // #653
-  {DBGFIELD("SAR16m1_SAR16mi_SAR32m1_SAR32mi_SAR64m1_SAR64mi_SAR8m1_SAR8mi_SHL16m1_SHL16mi_SHL32m1_SHL32mi_SHL64m1_SHL64mi_SHL8m1_SHL8mi_SHR16m1_SHR16mi_SHR32m1_SHR32mi_SHR64m1_SHR64mi_SHR8m1_SHR8mi") 4, false, false, 442, 7,  2, 1,  0, 0}, // #654
-  {DBGFIELD("SAR16rCL_SAR32rCL_SAR64rCL_SAR8rCL_SHL16rCL_SHL32rCL_SHL64rCL_SHL8rCL_SHR16rCL_SHR32rCL_SHR64rCL_SHR8rCL") 3, false, false, 449, 4, 19, 1,  0, 0}, // #655
-  {DBGFIELD("SAR16mCL_SAR32mCL_SAR64mCL_SAR8mCL_SHL16mCL_SHL32mCL_SHL64mCL_SHL8mCL_SHR16mCL_SHR32mCL_SHR64mCL_SHR8mCL") 6, false, false, 453, 8,  2, 1,  0, 0}, // #656
-  {DBGFIELD("ROL16r1_ROL32r1_ROL64r1_ROL8r1_ROR16r1_ROR32r1_ROR64r1_ROR8r1") 2, false, false, 461, 4,  2, 1,  0, 0}, // #657
-  {DBGFIELD("ROL16mi_ROL32mi_ROL64mi_ROL8mi_ROR16mi_ROR32mi_ROR64mi_ROR8mi") 5, false, false, 465, 7,  2, 1,  0, 0}, // #658
-  {DBGFIELD("ROL16rCL_ROL32rCL_ROL64rCL_ROL8rCL_ROR16rCL_ROR32rCL_ROR64rCL_ROR8rCL") 3, false, false, 449, 4, 19, 1,  0, 0}, // #659
-  {DBGFIELD("ROL16mCL_ROL32mCL_ROL64mCL_ROL8mCL_ROR16mCL_ROR32mCL_ROR64mCL_ROR8mCL") 6, false, false,  0, 0,  2, 1,  0, 0}, // #660
-  {DBGFIELD("RCL16r1_RCL32r1_RCL64r1_RCL8r1_RCR16r1_RCR32r1_RCR64r1_RCR8r1") 3, false, false, 472, 4, 19, 1,  0, 0}, // #661
-  {DBGFIELD("RCL16m1_RCL32m1_RCL64m1_RCL8m1_RCR16m1_RCR32m1_RCR64m1_RCR8m1") 6, false, false,  0, 0,  2, 1,  0, 0}, // #662
-  {DBGFIELD("RCL16rCL_RCL16ri_RCL32rCL_RCL32ri_RCL64rCL_RCL64ri_RCL8rCL_RCL8ri_RCR16rCL_RCR16ri_RCR32rCL_RCR32ri_RCR64rCL_RCR64ri_RCR8rCL_RCR8ri") 8, false, false,  1, 2, 16, 1,  0, 0}, // #663
-  {DBGFIELD("RCL16mCL_RCL16mi_RCL32mCL_RCL32mi_RCL64mCL_RCL64mi_RCL8mCL_RCL8mi_RCR16mCL_RCR16mi_RCR32mCL_RCR32mi_RCR64mCL_RCR64mi_RCR8mCL_RCR8mi") 11, false, false,  0, 0,  2, 1,  0, 0}, // #664
-  {DBGFIELD("SHLD16rri8_SHRD16rri8") 1, false, false, 22, 7,  6, 1,  0, 0}, // #665
-  {DBGFIELD("SHLD32rri8_SHRD32rri8") 1, false, false, 22, 7,  6, 1,  0, 0}, // #666
-  {DBGFIELD("SHLD64rri8_SHRD64rri8") 1, false, false, 22, 7,  6, 1,  0, 0}, // #667
-  {DBGFIELD("SHLD16mri8_SHRD16mri8") 5, false, false,  0, 0,  2, 1,  0, 0}, // #668
-  {DBGFIELD("SHLD32mri8_SHRD32mri8") 5, false, false,  0, 0,  2, 1,  0, 0}, // #669
-  {DBGFIELD("SHLD64mri8_SHRD64mri8") 5, false, false,  0, 0,  2, 1,  0, 0}, // #670
-  {DBGFIELD("SHLD16rrCL")         4, false, false,  1, 2,  6, 1,  0, 0}, // #671
-  {DBGFIELD("SHLD32rrCL")         4, false, false,  1, 2,  6, 1,  0, 0}, // #672
-  {DBGFIELD("SHLD64rrCL")         4, false, false,  1, 2,  6, 1,  0, 0}, // #673
-  {DBGFIELD("SHRD16rrCL")         4, false, false,  1, 2,  9, 1,  0, 0}, // #674
-  {DBGFIELD("SHRD32rrCL")         4, false, false,  1, 2,  9, 1,  0, 0}, // #675
-  {DBGFIELD("SHRD64rrCL")         4, false, false,  1, 2,  9, 1,  0, 0}, // #676
-  {DBGFIELD("SHLD16mrCL_SHRD16mrCL") 7, false, false,  0, 0,  2, 1,  0, 0}, // #677
-  {DBGFIELD("SHLD32mrCL_SHRD32mrCL") 7, false, false,  0, 0,  2, 1,  0, 0}, // #678
-  {DBGFIELD("SHLD64mrCL_SHRD64mrCL") 7, false, false,  0, 0,  2, 1,  0, 0}, // #679
-  {DBGFIELD("BT16ri8_BT32ri8_BT64ri8") 1, false, false, 97, 4,  2, 1,  0, 0}, // #680
-  {DBGFIELD("BT16rr_BT32rr_BT64rr") 1, false, false, 97, 4,  2, 1,  0, 0}, // #681
-  {DBGFIELD("BT16mr_BT32mr_BT64mr") 10, false, false,  0, 0,  2, 1,  0, 0}, // #682
-  {DBGFIELD("BT16mi8_BT32mi8_BT64mi8") 1, false, false, 91, 6,  3, 1,  0, 0}, // #683
-  {DBGFIELD("BTC16ri8_BTC32ri8_BTC64ri8_BTR16ri8_BTR32ri8_BTR64ri8_BTS16ri8_BTS32ri8_BTS64ri8") 1, false, false, 97, 4,  2, 1,  0, 0}, // #684
-  {DBGFIELD("BTC16rr_BTC32rr_BTC64rr_BTR16rr_BTR32rr_BTS16rr_BTS32rr_BTS64rr") 1, false, false, 97, 4,  2, 1,  0, 0}, // #685
-  {DBGFIELD("BTR64rr")            1, false, false, 97, 4,  2, 1,  0, 0}, // #686
-  {DBGFIELD("BTC16mr_BTC32mr_BTC64mr_BTR16mr_BTR32mr_BTR64mr_BTS16mr_BTS32mr_BTS64mr") 11, false, false,  0, 0,  2, 1,  0, 0}, // #687
-  {DBGFIELD("BTC16mi8_BTC32mi8_BTC64mi8_BTR16mi8_BTR32mi8_BTR64mi8_BTS16mi8_BTS32mi8_BTS64mi8") 1, false, false, 91, 6,  3, 1,  0, 0}, // #688
-  {DBGFIELD("BSF16rr_BSF32rr_BSF64rr_BSR16rr_BSR32rr_BSR64rr") 1, false, false, 22, 7,  6, 1,  0, 0}, // #689
-  {DBGFIELD("BSF16rm_BSF32rm_BSF64rm_BSR16rm_BSR32rm_BSR64rm") 1, false, false, 13, 9,  5, 1,  0, 0}, // #690
-  {DBGFIELD("SETAEr_SETAr_SETBEr_SETBr_SETEr_SETGEr_SETGr_SETLEr_SETLr_SETNEr_SETNOr_SETNPr_SETNSr_SETOr_SETPr_SETSr") 1, false, false, 97, 4,  2, 1,  0, 0}, // #691
-  {DBGFIELD("SETAEm_SETAm_SETBEm_SETBm_SETEm_SETGEm_SETGm_SETLEm_SETLm_SETNEm_SETNOm_SETNPm_SETNSm_SETOm_SETPm_SETSm") 3, false, false, 331, 7,  2, 1,  0, 0}, // #692
-  {DBGFIELD("CLD")                3, false, false, 476, 9,  2, 1,  0, 0}, // #693
-  {DBGFIELD("STD")                3, false, false, 476, 9,  2, 1,  0, 0}, // #694
-  {DBGFIELD("TZCNT16rr_TZCNT32rr_TZCNT64rr") 1, false, false, 22, 7,  6, 1,  0, 0}, // #695
-  {DBGFIELD("TZCNT16rm_TZCNT32rm_TZCNT64rm") 1, false, false, 13, 9,  5, 1,  0, 0}, // #696
-  {DBGFIELD("ANDN32rr_ANDN64rr")  1, false, false, 137, 4,  2, 1,  0, 0}, // #697
-  {DBGFIELD("ANDN32rm_ANDN64rm")  1, false, false, 146, 6,  9, 1,  0, 0}, // #698
-  {DBGFIELD("BLSI32rr_BLSI64rr_BLSMSK32rr_BLSMSK64rr_BLSR32rr_BLSR64rr") 1, false, false, 137, 4,  2, 1,  0, 0}, // #699
-  {DBGFIELD("BLSI32rm_BLSI64rm_BLSMSK32rm_BLSMSK64rm_BLSR32rm_BLSR64rm") 1, false, false, 146, 6,  9, 1,  0, 0}, // #700
-  {DBGFIELD("BEXTR32rr_BEXTR64rr") 1, false, false, 63, 2, 19, 1,  0, 0}, // #701
-  {DBGFIELD("BEXTR32rm_BEXTR64rm") 1, false, false, 305, 4, 16, 1,  0, 0}, // #702
-  {DBGFIELD("BZHI32rr_BZHI64rr")  1, false, false, 137, 4,  2, 1,  0, 0}, // #703
-  {DBGFIELD("BZHI32rm_BZHI64rm")  1, false, false, 146, 6,  9, 1,  0, 0}, // #704
-  {DBGFIELD("PDEP32rr_PDEP64rr_PEXT32rr_PEXT64rr") 1, false, false, 22, 7,  6, 1,  0, 0}, // #705
-  {DBGFIELD("PDEP32rm_PDEP64rm_PEXT32rm_PEXT64rm") 1, false, false, 13, 9,  5, 1,  0, 0}, // #706
-  {DBGFIELD("JCXZ_JRCXZ")         2, false, false, 485, 7,  2, 1,  0, 0}, // #707
-  {DBGFIELD("LOOP")               7, false, false,  0, 0,  2, 1,  0, 0}, // #708
-  {DBGFIELD("LOOPE")              7, false, false,  0, 0,  2, 1,  0, 0}, // #709
-  {DBGFIELD("LOOPNE")             7, false, false,  0, 0,  2, 1,  0, 0}, // #710
-  {DBGFIELD("CALL16r_CALL32r")    3, false, false, 492, 10,  2, 1,  0, 0}, // #711
-  {DBGFIELD("CALL16m_CALL32m")    4, false, false, 502, 10,  2, 1,  0, 0}, // #712
-  {DBGFIELD("LRETL_LRETQ_LRETW_RETL_RETQ_RETW") 2, false, false, 512, 8,  2, 1,  0, 0}, // #713
-  {DBGFIELD("LRETIL_LRETIQ_LRETIW") 4, false, false, 520, 10,  2, 1,  0, 0}, // #714
-  {DBGFIELD("RETIL_RETIQ_RETIW")  4, false, false, 520, 10,  2, 1,  0, 0}, // #715
-  {DBGFIELD("BOUNDS16rm_BOUNDS32rm") 15, false, false,  0, 0,  2, 1,  0, 0}, // #716
-  {DBGFIELD("INTO")               4, false, false,  0, 0,  2, 1,  0, 0}, // #717
-  {DBGFIELD("LODSB_LODSW")        3, false, false, 305, 4,  2, 1,  0, 0}, // #718
-  {DBGFIELD("LODSL_LODSQ")        2, false, false,  9, 4,  2, 1,  0, 0}, // #719
-  {DBGFIELD("STOSB_STOSL_STOSQ_STOSW") 3, false, false,  3, 6,  2, 1,  0, 0}, // #720
-  {DBGFIELD("MOVSB_MOVSL_MOVSQ_MOVSW") 5, false, false, 530, 6,  9, 1,  0, 0}, // #721
-  {DBGFIELD("MOVSLDUPrm")         5, false, false, 530, 6,  9, 1,  0, 0}, // #722
-  {DBGFIELD("MOVSLDUPrr")         5, false, false, 530, 6,  9, 1,  0, 0}, // #723
-  {DBGFIELD("SCASB_SCASL_SCASQ_SCASW") 3, false, false, 305, 4,  2, 1,  0, 0}, // #724
-  {DBGFIELD("CMPSB_CMPSL_CMPSQ_CMPSW") 5, false, false, 536, 4,  9, 1,  0, 0}, // #725
-  {DBGFIELD("XADD16rm_XADD32rm_XADD64rm_XADD8rm") 5, false, false,  0, 0,  2, 1,  0, 0}, // #726
-  {DBGFIELD("CMPXCHG16rm_CMPXCHG32rm_CMPXCHG64rm") 6, false, false,  0, 0,  2, 1,  0, 0}, // #727
-  {DBGFIELD("CMPXCHG8rm")         6, false, false,  0, 0,  2, 1,  0, 0}, // #728
-  {DBGFIELD("CMPXCHG8B")          15, false, false,  0, 0,  2, 1,  0, 0}, // #729
-  {DBGFIELD("CMPXCHG16B")         22, false, false,  0, 0,  2, 1,  0, 0}, // #730
-  {DBGFIELD("PAUSE")              5, false, false, 540, 9,  2, 1,  0, 0}, // #731
-  {DBGFIELD("LEAVE_LEAVE64")      3, false, false, 305, 4,  2, 1,  0, 0}, // #732
-  {DBGFIELD("XGETBV")             8, false, false,  0, 0,  2, 1,  0, 0}, // #733
-  {DBGFIELD("RDTSC")              15, false, false,  0, 0,  2, 1,  0, 0}, // #734
-  {DBGFIELD("RDTSCP")             15, false, false,  0, 0,  2, 1,  0, 0}, // #735
-  {DBGFIELD("RDPMC")              34, false, false,  0, 0,  2, 1,  0, 0}, // #736
-  {DBGFIELD("RDRAND16r_RDRAND32r_RDRAND64r") 17, false, false, 549, 5,  2, 1,  0, 0}, // #737
-  {DBGFIELD("LD_Frr")             1, false, false, 554, 4,  2, 1,  0, 0}, // #738
-  {DBGFIELD("LD_F80m")            4, false, false, 558, 6,  9, 1,  0, 0}, // #739
-  {DBGFIELD("FBLDm")              43, false, false,  0, 0, 32, 1,  0, 0}, // #740
-  {DBGFIELD("ST_FPrr_ST_Frr")     1, false, false, 554, 4,  2, 1,  0, 0}, // #741
-  {DBGFIELD("ST_FP80m")           7, false, false, 564, 6,  2, 1,  0, 0}, // #742
-  {DBGFIELD("FBSTPm")             226, false, false,  0, 0,  2, 1,  0, 0}, // #743
-  {DBGFIELD("XCH_F")              1, false, false,  0, 0,  2, 1,  0, 0}, // #744
-  {DBGFIELD("ILD_F16m_ILD_F32m_ILD_F64m") 2, false, false, 570, 6, 16, 1,  0, 0}, // #745
-  {DBGFIELD("IST_F16m_IST_F32m_IST_FP16m_IST_FP32m") 3, false, false, 294, 11,  5, 1,  0, 0}, // #746
-  {DBGFIELD("LD_F0")              1, false, false, 554, 4,  2, 1,  0, 0}, // #747
-  {DBGFIELD("LD_F1")              2, false, false, 554, 4,  2, 1,  0, 0}, // #748
-  {DBGFIELD("FLDPI")              2, false, false, 554, 4,  2, 1,  0, 0}, // #749
-  {DBGFIELD("CMOVBE_F_CMOVBE_Fp32_CMOVBE_Fp64_CMOVBE_Fp80_CMOVB_F_CMOVB_Fp32_CMOVB_Fp64_CMOVB_Fp80_CMOVNBE_F_CMOVNBE_Fp32_CMOVNBE_Fp64_CMOVNBE_Fp80_CMOVNB_F_CMOVNB_Fp32_CMOVNB_Fp64_CMOVNB_Fp80_CMOVNE_F_CMOVNE_Fp32_CMOVNE_Fp64_CMOVNE_Fp80_CMOVNP_F_CMOVNP_Fp32_CMOVNP_Fp64_CMOVNP_Fp80_CMOVP_F_CMOVP_Fp32_CMOVP_Fp64_CMOVP_Fp80") 3, false, false, 192, 12, 19, 1,  0, 0}, // #750
-  {DBGFIELD("FNSTSW16r")          2, false, false, 576, 9,  2, 1,  0, 0}, // #751
-  {DBGFIELD("FNSTSWm")            3, false, false, 585, 11, 16, 1,  0, 0}, // #752
-  {DBGFIELD("FLDCW16m")           3, false, false, 596, 11,  5, 1,  0, 0}, // #753
-  {DBGFIELD("FNSTCW16m")          3, false, false, 492, 10,  2, 1,  0, 0}, // #754
-  {DBGFIELD("FDECSTP_FINCSTP")    1, false, false, 554, 4,  2, 1,  0, 0}, // #755
-  {DBGFIELD("FFREE")              1, false, false, 554, 4,  2, 1,  0, 0}, // #756
-  {DBGFIELD("FSAVEm")             147, false, false,  0, 0,  2, 1,  0, 0}, // #757
-  {DBGFIELD("FRSTORm")            90, false, false,  0, 0,  2, 1,  0, 0}, // #758
-  {DBGFIELD("ABS_F_ABS_Fp32_ABS_Fp64_ABS_Fp80") 1, false, false, 117, 9,  2, 1,  0, 0}, // #759
-  {DBGFIELD("CHS_F_CHS_Fp32_CHS_Fp64_CHS_Fp80") 1, false, false, 117, 9,  2, 1,  0, 0}, // #760
-  {DBGFIELD("COMP_FST0r_COM_FST0r") 1, false, false, 22, 7,  2, 1,  0, 0}, // #761
-  {DBGFIELD("UCOM_FPr_UCOM_Fr")   1, false, false, 22, 7,  2, 1,  0, 0}, // #762
-  {DBGFIELD("FCOM32m_FCOM64m_FCOMP32m_FCOMP64m") 2, false, false, 13, 9,  2, 1,  0, 0}, // #763
-  {DBGFIELD("FCOMPP")             2, false, false, 554, 4,  2, 1,  0, 0}, // #764
-  {DBGFIELD("UCOM_FPPr")          2, false, false, 554, 4,  2, 1,  0, 0}, // #765
-  {DBGFIELD("COM_FIPr_COM_FIr")   3, false, false, 554, 4,  2, 1,  0, 0}, // #766
-  {DBGFIELD("UCOM_FIPr_UCOM_FIr") 3, false, false, 554, 4,  2, 1,  0, 0}, // #767
-  {DBGFIELD("FICOM16m_FICOM32m_FICOMP16m_FICOMP32m") 3, false, false, 607, 9,  2, 1,  0, 0}, // #768
-  {DBGFIELD("TST_F_TST_Fp32_TST_Fp64_TST_Fp80") 1, false, false, 22, 7,  2, 1,  0, 0}, // #769
-  {DBGFIELD("FXAM")               2, false, false, 616, 7,  2, 1,  0, 0}, // #770
-  {DBGFIELD("FPREM")              28, false, false,  0, 0, 23, 1,  0, 0}, // #771
-  {DBGFIELD("FPREM1")             28, false, false,  0, 0, 23, 1,  0, 0}, // #772
-  {DBGFIELD("FRNDINT")            17, false, false,  0, 0, 20, 1,  0, 0}, // #773
-  {DBGFIELD("FSCALE")             50, false, false,  0, 0, 33, 1,  0, 0}, // #774
-  {DBGFIELD("FXTRACT")            17, false, false,  0, 0, 24, 1,  0, 0}, // #775
-  {DBGFIELD("FNOP")               1, false, false, 554, 4,  2, 1,  0, 0}, // #776
-  {DBGFIELD("WAIT")               2, false, false, 554, 4,  2, 1,  0, 0}, // #777
-  {DBGFIELD("FNCLEX")             5, false, false, 623, 2,  2, 1,  0, 0}, // #778
-  {DBGFIELD("FNINIT")             26, false, false,  0, 0,  2, 1,  0, 0}, // #779
-  {DBGFIELD("MMX_MOVD64from64rr_MMX_MOVD64grr") 1, false, false, 117, 9,  2, 1,  0, 0}, // #780
-  {DBGFIELD("MOVPDI2DIrr_VMOVPDI2DIrr") 1, false, false, 117, 9,  2, 1,  0, 0}, // #781
-  {DBGFIELD("MMX_MOVD64rr_MMX_MOVD64to64rr") 1, false, false, 39, 8,  2, 1,  0, 0}, // #782
-  {DBGFIELD("MOVDI2PDIrr_VMOVDI2PDIrr") 1, false, false, 39, 8,  2, 1,  0, 0}, // #783
-  {DBGFIELD("VMOVPQIto64rr")      1, false, false, 117, 9,  2, 1,  0, 0}, // #784
-  {DBGFIELD("VMOV64toPQIrr")      1, false, false, 39, 8,  2, 1,  0, 0}, // #785
-  {DBGFIELD("MMX_MOVQ64rr_MMX_MOVQ64rr_REV") 1, false, false, 26, 3,  2, 1,  0, 0}, // #786
-  {DBGFIELD("MOVDQArr_MOVDQArr_REV_VMOVDQAYrr_VMOVDQAYrr_REV_VMOVDQArr_VMOVDQArr_REV") 1, false, false, 26, 3,  2, 1,  0, 0}, // #787
-  {DBGFIELD("MOVDQUrr_MOVDQUrr_REV_VMOVDQUYrr_VMOVDQUYrr_REV_VMOVDQUrr_VMOVDQUrr_REV") 1, false, false, 26, 3,  2, 1,  0, 0}, // #788
-  {DBGFIELD("MMX_MOVDQ2Qrr")      2, false, false, 625, 9,  2, 1,  0, 0}, // #789
-  {DBGFIELD("MMX_MOVQ2DQrr")      1, false, false, 26, 3,  2, 1,  0, 0}, // #790
-  {DBGFIELD("MMX_PACKSSDWirr_MMX_PACKSSWBirr_MMX_PACKUSWBirr") 3, false, false, 634, 8, 19, 1,  0, 0}, // #791
-  {DBGFIELD("MMX_PACKSSDWirm_MMX_PACKSSWBirm_MMX_PACKUSWBirm") 3, false, false, 642, 10,  9, 1,  0, 0}, // #792
-  {DBGFIELD("VPMOVSXBQYrr_VPMOVSXBWYrr_VPMOVSXDQYrr_VPMOVZXBQYrr_VPMOVZXBWYrr_VPMOVZXDQYrr") 1, false, false, 39, 8,  6, 1,  0, 0}, // #793
-  {DBGFIELD("PBLENDWrri")         1, false, false, 39, 8,  2, 1,  0, 0}, // #794
-  {DBGFIELD("VPBLENDWYrri_VPBLENDWrri") 1, false, false, 39, 8,  2, 1,  0, 0}, // #795
-  {DBGFIELD("PBLENDWrmi")         2, false, false, 29, 10,  9, 1,  1, 1}, // #796
-  {DBGFIELD("VPBLENDWYrmi_VPBLENDWrmi") 2, false, false, 29, 10,  9, 1,  1, 1}, // #797
-  {DBGFIELD("VPBLENDDYrri_VPBLENDDrri") 1, false, false, 26, 3,  2, 1,  0, 0}, // #798
-  {DBGFIELD("VPBLENDDYrmi_VPBLENDDrmi") 2, false, false, 17, 5,  9, 1,  1, 1}, // #799
-  {DBGFIELD("MMX_MASKMOVQ_MMX_MASKMOVQ64") 4, false, false, 652, 12, 34, 1,  0, 0}, // #800
-  {DBGFIELD("MASKMOVDQU_MASKMOVDQU64_VMASKMOVDQU_VMASKMOVDQU64") 10, false, false, 664, 7,  7, 1,  0, 0}, // #801
-  {DBGFIELD("VPMASKMOVDYrm_VPMASKMOVDrm_VPMASKMOVQYrm_VPMASKMOVQrm") 3, false, false, 47, 10,  9, 1,  1, 1}, // #802
-  {DBGFIELD("VPMASKMOVDYmr_VPMASKMOVDmr_VPMASKMOVQYmr_VPMASKMOVQmr") 4, false, false, 671, 15, 34, 1,  0, 0}, // #803
-  {DBGFIELD("MMX_PMOVMSKBrr")     1, false, false, 117, 9,  6, 1,  0, 0}, // #804
-  {DBGFIELD("PMOVMSKBrr_VPMOVMSKBrr") 1, false, false, 117, 9,  6, 1,  0, 0}, // #805
-  {DBGFIELD("VPMOVMSKBYrr")       1, false, false, 117, 9,  6, 1,  0, 0}, // #806
-  {DBGFIELD("MMX_PEXTRWirri")     2, false, false, 686, 12, 19, 1,  0, 0}, // #807
-  {DBGFIELD("PEXTRBrr_PEXTRDrr_PEXTRQrr_PEXTRWrr_REV") 2, false, false, 686, 12, 19, 1,  0, 0}, // #808
-  {DBGFIELD("PEXTRBmr_PEXTRDmr_PEXTRQmr_PEXTRWmr") 3, false, false, 266, 12,  2, 1,  0, 0}, // #809
-  {DBGFIELD("VPBROADCASTBrm_VPBROADCASTWrm") 3, false, false, 698, 11,  3, 1,  1, 1}, // #810
-  {DBGFIELD("VPBROADCASTBYrm_VPBROADCASTWYrm") 3, false, false, 698, 11,  5, 1,  1, 1}, // #811
-  {DBGFIELD("VPGATHERDDrm")       20, false, false,  0, 0,  2, 1,  1, 1}, // #812
-  {DBGFIELD("VPGATHERDDYrm")      34, false, false,  0, 0,  2, 1,  1, 1}, // #813
-  {DBGFIELD("VPGATHERQDrm")       15, false, false,  0, 0,  2, 1,  1, 1}, // #814
-  {DBGFIELD("VPGATHERQDYrm")      22, false, false,  0, 0,  2, 1,  1, 1}, // #815
-  {DBGFIELD("VPGATHERDQrm")       12, false, false,  0, 0,  2, 1,  1, 1}, // #816
-  {DBGFIELD("VPGATHERDQYrm")      20, false, false,  0, 0,  2, 1,  1, 1}, // #817
-  {DBGFIELD("VPGATHERQQrm")       14, false, false,  0, 0,  2, 1,  1, 1}, // #818
-  {DBGFIELD("VPGATHERQQYrm")      22, false, false,  0, 0,  2, 1,  1, 1}, // #819
-  {DBGFIELD("MMX_PHADDSWrr64_MMX_PHADDWrr64_MMX_PHSUBSWrr64_MMX_PHSUBWrr64") 3, false, false, 709, 11,  6, 1,  0, 0}, // #820
-  {DBGFIELD("MMX_PHADDrr64_MMX_PHSUBDrr64") 3, false, false, 709, 11,  6, 1,  0, 0}, // #821
-  {DBGFIELD("PHADDDrr_PHSUBDrr_VPHADDDrr_VPHSUBDrr") 3, false, false, 709, 11,  6, 1,  0, 0}, // #822
-  {DBGFIELD("PHADDSWrr128_PHSUBSWrr128_VPHADDSWrr128_VPHADDSWrr256_VPHSUBSWrr128_VPHSUBSWrr256") 3, false, false, 709, 11,  6, 1,  0, 0}, // #823
-  {DBGFIELD("PHADDWrr_PHSUBWrr_VPHADDDYrr_VPHADDWYrr_VPHADDWrr_VPHSUBDYrr_VPHSUBWYrr_VPHSUBWrr") 3, false, false, 709, 11,  6, 1,  0, 0}, // #824
-  {DBGFIELD("MMX_PHADDSWrm64_MMX_PHADDWrm64_MMX_PHSUBSWrm64_MMX_PHSUBWrm64") 3, false, false, 720, 13, 16, 1,  1, 1}, // #825
-  {DBGFIELD("MMX_PHADDrm64_MMX_PHSUBDrm64") 3, false, false, 720, 13, 16, 1,  1, 1}, // #826
-  {DBGFIELD("PHADDDrm_PHSUBDrm_VPHADDDrm_VPHSUBDrm") 3, false, false, 720, 13, 16, 1,  1, 1}, // #827
-  {DBGFIELD("PHADDSWrm128_PHSUBSWrm128_VPHADDSWrm128_VPHADDSWrm256_VPHSUBSWrm128_VPHSUBSWrm256") 3, false, false, 720, 13, 16, 1,  1, 1}, // #828
-  {DBGFIELD("PHADDWrm_PHSUBWrm_VPHADDDYrm_VPHADDWYrm_VPHADDWrm_VPHSUBDYrm_VPHSUBWYrm_VPHSUBWrm") 3, false, false, 720, 13, 16, 1,  1, 1}, // #829
-  {DBGFIELD("PCMPGTQrr_VPCMPGTQYrr_VPCMPGTQrr") 1, false, false, 117, 9,  3, 1,  0, 0}, // #830
-  {DBGFIELD("PCMPGTQrm_VPCMPGTQYrm_VPCMPGTQrm") 2, false, false, 105, 11,  3, 1,  1, 1}, // #831
-  {DBGFIELD("PMULLDrr_VPMULLDYrr_VPMULLDrr") 2, false, false, 733, 9,  8, 1,  0, 0}, // #832
-  {DBGFIELD("PMULLDrm_VPMULLDYrm_VPMULLDrm") 3, false, false, 742, 11,  8, 1,  1, 1}, // #833
-  {DBGFIELD("PTESTrr_VPTESTYrr_VPTESTrr") 2, false, false, 686, 12, 19, 1,  0, 0}, // #834
-  {DBGFIELD("PTESTrm_VPTESTYrm_VPTESTrm") 2, false, false, 686, 12, 19, 1,  0, 0}, // #835
-  {DBGFIELD("PSLLDrr_PSLLQrr_PSLLWrr_PSRADrr_PSRAWrr_PSRLDrr_PSRLQrr_PSRLWrr_VPSLLDYrr_VPSLLDrr_VPSLLQYrr_VPSLLQrr_VPSLLWYrr_VPSLLWrr_VPSRADYrr_VPSRADrr_VPSRAWYrr_VPSRAWrr_VPSRLDYrr_VPSRLDrr_VPSRLQYrr_VPSRLQrr_VPSRLWYrr_VPSRLWrr") 2, false, false, 686, 12, 19, 1,  0, 0}, // #836
-  {DBGFIELD("PSLLDQri_PSRLDQri")  1, false, false, 39, 8,  2, 1,  0, 0}, // #837
-  {DBGFIELD("VPSLLDQYri_VPSLLDQri_VPSRLDQYri_VPSRLDQri") 1, false, false, 39, 8,  2, 1,  0, 0}, // #838
-  {DBGFIELD("MMX_EMMS")           31, false, false,  0, 0, 34, 1,  0, 0}, // #839
-  {DBGFIELD("MOVMSKPDrr_MOVMSKPSrr_VMOVMSKPDrr_VMOVMSKPSrr") 1, false, false, 117, 9,  6, 1,  0, 0}, // #840
-  {DBGFIELD("VMOVMSKPDYrr_VMOVMSKPSYrr") 1, false, false, 117, 9, 19, 1,  0, 0}, // #841
-  {DBGFIELD("VPERM2F128rr")       1, false, false, 39, 8,  6, 1,  0, 0}, // #842
-  {DBGFIELD("VPERM2F128rm")       1, false, false, 29, 10,  5, 1,  1, 1}, // #843
-  {DBGFIELD("BLENDVPDrr0_BLENDVPSrr0") 1, false, false, 57, 8, 19, 1,  0, 0}, // #844
-  {DBGFIELD("BLENDVPDrm0_BLENDVPSrm0") 1, false, false, 47, 10, 16, 1,  1, 1}, // #845
-  {DBGFIELD("VBROADCASTF128")     1, false, false, 101, 3,  9, 1,  0, 0}, // #846
-  {DBGFIELD("EXTRACTPSrr")        2, false, false, 686, 12,  2, 1,  0, 0}, // #847
-  {DBGFIELD("VEXTRACTPSrr")       2, false, false, 686, 12,  2, 1,  0, 0}, // #848
-  {DBGFIELD("EXTRACTPSmr")        3, false, false, 753, 14,  9, 1,  0, 0}, // #849
-  {DBGFIELD("VEXTRACTPSmr")       3, false, false, 753, 14,  9, 1,  0, 0}, // #850
-  {DBGFIELD("VEXTRACTF128rr")     1, false, false, 39, 8,  6, 1,  0, 0}, // #851
-  {DBGFIELD("VEXTRACTF128mr")     2, false, false, 141, 5,  9, 1,  0, 0}, // #852
-  {DBGFIELD("VINSERTF128rr")      1, false, false, 39, 8,  6, 1,  0, 0}, // #853
-  {DBGFIELD("VINSERTF128rm")      1, false, false, 39, 8,  6, 1,  1, 1}, // #854
-  {DBGFIELD("VMASKMOVPDYrm_VMASKMOVPDrm_VMASKMOVPSYrm_VMASKMOVPSrm") 3, false, false, 47, 10,  9, 1,  0, 0}, // #855
-  {DBGFIELD("VMASKMOVPDmr_VMASKMOVPSmr") 4, false, false, 671, 15, 34, 1,  0, 0}, // #856
-  {DBGFIELD("VMASKMOVPDYmr_VMASKMOVPSYmr") 4, false, false, 671, 15,  7, 1,  0, 0}, // #857
-  {DBGFIELD("VGATHERDPSrm")       20, false, false,  0, 0,  2, 1,  1, 1}, // #858
-  {DBGFIELD("VGATHERDPSYrm")      34, false, false,  0, 0,  2, 1,  1, 1}, // #859
-  {DBGFIELD("VGATHERQPSrm")       15, false, false,  0, 0,  2, 1,  1, 1}, // #860
-  {DBGFIELD("VGATHERQPSYrm")      22, false, false,  0, 0,  2, 1,  1, 1}, // #861
-  {DBGFIELD("VGATHERDPDrm")       12, false, false,  0, 0,  2, 1,  1, 1}, // #862
-  {DBGFIELD("VGATHERDPDYrm")      20, false, false,  0, 0,  2, 1,  1, 1}, // #863
-  {DBGFIELD("VGATHERQPDrm")       14, false, false,  0, 0,  2, 1,  1, 1}, // #864
-  {DBGFIELD("VGATHERQPDYrm")      22, false, false,  0, 0,  2, 1,  1, 1}, // #865
-  {DBGFIELD("CVTPD2PSrr_VCVTPD2PSrr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #866
-  {DBGFIELD("CVTPD2PSrm_VCVTPD2PSXrm") 3, false, false, 778, 13, 10, 1,  0, 0}, // #867
-  {DBGFIELD("VCVTPD2PSYrr")       2, false, false, 767, 11,  3, 1,  0, 0}, // #868
-  {DBGFIELD("VCVTPD2PSYrm")       3, false, false, 778, 13, 15, 1,  0, 0}, // #869
-  {DBGFIELD("CVTSD2SSrr_Int_CVTSD2SSrr_Int_VCVTSD2SSrr_VCVTSD2SSrr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #870
-  {DBGFIELD("CVTSD2SSrm")         3, false, false, 778, 13, 10, 1,  0, 0}, // #871
-  {DBGFIELD("Int_CVTSD2SSrm_Int_VCVTSD2SSrm_VCVTSD2SSrm") 3, false, false, 778, 13, 10, 1,  0, 0}, // #872
-  {DBGFIELD("CVTPS2PDrr_VCVTPS2PDrr") 2, false, false, 686, 12, 19, 1,  0, 0}, // #873
-  {DBGFIELD("CVTPS2PDrm_VCVTPS2PDYrm_VCVTPS2PDrm") 2, false, false, 105, 11,  3, 1,  0, 0}, // #874
-  {DBGFIELD("VCVTPS2PDYrr")       2, false, false, 686, 12,  3, 1,  0, 0}, // #875
-  {DBGFIELD("CVTSS2SDrr_Int_CVTSS2SDrr_Int_VCVTSS2SDrr_VCVTSS2SDrr") 2, false, false, 686, 12, 19, 1,  0, 0}, // #876
-  {DBGFIELD("CVTSS2SDrm")         2, false, false, 105, 11,  3, 1,  0, 0}, // #877
-  {DBGFIELD("Int_CVTSS2SDrm_Int_VCVTSS2SDrm_VCVTSS2SDrm") 2, false, false, 105, 11,  3, 1,  0, 0}, // #878
-  {DBGFIELD("CVTDQ2PDrr")         2, false, false, 767, 11,  9, 1,  0, 0}, // #879
-  {DBGFIELD("VCVTDQ2PDrr")        2, false, false, 767, 11,  9, 1,  0, 0}, // #880
-  {DBGFIELD("VCVTDQ2PDYrr")       2, false, false, 767, 11, 16, 1,  0, 0}, // #881
-  {DBGFIELD("CVTPD2DQrr_CVTTPD2DQrr_VCVTTPD2DQrr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #882
-  {DBGFIELD("VCVTPD2DQrr")        2, false, false, 767, 11,  9, 1,  0, 0}, // #883
-  {DBGFIELD("CVTPD2DQrm_CVTTPD2DQrm") 3, false, false, 778, 13, 10, 1,  0, 0}, // #884
-  {DBGFIELD("VCVTPD2DQYrr")       2, false, false, 767, 11, 16, 1,  0, 0}, // #885
-  {DBGFIELD("VCVTTPD2DQYrr")      2, false, false, 767, 11, 16, 1,  0, 0}, // #886
-  {DBGFIELD("VCVTPD2DQYrm")       3, false, false, 778, 13,  8, 1,  0, 0}, // #887
-  {DBGFIELD("VCVTTPD2DQYrm")      3, false, false, 778, 13,  8, 1,  0, 0}, // #888
-  {DBGFIELD("MMX_CVTPS2PIirr_MMX_CVTTPS2PIirr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #889
-  {DBGFIELD("MMX_CVTPI2PDirr")    2, false, false, 767, 11,  9, 1,  0, 0}, // #890
-  {DBGFIELD("MMX_CVTPD2PIirr_MMX_CVTTPD2PIirr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #891
-  {DBGFIELD("CVTSI2SS64rr_CVTSI2SSrr_Int_CVTSI2SS64rr_Int_CVTSI2SSrr_Int_VCVTSI2SS64rr_Int_VCVTSI2SSrr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #892
-  {DBGFIELD("VCVTSI2SS64rr_VCVTSI2SSrr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #893
-  {DBGFIELD("CVTSS2SI64rr_CVTTSS2SI64rr_Int_CVTTSS2SI64rr_Int_VCVTTSS2SI64rr_VCVTSS2SI64rr_VCVTTSS2SI64rr") 2, false, false, 791, 12,  9, 1,  0, 0}, // #894
-  {DBGFIELD("CVTSS2SIrr_CVTTSS2SIrr_Int_CVTTSS2SIrr_Int_VCVTTSS2SIrr_VCVTSS2SIrr_VCVTTSS2SIrr") 2, false, false, 791, 12,  9, 1,  0, 0}, // #895
-  {DBGFIELD("CVTSS2SI64rm_CVTTSS2SI64rm_Int_CVTTSS2SI64rm_Int_VCVTTSS2SI64rm_VCVTSS2SI64rm_VCVTTSS2SI64rm") 3, false, false, 803, 14, 10, 1,  0, 0}, // #896
-  {DBGFIELD("CVTSS2SIrm_CVTTSS2SIrm_Int_CVTTSS2SIrm_Int_VCVTTSS2SIrm_VCVTSS2SIrm_VCVTTSS2SIrm") 3, false, false, 803, 14, 10, 1,  0, 0}, // #897
-  {DBGFIELD("CVTSD2SI64rr_CVTSD2SIrr_CVTTSD2SI64rr_CVTTSD2SIrr_Int_CVTTSD2SI64rr_Int_CVTTSD2SIrr_Int_VCVTTSD2SI64rr_Int_VCVTTSD2SIrr_VCVTSD2SI64rr_VCVTSD2SIrr_VCVTTSD2SI64rr_VCVTTSD2SIrr") 2, false, false, 791, 12,  9, 1,  0, 0}, // #898
-  {DBGFIELD("CVTSD2SI64rm_CVTSD2SIrm_CVTTSD2SI64rm_CVTTSD2SIrm_Int_CVTTSD2SI64rm_Int_CVTTSD2SIrm_Int_VCVTTSD2SI64rm_Int_VCVTTSD2SIrm_VCVTSD2SI64rm_VCVTSD2SIrm_VCVTTSD2SI64rm_VCVTTSD2SIrm") 3, false, false, 803, 14, 10, 1,  0, 0}, // #899
-  {DBGFIELD("VCVTPS2PHYrr_VCVTPS2PHrr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #900
-  {DBGFIELD("VCVTPS2PHYmr_VCVTPS2PHmr") 4, false, false, 817, 15, 35, 2,  0, 0}, // #901
-  {DBGFIELD("VCVTPH2PSYrr_VCVTPH2PSrr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #902
-  {DBGFIELD("HADDPDrr_HADDPSrr_HSUBPDrr_HSUBPSrr_VHADDPDYrr_VHADDPDrr_VHADDPSYrr_VHADDPSrr_VHSUBPDYrr_VHSUBPDrr_VHSUBPSYrr_VHSUBPSrr") 3, false, false, 709, 11,  3, 1,  0, 0}, // #903
-  {DBGFIELD("HADDPDrm_HADDPSrm_HSUBPDrm_HSUBPSrm_VHADDPDYrm_VHADDPDrm_VHADDPSYrm_VHADDPSrm_VHSUBPDYrm_VHSUBPDrm_VHSUBPSYrm_VHSUBPSrm") 4, false, false, 720, 13, 15, 1,  0, 0}, // #904
-  {DBGFIELD("MULPDrr_VMULPDrr")   1, false, false, 554, 4,  3, 1,  0, 0}, // #905
-  {DBGFIELD("MULPSrr_VMULPSrr")   1, false, false, 554, 4,  3, 1,  0, 0}, // #906
-  {DBGFIELD("MULSDrr_MULSDrr_Int_VMULSDrr_VMULSDrr_Int") 1, false, false, 554, 4,  3, 1,  0, 0}, // #907
-  {DBGFIELD("MULSSrr_MULSSrr_Int_VMULSSrr_VMULSSrr_Int") 1, false, false, 554, 4,  3, 1,  0, 0}, // #908
-  {DBGFIELD("MULPDrm_MULPSrm_VMULPDrm_VMULPSrm") 2, false, false, 570, 6, 15, 1,  0, 0}, // #909
-  {DBGFIELD("MULSDrm_MULSDrm_Int_MULSSrm_MULSSrm_Int_VMULSDrm_VMULSDrm_Int_VMULSSrm_VMULSSrm_Int") 2, false, false, 570, 6, 15, 1,  0, 0}, // #910
-  {DBGFIELD("VDIVPSYrr")          3, false, false, 832, 10, 23, 1,  0, 0}, // #911
-  {DBGFIELD("VDIVPSYrm")          4, false, false, 842, 12, 29, 1,  1, 1}, // #912
-  {DBGFIELD("VDIVPDYrr")          3, false, false, 832, 10, 37, 1,  0, 0}, // #913
-  {DBGFIELD("VDIVPDYrm")          4, false, false, 842, 12, 38, 1,  1, 1}, // #914
-  {DBGFIELD("VRCPPSYr")           3, false, false, 832, 10,  5, 1,  0, 0}, // #915
-  {DBGFIELD("VRCPPSYm")           4, false, false, 842, 12, 20, 1,  0, 0}, // #916
-  {DBGFIELD("ROUNDPDr_ROUNDPSr_VROUNDPDr_VROUNDPSr_VROUNDYPDr_VROUNDYPSr") 2, false, false, 616, 7, 16, 1,  0, 0}, // #917
-  {DBGFIELD("ROUNDSDr_ROUNDSDr_Int_ROUNDSSr_ROUNDSSr_Int_VROUNDSDr_VROUNDSDr_Int_VROUNDSSr_VROUNDSSr_Int") 2, false, false, 616, 7, 16, 1,  0, 0}, // #918
-  {DBGFIELD("ROUNDPDm_VROUNDPDm_VROUNDYPDm") 3, false, false, 607, 9,  8, 1,  0, 0}, // #919
-  {DBGFIELD("ROUNDPSm_VROUNDPSm_VROUNDYPSm") 3, false, false, 607, 9,  8, 1,  0, 0}, // #920
-  {DBGFIELD("ROUNDSDm_ROUNDSSm_VROUNDSDm_VROUNDSSm") 3, false, false, 607, 9,  8, 1,  0, 0}, // #921
-  {DBGFIELD("DPPSrri_VDPPSYrri_VDPPSrri") 4, false, false, 854, 14,  7, 1,  0, 0}, // #922
-  {DBGFIELD("DPPSrmi_VDPPSYrmi_VDPPSrmi") 6, false, false, 868, 17, 39, 1,  1, 1}, // #923
-  {DBGFIELD("DPPDrri")            3, false, false, 885, 14, 15, 1,  0, 0}, // #924
-  {DBGFIELD("VDPPDrri")           3, false, false, 885, 14, 15, 1,  0, 0}, // #925
-  {DBGFIELD("DPPDrmi_VDPPDrmi")   4, false, false, 899, 16, 34, 1,  0, 0}, // #926
-  {DBGFIELD("VFMADDPD4rr_VFMADDPD4rrY_VFMADDPD4rrY_REV_VFMADDPD4rr_REV_VFMADDPDr132r_VFMADDPDr132rY_VFMADDPDr213r_VFMADDPDr213rY_VFMADDPDr231r_VFMADDPDr231rY_VFMADDPS4rr_VFMADDPS4rrY_VFMADDPS4rrY_REV_VFMADDPS4rr_REV_VFMADDPSr132r_VFMADDPSr132rY_VFMADDPSr213r_VFMADDPSr213rY_VFMADDPSr231r_VFMADDPSr231rY_VFMADDSD4rr_VFMADDSD4rr_Int_VFMADDSD4rr_REV_VFMADDSDr132r_VFMADDSDr132r_Int_VFMADDSDr213r_VFMADDSDr213r_Int_VFMADDSDr231r_VFMADDSDr231r_Int_VFMADDSS4rr_VFMADDSS4rr_Int_VFMADDSS4rr_REV_VFMADDSSr132r_VFMADDSSr132r_Int_VFMADDSSr213r_VFMADDSSr213r_Int_VFMADDSSr231r_VFMADDSSr231r_Int_VFMADDSUBPDr132r_VFMADDSUBPDr132rY_VFMADDSUBPDr213r_VFMADDSUBPDr213rY_VFMADDSUBPDr231r_VFMADDSUBPDr231rY_VFMADDSUBPSr132r_VFMADDSUBPSr132rY_VFMADDSUBPSr213r_VFMADDSUBPSr213rY_VFMADDSUBPSr231r_VFMADDSUBPSr231rY_VFMSUBADDPDr132r_VFMSUBADDPDr132rY_VFMSUBADDPDr213r_VFMSUBADDPDr213rY_VFMSUBADDPDr231r_VFMSUBADDPDr231rY_VFMSUBADDPSr132r_VFMSUBADDPSr132rY_VFMSUBADDPSr213r_VFMSUBADDPSr213rY_VFMSUBADDPSr231r_VFMSUBADDPSr231rY_VFMSUBPD4rr_VFMSUBPD4rrY_VFMSUBPD4rrY_REV_VFMSUBPD4rr_REV_VFMSUBPDr132r_VFMSUBPDr132rY_VFMSUBPDr213r_VFMSUBPDr213rY_VFMSUBPDr231r_VFMSUBPDr231rY_VFMSUBPS4rr_VFMSUBPS4rrY_VFMSUBPS4rrY_REV_VFMSUBPS4rr_REV_VFMSUBPSr132r_VFMSUBPSr132rY_VFMSUBPSr213r_VFMSUBPSr213rY_VFMSUBPSr231r_VFMSUBPSr231rY_VFMSUBSD4rr_VFMSUBSD4rr_Int_VFMSUBSD4rr_REV_VFMSUBSDr132r_VFMSUBSDr132r_Int_VFMSUBSDr213r_VFMSUBSDr213r_Int_VFMSUBSDr231r_VFMSUBSDr231r_Int_VFMSUBSS4rr_VFMSUBSS4rr_Int_VFMSUBSS4rr_REV_VFMSUBSSr132r_VFMSUBSSr132r_Int_VFMSUBSSr213r_VFMSUBSSr213r_Int_VFMSUBSSr231r_VFMSUBSSr231r_Int_VFNMADDPD4rr_VFNMADDPD4rrY_VFNMADDPD4rrY_REV_VFNMADDPD4rr_REV_VFNMADDPDr132r_VFNMADDPDr132rY_VFNMADDPDr213r_VFNMADDPDr213rY_VFNMADDPDr231r_VFNMADDPDr231rY_VFNMADDPS4rr_VFNMADDPS4rrY_VFNMADDPS4rrY_REV_VFNMADDPS4rr_REV_VFNMADDPSr132r_VFNMADDPSr132rY_VFNMADDPSr213r_VFNMADDPSr213rY_VFNMADDPSr231r_VFNMADDPSr231rY_VFNMADDSD4rr_VFNMADDSD4rr_Int_VFNMADDSD4rr_REV_VFNMADDSDr132r_VFNMADDSDr132r_Int_VFNMADDSDr213r_VFNMADDSDr213r_Int_VFNMADDSDr231r_VFNMADDSDr231r_Int_VFNMADDSS4rr_VFNMADDSS4rr_Int_VFNMADDSS4rr_REV_VFNMADDSSr132r_VFNMADDSSr132r_Int_VFNMADDSSr213r_VFNMADDSSr213r_Int_VFNMADDSSr231r_VFNMADDSSr231r_Int_VFNMSUBPD4rr_VFNMSUBPD4rrY_VFNMSUBPD4rrY_REV_VFNMSUBPD4rr_REV_VFNMSUBPDr132r_VFNMSUBPDr132rY_VFNMSUBPDr213r_VFNMSUBPDr213rY_VFNMSUBPDr231r_VFNMSUBPDr231rY_VFNMSUBPS4rr_VFNMSUBPS4rrY_VFNMSUBPS4rrY_REV_VFNMSUBPS4rr_REV_VFNMSUBPSr132r_VFNMSUBPSr132rY_VFNMSUBPSr213r_VFNMSUBPSr213rY_VFNMSUBPSr231r_VFNMSUBPSr231rY_VFNMSUBSD4rr_VFNMSUBSD4rr_Int_VFNMSUBSD4rr_REV_VFNMSUBSDr132r_VFNMSUBSDr132r_Int_VFNMSUBSDr213r_VFNMSUBSDr213r_Int_VFNMSUBSDr231r_VFNMSUBSDr231r_Int_VFNMSUBSS4rr_VFNMSUBSS4rr_Int_VFNMSUBSS4rr_REV_VFNMSUBSSr132r_VFNMSUBSSr132r_Int_VFNMSUBSSr213r_VFNMSUBSSr213r_Int_VFNMSUBSSr231r_VFNMSUBSSr231r_Int") 1, false, false, 554, 4,  3, 1,  0, 0}, // #927
-  {DBGFIELD("VFMADDPD4mr_VFMADDPD4mrY_VFMADDPD4rm_VFMADDPD4rmY_VFMADDPDr132m_VFMADDPDr132mY_VFMADDPDr213m_VFMADDPDr213mY_VFMADDPDr231m_VFMADDPDr231mY_VFMADDPS4mr_VFMADDPS4mrY_VFMADDPS4rm_VFMADDPS4rmY_VFMADDPSr132m_VFMADDPSr132mY_VFMADDPSr213m_VFMADDPSr213mY_VFMADDPSr231m_VFMADDPSr231mY_VFMADDSD4mr_VFMADDSD4mr_Int_VFMADDSD4rm_VFMADDSD4rm_Int_VFMADDSDr132m_VFMADDSDr132m_Int_VFMADDSDr213m_VFMADDSDr213m_Int_VFMADDSDr231m_VFMADDSDr231m_Int_VFMADDSS4mr_VFMADDSS4mr_Int_VFMADDSS4rm_VFMADDSS4rm_Int_VFMADDSSr132m_VFMADDSSr132m_Int_VFMADDSSr213m_VFMADDSSr213m_Int_VFMADDSSr231m_VFMADDSSr231m_Int_VFMADDSUBPDr132m_VFMADDSUBPDr132mY_VFMADDSUBPDr213m_VFMADDSUBPDr213mY_VFMADDSUBPDr231m_VFMADDSUBPDr231mY_VFMADDSUBPSr132m_VFMADDSUBPSr132mY_VFMADDSUBPSr213m_VFMADDSUBPSr213mY_VFMADDSUBPSr231m_VFMADDSUBPSr231mY_VFMSUBADDPDr132m_VFMSUBADDPDr132mY_VFMSUBADDPDr213m_VFMSUBADDPDr213mY_VFMSUBADDPDr231m_VFMSUBADDPDr231mY_VFMSUBADDPSr132m_VFMSUBADDPSr132mY_VFMSUBADDPSr213m_VFMSUBADDPSr213mY_VFMSUBADDPSr231m_VFMSUBADDPSr231mY_VFMSUBPD4mr_VFMSUBPD4mrY_VFMSUBPD4rm_VFMSUBPD4rmY_VFMSUBPDr132m_VFMSUBPDr132mY_VFMSUBPDr213m_VFMSUBPDr213mY_VFMSUBPDr231m_VFMSUBPDr231mY_VFMSUBPS4mr_VFMSUBPS4mrY_VFMSUBPS4rm_VFMSUBPS4rmY_VFMSUBPSr132m_VFMSUBPSr132mY_VFMSUBPSr213m_VFMSUBPSr213mY_VFMSUBPSr231m_VFMSUBPSr231mY_VFMSUBSD4mr_VFMSUBSD4mr_Int_VFMSUBSD4rm_VFMSUBSD4rm_Int_VFMSUBSDr132m_VFMSUBSDr132m_Int_VFMSUBSDr213m_VFMSUBSDr213m_Int_VFMSUBSDr231m_VFMSUBSDr231m_Int_VFMSUBSS4mr_VFMSUBSS4mr_Int_VFMSUBSS4rm_VFMSUBSS4rm_Int_VFMSUBSSr132m_VFMSUBSSr132m_Int_VFMSUBSSr213m_VFMSUBSSr213m_Int_VFMSUBSSr231m_VFMSUBSSr231m_Int_VFNMADDPD4mr_VFNMADDPD4mrY_VFNMADDPD4rm_VFNMADDPD4rmY_VFNMADDPDr132m_VFNMADDPDr132mY_VFNMADDPDr213m_VFNMADDPDr213mY_VFNMADDPDr231m_VFNMADDPDr231mY_VFNMADDPS4mr_VFNMADDPS4mrY_VFNMADDPS4rm_VFNMADDPS4rmY_VFNMADDPSr132m_VFNMADDPSr132mY_VFNMADDPSr213m_VFNMADDPSr213mY_VFNMADDPSr231m_VFNMADDPSr231mY_VFNMADDSD4mr_VFNMADDSD4mr_Int_VFNMADDSD4rm_VFNMADDSD4rm_Int_VFNMADDSDr132m_VFNMADDSDr132m_Int_VFNMADDSDr213m_VFNMADDSDr213m_Int_VFNMADDSDr231m_VFNMADDSDr231m_Int_VFNMADDSS4mr_VFNMADDSS4mr_Int_VFNMADDSS4rm_VFNMADDSS4rm_Int_VFNMADDSSr132m_VFNMADDSSr132m_Int_VFNMADDSSr213m_VFNMADDSSr213m_Int_VFNMADDSSr231m_VFNMADDSSr231m_Int_VFNMSUBPD4mr_VFNMSUBPD4mrY_VFNMSUBPD4rm_VFNMSUBPD4rmY_VFNMSUBPDr132m_VFNMSUBPDr132mY_VFNMSUBPDr213m_VFNMSUBPDr213mY_VFNMSUBPDr231m_VFNMSUBPDr231mY_VFNMSUBPS4mr_VFNMSUBPS4mrY_VFNMSUBPS4rm_VFNMSUBPS4rmY_VFNMSUBPSr132m_VFNMSUBPSr132mY_VFNMSUBPSr213m_VFNMSUBPSr213mY_VFNMSUBPSr231m_VFNMSUBPSr231mY_VFNMSUBSD4mr_VFNMSUBSD4mr_Int_VFNMSUBSD4rm_VFNMSUBSD4rm_Int_VFNMSUBSDr132m_VFNMSUBSDr132m_Int_VFNMSUBSDr213m_VFNMSUBSDr213m_Int_VFNMSUBSDr231m_VFNMSUBSDr231m_Int_VFNMSUBSS4mr_VFNMSUBSS4mr_Int_VFNMSUBSS4rm_VFNMSUBSS4rm_Int_VFNMSUBSSr132m_VFNMSUBSSr132m_Int_VFNMSUBSSr213m_VFNMSUBSSr213m_Int_VFNMSUBSSr231m_VFNMSUBSSr231m_Int") 2, false, false, 570, 6, 15, 1,  0, 0}, // #928
-  {DBGFIELD("VSQRTPSYr")          3, false, false, 832, 10, 23, 1,  0, 0}, // #929
-  {DBGFIELD("VSQRTPSYm")          4, false, false, 842, 12, 29, 1,  0, 0}, // #930
-  {DBGFIELD("VSQRTPDYr")          3, false, false, 832, 10, 40, 1,  0, 0}, // #931
-  {DBGFIELD("VSQRTPDYm")          4, false, false, 842, 12, 30, 1,  0, 0}, // #932
-  {DBGFIELD("RSQRTPSr_VRSQRTPSr") 1, false, false, 117, 9,  3, 1,  0, 0}, // #933
-  {DBGFIELD("RSQRTSSr_VRSQRTSSr") 1, false, false, 117, 9,  3, 1,  0, 0}, // #934
-  {DBGFIELD("RSQRTSSr_Int")       1, false, false, 117, 9,  3, 1,  0, 0}, // #935
-  {DBGFIELD("VRSQRTSSr_Int")      1, false, false, 117, 9,  3, 1,  0, 0}, // #936
-  {DBGFIELD("RSQRTPSm_VRSQRTPSm") 2, false, false, 105, 11, 15, 1,  0, 0}, // #937
-  {DBGFIELD("RSQRTSSm_VRSQRTSSm") 2, false, false, 105, 11, 15, 1,  0, 0}, // #938
-  {DBGFIELD("RSQRTSSm_Int_VRSQRTSSm_Int") 2, false, false, 105, 11, 15, 1,  0, 0}, // #939
-  {DBGFIELD("VRSQRTPSYr")         3, false, false, 832, 10,  5, 1,  0, 0}, // #940
-  {DBGFIELD("VRSQRTPSYm")         4, false, false, 842, 12, 20, 1,  0, 0}, // #941
-  {DBGFIELD("ANDNPDrr_ANDNPSrr_ANDPDrr_ANDPSrr_ORPDrr_ORPSrr_VANDNPDYrr_VANDNPDrr_VANDNPSYrr_VANDNPSrr_VANDPDYrr_VANDPDrr_VANDPSYrr_VANDPSrr_VORPDYrr_VORPDrr_VORPSYrr_VORPSrr_VXORPDYrr_VXORPDrr_VXORPSYrr_VXORPSrr_XORPDrr_XORPSrr") 1, false, false, 39, 8,  2, 1,  0, 0}, // #942
-  {DBGFIELD("ANDNPDrm_ANDNPSrm_ANDPDrm_ANDPSrm_ORPDrm_ORPSrm_VANDNPDYrm_VANDNPDrm_VANDNPSYrm_VANDNPSrm_VANDPDYrm_VANDPDrm_VANDPSYrm_VANDPSrm_VORPDYrm_VORPDrm_VORPSYrm_VORPSrm_VXORPDYrm_VXORPDrm_VXORPSYrm_VXORPSrm_XORPDrm_XORPSrm") 2, false, false, 29, 10,  3, 1,  1, 1}, // #943
-  {DBGFIELD("VZEROUPPER")         4, false, false,  0, 0,  2, 1,  0, 0}, // #944
-  {DBGFIELD("VZEROALL")           12, false, false,  0, 0,  2, 1,  0, 0}, // #945
-  {DBGFIELD("LDMXCSR_VLDMXCSR")   3, false, false, 915, 14, 16, 1,  0, 0}, // #946
-  {DBGFIELD("STMXCSR_VSTMXCSR")   4, false, false, 929, 14,  5, 1,  0, 0} // #947
+  {DBGFIELD("IIC_SSE_HADDSUB_RM_WriteFAddLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #158
+  {DBGFIELD("IIC_SSE_HADDSUB_RR_WriteFAdd") 1, false, false, 22, 7,  6, 1,  0, 0}, // #159
+  {DBGFIELD("IIC_HLT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #160
+  {DBGFIELD("IIC_IDIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 104, 12, 11, 1,  2, 2}, // #161
+  {DBGFIELD("IIC_IDIV16_WriteIDiv") 1, false, false, 116, 10, 12, 1,  0, 0}, // #162
+  {DBGFIELD("IIC_IDIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 104, 12, 11, 1,  2, 2}, // #163
+  {DBGFIELD("IIC_IDIV32_WriteIDiv") 1, false, false, 116, 10, 12, 1,  0, 0}, // #164
+  {DBGFIELD("IIC_IDIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 104, 12, 11, 1,  2, 2}, // #165
+  {DBGFIELD("IIC_IDIV64_WriteIDiv") 1, false, false, 116, 10, 12, 1,  0, 0}, // #166
+  {DBGFIELD("IIC_IDIV8_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 104, 12, 11, 1,  2, 2}, // #167
+  {DBGFIELD("IIC_IDIV8_WriteIDiv") 1, false, false, 116, 10, 12, 1,  0, 0}, // #168
+  {DBGFIELD("IIC_FILD_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #169
+  {DBGFIELD("IIC_IMUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #170
+  {DBGFIELD("IIC_IMUL16_RR_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #171
+  {DBGFIELD("IIC_IMUL16_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #172
+  {DBGFIELD("IIC_IMUL16_RMI_WriteIMulLd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #173
+  {DBGFIELD("IIC_IMUL16_RRI_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #174
+  {DBGFIELD("IIC_IMUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #175
+  {DBGFIELD("IIC_IMUL32_RR_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #176
+  {DBGFIELD("IIC_IMUL32_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #177
+  {DBGFIELD("IIC_IMUL32_RMI_WriteIMulLd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #178
+  {DBGFIELD("IIC_IMUL32_RRI_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #179
+  {DBGFIELD("IIC_IMUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #180
+  {DBGFIELD("IIC_IMUL64_RR_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #181
+  {DBGFIELD("IIC_IMUL64_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #182
+  {DBGFIELD("IIC_IMUL64_RMI_WriteIMulLd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #183
+  {DBGFIELD("IIC_IMUL64_RRI_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #184
+  {DBGFIELD("IIC_IMUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #185
+  {DBGFIELD("IIC_IMUL8_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #186
+  {DBGFIELD("IIC_IN_RI_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #187
+  {DBGFIELD("IIC_IN_RR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #188
+  {DBGFIELD("IIC_INS_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #189
+  {DBGFIELD("IIC_SSE_INSERTPS_RM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #190
+  {DBGFIELD("IIC_SSE_INSERTPS_RR_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #191
+  {DBGFIELD("IIC_INT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #192
+  {DBGFIELD("IIC_INT3_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #193
+  {DBGFIELD("IIC_INVD_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #194
+  {DBGFIELD("IIC_INVLPG_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #195
+  {DBGFIELD("WriteJumpLd")        1, false, false, 91, 6,  3, 1,  0, 0}, // #196
+  {DBGFIELD("IIC_IRET_WriteJumpLd") 1, false, false, 91, 6,  3, 1,  0, 0}, // #197
+  {DBGFIELD("IIC_FST_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #198
+  {DBGFIELD("IIC_FIST_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #199
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #200
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd_ReadAfterLd") 1, false, false, 13, 9, 10, 1,  1, 1}, // #201
+  {DBGFIELD("WriteLoad")          1, false, false, 101, 3,  9, 1,  0, 0}, // #202
+  {DBGFIELD("IIC_Jcc_WriteJump")  1, false, false, 97, 4,  2, 1,  0, 0}, // #203
+  {DBGFIELD("IIC_JCXZ_WriteJump") 1, false, false, 97, 4,  2, 1,  0, 0}, // #204
+  {DBGFIELD("IIC_JMP_MEM_WriteJumpLd") 1, false, false, 91, 6,  3, 1,  0, 0}, // #205
+  {DBGFIELD("IIC_JMP_REG_WriteJump") 1, false, false, 97, 4,  2, 1,  0, 0}, // #206
+  {DBGFIELD("IIC_JMP_REL_WriteJump") 1, false, false, 97, 4,  2, 1,  0, 0}, // #207
+  {DBGFIELD("IIC_AHF_WriteALU")   1, false, false,  1, 2,  2, 1,  0, 0}, // #208
+  {DBGFIELD("IIC_LAR_RM_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #209
+  {DBGFIELD("IIC_LAR_RR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #210
+  {DBGFIELD("IIC_CMPX_LOCK_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #211
+  {DBGFIELD("IIC_CMPX_LOCK_16B_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #212
+  {DBGFIELD("IIC_CMPX_LOCK_8_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #213
+  {DBGFIELD("IIC_CMPX_LOCK_8B_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #214
+  {DBGFIELD("IIC_SSE_LDDQU_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #215
+  {DBGFIELD("IIC_SSE_LDMXCSR_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #216
+  {DBGFIELD("IIC_LXS_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #217
+  {DBGFIELD("IIC_FLDZ_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #218
+  {DBGFIELD("IIC_FIST_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #219
+  {DBGFIELD("IIC_FLD_WriteLoad")  1, false, false, 101, 3,  9, 1,  0, 0}, // #220
+  {DBGFIELD("IIC_FLD80_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #221
+  {DBGFIELD("IIC_FLD_WriteMove")  1, false, false,  1, 2,  2, 1,  0, 0}, // #222
+  {DBGFIELD("IIC_LEA_16_WriteLEA") 1, false, false, 137, 4,  2, 1,  0, 0}, // #223
+  {DBGFIELD("IIC_LEA_WriteLEA")   1, false, false, 137, 4,  2, 1,  0, 0}, // #224
+  {DBGFIELD("IIC_LEAVE_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #225
+  {DBGFIELD("IIC_SSE_LFENCE_WriteFence") 1, false, false, 141, 5,  2, 1,  0, 0}, // #226
+  {DBGFIELD("IIC_LGDT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #227
+  {DBGFIELD("IIC_LIDT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #228
+  {DBGFIELD("IIC_LLDT_MEM_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #229
+  {DBGFIELD("IIC_LLDT_REG_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #230
+  {DBGFIELD("IIC_LMSW_REG_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #231
+  {DBGFIELD("IIC_LMSW_MEM_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #232
+  {DBGFIELD("IIC_ALU_MEM_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #233
+  {DBGFIELD("IIC_ALU_NONMEM_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #234
+  {DBGFIELD("IIC_LODS_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #235
+  {DBGFIELD("IIC_LOOP_WriteJump") 1, false, false, 97, 4,  2, 1,  0, 0}, // #236
+  {DBGFIELD("IIC_LOOPE_WriteJump") 1, false, false, 97, 4,  2, 1,  0, 0}, // #237
+  {DBGFIELD("IIC_LOOPNE_WriteJump") 1, false, false, 97, 4,  2, 1,  0, 0}, // #238
+  {DBGFIELD("IIC_RET_WriteJumpLd") 1, false, false, 91, 6,  3, 1,  0, 0}, // #239
+  {DBGFIELD("IIC_LSL_RM_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #240
+  {DBGFIELD("IIC_LSL_RR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #241
+  {DBGFIELD("IIC_LTR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #242
+  {DBGFIELD("IIC_XADD_LOCK_MEM_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #243
+  {DBGFIELD("IIC_XADD_LOCK_MEM8_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #244
+  {DBGFIELD("IIC_SSE_MASKMOV_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #245
+  {DBGFIELD("IIC_SSE_MFENCE_WriteFence") 1, false, false, 141, 5,  2, 1,  0, 0}, // #246
+  {DBGFIELD("IIC_MMX_CVT_PD_RM_WriteCvtF2ILd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #247
+  {DBGFIELD("IIC_MMX_CVT_PD_RR_WriteCvtF2I") 1, false, false, 22, 7,  6, 1,  0, 0}, // #248
+  {DBGFIELD("WriteCvtI2FLd")      1, false, false, 13, 9, 10, 1,  0, 0}, // #249
+  {DBGFIELD("WriteCvtI2F")        1, false, false, 22, 7,  9, 1,  0, 0}, // #250
+  {DBGFIELD("IIC_MMX_CVT_PS_RM_WriteCvtF2ILd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #251
+  {DBGFIELD("IIC_MMX_CVT_PS_RR_WriteCvtF2I") 1, false, false, 22, 7,  6, 1,  0, 0}, // #252
+  {DBGFIELD("IIC_MMX_EMMS")       0, false, false,  0, 0,  0, 0,  0, 0}, // #253
+  {DBGFIELD("IIC_MMX_MASKMOV_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #254
+  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #255
+  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #256
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #257
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #258
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #259
+  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #260
+  {DBGFIELD("IIC_MMX_MOVQ_RR_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #261
+  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #262
+  {DBGFIELD("WriteMove")          1, false, false,  1, 2,  2, 1,  0, 0}, // #263
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd") 1, false, false, 146, 6,  3, 1,  0, 0}, // #264
+  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #265
+  {DBGFIELD("IIC_MMX_PCK_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #266
+  {DBGFIELD("IIC_MMX_PCK_RR_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #267
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #268
+  {DBGFIELD("IIC_MMX_ALUQ_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #269
+  {DBGFIELD("IIC_MMX_ALUQ_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #270
+  {DBGFIELD("WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #271
+  {DBGFIELD("WriteShuffle")       1, false, false, 39, 8,  2, 1,  0, 0}, // #272
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 17, 5,  3, 1,  1, 1}, // #273
+  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecLogic") 1, false, false, 26, 3,  2, 1,  0, 0}, // #274
+  {DBGFIELD("IIC_MMX_MISC_FUNC_REG_WriteVecIMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #275
+  {DBGFIELD("IIC_MMX_MISC_FUNC_MEM_WriteVecIMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #276
+  {DBGFIELD("IIC_MMX_PEXTR_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #277
+  {DBGFIELD("IIC_MMX_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #278
+  {DBGFIELD("IIC_MMX_PHADDSUBW_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #279
+  {DBGFIELD("IIC_MMX_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #280
+  {DBGFIELD("IIC_MMX_PHADDSUBD_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #281
+  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #282
+  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #283
+  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #284
+  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #285
+  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #286
+  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #287
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #288
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #289
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd") 1, false, false, 29, 10,  3, 1,  0, 0}, // #290
+  {DBGFIELD("IIC_MMX_SHIFT_RI_WriteVecShift") 1, false, false, 117, 9,  2, 1,  0, 0}, // #291
+  {DBGFIELD("IIC_MMX_SHIFT_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 105, 11,  3, 1,  1, 1}, // #292
+  {DBGFIELD("IIC_MMX_SHIFT_RR_WriteVecShift") 1, false, false, 117, 9,  2, 1,  0, 0}, // #293
+  {DBGFIELD("IIC_MMX_UNPCK_H_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #294
+  {DBGFIELD("IIC_MMX_UNPCK_H_RR_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #295
+  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #296
+  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #297
+  {DBGFIELD("IIC_SSE_MONITORX_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #298
+  {DBGFIELD("IIC_SSE_MONITOR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #299
+  {DBGFIELD("IIC_MOV_MEM_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #300
+  {DBGFIELD("IIC_MOV_MEM_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #301
+  {DBGFIELD("IIC_MOV_MEM_SR_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #302
+  {DBGFIELD("IIC_MOV_WriteMove")  1, false, false,  1, 2,  2, 1,  0, 0}, // #303
+  {DBGFIELD("IIC_MOV_MEM_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #304
+  {DBGFIELD("IIC_MOV_REG_SR_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #305
+  {DBGFIELD("IIC_MOV_SR_MEM_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #306
+  {DBGFIELD("IIC_MOV_SR_REG_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #307
+  {DBGFIELD("IIC_MOV_CR_REG_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #308
+  {DBGFIELD("IIC_MOV_DR_REG_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #309
+  {DBGFIELD("IIC_ALU_NONMEM_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #310
+  {DBGFIELD("IIC_MOV_REG_CR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #311
+  {DBGFIELD("IIC_MOV_REG_DR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #312
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #313
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #314
+  {DBGFIELD("IIC_SSE_MOVA_P_MR_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #315
+  {DBGFIELD("IIC_SSE_MOVA_P_RM_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #316
+  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #317
+  {DBGFIELD("IIC_MOVBE_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #318
+  {DBGFIELD("IIC_MOVBE_WriteALULd") 1, false, false,  9, 4,  3, 1,  0, 0}, // #319
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #320
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #321
+  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #322
+  {DBGFIELD("IIC_SSE_MOVU_P_MR_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #323
+  {DBGFIELD("IIC_SSE_MOVU_P_RM_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #324
+  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #325
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #326
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #327
+  {DBGFIELD("IIC_SSE_MOVMSK_WriteVecLogic") 1, false, false, 26, 3,  2, 1,  0, 0}, // #328
+  {DBGFIELD("IIC_SSE_MOVNT_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #329
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #330
+  {DBGFIELD("IIC_SSE_MOVD_ToGP_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #331
+  {DBGFIELD("IIC_SSE_MOVQ_RR_WriteVecLogic") 1, false, false, 26, 3,  2, 1,  0, 0}, // #332
+  {DBGFIELD("IIC_MOVS_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #333
+  {DBGFIELD("IIC_SSE_MOV_S_MR_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #334
+  {DBGFIELD("IIC_SSE_MOV_S_RM_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #335
+  {DBGFIELD("IIC_SSE_MOV_S_RR_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #336
+  {DBGFIELD("IIC_MOVSX_R16_M8_WriteALULd") 1, false, false,  9, 4,  3, 1,  0, 0}, // #337
+  {DBGFIELD("IIC_MOVSX_R16_R8_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #338
+  {DBGFIELD("IIC_MOVSX_WriteALULd") 1, false, false,  9, 4,  3, 1,  0, 0}, // #339
+  {DBGFIELD("IIC_MOVSX_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #340
+  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #341
+  {DBGFIELD("IIC_MOVZX_R16_M8_WriteALULd") 1, false, false,  9, 4,  3, 1,  0, 0}, // #342
+  {DBGFIELD("IIC_MOVZX_R16_R8_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #343
+  {DBGFIELD("IIC_MOVZX_WriteALULd") 1, false, false,  9, 4,  3, 1,  0, 0}, // #344
+  {DBGFIELD("IIC_MOVZX_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #345
+  {DBGFIELD("IIC_SSE_MPSADBW_RM_WriteMPSADLd_ReadAfterLd") 1, false, false, 152, 14, 16, 1,  1, 1}, // #346
+  {DBGFIELD("IIC_SSE_MPSADBW_RR_WriteMPSAD") 1, false, false, 166, 12, 16, 1,  0, 0}, // #347
+  {DBGFIELD("IIC_MUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #348
+  {DBGFIELD("IIC_MUL16_REG_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #349
+  {DBGFIELD("IIC_MUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #350
+  {DBGFIELD("IIC_MUL32_REG_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #351
+  {DBGFIELD("IIC_MUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #352
+  {DBGFIELD("IIC_MUL64_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #353
+  {DBGFIELD("IIC_MUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  2, 2}, // #354
+  {DBGFIELD("IIC_MUL8_WriteIMul") 1, false, false, 22, 7,  6, 1,  0, 0}, // #355
+  {DBGFIELD("IIC_SSE_MUL_F64P_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #356
+  {DBGFIELD("IIC_SSE_MUL_F64P_RR_WriteFMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #357
+  {DBGFIELD("IIC_SSE_MUL_F32P_RR_WriteFMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #358
+  {DBGFIELD("IIC_SSE_MUL_F64S_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #359
+  {DBGFIELD("IIC_SSE_MUL_F64S_RR_WriteFMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #360
+  {DBGFIELD("IIC_SSE_MUL_F32S_RR_WriteFMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #361
+  {DBGFIELD("IIC_MUL8_WriteIMulLd_WriteIMulH") 2, false, false, 13, 9,  5, 2,  0, 0}, // #362
+  {DBGFIELD("IIC_MUL8_WriteIMul_WriteIMulH") 2, false, false, 22, 7, 17, 2,  0, 0}, // #363
+  {DBGFIELD("WriteFMulLd")        1, false, false, 105, 11, 15, 1,  0, 0}, // #364
+  {DBGFIELD("WriteFMul")          1, false, false, 117, 9,  3, 1,  0, 0}, // #365
+  {DBGFIELD("IIC_SSE_MWAITX_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #366
+  {DBGFIELD("IIC_SSE_MWAIT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #367
+  {DBGFIELD("IIC_NOP_WriteZero")  1, false, false,  0, 0,  2, 1,  0, 0}, // #368
+  {DBGFIELD("IIC_OUT_IR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #369
+  {DBGFIELD("IIC_OUT_RR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #370
+  {DBGFIELD("IIC_OUTS_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #371
+  {DBGFIELD("IIC_SSE_PABS_RM_WriteVecALULd") 1, false, false, 146, 6,  3, 1,  0, 0}, // #372
+  {DBGFIELD("IIC_SSE_PABS_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #373
+  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #374
+  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #375
+  {DBGFIELD("IIC_SSE_INTALUQ_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #376
+  {DBGFIELD("IIC_SSE_INTALUQ_P_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #377
+  {DBGFIELD("IIC_SSE_PALIGNRM_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #378
+  {DBGFIELD("IIC_SSE_PALIGNRR_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #379
+  {DBGFIELD("IIC_SSE_BIT_P_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 17, 5,  3, 1,  1, 1}, // #380
+  {DBGFIELD("IIC_SSE_BIT_P_RR_WriteVecLogic") 1, false, false, 26, 3,  2, 1,  0, 0}, // #381
+  {DBGFIELD("IIC_SSE_PAUSE_WriteNop") 1, false, false,  0, 0,  2, 1,  0, 0}, // #382
+  {DBGFIELD("IIC_ALU_MEM_WriteVarBlendLd_ReadAfterLd") 1, false, false, 47, 10, 16, 1,  1, 1}, // #383
+  {DBGFIELD("IIC_ALU_NONMEM_WriteVarBlend") 1, false, false, 57, 8, 19, 1,  0, 0}, // #384
+  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteBlendLd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #385
+  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteBlend") 1, false, false, 137, 4,  2, 1,  0, 0}, // #386
+  {DBGFIELD("IIC_SSE_PCLMULQDQ_RM_WriteCLMulLd_ReadAfterLd") 1, false, false, 178, 14,  5, 1,  1, 1}, // #387
+  {DBGFIELD("IIC_SSE_PCLMULQDQ_RR_WriteCLMul") 1, false, false, 192, 12,  5, 1,  0, 0}, // #388
+  {DBGFIELD("WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #389
+  {DBGFIELD("WriteVecALU")        1, false, false, 137, 4,  2, 1,  0, 0}, // #390
+  {DBGFIELD("WritePCmpEStrILd_ReadAfterLd") 1, false, false, 204, 15, 20, 1,  1, 1}, // #391
+  {DBGFIELD("WritePCmpEStrI")     1, false, false, 219, 6, 20, 1,  0, 0}, // #392
+  {DBGFIELD("WritePCmpEStrMLd_ReadAfterLd") 1, false, false, 225, 8,  8, 1,  1, 1}, // #393
+  {DBGFIELD("WritePCmpEStrM")     1, false, false, 233, 13,  8, 1,  0, 0}, // #394
+  {DBGFIELD("WritePCmpIStrILd_ReadAfterLd") 1, false, false, 246, 11, 20, 1,  1, 1}, // #395
+  {DBGFIELD("WritePCmpIStrI")     1, false, false, 257, 9, 20, 1,  0, 0}, // #396
+  {DBGFIELD("WritePCmpIStrMLd_ReadAfterLd") 1, false, false, 246, 11,  8, 1,  1, 1}, // #397
+  {DBGFIELD("WritePCmpIStrM")     1, false, false, 257, 9,  8, 1,  0, 0}, // #398
+  {DBGFIELD("WriteShuffleLd_WriteRMW") 2, false, false, 266, 12,  3, 2,  0, 0}, // #399
+  {DBGFIELD("IIC_SSE_PEXTRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #400
+  {DBGFIELD("IIC_SSE_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #401
+  {DBGFIELD("IIC_SSE_PHADDSUBD_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #402
+  {DBGFIELD("IIC_SSE_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #403
+  {DBGFIELD("IIC_SSE_PHADDSUBW_RR_WriteVecALU") 1, false, false, 137, 4,  2, 1,  0, 0}, // #404
+  {DBGFIELD("WriteVecIMulLd")     1, false, false, 105, 11, 15, 1,  0, 0}, // #405
+  {DBGFIELD("WriteVecIMul")       1, false, false, 117, 9,  3, 1,  0, 0}, // #406
+  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #407
+  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #408
+  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #409
+  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #410
+  {DBGFIELD("WriteVecIMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #411
+  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteShuffleLd") 1, false, false, 29, 10,  3, 1,  0, 0}, // #412
+  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #413
+  {DBGFIELD("IIC_SSE_PMULHRSW_WriteVecIMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #414
+  {DBGFIELD("IIC_SSE_PMULHRSW_WriteVecIMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #415
+  {DBGFIELD("IIC_SSE_INTMUL_P_RM_WriteVecIMulLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #416
+  {DBGFIELD("IIC_SSE_INTMUL_P_RR_WriteVecIMul") 1, false, false, 117, 9,  3, 1,  0, 0}, // #417
+  {DBGFIELD("IIC_POP_REG16_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #418
+  {DBGFIELD("IIC_POP_MEM_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #419
+  {DBGFIELD("IIC_POP_REG_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #420
+  {DBGFIELD("IIC_POP_A_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #421
+  {DBGFIELD("IIC_SSE_POPCNT_RM_WriteFAddLd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #422
+  {DBGFIELD("IIC_SSE_POPCNT_RR_WriteFAdd") 1, false, false, 22, 7,  6, 1,  0, 0}, // #423
+  {DBGFIELD("IIC_POP_SR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #424
+  {DBGFIELD("IIC_POP_F_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #425
+  {DBGFIELD("IIC_POP_FD_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #426
+  {DBGFIELD("IIC_POP_SR_SS_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #427
+  {DBGFIELD("IIC_SSE_PSHUFB_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #428
+  {DBGFIELD("IIC_SSE_PSHUFB_RR_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #429
+  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #430
+  {DBGFIELD("IIC_SSE_PSHUF_RI_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #431
+  {DBGFIELD("IIC_SSE_INTSHDQ_P_RI_WriteVecShift") 1, false, false, 117, 9,  2, 1,  0, 0}, // #432
+  {DBGFIELD("IIC_SSE_INTSH_P_RI_WriteVecShift") 1, false, false, 117, 9,  2, 1,  0, 0}, // #433
+  {DBGFIELD("IIC_SSE_INTSH_P_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 105, 11,  3, 1,  1, 1}, // #434
+  {DBGFIELD("IIC_SSE_INTSH_P_RR_WriteVecShift") 1, false, false, 117, 9,  2, 1,  0, 0}, // #435
+  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #436
+  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #437
+  {DBGFIELD("IIC_PUSH_IMM_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #438
+  {DBGFIELD("IIC_PUSH_REG_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #439
+  {DBGFIELD("IIC_PUSH_MEM_WriteRMW") 1, false, false, 278, 3,  2, 1,  0, 0}, // #440
+  {DBGFIELD("IIC_PUSH_A_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #441
+  {DBGFIELD("IIC_PUSH_SR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #442
+  {DBGFIELD("IIC_PUSH_CS_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #443
+  {DBGFIELD("IIC_PUSH_F_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #444
+  {DBGFIELD("IIC_SR_WriteShiftLd_WriteRMW") 2, false, false, 281, 8,  3, 2,  0, 0}, // #445
+  {DBGFIELD("IIC_SR_WriteShift")  1, false, false, 97, 4,  2, 1,  0, 0}, // #446
+  {DBGFIELD("IIC_SSE_RCPP_RM_WriteFRcpLd") 1, false, false, 105, 11, 15, 1,  0, 0}, // #447
+  {DBGFIELD("IIC_SSE_RCPP_RR_WriteFRcp") 1, false, false, 117, 9,  3, 1,  0, 0}, // #448
+  {DBGFIELD("IIC_SSE_RCPS_RM_WriteFRcpLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #449
+  {DBGFIELD("WriteFRcpLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #450
+  {DBGFIELD("IIC_SSE_RCPS_RR_WriteFRcp") 1, false, false, 117, 9,  3, 1,  0, 0}, // #451
+  {DBGFIELD("WriteRMW")           1, false, false, 278, 3,  2, 1,  0, 0}, // #452
+  {DBGFIELD("IIC_RDMSR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #453
+  {DBGFIELD("IIC_RDPMC_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #454
+  {DBGFIELD("IIC_RDTSC_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #455
+  {DBGFIELD("IIC_REP_MOVS_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #456
+  {DBGFIELD("IIC_REP_STOS_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #457
+  {DBGFIELD("IIC_RET_IMM_WriteJumpLd") 1, false, false, 91, 6,  3, 1,  0, 0}, // #458
+  {DBGFIELD("WriteShiftLd")       1, false, false, 91, 6,  3, 1,  0, 0}, // #459
+  {DBGFIELD("WriteShift")         1, false, false, 97, 4,  2, 1,  0, 0}, // #460
+  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAddLd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #461
+  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAdd") 1, false, false, 22, 7,  6, 1,  0, 0}, // #462
+  {DBGFIELD("IIC_SSE_ROUNDPS_MEM_WriteFAddLd") 1, false, false, 13, 9,  5, 1,  0, 0}, // #463
+  {DBGFIELD("WriteFAddLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #464
+  {DBGFIELD("IIC_RSM_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #465
+  {DBGFIELD("IIC_SSE_RSQRTPS_RM_WriteFRsqrtLd") 1, false, false, 105, 11, 15, 1,  0, 0}, // #466
+  {DBGFIELD("IIC_SSE_RSQRTPS_RR_WriteFRsqrt") 1, false, false, 117, 9,  3, 1,  0, 0}, // #467
+  {DBGFIELD("IIC_SSE_RSQRTSS_RM_WriteFRsqrtLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #468
+  {DBGFIELD("WriteFRsqrtLd_ReadAfterLd") 1, false, false, 105, 11, 15, 1,  1, 1}, // #469
+  {DBGFIELD("IIC_SSE_RSQRTSS_RR_WriteFRsqrt") 1, false, false, 117, 9,  3, 1,  0, 0}, // #470
+  {DBGFIELD("WriteShiftLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd") 1, false, false, 91, 6,  3, 1,  2, 1}, // #471
+  {DBGFIELD("IIC_SCAS_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #472
+  {DBGFIELD("IIC_SET_M_WriteALU_WriteStore") 2, false, false, 289, 5, 21, 2,  0, 0}, // #473
+  {DBGFIELD("IIC_SET_R_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #474
+  {DBGFIELD("IIC_SSE_SFENCE_WriteFence") 1, false, false, 141, 5,  2, 1,  0, 0}, // #475
+  {DBGFIELD("IIC_SGDT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #476
+  {DBGFIELD("IIC_SHD16_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 281, 8,  3, 2,  0, 0}, // #477
+  {DBGFIELD("IIC_SHD16_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 281, 8,  3, 2,  0, 0}, // #478
+  {DBGFIELD("IIC_SHD16_REG_CL_WriteShift") 1, false, false, 97, 4,  2, 1,  0, 0}, // #479
+  {DBGFIELD("IIC_SHD16_REG_IM_WriteShift") 1, false, false, 97, 4,  2, 1,  0, 0}, // #480
+  {DBGFIELD("IIC_SHD32_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 281, 8,  3, 2,  0, 0}, // #481
+  {DBGFIELD("IIC_SHD32_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 281, 8,  3, 2,  0, 0}, // #482
+  {DBGFIELD("IIC_SHD32_REG_CL_WriteShift") 1, false, false, 97, 4,  2, 1,  0, 0}, // #483
+  {DBGFIELD("IIC_SHD32_REG_IM_WriteShift") 1, false, false, 97, 4,  2, 1,  0, 0}, // #484
+  {DBGFIELD("IIC_SHD64_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 281, 8,  3, 2,  0, 0}, // #485
+  {DBGFIELD("IIC_SHD64_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 281, 8,  3, 2,  0, 0}, // #486
+  {DBGFIELD("IIC_SHD64_REG_CL_WriteShift") 1, false, false, 97, 4,  2, 1,  0, 0}, // #487
+  {DBGFIELD("IIC_SHD64_REG_IM_WriteShift") 1, false, false, 97, 4,  2, 1,  0, 0}, // #488
+  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #489
+  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #490
+  {DBGFIELD("IIC_SIDT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #491
+  {DBGFIELD("IIC_SLDT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #492
+  {DBGFIELD("IIC_SMSW_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #493
+  {DBGFIELD("IIC_SSE_SQRTPD_RM_WriteFSqrtLd") 1, false, false, 105, 11, 23, 1,  0, 0}, // #494
+  {DBGFIELD("IIC_SSE_SQRTPD_RR_WriteFSqrt") 1, false, false, 117, 9, 24, 1,  0, 0}, // #495
+  {DBGFIELD("IIC_SSE_SQRTPS_RM_WriteFSqrtLd") 1, false, false, 105, 11, 23, 1,  0, 0}, // #496
+  {DBGFIELD("IIC_SSE_SQRTPS_RR_WriteFSqrt") 1, false, false, 117, 9, 24, 1,  0, 0}, // #497
+  {DBGFIELD("IIC_SSE_SQRTSD_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 105, 11, 23, 1,  1, 1}, // #498
+  {DBGFIELD("WriteFSqrtLd_ReadAfterLd") 1, false, false, 105, 11, 23, 1,  1, 1}, // #499
+  {DBGFIELD("IIC_SSE_SQRTSD_RR_WriteFSqrt") 1, false, false, 117, 9, 24, 1,  0, 0}, // #500
+  {DBGFIELD("IIC_SSE_SQRTSS_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 105, 11, 23, 1,  1, 1}, // #501
+  {DBGFIELD("IIC_SSE_SQRTSS_RR_WriteFSqrt") 1, false, false, 117, 9, 24, 1,  0, 0}, // #502
+  {DBGFIELD("WriteFSqrt")         1, false, false, 117, 9, 24, 1,  0, 0}, // #503
+  {DBGFIELD("IIC_STC_WriteALU")   1, false, false,  1, 2,  2, 1,  0, 0}, // #504
+  {DBGFIELD("IIC_STD_WriteALU")   1, false, false,  1, 2,  2, 1,  0, 0}, // #505
+  {DBGFIELD("IIC_STI_WriteALU")   1, false, false,  1, 2,  2, 1,  0, 0}, // #506
+  {DBGFIELD("IIC_SSE_STMXCSR_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #507
+  {DBGFIELD("IIC_STOS_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #508
+  {DBGFIELD("IIC_STR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #509
+  {DBGFIELD("IIC_FST80_WriteStore") 1, false, false, 133, 4,  2, 1,  0, 0}, // #510
+  {DBGFIELD("IIC_FST_WriteMove")  1, false, false,  1, 2,  2, 1,  0, 0}, // #511
+  {DBGFIELD("IIC_SWAPGS_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #512
+  {DBGFIELD("IIC_SYSCALL_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #513
+  {DBGFIELD("IIC_SYS_ENTER_EXIT_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #514
+  {DBGFIELD("IIC_JMP_REL_WriteJumpLd") 1, false, false, 91, 6,  3, 1,  0, 0}, // #515
+  {DBGFIELD("IIC_JMP_MEM_WriteJump") 1, false, false, 97, 4,  2, 1,  0, 0}, // #516
+  {DBGFIELD("IIC_JMP_REG_WriteJumpLd") 1, false, false, 91, 6,  3, 1,  0, 0}, // #517
+  {DBGFIELD("WriteJump")          1, false, false, 97, 4,  2, 1,  0, 0}, // #518
+  {DBGFIELD("IIC_FUCOMI_WriteFAdd") 1, false, false, 22, 7,  6, 1,  0, 0}, // #519
+  {DBGFIELD("IIC_FUCOM_WriteFAdd") 1, false, false, 22, 7,  6, 1,  0, 0}, // #520
+  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #521
+  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #522
+  {DBGFIELD("IIC_SSE_ALU_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #523
+  {DBGFIELD("IIC_SSE_ALU_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #524
+  {DBGFIELD("IIC_SSE_ALU_F32S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #525
+  {DBGFIELD("IIC_SSE_ALU_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #526
+  {DBGFIELD("WriteFVarBlendLd_ReadAfterLd") 1, false, false, 47, 10, 16, 1,  1, 1}, // #527
+  {DBGFIELD("WriteFVarBlend")     1, false, false, 57, 8, 19, 1,  0, 0}, // #528
+  {DBGFIELD("WriteFShuffleLd")    1, false, false, 29, 10,  3, 1,  0, 0}, // #529
+  {DBGFIELD("WriteFShuffle256")   1, false, false, 39, 8,  6, 1,  0, 0}, // #530
+  {DBGFIELD("WriteFShuffle")      1, false, false, 39, 8,  2, 1,  0, 0}, // #531
+  {DBGFIELD("IIC_SSE_ALU_F32P_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #532
+  {DBGFIELD("WriteCvtF2ILd")      1, false, false, 13, 9,  5, 1,  0, 0}, // #533
+  {DBGFIELD("WriteCvtF2I")        1, false, false, 22, 7,  6, 1,  0, 0}, // #534
+  {DBGFIELD("WriteCvtF2FLd")      1, false, false, 13, 9,  5, 1,  0, 0}, // #535
+  {DBGFIELD("WriteCvtF2F")        1, false, false, 22, 7,  6, 1,  0, 0}, // #536
+  {DBGFIELD("WriteCvtF2FLd_WriteRMW") 2, false, false, 294, 11, 25, 2,  0, 0}, // #537
+  {DBGFIELD("WriteCvtF2FLd_ReadAfterLd") 1, false, false, 13, 9,  5, 1,  1, 1}, // #538
+  {DBGFIELD("WriteCvtI2FLd_ReadAfterLd") 1, false, false, 13, 9, 10, 1,  1, 1}, // #539
+  {DBGFIELD("IIC_SSE_DIV_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #540
+  {DBGFIELD("IIC_SSE_DIV_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #541
+  {DBGFIELD("IIC_SSE_DIV_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #542
+  {DBGFIELD("IIC_VERR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #543
+  {DBGFIELD("IIC_VERW_REG_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #544
+  {DBGFIELD("IIC_VERW_MEM_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #545
+  {DBGFIELD("WriteStore")         1, false, false, 133, 4,  2, 1,  0, 0}, // #546
+  {DBGFIELD("WriteShuffle256")    1, false, false, 39, 8,  6, 1,  0, 0}, // #547
+  {DBGFIELD("IIC_ALU_MEM_WriteFBlendLd_WriteRMW") 2, false, false, 126, 7,  3, 2,  0, 0}, // #548
+  {DBGFIELD("WriteFShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #549
+  {DBGFIELD("WriteShuffle256Ld_ReadAfterLd") 1, false, false, 29, 10,  5, 1,  1, 1}, // #550
+  {DBGFIELD("IIC_ALU_MEM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 29, 10,  3, 1,  1, 1}, // #551
+  {DBGFIELD("IIC_ALU_NONMEM_WriteFShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #552
+  {DBGFIELD("IIC_SSE_MOVDQ")      0, false, false,  0, 0,  0, 0,  0, 0}, // #553
+  {DBGFIELD("IIC_SSE_MOV_LH")     0, false, false,  0, 0,  0, 0,  0, 0}, // #554
+  {DBGFIELD("IIC_SSE_MOVD_ToGP")  0, false, false,  0, 0,  0, 0,  0, 0}, // #555
+  {DBGFIELD("IIC_SSE_MOV_S_MR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #556
+  {DBGFIELD("IIC_SSE_MOV_S_RM")   0, false, false,  0, 0,  0, 0,  0, 0}, // #557
+  {DBGFIELD("IIC_SSE_MOV_S_RR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #558
+  {DBGFIELD("IIC_SSE_MOVQ_RR")    0, false, false,  0, 0,  0, 0,  0, 0}, // #559
+  {DBGFIELD("IIC_ALU_MEM_WriteMPSADLd_ReadAfterLd") 1, false, false, 152, 14, 16, 1,  1, 1}, // #560
+  {DBGFIELD("IIC_ALU_NONMEM_WriteMPSAD") 1, false, false, 166, 12, 16, 1,  0, 0}, // #561
+  {DBGFIELD("IIC_SSE_MUL_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #562
+  {DBGFIELD("IIC_SSE_MUL_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #563
+  {DBGFIELD("IIC_SSE_MUL_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #564
+  {DBGFIELD("WriteVecALULd")      1, false, false, 146, 6,  3, 1,  0, 0}, // #565
+  {DBGFIELD("IIC_SSE_INTALU_P_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #566
+  {DBGFIELD("IIC_SSE_INTALU_P_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #567
+  {DBGFIELD("WriteBlendLd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #568
+  {DBGFIELD("WriteBlend")         1, false, false, 137, 4,  2, 1,  0, 0}, // #569
+  {DBGFIELD("WriteVarBlendLd_ReadAfterLd") 1, false, false, 47, 10, 16, 1,  1, 1}, // #570
+  {DBGFIELD("WriteVarBlend")      1, false, false, 57, 8, 19, 1,  0, 0}, // #571
+  {DBGFIELD("IIC_ALU_MEM_WriteBlendLd_ReadAfterLd") 1, false, false, 146, 6,  3, 1,  1, 1}, // #572
+  {DBGFIELD("IIC_ALU_NONMEM_WriteBlend") 1, false, false, 137, 4,  2, 1,  0, 0}, // #573
+  {DBGFIELD("WriteCLMulLd_ReadAfterLd") 1, false, false, 178, 14,  5, 1,  1, 1}, // #574
+  {DBGFIELD("WriteCLMul")         1, false, false, 192, 12,  5, 1,  0, 0}, // #575
+  {DBGFIELD("IIC_SSE_ALU_F32P_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #576
+  {DBGFIELD("WriteFShuffle256Ld_ReadAfterLd") 1, false, false, 29, 10,  5, 1,  1, 1}, // #577
+  {DBGFIELD("IIC_ALU_MEM_WriteShuffleLd") 1, false, false, 29, 10,  3, 1,  0, 0}, // #578
+  {DBGFIELD("IIC_ALU_NONMEM_WriteShuffle") 1, false, false, 39, 8,  2, 1,  0, 0}, // #579
+  {DBGFIELD("WriteVarVecShift_ReadAfterLd") 1, false, false, 192, 12, 19, 1,  1, 1}, // #580
+  {DBGFIELD("WriteVarVecShift")   1, false, false, 192, 12, 19, 1,  0, 0}, // #581
+  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd") 1, false, false, 29, 10,  3, 1,  0, 0}, // #582
+  {DBGFIELD("WriteVarVecShiftLd_ReadAfterLd") 1, false, false, 178, 14, 16, 1,  1, 1}, // #583
+  {DBGFIELD("WriteFRcpLd")        1, false, false, 105, 11, 15, 1,  0, 0}, // #584
+  {DBGFIELD("WriteFRsqrtLd")      1, false, false, 105, 11, 15, 1,  0, 0}, // #585
+  {DBGFIELD("WriteFSqrtLd")       1, false, false, 105, 11, 23, 1,  0, 0}, // #586
+  {DBGFIELD("IIC_WAIT_WriteMicrocoded") 1, false, false,  1, 2,  1, 1,  0, 0}, // #587
+  {DBGFIELD("IIC_WRMSR_WriteSystem") 1, false, false,  1, 2,  1, 1,  0, 0}, // #588
+  {DBGFIELD("IIC_XADD_MEM_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #589
+  {DBGFIELD("IIC_XADD_REG_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #590
+  {DBGFIELD("IIC_XCHG_REG_WriteALU") 1, false, false,  1, 2,  2, 1,  0, 0}, // #591
+  {DBGFIELD("IIC_XCHG_MEM_WriteALULd_WriteRMW") 2, false, false,  3, 6,  3, 2,  0, 0}, // #592
+  {DBGFIELD("IIC_FXCH_WriteMove") 1, false, false,  1, 2,  2, 1,  0, 0}, // #593
+  {DBGFIELD("IIC_XLAT_WriteLoad") 1, false, false, 101, 3,  9, 1,  0, 0}, // #594
+  {DBGFIELD("MOV16rm")            1, false, false,  9, 4,  3, 1,  0, 0}, // #595
+  {DBGFIELD("MOVSX32rm16_MOVSX32rm8") 1, false, false, 101, 3,  9, 1,  0, 0}, // #596
+  {DBGFIELD("MOVZX32rm16_MOVZX32rm8") 1, false, false, 101, 3,  9, 1,  0, 0}, // #597
+  {DBGFIELD("CMOVA16rr_CMOVAE16rr_CMOVB16rr_CMOVBE16rr_CMOVE16rr_CMOVG16rr_CMOVGE16rr_CMOVL16rr_CMOVLE16rr_CMOVNE16rr_CMOVNO16rr_CMOVNP16rr_CMOVNS16rr_CMOVO16rr_CMOVP16rr_CMOVS16rr") 1, false, false, 63, 2, 19, 1,  0, 0}, // #598
+  {DBGFIELD("CMOVA32rr_CMOVA64rr_CMOVAE32rr_CMOVAE64rr_CMOVB32rr_CMOVB64rr_CMOVBE32rr_CMOVBE64rr_CMOVE32rr_CMOVE64rr_CMOVG32rr_CMOVG64rr_CMOVGE32rr_CMOVGE64rr_CMOVL32rr_CMOVL64rr_CMOVLE32rr_CMOVLE64rr_CMOVNE32rr_CMOVNE64rr_CMOVNO32rr_CMOVNO64rr_CMOVNP32rr_CMOVNP64rr_CMOVNS32rr_CMOVNS64rr_CMOVO32rr_CMOVO64rr_CMOVP32rr_CMOVP64rr_CMOVS32rr_CMOVS64rr") 1, false, false, 63, 2, 19, 1,  0, 0}, // #599
+  {DBGFIELD("CMOVA16rm_CMOVAE16rm_CMOVB16rm_CMOVBE16rm_CMOVE16rm_CMOVG16rm_CMOVGE16rm_CMOVL16rm_CMOVLE16rm_CMOVNE16rm_CMOVNO16rm_CMOVNP16rm_CMOVNS16rm_CMOVO16rm_CMOVP16rm_CMOVS16rm") 1, false, false, 305, 4, 16, 1,  1, 1}, // #600
+  {DBGFIELD("CMOVA32rm_CMOVA64rm_CMOVAE32rm_CMOVAE64rm_CMOVB32rm_CMOVB64rm_CMOVBE32rm_CMOVBE64rm_CMOVE32rm_CMOVE64rm_CMOVG32rm_CMOVG64rm_CMOVGE32rm_CMOVGE64rm_CMOVL32rm_CMOVL64rm_CMOVLE32rm_CMOVLE64rm_CMOVNE32rm_CMOVNE64rm_CMOVNO32rm_CMOVNO64rm_CMOVNP32rm_CMOVNP64rm_CMOVNS32rm_CMOVNS64rm_CMOVO32rm_CMOVO64rm_CMOVP32rm_CMOVP64rm_CMOVS32rm_CMOVS64rm") 1, false, false, 305, 4, 16, 1,  1, 1}, // #601
+  {DBGFIELD("XCHG16ar_XCHG16rr_XCHG32ar_XCHG32ar64_XCHG32rr_XCHG64ar_XCHG64rr_XCHG8rr") 1, false, false, 176, 2, 19, 1,  0, 0}, // #602
+  {DBGFIELD("XCHG16rm_XCHG32rm_XCHG64rm_XCHG8rm") 8, false, false,  0, 0, 27, 1,  0, 0}, // #603
+  {DBGFIELD("XLAT")               3, false, false,  0, 0,  5, 1,  0, 0}, // #604
+  {DBGFIELD("PUSH16rmm_PUSH32rmm") 1, false, false, 309, 4,  2, 1,  0, 0}, // #605
+  {DBGFIELD("PUSHF16_PUSHF32")    4, false, false, 313, 12,  2, 1,  0, 0}, // #606
+  {DBGFIELD("PUSHA16_PUSHA32")    19, false, false,  0, 0,  2, 1,  0, 0}, // #607
+  {DBGFIELD("POP16rmm_POP32rmm")  1, false, false, 309, 4,  2, 1,  0, 0}, // #608
+  {DBGFIELD("POPF16")             9, false, false,  0, 0,  2, 1,  0, 0}, // #609
+  {DBGFIELD("POPF32")             9, false, false,  0, 0,  2, 1,  0, 0}, // #610
+  {DBGFIELD("POPA16_POPA32")      18, false, false,  0, 0,  2, 1,  0, 0}, // #611
+  {DBGFIELD("LAHF_SAHF")          1, false, false, 97, 4,  2, 1,  0, 0}, // #612
+  {DBGFIELD("BSWAP32r")           1, false, false, 137, 4,  2, 1,  0, 0}, // #613
+  {DBGFIELD("BSWAP64r")           2, false, false, 325, 6,  2, 1,  0, 0}, // #614
+  {DBGFIELD("MOVBE16rm_MOVBE64rm") 1, false, false, 305, 4, 16, 1,  0, 0}, // #615
+  {DBGFIELD("MOVBE32rm")          2, false, false, 146, 6,  2, 1,  0, 0}, // #616
+  {DBGFIELD("MOVBE16mr")          3, false, false, 331, 7,  2, 1,  0, 0}, // #617
+  {DBGFIELD("MOVBE32mr")          3, false, false, 338, 7,  2, 1,  0, 0}, // #618
+  {DBGFIELD("MOVBE64mr")          4, false, false, 345, 9,  2, 1,  0, 0}, // #619
+  {DBGFIELD("ADD16mi_ADD16mi8_ADD16mr_ADD32mi_ADD32mi8_ADD32mr_ADD64mi32_ADD64mi8_ADD64mr_ADD8mi_ADD8mi8_ADD8mr_SUB16mi_SUB16mi8_SUB16mr_SUB32mi_SUB32mi8_SUB32mr_SUB64mi32_SUB64mi8_SUB64mr_SUB8mi_SUB8mi8_SUB8mr") 1, false, false, 354, 5,  2, 1,  0, 0}, // #620
+  {DBGFIELD("ADC16ri_ADC16ri8_ADC16rr_ADC16rr_REV_ADC32ri_ADC32ri8_ADC32rr_ADC32rr_REV_ADC64ri32_ADC64ri8_ADC64rr_ADC64rr_REV_ADC8ri_ADC8ri8_ADC8rr_ADC8rr_REV_SBB16ri_SBB16ri8_SBB16rr_SBB16rr_REV_SBB32ri_SBB32ri8_SBB32rr_SBB32rr_REV_SBB64ri32_SBB64ri8_SBB64rr_SBB64rr_REV_SBB8ri_SBB8ri8_SBB8rr_SBB8rr_REV") 1, false, false, 63, 2, 19, 1,  0, 0}, // #621
+  {DBGFIELD("ADC16rm_ADC32rm_ADC64rm_ADC8rm_SBB16rm_SBB32rm_SBB64rm_SBB8rm") 1, false, false, 305, 4, 16, 1,  1, 1}, // #622
+  {DBGFIELD("ADC16mi_ADC16mi8_ADC16mr_ADC32mi_ADC32mi8_ADC32mr_ADC64mi32_ADC64mi8_ADC64mr_ADC8mi_ADC8mi8_ADC8mr_SBB16mi_SBB16mi8_SBB16mr_SBB32mi_SBB32mi8_SBB32mr_SBB64mi32_SBB64mi8_SBB64mr_SBB8mi_SBB8mi8_SBB8mr") 1, false, false, 359, 5,  2, 1,  0, 0}, // #623
+  {DBGFIELD("DEC16m_DEC32m_DEC64m_DEC8m_INC16m_INC32m_INC64m_INC8m_NEG16m_NEG32m_NEG64m_NEG8m_NOT16m_NOT32m_NOT64m_NOT8m") 1, false, false, 364, 5,  2, 1,  0, 0}, // #624
+  {DBGFIELD("IMUL16r_IMUL16rr")   4, false, false, 369, 7,  9, 1,  0, 0}, // #625
+  {DBGFIELD("IMUL16rm")           4, false, false, 369, 7,  9, 1,  0, 0}, // #626
+  {DBGFIELD("IMUL16rmi_IMUL16rmi8") 4, false, false, 369, 7,  9, 1,  0, 0}, // #627
+  {DBGFIELD("IMUL16rri_IMUL16rri8") 4, false, false, 369, 7,  9, 1,  0, 0}, // #628
+  {DBGFIELD("MUL16r")             4, false, false, 369, 7,  9, 1,  0, 0}, // #629
+  {DBGFIELD("IMUL16m")            5, false, false, 376, 9, 10, 1,  0, 0}, // #630
+  {DBGFIELD("MUL16m")             5, false, false, 376, 9, 10, 1,  0, 0}, // #631
+  {DBGFIELD("IMUL32r_IMUL32rr")   3, false, false, 369, 7,  9, 1,  0, 0}, // #632
+  {DBGFIELD("IMUL32rm")           3, false, false, 369, 7,  9, 1,  0, 0}, // #633
+  {DBGFIELD("IMUL32rmi_IMUL32rmi8") 3, false, false, 369, 7,  9, 1,  0, 0}, // #634
+  {DBGFIELD("IMUL32rri_IMUL32rri8") 3, false, false, 369, 7,  9, 1,  0, 0}, // #635
+  {DBGFIELD("MUL32r")             3, false, false, 369, 7,  9, 1,  0, 0}, // #636
+  {DBGFIELD("IMUL32m")            4, false, false, 376, 9, 10, 1,  0, 0}, // #637
+  {DBGFIELD("MUL32m")             4, false, false, 376, 9, 10, 1,  0, 0}, // #638
+  {DBGFIELD("IMUL64r_IMUL64rr")   2, false, false, 385, 11,  6, 1,  0, 0}, // #639
+  {DBGFIELD("IMUL64rm")           2, false, false, 385, 11,  6, 1,  0, 0}, // #640
+  {DBGFIELD("IMUL64rmi32_IMUL64rmi8") 2, false, false, 385, 11,  6, 1,  0, 0}, // #641
+  {DBGFIELD("IMUL64rri32_IMUL64rri8") 2, false, false, 385, 11,  6, 1,  0, 0}, // #642
+  {DBGFIELD("MUL64r")             2, false, false, 385, 11,  6, 1,  0, 0}, // #643
+  {DBGFIELD("IMUL64m")            3, false, false, 396, 13,  5, 1,  0, 0}, // #644
+  {DBGFIELD("MUL64m")             3, false, false, 396, 13,  5, 1,  0, 0}, // #645
+  {DBGFIELD("MULX32rr")           3, false, false, 409, 8,  9, 1,  0, 0}, // #646
+  {DBGFIELD("MULX32rm")           4, false, false, 417, 10, 10, 1,  0, 0}, // #647
+  {DBGFIELD("MULX64rr")           2, false, false, 385, 11,  9, 1,  0, 0}, // #648
+  {DBGFIELD("MULX64rm")           3, false, false, 396, 13, 10, 1,  0, 0}, // #649
+  {DBGFIELD("DIV8r")              9, false, false, 427, 15, 28, 1,  0, 0}, // #650
+  {DBGFIELD("DIV16r")             10, false, false, 427, 15, 29, 1,  0, 0}, // #651
+  {DBGFIELD("DIV32r")             10, false, false, 427, 15, 28, 1,  0, 0}, // #652
+  {DBGFIELD("DIV64r")             36, false, false, 427, 15, 30, 1,  0, 0}, // #653
+  {DBGFIELD("IDIV8r")             9, false, false, 427, 15, 29, 1,  0, 0}, // #654
+  {DBGFIELD("IDIV16r")            10, false, false, 427, 15, 29, 1,  0, 0}, // #655
+  {DBGFIELD("IDIV32r")            9, false, false, 427, 15, 28, 1,  0, 0}, // #656
+  {DBGFIELD("IDIV64r")            59, false, false, 427, 15, 31, 1,  0, 0}, // #657
+  {DBGFIELD("AND16mi_AND16mi8_AND16mr_AND32mi_AND32mi8_AND32mr_AND64mi32_AND64mi8_AND64mr_AND8mi_AND8mi8_AND8mr_OR16mi_OR16mi8_OR16mr_OR32mi_OR32mi8_OR32mr_OR64mi32_OR64mi8_OR64mr_OR8mi_OR8mi8_OR8mr_XOR16mi_XOR16mi8_XOR16mr_XOR32mi_XOR32mi8_XOR32mr_XOR64mi32_XOR64mi8_XOR64mr_XOR8mi_XOR8mi8_XOR8mr") 1, false, false, 354, 5,  2, 1,  0, 0}, // #658
+  {DBGFIELD("OR32mrLocked")       1, false, false, 354, 5,  2, 1,  0, 0}, // #659
+  {DBGFIELD("SAR16m1_SAR16mi_SAR32m1_SAR32mi_SAR64m1_SAR64mi_SAR8m1_SAR8mi_SHL16m1_SHL16mi_SHL32m1_SHL32mi_SHL64m1_SHL64mi_SHL8m1_SHL8mi_SHR16m1_SHR16mi_SHR32m1_SHR32mi_SHR64m1_SHR64mi_SHR8m1_SHR8mi") 4, false, false, 442, 7,  2, 1,  0, 0}, // #660
+  {DBGFIELD("SAR16rCL_SAR32rCL_SAR64rCL_SAR8rCL_SHL16rCL_SHL32rCL_SHL64rCL_SHL8rCL_SHR16rCL_SHR32rCL_SHR64rCL_SHR8rCL") 3, false, false, 449, 4, 19, 1,  0, 0}, // #661
+  {DBGFIELD("SAR16mCL_SAR32mCL_SAR64mCL_SAR8mCL_SHL16mCL_SHL32mCL_SHL64mCL_SHL8mCL_SHR16mCL_SHR32mCL_SHR64mCL_SHR8mCL") 6, false, false, 453, 8,  2, 1,  0, 0}, // #662
+  {DBGFIELD("ROL16r1_ROL32r1_ROL64r1_ROL8r1_ROR16r1_ROR32r1_ROR64r1_ROR8r1") 2, false, false, 461, 4,  2, 1,  0, 0}, // #663
+  {DBGFIELD("ROL16mi_ROL32mi_ROL64mi_ROL8mi_ROR16mi_ROR32mi_ROR64mi_ROR8mi") 5, false, false, 465, 7,  2, 1,  0, 0}, // #664
+  {DBGFIELD("ROL16rCL_ROL32rCL_ROL64rCL_ROL8rCL_ROR16rCL_ROR32rCL_ROR64rCL_ROR8rCL") 3, false, false, 449, 4, 19, 1,  0, 0}, // #665
+  {DBGFIELD("ROL16mCL_ROL32mCL_ROL64mCL_ROL8mCL_ROR16mCL_ROR32mCL_ROR64mCL_ROR8mCL") 6, false, false,  0, 0,  2, 1,  0, 0}, // #666
+  {DBGFIELD("RCL16r1_RCL32r1_RCL64r1_RCL8r1_RCR16r1_RCR32r1_RCR64r1_RCR8r1") 3, false, false, 472, 4, 19, 1,  0, 0}, // #667
+  {DBGFIELD("RCL16m1_RCL32m1_RCL64m1_RCL8m1_RCR16m1_RCR32m1_RCR64m1_RCR8m1") 6, false, false,  0, 0,  2, 1,  0, 0}, // #668
+  {DBGFIELD("RCL16rCL_RCL16ri_RCL32rCL_RCL32ri_RCL64rCL_RCL64ri_RCL8rCL_RCL8ri_RCR16rCL_RCR16ri_RCR32rCL_RCR32ri_RCR64rCL_RCR64ri_RCR8rCL_RCR8ri") 8, false, false,  1, 2, 16, 1,  0, 0}, // #669
+  {DBGFIELD("RCL16mCL_RCL16mi_RCL32mCL_RCL32mi_RCL64mCL_RCL64mi_RCL8mCL_RCL8mi_RCR16mCL_RCR16mi_RCR32mCL_RCR32mi_RCR64mCL_RCR64mi_RCR8mCL_RCR8mi") 11, false, false,  0, 0,  2, 1,  0, 0}, // #670
+  {DBGFIELD("SHLD16rri8_SHRD16rri8") 1, false, false, 22, 7,  6, 1,  0, 0}, // #671
+  {DBGFIELD("SHLD32rri8_SHRD32rri8") 1, false, false, 22, 7,  6, 1,  0, 0}, // #672
+  {DBGFIELD("SHLD64rri8_SHRD64rri8") 1, false, false, 22, 7,  6, 1,  0, 0}, // #673
+  {DBGFIELD("SHLD16mri8_SHRD16mri8") 5, false, false,  0, 0,  2, 1,  0, 0}, // #674
+  {DBGFIELD("SHLD32mri8_SHRD32mri8") 5, false, false,  0, 0,  2, 1,  0, 0}, // #675
+  {DBGFIELD("SHLD64mri8_SHRD64mri8") 5, false, false,  0, 0,  2, 1,  0, 0}, // #676
+  {DBGFIELD("SHLD16rrCL")         4, false, false,  1, 2,  6, 1,  0, 0}, // #677
+  {DBGFIELD("SHLD32rrCL")         4, false, false,  1, 2,  6, 1,  0, 0}, // #678
+  {DBGFIELD("SHLD64rrCL")         4, false, false,  1, 2,  6, 1,  0, 0}, // #679
+  {DBGFIELD("SHRD16rrCL")         4, false, false,  1, 2,  9, 1,  0, 0}, // #680
+  {DBGFIELD("SHRD32rrCL")         4, false, false,  1, 2,  9, 1,  0, 0}, // #681
+  {DBGFIELD("SHRD64rrCL")         4, false, false,  1, 2,  9, 1,  0, 0}, // #682
+  {DBGFIELD("SHLD16mrCL_SHRD16mrCL") 7, false, false,  0, 0,  2, 1,  0, 0}, // #683
+  {DBGFIELD("SHLD32mrCL_SHRD32mrCL") 7, false, false,  0, 0,  2, 1,  0, 0}, // #684
+  {DBGFIELD("SHLD64mrCL_SHRD64mrCL") 7, false, false,  0, 0,  2, 1,  0, 0}, // #685
+  {DBGFIELD("BT16ri8_BT32ri8_BT64ri8") 1, false, false, 97, 4,  2, 1,  0, 0}, // #686
+  {DBGFIELD("BT16rr_BT32rr_BT64rr") 1, false, false, 97, 4,  2, 1,  0, 0}, // #687
+  {DBGFIELD("BT16mr_BT32mr_BT64mr") 10, false, false,  0, 0,  2, 1,  0, 0}, // #688
+  {DBGFIELD("BT16mi8_BT32mi8_BT64mi8") 1, false, false, 91, 6,  3, 1,  0, 0}, // #689
+  {DBGFIELD("BTC16ri8_BTC32ri8_BTC64ri8_BTR16ri8_BTR32ri8_BTR64ri8_BTS16ri8_BTS32ri8_BTS64ri8") 1, false, false, 97, 4,  2, 1,  0, 0}, // #690
+  {DBGFIELD("BTC16rr_BTC32rr_BTC64rr_BTR16rr_BTR32rr_BTS16rr_BTS32rr_BTS64rr") 1, false, false, 97, 4,  2, 1,  0, 0}, // #691
+  {DBGFIELD("BTR64rr")            1, false, false, 97, 4,  2, 1,  0, 0}, // #692
+  {DBGFIELD("BTC16mr_BTC32mr_BTC64mr_BTR16mr_BTR32mr_BTR64mr_BTS16mr_BTS32mr_BTS64mr") 11, false, false,  0, 0,  2, 1,  0, 0}, // #693
+  {DBGFIELD("BTC16mi8_BTC32mi8_BTC64mi8_BTR16mi8_BTR32mi8_BTR64mi8_BTS16mi8_BTS32mi8_BTS64mi8") 1, false, false, 91, 6,  3, 1,  0, 0}, // #694
+  {DBGFIELD("BSF16rr_BSF32rr_BSF64rr_BSR16rr_BSR32rr_BSR64rr") 1, false, false, 22, 7,  6, 1,  0, 0}, // #695
+  {DBGFIELD("BSF16rm_BSF32rm_BSF64rm_BSR16rm_BSR32rm_BSR64rm") 1, false, false, 13, 9,  5, 1,  0, 0}, // #696
+  {DBGFIELD("SETAEr_SETAr_SETBEr_SETBr_SETEr_SETGEr_SETGr_SETLEr_SETLr_SETNEr_SETNOr_SETNPr_SETNSr_SETOr_SETPr_SETSr") 1, false, false, 97, 4,  2, 1,  0, 0}, // #697
+  {DBGFIELD("SETAEm_SETAm_SETBEm_SETBm_SETEm_SETGEm_SETGm_SETLEm_SETLm_SETNEm_SETNOm_SETNPm_SETNSm_SETOm_SETPm_SETSm") 3, false, false, 331, 7,  2, 1,  0, 0}, // #698
+  {DBGFIELD("CLD")                3, false, false, 476, 9,  2, 1,  0, 0}, // #699
+  {DBGFIELD("STD")                3, false, false, 476, 9,  2, 1,  0, 0}, // #700
+  {DBGFIELD("TZCNT16rr_TZCNT32rr_TZCNT64rr") 1, false, false, 22, 7,  6, 1,  0, 0}, // #701
+  {DBGFIELD("TZCNT16rm_TZCNT32rm_TZCNT64rm") 1, false, false, 13, 9,  5, 1,  0, 0}, // #702
+  {DBGFIELD("ANDN32rr_ANDN64rr")  1, false, false, 137, 4,  2, 1,  0, 0}, // #703
+  {DBGFIELD("ANDN32rm_ANDN64rm")  1, false, false, 146, 6,  9, 1,  0, 0}, // #704
+  {DBGFIELD("BLSI32rr_BLSI64rr_BLSMSK32rr_BLSMSK64rr_BLSR32rr_BLSR64rr") 1, false, false, 137, 4,  2, 1,  0, 0}, // #705
+  {DBGFIELD("BLSI32rm_BLSI64rm_BLSMSK32rm_BLSMSK64rm_BLSR32rm_BLSR64rm") 1, false, false, 146, 6,  9, 1,  0, 0}, // #706
+  {DBGFIELD("BEXTR32rr_BEXTR64rr") 1, false, false, 63, 2, 19, 1,  0, 0}, // #707
+  {DBGFIELD("BEXTR32rm_BEXTR64rm") 1, false, false, 305, 4, 16, 1,  0, 0}, // #708
+  {DBGFIELD("BZHI32rr_BZHI64rr")  1, false, false, 137, 4,  2, 1,  0, 0}, // #709
+  {DBGFIELD("BZHI32rm_BZHI64rm")  1, false, false, 146, 6,  9, 1,  0, 0}, // #710
+  {DBGFIELD("PDEP32rr_PDEP64rr_PEXT32rr_PEXT64rr") 1, false, false, 22, 7,  6, 1,  0, 0}, // #711
+  {DBGFIELD("PDEP32rm_PDEP64rm_PEXT32rm_PEXT64rm") 1, false, false, 13, 9,  5, 1,  0, 0}, // #712
+  {DBGFIELD("JCXZ_JRCXZ")         2, false, false, 485, 7,  2, 1,  0, 0}, // #713
+  {DBGFIELD("LOOP")               7, false, false,  0, 0,  2, 1,  0, 0}, // #714
+  {DBGFIELD("LOOPE")              7, false, false,  0, 0,  2, 1,  0, 0}, // #715
+  {DBGFIELD("LOOPNE")             7, false, false,  0, 0,  2, 1,  0, 0}, // #716
+  {DBGFIELD("CALL16r_CALL32r")    3, false, false, 492, 10,  2, 1,  0, 0}, // #717
+  {DBGFIELD("CALL16m_CALL32m")    4, false, false, 502, 10,  2, 1,  0, 0}, // #718
+  {DBGFIELD("LRETL_LRETQ_LRETW_RETL_RETQ_RETW") 2, false, false, 512, 8,  2, 1,  0, 0}, // #719
+  {DBGFIELD("LRETIL_LRETIQ_LRETIW") 4, false, false, 520, 10,  2, 1,  0, 0}, // #720
+  {DBGFIELD("RETIL_RETIQ_RETIW")  4, false, false, 520, 10,  2, 1,  0, 0}, // #721
+  {DBGFIELD("BOUNDS16rm_BOUNDS32rm") 15, false, false,  0, 0,  2, 1,  0, 0}, // #722
+  {DBGFIELD("INTO")               4, false, false,  0, 0,  2, 1,  0, 0}, // #723
+  {DBGFIELD("LODSB_LODSW")        3, false, false, 305, 4,  2, 1,  0, 0}, // #724
+  {DBGFIELD("LODSL_LODSQ")        2, false, false,  9, 4,  2, 1,  0, 0}, // #725
+  {DBGFIELD("STOSB_STOSL_STOSQ_STOSW") 3, false, false,  3, 6,  2, 1,  0, 0}, // #726
+  {DBGFIELD("MOVSB_MOVSL_MOVSQ_MOVSW") 5, false, false, 530, 6,  9, 1,  0, 0}, // #727
+  {DBGFIELD("MOVSLDUPrm")         5, false, false, 530, 6,  9, 1,  0, 0}, // #728
+  {DBGFIELD("MOVSLDUPrr")         5, false, false, 530, 6,  9, 1,  0, 0}, // #729
+  {DBGFIELD("SCASB_SCASL_SCASQ_SCASW") 3, false, false, 305, 4,  2, 1,  0, 0}, // #730
+  {DBGFIELD("CMPSB_CMPSL_CMPSQ_CMPSW") 5, false, false, 536, 4,  9, 1,  0, 0}, // #731
+  {DBGFIELD("XADD16rm_XADD32rm_XADD64rm_XADD8rm") 5, false, false,  0, 0,  2, 1,  0, 0}, // #732
+  {DBGFIELD("CMPXCHG16rm_CMPXCHG32rm_CMPXCHG64rm") 6, false, false,  0, 0,  2, 1,  0, 0}, // #733
+  {DBGFIELD("CMPXCHG8rm")         6, false, false,  0, 0,  2, 1,  0, 0}, // #734
+  {DBGFIELD("CMPXCHG8B")          15, false, false,  0, 0,  2, 1,  0, 0}, // #735
+  {DBGFIELD("CMPXCHG16B")         22, false, false,  0, 0,  2, 1,  0, 0}, // #736
+  {DBGFIELD("PAUSE")              5, false, false, 540, 9,  2, 1,  0, 0}, // #737
+  {DBGFIELD("LEAVE_LEAVE64")      3, false, false, 305, 4,  2, 1,  0, 0}, // #738
+  {DBGFIELD("XGETBV")             8, false, false,  0, 0,  2, 1,  0, 0}, // #739
+  {DBGFIELD("RDTSC")              15, false, false,  0, 0,  2, 1,  0, 0}, // #740
+  {DBGFIELD("RDTSCP")             15, false, false,  0, 0,  2, 1,  0, 0}, // #741
+  {DBGFIELD("RDPMC")              34, false, false,  0, 0,  2, 1,  0, 0}, // #742
+  {DBGFIELD("RDRAND16r_RDRAND32r_RDRAND64r") 17, false, false, 549, 5,  2, 1,  0, 0}, // #743
+  {DBGFIELD("LD_Frr")             1, false, false, 554, 4,  2, 1,  0, 0}, // #744
+  {DBGFIELD("LD_F80m")            4, false, false, 558, 6,  9, 1,  0, 0}, // #745
+  {DBGFIELD("FBLDm")              43, false, false,  0, 0, 32, 1,  0, 0}, // #746
+  {DBGFIELD("ST_FPrr_ST_Frr")     1, false, false, 554, 4,  2, 1,  0, 0}, // #747
+  {DBGFIELD("ST_FP80m")           7, false, false, 564, 6,  2, 1,  0, 0}, // #748
+  {DBGFIELD("FBSTPm")             226, false, false,  0, 0,  2, 1,  0, 0}, // #749
+  {DBGFIELD("XCH_F")              1, false, false,  0, 0,  2, 1,  0, 0}, // #750
+  {DBGFIELD("ILD_F16m_ILD_F32m_ILD_F64m") 2, false, false, 570, 6, 16, 1,  0, 0}, // #751
+  {DBGFIELD("IST_F16m_IST_F32m_IST_FP16m_IST_FP32m") 3, false, false, 294, 11,  5, 1,  0, 0}, // #752
+  {DBGFIELD("LD_F0")              1, false, false, 554, 4,  2, 1,  0, 0}, // #753
+  {DBGFIELD("LD_F1")              2, false, false, 554, 4,  2, 1,  0, 0}, // #754
+  {DBGFIELD("FLDPI")              2, false, false, 554, 4,  2, 1,  0, 0}, // #755
+  {DBGFIELD("CMOVBE_F_CMOVBE_Fp32_CMOVBE_Fp64_CMOVBE_Fp80_CMOVB_F_CMOVB_Fp32_CMOVB_Fp64_CMOVB_Fp80_CMOVNBE_F_CMOVNBE_Fp32_CMOVNBE_Fp64_CMOVNBE_Fp80_CMOVNB_F_CMOVNB_Fp32_CMOVNB_Fp64_CMOVNB_Fp80_CMOVNE_F_CMOVNE_Fp32_CMOVNE_Fp64_CMOVNE_Fp80_CMOVNP_F_CMOVNP_Fp32_CMOVNP_Fp64_CMOVNP_Fp80_CMOVP_F_CMOVP_Fp32_CMOVP_Fp64_CMOVP_Fp80") 3, false, false, 192, 12, 19, 1,  0, 0}, // #756
+  {DBGFIELD("FNSTSW16r")          2, false, false, 576, 9,  2, 1,  0, 0}, // #757
+  {DBGFIELD("FNSTSWm")            3, false, false, 585, 11, 16, 1,  0, 0}, // #758
+  {DBGFIELD("FLDCW16m")           3, false, false, 596, 11,  5, 1,  0, 0}, // #759
+  {DBGFIELD("FNSTCW16m")          3, false, false, 492, 10,  2, 1,  0, 0}, // #760
+  {DBGFIELD("FDECSTP_FINCSTP")    1, false, false, 554, 4,  2, 1,  0, 0}, // #761
+  {DBGFIELD("FFREE")              1, false, false, 554, 4,  2, 1,  0, 0}, // #762
+  {DBGFIELD("FSAVEm")             147, false, false,  0, 0,  2, 1,  0, 0}, // #763
+  {DBGFIELD("FRSTORm")            90, false, false,  0, 0,  2, 1,  0, 0}, // #764
+  {DBGFIELD("ABS_F_ABS_Fp32_ABS_Fp64_ABS_Fp80") 1, false, false, 117, 9,  2, 1,  0, 0}, // #765
+  {DBGFIELD("CHS_F_CHS_Fp32_CHS_Fp64_CHS_Fp80") 1, false, false, 117, 9,  2, 1,  0, 0}, // #766
+  {DBGFIELD("COMP_FST0r_COM_FST0r") 1, false, false, 22, 7,  2, 1,  0, 0}, // #767
+  {DBGFIELD("UCOM_FPr_UCOM_Fr")   1, false, false, 22, 7,  2, 1,  0, 0}, // #768
+  {DBGFIELD("FCOM32m_FCOM64m_FCOMP32m_FCOMP64m") 2, false, false, 13, 9,  2, 1,  0, 0}, // #769
+  {DBGFIELD("FCOMPP")             2, false, false, 554, 4,  2, 1,  0, 0}, // #770
+  {DBGFIELD("UCOM_FPPr")          2, false, false, 554, 4,  2, 1,  0, 0}, // #771
+  {DBGFIELD("COM_FIPr_COM_FIr")   3, false, false, 554, 4,  2, 1,  0, 0}, // #772
+  {DBGFIELD("UCOM_FIPr_UCOM_FIr") 3, false, false, 554, 4,  2, 1,  0, 0}, // #773
+  {DBGFIELD("FICOM16m_FICOM32m_FICOMP16m_FICOMP32m") 3, false, false, 607, 9,  2, 1,  0, 0}, // #774
+  {DBGFIELD("TST_F_TST_Fp32_TST_Fp64_TST_Fp80") 1, false, false, 22, 7,  2, 1,  0, 0}, // #775
+  {DBGFIELD("FXAM")               2, false, false, 616, 7,  2, 1,  0, 0}, // #776
+  {DBGFIELD("FPREM")              28, false, false,  0, 0, 23, 1,  0, 0}, // #777
+  {DBGFIELD("FPREM1")             28, false, false,  0, 0, 23, 1,  0, 0}, // #778
+  {DBGFIELD("FRNDINT")            17, false, false,  0, 0, 20, 1,  0, 0}, // #779
+  {DBGFIELD("FSCALE")             50, false, false,  0, 0, 33, 1,  0, 0}, // #780
+  {DBGFIELD("FXTRACT")            17, false, false,  0, 0, 24, 1,  0, 0}, // #781
+  {DBGFIELD("FNOP")               1, false, false, 554, 4,  2, 1,  0, 0}, // #782
+  {DBGFIELD("WAIT")               2, false, false, 554, 4,  2, 1,  0, 0}, // #783
+  {DBGFIELD("FNCLEX")             5, false, false, 623, 2,  2, 1,  0, 0}, // #784
+  {DBGFIELD("FNINIT")             26, false, false,  0, 0,  2, 1,  0, 0}, // #785
+  {DBGFIELD("MMX_MOVD64from64rr_MMX_MOVD64grr") 1, false, false, 117, 9,  2, 1,  0, 0}, // #786
+  {DBGFIELD("MOVPDI2DIrr_VMOVPDI2DIrr") 1, false, false, 117, 9,  2, 1,  0, 0}, // #787
+  {DBGFIELD("MMX_MOVD64rr_MMX_MOVD64to64rr") 1, false, false, 39, 8,  2, 1,  0, 0}, // #788
+  {DBGFIELD("MOVDI2PDIrr_VMOVDI2PDIrr") 1, false, false, 39, 8,  2, 1,  0, 0}, // #789
+  {DBGFIELD("VMOVPQIto64rr")      1, false, false, 117, 9,  2, 1,  0, 0}, // #790
+  {DBGFIELD("VMOV64toPQIrr")      1, false, false, 39, 8,  2, 1,  0, 0}, // #791
+  {DBGFIELD("MMX_MOVQ64rr_MMX_MOVQ64rr_REV") 1, false, false, 26, 3,  2, 1,  0, 0}, // #792
+  {DBGFIELD("MOVDQArr_MOVDQArr_REV_VMOVDQAYrr_VMOVDQAYrr_REV_VMOVDQArr_VMOVDQArr_REV") 1, false, false, 26, 3,  2, 1,  0, 0}, // #793
+  {DBGFIELD("MOVDQUrr_MOVDQUrr_REV_VMOVDQUYrr_VMOVDQUYrr_REV_VMOVDQUrr_VMOVDQUrr_REV") 1, false, false, 26, 3,  2, 1,  0, 0}, // #794
+  {DBGFIELD("MMX_MOVDQ2Qrr")      2, false, false, 625, 9,  2, 1,  0, 0}, // #795
+  {DBGFIELD("MMX_MOVQ2DQrr")      1, false, false, 26, 3,  2, 1,  0, 0}, // #796
+  {DBGFIELD("MMX_PACKSSDWirr_MMX_PACKSSWBirr_MMX_PACKUSWBirr") 3, false, false, 634, 8, 19, 1,  0, 0}, // #797
+  {DBGFIELD("MMX_PACKSSDWirm_MMX_PACKSSWBirm_MMX_PACKUSWBirm") 3, false, false, 642, 10,  9, 1,  0, 0}, // #798
+  {DBGFIELD("VPMOVSXBQYrr_VPMOVSXBWYrr_VPMOVSXDQYrr_VPMOVZXBQYrr_VPMOVZXBWYrr_VPMOVZXDQYrr") 1, false, false, 39, 8,  6, 1,  0, 0}, // #799
+  {DBGFIELD("PBLENDWrri")         1, false, false, 39, 8,  2, 1,  0, 0}, // #800
+  {DBGFIELD("VPBLENDWYrri_VPBLENDWrri") 1, false, false, 39, 8,  2, 1,  0, 0}, // #801
+  {DBGFIELD("PBLENDWrmi")         2, false, false, 29, 10,  9, 1,  1, 1}, // #802
+  {DBGFIELD("VPBLENDWYrmi_VPBLENDWrmi") 2, false, false, 29, 10,  9, 1,  1, 1}, // #803
+  {DBGFIELD("VPBLENDDYrri_VPBLENDDrri") 1, false, false, 26, 3,  2, 1,  0, 0}, // #804
+  {DBGFIELD("VPBLENDDYrmi_VPBLENDDrmi") 2, false, false, 17, 5,  9, 1,  1, 1}, // #805
+  {DBGFIELD("MMX_MASKMOVQ_MMX_MASKMOVQ64") 4, false, false, 652, 12, 34, 1,  0, 0}, // #806
+  {DBGFIELD("MASKMOVDQU_MASKMOVDQU64_VMASKMOVDQU_VMASKMOVDQU64") 10, false, false, 664, 7,  7, 1,  0, 0}, // #807
+  {DBGFIELD("VPMASKMOVDYrm_VPMASKMOVDrm_VPMASKMOVQYrm_VPMASKMOVQrm") 3, false, false, 47, 10,  9, 1,  1, 1}, // #808
+  {DBGFIELD("VPMASKMOVDYmr_VPMASKMOVDmr_VPMASKMOVQYmr_VPMASKMOVQmr") 4, false, false, 671, 15, 34, 1,  0, 0}, // #809
+  {DBGFIELD("MMX_PMOVMSKBrr")     1, false, false, 117, 9,  6, 1,  0, 0}, // #810
+  {DBGFIELD("PMOVMSKBrr_VPMOVMSKBrr") 1, false, false, 117, 9,  6, 1,  0, 0}, // #811
+  {DBGFIELD("VPMOVMSKBYrr")       1, false, false, 117, 9,  6, 1,  0, 0}, // #812
+  {DBGFIELD("MMX_PEXTRWirri")     2, false, false, 686, 12, 19, 1,  0, 0}, // #813
+  {DBGFIELD("PEXTRBrr_PEXTRDrr_PEXTRQrr_PEXTRWrr_REV") 2, false, false, 686, 12, 19, 1,  0, 0}, // #814
+  {DBGFIELD("PEXTRBmr_PEXTRDmr_PEXTRQmr_PEXTRWmr") 3, false, false, 266, 12,  2, 1,  0, 0}, // #815
+  {DBGFIELD("VPBROADCASTBrm_VPBROADCASTWrm") 3, false, false, 698, 11,  3, 1,  1, 1}, // #816
+  {DBGFIELD("VPBROADCASTBYrm_VPBROADCASTWYrm") 3, false, false, 698, 11,  5, 1,  1, 1}, // #817
+  {DBGFIELD("VPGATHERDDrm")       20, false, false,  0, 0,  2, 1,  1, 1}, // #818
+  {DBGFIELD("VPGATHERDDYrm")      34, false, false,  0, 0,  2, 1,  1, 1}, // #819
+  {DBGFIELD("VPGATHERQDrm")       15, false, false,  0, 0,  2, 1,  1, 1}, // #820
+  {DBGFIELD("VPGATHERQDYrm")      22, false, false,  0, 0,  2, 1,  1, 1}, // #821
+  {DBGFIELD("VPGATHERDQrm")       12, false, false,  0, 0,  2, 1,  1, 1}, // #822
+  {DBGFIELD("VPGATHERDQYrm")      20, false, false,  0, 0,  2, 1,  1, 1}, // #823
+  {DBGFIELD("VPGATHERQQrm")       14, false, false,  0, 0,  2, 1,  1, 1}, // #824
+  {DBGFIELD("VPGATHERQQYrm")      22, false, false,  0, 0,  2, 1,  1, 1}, // #825
+  {DBGFIELD("MMX_PHADDSWrr64_MMX_PHADDWrr64_MMX_PHSUBSWrr64_MMX_PHSUBWrr64") 3, false, false, 709, 11,  6, 1,  0, 0}, // #826
+  {DBGFIELD("MMX_PHADDrr64_MMX_PHSUBDrr64") 3, false, false, 709, 11,  6, 1,  0, 0}, // #827
+  {DBGFIELD("PHADDDrr_PHSUBDrr_VPHADDDrr_VPHSUBDrr") 3, false, false, 709, 11,  6, 1,  0, 0}, // #828
+  {DBGFIELD("PHADDSWrr128_PHSUBSWrr128_VPHADDSWrr128_VPHADDSWrr256_VPHSUBSWrr128_VPHSUBSWrr256") 3, false, false, 709, 11,  6, 1,  0, 0}, // #829
+  {DBGFIELD("PHADDWrr_PHSUBWrr_VPHADDDYrr_VPHADDWYrr_VPHADDWrr_VPHSUBDYrr_VPHSUBWYrr_VPHSUBWrr") 3, false, false, 709, 11,  6, 1,  0, 0}, // #830
+  {DBGFIELD("MMX_PHADDSWrm64_MMX_PHADDWrm64_MMX_PHSUBSWrm64_MMX_PHSUBWrm64") 3, false, false, 720, 13, 16, 1,  1, 1}, // #831
+  {DBGFIELD("MMX_PHADDrm64_MMX_PHSUBDrm64") 3, false, false, 720, 13, 16, 1,  1, 1}, // #832
+  {DBGFIELD("PHADDDrm_PHSUBDrm_VPHADDDrm_VPHSUBDrm") 3, false, false, 720, 13, 16, 1,  1, 1}, // #833
+  {DBGFIELD("PHADDSWrm128_PHSUBSWrm128_VPHADDSWrm128_VPHADDSWrm256_VPHSUBSWrm128_VPHSUBSWrm256") 3, false, false, 720, 13, 16, 1,  1, 1}, // #834
+  {DBGFIELD("PHADDWrm_PHSUBWrm_VPHADDDYrm_VPHADDWYrm_VPHADDWrm_VPHSUBDYrm_VPHSUBWYrm_VPHSUBWrm") 3, false, false, 720, 13, 16, 1,  1, 1}, // #835
+  {DBGFIELD("PCMPGTQrr_VPCMPGTQYrr_VPCMPGTQrr") 1, false, false, 117, 9,  3, 1,  0, 0}, // #836
+  {DBGFIELD("PCMPGTQrm_VPCMPGTQYrm_VPCMPGTQrm") 2, false, false, 105, 11,  3, 1,  1, 1}, // #837
+  {DBGFIELD("PMULLDrr_VPMULLDYrr_VPMULLDrr") 2, false, false, 733, 9,  8, 1,  0, 0}, // #838
+  {DBGFIELD("PMULLDrm_VPMULLDYrm_VPMULLDrm") 3, false, false, 742, 11,  8, 1,  1, 1}, // #839
+  {DBGFIELD("PTESTrr_VPTESTYrr_VPTESTrr") 2, false, false, 686, 12, 19, 1,  0, 0}, // #840
+  {DBGFIELD("PTESTrm_VPTESTYrm_VPTESTrm") 2, false, false, 686, 12, 19, 1,  0, 0}, // #841
+  {DBGFIELD("PSLLDrr_PSLLQrr_PSLLWrr_PSRADrr_PSRAWrr_PSRLDrr_PSRLQrr_PSRLWrr_VPSLLDYrr_VPSLLDrr_VPSLLQYrr_VPSLLQrr_VPSLLWYrr_VPSLLWrr_VPSRADYrr_VPSRADrr_VPSRAWYrr_VPSRAWrr_VPSRLDYrr_VPSRLDrr_VPSRLQYrr_VPSRLQrr_VPSRLWYrr_VPSRLWrr") 2, false, false, 686, 12, 19, 1,  0, 0}, // #842
+  {DBGFIELD("PSLLDQri_PSRLDQri_VPSLLDQYri_VPSLLDQri_VPSRLDQYri_VPSRLDQri") 1, false, false, 39, 8,  2, 1,  0, 0}, // #843
+  {DBGFIELD("MMX_EMMS")           31, false, false,  0, 0, 34, 1,  0, 0}, // #844
+  {DBGFIELD("MOVMSKPDrr_MOVMSKPSrr_VMOVMSKPDrr_VMOVMSKPSrr") 1, false, false, 117, 9,  6, 1,  0, 0}, // #845
+  {DBGFIELD("VMOVMSKPDYrr_VMOVMSKPSYrr") 1, false, false, 117, 9, 19, 1,  0, 0}, // #846
+  {DBGFIELD("VPERM2F128rr")       1, false, false, 39, 8,  6, 1,  0, 0}, // #847
+  {DBGFIELD("VPERM2F128rm")       1, false, false, 29, 10,  5, 1,  1, 1}, // #848
+  {DBGFIELD("BLENDVPDrr0_BLENDVPSrr0") 1, false, false, 57, 8, 19, 1,  0, 0}, // #849
+  {DBGFIELD("BLENDVPDrm0_BLENDVPSrm0") 1, false, false, 47, 10, 16, 1,  1, 1}, // #850
+  {DBGFIELD("VBROADCASTF128")     1, false, false, 101, 3,  9, 1,  0, 0}, // #851
+  {DBGFIELD("EXTRACTPSrr")        2, false, false, 686, 12,  2, 1,  0, 0}, // #852
+  {DBGFIELD("VEXTRACTPSrr")       2, false, false, 686, 12,  2, 1,  0, 0}, // #853
+  {DBGFIELD("EXTRACTPSmr")        3, false, false, 753, 14,  9, 1,  0, 0}, // #854
+  {DBGFIELD("VEXTRACTPSmr")       3, false, false, 753, 14,  9, 1,  0, 0}, // #855
+  {DBGFIELD("VEXTRACTF128rr")     1, false, false, 39, 8,  6, 1,  0, 0}, // #856
+  {DBGFIELD("VEXTRACTF128mr")     2, false, false, 141, 5,  9, 1,  0, 0}, // #857
+  {DBGFIELD("VINSERTF128rr")      1, false, false, 39, 8,  6, 1,  0, 0}, // #858
+  {DBGFIELD("VINSERTF128rm")      1, false, false, 39, 8,  6, 1,  1, 1}, // #859
+  {DBGFIELD("VMASKMOVPDYrm_VMASKMOVPDrm_VMASKMOVPSYrm_VMASKMOVPSrm") 3, false, false, 47, 10,  9, 1,  0, 0}, // #860
+  {DBGFIELD("VMASKMOVPDmr_VMASKMOVPSmr") 4, false, false, 671, 15, 34, 1,  0, 0}, // #861
+  {DBGFIELD("VMASKMOVPDYmr_VMASKMOVPSYmr") 4, false, false, 671, 15,  7, 1,  0, 0}, // #862
+  {DBGFIELD("VGATHERDPSrm")       20, false, false,  0, 0,  2, 1,  1, 1}, // #863
+  {DBGFIELD("VGATHERDPSYrm")      34, false, false,  0, 0,  2, 1,  1, 1}, // #864
+  {DBGFIELD("VGATHERQPSrm")       15, false, false,  0, 0,  2, 1,  1, 1}, // #865
+  {DBGFIELD("VGATHERQPSYrm")      22, false, false,  0, 0,  2, 1,  1, 1}, // #866
+  {DBGFIELD("VGATHERDPDrm")       12, false, false,  0, 0,  2, 1,  1, 1}, // #867
+  {DBGFIELD("VGATHERDPDYrm")      20, false, false,  0, 0,  2, 1,  1, 1}, // #868
+  {DBGFIELD("VGATHERQPDrm")       14, false, false,  0, 0,  2, 1,  1, 1}, // #869
+  {DBGFIELD("VGATHERQPDYrm")      22, false, false,  0, 0,  2, 1,  1, 1}, // #870
+  {DBGFIELD("CVTPD2PSrr_VCVTPD2PSrr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #871
+  {DBGFIELD("CVTPD2PSrm_VCVTPD2PSrm") 3, false, false, 778, 13, 10, 1,  0, 0}, // #872
+  {DBGFIELD("VCVTPD2PSYrr")       2, false, false, 767, 11,  3, 1,  0, 0}, // #873
+  {DBGFIELD("VCVTPD2PSYrm")       3, false, false, 778, 13, 15, 1,  0, 0}, // #874
+  {DBGFIELD("CVTSD2SSrr_Int_CVTSD2SSrr_Int_VCVTSD2SSrr_VCVTSD2SSrr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #875
+  {DBGFIELD("CVTSD2SSrm")         3, false, false, 778, 13, 10, 1,  0, 0}, // #876
+  {DBGFIELD("Int_CVTSD2SSrm_Int_VCVTSD2SSrm_VCVTSD2SSrm") 3, false, false, 778, 13, 10, 1,  0, 0}, // #877
+  {DBGFIELD("CVTPS2PDrr_VCVTPS2PDrr") 2, false, false, 686, 12, 19, 1,  0, 0}, // #878
+  {DBGFIELD("CVTPS2PDrm_VCVTPS2PDYrm_VCVTPS2PDrm") 2, false, false, 105, 11,  3, 1,  0, 0}, // #879
+  {DBGFIELD("VCVTPS2PDYrr")       2, false, false, 686, 12,  3, 1,  0, 0}, // #880
+  {DBGFIELD("CVTSS2SDrr_Int_CVTSS2SDrr_Int_VCVTSS2SDrr_VCVTSS2SDrr") 2, false, false, 686, 12, 19, 1,  0, 0}, // #881
+  {DBGFIELD("CVTSS2SDrm")         2, false, false, 105, 11,  3, 1,  0, 0}, // #882
+  {DBGFIELD("Int_CVTSS2SDrm_Int_VCVTSS2SDrm_VCVTSS2SDrm") 2, false, false, 105, 11,  3, 1,  0, 0}, // #883
+  {DBGFIELD("CVTDQ2PDrr")         2, false, false, 767, 11,  9, 1,  0, 0}, // #884
+  {DBGFIELD("VCVTDQ2PDrr")        2, false, false, 767, 11,  9, 1,  0, 0}, // #885
+  {DBGFIELD("VCVTDQ2PDYrr")       2, false, false, 767, 11, 16, 1,  0, 0}, // #886
+  {DBGFIELD("CVTPD2DQrr_CVTTPD2DQrr_VCVTTPD2DQrr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #887
+  {DBGFIELD("VCVTPD2DQrr")        2, false, false, 767, 11,  9, 1,  0, 0}, // #888
+  {DBGFIELD("CVTPD2DQrm_CVTTPD2DQrm_VCVTTPD2DQrm") 3, false, false, 778, 13, 10, 1,  0, 0}, // #889
+  {DBGFIELD("VCVTPD2DQrm")        3, false, false, 778, 13, 10, 1,  0, 0}, // #890
+  {DBGFIELD("VCVTPD2DQYrr")       2, false, false, 767, 11, 16, 1,  0, 0}, // #891
+  {DBGFIELD("VCVTTPD2DQYrr")      2, false, false, 767, 11, 16, 1,  0, 0}, // #892
+  {DBGFIELD("VCVTPD2DQYrm")       3, false, false, 778, 13,  8, 1,  0, 0}, // #893
+  {DBGFIELD("VCVTTPD2DQYrm")      3, false, false, 778, 13,  8, 1,  0, 0}, // #894
+  {DBGFIELD("MMX_CVTPS2PIirr_MMX_CVTTPS2PIirr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #895
+  {DBGFIELD("MMX_CVTPI2PDirr")    2, false, false, 767, 11,  9, 1,  0, 0}, // #896
+  {DBGFIELD("MMX_CVTPD2PIirr_MMX_CVTTPD2PIirr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #897
+  {DBGFIELD("CVTSI2SS64rr_CVTSI2SSrr_Int_CVTSI2SS64rr_Int_CVTSI2SSrr_Int_VCVTSI2SS64rr_Int_VCVTSI2SSrr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #898
+  {DBGFIELD("VCVTSI2SS64rr_VCVTSI2SSrr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #899
+  {DBGFIELD("CVTSS2SI64rr_CVTTSS2SI64rr_Int_CVTTSS2SI64rr_Int_VCVTTSS2SI64rr_VCVTSS2SI64rr_VCVTTSS2SI64rr") 2, false, false, 791, 12,  9, 1,  0, 0}, // #900
+  {DBGFIELD("CVTSS2SIrr_CVTTSS2SIrr_Int_CVTTSS2SIrr_Int_VCVTTSS2SIrr_VCVTSS2SIrr_VCVTTSS2SIrr") 2, false, false, 791, 12,  9, 1,  0, 0}, // #901
+  {DBGFIELD("CVTSS2SI64rm_CVTTSS2SI64rm_Int_CVTTSS2SI64rm_Int_VCVTTSS2SI64rm_VCVTSS2SI64rm_VCVTTSS2SI64rm") 3, false, false, 803, 14, 10, 1,  0, 0}, // #902
+  {DBGFIELD("CVTSS2SIrm_CVTTSS2SIrm_Int_CVTTSS2SIrm_Int_VCVTTSS2SIrm_VCVTSS2SIrm_VCVTTSS2SIrm") 3, false, false, 803, 14, 10, 1,  0, 0}, // #903
+  {DBGFIELD("CVTSD2SI64rr_CVTSD2SIrr_CVTTSD2SI64rr_CVTTSD2SIrr_Int_CVTTSD2SI64rr_Int_CVTTSD2SIrr_Int_VCVTTSD2SI64rr_Int_VCVTTSD2SIrr_VCVTSD2SI64rr_VCVTSD2SIrr_VCVTTSD2SI64rr_VCVTTSD2SIrr") 2, false, false, 791, 12,  9, 1,  0, 0}, // #904
+  {DBGFIELD("CVTSD2SI64rm_CVTSD2SIrm_CVTTSD2SI64rm_CVTTSD2SIrm_Int_CVTTSD2SI64rm_Int_CVTTSD2SIrm_Int_VCVTTSD2SI64rm_Int_VCVTTSD2SIrm_VCVTSD2SI64rm_VCVTSD2SIrm_VCVTTSD2SI64rm_VCVTTSD2SIrm") 3, false, false, 803, 14, 10, 1,  0, 0}, // #905
+  {DBGFIELD("VCVTPS2PHYrr_VCVTPS2PHrr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #906
+  {DBGFIELD("VCVTPS2PHYmr_VCVTPS2PHmr") 4, false, false, 817, 15, 35, 2,  0, 0}, // #907
+  {DBGFIELD("VCVTPH2PSYrr_VCVTPH2PSrr") 2, false, false, 767, 11,  9, 1,  0, 0}, // #908
+  {DBGFIELD("HADDPDrr_HADDPSrr_HSUBPDrr_HSUBPSrr_VHADDPDYrr_VHADDPDrr_VHADDPSYrr_VHADDPSrr_VHSUBPDYrr_VHSUBPDrr_VHSUBPSYrr_VHSUBPSrr") 3, false, false, 709, 11,  3, 1,  0, 0}, // #909
+  {DBGFIELD("HADDPDrm_HADDPSrm_HSUBPDrm_HSUBPSrm_VHADDPDYrm_VHADDPDrm_VHADDPSYrm_VHADDPSrm_VHSUBPDYrm_VHSUBPDrm_VHSUBPSYrm_VHSUBPSrm") 4, false, false, 720, 13, 15, 1,  0, 0}, // #910
+  {DBGFIELD("MULPDrr_VMULPDrr")   1, false, false, 554, 4,  3, 1,  0, 0}, // #911
+  {DBGFIELD("MULPSrr_VMULPSrr")   1, false, false, 554, 4,  3, 1,  0, 0}, // #912
+  {DBGFIELD("MULSDrr_MULSDrr_Int_VMULSDrr_VMULSDrr_Int") 1, false, false, 554, 4,  3, 1,  0, 0}, // #913
+  {DBGFIELD("MULSSrr_MULSSrr_Int_VMULSSrr_VMULSSrr_Int") 1, false, false, 554, 4,  3, 1,  0, 0}, // #914
+  {DBGFIELD("MULPDrm_MULPSrm_VMULPDrm_VMULPSrm") 2, false, false, 570, 6, 15, 1,  0, 0}, // #915
+  {DBGFIELD("MULSDrm_MULSDrm_Int_MULSSrm_MULSSrm_Int_VMULSDrm_VMULSDrm_Int_VMULSSrm_VMULSSrm_Int") 2, false, false, 570, 6, 15, 1,  0, 0}, // #916
+  {DBGFIELD("VDIVPSYrr")          3, false, false, 832, 10, 23, 1,  0, 0}, // #917
+  {DBGFIELD("VDIVPSYrm")          4, false, false, 842, 12, 29, 1,  1, 1}, // #918
+  {DBGFIELD("VDIVPDYrr")          3, false, false, 832, 10, 37, 1,  0, 0}, // #919
+  {DBGFIELD("VDIVPDYrm")          4, false, false, 842, 12, 38, 1,  1, 1}, // #920
+  {DBGFIELD("VRCPPSYr")           3, false, false, 832, 10,  5, 1,  0, 0}, // #921
+  {DBGFIELD("VRCPPSYm")           4, false, false, 842, 12, 20, 1,  0, 0}, // #922
+  {DBGFIELD("ROUNDPDr_ROUNDPSr_VROUNDPDr_VROUNDPSr_VROUNDYPDr_VROUNDYPSr") 2, false, false, 616, 7, 16, 1,  0, 0}, // #923
+  {DBGFIELD("ROUNDSDr_ROUNDSDr_Int_ROUNDSSr_ROUNDSSr_Int_VROUNDSDr_VROUNDSDr_Int_VROUNDSSr_VROUNDSSr_Int") 2, false, false, 616, 7, 16, 1,  0, 0}, // #924
+  {DBGFIELD("ROUNDPDm_VROUNDPDm_VROUNDYPDm") 3, false, false, 607, 9,  8, 1,  0, 0}, // #925
+  {DBGFIELD("ROUNDPSm_VROUNDPSm_VROUNDYPSm") 3, false, false, 607, 9,  8, 1,  0, 0}, // #926
+  {DBGFIELD("ROUNDSDm_ROUNDSDm_Int_ROUNDSSm_ROUNDSSm_Int_VROUNDSDm_VROUNDSDm_Int_VROUNDSSm_VROUNDSSm_Int") 3, false, false, 607, 9,  8, 1,  0, 0}, // #927
+  {DBGFIELD("DPPSrri_VDPPSYrri_VDPPSrri") 4, false, false, 854, 14,  7, 1,  0, 0}, // #928
+  {DBGFIELD("DPPSrmi_VDPPSYrmi_VDPPSrmi") 6, false, false, 868, 17, 39, 1,  1, 1}, // #929
+  {DBGFIELD("DPPDrri")            3, false, false, 885, 14, 15, 1,  0, 0}, // #930
+  {DBGFIELD("VDPPDrri")           3, false, false, 885, 14, 15, 1,  0, 0}, // #931
+  {DBGFIELD("DPPDrmi_VDPPDrmi")   4, false, false, 899, 16, 34, 1,  0, 0}, // #932
+  {DBGFIELD("VFMADDPD4rr_VFMADDPD4rr_REV_VFMADDPS4rr_VFMADDPS4rr_REV_VFMADDSD4rr_VFMADDSD4rr_Int_VFMADDSD4rr_REV_VFMADDSS4rr_VFMADDSS4rr_Int_VFMADDSS4rr_REV_VFMSUBPD4rr_VFMSUBPD4rr_REV_VFMSUBPS4rr_VFMSUBPS4rr_REV_VFMSUBSD4rr_VFMSUBSD4rr_Int_VFMSUBSD4rr_REV_VFMSUBSS4rr_VFMSUBSS4rr_Int_VFMSUBSS4rr_REV_VFNMADDPD4rr_VFNMADDPD4rr_REV_VFNMADDPS4rr_VFNMADDPS4rr_REV_VFNMADDSD4rr_VFNMADDSD4rr_Int_VFNMADDSD4rr_REV_VFNMADDSS4rr_VFNMADDSS4rr_Int_VFNMADDSS4rr_REV_VFNMSUBPD4rr_VFNMSUBPD4rr_REV_VFNMSUBPS4rr_VFNMSUBPS4rr_REV_VFNMSUBSD4rr_VFNMSUBSD4rr_Int_VFNMSUBSD4rr_REV_VFNMSUBSS4rr_VFNMSUBSS4rr_Int_VFNMSUBSS4rr_REV") 1, false, false, 554, 4,  3, 1,  0, 0}, // #933
+  {DBGFIELD("VFMADDPD4mr_VFMADDPD4rm_VFMADDPS4mr_VFMADDPS4rm_VFMADDSD4mr_VFMADDSD4mr_Int_VFMADDSD4rm_VFMADDSD4rm_Int_VFMADDSS4mr_VFMADDSS4mr_Int_VFMADDSS4rm_VFMADDSS4rm_Int_VFMSUBPD4mr_VFMSUBPD4rm_VFMSUBPS4mr_VFMSUBPS4rm_VFMSUBSD4mr_VFMSUBSD4mr_Int_VFMSUBSD4rm_VFMSUBSD4rm_Int_VFMSUBSS4mr_VFMSUBSS4mr_Int_VFMSUBSS4rm_VFMSUBSS4rm_Int_VFNMADDPD4mr_VFNMADDPD4rm_VFNMADDPS4mr_VFNMADDPS4rm_VFNMADDSD4mr_VFNMADDSD4mr_Int_VFNMADDSD4rm_VFNMADDSD4rm_Int_VFNMADDSS4mr_VFNMADDSS4mr_Int_VFNMADDSS4rm_VFNMADDSS4rm_Int_VFNMSUBPD4mr_VFNMSUBPD4rm_VFNMSUBPS4mr_VFNMSUBPS4rm_VFNMSUBSD4mr_VFNMSUBSD4mr_Int_VFNMSUBSD4rm_VFNMSUBSD4rm_Int_VFNMSUBSS4mr_VFNMSUBSS4mr_Int_VFNMSUBSS4rm_VFNMSUBSS4rm_Int") 2, false, false, 570, 6, 15, 1,  0, 0}, // #934
+  {DBGFIELD("VSQRTPSYr")          3, false, false, 832, 10, 23, 1,  0, 0}, // #935
+  {DBGFIELD("VSQRTPSYm")          4, false, false, 842, 12, 29, 1,  0, 0}, // #936
+  {DBGFIELD("VSQRTPDYr")          3, false, false, 832, 10, 40, 1,  0, 0}, // #937
+  {DBGFIELD("VSQRTPDYm")          4, false, false, 842, 12, 30, 1,  0, 0}, // #938
+  {DBGFIELD("RSQRTPSr_VRSQRTPSr") 1, false, false, 117, 9,  3, 1,  0, 0}, // #939
+  {DBGFIELD("RSQRTSSr_VRSQRTSSr") 1, false, false, 117, 9,  3, 1,  0, 0}, // #940
+  {DBGFIELD("RSQRTSSr_Int")       1, false, false, 117, 9,  3, 1,  0, 0}, // #941
+  {DBGFIELD("VRSQRTSSr_Int")      1, false, false, 117, 9,  3, 1,  0, 0}, // #942
+  {DBGFIELD("RSQRTPSm_VRSQRTPSm") 2, false, false, 105, 11, 15, 1,  0, 0}, // #943
+  {DBGFIELD("RSQRTSSm_VRSQRTSSm") 2, false, false, 105, 11, 15, 1,  0, 0}, // #944
+  {DBGFIELD("RSQRTSSm_Int_VRSQRTSSm_Int") 2, false, false, 105, 11, 15, 1,  0, 0}, // #945
+  {DBGFIELD("VRSQRTPSYr")         3, false, false, 832, 10,  5, 1,  0, 0}, // #946
+  {DBGFIELD("VRSQRTPSYm")         4, false, false, 842, 12, 20, 1,  0, 0}, // #947
+  {DBGFIELD("ANDNPDrr_ANDNPSrr_ANDPDrr_ANDPSrr_ORPDrr_ORPSrr_VANDNPDYrr_VANDNPDrr_VANDNPSYrr_VANDNPSrr_VANDPDYrr_VANDPDrr_VANDPSYrr_VANDPSrr_VORPDYrr_VORPDrr_VORPSYrr_VORPSrr_VXORPDYrr_VXORPDrr_VXORPSYrr_VXORPSrr_XORPDrr_XORPSrr") 1, false, false, 39, 8,  2, 1,  0, 0}, // #948
+  {DBGFIELD("ANDNPDrm_ANDNPSrm_ANDPDrm_ANDPSrm_ORPDrm_ORPSrm_VANDNPDYrm_VANDNPDrm_VANDNPSYrm_VANDNPSrm_VANDPDYrm_VANDPDrm_VANDPSYrm_VANDPSrm_VORPDYrm_VORPDrm_VORPSYrm_VORPSrm_VXORPDYrm_VXORPDrm_VXORPSYrm_VXORPSrm_XORPDrm_XORPSrm") 2, false, false, 29, 10,  3, 1,  1, 1}, // #949
+  {DBGFIELD("VZEROUPPER")         4, false, false,  0, 0,  2, 1,  0, 0}, // #950
+  {DBGFIELD("VZEROALL")           12, false, false,  0, 0,  2, 1,  0, 0}, // #951
+  {DBGFIELD("LDMXCSR_VLDMXCSR")   3, false, false, 915, 14, 16, 1,  0, 0}, // #952
+  {DBGFIELD("STMXCSR_VSTMXCSR")   4, false, false, 929, 14,  5, 1,  0, 0} // #953
 }; // HaswellModelSchedClasses
 
 // {Name, NumMicroOps, BeginGroup, EndGroup, WriteProcResIdx,#, WriteLatencyIdx,#, ReadAdvanceIdx,#}
@@ -3750,796 +3771,802 @@ static const llvm::MCSchedClassDesc BtVer2ModelSchedClasses[] = {
   {DBGFIELD("IIC_FXTRACT_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #155
   {DBGFIELD("IIC_FYL2X_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #156
   {DBGFIELD("IIC_FYL2XP1_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #157
-  {DBGFIELD("IIC_SSE_BIT_P_RM_WriteFAddLd_ReadAfterLd") 1, false, false, 952, 5, 10, 1,  4, 1}, // #158
-  {DBGFIELD("IIC_SSE_BIT_P_RR_WriteFAdd") 1, false, false, 957, 3,  6, 1,  0, 0}, // #159
-  {DBGFIELD("IIC_SSE_MOVA_P_RM_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #160
-  {DBGFIELD("IIC_SSE_HADDSUB_RM_WriteFAddLd_ReadAfterLd") 1, false, false, 952, 5, 10, 1,  4, 1}, // #161
-  {DBGFIELD("IIC_SSE_HADDSUB_RR_WriteFAdd") 1, false, false, 957, 3,  6, 1,  0, 0}, // #162
-  {DBGFIELD("IIC_HLT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #163
-  {DBGFIELD("IIC_IDIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 980, 6, 43, 1,  5, 2}, // #164
-  {DBGFIELD("IIC_IDIV16_WriteIDiv") 1, false, false, 986, 4, 12, 1,  0, 0}, // #165
-  {DBGFIELD("IIC_IDIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 980, 6, 43, 1,  5, 2}, // #166
-  {DBGFIELD("IIC_IDIV32_WriteIDiv") 1, false, false, 986, 4, 12, 1,  0, 0}, // #167
-  {DBGFIELD("IIC_IDIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 980, 6, 43, 1,  5, 2}, // #168
-  {DBGFIELD("IIC_IDIV64_WriteIDiv") 1, false, false, 986, 4, 12, 1,  0, 0}, // #169
-  {DBGFIELD("IIC_IDIV8_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 980, 6, 43, 1,  5, 2}, // #170
-  {DBGFIELD("IIC_IDIV8_WriteIDiv") 1, false, false, 986, 4, 12, 1,  0, 0}, // #171
-  {DBGFIELD("IIC_FILD_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #172
-  {DBGFIELD("IIC_IMUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #173
-  {DBGFIELD("IIC_IMUL16_RR_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #174
-  {DBGFIELD("IIC_IMUL16_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  4, 1}, // #175
-  {DBGFIELD("IIC_IMUL16_RMI_WriteIMulLd") 1, false, false, 1001, 5, 16, 1,  0, 0}, // #176
-  {DBGFIELD("IIC_IMUL16_RRI_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #177
-  {DBGFIELD("IIC_IMUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #178
-  {DBGFIELD("IIC_IMUL32_RR_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #179
-  {DBGFIELD("IIC_IMUL32_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  4, 1}, // #180
-  {DBGFIELD("IIC_IMUL32_RMI_WriteIMulLd") 1, false, false, 1001, 5, 16, 1,  0, 0}, // #181
-  {DBGFIELD("IIC_IMUL32_RRI_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #182
-  {DBGFIELD("IIC_IMUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #183
-  {DBGFIELD("IIC_IMUL64_RR_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #184
-  {DBGFIELD("IIC_IMUL64_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  4, 1}, // #185
-  {DBGFIELD("IIC_IMUL64_RMI_WriteIMulLd") 1, false, false, 1001, 5, 16, 1,  0, 0}, // #186
-  {DBGFIELD("IIC_IMUL64_RRI_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #187
-  {DBGFIELD("IIC_IMUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #188
-  {DBGFIELD("IIC_IMUL8_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #189
-  {DBGFIELD("IIC_IN_RI_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #190
-  {DBGFIELD("IIC_IN_RR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #191
-  {DBGFIELD("IIC_INS_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #192
-  {DBGFIELD("IIC_SSE_INSERTPS_RM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #193
-  {DBGFIELD("IIC_SSE_INSERTPS_RR_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #194
-  {DBGFIELD("IIC_INT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #195
-  {DBGFIELD("IIC_INT3_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #196
-  {DBGFIELD("IIC_INVD_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #197
-  {DBGFIELD("IIC_INVLPG_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #198
-  {DBGFIELD("WriteJumpLd")        1, false, false, 948, 4,  9, 1,  0, 0}, // #199
-  {DBGFIELD("IIC_IRET_WriteJumpLd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #200
-  {DBGFIELD("IIC_FST_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #201
-  {DBGFIELD("IIC_FIST_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #202
-  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd_ReadAfterLd") 1, false, false, 972, 5, 10, 1,  4, 1}, // #203
-  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd_ReadAfterLd") 1, false, false, 972, 5, 10, 1,  4, 1}, // #204
-  {DBGFIELD("WriteLoad")          1, false, false, 968, 3,  3, 1,  0, 0}, // #205
-  {DBGFIELD("IIC_Jcc_WriteJump")  1, false, false, 427, 2,  2, 1,  0, 0}, // #206
-  {DBGFIELD("IIC_JCXZ_WriteJump") 1, false, false, 427, 2,  2, 1,  0, 0}, // #207
-  {DBGFIELD("IIC_JMP_MEM_WriteJumpLd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #208
-  {DBGFIELD("IIC_JMP_REG_WriteJump") 1, false, false, 427, 2,  2, 1,  0, 0}, // #209
-  {DBGFIELD("IIC_JMP_REL_WriteJump") 1, false, false, 427, 2,  2, 1,  0, 0}, // #210
-  {DBGFIELD("IIC_AHF_WriteALU")   1, false, false, 427, 2,  2, 1,  0, 0}, // #211
-  {DBGFIELD("IIC_LAR_RM_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #212
-  {DBGFIELD("IIC_LAR_RR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #213
-  {DBGFIELD("IIC_CMPX_LOCK_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #214
-  {DBGFIELD("IIC_CMPX_LOCK_16B_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #215
-  {DBGFIELD("IIC_CMPX_LOCK_8_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #216
-  {DBGFIELD("IIC_CMPX_LOCK_8B_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #217
-  {DBGFIELD("IIC_SSE_LDDQU_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #218
-  {DBGFIELD("IIC_SSE_LDMXCSR_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #219
-  {DBGFIELD("IIC_LXS_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #220
-  {DBGFIELD("IIC_FLDZ_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #221
-  {DBGFIELD("IIC_FIST_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #222
-  {DBGFIELD("IIC_FLD_WriteLoad")  1, false, false, 968, 3,  3, 1,  0, 0}, // #223
-  {DBGFIELD("IIC_FLD80_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #224
-  {DBGFIELD("IIC_FLD_WriteMove")  1, false, false, 13, 1,  2, 1,  0, 0}, // #225
-  {DBGFIELD("IIC_LEA_16_WriteLEA") 1, false, false, 427, 2,  2, 1,  0, 0}, // #226
-  {DBGFIELD("IIC_LEA_WriteLEA")   1, false, false, 427, 2,  2, 1,  0, 0}, // #227
-  {DBGFIELD("IIC_LEAVE_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #228
-  {DBGFIELD("IIC_SSE_LFENCE_WriteFence") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #229
-  {DBGFIELD("IIC_LGDT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #230
-  {DBGFIELD("IIC_LIDT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #231
-  {DBGFIELD("IIC_LLDT_MEM_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #232
-  {DBGFIELD("IIC_LLDT_REG_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #233
-  {DBGFIELD("IIC_LMSW_REG_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #234
-  {DBGFIELD("IIC_LMSW_MEM_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #235
-  {DBGFIELD("IIC_ALU_MEM_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #236
-  {DBGFIELD("IIC_ALU_NONMEM_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #237
-  {DBGFIELD("IIC_LODS_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #238
-  {DBGFIELD("IIC_LOOP_WriteJump") 1, false, false, 427, 2,  2, 1,  0, 0}, // #239
-  {DBGFIELD("IIC_LOOPE_WriteJump") 1, false, false, 427, 2,  2, 1,  0, 0}, // #240
-  {DBGFIELD("IIC_LOOPNE_WriteJump") 1, false, false, 427, 2,  2, 1,  0, 0}, // #241
-  {DBGFIELD("IIC_RET_WriteJumpLd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #242
-  {DBGFIELD("IIC_LSL_RM_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #243
-  {DBGFIELD("IIC_LSL_RR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #244
-  {DBGFIELD("IIC_LTR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #245
-  {DBGFIELD("IIC_XADD_LOCK_MEM_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #246
-  {DBGFIELD("IIC_XADD_LOCK_MEM8_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #247
-  {DBGFIELD("IIC_SSE_MASKMOV_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #248
-  {DBGFIELD("IIC_SSE_MFENCE_WriteFence") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #249
-  {DBGFIELD("IIC_MMX_CVT_PD_RM_WriteCvtF2ILd") 1, false, false, 972, 5, 10, 1,  0, 0}, // #250
-  {DBGFIELD("IIC_MMX_CVT_PD_RR_WriteCvtF2I") 1, false, false, 977, 3,  6, 1,  0, 0}, // #251
-  {DBGFIELD("WriteCvtI2FLd")      1, false, false, 972, 5, 10, 1,  0, 0}, // #252
-  {DBGFIELD("WriteCvtI2F")        1, false, false, 977, 3,  6, 1,  0, 0}, // #253
-  {DBGFIELD("IIC_MMX_CVT_PS_RM_WriteCvtF2ILd") 1, false, false, 972, 5, 10, 1,  0, 0}, // #254
-  {DBGFIELD("IIC_MMX_CVT_PS_RR_WriteCvtF2I") 1, false, false, 977, 3,  6, 1,  0, 0}, // #255
-  {DBGFIELD("IIC_MMX_EMMS")       0, false, false,  0, 0,  0, 0,  0, 0}, // #256
-  {DBGFIELD("IIC_MMX_MASKMOV_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #257
-  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #258
-  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #259
-  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #260
-  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #261
-  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #262
-  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #263
-  {DBGFIELD("IIC_MMX_MOVQ_RR_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #264
-  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #265
-  {DBGFIELD("WriteMove")          1, false, false, 13, 1,  2, 1,  0, 0}, // #266
-  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd") 1, false, false, 960, 4, 16, 1,  0, 0}, // #267
-  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #268
-  {DBGFIELD("IIC_MMX_PCK_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #269
-  {DBGFIELD("IIC_MMX_PCK_RR_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #270
-  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #271
-  {DBGFIELD("IIC_MMX_ALUQ_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #272
-  {DBGFIELD("IIC_MMX_ALUQ_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #273
-  {DBGFIELD("WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #274
-  {DBGFIELD("WriteShuffle")       1, false, false, 965, 2,  2, 1,  0, 0}, // #275
-  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #276
-  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecLogic") 1, false, false, 965, 2,  2, 1,  0, 0}, // #277
-  {DBGFIELD("IIC_MMX_MISC_FUNC_REG_WriteVecIMulLd_ReadAfterLd") 1, false, false, 952, 5,  5, 1,  4, 1}, // #278
-  {DBGFIELD("IIC_MMX_MISC_FUNC_MEM_WriteVecIMul") 1, false, false, 957, 3, 19, 1,  0, 0}, // #279
-  {DBGFIELD("IIC_MMX_PEXTR_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #280
-  {DBGFIELD("IIC_MMX_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #281
-  {DBGFIELD("IIC_MMX_PHADDSUBW_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #282
-  {DBGFIELD("IIC_MMX_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #283
-  {DBGFIELD("IIC_MMX_PHADDSUBD_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #284
-  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #285
-  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #286
-  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMulLd_ReadAfterLd") 1, false, false, 952, 5,  5, 1,  4, 1}, // #287
-  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMul") 1, false, false, 957, 3, 19, 1,  0, 0}, // #288
-  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMulLd_ReadAfterLd") 1, false, false, 952, 5,  5, 1,  4, 1}, // #289
-  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMul") 1, false, false, 957, 3, 19, 1,  0, 0}, // #290
-  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #291
-  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #292
-  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd") 1, false, false, 960, 4, 16, 1,  0, 0}, // #293
-  {DBGFIELD("IIC_MMX_SHIFT_RI_WriteVecShift") 1, false, false, 965, 2,  2, 1,  0, 0}, // #294
-  {DBGFIELD("IIC_MMX_SHIFT_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #295
-  {DBGFIELD("IIC_MMX_SHIFT_RR_WriteVecShift") 1, false, false, 965, 2,  2, 1,  0, 0}, // #296
-  {DBGFIELD("IIC_MMX_UNPCK_H_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #297
-  {DBGFIELD("IIC_MMX_UNPCK_H_RR_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #298
-  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #299
-  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #300
-  {DBGFIELD("IIC_SSE_MONITORX_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #301
-  {DBGFIELD("IIC_SSE_MONITOR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #302
-  {DBGFIELD("IIC_MOV_MEM_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #303
-  {DBGFIELD("IIC_MOV_MEM_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #304
-  {DBGFIELD("IIC_MOV_MEM_SR_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #305
-  {DBGFIELD("IIC_MOV_WriteMove")  1, false, false, 13, 1,  2, 1,  0, 0}, // #306
-  {DBGFIELD("IIC_MOV_MEM_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #307
-  {DBGFIELD("IIC_MOV_REG_SR_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #308
-  {DBGFIELD("IIC_MOV_SR_MEM_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #309
-  {DBGFIELD("IIC_MOV_SR_REG_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #310
-  {DBGFIELD("IIC_MOV_CR_REG_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #311
-  {DBGFIELD("IIC_MOV_DR_REG_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #312
-  {DBGFIELD("IIC_ALU_NONMEM_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #313
-  {DBGFIELD("IIC_MOV_REG_CR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #314
-  {DBGFIELD("IIC_MOV_REG_DR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #315
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #316
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #317
-  {DBGFIELD("IIC_SSE_MOVA_P_MR_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #318
-  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #319
-  {DBGFIELD("IIC_MOVBE_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #320
-  {DBGFIELD("IIC_MOVBE_WriteALULd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #321
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #322
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #323
-  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #324
-  {DBGFIELD("IIC_SSE_MOVU_P_MR_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #325
-  {DBGFIELD("IIC_SSE_MOVU_P_RM_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #326
-  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #327
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #328
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #329
-  {DBGFIELD("IIC_SSE_MOVMSK_WriteVecLogic") 1, false, false, 965, 2,  2, 1,  0, 0}, // #330
-  {DBGFIELD("IIC_SSE_MOVNT_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #331
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #332
-  {DBGFIELD("IIC_SSE_MOVD_ToGP_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #333
-  {DBGFIELD("IIC_SSE_MOVQ_RR_WriteVecLogic") 1, false, false, 965, 2,  2, 1,  0, 0}, // #334
-  {DBGFIELD("IIC_MOVS_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #335
-  {DBGFIELD("IIC_SSE_MOV_S_MR_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #336
-  {DBGFIELD("IIC_SSE_MOV_S_RM_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #337
-  {DBGFIELD("IIC_SSE_MOV_S_RR_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #338
-  {DBGFIELD("IIC_MOVSX_R16_M8_WriteALULd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #339
-  {DBGFIELD("IIC_MOVSX_R16_R8_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #340
-  {DBGFIELD("IIC_MOVSX_WriteALULd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #341
-  {DBGFIELD("IIC_MOVSX_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #342
-  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #343
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteVecLogicLd") 1, false, false, 960, 4, 16, 1,  0, 0}, // #344
-  {DBGFIELD("IIC_MOVZX_R16_M8_WriteALULd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #345
-  {DBGFIELD("IIC_MOVZX_R16_R8_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #346
-  {DBGFIELD("IIC_MOVZX_WriteALULd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #347
-  {DBGFIELD("IIC_MOVZX_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #348
-  {DBGFIELD("IIC_SSE_MPSADBW_RM_WriteMPSADLd_ReadAfterLd") 1, false, false, 1009, 5, 10, 1,  4, 1}, // #349
-  {DBGFIELD("IIC_SSE_MPSADBW_RR_WriteMPSAD") 1, false, false, 1014, 3,  6, 1,  0, 0}, // #350
-  {DBGFIELD("IIC_MUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #351
-  {DBGFIELD("IIC_MUL16_REG_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #352
-  {DBGFIELD("IIC_MUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #353
-  {DBGFIELD("IIC_MUL32_REG_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #354
-  {DBGFIELD("IIC_MUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #355
-  {DBGFIELD("IIC_MUL64_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #356
-  {DBGFIELD("IIC_MUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #357
-  {DBGFIELD("IIC_MUL8_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #358
-  {DBGFIELD("IIC_SSE_MUL_F64P_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 972, 5,  5, 1,  4, 1}, // #359
-  {DBGFIELD("IIC_SSE_MUL_F64P_RR_WriteFMul") 1, false, false, 977, 3, 19, 1,  0, 0}, // #360
-  {DBGFIELD("IIC_SSE_MUL_F32P_RR_WriteFMul") 1, false, false, 977, 3, 19, 1,  0, 0}, // #361
-  {DBGFIELD("IIC_SSE_MUL_F64S_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 972, 5,  5, 1,  4, 1}, // #362
-  {DBGFIELD("IIC_SSE_MUL_F64S_RR_WriteFMul") 1, false, false, 977, 3, 19, 1,  0, 0}, // #363
-  {DBGFIELD("IIC_SSE_MUL_F32S_RR_WriteFMul") 1, false, false, 977, 3, 19, 1,  0, 0}, // #364
-  {DBGFIELD("IIC_MUL8_WriteIMulLd_WriteIMulH") 2, false, false, 1017, 5, 47, 2,  0, 0}, // #365
-  {DBGFIELD("IIC_MUL8_WriteIMul_WriteIMulH") 2, false, false, 1022, 3, 49, 2,  0, 0}, // #366
-  {DBGFIELD("WriteFMulLd")        1, false, false, 972, 5,  5, 1,  0, 0}, // #367
-  {DBGFIELD("WriteFMul")          1, false, false, 977, 3, 19, 1,  0, 0}, // #368
-  {DBGFIELD("IIC_SSE_MWAITX_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #369
-  {DBGFIELD("IIC_SSE_MWAIT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #370
-  {DBGFIELD("IIC_NOP_WriteZero")  1, false, false,  0, 0,  2, 1,  0, 0}, // #371
-  {DBGFIELD("IIC_OUT_IR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #372
-  {DBGFIELD("IIC_OUT_RR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #373
-  {DBGFIELD("IIC_OUTS_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #374
-  {DBGFIELD("IIC_SSE_PABS_RM_WriteVecALULd") 1, false, false, 960, 4, 16, 1,  0, 0}, // #375
-  {DBGFIELD("IIC_SSE_PABS_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #376
-  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #377
-  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #378
-  {DBGFIELD("IIC_SSE_INTALUQ_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #379
-  {DBGFIELD("IIC_SSE_INTALUQ_P_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #380
-  {DBGFIELD("IIC_SSE_PALIGNRM_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #381
-  {DBGFIELD("IIC_SSE_PALIGNRR_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #382
-  {DBGFIELD("IIC_SSE_BIT_P_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #383
-  {DBGFIELD("IIC_SSE_BIT_P_RR_WriteVecLogic") 1, false, false, 965, 2,  2, 1,  0, 0}, // #384
-  {DBGFIELD("IIC_SSE_PAUSE_WriteNop") 1, false, false,  0, 0,  2, 1,  0, 0}, // #385
-  {DBGFIELD("IIC_ALU_MEM_WriteVarBlendLd_ReadAfterLd") 1, false, false, 1025, 4,  5, 1,  4, 1}, // #386
-  {DBGFIELD("IIC_ALU_NONMEM_WriteVarBlend") 1, false, false, 1029, 2, 19, 1,  0, 0}, // #387
-  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteBlendLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #388
-  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteBlend") 1, false, false, 965, 2,  2, 1,  0, 0}, // #389
-  {DBGFIELD("IIC_SSE_PCLMULQDQ_RM_WriteCLMulLd_ReadAfterLd") 1, false, false, 968, 4,  5, 1,  4, 1}, // #390
-  {DBGFIELD("IIC_SSE_PCLMULQDQ_RR_WriteCLMul") 1, false, false, 16, 1, 19, 1,  0, 0}, // #391
-  {DBGFIELD("WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #392
-  {DBGFIELD("WriteVecALU")        1, false, false, 965, 2,  2, 1,  0, 0}, // #393
-  {DBGFIELD("WritePCmpEStrILd_ReadAfterLd") 1, false, false, 1031, 4, 39, 1,  4, 1}, // #394
-  {DBGFIELD("WritePCmpEStrI")     1, false, false, 1035, 2, 34, 1,  0, 0}, // #395
-  {DBGFIELD("WritePCmpEStrMLd_ReadAfterLd") 1, false, false, 1031, 4, 39, 1,  4, 1}, // #396
-  {DBGFIELD("WritePCmpEStrM")     1, false, false, 1035, 2, 34, 1,  0, 0}, // #397
-  {DBGFIELD("WritePCmpIStrILd_ReadAfterLd") 1, false, false, 1025, 4, 20, 1,  4, 1}, // #398
-  {DBGFIELD("WritePCmpIStrI")     1, false, false, 1029, 2, 16, 1,  0, 0}, // #399
-  {DBGFIELD("WritePCmpIStrMLd_ReadAfterLd") 1, false, false, 1025, 4, 14, 1,  4, 1}, // #400
-  {DBGFIELD("WritePCmpIStrM")     1, false, false, 1029, 2,  5, 1,  0, 0}, // #401
-  {DBGFIELD("WriteShuffleLd_WriteRMW") 2, false, false, 996, 5, 45, 2,  0, 0}, // #402
-  {DBGFIELD("IIC_SSE_PEXTRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #403
-  {DBGFIELD("IIC_SSE_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #404
-  {DBGFIELD("IIC_SSE_PHADDSUBD_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #405
-  {DBGFIELD("IIC_SSE_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #406
-  {DBGFIELD("IIC_SSE_PHADDSUBW_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #407
-  {DBGFIELD("WriteVecIMulLd")     1, false, false, 952, 5,  5, 1,  0, 0}, // #408
-  {DBGFIELD("WriteVecIMul")       1, false, false, 957, 3, 19, 1,  0, 0}, // #409
-  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #410
-  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #411
-  {DBGFIELD("WriteVecIMulLd_ReadAfterLd") 1, false, false, 952, 5,  5, 1,  4, 1}, // #412
-  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMulLd_ReadAfterLd") 1, false, false, 952, 5,  5, 1,  4, 1}, // #413
-  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMul") 1, false, false, 957, 3, 19, 1,  0, 0}, // #414
-  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteShuffleLd") 1, false, false, 960, 4, 16, 1,  0, 0}, // #415
-  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #416
-  {DBGFIELD("IIC_SSE_INTMUL_P_RM_WriteVecIMulLd_ReadAfterLd") 1, false, false, 952, 5,  5, 1,  4, 1}, // #417
-  {DBGFIELD("IIC_SSE_INTMUL_P_RR_WriteVecIMul") 1, false, false, 957, 3, 19, 1,  0, 0}, // #418
-  {DBGFIELD("IIC_POP_REG16_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #419
-  {DBGFIELD("IIC_POP_MEM_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #420
-  {DBGFIELD("IIC_POP_REG_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #421
-  {DBGFIELD("IIC_POP_A_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #422
-  {DBGFIELD("IIC_SSE_POPCNT_RM_WriteFAddLd") 1, false, false, 952, 5, 10, 1,  0, 0}, // #423
-  {DBGFIELD("IIC_SSE_POPCNT_RR_WriteFAdd") 1, false, false, 957, 3,  6, 1,  0, 0}, // #424
-  {DBGFIELD("IIC_POP_SR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #425
-  {DBGFIELD("IIC_POP_F_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #426
-  {DBGFIELD("IIC_POP_FD_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #427
-  {DBGFIELD("IIC_POP_SR_SS_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #428
-  {DBGFIELD("IIC_SSE_PSHUFB_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #429
-  {DBGFIELD("IIC_SSE_PSHUFB_RR_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #430
-  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #431
-  {DBGFIELD("IIC_SSE_PSHUF_RI_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #432
-  {DBGFIELD("IIC_SSE_INTSHDQ_P_RI_WriteVecShift") 1, false, false, 965, 2,  2, 1,  0, 0}, // #433
-  {DBGFIELD("IIC_SSE_INTSH_P_RI_WriteVecShift") 1, false, false, 965, 2,  2, 1,  0, 0}, // #434
-  {DBGFIELD("IIC_SSE_INTSH_P_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #435
-  {DBGFIELD("IIC_SSE_INTSH_P_RR_WriteVecShift") 1, false, false, 965, 2,  2, 1,  0, 0}, // #436
-  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #437
-  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #438
-  {DBGFIELD("IIC_PUSH_IMM_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #439
-  {DBGFIELD("IIC_PUSH_REG_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #440
-  {DBGFIELD("IIC_PUSH_MEM_WriteRMW") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #441
-  {DBGFIELD("IIC_PUSH_A_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #442
-  {DBGFIELD("IIC_PUSH_SR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #443
-  {DBGFIELD("IIC_PUSH_CS_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #444
-  {DBGFIELD("IIC_PUSH_F_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #445
-  {DBGFIELD("IIC_SR_WriteShiftLd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #446
-  {DBGFIELD("IIC_SR_WriteShift")  1, false, false, 427, 2,  2, 1,  0, 0}, // #447
-  {DBGFIELD("IIC_SSE_RCPP_RM_WriteFRcpLd") 1, false, false, 972, 5,  5, 1,  0, 0}, // #448
-  {DBGFIELD("IIC_SSE_RCPP_RR_WriteFRcp") 1, false, false, 977, 3, 19, 1,  0, 0}, // #449
-  {DBGFIELD("IIC_SSE_RCPS_RM_WriteFRcpLd_ReadAfterLd") 1, false, false, 972, 5,  5, 1,  4, 1}, // #450
-  {DBGFIELD("WriteFRcpLd_ReadAfterLd") 1, false, false, 972, 5,  5, 1,  4, 1}, // #451
-  {DBGFIELD("IIC_SSE_RCPS_RR_WriteFRcp") 1, false, false, 977, 3, 19, 1,  0, 0}, // #452
-  {DBGFIELD("WriteRMW")           1, false, false, 1006, 3,  2, 1,  0, 0}, // #453
-  {DBGFIELD("IIC_RDMSR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #454
-  {DBGFIELD("IIC_RDPMC_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #455
-  {DBGFIELD("IIC_RDTSC_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #456
-  {DBGFIELD("IIC_REP_MOVS_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #457
-  {DBGFIELD("IIC_REP_STOS_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #458
-  {DBGFIELD("IIC_RET_IMM_WriteJumpLd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #459
-  {DBGFIELD("WriteShiftLd")       1, false, false, 948, 4,  9, 1,  0, 0}, // #460
-  {DBGFIELD("WriteShift")         1, false, false, 427, 2,  2, 1,  0, 0}, // #461
-  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAddLd") 1, false, false, 952, 5, 10, 1,  0, 0}, // #462
-  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAdd") 1, false, false, 957, 3,  6, 1,  0, 0}, // #463
-  {DBGFIELD("IIC_SSE_ROUNDPS_MEM_WriteFAddLd") 1, false, false, 952, 5, 10, 1,  0, 0}, // #464
-  {DBGFIELD("WriteFAddLd_ReadAfterLd") 1, false, false, 952, 5, 10, 1,  4, 1}, // #465
-  {DBGFIELD("IIC_RSM_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #466
-  {DBGFIELD("IIC_SSE_RSQRTPS_RM_WriteFRsqrtLd") 1, false, false, 972, 5,  5, 1,  0, 0}, // #467
-  {DBGFIELD("IIC_SSE_RSQRTPS_RR_WriteFRsqrt") 1, false, false, 977, 3, 19, 1,  0, 0}, // #468
-  {DBGFIELD("IIC_SSE_RSQRTSS_RM_WriteFRsqrtLd_ReadAfterLd") 1, false, false, 972, 5,  5, 1,  4, 1}, // #469
-  {DBGFIELD("WriteFRsqrtLd_ReadAfterLd") 1, false, false, 972, 5,  5, 1,  4, 1}, // #470
-  {DBGFIELD("IIC_SSE_RSQRTSS_RR_WriteFRsqrt") 1, false, false, 977, 3, 19, 1,  0, 0}, // #471
-  {DBGFIELD("WriteShiftLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd") 1, false, false, 948, 4,  9, 1,  5, 1}, // #472
-  {DBGFIELD("IIC_SCAS_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #473
-  {DBGFIELD("IIC_SET_M_WriteALU_WriteStore") 2, false, false, 1037, 4, 21, 2,  0, 0}, // #474
-  {DBGFIELD("IIC_SET_R_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #475
-  {DBGFIELD("IIC_SSE_SFENCE_WriteFence") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #476
-  {DBGFIELD("IIC_SGDT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #477
-  {DBGFIELD("IIC_SHD16_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #478
-  {DBGFIELD("IIC_SHD16_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #479
-  {DBGFIELD("IIC_SHD16_REG_CL_WriteShift") 1, false, false, 427, 2,  2, 1,  0, 0}, // #480
-  {DBGFIELD("IIC_SHD16_REG_IM_WriteShift") 1, false, false, 427, 2,  2, 1,  0, 0}, // #481
-  {DBGFIELD("IIC_SHD32_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #482
-  {DBGFIELD("IIC_SHD32_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #483
-  {DBGFIELD("IIC_SHD32_REG_CL_WriteShift") 1, false, false, 427, 2,  2, 1,  0, 0}, // #484
-  {DBGFIELD("IIC_SHD32_REG_IM_WriteShift") 1, false, false, 427, 2,  2, 1,  0, 0}, // #485
-  {DBGFIELD("IIC_SHD64_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #486
-  {DBGFIELD("IIC_SHD64_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #487
-  {DBGFIELD("IIC_SHD64_REG_CL_WriteShift") 1, false, false, 427, 2,  2, 1,  0, 0}, // #488
-  {DBGFIELD("IIC_SHD64_REG_IM_WriteShift") 1, false, false, 427, 2,  2, 1,  0, 0}, // #489
-  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #490
-  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #491
-  {DBGFIELD("IIC_SIDT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #492
-  {DBGFIELD("IIC_SLDT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #493
-  {DBGFIELD("IIC_SMSW_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #494
-  {DBGFIELD("IIC_SSE_SQRTPD_RM_WriteFSqrtLd") 1, false, false, 1041, 6, 51, 1,  0, 0}, // #495
-  {DBGFIELD("IIC_SSE_SQRTPD_RR_WriteFSqrt") 1, false, false, 1041, 6, 27, 1,  0, 0}, // #496
-  {DBGFIELD("IIC_SSE_SQRTPS_RM_WriteFSqrtLd") 1, false, false, 1041, 6, 51, 1,  0, 0}, // #497
-  {DBGFIELD("IIC_SSE_SQRTPS_RR_WriteFSqrt") 1, false, false, 1041, 6, 27, 1,  0, 0}, // #498
-  {DBGFIELD("IIC_SSE_SQRTSD_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 1041, 6, 51, 1,  4, 1}, // #499
-  {DBGFIELD("WriteFSqrtLd_ReadAfterLd") 1, false, false, 1041, 6, 51, 1,  4, 1}, // #500
-  {DBGFIELD("IIC_SSE_SQRTSD_RR_WriteFSqrt") 1, false, false, 1041, 6, 27, 1,  0, 0}, // #501
-  {DBGFIELD("IIC_SSE_SQRTSS_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 1041, 6, 51, 1,  4, 1}, // #502
-  {DBGFIELD("IIC_SSE_SQRTSS_RR_WriteFSqrt") 1, false, false, 1041, 6, 27, 1,  0, 0}, // #503
-  {DBGFIELD("WriteFSqrt")         1, false, false, 1041, 6, 27, 1,  0, 0}, // #504
-  {DBGFIELD("IIC_STC_WriteALU")   1, false, false, 427, 2,  2, 1,  0, 0}, // #505
-  {DBGFIELD("IIC_STD_WriteALU")   1, false, false, 427, 2,  2, 1,  0, 0}, // #506
-  {DBGFIELD("IIC_STI_WriteALU")   1, false, false, 427, 2,  2, 1,  0, 0}, // #507
-  {DBGFIELD("IIC_SSE_STMXCSR_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #508
-  {DBGFIELD("IIC_STOS_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #509
-  {DBGFIELD("IIC_STR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #510
-  {DBGFIELD("IIC_FST80_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #511
-  {DBGFIELD("IIC_FST_WriteMove")  1, false, false, 13, 1,  2, 1,  0, 0}, // #512
-  {DBGFIELD("IIC_SWAPGS_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #513
-  {DBGFIELD("IIC_SYSCALL_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #514
-  {DBGFIELD("IIC_SYS_ENTER_EXIT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #515
-  {DBGFIELD("IIC_JMP_REL_WriteJumpLd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #516
-  {DBGFIELD("IIC_JMP_MEM_WriteJump") 1, false, false, 427, 2,  2, 1,  0, 0}, // #517
-  {DBGFIELD("IIC_JMP_REG_WriteJumpLd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #518
-  {DBGFIELD("WriteJump")          1, false, false, 427, 2,  2, 1,  0, 0}, // #519
-  {DBGFIELD("IIC_FUCOMI_WriteFAdd") 1, false, false, 957, 3,  6, 1,  0, 0}, // #520
-  {DBGFIELD("IIC_FUCOM_WriteFAdd") 1, false, false, 957, 3,  6, 1,  0, 0}, // #521
-  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #522
-  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #523
-  {DBGFIELD("IIC_SSE_ALU_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #524
-  {DBGFIELD("IIC_SSE_ALU_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #525
-  {DBGFIELD("IIC_SSE_ALU_F32S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #526
-  {DBGFIELD("IIC_SSE_ALU_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #527
-  {DBGFIELD("WriteFVarBlendLd_ReadAfterLd") 1, false, false, 1025, 4,  5, 1,  4, 1}, // #528
-  {DBGFIELD("WriteFVarBlend")     1, false, false, 1029, 2, 19, 1,  0, 0}, // #529
-  {DBGFIELD("WriteFShuffleLd")    1, false, false, 960, 4, 16, 1,  0, 0}, // #530
-  {DBGFIELD("WriteFShuffle256")   1, false, false, 965, 2,  2, 1,  0, 0}, // #531
-  {DBGFIELD("WriteFShuffle")      1, false, false, 965, 2,  2, 1,  0, 0}, // #532
-  {DBGFIELD("IIC_SSE_ALU_F32P_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #533
-  {DBGFIELD("WriteCvtF2ILd")      1, false, false, 972, 5, 10, 1,  0, 0}, // #534
-  {DBGFIELD("WriteCvtF2I")        1, false, false, 977, 3,  6, 1,  0, 0}, // #535
-  {DBGFIELD("WriteCvtF2FLd")      1, false, false, 972, 5, 10, 1,  0, 0}, // #536
-  {DBGFIELD("WriteCvtF2F")        1, false, false, 977, 3,  6, 1,  0, 0}, // #537
-  {DBGFIELD("WriteCvtF2FLd_WriteRMW") 2, false, false, 1047, 6, 35, 2,  0, 0}, // #538
-  {DBGFIELD("WriteCvtF2FLd_ReadAfterLd") 1, false, false, 972, 5, 10, 1,  4, 1}, // #539
-  {DBGFIELD("WriteCvtI2FLd_ReadAfterLd") 1, false, false, 972, 5, 10, 1,  4, 1}, // #540
-  {DBGFIELD("IIC_VERR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #541
-  {DBGFIELD("IIC_VERW_REG_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #542
-  {DBGFIELD("IIC_VERW_MEM_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #543
-  {DBGFIELD("WriteStore")         1, false, false, 1006, 3,  2, 1,  0, 0}, // #544
-  {DBGFIELD("WriteShuffle256")    1, false, false, 965, 2,  2, 1,  0, 0}, // #545
-  {DBGFIELD("IIC_ALU_MEM_WriteFBlendLd_WriteRMW") 2, false, false, 996, 5, 45, 2,  0, 0}, // #546
-  {DBGFIELD("WriteFShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #547
-  {DBGFIELD("WriteShuffle256Ld_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #548
-  {DBGFIELD("IIC_ALU_MEM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #549
-  {DBGFIELD("IIC_ALU_NONMEM_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #550
-  {DBGFIELD("IIC_SSE_MOVDQ")      0, false, false,  0, 0,  0, 0,  0, 0}, // #551
-  {DBGFIELD("IIC_SSE_MOV_LH")     0, false, false,  0, 0,  0, 0,  0, 0}, // #552
-  {DBGFIELD("IIC_SSE_MOVD_ToGP")  0, false, false,  0, 0,  0, 0,  0, 0}, // #553
-  {DBGFIELD("IIC_SSE_MOV_S_MR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #554
-  {DBGFIELD("IIC_SSE_MOV_S_RM")   0, false, false,  0, 0,  0, 0,  0, 0}, // #555
-  {DBGFIELD("IIC_SSE_MOV_S_RR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #556
-  {DBGFIELD("IIC_SSE_MOVQ_RR")    0, false, false,  0, 0,  0, 0,  0, 0}, // #557
-  {DBGFIELD("IIC_ALU_MEM_WriteMPSADLd_ReadAfterLd") 1, false, false, 1009, 5, 10, 1,  4, 1}, // #558
-  {DBGFIELD("IIC_ALU_NONMEM_WriteMPSAD") 1, false, false, 1014, 3,  6, 1,  0, 0}, // #559
-  {DBGFIELD("WriteVecALULd")      1, false, false, 960, 4, 16, 1,  0, 0}, // #560
-  {DBGFIELD("WriteBlendLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #561
-  {DBGFIELD("WriteBlend")         1, false, false, 965, 2,  2, 1,  0, 0}, // #562
-  {DBGFIELD("WriteVarBlendLd_ReadAfterLd") 1, false, false, 1025, 4,  5, 1,  4, 1}, // #563
-  {DBGFIELD("WriteVarBlend")      1, false, false, 1029, 2, 19, 1,  0, 0}, // #564
-  {DBGFIELD("IIC_ALU_MEM_WriteBlendLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #565
-  {DBGFIELD("IIC_ALU_NONMEM_WriteBlend") 1, false, false, 965, 2,  2, 1,  0, 0}, // #566
-  {DBGFIELD("WriteCLMulLd_ReadAfterLd") 1, false, false, 968, 4,  5, 1,  4, 1}, // #567
-  {DBGFIELD("WriteCLMul")         1, false, false, 16, 1, 19, 1,  0, 0}, // #568
-  {DBGFIELD("IIC_SSE_ALU_F32P_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #569
-  {DBGFIELD("WriteFShuffle256Ld_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #570
-  {DBGFIELD("IIC_ALU_MEM_WriteShuffleLd") 1, false, false, 960, 4, 16, 1,  0, 0}, // #571
-  {DBGFIELD("IIC_ALU_NONMEM_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #572
-  {DBGFIELD("WriteVarVecShift_ReadAfterLd") 1, false, false, 965, 2,  2, 1,  4, 1}, // #573
-  {DBGFIELD("WriteVarVecShift")   1, false, false, 965, 2,  2, 1,  0, 0}, // #574
-  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd") 1, false, false, 960, 4, 16, 1,  0, 0}, // #575
-  {DBGFIELD("WriteVecShift")      1, false, false, 965, 2,  2, 1,  0, 0}, // #576
-  {DBGFIELD("WriteVarVecShiftLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #577
-  {DBGFIELD("WriteFRcpLd")        1, false, false, 972, 5,  5, 1,  0, 0}, // #578
-  {DBGFIELD("WriteFRsqrtLd")      1, false, false, 972, 5,  5, 1,  0, 0}, // #579
-  {DBGFIELD("WriteFSqrtLd")       1, false, false, 1041, 6, 51, 1,  0, 0}, // #580
-  {DBGFIELD("IIC_WAIT_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #581
-  {DBGFIELD("IIC_WRMSR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #582
-  {DBGFIELD("IIC_XADD_MEM_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #583
-  {DBGFIELD("IIC_XADD_REG_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #584
-  {DBGFIELD("IIC_XCHG_REG_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #585
-  {DBGFIELD("IIC_XCHG_MEM_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #586
-  {DBGFIELD("IIC_FXCH_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #587
-  {DBGFIELD("IIC_XLAT_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #588
-  {DBGFIELD("MOV16rm")            1, false, false, 968, 3,  3, 1,  0, 0}, // #589
-  {DBGFIELD("MOVSX32rm16_MOVSX32rm8") 1, false, false, 948, 4,  9, 1,  0, 0}, // #590
-  {DBGFIELD("MOVZX32rm16_MOVZX32rm8") 1, false, false, 948, 4,  9, 1,  0, 0}, // #591
-  {DBGFIELD("CMOVA16rr_CMOVAE16rr_CMOVB16rr_CMOVBE16rr_CMOVE16rr_CMOVG16rr_CMOVGE16rr_CMOVL16rr_CMOVLE16rr_CMOVNE16rr_CMOVNO16rr_CMOVNP16rr_CMOVNS16rr_CMOVO16rr_CMOVP16rr_CMOVS16rr") 1, false, false, 427, 2,  2, 1,  0, 0}, // #592
-  {DBGFIELD("CMOVA32rr_CMOVA64rr_CMOVAE32rr_CMOVAE64rr_CMOVB32rr_CMOVB64rr_CMOVBE32rr_CMOVBE64rr_CMOVE32rr_CMOVE64rr_CMOVG32rr_CMOVG64rr_CMOVGE32rr_CMOVGE64rr_CMOVL32rr_CMOVL64rr_CMOVLE32rr_CMOVLE64rr_CMOVNE32rr_CMOVNE64rr_CMOVNO32rr_CMOVNO64rr_CMOVNP32rr_CMOVNP64rr_CMOVNS32rr_CMOVNS64rr_CMOVO32rr_CMOVO64rr_CMOVP32rr_CMOVP64rr_CMOVS32rr_CMOVS64rr") 1, false, false, 427, 2,  2, 1,  0, 0}, // #593
-  {DBGFIELD("CMOVA16rm_CMOVAE16rm_CMOVB16rm_CMOVBE16rm_CMOVE16rm_CMOVG16rm_CMOVGE16rm_CMOVL16rm_CMOVLE16rm_CMOVNE16rm_CMOVNO16rm_CMOVNP16rm_CMOVNS16rm_CMOVO16rm_CMOVP16rm_CMOVS16rm") 1, false, false, 948, 4,  9, 1,  4, 1}, // #594
-  {DBGFIELD("CMOVA32rm_CMOVA64rm_CMOVAE32rm_CMOVAE64rm_CMOVB32rm_CMOVB64rm_CMOVBE32rm_CMOVBE64rm_CMOVE32rm_CMOVE64rm_CMOVG32rm_CMOVG64rm_CMOVGE32rm_CMOVGE64rm_CMOVL32rm_CMOVL64rm_CMOVLE32rm_CMOVLE64rm_CMOVNE32rm_CMOVNE64rm_CMOVNO32rm_CMOVNO64rm_CMOVNP32rm_CMOVNP64rm_CMOVNS32rm_CMOVNS64rm_CMOVO32rm_CMOVO64rm_CMOVP32rm_CMOVP64rm_CMOVS32rm_CMOVS64rm") 1, false, false, 948, 4,  9, 1,  4, 1}, // #595
-  {DBGFIELD("XCHG16ar_XCHG16rr_XCHG32ar_XCHG32ar64_XCHG32rr_XCHG64ar_XCHG64rr_XCHG8rr") 1, false, false, 427, 2,  2, 1,  0, 0}, // #596
-  {DBGFIELD("XCHG16rm_XCHG32rm_XCHG64rm_XCHG8rm") 2, false, false, 943, 5, 41, 2,  0, 0}, // #597
-  {DBGFIELD("XLAT")               1, false, false, 968, 3,  3, 1,  0, 0}, // #598
-  {DBGFIELD("PUSH16rmm_PUSH32rmm") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #599
-  {DBGFIELD("PUSHF16_PUSHF32")    1, false, false, 1006, 3,  2, 1,  0, 0}, // #600
-  {DBGFIELD("PUSHA16_PUSHA32")    1, false, false, 1006, 3,  2, 1,  0, 0}, // #601
-  {DBGFIELD("POP16rmm_POP32rmm")  1, false, false, 968, 3,  3, 1,  0, 0}, // #602
-  {DBGFIELD("POPF16")             1, false, false, 968, 3,  3, 1,  0, 0}, // #603
-  {DBGFIELD("POPF32")             1, false, false, 968, 3,  3, 1,  0, 0}, // #604
-  {DBGFIELD("POPA16_POPA32")      1, false, false, 968, 3,  3, 1,  0, 0}, // #605
-  {DBGFIELD("LAHF_SAHF")          1, false, false, 427, 2,  2, 1,  0, 0}, // #606
-  {DBGFIELD("BSWAP32r")           1, false, false, 427, 2,  2, 1,  0, 0}, // #607
-  {DBGFIELD("BSWAP64r")           1, false, false, 427, 2,  2, 1,  0, 0}, // #608
-  {DBGFIELD("MOVBE16rm_MOVBE64rm") 1, false, false, 948, 4,  9, 1,  0, 0}, // #609
-  {DBGFIELD("MOVBE32rm")          1, false, false, 948, 4,  9, 1,  0, 0}, // #610
-  {DBGFIELD("MOVBE16mr")          1, false, false, 1006, 3,  2, 1,  0, 0}, // #611
-  {DBGFIELD("MOVBE32mr")          1, false, false, 1006, 3,  2, 1,  0, 0}, // #612
-  {DBGFIELD("MOVBE64mr")          1, false, false, 1006, 3,  2, 1,  0, 0}, // #613
-  {DBGFIELD("ADD16mi_ADD16mi8_ADD16mr_ADD32mi_ADD32mi8_ADD32mr_ADD64mi32_ADD64mi8_ADD64mr_ADD8mi_ADD8mi8_ADD8mr_SUB16mi_SUB16mi8_SUB16mr_SUB32mi_SUB32mi8_SUB32mr_SUB64mi32_SUB64mi8_SUB64mr_SUB8mi_SUB8mi8_SUB8mr") 2, false, false, 943, 5, 41, 2,  0, 0}, // #614
-  {DBGFIELD("ADC16ri_ADC16ri8_ADC16rr_ADC16rr_REV_ADC32ri_ADC32ri8_ADC32rr_ADC32rr_REV_ADC64ri32_ADC64ri8_ADC64rr_ADC64rr_REV_ADC8ri_ADC8ri8_ADC8rr_ADC8rr_REV_SBB16ri_SBB16ri8_SBB16rr_SBB16rr_REV_SBB32ri_SBB32ri8_SBB32rr_SBB32rr_REV_SBB64ri32_SBB64ri8_SBB64rr_SBB64rr_REV_SBB8ri_SBB8ri8_SBB8rr_SBB8rr_REV") 1, false, false, 427, 2,  2, 1,  0, 0}, // #615
-  {DBGFIELD("ADC16rm_ADC32rm_ADC64rm_ADC8rm_SBB16rm_SBB32rm_SBB64rm_SBB8rm") 1, false, false, 948, 4,  9, 1,  4, 1}, // #616
-  {DBGFIELD("ADC16mi_ADC16mi8_ADC16mr_ADC32mi_ADC32mi8_ADC32mr_ADC64mi32_ADC64mi8_ADC64mr_ADC8mi_ADC8mi8_ADC8mr_SBB16mi_SBB16mi8_SBB16mr_SBB32mi_SBB32mi8_SBB32mr_SBB64mi32_SBB64mi8_SBB64mr_SBB8mi_SBB8mi8_SBB8mr") 2, false, false, 943, 5, 41, 2,  0, 0}, // #617
-  {DBGFIELD("DEC16m_DEC32m_DEC64m_DEC8m_INC16m_INC32m_INC64m_INC8m_NEG16m_NEG32m_NEG64m_NEG8m_NOT16m_NOT32m_NOT64m_NOT8m") 2, false, false, 943, 5, 41, 2,  0, 0}, // #618
-  {DBGFIELD("IMUL16r_IMUL16rr")   1, false, false, 986, 3,  6, 1,  0, 0}, // #619
-  {DBGFIELD("IMUL16rm")           1, false, false, 1001, 5, 16, 1,  4, 1}, // #620
-  {DBGFIELD("IMUL16rmi_IMUL16rmi8") 1, false, false, 1001, 5, 16, 1,  0, 0}, // #621
-  {DBGFIELD("IMUL16rri_IMUL16rri8") 1, false, false, 986, 3,  6, 1,  0, 0}, // #622
-  {DBGFIELD("MUL16r")             1, false, false, 986, 3,  6, 1,  0, 0}, // #623
-  {DBGFIELD("IMUL16m")            1, false, false, 1001, 5, 16, 1,  5, 2}, // #624
-  {DBGFIELD("MUL16m")             1, false, false, 1001, 5, 16, 1,  5, 2}, // #625
-  {DBGFIELD("IMUL32r_IMUL32rr")   1, false, false, 986, 3,  6, 1,  0, 0}, // #626
-  {DBGFIELD("IMUL32rm")           1, false, false, 1001, 5, 16, 1,  4, 1}, // #627
-  {DBGFIELD("IMUL32rmi_IMUL32rmi8") 1, false, false, 1001, 5, 16, 1,  0, 0}, // #628
-  {DBGFIELD("IMUL32rri_IMUL32rri8") 1, false, false, 986, 3,  6, 1,  0, 0}, // #629
-  {DBGFIELD("MUL32r")             1, false, false, 986, 3,  6, 1,  0, 0}, // #630
-  {DBGFIELD("IMUL32m")            1, false, false, 1001, 5, 16, 1,  5, 2}, // #631
-  {DBGFIELD("MUL32m")             1, false, false, 1001, 5, 16, 1,  5, 2}, // #632
-  {DBGFIELD("IMUL64r_IMUL64rr")   1, false, false, 986, 3,  6, 1,  0, 0}, // #633
-  {DBGFIELD("IMUL64rm")           1, false, false, 1001, 5, 16, 1,  4, 1}, // #634
-  {DBGFIELD("IMUL64rmi32_IMUL64rmi8") 1, false, false, 1001, 5, 16, 1,  0, 0}, // #635
-  {DBGFIELD("IMUL64rri32_IMUL64rri8") 1, false, false, 986, 3,  6, 1,  0, 0}, // #636
-  {DBGFIELD("MUL64r")             1, false, false, 986, 3,  6, 1,  0, 0}, // #637
-  {DBGFIELD("IMUL64m")            1, false, false, 1001, 5, 16, 1,  5, 2}, // #638
-  {DBGFIELD("MUL64m")             1, false, false, 1001, 5, 16, 1,  5, 2}, // #639
-  {DBGFIELD("MULX32rr")           2, false, false, 1022, 3, 49, 2,  0, 0}, // #640
-  {DBGFIELD("MULX32rm")           2, false, false, 1017, 5, 47, 2,  0, 0}, // #641
-  {DBGFIELD("MULX64rr")           2, false, false, 1022, 3, 49, 2,  0, 0}, // #642
-  {DBGFIELD("MULX64rm")           2, false, false, 1017, 5, 47, 2,  0, 0}, // #643
-  {DBGFIELD("DIV8r")              1, false, false, 986, 4, 12, 1,  0, 0}, // #644
-  {DBGFIELD("DIV16r")             1, false, false, 986, 4, 12, 1,  0, 0}, // #645
-  {DBGFIELD("DIV32r")             1, false, false, 986, 4, 12, 1,  0, 0}, // #646
-  {DBGFIELD("DIV64r")             1, false, false, 986, 4, 12, 1,  0, 0}, // #647
-  {DBGFIELD("IDIV8r")             1, false, false, 986, 4, 12, 1,  0, 0}, // #648
-  {DBGFIELD("IDIV16r")            1, false, false, 986, 4, 12, 1,  0, 0}, // #649
-  {DBGFIELD("IDIV32r")            1, false, false, 986, 4, 12, 1,  0, 0}, // #650
-  {DBGFIELD("IDIV64r")            1, false, false, 986, 4, 12, 1,  0, 0}, // #651
-  {DBGFIELD("AND16mi_AND16mi8_AND16mr_AND32mi_AND32mi8_AND32mr_AND64mi32_AND64mi8_AND64mr_AND8mi_AND8mi8_AND8mr_OR16mi_OR16mi8_OR16mr_OR32mi_OR32mi8_OR32mr_OR64mi32_OR64mi8_OR64mr_OR8mi_OR8mi8_OR8mr_XOR16mi_XOR16mi8_XOR16mr_XOR32mi_XOR32mi8_XOR32mr_XOR64mi32_XOR64mi8_XOR64mr_XOR8mi_XOR8mi8_XOR8mr") 2, false, false, 943, 5, 41, 2,  0, 0}, // #652
-  {DBGFIELD("OR32mrLocked")       2, false, false, 943, 5, 41, 2,  0, 0}, // #653
-  {DBGFIELD("SAR16m1_SAR16mi_SAR32m1_SAR32mi_SAR64m1_SAR64mi_SAR8m1_SAR8mi_SHL16m1_SHL16mi_SHL32m1_SHL32mi_SHL64m1_SHL64mi_SHL8m1_SHL8mi_SHR16m1_SHR16mi_SHR32m1_SHR32mi_SHR64m1_SHR64mi_SHR8m1_SHR8mi") 2, false, false, 943, 5, 41, 2,  0, 0}, // #654
-  {DBGFIELD("SAR16rCL_SAR32rCL_SAR64rCL_SAR8rCL_SHL16rCL_SHL32rCL_SHL64rCL_SHL8rCL_SHR16rCL_SHR32rCL_SHR64rCL_SHR8rCL") 1, false, false, 427, 2,  2, 1,  0, 0}, // #655
-  {DBGFIELD("SAR16mCL_SAR32mCL_SAR64mCL_SAR8mCL_SHL16mCL_SHL32mCL_SHL64mCL_SHL8mCL_SHR16mCL_SHR32mCL_SHR64mCL_SHR8mCL") 2, false, false, 943, 5, 41, 2,  0, 0}, // #656
-  {DBGFIELD("ROL16r1_ROL32r1_ROL64r1_ROL8r1_ROR16r1_ROR32r1_ROR64r1_ROR8r1") 1, false, false, 427, 2,  2, 1,  0, 0}, // #657
-  {DBGFIELD("ROL16mi_ROL32mi_ROL64mi_ROL8mi_ROR16mi_ROR32mi_ROR64mi_ROR8mi") 2, false, false, 943, 5, 41, 2,  0, 0}, // #658
-  {DBGFIELD("ROL16rCL_ROL32rCL_ROL64rCL_ROL8rCL_ROR16rCL_ROR32rCL_ROR64rCL_ROR8rCL") 1, false, false, 427, 2,  2, 1,  0, 0}, // #659
-  {DBGFIELD("ROL16mCL_ROL32mCL_ROL64mCL_ROL8mCL_ROR16mCL_ROR32mCL_ROR64mCL_ROR8mCL") 2, false, false, 943, 5, 41, 2,  0, 0}, // #660
-  {DBGFIELD("RCL16r1_RCL32r1_RCL64r1_RCL8r1_RCR16r1_RCR32r1_RCR64r1_RCR8r1") 1, false, false, 427, 2,  2, 1,  0, 0}, // #661
-  {DBGFIELD("RCL16m1_RCL32m1_RCL64m1_RCL8m1_RCR16m1_RCR32m1_RCR64m1_RCR8m1") 2, false, false, 943, 5, 41, 2,  0, 0}, // #662
-  {DBGFIELD("RCL16rCL_RCL16ri_RCL32rCL_RCL32ri_RCL64rCL_RCL64ri_RCL8rCL_RCL8ri_RCR16rCL_RCR16ri_RCR32rCL_RCR32ri_RCR64rCL_RCR64ri_RCR8rCL_RCR8ri") 1, false, false, 427, 2,  2, 1,  0, 0}, // #663
-  {DBGFIELD("RCL16mCL_RCL16mi_RCL32mCL_RCL32mi_RCL64mCL_RCL64mi_RCL8mCL_RCL8mi_RCR16mCL_RCR16mi_RCR32mCL_RCR32mi_RCR64mCL_RCR64mi_RCR8mCL_RCR8mi") 2, false, false, 943, 5, 41, 2,  0, 0}, // #664
-  {DBGFIELD("SHLD16rri8_SHRD16rri8") 1, false, false, 427, 2,  2, 1,  0, 0}, // #665
-  {DBGFIELD("SHLD32rri8_SHRD32rri8") 1, false, false, 427, 2,  2, 1,  0, 0}, // #666
-  {DBGFIELD("SHLD64rri8_SHRD64rri8") 1, false, false, 427, 2,  2, 1,  0, 0}, // #667
-  {DBGFIELD("SHLD16mri8_SHRD16mri8") 2, false, false, 943, 5, 41, 2,  0, 0}, // #668
-  {DBGFIELD("SHLD32mri8_SHRD32mri8") 2, false, false, 943, 5, 41, 2,  0, 0}, // #669
-  {DBGFIELD("SHLD64mri8_SHRD64mri8") 2, false, false, 943, 5, 41, 2,  0, 0}, // #670
-  {DBGFIELD("SHLD16rrCL")         1, false, false, 427, 2,  2, 1,  0, 0}, // #671
-  {DBGFIELD("SHLD32rrCL")         1, false, false, 427, 2,  2, 1,  0, 0}, // #672
-  {DBGFIELD("SHLD64rrCL")         1, false, false, 427, 2,  2, 1,  0, 0}, // #673
-  {DBGFIELD("SHRD16rrCL")         1, false, false, 427, 2,  2, 1,  0, 0}, // #674
-  {DBGFIELD("SHRD32rrCL")         1, false, false, 427, 2,  2, 1,  0, 0}, // #675
-  {DBGFIELD("SHRD64rrCL")         1, false, false, 427, 2,  2, 1,  0, 0}, // #676
-  {DBGFIELD("SHLD16mrCL_SHRD16mrCL") 2, false, false, 943, 5, 41, 2,  0, 0}, // #677
-  {DBGFIELD("SHLD32mrCL_SHRD32mrCL") 2, false, false, 943, 5, 41, 2,  0, 0}, // #678
-  {DBGFIELD("SHLD64mrCL_SHRD64mrCL") 2, false, false, 943, 5, 41, 2,  0, 0}, // #679
-  {DBGFIELD("BT16ri8_BT32ri8_BT64ri8") 1, false, false, 427, 2,  2, 1,  0, 0}, // #680
-  {DBGFIELD("BT16rr_BT32rr_BT64rr") 1, false, false, 427, 2,  2, 1,  0, 0}, // #681
-  {DBGFIELD("BT16mr_BT32mr_BT64mr") 1, false, false, 948, 4,  9, 1,  0, 0}, // #682
-  {DBGFIELD("BT16mi8_BT32mi8_BT64mi8") 1, false, false, 427, 2,  2, 1,  0, 0}, // #683
-  {DBGFIELD("BTC16ri8_BTC32ri8_BTC64ri8_BTR16ri8_BTR32ri8_BTR64ri8_BTS16ri8_BTS32ri8_BTS64ri8") 1, false, false, 427, 2,  2, 1,  0, 0}, // #684
-  {DBGFIELD("BTC16rr_BTC32rr_BTC64rr_BTR16rr_BTR32rr_BTS16rr_BTS32rr_BTS64rr") 1, false, false, 427, 2,  2, 1,  0, 0}, // #685
-  {DBGFIELD("BTR64rr")            1, false, false, 427, 2,  2, 1,  0, 0}, // #686
-  {DBGFIELD("BTC16mr_BTC32mr_BTC64mr_BTR16mr_BTR32mr_BTR64mr_BTS16mr_BTS32mr_BTS64mr") 2, false, false, 943, 5, 41, 2,  0, 0}, // #687
-  {DBGFIELD("BTC16mi8_BTC32mi8_BTC64mi8_BTR16mi8_BTR32mi8_BTR64mi8_BTS16mi8_BTS32mi8_BTS64mi8") 2, false, false, 943, 5, 41, 2,  0, 0}, // #688
-  {DBGFIELD("BSF16rr_BSF32rr_BSF64rr_BSR16rr_BSR32rr_BSR64rr") 1, false, false, 427, 2,  2, 1,  0, 0}, // #689
-  {DBGFIELD("BSF16rm_BSF32rm_BSF64rm_BSR16rm_BSR32rm_BSR64rm") 1, false, false, 948, 4,  9, 1,  0, 0}, // #690
-  {DBGFIELD("SETAEr_SETAr_SETBEr_SETBr_SETEr_SETGEr_SETGr_SETLEr_SETLr_SETNEr_SETNOr_SETNPr_SETNSr_SETOr_SETPr_SETSr") 1, false, false, 427, 2,  2, 1,  0, 0}, // #691
-  {DBGFIELD("SETAEm_SETAm_SETBEm_SETBm_SETEm_SETGEm_SETGm_SETLEm_SETLm_SETNEm_SETNOm_SETNPm_SETNSm_SETOm_SETPm_SETSm") 2, false, false, 1037, 4, 21, 2,  0, 0}, // #692
-  {DBGFIELD("CLD")                1, false, false, 427, 2,  2, 1,  0, 0}, // #693
-  {DBGFIELD("STD")                1, false, false, 427, 2,  2, 1,  0, 0}, // #694
-  {DBGFIELD("TZCNT16rr_TZCNT32rr_TZCNT64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #695
-  {DBGFIELD("TZCNT16rm_TZCNT32rm_TZCNT64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #696
-  {DBGFIELD("ANDN32rr_ANDN64rr")  1, false, false, 427, 2,  2, 1,  0, 0}, // #697
-  {DBGFIELD("ANDN32rm_ANDN64rm")  1, false, false, 948, 4,  9, 1,  4, 1}, // #698
-  {DBGFIELD("BLSI32rr_BLSI64rr_BLSMSK32rr_BLSMSK64rr_BLSR32rr_BLSR64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #699
-  {DBGFIELD("BLSI32rm_BLSI64rm_BLSMSK32rm_BLSMSK64rm_BLSR32rm_BLSR64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #700
-  {DBGFIELD("BEXTR32rr_BEXTR64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #701
-  {DBGFIELD("BEXTR32rm_BEXTR64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #702
-  {DBGFIELD("BZHI32rr_BZHI64rr")  0, false, false,  0, 0,  0, 0,  0, 0}, // #703
-  {DBGFIELD("BZHI32rm_BZHI64rm")  0, false, false,  0, 0,  0, 0,  0, 0}, // #704
-  {DBGFIELD("PDEP32rr_PDEP64rr_PEXT32rr_PEXT64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #705
-  {DBGFIELD("PDEP32rm_PDEP64rm_PEXT32rm_PEXT64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #706
-  {DBGFIELD("JCXZ_JRCXZ")         1, false, false, 427, 2,  2, 1,  0, 0}, // #707
-  {DBGFIELD("LOOP")               1, false, false, 427, 2,  2, 1,  0, 0}, // #708
-  {DBGFIELD("LOOPE")              1, false, false, 427, 2,  2, 1,  0, 0}, // #709
-  {DBGFIELD("LOOPNE")             1, false, false, 427, 2,  2, 1,  0, 0}, // #710
-  {DBGFIELD("CALL16r_CALL32r")    1, false, false, 427, 2,  2, 1,  0, 0}, // #711
-  {DBGFIELD("CALL16m_CALL32m")    1, false, false, 948, 4,  9, 1,  0, 0}, // #712
-  {DBGFIELD("LRETL_LRETQ_LRETW_RETL_RETQ_RETW") 1, false, false, 948, 4,  9, 1,  0, 0}, // #713
-  {DBGFIELD("LRETIL_LRETIQ_LRETIW") 1, false, false, 948, 4,  9, 1,  0, 0}, // #714
-  {DBGFIELD("RETIL_RETIQ_RETIW")  1, false, false, 948, 4,  9, 1,  0, 0}, // #715
-  {DBGFIELD("BOUNDS16rm_BOUNDS32rm") 1, false, false, 13, 1,  1, 1,  0, 0}, // #716
-  {DBGFIELD("INTO")               1, false, false, 13, 1,  1, 1,  0, 0}, // #717
-  {DBGFIELD("LODSB_LODSW")        1, false, false, 13, 1,  1, 1,  0, 0}, // #718
-  {DBGFIELD("LODSL_LODSQ")        1, false, false, 13, 1,  1, 1,  0, 0}, // #719
-  {DBGFIELD("STOSB_STOSL_STOSQ_STOSW") 1, false, false, 13, 1,  1, 1,  0, 0}, // #720
-  {DBGFIELD("MOVSB_MOVSL_MOVSQ_MOVSW") 1, false, false, 13, 1,  1, 1,  0, 0}, // #721
-  {DBGFIELD("MOVSLDUPrm")         1, false, false, 968, 3,  3, 1,  0, 0}, // #722
-  {DBGFIELD("MOVSLDUPrr")         1, false, false, 965, 2,  2, 1,  0, 0}, // #723
-  {DBGFIELD("SCASB_SCASL_SCASQ_SCASW") 1, false, false, 13, 1,  1, 1,  0, 0}, // #724
-  {DBGFIELD("CMPSB_CMPSL_CMPSQ_CMPSW") 1, false, false, 13, 1,  1, 1,  0, 0}, // #725
-  {DBGFIELD("XADD16rm_XADD32rm_XADD64rm_XADD8rm") 2, false, false, 943, 5, 41, 2,  0, 0}, // #726
-  {DBGFIELD("CMPXCHG16rm_CMPXCHG32rm_CMPXCHG64rm") 2, false, false, 943, 5, 41, 2,  0, 0}, // #727
-  {DBGFIELD("CMPXCHG8rm")         2, false, false, 943, 5, 41, 2,  0, 0}, // #728
-  {DBGFIELD("CMPXCHG8B")          2, false, false, 943, 5, 41, 2,  0, 0}, // #729
-  {DBGFIELD("CMPXCHG16B")         2, false, false, 943, 5, 41, 2,  0, 0}, // #730
-  {DBGFIELD("PAUSE")              1, false, false,  0, 0,  2, 1,  0, 0}, // #731
-  {DBGFIELD("LEAVE_LEAVE64")      1, false, false, 427, 2,  2, 1,  0, 0}, // #732
-  {DBGFIELD("XGETBV")             1, false, false, 13, 1,  1, 1,  0, 0}, // #733
-  {DBGFIELD("RDTSC")              1, false, false, 13, 1,  1, 1,  0, 0}, // #734
-  {DBGFIELD("RDTSCP")             1, false, false, 13, 1,  1, 1,  0, 0}, // #735
-  {DBGFIELD("RDPMC")              1, false, false, 13, 1,  1, 1,  0, 0}, // #736
-  {DBGFIELD("RDRAND16r_RDRAND32r_RDRAND64r") 0, false, false,  0, 0,  0, 0,  0, 0}, // #737
-  {DBGFIELD("LD_Frr")             1, false, false, 13, 1,  2, 1,  0, 0}, // #738
-  {DBGFIELD("LD_F80m")            1, false, false, 968, 3,  3, 1,  0, 0}, // #739
-  {DBGFIELD("FBLDm")              0, false, false,  0, 0,  0, 0,  0, 0}, // #740
-  {DBGFIELD("ST_FPrr_ST_Frr")     1, false, false, 13, 1,  2, 1,  0, 0}, // #741
-  {DBGFIELD("ST_FP80m")           1, false, false, 1006, 3,  2, 1,  0, 0}, // #742
-  {DBGFIELD("FBSTPm")             0, false, false,  0, 0,  0, 0,  0, 0}, // #743
-  {DBGFIELD("XCH_F")              1, false, false, 13, 1,  2, 1,  0, 0}, // #744
-  {DBGFIELD("ILD_F16m_ILD_F32m_ILD_F64m") 1, false, false, 968, 3,  3, 1,  0, 0}, // #745
-  {DBGFIELD("IST_F16m_IST_F32m_IST_FP16m_IST_FP32m") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #746
-  {DBGFIELD("LD_F0")              1, false, false,  0, 0,  2, 1,  0, 0}, // #747
-  {DBGFIELD("LD_F1")              1, false, false,  0, 0,  2, 1,  0, 0}, // #748
-  {DBGFIELD("FLDPI")              1, false, false, 13, 1,  1, 1,  0, 0}, // #749
-  {DBGFIELD("CMOVBE_F_CMOVBE_Fp32_CMOVBE_Fp64_CMOVBE_Fp80_CMOVB_F_CMOVB_Fp32_CMOVB_Fp64_CMOVB_Fp80_CMOVNBE_F_CMOVNBE_Fp32_CMOVNBE_Fp64_CMOVNBE_Fp80_CMOVNB_F_CMOVNB_Fp32_CMOVNB_Fp64_CMOVNB_Fp80_CMOVNE_F_CMOVNE_Fp32_CMOVNE_Fp64_CMOVNE_Fp80_CMOVNP_F_CMOVNP_Fp32_CMOVNP_Fp64_CMOVNP_Fp80_CMOVP_F_CMOVP_Fp32_CMOVP_Fp64_CMOVP_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #750
-  {DBGFIELD("FNSTSW16r")          1, false, false, 427, 2,  2, 1,  0, 0}, // #751
-  {DBGFIELD("FNSTSWm")            0, false, false,  0, 0,  0, 0,  0, 0}, // #752
-  {DBGFIELD("FLDCW16m")           1, false, false, 968, 3,  3, 1,  0, 0}, // #753
-  {DBGFIELD("FNSTCW16m")          1, false, false, 427, 2,  2, 1,  0, 0}, // #754
-  {DBGFIELD("FDECSTP_FINCSTP")    1, false, false, 13, 1,  1, 1,  0, 0}, // #755
-  {DBGFIELD("FFREE")              1, false, false, 13, 1,  1, 1,  0, 0}, // #756
-  {DBGFIELD("FSAVEm")             0, false, false,  0, 0,  0, 0,  0, 0}, // #757
-  {DBGFIELD("FRSTORm")            0, false, false,  0, 0,  0, 0,  0, 0}, // #758
-  {DBGFIELD("ABS_F_ABS_Fp32_ABS_Fp64_ABS_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #759
-  {DBGFIELD("CHS_F_CHS_Fp32_CHS_Fp64_CHS_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #760
-  {DBGFIELD("COMP_FST0r_COM_FST0r") 0, false, false,  0, 0,  0, 0,  0, 0}, // #761
-  {DBGFIELD("UCOM_FPr_UCOM_Fr")   1, false, false, 957, 3,  6, 1,  0, 0}, // #762
-  {DBGFIELD("FCOM32m_FCOM64m_FCOMP32m_FCOMP64m") 0, false, false,  0, 0,  0, 0,  0, 0}, // #763
-  {DBGFIELD("FCOMPP")             1, false, false, 13, 1,  1, 1,  0, 0}, // #764
-  {DBGFIELD("UCOM_FPPr")          1, false, false, 957, 3,  6, 1,  0, 0}, // #765
-  {DBGFIELD("COM_FIPr_COM_FIr")   1, false, false, 957, 3,  6, 1,  0, 0}, // #766
-  {DBGFIELD("UCOM_FIPr_UCOM_FIr") 1, false, false, 957, 3,  6, 1,  0, 0}, // #767
-  {DBGFIELD("FICOM16m_FICOM32m_FICOMP16m_FICOMP32m") 0, false, false,  0, 0,  0, 0,  0, 0}, // #768
-  {DBGFIELD("TST_F_TST_Fp32_TST_Fp64_TST_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #769
-  {DBGFIELD("FXAM")               1, false, false, 13, 1,  1, 1,  0, 0}, // #770
-  {DBGFIELD("FPREM")              1, false, false, 13, 1,  1, 1,  0, 0}, // #771
-  {DBGFIELD("FPREM1")             1, false, false, 13, 1,  1, 1,  0, 0}, // #772
-  {DBGFIELD("FRNDINT")            1, false, false, 13, 1,  1, 1,  0, 0}, // #773
-  {DBGFIELD("FSCALE")             1, false, false, 13, 1,  1, 1,  0, 0}, // #774
-  {DBGFIELD("FXTRACT")            1, false, false, 13, 1,  1, 1,  0, 0}, // #775
-  {DBGFIELD("FNOP")               1, false, false, 13, 1,  1, 1,  0, 0}, // #776
-  {DBGFIELD("WAIT")               1, false, false, 13, 1,  1, 1,  0, 0}, // #777
-  {DBGFIELD("FNCLEX")             1, false, false, 13, 1,  1, 1,  0, 0}, // #778
-  {DBGFIELD("FNINIT")             1, false, false, 13, 1,  1, 1,  0, 0}, // #779
-  {DBGFIELD("MMX_MOVD64from64rr_MMX_MOVD64grr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #780
-  {DBGFIELD("MOVPDI2DIrr_VMOVPDI2DIrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #781
-  {DBGFIELD("MMX_MOVD64rr_MMX_MOVD64to64rr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #782
-  {DBGFIELD("MOVDI2PDIrr_VMOVDI2PDIrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #783
-  {DBGFIELD("VMOVPQIto64rr")      1, false, false, 13, 1,  2, 1,  0, 0}, // #784
-  {DBGFIELD("VMOV64toPQIrr")      1, false, false, 13, 1,  2, 1,  0, 0}, // #785
-  {DBGFIELD("MMX_MOVQ64rr_MMX_MOVQ64rr_REV") 1, false, false, 13, 1,  2, 1,  0, 0}, // #786
-  {DBGFIELD("MOVDQArr_MOVDQArr_REV_VMOVDQAYrr_VMOVDQAYrr_REV_VMOVDQArr_VMOVDQArr_REV") 1, false, false, 13, 1,  2, 1,  0, 0}, // #787
-  {DBGFIELD("MOVDQUrr_MOVDQUrr_REV_VMOVDQUYrr_VMOVDQUYrr_REV_VMOVDQUrr_VMOVDQUrr_REV") 1, false, false, 13, 1,  2, 1,  0, 0}, // #788
-  {DBGFIELD("MMX_MOVDQ2Qrr")      1, false, false, 13, 1,  2, 1,  0, 0}, // #789
-  {DBGFIELD("MMX_MOVQ2DQrr")      1, false, false, 13, 1,  2, 1,  0, 0}, // #790
-  {DBGFIELD("MMX_PACKSSDWirr_MMX_PACKSSWBirr_MMX_PACKUSWBirr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #791
-  {DBGFIELD("MMX_PACKSSDWirm_MMX_PACKSSWBirm_MMX_PACKUSWBirm") 1, false, false, 960, 4, 16, 1,  4, 1}, // #792
-  {DBGFIELD("VPMOVSXBQYrr_VPMOVSXBWYrr_VPMOVSXDQYrr_VPMOVZXBQYrr_VPMOVZXBWYrr_VPMOVZXDQYrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #793
-  {DBGFIELD("PBLENDWrri")         1, false, false, 965, 2,  2, 1,  0, 0}, // #794
-  {DBGFIELD("VPBLENDWYrri_VPBLENDWrri") 1, false, false, 965, 2,  2, 1,  0, 0}, // #795
-  {DBGFIELD("PBLENDWrmi")         1, false, false, 960, 4, 16, 1,  4, 1}, // #796
-  {DBGFIELD("VPBLENDWYrmi_VPBLENDWrmi") 1, false, false, 960, 4, 16, 1,  4, 1}, // #797
-  {DBGFIELD("VPBLENDDYrri_VPBLENDDrri") 1, false, false, 965, 2,  2, 1,  0, 0}, // #798
-  {DBGFIELD("VPBLENDDYrmi_VPBLENDDrmi") 1, false, false, 960, 4, 16, 1,  4, 1}, // #799
-  {DBGFIELD("MMX_MASKMOVQ_MMX_MASKMOVQ64") 1, false, false, 965, 2,  2, 1,  0, 0}, // #800
-  {DBGFIELD("MASKMOVDQU_MASKMOVDQU64_VMASKMOVDQU_VMASKMOVDQU64") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #801
-  {DBGFIELD("VPMASKMOVDYrm_VPMASKMOVDrm_VPMASKMOVQYrm_VPMASKMOVQrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #802
-  {DBGFIELD("VPMASKMOVDYmr_VPMASKMOVDmr_VPMASKMOVQYmr_VPMASKMOVQmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #803
-  {DBGFIELD("MMX_PMOVMSKBrr")     0, false, false,  0, 0,  0, 0,  0, 0}, // #804
-  {DBGFIELD("PMOVMSKBrr_VPMOVMSKBrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #805
-  {DBGFIELD("VPMOVMSKBYrr")       1, false, false, 965, 2,  2, 1,  0, 0}, // #806
-  {DBGFIELD("MMX_PEXTRWirri")     1, false, false, 965, 2,  2, 1,  0, 0}, // #807
-  {DBGFIELD("PEXTRBrr_PEXTRDrr_PEXTRQrr_PEXTRWrr_REV") 1, false, false, 965, 2,  2, 1,  0, 0}, // #808
-  {DBGFIELD("PEXTRBmr_PEXTRDmr_PEXTRQmr_PEXTRWmr") 2, false, false, 996, 5, 45, 2,  0, 0}, // #809
-  {DBGFIELD("VPBROADCASTBrm_VPBROADCASTWrm") 1, false, false, 968, 3,  3, 1,  0, 0}, // #810
-  {DBGFIELD("VPBROADCASTBYrm_VPBROADCASTWYrm") 1, false, false, 968, 3,  3, 1,  0, 0}, // #811
-  {DBGFIELD("VPGATHERDDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #812
-  {DBGFIELD("VPGATHERDDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #813
-  {DBGFIELD("VPGATHERQDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #814
-  {DBGFIELD("VPGATHERQDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #815
-  {DBGFIELD("VPGATHERDQrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #816
-  {DBGFIELD("VPGATHERDQYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #817
-  {DBGFIELD("VPGATHERQQrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #818
-  {DBGFIELD("VPGATHERQQYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #819
-  {DBGFIELD("MMX_PHADDSWrr64_MMX_PHADDWrr64_MMX_PHSUBSWrr64_MMX_PHSUBWrr64") 1, false, false, 965, 2,  2, 1,  0, 0}, // #820
-  {DBGFIELD("MMX_PHADDrr64_MMX_PHSUBDrr64") 1, false, false, 965, 2,  2, 1,  0, 0}, // #821
-  {DBGFIELD("PHADDDrr_PHSUBDrr_VPHADDDrr_VPHSUBDrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #822
-  {DBGFIELD("PHADDSWrr128_PHSUBSWrr128_VPHADDSWrr128_VPHADDSWrr256_VPHSUBSWrr128_VPHSUBSWrr256") 1, false, false, 965, 2,  2, 1,  0, 0}, // #823
-  {DBGFIELD("PHADDWrr_PHSUBWrr_VPHADDDYrr_VPHADDWYrr_VPHADDWrr_VPHSUBDYrr_VPHSUBWYrr_VPHSUBWrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #824
-  {DBGFIELD("MMX_PHADDSWrm64_MMX_PHADDWrm64_MMX_PHSUBSWrm64_MMX_PHSUBWrm64") 1, false, false, 960, 4, 16, 1,  4, 1}, // #825
-  {DBGFIELD("MMX_PHADDrm64_MMX_PHSUBDrm64") 1, false, false, 960, 4, 16, 1,  4, 1}, // #826
-  {DBGFIELD("PHADDDrm_PHSUBDrm_VPHADDDrm_VPHSUBDrm") 1, false, false, 960, 4, 16, 1,  4, 1}, // #827
-  {DBGFIELD("PHADDSWrm128_PHSUBSWrm128_VPHADDSWrm128_VPHADDSWrm256_VPHSUBSWrm128_VPHSUBSWrm256") 1, false, false, 960, 4, 16, 1,  4, 1}, // #828
-  {DBGFIELD("PHADDWrm_PHSUBWrm_VPHADDDYrm_VPHADDWYrm_VPHADDWrm_VPHSUBDYrm_VPHSUBWYrm_VPHSUBWrm") 1, false, false, 960, 4, 16, 1,  4, 1}, // #829
-  {DBGFIELD("PCMPGTQrr_VPCMPGTQYrr_VPCMPGTQrr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #830
-  {DBGFIELD("PCMPGTQrm_VPCMPGTQYrm_VPCMPGTQrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #831
-  {DBGFIELD("PMULLDrr_VPMULLDYrr_VPMULLDrr") 1, false, false, 957, 3, 19, 1,  0, 0}, // #832
-  {DBGFIELD("PMULLDrm_VPMULLDYrm_VPMULLDrm") 1, false, false, 952, 5,  5, 1,  4, 1}, // #833
-  {DBGFIELD("PTESTrr_VPTESTYrr_VPTESTrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #834
-  {DBGFIELD("PTESTrm_VPTESTYrm_VPTESTrm") 1, false, false, 960, 4, 16, 1,  4, 1}, // #835
-  {DBGFIELD("PSLLDrr_PSLLQrr_PSLLWrr_PSRADrr_PSRAWrr_PSRLDrr_PSRLQrr_PSRLWrr_VPSLLDYrr_VPSLLDrr_VPSLLQYrr_VPSLLQrr_VPSLLWYrr_VPSLLWrr_VPSRADYrr_VPSRADrr_VPSRAWYrr_VPSRAWrr_VPSRLDYrr_VPSRLDrr_VPSRLQYrr_VPSRLQrr_VPSRLWYrr_VPSRLWrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #836
-  {DBGFIELD("PSLLDQri_PSRLDQri")  1, false, false, 965, 2,  2, 1,  0, 0}, // #837
-  {DBGFIELD("VPSLLDQYri_VPSLLDQri_VPSRLDQYri_VPSRLDQri") 1, false, false, 965, 2,  2, 1,  0, 0}, // #838
-  {DBGFIELD("MMX_EMMS")           0, false, false,  0, 0,  0, 0,  0, 0}, // #839
-  {DBGFIELD("MOVMSKPDrr_MOVMSKPSrr_VMOVMSKPDrr_VMOVMSKPSrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #840
-  {DBGFIELD("VMOVMSKPDYrr_VMOVMSKPSYrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #841
-  {DBGFIELD("VPERM2F128rr")       1, false, false, 965, 2,  2, 1,  0, 0}, // #842
-  {DBGFIELD("VPERM2F128rm")       1, false, false, 960, 4, 16, 1,  4, 1}, // #843
-  {DBGFIELD("BLENDVPDrr0_BLENDVPSrr0") 1, false, false, 965, 2,  2, 1,  0, 0}, // #844
-  {DBGFIELD("BLENDVPDrm0_BLENDVPSrm0") 1, false, false, 960, 4, 16, 1,  4, 1}, // #845
-  {DBGFIELD("VBROADCASTF128")     1, false, false, 960, 4, 16, 1,  0, 0}, // #846
-  {DBGFIELD("EXTRACTPSrr")        1, false, false, 965, 2,  2, 1,  0, 0}, // #847
-  {DBGFIELD("VEXTRACTPSrr")       1, false, false, 965, 2,  2, 1,  0, 0}, // #848
-  {DBGFIELD("EXTRACTPSmr")        2, false, false, 996, 5, 45, 2,  0, 0}, // #849
-  {DBGFIELD("VEXTRACTPSmr")       2, false, false, 996, 5, 45, 2,  0, 0}, // #850
-  {DBGFIELD("VEXTRACTF128rr")     1, false, false, 965, 2,  2, 1,  0, 0}, // #851
-  {DBGFIELD("VEXTRACTF128mr")     1, false, false, 1006, 3,  2, 1,  0, 0}, // #852
-  {DBGFIELD("VINSERTF128rr")      1, false, false, 965, 2,  2, 1,  0, 0}, // #853
-  {DBGFIELD("VINSERTF128rm")      1, false, false, 960, 4, 16, 1,  4, 1}, // #854
-  {DBGFIELD("VMASKMOVPDYrm_VMASKMOVPDrm_VMASKMOVPSYrm_VMASKMOVPSrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #855
-  {DBGFIELD("VMASKMOVPDmr_VMASKMOVPSmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #856
-  {DBGFIELD("VMASKMOVPDYmr_VMASKMOVPSYmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #857
-  {DBGFIELD("VGATHERDPSrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #858
-  {DBGFIELD("VGATHERDPSYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #859
-  {DBGFIELD("VGATHERQPSrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #860
-  {DBGFIELD("VGATHERQPSYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #861
-  {DBGFIELD("VGATHERDPDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #862
-  {DBGFIELD("VGATHERDPDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #863
-  {DBGFIELD("VGATHERQPDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #864
-  {DBGFIELD("VGATHERQPDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #865
-  {DBGFIELD("CVTPD2PSrr_VCVTPD2PSrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #866
-  {DBGFIELD("CVTPD2PSrm_VCVTPD2PSXrm") 1, false, false, 972, 5, 10, 1,  0, 0}, // #867
-  {DBGFIELD("VCVTPD2PSYrr")       1, false, false, 977, 3,  6, 1,  0, 0}, // #868
-  {DBGFIELD("VCVTPD2PSYrm")       1, false, false, 972, 5, 10, 1,  0, 0}, // #869
-  {DBGFIELD("CVTSD2SSrr_Int_CVTSD2SSrr_Int_VCVTSD2SSrr_VCVTSD2SSrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #870
-  {DBGFIELD("CVTSD2SSrm")         1, false, false, 972, 5, 10, 1,  0, 0}, // #871
-  {DBGFIELD("Int_CVTSD2SSrm_Int_VCVTSD2SSrm_VCVTSD2SSrm") 1, false, false, 972, 5, 10, 1,  4, 1}, // #872
-  {DBGFIELD("CVTPS2PDrr_VCVTPS2PDrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #873
-  {DBGFIELD("CVTPS2PDrm_VCVTPS2PDYrm_VCVTPS2PDrm") 1, false, false, 972, 5, 10, 1,  0, 0}, // #874
-  {DBGFIELD("VCVTPS2PDYrr")       1, false, false, 977, 3,  6, 1,  0, 0}, // #875
-  {DBGFIELD("CVTSS2SDrr_Int_CVTSS2SDrr_Int_VCVTSS2SDrr_VCVTSS2SDrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #876
-  {DBGFIELD("CVTSS2SDrm")         1, false, false, 972, 5, 10, 1,  0, 0}, // #877
-  {DBGFIELD("Int_CVTSS2SDrm_Int_VCVTSS2SDrm_VCVTSS2SDrm") 1, false, false, 972, 5, 10, 1,  4, 1}, // #878
-  {DBGFIELD("CVTDQ2PDrr")         1, false, false, 977, 3,  6, 1,  0, 0}, // #879
-  {DBGFIELD("VCVTDQ2PDrr")        1, false, false, 977, 3,  6, 1,  0, 0}, // #880
-  {DBGFIELD("VCVTDQ2PDYrr")       1, false, false, 977, 3,  6, 1,  0, 0}, // #881
-  {DBGFIELD("CVTPD2DQrr_CVTTPD2DQrr_VCVTTPD2DQrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #882
-  {DBGFIELD("VCVTPD2DQrr")        1, false, false, 977, 3,  6, 1,  0, 0}, // #883
-  {DBGFIELD("CVTPD2DQrm_CVTTPD2DQrm") 1, false, false, 972, 5, 10, 1,  0, 0}, // #884
-  {DBGFIELD("VCVTPD2DQYrr")       1, false, false, 977, 3,  6, 1,  0, 0}, // #885
-  {DBGFIELD("VCVTTPD2DQYrr")      1, false, false, 977, 3,  6, 1,  0, 0}, // #886
-  {DBGFIELD("VCVTPD2DQYrm")       1, false, false, 972, 5, 10, 1,  0, 0}, // #887
-  {DBGFIELD("VCVTTPD2DQYrm")      1, false, false, 972, 5, 10, 1,  0, 0}, // #888
-  {DBGFIELD("MMX_CVTPS2PIirr_MMX_CVTTPS2PIirr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #889
-  {DBGFIELD("MMX_CVTPI2PDirr")    1, false, false, 977, 3,  6, 1,  0, 0}, // #890
-  {DBGFIELD("MMX_CVTPD2PIirr_MMX_CVTTPD2PIirr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #891
-  {DBGFIELD("CVTSI2SS64rr_CVTSI2SSrr_Int_CVTSI2SS64rr_Int_CVTSI2SSrr_Int_VCVTSI2SS64rr_Int_VCVTSI2SSrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #892
-  {DBGFIELD("VCVTSI2SS64rr_VCVTSI2SSrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #893
-  {DBGFIELD("CVTSS2SI64rr_CVTTSS2SI64rr_Int_CVTTSS2SI64rr_Int_VCVTTSS2SI64rr_VCVTSS2SI64rr_VCVTTSS2SI64rr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #894
-  {DBGFIELD("CVTSS2SIrr_CVTTSS2SIrr_Int_CVTTSS2SIrr_Int_VCVTTSS2SIrr_VCVTSS2SIrr_VCVTTSS2SIrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #895
-  {DBGFIELD("CVTSS2SI64rm_CVTTSS2SI64rm_Int_CVTTSS2SI64rm_Int_VCVTTSS2SI64rm_VCVTSS2SI64rm_VCVTTSS2SI64rm") 1, false, false, 972, 5, 10, 1,  0, 0}, // #896
-  {DBGFIELD("CVTSS2SIrm_CVTTSS2SIrm_Int_CVTTSS2SIrm_Int_VCVTTSS2SIrm_VCVTSS2SIrm_VCVTTSS2SIrm") 1, false, false, 972, 5, 10, 1,  0, 0}, // #897
-  {DBGFIELD("CVTSD2SI64rr_CVTSD2SIrr_CVTTSD2SI64rr_CVTTSD2SIrr_Int_CVTTSD2SI64rr_Int_CVTTSD2SIrr_Int_VCVTTSD2SI64rr_Int_VCVTTSD2SIrr_VCVTSD2SI64rr_VCVTSD2SIrr_VCVTTSD2SI64rr_VCVTTSD2SIrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #898
-  {DBGFIELD("CVTSD2SI64rm_CVTSD2SIrm_CVTTSD2SI64rm_CVTTSD2SIrm_Int_CVTTSD2SI64rm_Int_CVTTSD2SIrm_Int_VCVTTSD2SI64rm_Int_VCVTTSD2SIrm_VCVTSD2SI64rm_VCVTSD2SIrm_VCVTTSD2SI64rm_VCVTTSD2SIrm") 1, false, false, 972, 5, 10, 1,  0, 0}, // #899
-  {DBGFIELD("VCVTPS2PHYrr_VCVTPS2PHrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #900
-  {DBGFIELD("VCVTPS2PHYmr_VCVTPS2PHmr") 2, false, false, 1047, 6, 35, 2,  0, 0}, // #901
-  {DBGFIELD("VCVTPH2PSYrr_VCVTPH2PSrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #902
-  {DBGFIELD("HADDPDrr_HADDPSrr_HSUBPDrr_HSUBPSrr_VHADDPDYrr_VHADDPDrr_VHADDPSYrr_VHADDPSrr_VHSUBPDYrr_VHSUBPDrr_VHSUBPSYrr_VHSUBPSrr") 1, false, false, 957, 3,  6, 1,  0, 0}, // #903
-  {DBGFIELD("HADDPDrm_HADDPSrm_HSUBPDrm_HSUBPSrm_VHADDPDYrm_VHADDPDrm_VHADDPSYrm_VHADDPSrm_VHSUBPDYrm_VHSUBPDrm_VHSUBPSYrm_VHSUBPSrm") 1, false, false, 952, 5, 10, 1,  4, 1}, // #904
-  {DBGFIELD("MULPDrr_VMULPDrr")   1, false, false, 977, 3, 19, 1,  0, 0}, // #905
-  {DBGFIELD("MULPSrr_VMULPSrr")   1, false, false, 977, 3, 19, 1,  0, 0}, // #906
-  {DBGFIELD("MULSDrr_MULSDrr_Int_VMULSDrr_VMULSDrr_Int") 1, false, false, 977, 3, 19, 1,  0, 0}, // #907
-  {DBGFIELD("MULSSrr_MULSSrr_Int_VMULSSrr_VMULSSrr_Int") 1, false, false, 977, 3, 19, 1,  0, 0}, // #908
-  {DBGFIELD("MULPDrm_MULPSrm_VMULPDrm_VMULPSrm") 1, false, false, 972, 5,  5, 1,  4, 1}, // #909
-  {DBGFIELD("MULSDrm_MULSDrm_Int_MULSSrm_MULSSrm_Int_VMULSDrm_VMULSDrm_Int_VMULSSrm_VMULSSrm_Int") 1, false, false, 972, 5,  5, 1,  4, 1}, // #910
-  {DBGFIELD("VDIVPSYrr")          1, false, false, 990, 6, 23, 1,  0, 0}, // #911
-  {DBGFIELD("VDIVPSYrm")          1, false, false, 990, 6, 44, 1,  4, 1}, // #912
-  {DBGFIELD("VDIVPDYrr")          1, false, false, 990, 6, 23, 1,  0, 0}, // #913
-  {DBGFIELD("VDIVPDYrm")          1, false, false, 990, 6, 44, 1,  4, 1}, // #914
-  {DBGFIELD("VRCPPSYr")           1, false, false, 977, 3, 19, 1,  0, 0}, // #915
-  {DBGFIELD("VRCPPSYm")           1, false, false, 972, 5,  5, 1,  0, 0}, // #916
-  {DBGFIELD("ROUNDPDr_ROUNDPSr_VROUNDPDr_VROUNDPSr_VROUNDYPDr_VROUNDYPSr") 1, false, false, 957, 3,  6, 1,  0, 0}, // #917
-  {DBGFIELD("ROUNDSDr_ROUNDSDr_Int_ROUNDSSr_ROUNDSSr_Int_VROUNDSDr_VROUNDSDr_Int_VROUNDSSr_VROUNDSSr_Int") 1, false, false, 957, 3,  6, 1,  0, 0}, // #918
-  {DBGFIELD("ROUNDPDm_VROUNDPDm_VROUNDYPDm") 1, false, false, 952, 5, 10, 1,  0, 0}, // #919
-  {DBGFIELD("ROUNDPSm_VROUNDPSm_VROUNDYPSm") 1, false, false, 952, 5, 10, 1,  0, 0}, // #920
-  {DBGFIELD("ROUNDSDm_ROUNDSSm_VROUNDSDm_VROUNDSSm") 1, false, false, 952, 5, 10, 1,  4, 1}, // #921
-  {DBGFIELD("DPPSrri_VDPPSYrri_VDPPSrri") 1, false, false, 957, 3,  6, 1,  0, 0}, // #922
-  {DBGFIELD("DPPSrmi_VDPPSYrmi_VDPPSrmi") 1, false, false, 952, 5, 10, 1,  4, 1}, // #923
-  {DBGFIELD("DPPDrri")            1, false, false, 957, 3,  6, 1,  0, 0}, // #924
-  {DBGFIELD("VDPPDrri")           1, false, false, 957, 3,  6, 1,  0, 0}, // #925
-  {DBGFIELD("DPPDrmi_VDPPDrmi")   1, false, false, 952, 5, 10, 1,  4, 1}, // #926
-  {DBGFIELD("VFMADDPD4rr_VFMADDPD4rrY_VFMADDPD4rrY_REV_VFMADDPD4rr_REV_VFMADDPDr132r_VFMADDPDr132rY_VFMADDPDr213r_VFMADDPDr213rY_VFMADDPDr231r_VFMADDPDr231rY_VFMADDPS4rr_VFMADDPS4rrY_VFMADDPS4rrY_REV_VFMADDPS4rr_REV_VFMADDPSr132r_VFMADDPSr132rY_VFMADDPSr213r_VFMADDPSr213rY_VFMADDPSr231r_VFMADDPSr231rY_VFMADDSD4rr_VFMADDSD4rr_Int_VFMADDSD4rr_REV_VFMADDSDr132r_VFMADDSDr132r_Int_VFMADDSDr213r_VFMADDSDr213r_Int_VFMADDSDr231r_VFMADDSDr231r_Int_VFMADDSS4rr_VFMADDSS4rr_Int_VFMADDSS4rr_REV_VFMADDSSr132r_VFMADDSSr132r_Int_VFMADDSSr213r_VFMADDSSr213r_Int_VFMADDSSr231r_VFMADDSSr231r_Int_VFMADDSUBPDr132r_VFMADDSUBPDr132rY_VFMADDSUBPDr213r_VFMADDSUBPDr213rY_VFMADDSUBPDr231r_VFMADDSUBPDr231rY_VFMADDSUBPSr132r_VFMADDSUBPSr132rY_VFMADDSUBPSr213r_VFMADDSUBPSr213rY_VFMADDSUBPSr231r_VFMADDSUBPSr231rY_VFMSUBADDPDr132r_VFMSUBADDPDr132rY_VFMSUBADDPDr213r_VFMSUBADDPDr213rY_VFMSUBADDPDr231r_VFMSUBADDPDr231rY_VFMSUBADDPSr132r_VFMSUBADDPSr132rY_VFMSUBADDPSr213r_VFMSUBADDPSr213rY_VFMSUBADDPSr231r_VFMSUBADDPSr231rY_VFMSUBPD4rr_VFMSUBPD4rrY_VFMSUBPD4rrY_REV_VFMSUBPD4rr_REV_VFMSUBPDr132r_VFMSUBPDr132rY_VFMSUBPDr213r_VFMSUBPDr213rY_VFMSUBPDr231r_VFMSUBPDr231rY_VFMSUBPS4rr_VFMSUBPS4rrY_VFMSUBPS4rrY_REV_VFMSUBPS4rr_REV_VFMSUBPSr132r_VFMSUBPSr132rY_VFMSUBPSr213r_VFMSUBPSr213rY_VFMSUBPSr231r_VFMSUBPSr231rY_VFMSUBSD4rr_VFMSUBSD4rr_Int_VFMSUBSD4rr_REV_VFMSUBSDr132r_VFMSUBSDr132r_Int_VFMSUBSDr213r_VFMSUBSDr213r_Int_VFMSUBSDr231r_VFMSUBSDr231r_Int_VFMSUBSS4rr_VFMSUBSS4rr_Int_VFMSUBSS4rr_REV_VFMSUBSSr132r_VFMSUBSSr132r_Int_VFMSUBSSr213r_VFMSUBSSr213r_Int_VFMSUBSSr231r_VFMSUBSSr231r_Int_VFNMADDPD4rr_VFNMADDPD4rrY_VFNMADDPD4rrY_REV_VFNMADDPD4rr_REV_VFNMADDPDr132r_VFNMADDPDr132rY_VFNMADDPDr213r_VFNMADDPDr213rY_VFNMADDPDr231r_VFNMADDPDr231rY_VFNMADDPS4rr_VFNMADDPS4rrY_VFNMADDPS4rrY_REV_VFNMADDPS4rr_REV_VFNMADDPSr132r_VFNMADDPSr132rY_VFNMADDPSr213r_VFNMADDPSr213rY_VFNMADDPSr231r_VFNMADDPSr231rY_VFNMADDSD4rr_VFNMADDSD4rr_Int_VFNMADDSD4rr_REV_VFNMADDSDr132r_VFNMADDSDr132r_Int_VFNMADDSDr213r_VFNMADDSDr213r_Int_VFNMADDSDr231r_VFNMADDSDr231r_Int_VFNMADDSS4rr_VFNMADDSS4rr_Int_VFNMADDSS4rr_REV_VFNMADDSSr132r_VFNMADDSSr132r_Int_VFNMADDSSr213r_VFNMADDSSr213r_Int_VFNMADDSSr231r_VFNMADDSSr231r_Int_VFNMSUBPD4rr_VFNMSUBPD4rrY_VFNMSUBPD4rrY_REV_VFNMSUBPD4rr_REV_VFNMSUBPDr132r_VFNMSUBPDr132rY_VFNMSUBPDr213r_VFNMSUBPDr213rY_VFNMSUBPDr231r_VFNMSUBPDr231rY_VFNMSUBPS4rr_VFNMSUBPS4rrY_VFNMSUBPS4rrY_REV_VFNMSUBPS4rr_REV_VFNMSUBPSr132r_VFNMSUBPSr132rY_VFNMSUBPSr213r_VFNMSUBPSr213rY_VFNMSUBPSr231r_VFNMSUBPSr231rY_VFNMSUBSD4rr_VFNMSUBSD4rr_Int_VFNMSUBSD4rr_REV_VFNMSUBSDr132r_VFNMSUBSDr132r_Int_VFNMSUBSDr213r_VFNMSUBSDr213r_Int_VFNMSUBSDr231r_VFNMSUBSDr231r_Int_VFNMSUBSS4rr_VFNMSUBSS4rr_Int_VFNMSUBSS4rr_REV_VFNMSUBSSr132r_VFNMSUBSSr132r_Int_VFNMSUBSSr213r_VFNMSUBSSr213r_Int_VFNMSUBSSr231r_VFNMSUBSSr231r_Int") 0, false, false,  0, 0,  0, 0,  0, 0}, // #927
-  {DBGFIELD("VFMADDPD4mr_VFMADDPD4mrY_VFMADDPD4rm_VFMADDPD4rmY_VFMADDPDr132m_VFMADDPDr132mY_VFMADDPDr213m_VFMADDPDr213mY_VFMADDPDr231m_VFMADDPDr231mY_VFMADDPS4mr_VFMADDPS4mrY_VFMADDPS4rm_VFMADDPS4rmY_VFMADDPSr132m_VFMADDPSr132mY_VFMADDPSr213m_VFMADDPSr213mY_VFMADDPSr231m_VFMADDPSr231mY_VFMADDSD4mr_VFMADDSD4mr_Int_VFMADDSD4rm_VFMADDSD4rm_Int_VFMADDSDr132m_VFMADDSDr132m_Int_VFMADDSDr213m_VFMADDSDr213m_Int_VFMADDSDr231m_VFMADDSDr231m_Int_VFMADDSS4mr_VFMADDSS4mr_Int_VFMADDSS4rm_VFMADDSS4rm_Int_VFMADDSSr132m_VFMADDSSr132m_Int_VFMADDSSr213m_VFMADDSSr213m_Int_VFMADDSSr231m_VFMADDSSr231m_Int_VFMADDSUBPDr132m_VFMADDSUBPDr132mY_VFMADDSUBPDr213m_VFMADDSUBPDr213mY_VFMADDSUBPDr231m_VFMADDSUBPDr231mY_VFMADDSUBPSr132m_VFMADDSUBPSr132mY_VFMADDSUBPSr213m_VFMADDSUBPSr213mY_VFMADDSUBPSr231m_VFMADDSUBPSr231mY_VFMSUBADDPDr132m_VFMSUBADDPDr132mY_VFMSUBADDPDr213m_VFMSUBADDPDr213mY_VFMSUBADDPDr231m_VFMSUBADDPDr231mY_VFMSUBADDPSr132m_VFMSUBADDPSr132mY_VFMSUBADDPSr213m_VFMSUBADDPSr213mY_VFMSUBADDPSr231m_VFMSUBADDPSr231mY_VFMSUBPD4mr_VFMSUBPD4mrY_VFMSUBPD4rm_VFMSUBPD4rmY_VFMSUBPDr132m_VFMSUBPDr132mY_VFMSUBPDr213m_VFMSUBPDr213mY_VFMSUBPDr231m_VFMSUBPDr231mY_VFMSUBPS4mr_VFMSUBPS4mrY_VFMSUBPS4rm_VFMSUBPS4rmY_VFMSUBPSr132m_VFMSUBPSr132mY_VFMSUBPSr213m_VFMSUBPSr213mY_VFMSUBPSr231m_VFMSUBPSr231mY_VFMSUBSD4mr_VFMSUBSD4mr_Int_VFMSUBSD4rm_VFMSUBSD4rm_Int_VFMSUBSDr132m_VFMSUBSDr132m_Int_VFMSUBSDr213m_VFMSUBSDr213m_Int_VFMSUBSDr231m_VFMSUBSDr231m_Int_VFMSUBSS4mr_VFMSUBSS4mr_Int_VFMSUBSS4rm_VFMSUBSS4rm_Int_VFMSUBSSr132m_VFMSUBSSr132m_Int_VFMSUBSSr213m_VFMSUBSSr213m_Int_VFMSUBSSr231m_VFMSUBSSr231m_Int_VFNMADDPD4mr_VFNMADDPD4mrY_VFNMADDPD4rm_VFNMADDPD4rmY_VFNMADDPDr132m_VFNMADDPDr132mY_VFNMADDPDr213m_VFNMADDPDr213mY_VFNMADDPDr231m_VFNMADDPDr231mY_VFNMADDPS4mr_VFNMADDPS4mrY_VFNMADDPS4rm_VFNMADDPS4rmY_VFNMADDPSr132m_VFNMADDPSr132mY_VFNMADDPSr213m_VFNMADDPSr213mY_VFNMADDPSr231m_VFNMADDPSr231mY_VFNMADDSD4mr_VFNMADDSD4mr_Int_VFNMADDSD4rm_VFNMADDSD4rm_Int_VFNMADDSDr132m_VFNMADDSDr132m_Int_VFNMADDSDr213m_VFNMADDSDr213m_Int_VFNMADDSDr231m_VFNMADDSDr231m_Int_VFNMADDSS4mr_VFNMADDSS4mr_Int_VFNMADDSS4rm_VFNMADDSS4rm_Int_VFNMADDSSr132m_VFNMADDSSr132m_Int_VFNMADDSSr213m_VFNMADDSSr213m_Int_VFNMADDSSr231m_VFNMADDSSr231m_Int_VFNMSUBPD4mr_VFNMSUBPD4mrY_VFNMSUBPD4rm_VFNMSUBPD4rmY_VFNMSUBPDr132m_VFNMSUBPDr132mY_VFNMSUBPDr213m_VFNMSUBPDr213mY_VFNMSUBPDr231m_VFNMSUBPDr231mY_VFNMSUBPS4mr_VFNMSUBPS4mrY_VFNMSUBPS4rm_VFNMSUBPS4rmY_VFNMSUBPSr132m_VFNMSUBPSr132mY_VFNMSUBPSr213m_VFNMSUBPSr213mY_VFNMSUBPSr231m_VFNMSUBPSr231mY_VFNMSUBSD4mr_VFNMSUBSD4mr_Int_VFNMSUBSD4rm_VFNMSUBSD4rm_Int_VFNMSUBSDr132m_VFNMSUBSDr132m_Int_VFNMSUBSDr213m_VFNMSUBSDr213m_Int_VFNMSUBSDr231m_VFNMSUBSDr231m_Int_VFNMSUBSS4mr_VFNMSUBSS4mr_Int_VFNMSUBSS4rm_VFNMSUBSS4rm_Int_VFNMSUBSSr132m_VFNMSUBSSr132m_Int_VFNMSUBSSr213m_VFNMSUBSSr213m_Int_VFNMSUBSSr231m_VFNMSUBSSr231m_Int") 0, false, false,  0, 0,  0, 0,  0, 0}, // #928
-  {DBGFIELD("VSQRTPSYr")          1, false, false, 1041, 6, 27, 1,  0, 0}, // #929
-  {DBGFIELD("VSQRTPSYm")          1, false, false, 1041, 6, 51, 1,  0, 0}, // #930
-  {DBGFIELD("VSQRTPDYr")          1, false, false, 1041, 6, 27, 1,  0, 0}, // #931
-  {DBGFIELD("VSQRTPDYm")          1, false, false, 1041, 6, 51, 1,  0, 0}, // #932
-  {DBGFIELD("RSQRTPSr_VRSQRTPSr") 1, false, false, 977, 3, 19, 1,  0, 0}, // #933
-  {DBGFIELD("RSQRTSSr_VRSQRTSSr") 1, false, false, 977, 3, 19, 1,  0, 0}, // #934
-  {DBGFIELD("RSQRTSSr_Int")       1, false, false, 972, 5,  5, 1,  4, 1}, // #935
-  {DBGFIELD("VRSQRTSSr_Int")      1, false, false, 972, 5,  5, 1,  0, 0}, // #936
-  {DBGFIELD("RSQRTPSm_VRSQRTPSm") 1, false, false, 972, 5,  5, 1,  0, 0}, // #937
-  {DBGFIELD("RSQRTSSm_VRSQRTSSm") 1, false, false, 972, 5,  5, 1,  4, 1}, // #938
-  {DBGFIELD("RSQRTSSm_Int_VRSQRTSSm_Int") 1, false, false, 972, 5,  5, 1,  4, 1}, // #939
-  {DBGFIELD("VRSQRTPSYr")         1, false, false, 977, 3, 19, 1,  0, 0}, // #940
-  {DBGFIELD("VRSQRTPSYm")         1, false, false, 972, 5,  5, 1,  0, 0}, // #941
-  {DBGFIELD("ANDNPDrr_ANDNPSrr_ANDPDrr_ANDPSrr_ORPDrr_ORPSrr_VANDNPDYrr_VANDNPDrr_VANDNPSYrr_VANDNPSrr_VANDPDYrr_VANDPDrr_VANDPSYrr_VANDPSrr_VORPDYrr_VORPDrr_VORPSYrr_VORPSrr_VXORPDYrr_VXORPDrr_VXORPSYrr_VXORPSrr_XORPDrr_XORPSrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #942
-  {DBGFIELD("ANDNPDrm_ANDNPSrm_ANDPDrm_ANDPSrm_ORPDrm_ORPSrm_VANDNPDYrm_VANDNPDrm_VANDNPSYrm_VANDNPSrm_VANDPDYrm_VANDPDrm_VANDPSYrm_VANDPSrm_VORPDYrm_VORPDrm_VORPSYrm_VORPSrm_VXORPDYrm_VXORPDrm_VXORPSYrm_VXORPSrm_XORPDrm_XORPSrm") 1, false, false, 960, 4, 16, 1,  4, 1}, // #943
-  {DBGFIELD("VZEROUPPER")         0, false, false,  0, 0,  0, 0,  0, 0}, // #944
-  {DBGFIELD("VZEROALL")           0, false, false,  0, 0,  0, 0,  0, 0}, // #945
-  {DBGFIELD("LDMXCSR_VLDMXCSR")   1, false, false, 968, 3,  3, 1,  0, 0}, // #946
-  {DBGFIELD("STMXCSR_VSTMXCSR")   1, false, false, 1006, 3,  2, 1,  0, 0} // #947
+  {DBGFIELD("IIC_SSE_HADDSUB_RM_WriteFAddLd_ReadAfterLd") 1, false, false, 952, 5, 10, 1,  4, 1}, // #158
+  {DBGFIELD("IIC_SSE_HADDSUB_RR_WriteFAdd") 1, false, false, 957, 3,  6, 1,  0, 0}, // #159
+  {DBGFIELD("IIC_HLT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #160
+  {DBGFIELD("IIC_IDIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 980, 6, 43, 1,  5, 2}, // #161
+  {DBGFIELD("IIC_IDIV16_WriteIDiv") 1, false, false, 986, 4, 12, 1,  0, 0}, // #162
+  {DBGFIELD("IIC_IDIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 980, 6, 43, 1,  5, 2}, // #163
+  {DBGFIELD("IIC_IDIV32_WriteIDiv") 1, false, false, 986, 4, 12, 1,  0, 0}, // #164
+  {DBGFIELD("IIC_IDIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 980, 6, 43, 1,  5, 2}, // #165
+  {DBGFIELD("IIC_IDIV64_WriteIDiv") 1, false, false, 986, 4, 12, 1,  0, 0}, // #166
+  {DBGFIELD("IIC_IDIV8_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 980, 6, 43, 1,  5, 2}, // #167
+  {DBGFIELD("IIC_IDIV8_WriteIDiv") 1, false, false, 986, 4, 12, 1,  0, 0}, // #168
+  {DBGFIELD("IIC_FILD_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #169
+  {DBGFIELD("IIC_IMUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #170
+  {DBGFIELD("IIC_IMUL16_RR_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #171
+  {DBGFIELD("IIC_IMUL16_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  4, 1}, // #172
+  {DBGFIELD("IIC_IMUL16_RMI_WriteIMulLd") 1, false, false, 1001, 5, 16, 1,  0, 0}, // #173
+  {DBGFIELD("IIC_IMUL16_RRI_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #174
+  {DBGFIELD("IIC_IMUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #175
+  {DBGFIELD("IIC_IMUL32_RR_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #176
+  {DBGFIELD("IIC_IMUL32_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  4, 1}, // #177
+  {DBGFIELD("IIC_IMUL32_RMI_WriteIMulLd") 1, false, false, 1001, 5, 16, 1,  0, 0}, // #178
+  {DBGFIELD("IIC_IMUL32_RRI_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #179
+  {DBGFIELD("IIC_IMUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #180
+  {DBGFIELD("IIC_IMUL64_RR_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #181
+  {DBGFIELD("IIC_IMUL64_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  4, 1}, // #182
+  {DBGFIELD("IIC_IMUL64_RMI_WriteIMulLd") 1, false, false, 1001, 5, 16, 1,  0, 0}, // #183
+  {DBGFIELD("IIC_IMUL64_RRI_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #184
+  {DBGFIELD("IIC_IMUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #185
+  {DBGFIELD("IIC_IMUL8_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #186
+  {DBGFIELD("IIC_IN_RI_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #187
+  {DBGFIELD("IIC_IN_RR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #188
+  {DBGFIELD("IIC_INS_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #189
+  {DBGFIELD("IIC_SSE_INSERTPS_RM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #190
+  {DBGFIELD("IIC_SSE_INSERTPS_RR_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #191
+  {DBGFIELD("IIC_INT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #192
+  {DBGFIELD("IIC_INT3_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #193
+  {DBGFIELD("IIC_INVD_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #194
+  {DBGFIELD("IIC_INVLPG_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #195
+  {DBGFIELD("WriteJumpLd")        1, false, false, 948, 4,  9, 1,  0, 0}, // #196
+  {DBGFIELD("IIC_IRET_WriteJumpLd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #197
+  {DBGFIELD("IIC_FST_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #198
+  {DBGFIELD("IIC_FIST_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #199
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd_ReadAfterLd") 1, false, false, 972, 5, 10, 1,  4, 1}, // #200
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd_ReadAfterLd") 1, false, false, 972, 5, 10, 1,  4, 1}, // #201
+  {DBGFIELD("WriteLoad")          1, false, false, 968, 3,  3, 1,  0, 0}, // #202
+  {DBGFIELD("IIC_Jcc_WriteJump")  1, false, false, 427, 2,  2, 1,  0, 0}, // #203
+  {DBGFIELD("IIC_JCXZ_WriteJump") 1, false, false, 427, 2,  2, 1,  0, 0}, // #204
+  {DBGFIELD("IIC_JMP_MEM_WriteJumpLd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #205
+  {DBGFIELD("IIC_JMP_REG_WriteJump") 1, false, false, 427, 2,  2, 1,  0, 0}, // #206
+  {DBGFIELD("IIC_JMP_REL_WriteJump") 1, false, false, 427, 2,  2, 1,  0, 0}, // #207
+  {DBGFIELD("IIC_AHF_WriteALU")   1, false, false, 427, 2,  2, 1,  0, 0}, // #208
+  {DBGFIELD("IIC_LAR_RM_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #209
+  {DBGFIELD("IIC_LAR_RR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #210
+  {DBGFIELD("IIC_CMPX_LOCK_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #211
+  {DBGFIELD("IIC_CMPX_LOCK_16B_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #212
+  {DBGFIELD("IIC_CMPX_LOCK_8_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #213
+  {DBGFIELD("IIC_CMPX_LOCK_8B_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #214
+  {DBGFIELD("IIC_SSE_LDDQU_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #215
+  {DBGFIELD("IIC_SSE_LDMXCSR_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #216
+  {DBGFIELD("IIC_LXS_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #217
+  {DBGFIELD("IIC_FLDZ_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #218
+  {DBGFIELD("IIC_FIST_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #219
+  {DBGFIELD("IIC_FLD_WriteLoad")  1, false, false, 968, 3,  3, 1,  0, 0}, // #220
+  {DBGFIELD("IIC_FLD80_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #221
+  {DBGFIELD("IIC_FLD_WriteMove")  1, false, false, 13, 1,  2, 1,  0, 0}, // #222
+  {DBGFIELD("IIC_LEA_16_WriteLEA") 1, false, false, 427, 2,  2, 1,  0, 0}, // #223
+  {DBGFIELD("IIC_LEA_WriteLEA")   1, false, false, 427, 2,  2, 1,  0, 0}, // #224
+  {DBGFIELD("IIC_LEAVE_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #225
+  {DBGFIELD("IIC_SSE_LFENCE_WriteFence") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #226
+  {DBGFIELD("IIC_LGDT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #227
+  {DBGFIELD("IIC_LIDT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #228
+  {DBGFIELD("IIC_LLDT_MEM_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #229
+  {DBGFIELD("IIC_LLDT_REG_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #230
+  {DBGFIELD("IIC_LMSW_REG_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #231
+  {DBGFIELD("IIC_LMSW_MEM_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #232
+  {DBGFIELD("IIC_ALU_MEM_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #233
+  {DBGFIELD("IIC_ALU_NONMEM_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #234
+  {DBGFIELD("IIC_LODS_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #235
+  {DBGFIELD("IIC_LOOP_WriteJump") 1, false, false, 427, 2,  2, 1,  0, 0}, // #236
+  {DBGFIELD("IIC_LOOPE_WriteJump") 1, false, false, 427, 2,  2, 1,  0, 0}, // #237
+  {DBGFIELD("IIC_LOOPNE_WriteJump") 1, false, false, 427, 2,  2, 1,  0, 0}, // #238
+  {DBGFIELD("IIC_RET_WriteJumpLd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #239
+  {DBGFIELD("IIC_LSL_RM_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #240
+  {DBGFIELD("IIC_LSL_RR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #241
+  {DBGFIELD("IIC_LTR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #242
+  {DBGFIELD("IIC_XADD_LOCK_MEM_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #243
+  {DBGFIELD("IIC_XADD_LOCK_MEM8_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #244
+  {DBGFIELD("IIC_SSE_MASKMOV_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #245
+  {DBGFIELD("IIC_SSE_MFENCE_WriteFence") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #246
+  {DBGFIELD("IIC_MMX_CVT_PD_RM_WriteCvtF2ILd") 1, false, false, 972, 5, 10, 1,  0, 0}, // #247
+  {DBGFIELD("IIC_MMX_CVT_PD_RR_WriteCvtF2I") 1, false, false, 977, 3,  6, 1,  0, 0}, // #248
+  {DBGFIELD("WriteCvtI2FLd")      1, false, false, 972, 5, 10, 1,  0, 0}, // #249
+  {DBGFIELD("WriteCvtI2F")        1, false, false, 977, 3,  6, 1,  0, 0}, // #250
+  {DBGFIELD("IIC_MMX_CVT_PS_RM_WriteCvtF2ILd") 1, false, false, 972, 5, 10, 1,  0, 0}, // #251
+  {DBGFIELD("IIC_MMX_CVT_PS_RR_WriteCvtF2I") 1, false, false, 977, 3,  6, 1,  0, 0}, // #252
+  {DBGFIELD("IIC_MMX_EMMS")       0, false, false,  0, 0,  0, 0,  0, 0}, // #253
+  {DBGFIELD("IIC_MMX_MASKMOV_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #254
+  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #255
+  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #256
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #257
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #258
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #259
+  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #260
+  {DBGFIELD("IIC_MMX_MOVQ_RR_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #261
+  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #262
+  {DBGFIELD("WriteMove")          1, false, false, 13, 1,  2, 1,  0, 0}, // #263
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd") 1, false, false, 960, 4, 16, 1,  0, 0}, // #264
+  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #265
+  {DBGFIELD("IIC_MMX_PCK_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #266
+  {DBGFIELD("IIC_MMX_PCK_RR_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #267
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #268
+  {DBGFIELD("IIC_MMX_ALUQ_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #269
+  {DBGFIELD("IIC_MMX_ALUQ_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #270
+  {DBGFIELD("WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #271
+  {DBGFIELD("WriteShuffle")       1, false, false, 965, 2,  2, 1,  0, 0}, // #272
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #273
+  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecLogic") 1, false, false, 965, 2,  2, 1,  0, 0}, // #274
+  {DBGFIELD("IIC_MMX_MISC_FUNC_REG_WriteVecIMulLd_ReadAfterLd") 1, false, false, 952, 5,  5, 1,  4, 1}, // #275
+  {DBGFIELD("IIC_MMX_MISC_FUNC_MEM_WriteVecIMul") 1, false, false, 957, 3, 19, 1,  0, 0}, // #276
+  {DBGFIELD("IIC_MMX_PEXTR_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #277
+  {DBGFIELD("IIC_MMX_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #278
+  {DBGFIELD("IIC_MMX_PHADDSUBW_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #279
+  {DBGFIELD("IIC_MMX_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #280
+  {DBGFIELD("IIC_MMX_PHADDSUBD_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #281
+  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #282
+  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #283
+  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMulLd_ReadAfterLd") 1, false, false, 952, 5,  5, 1,  4, 1}, // #284
+  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMul") 1, false, false, 957, 3, 19, 1,  0, 0}, // #285
+  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMulLd_ReadAfterLd") 1, false, false, 952, 5,  5, 1,  4, 1}, // #286
+  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMul") 1, false, false, 957, 3, 19, 1,  0, 0}, // #287
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #288
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #289
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd") 1, false, false, 960, 4, 16, 1,  0, 0}, // #290
+  {DBGFIELD("IIC_MMX_SHIFT_RI_WriteVecShift") 1, false, false, 965, 2,  2, 1,  0, 0}, // #291
+  {DBGFIELD("IIC_MMX_SHIFT_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #292
+  {DBGFIELD("IIC_MMX_SHIFT_RR_WriteVecShift") 1, false, false, 965, 2,  2, 1,  0, 0}, // #293
+  {DBGFIELD("IIC_MMX_UNPCK_H_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #294
+  {DBGFIELD("IIC_MMX_UNPCK_H_RR_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #295
+  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #296
+  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #297
+  {DBGFIELD("IIC_SSE_MONITORX_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #298
+  {DBGFIELD("IIC_SSE_MONITOR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #299
+  {DBGFIELD("IIC_MOV_MEM_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #300
+  {DBGFIELD("IIC_MOV_MEM_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #301
+  {DBGFIELD("IIC_MOV_MEM_SR_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #302
+  {DBGFIELD("IIC_MOV_WriteMove")  1, false, false, 13, 1,  2, 1,  0, 0}, // #303
+  {DBGFIELD("IIC_MOV_MEM_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #304
+  {DBGFIELD("IIC_MOV_REG_SR_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #305
+  {DBGFIELD("IIC_MOV_SR_MEM_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #306
+  {DBGFIELD("IIC_MOV_SR_REG_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #307
+  {DBGFIELD("IIC_MOV_CR_REG_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #308
+  {DBGFIELD("IIC_MOV_DR_REG_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #309
+  {DBGFIELD("IIC_ALU_NONMEM_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #310
+  {DBGFIELD("IIC_MOV_REG_CR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #311
+  {DBGFIELD("IIC_MOV_REG_DR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #312
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #313
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #314
+  {DBGFIELD("IIC_SSE_MOVA_P_MR_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #315
+  {DBGFIELD("IIC_SSE_MOVA_P_RM_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #316
+  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #317
+  {DBGFIELD("IIC_MOVBE_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #318
+  {DBGFIELD("IIC_MOVBE_WriteALULd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #319
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #320
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #321
+  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #322
+  {DBGFIELD("IIC_SSE_MOVU_P_MR_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #323
+  {DBGFIELD("IIC_SSE_MOVU_P_RM_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #324
+  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #325
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #326
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #327
+  {DBGFIELD("IIC_SSE_MOVMSK_WriteVecLogic") 1, false, false, 965, 2,  2, 1,  0, 0}, // #328
+  {DBGFIELD("IIC_SSE_MOVNT_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #329
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #330
+  {DBGFIELD("IIC_SSE_MOVD_ToGP_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #331
+  {DBGFIELD("IIC_SSE_MOVQ_RR_WriteVecLogic") 1, false, false, 965, 2,  2, 1,  0, 0}, // #332
+  {DBGFIELD("IIC_MOVS_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #333
+  {DBGFIELD("IIC_SSE_MOV_S_MR_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #334
+  {DBGFIELD("IIC_SSE_MOV_S_RM_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #335
+  {DBGFIELD("IIC_SSE_MOV_S_RR_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #336
+  {DBGFIELD("IIC_MOVSX_R16_M8_WriteALULd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #337
+  {DBGFIELD("IIC_MOVSX_R16_R8_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #338
+  {DBGFIELD("IIC_MOVSX_WriteALULd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #339
+  {DBGFIELD("IIC_MOVSX_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #340
+  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #341
+  {DBGFIELD("IIC_MOVZX_R16_M8_WriteALULd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #342
+  {DBGFIELD("IIC_MOVZX_R16_R8_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #343
+  {DBGFIELD("IIC_MOVZX_WriteALULd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #344
+  {DBGFIELD("IIC_MOVZX_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #345
+  {DBGFIELD("IIC_SSE_MPSADBW_RM_WriteMPSADLd_ReadAfterLd") 1, false, false, 1009, 5, 10, 1,  4, 1}, // #346
+  {DBGFIELD("IIC_SSE_MPSADBW_RR_WriteMPSAD") 1, false, false, 1014, 3,  6, 1,  0, 0}, // #347
+  {DBGFIELD("IIC_MUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #348
+  {DBGFIELD("IIC_MUL16_REG_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #349
+  {DBGFIELD("IIC_MUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #350
+  {DBGFIELD("IIC_MUL32_REG_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #351
+  {DBGFIELD("IIC_MUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #352
+  {DBGFIELD("IIC_MUL64_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #353
+  {DBGFIELD("IIC_MUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1001, 5, 16, 1,  5, 2}, // #354
+  {DBGFIELD("IIC_MUL8_WriteIMul") 1, false, false, 986, 3,  6, 1,  0, 0}, // #355
+  {DBGFIELD("IIC_SSE_MUL_F64P_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 972, 5,  5, 1,  4, 1}, // #356
+  {DBGFIELD("IIC_SSE_MUL_F64P_RR_WriteFMul") 1, false, false, 977, 3, 19, 1,  0, 0}, // #357
+  {DBGFIELD("IIC_SSE_MUL_F32P_RR_WriteFMul") 1, false, false, 977, 3, 19, 1,  0, 0}, // #358
+  {DBGFIELD("IIC_SSE_MUL_F64S_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 972, 5,  5, 1,  4, 1}, // #359
+  {DBGFIELD("IIC_SSE_MUL_F64S_RR_WriteFMul") 1, false, false, 977, 3, 19, 1,  0, 0}, // #360
+  {DBGFIELD("IIC_SSE_MUL_F32S_RR_WriteFMul") 1, false, false, 977, 3, 19, 1,  0, 0}, // #361
+  {DBGFIELD("IIC_MUL8_WriteIMulLd_WriteIMulH") 2, false, false, 1017, 5, 47, 2,  0, 0}, // #362
+  {DBGFIELD("IIC_MUL8_WriteIMul_WriteIMulH") 2, false, false, 1022, 3, 49, 2,  0, 0}, // #363
+  {DBGFIELD("WriteFMulLd")        1, false, false, 972, 5,  5, 1,  0, 0}, // #364
+  {DBGFIELD("WriteFMul")          1, false, false, 977, 3, 19, 1,  0, 0}, // #365
+  {DBGFIELD("IIC_SSE_MWAITX_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #366
+  {DBGFIELD("IIC_SSE_MWAIT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #367
+  {DBGFIELD("IIC_NOP_WriteZero")  1, false, false,  0, 0,  2, 1,  0, 0}, // #368
+  {DBGFIELD("IIC_OUT_IR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #369
+  {DBGFIELD("IIC_OUT_RR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #370
+  {DBGFIELD("IIC_OUTS_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #371
+  {DBGFIELD("IIC_SSE_PABS_RM_WriteVecALULd") 1, false, false, 960, 4, 16, 1,  0, 0}, // #372
+  {DBGFIELD("IIC_SSE_PABS_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #373
+  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #374
+  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #375
+  {DBGFIELD("IIC_SSE_INTALUQ_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #376
+  {DBGFIELD("IIC_SSE_INTALUQ_P_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #377
+  {DBGFIELD("IIC_SSE_PALIGNRM_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #378
+  {DBGFIELD("IIC_SSE_PALIGNRR_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #379
+  {DBGFIELD("IIC_SSE_BIT_P_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #380
+  {DBGFIELD("IIC_SSE_BIT_P_RR_WriteVecLogic") 1, false, false, 965, 2,  2, 1,  0, 0}, // #381
+  {DBGFIELD("IIC_SSE_PAUSE_WriteNop") 1, false, false,  0, 0,  2, 1,  0, 0}, // #382
+  {DBGFIELD("IIC_ALU_MEM_WriteVarBlendLd_ReadAfterLd") 1, false, false, 1025, 4,  5, 1,  4, 1}, // #383
+  {DBGFIELD("IIC_ALU_NONMEM_WriteVarBlend") 1, false, false, 1029, 2, 19, 1,  0, 0}, // #384
+  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteBlendLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #385
+  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteBlend") 1, false, false, 965, 2,  2, 1,  0, 0}, // #386
+  {DBGFIELD("IIC_SSE_PCLMULQDQ_RM_WriteCLMulLd_ReadAfterLd") 1, false, false, 968, 4,  5, 1,  4, 1}, // #387
+  {DBGFIELD("IIC_SSE_PCLMULQDQ_RR_WriteCLMul") 1, false, false, 16, 1, 19, 1,  0, 0}, // #388
+  {DBGFIELD("WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #389
+  {DBGFIELD("WriteVecALU")        1, false, false, 965, 2,  2, 1,  0, 0}, // #390
+  {DBGFIELD("WritePCmpEStrILd_ReadAfterLd") 1, false, false, 1031, 4, 39, 1,  4, 1}, // #391
+  {DBGFIELD("WritePCmpEStrI")     1, false, false, 1035, 2, 34, 1,  0, 0}, // #392
+  {DBGFIELD("WritePCmpEStrMLd_ReadAfterLd") 1, false, false, 1031, 4, 39, 1,  4, 1}, // #393
+  {DBGFIELD("WritePCmpEStrM")     1, false, false, 1035, 2, 34, 1,  0, 0}, // #394
+  {DBGFIELD("WritePCmpIStrILd_ReadAfterLd") 1, false, false, 1025, 4, 20, 1,  4, 1}, // #395
+  {DBGFIELD("WritePCmpIStrI")     1, false, false, 1029, 2, 16, 1,  0, 0}, // #396
+  {DBGFIELD("WritePCmpIStrMLd_ReadAfterLd") 1, false, false, 1025, 4, 14, 1,  4, 1}, // #397
+  {DBGFIELD("WritePCmpIStrM")     1, false, false, 1029, 2,  5, 1,  0, 0}, // #398
+  {DBGFIELD("WriteShuffleLd_WriteRMW") 2, false, false, 996, 5, 45, 2,  0, 0}, // #399
+  {DBGFIELD("IIC_SSE_PEXTRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #400
+  {DBGFIELD("IIC_SSE_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #401
+  {DBGFIELD("IIC_SSE_PHADDSUBD_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #402
+  {DBGFIELD("IIC_SSE_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #403
+  {DBGFIELD("IIC_SSE_PHADDSUBW_RR_WriteVecALU") 1, false, false, 965, 2,  2, 1,  0, 0}, // #404
+  {DBGFIELD("WriteVecIMulLd")     1, false, false, 952, 5,  5, 1,  0, 0}, // #405
+  {DBGFIELD("WriteVecIMul")       1, false, false, 957, 3, 19, 1,  0, 0}, // #406
+  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #407
+  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #408
+  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMulLd_ReadAfterLd") 1, false, false, 952, 5,  5, 1,  4, 1}, // #409
+  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMul") 1, false, false, 957, 3, 19, 1,  0, 0}, // #410
+  {DBGFIELD("WriteVecIMulLd_ReadAfterLd") 1, false, false, 952, 5,  5, 1,  4, 1}, // #411
+  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteShuffleLd") 1, false, false, 960, 4, 16, 1,  0, 0}, // #412
+  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #413
+  {DBGFIELD("IIC_SSE_PMULHRSW_WriteVecIMulLd_ReadAfterLd") 1, false, false, 952, 5,  5, 1,  4, 1}, // #414
+  {DBGFIELD("IIC_SSE_PMULHRSW_WriteVecIMul") 1, false, false, 957, 3, 19, 1,  0, 0}, // #415
+  {DBGFIELD("IIC_SSE_INTMUL_P_RM_WriteVecIMulLd_ReadAfterLd") 1, false, false, 952, 5,  5, 1,  4, 1}, // #416
+  {DBGFIELD("IIC_SSE_INTMUL_P_RR_WriteVecIMul") 1, false, false, 957, 3, 19, 1,  0, 0}, // #417
+  {DBGFIELD("IIC_POP_REG16_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #418
+  {DBGFIELD("IIC_POP_MEM_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #419
+  {DBGFIELD("IIC_POP_REG_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #420
+  {DBGFIELD("IIC_POP_A_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #421
+  {DBGFIELD("IIC_SSE_POPCNT_RM_WriteFAddLd") 1, false, false, 952, 5, 10, 1,  0, 0}, // #422
+  {DBGFIELD("IIC_SSE_POPCNT_RR_WriteFAdd") 1, false, false, 957, 3,  6, 1,  0, 0}, // #423
+  {DBGFIELD("IIC_POP_SR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #424
+  {DBGFIELD("IIC_POP_F_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #425
+  {DBGFIELD("IIC_POP_FD_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #426
+  {DBGFIELD("IIC_POP_SR_SS_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #427
+  {DBGFIELD("IIC_SSE_PSHUFB_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #428
+  {DBGFIELD("IIC_SSE_PSHUFB_RR_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #429
+  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #430
+  {DBGFIELD("IIC_SSE_PSHUF_RI_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #431
+  {DBGFIELD("IIC_SSE_INTSHDQ_P_RI_WriteVecShift") 1, false, false, 965, 2,  2, 1,  0, 0}, // #432
+  {DBGFIELD("IIC_SSE_INTSH_P_RI_WriteVecShift") 1, false, false, 965, 2,  2, 1,  0, 0}, // #433
+  {DBGFIELD("IIC_SSE_INTSH_P_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #434
+  {DBGFIELD("IIC_SSE_INTSH_P_RR_WriteVecShift") 1, false, false, 965, 2,  2, 1,  0, 0}, // #435
+  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #436
+  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #437
+  {DBGFIELD("IIC_PUSH_IMM_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #438
+  {DBGFIELD("IIC_PUSH_REG_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #439
+  {DBGFIELD("IIC_PUSH_MEM_WriteRMW") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #440
+  {DBGFIELD("IIC_PUSH_A_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #441
+  {DBGFIELD("IIC_PUSH_SR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #442
+  {DBGFIELD("IIC_PUSH_CS_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #443
+  {DBGFIELD("IIC_PUSH_F_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #444
+  {DBGFIELD("IIC_SR_WriteShiftLd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #445
+  {DBGFIELD("IIC_SR_WriteShift")  1, false, false, 427, 2,  2, 1,  0, 0}, // #446
+  {DBGFIELD("IIC_SSE_RCPP_RM_WriteFRcpLd") 1, false, false, 972, 5,  5, 1,  0, 0}, // #447
+  {DBGFIELD("IIC_SSE_RCPP_RR_WriteFRcp") 1, false, false, 977, 3, 19, 1,  0, 0}, // #448
+  {DBGFIELD("IIC_SSE_RCPS_RM_WriteFRcpLd_ReadAfterLd") 1, false, false, 972, 5,  5, 1,  4, 1}, // #449
+  {DBGFIELD("WriteFRcpLd_ReadAfterLd") 1, false, false, 972, 5,  5, 1,  4, 1}, // #450
+  {DBGFIELD("IIC_SSE_RCPS_RR_WriteFRcp") 1, false, false, 977, 3, 19, 1,  0, 0}, // #451
+  {DBGFIELD("WriteRMW")           1, false, false, 1006, 3,  2, 1,  0, 0}, // #452
+  {DBGFIELD("IIC_RDMSR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #453
+  {DBGFIELD("IIC_RDPMC_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #454
+  {DBGFIELD("IIC_RDTSC_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #455
+  {DBGFIELD("IIC_REP_MOVS_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #456
+  {DBGFIELD("IIC_REP_STOS_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #457
+  {DBGFIELD("IIC_RET_IMM_WriteJumpLd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #458
+  {DBGFIELD("WriteShiftLd")       1, false, false, 948, 4,  9, 1,  0, 0}, // #459
+  {DBGFIELD("WriteShift")         1, false, false, 427, 2,  2, 1,  0, 0}, // #460
+  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAddLd") 1, false, false, 952, 5, 10, 1,  0, 0}, // #461
+  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAdd") 1, false, false, 957, 3,  6, 1,  0, 0}, // #462
+  {DBGFIELD("IIC_SSE_ROUNDPS_MEM_WriteFAddLd") 1, false, false, 952, 5, 10, 1,  0, 0}, // #463
+  {DBGFIELD("WriteFAddLd_ReadAfterLd") 1, false, false, 952, 5, 10, 1,  4, 1}, // #464
+  {DBGFIELD("IIC_RSM_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #465
+  {DBGFIELD("IIC_SSE_RSQRTPS_RM_WriteFRsqrtLd") 1, false, false, 972, 5,  5, 1,  0, 0}, // #466
+  {DBGFIELD("IIC_SSE_RSQRTPS_RR_WriteFRsqrt") 1, false, false, 977, 3, 19, 1,  0, 0}, // #467
+  {DBGFIELD("IIC_SSE_RSQRTSS_RM_WriteFRsqrtLd_ReadAfterLd") 1, false, false, 972, 5,  5, 1,  4, 1}, // #468
+  {DBGFIELD("WriteFRsqrtLd_ReadAfterLd") 1, false, false, 972, 5,  5, 1,  4, 1}, // #469
+  {DBGFIELD("IIC_SSE_RSQRTSS_RR_WriteFRsqrt") 1, false, false, 977, 3, 19, 1,  0, 0}, // #470
+  {DBGFIELD("WriteShiftLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd") 1, false, false, 948, 4,  9, 1,  5, 1}, // #471
+  {DBGFIELD("IIC_SCAS_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #472
+  {DBGFIELD("IIC_SET_M_WriteALU_WriteStore") 2, false, false, 1037, 4, 21, 2,  0, 0}, // #473
+  {DBGFIELD("IIC_SET_R_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #474
+  {DBGFIELD("IIC_SSE_SFENCE_WriteFence") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #475
+  {DBGFIELD("IIC_SGDT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #476
+  {DBGFIELD("IIC_SHD16_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #477
+  {DBGFIELD("IIC_SHD16_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #478
+  {DBGFIELD("IIC_SHD16_REG_CL_WriteShift") 1, false, false, 427, 2,  2, 1,  0, 0}, // #479
+  {DBGFIELD("IIC_SHD16_REG_IM_WriteShift") 1, false, false, 427, 2,  2, 1,  0, 0}, // #480
+  {DBGFIELD("IIC_SHD32_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #481
+  {DBGFIELD("IIC_SHD32_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #482
+  {DBGFIELD("IIC_SHD32_REG_CL_WriteShift") 1, false, false, 427, 2,  2, 1,  0, 0}, // #483
+  {DBGFIELD("IIC_SHD32_REG_IM_WriteShift") 1, false, false, 427, 2,  2, 1,  0, 0}, // #484
+  {DBGFIELD("IIC_SHD64_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #485
+  {DBGFIELD("IIC_SHD64_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #486
+  {DBGFIELD("IIC_SHD64_REG_CL_WriteShift") 1, false, false, 427, 2,  2, 1,  0, 0}, // #487
+  {DBGFIELD("IIC_SHD64_REG_IM_WriteShift") 1, false, false, 427, 2,  2, 1,  0, 0}, // #488
+  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #489
+  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #490
+  {DBGFIELD("IIC_SIDT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #491
+  {DBGFIELD("IIC_SLDT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #492
+  {DBGFIELD("IIC_SMSW_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #493
+  {DBGFIELD("IIC_SSE_SQRTPD_RM_WriteFSqrtLd") 1, false, false, 1041, 6, 51, 1,  0, 0}, // #494
+  {DBGFIELD("IIC_SSE_SQRTPD_RR_WriteFSqrt") 1, false, false, 1041, 6, 27, 1,  0, 0}, // #495
+  {DBGFIELD("IIC_SSE_SQRTPS_RM_WriteFSqrtLd") 1, false, false, 1041, 6, 51, 1,  0, 0}, // #496
+  {DBGFIELD("IIC_SSE_SQRTPS_RR_WriteFSqrt") 1, false, false, 1041, 6, 27, 1,  0, 0}, // #497
+  {DBGFIELD("IIC_SSE_SQRTSD_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 1041, 6, 51, 1,  4, 1}, // #498
+  {DBGFIELD("WriteFSqrtLd_ReadAfterLd") 1, false, false, 1041, 6, 51, 1,  4, 1}, // #499
+  {DBGFIELD("IIC_SSE_SQRTSD_RR_WriteFSqrt") 1, false, false, 1041, 6, 27, 1,  0, 0}, // #500
+  {DBGFIELD("IIC_SSE_SQRTSS_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 1041, 6, 51, 1,  4, 1}, // #501
+  {DBGFIELD("IIC_SSE_SQRTSS_RR_WriteFSqrt") 1, false, false, 1041, 6, 27, 1,  0, 0}, // #502
+  {DBGFIELD("WriteFSqrt")         1, false, false, 1041, 6, 27, 1,  0, 0}, // #503
+  {DBGFIELD("IIC_STC_WriteALU")   1, false, false, 427, 2,  2, 1,  0, 0}, // #504
+  {DBGFIELD("IIC_STD_WriteALU")   1, false, false, 427, 2,  2, 1,  0, 0}, // #505
+  {DBGFIELD("IIC_STI_WriteALU")   1, false, false, 427, 2,  2, 1,  0, 0}, // #506
+  {DBGFIELD("IIC_SSE_STMXCSR_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #507
+  {DBGFIELD("IIC_STOS_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #508
+  {DBGFIELD("IIC_STR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #509
+  {DBGFIELD("IIC_FST80_WriteStore") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #510
+  {DBGFIELD("IIC_FST_WriteMove")  1, false, false, 13, 1,  2, 1,  0, 0}, // #511
+  {DBGFIELD("IIC_SWAPGS_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #512
+  {DBGFIELD("IIC_SYSCALL_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #513
+  {DBGFIELD("IIC_SYS_ENTER_EXIT_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #514
+  {DBGFIELD("IIC_JMP_REL_WriteJumpLd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #515
+  {DBGFIELD("IIC_JMP_MEM_WriteJump") 1, false, false, 427, 2,  2, 1,  0, 0}, // #516
+  {DBGFIELD("IIC_JMP_REG_WriteJumpLd") 1, false, false, 948, 4,  9, 1,  0, 0}, // #517
+  {DBGFIELD("WriteJump")          1, false, false, 427, 2,  2, 1,  0, 0}, // #518
+  {DBGFIELD("IIC_FUCOMI_WriteFAdd") 1, false, false, 957, 3,  6, 1,  0, 0}, // #519
+  {DBGFIELD("IIC_FUCOM_WriteFAdd") 1, false, false, 957, 3,  6, 1,  0, 0}, // #520
+  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #521
+  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #522
+  {DBGFIELD("IIC_SSE_ALU_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #523
+  {DBGFIELD("IIC_SSE_ALU_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #524
+  {DBGFIELD("IIC_SSE_ALU_F32S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #525
+  {DBGFIELD("IIC_SSE_ALU_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #526
+  {DBGFIELD("WriteFVarBlendLd_ReadAfterLd") 1, false, false, 1025, 4,  5, 1,  4, 1}, // #527
+  {DBGFIELD("WriteFVarBlend")     1, false, false, 1029, 2, 19, 1,  0, 0}, // #528
+  {DBGFIELD("WriteFShuffleLd")    1, false, false, 960, 4, 16, 1,  0, 0}, // #529
+  {DBGFIELD("WriteFShuffle256")   1, false, false, 965, 2,  2, 1,  0, 0}, // #530
+  {DBGFIELD("WriteFShuffle")      1, false, false, 965, 2,  2, 1,  0, 0}, // #531
+  {DBGFIELD("IIC_SSE_ALU_F32P_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #532
+  {DBGFIELD("WriteCvtF2ILd")      1, false, false, 972, 5, 10, 1,  0, 0}, // #533
+  {DBGFIELD("WriteCvtF2I")        1, false, false, 977, 3,  6, 1,  0, 0}, // #534
+  {DBGFIELD("WriteCvtF2FLd")      1, false, false, 972, 5, 10, 1,  0, 0}, // #535
+  {DBGFIELD("WriteCvtF2F")        1, false, false, 977, 3,  6, 1,  0, 0}, // #536
+  {DBGFIELD("WriteCvtF2FLd_WriteRMW") 2, false, false, 1047, 6, 35, 2,  0, 0}, // #537
+  {DBGFIELD("WriteCvtF2FLd_ReadAfterLd") 1, false, false, 972, 5, 10, 1,  4, 1}, // #538
+  {DBGFIELD("WriteCvtI2FLd_ReadAfterLd") 1, false, false, 972, 5, 10, 1,  4, 1}, // #539
+  {DBGFIELD("IIC_SSE_DIV_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #540
+  {DBGFIELD("IIC_SSE_DIV_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #541
+  {DBGFIELD("IIC_SSE_DIV_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #542
+  {DBGFIELD("IIC_VERR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #543
+  {DBGFIELD("IIC_VERW_REG_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #544
+  {DBGFIELD("IIC_VERW_MEM_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #545
+  {DBGFIELD("WriteStore")         1, false, false, 1006, 3,  2, 1,  0, 0}, // #546
+  {DBGFIELD("WriteShuffle256")    1, false, false, 965, 2,  2, 1,  0, 0}, // #547
+  {DBGFIELD("IIC_ALU_MEM_WriteFBlendLd_WriteRMW") 2, false, false, 996, 5, 45, 2,  0, 0}, // #548
+  {DBGFIELD("WriteFShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #549
+  {DBGFIELD("WriteShuffle256Ld_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #550
+  {DBGFIELD("IIC_ALU_MEM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #551
+  {DBGFIELD("IIC_ALU_NONMEM_WriteFShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #552
+  {DBGFIELD("IIC_SSE_MOVDQ")      0, false, false,  0, 0,  0, 0,  0, 0}, // #553
+  {DBGFIELD("IIC_SSE_MOV_LH")     0, false, false,  0, 0,  0, 0,  0, 0}, // #554
+  {DBGFIELD("IIC_SSE_MOVD_ToGP")  0, false, false,  0, 0,  0, 0,  0, 0}, // #555
+  {DBGFIELD("IIC_SSE_MOV_S_MR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #556
+  {DBGFIELD("IIC_SSE_MOV_S_RM")   0, false, false,  0, 0,  0, 0,  0, 0}, // #557
+  {DBGFIELD("IIC_SSE_MOV_S_RR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #558
+  {DBGFIELD("IIC_SSE_MOVQ_RR")    0, false, false,  0, 0,  0, 0,  0, 0}, // #559
+  {DBGFIELD("IIC_ALU_MEM_WriteMPSADLd_ReadAfterLd") 1, false, false, 1009, 5, 10, 1,  4, 1}, // #560
+  {DBGFIELD("IIC_ALU_NONMEM_WriteMPSAD") 1, false, false, 1014, 3,  6, 1,  0, 0}, // #561
+  {DBGFIELD("IIC_SSE_MUL_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #562
+  {DBGFIELD("IIC_SSE_MUL_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #563
+  {DBGFIELD("IIC_SSE_MUL_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #564
+  {DBGFIELD("WriteVecALULd")      1, false, false, 960, 4, 16, 1,  0, 0}, // #565
+  {DBGFIELD("IIC_SSE_INTALU_P_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #566
+  {DBGFIELD("IIC_SSE_INTALU_P_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #567
+  {DBGFIELD("WriteBlendLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #568
+  {DBGFIELD("WriteBlend")         1, false, false, 965, 2,  2, 1,  0, 0}, // #569
+  {DBGFIELD("WriteVarBlendLd_ReadAfterLd") 1, false, false, 1025, 4,  5, 1,  4, 1}, // #570
+  {DBGFIELD("WriteVarBlend")      1, false, false, 1029, 2, 19, 1,  0, 0}, // #571
+  {DBGFIELD("IIC_ALU_MEM_WriteBlendLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #572
+  {DBGFIELD("IIC_ALU_NONMEM_WriteBlend") 1, false, false, 965, 2,  2, 1,  0, 0}, // #573
+  {DBGFIELD("WriteCLMulLd_ReadAfterLd") 1, false, false, 968, 4,  5, 1,  4, 1}, // #574
+  {DBGFIELD("WriteCLMul")         1, false, false, 16, 1, 19, 1,  0, 0}, // #575
+  {DBGFIELD("IIC_SSE_ALU_F32P_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #576
+  {DBGFIELD("WriteFShuffle256Ld_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #577
+  {DBGFIELD("IIC_ALU_MEM_WriteShuffleLd") 1, false, false, 960, 4, 16, 1,  0, 0}, // #578
+  {DBGFIELD("IIC_ALU_NONMEM_WriteShuffle") 1, false, false, 965, 2,  2, 1,  0, 0}, // #579
+  {DBGFIELD("WriteVarVecShift_ReadAfterLd") 1, false, false, 965, 2,  2, 1,  4, 1}, // #580
+  {DBGFIELD("WriteVarVecShift")   1, false, false, 965, 2,  2, 1,  0, 0}, // #581
+  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd") 1, false, false, 960, 4, 16, 1,  0, 0}, // #582
+  {DBGFIELD("WriteVarVecShiftLd_ReadAfterLd") 1, false, false, 960, 4, 16, 1,  4, 1}, // #583
+  {DBGFIELD("WriteFRcpLd")        1, false, false, 972, 5,  5, 1,  0, 0}, // #584
+  {DBGFIELD("WriteFRsqrtLd")      1, false, false, 972, 5,  5, 1,  0, 0}, // #585
+  {DBGFIELD("WriteFSqrtLd")       1, false, false, 1041, 6, 51, 1,  0, 0}, // #586
+  {DBGFIELD("IIC_WAIT_WriteMicrocoded") 1, false, false, 13, 1,  1, 1,  0, 0}, // #587
+  {DBGFIELD("IIC_WRMSR_WriteSystem") 1, false, false, 13, 1,  1, 1,  0, 0}, // #588
+  {DBGFIELD("IIC_XADD_MEM_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #589
+  {DBGFIELD("IIC_XADD_REG_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #590
+  {DBGFIELD("IIC_XCHG_REG_WriteALU") 1, false, false, 427, 2,  2, 1,  0, 0}, // #591
+  {DBGFIELD("IIC_XCHG_MEM_WriteALULd_WriteRMW") 2, false, false, 943, 5, 41, 2,  0, 0}, // #592
+  {DBGFIELD("IIC_FXCH_WriteMove") 1, false, false, 13, 1,  2, 1,  0, 0}, // #593
+  {DBGFIELD("IIC_XLAT_WriteLoad") 1, false, false, 968, 3,  3, 1,  0, 0}, // #594
+  {DBGFIELD("MOV16rm")            1, false, false, 968, 3,  3, 1,  0, 0}, // #595
+  {DBGFIELD("MOVSX32rm16_MOVSX32rm8") 1, false, false, 948, 4,  9, 1,  0, 0}, // #596
+  {DBGFIELD("MOVZX32rm16_MOVZX32rm8") 1, false, false, 948, 4,  9, 1,  0, 0}, // #597
+  {DBGFIELD("CMOVA16rr_CMOVAE16rr_CMOVB16rr_CMOVBE16rr_CMOVE16rr_CMOVG16rr_CMOVGE16rr_CMOVL16rr_CMOVLE16rr_CMOVNE16rr_CMOVNO16rr_CMOVNP16rr_CMOVNS16rr_CMOVO16rr_CMOVP16rr_CMOVS16rr") 1, false, false, 427, 2,  2, 1,  0, 0}, // #598
+  {DBGFIELD("CMOVA32rr_CMOVA64rr_CMOVAE32rr_CMOVAE64rr_CMOVB32rr_CMOVB64rr_CMOVBE32rr_CMOVBE64rr_CMOVE32rr_CMOVE64rr_CMOVG32rr_CMOVG64rr_CMOVGE32rr_CMOVGE64rr_CMOVL32rr_CMOVL64rr_CMOVLE32rr_CMOVLE64rr_CMOVNE32rr_CMOVNE64rr_CMOVNO32rr_CMOVNO64rr_CMOVNP32rr_CMOVNP64rr_CMOVNS32rr_CMOVNS64rr_CMOVO32rr_CMOVO64rr_CMOVP32rr_CMOVP64rr_CMOVS32rr_CMOVS64rr") 1, false, false, 427, 2,  2, 1,  0, 0}, // #599
+  {DBGFIELD("CMOVA16rm_CMOVAE16rm_CMOVB16rm_CMOVBE16rm_CMOVE16rm_CMOVG16rm_CMOVGE16rm_CMOVL16rm_CMOVLE16rm_CMOVNE16rm_CMOVNO16rm_CMOVNP16rm_CMOVNS16rm_CMOVO16rm_CMOVP16rm_CMOVS16rm") 1, false, false, 948, 4,  9, 1,  4, 1}, // #600
+  {DBGFIELD("CMOVA32rm_CMOVA64rm_CMOVAE32rm_CMOVAE64rm_CMOVB32rm_CMOVB64rm_CMOVBE32rm_CMOVBE64rm_CMOVE32rm_CMOVE64rm_CMOVG32rm_CMOVG64rm_CMOVGE32rm_CMOVGE64rm_CMOVL32rm_CMOVL64rm_CMOVLE32rm_CMOVLE64rm_CMOVNE32rm_CMOVNE64rm_CMOVNO32rm_CMOVNO64rm_CMOVNP32rm_CMOVNP64rm_CMOVNS32rm_CMOVNS64rm_CMOVO32rm_CMOVO64rm_CMOVP32rm_CMOVP64rm_CMOVS32rm_CMOVS64rm") 1, false, false, 948, 4,  9, 1,  4, 1}, // #601
+  {DBGFIELD("XCHG16ar_XCHG16rr_XCHG32ar_XCHG32ar64_XCHG32rr_XCHG64ar_XCHG64rr_XCHG8rr") 1, false, false, 427, 2,  2, 1,  0, 0}, // #602
+  {DBGFIELD("XCHG16rm_XCHG32rm_XCHG64rm_XCHG8rm") 2, false, false, 943, 5, 41, 2,  0, 0}, // #603
+  {DBGFIELD("XLAT")               1, false, false, 968, 3,  3, 1,  0, 0}, // #604
+  {DBGFIELD("PUSH16rmm_PUSH32rmm") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #605
+  {DBGFIELD("PUSHF16_PUSHF32")    1, false, false, 1006, 3,  2, 1,  0, 0}, // #606
+  {DBGFIELD("PUSHA16_PUSHA32")    1, false, false, 1006, 3,  2, 1,  0, 0}, // #607
+  {DBGFIELD("POP16rmm_POP32rmm")  1, false, false, 968, 3,  3, 1,  0, 0}, // #608
+  {DBGFIELD("POPF16")             1, false, false, 968, 3,  3, 1,  0, 0}, // #609
+  {DBGFIELD("POPF32")             1, false, false, 968, 3,  3, 1,  0, 0}, // #610
+  {DBGFIELD("POPA16_POPA32")      1, false, false, 968, 3,  3, 1,  0, 0}, // #611
+  {DBGFIELD("LAHF_SAHF")          1, false, false, 427, 2,  2, 1,  0, 0}, // #612
+  {DBGFIELD("BSWAP32r")           1, false, false, 427, 2,  2, 1,  0, 0}, // #613
+  {DBGFIELD("BSWAP64r")           1, false, false, 427, 2,  2, 1,  0, 0}, // #614
+  {DBGFIELD("MOVBE16rm_MOVBE64rm") 1, false, false, 948, 4,  9, 1,  0, 0}, // #615
+  {DBGFIELD("MOVBE32rm")          1, false, false, 948, 4,  9, 1,  0, 0}, // #616
+  {DBGFIELD("MOVBE16mr")          1, false, false, 1006, 3,  2, 1,  0, 0}, // #617
+  {DBGFIELD("MOVBE32mr")          1, false, false, 1006, 3,  2, 1,  0, 0}, // #618
+  {DBGFIELD("MOVBE64mr")          1, false, false, 1006, 3,  2, 1,  0, 0}, // #619
+  {DBGFIELD("ADD16mi_ADD16mi8_ADD16mr_ADD32mi_ADD32mi8_ADD32mr_ADD64mi32_ADD64mi8_ADD64mr_ADD8mi_ADD8mi8_ADD8mr_SUB16mi_SUB16mi8_SUB16mr_SUB32mi_SUB32mi8_SUB32mr_SUB64mi32_SUB64mi8_SUB64mr_SUB8mi_SUB8mi8_SUB8mr") 2, false, false, 943, 5, 41, 2,  0, 0}, // #620
+  {DBGFIELD("ADC16ri_ADC16ri8_ADC16rr_ADC16rr_REV_ADC32ri_ADC32ri8_ADC32rr_ADC32rr_REV_ADC64ri32_ADC64ri8_ADC64rr_ADC64rr_REV_ADC8ri_ADC8ri8_ADC8rr_ADC8rr_REV_SBB16ri_SBB16ri8_SBB16rr_SBB16rr_REV_SBB32ri_SBB32ri8_SBB32rr_SBB32rr_REV_SBB64ri32_SBB64ri8_SBB64rr_SBB64rr_REV_SBB8ri_SBB8ri8_SBB8rr_SBB8rr_REV") 1, false, false, 427, 2,  2, 1,  0, 0}, // #621
+  {DBGFIELD("ADC16rm_ADC32rm_ADC64rm_ADC8rm_SBB16rm_SBB32rm_SBB64rm_SBB8rm") 1, false, false, 948, 4,  9, 1,  4, 1}, // #622
+  {DBGFIELD("ADC16mi_ADC16mi8_ADC16mr_ADC32mi_ADC32mi8_ADC32mr_ADC64mi32_ADC64mi8_ADC64mr_ADC8mi_ADC8mi8_ADC8mr_SBB16mi_SBB16mi8_SBB16mr_SBB32mi_SBB32mi8_SBB32mr_SBB64mi32_SBB64mi8_SBB64mr_SBB8mi_SBB8mi8_SBB8mr") 2, false, false, 943, 5, 41, 2,  0, 0}, // #623
+  {DBGFIELD("DEC16m_DEC32m_DEC64m_DEC8m_INC16m_INC32m_INC64m_INC8m_NEG16m_NEG32m_NEG64m_NEG8m_NOT16m_NOT32m_NOT64m_NOT8m") 2, false, false, 943, 5, 41, 2,  0, 0}, // #624
+  {DBGFIELD("IMUL16r_IMUL16rr")   1, false, false, 986, 3,  6, 1,  0, 0}, // #625
+  {DBGFIELD("IMUL16rm")           1, false, false, 1001, 5, 16, 1,  4, 1}, // #626
+  {DBGFIELD("IMUL16rmi_IMUL16rmi8") 1, false, false, 1001, 5, 16, 1,  0, 0}, // #627
+  {DBGFIELD("IMUL16rri_IMUL16rri8") 1, false, false, 986, 3,  6, 1,  0, 0}, // #628
+  {DBGFIELD("MUL16r")             1, false, false, 986, 3,  6, 1,  0, 0}, // #629
+  {DBGFIELD("IMUL16m")            1, false, false, 1001, 5, 16, 1,  5, 2}, // #630
+  {DBGFIELD("MUL16m")             1, false, false, 1001, 5, 16, 1,  5, 2}, // #631
+  {DBGFIELD("IMUL32r_IMUL32rr")   1, false, false, 986, 3,  6, 1,  0, 0}, // #632
+  {DBGFIELD("IMUL32rm")           1, false, false, 1001, 5, 16, 1,  4, 1}, // #633
+  {DBGFIELD("IMUL32rmi_IMUL32rmi8") 1, false, false, 1001, 5, 16, 1,  0, 0}, // #634
+  {DBGFIELD("IMUL32rri_IMUL32rri8") 1, false, false, 986, 3,  6, 1,  0, 0}, // #635
+  {DBGFIELD("MUL32r")             1, false, false, 986, 3,  6, 1,  0, 0}, // #636
+  {DBGFIELD("IMUL32m")            1, false, false, 1001, 5, 16, 1,  5, 2}, // #637
+  {DBGFIELD("MUL32m")             1, false, false, 1001, 5, 16, 1,  5, 2}, // #638
+  {DBGFIELD("IMUL64r_IMUL64rr")   1, false, false, 986, 3,  6, 1,  0, 0}, // #639
+  {DBGFIELD("IMUL64rm")           1, false, false, 1001, 5, 16, 1,  4, 1}, // #640
+  {DBGFIELD("IMUL64rmi32_IMUL64rmi8") 1, false, false, 1001, 5, 16, 1,  0, 0}, // #641
+  {DBGFIELD("IMUL64rri32_IMUL64rri8") 1, false, false, 986, 3,  6, 1,  0, 0}, // #642
+  {DBGFIELD("MUL64r")             1, false, false, 986, 3,  6, 1,  0, 0}, // #643
+  {DBGFIELD("IMUL64m")            1, false, false, 1001, 5, 16, 1,  5, 2}, // #644
+  {DBGFIELD("MUL64m")             1, false, false, 1001, 5, 16, 1,  5, 2}, // #645
+  {DBGFIELD("MULX32rr")           2, false, false, 1022, 3, 49, 2,  0, 0}, // #646
+  {DBGFIELD("MULX32rm")           2, false, false, 1017, 5, 47, 2,  0, 0}, // #647
+  {DBGFIELD("MULX64rr")           2, false, false, 1022, 3, 49, 2,  0, 0}, // #648
+  {DBGFIELD("MULX64rm")           2, false, false, 1017, 5, 47, 2,  0, 0}, // #649
+  {DBGFIELD("DIV8r")              1, false, false, 986, 4, 12, 1,  0, 0}, // #650
+  {DBGFIELD("DIV16r")             1, false, false, 986, 4, 12, 1,  0, 0}, // #651
+  {DBGFIELD("DIV32r")             1, false, false, 986, 4, 12, 1,  0, 0}, // #652
+  {DBGFIELD("DIV64r")             1, false, false, 986, 4, 12, 1,  0, 0}, // #653
+  {DBGFIELD("IDIV8r")             1, false, false, 986, 4, 12, 1,  0, 0}, // #654
+  {DBGFIELD("IDIV16r")            1, false, false, 986, 4, 12, 1,  0, 0}, // #655
+  {DBGFIELD("IDIV32r")            1, false, false, 986, 4, 12, 1,  0, 0}, // #656
+  {DBGFIELD("IDIV64r")            1, false, false, 986, 4, 12, 1,  0, 0}, // #657
+  {DBGFIELD("AND16mi_AND16mi8_AND16mr_AND32mi_AND32mi8_AND32mr_AND64mi32_AND64mi8_AND64mr_AND8mi_AND8mi8_AND8mr_OR16mi_OR16mi8_OR16mr_OR32mi_OR32mi8_OR32mr_OR64mi32_OR64mi8_OR64mr_OR8mi_OR8mi8_OR8mr_XOR16mi_XOR16mi8_XOR16mr_XOR32mi_XOR32mi8_XOR32mr_XOR64mi32_XOR64mi8_XOR64mr_XOR8mi_XOR8mi8_XOR8mr") 2, false, false, 943, 5, 41, 2,  0, 0}, // #658
+  {DBGFIELD("OR32mrLocked")       2, false, false, 943, 5, 41, 2,  0, 0}, // #659
+  {DBGFIELD("SAR16m1_SAR16mi_SAR32m1_SAR32mi_SAR64m1_SAR64mi_SAR8m1_SAR8mi_SHL16m1_SHL16mi_SHL32m1_SHL32mi_SHL64m1_SHL64mi_SHL8m1_SHL8mi_SHR16m1_SHR16mi_SHR32m1_SHR32mi_SHR64m1_SHR64mi_SHR8m1_SHR8mi") 2, false, false, 943, 5, 41, 2,  0, 0}, // #660
+  {DBGFIELD("SAR16rCL_SAR32rCL_SAR64rCL_SAR8rCL_SHL16rCL_SHL32rCL_SHL64rCL_SHL8rCL_SHR16rCL_SHR32rCL_SHR64rCL_SHR8rCL") 1, false, false, 427, 2,  2, 1,  0, 0}, // #661
+  {DBGFIELD("SAR16mCL_SAR32mCL_SAR64mCL_SAR8mCL_SHL16mCL_SHL32mCL_SHL64mCL_SHL8mCL_SHR16mCL_SHR32mCL_SHR64mCL_SHR8mCL") 2, false, false, 943, 5, 41, 2,  0, 0}, // #662
+  {DBGFIELD("ROL16r1_ROL32r1_ROL64r1_ROL8r1_ROR16r1_ROR32r1_ROR64r1_ROR8r1") 1, false, false, 427, 2,  2, 1,  0, 0}, // #663
+  {DBGFIELD("ROL16mi_ROL32mi_ROL64mi_ROL8mi_ROR16mi_ROR32mi_ROR64mi_ROR8mi") 2, false, false, 943, 5, 41, 2,  0, 0}, // #664
+  {DBGFIELD("ROL16rCL_ROL32rCL_ROL64rCL_ROL8rCL_ROR16rCL_ROR32rCL_ROR64rCL_ROR8rCL") 1, false, false, 427, 2,  2, 1,  0, 0}, // #665
+  {DBGFIELD("ROL16mCL_ROL32mCL_ROL64mCL_ROL8mCL_ROR16mCL_ROR32mCL_ROR64mCL_ROR8mCL") 2, false, false, 943, 5, 41, 2,  0, 0}, // #666
+  {DBGFIELD("RCL16r1_RCL32r1_RCL64r1_RCL8r1_RCR16r1_RCR32r1_RCR64r1_RCR8r1") 1, false, false, 427, 2,  2, 1,  0, 0}, // #667
+  {DBGFIELD("RCL16m1_RCL32m1_RCL64m1_RCL8m1_RCR16m1_RCR32m1_RCR64m1_RCR8m1") 2, false, false, 943, 5, 41, 2,  0, 0}, // #668
+  {DBGFIELD("RCL16rCL_RCL16ri_RCL32rCL_RCL32ri_RCL64rCL_RCL64ri_RCL8rCL_RCL8ri_RCR16rCL_RCR16ri_RCR32rCL_RCR32ri_RCR64rCL_RCR64ri_RCR8rCL_RCR8ri") 1, false, false, 427, 2,  2, 1,  0, 0}, // #669
+  {DBGFIELD("RCL16mCL_RCL16mi_RCL32mCL_RCL32mi_RCL64mCL_RCL64mi_RCL8mCL_RCL8mi_RCR16mCL_RCR16mi_RCR32mCL_RCR32mi_RCR64mCL_RCR64mi_RCR8mCL_RCR8mi") 2, false, false, 943, 5, 41, 2,  0, 0}, // #670
+  {DBGFIELD("SHLD16rri8_SHRD16rri8") 1, false, false, 427, 2,  2, 1,  0, 0}, // #671
+  {DBGFIELD("SHLD32rri8_SHRD32rri8") 1, false, false, 427, 2,  2, 1,  0, 0}, // #672
+  {DBGFIELD("SHLD64rri8_SHRD64rri8") 1, false, false, 427, 2,  2, 1,  0, 0}, // #673
+  {DBGFIELD("SHLD16mri8_SHRD16mri8") 2, false, false, 943, 5, 41, 2,  0, 0}, // #674
+  {DBGFIELD("SHLD32mri8_SHRD32mri8") 2, false, false, 943, 5, 41, 2,  0, 0}, // #675
+  {DBGFIELD("SHLD64mri8_SHRD64mri8") 2, false, false, 943, 5, 41, 2,  0, 0}, // #676
+  {DBGFIELD("SHLD16rrCL")         1, false, false, 427, 2,  2, 1,  0, 0}, // #677
+  {DBGFIELD("SHLD32rrCL")         1, false, false, 427, 2,  2, 1,  0, 0}, // #678
+  {DBGFIELD("SHLD64rrCL")         1, false, false, 427, 2,  2, 1,  0, 0}, // #679
+  {DBGFIELD("SHRD16rrCL")         1, false, false, 427, 2,  2, 1,  0, 0}, // #680
+  {DBGFIELD("SHRD32rrCL")         1, false, false, 427, 2,  2, 1,  0, 0}, // #681
+  {DBGFIELD("SHRD64rrCL")         1, false, false, 427, 2,  2, 1,  0, 0}, // #682
+  {DBGFIELD("SHLD16mrCL_SHRD16mrCL") 2, false, false, 943, 5, 41, 2,  0, 0}, // #683
+  {DBGFIELD("SHLD32mrCL_SHRD32mrCL") 2, false, false, 943, 5, 41, 2,  0, 0}, // #684
+  {DBGFIELD("SHLD64mrCL_SHRD64mrCL") 2, false, false, 943, 5, 41, 2,  0, 0}, // #685
+  {DBGFIELD("BT16ri8_BT32ri8_BT64ri8") 1, false, false, 427, 2,  2, 1,  0, 0}, // #686
+  {DBGFIELD("BT16rr_BT32rr_BT64rr") 1, false, false, 427, 2,  2, 1,  0, 0}, // #687
+  {DBGFIELD("BT16mr_BT32mr_BT64mr") 1, false, false, 948, 4,  9, 1,  0, 0}, // #688
+  {DBGFIELD("BT16mi8_BT32mi8_BT64mi8") 1, false, false, 427, 2,  2, 1,  0, 0}, // #689
+  {DBGFIELD("BTC16ri8_BTC32ri8_BTC64ri8_BTR16ri8_BTR32ri8_BTR64ri8_BTS16ri8_BTS32ri8_BTS64ri8") 1, false, false, 427, 2,  2, 1,  0, 0}, // #690
+  {DBGFIELD("BTC16rr_BTC32rr_BTC64rr_BTR16rr_BTR32rr_BTS16rr_BTS32rr_BTS64rr") 1, false, false, 427, 2,  2, 1,  0, 0}, // #691
+  {DBGFIELD("BTR64rr")            1, false, false, 427, 2,  2, 1,  0, 0}, // #692
+  {DBGFIELD("BTC16mr_BTC32mr_BTC64mr_BTR16mr_BTR32mr_BTR64mr_BTS16mr_BTS32mr_BTS64mr") 2, false, false, 943, 5, 41, 2,  0, 0}, // #693
+  {DBGFIELD("BTC16mi8_BTC32mi8_BTC64mi8_BTR16mi8_BTR32mi8_BTR64mi8_BTS16mi8_BTS32mi8_BTS64mi8") 2, false, false, 943, 5, 41, 2,  0, 0}, // #694
+  {DBGFIELD("BSF16rr_BSF32rr_BSF64rr_BSR16rr_BSR32rr_BSR64rr") 1, false, false, 427, 2,  2, 1,  0, 0}, // #695
+  {DBGFIELD("BSF16rm_BSF32rm_BSF64rm_BSR16rm_BSR32rm_BSR64rm") 1, false, false, 948, 4,  9, 1,  0, 0}, // #696
+  {DBGFIELD("SETAEr_SETAr_SETBEr_SETBr_SETEr_SETGEr_SETGr_SETLEr_SETLr_SETNEr_SETNOr_SETNPr_SETNSr_SETOr_SETPr_SETSr") 1, false, false, 427, 2,  2, 1,  0, 0}, // #697
+  {DBGFIELD("SETAEm_SETAm_SETBEm_SETBm_SETEm_SETGEm_SETGm_SETLEm_SETLm_SETNEm_SETNOm_SETNPm_SETNSm_SETOm_SETPm_SETSm") 2, false, false, 1037, 4, 21, 2,  0, 0}, // #698
+  {DBGFIELD("CLD")                1, false, false, 427, 2,  2, 1,  0, 0}, // #699
+  {DBGFIELD("STD")                1, false, false, 427, 2,  2, 1,  0, 0}, // #700
+  {DBGFIELD("TZCNT16rr_TZCNT32rr_TZCNT64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #701
+  {DBGFIELD("TZCNT16rm_TZCNT32rm_TZCNT64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #702
+  {DBGFIELD("ANDN32rr_ANDN64rr")  1, false, false, 427, 2,  2, 1,  0, 0}, // #703
+  {DBGFIELD("ANDN32rm_ANDN64rm")  1, false, false, 948, 4,  9, 1,  4, 1}, // #704
+  {DBGFIELD("BLSI32rr_BLSI64rr_BLSMSK32rr_BLSMSK64rr_BLSR32rr_BLSR64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #705
+  {DBGFIELD("BLSI32rm_BLSI64rm_BLSMSK32rm_BLSMSK64rm_BLSR32rm_BLSR64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #706
+  {DBGFIELD("BEXTR32rr_BEXTR64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #707
+  {DBGFIELD("BEXTR32rm_BEXTR64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #708
+  {DBGFIELD("BZHI32rr_BZHI64rr")  0, false, false,  0, 0,  0, 0,  0, 0}, // #709
+  {DBGFIELD("BZHI32rm_BZHI64rm")  0, false, false,  0, 0,  0, 0,  0, 0}, // #710
+  {DBGFIELD("PDEP32rr_PDEP64rr_PEXT32rr_PEXT64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #711
+  {DBGFIELD("PDEP32rm_PDEP64rm_PEXT32rm_PEXT64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #712
+  {DBGFIELD("JCXZ_JRCXZ")         1, false, false, 427, 2,  2, 1,  0, 0}, // #713
+  {DBGFIELD("LOOP")               1, false, false, 427, 2,  2, 1,  0, 0}, // #714
+  {DBGFIELD("LOOPE")              1, false, false, 427, 2,  2, 1,  0, 0}, // #715
+  {DBGFIELD("LOOPNE")             1, false, false, 427, 2,  2, 1,  0, 0}, // #716
+  {DBGFIELD("CALL16r_CALL32r")    1, false, false, 427, 2,  2, 1,  0, 0}, // #717
+  {DBGFIELD("CALL16m_CALL32m")    1, false, false, 948, 4,  9, 1,  0, 0}, // #718
+  {DBGFIELD("LRETL_LRETQ_LRETW_RETL_RETQ_RETW") 1, false, false, 948, 4,  9, 1,  0, 0}, // #719
+  {DBGFIELD("LRETIL_LRETIQ_LRETIW") 1, false, false, 948, 4,  9, 1,  0, 0}, // #720
+  {DBGFIELD("RETIL_RETIQ_RETIW")  1, false, false, 948, 4,  9, 1,  0, 0}, // #721
+  {DBGFIELD("BOUNDS16rm_BOUNDS32rm") 1, false, false, 13, 1,  1, 1,  0, 0}, // #722
+  {DBGFIELD("INTO")               1, false, false, 13, 1,  1, 1,  0, 0}, // #723
+  {DBGFIELD("LODSB_LODSW")        1, false, false, 13, 1,  1, 1,  0, 0}, // #724
+  {DBGFIELD("LODSL_LODSQ")        1, false, false, 13, 1,  1, 1,  0, 0}, // #725
+  {DBGFIELD("STOSB_STOSL_STOSQ_STOSW") 1, false, false, 13, 1,  1, 1,  0, 0}, // #726
+  {DBGFIELD("MOVSB_MOVSL_MOVSQ_MOVSW") 1, false, false, 13, 1,  1, 1,  0, 0}, // #727
+  {DBGFIELD("MOVSLDUPrm")         1, false, false, 968, 3,  3, 1,  0, 0}, // #728
+  {DBGFIELD("MOVSLDUPrr")         1, false, false, 965, 2,  2, 1,  0, 0}, // #729
+  {DBGFIELD("SCASB_SCASL_SCASQ_SCASW") 1, false, false, 13, 1,  1, 1,  0, 0}, // #730
+  {DBGFIELD("CMPSB_CMPSL_CMPSQ_CMPSW") 1, false, false, 13, 1,  1, 1,  0, 0}, // #731
+  {DBGFIELD("XADD16rm_XADD32rm_XADD64rm_XADD8rm") 2, false, false, 943, 5, 41, 2,  0, 0}, // #732
+  {DBGFIELD("CMPXCHG16rm_CMPXCHG32rm_CMPXCHG64rm") 2, false, false, 943, 5, 41, 2,  0, 0}, // #733
+  {DBGFIELD("CMPXCHG8rm")         2, false, false, 943, 5, 41, 2,  0, 0}, // #734
+  {DBGFIELD("CMPXCHG8B")          2, false, false, 943, 5, 41, 2,  0, 0}, // #735
+  {DBGFIELD("CMPXCHG16B")         2, false, false, 943, 5, 41, 2,  0, 0}, // #736
+  {DBGFIELD("PAUSE")              1, false, false,  0, 0,  2, 1,  0, 0}, // #737
+  {DBGFIELD("LEAVE_LEAVE64")      1, false, false, 427, 2,  2, 1,  0, 0}, // #738
+  {DBGFIELD("XGETBV")             1, false, false, 13, 1,  1, 1,  0, 0}, // #739
+  {DBGFIELD("RDTSC")              1, false, false, 13, 1,  1, 1,  0, 0}, // #740
+  {DBGFIELD("RDTSCP")             1, false, false, 13, 1,  1, 1,  0, 0}, // #741
+  {DBGFIELD("RDPMC")              1, false, false, 13, 1,  1, 1,  0, 0}, // #742
+  {DBGFIELD("RDRAND16r_RDRAND32r_RDRAND64r") 0, false, false,  0, 0,  0, 0,  0, 0}, // #743
+  {DBGFIELD("LD_Frr")             1, false, false, 13, 1,  2, 1,  0, 0}, // #744
+  {DBGFIELD("LD_F80m")            1, false, false, 968, 3,  3, 1,  0, 0}, // #745
+  {DBGFIELD("FBLDm")              0, false, false,  0, 0,  0, 0,  0, 0}, // #746
+  {DBGFIELD("ST_FPrr_ST_Frr")     1, false, false, 13, 1,  2, 1,  0, 0}, // #747
+  {DBGFIELD("ST_FP80m")           1, false, false, 1006, 3,  2, 1,  0, 0}, // #748
+  {DBGFIELD("FBSTPm")             0, false, false,  0, 0,  0, 0,  0, 0}, // #749
+  {DBGFIELD("XCH_F")              1, false, false, 13, 1,  2, 1,  0, 0}, // #750
+  {DBGFIELD("ILD_F16m_ILD_F32m_ILD_F64m") 1, false, false, 968, 3,  3, 1,  0, 0}, // #751
+  {DBGFIELD("IST_F16m_IST_F32m_IST_FP16m_IST_FP32m") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #752
+  {DBGFIELD("LD_F0")              1, false, false,  0, 0,  2, 1,  0, 0}, // #753
+  {DBGFIELD("LD_F1")              1, false, false,  0, 0,  2, 1,  0, 0}, // #754
+  {DBGFIELD("FLDPI")              1, false, false, 13, 1,  1, 1,  0, 0}, // #755
+  {DBGFIELD("CMOVBE_F_CMOVBE_Fp32_CMOVBE_Fp64_CMOVBE_Fp80_CMOVB_F_CMOVB_Fp32_CMOVB_Fp64_CMOVB_Fp80_CMOVNBE_F_CMOVNBE_Fp32_CMOVNBE_Fp64_CMOVNBE_Fp80_CMOVNB_F_CMOVNB_Fp32_CMOVNB_Fp64_CMOVNB_Fp80_CMOVNE_F_CMOVNE_Fp32_CMOVNE_Fp64_CMOVNE_Fp80_CMOVNP_F_CMOVNP_Fp32_CMOVNP_Fp64_CMOVNP_Fp80_CMOVP_F_CMOVP_Fp32_CMOVP_Fp64_CMOVP_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #756
+  {DBGFIELD("FNSTSW16r")          1, false, false, 427, 2,  2, 1,  0, 0}, // #757
+  {DBGFIELD("FNSTSWm")            0, false, false,  0, 0,  0, 0,  0, 0}, // #758
+  {DBGFIELD("FLDCW16m")           1, false, false, 968, 3,  3, 1,  0, 0}, // #759
+  {DBGFIELD("FNSTCW16m")          1, false, false, 427, 2,  2, 1,  0, 0}, // #760
+  {DBGFIELD("FDECSTP_FINCSTP")    1, false, false, 13, 1,  1, 1,  0, 0}, // #761
+  {DBGFIELD("FFREE")              1, false, false, 13, 1,  1, 1,  0, 0}, // #762
+  {DBGFIELD("FSAVEm")             0, false, false,  0, 0,  0, 0,  0, 0}, // #763
+  {DBGFIELD("FRSTORm")            0, false, false,  0, 0,  0, 0,  0, 0}, // #764
+  {DBGFIELD("ABS_F_ABS_Fp32_ABS_Fp64_ABS_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #765
+  {DBGFIELD("CHS_F_CHS_Fp32_CHS_Fp64_CHS_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #766
+  {DBGFIELD("COMP_FST0r_COM_FST0r") 0, false, false,  0, 0,  0, 0,  0, 0}, // #767
+  {DBGFIELD("UCOM_FPr_UCOM_Fr")   1, false, false, 957, 3,  6, 1,  0, 0}, // #768
+  {DBGFIELD("FCOM32m_FCOM64m_FCOMP32m_FCOMP64m") 0, false, false,  0, 0,  0, 0,  0, 0}, // #769
+  {DBGFIELD("FCOMPP")             1, false, false, 13, 1,  1, 1,  0, 0}, // #770
+  {DBGFIELD("UCOM_FPPr")          1, false, false, 957, 3,  6, 1,  0, 0}, // #771
+  {DBGFIELD("COM_FIPr_COM_FIr")   1, false, false, 957, 3,  6, 1,  0, 0}, // #772
+  {DBGFIELD("UCOM_FIPr_UCOM_FIr") 1, false, false, 957, 3,  6, 1,  0, 0}, // #773
+  {DBGFIELD("FICOM16m_FICOM32m_FICOMP16m_FICOMP32m") 0, false, false,  0, 0,  0, 0,  0, 0}, // #774
+  {DBGFIELD("TST_F_TST_Fp32_TST_Fp64_TST_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #775
+  {DBGFIELD("FXAM")               1, false, false, 13, 1,  1, 1,  0, 0}, // #776
+  {DBGFIELD("FPREM")              1, false, false, 13, 1,  1, 1,  0, 0}, // #777
+  {DBGFIELD("FPREM1")             1, false, false, 13, 1,  1, 1,  0, 0}, // #778
+  {DBGFIELD("FRNDINT")            1, false, false, 13, 1,  1, 1,  0, 0}, // #779
+  {DBGFIELD("FSCALE")             1, false, false, 13, 1,  1, 1,  0, 0}, // #780
+  {DBGFIELD("FXTRACT")            1, false, false, 13, 1,  1, 1,  0, 0}, // #781
+  {DBGFIELD("FNOP")               1, false, false, 13, 1,  1, 1,  0, 0}, // #782
+  {DBGFIELD("WAIT")               1, false, false, 13, 1,  1, 1,  0, 0}, // #783
+  {DBGFIELD("FNCLEX")             1, false, false, 13, 1,  1, 1,  0, 0}, // #784
+  {DBGFIELD("FNINIT")             1, false, false, 13, 1,  1, 1,  0, 0}, // #785
+  {DBGFIELD("MMX_MOVD64from64rr_MMX_MOVD64grr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #786
+  {DBGFIELD("MOVPDI2DIrr_VMOVPDI2DIrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #787
+  {DBGFIELD("MMX_MOVD64rr_MMX_MOVD64to64rr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #788
+  {DBGFIELD("MOVDI2PDIrr_VMOVDI2PDIrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #789
+  {DBGFIELD("VMOVPQIto64rr")      1, false, false, 13, 1,  2, 1,  0, 0}, // #790
+  {DBGFIELD("VMOV64toPQIrr")      1, false, false, 13, 1,  2, 1,  0, 0}, // #791
+  {DBGFIELD("MMX_MOVQ64rr_MMX_MOVQ64rr_REV") 1, false, false, 13, 1,  2, 1,  0, 0}, // #792
+  {DBGFIELD("MOVDQArr_MOVDQArr_REV_VMOVDQAYrr_VMOVDQAYrr_REV_VMOVDQArr_VMOVDQArr_REV") 1, false, false, 13, 1,  2, 1,  0, 0}, // #793
+  {DBGFIELD("MOVDQUrr_MOVDQUrr_REV_VMOVDQUYrr_VMOVDQUYrr_REV_VMOVDQUrr_VMOVDQUrr_REV") 1, false, false, 13, 1,  2, 1,  0, 0}, // #794
+  {DBGFIELD("MMX_MOVDQ2Qrr")      1, false, false, 13, 1,  2, 1,  0, 0}, // #795
+  {DBGFIELD("MMX_MOVQ2DQrr")      1, false, false, 13, 1,  2, 1,  0, 0}, // #796
+  {DBGFIELD("MMX_PACKSSDWirr_MMX_PACKSSWBirr_MMX_PACKUSWBirr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #797
+  {DBGFIELD("MMX_PACKSSDWirm_MMX_PACKSSWBirm_MMX_PACKUSWBirm") 1, false, false, 960, 4, 16, 1,  4, 1}, // #798
+  {DBGFIELD("VPMOVSXBQYrr_VPMOVSXBWYrr_VPMOVSXDQYrr_VPMOVZXBQYrr_VPMOVZXBWYrr_VPMOVZXDQYrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #799
+  {DBGFIELD("PBLENDWrri")         1, false, false, 965, 2,  2, 1,  0, 0}, // #800
+  {DBGFIELD("VPBLENDWYrri_VPBLENDWrri") 1, false, false, 965, 2,  2, 1,  0, 0}, // #801
+  {DBGFIELD("PBLENDWrmi")         1, false, false, 960, 4, 16, 1,  4, 1}, // #802
+  {DBGFIELD("VPBLENDWYrmi_VPBLENDWrmi") 1, false, false, 960, 4, 16, 1,  4, 1}, // #803
+  {DBGFIELD("VPBLENDDYrri_VPBLENDDrri") 1, false, false, 965, 2,  2, 1,  0, 0}, // #804
+  {DBGFIELD("VPBLENDDYrmi_VPBLENDDrmi") 1, false, false, 960, 4, 16, 1,  4, 1}, // #805
+  {DBGFIELD("MMX_MASKMOVQ_MMX_MASKMOVQ64") 1, false, false, 965, 2,  2, 1,  0, 0}, // #806
+  {DBGFIELD("MASKMOVDQU_MASKMOVDQU64_VMASKMOVDQU_VMASKMOVDQU64") 1, false, false, 1006, 3,  2, 1,  0, 0}, // #807
+  {DBGFIELD("VPMASKMOVDYrm_VPMASKMOVDrm_VPMASKMOVQYrm_VPMASKMOVQrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #808
+  {DBGFIELD("VPMASKMOVDYmr_VPMASKMOVDmr_VPMASKMOVQYmr_VPMASKMOVQmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #809
+  {DBGFIELD("MMX_PMOVMSKBrr")     0, false, false,  0, 0,  0, 0,  0, 0}, // #810
+  {DBGFIELD("PMOVMSKBrr_VPMOVMSKBrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #811
+  {DBGFIELD("VPMOVMSKBYrr")       1, false, false, 965, 2,  2, 1,  0, 0}, // #812
+  {DBGFIELD("MMX_PEXTRWirri")     1, false, false, 965, 2,  2, 1,  0, 0}, // #813
+  {DBGFIELD("PEXTRBrr_PEXTRDrr_PEXTRQrr_PEXTRWrr_REV") 1, false, false, 965, 2,  2, 1,  0, 0}, // #814
+  {DBGFIELD("PEXTRBmr_PEXTRDmr_PEXTRQmr_PEXTRWmr") 2, false, false, 996, 5, 45, 2,  0, 0}, // #815
+  {DBGFIELD("VPBROADCASTBrm_VPBROADCASTWrm") 1, false, false, 968, 3,  3, 1,  0, 0}, // #816
+  {DBGFIELD("VPBROADCASTBYrm_VPBROADCASTWYrm") 1, false, false, 968, 3,  3, 1,  0, 0}, // #817
+  {DBGFIELD("VPGATHERDDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #818
+  {DBGFIELD("VPGATHERDDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #819
+  {DBGFIELD("VPGATHERQDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #820
+  {DBGFIELD("VPGATHERQDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #821
+  {DBGFIELD("VPGATHERDQrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #822
+  {DBGFIELD("VPGATHERDQYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #823
+  {DBGFIELD("VPGATHERQQrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #824
+  {DBGFIELD("VPGATHERQQYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #825
+  {DBGFIELD("MMX_PHADDSWrr64_MMX_PHADDWrr64_MMX_PHSUBSWrr64_MMX_PHSUBWrr64") 1, false, false, 965, 2,  2, 1,  0, 0}, // #826
+  {DBGFIELD("MMX_PHADDrr64_MMX_PHSUBDrr64") 1, false, false, 965, 2,  2, 1,  0, 0}, // #827
+  {DBGFIELD("PHADDDrr_PHSUBDrr_VPHADDDrr_VPHSUBDrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #828
+  {DBGFIELD("PHADDSWrr128_PHSUBSWrr128_VPHADDSWrr128_VPHADDSWrr256_VPHSUBSWrr128_VPHSUBSWrr256") 1, false, false, 965, 2,  2, 1,  0, 0}, // #829
+  {DBGFIELD("PHADDWrr_PHSUBWrr_VPHADDDYrr_VPHADDWYrr_VPHADDWrr_VPHSUBDYrr_VPHSUBWYrr_VPHSUBWrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #830
+  {DBGFIELD("MMX_PHADDSWrm64_MMX_PHADDWrm64_MMX_PHSUBSWrm64_MMX_PHSUBWrm64") 1, false, false, 960, 4, 16, 1,  4, 1}, // #831
+  {DBGFIELD("MMX_PHADDrm64_MMX_PHSUBDrm64") 1, false, false, 960, 4, 16, 1,  4, 1}, // #832
+  {DBGFIELD("PHADDDrm_PHSUBDrm_VPHADDDrm_VPHSUBDrm") 1, false, false, 960, 4, 16, 1,  4, 1}, // #833
+  {DBGFIELD("PHADDSWrm128_PHSUBSWrm128_VPHADDSWrm128_VPHADDSWrm256_VPHSUBSWrm128_VPHSUBSWrm256") 1, false, false, 960, 4, 16, 1,  4, 1}, // #834
+  {DBGFIELD("PHADDWrm_PHSUBWrm_VPHADDDYrm_VPHADDWYrm_VPHADDWrm_VPHSUBDYrm_VPHSUBWYrm_VPHSUBWrm") 1, false, false, 960, 4, 16, 1,  4, 1}, // #835
+  {DBGFIELD("PCMPGTQrr_VPCMPGTQYrr_VPCMPGTQrr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #836
+  {DBGFIELD("PCMPGTQrm_VPCMPGTQYrm_VPCMPGTQrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #837
+  {DBGFIELD("PMULLDrr_VPMULLDYrr_VPMULLDrr") 1, false, false, 957, 3, 19, 1,  0, 0}, // #838
+  {DBGFIELD("PMULLDrm_VPMULLDYrm_VPMULLDrm") 1, false, false, 952, 5,  5, 1,  4, 1}, // #839
+  {DBGFIELD("PTESTrr_VPTESTYrr_VPTESTrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #840
+  {DBGFIELD("PTESTrm_VPTESTYrm_VPTESTrm") 1, false, false, 960, 4, 16, 1,  4, 1}, // #841
+  {DBGFIELD("PSLLDrr_PSLLQrr_PSLLWrr_PSRADrr_PSRAWrr_PSRLDrr_PSRLQrr_PSRLWrr_VPSLLDYrr_VPSLLDrr_VPSLLQYrr_VPSLLQrr_VPSLLWYrr_VPSLLWrr_VPSRADYrr_VPSRADrr_VPSRAWYrr_VPSRAWrr_VPSRLDYrr_VPSRLDrr_VPSRLQYrr_VPSRLQrr_VPSRLWYrr_VPSRLWrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #842
+  {DBGFIELD("PSLLDQri_PSRLDQri_VPSLLDQYri_VPSLLDQri_VPSRLDQYri_VPSRLDQri") 1, false, false, 965, 2,  2, 1,  0, 0}, // #843
+  {DBGFIELD("MMX_EMMS")           0, false, false,  0, 0,  0, 0,  0, 0}, // #844
+  {DBGFIELD("MOVMSKPDrr_MOVMSKPSrr_VMOVMSKPDrr_VMOVMSKPSrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #845
+  {DBGFIELD("VMOVMSKPDYrr_VMOVMSKPSYrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #846
+  {DBGFIELD("VPERM2F128rr")       1, false, false, 965, 2,  2, 1,  0, 0}, // #847
+  {DBGFIELD("VPERM2F128rm")       1, false, false, 960, 4, 16, 1,  4, 1}, // #848
+  {DBGFIELD("BLENDVPDrr0_BLENDVPSrr0") 1, false, false, 965, 2,  2, 1,  0, 0}, // #849
+  {DBGFIELD("BLENDVPDrm0_BLENDVPSrm0") 1, false, false, 960, 4, 16, 1,  4, 1}, // #850
+  {DBGFIELD("VBROADCASTF128")     1, false, false, 960, 4, 16, 1,  0, 0}, // #851
+  {DBGFIELD("EXTRACTPSrr")        1, false, false, 965, 2,  2, 1,  0, 0}, // #852
+  {DBGFIELD("VEXTRACTPSrr")       1, false, false, 965, 2,  2, 1,  0, 0}, // #853
+  {DBGFIELD("EXTRACTPSmr")        2, false, false, 996, 5, 45, 2,  0, 0}, // #854
+  {DBGFIELD("VEXTRACTPSmr")       2, false, false, 996, 5, 45, 2,  0, 0}, // #855
+  {DBGFIELD("VEXTRACTF128rr")     1, false, false, 965, 2,  2, 1,  0, 0}, // #856
+  {DBGFIELD("VEXTRACTF128mr")     1, false, false, 1006, 3,  2, 1,  0, 0}, // #857
+  {DBGFIELD("VINSERTF128rr")      1, false, false, 965, 2,  2, 1,  0, 0}, // #858
+  {DBGFIELD("VINSERTF128rm")      1, false, false, 960, 4, 16, 1,  4, 1}, // #859
+  {DBGFIELD("VMASKMOVPDYrm_VMASKMOVPDrm_VMASKMOVPSYrm_VMASKMOVPSrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #860
+  {DBGFIELD("VMASKMOVPDmr_VMASKMOVPSmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #861
+  {DBGFIELD("VMASKMOVPDYmr_VMASKMOVPSYmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #862
+  {DBGFIELD("VGATHERDPSrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #863
+  {DBGFIELD("VGATHERDPSYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #864
+  {DBGFIELD("VGATHERQPSrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #865
+  {DBGFIELD("VGATHERQPSYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #866
+  {DBGFIELD("VGATHERDPDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #867
+  {DBGFIELD("VGATHERDPDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #868
+  {DBGFIELD("VGATHERQPDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #869
+  {DBGFIELD("VGATHERQPDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #870
+  {DBGFIELD("CVTPD2PSrr_VCVTPD2PSrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #871
+  {DBGFIELD("CVTPD2PSrm_VCVTPD2PSrm") 1, false, false, 972, 5, 10, 1,  0, 0}, // #872
+  {DBGFIELD("VCVTPD2PSYrr")       1, false, false, 977, 3,  6, 1,  0, 0}, // #873
+  {DBGFIELD("VCVTPD2PSYrm")       1, false, false, 972, 5, 10, 1,  0, 0}, // #874
+  {DBGFIELD("CVTSD2SSrr_Int_CVTSD2SSrr_Int_VCVTSD2SSrr_VCVTSD2SSrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #875
+  {DBGFIELD("CVTSD2SSrm")         1, false, false, 972, 5, 10, 1,  0, 0}, // #876
+  {DBGFIELD("Int_CVTSD2SSrm_Int_VCVTSD2SSrm_VCVTSD2SSrm") 1, false, false, 972, 5, 10, 1,  4, 1}, // #877
+  {DBGFIELD("CVTPS2PDrr_VCVTPS2PDrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #878
+  {DBGFIELD("CVTPS2PDrm_VCVTPS2PDYrm_VCVTPS2PDrm") 1, false, false, 972, 5, 10, 1,  0, 0}, // #879
+  {DBGFIELD("VCVTPS2PDYrr")       1, false, false, 977, 3,  6, 1,  0, 0}, // #880
+  {DBGFIELD("CVTSS2SDrr_Int_CVTSS2SDrr_Int_VCVTSS2SDrr_VCVTSS2SDrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #881
+  {DBGFIELD("CVTSS2SDrm")         1, false, false, 972, 5, 10, 1,  0, 0}, // #882
+  {DBGFIELD("Int_CVTSS2SDrm_Int_VCVTSS2SDrm_VCVTSS2SDrm") 1, false, false, 972, 5, 10, 1,  4, 1}, // #883
+  {DBGFIELD("CVTDQ2PDrr")         1, false, false, 977, 3,  6, 1,  0, 0}, // #884
+  {DBGFIELD("VCVTDQ2PDrr")        1, false, false, 977, 3,  6, 1,  0, 0}, // #885
+  {DBGFIELD("VCVTDQ2PDYrr")       1, false, false, 977, 3,  6, 1,  0, 0}, // #886
+  {DBGFIELD("CVTPD2DQrr_CVTTPD2DQrr_VCVTTPD2DQrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #887
+  {DBGFIELD("VCVTPD2DQrr")        1, false, false, 977, 3,  6, 1,  0, 0}, // #888
+  {DBGFIELD("CVTPD2DQrm_CVTTPD2DQrm_VCVTTPD2DQrm") 1, false, false, 972, 5, 10, 1,  0, 0}, // #889
+  {DBGFIELD("VCVTPD2DQrm")        1, false, false, 972, 5, 10, 1,  0, 0}, // #890
+  {DBGFIELD("VCVTPD2DQYrr")       1, false, false, 977, 3,  6, 1,  0, 0}, // #891
+  {DBGFIELD("VCVTTPD2DQYrr")      1, false, false, 977, 3,  6, 1,  0, 0}, // #892
+  {DBGFIELD("VCVTPD2DQYrm")       1, false, false, 972, 5, 10, 1,  0, 0}, // #893
+  {DBGFIELD("VCVTTPD2DQYrm")      1, false, false, 972, 5, 10, 1,  0, 0}, // #894
+  {DBGFIELD("MMX_CVTPS2PIirr_MMX_CVTTPS2PIirr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #895
+  {DBGFIELD("MMX_CVTPI2PDirr")    1, false, false, 977, 3,  6, 1,  0, 0}, // #896
+  {DBGFIELD("MMX_CVTPD2PIirr_MMX_CVTTPD2PIirr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #897
+  {DBGFIELD("CVTSI2SS64rr_CVTSI2SSrr_Int_CVTSI2SS64rr_Int_CVTSI2SSrr_Int_VCVTSI2SS64rr_Int_VCVTSI2SSrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #898
+  {DBGFIELD("VCVTSI2SS64rr_VCVTSI2SSrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #899
+  {DBGFIELD("CVTSS2SI64rr_CVTTSS2SI64rr_Int_CVTTSS2SI64rr_Int_VCVTTSS2SI64rr_VCVTSS2SI64rr_VCVTTSS2SI64rr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #900
+  {DBGFIELD("CVTSS2SIrr_CVTTSS2SIrr_Int_CVTTSS2SIrr_Int_VCVTTSS2SIrr_VCVTSS2SIrr_VCVTTSS2SIrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #901
+  {DBGFIELD("CVTSS2SI64rm_CVTTSS2SI64rm_Int_CVTTSS2SI64rm_Int_VCVTTSS2SI64rm_VCVTSS2SI64rm_VCVTTSS2SI64rm") 1, false, false, 972, 5, 10, 1,  0, 0}, // #902
+  {DBGFIELD("CVTSS2SIrm_CVTTSS2SIrm_Int_CVTTSS2SIrm_Int_VCVTTSS2SIrm_VCVTSS2SIrm_VCVTTSS2SIrm") 1, false, false, 972, 5, 10, 1,  0, 0}, // #903
+  {DBGFIELD("CVTSD2SI64rr_CVTSD2SIrr_CVTTSD2SI64rr_CVTTSD2SIrr_Int_CVTTSD2SI64rr_Int_CVTTSD2SIrr_Int_VCVTTSD2SI64rr_Int_VCVTTSD2SIrr_VCVTSD2SI64rr_VCVTSD2SIrr_VCVTTSD2SI64rr_VCVTTSD2SIrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #904
+  {DBGFIELD("CVTSD2SI64rm_CVTSD2SIrm_CVTTSD2SI64rm_CVTTSD2SIrm_Int_CVTTSD2SI64rm_Int_CVTTSD2SIrm_Int_VCVTTSD2SI64rm_Int_VCVTTSD2SIrm_VCVTSD2SI64rm_VCVTSD2SIrm_VCVTTSD2SI64rm_VCVTTSD2SIrm") 1, false, false, 972, 5, 10, 1,  0, 0}, // #905
+  {DBGFIELD("VCVTPS2PHYrr_VCVTPS2PHrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #906
+  {DBGFIELD("VCVTPS2PHYmr_VCVTPS2PHmr") 2, false, false, 1047, 6, 35, 2,  0, 0}, // #907
+  {DBGFIELD("VCVTPH2PSYrr_VCVTPH2PSrr") 1, false, false, 977, 3,  6, 1,  0, 0}, // #908
+  {DBGFIELD("HADDPDrr_HADDPSrr_HSUBPDrr_HSUBPSrr_VHADDPDYrr_VHADDPDrr_VHADDPSYrr_VHADDPSrr_VHSUBPDYrr_VHSUBPDrr_VHSUBPSYrr_VHSUBPSrr") 1, false, false, 957, 3,  6, 1,  0, 0}, // #909
+  {DBGFIELD("HADDPDrm_HADDPSrm_HSUBPDrm_HSUBPSrm_VHADDPDYrm_VHADDPDrm_VHADDPSYrm_VHADDPSrm_VHSUBPDYrm_VHSUBPDrm_VHSUBPSYrm_VHSUBPSrm") 1, false, false, 952, 5, 10, 1,  4, 1}, // #910
+  {DBGFIELD("MULPDrr_VMULPDrr")   1, false, false, 977, 3, 19, 1,  0, 0}, // #911
+  {DBGFIELD("MULPSrr_VMULPSrr")   1, false, false, 977, 3, 19, 1,  0, 0}, // #912
+  {DBGFIELD("MULSDrr_MULSDrr_Int_VMULSDrr_VMULSDrr_Int") 1, false, false, 977, 3, 19, 1,  0, 0}, // #913
+  {DBGFIELD("MULSSrr_MULSSrr_Int_VMULSSrr_VMULSSrr_Int") 1, false, false, 977, 3, 19, 1,  0, 0}, // #914
+  {DBGFIELD("MULPDrm_MULPSrm_VMULPDrm_VMULPSrm") 1, false, false, 972, 5,  5, 1,  4, 1}, // #915
+  {DBGFIELD("MULSDrm_MULSDrm_Int_MULSSrm_MULSSrm_Int_VMULSDrm_VMULSDrm_Int_VMULSSrm_VMULSSrm_Int") 1, false, false, 972, 5,  5, 1,  4, 1}, // #916
+  {DBGFIELD("VDIVPSYrr")          1, false, false, 990, 6, 23, 1,  0, 0}, // #917
+  {DBGFIELD("VDIVPSYrm")          1, false, false, 990, 6, 44, 1,  4, 1}, // #918
+  {DBGFIELD("VDIVPDYrr")          1, false, false, 990, 6, 23, 1,  0, 0}, // #919
+  {DBGFIELD("VDIVPDYrm")          1, false, false, 990, 6, 44, 1,  4, 1}, // #920
+  {DBGFIELD("VRCPPSYr")           1, false, false, 977, 3, 19, 1,  0, 0}, // #921
+  {DBGFIELD("VRCPPSYm")           1, false, false, 972, 5,  5, 1,  0, 0}, // #922
+  {DBGFIELD("ROUNDPDr_ROUNDPSr_VROUNDPDr_VROUNDPSr_VROUNDYPDr_VROUNDYPSr") 1, false, false, 957, 3,  6, 1,  0, 0}, // #923
+  {DBGFIELD("ROUNDSDr_ROUNDSDr_Int_ROUNDSSr_ROUNDSSr_Int_VROUNDSDr_VROUNDSDr_Int_VROUNDSSr_VROUNDSSr_Int") 1, false, false, 957, 3,  6, 1,  0, 0}, // #924
+  {DBGFIELD("ROUNDPDm_VROUNDPDm_VROUNDYPDm") 1, false, false, 952, 5, 10, 1,  0, 0}, // #925
+  {DBGFIELD("ROUNDPSm_VROUNDPSm_VROUNDYPSm") 1, false, false, 952, 5, 10, 1,  0, 0}, // #926
+  {DBGFIELD("ROUNDSDm_ROUNDSDm_Int_ROUNDSSm_ROUNDSSm_Int_VROUNDSDm_VROUNDSDm_Int_VROUNDSSm_VROUNDSSm_Int") 1, false, false, 952, 5, 10, 1,  4, 1}, // #927
+  {DBGFIELD("DPPSrri_VDPPSYrri_VDPPSrri") 1, false, false, 957, 3,  6, 1,  0, 0}, // #928
+  {DBGFIELD("DPPSrmi_VDPPSYrmi_VDPPSrmi") 1, false, false, 952, 5, 10, 1,  4, 1}, // #929
+  {DBGFIELD("DPPDrri")            1, false, false, 957, 3,  6, 1,  0, 0}, // #930
+  {DBGFIELD("VDPPDrri")           1, false, false, 957, 3,  6, 1,  0, 0}, // #931
+  {DBGFIELD("DPPDrmi_VDPPDrmi")   1, false, false, 952, 5, 10, 1,  4, 1}, // #932
+  {DBGFIELD("VFMADDPD4rr_VFMADDPD4rr_REV_VFMADDPS4rr_VFMADDPS4rr_REV_VFMADDSD4rr_VFMADDSD4rr_Int_VFMADDSD4rr_REV_VFMADDSS4rr_VFMADDSS4rr_Int_VFMADDSS4rr_REV_VFMSUBPD4rr_VFMSUBPD4rr_REV_VFMSUBPS4rr_VFMSUBPS4rr_REV_VFMSUBSD4rr_VFMSUBSD4rr_Int_VFMSUBSD4rr_REV_VFMSUBSS4rr_VFMSUBSS4rr_Int_VFMSUBSS4rr_REV_VFNMADDPD4rr_VFNMADDPD4rr_REV_VFNMADDPS4rr_VFNMADDPS4rr_REV_VFNMADDSD4rr_VFNMADDSD4rr_Int_VFNMADDSD4rr_REV_VFNMADDSS4rr_VFNMADDSS4rr_Int_VFNMADDSS4rr_REV_VFNMSUBPD4rr_VFNMSUBPD4rr_REV_VFNMSUBPS4rr_VFNMSUBPS4rr_REV_VFNMSUBSD4rr_VFNMSUBSD4rr_Int_VFNMSUBSD4rr_REV_VFNMSUBSS4rr_VFNMSUBSS4rr_Int_VFNMSUBSS4rr_REV") 0, false, false,  0, 0,  0, 0,  0, 0}, // #933
+  {DBGFIELD("VFMADDPD4mr_VFMADDPD4rm_VFMADDPS4mr_VFMADDPS4rm_VFMADDSD4mr_VFMADDSD4mr_Int_VFMADDSD4rm_VFMADDSD4rm_Int_VFMADDSS4mr_VFMADDSS4mr_Int_VFMADDSS4rm_VFMADDSS4rm_Int_VFMSUBPD4mr_VFMSUBPD4rm_VFMSUBPS4mr_VFMSUBPS4rm_VFMSUBSD4mr_VFMSUBSD4mr_Int_VFMSUBSD4rm_VFMSUBSD4rm_Int_VFMSUBSS4mr_VFMSUBSS4mr_Int_VFMSUBSS4rm_VFMSUBSS4rm_Int_VFNMADDPD4mr_VFNMADDPD4rm_VFNMADDPS4mr_VFNMADDPS4rm_VFNMADDSD4mr_VFNMADDSD4mr_Int_VFNMADDSD4rm_VFNMADDSD4rm_Int_VFNMADDSS4mr_VFNMADDSS4mr_Int_VFNMADDSS4rm_VFNMADDSS4rm_Int_VFNMSUBPD4mr_VFNMSUBPD4rm_VFNMSUBPS4mr_VFNMSUBPS4rm_VFNMSUBSD4mr_VFNMSUBSD4mr_Int_VFNMSUBSD4rm_VFNMSUBSD4rm_Int_VFNMSUBSS4mr_VFNMSUBSS4mr_Int_VFNMSUBSS4rm_VFNMSUBSS4rm_Int") 0, false, false,  0, 0,  0, 0,  0, 0}, // #934
+  {DBGFIELD("VSQRTPSYr")          1, false, false, 1041, 6, 27, 1,  0, 0}, // #935
+  {DBGFIELD("VSQRTPSYm")          1, false, false, 1041, 6, 51, 1,  0, 0}, // #936
+  {DBGFIELD("VSQRTPDYr")          1, false, false, 1041, 6, 27, 1,  0, 0}, // #937
+  {DBGFIELD("VSQRTPDYm")          1, false, false, 1041, 6, 51, 1,  0, 0}, // #938
+  {DBGFIELD("RSQRTPSr_VRSQRTPSr") 1, false, false, 977, 3, 19, 1,  0, 0}, // #939
+  {DBGFIELD("RSQRTSSr_VRSQRTSSr") 1, false, false, 977, 3, 19, 1,  0, 0}, // #940
+  {DBGFIELD("RSQRTSSr_Int")       1, false, false, 972, 5,  5, 1,  4, 1}, // #941
+  {DBGFIELD("VRSQRTSSr_Int")      1, false, false, 972, 5,  5, 1,  0, 0}, // #942
+  {DBGFIELD("RSQRTPSm_VRSQRTPSm") 1, false, false, 972, 5,  5, 1,  0, 0}, // #943
+  {DBGFIELD("RSQRTSSm_VRSQRTSSm") 1, false, false, 972, 5,  5, 1,  4, 1}, // #944
+  {DBGFIELD("RSQRTSSm_Int_VRSQRTSSm_Int") 1, false, false, 972, 5,  5, 1,  4, 1}, // #945
+  {DBGFIELD("VRSQRTPSYr")         1, false, false, 977, 3, 19, 1,  0, 0}, // #946
+  {DBGFIELD("VRSQRTPSYm")         1, false, false, 972, 5,  5, 1,  0, 0}, // #947
+  {DBGFIELD("ANDNPDrr_ANDNPSrr_ANDPDrr_ANDPSrr_ORPDrr_ORPSrr_VANDNPDYrr_VANDNPDrr_VANDNPSYrr_VANDNPSrr_VANDPDYrr_VANDPDrr_VANDPSYrr_VANDPSrr_VORPDYrr_VORPDrr_VORPSYrr_VORPSrr_VXORPDYrr_VXORPDrr_VXORPSYrr_VXORPSrr_XORPDrr_XORPSrr") 1, false, false, 965, 2,  2, 1,  0, 0}, // #948
+  {DBGFIELD("ANDNPDrm_ANDNPSrm_ANDPDrm_ANDPSrm_ORPDrm_ORPSrm_VANDNPDYrm_VANDNPDrm_VANDNPSYrm_VANDNPSrm_VANDPDYrm_VANDPDrm_VANDPSYrm_VANDPSrm_VORPDYrm_VORPDrm_VORPSYrm_VORPSrm_VXORPDYrm_VXORPDrm_VXORPSYrm_VXORPSrm_XORPDrm_XORPSrm") 1, false, false, 960, 4, 16, 1,  4, 1}, // #949
+  {DBGFIELD("VZEROUPPER")         0, false, false,  0, 0,  0, 0,  0, 0}, // #950
+  {DBGFIELD("VZEROALL")           0, false, false,  0, 0,  0, 0,  0, 0}, // #951
+  {DBGFIELD("LDMXCSR_VLDMXCSR")   1, false, false, 968, 3,  3, 1,  0, 0}, // #952
+  {DBGFIELD("STMXCSR_VSTMXCSR")   1, false, false, 1006, 3,  2, 1,  0, 0} // #953
 }; // BtVer2ModelSchedClasses
 
 // {Name, NumMicroOps, BeginGroup, EndGroup, WriteProcResIdx,#, WriteLatencyIdx,#, ReadAdvanceIdx,#}
@@ -4702,796 +4729,802 @@ static const llvm::MCSchedClassDesc SandyBridgeModelSchedClasses[] = {
   {DBGFIELD("IIC_FXTRACT_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #155
   {DBGFIELD("IIC_FYL2X_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #156
   {DBGFIELD("IIC_FYL2XP1_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #157
-  {DBGFIELD("IIC_SSE_BIT_P_RM_WriteFAddLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #158
-  {DBGFIELD("IIC_SSE_BIT_P_RR_WriteFAdd") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #159
-  {DBGFIELD("IIC_SSE_MOVA_P_RM_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #160
-  {DBGFIELD("IIC_SSE_HADDSUB_RM_WriteFAddLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #161
-  {DBGFIELD("IIC_SSE_HADDSUB_RR_WriteFAdd") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #162
-  {DBGFIELD("IIC_HLT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #163
-  {DBGFIELD("IIC_IDIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1092, 6, 11, 1,  2, 2}, // #164
-  {DBGFIELD("IIC_IDIV16_WriteIDiv") 1, false, false, 1098, 5, 12, 1,  0, 0}, // #165
-  {DBGFIELD("IIC_IDIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1092, 6, 11, 1,  2, 2}, // #166
-  {DBGFIELD("IIC_IDIV32_WriteIDiv") 1, false, false, 1098, 5, 12, 1,  0, 0}, // #167
-  {DBGFIELD("IIC_IDIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1092, 6, 11, 1,  2, 2}, // #168
-  {DBGFIELD("IIC_IDIV64_WriteIDiv") 1, false, false, 1098, 5, 12, 1,  0, 0}, // #169
-  {DBGFIELD("IIC_IDIV8_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1092, 6, 11, 1,  2, 2}, // #170
-  {DBGFIELD("IIC_IDIV8_WriteIDiv") 1, false, false, 1098, 5, 12, 1,  0, 0}, // #171
-  {DBGFIELD("IIC_FILD_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #172
-  {DBGFIELD("IIC_IMUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #173
-  {DBGFIELD("IIC_IMUL16_RR_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #174
-  {DBGFIELD("IIC_IMUL16_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #175
-  {DBGFIELD("IIC_IMUL16_RMI_WriteIMulLd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #176
-  {DBGFIELD("IIC_IMUL16_RRI_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #177
-  {DBGFIELD("IIC_IMUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #178
-  {DBGFIELD("IIC_IMUL32_RR_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #179
-  {DBGFIELD("IIC_IMUL32_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #180
-  {DBGFIELD("IIC_IMUL32_RMI_WriteIMulLd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #181
-  {DBGFIELD("IIC_IMUL32_RRI_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #182
-  {DBGFIELD("IIC_IMUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #183
-  {DBGFIELD("IIC_IMUL64_RR_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #184
-  {DBGFIELD("IIC_IMUL64_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #185
-  {DBGFIELD("IIC_IMUL64_RMI_WriteIMulLd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #186
-  {DBGFIELD("IIC_IMUL64_RRI_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #187
-  {DBGFIELD("IIC_IMUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #188
-  {DBGFIELD("IIC_IMUL8_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #189
-  {DBGFIELD("IIC_IN_RI_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #190
-  {DBGFIELD("IIC_IN_RR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #191
-  {DBGFIELD("IIC_INS_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #192
-  {DBGFIELD("IIC_SSE_INSERTPS_RM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1081, 6,  3, 1,  1, 1}, // #193
-  {DBGFIELD("IIC_SSE_INSERTPS_RR_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #194
-  {DBGFIELD("IIC_INT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #195
-  {DBGFIELD("IIC_INT3_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #196
-  {DBGFIELD("IIC_INVD_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #197
-  {DBGFIELD("IIC_INVLPG_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #198
-  {DBGFIELD("WriteJumpLd")        1, false, false, 1081, 6,  3, 1,  0, 0}, // #199
-  {DBGFIELD("IIC_IRET_WriteJumpLd") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #200
-  {DBGFIELD("IIC_FST_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #201
-  {DBGFIELD("IIC_FIST_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #202
-  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #203
-  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd_ReadAfterLd") 1, false, false, 1057, 5, 10, 1,  1, 1}, // #204
-  {DBGFIELD("WriteLoad")          1, false, false, 282, 2,  9, 1,  0, 0}, // #205
-  {DBGFIELD("IIC_Jcc_WriteJump")  1, false, false, 1087, 5,  2, 1,  0, 0}, // #206
-  {DBGFIELD("IIC_JCXZ_WriteJump") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #207
-  {DBGFIELD("IIC_JMP_MEM_WriteJumpLd") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #208
-  {DBGFIELD("IIC_JMP_REG_WriteJump") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #209
-  {DBGFIELD("IIC_JMP_REL_WriteJump") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #210
-  {DBGFIELD("IIC_AHF_WriteALU")   1, false, false, 108, 2,  2, 1,  0, 0}, // #211
-  {DBGFIELD("IIC_LAR_RM_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #212
-  {DBGFIELD("IIC_LAR_RR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #213
-  {DBGFIELD("IIC_CMPX_LOCK_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #214
-  {DBGFIELD("IIC_CMPX_LOCK_16B_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #215
-  {DBGFIELD("IIC_CMPX_LOCK_8_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #216
-  {DBGFIELD("IIC_CMPX_LOCK_8B_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #217
-  {DBGFIELD("IIC_SSE_LDDQU_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #218
-  {DBGFIELD("IIC_SSE_LDMXCSR_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #219
-  {DBGFIELD("IIC_LXS_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #220
-  {DBGFIELD("IIC_FLDZ_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #221
-  {DBGFIELD("IIC_FIST_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #222
-  {DBGFIELD("IIC_FLD_WriteLoad")  1, false, false, 282, 2,  9, 1,  0, 0}, // #223
-  {DBGFIELD("IIC_FLD80_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #224
-  {DBGFIELD("IIC_FLD_WriteMove")  1, false, false, 108, 2,  2, 1,  0, 0}, // #225
-  {DBGFIELD("IIC_LEA_16_WriteLEA") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #226
-  {DBGFIELD("IIC_LEA_WriteLEA")   1, false, false, 1063, 3,  2, 1,  0, 0}, // #227
-  {DBGFIELD("IIC_LEAVE_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #228
-  {DBGFIELD("IIC_SSE_LFENCE_WriteFence") 1, false, false, 442, 3,  2, 1,  0, 0}, // #229
-  {DBGFIELD("IIC_LGDT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #230
-  {DBGFIELD("IIC_LIDT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #231
-  {DBGFIELD("IIC_LLDT_MEM_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #232
-  {DBGFIELD("IIC_LLDT_REG_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #233
-  {DBGFIELD("IIC_LMSW_REG_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #234
-  {DBGFIELD("IIC_LMSW_MEM_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #235
-  {DBGFIELD("IIC_ALU_MEM_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #236
-  {DBGFIELD("IIC_ALU_NONMEM_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #237
-  {DBGFIELD("IIC_LODS_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #238
-  {DBGFIELD("IIC_LOOP_WriteJump") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #239
-  {DBGFIELD("IIC_LOOPE_WriteJump") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #240
-  {DBGFIELD("IIC_LOOPNE_WriteJump") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #241
-  {DBGFIELD("IIC_RET_WriteJumpLd") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #242
-  {DBGFIELD("IIC_LSL_RM_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #243
-  {DBGFIELD("IIC_LSL_RR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #244
-  {DBGFIELD("IIC_LTR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #245
-  {DBGFIELD("IIC_XADD_LOCK_MEM_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #246
-  {DBGFIELD("IIC_XADD_LOCK_MEM8_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #247
-  {DBGFIELD("IIC_SSE_MASKMOV_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #248
-  {DBGFIELD("IIC_SSE_MFENCE_WriteFence") 1, false, false, 442, 3,  2, 1,  0, 0}, // #249
-  {DBGFIELD("IIC_MMX_CVT_PD_RM_WriteCvtF2ILd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #250
-  {DBGFIELD("IIC_MMX_CVT_PD_RR_WriteCvtF2I") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #251
-  {DBGFIELD("WriteCvtI2FLd")      1, false, false, 1057, 5, 10, 1,  0, 0}, // #252
-  {DBGFIELD("WriteCvtI2F")        1, false, false, 1062, 4,  9, 1,  0, 0}, // #253
-  {DBGFIELD("IIC_MMX_CVT_PS_RM_WriteCvtF2ILd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #254
-  {DBGFIELD("IIC_MMX_CVT_PS_RR_WriteCvtF2I") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #255
-  {DBGFIELD("IIC_MMX_EMMS")       0, false, false,  0, 0,  0, 0,  0, 0}, // #256
-  {DBGFIELD("IIC_MMX_MASKMOV_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #257
-  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #258
-  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #259
-  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #260
-  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #261
-  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #262
-  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #263
-  {DBGFIELD("IIC_MMX_MOVQ_RR_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #264
-  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #265
-  {DBGFIELD("WriteMove")          1, false, false, 108, 2,  2, 1,  0, 0}, // #266
-  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd") 1, false, false, 917, 4,  3, 1,  0, 0}, // #267
-  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #268
-  {DBGFIELD("IIC_MMX_PCK_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #269
-  {DBGFIELD("IIC_MMX_PCK_RR_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #270
-  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #271
-  {DBGFIELD("IIC_MMX_ALUQ_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #272
-  {DBGFIELD("IIC_MMX_ALUQ_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #273
-  {DBGFIELD("WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #274
-  {DBGFIELD("WriteShuffle")       1, false, false, 1063, 3,  2, 1,  0, 0}, // #275
-  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 918, 3,  3, 1,  1, 1}, // #276
-  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecLogic") 1, false, false, 108, 2,  2, 1,  0, 0}, // #277
-  {DBGFIELD("IIC_MMX_MISC_FUNC_REG_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #278
-  {DBGFIELD("IIC_MMX_MISC_FUNC_MEM_WriteVecIMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #279
-  {DBGFIELD("IIC_MMX_PEXTR_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #280
-  {DBGFIELD("IIC_MMX_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #281
-  {DBGFIELD("IIC_MMX_PHADDSUBW_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #282
-  {DBGFIELD("IIC_MMX_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #283
-  {DBGFIELD("IIC_MMX_PHADDSUBD_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #284
-  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #285
-  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #286
-  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #287
-  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #288
-  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #289
-  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #290
-  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #291
-  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #292
-  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd") 1, false, false, 917, 4,  3, 1,  0, 0}, // #293
-  {DBGFIELD("IIC_MMX_SHIFT_RI_WriteVecShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #294
-  {DBGFIELD("IIC_MMX_SHIFT_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 1074, 4,  3, 1,  1, 1}, // #295
-  {DBGFIELD("IIC_MMX_SHIFT_RR_WriteVecShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #296
-  {DBGFIELD("IIC_MMX_UNPCK_H_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #297
-  {DBGFIELD("IIC_MMX_UNPCK_H_RR_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #298
-  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #299
-  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #300
-  {DBGFIELD("IIC_SSE_MONITORX_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #301
-  {DBGFIELD("IIC_SSE_MONITOR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #302
-  {DBGFIELD("IIC_MOV_MEM_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #303
-  {DBGFIELD("IIC_MOV_MEM_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #304
-  {DBGFIELD("IIC_MOV_MEM_SR_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #305
-  {DBGFIELD("IIC_MOV_WriteMove")  1, false, false, 108, 2,  2, 1,  0, 0}, // #306
-  {DBGFIELD("IIC_MOV_MEM_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #307
-  {DBGFIELD("IIC_MOV_REG_SR_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #308
-  {DBGFIELD("IIC_MOV_SR_MEM_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #309
-  {DBGFIELD("IIC_MOV_SR_REG_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #310
-  {DBGFIELD("IIC_MOV_CR_REG_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #311
-  {DBGFIELD("IIC_MOV_DR_REG_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #312
-  {DBGFIELD("IIC_ALU_NONMEM_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #313
-  {DBGFIELD("IIC_MOV_REG_CR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #314
-  {DBGFIELD("IIC_MOV_REG_DR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #315
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #316
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #317
-  {DBGFIELD("IIC_SSE_MOVA_P_MR_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #318
-  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #319
-  {DBGFIELD("IIC_MOVBE_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #320
-  {DBGFIELD("IIC_MOVBE_WriteALULd") 1, false, false, 918, 3,  3, 1,  0, 0}, // #321
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #322
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #323
-  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #324
-  {DBGFIELD("IIC_SSE_MOVU_P_MR_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #325
-  {DBGFIELD("IIC_SSE_MOVU_P_RM_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #326
-  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #327
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #328
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1081, 6,  3, 1,  1, 1}, // #329
-  {DBGFIELD("IIC_SSE_MOVMSK_WriteVecLogic") 1, false, false, 108, 2,  2, 1,  0, 0}, // #330
-  {DBGFIELD("IIC_SSE_MOVNT_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #331
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #332
-  {DBGFIELD("IIC_SSE_MOVD_ToGP_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #333
-  {DBGFIELD("IIC_SSE_MOVQ_RR_WriteVecLogic") 1, false, false, 108, 2,  2, 1,  0, 0}, // #334
-  {DBGFIELD("IIC_MOVS_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #335
-  {DBGFIELD("IIC_SSE_MOV_S_MR_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #336
-  {DBGFIELD("IIC_SSE_MOV_S_RM_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #337
-  {DBGFIELD("IIC_SSE_MOV_S_RR_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #338
-  {DBGFIELD("IIC_MOVSX_R16_M8_WriteALULd") 1, false, false, 918, 3,  3, 1,  0, 0}, // #339
-  {DBGFIELD("IIC_MOVSX_R16_R8_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #340
-  {DBGFIELD("IIC_MOVSX_WriteALULd") 1, false, false, 918, 3,  3, 1,  0, 0}, // #341
-  {DBGFIELD("IIC_MOVSX_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #342
-  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #343
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteVecLogicLd") 1, false, false, 918, 3,  3, 1,  0, 0}, // #344
-  {DBGFIELD("IIC_MOVZX_R16_M8_WriteALULd") 1, false, false, 918, 3,  3, 1,  0, 0}, // #345
-  {DBGFIELD("IIC_MOVZX_R16_R8_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #346
-  {DBGFIELD("IIC_MOVZX_WriteALULd") 1, false, false, 918, 3,  3, 1,  0, 0}, // #347
-  {DBGFIELD("IIC_MOVZX_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #348
-  {DBGFIELD("IIC_SSE_MPSADBW_RM_WriteMPSADLd_ReadAfterLd") 1, false, false, 1108, 8, 16, 1,  1, 1}, // #349
-  {DBGFIELD("IIC_SSE_MPSADBW_RR_WriteMPSAD") 1, false, false, 1116, 7, 16, 1,  0, 0}, // #350
-  {DBGFIELD("IIC_MUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #351
-  {DBGFIELD("IIC_MUL16_REG_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #352
-  {DBGFIELD("IIC_MUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #353
-  {DBGFIELD("IIC_MUL32_REG_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #354
-  {DBGFIELD("IIC_MUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #355
-  {DBGFIELD("IIC_MUL64_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #356
-  {DBGFIELD("IIC_MUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #357
-  {DBGFIELD("IIC_MUL8_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #358
-  {DBGFIELD("IIC_SSE_MUL_F64P_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #359
-  {DBGFIELD("IIC_SSE_MUL_F64P_RR_WriteFMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #360
-  {DBGFIELD("IIC_SSE_MUL_F32P_RR_WriteFMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #361
-  {DBGFIELD("IIC_SSE_MUL_F64S_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #362
-  {DBGFIELD("IIC_SSE_MUL_F64S_RR_WriteFMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #363
-  {DBGFIELD("IIC_SSE_MUL_F32S_RR_WriteFMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #364
-  {DBGFIELD("IIC_MUL8_WriteIMulLd_WriteIMulH") 2, false, false, 1057, 5,  5, 2,  0, 0}, // #365
-  {DBGFIELD("IIC_MUL8_WriteIMul_WriteIMulH") 2, false, false, 1062, 4, 17, 2,  0, 0}, // #366
-  {DBGFIELD("WriteFMulLd")        1, false, false, 1093, 5, 15, 1,  0, 0}, // #367
-  {DBGFIELD("WriteFMul")          1, false, false, 1099, 4,  3, 1,  0, 0}, // #368
-  {DBGFIELD("IIC_SSE_MWAITX_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #369
-  {DBGFIELD("IIC_SSE_MWAIT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #370
-  {DBGFIELD("IIC_NOP_WriteZero")  1, false, false,  0, 0,  2, 1,  0, 0}, // #371
-  {DBGFIELD("IIC_OUT_IR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #372
-  {DBGFIELD("IIC_OUT_RR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #373
-  {DBGFIELD("IIC_OUTS_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #374
-  {DBGFIELD("IIC_SSE_PABS_RM_WriteVecALULd") 1, false, false, 917, 4,  3, 1,  0, 0}, // #375
-  {DBGFIELD("IIC_SSE_PABS_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #376
-  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #377
-  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #378
-  {DBGFIELD("IIC_SSE_INTALUQ_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #379
-  {DBGFIELD("IIC_SSE_INTALUQ_P_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #380
-  {DBGFIELD("IIC_SSE_PALIGNRM_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #381
-  {DBGFIELD("IIC_SSE_PALIGNRR_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #382
-  {DBGFIELD("IIC_SSE_BIT_P_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 918, 3,  3, 1,  1, 1}, // #383
-  {DBGFIELD("IIC_SSE_BIT_P_RR_WriteVecLogic") 1, false, false, 108, 2,  2, 1,  0, 0}, // #384
-  {DBGFIELD("IIC_SSE_PAUSE_WriteNop") 1, false, false,  0, 0,  2, 1,  0, 0}, // #385
-  {DBGFIELD("IIC_ALU_MEM_WriteVarBlendLd_ReadAfterLd") 1, false, false, 1123, 7, 16, 1,  1, 1}, // #386
-  {DBGFIELD("IIC_ALU_NONMEM_WriteVarBlend") 1, false, false, 1130, 6, 19, 1,  0, 0}, // #387
-  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteBlendLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #388
-  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteBlend") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #389
-  {DBGFIELD("IIC_SSE_PCLMULQDQ_RM_WriteCLMulLd_ReadAfterLd") 1, false, false, 1136, 3,  7, 1,  1, 1}, // #390
-  {DBGFIELD("IIC_SSE_PCLMULQDQ_RR_WriteCLMul") 1, false, false, 1139, 2,  7, 1,  0, 0}, // #391
-  {DBGFIELD("WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #392
-  {DBGFIELD("WriteVecALU")        1, false, false, 1063, 3,  2, 1,  0, 0}, // #393
-  {DBGFIELD("WritePCmpEStrILd_ReadAfterLd") 1, false, false, 1141, 3,  9, 1,  1, 1}, // #394
-  {DBGFIELD("WritePCmpEStrI")     1, false, false, 1144, 2,  9, 1,  0, 0}, // #395
-  {DBGFIELD("WritePCmpEStrMLd_ReadAfterLd") 1, false, false, 1141, 3, 20, 1,  1, 1}, // #396
-  {DBGFIELD("WritePCmpEStrM")     1, false, false, 1144, 2, 20, 1,  0, 0}, // #397
-  {DBGFIELD("WritePCmpIStrILd_ReadAfterLd") 1, false, false, 1113, 3,  6, 1,  1, 1}, // #398
-  {DBGFIELD("WritePCmpIStrI")     1, false, false, 249, 2,  6, 1,  0, 0}, // #399
-  {DBGFIELD("WritePCmpIStrMLd_ReadAfterLd") 1, false, false, 1113, 3, 20, 1,  1, 1}, // #400
-  {DBGFIELD("WritePCmpIStrM")     1, false, false, 249, 2, 20, 1,  0, 0}, // #401
-  {DBGFIELD("WriteShuffleLd_WriteRMW") 2, false, false, 1146, 5,  3, 2,  0, 0}, // #402
-  {DBGFIELD("IIC_SSE_PEXTRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #403
-  {DBGFIELD("IIC_SSE_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #404
-  {DBGFIELD("IIC_SSE_PHADDSUBD_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #405
-  {DBGFIELD("IIC_SSE_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #406
-  {DBGFIELD("IIC_SSE_PHADDSUBW_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #407
-  {DBGFIELD("WriteVecIMulLd")     1, false, false, 1093, 5, 15, 1,  0, 0}, // #408
-  {DBGFIELD("WriteVecIMul")       1, false, false, 1099, 4,  3, 1,  0, 0}, // #409
-  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #410
-  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #411
-  {DBGFIELD("WriteVecIMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #412
-  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #413
-  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #414
-  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteShuffleLd") 1, false, false, 917, 4,  3, 1,  0, 0}, // #415
-  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #416
-  {DBGFIELD("IIC_SSE_INTMUL_P_RM_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #417
-  {DBGFIELD("IIC_SSE_INTMUL_P_RR_WriteVecIMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #418
-  {DBGFIELD("IIC_POP_REG16_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #419
-  {DBGFIELD("IIC_POP_MEM_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #420
-  {DBGFIELD("IIC_POP_REG_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #421
-  {DBGFIELD("IIC_POP_A_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #422
-  {DBGFIELD("IIC_SSE_POPCNT_RM_WriteFAddLd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #423
-  {DBGFIELD("IIC_SSE_POPCNT_RR_WriteFAdd") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #424
-  {DBGFIELD("IIC_POP_SR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #425
-  {DBGFIELD("IIC_POP_F_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #426
-  {DBGFIELD("IIC_POP_FD_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #427
-  {DBGFIELD("IIC_POP_SR_SS_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #428
-  {DBGFIELD("IIC_SSE_PSHUFB_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #429
-  {DBGFIELD("IIC_SSE_PSHUFB_RR_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #430
-  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #431
-  {DBGFIELD("IIC_SSE_PSHUF_RI_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #432
-  {DBGFIELD("IIC_SSE_INTSHDQ_P_RI_WriteVecShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #433
-  {DBGFIELD("IIC_SSE_INTSH_P_RI_WriteVecShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #434
-  {DBGFIELD("IIC_SSE_INTSH_P_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 1074, 4,  3, 1,  1, 1}, // #435
-  {DBGFIELD("IIC_SSE_INTSH_P_RR_WriteVecShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #436
-  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #437
-  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #438
-  {DBGFIELD("IIC_PUSH_IMM_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #439
-  {DBGFIELD("IIC_PUSH_REG_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #440
-  {DBGFIELD("IIC_PUSH_MEM_WriteRMW") 1, false, false, 1151, 2,  2, 1,  0, 0}, // #441
-  {DBGFIELD("IIC_PUSH_A_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #442
-  {DBGFIELD("IIC_PUSH_SR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #443
-  {DBGFIELD("IIC_PUSH_CS_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #444
-  {DBGFIELD("IIC_PUSH_F_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #445
-  {DBGFIELD("IIC_SR_WriteShiftLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #446
-  {DBGFIELD("IIC_SR_WriteShift")  1, false, false, 1078, 3,  2, 1,  0, 0}, // #447
-  {DBGFIELD("IIC_SSE_RCPP_RM_WriteFRcpLd") 1, false, false, 1093, 5, 15, 1,  0, 0}, // #448
-  {DBGFIELD("IIC_SSE_RCPP_RR_WriteFRcp") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #449
-  {DBGFIELD("IIC_SSE_RCPS_RM_WriteFRcpLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #450
-  {DBGFIELD("WriteFRcpLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #451
-  {DBGFIELD("IIC_SSE_RCPS_RR_WriteFRcp") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #452
-  {DBGFIELD("WriteRMW")           1, false, false, 1151, 2,  2, 1,  0, 0}, // #453
-  {DBGFIELD("IIC_RDMSR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #454
-  {DBGFIELD("IIC_RDPMC_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #455
-  {DBGFIELD("IIC_RDTSC_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #456
-  {DBGFIELD("IIC_REP_MOVS_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #457
-  {DBGFIELD("IIC_REP_STOS_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #458
-  {DBGFIELD("IIC_RET_IMM_WriteJumpLd") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #459
-  {DBGFIELD("WriteShiftLd")       1, false, false, 1074, 4,  3, 1,  0, 0}, // #460
-  {DBGFIELD("WriteShift")         1, false, false, 1078, 3,  2, 1,  0, 0}, // #461
-  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAddLd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #462
-  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAdd") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #463
-  {DBGFIELD("IIC_SSE_ROUNDPS_MEM_WriteFAddLd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #464
-  {DBGFIELD("WriteFAddLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #465
-  {DBGFIELD("IIC_RSM_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #466
-  {DBGFIELD("IIC_SSE_RSQRTPS_RM_WriteFRsqrtLd") 1, false, false, 1093, 5, 15, 1,  0, 0}, // #467
-  {DBGFIELD("IIC_SSE_RSQRTPS_RR_WriteFRsqrt") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #468
-  {DBGFIELD("IIC_SSE_RSQRTSS_RM_WriteFRsqrtLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #469
-  {DBGFIELD("WriteFRsqrtLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #470
-  {DBGFIELD("IIC_SSE_RSQRTSS_RR_WriteFRsqrt") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #471
-  {DBGFIELD("WriteShiftLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd") 1, false, false, 1074, 4,  3, 1,  2, 1}, // #472
-  {DBGFIELD("IIC_SCAS_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #473
-  {DBGFIELD("IIC_SET_M_WriteALU_WriteStore") 2, false, false, 1053, 4, 21, 2,  0, 0}, // #474
-  {DBGFIELD("IIC_SET_R_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #475
-  {DBGFIELD("IIC_SSE_SFENCE_WriteFence") 1, false, false, 442, 3,  2, 1,  0, 0}, // #476
-  {DBGFIELD("IIC_SGDT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #477
-  {DBGFIELD("IIC_SHD16_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #478
-  {DBGFIELD("IIC_SHD16_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #479
-  {DBGFIELD("IIC_SHD16_REG_CL_WriteShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #480
-  {DBGFIELD("IIC_SHD16_REG_IM_WriteShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #481
-  {DBGFIELD("IIC_SHD32_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #482
-  {DBGFIELD("IIC_SHD32_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #483
-  {DBGFIELD("IIC_SHD32_REG_CL_WriteShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #484
-  {DBGFIELD("IIC_SHD32_REG_IM_WriteShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #485
-  {DBGFIELD("IIC_SHD64_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #486
-  {DBGFIELD("IIC_SHD64_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #487
-  {DBGFIELD("IIC_SHD64_REG_CL_WriteShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #488
-  {DBGFIELD("IIC_SHD64_REG_IM_WriteShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #489
-  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1081, 6,  3, 1,  1, 1}, // #490
-  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #491
-  {DBGFIELD("IIC_SIDT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #492
-  {DBGFIELD("IIC_SLDT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #493
-  {DBGFIELD("IIC_SMSW_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #494
-  {DBGFIELD("IIC_SSE_SQRTPD_RM_WriteFSqrtLd") 1, false, false, 1093, 5, 23, 1,  0, 0}, // #495
-  {DBGFIELD("IIC_SSE_SQRTPD_RR_WriteFSqrt") 1, false, false, 1099, 4, 24, 1,  0, 0}, // #496
-  {DBGFIELD("IIC_SSE_SQRTPS_RM_WriteFSqrtLd") 1, false, false, 1093, 5, 23, 1,  0, 0}, // #497
-  {DBGFIELD("IIC_SSE_SQRTPS_RR_WriteFSqrt") 1, false, false, 1099, 4, 24, 1,  0, 0}, // #498
-  {DBGFIELD("IIC_SSE_SQRTSD_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 1093, 5, 23, 1,  1, 1}, // #499
-  {DBGFIELD("WriteFSqrtLd_ReadAfterLd") 1, false, false, 1093, 5, 23, 1,  1, 1}, // #500
-  {DBGFIELD("IIC_SSE_SQRTSD_RR_WriteFSqrt") 1, false, false, 1099, 4, 24, 1,  0, 0}, // #501
-  {DBGFIELD("IIC_SSE_SQRTSS_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 1093, 5, 23, 1,  1, 1}, // #502
-  {DBGFIELD("IIC_SSE_SQRTSS_RR_WriteFSqrt") 1, false, false, 1099, 4, 24, 1,  0, 0}, // #503
-  {DBGFIELD("WriteFSqrt")         1, false, false, 1099, 4, 24, 1,  0, 0}, // #504
-  {DBGFIELD("IIC_STC_WriteALU")   1, false, false, 108, 2,  2, 1,  0, 0}, // #505
-  {DBGFIELD("IIC_STD_WriteALU")   1, false, false, 108, 2,  2, 1,  0, 0}, // #506
-  {DBGFIELD("IIC_STI_WriteALU")   1, false, false, 108, 2,  2, 1,  0, 0}, // #507
-  {DBGFIELD("IIC_SSE_STMXCSR_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #508
-  {DBGFIELD("IIC_STOS_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #509
-  {DBGFIELD("IIC_STR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #510
-  {DBGFIELD("IIC_FST80_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #511
-  {DBGFIELD("IIC_FST_WriteMove")  1, false, false, 108, 2,  2, 1,  0, 0}, // #512
-  {DBGFIELD("IIC_SWAPGS_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #513
-  {DBGFIELD("IIC_SYSCALL_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #514
-  {DBGFIELD("IIC_SYS_ENTER_EXIT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #515
-  {DBGFIELD("IIC_JMP_REL_WriteJumpLd") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #516
-  {DBGFIELD("IIC_JMP_MEM_WriteJump") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #517
-  {DBGFIELD("IIC_JMP_REG_WriteJumpLd") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #518
-  {DBGFIELD("WriteJump")          1, false, false, 1087, 5,  2, 1,  0, 0}, // #519
-  {DBGFIELD("IIC_FUCOMI_WriteFAdd") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #520
-  {DBGFIELD("IIC_FUCOM_WriteFAdd") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #521
-  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1081, 6,  3, 1,  1, 1}, // #522
-  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #523
-  {DBGFIELD("IIC_SSE_ALU_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #524
-  {DBGFIELD("IIC_SSE_ALU_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #525
-  {DBGFIELD("IIC_SSE_ALU_F32S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #526
-  {DBGFIELD("IIC_SSE_ALU_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #527
-  {DBGFIELD("WriteFVarBlendLd_ReadAfterLd") 1, false, false, 1153, 7, 16, 1,  1, 1}, // #528
-  {DBGFIELD("WriteFVarBlend")     1, false, false, 1160, 6, 19, 1,  0, 0}, // #529
-  {DBGFIELD("WriteFShuffleLd")    1, false, false, 1081, 6,  3, 1,  0, 0}, // #530
-  {DBGFIELD("WriteFShuffle256")   1, false, false, 1099, 4,  2, 1,  0, 0}, // #531
-  {DBGFIELD("WriteFShuffle")      1, false, false, 1087, 5,  2, 1,  0, 0}, // #532
-  {DBGFIELD("IIC_SSE_ALU_F32P_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #533
-  {DBGFIELD("WriteCvtF2ILd")      1, false, false, 1057, 5,  5, 1,  0, 0}, // #534
-  {DBGFIELD("WriteCvtF2I")        1, false, false, 1062, 4,  6, 1,  0, 0}, // #535
-  {DBGFIELD("WriteCvtF2FLd")      1, false, false, 1057, 5,  5, 1,  0, 0}, // #536
-  {DBGFIELD("WriteCvtF2F")        1, false, false, 1062, 4,  6, 1,  0, 0}, // #537
-  {DBGFIELD("WriteCvtF2FLd_WriteRMW") 2, false, false, 1166, 6, 25, 2,  0, 0}, // #538
-  {DBGFIELD("WriteCvtF2FLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #539
-  {DBGFIELD("WriteCvtI2FLd_ReadAfterLd") 1, false, false, 1057, 5, 10, 1,  1, 1}, // #540
-  {DBGFIELD("IIC_VERR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #541
-  {DBGFIELD("IIC_VERW_REG_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #542
-  {DBGFIELD("IIC_VERW_MEM_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #543
-  {DBGFIELD("WriteStore")         1, false, false, 442, 3,  2, 1,  0, 0}, // #544
-  {DBGFIELD("WriteShuffle256")    1, false, false, 1099, 4,  2, 1,  0, 0}, // #545
-  {DBGFIELD("IIC_ALU_MEM_WriteFBlendLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #546
-  {DBGFIELD("WriteFShuffleLd_ReadAfterLd") 1, false, false, 1081, 6,  3, 1,  1, 1}, // #547
-  {DBGFIELD("WriteShuffle256Ld_ReadAfterLd") 1, false, false, 1093, 5,  3, 1,  1, 1}, // #548
-  {DBGFIELD("IIC_ALU_MEM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1081, 6,  3, 1,  1, 1}, // #549
-  {DBGFIELD("IIC_ALU_NONMEM_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #550
-  {DBGFIELD("IIC_SSE_MOVDQ")      0, false, false,  0, 0,  0, 0,  0, 0}, // #551
-  {DBGFIELD("IIC_SSE_MOV_LH")     0, false, false,  0, 0,  0, 0,  0, 0}, // #552
-  {DBGFIELD("IIC_SSE_MOVD_ToGP")  0, false, false,  0, 0,  0, 0,  0, 0}, // #553
-  {DBGFIELD("IIC_SSE_MOV_S_MR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #554
-  {DBGFIELD("IIC_SSE_MOV_S_RM")   0, false, false,  0, 0,  0, 0,  0, 0}, // #555
-  {DBGFIELD("IIC_SSE_MOV_S_RR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #556
-  {DBGFIELD("IIC_SSE_MOVQ_RR")    0, false, false,  0, 0,  0, 0,  0, 0}, // #557
-  {DBGFIELD("IIC_ALU_MEM_WriteMPSADLd_ReadAfterLd") 1, false, false, 1108, 8, 16, 1,  1, 1}, // #558
-  {DBGFIELD("IIC_ALU_NONMEM_WriteMPSAD") 1, false, false, 1116, 7, 16, 1,  0, 0}, // #559
-  {DBGFIELD("WriteVecALULd")      1, false, false, 917, 4,  3, 1,  0, 0}, // #560
-  {DBGFIELD("WriteBlendLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #561
-  {DBGFIELD("WriteBlend")         1, false, false, 1063, 3,  2, 1,  0, 0}, // #562
-  {DBGFIELD("WriteVarBlendLd_ReadAfterLd") 1, false, false, 1123, 7, 16, 1,  1, 1}, // #563
-  {DBGFIELD("WriteVarBlend")      1, false, false, 1130, 6, 19, 1,  0, 0}, // #564
-  {DBGFIELD("IIC_ALU_MEM_WriteBlendLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #565
-  {DBGFIELD("IIC_ALU_NONMEM_WriteBlend") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #566
-  {DBGFIELD("WriteCLMulLd_ReadAfterLd") 1, false, false, 1136, 3,  7, 1,  1, 1}, // #567
-  {DBGFIELD("WriteCLMul")         1, false, false, 1139, 2,  7, 1,  0, 0}, // #568
-  {DBGFIELD("IIC_SSE_ALU_F32P_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #569
-  {DBGFIELD("WriteFShuffle256Ld_ReadAfterLd") 1, false, false, 1093, 5,  3, 1,  1, 1}, // #570
-  {DBGFIELD("IIC_ALU_MEM_WriteShuffleLd") 1, false, false, 917, 4,  3, 1,  0, 0}, // #571
-  {DBGFIELD("IIC_ALU_NONMEM_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #572
-  {DBGFIELD("WriteVarVecShift_ReadAfterLd") 1, false, false, 1099, 4,  2, 1,  1, 1}, // #573
-  {DBGFIELD("WriteVarVecShift")   1, false, false, 1099, 4,  2, 1,  0, 0}, // #574
-  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd") 1, false, false, 917, 4,  3, 1,  0, 0}, // #575
-  {DBGFIELD("WriteVecShift")      1, false, false, 1078, 3,  2, 1,  0, 0}, // #576
-  {DBGFIELD("WriteVarVecShiftLd_ReadAfterLd") 1, false, false, 1093, 5,  3, 1,  1, 1}, // #577
-  {DBGFIELD("WriteFRcpLd")        1, false, false, 1093, 5, 15, 1,  0, 0}, // #578
-  {DBGFIELD("WriteFRsqrtLd")      1, false, false, 1093, 5, 15, 1,  0, 0}, // #579
-  {DBGFIELD("WriteFSqrtLd")       1, false, false, 1093, 5, 23, 1,  0, 0}, // #580
-  {DBGFIELD("IIC_WAIT_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #581
-  {DBGFIELD("IIC_WRMSR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #582
-  {DBGFIELD("IIC_XADD_MEM_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #583
-  {DBGFIELD("IIC_XADD_REG_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #584
-  {DBGFIELD("IIC_XCHG_REG_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #585
-  {DBGFIELD("IIC_XCHG_MEM_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #586
-  {DBGFIELD("IIC_FXCH_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #587
-  {DBGFIELD("IIC_XLAT_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #588
-  {DBGFIELD("MOV16rm")            1, false, false, 282, 2,  9, 1,  0, 0}, // #589
-  {DBGFIELD("MOVSX32rm16_MOVSX32rm8") 1, false, false, 918, 3,  3, 1,  0, 0}, // #590
-  {DBGFIELD("MOVZX32rm16_MOVZX32rm8") 1, false, false, 918, 3,  3, 1,  0, 0}, // #591
-  {DBGFIELD("CMOVA16rr_CMOVAE16rr_CMOVB16rr_CMOVBE16rr_CMOVE16rr_CMOVG16rr_CMOVGE16rr_CMOVL16rr_CMOVLE16rr_CMOVNE16rr_CMOVNO16rr_CMOVNP16rr_CMOVNS16rr_CMOVO16rr_CMOVP16rr_CMOVS16rr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #592
-  {DBGFIELD("CMOVA32rr_CMOVA64rr_CMOVAE32rr_CMOVAE64rr_CMOVB32rr_CMOVB64rr_CMOVBE32rr_CMOVBE64rr_CMOVE32rr_CMOVE64rr_CMOVG32rr_CMOVG64rr_CMOVGE32rr_CMOVGE64rr_CMOVL32rr_CMOVL64rr_CMOVLE32rr_CMOVLE64rr_CMOVNE32rr_CMOVNE64rr_CMOVNO32rr_CMOVNO64rr_CMOVNP32rr_CMOVNP64rr_CMOVNS32rr_CMOVNS64rr_CMOVO32rr_CMOVO64rr_CMOVP32rr_CMOVP64rr_CMOVS32rr_CMOVS64rr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #593
-  {DBGFIELD("CMOVA16rm_CMOVAE16rm_CMOVB16rm_CMOVBE16rm_CMOVE16rm_CMOVG16rm_CMOVGE16rm_CMOVL16rm_CMOVLE16rm_CMOVNE16rm_CMOVNO16rm_CMOVNP16rm_CMOVNS16rm_CMOVO16rm_CMOVP16rm_CMOVS16rm") 1, false, false, 918, 3,  3, 1,  1, 1}, // #594
-  {DBGFIELD("CMOVA32rm_CMOVA64rm_CMOVAE32rm_CMOVAE64rm_CMOVB32rm_CMOVB64rm_CMOVBE32rm_CMOVBE64rm_CMOVE32rm_CMOVE64rm_CMOVG32rm_CMOVG64rm_CMOVGE32rm_CMOVGE64rm_CMOVL32rm_CMOVL64rm_CMOVLE32rm_CMOVLE64rm_CMOVNE32rm_CMOVNE64rm_CMOVNO32rm_CMOVNO64rm_CMOVNP32rm_CMOVNP64rm_CMOVNS32rm_CMOVNS64rm_CMOVO32rm_CMOVO64rm_CMOVP32rm_CMOVP64rm_CMOVS32rm_CMOVS64rm") 1, false, false, 918, 3,  3, 1,  1, 1}, // #595
-  {DBGFIELD("XCHG16ar_XCHG16rr_XCHG32ar_XCHG32ar64_XCHG32rr_XCHG64ar_XCHG64rr_XCHG8rr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #596
-  {DBGFIELD("XCHG16rm_XCHG32rm_XCHG64rm_XCHG8rm") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #597
-  {DBGFIELD("XLAT")               1, false, false, 282, 2,  9, 1,  0, 0}, // #598
-  {DBGFIELD("PUSH16rmm_PUSH32rmm") 1, false, false, 1151, 2,  2, 1,  0, 0}, // #599
-  {DBGFIELD("PUSHF16_PUSHF32")    1, false, false, 442, 3,  2, 1,  0, 0}, // #600
-  {DBGFIELD("PUSHA16_PUSHA32")    1, false, false, 442, 3,  2, 1,  0, 0}, // #601
-  {DBGFIELD("POP16rmm_POP32rmm")  1, false, false, 282, 2,  9, 1,  0, 0}, // #602
-  {DBGFIELD("POPF16")             1, false, false, 282, 2,  9, 1,  0, 0}, // #603
-  {DBGFIELD("POPF32")             1, false, false, 282, 2,  9, 1,  0, 0}, // #604
-  {DBGFIELD("POPA16_POPA32")      1, false, false, 282, 2,  9, 1,  0, 0}, // #605
-  {DBGFIELD("LAHF_SAHF")          1, false, false, 108, 2,  2, 1,  0, 0}, // #606
-  {DBGFIELD("BSWAP32r")           1, false, false, 108, 2,  2, 1,  0, 0}, // #607
-  {DBGFIELD("BSWAP64r")           1, false, false, 108, 2,  2, 1,  0, 0}, // #608
-  {DBGFIELD("MOVBE16rm_MOVBE64rm") 1, false, false, 918, 3,  3, 1,  0, 0}, // #609
-  {DBGFIELD("MOVBE32rm")          1, false, false, 918, 3,  3, 1,  0, 0}, // #610
-  {DBGFIELD("MOVBE16mr")          1, false, false, 442, 3,  2, 1,  0, 0}, // #611
-  {DBGFIELD("MOVBE32mr")          1, false, false, 442, 3,  2, 1,  0, 0}, // #612
-  {DBGFIELD("MOVBE64mr")          1, false, false, 442, 3,  2, 1,  0, 0}, // #613
-  {DBGFIELD("ADD16mi_ADD16mi8_ADD16mr_ADD32mi_ADD32mi8_ADD32mr_ADD64mi32_ADD64mi8_ADD64mr_ADD8mi_ADD8mi8_ADD8mr_SUB16mi_SUB16mi8_SUB16mr_SUB32mi_SUB32mi8_SUB32mr_SUB64mi32_SUB64mi8_SUB64mr_SUB8mi_SUB8mi8_SUB8mr") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #614
-  {DBGFIELD("ADC16ri_ADC16ri8_ADC16rr_ADC16rr_REV_ADC32ri_ADC32ri8_ADC32rr_ADC32rr_REV_ADC64ri32_ADC64ri8_ADC64rr_ADC64rr_REV_ADC8ri_ADC8ri8_ADC8rr_ADC8rr_REV_SBB16ri_SBB16ri8_SBB16rr_SBB16rr_REV_SBB32ri_SBB32ri8_SBB32rr_SBB32rr_REV_SBB64ri32_SBB64ri8_SBB64rr_SBB64rr_REV_SBB8ri_SBB8ri8_SBB8rr_SBB8rr_REV") 1, false, false, 108, 2,  2, 1,  0, 0}, // #615
-  {DBGFIELD("ADC16rm_ADC32rm_ADC64rm_ADC8rm_SBB16rm_SBB32rm_SBB64rm_SBB8rm") 1, false, false, 918, 3,  3, 1,  1, 1}, // #616
-  {DBGFIELD("ADC16mi_ADC16mi8_ADC16mr_ADC32mi_ADC32mi8_ADC32mr_ADC64mi32_ADC64mi8_ADC64mr_ADC8mi_ADC8mi8_ADC8mr_SBB16mi_SBB16mi8_SBB16mr_SBB32mi_SBB32mi8_SBB32mr_SBB64mi32_SBB64mi8_SBB64mr_SBB8mi_SBB8mi8_SBB8mr") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #617
-  {DBGFIELD("DEC16m_DEC32m_DEC64m_DEC8m_INC16m_INC32m_INC64m_INC8m_NEG16m_NEG32m_NEG64m_NEG8m_NOT16m_NOT32m_NOT64m_NOT8m") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #618
-  {DBGFIELD("IMUL16r_IMUL16rr")   1, false, false, 1062, 4,  6, 1,  0, 0}, // #619
-  {DBGFIELD("IMUL16rm")           1, false, false, 1057, 5,  5, 1,  1, 1}, // #620
-  {DBGFIELD("IMUL16rmi_IMUL16rmi8") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #621
-  {DBGFIELD("IMUL16rri_IMUL16rri8") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #622
-  {DBGFIELD("MUL16r")             1, false, false, 1062, 4,  6, 1,  0, 0}, // #623
-  {DBGFIELD("IMUL16m")            1, false, false, 1057, 5,  5, 1,  2, 2}, // #624
-  {DBGFIELD("MUL16m")             1, false, false, 1057, 5,  5, 1,  2, 2}, // #625
-  {DBGFIELD("IMUL32r_IMUL32rr")   1, false, false, 1062, 4,  6, 1,  0, 0}, // #626
-  {DBGFIELD("IMUL32rm")           1, false, false, 1057, 5,  5, 1,  1, 1}, // #627
-  {DBGFIELD("IMUL32rmi_IMUL32rmi8") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #628
-  {DBGFIELD("IMUL32rri_IMUL32rri8") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #629
-  {DBGFIELD("MUL32r")             1, false, false, 1062, 4,  6, 1,  0, 0}, // #630
-  {DBGFIELD("IMUL32m")            1, false, false, 1057, 5,  5, 1,  2, 2}, // #631
-  {DBGFIELD("MUL32m")             1, false, false, 1057, 5,  5, 1,  2, 2}, // #632
-  {DBGFIELD("IMUL64r_IMUL64rr")   1, false, false, 1062, 4,  6, 1,  0, 0}, // #633
-  {DBGFIELD("IMUL64rm")           1, false, false, 1057, 5,  5, 1,  1, 1}, // #634
-  {DBGFIELD("IMUL64rmi32_IMUL64rmi8") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #635
-  {DBGFIELD("IMUL64rri32_IMUL64rri8") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #636
-  {DBGFIELD("MUL64r")             1, false, false, 1062, 4,  6, 1,  0, 0}, // #637
-  {DBGFIELD("IMUL64m")            1, false, false, 1057, 5,  5, 1,  2, 2}, // #638
-  {DBGFIELD("MUL64m")             1, false, false, 1057, 5,  5, 1,  2, 2}, // #639
-  {DBGFIELD("MULX32rr")           2, false, false, 1062, 4, 17, 2,  0, 0}, // #640
-  {DBGFIELD("MULX32rm")           2, false, false, 1057, 5,  5, 2,  0, 0}, // #641
-  {DBGFIELD("MULX64rr")           2, false, false, 1062, 4, 17, 2,  0, 0}, // #642
-  {DBGFIELD("MULX64rm")           2, false, false, 1057, 5,  5, 2,  0, 0}, // #643
-  {DBGFIELD("DIV8r")              1, false, false, 1098, 5, 12, 1,  0, 0}, // #644
-  {DBGFIELD("DIV16r")             1, false, false, 1098, 5, 12, 1,  0, 0}, // #645
-  {DBGFIELD("DIV32r")             1, false, false, 1098, 5, 12, 1,  0, 0}, // #646
-  {DBGFIELD("DIV64r")             1, false, false, 1098, 5, 12, 1,  0, 0}, // #647
-  {DBGFIELD("IDIV8r")             1, false, false, 1098, 5, 12, 1,  0, 0}, // #648
-  {DBGFIELD("IDIV16r")            1, false, false, 1098, 5, 12, 1,  0, 0}, // #649
-  {DBGFIELD("IDIV32r")            1, false, false, 1098, 5, 12, 1,  0, 0}, // #650
-  {DBGFIELD("IDIV64r")            1, false, false, 1098, 5, 12, 1,  0, 0}, // #651
-  {DBGFIELD("AND16mi_AND16mi8_AND16mr_AND32mi_AND32mi8_AND32mr_AND64mi32_AND64mi8_AND64mr_AND8mi_AND8mi8_AND8mr_OR16mi_OR16mi8_OR16mr_OR32mi_OR32mi8_OR32mr_OR64mi32_OR64mi8_OR64mr_OR8mi_OR8mi8_OR8mr_XOR16mi_XOR16mi8_XOR16mr_XOR32mi_XOR32mi8_XOR32mr_XOR64mi32_XOR64mi8_XOR64mr_XOR8mi_XOR8mi8_XOR8mr") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #652
-  {DBGFIELD("OR32mrLocked")       2, false, false, 1053, 4,  3, 2,  0, 0}, // #653
-  {DBGFIELD("SAR16m1_SAR16mi_SAR32m1_SAR32mi_SAR64m1_SAR64mi_SAR8m1_SAR8mi_SHL16m1_SHL16mi_SHL32m1_SHL32mi_SHL64m1_SHL64mi_SHL8m1_SHL8mi_SHR16m1_SHR16mi_SHR32m1_SHR32mi_SHR64m1_SHR64mi_SHR8m1_SHR8mi") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #654
-  {DBGFIELD("SAR16rCL_SAR32rCL_SAR64rCL_SAR8rCL_SHL16rCL_SHL32rCL_SHL64rCL_SHL8rCL_SHR16rCL_SHR32rCL_SHR64rCL_SHR8rCL") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #655
-  {DBGFIELD("SAR16mCL_SAR32mCL_SAR64mCL_SAR8mCL_SHL16mCL_SHL32mCL_SHL64mCL_SHL8mCL_SHR16mCL_SHR32mCL_SHR64mCL_SHR8mCL") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #656
-  {DBGFIELD("ROL16r1_ROL32r1_ROL64r1_ROL8r1_ROR16r1_ROR32r1_ROR64r1_ROR8r1") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #657
-  {DBGFIELD("ROL16mi_ROL32mi_ROL64mi_ROL8mi_ROR16mi_ROR32mi_ROR64mi_ROR8mi") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #658
-  {DBGFIELD("ROL16rCL_ROL32rCL_ROL64rCL_ROL8rCL_ROR16rCL_ROR32rCL_ROR64rCL_ROR8rCL") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #659
-  {DBGFIELD("ROL16mCL_ROL32mCL_ROL64mCL_ROL8mCL_ROR16mCL_ROR32mCL_ROR64mCL_ROR8mCL") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #660
-  {DBGFIELD("RCL16r1_RCL32r1_RCL64r1_RCL8r1_RCR16r1_RCR32r1_RCR64r1_RCR8r1") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #661
-  {DBGFIELD("RCL16m1_RCL32m1_RCL64m1_RCL8m1_RCR16m1_RCR32m1_RCR64m1_RCR8m1") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #662
-  {DBGFIELD("RCL16rCL_RCL16ri_RCL32rCL_RCL32ri_RCL64rCL_RCL64ri_RCL8rCL_RCL8ri_RCR16rCL_RCR16ri_RCR32rCL_RCR32ri_RCR64rCL_RCR64ri_RCR8rCL_RCR8ri") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #663
-  {DBGFIELD("RCL16mCL_RCL16mi_RCL32mCL_RCL32mi_RCL64mCL_RCL64mi_RCL8mCL_RCL8mi_RCR16mCL_RCR16mi_RCR32mCL_RCR32mi_RCR64mCL_RCR64mi_RCR8mCL_RCR8mi") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #664
-  {DBGFIELD("SHLD16rri8_SHRD16rri8") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #665
-  {DBGFIELD("SHLD32rri8_SHRD32rri8") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #666
-  {DBGFIELD("SHLD64rri8_SHRD64rri8") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #667
-  {DBGFIELD("SHLD16mri8_SHRD16mri8") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #668
-  {DBGFIELD("SHLD32mri8_SHRD32mri8") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #669
-  {DBGFIELD("SHLD64mri8_SHRD64mri8") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #670
-  {DBGFIELD("SHLD16rrCL")         1, false, false, 1078, 3,  2, 1,  0, 0}, // #671
-  {DBGFIELD("SHLD32rrCL")         1, false, false, 1078, 3,  2, 1,  0, 0}, // #672
-  {DBGFIELD("SHLD64rrCL")         1, false, false, 1078, 3,  2, 1,  0, 0}, // #673
-  {DBGFIELD("SHRD16rrCL")         1, false, false, 1078, 3,  2, 1,  0, 0}, // #674
-  {DBGFIELD("SHRD32rrCL")         1, false, false, 1078, 3,  2, 1,  0, 0}, // #675
-  {DBGFIELD("SHRD64rrCL")         1, false, false, 1078, 3,  2, 1,  0, 0}, // #676
-  {DBGFIELD("SHLD16mrCL_SHRD16mrCL") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #677
-  {DBGFIELD("SHLD32mrCL_SHRD32mrCL") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #678
-  {DBGFIELD("SHLD64mrCL_SHRD64mrCL") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #679
-  {DBGFIELD("BT16ri8_BT32ri8_BT64ri8") 1, false, false, 108, 2,  2, 1,  0, 0}, // #680
-  {DBGFIELD("BT16rr_BT32rr_BT64rr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #681
-  {DBGFIELD("BT16mr_BT32mr_BT64mr") 1, false, false, 918, 3,  3, 1,  0, 0}, // #682
-  {DBGFIELD("BT16mi8_BT32mi8_BT64mi8") 1, false, false, 108, 2,  2, 1,  0, 0}, // #683
-  {DBGFIELD("BTC16ri8_BTC32ri8_BTC64ri8_BTR16ri8_BTR32ri8_BTR64ri8_BTS16ri8_BTS32ri8_BTS64ri8") 1, false, false, 108, 2,  2, 1,  0, 0}, // #684
-  {DBGFIELD("BTC16rr_BTC32rr_BTC64rr_BTR16rr_BTR32rr_BTS16rr_BTS32rr_BTS64rr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #685
-  {DBGFIELD("BTR64rr")            1, false, false, 108, 2,  2, 1,  0, 0}, // #686
-  {DBGFIELD("BTC16mr_BTC32mr_BTC64mr_BTR16mr_BTR32mr_BTR64mr_BTS16mr_BTS32mr_BTS64mr") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #687
-  {DBGFIELD("BTC16mi8_BTC32mi8_BTC64mi8_BTR16mi8_BTR32mi8_BTR64mi8_BTS16mi8_BTS32mi8_BTS64mi8") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #688
-  {DBGFIELD("BSF16rr_BSF32rr_BSF64rr_BSR16rr_BSR32rr_BSR64rr") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #689
-  {DBGFIELD("BSF16rm_BSF32rm_BSF64rm_BSR16rm_BSR32rm_BSR64rm") 1, false, false, 1074, 4,  3, 1,  0, 0}, // #690
-  {DBGFIELD("SETAEr_SETAr_SETBEr_SETBr_SETEr_SETGEr_SETGr_SETLEr_SETLr_SETNEr_SETNOr_SETNPr_SETNSr_SETOr_SETPr_SETSr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #691
-  {DBGFIELD("SETAEm_SETAm_SETBEm_SETBm_SETEm_SETGEm_SETGm_SETLEm_SETLm_SETNEm_SETNOm_SETNPm_SETNSm_SETOm_SETPm_SETSm") 2, false, false, 1053, 4, 21, 2,  0, 0}, // #692
-  {DBGFIELD("CLD")                1, false, false, 108, 2,  2, 1,  0, 0}, // #693
-  {DBGFIELD("STD")                1, false, false, 108, 2,  2, 1,  0, 0}, // #694
-  {DBGFIELD("TZCNT16rr_TZCNT32rr_TZCNT64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #695
-  {DBGFIELD("TZCNT16rm_TZCNT32rm_TZCNT64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #696
-  {DBGFIELD("ANDN32rr_ANDN64rr")  1, false, false, 108, 2,  2, 1,  0, 0}, // #697
-  {DBGFIELD("ANDN32rm_ANDN64rm")  1, false, false, 918, 3,  3, 1,  1, 1}, // #698
-  {DBGFIELD("BLSI32rr_BLSI64rr_BLSMSK32rr_BLSMSK64rr_BLSR32rr_BLSR64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #699
-  {DBGFIELD("BLSI32rm_BLSI64rm_BLSMSK32rm_BLSMSK64rm_BLSR32rm_BLSR64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #700
-  {DBGFIELD("BEXTR32rr_BEXTR64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #701
-  {DBGFIELD("BEXTR32rm_BEXTR64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #702
-  {DBGFIELD("BZHI32rr_BZHI64rr")  0, false, false,  0, 0,  0, 0,  0, 0}, // #703
-  {DBGFIELD("BZHI32rm_BZHI64rm")  0, false, false,  0, 0,  0, 0,  0, 0}, // #704
-  {DBGFIELD("PDEP32rr_PDEP64rr_PEXT32rr_PEXT64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #705
-  {DBGFIELD("PDEP32rm_PDEP64rm_PEXT32rm_PEXT64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #706
-  {DBGFIELD("JCXZ_JRCXZ")         1, false, false, 1087, 5,  2, 1,  0, 0}, // #707
-  {DBGFIELD("LOOP")               1, false, false, 1087, 5,  2, 1,  0, 0}, // #708
-  {DBGFIELD("LOOPE")              1, false, false, 1087, 5,  2, 1,  0, 0}, // #709
-  {DBGFIELD("LOOPNE")             1, false, false, 1087, 5,  2, 1,  0, 0}, // #710
-  {DBGFIELD("CALL16r_CALL32r")    1, false, false, 1087, 5,  2, 1,  0, 0}, // #711
-  {DBGFIELD("CALL16m_CALL32m")    1, false, false, 1081, 6,  3, 1,  0, 0}, // #712
-  {DBGFIELD("LRETL_LRETQ_LRETW_RETL_RETQ_RETW") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #713
-  {DBGFIELD("LRETIL_LRETIQ_LRETIW") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #714
-  {DBGFIELD("RETIL_RETIQ_RETIW")  1, false, false, 1081, 6,  3, 1,  0, 0}, // #715
-  {DBGFIELD("BOUNDS16rm_BOUNDS32rm") 1, false, false, 108, 2,  1, 1,  0, 0}, // #716
-  {DBGFIELD("INTO")               1, false, false, 108, 2,  1, 1,  0, 0}, // #717
-  {DBGFIELD("LODSB_LODSW")        1, false, false, 108, 2,  1, 1,  0, 0}, // #718
-  {DBGFIELD("LODSL_LODSQ")        1, false, false, 108, 2,  1, 1,  0, 0}, // #719
-  {DBGFIELD("STOSB_STOSL_STOSQ_STOSW") 1, false, false, 108, 2,  1, 1,  0, 0}, // #720
-  {DBGFIELD("MOVSB_MOVSL_MOVSQ_MOVSW") 1, false, false, 108, 2,  1, 1,  0, 0}, // #721
-  {DBGFIELD("MOVSLDUPrm")         1, false, false, 282, 2,  9, 1,  0, 0}, // #722
-  {DBGFIELD("MOVSLDUPrr")         1, false, false, 1087, 5,  2, 1,  0, 0}, // #723
-  {DBGFIELD("SCASB_SCASL_SCASQ_SCASW") 1, false, false, 108, 2,  1, 1,  0, 0}, // #724
-  {DBGFIELD("CMPSB_CMPSL_CMPSQ_CMPSW") 1, false, false, 108, 2,  1, 1,  0, 0}, // #725
-  {DBGFIELD("XADD16rm_XADD32rm_XADD64rm_XADD8rm") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #726
-  {DBGFIELD("CMPXCHG16rm_CMPXCHG32rm_CMPXCHG64rm") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #727
-  {DBGFIELD("CMPXCHG8rm")         2, false, false, 1053, 4,  3, 2,  0, 0}, // #728
-  {DBGFIELD("CMPXCHG8B")          2, false, false, 1053, 4,  3, 2,  0, 0}, // #729
-  {DBGFIELD("CMPXCHG16B")         2, false, false, 1053, 4,  3, 2,  0, 0}, // #730
-  {DBGFIELD("PAUSE")              1, false, false,  0, 0,  2, 1,  0, 0}, // #731
-  {DBGFIELD("LEAVE_LEAVE64")      1, false, false, 108, 2,  2, 1,  0, 0}, // #732
-  {DBGFIELD("XGETBV")             1, false, false, 108, 2,  1, 1,  0, 0}, // #733
-  {DBGFIELD("RDTSC")              1, false, false, 108, 2,  1, 1,  0, 0}, // #734
-  {DBGFIELD("RDTSCP")             1, false, false, 108, 2,  1, 1,  0, 0}, // #735
-  {DBGFIELD("RDPMC")              1, false, false, 108, 2,  1, 1,  0, 0}, // #736
-  {DBGFIELD("RDRAND16r_RDRAND32r_RDRAND64r") 0, false, false,  0, 0,  0, 0,  0, 0}, // #737
-  {DBGFIELD("LD_Frr")             1, false, false, 108, 2,  2, 1,  0, 0}, // #738
-  {DBGFIELD("LD_F80m")            1, false, false, 282, 2,  9, 1,  0, 0}, // #739
-  {DBGFIELD("FBLDm")              0, false, false,  0, 0,  0, 0,  0, 0}, // #740
-  {DBGFIELD("ST_FPrr_ST_Frr")     1, false, false, 108, 2,  2, 1,  0, 0}, // #741
-  {DBGFIELD("ST_FP80m")           1, false, false, 442, 3,  2, 1,  0, 0}, // #742
-  {DBGFIELD("FBSTPm")             0, false, false,  0, 0,  0, 0,  0, 0}, // #743
-  {DBGFIELD("XCH_F")              1, false, false, 108, 2,  2, 1,  0, 0}, // #744
-  {DBGFIELD("ILD_F16m_ILD_F32m_ILD_F64m") 1, false, false, 282, 2,  9, 1,  0, 0}, // #745
-  {DBGFIELD("IST_F16m_IST_F32m_IST_FP16m_IST_FP32m") 1, false, false, 442, 3,  2, 1,  0, 0}, // #746
-  {DBGFIELD("LD_F0")              1, false, false,  0, 0,  2, 1,  0, 0}, // #747
-  {DBGFIELD("LD_F1")              1, false, false,  0, 0,  2, 1,  0, 0}, // #748
-  {DBGFIELD("FLDPI")              1, false, false, 108, 2,  1, 1,  0, 0}, // #749
-  {DBGFIELD("CMOVBE_F_CMOVBE_Fp32_CMOVBE_Fp64_CMOVBE_Fp80_CMOVB_F_CMOVB_Fp32_CMOVB_Fp64_CMOVB_Fp80_CMOVNBE_F_CMOVNBE_Fp32_CMOVNBE_Fp64_CMOVNBE_Fp80_CMOVNB_F_CMOVNB_Fp32_CMOVNB_Fp64_CMOVNB_Fp80_CMOVNE_F_CMOVNE_Fp32_CMOVNE_Fp64_CMOVNE_Fp80_CMOVNP_F_CMOVNP_Fp32_CMOVNP_Fp64_CMOVNP_Fp80_CMOVP_F_CMOVP_Fp32_CMOVP_Fp64_CMOVP_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #750
-  {DBGFIELD("FNSTSW16r")          1, false, false, 108, 2,  2, 1,  0, 0}, // #751
-  {DBGFIELD("FNSTSWm")            0, false, false,  0, 0,  0, 0,  0, 0}, // #752
-  {DBGFIELD("FLDCW16m")           1, false, false, 282, 2,  9, 1,  0, 0}, // #753
-  {DBGFIELD("FNSTCW16m")          1, false, false, 108, 2,  2, 1,  0, 0}, // #754
-  {DBGFIELD("FDECSTP_FINCSTP")    1, false, false, 108, 2,  1, 1,  0, 0}, // #755
-  {DBGFIELD("FFREE")              1, false, false, 108, 2,  1, 1,  0, 0}, // #756
-  {DBGFIELD("FSAVEm")             0, false, false,  0, 0,  0, 0,  0, 0}, // #757
-  {DBGFIELD("FRSTORm")            0, false, false,  0, 0,  0, 0,  0, 0}, // #758
-  {DBGFIELD("ABS_F_ABS_Fp32_ABS_Fp64_ABS_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #759
-  {DBGFIELD("CHS_F_CHS_Fp32_CHS_Fp64_CHS_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #760
-  {DBGFIELD("COMP_FST0r_COM_FST0r") 0, false, false,  0, 0,  0, 0,  0, 0}, // #761
-  {DBGFIELD("UCOM_FPr_UCOM_Fr")   1, false, false, 1062, 4,  6, 1,  0, 0}, // #762
-  {DBGFIELD("FCOM32m_FCOM64m_FCOMP32m_FCOMP64m") 0, false, false,  0, 0,  0, 0,  0, 0}, // #763
-  {DBGFIELD("FCOMPP")             1, false, false, 108, 2,  1, 1,  0, 0}, // #764
-  {DBGFIELD("UCOM_FPPr")          1, false, false, 1062, 4,  6, 1,  0, 0}, // #765
-  {DBGFIELD("COM_FIPr_COM_FIr")   1, false, false, 1062, 4,  6, 1,  0, 0}, // #766
-  {DBGFIELD("UCOM_FIPr_UCOM_FIr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #767
-  {DBGFIELD("FICOM16m_FICOM32m_FICOMP16m_FICOMP32m") 0, false, false,  0, 0,  0, 0,  0, 0}, // #768
-  {DBGFIELD("TST_F_TST_Fp32_TST_Fp64_TST_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #769
-  {DBGFIELD("FXAM")               1, false, false, 108, 2,  1, 1,  0, 0}, // #770
-  {DBGFIELD("FPREM")              1, false, false, 108, 2,  1, 1,  0, 0}, // #771
-  {DBGFIELD("FPREM1")             1, false, false, 108, 2,  1, 1,  0, 0}, // #772
-  {DBGFIELD("FRNDINT")            1, false, false, 108, 2,  1, 1,  0, 0}, // #773
-  {DBGFIELD("FSCALE")             1, false, false, 108, 2,  1, 1,  0, 0}, // #774
-  {DBGFIELD("FXTRACT")            1, false, false, 108, 2,  1, 1,  0, 0}, // #775
-  {DBGFIELD("FNOP")               1, false, false, 108, 2,  1, 1,  0, 0}, // #776
-  {DBGFIELD("WAIT")               1, false, false, 108, 2,  1, 1,  0, 0}, // #777
-  {DBGFIELD("FNCLEX")             1, false, false, 108, 2,  1, 1,  0, 0}, // #778
-  {DBGFIELD("FNINIT")             1, false, false, 108, 2,  1, 1,  0, 0}, // #779
-  {DBGFIELD("MMX_MOVD64from64rr_MMX_MOVD64grr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #780
-  {DBGFIELD("MOVPDI2DIrr_VMOVPDI2DIrr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #781
-  {DBGFIELD("MMX_MOVD64rr_MMX_MOVD64to64rr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #782
-  {DBGFIELD("MOVDI2PDIrr_VMOVDI2PDIrr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #783
-  {DBGFIELD("VMOVPQIto64rr")      1, false, false, 108, 2,  2, 1,  0, 0}, // #784
-  {DBGFIELD("VMOV64toPQIrr")      1, false, false, 108, 2,  2, 1,  0, 0}, // #785
-  {DBGFIELD("MMX_MOVQ64rr_MMX_MOVQ64rr_REV") 1, false, false, 108, 2,  2, 1,  0, 0}, // #786
-  {DBGFIELD("MOVDQArr_MOVDQArr_REV_VMOVDQAYrr_VMOVDQAYrr_REV_VMOVDQArr_VMOVDQArr_REV") 1, false, false, 108, 2,  2, 1,  0, 0}, // #787
-  {DBGFIELD("MOVDQUrr_MOVDQUrr_REV_VMOVDQUYrr_VMOVDQUYrr_REV_VMOVDQUrr_VMOVDQUrr_REV") 1, false, false, 108, 2,  2, 1,  0, 0}, // #788
-  {DBGFIELD("MMX_MOVDQ2Qrr")      1, false, false, 108, 2,  2, 1,  0, 0}, // #789
-  {DBGFIELD("MMX_MOVQ2DQrr")      1, false, false, 108, 2,  2, 1,  0, 0}, // #790
-  {DBGFIELD("MMX_PACKSSDWirr_MMX_PACKSSWBirr_MMX_PACKUSWBirr") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #791
-  {DBGFIELD("MMX_PACKSSDWirm_MMX_PACKSSWBirm_MMX_PACKUSWBirm") 1, false, false, 917, 4,  3, 1,  1, 1}, // #792
-  {DBGFIELD("VPMOVSXBQYrr_VPMOVSXBWYrr_VPMOVSXDQYrr_VPMOVZXBQYrr_VPMOVZXBWYrr_VPMOVZXDQYrr") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #793
-  {DBGFIELD("PBLENDWrri")         1, false, false, 1063, 3,  2, 1,  0, 0}, // #794
-  {DBGFIELD("VPBLENDWYrri_VPBLENDWrri") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #795
-  {DBGFIELD("PBLENDWrmi")         1, false, false, 917, 4,  3, 1,  1, 1}, // #796
-  {DBGFIELD("VPBLENDWYrmi_VPBLENDWrmi") 1, false, false, 917, 4,  3, 1,  1, 1}, // #797
-  {DBGFIELD("VPBLENDDYrri_VPBLENDDrri") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #798
-  {DBGFIELD("VPBLENDDYrmi_VPBLENDDrmi") 1, false, false, 917, 4,  3, 1,  1, 1}, // #799
-  {DBGFIELD("MMX_MASKMOVQ_MMX_MASKMOVQ64") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #800
-  {DBGFIELD("MASKMOVDQU_MASKMOVDQU64_VMASKMOVDQU_VMASKMOVDQU64") 1, false, false, 442, 3,  2, 1,  0, 0}, // #801
-  {DBGFIELD("VPMASKMOVDYrm_VPMASKMOVDrm_VPMASKMOVQYrm_VPMASKMOVQrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #802
-  {DBGFIELD("VPMASKMOVDYmr_VPMASKMOVDmr_VPMASKMOVQYmr_VPMASKMOVQmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #803
-  {DBGFIELD("MMX_PMOVMSKBrr")     0, false, false,  0, 0,  0, 0,  0, 0}, // #804
-  {DBGFIELD("PMOVMSKBrr_VPMOVMSKBrr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #805
-  {DBGFIELD("VPMOVMSKBYrr")       1, false, false, 108, 2,  2, 1,  0, 0}, // #806
-  {DBGFIELD("MMX_PEXTRWirri")     1, false, false, 1063, 3,  2, 1,  0, 0}, // #807
-  {DBGFIELD("PEXTRBrr_PEXTRDrr_PEXTRQrr_PEXTRWrr_REV") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #808
-  {DBGFIELD("PEXTRBmr_PEXTRDmr_PEXTRQmr_PEXTRWmr") 2, false, false, 1146, 5,  3, 2,  0, 0}, // #809
-  {DBGFIELD("VPBROADCASTBrm_VPBROADCASTWrm") 1, false, false, 282, 2,  9, 1,  0, 0}, // #810
-  {DBGFIELD("VPBROADCASTBYrm_VPBROADCASTWYrm") 1, false, false, 282, 2,  9, 1,  0, 0}, // #811
-  {DBGFIELD("VPGATHERDDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #812
-  {DBGFIELD("VPGATHERDDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #813
-  {DBGFIELD("VPGATHERQDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #814
-  {DBGFIELD("VPGATHERQDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #815
-  {DBGFIELD("VPGATHERDQrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #816
-  {DBGFIELD("VPGATHERDQYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #817
-  {DBGFIELD("VPGATHERQQrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #818
-  {DBGFIELD("VPGATHERQQYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #819
-  {DBGFIELD("MMX_PHADDSWrr64_MMX_PHADDWrr64_MMX_PHSUBSWrr64_MMX_PHSUBWrr64") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #820
-  {DBGFIELD("MMX_PHADDrr64_MMX_PHSUBDrr64") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #821
-  {DBGFIELD("PHADDDrr_PHSUBDrr_VPHADDDrr_VPHSUBDrr") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #822
-  {DBGFIELD("PHADDSWrr128_PHSUBSWrr128_VPHADDSWrr128_VPHADDSWrr256_VPHSUBSWrr128_VPHSUBSWrr256") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #823
-  {DBGFIELD("PHADDWrr_PHSUBWrr_VPHADDDYrr_VPHADDWYrr_VPHADDWrr_VPHSUBDYrr_VPHSUBWYrr_VPHSUBWrr") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #824
-  {DBGFIELD("MMX_PHADDSWrm64_MMX_PHADDWrm64_MMX_PHSUBSWrm64_MMX_PHSUBWrm64") 1, false, false, 917, 4,  3, 1,  1, 1}, // #825
-  {DBGFIELD("MMX_PHADDrm64_MMX_PHSUBDrm64") 1, false, false, 917, 4,  3, 1,  1, 1}, // #826
-  {DBGFIELD("PHADDDrm_PHSUBDrm_VPHADDDrm_VPHSUBDrm") 1, false, false, 917, 4,  3, 1,  1, 1}, // #827
-  {DBGFIELD("PHADDSWrm128_PHSUBSWrm128_VPHADDSWrm128_VPHADDSWrm256_VPHSUBSWrm128_VPHSUBSWrm256") 1, false, false, 917, 4,  3, 1,  1, 1}, // #828
-  {DBGFIELD("PHADDWrm_PHSUBWrm_VPHADDDYrm_VPHADDWYrm_VPHADDWrm_VPHSUBDYrm_VPHSUBWYrm_VPHSUBWrm") 1, false, false, 917, 4,  3, 1,  1, 1}, // #829
-  {DBGFIELD("PCMPGTQrr_VPCMPGTQYrr_VPCMPGTQrr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #830
-  {DBGFIELD("PCMPGTQrm_VPCMPGTQYrm_VPCMPGTQrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #831
-  {DBGFIELD("PMULLDrr_VPMULLDYrr_VPMULLDrr") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #832
-  {DBGFIELD("PMULLDrm_VPMULLDYrm_VPMULLDrm") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #833
-  {DBGFIELD("PTESTrr_VPTESTYrr_VPTESTrr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #834
-  {DBGFIELD("PTESTrm_VPTESTYrm_VPTESTrm") 1, false, false, 918, 3,  3, 1,  1, 1}, // #835
-  {DBGFIELD("PSLLDrr_PSLLQrr_PSLLWrr_PSRADrr_PSRAWrr_PSRLDrr_PSRLQrr_PSRLWrr_VPSLLDYrr_VPSLLDrr_VPSLLQYrr_VPSLLQrr_VPSLLWYrr_VPSLLWrr_VPSRADYrr_VPSRADrr_VPSRAWYrr_VPSRAWrr_VPSRLDYrr_VPSRLDrr_VPSRLQYrr_VPSRLQrr_VPSRLWYrr_VPSRLWrr") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #836
-  {DBGFIELD("PSLLDQri_PSRLDQri")  1, false, false, 1078, 3,  2, 1,  0, 0}, // #837
-  {DBGFIELD("VPSLLDQYri_VPSLLDQri_VPSRLDQYri_VPSRLDQri") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #838
-  {DBGFIELD("MMX_EMMS")           0, false, false,  0, 0,  0, 0,  0, 0}, // #839
-  {DBGFIELD("MOVMSKPDrr_MOVMSKPSrr_VMOVMSKPDrr_VMOVMSKPSrr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #840
-  {DBGFIELD("VMOVMSKPDYrr_VMOVMSKPSYrr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #841
-  {DBGFIELD("VPERM2F128rr")       1, false, false, 1087, 5,  2, 1,  0, 0}, // #842
-  {DBGFIELD("VPERM2F128rm")       1, false, false, 1081, 6,  3, 1,  1, 1}, // #843
-  {DBGFIELD("BLENDVPDrr0_BLENDVPSrr0") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #844
-  {DBGFIELD("BLENDVPDrm0_BLENDVPSrm0") 1, false, false, 1074, 4,  3, 1,  1, 1}, // #845
-  {DBGFIELD("VBROADCASTF128")     1, false, false, 1081, 6,  3, 1,  0, 0}, // #846
-  {DBGFIELD("EXTRACTPSrr")        1, false, false, 1078, 3,  2, 1,  0, 0}, // #847
-  {DBGFIELD("VEXTRACTPSrr")       1, false, false, 1078, 3,  2, 1,  0, 0}, // #848
-  {DBGFIELD("EXTRACTPSmr")        2, false, false, 1103, 5,  3, 2,  0, 0}, // #849
-  {DBGFIELD("VEXTRACTPSmr")       2, false, false, 1103, 5,  3, 2,  0, 0}, // #850
-  {DBGFIELD("VEXTRACTF128rr")     1, false, false, 1087, 5,  2, 1,  0, 0}, // #851
-  {DBGFIELD("VEXTRACTF128mr")     1, false, false, 442, 3,  2, 1,  0, 0}, // #852
-  {DBGFIELD("VINSERTF128rr")      1, false, false, 1087, 5,  2, 1,  0, 0}, // #853
-  {DBGFIELD("VINSERTF128rm")      1, false, false, 1081, 6,  3, 1,  1, 1}, // #854
-  {DBGFIELD("VMASKMOVPDYrm_VMASKMOVPDrm_VMASKMOVPSYrm_VMASKMOVPSrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #855
-  {DBGFIELD("VMASKMOVPDmr_VMASKMOVPSmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #856
-  {DBGFIELD("VMASKMOVPDYmr_VMASKMOVPSYmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #857
-  {DBGFIELD("VGATHERDPSrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #858
-  {DBGFIELD("VGATHERDPSYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #859
-  {DBGFIELD("VGATHERQPSrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #860
-  {DBGFIELD("VGATHERQPSYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #861
-  {DBGFIELD("VGATHERDPDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #862
-  {DBGFIELD("VGATHERDPDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #863
-  {DBGFIELD("VGATHERQPDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #864
-  {DBGFIELD("VGATHERQPDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #865
-  {DBGFIELD("CVTPD2PSrr_VCVTPD2PSrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #866
-  {DBGFIELD("CVTPD2PSrm_VCVTPD2PSXrm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #867
-  {DBGFIELD("VCVTPD2PSYrr")       1, false, false, 1062, 4,  6, 1,  0, 0}, // #868
-  {DBGFIELD("VCVTPD2PSYrm")       1, false, false, 1057, 5,  5, 1,  0, 0}, // #869
-  {DBGFIELD("CVTSD2SSrr_Int_CVTSD2SSrr_Int_VCVTSD2SSrr_VCVTSD2SSrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #870
-  {DBGFIELD("CVTSD2SSrm")         1, false, false, 1057, 5,  5, 1,  0, 0}, // #871
-  {DBGFIELD("Int_CVTSD2SSrm_Int_VCVTSD2SSrm_VCVTSD2SSrm") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #872
-  {DBGFIELD("CVTPS2PDrr_VCVTPS2PDrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #873
-  {DBGFIELD("CVTPS2PDrm_VCVTPS2PDYrm_VCVTPS2PDrm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #874
-  {DBGFIELD("VCVTPS2PDYrr")       1, false, false, 1062, 4,  6, 1,  0, 0}, // #875
-  {DBGFIELD("CVTSS2SDrr_Int_CVTSS2SDrr_Int_VCVTSS2SDrr_VCVTSS2SDrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #876
-  {DBGFIELD("CVTSS2SDrm")         1, false, false, 1057, 5,  5, 1,  0, 0}, // #877
-  {DBGFIELD("Int_CVTSS2SDrm_Int_VCVTSS2SDrm_VCVTSS2SDrm") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #878
-  {DBGFIELD("CVTDQ2PDrr")         1, false, false, 1062, 4,  9, 1,  0, 0}, // #879
-  {DBGFIELD("VCVTDQ2PDrr")        1, false, false, 1062, 4,  9, 1,  0, 0}, // #880
-  {DBGFIELD("VCVTDQ2PDYrr")       1, false, false, 1062, 4,  9, 1,  0, 0}, // #881
-  {DBGFIELD("CVTPD2DQrr_CVTTPD2DQrr_VCVTTPD2DQrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #882
-  {DBGFIELD("VCVTPD2DQrr")        1, false, false, 1062, 4,  6, 1,  0, 0}, // #883
-  {DBGFIELD("CVTPD2DQrm_CVTTPD2DQrm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #884
-  {DBGFIELD("VCVTPD2DQYrr")       1, false, false, 1062, 4,  6, 1,  0, 0}, // #885
-  {DBGFIELD("VCVTTPD2DQYrr")      1, false, false, 1062, 4,  6, 1,  0, 0}, // #886
-  {DBGFIELD("VCVTPD2DQYrm")       1, false, false, 1057, 5,  5, 1,  0, 0}, // #887
-  {DBGFIELD("VCVTTPD2DQYrm")      1, false, false, 1057, 5,  5, 1,  0, 0}, // #888
-  {DBGFIELD("MMX_CVTPS2PIirr_MMX_CVTTPS2PIirr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #889
-  {DBGFIELD("MMX_CVTPI2PDirr")    1, false, false, 1062, 4,  6, 1,  0, 0}, // #890
-  {DBGFIELD("MMX_CVTPD2PIirr_MMX_CVTTPD2PIirr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #891
-  {DBGFIELD("CVTSI2SS64rr_CVTSI2SSrr_Int_CVTSI2SS64rr_Int_CVTSI2SSrr_Int_VCVTSI2SS64rr_Int_VCVTSI2SSrr") 1, false, false, 1062, 4,  9, 1,  0, 0}, // #892
-  {DBGFIELD("VCVTSI2SS64rr_VCVTSI2SSrr") 1, false, false, 1062, 4,  9, 1,  0, 0}, // #893
-  {DBGFIELD("CVTSS2SI64rr_CVTTSS2SI64rr_Int_CVTTSS2SI64rr_Int_VCVTTSS2SI64rr_VCVTSS2SI64rr_VCVTTSS2SI64rr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #894
-  {DBGFIELD("CVTSS2SIrr_CVTTSS2SIrr_Int_CVTTSS2SIrr_Int_VCVTTSS2SIrr_VCVTSS2SIrr_VCVTTSS2SIrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #895
-  {DBGFIELD("CVTSS2SI64rm_CVTTSS2SI64rm_Int_CVTTSS2SI64rm_Int_VCVTTSS2SI64rm_VCVTSS2SI64rm_VCVTTSS2SI64rm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #896
-  {DBGFIELD("CVTSS2SIrm_CVTTSS2SIrm_Int_CVTTSS2SIrm_Int_VCVTTSS2SIrm_VCVTSS2SIrm_VCVTTSS2SIrm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #897
-  {DBGFIELD("CVTSD2SI64rr_CVTSD2SIrr_CVTTSD2SI64rr_CVTTSD2SIrr_Int_CVTTSD2SI64rr_Int_CVTTSD2SIrr_Int_VCVTTSD2SI64rr_Int_VCVTTSD2SIrr_VCVTSD2SI64rr_VCVTSD2SIrr_VCVTTSD2SI64rr_VCVTTSD2SIrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #898
-  {DBGFIELD("CVTSD2SI64rm_CVTSD2SIrm_CVTTSD2SI64rm_CVTTSD2SIrm_Int_CVTTSD2SI64rm_Int_CVTTSD2SIrm_Int_VCVTTSD2SI64rm_Int_VCVTTSD2SIrm_VCVTSD2SI64rm_VCVTSD2SIrm_VCVTTSD2SI64rm_VCVTTSD2SIrm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #899
-  {DBGFIELD("VCVTPS2PHYrr_VCVTPS2PHrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #900
-  {DBGFIELD("VCVTPS2PHYmr_VCVTPS2PHmr") 2, false, false, 1166, 6, 25, 2,  0, 0}, // #901
-  {DBGFIELD("VCVTPH2PSYrr_VCVTPH2PSrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #902
-  {DBGFIELD("HADDPDrr_HADDPSrr_HSUBPDrr_HSUBPSrr_VHADDPDYrr_VHADDPDrr_VHADDPSYrr_VHADDPSrr_VHSUBPDYrr_VHSUBPDrr_VHSUBPSYrr_VHSUBPSrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #903
-  {DBGFIELD("HADDPDrm_HADDPSrm_HSUBPDrm_HSUBPSrm_VHADDPDYrm_VHADDPDrm_VHADDPSYrm_VHADDPSrm_VHSUBPDYrm_VHSUBPDrm_VHSUBPSYrm_VHSUBPSrm") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #904
-  {DBGFIELD("MULPDrr_VMULPDrr")   1, false, false, 1099, 4,  3, 1,  0, 0}, // #905
-  {DBGFIELD("MULPSrr_VMULPSrr")   1, false, false, 1099, 4,  3, 1,  0, 0}, // #906
-  {DBGFIELD("MULSDrr_MULSDrr_Int_VMULSDrr_VMULSDrr_Int") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #907
-  {DBGFIELD("MULSSrr_MULSSrr_Int_VMULSSrr_VMULSSrr_Int") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #908
-  {DBGFIELD("MULPDrm_MULPSrm_VMULPDrm_VMULPSrm") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #909
-  {DBGFIELD("MULSDrm_MULSDrm_Int_MULSSrm_MULSSrm_Int_VMULSDrm_VMULSDrm_Int_VMULSSrm_VMULSSrm_Int") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #910
-  {DBGFIELD("VDIVPSYrr")          1, false, false, 1099, 4, 14, 1,  0, 0}, // #911
-  {DBGFIELD("VDIVPSYrm")          1, false, false, 1093, 5, 13, 1,  1, 1}, // #912
-  {DBGFIELD("VDIVPDYrr")          1, false, false, 1099, 4, 14, 1,  0, 0}, // #913
-  {DBGFIELD("VDIVPDYrm")          1, false, false, 1093, 5, 13, 1,  1, 1}, // #914
-  {DBGFIELD("VRCPPSYr")           1, false, false, 1099, 4,  3, 1,  0, 0}, // #915
-  {DBGFIELD("VRCPPSYm")           1, false, false, 1093, 5, 15, 1,  0, 0}, // #916
-  {DBGFIELD("ROUNDPDr_ROUNDPSr_VROUNDPDr_VROUNDPSr_VROUNDYPDr_VROUNDYPSr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #917
-  {DBGFIELD("ROUNDSDr_ROUNDSDr_Int_ROUNDSSr_ROUNDSSr_Int_VROUNDSDr_VROUNDSDr_Int_VROUNDSSr_VROUNDSSr_Int") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #918
-  {DBGFIELD("ROUNDPDm_VROUNDPDm_VROUNDYPDm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #919
-  {DBGFIELD("ROUNDPSm_VROUNDPSm_VROUNDYPSm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #920
-  {DBGFIELD("ROUNDSDm_ROUNDSSm_VROUNDSDm_VROUNDSSm") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #921
-  {DBGFIELD("DPPSrri_VDPPSYrri_VDPPSrri") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #922
-  {DBGFIELD("DPPSrmi_VDPPSYrmi_VDPPSrmi") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #923
-  {DBGFIELD("DPPDrri")            1, false, false, 1062, 4,  6, 1,  0, 0}, // #924
-  {DBGFIELD("VDPPDrri")           1, false, false, 1062, 4,  6, 1,  0, 0}, // #925
-  {DBGFIELD("DPPDrmi_VDPPDrmi")   1, false, false, 1057, 5,  5, 1,  1, 1}, // #926
-  {DBGFIELD("VFMADDPD4rr_VFMADDPD4rrY_VFMADDPD4rrY_REV_VFMADDPD4rr_REV_VFMADDPDr132r_VFMADDPDr132rY_VFMADDPDr213r_VFMADDPDr213rY_VFMADDPDr231r_VFMADDPDr231rY_VFMADDPS4rr_VFMADDPS4rrY_VFMADDPS4rrY_REV_VFMADDPS4rr_REV_VFMADDPSr132r_VFMADDPSr132rY_VFMADDPSr213r_VFMADDPSr213rY_VFMADDPSr231r_VFMADDPSr231rY_VFMADDSD4rr_VFMADDSD4rr_Int_VFMADDSD4rr_REV_VFMADDSDr132r_VFMADDSDr132r_Int_VFMADDSDr213r_VFMADDSDr213r_Int_VFMADDSDr231r_VFMADDSDr231r_Int_VFMADDSS4rr_VFMADDSS4rr_Int_VFMADDSS4rr_REV_VFMADDSSr132r_VFMADDSSr132r_Int_VFMADDSSr213r_VFMADDSSr213r_Int_VFMADDSSr231r_VFMADDSSr231r_Int_VFMADDSUBPDr132r_VFMADDSUBPDr132rY_VFMADDSUBPDr213r_VFMADDSUBPDr213rY_VFMADDSUBPDr231r_VFMADDSUBPDr231rY_VFMADDSUBPSr132r_VFMADDSUBPSr132rY_VFMADDSUBPSr213r_VFMADDSUBPSr213rY_VFMADDSUBPSr231r_VFMADDSUBPSr231rY_VFMSUBADDPDr132r_VFMSUBADDPDr132rY_VFMSUBADDPDr213r_VFMSUBADDPDr213rY_VFMSUBADDPDr231r_VFMSUBADDPDr231rY_VFMSUBADDPSr132r_VFMSUBADDPSr132rY_VFMSUBADDPSr213r_VFMSUBADDPSr213rY_VFMSUBADDPSr231r_VFMSUBADDPSr231rY_VFMSUBPD4rr_VFMSUBPD4rrY_VFMSUBPD4rrY_REV_VFMSUBPD4rr_REV_VFMSUBPDr132r_VFMSUBPDr132rY_VFMSUBPDr213r_VFMSUBPDr213rY_VFMSUBPDr231r_VFMSUBPDr231rY_VFMSUBPS4rr_VFMSUBPS4rrY_VFMSUBPS4rrY_REV_VFMSUBPS4rr_REV_VFMSUBPSr132r_VFMSUBPSr132rY_VFMSUBPSr213r_VFMSUBPSr213rY_VFMSUBPSr231r_VFMSUBPSr231rY_VFMSUBSD4rr_VFMSUBSD4rr_Int_VFMSUBSD4rr_REV_VFMSUBSDr132r_VFMSUBSDr132r_Int_VFMSUBSDr213r_VFMSUBSDr213r_Int_VFMSUBSDr231r_VFMSUBSDr231r_Int_VFMSUBSS4rr_VFMSUBSS4rr_Int_VFMSUBSS4rr_REV_VFMSUBSSr132r_VFMSUBSSr132r_Int_VFMSUBSSr213r_VFMSUBSSr213r_Int_VFMSUBSSr231r_VFMSUBSSr231r_Int_VFNMADDPD4rr_VFNMADDPD4rrY_VFNMADDPD4rrY_REV_VFNMADDPD4rr_REV_VFNMADDPDr132r_VFNMADDPDr132rY_VFNMADDPDr213r_VFNMADDPDr213rY_VFNMADDPDr231r_VFNMADDPDr231rY_VFNMADDPS4rr_VFNMADDPS4rrY_VFNMADDPS4rrY_REV_VFNMADDPS4rr_REV_VFNMADDPSr132r_VFNMADDPSr132rY_VFNMADDPSr213r_VFNMADDPSr213rY_VFNMADDPSr231r_VFNMADDPSr231rY_VFNMADDSD4rr_VFNMADDSD4rr_Int_VFNMADDSD4rr_REV_VFNMADDSDr132r_VFNMADDSDr132r_Int_VFNMADDSDr213r_VFNMADDSDr213r_Int_VFNMADDSDr231r_VFNMADDSDr231r_Int_VFNMADDSS4rr_VFNMADDSS4rr_Int_VFNMADDSS4rr_REV_VFNMADDSSr132r_VFNMADDSSr132r_Int_VFNMADDSSr213r_VFNMADDSSr213r_Int_VFNMADDSSr231r_VFNMADDSSr231r_Int_VFNMSUBPD4rr_VFNMSUBPD4rrY_VFNMSUBPD4rrY_REV_VFNMSUBPD4rr_REV_VFNMSUBPDr132r_VFNMSUBPDr132rY_VFNMSUBPDr213r_VFNMSUBPDr213rY_VFNMSUBPDr231r_VFNMSUBPDr231rY_VFNMSUBPS4rr_VFNMSUBPS4rrY_VFNMSUBPS4rrY_REV_VFNMSUBPS4rr_REV_VFNMSUBPSr132r_VFNMSUBPSr132rY_VFNMSUBPSr213r_VFNMSUBPSr213rY_VFNMSUBPSr231r_VFNMSUBPSr231rY_VFNMSUBSD4rr_VFNMSUBSD4rr_Int_VFNMSUBSD4rr_REV_VFNMSUBSDr132r_VFNMSUBSDr132r_Int_VFNMSUBSDr213r_VFNMSUBSDr213r_Int_VFNMSUBSDr231r_VFNMSUBSDr231r_Int_VFNMSUBSS4rr_VFNMSUBSS4rr_Int_VFNMSUBSS4rr_REV_VFNMSUBSSr132r_VFNMSUBSSr132r_Int_VFNMSUBSSr213r_VFNMSUBSSr213r_Int_VFNMSUBSSr231r_VFNMSUBSSr231r_Int") 0, false, false,  0, 0,  0, 0,  0, 0}, // #927
-  {DBGFIELD("VFMADDPD4mr_VFMADDPD4mrY_VFMADDPD4rm_VFMADDPD4rmY_VFMADDPDr132m_VFMADDPDr132mY_VFMADDPDr213m_VFMADDPDr213mY_VFMADDPDr231m_VFMADDPDr231mY_VFMADDPS4mr_VFMADDPS4mrY_VFMADDPS4rm_VFMADDPS4rmY_VFMADDPSr132m_VFMADDPSr132mY_VFMADDPSr213m_VFMADDPSr213mY_VFMADDPSr231m_VFMADDPSr231mY_VFMADDSD4mr_VFMADDSD4mr_Int_VFMADDSD4rm_VFMADDSD4rm_Int_VFMADDSDr132m_VFMADDSDr132m_Int_VFMADDSDr213m_VFMADDSDr213m_Int_VFMADDSDr231m_VFMADDSDr231m_Int_VFMADDSS4mr_VFMADDSS4mr_Int_VFMADDSS4rm_VFMADDSS4rm_Int_VFMADDSSr132m_VFMADDSSr132m_Int_VFMADDSSr213m_VFMADDSSr213m_Int_VFMADDSSr231m_VFMADDSSr231m_Int_VFMADDSUBPDr132m_VFMADDSUBPDr132mY_VFMADDSUBPDr213m_VFMADDSUBPDr213mY_VFMADDSUBPDr231m_VFMADDSUBPDr231mY_VFMADDSUBPSr132m_VFMADDSUBPSr132mY_VFMADDSUBPSr213m_VFMADDSUBPSr213mY_VFMADDSUBPSr231m_VFMADDSUBPSr231mY_VFMSUBADDPDr132m_VFMSUBADDPDr132mY_VFMSUBADDPDr213m_VFMSUBADDPDr213mY_VFMSUBADDPDr231m_VFMSUBADDPDr231mY_VFMSUBADDPSr132m_VFMSUBADDPSr132mY_VFMSUBADDPSr213m_VFMSUBADDPSr213mY_VFMSUBADDPSr231m_VFMSUBADDPSr231mY_VFMSUBPD4mr_VFMSUBPD4mrY_VFMSUBPD4rm_VFMSUBPD4rmY_VFMSUBPDr132m_VFMSUBPDr132mY_VFMSUBPDr213m_VFMSUBPDr213mY_VFMSUBPDr231m_VFMSUBPDr231mY_VFMSUBPS4mr_VFMSUBPS4mrY_VFMSUBPS4rm_VFMSUBPS4rmY_VFMSUBPSr132m_VFMSUBPSr132mY_VFMSUBPSr213m_VFMSUBPSr213mY_VFMSUBPSr231m_VFMSUBPSr231mY_VFMSUBSD4mr_VFMSUBSD4mr_Int_VFMSUBSD4rm_VFMSUBSD4rm_Int_VFMSUBSDr132m_VFMSUBSDr132m_Int_VFMSUBSDr213m_VFMSUBSDr213m_Int_VFMSUBSDr231m_VFMSUBSDr231m_Int_VFMSUBSS4mr_VFMSUBSS4mr_Int_VFMSUBSS4rm_VFMSUBSS4rm_Int_VFMSUBSSr132m_VFMSUBSSr132m_Int_VFMSUBSSr213m_VFMSUBSSr213m_Int_VFMSUBSSr231m_VFMSUBSSr231m_Int_VFNMADDPD4mr_VFNMADDPD4mrY_VFNMADDPD4rm_VFNMADDPD4rmY_VFNMADDPDr132m_VFNMADDPDr132mY_VFNMADDPDr213m_VFNMADDPDr213mY_VFNMADDPDr231m_VFNMADDPDr231mY_VFNMADDPS4mr_VFNMADDPS4mrY_VFNMADDPS4rm_VFNMADDPS4rmY_VFNMADDPSr132m_VFNMADDPSr132mY_VFNMADDPSr213m_VFNMADDPSr213mY_VFNMADDPSr231m_VFNMADDPSr231mY_VFNMADDSD4mr_VFNMADDSD4mr_Int_VFNMADDSD4rm_VFNMADDSD4rm_Int_VFNMADDSDr132m_VFNMADDSDr132m_Int_VFNMADDSDr213m_VFNMADDSDr213m_Int_VFNMADDSDr231m_VFNMADDSDr231m_Int_VFNMADDSS4mr_VFNMADDSS4mr_Int_VFNMADDSS4rm_VFNMADDSS4rm_Int_VFNMADDSSr132m_VFNMADDSSr132m_Int_VFNMADDSSr213m_VFNMADDSSr213m_Int_VFNMADDSSr231m_VFNMADDSSr231m_Int_VFNMSUBPD4mr_VFNMSUBPD4mrY_VFNMSUBPD4rm_VFNMSUBPD4rmY_VFNMSUBPDr132m_VFNMSUBPDr132mY_VFNMSUBPDr213m_VFNMSUBPDr213mY_VFNMSUBPDr231m_VFNMSUBPDr231mY_VFNMSUBPS4mr_VFNMSUBPS4mrY_VFNMSUBPS4rm_VFNMSUBPS4rmY_VFNMSUBPSr132m_VFNMSUBPSr132mY_VFNMSUBPSr213m_VFNMSUBPSr213mY_VFNMSUBPSr231m_VFNMSUBPSr231mY_VFNMSUBSD4mr_VFNMSUBSD4mr_Int_VFNMSUBSD4rm_VFNMSUBSD4rm_Int_VFNMSUBSDr132m_VFNMSUBSDr132m_Int_VFNMSUBSDr213m_VFNMSUBSDr213m_Int_VFNMSUBSDr231m_VFNMSUBSDr231m_Int_VFNMSUBSS4mr_VFNMSUBSS4mr_Int_VFNMSUBSS4rm_VFNMSUBSS4rm_Int_VFNMSUBSSr132m_VFNMSUBSSr132m_Int_VFNMSUBSSr213m_VFNMSUBSSr213m_Int_VFNMSUBSSr231m_VFNMSUBSSr231m_Int") 0, false, false,  0, 0,  0, 0,  0, 0}, // #928
-  {DBGFIELD("VSQRTPSYr")          1, false, false, 1099, 4, 24, 1,  0, 0}, // #929
-  {DBGFIELD("VSQRTPSYm")          1, false, false, 1093, 5, 23, 1,  0, 0}, // #930
-  {DBGFIELD("VSQRTPDYr")          1, false, false, 1099, 4, 24, 1,  0, 0}, // #931
-  {DBGFIELD("VSQRTPDYm")          1, false, false, 1093, 5, 23, 1,  0, 0}, // #932
-  {DBGFIELD("RSQRTPSr_VRSQRTPSr") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #933
-  {DBGFIELD("RSQRTSSr_VRSQRTSSr") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #934
-  {DBGFIELD("RSQRTSSr_Int")       1, false, false, 1093, 5, 15, 1,  1, 1}, // #935
-  {DBGFIELD("VRSQRTSSr_Int")      1, false, false, 1093, 5, 15, 1,  0, 0}, // #936
-  {DBGFIELD("RSQRTPSm_VRSQRTPSm") 1, false, false, 1093, 5, 15, 1,  0, 0}, // #937
-  {DBGFIELD("RSQRTSSm_VRSQRTSSm") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #938
-  {DBGFIELD("RSQRTSSm_Int_VRSQRTSSm_Int") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #939
-  {DBGFIELD("VRSQRTPSYr")         1, false, false, 1099, 4,  3, 1,  0, 0}, // #940
-  {DBGFIELD("VRSQRTPSYm")         1, false, false, 1093, 5, 15, 1,  0, 0}, // #941
-  {DBGFIELD("ANDNPDrr_ANDNPSrr_ANDPDrr_ANDPSrr_ORPDrr_ORPSrr_VANDNPDYrr_VANDNPDrr_VANDNPSYrr_VANDNPSrr_VANDPDYrr_VANDPDrr_VANDPSYrr_VANDPSrr_VORPDYrr_VORPDrr_VORPSYrr_VORPSrr_VXORPDYrr_VXORPDrr_VXORPSYrr_VXORPSrr_XORPDrr_XORPSrr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #942
-  {DBGFIELD("ANDNPDrm_ANDNPSrm_ANDPDrm_ANDPSrm_ORPDrm_ORPSrm_VANDNPDYrm_VANDNPDrm_VANDNPSYrm_VANDNPSrm_VANDPDYrm_VANDPDrm_VANDPSYrm_VANDPSrm_VORPDYrm_VORPDrm_VORPSYrm_VORPSrm_VXORPDYrm_VXORPDrm_VXORPSYrm_VXORPSrm_XORPDrm_XORPSrm") 1, false, false, 918, 3,  3, 1,  1, 1}, // #943
-  {DBGFIELD("VZEROUPPER")         0, false, false,  0, 0,  0, 0,  0, 0}, // #944
-  {DBGFIELD("VZEROALL")           0, false, false,  0, 0,  0, 0,  0, 0}, // #945
-  {DBGFIELD("LDMXCSR_VLDMXCSR")   1, false, false, 282, 2,  9, 1,  0, 0}, // #946
-  {DBGFIELD("STMXCSR_VSTMXCSR")   1, false, false, 442, 3,  2, 1,  0, 0} // #947
+  {DBGFIELD("IIC_SSE_HADDSUB_RM_WriteFAddLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #158
+  {DBGFIELD("IIC_SSE_HADDSUB_RR_WriteFAdd") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #159
+  {DBGFIELD("IIC_HLT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #160
+  {DBGFIELD("IIC_IDIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1092, 6, 11, 1,  2, 2}, // #161
+  {DBGFIELD("IIC_IDIV16_WriteIDiv") 1, false, false, 1098, 5, 12, 1,  0, 0}, // #162
+  {DBGFIELD("IIC_IDIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1092, 6, 11, 1,  2, 2}, // #163
+  {DBGFIELD("IIC_IDIV32_WriteIDiv") 1, false, false, 1098, 5, 12, 1,  0, 0}, // #164
+  {DBGFIELD("IIC_IDIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1092, 6, 11, 1,  2, 2}, // #165
+  {DBGFIELD("IIC_IDIV64_WriteIDiv") 1, false, false, 1098, 5, 12, 1,  0, 0}, // #166
+  {DBGFIELD("IIC_IDIV8_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1092, 6, 11, 1,  2, 2}, // #167
+  {DBGFIELD("IIC_IDIV8_WriteIDiv") 1, false, false, 1098, 5, 12, 1,  0, 0}, // #168
+  {DBGFIELD("IIC_FILD_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #169
+  {DBGFIELD("IIC_IMUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #170
+  {DBGFIELD("IIC_IMUL16_RR_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #171
+  {DBGFIELD("IIC_IMUL16_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #172
+  {DBGFIELD("IIC_IMUL16_RMI_WriteIMulLd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #173
+  {DBGFIELD("IIC_IMUL16_RRI_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #174
+  {DBGFIELD("IIC_IMUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #175
+  {DBGFIELD("IIC_IMUL32_RR_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #176
+  {DBGFIELD("IIC_IMUL32_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #177
+  {DBGFIELD("IIC_IMUL32_RMI_WriteIMulLd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #178
+  {DBGFIELD("IIC_IMUL32_RRI_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #179
+  {DBGFIELD("IIC_IMUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #180
+  {DBGFIELD("IIC_IMUL64_RR_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #181
+  {DBGFIELD("IIC_IMUL64_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #182
+  {DBGFIELD("IIC_IMUL64_RMI_WriteIMulLd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #183
+  {DBGFIELD("IIC_IMUL64_RRI_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #184
+  {DBGFIELD("IIC_IMUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #185
+  {DBGFIELD("IIC_IMUL8_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #186
+  {DBGFIELD("IIC_IN_RI_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #187
+  {DBGFIELD("IIC_IN_RR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #188
+  {DBGFIELD("IIC_INS_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #189
+  {DBGFIELD("IIC_SSE_INSERTPS_RM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1081, 6,  3, 1,  1, 1}, // #190
+  {DBGFIELD("IIC_SSE_INSERTPS_RR_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #191
+  {DBGFIELD("IIC_INT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #192
+  {DBGFIELD("IIC_INT3_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #193
+  {DBGFIELD("IIC_INVD_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #194
+  {DBGFIELD("IIC_INVLPG_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #195
+  {DBGFIELD("WriteJumpLd")        1, false, false, 1081, 6,  3, 1,  0, 0}, // #196
+  {DBGFIELD("IIC_IRET_WriteJumpLd") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #197
+  {DBGFIELD("IIC_FST_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #198
+  {DBGFIELD("IIC_FIST_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #199
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #200
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd_ReadAfterLd") 1, false, false, 1057, 5, 10, 1,  1, 1}, // #201
+  {DBGFIELD("WriteLoad")          1, false, false, 282, 2,  9, 1,  0, 0}, // #202
+  {DBGFIELD("IIC_Jcc_WriteJump")  1, false, false, 1087, 5,  2, 1,  0, 0}, // #203
+  {DBGFIELD("IIC_JCXZ_WriteJump") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #204
+  {DBGFIELD("IIC_JMP_MEM_WriteJumpLd") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #205
+  {DBGFIELD("IIC_JMP_REG_WriteJump") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #206
+  {DBGFIELD("IIC_JMP_REL_WriteJump") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #207
+  {DBGFIELD("IIC_AHF_WriteALU")   1, false, false, 108, 2,  2, 1,  0, 0}, // #208
+  {DBGFIELD("IIC_LAR_RM_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #209
+  {DBGFIELD("IIC_LAR_RR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #210
+  {DBGFIELD("IIC_CMPX_LOCK_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #211
+  {DBGFIELD("IIC_CMPX_LOCK_16B_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #212
+  {DBGFIELD("IIC_CMPX_LOCK_8_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #213
+  {DBGFIELD("IIC_CMPX_LOCK_8B_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #214
+  {DBGFIELD("IIC_SSE_LDDQU_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #215
+  {DBGFIELD("IIC_SSE_LDMXCSR_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #216
+  {DBGFIELD("IIC_LXS_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #217
+  {DBGFIELD("IIC_FLDZ_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #218
+  {DBGFIELD("IIC_FIST_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #219
+  {DBGFIELD("IIC_FLD_WriteLoad")  1, false, false, 282, 2,  9, 1,  0, 0}, // #220
+  {DBGFIELD("IIC_FLD80_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #221
+  {DBGFIELD("IIC_FLD_WriteMove")  1, false, false, 108, 2,  2, 1,  0, 0}, // #222
+  {DBGFIELD("IIC_LEA_16_WriteLEA") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #223
+  {DBGFIELD("IIC_LEA_WriteLEA")   1, false, false, 1063, 3,  2, 1,  0, 0}, // #224
+  {DBGFIELD("IIC_LEAVE_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #225
+  {DBGFIELD("IIC_SSE_LFENCE_WriteFence") 1, false, false, 442, 3,  2, 1,  0, 0}, // #226
+  {DBGFIELD("IIC_LGDT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #227
+  {DBGFIELD("IIC_LIDT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #228
+  {DBGFIELD("IIC_LLDT_MEM_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #229
+  {DBGFIELD("IIC_LLDT_REG_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #230
+  {DBGFIELD("IIC_LMSW_REG_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #231
+  {DBGFIELD("IIC_LMSW_MEM_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #232
+  {DBGFIELD("IIC_ALU_MEM_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #233
+  {DBGFIELD("IIC_ALU_NONMEM_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #234
+  {DBGFIELD("IIC_LODS_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #235
+  {DBGFIELD("IIC_LOOP_WriteJump") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #236
+  {DBGFIELD("IIC_LOOPE_WriteJump") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #237
+  {DBGFIELD("IIC_LOOPNE_WriteJump") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #238
+  {DBGFIELD("IIC_RET_WriteJumpLd") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #239
+  {DBGFIELD("IIC_LSL_RM_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #240
+  {DBGFIELD("IIC_LSL_RR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #241
+  {DBGFIELD("IIC_LTR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #242
+  {DBGFIELD("IIC_XADD_LOCK_MEM_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #243
+  {DBGFIELD("IIC_XADD_LOCK_MEM8_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #244
+  {DBGFIELD("IIC_SSE_MASKMOV_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #245
+  {DBGFIELD("IIC_SSE_MFENCE_WriteFence") 1, false, false, 442, 3,  2, 1,  0, 0}, // #246
+  {DBGFIELD("IIC_MMX_CVT_PD_RM_WriteCvtF2ILd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #247
+  {DBGFIELD("IIC_MMX_CVT_PD_RR_WriteCvtF2I") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #248
+  {DBGFIELD("WriteCvtI2FLd")      1, false, false, 1057, 5, 10, 1,  0, 0}, // #249
+  {DBGFIELD("WriteCvtI2F")        1, false, false, 1062, 4,  9, 1,  0, 0}, // #250
+  {DBGFIELD("IIC_MMX_CVT_PS_RM_WriteCvtF2ILd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #251
+  {DBGFIELD("IIC_MMX_CVT_PS_RR_WriteCvtF2I") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #252
+  {DBGFIELD("IIC_MMX_EMMS")       0, false, false,  0, 0,  0, 0,  0, 0}, // #253
+  {DBGFIELD("IIC_MMX_MASKMOV_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #254
+  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #255
+  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #256
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #257
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #258
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #259
+  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #260
+  {DBGFIELD("IIC_MMX_MOVQ_RR_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #261
+  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #262
+  {DBGFIELD("WriteMove")          1, false, false, 108, 2,  2, 1,  0, 0}, // #263
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd") 1, false, false, 917, 4,  3, 1,  0, 0}, // #264
+  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #265
+  {DBGFIELD("IIC_MMX_PCK_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #266
+  {DBGFIELD("IIC_MMX_PCK_RR_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #267
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #268
+  {DBGFIELD("IIC_MMX_ALUQ_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #269
+  {DBGFIELD("IIC_MMX_ALUQ_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #270
+  {DBGFIELD("WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #271
+  {DBGFIELD("WriteShuffle")       1, false, false, 1063, 3,  2, 1,  0, 0}, // #272
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 918, 3,  3, 1,  1, 1}, // #273
+  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecLogic") 1, false, false, 108, 2,  2, 1,  0, 0}, // #274
+  {DBGFIELD("IIC_MMX_MISC_FUNC_REG_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #275
+  {DBGFIELD("IIC_MMX_MISC_FUNC_MEM_WriteVecIMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #276
+  {DBGFIELD("IIC_MMX_PEXTR_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #277
+  {DBGFIELD("IIC_MMX_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #278
+  {DBGFIELD("IIC_MMX_PHADDSUBW_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #279
+  {DBGFIELD("IIC_MMX_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #280
+  {DBGFIELD("IIC_MMX_PHADDSUBD_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #281
+  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #282
+  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #283
+  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #284
+  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #285
+  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #286
+  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #287
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #288
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #289
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd") 1, false, false, 917, 4,  3, 1,  0, 0}, // #290
+  {DBGFIELD("IIC_MMX_SHIFT_RI_WriteVecShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #291
+  {DBGFIELD("IIC_MMX_SHIFT_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 1074, 4,  3, 1,  1, 1}, // #292
+  {DBGFIELD("IIC_MMX_SHIFT_RR_WriteVecShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #293
+  {DBGFIELD("IIC_MMX_UNPCK_H_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #294
+  {DBGFIELD("IIC_MMX_UNPCK_H_RR_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #295
+  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #296
+  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #297
+  {DBGFIELD("IIC_SSE_MONITORX_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #298
+  {DBGFIELD("IIC_SSE_MONITOR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #299
+  {DBGFIELD("IIC_MOV_MEM_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #300
+  {DBGFIELD("IIC_MOV_MEM_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #301
+  {DBGFIELD("IIC_MOV_MEM_SR_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #302
+  {DBGFIELD("IIC_MOV_WriteMove")  1, false, false, 108, 2,  2, 1,  0, 0}, // #303
+  {DBGFIELD("IIC_MOV_MEM_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #304
+  {DBGFIELD("IIC_MOV_REG_SR_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #305
+  {DBGFIELD("IIC_MOV_SR_MEM_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #306
+  {DBGFIELD("IIC_MOV_SR_REG_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #307
+  {DBGFIELD("IIC_MOV_CR_REG_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #308
+  {DBGFIELD("IIC_MOV_DR_REG_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #309
+  {DBGFIELD("IIC_ALU_NONMEM_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #310
+  {DBGFIELD("IIC_MOV_REG_CR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #311
+  {DBGFIELD("IIC_MOV_REG_DR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #312
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #313
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #314
+  {DBGFIELD("IIC_SSE_MOVA_P_MR_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #315
+  {DBGFIELD("IIC_SSE_MOVA_P_RM_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #316
+  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #317
+  {DBGFIELD("IIC_MOVBE_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #318
+  {DBGFIELD("IIC_MOVBE_WriteALULd") 1, false, false, 918, 3,  3, 1,  0, 0}, // #319
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #320
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #321
+  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #322
+  {DBGFIELD("IIC_SSE_MOVU_P_MR_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #323
+  {DBGFIELD("IIC_SSE_MOVU_P_RM_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #324
+  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #325
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #326
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1081, 6,  3, 1,  1, 1}, // #327
+  {DBGFIELD("IIC_SSE_MOVMSK_WriteVecLogic") 1, false, false, 108, 2,  2, 1,  0, 0}, // #328
+  {DBGFIELD("IIC_SSE_MOVNT_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #329
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #330
+  {DBGFIELD("IIC_SSE_MOVD_ToGP_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #331
+  {DBGFIELD("IIC_SSE_MOVQ_RR_WriteVecLogic") 1, false, false, 108, 2,  2, 1,  0, 0}, // #332
+  {DBGFIELD("IIC_MOVS_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #333
+  {DBGFIELD("IIC_SSE_MOV_S_MR_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #334
+  {DBGFIELD("IIC_SSE_MOV_S_RM_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #335
+  {DBGFIELD("IIC_SSE_MOV_S_RR_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #336
+  {DBGFIELD("IIC_MOVSX_R16_M8_WriteALULd") 1, false, false, 918, 3,  3, 1,  0, 0}, // #337
+  {DBGFIELD("IIC_MOVSX_R16_R8_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #338
+  {DBGFIELD("IIC_MOVSX_WriteALULd") 1, false, false, 918, 3,  3, 1,  0, 0}, // #339
+  {DBGFIELD("IIC_MOVSX_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #340
+  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #341
+  {DBGFIELD("IIC_MOVZX_R16_M8_WriteALULd") 1, false, false, 918, 3,  3, 1,  0, 0}, // #342
+  {DBGFIELD("IIC_MOVZX_R16_R8_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #343
+  {DBGFIELD("IIC_MOVZX_WriteALULd") 1, false, false, 918, 3,  3, 1,  0, 0}, // #344
+  {DBGFIELD("IIC_MOVZX_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #345
+  {DBGFIELD("IIC_SSE_MPSADBW_RM_WriteMPSADLd_ReadAfterLd") 1, false, false, 1108, 8, 16, 1,  1, 1}, // #346
+  {DBGFIELD("IIC_SSE_MPSADBW_RR_WriteMPSAD") 1, false, false, 1116, 7, 16, 1,  0, 0}, // #347
+  {DBGFIELD("IIC_MUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #348
+  {DBGFIELD("IIC_MUL16_REG_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #349
+  {DBGFIELD("IIC_MUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #350
+  {DBGFIELD("IIC_MUL32_REG_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #351
+  {DBGFIELD("IIC_MUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #352
+  {DBGFIELD("IIC_MUL64_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #353
+  {DBGFIELD("IIC_MUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  2, 2}, // #354
+  {DBGFIELD("IIC_MUL8_WriteIMul") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #355
+  {DBGFIELD("IIC_SSE_MUL_F64P_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #356
+  {DBGFIELD("IIC_SSE_MUL_F64P_RR_WriteFMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #357
+  {DBGFIELD("IIC_SSE_MUL_F32P_RR_WriteFMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #358
+  {DBGFIELD("IIC_SSE_MUL_F64S_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #359
+  {DBGFIELD("IIC_SSE_MUL_F64S_RR_WriteFMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #360
+  {DBGFIELD("IIC_SSE_MUL_F32S_RR_WriteFMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #361
+  {DBGFIELD("IIC_MUL8_WriteIMulLd_WriteIMulH") 2, false, false, 1057, 5,  5, 2,  0, 0}, // #362
+  {DBGFIELD("IIC_MUL8_WriteIMul_WriteIMulH") 2, false, false, 1062, 4, 17, 2,  0, 0}, // #363
+  {DBGFIELD("WriteFMulLd")        1, false, false, 1093, 5, 15, 1,  0, 0}, // #364
+  {DBGFIELD("WriteFMul")          1, false, false, 1099, 4,  3, 1,  0, 0}, // #365
+  {DBGFIELD("IIC_SSE_MWAITX_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #366
+  {DBGFIELD("IIC_SSE_MWAIT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #367
+  {DBGFIELD("IIC_NOP_WriteZero")  1, false, false,  0, 0,  2, 1,  0, 0}, // #368
+  {DBGFIELD("IIC_OUT_IR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #369
+  {DBGFIELD("IIC_OUT_RR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #370
+  {DBGFIELD("IIC_OUTS_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #371
+  {DBGFIELD("IIC_SSE_PABS_RM_WriteVecALULd") 1, false, false, 917, 4,  3, 1,  0, 0}, // #372
+  {DBGFIELD("IIC_SSE_PABS_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #373
+  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #374
+  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #375
+  {DBGFIELD("IIC_SSE_INTALUQ_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #376
+  {DBGFIELD("IIC_SSE_INTALUQ_P_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #377
+  {DBGFIELD("IIC_SSE_PALIGNRM_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #378
+  {DBGFIELD("IIC_SSE_PALIGNRR_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #379
+  {DBGFIELD("IIC_SSE_BIT_P_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 918, 3,  3, 1,  1, 1}, // #380
+  {DBGFIELD("IIC_SSE_BIT_P_RR_WriteVecLogic") 1, false, false, 108, 2,  2, 1,  0, 0}, // #381
+  {DBGFIELD("IIC_SSE_PAUSE_WriteNop") 1, false, false,  0, 0,  2, 1,  0, 0}, // #382
+  {DBGFIELD("IIC_ALU_MEM_WriteVarBlendLd_ReadAfterLd") 1, false, false, 1123, 7, 16, 1,  1, 1}, // #383
+  {DBGFIELD("IIC_ALU_NONMEM_WriteVarBlend") 1, false, false, 1130, 6, 19, 1,  0, 0}, // #384
+  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteBlendLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #385
+  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteBlend") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #386
+  {DBGFIELD("IIC_SSE_PCLMULQDQ_RM_WriteCLMulLd_ReadAfterLd") 1, false, false, 1136, 3,  7, 1,  1, 1}, // #387
+  {DBGFIELD("IIC_SSE_PCLMULQDQ_RR_WriteCLMul") 1, false, false, 1139, 2,  7, 1,  0, 0}, // #388
+  {DBGFIELD("WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #389
+  {DBGFIELD("WriteVecALU")        1, false, false, 1063, 3,  2, 1,  0, 0}, // #390
+  {DBGFIELD("WritePCmpEStrILd_ReadAfterLd") 1, false, false, 1141, 3,  9, 1,  1, 1}, // #391
+  {DBGFIELD("WritePCmpEStrI")     1, false, false, 1144, 2,  9, 1,  0, 0}, // #392
+  {DBGFIELD("WritePCmpEStrMLd_ReadAfterLd") 1, false, false, 1141, 3, 20, 1,  1, 1}, // #393
+  {DBGFIELD("WritePCmpEStrM")     1, false, false, 1144, 2, 20, 1,  0, 0}, // #394
+  {DBGFIELD("WritePCmpIStrILd_ReadAfterLd") 1, false, false, 1113, 3,  6, 1,  1, 1}, // #395
+  {DBGFIELD("WritePCmpIStrI")     1, false, false, 249, 2,  6, 1,  0, 0}, // #396
+  {DBGFIELD("WritePCmpIStrMLd_ReadAfterLd") 1, false, false, 1113, 3, 20, 1,  1, 1}, // #397
+  {DBGFIELD("WritePCmpIStrM")     1, false, false, 249, 2, 20, 1,  0, 0}, // #398
+  {DBGFIELD("WriteShuffleLd_WriteRMW") 2, false, false, 1146, 5,  3, 2,  0, 0}, // #399
+  {DBGFIELD("IIC_SSE_PEXTRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #400
+  {DBGFIELD("IIC_SSE_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #401
+  {DBGFIELD("IIC_SSE_PHADDSUBD_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #402
+  {DBGFIELD("IIC_SSE_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #403
+  {DBGFIELD("IIC_SSE_PHADDSUBW_RR_WriteVecALU") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #404
+  {DBGFIELD("WriteVecIMulLd")     1, false, false, 1093, 5, 15, 1,  0, 0}, // #405
+  {DBGFIELD("WriteVecIMul")       1, false, false, 1099, 4,  3, 1,  0, 0}, // #406
+  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #407
+  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #408
+  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #409
+  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #410
+  {DBGFIELD("WriteVecIMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #411
+  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteShuffleLd") 1, false, false, 917, 4,  3, 1,  0, 0}, // #412
+  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #413
+  {DBGFIELD("IIC_SSE_PMULHRSW_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #414
+  {DBGFIELD("IIC_SSE_PMULHRSW_WriteVecIMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #415
+  {DBGFIELD("IIC_SSE_INTMUL_P_RM_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #416
+  {DBGFIELD("IIC_SSE_INTMUL_P_RR_WriteVecIMul") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #417
+  {DBGFIELD("IIC_POP_REG16_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #418
+  {DBGFIELD("IIC_POP_MEM_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #419
+  {DBGFIELD("IIC_POP_REG_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #420
+  {DBGFIELD("IIC_POP_A_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #421
+  {DBGFIELD("IIC_SSE_POPCNT_RM_WriteFAddLd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #422
+  {DBGFIELD("IIC_SSE_POPCNT_RR_WriteFAdd") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #423
+  {DBGFIELD("IIC_POP_SR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #424
+  {DBGFIELD("IIC_POP_F_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #425
+  {DBGFIELD("IIC_POP_FD_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #426
+  {DBGFIELD("IIC_POP_SR_SS_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #427
+  {DBGFIELD("IIC_SSE_PSHUFB_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #428
+  {DBGFIELD("IIC_SSE_PSHUFB_RR_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #429
+  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #430
+  {DBGFIELD("IIC_SSE_PSHUF_RI_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #431
+  {DBGFIELD("IIC_SSE_INTSHDQ_P_RI_WriteVecShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #432
+  {DBGFIELD("IIC_SSE_INTSH_P_RI_WriteVecShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #433
+  {DBGFIELD("IIC_SSE_INTSH_P_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 1074, 4,  3, 1,  1, 1}, // #434
+  {DBGFIELD("IIC_SSE_INTSH_P_RR_WriteVecShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #435
+  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffleLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #436
+  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #437
+  {DBGFIELD("IIC_PUSH_IMM_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #438
+  {DBGFIELD("IIC_PUSH_REG_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #439
+  {DBGFIELD("IIC_PUSH_MEM_WriteRMW") 1, false, false, 1151, 2,  2, 1,  0, 0}, // #440
+  {DBGFIELD("IIC_PUSH_A_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #441
+  {DBGFIELD("IIC_PUSH_SR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #442
+  {DBGFIELD("IIC_PUSH_CS_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #443
+  {DBGFIELD("IIC_PUSH_F_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #444
+  {DBGFIELD("IIC_SR_WriteShiftLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #445
+  {DBGFIELD("IIC_SR_WriteShift")  1, false, false, 1078, 3,  2, 1,  0, 0}, // #446
+  {DBGFIELD("IIC_SSE_RCPP_RM_WriteFRcpLd") 1, false, false, 1093, 5, 15, 1,  0, 0}, // #447
+  {DBGFIELD("IIC_SSE_RCPP_RR_WriteFRcp") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #448
+  {DBGFIELD("IIC_SSE_RCPS_RM_WriteFRcpLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #449
+  {DBGFIELD("WriteFRcpLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #450
+  {DBGFIELD("IIC_SSE_RCPS_RR_WriteFRcp") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #451
+  {DBGFIELD("WriteRMW")           1, false, false, 1151, 2,  2, 1,  0, 0}, // #452
+  {DBGFIELD("IIC_RDMSR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #453
+  {DBGFIELD("IIC_RDPMC_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #454
+  {DBGFIELD("IIC_RDTSC_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #455
+  {DBGFIELD("IIC_REP_MOVS_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #456
+  {DBGFIELD("IIC_REP_STOS_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #457
+  {DBGFIELD("IIC_RET_IMM_WriteJumpLd") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #458
+  {DBGFIELD("WriteShiftLd")       1, false, false, 1074, 4,  3, 1,  0, 0}, // #459
+  {DBGFIELD("WriteShift")         1, false, false, 1078, 3,  2, 1,  0, 0}, // #460
+  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAddLd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #461
+  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAdd") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #462
+  {DBGFIELD("IIC_SSE_ROUNDPS_MEM_WriteFAddLd") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #463
+  {DBGFIELD("WriteFAddLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #464
+  {DBGFIELD("IIC_RSM_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #465
+  {DBGFIELD("IIC_SSE_RSQRTPS_RM_WriteFRsqrtLd") 1, false, false, 1093, 5, 15, 1,  0, 0}, // #466
+  {DBGFIELD("IIC_SSE_RSQRTPS_RR_WriteFRsqrt") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #467
+  {DBGFIELD("IIC_SSE_RSQRTSS_RM_WriteFRsqrtLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #468
+  {DBGFIELD("WriteFRsqrtLd_ReadAfterLd") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #469
+  {DBGFIELD("IIC_SSE_RSQRTSS_RR_WriteFRsqrt") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #470
+  {DBGFIELD("WriteShiftLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd") 1, false, false, 1074, 4,  3, 1,  2, 1}, // #471
+  {DBGFIELD("IIC_SCAS_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #472
+  {DBGFIELD("IIC_SET_M_WriteALU_WriteStore") 2, false, false, 1053, 4, 21, 2,  0, 0}, // #473
+  {DBGFIELD("IIC_SET_R_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #474
+  {DBGFIELD("IIC_SSE_SFENCE_WriteFence") 1, false, false, 442, 3,  2, 1,  0, 0}, // #475
+  {DBGFIELD("IIC_SGDT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #476
+  {DBGFIELD("IIC_SHD16_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #477
+  {DBGFIELD("IIC_SHD16_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #478
+  {DBGFIELD("IIC_SHD16_REG_CL_WriteShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #479
+  {DBGFIELD("IIC_SHD16_REG_IM_WriteShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #480
+  {DBGFIELD("IIC_SHD32_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #481
+  {DBGFIELD("IIC_SHD32_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #482
+  {DBGFIELD("IIC_SHD32_REG_CL_WriteShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #483
+  {DBGFIELD("IIC_SHD32_REG_IM_WriteShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #484
+  {DBGFIELD("IIC_SHD64_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #485
+  {DBGFIELD("IIC_SHD64_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #486
+  {DBGFIELD("IIC_SHD64_REG_CL_WriteShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #487
+  {DBGFIELD("IIC_SHD64_REG_IM_WriteShift") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #488
+  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1081, 6,  3, 1,  1, 1}, // #489
+  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #490
+  {DBGFIELD("IIC_SIDT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #491
+  {DBGFIELD("IIC_SLDT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #492
+  {DBGFIELD("IIC_SMSW_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #493
+  {DBGFIELD("IIC_SSE_SQRTPD_RM_WriteFSqrtLd") 1, false, false, 1093, 5, 23, 1,  0, 0}, // #494
+  {DBGFIELD("IIC_SSE_SQRTPD_RR_WriteFSqrt") 1, false, false, 1099, 4, 24, 1,  0, 0}, // #495
+  {DBGFIELD("IIC_SSE_SQRTPS_RM_WriteFSqrtLd") 1, false, false, 1093, 5, 23, 1,  0, 0}, // #496
+  {DBGFIELD("IIC_SSE_SQRTPS_RR_WriteFSqrt") 1, false, false, 1099, 4, 24, 1,  0, 0}, // #497
+  {DBGFIELD("IIC_SSE_SQRTSD_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 1093, 5, 23, 1,  1, 1}, // #498
+  {DBGFIELD("WriteFSqrtLd_ReadAfterLd") 1, false, false, 1093, 5, 23, 1,  1, 1}, // #499
+  {DBGFIELD("IIC_SSE_SQRTSD_RR_WriteFSqrt") 1, false, false, 1099, 4, 24, 1,  0, 0}, // #500
+  {DBGFIELD("IIC_SSE_SQRTSS_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 1093, 5, 23, 1,  1, 1}, // #501
+  {DBGFIELD("IIC_SSE_SQRTSS_RR_WriteFSqrt") 1, false, false, 1099, 4, 24, 1,  0, 0}, // #502
+  {DBGFIELD("WriteFSqrt")         1, false, false, 1099, 4, 24, 1,  0, 0}, // #503
+  {DBGFIELD("IIC_STC_WriteALU")   1, false, false, 108, 2,  2, 1,  0, 0}, // #504
+  {DBGFIELD("IIC_STD_WriteALU")   1, false, false, 108, 2,  2, 1,  0, 0}, // #505
+  {DBGFIELD("IIC_STI_WriteALU")   1, false, false, 108, 2,  2, 1,  0, 0}, // #506
+  {DBGFIELD("IIC_SSE_STMXCSR_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #507
+  {DBGFIELD("IIC_STOS_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #508
+  {DBGFIELD("IIC_STR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #509
+  {DBGFIELD("IIC_FST80_WriteStore") 1, false, false, 442, 3,  2, 1,  0, 0}, // #510
+  {DBGFIELD("IIC_FST_WriteMove")  1, false, false, 108, 2,  2, 1,  0, 0}, // #511
+  {DBGFIELD("IIC_SWAPGS_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #512
+  {DBGFIELD("IIC_SYSCALL_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #513
+  {DBGFIELD("IIC_SYS_ENTER_EXIT_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #514
+  {DBGFIELD("IIC_JMP_REL_WriteJumpLd") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #515
+  {DBGFIELD("IIC_JMP_MEM_WriteJump") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #516
+  {DBGFIELD("IIC_JMP_REG_WriteJumpLd") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #517
+  {DBGFIELD("WriteJump")          1, false, false, 1087, 5,  2, 1,  0, 0}, // #518
+  {DBGFIELD("IIC_FUCOMI_WriteFAdd") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #519
+  {DBGFIELD("IIC_FUCOM_WriteFAdd") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #520
+  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1081, 6,  3, 1,  1, 1}, // #521
+  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #522
+  {DBGFIELD("IIC_SSE_ALU_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #523
+  {DBGFIELD("IIC_SSE_ALU_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #524
+  {DBGFIELD("IIC_SSE_ALU_F32S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #525
+  {DBGFIELD("IIC_SSE_ALU_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #526
+  {DBGFIELD("WriteFVarBlendLd_ReadAfterLd") 1, false, false, 1153, 7, 16, 1,  1, 1}, // #527
+  {DBGFIELD("WriteFVarBlend")     1, false, false, 1160, 6, 19, 1,  0, 0}, // #528
+  {DBGFIELD("WriteFShuffleLd")    1, false, false, 1081, 6,  3, 1,  0, 0}, // #529
+  {DBGFIELD("WriteFShuffle256")   1, false, false, 1099, 4,  2, 1,  0, 0}, // #530
+  {DBGFIELD("WriteFShuffle")      1, false, false, 1087, 5,  2, 1,  0, 0}, // #531
+  {DBGFIELD("IIC_SSE_ALU_F32P_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #532
+  {DBGFIELD("WriteCvtF2ILd")      1, false, false, 1057, 5,  5, 1,  0, 0}, // #533
+  {DBGFIELD("WriteCvtF2I")        1, false, false, 1062, 4,  6, 1,  0, 0}, // #534
+  {DBGFIELD("WriteCvtF2FLd")      1, false, false, 1057, 5,  5, 1,  0, 0}, // #535
+  {DBGFIELD("WriteCvtF2F")        1, false, false, 1062, 4,  6, 1,  0, 0}, // #536
+  {DBGFIELD("WriteCvtF2FLd_WriteRMW") 2, false, false, 1166, 6, 25, 2,  0, 0}, // #537
+  {DBGFIELD("WriteCvtF2FLd_ReadAfterLd") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #538
+  {DBGFIELD("WriteCvtI2FLd_ReadAfterLd") 1, false, false, 1057, 5, 10, 1,  1, 1}, // #539
+  {DBGFIELD("IIC_SSE_DIV_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #540
+  {DBGFIELD("IIC_SSE_DIV_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #541
+  {DBGFIELD("IIC_SSE_DIV_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #542
+  {DBGFIELD("IIC_VERR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #543
+  {DBGFIELD("IIC_VERW_REG_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #544
+  {DBGFIELD("IIC_VERW_MEM_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #545
+  {DBGFIELD("WriteStore")         1, false, false, 442, 3,  2, 1,  0, 0}, // #546
+  {DBGFIELD("WriteShuffle256")    1, false, false, 1099, 4,  2, 1,  0, 0}, // #547
+  {DBGFIELD("IIC_ALU_MEM_WriteFBlendLd_WriteRMW") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #548
+  {DBGFIELD("WriteFShuffleLd_ReadAfterLd") 1, false, false, 1081, 6,  3, 1,  1, 1}, // #549
+  {DBGFIELD("WriteShuffle256Ld_ReadAfterLd") 1, false, false, 1093, 5,  3, 1,  1, 1}, // #550
+  {DBGFIELD("IIC_ALU_MEM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1081, 6,  3, 1,  1, 1}, // #551
+  {DBGFIELD("IIC_ALU_NONMEM_WriteFShuffle") 1, false, false, 1087, 5,  2, 1,  0, 0}, // #552
+  {DBGFIELD("IIC_SSE_MOVDQ")      0, false, false,  0, 0,  0, 0,  0, 0}, // #553
+  {DBGFIELD("IIC_SSE_MOV_LH")     0, false, false,  0, 0,  0, 0,  0, 0}, // #554
+  {DBGFIELD("IIC_SSE_MOVD_ToGP")  0, false, false,  0, 0,  0, 0,  0, 0}, // #555
+  {DBGFIELD("IIC_SSE_MOV_S_MR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #556
+  {DBGFIELD("IIC_SSE_MOV_S_RM")   0, false, false,  0, 0,  0, 0,  0, 0}, // #557
+  {DBGFIELD("IIC_SSE_MOV_S_RR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #558
+  {DBGFIELD("IIC_SSE_MOVQ_RR")    0, false, false,  0, 0,  0, 0,  0, 0}, // #559
+  {DBGFIELD("IIC_ALU_MEM_WriteMPSADLd_ReadAfterLd") 1, false, false, 1108, 8, 16, 1,  1, 1}, // #560
+  {DBGFIELD("IIC_ALU_NONMEM_WriteMPSAD") 1, false, false, 1116, 7, 16, 1,  0, 0}, // #561
+  {DBGFIELD("IIC_SSE_MUL_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #562
+  {DBGFIELD("IIC_SSE_MUL_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #563
+  {DBGFIELD("IIC_SSE_MUL_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #564
+  {DBGFIELD("WriteVecALULd")      1, false, false, 917, 4,  3, 1,  0, 0}, // #565
+  {DBGFIELD("IIC_SSE_INTALU_P_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #566
+  {DBGFIELD("IIC_SSE_INTALU_P_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #567
+  {DBGFIELD("WriteBlendLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #568
+  {DBGFIELD("WriteBlend")         1, false, false, 1063, 3,  2, 1,  0, 0}, // #569
+  {DBGFIELD("WriteVarBlendLd_ReadAfterLd") 1, false, false, 1123, 7, 16, 1,  1, 1}, // #570
+  {DBGFIELD("WriteVarBlend")      1, false, false, 1130, 6, 19, 1,  0, 0}, // #571
+  {DBGFIELD("IIC_ALU_MEM_WriteBlendLd_ReadAfterLd") 1, false, false, 917, 4,  3, 1,  1, 1}, // #572
+  {DBGFIELD("IIC_ALU_NONMEM_WriteBlend") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #573
+  {DBGFIELD("WriteCLMulLd_ReadAfterLd") 1, false, false, 1136, 3,  7, 1,  1, 1}, // #574
+  {DBGFIELD("WriteCLMul")         1, false, false, 1139, 2,  7, 1,  0, 0}, // #575
+  {DBGFIELD("IIC_SSE_ALU_F32P_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #576
+  {DBGFIELD("WriteFShuffle256Ld_ReadAfterLd") 1, false, false, 1093, 5,  3, 1,  1, 1}, // #577
+  {DBGFIELD("IIC_ALU_MEM_WriteShuffleLd") 1, false, false, 917, 4,  3, 1,  0, 0}, // #578
+  {DBGFIELD("IIC_ALU_NONMEM_WriteShuffle") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #579
+  {DBGFIELD("WriteVarVecShift_ReadAfterLd") 1, false, false, 1099, 4,  2, 1,  1, 1}, // #580
+  {DBGFIELD("WriteVarVecShift")   1, false, false, 1099, 4,  2, 1,  0, 0}, // #581
+  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd") 1, false, false, 917, 4,  3, 1,  0, 0}, // #582
+  {DBGFIELD("WriteVarVecShiftLd_ReadAfterLd") 1, false, false, 1093, 5,  3, 1,  1, 1}, // #583
+  {DBGFIELD("WriteFRcpLd")        1, false, false, 1093, 5, 15, 1,  0, 0}, // #584
+  {DBGFIELD("WriteFRsqrtLd")      1, false, false, 1093, 5, 15, 1,  0, 0}, // #585
+  {DBGFIELD("WriteFSqrtLd")       1, false, false, 1093, 5, 23, 1,  0, 0}, // #586
+  {DBGFIELD("IIC_WAIT_WriteMicrocoded") 1, false, false, 108, 2,  1, 1,  0, 0}, // #587
+  {DBGFIELD("IIC_WRMSR_WriteSystem") 1, false, false, 108, 2,  1, 1,  0, 0}, // #588
+  {DBGFIELD("IIC_XADD_MEM_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #589
+  {DBGFIELD("IIC_XADD_REG_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #590
+  {DBGFIELD("IIC_XCHG_REG_WriteALU") 1, false, false, 108, 2,  2, 1,  0, 0}, // #591
+  {DBGFIELD("IIC_XCHG_MEM_WriteALULd_WriteRMW") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #592
+  {DBGFIELD("IIC_FXCH_WriteMove") 1, false, false, 108, 2,  2, 1,  0, 0}, // #593
+  {DBGFIELD("IIC_XLAT_WriteLoad") 1, false, false, 282, 2,  9, 1,  0, 0}, // #594
+  {DBGFIELD("MOV16rm")            1, false, false, 282, 2,  9, 1,  0, 0}, // #595
+  {DBGFIELD("MOVSX32rm16_MOVSX32rm8") 1, false, false, 918, 3,  3, 1,  0, 0}, // #596
+  {DBGFIELD("MOVZX32rm16_MOVZX32rm8") 1, false, false, 918, 3,  3, 1,  0, 0}, // #597
+  {DBGFIELD("CMOVA16rr_CMOVAE16rr_CMOVB16rr_CMOVBE16rr_CMOVE16rr_CMOVG16rr_CMOVGE16rr_CMOVL16rr_CMOVLE16rr_CMOVNE16rr_CMOVNO16rr_CMOVNP16rr_CMOVNS16rr_CMOVO16rr_CMOVP16rr_CMOVS16rr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #598
+  {DBGFIELD("CMOVA32rr_CMOVA64rr_CMOVAE32rr_CMOVAE64rr_CMOVB32rr_CMOVB64rr_CMOVBE32rr_CMOVBE64rr_CMOVE32rr_CMOVE64rr_CMOVG32rr_CMOVG64rr_CMOVGE32rr_CMOVGE64rr_CMOVL32rr_CMOVL64rr_CMOVLE32rr_CMOVLE64rr_CMOVNE32rr_CMOVNE64rr_CMOVNO32rr_CMOVNO64rr_CMOVNP32rr_CMOVNP64rr_CMOVNS32rr_CMOVNS64rr_CMOVO32rr_CMOVO64rr_CMOVP32rr_CMOVP64rr_CMOVS32rr_CMOVS64rr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #599
+  {DBGFIELD("CMOVA16rm_CMOVAE16rm_CMOVB16rm_CMOVBE16rm_CMOVE16rm_CMOVG16rm_CMOVGE16rm_CMOVL16rm_CMOVLE16rm_CMOVNE16rm_CMOVNO16rm_CMOVNP16rm_CMOVNS16rm_CMOVO16rm_CMOVP16rm_CMOVS16rm") 1, false, false, 918, 3,  3, 1,  1, 1}, // #600
+  {DBGFIELD("CMOVA32rm_CMOVA64rm_CMOVAE32rm_CMOVAE64rm_CMOVB32rm_CMOVB64rm_CMOVBE32rm_CMOVBE64rm_CMOVE32rm_CMOVE64rm_CMOVG32rm_CMOVG64rm_CMOVGE32rm_CMOVGE64rm_CMOVL32rm_CMOVL64rm_CMOVLE32rm_CMOVLE64rm_CMOVNE32rm_CMOVNE64rm_CMOVNO32rm_CMOVNO64rm_CMOVNP32rm_CMOVNP64rm_CMOVNS32rm_CMOVNS64rm_CMOVO32rm_CMOVO64rm_CMOVP32rm_CMOVP64rm_CMOVS32rm_CMOVS64rm") 1, false, false, 918, 3,  3, 1,  1, 1}, // #601
+  {DBGFIELD("XCHG16ar_XCHG16rr_XCHG32ar_XCHG32ar64_XCHG32rr_XCHG64ar_XCHG64rr_XCHG8rr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #602
+  {DBGFIELD("XCHG16rm_XCHG32rm_XCHG64rm_XCHG8rm") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #603
+  {DBGFIELD("XLAT")               1, false, false, 282, 2,  9, 1,  0, 0}, // #604
+  {DBGFIELD("PUSH16rmm_PUSH32rmm") 1, false, false, 1151, 2,  2, 1,  0, 0}, // #605
+  {DBGFIELD("PUSHF16_PUSHF32")    1, false, false, 442, 3,  2, 1,  0, 0}, // #606
+  {DBGFIELD("PUSHA16_PUSHA32")    1, false, false, 442, 3,  2, 1,  0, 0}, // #607
+  {DBGFIELD("POP16rmm_POP32rmm")  1, false, false, 282, 2,  9, 1,  0, 0}, // #608
+  {DBGFIELD("POPF16")             1, false, false, 282, 2,  9, 1,  0, 0}, // #609
+  {DBGFIELD("POPF32")             1, false, false, 282, 2,  9, 1,  0, 0}, // #610
+  {DBGFIELD("POPA16_POPA32")      1, false, false, 282, 2,  9, 1,  0, 0}, // #611
+  {DBGFIELD("LAHF_SAHF")          1, false, false, 108, 2,  2, 1,  0, 0}, // #612
+  {DBGFIELD("BSWAP32r")           1, false, false, 108, 2,  2, 1,  0, 0}, // #613
+  {DBGFIELD("BSWAP64r")           1, false, false, 108, 2,  2, 1,  0, 0}, // #614
+  {DBGFIELD("MOVBE16rm_MOVBE64rm") 1, false, false, 918, 3,  3, 1,  0, 0}, // #615
+  {DBGFIELD("MOVBE32rm")          1, false, false, 918, 3,  3, 1,  0, 0}, // #616
+  {DBGFIELD("MOVBE16mr")          1, false, false, 442, 3,  2, 1,  0, 0}, // #617
+  {DBGFIELD("MOVBE32mr")          1, false, false, 442, 3,  2, 1,  0, 0}, // #618
+  {DBGFIELD("MOVBE64mr")          1, false, false, 442, 3,  2, 1,  0, 0}, // #619
+  {DBGFIELD("ADD16mi_ADD16mi8_ADD16mr_ADD32mi_ADD32mi8_ADD32mr_ADD64mi32_ADD64mi8_ADD64mr_ADD8mi_ADD8mi8_ADD8mr_SUB16mi_SUB16mi8_SUB16mr_SUB32mi_SUB32mi8_SUB32mr_SUB64mi32_SUB64mi8_SUB64mr_SUB8mi_SUB8mi8_SUB8mr") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #620
+  {DBGFIELD("ADC16ri_ADC16ri8_ADC16rr_ADC16rr_REV_ADC32ri_ADC32ri8_ADC32rr_ADC32rr_REV_ADC64ri32_ADC64ri8_ADC64rr_ADC64rr_REV_ADC8ri_ADC8ri8_ADC8rr_ADC8rr_REV_SBB16ri_SBB16ri8_SBB16rr_SBB16rr_REV_SBB32ri_SBB32ri8_SBB32rr_SBB32rr_REV_SBB64ri32_SBB64ri8_SBB64rr_SBB64rr_REV_SBB8ri_SBB8ri8_SBB8rr_SBB8rr_REV") 1, false, false, 108, 2,  2, 1,  0, 0}, // #621
+  {DBGFIELD("ADC16rm_ADC32rm_ADC64rm_ADC8rm_SBB16rm_SBB32rm_SBB64rm_SBB8rm") 1, false, false, 918, 3,  3, 1,  1, 1}, // #622
+  {DBGFIELD("ADC16mi_ADC16mi8_ADC16mr_ADC32mi_ADC32mi8_ADC32mr_ADC64mi32_ADC64mi8_ADC64mr_ADC8mi_ADC8mi8_ADC8mr_SBB16mi_SBB16mi8_SBB16mr_SBB32mi_SBB32mi8_SBB32mr_SBB64mi32_SBB64mi8_SBB64mr_SBB8mi_SBB8mi8_SBB8mr") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #623
+  {DBGFIELD("DEC16m_DEC32m_DEC64m_DEC8m_INC16m_INC32m_INC64m_INC8m_NEG16m_NEG32m_NEG64m_NEG8m_NOT16m_NOT32m_NOT64m_NOT8m") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #624
+  {DBGFIELD("IMUL16r_IMUL16rr")   1, false, false, 1062, 4,  6, 1,  0, 0}, // #625
+  {DBGFIELD("IMUL16rm")           1, false, false, 1057, 5,  5, 1,  1, 1}, // #626
+  {DBGFIELD("IMUL16rmi_IMUL16rmi8") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #627
+  {DBGFIELD("IMUL16rri_IMUL16rri8") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #628
+  {DBGFIELD("MUL16r")             1, false, false, 1062, 4,  6, 1,  0, 0}, // #629
+  {DBGFIELD("IMUL16m")            1, false, false, 1057, 5,  5, 1,  2, 2}, // #630
+  {DBGFIELD("MUL16m")             1, false, false, 1057, 5,  5, 1,  2, 2}, // #631
+  {DBGFIELD("IMUL32r_IMUL32rr")   1, false, false, 1062, 4,  6, 1,  0, 0}, // #632
+  {DBGFIELD("IMUL32rm")           1, false, false, 1057, 5,  5, 1,  1, 1}, // #633
+  {DBGFIELD("IMUL32rmi_IMUL32rmi8") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #634
+  {DBGFIELD("IMUL32rri_IMUL32rri8") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #635
+  {DBGFIELD("MUL32r")             1, false, false, 1062, 4,  6, 1,  0, 0}, // #636
+  {DBGFIELD("IMUL32m")            1, false, false, 1057, 5,  5, 1,  2, 2}, // #637
+  {DBGFIELD("MUL32m")             1, false, false, 1057, 5,  5, 1,  2, 2}, // #638
+  {DBGFIELD("IMUL64r_IMUL64rr")   1, false, false, 1062, 4,  6, 1,  0, 0}, // #639
+  {DBGFIELD("IMUL64rm")           1, false, false, 1057, 5,  5, 1,  1, 1}, // #640
+  {DBGFIELD("IMUL64rmi32_IMUL64rmi8") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #641
+  {DBGFIELD("IMUL64rri32_IMUL64rri8") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #642
+  {DBGFIELD("MUL64r")             1, false, false, 1062, 4,  6, 1,  0, 0}, // #643
+  {DBGFIELD("IMUL64m")            1, false, false, 1057, 5,  5, 1,  2, 2}, // #644
+  {DBGFIELD("MUL64m")             1, false, false, 1057, 5,  5, 1,  2, 2}, // #645
+  {DBGFIELD("MULX32rr")           2, false, false, 1062, 4, 17, 2,  0, 0}, // #646
+  {DBGFIELD("MULX32rm")           2, false, false, 1057, 5,  5, 2,  0, 0}, // #647
+  {DBGFIELD("MULX64rr")           2, false, false, 1062, 4, 17, 2,  0, 0}, // #648
+  {DBGFIELD("MULX64rm")           2, false, false, 1057, 5,  5, 2,  0, 0}, // #649
+  {DBGFIELD("DIV8r")              1, false, false, 1098, 5, 12, 1,  0, 0}, // #650
+  {DBGFIELD("DIV16r")             1, false, false, 1098, 5, 12, 1,  0, 0}, // #651
+  {DBGFIELD("DIV32r")             1, false, false, 1098, 5, 12, 1,  0, 0}, // #652
+  {DBGFIELD("DIV64r")             1, false, false, 1098, 5, 12, 1,  0, 0}, // #653
+  {DBGFIELD("IDIV8r")             1, false, false, 1098, 5, 12, 1,  0, 0}, // #654
+  {DBGFIELD("IDIV16r")            1, false, false, 1098, 5, 12, 1,  0, 0}, // #655
+  {DBGFIELD("IDIV32r")            1, false, false, 1098, 5, 12, 1,  0, 0}, // #656
+  {DBGFIELD("IDIV64r")            1, false, false, 1098, 5, 12, 1,  0, 0}, // #657
+  {DBGFIELD("AND16mi_AND16mi8_AND16mr_AND32mi_AND32mi8_AND32mr_AND64mi32_AND64mi8_AND64mr_AND8mi_AND8mi8_AND8mr_OR16mi_OR16mi8_OR16mr_OR32mi_OR32mi8_OR32mr_OR64mi32_OR64mi8_OR64mr_OR8mi_OR8mi8_OR8mr_XOR16mi_XOR16mi8_XOR16mr_XOR32mi_XOR32mi8_XOR32mr_XOR64mi32_XOR64mi8_XOR64mr_XOR8mi_XOR8mi8_XOR8mr") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #658
+  {DBGFIELD("OR32mrLocked")       2, false, false, 1053, 4,  3, 2,  0, 0}, // #659
+  {DBGFIELD("SAR16m1_SAR16mi_SAR32m1_SAR32mi_SAR64m1_SAR64mi_SAR8m1_SAR8mi_SHL16m1_SHL16mi_SHL32m1_SHL32mi_SHL64m1_SHL64mi_SHL8m1_SHL8mi_SHR16m1_SHR16mi_SHR32m1_SHR32mi_SHR64m1_SHR64mi_SHR8m1_SHR8mi") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #660
+  {DBGFIELD("SAR16rCL_SAR32rCL_SAR64rCL_SAR8rCL_SHL16rCL_SHL32rCL_SHL64rCL_SHL8rCL_SHR16rCL_SHR32rCL_SHR64rCL_SHR8rCL") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #661
+  {DBGFIELD("SAR16mCL_SAR32mCL_SAR64mCL_SAR8mCL_SHL16mCL_SHL32mCL_SHL64mCL_SHL8mCL_SHR16mCL_SHR32mCL_SHR64mCL_SHR8mCL") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #662
+  {DBGFIELD("ROL16r1_ROL32r1_ROL64r1_ROL8r1_ROR16r1_ROR32r1_ROR64r1_ROR8r1") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #663
+  {DBGFIELD("ROL16mi_ROL32mi_ROL64mi_ROL8mi_ROR16mi_ROR32mi_ROR64mi_ROR8mi") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #664
+  {DBGFIELD("ROL16rCL_ROL32rCL_ROL64rCL_ROL8rCL_ROR16rCL_ROR32rCL_ROR64rCL_ROR8rCL") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #665
+  {DBGFIELD("ROL16mCL_ROL32mCL_ROL64mCL_ROL8mCL_ROR16mCL_ROR32mCL_ROR64mCL_ROR8mCL") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #666
+  {DBGFIELD("RCL16r1_RCL32r1_RCL64r1_RCL8r1_RCR16r1_RCR32r1_RCR64r1_RCR8r1") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #667
+  {DBGFIELD("RCL16m1_RCL32m1_RCL64m1_RCL8m1_RCR16m1_RCR32m1_RCR64m1_RCR8m1") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #668
+  {DBGFIELD("RCL16rCL_RCL16ri_RCL32rCL_RCL32ri_RCL64rCL_RCL64ri_RCL8rCL_RCL8ri_RCR16rCL_RCR16ri_RCR32rCL_RCR32ri_RCR64rCL_RCR64ri_RCR8rCL_RCR8ri") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #669
+  {DBGFIELD("RCL16mCL_RCL16mi_RCL32mCL_RCL32mi_RCL64mCL_RCL64mi_RCL8mCL_RCL8mi_RCR16mCL_RCR16mi_RCR32mCL_RCR32mi_RCR64mCL_RCR64mi_RCR8mCL_RCR8mi") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #670
+  {DBGFIELD("SHLD16rri8_SHRD16rri8") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #671
+  {DBGFIELD("SHLD32rri8_SHRD32rri8") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #672
+  {DBGFIELD("SHLD64rri8_SHRD64rri8") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #673
+  {DBGFIELD("SHLD16mri8_SHRD16mri8") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #674
+  {DBGFIELD("SHLD32mri8_SHRD32mri8") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #675
+  {DBGFIELD("SHLD64mri8_SHRD64mri8") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #676
+  {DBGFIELD("SHLD16rrCL")         1, false, false, 1078, 3,  2, 1,  0, 0}, // #677
+  {DBGFIELD("SHLD32rrCL")         1, false, false, 1078, 3,  2, 1,  0, 0}, // #678
+  {DBGFIELD("SHLD64rrCL")         1, false, false, 1078, 3,  2, 1,  0, 0}, // #679
+  {DBGFIELD("SHRD16rrCL")         1, false, false, 1078, 3,  2, 1,  0, 0}, // #680
+  {DBGFIELD("SHRD32rrCL")         1, false, false, 1078, 3,  2, 1,  0, 0}, // #681
+  {DBGFIELD("SHRD64rrCL")         1, false, false, 1078, 3,  2, 1,  0, 0}, // #682
+  {DBGFIELD("SHLD16mrCL_SHRD16mrCL") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #683
+  {DBGFIELD("SHLD32mrCL_SHRD32mrCL") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #684
+  {DBGFIELD("SHLD64mrCL_SHRD64mrCL") 2, false, false, 1103, 5,  3, 2,  0, 0}, // #685
+  {DBGFIELD("BT16ri8_BT32ri8_BT64ri8") 1, false, false, 108, 2,  2, 1,  0, 0}, // #686
+  {DBGFIELD("BT16rr_BT32rr_BT64rr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #687
+  {DBGFIELD("BT16mr_BT32mr_BT64mr") 1, false, false, 918, 3,  3, 1,  0, 0}, // #688
+  {DBGFIELD("BT16mi8_BT32mi8_BT64mi8") 1, false, false, 108, 2,  2, 1,  0, 0}, // #689
+  {DBGFIELD("BTC16ri8_BTC32ri8_BTC64ri8_BTR16ri8_BTR32ri8_BTR64ri8_BTS16ri8_BTS32ri8_BTS64ri8") 1, false, false, 108, 2,  2, 1,  0, 0}, // #690
+  {DBGFIELD("BTC16rr_BTC32rr_BTC64rr_BTR16rr_BTR32rr_BTS16rr_BTS32rr_BTS64rr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #691
+  {DBGFIELD("BTR64rr")            1, false, false, 108, 2,  2, 1,  0, 0}, // #692
+  {DBGFIELD("BTC16mr_BTC32mr_BTC64mr_BTR16mr_BTR32mr_BTR64mr_BTS16mr_BTS32mr_BTS64mr") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #693
+  {DBGFIELD("BTC16mi8_BTC32mi8_BTC64mi8_BTR16mi8_BTR32mi8_BTR64mi8_BTS16mi8_BTS32mi8_BTS64mi8") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #694
+  {DBGFIELD("BSF16rr_BSF32rr_BSF64rr_BSR16rr_BSR32rr_BSR64rr") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #695
+  {DBGFIELD("BSF16rm_BSF32rm_BSF64rm_BSR16rm_BSR32rm_BSR64rm") 1, false, false, 1074, 4,  3, 1,  0, 0}, // #696
+  {DBGFIELD("SETAEr_SETAr_SETBEr_SETBr_SETEr_SETGEr_SETGr_SETLEr_SETLr_SETNEr_SETNOr_SETNPr_SETNSr_SETOr_SETPr_SETSr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #697
+  {DBGFIELD("SETAEm_SETAm_SETBEm_SETBm_SETEm_SETGEm_SETGm_SETLEm_SETLm_SETNEm_SETNOm_SETNPm_SETNSm_SETOm_SETPm_SETSm") 2, false, false, 1053, 4, 21, 2,  0, 0}, // #698
+  {DBGFIELD("CLD")                1, false, false, 108, 2,  2, 1,  0, 0}, // #699
+  {DBGFIELD("STD")                1, false, false, 108, 2,  2, 1,  0, 0}, // #700
+  {DBGFIELD("TZCNT16rr_TZCNT32rr_TZCNT64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #701
+  {DBGFIELD("TZCNT16rm_TZCNT32rm_TZCNT64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #702
+  {DBGFIELD("ANDN32rr_ANDN64rr")  1, false, false, 108, 2,  2, 1,  0, 0}, // #703
+  {DBGFIELD("ANDN32rm_ANDN64rm")  1, false, false, 918, 3,  3, 1,  1, 1}, // #704
+  {DBGFIELD("BLSI32rr_BLSI64rr_BLSMSK32rr_BLSMSK64rr_BLSR32rr_BLSR64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #705
+  {DBGFIELD("BLSI32rm_BLSI64rm_BLSMSK32rm_BLSMSK64rm_BLSR32rm_BLSR64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #706
+  {DBGFIELD("BEXTR32rr_BEXTR64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #707
+  {DBGFIELD("BEXTR32rm_BEXTR64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #708
+  {DBGFIELD("BZHI32rr_BZHI64rr")  0, false, false,  0, 0,  0, 0,  0, 0}, // #709
+  {DBGFIELD("BZHI32rm_BZHI64rm")  0, false, false,  0, 0,  0, 0,  0, 0}, // #710
+  {DBGFIELD("PDEP32rr_PDEP64rr_PEXT32rr_PEXT64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #711
+  {DBGFIELD("PDEP32rm_PDEP64rm_PEXT32rm_PEXT64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #712
+  {DBGFIELD("JCXZ_JRCXZ")         1, false, false, 1087, 5,  2, 1,  0, 0}, // #713
+  {DBGFIELD("LOOP")               1, false, false, 1087, 5,  2, 1,  0, 0}, // #714
+  {DBGFIELD("LOOPE")              1, false, false, 1087, 5,  2, 1,  0, 0}, // #715
+  {DBGFIELD("LOOPNE")             1, false, false, 1087, 5,  2, 1,  0, 0}, // #716
+  {DBGFIELD("CALL16r_CALL32r")    1, false, false, 1087, 5,  2, 1,  0, 0}, // #717
+  {DBGFIELD("CALL16m_CALL32m")    1, false, false, 1081, 6,  3, 1,  0, 0}, // #718
+  {DBGFIELD("LRETL_LRETQ_LRETW_RETL_RETQ_RETW") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #719
+  {DBGFIELD("LRETIL_LRETIQ_LRETIW") 1, false, false, 1081, 6,  3, 1,  0, 0}, // #720
+  {DBGFIELD("RETIL_RETIQ_RETIW")  1, false, false, 1081, 6,  3, 1,  0, 0}, // #721
+  {DBGFIELD("BOUNDS16rm_BOUNDS32rm") 1, false, false, 108, 2,  1, 1,  0, 0}, // #722
+  {DBGFIELD("INTO")               1, false, false, 108, 2,  1, 1,  0, 0}, // #723
+  {DBGFIELD("LODSB_LODSW")        1, false, false, 108, 2,  1, 1,  0, 0}, // #724
+  {DBGFIELD("LODSL_LODSQ")        1, false, false, 108, 2,  1, 1,  0, 0}, // #725
+  {DBGFIELD("STOSB_STOSL_STOSQ_STOSW") 1, false, false, 108, 2,  1, 1,  0, 0}, // #726
+  {DBGFIELD("MOVSB_MOVSL_MOVSQ_MOVSW") 1, false, false, 108, 2,  1, 1,  0, 0}, // #727
+  {DBGFIELD("MOVSLDUPrm")         1, false, false, 282, 2,  9, 1,  0, 0}, // #728
+  {DBGFIELD("MOVSLDUPrr")         1, false, false, 1087, 5,  2, 1,  0, 0}, // #729
+  {DBGFIELD("SCASB_SCASL_SCASQ_SCASW") 1, false, false, 108, 2,  1, 1,  0, 0}, // #730
+  {DBGFIELD("CMPSB_CMPSL_CMPSQ_CMPSW") 1, false, false, 108, 2,  1, 1,  0, 0}, // #731
+  {DBGFIELD("XADD16rm_XADD32rm_XADD64rm_XADD8rm") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #732
+  {DBGFIELD("CMPXCHG16rm_CMPXCHG32rm_CMPXCHG64rm") 2, false, false, 1053, 4,  3, 2,  0, 0}, // #733
+  {DBGFIELD("CMPXCHG8rm")         2, false, false, 1053, 4,  3, 2,  0, 0}, // #734
+  {DBGFIELD("CMPXCHG8B")          2, false, false, 1053, 4,  3, 2,  0, 0}, // #735
+  {DBGFIELD("CMPXCHG16B")         2, false, false, 1053, 4,  3, 2,  0, 0}, // #736
+  {DBGFIELD("PAUSE")              1, false, false,  0, 0,  2, 1,  0, 0}, // #737
+  {DBGFIELD("LEAVE_LEAVE64")      1, false, false, 108, 2,  2, 1,  0, 0}, // #738
+  {DBGFIELD("XGETBV")             1, false, false, 108, 2,  1, 1,  0, 0}, // #739
+  {DBGFIELD("RDTSC")              1, false, false, 108, 2,  1, 1,  0, 0}, // #740
+  {DBGFIELD("RDTSCP")             1, false, false, 108, 2,  1, 1,  0, 0}, // #741
+  {DBGFIELD("RDPMC")              1, false, false, 108, 2,  1, 1,  0, 0}, // #742
+  {DBGFIELD("RDRAND16r_RDRAND32r_RDRAND64r") 0, false, false,  0, 0,  0, 0,  0, 0}, // #743
+  {DBGFIELD("LD_Frr")             1, false, false, 108, 2,  2, 1,  0, 0}, // #744
+  {DBGFIELD("LD_F80m")            1, false, false, 282, 2,  9, 1,  0, 0}, // #745
+  {DBGFIELD("FBLDm")              0, false, false,  0, 0,  0, 0,  0, 0}, // #746
+  {DBGFIELD("ST_FPrr_ST_Frr")     1, false, false, 108, 2,  2, 1,  0, 0}, // #747
+  {DBGFIELD("ST_FP80m")           1, false, false, 442, 3,  2, 1,  0, 0}, // #748
+  {DBGFIELD("FBSTPm")             0, false, false,  0, 0,  0, 0,  0, 0}, // #749
+  {DBGFIELD("XCH_F")              1, false, false, 108, 2,  2, 1,  0, 0}, // #750
+  {DBGFIELD("ILD_F16m_ILD_F32m_ILD_F64m") 1, false, false, 282, 2,  9, 1,  0, 0}, // #751
+  {DBGFIELD("IST_F16m_IST_F32m_IST_FP16m_IST_FP32m") 1, false, false, 442, 3,  2, 1,  0, 0}, // #752
+  {DBGFIELD("LD_F0")              1, false, false,  0, 0,  2, 1,  0, 0}, // #753
+  {DBGFIELD("LD_F1")              1, false, false,  0, 0,  2, 1,  0, 0}, // #754
+  {DBGFIELD("FLDPI")              1, false, false, 108, 2,  1, 1,  0, 0}, // #755
+  {DBGFIELD("CMOVBE_F_CMOVBE_Fp32_CMOVBE_Fp64_CMOVBE_Fp80_CMOVB_F_CMOVB_Fp32_CMOVB_Fp64_CMOVB_Fp80_CMOVNBE_F_CMOVNBE_Fp32_CMOVNBE_Fp64_CMOVNBE_Fp80_CMOVNB_F_CMOVNB_Fp32_CMOVNB_Fp64_CMOVNB_Fp80_CMOVNE_F_CMOVNE_Fp32_CMOVNE_Fp64_CMOVNE_Fp80_CMOVNP_F_CMOVNP_Fp32_CMOVNP_Fp64_CMOVNP_Fp80_CMOVP_F_CMOVP_Fp32_CMOVP_Fp64_CMOVP_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #756
+  {DBGFIELD("FNSTSW16r")          1, false, false, 108, 2,  2, 1,  0, 0}, // #757
+  {DBGFIELD("FNSTSWm")            0, false, false,  0, 0,  0, 0,  0, 0}, // #758
+  {DBGFIELD("FLDCW16m")           1, false, false, 282, 2,  9, 1,  0, 0}, // #759
+  {DBGFIELD("FNSTCW16m")          1, false, false, 108, 2,  2, 1,  0, 0}, // #760
+  {DBGFIELD("FDECSTP_FINCSTP")    1, false, false, 108, 2,  1, 1,  0, 0}, // #761
+  {DBGFIELD("FFREE")              1, false, false, 108, 2,  1, 1,  0, 0}, // #762
+  {DBGFIELD("FSAVEm")             0, false, false,  0, 0,  0, 0,  0, 0}, // #763
+  {DBGFIELD("FRSTORm")            0, false, false,  0, 0,  0, 0,  0, 0}, // #764
+  {DBGFIELD("ABS_F_ABS_Fp32_ABS_Fp64_ABS_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #765
+  {DBGFIELD("CHS_F_CHS_Fp32_CHS_Fp64_CHS_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #766
+  {DBGFIELD("COMP_FST0r_COM_FST0r") 0, false, false,  0, 0,  0, 0,  0, 0}, // #767
+  {DBGFIELD("UCOM_FPr_UCOM_Fr")   1, false, false, 1062, 4,  6, 1,  0, 0}, // #768
+  {DBGFIELD("FCOM32m_FCOM64m_FCOMP32m_FCOMP64m") 0, false, false,  0, 0,  0, 0,  0, 0}, // #769
+  {DBGFIELD("FCOMPP")             1, false, false, 108, 2,  1, 1,  0, 0}, // #770
+  {DBGFIELD("UCOM_FPPr")          1, false, false, 1062, 4,  6, 1,  0, 0}, // #771
+  {DBGFIELD("COM_FIPr_COM_FIr")   1, false, false, 1062, 4,  6, 1,  0, 0}, // #772
+  {DBGFIELD("UCOM_FIPr_UCOM_FIr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #773
+  {DBGFIELD("FICOM16m_FICOM32m_FICOMP16m_FICOMP32m") 0, false, false,  0, 0,  0, 0,  0, 0}, // #774
+  {DBGFIELD("TST_F_TST_Fp32_TST_Fp64_TST_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #775
+  {DBGFIELD("FXAM")               1, false, false, 108, 2,  1, 1,  0, 0}, // #776
+  {DBGFIELD("FPREM")              1, false, false, 108, 2,  1, 1,  0, 0}, // #777
+  {DBGFIELD("FPREM1")             1, false, false, 108, 2,  1, 1,  0, 0}, // #778
+  {DBGFIELD("FRNDINT")            1, false, false, 108, 2,  1, 1,  0, 0}, // #779
+  {DBGFIELD("FSCALE")             1, false, false, 108, 2,  1, 1,  0, 0}, // #780
+  {DBGFIELD("FXTRACT")            1, false, false, 108, 2,  1, 1,  0, 0}, // #781
+  {DBGFIELD("FNOP")               1, false, false, 108, 2,  1, 1,  0, 0}, // #782
+  {DBGFIELD("WAIT")               1, false, false, 108, 2,  1, 1,  0, 0}, // #783
+  {DBGFIELD("FNCLEX")             1, false, false, 108, 2,  1, 1,  0, 0}, // #784
+  {DBGFIELD("FNINIT")             1, false, false, 108, 2,  1, 1,  0, 0}, // #785
+  {DBGFIELD("MMX_MOVD64from64rr_MMX_MOVD64grr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #786
+  {DBGFIELD("MOVPDI2DIrr_VMOVPDI2DIrr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #787
+  {DBGFIELD("MMX_MOVD64rr_MMX_MOVD64to64rr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #788
+  {DBGFIELD("MOVDI2PDIrr_VMOVDI2PDIrr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #789
+  {DBGFIELD("VMOVPQIto64rr")      1, false, false, 108, 2,  2, 1,  0, 0}, // #790
+  {DBGFIELD("VMOV64toPQIrr")      1, false, false, 108, 2,  2, 1,  0, 0}, // #791
+  {DBGFIELD("MMX_MOVQ64rr_MMX_MOVQ64rr_REV") 1, false, false, 108, 2,  2, 1,  0, 0}, // #792
+  {DBGFIELD("MOVDQArr_MOVDQArr_REV_VMOVDQAYrr_VMOVDQAYrr_REV_VMOVDQArr_VMOVDQArr_REV") 1, false, false, 108, 2,  2, 1,  0, 0}, // #793
+  {DBGFIELD("MOVDQUrr_MOVDQUrr_REV_VMOVDQUYrr_VMOVDQUYrr_REV_VMOVDQUrr_VMOVDQUrr_REV") 1, false, false, 108, 2,  2, 1,  0, 0}, // #794
+  {DBGFIELD("MMX_MOVDQ2Qrr")      1, false, false, 108, 2,  2, 1,  0, 0}, // #795
+  {DBGFIELD("MMX_MOVQ2DQrr")      1, false, false, 108, 2,  2, 1,  0, 0}, // #796
+  {DBGFIELD("MMX_PACKSSDWirr_MMX_PACKSSWBirr_MMX_PACKUSWBirr") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #797
+  {DBGFIELD("MMX_PACKSSDWirm_MMX_PACKSSWBirm_MMX_PACKUSWBirm") 1, false, false, 917, 4,  3, 1,  1, 1}, // #798
+  {DBGFIELD("VPMOVSXBQYrr_VPMOVSXBWYrr_VPMOVSXDQYrr_VPMOVZXBQYrr_VPMOVZXBWYrr_VPMOVZXDQYrr") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #799
+  {DBGFIELD("PBLENDWrri")         1, false, false, 1063, 3,  2, 1,  0, 0}, // #800
+  {DBGFIELD("VPBLENDWYrri_VPBLENDWrri") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #801
+  {DBGFIELD("PBLENDWrmi")         1, false, false, 917, 4,  3, 1,  1, 1}, // #802
+  {DBGFIELD("VPBLENDWYrmi_VPBLENDWrmi") 1, false, false, 917, 4,  3, 1,  1, 1}, // #803
+  {DBGFIELD("VPBLENDDYrri_VPBLENDDrri") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #804
+  {DBGFIELD("VPBLENDDYrmi_VPBLENDDrmi") 1, false, false, 917, 4,  3, 1,  1, 1}, // #805
+  {DBGFIELD("MMX_MASKMOVQ_MMX_MASKMOVQ64") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #806
+  {DBGFIELD("MASKMOVDQU_MASKMOVDQU64_VMASKMOVDQU_VMASKMOVDQU64") 1, false, false, 442, 3,  2, 1,  0, 0}, // #807
+  {DBGFIELD("VPMASKMOVDYrm_VPMASKMOVDrm_VPMASKMOVQYrm_VPMASKMOVQrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #808
+  {DBGFIELD("VPMASKMOVDYmr_VPMASKMOVDmr_VPMASKMOVQYmr_VPMASKMOVQmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #809
+  {DBGFIELD("MMX_PMOVMSKBrr")     0, false, false,  0, 0,  0, 0,  0, 0}, // #810
+  {DBGFIELD("PMOVMSKBrr_VPMOVMSKBrr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #811
+  {DBGFIELD("VPMOVMSKBYrr")       1, false, false, 108, 2,  2, 1,  0, 0}, // #812
+  {DBGFIELD("MMX_PEXTRWirri")     1, false, false, 1063, 3,  2, 1,  0, 0}, // #813
+  {DBGFIELD("PEXTRBrr_PEXTRDrr_PEXTRQrr_PEXTRWrr_REV") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #814
+  {DBGFIELD("PEXTRBmr_PEXTRDmr_PEXTRQmr_PEXTRWmr") 2, false, false, 1146, 5,  3, 2,  0, 0}, // #815
+  {DBGFIELD("VPBROADCASTBrm_VPBROADCASTWrm") 1, false, false, 282, 2,  9, 1,  0, 0}, // #816
+  {DBGFIELD("VPBROADCASTBYrm_VPBROADCASTWYrm") 1, false, false, 282, 2,  9, 1,  0, 0}, // #817
+  {DBGFIELD("VPGATHERDDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #818
+  {DBGFIELD("VPGATHERDDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #819
+  {DBGFIELD("VPGATHERQDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #820
+  {DBGFIELD("VPGATHERQDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #821
+  {DBGFIELD("VPGATHERDQrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #822
+  {DBGFIELD("VPGATHERDQYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #823
+  {DBGFIELD("VPGATHERQQrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #824
+  {DBGFIELD("VPGATHERQQYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #825
+  {DBGFIELD("MMX_PHADDSWrr64_MMX_PHADDWrr64_MMX_PHSUBSWrr64_MMX_PHSUBWrr64") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #826
+  {DBGFIELD("MMX_PHADDrr64_MMX_PHSUBDrr64") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #827
+  {DBGFIELD("PHADDDrr_PHSUBDrr_VPHADDDrr_VPHSUBDrr") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #828
+  {DBGFIELD("PHADDSWrr128_PHSUBSWrr128_VPHADDSWrr128_VPHADDSWrr256_VPHSUBSWrr128_VPHSUBSWrr256") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #829
+  {DBGFIELD("PHADDWrr_PHSUBWrr_VPHADDDYrr_VPHADDWYrr_VPHADDWrr_VPHSUBDYrr_VPHSUBWYrr_VPHSUBWrr") 1, false, false, 1063, 3,  2, 1,  0, 0}, // #830
+  {DBGFIELD("MMX_PHADDSWrm64_MMX_PHADDWrm64_MMX_PHSUBSWrm64_MMX_PHSUBWrm64") 1, false, false, 917, 4,  3, 1,  1, 1}, // #831
+  {DBGFIELD("MMX_PHADDrm64_MMX_PHSUBDrm64") 1, false, false, 917, 4,  3, 1,  1, 1}, // #832
+  {DBGFIELD("PHADDDrm_PHSUBDrm_VPHADDDrm_VPHSUBDrm") 1, false, false, 917, 4,  3, 1,  1, 1}, // #833
+  {DBGFIELD("PHADDSWrm128_PHSUBSWrm128_VPHADDSWrm128_VPHADDSWrm256_VPHSUBSWrm128_VPHSUBSWrm256") 1, false, false, 917, 4,  3, 1,  1, 1}, // #834
+  {DBGFIELD("PHADDWrm_PHSUBWrm_VPHADDDYrm_VPHADDWYrm_VPHADDWrm_VPHSUBDYrm_VPHSUBWYrm_VPHSUBWrm") 1, false, false, 917, 4,  3, 1,  1, 1}, // #835
+  {DBGFIELD("PCMPGTQrr_VPCMPGTQYrr_VPCMPGTQrr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #836
+  {DBGFIELD("PCMPGTQrm_VPCMPGTQYrm_VPCMPGTQrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #837
+  {DBGFIELD("PMULLDrr_VPMULLDYrr_VPMULLDrr") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #838
+  {DBGFIELD("PMULLDrm_VPMULLDYrm_VPMULLDrm") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #839
+  {DBGFIELD("PTESTrr_VPTESTYrr_VPTESTrr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #840
+  {DBGFIELD("PTESTrm_VPTESTYrm_VPTESTrm") 1, false, false, 918, 3,  3, 1,  1, 1}, // #841
+  {DBGFIELD("PSLLDrr_PSLLQrr_PSLLWrr_PSRADrr_PSRAWrr_PSRLDrr_PSRLQrr_PSRLWrr_VPSLLDYrr_VPSLLDrr_VPSLLQYrr_VPSLLQrr_VPSLLWYrr_VPSLLWrr_VPSRADYrr_VPSRADrr_VPSRAWYrr_VPSRAWrr_VPSRLDYrr_VPSRLDrr_VPSRLQYrr_VPSRLQrr_VPSRLWYrr_VPSRLWrr") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #842
+  {DBGFIELD("PSLLDQri_PSRLDQri_VPSLLDQYri_VPSLLDQri_VPSRLDQYri_VPSRLDQri") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #843
+  {DBGFIELD("MMX_EMMS")           0, false, false,  0, 0,  0, 0,  0, 0}, // #844
+  {DBGFIELD("MOVMSKPDrr_MOVMSKPSrr_VMOVMSKPDrr_VMOVMSKPSrr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #845
+  {DBGFIELD("VMOVMSKPDYrr_VMOVMSKPSYrr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #846
+  {DBGFIELD("VPERM2F128rr")       1, false, false, 1087, 5,  2, 1,  0, 0}, // #847
+  {DBGFIELD("VPERM2F128rm")       1, false, false, 1081, 6,  3, 1,  1, 1}, // #848
+  {DBGFIELD("BLENDVPDrr0_BLENDVPSrr0") 1, false, false, 1078, 3,  2, 1,  0, 0}, // #849
+  {DBGFIELD("BLENDVPDrm0_BLENDVPSrm0") 1, false, false, 1074, 4,  3, 1,  1, 1}, // #850
+  {DBGFIELD("VBROADCASTF128")     1, false, false, 1081, 6,  3, 1,  0, 0}, // #851
+  {DBGFIELD("EXTRACTPSrr")        1, false, false, 1078, 3,  2, 1,  0, 0}, // #852
+  {DBGFIELD("VEXTRACTPSrr")       1, false, false, 1078, 3,  2, 1,  0, 0}, // #853
+  {DBGFIELD("EXTRACTPSmr")        2, false, false, 1103, 5,  3, 2,  0, 0}, // #854
+  {DBGFIELD("VEXTRACTPSmr")       2, false, false, 1103, 5,  3, 2,  0, 0}, // #855
+  {DBGFIELD("VEXTRACTF128rr")     1, false, false, 1087, 5,  2, 1,  0, 0}, // #856
+  {DBGFIELD("VEXTRACTF128mr")     1, false, false, 442, 3,  2, 1,  0, 0}, // #857
+  {DBGFIELD("VINSERTF128rr")      1, false, false, 1087, 5,  2, 1,  0, 0}, // #858
+  {DBGFIELD("VINSERTF128rm")      1, false, false, 1081, 6,  3, 1,  1, 1}, // #859
+  {DBGFIELD("VMASKMOVPDYrm_VMASKMOVPDrm_VMASKMOVPSYrm_VMASKMOVPSrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #860
+  {DBGFIELD("VMASKMOVPDmr_VMASKMOVPSmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #861
+  {DBGFIELD("VMASKMOVPDYmr_VMASKMOVPSYmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #862
+  {DBGFIELD("VGATHERDPSrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #863
+  {DBGFIELD("VGATHERDPSYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #864
+  {DBGFIELD("VGATHERQPSrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #865
+  {DBGFIELD("VGATHERQPSYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #866
+  {DBGFIELD("VGATHERDPDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #867
+  {DBGFIELD("VGATHERDPDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #868
+  {DBGFIELD("VGATHERQPDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #869
+  {DBGFIELD("VGATHERQPDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #870
+  {DBGFIELD("CVTPD2PSrr_VCVTPD2PSrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #871
+  {DBGFIELD("CVTPD2PSrm_VCVTPD2PSrm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #872
+  {DBGFIELD("VCVTPD2PSYrr")       1, false, false, 1062, 4,  6, 1,  0, 0}, // #873
+  {DBGFIELD("VCVTPD2PSYrm")       1, false, false, 1057, 5,  5, 1,  0, 0}, // #874
+  {DBGFIELD("CVTSD2SSrr_Int_CVTSD2SSrr_Int_VCVTSD2SSrr_VCVTSD2SSrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #875
+  {DBGFIELD("CVTSD2SSrm")         1, false, false, 1057, 5,  5, 1,  0, 0}, // #876
+  {DBGFIELD("Int_CVTSD2SSrm_Int_VCVTSD2SSrm_VCVTSD2SSrm") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #877
+  {DBGFIELD("CVTPS2PDrr_VCVTPS2PDrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #878
+  {DBGFIELD("CVTPS2PDrm_VCVTPS2PDYrm_VCVTPS2PDrm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #879
+  {DBGFIELD("VCVTPS2PDYrr")       1, false, false, 1062, 4,  6, 1,  0, 0}, // #880
+  {DBGFIELD("CVTSS2SDrr_Int_CVTSS2SDrr_Int_VCVTSS2SDrr_VCVTSS2SDrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #881
+  {DBGFIELD("CVTSS2SDrm")         1, false, false, 1057, 5,  5, 1,  0, 0}, // #882
+  {DBGFIELD("Int_CVTSS2SDrm_Int_VCVTSS2SDrm_VCVTSS2SDrm") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #883
+  {DBGFIELD("CVTDQ2PDrr")         1, false, false, 1062, 4,  9, 1,  0, 0}, // #884
+  {DBGFIELD("VCVTDQ2PDrr")        1, false, false, 1062, 4,  9, 1,  0, 0}, // #885
+  {DBGFIELD("VCVTDQ2PDYrr")       1, false, false, 1062, 4,  9, 1,  0, 0}, // #886
+  {DBGFIELD("CVTPD2DQrr_CVTTPD2DQrr_VCVTTPD2DQrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #887
+  {DBGFIELD("VCVTPD2DQrr")        1, false, false, 1062, 4,  6, 1,  0, 0}, // #888
+  {DBGFIELD("CVTPD2DQrm_CVTTPD2DQrm_VCVTTPD2DQrm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #889
+  {DBGFIELD("VCVTPD2DQrm")        1, false, false, 1057, 5,  5, 1,  0, 0}, // #890
+  {DBGFIELD("VCVTPD2DQYrr")       1, false, false, 1062, 4,  6, 1,  0, 0}, // #891
+  {DBGFIELD("VCVTTPD2DQYrr")      1, false, false, 1062, 4,  6, 1,  0, 0}, // #892
+  {DBGFIELD("VCVTPD2DQYrm")       1, false, false, 1057, 5,  5, 1,  0, 0}, // #893
+  {DBGFIELD("VCVTTPD2DQYrm")      1, false, false, 1057, 5,  5, 1,  0, 0}, // #894
+  {DBGFIELD("MMX_CVTPS2PIirr_MMX_CVTTPS2PIirr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #895
+  {DBGFIELD("MMX_CVTPI2PDirr")    1, false, false, 1062, 4,  6, 1,  0, 0}, // #896
+  {DBGFIELD("MMX_CVTPD2PIirr_MMX_CVTTPD2PIirr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #897
+  {DBGFIELD("CVTSI2SS64rr_CVTSI2SSrr_Int_CVTSI2SS64rr_Int_CVTSI2SSrr_Int_VCVTSI2SS64rr_Int_VCVTSI2SSrr") 1, false, false, 1062, 4,  9, 1,  0, 0}, // #898
+  {DBGFIELD("VCVTSI2SS64rr_VCVTSI2SSrr") 1, false, false, 1062, 4,  9, 1,  0, 0}, // #899
+  {DBGFIELD("CVTSS2SI64rr_CVTTSS2SI64rr_Int_CVTTSS2SI64rr_Int_VCVTTSS2SI64rr_VCVTSS2SI64rr_VCVTTSS2SI64rr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #900
+  {DBGFIELD("CVTSS2SIrr_CVTTSS2SIrr_Int_CVTTSS2SIrr_Int_VCVTTSS2SIrr_VCVTSS2SIrr_VCVTTSS2SIrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #901
+  {DBGFIELD("CVTSS2SI64rm_CVTTSS2SI64rm_Int_CVTTSS2SI64rm_Int_VCVTTSS2SI64rm_VCVTSS2SI64rm_VCVTTSS2SI64rm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #902
+  {DBGFIELD("CVTSS2SIrm_CVTTSS2SIrm_Int_CVTTSS2SIrm_Int_VCVTTSS2SIrm_VCVTSS2SIrm_VCVTTSS2SIrm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #903
+  {DBGFIELD("CVTSD2SI64rr_CVTSD2SIrr_CVTTSD2SI64rr_CVTTSD2SIrr_Int_CVTTSD2SI64rr_Int_CVTTSD2SIrr_Int_VCVTTSD2SI64rr_Int_VCVTTSD2SIrr_VCVTSD2SI64rr_VCVTSD2SIrr_VCVTTSD2SI64rr_VCVTTSD2SIrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #904
+  {DBGFIELD("CVTSD2SI64rm_CVTSD2SIrm_CVTTSD2SI64rm_CVTTSD2SIrm_Int_CVTTSD2SI64rm_Int_CVTTSD2SIrm_Int_VCVTTSD2SI64rm_Int_VCVTTSD2SIrm_VCVTSD2SI64rm_VCVTSD2SIrm_VCVTTSD2SI64rm_VCVTTSD2SIrm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #905
+  {DBGFIELD("VCVTPS2PHYrr_VCVTPS2PHrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #906
+  {DBGFIELD("VCVTPS2PHYmr_VCVTPS2PHmr") 2, false, false, 1166, 6, 25, 2,  0, 0}, // #907
+  {DBGFIELD("VCVTPH2PSYrr_VCVTPH2PSrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #908
+  {DBGFIELD("HADDPDrr_HADDPSrr_HSUBPDrr_HSUBPSrr_VHADDPDYrr_VHADDPDrr_VHADDPSYrr_VHADDPSrr_VHSUBPDYrr_VHSUBPDrr_VHSUBPSYrr_VHSUBPSrr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #909
+  {DBGFIELD("HADDPDrm_HADDPSrm_HSUBPDrm_HSUBPSrm_VHADDPDYrm_VHADDPDrm_VHADDPSYrm_VHADDPSrm_VHSUBPDYrm_VHSUBPDrm_VHSUBPSYrm_VHSUBPSrm") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #910
+  {DBGFIELD("MULPDrr_VMULPDrr")   1, false, false, 1099, 4,  3, 1,  0, 0}, // #911
+  {DBGFIELD("MULPSrr_VMULPSrr")   1, false, false, 1099, 4,  3, 1,  0, 0}, // #912
+  {DBGFIELD("MULSDrr_MULSDrr_Int_VMULSDrr_VMULSDrr_Int") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #913
+  {DBGFIELD("MULSSrr_MULSSrr_Int_VMULSSrr_VMULSSrr_Int") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #914
+  {DBGFIELD("MULPDrm_MULPSrm_VMULPDrm_VMULPSrm") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #915
+  {DBGFIELD("MULSDrm_MULSDrm_Int_MULSSrm_MULSSrm_Int_VMULSDrm_VMULSDrm_Int_VMULSSrm_VMULSSrm_Int") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #916
+  {DBGFIELD("VDIVPSYrr")          1, false, false, 1099, 4, 14, 1,  0, 0}, // #917
+  {DBGFIELD("VDIVPSYrm")          1, false, false, 1093, 5, 13, 1,  1, 1}, // #918
+  {DBGFIELD("VDIVPDYrr")          1, false, false, 1099, 4, 14, 1,  0, 0}, // #919
+  {DBGFIELD("VDIVPDYrm")          1, false, false, 1093, 5, 13, 1,  1, 1}, // #920
+  {DBGFIELD("VRCPPSYr")           1, false, false, 1099, 4,  3, 1,  0, 0}, // #921
+  {DBGFIELD("VRCPPSYm")           1, false, false, 1093, 5, 15, 1,  0, 0}, // #922
+  {DBGFIELD("ROUNDPDr_ROUNDPSr_VROUNDPDr_VROUNDPSr_VROUNDYPDr_VROUNDYPSr") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #923
+  {DBGFIELD("ROUNDSDr_ROUNDSDr_Int_ROUNDSSr_ROUNDSSr_Int_VROUNDSDr_VROUNDSDr_Int_VROUNDSSr_VROUNDSSr_Int") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #924
+  {DBGFIELD("ROUNDPDm_VROUNDPDm_VROUNDYPDm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #925
+  {DBGFIELD("ROUNDPSm_VROUNDPSm_VROUNDYPSm") 1, false, false, 1057, 5,  5, 1,  0, 0}, // #926
+  {DBGFIELD("ROUNDSDm_ROUNDSDm_Int_ROUNDSSm_ROUNDSSm_Int_VROUNDSDm_VROUNDSDm_Int_VROUNDSSm_VROUNDSSm_Int") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #927
+  {DBGFIELD("DPPSrri_VDPPSYrri_VDPPSrri") 1, false, false, 1062, 4,  6, 1,  0, 0}, // #928
+  {DBGFIELD("DPPSrmi_VDPPSYrmi_VDPPSrmi") 1, false, false, 1057, 5,  5, 1,  1, 1}, // #929
+  {DBGFIELD("DPPDrri")            1, false, false, 1062, 4,  6, 1,  0, 0}, // #930
+  {DBGFIELD("VDPPDrri")           1, false, false, 1062, 4,  6, 1,  0, 0}, // #931
+  {DBGFIELD("DPPDrmi_VDPPDrmi")   1, false, false, 1057, 5,  5, 1,  1, 1}, // #932
+  {DBGFIELD("VFMADDPD4rr_VFMADDPD4rr_REV_VFMADDPS4rr_VFMADDPS4rr_REV_VFMADDSD4rr_VFMADDSD4rr_Int_VFMADDSD4rr_REV_VFMADDSS4rr_VFMADDSS4rr_Int_VFMADDSS4rr_REV_VFMSUBPD4rr_VFMSUBPD4rr_REV_VFMSUBPS4rr_VFMSUBPS4rr_REV_VFMSUBSD4rr_VFMSUBSD4rr_Int_VFMSUBSD4rr_REV_VFMSUBSS4rr_VFMSUBSS4rr_Int_VFMSUBSS4rr_REV_VFNMADDPD4rr_VFNMADDPD4rr_REV_VFNMADDPS4rr_VFNMADDPS4rr_REV_VFNMADDSD4rr_VFNMADDSD4rr_Int_VFNMADDSD4rr_REV_VFNMADDSS4rr_VFNMADDSS4rr_Int_VFNMADDSS4rr_REV_VFNMSUBPD4rr_VFNMSUBPD4rr_REV_VFNMSUBPS4rr_VFNMSUBPS4rr_REV_VFNMSUBSD4rr_VFNMSUBSD4rr_Int_VFNMSUBSD4rr_REV_VFNMSUBSS4rr_VFNMSUBSS4rr_Int_VFNMSUBSS4rr_REV") 0, false, false,  0, 0,  0, 0,  0, 0}, // #933
+  {DBGFIELD("VFMADDPD4mr_VFMADDPD4rm_VFMADDPS4mr_VFMADDPS4rm_VFMADDSD4mr_VFMADDSD4mr_Int_VFMADDSD4rm_VFMADDSD4rm_Int_VFMADDSS4mr_VFMADDSS4mr_Int_VFMADDSS4rm_VFMADDSS4rm_Int_VFMSUBPD4mr_VFMSUBPD4rm_VFMSUBPS4mr_VFMSUBPS4rm_VFMSUBSD4mr_VFMSUBSD4mr_Int_VFMSUBSD4rm_VFMSUBSD4rm_Int_VFMSUBSS4mr_VFMSUBSS4mr_Int_VFMSUBSS4rm_VFMSUBSS4rm_Int_VFNMADDPD4mr_VFNMADDPD4rm_VFNMADDPS4mr_VFNMADDPS4rm_VFNMADDSD4mr_VFNMADDSD4mr_Int_VFNMADDSD4rm_VFNMADDSD4rm_Int_VFNMADDSS4mr_VFNMADDSS4mr_Int_VFNMADDSS4rm_VFNMADDSS4rm_Int_VFNMSUBPD4mr_VFNMSUBPD4rm_VFNMSUBPS4mr_VFNMSUBPS4rm_VFNMSUBSD4mr_VFNMSUBSD4mr_Int_VFNMSUBSD4rm_VFNMSUBSD4rm_Int_VFNMSUBSS4mr_VFNMSUBSS4mr_Int_VFNMSUBSS4rm_VFNMSUBSS4rm_Int") 0, false, false,  0, 0,  0, 0,  0, 0}, // #934
+  {DBGFIELD("VSQRTPSYr")          1, false, false, 1099, 4, 24, 1,  0, 0}, // #935
+  {DBGFIELD("VSQRTPSYm")          1, false, false, 1093, 5, 23, 1,  0, 0}, // #936
+  {DBGFIELD("VSQRTPDYr")          1, false, false, 1099, 4, 24, 1,  0, 0}, // #937
+  {DBGFIELD("VSQRTPDYm")          1, false, false, 1093, 5, 23, 1,  0, 0}, // #938
+  {DBGFIELD("RSQRTPSr_VRSQRTPSr") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #939
+  {DBGFIELD("RSQRTSSr_VRSQRTSSr") 1, false, false, 1099, 4,  3, 1,  0, 0}, // #940
+  {DBGFIELD("RSQRTSSr_Int")       1, false, false, 1093, 5, 15, 1,  1, 1}, // #941
+  {DBGFIELD("VRSQRTSSr_Int")      1, false, false, 1093, 5, 15, 1,  0, 0}, // #942
+  {DBGFIELD("RSQRTPSm_VRSQRTPSm") 1, false, false, 1093, 5, 15, 1,  0, 0}, // #943
+  {DBGFIELD("RSQRTSSm_VRSQRTSSm") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #944
+  {DBGFIELD("RSQRTSSm_Int_VRSQRTSSm_Int") 1, false, false, 1093, 5, 15, 1,  1, 1}, // #945
+  {DBGFIELD("VRSQRTPSYr")         1, false, false, 1099, 4,  3, 1,  0, 0}, // #946
+  {DBGFIELD("VRSQRTPSYm")         1, false, false, 1093, 5, 15, 1,  0, 0}, // #947
+  {DBGFIELD("ANDNPDrr_ANDNPSrr_ANDPDrr_ANDPSrr_ORPDrr_ORPSrr_VANDNPDYrr_VANDNPDrr_VANDNPSYrr_VANDNPSrr_VANDPDYrr_VANDPDrr_VANDPSYrr_VANDPSrr_VORPDYrr_VORPDrr_VORPSYrr_VORPSrr_VXORPDYrr_VXORPDrr_VXORPSYrr_VXORPSrr_XORPDrr_XORPSrr") 1, false, false, 108, 2,  2, 1,  0, 0}, // #948
+  {DBGFIELD("ANDNPDrm_ANDNPSrm_ANDPDrm_ANDPSrm_ORPDrm_ORPSrm_VANDNPDYrm_VANDNPDrm_VANDNPSYrm_VANDNPSrm_VANDPDYrm_VANDPDrm_VANDPSYrm_VANDPSrm_VORPDYrm_VORPDrm_VORPSYrm_VORPSrm_VXORPDYrm_VXORPDrm_VXORPSYrm_VXORPSrm_XORPDrm_XORPSrm") 1, false, false, 918, 3,  3, 1,  1, 1}, // #949
+  {DBGFIELD("VZEROUPPER")         0, false, false,  0, 0,  0, 0,  0, 0}, // #950
+  {DBGFIELD("VZEROALL")           0, false, false,  0, 0,  0, 0,  0, 0}, // #951
+  {DBGFIELD("LDMXCSR_VLDMXCSR")   1, false, false, 282, 2,  9, 1,  0, 0}, // #952
+  {DBGFIELD("STMXCSR_VSTMXCSR")   1, false, false, 442, 3,  2, 1,  0, 0} // #953
 }; // SandyBridgeModelSchedClasses
 
 // {Name, NumMicroOps, BeginGroup, EndGroup, WriteProcResIdx,#, WriteLatencyIdx,#, ReadAdvanceIdx,#}
@@ -5654,796 +5687,802 @@ static const llvm::MCSchedClassDesc SLMModelSchedClasses[] = {
   {DBGFIELD("IIC_FXTRACT_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #155
   {DBGFIELD("IIC_FYL2X_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #156
   {DBGFIELD("IIC_FYL2XP1_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #157
-  {DBGFIELD("IIC_SSE_BIT_P_RM_WriteFAddLd_ReadAfterLd") 1, false, false, 1174, 3, 16, 1,  4, 1}, // #158
-  {DBGFIELD("IIC_SSE_BIT_P_RR_WriteFAdd") 1, false, false, 427, 2,  6, 1,  0, 0}, // #159
-  {DBGFIELD("IIC_SSE_MOVA_P_RM_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #160
-  {DBGFIELD("IIC_SSE_HADDSUB_RM_WriteFAddLd_ReadAfterLd") 1, false, false, 1174, 3, 16, 1,  4, 1}, // #161
-  {DBGFIELD("IIC_SSE_HADDSUB_RR_WriteFAdd") 1, false, false, 427, 2,  6, 1,  0, 0}, // #162
-  {DBGFIELD("IIC_HLT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #163
-  {DBGFIELD("IIC_IDIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1183, 3, 11, 1,  5, 2}, // #164
-  {DBGFIELD("IIC_IDIV16_WriteIDiv") 1, false, false, 1186, 2, 12, 1,  0, 0}, // #165
-  {DBGFIELD("IIC_IDIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1183, 3, 11, 1,  5, 2}, // #166
-  {DBGFIELD("IIC_IDIV32_WriteIDiv") 1, false, false, 1186, 2, 12, 1,  0, 0}, // #167
-  {DBGFIELD("IIC_IDIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1183, 3, 11, 1,  5, 2}, // #168
-  {DBGFIELD("IIC_IDIV64_WriteIDiv") 1, false, false, 1186, 2, 12, 1,  0, 0}, // #169
-  {DBGFIELD("IIC_IDIV8_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1183, 3, 11, 1,  5, 2}, // #170
-  {DBGFIELD("IIC_IDIV8_WriteIDiv") 1, false, false, 1186, 2, 12, 1,  0, 0}, // #171
-  {DBGFIELD("IIC_FILD_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #172
-  {DBGFIELD("IIC_IMUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #173
-  {DBGFIELD("IIC_IMUL16_RR_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #174
-  {DBGFIELD("IIC_IMUL16_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  4, 1}, // #175
-  {DBGFIELD("IIC_IMUL16_RMI_WriteIMulLd") 1, false, false, 1081, 3, 16, 1,  0, 0}, // #176
-  {DBGFIELD("IIC_IMUL16_RRI_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #177
-  {DBGFIELD("IIC_IMUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #178
-  {DBGFIELD("IIC_IMUL32_RR_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #179
-  {DBGFIELD("IIC_IMUL32_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  4, 1}, // #180
-  {DBGFIELD("IIC_IMUL32_RMI_WriteIMulLd") 1, false, false, 1081, 3, 16, 1,  0, 0}, // #181
-  {DBGFIELD("IIC_IMUL32_RRI_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #182
-  {DBGFIELD("IIC_IMUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #183
-  {DBGFIELD("IIC_IMUL64_RR_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #184
-  {DBGFIELD("IIC_IMUL64_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  4, 1}, // #185
-  {DBGFIELD("IIC_IMUL64_RMI_WriteIMulLd") 1, false, false, 1081, 3, 16, 1,  0, 0}, // #186
-  {DBGFIELD("IIC_IMUL64_RRI_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #187
-  {DBGFIELD("IIC_IMUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #188
-  {DBGFIELD("IIC_IMUL8_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #189
-  {DBGFIELD("IIC_IN_RI_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #190
-  {DBGFIELD("IIC_IN_RR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #191
-  {DBGFIELD("IIC_INS_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #192
-  {DBGFIELD("IIC_SSE_INSERTPS_RM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #193
-  {DBGFIELD("IIC_SSE_INSERTPS_RR_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #194
-  {DBGFIELD("IIC_INT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #195
-  {DBGFIELD("IIC_INT3_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #196
-  {DBGFIELD("IIC_INVD_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #197
-  {DBGFIELD("IIC_INVLPG_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #198
-  {DBGFIELD("WriteJumpLd")        1, false, false, 1081, 3,  9, 1,  0, 0}, // #199
-  {DBGFIELD("IIC_IRET_WriteJumpLd") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #200
-  {DBGFIELD("IIC_FST_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #201
-  {DBGFIELD("IIC_FIST_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #202
-  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd_ReadAfterLd") 1, false, false, 13, 2,  5, 1,  4, 1}, // #203
-  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd_ReadAfterLd") 1, false, false, 13, 2,  5, 1,  4, 1}, // #204
-  {DBGFIELD("WriteLoad")          1, false, false, 14, 1,  6, 1,  0, 0}, // #205
-  {DBGFIELD("IIC_Jcc_WriteJump")  1, false, false, 429, 2,  2, 1,  0, 0}, // #206
-  {DBGFIELD("IIC_JCXZ_WriteJump") 1, false, false, 429, 2,  2, 1,  0, 0}, // #207
-  {DBGFIELD("IIC_JMP_MEM_WriteJumpLd") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #208
-  {DBGFIELD("IIC_JMP_REG_WriteJump") 1, false, false, 429, 2,  2, 1,  0, 0}, // #209
-  {DBGFIELD("IIC_JMP_REL_WriteJump") 1, false, false, 429, 2,  2, 1,  0, 0}, // #210
-  {DBGFIELD("IIC_AHF_WriteALU")   1, false, false, 386, 1,  2, 1,  0, 0}, // #211
-  {DBGFIELD("IIC_LAR_RM_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #212
-  {DBGFIELD("IIC_LAR_RR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #213
-  {DBGFIELD("IIC_CMPX_LOCK_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #214
-  {DBGFIELD("IIC_CMPX_LOCK_16B_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #215
-  {DBGFIELD("IIC_CMPX_LOCK_8_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #216
-  {DBGFIELD("IIC_CMPX_LOCK_8B_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #217
-  {DBGFIELD("IIC_SSE_LDDQU_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #218
-  {DBGFIELD("IIC_SSE_LDMXCSR_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #219
-  {DBGFIELD("IIC_LXS_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #220
-  {DBGFIELD("IIC_FLDZ_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #221
-  {DBGFIELD("IIC_FIST_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #222
-  {DBGFIELD("IIC_FLD_WriteLoad")  1, false, false, 14, 1,  6, 1,  0, 0}, // #223
-  {DBGFIELD("IIC_FLD80_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #224
-  {DBGFIELD("IIC_FLD_WriteMove")  1, false, false, 386, 1,  2, 1,  0, 0}, // #225
-  {DBGFIELD("IIC_LEA_16_WriteLEA") 1, false, false, 429, 2,  2, 1,  0, 0}, // #226
-  {DBGFIELD("IIC_LEA_WriteLEA")   1, false, false, 429, 2,  2, 1,  0, 0}, // #227
-  {DBGFIELD("IIC_LEAVE_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #228
-  {DBGFIELD("IIC_SSE_LFENCE_WriteFence") 1, false, false, 14, 1,  2, 1,  0, 0}, // #229
-  {DBGFIELD("IIC_LGDT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #230
-  {DBGFIELD("IIC_LIDT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #231
-  {DBGFIELD("IIC_LLDT_MEM_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #232
-  {DBGFIELD("IIC_LLDT_REG_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #233
-  {DBGFIELD("IIC_LMSW_REG_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #234
-  {DBGFIELD("IIC_LMSW_MEM_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #235
-  {DBGFIELD("IIC_ALU_MEM_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #236
-  {DBGFIELD("IIC_ALU_NONMEM_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #237
-  {DBGFIELD("IIC_LODS_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #238
-  {DBGFIELD("IIC_LOOP_WriteJump") 1, false, false, 429, 2,  2, 1,  0, 0}, // #239
-  {DBGFIELD("IIC_LOOPE_WriteJump") 1, false, false, 429, 2,  2, 1,  0, 0}, // #240
-  {DBGFIELD("IIC_LOOPNE_WriteJump") 1, false, false, 429, 2,  2, 1,  0, 0}, // #241
-  {DBGFIELD("IIC_RET_WriteJumpLd") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #242
-  {DBGFIELD("IIC_LSL_RM_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #243
-  {DBGFIELD("IIC_LSL_RR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #244
-  {DBGFIELD("IIC_LTR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #245
-  {DBGFIELD("IIC_XADD_LOCK_MEM_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #246
-  {DBGFIELD("IIC_XADD_LOCK_MEM8_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #247
-  {DBGFIELD("IIC_SSE_MASKMOV_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #248
-  {DBGFIELD("IIC_SSE_MFENCE_WriteFence") 1, false, false, 14, 1,  2, 1,  0, 0}, // #249
-  {DBGFIELD("IIC_MMX_CVT_PD_RM_WriteCvtF2ILd") 1, false, false, 13, 2,  5, 1,  0, 0}, // #250
-  {DBGFIELD("IIC_MMX_CVT_PD_RR_WriteCvtF2I") 1, false, false, 13, 1,  9, 1,  0, 0}, // #251
-  {DBGFIELD("WriteCvtI2FLd")      1, false, false, 13, 2,  5, 1,  0, 0}, // #252
-  {DBGFIELD("WriteCvtI2F")        1, false, false, 13, 1,  9, 1,  0, 0}, // #253
-  {DBGFIELD("IIC_MMX_CVT_PS_RM_WriteCvtF2ILd") 1, false, false, 13, 2,  5, 1,  0, 0}, // #254
-  {DBGFIELD("IIC_MMX_CVT_PS_RR_WriteCvtF2I") 1, false, false, 13, 1,  9, 1,  0, 0}, // #255
-  {DBGFIELD("IIC_MMX_EMMS")       0, false, false,  0, 0,  0, 0,  0, 0}, // #256
-  {DBGFIELD("IIC_MMX_MASKMOV_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #257
-  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #258
-  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #259
-  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #260
-  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #261
-  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #262
-  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #263
-  {DBGFIELD("IIC_MMX_MOVQ_RR_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #264
-  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #265
-  {DBGFIELD("WriteMove")          1, false, false, 386, 1,  2, 1,  0, 0}, // #266
-  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd") 1, false, false, 13, 2,  9, 1,  0, 0}, // #267
-  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #268
-  {DBGFIELD("IIC_MMX_PCK_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #269
-  {DBGFIELD("IIC_MMX_PCK_RR_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #270
-  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #271
-  {DBGFIELD("IIC_MMX_ALUQ_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #272
-  {DBGFIELD("IIC_MMX_ALUQ_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #273
-  {DBGFIELD("WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #274
-  {DBGFIELD("WriteShuffle")       1, false, false, 1172, 2,  2, 1,  0, 0}, // #275
-  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #276
-  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecLogic") 1, false, false, 13, 1,  2, 1,  0, 0}, // #277
-  {DBGFIELD("IIC_MMX_MISC_FUNC_REG_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #278
-  {DBGFIELD("IIC_MMX_MISC_FUNC_MEM_WriteVecIMul") 1, false, false, 1172, 2,  9, 1,  0, 0}, // #279
-  {DBGFIELD("IIC_MMX_PEXTR_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #280
-  {DBGFIELD("IIC_MMX_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #281
-  {DBGFIELD("IIC_MMX_PHADDSUBW_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #282
-  {DBGFIELD("IIC_MMX_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #283
-  {DBGFIELD("IIC_MMX_PHADDSUBD_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #284
-  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #285
-  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #286
-  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #287
-  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMul") 1, false, false, 1172, 2,  9, 1,  0, 0}, // #288
-  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #289
-  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMul") 1, false, false, 1172, 2,  9, 1,  0, 0}, // #290
-  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #291
-  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #292
-  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd") 1, false, false, 1180, 3,  9, 1,  0, 0}, // #293
-  {DBGFIELD("IIC_MMX_SHIFT_RI_WriteVecShift") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #294
-  {DBGFIELD("IIC_MMX_SHIFT_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #295
-  {DBGFIELD("IIC_MMX_SHIFT_RR_WriteVecShift") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #296
-  {DBGFIELD("IIC_MMX_UNPCK_H_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #297
-  {DBGFIELD("IIC_MMX_UNPCK_H_RR_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #298
-  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #299
-  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #300
-  {DBGFIELD("IIC_SSE_MONITORX_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #301
-  {DBGFIELD("IIC_SSE_MONITOR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #302
-  {DBGFIELD("IIC_MOV_MEM_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #303
-  {DBGFIELD("IIC_MOV_MEM_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #304
-  {DBGFIELD("IIC_MOV_MEM_SR_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #305
-  {DBGFIELD("IIC_MOV_WriteMove")  1, false, false, 386, 1,  2, 1,  0, 0}, // #306
-  {DBGFIELD("IIC_MOV_MEM_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #307
-  {DBGFIELD("IIC_MOV_REG_SR_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #308
-  {DBGFIELD("IIC_MOV_SR_MEM_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #309
-  {DBGFIELD("IIC_MOV_SR_REG_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #310
-  {DBGFIELD("IIC_MOV_CR_REG_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #311
-  {DBGFIELD("IIC_MOV_DR_REG_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #312
-  {DBGFIELD("IIC_ALU_NONMEM_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #313
-  {DBGFIELD("IIC_MOV_REG_CR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #314
-  {DBGFIELD("IIC_MOV_REG_DR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #315
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #316
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #317
-  {DBGFIELD("IIC_SSE_MOVA_P_MR_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #318
-  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #319
-  {DBGFIELD("IIC_MOVBE_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #320
-  {DBGFIELD("IIC_MOVBE_WriteALULd") 1, false, false, 386, 2,  9, 1,  0, 0}, // #321
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #322
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #323
-  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #324
-  {DBGFIELD("IIC_SSE_MOVU_P_MR_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #325
-  {DBGFIELD("IIC_SSE_MOVU_P_RM_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #326
-  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #327
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #328
-  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #329
-  {DBGFIELD("IIC_SSE_MOVMSK_WriteVecLogic") 1, false, false, 13, 1,  2, 1,  0, 0}, // #330
-  {DBGFIELD("IIC_SSE_MOVNT_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #331
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #332
-  {DBGFIELD("IIC_SSE_MOVD_ToGP_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #333
-  {DBGFIELD("IIC_SSE_MOVQ_RR_WriteVecLogic") 1, false, false, 13, 1,  2, 1,  0, 0}, // #334
-  {DBGFIELD("IIC_MOVS_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #335
-  {DBGFIELD("IIC_SSE_MOV_S_MR_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #336
-  {DBGFIELD("IIC_SSE_MOV_S_RM_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #337
-  {DBGFIELD("IIC_SSE_MOV_S_RR_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #338
-  {DBGFIELD("IIC_MOVSX_R16_M8_WriteALULd") 1, false, false, 386, 2,  9, 1,  0, 0}, // #339
-  {DBGFIELD("IIC_MOVSX_R16_R8_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #340
-  {DBGFIELD("IIC_MOVSX_WriteALULd") 1, false, false, 386, 2,  9, 1,  0, 0}, // #341
-  {DBGFIELD("IIC_MOVSX_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #342
-  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #343
-  {DBGFIELD("IIC_SSE_MOVDQ_WriteVecLogicLd") 1, false, false, 13, 2,  9, 1,  0, 0}, // #344
-  {DBGFIELD("IIC_MOVZX_R16_M8_WriteALULd") 1, false, false, 386, 2,  9, 1,  0, 0}, // #345
-  {DBGFIELD("IIC_MOVZX_R16_R8_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #346
-  {DBGFIELD("IIC_MOVZX_WriteALULd") 1, false, false, 386, 2,  9, 1,  0, 0}, // #347
-  {DBGFIELD("IIC_MOVZX_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #348
-  {DBGFIELD("IIC_SSE_MPSADBW_RM_WriteMPSADLd_ReadAfterLd") 1, false, false, 1180, 3,  8, 1,  4, 1}, // #349
-  {DBGFIELD("IIC_SSE_MPSADBW_RR_WriteMPSAD") 1, false, false, 1172, 2,  5, 1,  0, 0}, // #350
-  {DBGFIELD("IIC_MUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #351
-  {DBGFIELD("IIC_MUL16_REG_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #352
-  {DBGFIELD("IIC_MUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #353
-  {DBGFIELD("IIC_MUL32_REG_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #354
-  {DBGFIELD("IIC_MUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #355
-  {DBGFIELD("IIC_MUL64_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #356
-  {DBGFIELD("IIC_MUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #357
-  {DBGFIELD("IIC_MUL8_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #358
-  {DBGFIELD("IIC_SSE_MUL_F64P_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 1198, 4, 10, 1,  4, 1}, // #359
-  {DBGFIELD("IIC_SSE_MUL_F64P_RR_WriteFMul") 1, false, false, 1202, 3,  3, 1,  0, 0}, // #360
-  {DBGFIELD("IIC_SSE_MUL_F32P_RR_WriteFMul") 1, false, false, 1202, 3,  3, 1,  0, 0}, // #361
-  {DBGFIELD("IIC_SSE_MUL_F64S_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 1198, 4, 10, 1,  4, 1}, // #362
-  {DBGFIELD("IIC_SSE_MUL_F64S_RR_WriteFMul") 1, false, false, 1202, 3,  3, 1,  0, 0}, // #363
-  {DBGFIELD("IIC_SSE_MUL_F32S_RR_WriteFMul") 1, false, false, 1202, 3,  3, 1,  0, 0}, // #364
-  {DBGFIELD("IIC_MUL8_WriteIMulLd_WriteIMulH") 2, false, false, 1205, 5, 45, 2,  0, 0}, // #365
-  {DBGFIELD("IIC_MUL8_WriteIMul_WriteIMulH") 2, false, false, 1205, 4, 54, 2,  0, 0}, // #366
-  {DBGFIELD("WriteFMulLd")        1, false, false, 1198, 4, 10, 1,  0, 0}, // #367
-  {DBGFIELD("WriteFMul")          1, false, false, 1202, 3,  3, 1,  0, 0}, // #368
-  {DBGFIELD("IIC_SSE_MWAITX_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #369
-  {DBGFIELD("IIC_SSE_MWAIT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #370
-  {DBGFIELD("IIC_NOP_WriteZero")  1, false, false,  0, 0,  2, 1,  0, 0}, // #371
-  {DBGFIELD("IIC_OUT_IR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #372
-  {DBGFIELD("IIC_OUT_RR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #373
-  {DBGFIELD("IIC_OUTS_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #374
-  {DBGFIELD("IIC_SSE_PABS_RM_WriteVecALULd") 1, false, false, 13, 2,  9, 1,  0, 0}, // #375
-  {DBGFIELD("IIC_SSE_PABS_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #376
-  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #377
-  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #378
-  {DBGFIELD("IIC_SSE_INTALUQ_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #379
-  {DBGFIELD("IIC_SSE_INTALUQ_P_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #380
-  {DBGFIELD("IIC_SSE_PALIGNRM_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #381
-  {DBGFIELD("IIC_SSE_PALIGNRR_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #382
-  {DBGFIELD("IIC_SSE_BIT_P_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #383
-  {DBGFIELD("IIC_SSE_BIT_P_RR_WriteVecLogic") 1, false, false, 13, 1,  2, 1,  0, 0}, // #384
-  {DBGFIELD("IIC_SSE_PAUSE_WriteNop") 1, false, false,  0, 0,  2, 1,  0, 0}, // #385
-  {DBGFIELD("IIC_ALU_MEM_WriteVarBlendLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #386
-  {DBGFIELD("IIC_ALU_NONMEM_WriteVarBlend") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #387
-  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteBlendLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #388
-  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteBlend") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #389
-  {DBGFIELD("IIC_SSE_PCLMULQDQ_RM_WriteCLMulLd_ReadAfterLd") 1, false, false, 1210, 3,  8, 1,  4, 1}, // #390
-  {DBGFIELD("IIC_SSE_PCLMULQDQ_RR_WriteCLMul") 1, false, false, 1210, 2,  8, 1,  0, 0}, // #391
-  {DBGFIELD("WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #392
-  {DBGFIELD("WriteVecALU")        1, false, false, 13, 1,  2, 1,  0, 0}, // #393
-  {DBGFIELD("WritePCmpEStrILd_ReadAfterLd") 1, false, false, 1213, 3, 27, 1,  4, 1}, // #394
-  {DBGFIELD("WritePCmpEStrI")     1, false, false, 1213, 2, 27, 1,  0, 0}, // #395
-  {DBGFIELD("WritePCmpEStrMLd_ReadAfterLd") 1, false, false, 1216, 3, 56, 1,  4, 1}, // #396
-  {DBGFIELD("WritePCmpEStrM")     1, false, false, 1216, 2, 56, 1,  0, 0}, // #397
-  {DBGFIELD("WritePCmpIStrILd_ReadAfterLd") 1, false, false, 1216, 3, 56, 1,  4, 1}, // #398
-  {DBGFIELD("WritePCmpIStrI")     1, false, false, 1216, 2, 56, 1,  0, 0}, // #399
-  {DBGFIELD("WritePCmpIStrMLd_ReadAfterLd") 1, false, false, 1219, 3, 34, 1,  4, 1}, // #400
-  {DBGFIELD("WritePCmpIStrM")     1, false, false, 1219, 2, 34, 1,  0, 0}, // #401
-  {DBGFIELD("WriteShuffleLd_WriteRMW") 2, false, false, 1195, 3, 41, 2,  0, 0}, // #402
-  {DBGFIELD("IIC_SSE_PEXTRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #403
-  {DBGFIELD("IIC_SSE_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #404
-  {DBGFIELD("IIC_SSE_PHADDSUBD_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #405
-  {DBGFIELD("IIC_SSE_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #406
-  {DBGFIELD("IIC_SSE_PHADDSUBW_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #407
-  {DBGFIELD("WriteVecIMulLd")     1, false, false, 1180, 3,  5, 1,  0, 0}, // #408
-  {DBGFIELD("WriteVecIMul")       1, false, false, 1172, 2,  9, 1,  0, 0}, // #409
-  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #410
-  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #411
-  {DBGFIELD("WriteVecIMulLd_ReadAfterLd") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #412
-  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #413
-  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMul") 1, false, false, 1172, 2,  9, 1,  0, 0}, // #414
-  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteShuffleLd") 1, false, false, 1180, 3,  9, 1,  0, 0}, // #415
-  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #416
-  {DBGFIELD("IIC_SSE_INTMUL_P_RM_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #417
-  {DBGFIELD("IIC_SSE_INTMUL_P_RR_WriteVecIMul") 1, false, false, 1172, 2,  9, 1,  0, 0}, // #418
-  {DBGFIELD("IIC_POP_REG16_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #419
-  {DBGFIELD("IIC_POP_MEM_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #420
-  {DBGFIELD("IIC_POP_REG_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #421
-  {DBGFIELD("IIC_POP_A_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #422
-  {DBGFIELD("IIC_SSE_POPCNT_RM_WriteFAddLd") 1, false, false, 1174, 3, 16, 1,  0, 0}, // #423
-  {DBGFIELD("IIC_SSE_POPCNT_RR_WriteFAdd") 1, false, false, 427, 2,  6, 1,  0, 0}, // #424
-  {DBGFIELD("IIC_POP_SR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #425
-  {DBGFIELD("IIC_POP_F_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #426
-  {DBGFIELD("IIC_POP_FD_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #427
-  {DBGFIELD("IIC_POP_SR_SS_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #428
-  {DBGFIELD("IIC_SSE_PSHUFB_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #429
-  {DBGFIELD("IIC_SSE_PSHUFB_RR_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #430
-  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #431
-  {DBGFIELD("IIC_SSE_PSHUF_RI_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #432
-  {DBGFIELD("IIC_SSE_INTSHDQ_P_RI_WriteVecShift") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #433
-  {DBGFIELD("IIC_SSE_INTSH_P_RI_WriteVecShift") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #434
-  {DBGFIELD("IIC_SSE_INTSH_P_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #435
-  {DBGFIELD("IIC_SSE_INTSH_P_RR_WriteVecShift") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #436
-  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #437
-  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #438
-  {DBGFIELD("IIC_PUSH_IMM_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #439
-  {DBGFIELD("IIC_PUSH_REG_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #440
-  {DBGFIELD("IIC_PUSH_MEM_WriteRMW") 1, false, false, 14, 1,  2, 1,  0, 0}, // #441
-  {DBGFIELD("IIC_PUSH_A_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #442
-  {DBGFIELD("IIC_PUSH_SR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #443
-  {DBGFIELD("IIC_PUSH_CS_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #444
-  {DBGFIELD("IIC_PUSH_F_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #445
-  {DBGFIELD("IIC_SR_WriteShiftLd_WriteRMW") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #446
-  {DBGFIELD("IIC_SR_WriteShift")  1, false, false, 492, 2,  2, 1,  0, 0}, // #447
-  {DBGFIELD("IIC_SSE_RCPP_RM_WriteFRcpLd") 1, false, false, 1180, 3, 10, 1,  0, 0}, // #448
-  {DBGFIELD("IIC_SSE_RCPP_RR_WriteFRcp") 1, false, false, 1172, 2,  3, 1,  0, 0}, // #449
-  {DBGFIELD("IIC_SSE_RCPS_RM_WriteFRcpLd_ReadAfterLd") 1, false, false, 1180, 3, 10, 1,  4, 1}, // #450
-  {DBGFIELD("WriteFRcpLd_ReadAfterLd") 1, false, false, 1180, 3, 10, 1,  4, 1}, // #451
-  {DBGFIELD("IIC_SSE_RCPS_RR_WriteFRcp") 1, false, false, 1172, 2,  3, 1,  0, 0}, // #452
-  {DBGFIELD("WriteRMW")           1, false, false, 14, 1,  2, 1,  0, 0}, // #453
-  {DBGFIELD("IIC_RDMSR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #454
-  {DBGFIELD("IIC_RDPMC_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #455
-  {DBGFIELD("IIC_RDTSC_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #456
-  {DBGFIELD("IIC_REP_MOVS_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #457
-  {DBGFIELD("IIC_REP_STOS_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #458
-  {DBGFIELD("IIC_RET_IMM_WriteJumpLd") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #459
-  {DBGFIELD("WriteShiftLd")       1, false, false, 930, 3,  9, 1,  0, 0}, // #460
-  {DBGFIELD("WriteShift")         1, false, false, 492, 2,  2, 1,  0, 0}, // #461
-  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAddLd") 1, false, false, 1174, 3, 16, 1,  0, 0}, // #462
-  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAdd") 1, false, false, 427, 2,  6, 1,  0, 0}, // #463
-  {DBGFIELD("IIC_SSE_ROUNDPS_MEM_WriteFAddLd") 1, false, false, 1174, 3, 16, 1,  0, 0}, // #464
-  {DBGFIELD("WriteFAddLd_ReadAfterLd") 1, false, false, 1174, 3, 16, 1,  4, 1}, // #465
-  {DBGFIELD("IIC_RSM_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #466
-  {DBGFIELD("IIC_SSE_RSQRTPS_RM_WriteFRsqrtLd") 1, false, false, 1180, 3, 10, 1,  0, 0}, // #467
-  {DBGFIELD("IIC_SSE_RSQRTPS_RR_WriteFRsqrt") 1, false, false, 1172, 2,  3, 1,  0, 0}, // #468
-  {DBGFIELD("IIC_SSE_RSQRTSS_RM_WriteFRsqrtLd_ReadAfterLd") 1, false, false, 1180, 3, 10, 1,  4, 1}, // #469
-  {DBGFIELD("WriteFRsqrtLd_ReadAfterLd") 1, false, false, 1180, 3, 10, 1,  4, 1}, // #470
-  {DBGFIELD("IIC_SSE_RSQRTSS_RR_WriteFRsqrt") 1, false, false, 1172, 2,  3, 1,  0, 0}, // #471
-  {DBGFIELD("WriteShiftLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd") 1, false, false, 930, 3,  9, 1,  5, 1}, // #472
-  {DBGFIELD("IIC_SCAS_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #473
-  {DBGFIELD("IIC_SET_M_WriteALU_WriteStore") 2, false, false, 1155, 2, 21, 2,  0, 0}, // #474
-  {DBGFIELD("IIC_SET_R_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #475
-  {DBGFIELD("IIC_SSE_SFENCE_WriteFence") 1, false, false, 14, 1,  2, 1,  0, 0}, // #476
-  {DBGFIELD("IIC_SGDT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #477
-  {DBGFIELD("IIC_SHD16_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #478
-  {DBGFIELD("IIC_SHD16_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #479
-  {DBGFIELD("IIC_SHD16_REG_CL_WriteShift") 1, false, false, 492, 2,  2, 1,  0, 0}, // #480
-  {DBGFIELD("IIC_SHD16_REG_IM_WriteShift") 1, false, false, 492, 2,  2, 1,  0, 0}, // #481
-  {DBGFIELD("IIC_SHD32_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #482
-  {DBGFIELD("IIC_SHD32_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #483
-  {DBGFIELD("IIC_SHD32_REG_CL_WriteShift") 1, false, false, 492, 2,  2, 1,  0, 0}, // #484
-  {DBGFIELD("IIC_SHD32_REG_IM_WriteShift") 1, false, false, 492, 2,  2, 1,  0, 0}, // #485
-  {DBGFIELD("IIC_SHD64_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #486
-  {DBGFIELD("IIC_SHD64_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #487
-  {DBGFIELD("IIC_SHD64_REG_CL_WriteShift") 1, false, false, 492, 2,  2, 1,  0, 0}, // #488
-  {DBGFIELD("IIC_SHD64_REG_IM_WriteShift") 1, false, false, 492, 2,  2, 1,  0, 0}, // #489
-  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #490
-  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #491
-  {DBGFIELD("IIC_SIDT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #492
-  {DBGFIELD("IIC_SLDT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #493
-  {DBGFIELD("IIC_SMSW_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #494
-  {DBGFIELD("IIC_SSE_SQRTPD_RM_WriteFSqrtLd") 1, false, false, 1180, 3, 39, 1,  0, 0}, // #495
-  {DBGFIELD("IIC_SSE_SQRTPD_RR_WriteFSqrt") 1, false, false, 1172, 2, 24, 1,  0, 0}, // #496
-  {DBGFIELD("IIC_SSE_SQRTPS_RM_WriteFSqrtLd") 1, false, false, 1180, 3, 39, 1,  0, 0}, // #497
-  {DBGFIELD("IIC_SSE_SQRTPS_RR_WriteFSqrt") 1, false, false, 1172, 2, 24, 1,  0, 0}, // #498
-  {DBGFIELD("IIC_SSE_SQRTSD_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 1180, 3, 39, 1,  4, 1}, // #499
-  {DBGFIELD("WriteFSqrtLd_ReadAfterLd") 1, false, false, 1180, 3, 39, 1,  4, 1}, // #500
-  {DBGFIELD("IIC_SSE_SQRTSD_RR_WriteFSqrt") 1, false, false, 1172, 2, 24, 1,  0, 0}, // #501
-  {DBGFIELD("IIC_SSE_SQRTSS_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 1180, 3, 39, 1,  4, 1}, // #502
-  {DBGFIELD("IIC_SSE_SQRTSS_RR_WriteFSqrt") 1, false, false, 1172, 2, 24, 1,  0, 0}, // #503
-  {DBGFIELD("WriteFSqrt")         1, false, false, 1172, 2, 24, 1,  0, 0}, // #504
-  {DBGFIELD("IIC_STC_WriteALU")   1, false, false, 386, 1,  2, 1,  0, 0}, // #505
-  {DBGFIELD("IIC_STD_WriteALU")   1, false, false, 386, 1,  2, 1,  0, 0}, // #506
-  {DBGFIELD("IIC_STI_WriteALU")   1, false, false, 386, 1,  2, 1,  0, 0}, // #507
-  {DBGFIELD("IIC_SSE_STMXCSR_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #508
-  {DBGFIELD("IIC_STOS_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #509
-  {DBGFIELD("IIC_STR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #510
-  {DBGFIELD("IIC_FST80_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #511
-  {DBGFIELD("IIC_FST_WriteMove")  1, false, false, 386, 1,  2, 1,  0, 0}, // #512
-  {DBGFIELD("IIC_SWAPGS_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #513
-  {DBGFIELD("IIC_SYSCALL_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #514
-  {DBGFIELD("IIC_SYS_ENTER_EXIT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #515
-  {DBGFIELD("IIC_JMP_REL_WriteJumpLd") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #516
-  {DBGFIELD("IIC_JMP_MEM_WriteJump") 1, false, false, 429, 2,  2, 1,  0, 0}, // #517
-  {DBGFIELD("IIC_JMP_REG_WriteJumpLd") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #518
-  {DBGFIELD("WriteJump")          1, false, false, 429, 2,  2, 1,  0, 0}, // #519
-  {DBGFIELD("IIC_FUCOMI_WriteFAdd") 1, false, false, 427, 2,  6, 1,  0, 0}, // #520
-  {DBGFIELD("IIC_FUCOM_WriteFAdd") 1, false, false, 427, 2,  6, 1,  0, 0}, // #521
-  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #522
-  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #523
-  {DBGFIELD("IIC_SSE_ALU_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #524
-  {DBGFIELD("IIC_SSE_ALU_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #525
-  {DBGFIELD("IIC_SSE_ALU_F32S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #526
-  {DBGFIELD("IIC_SSE_ALU_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #527
-  {DBGFIELD("WriteFVarBlendLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #528
-  {DBGFIELD("WriteFVarBlend")     1, false, false, 1172, 2,  2, 1,  0, 0}, // #529
-  {DBGFIELD("WriteFShuffleLd")    1, false, false, 1180, 3,  9, 1,  0, 0}, // #530
-  {DBGFIELD("WriteFShuffle256")   1, false, false, 1172, 2,  2, 1,  0, 0}, // #531
-  {DBGFIELD("WriteFShuffle")      1, false, false, 1172, 2,  2, 1,  0, 0}, // #532
-  {DBGFIELD("IIC_SSE_ALU_F32P_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #533
-  {DBGFIELD("WriteCvtF2ILd")      1, false, false, 13, 2,  5, 1,  0, 0}, // #534
-  {DBGFIELD("WriteCvtF2I")        1, false, false, 13, 1,  9, 1,  0, 0}, // #535
-  {DBGFIELD("WriteCvtF2FLd")      1, false, false, 13, 2,  5, 1,  0, 0}, // #536
-  {DBGFIELD("WriteCvtF2F")        1, false, false, 13, 1,  9, 1,  0, 0}, // #537
-  {DBGFIELD("WriteCvtF2FLd_WriteRMW") 2, false, false, 792, 2, 25, 2,  0, 0}, // #538
-  {DBGFIELD("WriteCvtF2FLd_ReadAfterLd") 1, false, false, 13, 2,  5, 1,  4, 1}, // #539
-  {DBGFIELD("WriteCvtI2FLd_ReadAfterLd") 1, false, false, 13, 2,  5, 1,  4, 1}, // #540
-  {DBGFIELD("IIC_VERR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #541
-  {DBGFIELD("IIC_VERW_REG_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #542
-  {DBGFIELD("IIC_VERW_MEM_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #543
-  {DBGFIELD("WriteStore")         1, false, false, 386, 2,  2, 1,  0, 0}, // #544
-  {DBGFIELD("WriteShuffle256")    1, false, false, 1172, 2,  2, 1,  0, 0}, // #545
-  {DBGFIELD("IIC_ALU_MEM_WriteFBlendLd_WriteRMW") 2, false, false, 1195, 3, 41, 2,  0, 0}, // #546
-  {DBGFIELD("WriteFShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #547
-  {DBGFIELD("WriteShuffle256Ld_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #548
-  {DBGFIELD("IIC_ALU_MEM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #549
-  {DBGFIELD("IIC_ALU_NONMEM_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #550
-  {DBGFIELD("IIC_SSE_MOVDQ")      0, false, false,  0, 0,  0, 0,  0, 0}, // #551
-  {DBGFIELD("IIC_SSE_MOV_LH")     0, false, false,  0, 0,  0, 0,  0, 0}, // #552
-  {DBGFIELD("IIC_SSE_MOVD_ToGP")  0, false, false,  0, 0,  0, 0,  0, 0}, // #553
-  {DBGFIELD("IIC_SSE_MOV_S_MR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #554
-  {DBGFIELD("IIC_SSE_MOV_S_RM")   0, false, false,  0, 0,  0, 0,  0, 0}, // #555
-  {DBGFIELD("IIC_SSE_MOV_S_RR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #556
-  {DBGFIELD("IIC_SSE_MOVQ_RR")    0, false, false,  0, 0,  0, 0,  0, 0}, // #557
-  {DBGFIELD("IIC_ALU_MEM_WriteMPSADLd_ReadAfterLd") 1, false, false, 1180, 3,  8, 1,  4, 1}, // #558
-  {DBGFIELD("IIC_ALU_NONMEM_WriteMPSAD") 1, false, false, 1172, 2,  5, 1,  0, 0}, // #559
-  {DBGFIELD("WriteVecALULd")      1, false, false, 13, 2,  9, 1,  0, 0}, // #560
-  {DBGFIELD("WriteBlendLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #561
-  {DBGFIELD("WriteBlend")         1, false, false, 1172, 2,  2, 1,  0, 0}, // #562
-  {DBGFIELD("WriteVarBlendLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #563
-  {DBGFIELD("WriteVarBlend")      1, false, false, 1172, 2,  2, 1,  0, 0}, // #564
-  {DBGFIELD("IIC_ALU_MEM_WriteBlendLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #565
-  {DBGFIELD("IIC_ALU_NONMEM_WriteBlend") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #566
-  {DBGFIELD("WriteCLMulLd_ReadAfterLd") 1, false, false, 1210, 3,  8, 1,  4, 1}, // #567
-  {DBGFIELD("WriteCLMul")         1, false, false, 1210, 2,  8, 1,  0, 0}, // #568
-  {DBGFIELD("IIC_SSE_ALU_F32P_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #569
-  {DBGFIELD("WriteFShuffle256Ld_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #570
-  {DBGFIELD("IIC_ALU_MEM_WriteShuffleLd") 1, false, false, 1180, 3,  9, 1,  0, 0}, // #571
-  {DBGFIELD("IIC_ALU_NONMEM_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #572
-  {DBGFIELD("WriteVarVecShift_ReadAfterLd") 1, false, false, 1172, 2,  2, 1,  4, 1}, // #573
-  {DBGFIELD("WriteVarVecShift")   1, false, false, 1172, 2,  2, 1,  0, 0}, // #574
-  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd") 1, false, false, 1180, 3,  9, 1,  0, 0}, // #575
-  {DBGFIELD("WriteVecShift")      1, false, false, 1172, 2,  2, 1,  0, 0}, // #576
-  {DBGFIELD("WriteVarVecShiftLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #577
-  {DBGFIELD("WriteFRcpLd")        1, false, false, 1180, 3, 10, 1,  0, 0}, // #578
-  {DBGFIELD("WriteFRsqrtLd")      1, false, false, 1180, 3, 10, 1,  0, 0}, // #579
-  {DBGFIELD("WriteFSqrtLd")       1, false, false, 1180, 3, 39, 1,  0, 0}, // #580
-  {DBGFIELD("IIC_WAIT_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #581
-  {DBGFIELD("IIC_WRMSR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #582
-  {DBGFIELD("IIC_XADD_MEM_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #583
-  {DBGFIELD("IIC_XADD_REG_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #584
-  {DBGFIELD("IIC_XCHG_REG_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #585
-  {DBGFIELD("IIC_XCHG_MEM_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #586
-  {DBGFIELD("IIC_FXCH_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #587
-  {DBGFIELD("IIC_XLAT_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #588
-  {DBGFIELD("MOV16rm")            1, false, false, 14, 1,  6, 1,  0, 0}, // #589
-  {DBGFIELD("MOVSX32rm16_MOVSX32rm8") 1, false, false, 386, 2,  9, 1,  0, 0}, // #590
-  {DBGFIELD("MOVZX32rm16_MOVZX32rm8") 1, false, false, 386, 2,  9, 1,  0, 0}, // #591
-  {DBGFIELD("CMOVA16rr_CMOVAE16rr_CMOVB16rr_CMOVBE16rr_CMOVE16rr_CMOVG16rr_CMOVGE16rr_CMOVL16rr_CMOVLE16rr_CMOVNE16rr_CMOVNO16rr_CMOVNP16rr_CMOVNS16rr_CMOVO16rr_CMOVP16rr_CMOVS16rr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #592
-  {DBGFIELD("CMOVA32rr_CMOVA64rr_CMOVAE32rr_CMOVAE64rr_CMOVB32rr_CMOVB64rr_CMOVBE32rr_CMOVBE64rr_CMOVE32rr_CMOVE64rr_CMOVG32rr_CMOVG64rr_CMOVGE32rr_CMOVGE64rr_CMOVL32rr_CMOVL64rr_CMOVLE32rr_CMOVLE64rr_CMOVNE32rr_CMOVNE64rr_CMOVNO32rr_CMOVNO64rr_CMOVNP32rr_CMOVNP64rr_CMOVNS32rr_CMOVNS64rr_CMOVO32rr_CMOVO64rr_CMOVP32rr_CMOVP64rr_CMOVS32rr_CMOVS64rr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #593
-  {DBGFIELD("CMOVA16rm_CMOVAE16rm_CMOVB16rm_CMOVBE16rm_CMOVE16rm_CMOVG16rm_CMOVGE16rm_CMOVL16rm_CMOVLE16rm_CMOVNE16rm_CMOVNO16rm_CMOVNP16rm_CMOVNS16rm_CMOVO16rm_CMOVP16rm_CMOVS16rm") 1, false, false, 386, 2,  9, 1,  4, 1}, // #594
-  {DBGFIELD("CMOVA32rm_CMOVA64rm_CMOVAE32rm_CMOVAE64rm_CMOVB32rm_CMOVB64rm_CMOVBE32rm_CMOVBE64rm_CMOVE32rm_CMOVE64rm_CMOVG32rm_CMOVG64rm_CMOVGE32rm_CMOVGE64rm_CMOVL32rm_CMOVL64rm_CMOVLE32rm_CMOVLE64rm_CMOVNE32rm_CMOVNE64rm_CMOVNO32rm_CMOVNO64rm_CMOVNP32rm_CMOVNP64rm_CMOVNS32rm_CMOVNS64rm_CMOVO32rm_CMOVO64rm_CMOVP32rm_CMOVP64rm_CMOVS32rm_CMOVS64rm") 1, false, false, 386, 2,  9, 1,  4, 1}, // #595
-  {DBGFIELD("XCHG16ar_XCHG16rr_XCHG32ar_XCHG32ar64_XCHG32rr_XCHG64ar_XCHG64rr_XCHG8rr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #596
-  {DBGFIELD("XCHG16rm_XCHG32rm_XCHG64rm_XCHG8rm") 2, false, false, 430, 2, 41, 2,  0, 0}, // #597
-  {DBGFIELD("XLAT")               1, false, false, 14, 1,  6, 1,  0, 0}, // #598
-  {DBGFIELD("PUSH16rmm_PUSH32rmm") 1, false, false, 14, 1,  2, 1,  0, 0}, // #599
-  {DBGFIELD("PUSHF16_PUSHF32")    1, false, false, 386, 2,  2, 1,  0, 0}, // #600
-  {DBGFIELD("PUSHA16_PUSHA32")    1, false, false, 386, 2,  2, 1,  0, 0}, // #601
-  {DBGFIELD("POP16rmm_POP32rmm")  1, false, false, 14, 1,  6, 1,  0, 0}, // #602
-  {DBGFIELD("POPF16")             1, false, false, 14, 1,  6, 1,  0, 0}, // #603
-  {DBGFIELD("POPF32")             1, false, false, 14, 1,  6, 1,  0, 0}, // #604
-  {DBGFIELD("POPA16_POPA32")      1, false, false, 14, 1,  6, 1,  0, 0}, // #605
-  {DBGFIELD("LAHF_SAHF")          1, false, false, 386, 1,  2, 1,  0, 0}, // #606
-  {DBGFIELD("BSWAP32r")           1, false, false, 386, 1,  2, 1,  0, 0}, // #607
-  {DBGFIELD("BSWAP64r")           1, false, false, 386, 1,  2, 1,  0, 0}, // #608
-  {DBGFIELD("MOVBE16rm_MOVBE64rm") 1, false, false, 386, 2,  9, 1,  0, 0}, // #609
-  {DBGFIELD("MOVBE32rm")          1, false, false, 386, 2,  9, 1,  0, 0}, // #610
-  {DBGFIELD("MOVBE16mr")          1, false, false, 386, 2,  2, 1,  0, 0}, // #611
-  {DBGFIELD("MOVBE32mr")          1, false, false, 386, 2,  2, 1,  0, 0}, // #612
-  {DBGFIELD("MOVBE64mr")          1, false, false, 386, 2,  2, 1,  0, 0}, // #613
-  {DBGFIELD("ADD16mi_ADD16mi8_ADD16mr_ADD32mi_ADD32mi8_ADD32mr_ADD64mi32_ADD64mi8_ADD64mr_ADD8mi_ADD8mi8_ADD8mr_SUB16mi_SUB16mi8_SUB16mr_SUB32mi_SUB32mi8_SUB32mr_SUB64mi32_SUB64mi8_SUB64mr_SUB8mi_SUB8mi8_SUB8mr") 2, false, false, 430, 2, 41, 2,  0, 0}, // #614
-  {DBGFIELD("ADC16ri_ADC16ri8_ADC16rr_ADC16rr_REV_ADC32ri_ADC32ri8_ADC32rr_ADC32rr_REV_ADC64ri32_ADC64ri8_ADC64rr_ADC64rr_REV_ADC8ri_ADC8ri8_ADC8rr_ADC8rr_REV_SBB16ri_SBB16ri8_SBB16rr_SBB16rr_REV_SBB32ri_SBB32ri8_SBB32rr_SBB32rr_REV_SBB64ri32_SBB64ri8_SBB64rr_SBB64rr_REV_SBB8ri_SBB8ri8_SBB8rr_SBB8rr_REV") 1, false, false, 386, 1,  2, 1,  0, 0}, // #615
-  {DBGFIELD("ADC16rm_ADC32rm_ADC64rm_ADC8rm_SBB16rm_SBB32rm_SBB64rm_SBB8rm") 1, false, false, 386, 2,  9, 1,  4, 1}, // #616
-  {DBGFIELD("ADC16mi_ADC16mi8_ADC16mr_ADC32mi_ADC32mi8_ADC32mr_ADC64mi32_ADC64mi8_ADC64mr_ADC8mi_ADC8mi8_ADC8mr_SBB16mi_SBB16mi8_SBB16mr_SBB32mi_SBB32mi8_SBB32mr_SBB64mi32_SBB64mi8_SBB64mr_SBB8mi_SBB8mi8_SBB8mr") 2, false, false, 430, 2, 41, 2,  0, 0}, // #617
-  {DBGFIELD("DEC16m_DEC32m_DEC64m_DEC8m_INC16m_INC32m_INC64m_INC8m_NEG16m_NEG32m_NEG64m_NEG8m_NOT16m_NOT32m_NOT64m_NOT8m") 2, false, false, 430, 2, 41, 2,  0, 0}, // #618
-  {DBGFIELD("IMUL16r_IMUL16rr")   1, false, false, 429, 2,  6, 1,  0, 0}, // #619
-  {DBGFIELD("IMUL16rm")           1, false, false, 1081, 3, 16, 1,  4, 1}, // #620
-  {DBGFIELD("IMUL16rmi_IMUL16rmi8") 1, false, false, 1081, 3, 16, 1,  0, 0}, // #621
-  {DBGFIELD("IMUL16rri_IMUL16rri8") 1, false, false, 429, 2,  6, 1,  0, 0}, // #622
-  {DBGFIELD("MUL16r")             1, false, false, 429, 2,  6, 1,  0, 0}, // #623
-  {DBGFIELD("IMUL16m")            1, false, false, 1081, 3, 16, 1,  5, 2}, // #624
-  {DBGFIELD("MUL16m")             1, false, false, 1081, 3, 16, 1,  5, 2}, // #625
-  {DBGFIELD("IMUL32r_IMUL32rr")   1, false, false, 429, 2,  6, 1,  0, 0}, // #626
-  {DBGFIELD("IMUL32rm")           1, false, false, 1081, 3, 16, 1,  4, 1}, // #627
-  {DBGFIELD("IMUL32rmi_IMUL32rmi8") 1, false, false, 1081, 3, 16, 1,  0, 0}, // #628
-  {DBGFIELD("IMUL32rri_IMUL32rri8") 1, false, false, 429, 2,  6, 1,  0, 0}, // #629
-  {DBGFIELD("MUL32r")             1, false, false, 429, 2,  6, 1,  0, 0}, // #630
-  {DBGFIELD("IMUL32m")            1, false, false, 1081, 3, 16, 1,  5, 2}, // #631
-  {DBGFIELD("MUL32m")             1, false, false, 1081, 3, 16, 1,  5, 2}, // #632
-  {DBGFIELD("IMUL64r_IMUL64rr")   1, false, false, 429, 2,  6, 1,  0, 0}, // #633
-  {DBGFIELD("IMUL64rm")           1, false, false, 1081, 3, 16, 1,  4, 1}, // #634
-  {DBGFIELD("IMUL64rmi32_IMUL64rmi8") 1, false, false, 1081, 3, 16, 1,  0, 0}, // #635
-  {DBGFIELD("IMUL64rri32_IMUL64rri8") 1, false, false, 429, 2,  6, 1,  0, 0}, // #636
-  {DBGFIELD("MUL64r")             1, false, false, 429, 2,  6, 1,  0, 0}, // #637
-  {DBGFIELD("IMUL64m")            1, false, false, 1081, 3, 16, 1,  5, 2}, // #638
-  {DBGFIELD("MUL64m")             1, false, false, 1081, 3, 16, 1,  5, 2}, // #639
-  {DBGFIELD("MULX32rr")           2, false, false, 1205, 4, 54, 2,  0, 0}, // #640
-  {DBGFIELD("MULX32rm")           2, false, false, 1205, 5, 45, 2,  0, 0}, // #641
-  {DBGFIELD("MULX64rr")           2, false, false, 1205, 4, 54, 2,  0, 0}, // #642
-  {DBGFIELD("MULX64rm")           2, false, false, 1205, 5, 45, 2,  0, 0}, // #643
-  {DBGFIELD("DIV8r")              1, false, false, 1186, 2, 12, 1,  0, 0}, // #644
-  {DBGFIELD("DIV16r")             1, false, false, 1186, 2, 12, 1,  0, 0}, // #645
-  {DBGFIELD("DIV32r")             1, false, false, 1186, 2, 12, 1,  0, 0}, // #646
-  {DBGFIELD("DIV64r")             1, false, false, 1186, 2, 12, 1,  0, 0}, // #647
-  {DBGFIELD("IDIV8r")             1, false, false, 1186, 2, 12, 1,  0, 0}, // #648
-  {DBGFIELD("IDIV16r")            1, false, false, 1186, 2, 12, 1,  0, 0}, // #649
-  {DBGFIELD("IDIV32r")            1, false, false, 1186, 2, 12, 1,  0, 0}, // #650
-  {DBGFIELD("IDIV64r")            1, false, false, 1186, 2, 12, 1,  0, 0}, // #651
-  {DBGFIELD("AND16mi_AND16mi8_AND16mr_AND32mi_AND32mi8_AND32mr_AND64mi32_AND64mi8_AND64mr_AND8mi_AND8mi8_AND8mr_OR16mi_OR16mi8_OR16mr_OR32mi_OR32mi8_OR32mr_OR64mi32_OR64mi8_OR64mr_OR8mi_OR8mi8_OR8mr_XOR16mi_XOR16mi8_XOR16mr_XOR32mi_XOR32mi8_XOR32mr_XOR64mi32_XOR64mi8_XOR64mr_XOR8mi_XOR8mi8_XOR8mr") 2, false, false, 430, 2, 41, 2,  0, 0}, // #652
-  {DBGFIELD("OR32mrLocked")       2, false, false, 430, 2, 41, 2,  0, 0}, // #653
-  {DBGFIELD("SAR16m1_SAR16mi_SAR32m1_SAR32mi_SAR64m1_SAR64mi_SAR8m1_SAR8mi_SHL16m1_SHL16mi_SHL32m1_SHL32mi_SHL64m1_SHL64mi_SHL8m1_SHL8mi_SHR16m1_SHR16mi_SHR32m1_SHR32mi_SHR64m1_SHR64mi_SHR8m1_SHR8mi") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #654
-  {DBGFIELD("SAR16rCL_SAR32rCL_SAR64rCL_SAR8rCL_SHL16rCL_SHL32rCL_SHL64rCL_SHL8rCL_SHR16rCL_SHR32rCL_SHR64rCL_SHR8rCL") 1, false, false, 492, 2,  2, 1,  0, 0}, // #655
-  {DBGFIELD("SAR16mCL_SAR32mCL_SAR64mCL_SAR8mCL_SHL16mCL_SHL32mCL_SHL64mCL_SHL8mCL_SHR16mCL_SHR32mCL_SHR64mCL_SHR8mCL") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #656
-  {DBGFIELD("ROL16r1_ROL32r1_ROL64r1_ROL8r1_ROR16r1_ROR32r1_ROR64r1_ROR8r1") 1, false, false, 492, 2,  2, 1,  0, 0}, // #657
-  {DBGFIELD("ROL16mi_ROL32mi_ROL64mi_ROL8mi_ROR16mi_ROR32mi_ROR64mi_ROR8mi") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #658
-  {DBGFIELD("ROL16rCL_ROL32rCL_ROL64rCL_ROL8rCL_ROR16rCL_ROR32rCL_ROR64rCL_ROR8rCL") 1, false, false, 492, 2,  2, 1,  0, 0}, // #659
-  {DBGFIELD("ROL16mCL_ROL32mCL_ROL64mCL_ROL8mCL_ROR16mCL_ROR32mCL_ROR64mCL_ROR8mCL") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #660
-  {DBGFIELD("RCL16r1_RCL32r1_RCL64r1_RCL8r1_RCR16r1_RCR32r1_RCR64r1_RCR8r1") 1, false, false, 492, 2,  2, 1,  0, 0}, // #661
-  {DBGFIELD("RCL16m1_RCL32m1_RCL64m1_RCL8m1_RCR16m1_RCR32m1_RCR64m1_RCR8m1") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #662
-  {DBGFIELD("RCL16rCL_RCL16ri_RCL32rCL_RCL32ri_RCL64rCL_RCL64ri_RCL8rCL_RCL8ri_RCR16rCL_RCR16ri_RCR32rCL_RCR32ri_RCR64rCL_RCR64ri_RCR8rCL_RCR8ri") 1, false, false, 492, 2,  2, 1,  0, 0}, // #663
-  {DBGFIELD("RCL16mCL_RCL16mi_RCL32mCL_RCL32mi_RCL64mCL_RCL64mi_RCL8mCL_RCL8mi_RCR16mCL_RCR16mi_RCR32mCL_RCR32mi_RCR64mCL_RCR64mi_RCR8mCL_RCR8mi") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #664
-  {DBGFIELD("SHLD16rri8_SHRD16rri8") 1, false, false, 492, 2,  2, 1,  0, 0}, // #665
-  {DBGFIELD("SHLD32rri8_SHRD32rri8") 1, false, false, 492, 2,  2, 1,  0, 0}, // #666
-  {DBGFIELD("SHLD64rri8_SHRD64rri8") 1, false, false, 492, 2,  2, 1,  0, 0}, // #667
-  {DBGFIELD("SHLD16mri8_SHRD16mri8") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #668
-  {DBGFIELD("SHLD32mri8_SHRD32mri8") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #669
-  {DBGFIELD("SHLD64mri8_SHRD64mri8") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #670
-  {DBGFIELD("SHLD16rrCL")         1, false, false, 492, 2,  2, 1,  0, 0}, // #671
-  {DBGFIELD("SHLD32rrCL")         1, false, false, 492, 2,  2, 1,  0, 0}, // #672
-  {DBGFIELD("SHLD64rrCL")         1, false, false, 492, 2,  2, 1,  0, 0}, // #673
-  {DBGFIELD("SHRD16rrCL")         1, false, false, 492, 2,  2, 1,  0, 0}, // #674
-  {DBGFIELD("SHRD32rrCL")         1, false, false, 492, 2,  2, 1,  0, 0}, // #675
-  {DBGFIELD("SHRD64rrCL")         1, false, false, 492, 2,  2, 1,  0, 0}, // #676
-  {DBGFIELD("SHLD16mrCL_SHRD16mrCL") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #677
-  {DBGFIELD("SHLD32mrCL_SHRD32mrCL") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #678
-  {DBGFIELD("SHLD64mrCL_SHRD64mrCL") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #679
-  {DBGFIELD("BT16ri8_BT32ri8_BT64ri8") 1, false, false, 386, 1,  2, 1,  0, 0}, // #680
-  {DBGFIELD("BT16rr_BT32rr_BT64rr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #681
-  {DBGFIELD("BT16mr_BT32mr_BT64mr") 1, false, false, 386, 2,  9, 1,  0, 0}, // #682
-  {DBGFIELD("BT16mi8_BT32mi8_BT64mi8") 1, false, false, 386, 1,  2, 1,  0, 0}, // #683
-  {DBGFIELD("BTC16ri8_BTC32ri8_BTC64ri8_BTR16ri8_BTR32ri8_BTR64ri8_BTS16ri8_BTS32ri8_BTS64ri8") 1, false, false, 386, 1,  2, 1,  0, 0}, // #684
-  {DBGFIELD("BTC16rr_BTC32rr_BTC64rr_BTR16rr_BTR32rr_BTS16rr_BTS32rr_BTS64rr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #685
-  {DBGFIELD("BTR64rr")            1, false, false, 386, 1,  2, 1,  0, 0}, // #686
-  {DBGFIELD("BTC16mr_BTC32mr_BTC64mr_BTR16mr_BTR32mr_BTR64mr_BTS16mr_BTS32mr_BTS64mr") 2, false, false, 430, 2, 41, 2,  0, 0}, // #687
-  {DBGFIELD("BTC16mi8_BTC32mi8_BTC64mi8_BTR16mi8_BTR32mi8_BTR64mi8_BTS16mi8_BTS32mi8_BTS64mi8") 2, false, false, 430, 2, 41, 2,  0, 0}, // #688
-  {DBGFIELD("BSF16rr_BSF32rr_BSF64rr_BSR16rr_BSR32rr_BSR64rr") 1, false, false, 492, 2,  2, 1,  0, 0}, // #689
-  {DBGFIELD("BSF16rm_BSF32rm_BSF64rm_BSR16rm_BSR32rm_BSR64rm") 1, false, false, 930, 3,  9, 1,  0, 0}, // #690
-  {DBGFIELD("SETAEr_SETAr_SETBEr_SETBr_SETEr_SETGEr_SETGr_SETLEr_SETLr_SETNEr_SETNOr_SETNPr_SETNSr_SETOr_SETPr_SETSr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #691
-  {DBGFIELD("SETAEm_SETAm_SETBEm_SETBm_SETEm_SETGEm_SETGm_SETLEm_SETLm_SETNEm_SETNOm_SETNPm_SETNSm_SETOm_SETPm_SETSm") 2, false, false, 1155, 2, 21, 2,  0, 0}, // #692
-  {DBGFIELD("CLD")                1, false, false, 386, 1,  2, 1,  0, 0}, // #693
-  {DBGFIELD("STD")                1, false, false, 386, 1,  2, 1,  0, 0}, // #694
-  {DBGFIELD("TZCNT16rr_TZCNT32rr_TZCNT64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #695
-  {DBGFIELD("TZCNT16rm_TZCNT32rm_TZCNT64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #696
-  {DBGFIELD("ANDN32rr_ANDN64rr")  1, false, false, 386, 1,  2, 1,  0, 0}, // #697
-  {DBGFIELD("ANDN32rm_ANDN64rm")  1, false, false, 386, 2,  9, 1,  4, 1}, // #698
-  {DBGFIELD("BLSI32rr_BLSI64rr_BLSMSK32rr_BLSMSK64rr_BLSR32rr_BLSR64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #699
-  {DBGFIELD("BLSI32rm_BLSI64rm_BLSMSK32rm_BLSMSK64rm_BLSR32rm_BLSR64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #700
-  {DBGFIELD("BEXTR32rr_BEXTR64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #701
-  {DBGFIELD("BEXTR32rm_BEXTR64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #702
-  {DBGFIELD("BZHI32rr_BZHI64rr")  0, false, false,  0, 0,  0, 0,  0, 0}, // #703
-  {DBGFIELD("BZHI32rm_BZHI64rm")  0, false, false,  0, 0,  0, 0,  0, 0}, // #704
-  {DBGFIELD("PDEP32rr_PDEP64rr_PEXT32rr_PEXT64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #705
-  {DBGFIELD("PDEP32rm_PDEP64rm_PEXT32rm_PEXT64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #706
-  {DBGFIELD("JCXZ_JRCXZ")         1, false, false, 429, 2,  2, 1,  0, 0}, // #707
-  {DBGFIELD("LOOP")               1, false, false, 429, 2,  2, 1,  0, 0}, // #708
-  {DBGFIELD("LOOPE")              1, false, false, 429, 2,  2, 1,  0, 0}, // #709
-  {DBGFIELD("LOOPNE")             1, false, false, 429, 2,  2, 1,  0, 0}, // #710
-  {DBGFIELD("CALL16r_CALL32r")    1, false, false, 429, 2,  2, 1,  0, 0}, // #711
-  {DBGFIELD("CALL16m_CALL32m")    1, false, false, 1081, 3,  9, 1,  0, 0}, // #712
-  {DBGFIELD("LRETL_LRETQ_LRETW_RETL_RETQ_RETW") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #713
-  {DBGFIELD("LRETIL_LRETIQ_LRETIW") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #714
-  {DBGFIELD("RETIL_RETIQ_RETIW")  1, false, false, 1081, 3,  9, 1,  0, 0}, // #715
-  {DBGFIELD("BOUNDS16rm_BOUNDS32rm") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #716
-  {DBGFIELD("INTO")               1, false, false, 1172, 2,  1, 1,  0, 0}, // #717
-  {DBGFIELD("LODSB_LODSW")        1, false, false, 1172, 2,  1, 1,  0, 0}, // #718
-  {DBGFIELD("LODSL_LODSQ")        1, false, false, 1172, 2,  1, 1,  0, 0}, // #719
-  {DBGFIELD("STOSB_STOSL_STOSQ_STOSW") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #720
-  {DBGFIELD("MOVSB_MOVSL_MOVSQ_MOVSW") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #721
-  {DBGFIELD("MOVSLDUPrm")         1, false, false, 14, 1,  6, 1,  0, 0}, // #722
-  {DBGFIELD("MOVSLDUPrr")         1, false, false, 1172, 2,  2, 1,  0, 0}, // #723
-  {DBGFIELD("SCASB_SCASL_SCASQ_SCASW") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #724
-  {DBGFIELD("CMPSB_CMPSL_CMPSQ_CMPSW") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #725
-  {DBGFIELD("XADD16rm_XADD32rm_XADD64rm_XADD8rm") 2, false, false, 430, 2, 41, 2,  0, 0}, // #726
-  {DBGFIELD("CMPXCHG16rm_CMPXCHG32rm_CMPXCHG64rm") 2, false, false, 430, 2, 41, 2,  0, 0}, // #727
-  {DBGFIELD("CMPXCHG8rm")         2, false, false, 430, 2, 41, 2,  0, 0}, // #728
-  {DBGFIELD("CMPXCHG8B")          2, false, false, 430, 2, 41, 2,  0, 0}, // #729
-  {DBGFIELD("CMPXCHG16B")         2, false, false, 430, 2, 41, 2,  0, 0}, // #730
-  {DBGFIELD("PAUSE")              1, false, false,  0, 0,  2, 1,  0, 0}, // #731
-  {DBGFIELD("LEAVE_LEAVE64")      1, false, false, 386, 1,  2, 1,  0, 0}, // #732
-  {DBGFIELD("XGETBV")             1, false, false, 1172, 2,  1, 1,  0, 0}, // #733
-  {DBGFIELD("RDTSC")              1, false, false, 1172, 2,  1, 1,  0, 0}, // #734
-  {DBGFIELD("RDTSCP")             1, false, false, 1172, 2,  1, 1,  0, 0}, // #735
-  {DBGFIELD("RDPMC")              1, false, false, 1172, 2,  1, 1,  0, 0}, // #736
-  {DBGFIELD("RDRAND16r_RDRAND32r_RDRAND64r") 0, false, false,  0, 0,  0, 0,  0, 0}, // #737
-  {DBGFIELD("LD_Frr")             1, false, false, 386, 1,  2, 1,  0, 0}, // #738
-  {DBGFIELD("LD_F80m")            1, false, false, 14, 1,  6, 1,  0, 0}, // #739
-  {DBGFIELD("FBLDm")              0, false, false,  0, 0,  0, 0,  0, 0}, // #740
-  {DBGFIELD("ST_FPrr_ST_Frr")     1, false, false, 386, 1,  2, 1,  0, 0}, // #741
-  {DBGFIELD("ST_FP80m")           1, false, false, 386, 2,  2, 1,  0, 0}, // #742
-  {DBGFIELD("FBSTPm")             0, false, false,  0, 0,  0, 0,  0, 0}, // #743
-  {DBGFIELD("XCH_F")              1, false, false, 386, 1,  2, 1,  0, 0}, // #744
-  {DBGFIELD("ILD_F16m_ILD_F32m_ILD_F64m") 1, false, false, 14, 1,  6, 1,  0, 0}, // #745
-  {DBGFIELD("IST_F16m_IST_F32m_IST_FP16m_IST_FP32m") 1, false, false, 386, 2,  2, 1,  0, 0}, // #746
-  {DBGFIELD("LD_F0")              1, false, false,  0, 0,  2, 1,  0, 0}, // #747
-  {DBGFIELD("LD_F1")              1, false, false,  0, 0,  2, 1,  0, 0}, // #748
-  {DBGFIELD("FLDPI")              1, false, false, 1172, 2,  1, 1,  0, 0}, // #749
-  {DBGFIELD("CMOVBE_F_CMOVBE_Fp32_CMOVBE_Fp64_CMOVBE_Fp80_CMOVB_F_CMOVB_Fp32_CMOVB_Fp64_CMOVB_Fp80_CMOVNBE_F_CMOVNBE_Fp32_CMOVNBE_Fp64_CMOVNBE_Fp80_CMOVNB_F_CMOVNB_Fp32_CMOVNB_Fp64_CMOVNB_Fp80_CMOVNE_F_CMOVNE_Fp32_CMOVNE_Fp64_CMOVNE_Fp80_CMOVNP_F_CMOVNP_Fp32_CMOVNP_Fp64_CMOVNP_Fp80_CMOVP_F_CMOVP_Fp32_CMOVP_Fp64_CMOVP_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #750
-  {DBGFIELD("FNSTSW16r")          1, false, false, 386, 1,  2, 1,  0, 0}, // #751
-  {DBGFIELD("FNSTSWm")            0, false, false,  0, 0,  0, 0,  0, 0}, // #752
-  {DBGFIELD("FLDCW16m")           1, false, false, 14, 1,  6, 1,  0, 0}, // #753
-  {DBGFIELD("FNSTCW16m")          1, false, false, 386, 1,  2, 1,  0, 0}, // #754
-  {DBGFIELD("FDECSTP_FINCSTP")    1, false, false, 1172, 2,  1, 1,  0, 0}, // #755
-  {DBGFIELD("FFREE")              1, false, false, 1172, 2,  1, 1,  0, 0}, // #756
-  {DBGFIELD("FSAVEm")             0, false, false,  0, 0,  0, 0,  0, 0}, // #757
-  {DBGFIELD("FRSTORm")            0, false, false,  0, 0,  0, 0,  0, 0}, // #758
-  {DBGFIELD("ABS_F_ABS_Fp32_ABS_Fp64_ABS_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #759
-  {DBGFIELD("CHS_F_CHS_Fp32_CHS_Fp64_CHS_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #760
-  {DBGFIELD("COMP_FST0r_COM_FST0r") 0, false, false,  0, 0,  0, 0,  0, 0}, // #761
-  {DBGFIELD("UCOM_FPr_UCOM_Fr")   1, false, false, 427, 2,  6, 1,  0, 0}, // #762
-  {DBGFIELD("FCOM32m_FCOM64m_FCOMP32m_FCOMP64m") 0, false, false,  0, 0,  0, 0,  0, 0}, // #763
-  {DBGFIELD("FCOMPP")             1, false, false, 1172, 2,  1, 1,  0, 0}, // #764
-  {DBGFIELD("UCOM_FPPr")          1, false, false, 427, 2,  6, 1,  0, 0}, // #765
-  {DBGFIELD("COM_FIPr_COM_FIr")   1, false, false, 427, 2,  6, 1,  0, 0}, // #766
-  {DBGFIELD("UCOM_FIPr_UCOM_FIr") 1, false, false, 427, 2,  6, 1,  0, 0}, // #767
-  {DBGFIELD("FICOM16m_FICOM32m_FICOMP16m_FICOMP32m") 0, false, false,  0, 0,  0, 0,  0, 0}, // #768
-  {DBGFIELD("TST_F_TST_Fp32_TST_Fp64_TST_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #769
-  {DBGFIELD("FXAM")               1, false, false, 1172, 2,  1, 1,  0, 0}, // #770
-  {DBGFIELD("FPREM")              1, false, false, 1172, 2,  1, 1,  0, 0}, // #771
-  {DBGFIELD("FPREM1")             1, false, false, 1172, 2,  1, 1,  0, 0}, // #772
-  {DBGFIELD("FRNDINT")            1, false, false, 1172, 2,  1, 1,  0, 0}, // #773
-  {DBGFIELD("FSCALE")             1, false, false, 1172, 2,  1, 1,  0, 0}, // #774
-  {DBGFIELD("FXTRACT")            1, false, false, 1172, 2,  1, 1,  0, 0}, // #775
-  {DBGFIELD("FNOP")               1, false, false, 1172, 2,  1, 1,  0, 0}, // #776
-  {DBGFIELD("WAIT")               1, false, false, 1172, 2,  1, 1,  0, 0}, // #777
-  {DBGFIELD("FNCLEX")             1, false, false, 1172, 2,  1, 1,  0, 0}, // #778
-  {DBGFIELD("FNINIT")             1, false, false, 1172, 2,  1, 1,  0, 0}, // #779
-  {DBGFIELD("MMX_MOVD64from64rr_MMX_MOVD64grr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #780
-  {DBGFIELD("MOVPDI2DIrr_VMOVPDI2DIrr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #781
-  {DBGFIELD("MMX_MOVD64rr_MMX_MOVD64to64rr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #782
-  {DBGFIELD("MOVDI2PDIrr_VMOVDI2PDIrr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #783
-  {DBGFIELD("VMOVPQIto64rr")      1, false, false, 386, 1,  2, 1,  0, 0}, // #784
-  {DBGFIELD("VMOV64toPQIrr")      1, false, false, 386, 1,  2, 1,  0, 0}, // #785
-  {DBGFIELD("MMX_MOVQ64rr_MMX_MOVQ64rr_REV") 1, false, false, 386, 1,  2, 1,  0, 0}, // #786
-  {DBGFIELD("MOVDQArr_MOVDQArr_REV_VMOVDQAYrr_VMOVDQAYrr_REV_VMOVDQArr_VMOVDQArr_REV") 1, false, false, 386, 1,  2, 1,  0, 0}, // #787
-  {DBGFIELD("MOVDQUrr_MOVDQUrr_REV_VMOVDQUYrr_VMOVDQUYrr_REV_VMOVDQUrr_VMOVDQUrr_REV") 1, false, false, 386, 1,  2, 1,  0, 0}, // #788
-  {DBGFIELD("MMX_MOVDQ2Qrr")      1, false, false, 386, 1,  2, 1,  0, 0}, // #789
-  {DBGFIELD("MMX_MOVQ2DQrr")      1, false, false, 386, 1,  2, 1,  0, 0}, // #790
-  {DBGFIELD("MMX_PACKSSDWirr_MMX_PACKSSWBirr_MMX_PACKUSWBirr") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #791
-  {DBGFIELD("MMX_PACKSSDWirm_MMX_PACKSSWBirm_MMX_PACKUSWBirm") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #792
-  {DBGFIELD("VPMOVSXBQYrr_VPMOVSXBWYrr_VPMOVSXDQYrr_VPMOVZXBQYrr_VPMOVZXBWYrr_VPMOVZXDQYrr") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #793
-  {DBGFIELD("PBLENDWrri")         1, false, false, 1172, 2,  2, 1,  0, 0}, // #794
-  {DBGFIELD("VPBLENDWYrri_VPBLENDWrri") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #795
-  {DBGFIELD("PBLENDWrmi")         1, false, false, 1180, 3,  9, 1,  4, 1}, // #796
-  {DBGFIELD("VPBLENDWYrmi_VPBLENDWrmi") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #797
-  {DBGFIELD("VPBLENDDYrri_VPBLENDDrri") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #798
-  {DBGFIELD("VPBLENDDYrmi_VPBLENDDrmi") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #799
-  {DBGFIELD("MMX_MASKMOVQ_MMX_MASKMOVQ64") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #800
-  {DBGFIELD("MASKMOVDQU_MASKMOVDQU64_VMASKMOVDQU_VMASKMOVDQU64") 1, false, false, 386, 2,  2, 1,  0, 0}, // #801
-  {DBGFIELD("VPMASKMOVDYrm_VPMASKMOVDrm_VPMASKMOVQYrm_VPMASKMOVQrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #802
-  {DBGFIELD("VPMASKMOVDYmr_VPMASKMOVDmr_VPMASKMOVQYmr_VPMASKMOVQmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #803
-  {DBGFIELD("MMX_PMOVMSKBrr")     0, false, false,  0, 0,  0, 0,  0, 0}, // #804
-  {DBGFIELD("PMOVMSKBrr_VPMOVMSKBrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #805
-  {DBGFIELD("VPMOVMSKBYrr")       1, false, false, 13, 1,  2, 1,  0, 0}, // #806
-  {DBGFIELD("MMX_PEXTRWirri")     1, false, false, 1172, 2,  2, 1,  0, 0}, // #807
-  {DBGFIELD("PEXTRBrr_PEXTRDrr_PEXTRQrr_PEXTRWrr_REV") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #808
-  {DBGFIELD("PEXTRBmr_PEXTRDmr_PEXTRQmr_PEXTRWmr") 2, false, false, 1195, 3, 41, 2,  0, 0}, // #809
-  {DBGFIELD("VPBROADCASTBrm_VPBROADCASTWrm") 1, false, false, 14, 1,  6, 1,  0, 0}, // #810
-  {DBGFIELD("VPBROADCASTBYrm_VPBROADCASTWYrm") 1, false, false, 14, 1,  6, 1,  0, 0}, // #811
-  {DBGFIELD("VPGATHERDDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #812
-  {DBGFIELD("VPGATHERDDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #813
-  {DBGFIELD("VPGATHERQDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #814
-  {DBGFIELD("VPGATHERQDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #815
-  {DBGFIELD("VPGATHERDQrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #816
-  {DBGFIELD("VPGATHERDQYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #817
-  {DBGFIELD("VPGATHERQQrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #818
-  {DBGFIELD("VPGATHERQQYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #819
-  {DBGFIELD("MMX_PHADDSWrr64_MMX_PHADDWrr64_MMX_PHSUBSWrr64_MMX_PHSUBWrr64") 1, false, false, 13, 1,  2, 1,  0, 0}, // #820
-  {DBGFIELD("MMX_PHADDrr64_MMX_PHSUBDrr64") 1, false, false, 13, 1,  2, 1,  0, 0}, // #821
-  {DBGFIELD("PHADDDrr_PHSUBDrr_VPHADDDrr_VPHSUBDrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #822
-  {DBGFIELD("PHADDSWrr128_PHSUBSWrr128_VPHADDSWrr128_VPHADDSWrr256_VPHSUBSWrr128_VPHSUBSWrr256") 1, false, false, 13, 1,  2, 1,  0, 0}, // #823
-  {DBGFIELD("PHADDWrr_PHSUBWrr_VPHADDDYrr_VPHADDWYrr_VPHADDWrr_VPHSUBDYrr_VPHSUBWYrr_VPHSUBWrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #824
-  {DBGFIELD("MMX_PHADDSWrm64_MMX_PHADDWrm64_MMX_PHSUBSWrm64_MMX_PHSUBWrm64") 1, false, false, 13, 2,  9, 1,  4, 1}, // #825
-  {DBGFIELD("MMX_PHADDrm64_MMX_PHSUBDrm64") 1, false, false, 13, 2,  9, 1,  4, 1}, // #826
-  {DBGFIELD("PHADDDrm_PHSUBDrm_VPHADDDrm_VPHSUBDrm") 1, false, false, 13, 2,  9, 1,  4, 1}, // #827
-  {DBGFIELD("PHADDSWrm128_PHSUBSWrm128_VPHADDSWrm128_VPHADDSWrm256_VPHSUBSWrm128_VPHSUBSWrm256") 1, false, false, 13, 2,  9, 1,  4, 1}, // #828
-  {DBGFIELD("PHADDWrm_PHSUBWrm_VPHADDDYrm_VPHADDWYrm_VPHADDWrm_VPHSUBDYrm_VPHSUBWYrm_VPHSUBWrm") 1, false, false, 13, 2,  9, 1,  4, 1}, // #829
-  {DBGFIELD("PCMPGTQrr_VPCMPGTQYrr_VPCMPGTQrr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #830
-  {DBGFIELD("PCMPGTQrm_VPCMPGTQYrm_VPCMPGTQrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #831
-  {DBGFIELD("PMULLDrr_VPMULLDYrr_VPMULLDrr") 1, false, false, 1172, 2,  9, 1,  0, 0}, // #832
-  {DBGFIELD("PMULLDrm_VPMULLDYrm_VPMULLDrm") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #833
-  {DBGFIELD("PTESTrr_VPTESTYrr_VPTESTrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #834
-  {DBGFIELD("PTESTrm_VPTESTYrm_VPTESTrm") 1, false, false, 13, 2,  9, 1,  4, 1}, // #835
-  {DBGFIELD("PSLLDrr_PSLLQrr_PSLLWrr_PSRADrr_PSRAWrr_PSRLDrr_PSRLQrr_PSRLWrr_VPSLLDYrr_VPSLLDrr_VPSLLQYrr_VPSLLQrr_VPSLLWYrr_VPSLLWrr_VPSRADYrr_VPSRADrr_VPSRAWYrr_VPSRAWrr_VPSRLDYrr_VPSRLDrr_VPSRLQYrr_VPSRLQrr_VPSRLWYrr_VPSRLWrr") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #836
-  {DBGFIELD("PSLLDQri_PSRLDQri")  1, false, false, 1172, 2,  2, 1,  0, 0}, // #837
-  {DBGFIELD("VPSLLDQYri_VPSLLDQri_VPSRLDQYri_VPSRLDQri") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #838
-  {DBGFIELD("MMX_EMMS")           0, false, false,  0, 0,  0, 0,  0, 0}, // #839
-  {DBGFIELD("MOVMSKPDrr_MOVMSKPSrr_VMOVMSKPDrr_VMOVMSKPSrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #840
-  {DBGFIELD("VMOVMSKPDYrr_VMOVMSKPSYrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #841
-  {DBGFIELD("VPERM2F128rr")       1, false, false, 1172, 2,  2, 1,  0, 0}, // #842
-  {DBGFIELD("VPERM2F128rm")       1, false, false, 1180, 3,  9, 1,  4, 1}, // #843
-  {DBGFIELD("BLENDVPDrr0_BLENDVPSrr0") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #844
-  {DBGFIELD("BLENDVPDrm0_BLENDVPSrm0") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #845
-  {DBGFIELD("VBROADCASTF128")     1, false, false, 1180, 3,  9, 1,  0, 0}, // #846
-  {DBGFIELD("EXTRACTPSrr")        1, false, false, 1172, 2,  2, 1,  0, 0}, // #847
-  {DBGFIELD("VEXTRACTPSrr")       1, false, false, 1172, 2,  2, 1,  0, 0}, // #848
-  {DBGFIELD("EXTRACTPSmr")        2, false, false, 1195, 3, 41, 2,  0, 0}, // #849
-  {DBGFIELD("VEXTRACTPSmr")       2, false, false, 1195, 3, 41, 2,  0, 0}, // #850
-  {DBGFIELD("VEXTRACTF128rr")     1, false, false, 1172, 2,  2, 1,  0, 0}, // #851
-  {DBGFIELD("VEXTRACTF128mr")     1, false, false, 386, 2,  2, 1,  0, 0}, // #852
-  {DBGFIELD("VINSERTF128rr")      1, false, false, 1172, 2,  2, 1,  0, 0}, // #853
-  {DBGFIELD("VINSERTF128rm")      1, false, false, 1180, 3,  9, 1,  4, 1}, // #854
-  {DBGFIELD("VMASKMOVPDYrm_VMASKMOVPDrm_VMASKMOVPSYrm_VMASKMOVPSrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #855
-  {DBGFIELD("VMASKMOVPDmr_VMASKMOVPSmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #856
-  {DBGFIELD("VMASKMOVPDYmr_VMASKMOVPSYmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #857
-  {DBGFIELD("VGATHERDPSrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #858
-  {DBGFIELD("VGATHERDPSYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #859
-  {DBGFIELD("VGATHERQPSrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #860
-  {DBGFIELD("VGATHERQPSYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #861
-  {DBGFIELD("VGATHERDPDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #862
-  {DBGFIELD("VGATHERDPDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #863
-  {DBGFIELD("VGATHERQPDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #864
-  {DBGFIELD("VGATHERQPDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #865
-  {DBGFIELD("CVTPD2PSrr_VCVTPD2PSrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #866
-  {DBGFIELD("CVTPD2PSrm_VCVTPD2PSXrm") 1, false, false, 13, 2,  5, 1,  0, 0}, // #867
-  {DBGFIELD("VCVTPD2PSYrr")       1, false, false, 13, 1,  9, 1,  0, 0}, // #868
-  {DBGFIELD("VCVTPD2PSYrm")       1, false, false, 13, 2,  5, 1,  0, 0}, // #869
-  {DBGFIELD("CVTSD2SSrr_Int_CVTSD2SSrr_Int_VCVTSD2SSrr_VCVTSD2SSrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #870
-  {DBGFIELD("CVTSD2SSrm")         1, false, false, 13, 2,  5, 1,  0, 0}, // #871
-  {DBGFIELD("Int_CVTSD2SSrm_Int_VCVTSD2SSrm_VCVTSD2SSrm") 1, false, false, 13, 2,  5, 1,  4, 1}, // #872
-  {DBGFIELD("CVTPS2PDrr_VCVTPS2PDrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #873
-  {DBGFIELD("CVTPS2PDrm_VCVTPS2PDYrm_VCVTPS2PDrm") 1, false, false, 13, 2,  5, 1,  0, 0}, // #874
-  {DBGFIELD("VCVTPS2PDYrr")       1, false, false, 13, 1,  9, 1,  0, 0}, // #875
-  {DBGFIELD("CVTSS2SDrr_Int_CVTSS2SDrr_Int_VCVTSS2SDrr_VCVTSS2SDrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #876
-  {DBGFIELD("CVTSS2SDrm")         1, false, false, 13, 2,  5, 1,  0, 0}, // #877
-  {DBGFIELD("Int_CVTSS2SDrm_Int_VCVTSS2SDrm_VCVTSS2SDrm") 1, false, false, 13, 2,  5, 1,  4, 1}, // #878
-  {DBGFIELD("CVTDQ2PDrr")         1, false, false, 13, 1,  9, 1,  0, 0}, // #879
-  {DBGFIELD("VCVTDQ2PDrr")        1, false, false, 13, 1,  9, 1,  0, 0}, // #880
-  {DBGFIELD("VCVTDQ2PDYrr")       1, false, false, 13, 1,  9, 1,  0, 0}, // #881
-  {DBGFIELD("CVTPD2DQrr_CVTTPD2DQrr_VCVTTPD2DQrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #882
-  {DBGFIELD("VCVTPD2DQrr")        1, false, false, 13, 1,  9, 1,  0, 0}, // #883
-  {DBGFIELD("CVTPD2DQrm_CVTTPD2DQrm") 1, false, false, 13, 2,  5, 1,  0, 0}, // #884
-  {DBGFIELD("VCVTPD2DQYrr")       1, false, false, 13, 1,  9, 1,  0, 0}, // #885
-  {DBGFIELD("VCVTTPD2DQYrr")      1, false, false, 13, 1,  9, 1,  0, 0}, // #886
-  {DBGFIELD("VCVTPD2DQYrm")       1, false, false, 13, 2,  5, 1,  0, 0}, // #887
-  {DBGFIELD("VCVTTPD2DQYrm")      1, false, false, 13, 2,  5, 1,  0, 0}, // #888
-  {DBGFIELD("MMX_CVTPS2PIirr_MMX_CVTTPS2PIirr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #889
-  {DBGFIELD("MMX_CVTPI2PDirr")    1, false, false, 13, 1,  9, 1,  0, 0}, // #890
-  {DBGFIELD("MMX_CVTPD2PIirr_MMX_CVTTPD2PIirr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #891
-  {DBGFIELD("CVTSI2SS64rr_CVTSI2SSrr_Int_CVTSI2SS64rr_Int_CVTSI2SSrr_Int_VCVTSI2SS64rr_Int_VCVTSI2SSrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #892
-  {DBGFIELD("VCVTSI2SS64rr_VCVTSI2SSrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #893
-  {DBGFIELD("CVTSS2SI64rr_CVTTSS2SI64rr_Int_CVTTSS2SI64rr_Int_VCVTTSS2SI64rr_VCVTSS2SI64rr_VCVTTSS2SI64rr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #894
-  {DBGFIELD("CVTSS2SIrr_CVTTSS2SIrr_Int_CVTTSS2SIrr_Int_VCVTTSS2SIrr_VCVTSS2SIrr_VCVTTSS2SIrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #895
-  {DBGFIELD("CVTSS2SI64rm_CVTTSS2SI64rm_Int_CVTTSS2SI64rm_Int_VCVTTSS2SI64rm_VCVTSS2SI64rm_VCVTTSS2SI64rm") 1, false, false, 13, 2,  5, 1,  0, 0}, // #896
-  {DBGFIELD("CVTSS2SIrm_CVTTSS2SIrm_Int_CVTTSS2SIrm_Int_VCVTTSS2SIrm_VCVTSS2SIrm_VCVTTSS2SIrm") 1, false, false, 13, 2,  5, 1,  0, 0}, // #897
-  {DBGFIELD("CVTSD2SI64rr_CVTSD2SIrr_CVTTSD2SI64rr_CVTTSD2SIrr_Int_CVTTSD2SI64rr_Int_CVTTSD2SIrr_Int_VCVTTSD2SI64rr_Int_VCVTTSD2SIrr_VCVTSD2SI64rr_VCVTSD2SIrr_VCVTTSD2SI64rr_VCVTTSD2SIrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #898
-  {DBGFIELD("CVTSD2SI64rm_CVTSD2SIrm_CVTTSD2SI64rm_CVTTSD2SIrm_Int_CVTTSD2SI64rm_Int_CVTTSD2SIrm_Int_VCVTTSD2SI64rm_Int_VCVTTSD2SIrm_VCVTSD2SI64rm_VCVTSD2SIrm_VCVTTSD2SI64rm_VCVTTSD2SIrm") 1, false, false, 13, 2,  5, 1,  0, 0}, // #899
-  {DBGFIELD("VCVTPS2PHYrr_VCVTPS2PHrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #900
-  {DBGFIELD("VCVTPS2PHYmr_VCVTPS2PHmr") 2, false, false, 792, 2, 25, 2,  0, 0}, // #901
-  {DBGFIELD("VCVTPH2PSYrr_VCVTPH2PSrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #902
-  {DBGFIELD("HADDPDrr_HADDPSrr_HSUBPDrr_HSUBPSrr_VHADDPDYrr_VHADDPDrr_VHADDPSYrr_VHADDPSrr_VHSUBPDYrr_VHSUBPDrr_VHSUBPSYrr_VHSUBPSrr") 1, false, false, 427, 2,  6, 1,  0, 0}, // #903
-  {DBGFIELD("HADDPDrm_HADDPSrm_HSUBPDrm_HSUBPSrm_VHADDPDYrm_VHADDPDrm_VHADDPSYrm_VHADDPSrm_VHSUBPDYrm_VHSUBPDrm_VHSUBPSYrm_VHSUBPSrm") 1, false, false, 1174, 3, 16, 1,  4, 1}, // #904
-  {DBGFIELD("MULPDrr_VMULPDrr")   1, false, false, 1202, 3,  3, 1,  0, 0}, // #905
-  {DBGFIELD("MULPSrr_VMULPSrr")   1, false, false, 1202, 3,  3, 1,  0, 0}, // #906
-  {DBGFIELD("MULSDrr_MULSDrr_Int_VMULSDrr_VMULSDrr_Int") 1, false, false, 1202, 3,  3, 1,  0, 0}, // #907
-  {DBGFIELD("MULSSrr_MULSSrr_Int_VMULSSrr_VMULSSrr_Int") 1, false, false, 1202, 3,  3, 1,  0, 0}, // #908
-  {DBGFIELD("MULPDrm_MULPSrm_VMULPDrm_VMULPSrm") 1, false, false, 1198, 4, 10, 1,  4, 1}, // #909
-  {DBGFIELD("MULSDrm_MULSDrm_Int_MULSSrm_MULSSrm_Int_VMULSDrm_VMULSDrm_Int_VMULSSrm_VMULSSrm_Int") 1, false, false, 1198, 4, 10, 1,  4, 1}, // #910
-  {DBGFIELD("VDIVPSYrr")          1, false, false, 1192, 3, 53, 1,  0, 0}, // #911
-  {DBGFIELD("VDIVPSYrm")          1, false, false, 1188, 4, 52, 1,  4, 1}, // #912
-  {DBGFIELD("VDIVPDYrr")          1, false, false, 1192, 3, 53, 1,  0, 0}, // #913
-  {DBGFIELD("VDIVPDYrm")          1, false, false, 1188, 4, 52, 1,  4, 1}, // #914
-  {DBGFIELD("VRCPPSYr")           1, false, false, 1172, 2,  3, 1,  0, 0}, // #915
-  {DBGFIELD("VRCPPSYm")           1, false, false, 1180, 3, 10, 1,  0, 0}, // #916
-  {DBGFIELD("ROUNDPDr_ROUNDPSr_VROUNDPDr_VROUNDPSr_VROUNDYPDr_VROUNDYPSr") 1, false, false, 427, 2,  6, 1,  0, 0}, // #917
-  {DBGFIELD("ROUNDSDr_ROUNDSDr_Int_ROUNDSSr_ROUNDSSr_Int_VROUNDSDr_VROUNDSDr_Int_VROUNDSSr_VROUNDSSr_Int") 1, false, false, 427, 2,  6, 1,  0, 0}, // #918
-  {DBGFIELD("ROUNDPDm_VROUNDPDm_VROUNDYPDm") 1, false, false, 1174, 3, 16, 1,  0, 0}, // #919
-  {DBGFIELD("ROUNDPSm_VROUNDPSm_VROUNDYPSm") 1, false, false, 1174, 3, 16, 1,  0, 0}, // #920
-  {DBGFIELD("ROUNDSDm_ROUNDSSm_VROUNDSDm_VROUNDSSm") 1, false, false, 1174, 3, 16, 1,  4, 1}, // #921
-  {DBGFIELD("DPPSrri_VDPPSYrri_VDPPSrri") 1, false, false, 427, 2,  6, 1,  0, 0}, // #922
-  {DBGFIELD("DPPSrmi_VDPPSYrmi_VDPPSrmi") 1, false, false, 1174, 3, 16, 1,  4, 1}, // #923
-  {DBGFIELD("DPPDrri")            1, false, false, 427, 2,  6, 1,  0, 0}, // #924
-  {DBGFIELD("VDPPDrri")           1, false, false, 427, 2,  6, 1,  0, 0}, // #925
-  {DBGFIELD("DPPDrmi_VDPPDrmi")   1, false, false, 1174, 3, 16, 1,  4, 1}, // #926
-  {DBGFIELD("VFMADDPD4rr_VFMADDPD4rrY_VFMADDPD4rrY_REV_VFMADDPD4rr_REV_VFMADDPDr132r_VFMADDPDr132rY_VFMADDPDr213r_VFMADDPDr213rY_VFMADDPDr231r_VFMADDPDr231rY_VFMADDPS4rr_VFMADDPS4rrY_VFMADDPS4rrY_REV_VFMADDPS4rr_REV_VFMADDPSr132r_VFMADDPSr132rY_VFMADDPSr213r_VFMADDPSr213rY_VFMADDPSr231r_VFMADDPSr231rY_VFMADDSD4rr_VFMADDSD4rr_Int_VFMADDSD4rr_REV_VFMADDSDr132r_VFMADDSDr132r_Int_VFMADDSDr213r_VFMADDSDr213r_Int_VFMADDSDr231r_VFMADDSDr231r_Int_VFMADDSS4rr_VFMADDSS4rr_Int_VFMADDSS4rr_REV_VFMADDSSr132r_VFMADDSSr132r_Int_VFMADDSSr213r_VFMADDSSr213r_Int_VFMADDSSr231r_VFMADDSSr231r_Int_VFMADDSUBPDr132r_VFMADDSUBPDr132rY_VFMADDSUBPDr213r_VFMADDSUBPDr213rY_VFMADDSUBPDr231r_VFMADDSUBPDr231rY_VFMADDSUBPSr132r_VFMADDSUBPSr132rY_VFMADDSUBPSr213r_VFMADDSUBPSr213rY_VFMADDSUBPSr231r_VFMADDSUBPSr231rY_VFMSUBADDPDr132r_VFMSUBADDPDr132rY_VFMSUBADDPDr213r_VFMSUBADDPDr213rY_VFMSUBADDPDr231r_VFMSUBADDPDr231rY_VFMSUBADDPSr132r_VFMSUBADDPSr132rY_VFMSUBADDPSr213r_VFMSUBADDPSr213rY_VFMSUBADDPSr231r_VFMSUBADDPSr231rY_VFMSUBPD4rr_VFMSUBPD4rrY_VFMSUBPD4rrY_REV_VFMSUBPD4rr_REV_VFMSUBPDr132r_VFMSUBPDr132rY_VFMSUBPDr213r_VFMSUBPDr213rY_VFMSUBPDr231r_VFMSUBPDr231rY_VFMSUBPS4rr_VFMSUBPS4rrY_VFMSUBPS4rrY_REV_VFMSUBPS4rr_REV_VFMSUBPSr132r_VFMSUBPSr132rY_VFMSUBPSr213r_VFMSUBPSr213rY_VFMSUBPSr231r_VFMSUBPSr231rY_VFMSUBSD4rr_VFMSUBSD4rr_Int_VFMSUBSD4rr_REV_VFMSUBSDr132r_VFMSUBSDr132r_Int_VFMSUBSDr213r_VFMSUBSDr213r_Int_VFMSUBSDr231r_VFMSUBSDr231r_Int_VFMSUBSS4rr_VFMSUBSS4rr_Int_VFMSUBSS4rr_REV_VFMSUBSSr132r_VFMSUBSSr132r_Int_VFMSUBSSr213r_VFMSUBSSr213r_Int_VFMSUBSSr231r_VFMSUBSSr231r_Int_VFNMADDPD4rr_VFNMADDPD4rrY_VFNMADDPD4rrY_REV_VFNMADDPD4rr_REV_VFNMADDPDr132r_VFNMADDPDr132rY_VFNMADDPDr213r_VFNMADDPDr213rY_VFNMADDPDr231r_VFNMADDPDr231rY_VFNMADDPS4rr_VFNMADDPS4rrY_VFNMADDPS4rrY_REV_VFNMADDPS4rr_REV_VFNMADDPSr132r_VFNMADDPSr132rY_VFNMADDPSr213r_VFNMADDPSr213rY_VFNMADDPSr231r_VFNMADDPSr231rY_VFNMADDSD4rr_VFNMADDSD4rr_Int_VFNMADDSD4rr_REV_VFNMADDSDr132r_VFNMADDSDr132r_Int_VFNMADDSDr213r_VFNMADDSDr213r_Int_VFNMADDSDr231r_VFNMADDSDr231r_Int_VFNMADDSS4rr_VFNMADDSS4rr_Int_VFNMADDSS4rr_REV_VFNMADDSSr132r_VFNMADDSSr132r_Int_VFNMADDSSr213r_VFNMADDSSr213r_Int_VFNMADDSSr231r_VFNMADDSSr231r_Int_VFNMSUBPD4rr_VFNMSUBPD4rrY_VFNMSUBPD4rrY_REV_VFNMSUBPD4rr_REV_VFNMSUBPDr132r_VFNMSUBPDr132rY_VFNMSUBPDr213r_VFNMSUBPDr213rY_VFNMSUBPDr231r_VFNMSUBPDr231rY_VFNMSUBPS4rr_VFNMSUBPS4rrY_VFNMSUBPS4rrY_REV_VFNMSUBPS4rr_REV_VFNMSUBPSr132r_VFNMSUBPSr132rY_VFNMSUBPSr213r_VFNMSUBPSr213rY_VFNMSUBPSr231r_VFNMSUBPSr231rY_VFNMSUBSD4rr_VFNMSUBSD4rr_Int_VFNMSUBSD4rr_REV_VFNMSUBSDr132r_VFNMSUBSDr132r_Int_VFNMSUBSDr213r_VFNMSUBSDr213r_Int_VFNMSUBSDr231r_VFNMSUBSDr231r_Int_VFNMSUBSS4rr_VFNMSUBSS4rr_Int_VFNMSUBSS4rr_REV_VFNMSUBSSr132r_VFNMSUBSSr132r_Int_VFNMSUBSSr213r_VFNMSUBSSr213r_Int_VFNMSUBSSr231r_VFNMSUBSSr231r_Int") 0, false, false,  0, 0,  0, 0,  0, 0}, // #927
-  {DBGFIELD("VFMADDPD4mr_VFMADDPD4mrY_VFMADDPD4rm_VFMADDPD4rmY_VFMADDPDr132m_VFMADDPDr132mY_VFMADDPDr213m_VFMADDPDr213mY_VFMADDPDr231m_VFMADDPDr231mY_VFMADDPS4mr_VFMADDPS4mrY_VFMADDPS4rm_VFMADDPS4rmY_VFMADDPSr132m_VFMADDPSr132mY_VFMADDPSr213m_VFMADDPSr213mY_VFMADDPSr231m_VFMADDPSr231mY_VFMADDSD4mr_VFMADDSD4mr_Int_VFMADDSD4rm_VFMADDSD4rm_Int_VFMADDSDr132m_VFMADDSDr132m_Int_VFMADDSDr213m_VFMADDSDr213m_Int_VFMADDSDr231m_VFMADDSDr231m_Int_VFMADDSS4mr_VFMADDSS4mr_Int_VFMADDSS4rm_VFMADDSS4rm_Int_VFMADDSSr132m_VFMADDSSr132m_Int_VFMADDSSr213m_VFMADDSSr213m_Int_VFMADDSSr231m_VFMADDSSr231m_Int_VFMADDSUBPDr132m_VFMADDSUBPDr132mY_VFMADDSUBPDr213m_VFMADDSUBPDr213mY_VFMADDSUBPDr231m_VFMADDSUBPDr231mY_VFMADDSUBPSr132m_VFMADDSUBPSr132mY_VFMADDSUBPSr213m_VFMADDSUBPSr213mY_VFMADDSUBPSr231m_VFMADDSUBPSr231mY_VFMSUBADDPDr132m_VFMSUBADDPDr132mY_VFMSUBADDPDr213m_VFMSUBADDPDr213mY_VFMSUBADDPDr231m_VFMSUBADDPDr231mY_VFMSUBADDPSr132m_VFMSUBADDPSr132mY_VFMSUBADDPSr213m_VFMSUBADDPSr213mY_VFMSUBADDPSr231m_VFMSUBADDPSr231mY_VFMSUBPD4mr_VFMSUBPD4mrY_VFMSUBPD4rm_VFMSUBPD4rmY_VFMSUBPDr132m_VFMSUBPDr132mY_VFMSUBPDr213m_VFMSUBPDr213mY_VFMSUBPDr231m_VFMSUBPDr231mY_VFMSUBPS4mr_VFMSUBPS4mrY_VFMSUBPS4rm_VFMSUBPS4rmY_VFMSUBPSr132m_VFMSUBPSr132mY_VFMSUBPSr213m_VFMSUBPSr213mY_VFMSUBPSr231m_VFMSUBPSr231mY_VFMSUBSD4mr_VFMSUBSD4mr_Int_VFMSUBSD4rm_VFMSUBSD4rm_Int_VFMSUBSDr132m_VFMSUBSDr132m_Int_VFMSUBSDr213m_VFMSUBSDr213m_Int_VFMSUBSDr231m_VFMSUBSDr231m_Int_VFMSUBSS4mr_VFMSUBSS4mr_Int_VFMSUBSS4rm_VFMSUBSS4rm_Int_VFMSUBSSr132m_VFMSUBSSr132m_Int_VFMSUBSSr213m_VFMSUBSSr213m_Int_VFMSUBSSr231m_VFMSUBSSr231m_Int_VFNMADDPD4mr_VFNMADDPD4mrY_VFNMADDPD4rm_VFNMADDPD4rmY_VFNMADDPDr132m_VFNMADDPDr132mY_VFNMADDPDr213m_VFNMADDPDr213mY_VFNMADDPDr231m_VFNMADDPDr231mY_VFNMADDPS4mr_VFNMADDPS4mrY_VFNMADDPS4rm_VFNMADDPS4rmY_VFNMADDPSr132m_VFNMADDPSr132mY_VFNMADDPSr213m_VFNMADDPSr213mY_VFNMADDPSr231m_VFNMADDPSr231mY_VFNMADDSD4mr_VFNMADDSD4mr_Int_VFNMADDSD4rm_VFNMADDSD4rm_Int_VFNMADDSDr132m_VFNMADDSDr132m_Int_VFNMADDSDr213m_VFNMADDSDr213m_Int_VFNMADDSDr231m_VFNMADDSDr231m_Int_VFNMADDSS4mr_VFNMADDSS4mr_Int_VFNMADDSS4rm_VFNMADDSS4rm_Int_VFNMADDSSr132m_VFNMADDSSr132m_Int_VFNMADDSSr213m_VFNMADDSSr213m_Int_VFNMADDSSr231m_VFNMADDSSr231m_Int_VFNMSUBPD4mr_VFNMSUBPD4mrY_VFNMSUBPD4rm_VFNMSUBPD4rmY_VFNMSUBPDr132m_VFNMSUBPDr132mY_VFNMSUBPDr213m_VFNMSUBPDr213mY_VFNMSUBPDr231m_VFNMSUBPDr231mY_VFNMSUBPS4mr_VFNMSUBPS4mrY_VFNMSUBPS4rm_VFNMSUBPS4rmY_VFNMSUBPSr132m_VFNMSUBPSr132mY_VFNMSUBPSr213m_VFNMSUBPSr213mY_VFNMSUBPSr231m_VFNMSUBPSr231mY_VFNMSUBSD4mr_VFNMSUBSD4mr_Int_VFNMSUBSD4rm_VFNMSUBSD4rm_Int_VFNMSUBSDr132m_VFNMSUBSDr132m_Int_VFNMSUBSDr213m_VFNMSUBSDr213m_Int_VFNMSUBSDr231m_VFNMSUBSDr231m_Int_VFNMSUBSS4mr_VFNMSUBSS4mr_Int_VFNMSUBSS4rm_VFNMSUBSS4rm_Int_VFNMSUBSSr132m_VFNMSUBSSr132m_Int_VFNMSUBSSr213m_VFNMSUBSSr213m_Int_VFNMSUBSSr231m_VFNMSUBSSr231m_Int") 0, false, false,  0, 0,  0, 0,  0, 0}, // #928
-  {DBGFIELD("VSQRTPSYr")          1, false, false, 1172, 2, 24, 1,  0, 0}, // #929
-  {DBGFIELD("VSQRTPSYm")          1, false, false, 1180, 3, 39, 1,  0, 0}, // #930
-  {DBGFIELD("VSQRTPDYr")          1, false, false, 1172, 2, 24, 1,  0, 0}, // #931
-  {DBGFIELD("VSQRTPDYm")          1, false, false, 1180, 3, 39, 1,  0, 0}, // #932
-  {DBGFIELD("RSQRTPSr_VRSQRTPSr") 1, false, false, 1172, 2,  3, 1,  0, 0}, // #933
-  {DBGFIELD("RSQRTSSr_VRSQRTSSr") 1, false, false, 1172, 2,  3, 1,  0, 0}, // #934
-  {DBGFIELD("RSQRTSSr_Int")       1, false, false, 1180, 3, 10, 1,  4, 1}, // #935
-  {DBGFIELD("VRSQRTSSr_Int")      1, false, false, 1180, 3, 10, 1,  0, 0}, // #936
-  {DBGFIELD("RSQRTPSm_VRSQRTPSm") 1, false, false, 1180, 3, 10, 1,  0, 0}, // #937
-  {DBGFIELD("RSQRTSSm_VRSQRTSSm") 1, false, false, 1180, 3, 10, 1,  4, 1}, // #938
-  {DBGFIELD("RSQRTSSm_Int_VRSQRTSSm_Int") 1, false, false, 1180, 3, 10, 1,  4, 1}, // #939
-  {DBGFIELD("VRSQRTPSYr")         1, false, false, 1172, 2,  3, 1,  0, 0}, // #940
-  {DBGFIELD("VRSQRTPSYm")         1, false, false, 1180, 3, 10, 1,  0, 0}, // #941
-  {DBGFIELD("ANDNPDrr_ANDNPSrr_ANDPDrr_ANDPSrr_ORPDrr_ORPSrr_VANDNPDYrr_VANDNPDrr_VANDNPSYrr_VANDNPSrr_VANDPDYrr_VANDPDrr_VANDPSYrr_VANDPSrr_VORPDYrr_VORPDrr_VORPSYrr_VORPSrr_VXORPDYrr_VXORPDrr_VXORPSYrr_VXORPSrr_XORPDrr_XORPSrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #942
-  {DBGFIELD("ANDNPDrm_ANDNPSrm_ANDPDrm_ANDPSrm_ORPDrm_ORPSrm_VANDNPDYrm_VANDNPDrm_VANDNPSYrm_VANDNPSrm_VANDPDYrm_VANDPDrm_VANDPSYrm_VANDPSrm_VORPDYrm_VORPDrm_VORPSYrm_VORPSrm_VXORPDYrm_VXORPDrm_VXORPSYrm_VXORPSrm_XORPDrm_XORPSrm") 1, false, false, 13, 2,  9, 1,  4, 1}, // #943
-  {DBGFIELD("VZEROUPPER")         0, false, false,  0, 0,  0, 0,  0, 0}, // #944
-  {DBGFIELD("VZEROALL")           0, false, false,  0, 0,  0, 0,  0, 0}, // #945
-  {DBGFIELD("LDMXCSR_VLDMXCSR")   1, false, false, 14, 1,  6, 1,  0, 0}, // #946
-  {DBGFIELD("STMXCSR_VSTMXCSR")   1, false, false, 386, 2,  2, 1,  0, 0} // #947
+  {DBGFIELD("IIC_SSE_HADDSUB_RM_WriteFAddLd_ReadAfterLd") 1, false, false, 1174, 3, 16, 1,  4, 1}, // #158
+  {DBGFIELD("IIC_SSE_HADDSUB_RR_WriteFAdd") 1, false, false, 427, 2,  6, 1,  0, 0}, // #159
+  {DBGFIELD("IIC_HLT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #160
+  {DBGFIELD("IIC_IDIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1183, 3, 11, 1,  5, 2}, // #161
+  {DBGFIELD("IIC_IDIV16_WriteIDiv") 1, false, false, 1186, 2, 12, 1,  0, 0}, // #162
+  {DBGFIELD("IIC_IDIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1183, 3, 11, 1,  5, 2}, // #163
+  {DBGFIELD("IIC_IDIV32_WriteIDiv") 1, false, false, 1186, 2, 12, 1,  0, 0}, // #164
+  {DBGFIELD("IIC_IDIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1183, 3, 11, 1,  5, 2}, // #165
+  {DBGFIELD("IIC_IDIV64_WriteIDiv") 1, false, false, 1186, 2, 12, 1,  0, 0}, // #166
+  {DBGFIELD("IIC_IDIV8_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1183, 3, 11, 1,  5, 2}, // #167
+  {DBGFIELD("IIC_IDIV8_WriteIDiv") 1, false, false, 1186, 2, 12, 1,  0, 0}, // #168
+  {DBGFIELD("IIC_FILD_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #169
+  {DBGFIELD("IIC_IMUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #170
+  {DBGFIELD("IIC_IMUL16_RR_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #171
+  {DBGFIELD("IIC_IMUL16_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  4, 1}, // #172
+  {DBGFIELD("IIC_IMUL16_RMI_WriteIMulLd") 1, false, false, 1081, 3, 16, 1,  0, 0}, // #173
+  {DBGFIELD("IIC_IMUL16_RRI_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #174
+  {DBGFIELD("IIC_IMUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #175
+  {DBGFIELD("IIC_IMUL32_RR_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #176
+  {DBGFIELD("IIC_IMUL32_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  4, 1}, // #177
+  {DBGFIELD("IIC_IMUL32_RMI_WriteIMulLd") 1, false, false, 1081, 3, 16, 1,  0, 0}, // #178
+  {DBGFIELD("IIC_IMUL32_RRI_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #179
+  {DBGFIELD("IIC_IMUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #180
+  {DBGFIELD("IIC_IMUL64_RR_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #181
+  {DBGFIELD("IIC_IMUL64_RM_WriteIMulLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  4, 1}, // #182
+  {DBGFIELD("IIC_IMUL64_RMI_WriteIMulLd") 1, false, false, 1081, 3, 16, 1,  0, 0}, // #183
+  {DBGFIELD("IIC_IMUL64_RRI_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #184
+  {DBGFIELD("IIC_IMUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #185
+  {DBGFIELD("IIC_IMUL8_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #186
+  {DBGFIELD("IIC_IN_RI_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #187
+  {DBGFIELD("IIC_IN_RR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #188
+  {DBGFIELD("IIC_INS_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #189
+  {DBGFIELD("IIC_SSE_INSERTPS_RM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #190
+  {DBGFIELD("IIC_SSE_INSERTPS_RR_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #191
+  {DBGFIELD("IIC_INT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #192
+  {DBGFIELD("IIC_INT3_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #193
+  {DBGFIELD("IIC_INVD_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #194
+  {DBGFIELD("IIC_INVLPG_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #195
+  {DBGFIELD("WriteJumpLd")        1, false, false, 1081, 3,  9, 1,  0, 0}, // #196
+  {DBGFIELD("IIC_IRET_WriteJumpLd") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #197
+  {DBGFIELD("IIC_FST_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #198
+  {DBGFIELD("IIC_FIST_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #199
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd_ReadAfterLd") 1, false, false, 13, 2,  5, 1,  4, 1}, // #200
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd_ReadAfterLd") 1, false, false, 13, 2,  5, 1,  4, 1}, // #201
+  {DBGFIELD("WriteLoad")          1, false, false, 14, 1,  6, 1,  0, 0}, // #202
+  {DBGFIELD("IIC_Jcc_WriteJump")  1, false, false, 429, 2,  2, 1,  0, 0}, // #203
+  {DBGFIELD("IIC_JCXZ_WriteJump") 1, false, false, 429, 2,  2, 1,  0, 0}, // #204
+  {DBGFIELD("IIC_JMP_MEM_WriteJumpLd") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #205
+  {DBGFIELD("IIC_JMP_REG_WriteJump") 1, false, false, 429, 2,  2, 1,  0, 0}, // #206
+  {DBGFIELD("IIC_JMP_REL_WriteJump") 1, false, false, 429, 2,  2, 1,  0, 0}, // #207
+  {DBGFIELD("IIC_AHF_WriteALU")   1, false, false, 386, 1,  2, 1,  0, 0}, // #208
+  {DBGFIELD("IIC_LAR_RM_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #209
+  {DBGFIELD("IIC_LAR_RR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #210
+  {DBGFIELD("IIC_CMPX_LOCK_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #211
+  {DBGFIELD("IIC_CMPX_LOCK_16B_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #212
+  {DBGFIELD("IIC_CMPX_LOCK_8_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #213
+  {DBGFIELD("IIC_CMPX_LOCK_8B_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #214
+  {DBGFIELD("IIC_SSE_LDDQU_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #215
+  {DBGFIELD("IIC_SSE_LDMXCSR_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #216
+  {DBGFIELD("IIC_LXS_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #217
+  {DBGFIELD("IIC_FLDZ_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #218
+  {DBGFIELD("IIC_FIST_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #219
+  {DBGFIELD("IIC_FLD_WriteLoad")  1, false, false, 14, 1,  6, 1,  0, 0}, // #220
+  {DBGFIELD("IIC_FLD80_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #221
+  {DBGFIELD("IIC_FLD_WriteMove")  1, false, false, 386, 1,  2, 1,  0, 0}, // #222
+  {DBGFIELD("IIC_LEA_16_WriteLEA") 1, false, false, 429, 2,  2, 1,  0, 0}, // #223
+  {DBGFIELD("IIC_LEA_WriteLEA")   1, false, false, 429, 2,  2, 1,  0, 0}, // #224
+  {DBGFIELD("IIC_LEAVE_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #225
+  {DBGFIELD("IIC_SSE_LFENCE_WriteFence") 1, false, false, 14, 1,  2, 1,  0, 0}, // #226
+  {DBGFIELD("IIC_LGDT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #227
+  {DBGFIELD("IIC_LIDT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #228
+  {DBGFIELD("IIC_LLDT_MEM_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #229
+  {DBGFIELD("IIC_LLDT_REG_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #230
+  {DBGFIELD("IIC_LMSW_REG_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #231
+  {DBGFIELD("IIC_LMSW_MEM_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #232
+  {DBGFIELD("IIC_ALU_MEM_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #233
+  {DBGFIELD("IIC_ALU_NONMEM_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #234
+  {DBGFIELD("IIC_LODS_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #235
+  {DBGFIELD("IIC_LOOP_WriteJump") 1, false, false, 429, 2,  2, 1,  0, 0}, // #236
+  {DBGFIELD("IIC_LOOPE_WriteJump") 1, false, false, 429, 2,  2, 1,  0, 0}, // #237
+  {DBGFIELD("IIC_LOOPNE_WriteJump") 1, false, false, 429, 2,  2, 1,  0, 0}, // #238
+  {DBGFIELD("IIC_RET_WriteJumpLd") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #239
+  {DBGFIELD("IIC_LSL_RM_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #240
+  {DBGFIELD("IIC_LSL_RR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #241
+  {DBGFIELD("IIC_LTR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #242
+  {DBGFIELD("IIC_XADD_LOCK_MEM_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #243
+  {DBGFIELD("IIC_XADD_LOCK_MEM8_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #244
+  {DBGFIELD("IIC_SSE_MASKMOV_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #245
+  {DBGFIELD("IIC_SSE_MFENCE_WriteFence") 1, false, false, 14, 1,  2, 1,  0, 0}, // #246
+  {DBGFIELD("IIC_MMX_CVT_PD_RM_WriteCvtF2ILd") 1, false, false, 13, 2,  5, 1,  0, 0}, // #247
+  {DBGFIELD("IIC_MMX_CVT_PD_RR_WriteCvtF2I") 1, false, false, 13, 1,  9, 1,  0, 0}, // #248
+  {DBGFIELD("WriteCvtI2FLd")      1, false, false, 13, 2,  5, 1,  0, 0}, // #249
+  {DBGFIELD("WriteCvtI2F")        1, false, false, 13, 1,  9, 1,  0, 0}, // #250
+  {DBGFIELD("IIC_MMX_CVT_PS_RM_WriteCvtF2ILd") 1, false, false, 13, 2,  5, 1,  0, 0}, // #251
+  {DBGFIELD("IIC_MMX_CVT_PS_RR_WriteCvtF2I") 1, false, false, 13, 1,  9, 1,  0, 0}, // #252
+  {DBGFIELD("IIC_MMX_EMMS")       0, false, false,  0, 0,  0, 0,  0, 0}, // #253
+  {DBGFIELD("IIC_MMX_MASKMOV_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #254
+  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #255
+  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #256
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #257
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #258
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #259
+  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #260
+  {DBGFIELD("IIC_MMX_MOVQ_RR_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #261
+  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #262
+  {DBGFIELD("WriteMove")          1, false, false, 386, 1,  2, 1,  0, 0}, // #263
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd") 1, false, false, 13, 2,  9, 1,  0, 0}, // #264
+  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #265
+  {DBGFIELD("IIC_MMX_PCK_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #266
+  {DBGFIELD("IIC_MMX_PCK_RR_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #267
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #268
+  {DBGFIELD("IIC_MMX_ALUQ_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #269
+  {DBGFIELD("IIC_MMX_ALUQ_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #270
+  {DBGFIELD("WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #271
+  {DBGFIELD("WriteShuffle")       1, false, false, 1172, 2,  2, 1,  0, 0}, // #272
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #273
+  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecLogic") 1, false, false, 13, 1,  2, 1,  0, 0}, // #274
+  {DBGFIELD("IIC_MMX_MISC_FUNC_REG_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #275
+  {DBGFIELD("IIC_MMX_MISC_FUNC_MEM_WriteVecIMul") 1, false, false, 1172, 2,  9, 1,  0, 0}, // #276
+  {DBGFIELD("IIC_MMX_PEXTR_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #277
+  {DBGFIELD("IIC_MMX_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #278
+  {DBGFIELD("IIC_MMX_PHADDSUBW_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #279
+  {DBGFIELD("IIC_MMX_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #280
+  {DBGFIELD("IIC_MMX_PHADDSUBD_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #281
+  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #282
+  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #283
+  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #284
+  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMul") 1, false, false, 1172, 2,  9, 1,  0, 0}, // #285
+  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #286
+  {DBGFIELD("IIC_MMX_PSADBW_WriteVecIMul") 1, false, false, 1172, 2,  9, 1,  0, 0}, // #287
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #288
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #289
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd") 1, false, false, 1180, 3,  9, 1,  0, 0}, // #290
+  {DBGFIELD("IIC_MMX_SHIFT_RI_WriteVecShift") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #291
+  {DBGFIELD("IIC_MMX_SHIFT_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #292
+  {DBGFIELD("IIC_MMX_SHIFT_RR_WriteVecShift") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #293
+  {DBGFIELD("IIC_MMX_UNPCK_H_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #294
+  {DBGFIELD("IIC_MMX_UNPCK_H_RR_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #295
+  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #296
+  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #297
+  {DBGFIELD("IIC_SSE_MONITORX_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #298
+  {DBGFIELD("IIC_SSE_MONITOR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #299
+  {DBGFIELD("IIC_MOV_MEM_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #300
+  {DBGFIELD("IIC_MOV_MEM_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #301
+  {DBGFIELD("IIC_MOV_MEM_SR_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #302
+  {DBGFIELD("IIC_MOV_WriteMove")  1, false, false, 386, 1,  2, 1,  0, 0}, // #303
+  {DBGFIELD("IIC_MOV_MEM_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #304
+  {DBGFIELD("IIC_MOV_REG_SR_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #305
+  {DBGFIELD("IIC_MOV_SR_MEM_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #306
+  {DBGFIELD("IIC_MOV_SR_REG_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #307
+  {DBGFIELD("IIC_MOV_CR_REG_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #308
+  {DBGFIELD("IIC_MOV_DR_REG_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #309
+  {DBGFIELD("IIC_ALU_NONMEM_WriteZero") 1, false, false,  0, 0,  2, 1,  0, 0}, // #310
+  {DBGFIELD("IIC_MOV_REG_CR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #311
+  {DBGFIELD("IIC_MOV_REG_DR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #312
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #313
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #314
+  {DBGFIELD("IIC_SSE_MOVA_P_MR_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #315
+  {DBGFIELD("IIC_SSE_MOVA_P_RM_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #316
+  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #317
+  {DBGFIELD("IIC_MOVBE_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #318
+  {DBGFIELD("IIC_MOVBE_WriteALULd") 1, false, false, 386, 2,  9, 1,  0, 0}, // #319
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #320
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #321
+  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #322
+  {DBGFIELD("IIC_SSE_MOVU_P_MR_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #323
+  {DBGFIELD("IIC_SSE_MOVU_P_RM_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #324
+  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #325
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #326
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #327
+  {DBGFIELD("IIC_SSE_MOVMSK_WriteVecLogic") 1, false, false, 13, 1,  2, 1,  0, 0}, // #328
+  {DBGFIELD("IIC_SSE_MOVNT_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #329
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #330
+  {DBGFIELD("IIC_SSE_MOVD_ToGP_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #331
+  {DBGFIELD("IIC_SSE_MOVQ_RR_WriteVecLogic") 1, false, false, 13, 1,  2, 1,  0, 0}, // #332
+  {DBGFIELD("IIC_MOVS_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #333
+  {DBGFIELD("IIC_SSE_MOV_S_MR_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #334
+  {DBGFIELD("IIC_SSE_MOV_S_RM_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #335
+  {DBGFIELD("IIC_SSE_MOV_S_RR_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #336
+  {DBGFIELD("IIC_MOVSX_R16_M8_WriteALULd") 1, false, false, 386, 2,  9, 1,  0, 0}, // #337
+  {DBGFIELD("IIC_MOVSX_R16_R8_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #338
+  {DBGFIELD("IIC_MOVSX_WriteALULd") 1, false, false, 386, 2,  9, 1,  0, 0}, // #339
+  {DBGFIELD("IIC_MOVSX_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #340
+  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #341
+  {DBGFIELD("IIC_MOVZX_R16_M8_WriteALULd") 1, false, false, 386, 2,  9, 1,  0, 0}, // #342
+  {DBGFIELD("IIC_MOVZX_R16_R8_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #343
+  {DBGFIELD("IIC_MOVZX_WriteALULd") 1, false, false, 386, 2,  9, 1,  0, 0}, // #344
+  {DBGFIELD("IIC_MOVZX_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #345
+  {DBGFIELD("IIC_SSE_MPSADBW_RM_WriteMPSADLd_ReadAfterLd") 1, false, false, 1180, 3,  8, 1,  4, 1}, // #346
+  {DBGFIELD("IIC_SSE_MPSADBW_RR_WriteMPSAD") 1, false, false, 1172, 2,  5, 1,  0, 0}, // #347
+  {DBGFIELD("IIC_MUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #348
+  {DBGFIELD("IIC_MUL16_REG_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #349
+  {DBGFIELD("IIC_MUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #350
+  {DBGFIELD("IIC_MUL32_REG_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #351
+  {DBGFIELD("IIC_MUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #352
+  {DBGFIELD("IIC_MUL64_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #353
+  {DBGFIELD("IIC_MUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, false, false, 1081, 3, 16, 1,  5, 2}, // #354
+  {DBGFIELD("IIC_MUL8_WriteIMul") 1, false, false, 429, 2,  6, 1,  0, 0}, // #355
+  {DBGFIELD("IIC_SSE_MUL_F64P_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 1198, 4, 10, 1,  4, 1}, // #356
+  {DBGFIELD("IIC_SSE_MUL_F64P_RR_WriteFMul") 1, false, false, 1202, 3,  3, 1,  0, 0}, // #357
+  {DBGFIELD("IIC_SSE_MUL_F32P_RR_WriteFMul") 1, false, false, 1202, 3,  3, 1,  0, 0}, // #358
+  {DBGFIELD("IIC_SSE_MUL_F64S_RM_WriteFMulLd_ReadAfterLd") 1, false, false, 1198, 4, 10, 1,  4, 1}, // #359
+  {DBGFIELD("IIC_SSE_MUL_F64S_RR_WriteFMul") 1, false, false, 1202, 3,  3, 1,  0, 0}, // #360
+  {DBGFIELD("IIC_SSE_MUL_F32S_RR_WriteFMul") 1, false, false, 1202, 3,  3, 1,  0, 0}, // #361
+  {DBGFIELD("IIC_MUL8_WriteIMulLd_WriteIMulH") 2, false, false, 1205, 5, 45, 2,  0, 0}, // #362
+  {DBGFIELD("IIC_MUL8_WriteIMul_WriteIMulH") 2, false, false, 1205, 4, 54, 2,  0, 0}, // #363
+  {DBGFIELD("WriteFMulLd")        1, false, false, 1198, 4, 10, 1,  0, 0}, // #364
+  {DBGFIELD("WriteFMul")          1, false, false, 1202, 3,  3, 1,  0, 0}, // #365
+  {DBGFIELD("IIC_SSE_MWAITX_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #366
+  {DBGFIELD("IIC_SSE_MWAIT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #367
+  {DBGFIELD("IIC_NOP_WriteZero")  1, false, false,  0, 0,  2, 1,  0, 0}, // #368
+  {DBGFIELD("IIC_OUT_IR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #369
+  {DBGFIELD("IIC_OUT_RR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #370
+  {DBGFIELD("IIC_OUTS_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #371
+  {DBGFIELD("IIC_SSE_PABS_RM_WriteVecALULd") 1, false, false, 13, 2,  9, 1,  0, 0}, // #372
+  {DBGFIELD("IIC_SSE_PABS_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #373
+  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #374
+  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #375
+  {DBGFIELD("IIC_SSE_INTALUQ_P_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #376
+  {DBGFIELD("IIC_SSE_INTALUQ_P_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #377
+  {DBGFIELD("IIC_SSE_PALIGNRM_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #378
+  {DBGFIELD("IIC_SSE_PALIGNRR_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #379
+  {DBGFIELD("IIC_SSE_BIT_P_RM_WriteVecLogicLd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #380
+  {DBGFIELD("IIC_SSE_BIT_P_RR_WriteVecLogic") 1, false, false, 13, 1,  2, 1,  0, 0}, // #381
+  {DBGFIELD("IIC_SSE_PAUSE_WriteNop") 1, false, false,  0, 0,  2, 1,  0, 0}, // #382
+  {DBGFIELD("IIC_ALU_MEM_WriteVarBlendLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #383
+  {DBGFIELD("IIC_ALU_NONMEM_WriteVarBlend") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #384
+  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteBlendLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #385
+  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteBlend") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #386
+  {DBGFIELD("IIC_SSE_PCLMULQDQ_RM_WriteCLMulLd_ReadAfterLd") 1, false, false, 1210, 3,  8, 1,  4, 1}, // #387
+  {DBGFIELD("IIC_SSE_PCLMULQDQ_RR_WriteCLMul") 1, false, false, 1210, 2,  8, 1,  0, 0}, // #388
+  {DBGFIELD("WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #389
+  {DBGFIELD("WriteVecALU")        1, false, false, 13, 1,  2, 1,  0, 0}, // #390
+  {DBGFIELD("WritePCmpEStrILd_ReadAfterLd") 1, false, false, 1213, 3, 27, 1,  4, 1}, // #391
+  {DBGFIELD("WritePCmpEStrI")     1, false, false, 1213, 2, 27, 1,  0, 0}, // #392
+  {DBGFIELD("WritePCmpEStrMLd_ReadAfterLd") 1, false, false, 1216, 3, 56, 1,  4, 1}, // #393
+  {DBGFIELD("WritePCmpEStrM")     1, false, false, 1216, 2, 56, 1,  0, 0}, // #394
+  {DBGFIELD("WritePCmpIStrILd_ReadAfterLd") 1, false, false, 1216, 3, 56, 1,  4, 1}, // #395
+  {DBGFIELD("WritePCmpIStrI")     1, false, false, 1216, 2, 56, 1,  0, 0}, // #396
+  {DBGFIELD("WritePCmpIStrMLd_ReadAfterLd") 1, false, false, 1219, 3, 34, 1,  4, 1}, // #397
+  {DBGFIELD("WritePCmpIStrM")     1, false, false, 1219, 2, 34, 1,  0, 0}, // #398
+  {DBGFIELD("WriteShuffleLd_WriteRMW") 2, false, false, 1195, 3, 41, 2,  0, 0}, // #399
+  {DBGFIELD("IIC_SSE_PEXTRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #400
+  {DBGFIELD("IIC_SSE_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #401
+  {DBGFIELD("IIC_SSE_PHADDSUBD_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #402
+  {DBGFIELD("IIC_SSE_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, false, false, 13, 2,  9, 1,  4, 1}, // #403
+  {DBGFIELD("IIC_SSE_PHADDSUBW_RR_WriteVecALU") 1, false, false, 13, 1,  2, 1,  0, 0}, // #404
+  {DBGFIELD("WriteVecIMulLd")     1, false, false, 1180, 3,  5, 1,  0, 0}, // #405
+  {DBGFIELD("WriteVecIMul")       1, false, false, 1172, 2,  9, 1,  0, 0}, // #406
+  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #407
+  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #408
+  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #409
+  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMul") 1, false, false, 1172, 2,  9, 1,  0, 0}, // #410
+  {DBGFIELD("WriteVecIMulLd_ReadAfterLd") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #411
+  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteShuffleLd") 1, false, false, 1180, 3,  9, 1,  0, 0}, // #412
+  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #413
+  {DBGFIELD("IIC_SSE_PMULHRSW_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #414
+  {DBGFIELD("IIC_SSE_PMULHRSW_WriteVecIMul") 1, false, false, 1172, 2,  9, 1,  0, 0}, // #415
+  {DBGFIELD("IIC_SSE_INTMUL_P_RM_WriteVecIMulLd_ReadAfterLd") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #416
+  {DBGFIELD("IIC_SSE_INTMUL_P_RR_WriteVecIMul") 1, false, false, 1172, 2,  9, 1,  0, 0}, // #417
+  {DBGFIELD("IIC_POP_REG16_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #418
+  {DBGFIELD("IIC_POP_MEM_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #419
+  {DBGFIELD("IIC_POP_REG_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #420
+  {DBGFIELD("IIC_POP_A_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #421
+  {DBGFIELD("IIC_SSE_POPCNT_RM_WriteFAddLd") 1, false, false, 1174, 3, 16, 1,  0, 0}, // #422
+  {DBGFIELD("IIC_SSE_POPCNT_RR_WriteFAdd") 1, false, false, 427, 2,  6, 1,  0, 0}, // #423
+  {DBGFIELD("IIC_POP_SR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #424
+  {DBGFIELD("IIC_POP_F_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #425
+  {DBGFIELD("IIC_POP_FD_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #426
+  {DBGFIELD("IIC_POP_SR_SS_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #427
+  {DBGFIELD("IIC_SSE_PSHUFB_RM_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #428
+  {DBGFIELD("IIC_SSE_PSHUFB_RR_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #429
+  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #430
+  {DBGFIELD("IIC_SSE_PSHUF_RI_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #431
+  {DBGFIELD("IIC_SSE_INTSHDQ_P_RI_WriteVecShift") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #432
+  {DBGFIELD("IIC_SSE_INTSH_P_RI_WriteVecShift") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #433
+  {DBGFIELD("IIC_SSE_INTSH_P_RM_WriteVecShiftLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #434
+  {DBGFIELD("IIC_SSE_INTSH_P_RR_WriteVecShift") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #435
+  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #436
+  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #437
+  {DBGFIELD("IIC_PUSH_IMM_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #438
+  {DBGFIELD("IIC_PUSH_REG_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #439
+  {DBGFIELD("IIC_PUSH_MEM_WriteRMW") 1, false, false, 14, 1,  2, 1,  0, 0}, // #440
+  {DBGFIELD("IIC_PUSH_A_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #441
+  {DBGFIELD("IIC_PUSH_SR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #442
+  {DBGFIELD("IIC_PUSH_CS_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #443
+  {DBGFIELD("IIC_PUSH_F_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #444
+  {DBGFIELD("IIC_SR_WriteShiftLd_WriteRMW") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #445
+  {DBGFIELD("IIC_SR_WriteShift")  1, false, false, 492, 2,  2, 1,  0, 0}, // #446
+  {DBGFIELD("IIC_SSE_RCPP_RM_WriteFRcpLd") 1, false, false, 1180, 3, 10, 1,  0, 0}, // #447
+  {DBGFIELD("IIC_SSE_RCPP_RR_WriteFRcp") 1, false, false, 1172, 2,  3, 1,  0, 0}, // #448
+  {DBGFIELD("IIC_SSE_RCPS_RM_WriteFRcpLd_ReadAfterLd") 1, false, false, 1180, 3, 10, 1,  4, 1}, // #449
+  {DBGFIELD("WriteFRcpLd_ReadAfterLd") 1, false, false, 1180, 3, 10, 1,  4, 1}, // #450
+  {DBGFIELD("IIC_SSE_RCPS_RR_WriteFRcp") 1, false, false, 1172, 2,  3, 1,  0, 0}, // #451
+  {DBGFIELD("WriteRMW")           1, false, false, 14, 1,  2, 1,  0, 0}, // #452
+  {DBGFIELD("IIC_RDMSR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #453
+  {DBGFIELD("IIC_RDPMC_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #454
+  {DBGFIELD("IIC_RDTSC_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #455
+  {DBGFIELD("IIC_REP_MOVS_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #456
+  {DBGFIELD("IIC_REP_STOS_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #457
+  {DBGFIELD("IIC_RET_IMM_WriteJumpLd") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #458
+  {DBGFIELD("WriteShiftLd")       1, false, false, 930, 3,  9, 1,  0, 0}, // #459
+  {DBGFIELD("WriteShift")         1, false, false, 492, 2,  2, 1,  0, 0}, // #460
+  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAddLd") 1, false, false, 1174, 3, 16, 1,  0, 0}, // #461
+  {DBGFIELD("IIC_SSE_ROUNDPS_REG_WriteFAdd") 1, false, false, 427, 2,  6, 1,  0, 0}, // #462
+  {DBGFIELD("IIC_SSE_ROUNDPS_MEM_WriteFAddLd") 1, false, false, 1174, 3, 16, 1,  0, 0}, // #463
+  {DBGFIELD("WriteFAddLd_ReadAfterLd") 1, false, false, 1174, 3, 16, 1,  4, 1}, // #464
+  {DBGFIELD("IIC_RSM_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #465
+  {DBGFIELD("IIC_SSE_RSQRTPS_RM_WriteFRsqrtLd") 1, false, false, 1180, 3, 10, 1,  0, 0}, // #466
+  {DBGFIELD("IIC_SSE_RSQRTPS_RR_WriteFRsqrt") 1, false, false, 1172, 2,  3, 1,  0, 0}, // #467
+  {DBGFIELD("IIC_SSE_RSQRTSS_RM_WriteFRsqrtLd_ReadAfterLd") 1, false, false, 1180, 3, 10, 1,  4, 1}, // #468
+  {DBGFIELD("WriteFRsqrtLd_ReadAfterLd") 1, false, false, 1180, 3, 10, 1,  4, 1}, // #469
+  {DBGFIELD("IIC_SSE_RSQRTSS_RR_WriteFRsqrt") 1, false, false, 1172, 2,  3, 1,  0, 0}, // #470
+  {DBGFIELD("WriteShiftLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd") 1, false, false, 930, 3,  9, 1,  5, 1}, // #471
+  {DBGFIELD("IIC_SCAS_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #472
+  {DBGFIELD("IIC_SET_M_WriteALU_WriteStore") 2, false, false, 1155, 2, 21, 2,  0, 0}, // #473
+  {DBGFIELD("IIC_SET_R_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #474
+  {DBGFIELD("IIC_SSE_SFENCE_WriteFence") 1, false, false, 14, 1,  2, 1,  0, 0}, // #475
+  {DBGFIELD("IIC_SGDT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #476
+  {DBGFIELD("IIC_SHD16_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #477
+  {DBGFIELD("IIC_SHD16_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #478
+  {DBGFIELD("IIC_SHD16_REG_CL_WriteShift") 1, false, false, 492, 2,  2, 1,  0, 0}, // #479
+  {DBGFIELD("IIC_SHD16_REG_IM_WriteShift") 1, false, false, 492, 2,  2, 1,  0, 0}, // #480
+  {DBGFIELD("IIC_SHD32_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #481
+  {DBGFIELD("IIC_SHD32_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #482
+  {DBGFIELD("IIC_SHD32_REG_CL_WriteShift") 1, false, false, 492, 2,  2, 1,  0, 0}, // #483
+  {DBGFIELD("IIC_SHD32_REG_IM_WriteShift") 1, false, false, 492, 2,  2, 1,  0, 0}, // #484
+  {DBGFIELD("IIC_SHD64_MEM_CL_WriteShiftLd_WriteRMW") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #485
+  {DBGFIELD("IIC_SHD64_MEM_IM_WriteShiftLd_WriteRMW") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #486
+  {DBGFIELD("IIC_SHD64_REG_CL_WriteShift") 1, false, false, 492, 2,  2, 1,  0, 0}, // #487
+  {DBGFIELD("IIC_SHD64_REG_IM_WriteShift") 1, false, false, 492, 2,  2, 1,  0, 0}, // #488
+  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #489
+  {DBGFIELD("IIC_SSE_SHUFP_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #490
+  {DBGFIELD("IIC_SIDT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #491
+  {DBGFIELD("IIC_SLDT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #492
+  {DBGFIELD("IIC_SMSW_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #493
+  {DBGFIELD("IIC_SSE_SQRTPD_RM_WriteFSqrtLd") 1, false, false, 1180, 3, 39, 1,  0, 0}, // #494
+  {DBGFIELD("IIC_SSE_SQRTPD_RR_WriteFSqrt") 1, false, false, 1172, 2, 24, 1,  0, 0}, // #495
+  {DBGFIELD("IIC_SSE_SQRTPS_RM_WriteFSqrtLd") 1, false, false, 1180, 3, 39, 1,  0, 0}, // #496
+  {DBGFIELD("IIC_SSE_SQRTPS_RR_WriteFSqrt") 1, false, false, 1172, 2, 24, 1,  0, 0}, // #497
+  {DBGFIELD("IIC_SSE_SQRTSD_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 1180, 3, 39, 1,  4, 1}, // #498
+  {DBGFIELD("WriteFSqrtLd_ReadAfterLd") 1, false, false, 1180, 3, 39, 1,  4, 1}, // #499
+  {DBGFIELD("IIC_SSE_SQRTSD_RR_WriteFSqrt") 1, false, false, 1172, 2, 24, 1,  0, 0}, // #500
+  {DBGFIELD("IIC_SSE_SQRTSS_RM_WriteFSqrtLd_ReadAfterLd") 1, false, false, 1180, 3, 39, 1,  4, 1}, // #501
+  {DBGFIELD("IIC_SSE_SQRTSS_RR_WriteFSqrt") 1, false, false, 1172, 2, 24, 1,  0, 0}, // #502
+  {DBGFIELD("WriteFSqrt")         1, false, false, 1172, 2, 24, 1,  0, 0}, // #503
+  {DBGFIELD("IIC_STC_WriteALU")   1, false, false, 386, 1,  2, 1,  0, 0}, // #504
+  {DBGFIELD("IIC_STD_WriteALU")   1, false, false, 386, 1,  2, 1,  0, 0}, // #505
+  {DBGFIELD("IIC_STI_WriteALU")   1, false, false, 386, 1,  2, 1,  0, 0}, // #506
+  {DBGFIELD("IIC_SSE_STMXCSR_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #507
+  {DBGFIELD("IIC_STOS_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #508
+  {DBGFIELD("IIC_STR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #509
+  {DBGFIELD("IIC_FST80_WriteStore") 1, false, false, 386, 2,  2, 1,  0, 0}, // #510
+  {DBGFIELD("IIC_FST_WriteMove")  1, false, false, 386, 1,  2, 1,  0, 0}, // #511
+  {DBGFIELD("IIC_SWAPGS_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #512
+  {DBGFIELD("IIC_SYSCALL_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #513
+  {DBGFIELD("IIC_SYS_ENTER_EXIT_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #514
+  {DBGFIELD("IIC_JMP_REL_WriteJumpLd") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #515
+  {DBGFIELD("IIC_JMP_MEM_WriteJump") 1, false, false, 429, 2,  2, 1,  0, 0}, // #516
+  {DBGFIELD("IIC_JMP_REG_WriteJumpLd") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #517
+  {DBGFIELD("WriteJump")          1, false, false, 429, 2,  2, 1,  0, 0}, // #518
+  {DBGFIELD("IIC_FUCOMI_WriteFAdd") 1, false, false, 427, 2,  6, 1,  0, 0}, // #519
+  {DBGFIELD("IIC_FUCOM_WriteFAdd") 1, false, false, 427, 2,  6, 1,  0, 0}, // #520
+  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #521
+  {DBGFIELD("IIC_SSE_UNPCK_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #522
+  {DBGFIELD("IIC_SSE_ALU_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #523
+  {DBGFIELD("IIC_SSE_ALU_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #524
+  {DBGFIELD("IIC_SSE_ALU_F32S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #525
+  {DBGFIELD("IIC_SSE_ALU_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #526
+  {DBGFIELD("WriteFVarBlendLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #527
+  {DBGFIELD("WriteFVarBlend")     1, false, false, 1172, 2,  2, 1,  0, 0}, // #528
+  {DBGFIELD("WriteFShuffleLd")    1, false, false, 1180, 3,  9, 1,  0, 0}, // #529
+  {DBGFIELD("WriteFShuffle256")   1, false, false, 1172, 2,  2, 1,  0, 0}, // #530
+  {DBGFIELD("WriteFShuffle")      1, false, false, 1172, 2,  2, 1,  0, 0}, // #531
+  {DBGFIELD("IIC_SSE_ALU_F32P_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #532
+  {DBGFIELD("WriteCvtF2ILd")      1, false, false, 13, 2,  5, 1,  0, 0}, // #533
+  {DBGFIELD("WriteCvtF2I")        1, false, false, 13, 1,  9, 1,  0, 0}, // #534
+  {DBGFIELD("WriteCvtF2FLd")      1, false, false, 13, 2,  5, 1,  0, 0}, // #535
+  {DBGFIELD("WriteCvtF2F")        1, false, false, 13, 1,  9, 1,  0, 0}, // #536
+  {DBGFIELD("WriteCvtF2FLd_WriteRMW") 2, false, false, 792, 2, 25, 2,  0, 0}, // #537
+  {DBGFIELD("WriteCvtF2FLd_ReadAfterLd") 1, false, false, 13, 2,  5, 1,  4, 1}, // #538
+  {DBGFIELD("WriteCvtI2FLd_ReadAfterLd") 1, false, false, 13, 2,  5, 1,  4, 1}, // #539
+  {DBGFIELD("IIC_SSE_DIV_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #540
+  {DBGFIELD("IIC_SSE_DIV_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #541
+  {DBGFIELD("IIC_SSE_DIV_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #542
+  {DBGFIELD("IIC_VERR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #543
+  {DBGFIELD("IIC_VERW_REG_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #544
+  {DBGFIELD("IIC_VERW_MEM_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #545
+  {DBGFIELD("WriteStore")         1, false, false, 386, 2,  2, 1,  0, 0}, // #546
+  {DBGFIELD("WriteShuffle256")    1, false, false, 1172, 2,  2, 1,  0, 0}, // #547
+  {DBGFIELD("IIC_ALU_MEM_WriteFBlendLd_WriteRMW") 2, false, false, 1195, 3, 41, 2,  0, 0}, // #548
+  {DBGFIELD("WriteFShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #549
+  {DBGFIELD("WriteShuffle256Ld_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #550
+  {DBGFIELD("IIC_ALU_MEM_WriteFShuffleLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #551
+  {DBGFIELD("IIC_ALU_NONMEM_WriteFShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #552
+  {DBGFIELD("IIC_SSE_MOVDQ")      0, false, false,  0, 0,  0, 0,  0, 0}, // #553
+  {DBGFIELD("IIC_SSE_MOV_LH")     0, false, false,  0, 0,  0, 0,  0, 0}, // #554
+  {DBGFIELD("IIC_SSE_MOVD_ToGP")  0, false, false,  0, 0,  0, 0,  0, 0}, // #555
+  {DBGFIELD("IIC_SSE_MOV_S_MR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #556
+  {DBGFIELD("IIC_SSE_MOV_S_RM")   0, false, false,  0, 0,  0, 0,  0, 0}, // #557
+  {DBGFIELD("IIC_SSE_MOV_S_RR")   0, false, false,  0, 0,  0, 0,  0, 0}, // #558
+  {DBGFIELD("IIC_SSE_MOVQ_RR")    0, false, false,  0, 0,  0, 0,  0, 0}, // #559
+  {DBGFIELD("IIC_ALU_MEM_WriteMPSADLd_ReadAfterLd") 1, false, false, 1180, 3,  8, 1,  4, 1}, // #560
+  {DBGFIELD("IIC_ALU_NONMEM_WriteMPSAD") 1, false, false, 1172, 2,  5, 1,  0, 0}, // #561
+  {DBGFIELD("IIC_SSE_MUL_F64S_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #562
+  {DBGFIELD("IIC_SSE_MUL_F64S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #563
+  {DBGFIELD("IIC_SSE_MUL_F32S_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #564
+  {DBGFIELD("WriteVecALULd")      1, false, false, 13, 2,  9, 1,  0, 0}, // #565
+  {DBGFIELD("IIC_SSE_INTALU_P_RM") 0, false, false,  0, 0,  0, 0,  0, 0}, // #566
+  {DBGFIELD("IIC_SSE_INTALU_P_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #567
+  {DBGFIELD("WriteBlendLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #568
+  {DBGFIELD("WriteBlend")         1, false, false, 1172, 2,  2, 1,  0, 0}, // #569
+  {DBGFIELD("WriteVarBlendLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #570
+  {DBGFIELD("WriteVarBlend")      1, false, false, 1172, 2,  2, 1,  0, 0}, // #571
+  {DBGFIELD("IIC_ALU_MEM_WriteBlendLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #572
+  {DBGFIELD("IIC_ALU_NONMEM_WriteBlend") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #573
+  {DBGFIELD("WriteCLMulLd_ReadAfterLd") 1, false, false, 1210, 3,  8, 1,  4, 1}, // #574
+  {DBGFIELD("WriteCLMul")         1, false, false, 1210, 2,  8, 1,  0, 0}, // #575
+  {DBGFIELD("IIC_SSE_ALU_F32P_RR") 0, false, false,  0, 0,  0, 0,  0, 0}, // #576
+  {DBGFIELD("WriteFShuffle256Ld_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #577
+  {DBGFIELD("IIC_ALU_MEM_WriteShuffleLd") 1, false, false, 1180, 3,  9, 1,  0, 0}, // #578
+  {DBGFIELD("IIC_ALU_NONMEM_WriteShuffle") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #579
+  {DBGFIELD("WriteVarVecShift_ReadAfterLd") 1, false, false, 1172, 2,  2, 1,  4, 1}, // #580
+  {DBGFIELD("WriteVarVecShift")   1, false, false, 1172, 2,  2, 1,  0, 0}, // #581
+  {DBGFIELD("IIC_SSE_PSHUF_MI_WriteShuffleLd") 1, false, false, 1180, 3,  9, 1,  0, 0}, // #582
+  {DBGFIELD("WriteVarVecShiftLd_ReadAfterLd") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #583
+  {DBGFIELD("WriteFRcpLd")        1, false, false, 1180, 3, 10, 1,  0, 0}, // #584
+  {DBGFIELD("WriteFRsqrtLd")      1, false, false, 1180, 3, 10, 1,  0, 0}, // #585
+  {DBGFIELD("WriteFSqrtLd")       1, false, false, 1180, 3, 39, 1,  0, 0}, // #586
+  {DBGFIELD("IIC_WAIT_WriteMicrocoded") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #587
+  {DBGFIELD("IIC_WRMSR_WriteSystem") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #588
+  {DBGFIELD("IIC_XADD_MEM_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #589
+  {DBGFIELD("IIC_XADD_REG_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #590
+  {DBGFIELD("IIC_XCHG_REG_WriteALU") 1, false, false, 386, 1,  2, 1,  0, 0}, // #591
+  {DBGFIELD("IIC_XCHG_MEM_WriteALULd_WriteRMW") 2, false, false, 430, 2, 41, 2,  0, 0}, // #592
+  {DBGFIELD("IIC_FXCH_WriteMove") 1, false, false, 386, 1,  2, 1,  0, 0}, // #593
+  {DBGFIELD("IIC_XLAT_WriteLoad") 1, false, false, 14, 1,  6, 1,  0, 0}, // #594
+  {DBGFIELD("MOV16rm")            1, false, false, 14, 1,  6, 1,  0, 0}, // #595
+  {DBGFIELD("MOVSX32rm16_MOVSX32rm8") 1, false, false, 386, 2,  9, 1,  0, 0}, // #596
+  {DBGFIELD("MOVZX32rm16_MOVZX32rm8") 1, false, false, 386, 2,  9, 1,  0, 0}, // #597
+  {DBGFIELD("CMOVA16rr_CMOVAE16rr_CMOVB16rr_CMOVBE16rr_CMOVE16rr_CMOVG16rr_CMOVGE16rr_CMOVL16rr_CMOVLE16rr_CMOVNE16rr_CMOVNO16rr_CMOVNP16rr_CMOVNS16rr_CMOVO16rr_CMOVP16rr_CMOVS16rr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #598
+  {DBGFIELD("CMOVA32rr_CMOVA64rr_CMOVAE32rr_CMOVAE64rr_CMOVB32rr_CMOVB64rr_CMOVBE32rr_CMOVBE64rr_CMOVE32rr_CMOVE64rr_CMOVG32rr_CMOVG64rr_CMOVGE32rr_CMOVGE64rr_CMOVL32rr_CMOVL64rr_CMOVLE32rr_CMOVLE64rr_CMOVNE32rr_CMOVNE64rr_CMOVNO32rr_CMOVNO64rr_CMOVNP32rr_CMOVNP64rr_CMOVNS32rr_CMOVNS64rr_CMOVO32rr_CMOVO64rr_CMOVP32rr_CMOVP64rr_CMOVS32rr_CMOVS64rr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #599
+  {DBGFIELD("CMOVA16rm_CMOVAE16rm_CMOVB16rm_CMOVBE16rm_CMOVE16rm_CMOVG16rm_CMOVGE16rm_CMOVL16rm_CMOVLE16rm_CMOVNE16rm_CMOVNO16rm_CMOVNP16rm_CMOVNS16rm_CMOVO16rm_CMOVP16rm_CMOVS16rm") 1, false, false, 386, 2,  9, 1,  4, 1}, // #600
+  {DBGFIELD("CMOVA32rm_CMOVA64rm_CMOVAE32rm_CMOVAE64rm_CMOVB32rm_CMOVB64rm_CMOVBE32rm_CMOVBE64rm_CMOVE32rm_CMOVE64rm_CMOVG32rm_CMOVG64rm_CMOVGE32rm_CMOVGE64rm_CMOVL32rm_CMOVL64rm_CMOVLE32rm_CMOVLE64rm_CMOVNE32rm_CMOVNE64rm_CMOVNO32rm_CMOVNO64rm_CMOVNP32rm_CMOVNP64rm_CMOVNS32rm_CMOVNS64rm_CMOVO32rm_CMOVO64rm_CMOVP32rm_CMOVP64rm_CMOVS32rm_CMOVS64rm") 1, false, false, 386, 2,  9, 1,  4, 1}, // #601
+  {DBGFIELD("XCHG16ar_XCHG16rr_XCHG32ar_XCHG32ar64_XCHG32rr_XCHG64ar_XCHG64rr_XCHG8rr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #602
+  {DBGFIELD("XCHG16rm_XCHG32rm_XCHG64rm_XCHG8rm") 2, false, false, 430, 2, 41, 2,  0, 0}, // #603
+  {DBGFIELD("XLAT")               1, false, false, 14, 1,  6, 1,  0, 0}, // #604
+  {DBGFIELD("PUSH16rmm_PUSH32rmm") 1, false, false, 14, 1,  2, 1,  0, 0}, // #605
+  {DBGFIELD("PUSHF16_PUSHF32")    1, false, false, 386, 2,  2, 1,  0, 0}, // #606
+  {DBGFIELD("PUSHA16_PUSHA32")    1, false, false, 386, 2,  2, 1,  0, 0}, // #607
+  {DBGFIELD("POP16rmm_POP32rmm")  1, false, false, 14, 1,  6, 1,  0, 0}, // #608
+  {DBGFIELD("POPF16")             1, false, false, 14, 1,  6, 1,  0, 0}, // #609
+  {DBGFIELD("POPF32")             1, false, false, 14, 1,  6, 1,  0, 0}, // #610
+  {DBGFIELD("POPA16_POPA32")      1, false, false, 14, 1,  6, 1,  0, 0}, // #611
+  {DBGFIELD("LAHF_SAHF")          1, false, false, 386, 1,  2, 1,  0, 0}, // #612
+  {DBGFIELD("BSWAP32r")           1, false, false, 386, 1,  2, 1,  0, 0}, // #613
+  {DBGFIELD("BSWAP64r")           1, false, false, 386, 1,  2, 1,  0, 0}, // #614
+  {DBGFIELD("MOVBE16rm_MOVBE64rm") 1, false, false, 386, 2,  9, 1,  0, 0}, // #615
+  {DBGFIELD("MOVBE32rm")          1, false, false, 386, 2,  9, 1,  0, 0}, // #616
+  {DBGFIELD("MOVBE16mr")          1, false, false, 386, 2,  2, 1,  0, 0}, // #617
+  {DBGFIELD("MOVBE32mr")          1, false, false, 386, 2,  2, 1,  0, 0}, // #618
+  {DBGFIELD("MOVBE64mr")          1, false, false, 386, 2,  2, 1,  0, 0}, // #619
+  {DBGFIELD("ADD16mi_ADD16mi8_ADD16mr_ADD32mi_ADD32mi8_ADD32mr_ADD64mi32_ADD64mi8_ADD64mr_ADD8mi_ADD8mi8_ADD8mr_SUB16mi_SUB16mi8_SUB16mr_SUB32mi_SUB32mi8_SUB32mr_SUB64mi32_SUB64mi8_SUB64mr_SUB8mi_SUB8mi8_SUB8mr") 2, false, false, 430, 2, 41, 2,  0, 0}, // #620
+  {DBGFIELD("ADC16ri_ADC16ri8_ADC16rr_ADC16rr_REV_ADC32ri_ADC32ri8_ADC32rr_ADC32rr_REV_ADC64ri32_ADC64ri8_ADC64rr_ADC64rr_REV_ADC8ri_ADC8ri8_ADC8rr_ADC8rr_REV_SBB16ri_SBB16ri8_SBB16rr_SBB16rr_REV_SBB32ri_SBB32ri8_SBB32rr_SBB32rr_REV_SBB64ri32_SBB64ri8_SBB64rr_SBB64rr_REV_SBB8ri_SBB8ri8_SBB8rr_SBB8rr_REV") 1, false, false, 386, 1,  2, 1,  0, 0}, // #621
+  {DBGFIELD("ADC16rm_ADC32rm_ADC64rm_ADC8rm_SBB16rm_SBB32rm_SBB64rm_SBB8rm") 1, false, false, 386, 2,  9, 1,  4, 1}, // #622
+  {DBGFIELD("ADC16mi_ADC16mi8_ADC16mr_ADC32mi_ADC32mi8_ADC32mr_ADC64mi32_ADC64mi8_ADC64mr_ADC8mi_ADC8mi8_ADC8mr_SBB16mi_SBB16mi8_SBB16mr_SBB32mi_SBB32mi8_SBB32mr_SBB64mi32_SBB64mi8_SBB64mr_SBB8mi_SBB8mi8_SBB8mr") 2, false, false, 430, 2, 41, 2,  0, 0}, // #623
+  {DBGFIELD("DEC16m_DEC32m_DEC64m_DEC8m_INC16m_INC32m_INC64m_INC8m_NEG16m_NEG32m_NEG64m_NEG8m_NOT16m_NOT32m_NOT64m_NOT8m") 2, false, false, 430, 2, 41, 2,  0, 0}, // #624
+  {DBGFIELD("IMUL16r_IMUL16rr")   1, false, false, 429, 2,  6, 1,  0, 0}, // #625
+  {DBGFIELD("IMUL16rm")           1, false, false, 1081, 3, 16, 1,  4, 1}, // #626
+  {DBGFIELD("IMUL16rmi_IMUL16rmi8") 1, false, false, 1081, 3, 16, 1,  0, 0}, // #627
+  {DBGFIELD("IMUL16rri_IMUL16rri8") 1, false, false, 429, 2,  6, 1,  0, 0}, // #628
+  {DBGFIELD("MUL16r")             1, false, false, 429, 2,  6, 1,  0, 0}, // #629
+  {DBGFIELD("IMUL16m")            1, false, false, 1081, 3, 16, 1,  5, 2}, // #630
+  {DBGFIELD("MUL16m")             1, false, false, 1081, 3, 16, 1,  5, 2}, // #631
+  {DBGFIELD("IMUL32r_IMUL32rr")   1, false, false, 429, 2,  6, 1,  0, 0}, // #632
+  {DBGFIELD("IMUL32rm")           1, false, false, 1081, 3, 16, 1,  4, 1}, // #633
+  {DBGFIELD("IMUL32rmi_IMUL32rmi8") 1, false, false, 1081, 3, 16, 1,  0, 0}, // #634
+  {DBGFIELD("IMUL32rri_IMUL32rri8") 1, false, false, 429, 2,  6, 1,  0, 0}, // #635
+  {DBGFIELD("MUL32r")             1, false, false, 429, 2,  6, 1,  0, 0}, // #636
+  {DBGFIELD("IMUL32m")            1, false, false, 1081, 3, 16, 1,  5, 2}, // #637
+  {DBGFIELD("MUL32m")             1, false, false, 1081, 3, 16, 1,  5, 2}, // #638
+  {DBGFIELD("IMUL64r_IMUL64rr")   1, false, false, 429, 2,  6, 1,  0, 0}, // #639
+  {DBGFIELD("IMUL64rm")           1, false, false, 1081, 3, 16, 1,  4, 1}, // #640
+  {DBGFIELD("IMUL64rmi32_IMUL64rmi8") 1, false, false, 1081, 3, 16, 1,  0, 0}, // #641
+  {DBGFIELD("IMUL64rri32_IMUL64rri8") 1, false, false, 429, 2,  6, 1,  0, 0}, // #642
+  {DBGFIELD("MUL64r")             1, false, false, 429, 2,  6, 1,  0, 0}, // #643
+  {DBGFIELD("IMUL64m")            1, false, false, 1081, 3, 16, 1,  5, 2}, // #644
+  {DBGFIELD("MUL64m")             1, false, false, 1081, 3, 16, 1,  5, 2}, // #645
+  {DBGFIELD("MULX32rr")           2, false, false, 1205, 4, 54, 2,  0, 0}, // #646
+  {DBGFIELD("MULX32rm")           2, false, false, 1205, 5, 45, 2,  0, 0}, // #647
+  {DBGFIELD("MULX64rr")           2, false, false, 1205, 4, 54, 2,  0, 0}, // #648
+  {DBGFIELD("MULX64rm")           2, false, false, 1205, 5, 45, 2,  0, 0}, // #649
+  {DBGFIELD("DIV8r")              1, false, false, 1186, 2, 12, 1,  0, 0}, // #650
+  {DBGFIELD("DIV16r")             1, false, false, 1186, 2, 12, 1,  0, 0}, // #651
+  {DBGFIELD("DIV32r")             1, false, false, 1186, 2, 12, 1,  0, 0}, // #652
+  {DBGFIELD("DIV64r")             1, false, false, 1186, 2, 12, 1,  0, 0}, // #653
+  {DBGFIELD("IDIV8r")             1, false, false, 1186, 2, 12, 1,  0, 0}, // #654
+  {DBGFIELD("IDIV16r")            1, false, false, 1186, 2, 12, 1,  0, 0}, // #655
+  {DBGFIELD("IDIV32r")            1, false, false, 1186, 2, 12, 1,  0, 0}, // #656
+  {DBGFIELD("IDIV64r")            1, false, false, 1186, 2, 12, 1,  0, 0}, // #657
+  {DBGFIELD("AND16mi_AND16mi8_AND16mr_AND32mi_AND32mi8_AND32mr_AND64mi32_AND64mi8_AND64mr_AND8mi_AND8mi8_AND8mr_OR16mi_OR16mi8_OR16mr_OR32mi_OR32mi8_OR32mr_OR64mi32_OR64mi8_OR64mr_OR8mi_OR8mi8_OR8mr_XOR16mi_XOR16mi8_XOR16mr_XOR32mi_XOR32mi8_XOR32mr_XOR64mi32_XOR64mi8_XOR64mr_XOR8mi_XOR8mi8_XOR8mr") 2, false, false, 430, 2, 41, 2,  0, 0}, // #658
+  {DBGFIELD("OR32mrLocked")       2, false, false, 430, 2, 41, 2,  0, 0}, // #659
+  {DBGFIELD("SAR16m1_SAR16mi_SAR32m1_SAR32mi_SAR64m1_SAR64mi_SAR8m1_SAR8mi_SHL16m1_SHL16mi_SHL32m1_SHL32mi_SHL64m1_SHL64mi_SHL8m1_SHL8mi_SHR16m1_SHR16mi_SHR32m1_SHR32mi_SHR64m1_SHR64mi_SHR8m1_SHR8mi") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #660
+  {DBGFIELD("SAR16rCL_SAR32rCL_SAR64rCL_SAR8rCL_SHL16rCL_SHL32rCL_SHL64rCL_SHL8rCL_SHR16rCL_SHR32rCL_SHR64rCL_SHR8rCL") 1, false, false, 492, 2,  2, 1,  0, 0}, // #661
+  {DBGFIELD("SAR16mCL_SAR32mCL_SAR64mCL_SAR8mCL_SHL16mCL_SHL32mCL_SHL64mCL_SHL8mCL_SHR16mCL_SHR32mCL_SHR64mCL_SHR8mCL") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #662
+  {DBGFIELD("ROL16r1_ROL32r1_ROL64r1_ROL8r1_ROR16r1_ROR32r1_ROR64r1_ROR8r1") 1, false, false, 492, 2,  2, 1,  0, 0}, // #663
+  {DBGFIELD("ROL16mi_ROL32mi_ROL64mi_ROL8mi_ROR16mi_ROR32mi_ROR64mi_ROR8mi") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #664
+  {DBGFIELD("ROL16rCL_ROL32rCL_ROL64rCL_ROL8rCL_ROR16rCL_ROR32rCL_ROR64rCL_ROR8rCL") 1, false, false, 492, 2,  2, 1,  0, 0}, // #665
+  {DBGFIELD("ROL16mCL_ROL32mCL_ROL64mCL_ROL8mCL_ROR16mCL_ROR32mCL_ROR64mCL_ROR8mCL") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #666
+  {DBGFIELD("RCL16r1_RCL32r1_RCL64r1_RCL8r1_RCR16r1_RCR32r1_RCR64r1_RCR8r1") 1, false, false, 492, 2,  2, 1,  0, 0}, // #667
+  {DBGFIELD("RCL16m1_RCL32m1_RCL64m1_RCL8m1_RCR16m1_RCR32m1_RCR64m1_RCR8m1") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #668
+  {DBGFIELD("RCL16rCL_RCL16ri_RCL32rCL_RCL32ri_RCL64rCL_RCL64ri_RCL8rCL_RCL8ri_RCR16rCL_RCR16ri_RCR32rCL_RCR32ri_RCR64rCL_RCR64ri_RCR8rCL_RCR8ri") 1, false, false, 492, 2,  2, 1,  0, 0}, // #669
+  {DBGFIELD("RCL16mCL_RCL16mi_RCL32mCL_RCL32mi_RCL64mCL_RCL64mi_RCL8mCL_RCL8mi_RCR16mCL_RCR16mi_RCR32mCL_RCR32mi_RCR64mCL_RCR64mi_RCR8mCL_RCR8mi") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #670
+  {DBGFIELD("SHLD16rri8_SHRD16rri8") 1, false, false, 492, 2,  2, 1,  0, 0}, // #671
+  {DBGFIELD("SHLD32rri8_SHRD32rri8") 1, false, false, 492, 2,  2, 1,  0, 0}, // #672
+  {DBGFIELD("SHLD64rri8_SHRD64rri8") 1, false, false, 492, 2,  2, 1,  0, 0}, // #673
+  {DBGFIELD("SHLD16mri8_SHRD16mri8") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #674
+  {DBGFIELD("SHLD32mri8_SHRD32mri8") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #675
+  {DBGFIELD("SHLD64mri8_SHRD64mri8") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #676
+  {DBGFIELD("SHLD16rrCL")         1, false, false, 492, 2,  2, 1,  0, 0}, // #677
+  {DBGFIELD("SHLD32rrCL")         1, false, false, 492, 2,  2, 1,  0, 0}, // #678
+  {DBGFIELD("SHLD64rrCL")         1, false, false, 492, 2,  2, 1,  0, 0}, // #679
+  {DBGFIELD("SHRD16rrCL")         1, false, false, 492, 2,  2, 1,  0, 0}, // #680
+  {DBGFIELD("SHRD32rrCL")         1, false, false, 492, 2,  2, 1,  0, 0}, // #681
+  {DBGFIELD("SHRD64rrCL")         1, false, false, 492, 2,  2, 1,  0, 0}, // #682
+  {DBGFIELD("SHLD16mrCL_SHRD16mrCL") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #683
+  {DBGFIELD("SHLD32mrCL_SHRD32mrCL") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #684
+  {DBGFIELD("SHLD64mrCL_SHRD64mrCL") 2, false, false, 1222, 3, 41, 2,  0, 0}, // #685
+  {DBGFIELD("BT16ri8_BT32ri8_BT64ri8") 1, false, false, 386, 1,  2, 1,  0, 0}, // #686
+  {DBGFIELD("BT16rr_BT32rr_BT64rr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #687
+  {DBGFIELD("BT16mr_BT32mr_BT64mr") 1, false, false, 386, 2,  9, 1,  0, 0}, // #688
+  {DBGFIELD("BT16mi8_BT32mi8_BT64mi8") 1, false, false, 386, 1,  2, 1,  0, 0}, // #689
+  {DBGFIELD("BTC16ri8_BTC32ri8_BTC64ri8_BTR16ri8_BTR32ri8_BTR64ri8_BTS16ri8_BTS32ri8_BTS64ri8") 1, false, false, 386, 1,  2, 1,  0, 0}, // #690
+  {DBGFIELD("BTC16rr_BTC32rr_BTC64rr_BTR16rr_BTR32rr_BTS16rr_BTS32rr_BTS64rr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #691
+  {DBGFIELD("BTR64rr")            1, false, false, 386, 1,  2, 1,  0, 0}, // #692
+  {DBGFIELD("BTC16mr_BTC32mr_BTC64mr_BTR16mr_BTR32mr_BTR64mr_BTS16mr_BTS32mr_BTS64mr") 2, false, false, 430, 2, 41, 2,  0, 0}, // #693
+  {DBGFIELD("BTC16mi8_BTC32mi8_BTC64mi8_BTR16mi8_BTR32mi8_BTR64mi8_BTS16mi8_BTS32mi8_BTS64mi8") 2, false, false, 430, 2, 41, 2,  0, 0}, // #694
+  {DBGFIELD("BSF16rr_BSF32rr_BSF64rr_BSR16rr_BSR32rr_BSR64rr") 1, false, false, 492, 2,  2, 1,  0, 0}, // #695
+  {DBGFIELD("BSF16rm_BSF32rm_BSF64rm_BSR16rm_BSR32rm_BSR64rm") 1, false, false, 930, 3,  9, 1,  0, 0}, // #696
+  {DBGFIELD("SETAEr_SETAr_SETBEr_SETBr_SETEr_SETGEr_SETGr_SETLEr_SETLr_SETNEr_SETNOr_SETNPr_SETNSr_SETOr_SETPr_SETSr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #697
+  {DBGFIELD("SETAEm_SETAm_SETBEm_SETBm_SETEm_SETGEm_SETGm_SETLEm_SETLm_SETNEm_SETNOm_SETNPm_SETNSm_SETOm_SETPm_SETSm") 2, false, false, 1155, 2, 21, 2,  0, 0}, // #698
+  {DBGFIELD("CLD")                1, false, false, 386, 1,  2, 1,  0, 0}, // #699
+  {DBGFIELD("STD")                1, false, false, 386, 1,  2, 1,  0, 0}, // #700
+  {DBGFIELD("TZCNT16rr_TZCNT32rr_TZCNT64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #701
+  {DBGFIELD("TZCNT16rm_TZCNT32rm_TZCNT64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #702
+  {DBGFIELD("ANDN32rr_ANDN64rr")  1, false, false, 386, 1,  2, 1,  0, 0}, // #703
+  {DBGFIELD("ANDN32rm_ANDN64rm")  1, false, false, 386, 2,  9, 1,  4, 1}, // #704
+  {DBGFIELD("BLSI32rr_BLSI64rr_BLSMSK32rr_BLSMSK64rr_BLSR32rr_BLSR64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #705
+  {DBGFIELD("BLSI32rm_BLSI64rm_BLSMSK32rm_BLSMSK64rm_BLSR32rm_BLSR64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #706
+  {DBGFIELD("BEXTR32rr_BEXTR64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #707
+  {DBGFIELD("BEXTR32rm_BEXTR64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #708
+  {DBGFIELD("BZHI32rr_BZHI64rr")  0, false, false,  0, 0,  0, 0,  0, 0}, // #709
+  {DBGFIELD("BZHI32rm_BZHI64rm")  0, false, false,  0, 0,  0, 0,  0, 0}, // #710
+  {DBGFIELD("PDEP32rr_PDEP64rr_PEXT32rr_PEXT64rr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #711
+  {DBGFIELD("PDEP32rm_PDEP64rm_PEXT32rm_PEXT64rm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #712
+  {DBGFIELD("JCXZ_JRCXZ")         1, false, false, 429, 2,  2, 1,  0, 0}, // #713
+  {DBGFIELD("LOOP")               1, false, false, 429, 2,  2, 1,  0, 0}, // #714
+  {DBGFIELD("LOOPE")              1, false, false, 429, 2,  2, 1,  0, 0}, // #715
+  {DBGFIELD("LOOPNE")             1, false, false, 429, 2,  2, 1,  0, 0}, // #716
+  {DBGFIELD("CALL16r_CALL32r")    1, false, false, 429, 2,  2, 1,  0, 0}, // #717
+  {DBGFIELD("CALL16m_CALL32m")    1, false, false, 1081, 3,  9, 1,  0, 0}, // #718
+  {DBGFIELD("LRETL_LRETQ_LRETW_RETL_RETQ_RETW") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #719
+  {DBGFIELD("LRETIL_LRETIQ_LRETIW") 1, false, false, 1081, 3,  9, 1,  0, 0}, // #720
+  {DBGFIELD("RETIL_RETIQ_RETIW")  1, false, false, 1081, 3,  9, 1,  0, 0}, // #721
+  {DBGFIELD("BOUNDS16rm_BOUNDS32rm") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #722
+  {DBGFIELD("INTO")               1, false, false, 1172, 2,  1, 1,  0, 0}, // #723
+  {DBGFIELD("LODSB_LODSW")        1, false, false, 1172, 2,  1, 1,  0, 0}, // #724
+  {DBGFIELD("LODSL_LODSQ")        1, false, false, 1172, 2,  1, 1,  0, 0}, // #725
+  {DBGFIELD("STOSB_STOSL_STOSQ_STOSW") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #726
+  {DBGFIELD("MOVSB_MOVSL_MOVSQ_MOVSW") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #727
+  {DBGFIELD("MOVSLDUPrm")         1, false, false, 14, 1,  6, 1,  0, 0}, // #728
+  {DBGFIELD("MOVSLDUPrr")         1, false, false, 1172, 2,  2, 1,  0, 0}, // #729
+  {DBGFIELD("SCASB_SCASL_SCASQ_SCASW") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #730
+  {DBGFIELD("CMPSB_CMPSL_CMPSQ_CMPSW") 1, false, false, 1172, 2,  1, 1,  0, 0}, // #731
+  {DBGFIELD("XADD16rm_XADD32rm_XADD64rm_XADD8rm") 2, false, false, 430, 2, 41, 2,  0, 0}, // #732
+  {DBGFIELD("CMPXCHG16rm_CMPXCHG32rm_CMPXCHG64rm") 2, false, false, 430, 2, 41, 2,  0, 0}, // #733
+  {DBGFIELD("CMPXCHG8rm")         2, false, false, 430, 2, 41, 2,  0, 0}, // #734
+  {DBGFIELD("CMPXCHG8B")          2, false, false, 430, 2, 41, 2,  0, 0}, // #735
+  {DBGFIELD("CMPXCHG16B")         2, false, false, 430, 2, 41, 2,  0, 0}, // #736
+  {DBGFIELD("PAUSE")              1, false, false,  0, 0,  2, 1,  0, 0}, // #737
+  {DBGFIELD("LEAVE_LEAVE64")      1, false, false, 386, 1,  2, 1,  0, 0}, // #738
+  {DBGFIELD("XGETBV")             1, false, false, 1172, 2,  1, 1,  0, 0}, // #739
+  {DBGFIELD("RDTSC")              1, false, false, 1172, 2,  1, 1,  0, 0}, // #740
+  {DBGFIELD("RDTSCP")             1, false, false, 1172, 2,  1, 1,  0, 0}, // #741
+  {DBGFIELD("RDPMC")              1, false, false, 1172, 2,  1, 1,  0, 0}, // #742
+  {DBGFIELD("RDRAND16r_RDRAND32r_RDRAND64r") 0, false, false,  0, 0,  0, 0,  0, 0}, // #743
+  {DBGFIELD("LD_Frr")             1, false, false, 386, 1,  2, 1,  0, 0}, // #744
+  {DBGFIELD("LD_F80m")            1, false, false, 14, 1,  6, 1,  0, 0}, // #745
+  {DBGFIELD("FBLDm")              0, false, false,  0, 0,  0, 0,  0, 0}, // #746
+  {DBGFIELD("ST_FPrr_ST_Frr")     1, false, false, 386, 1,  2, 1,  0, 0}, // #747
+  {DBGFIELD("ST_FP80m")           1, false, false, 386, 2,  2, 1,  0, 0}, // #748
+  {DBGFIELD("FBSTPm")             0, false, false,  0, 0,  0, 0,  0, 0}, // #749
+  {DBGFIELD("XCH_F")              1, false, false, 386, 1,  2, 1,  0, 0}, // #750
+  {DBGFIELD("ILD_F16m_ILD_F32m_ILD_F64m") 1, false, false, 14, 1,  6, 1,  0, 0}, // #751
+  {DBGFIELD("IST_F16m_IST_F32m_IST_FP16m_IST_FP32m") 1, false, false, 386, 2,  2, 1,  0, 0}, // #752
+  {DBGFIELD("LD_F0")              1, false, false,  0, 0,  2, 1,  0, 0}, // #753
+  {DBGFIELD("LD_F1")              1, false, false,  0, 0,  2, 1,  0, 0}, // #754
+  {DBGFIELD("FLDPI")              1, false, false, 1172, 2,  1, 1,  0, 0}, // #755
+  {DBGFIELD("CMOVBE_F_CMOVBE_Fp32_CMOVBE_Fp64_CMOVBE_Fp80_CMOVB_F_CMOVB_Fp32_CMOVB_Fp64_CMOVB_Fp80_CMOVNBE_F_CMOVNBE_Fp32_CMOVNBE_Fp64_CMOVNBE_Fp80_CMOVNB_F_CMOVNB_Fp32_CMOVNB_Fp64_CMOVNB_Fp80_CMOVNE_F_CMOVNE_Fp32_CMOVNE_Fp64_CMOVNE_Fp80_CMOVNP_F_CMOVNP_Fp32_CMOVNP_Fp64_CMOVNP_Fp80_CMOVP_F_CMOVP_Fp32_CMOVP_Fp64_CMOVP_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #756
+  {DBGFIELD("FNSTSW16r")          1, false, false, 386, 1,  2, 1,  0, 0}, // #757
+  {DBGFIELD("FNSTSWm")            0, false, false,  0, 0,  0, 0,  0, 0}, // #758
+  {DBGFIELD("FLDCW16m")           1, false, false, 14, 1,  6, 1,  0, 0}, // #759
+  {DBGFIELD("FNSTCW16m")          1, false, false, 386, 1,  2, 1,  0, 0}, // #760
+  {DBGFIELD("FDECSTP_FINCSTP")    1, false, false, 1172, 2,  1, 1,  0, 0}, // #761
+  {DBGFIELD("FFREE")              1, false, false, 1172, 2,  1, 1,  0, 0}, // #762
+  {DBGFIELD("FSAVEm")             0, false, false,  0, 0,  0, 0,  0, 0}, // #763
+  {DBGFIELD("FRSTORm")            0, false, false,  0, 0,  0, 0,  0, 0}, // #764
+  {DBGFIELD("ABS_F_ABS_Fp32_ABS_Fp64_ABS_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #765
+  {DBGFIELD("CHS_F_CHS_Fp32_CHS_Fp64_CHS_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #766
+  {DBGFIELD("COMP_FST0r_COM_FST0r") 0, false, false,  0, 0,  0, 0,  0, 0}, // #767
+  {DBGFIELD("UCOM_FPr_UCOM_Fr")   1, false, false, 427, 2,  6, 1,  0, 0}, // #768
+  {DBGFIELD("FCOM32m_FCOM64m_FCOMP32m_FCOMP64m") 0, false, false,  0, 0,  0, 0,  0, 0}, // #769
+  {DBGFIELD("FCOMPP")             1, false, false, 1172, 2,  1, 1,  0, 0}, // #770
+  {DBGFIELD("UCOM_FPPr")          1, false, false, 427, 2,  6, 1,  0, 0}, // #771
+  {DBGFIELD("COM_FIPr_COM_FIr")   1, false, false, 427, 2,  6, 1,  0, 0}, // #772
+  {DBGFIELD("UCOM_FIPr_UCOM_FIr") 1, false, false, 427, 2,  6, 1,  0, 0}, // #773
+  {DBGFIELD("FICOM16m_FICOM32m_FICOMP16m_FICOMP32m") 0, false, false,  0, 0,  0, 0,  0, 0}, // #774
+  {DBGFIELD("TST_F_TST_Fp32_TST_Fp64_TST_Fp80") 0, false, false,  0, 0,  0, 0,  0, 0}, // #775
+  {DBGFIELD("FXAM")               1, false, false, 1172, 2,  1, 1,  0, 0}, // #776
+  {DBGFIELD("FPREM")              1, false, false, 1172, 2,  1, 1,  0, 0}, // #777
+  {DBGFIELD("FPREM1")             1, false, false, 1172, 2,  1, 1,  0, 0}, // #778
+  {DBGFIELD("FRNDINT")            1, false, false, 1172, 2,  1, 1,  0, 0}, // #779
+  {DBGFIELD("FSCALE")             1, false, false, 1172, 2,  1, 1,  0, 0}, // #780
+  {DBGFIELD("FXTRACT")            1, false, false, 1172, 2,  1, 1,  0, 0}, // #781
+  {DBGFIELD("FNOP")               1, false, false, 1172, 2,  1, 1,  0, 0}, // #782
+  {DBGFIELD("WAIT")               1, false, false, 1172, 2,  1, 1,  0, 0}, // #783
+  {DBGFIELD("FNCLEX")             1, false, false, 1172, 2,  1, 1,  0, 0}, // #784
+  {DBGFIELD("FNINIT")             1, false, false, 1172, 2,  1, 1,  0, 0}, // #785
+  {DBGFIELD("MMX_MOVD64from64rr_MMX_MOVD64grr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #786
+  {DBGFIELD("MOVPDI2DIrr_VMOVPDI2DIrr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #787
+  {DBGFIELD("MMX_MOVD64rr_MMX_MOVD64to64rr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #788
+  {DBGFIELD("MOVDI2PDIrr_VMOVDI2PDIrr") 1, false, false, 386, 1,  2, 1,  0, 0}, // #789
+  {DBGFIELD("VMOVPQIto64rr")      1, false, false, 386, 1,  2, 1,  0, 0}, // #790
+  {DBGFIELD("VMOV64toPQIrr")      1, false, false, 386, 1,  2, 1,  0, 0}, // #791
+  {DBGFIELD("MMX_MOVQ64rr_MMX_MOVQ64rr_REV") 1, false, false, 386, 1,  2, 1,  0, 0}, // #792
+  {DBGFIELD("MOVDQArr_MOVDQArr_REV_VMOVDQAYrr_VMOVDQAYrr_REV_VMOVDQArr_VMOVDQArr_REV") 1, false, false, 386, 1,  2, 1,  0, 0}, // #793
+  {DBGFIELD("MOVDQUrr_MOVDQUrr_REV_VMOVDQUYrr_VMOVDQUYrr_REV_VMOVDQUrr_VMOVDQUrr_REV") 1, false, false, 386, 1,  2, 1,  0, 0}, // #794
+  {DBGFIELD("MMX_MOVDQ2Qrr")      1, false, false, 386, 1,  2, 1,  0, 0}, // #795
+  {DBGFIELD("MMX_MOVQ2DQrr")      1, false, false, 386, 1,  2, 1,  0, 0}, // #796
+  {DBGFIELD("MMX_PACKSSDWirr_MMX_PACKSSWBirr_MMX_PACKUSWBirr") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #797
+  {DBGFIELD("MMX_PACKSSDWirm_MMX_PACKSSWBirm_MMX_PACKUSWBirm") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #798
+  {DBGFIELD("VPMOVSXBQYrr_VPMOVSXBWYrr_VPMOVSXDQYrr_VPMOVZXBQYrr_VPMOVZXBWYrr_VPMOVZXDQYrr") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #799
+  {DBGFIELD("PBLENDWrri")         1, false, false, 1172, 2,  2, 1,  0, 0}, // #800
+  {DBGFIELD("VPBLENDWYrri_VPBLENDWrri") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #801
+  {DBGFIELD("PBLENDWrmi")         1, false, false, 1180, 3,  9, 1,  4, 1}, // #802
+  {DBGFIELD("VPBLENDWYrmi_VPBLENDWrmi") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #803
+  {DBGFIELD("VPBLENDDYrri_VPBLENDDrri") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #804
+  {DBGFIELD("VPBLENDDYrmi_VPBLENDDrmi") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #805
+  {DBGFIELD("MMX_MASKMOVQ_MMX_MASKMOVQ64") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #806
+  {DBGFIELD("MASKMOVDQU_MASKMOVDQU64_VMASKMOVDQU_VMASKMOVDQU64") 1, false, false, 386, 2,  2, 1,  0, 0}, // #807
+  {DBGFIELD("VPMASKMOVDYrm_VPMASKMOVDrm_VPMASKMOVQYrm_VPMASKMOVQrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #808
+  {DBGFIELD("VPMASKMOVDYmr_VPMASKMOVDmr_VPMASKMOVQYmr_VPMASKMOVQmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #809
+  {DBGFIELD("MMX_PMOVMSKBrr")     0, false, false,  0, 0,  0, 0,  0, 0}, // #810
+  {DBGFIELD("PMOVMSKBrr_VPMOVMSKBrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #811
+  {DBGFIELD("VPMOVMSKBYrr")       1, false, false, 13, 1,  2, 1,  0, 0}, // #812
+  {DBGFIELD("MMX_PEXTRWirri")     1, false, false, 1172, 2,  2, 1,  0, 0}, // #813
+  {DBGFIELD("PEXTRBrr_PEXTRDrr_PEXTRQrr_PEXTRWrr_REV") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #814
+  {DBGFIELD("PEXTRBmr_PEXTRDmr_PEXTRQmr_PEXTRWmr") 2, false, false, 1195, 3, 41, 2,  0, 0}, // #815
+  {DBGFIELD("VPBROADCASTBrm_VPBROADCASTWrm") 1, false, false, 14, 1,  6, 1,  0, 0}, // #816
+  {DBGFIELD("VPBROADCASTBYrm_VPBROADCASTWYrm") 1, false, false, 14, 1,  6, 1,  0, 0}, // #817
+  {DBGFIELD("VPGATHERDDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #818
+  {DBGFIELD("VPGATHERDDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #819
+  {DBGFIELD("VPGATHERQDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #820
+  {DBGFIELD("VPGATHERQDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #821
+  {DBGFIELD("VPGATHERDQrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #822
+  {DBGFIELD("VPGATHERDQYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #823
+  {DBGFIELD("VPGATHERQQrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #824
+  {DBGFIELD("VPGATHERQQYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #825
+  {DBGFIELD("MMX_PHADDSWrr64_MMX_PHADDWrr64_MMX_PHSUBSWrr64_MMX_PHSUBWrr64") 1, false, false, 13, 1,  2, 1,  0, 0}, // #826
+  {DBGFIELD("MMX_PHADDrr64_MMX_PHSUBDrr64") 1, false, false, 13, 1,  2, 1,  0, 0}, // #827
+  {DBGFIELD("PHADDDrr_PHSUBDrr_VPHADDDrr_VPHSUBDrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #828
+  {DBGFIELD("PHADDSWrr128_PHSUBSWrr128_VPHADDSWrr128_VPHADDSWrr256_VPHSUBSWrr128_VPHSUBSWrr256") 1, false, false, 13, 1,  2, 1,  0, 0}, // #829
+  {DBGFIELD("PHADDWrr_PHSUBWrr_VPHADDDYrr_VPHADDWYrr_VPHADDWrr_VPHSUBDYrr_VPHSUBWYrr_VPHSUBWrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #830
+  {DBGFIELD("MMX_PHADDSWrm64_MMX_PHADDWrm64_MMX_PHSUBSWrm64_MMX_PHSUBWrm64") 1, false, false, 13, 2,  9, 1,  4, 1}, // #831
+  {DBGFIELD("MMX_PHADDrm64_MMX_PHSUBDrm64") 1, false, false, 13, 2,  9, 1,  4, 1}, // #832
+  {DBGFIELD("PHADDDrm_PHSUBDrm_VPHADDDrm_VPHSUBDrm") 1, false, false, 13, 2,  9, 1,  4, 1}, // #833
+  {DBGFIELD("PHADDSWrm128_PHSUBSWrm128_VPHADDSWrm128_VPHADDSWrm256_VPHSUBSWrm128_VPHSUBSWrm256") 1, false, false, 13, 2,  9, 1,  4, 1}, // #834
+  {DBGFIELD("PHADDWrm_PHSUBWrm_VPHADDDYrm_VPHADDWYrm_VPHADDWrm_VPHSUBDYrm_VPHSUBWYrm_VPHSUBWrm") 1, false, false, 13, 2,  9, 1,  4, 1}, // #835
+  {DBGFIELD("PCMPGTQrr_VPCMPGTQYrr_VPCMPGTQrr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #836
+  {DBGFIELD("PCMPGTQrm_VPCMPGTQYrm_VPCMPGTQrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #837
+  {DBGFIELD("PMULLDrr_VPMULLDYrr_VPMULLDrr") 1, false, false, 1172, 2,  9, 1,  0, 0}, // #838
+  {DBGFIELD("PMULLDrm_VPMULLDYrm_VPMULLDrm") 1, false, false, 1180, 3,  5, 1,  4, 1}, // #839
+  {DBGFIELD("PTESTrr_VPTESTYrr_VPTESTrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #840
+  {DBGFIELD("PTESTrm_VPTESTYrm_VPTESTrm") 1, false, false, 13, 2,  9, 1,  4, 1}, // #841
+  {DBGFIELD("PSLLDrr_PSLLQrr_PSLLWrr_PSRADrr_PSRAWrr_PSRLDrr_PSRLQrr_PSRLWrr_VPSLLDYrr_VPSLLDrr_VPSLLQYrr_VPSLLQrr_VPSLLWYrr_VPSLLWrr_VPSRADYrr_VPSRADrr_VPSRAWYrr_VPSRAWrr_VPSRLDYrr_VPSRLDrr_VPSRLQYrr_VPSRLQrr_VPSRLWYrr_VPSRLWrr") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #842
+  {DBGFIELD("PSLLDQri_PSRLDQri_VPSLLDQYri_VPSLLDQri_VPSRLDQYri_VPSRLDQri") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #843
+  {DBGFIELD("MMX_EMMS")           0, false, false,  0, 0,  0, 0,  0, 0}, // #844
+  {DBGFIELD("MOVMSKPDrr_MOVMSKPSrr_VMOVMSKPDrr_VMOVMSKPSrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #845
+  {DBGFIELD("VMOVMSKPDYrr_VMOVMSKPSYrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #846
+  {DBGFIELD("VPERM2F128rr")       1, false, false, 1172, 2,  2, 1,  0, 0}, // #847
+  {DBGFIELD("VPERM2F128rm")       1, false, false, 1180, 3,  9, 1,  4, 1}, // #848
+  {DBGFIELD("BLENDVPDrr0_BLENDVPSrr0") 1, false, false, 1172, 2,  2, 1,  0, 0}, // #849
+  {DBGFIELD("BLENDVPDrm0_BLENDVPSrm0") 1, false, false, 1180, 3,  9, 1,  4, 1}, // #850
+  {DBGFIELD("VBROADCASTF128")     1, false, false, 1180, 3,  9, 1,  0, 0}, // #851
+  {DBGFIELD("EXTRACTPSrr")        1, false, false, 1172, 2,  2, 1,  0, 0}, // #852
+  {DBGFIELD("VEXTRACTPSrr")       1, false, false, 1172, 2,  2, 1,  0, 0}, // #853
+  {DBGFIELD("EXTRACTPSmr")        2, false, false, 1195, 3, 41, 2,  0, 0}, // #854
+  {DBGFIELD("VEXTRACTPSmr")       2, false, false, 1195, 3, 41, 2,  0, 0}, // #855
+  {DBGFIELD("VEXTRACTF128rr")     1, false, false, 1172, 2,  2, 1,  0, 0}, // #856
+  {DBGFIELD("VEXTRACTF128mr")     1, false, false, 386, 2,  2, 1,  0, 0}, // #857
+  {DBGFIELD("VINSERTF128rr")      1, false, false, 1172, 2,  2, 1,  0, 0}, // #858
+  {DBGFIELD("VINSERTF128rm")      1, false, false, 1180, 3,  9, 1,  4, 1}, // #859
+  {DBGFIELD("VMASKMOVPDYrm_VMASKMOVPDrm_VMASKMOVPSYrm_VMASKMOVPSrm") 0, false, false,  0, 0,  0, 0,  0, 0}, // #860
+  {DBGFIELD("VMASKMOVPDmr_VMASKMOVPSmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #861
+  {DBGFIELD("VMASKMOVPDYmr_VMASKMOVPSYmr") 0, false, false,  0, 0,  0, 0,  0, 0}, // #862
+  {DBGFIELD("VGATHERDPSrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #863
+  {DBGFIELD("VGATHERDPSYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #864
+  {DBGFIELD("VGATHERQPSrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #865
+  {DBGFIELD("VGATHERQPSYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #866
+  {DBGFIELD("VGATHERDPDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #867
+  {DBGFIELD("VGATHERDPDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #868
+  {DBGFIELD("VGATHERQPDrm")       0, false, false,  0, 0,  0, 0,  0, 0}, // #869
+  {DBGFIELD("VGATHERQPDYrm")      0, false, false,  0, 0,  0, 0,  0, 0}, // #870
+  {DBGFIELD("CVTPD2PSrr_VCVTPD2PSrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #871
+  {DBGFIELD("CVTPD2PSrm_VCVTPD2PSrm") 1, false, false, 13, 2,  5, 1,  0, 0}, // #872
+  {DBGFIELD("VCVTPD2PSYrr")       1, false, false, 13, 1,  9, 1,  0, 0}, // #873
+  {DBGFIELD("VCVTPD2PSYrm")       1, false, false, 13, 2,  5, 1,  0, 0}, // #874
+  {DBGFIELD("CVTSD2SSrr_Int_CVTSD2SSrr_Int_VCVTSD2SSrr_VCVTSD2SSrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #875
+  {DBGFIELD("CVTSD2SSrm")         1, false, false, 13, 2,  5, 1,  0, 0}, // #876
+  {DBGFIELD("Int_CVTSD2SSrm_Int_VCVTSD2SSrm_VCVTSD2SSrm") 1, false, false, 13, 2,  5, 1,  4, 1}, // #877
+  {DBGFIELD("CVTPS2PDrr_VCVTPS2PDrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #878
+  {DBGFIELD("CVTPS2PDrm_VCVTPS2PDYrm_VCVTPS2PDrm") 1, false, false, 13, 2,  5, 1,  0, 0}, // #879
+  {DBGFIELD("VCVTPS2PDYrr")       1, false, false, 13, 1,  9, 1,  0, 0}, // #880
+  {DBGFIELD("CVTSS2SDrr_Int_CVTSS2SDrr_Int_VCVTSS2SDrr_VCVTSS2SDrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #881
+  {DBGFIELD("CVTSS2SDrm")         1, false, false, 13, 2,  5, 1,  0, 0}, // #882
+  {DBGFIELD("Int_CVTSS2SDrm_Int_VCVTSS2SDrm_VCVTSS2SDrm") 1, false, false, 13, 2,  5, 1,  4, 1}, // #883
+  {DBGFIELD("CVTDQ2PDrr")         1, false, false, 13, 1,  9, 1,  0, 0}, // #884
+  {DBGFIELD("VCVTDQ2PDrr")        1, false, false, 13, 1,  9, 1,  0, 0}, // #885
+  {DBGFIELD("VCVTDQ2PDYrr")       1, false, false, 13, 1,  9, 1,  0, 0}, // #886
+  {DBGFIELD("CVTPD2DQrr_CVTTPD2DQrr_VCVTTPD2DQrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #887
+  {DBGFIELD("VCVTPD2DQrr")        1, false, false, 13, 1,  9, 1,  0, 0}, // #888
+  {DBGFIELD("CVTPD2DQrm_CVTTPD2DQrm_VCVTTPD2DQrm") 1, false, false, 13, 2,  5, 1,  0, 0}, // #889
+  {DBGFIELD("VCVTPD2DQrm")        1, false, false, 13, 2,  5, 1,  0, 0}, // #890
+  {DBGFIELD("VCVTPD2DQYrr")       1, false, false, 13, 1,  9, 1,  0, 0}, // #891
+  {DBGFIELD("VCVTTPD2DQYrr")      1, false, false, 13, 1,  9, 1,  0, 0}, // #892
+  {DBGFIELD("VCVTPD2DQYrm")       1, false, false, 13, 2,  5, 1,  0, 0}, // #893
+  {DBGFIELD("VCVTTPD2DQYrm")      1, false, false, 13, 2,  5, 1,  0, 0}, // #894
+  {DBGFIELD("MMX_CVTPS2PIirr_MMX_CVTTPS2PIirr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #895
+  {DBGFIELD("MMX_CVTPI2PDirr")    1, false, false, 13, 1,  9, 1,  0, 0}, // #896
+  {DBGFIELD("MMX_CVTPD2PIirr_MMX_CVTTPD2PIirr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #897
+  {DBGFIELD("CVTSI2SS64rr_CVTSI2SSrr_Int_CVTSI2SS64rr_Int_CVTSI2SSrr_Int_VCVTSI2SS64rr_Int_VCVTSI2SSrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #898
+  {DBGFIELD("VCVTSI2SS64rr_VCVTSI2SSrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #899
+  {DBGFIELD("CVTSS2SI64rr_CVTTSS2SI64rr_Int_CVTTSS2SI64rr_Int_VCVTTSS2SI64rr_VCVTSS2SI64rr_VCVTTSS2SI64rr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #900
+  {DBGFIELD("CVTSS2SIrr_CVTTSS2SIrr_Int_CVTTSS2SIrr_Int_VCVTTSS2SIrr_VCVTSS2SIrr_VCVTTSS2SIrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #901
+  {DBGFIELD("CVTSS2SI64rm_CVTTSS2SI64rm_Int_CVTTSS2SI64rm_Int_VCVTTSS2SI64rm_VCVTSS2SI64rm_VCVTTSS2SI64rm") 1, false, false, 13, 2,  5, 1,  0, 0}, // #902
+  {DBGFIELD("CVTSS2SIrm_CVTTSS2SIrm_Int_CVTTSS2SIrm_Int_VCVTTSS2SIrm_VCVTSS2SIrm_VCVTTSS2SIrm") 1, false, false, 13, 2,  5, 1,  0, 0}, // #903
+  {DBGFIELD("CVTSD2SI64rr_CVTSD2SIrr_CVTTSD2SI64rr_CVTTSD2SIrr_Int_CVTTSD2SI64rr_Int_CVTTSD2SIrr_Int_VCVTTSD2SI64rr_Int_VCVTTSD2SIrr_VCVTSD2SI64rr_VCVTSD2SIrr_VCVTTSD2SI64rr_VCVTTSD2SIrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #904
+  {DBGFIELD("CVTSD2SI64rm_CVTSD2SIrm_CVTTSD2SI64rm_CVTTSD2SIrm_Int_CVTTSD2SI64rm_Int_CVTTSD2SIrm_Int_VCVTTSD2SI64rm_Int_VCVTTSD2SIrm_VCVTSD2SI64rm_VCVTSD2SIrm_VCVTTSD2SI64rm_VCVTTSD2SIrm") 1, false, false, 13, 2,  5, 1,  0, 0}, // #905
+  {DBGFIELD("VCVTPS2PHYrr_VCVTPS2PHrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #906
+  {DBGFIELD("VCVTPS2PHYmr_VCVTPS2PHmr") 2, false, false, 792, 2, 25, 2,  0, 0}, // #907
+  {DBGFIELD("VCVTPH2PSYrr_VCVTPH2PSrr") 1, false, false, 13, 1,  9, 1,  0, 0}, // #908
+  {DBGFIELD("HADDPDrr_HADDPSrr_HSUBPDrr_HSUBPSrr_VHADDPDYrr_VHADDPDrr_VHADDPSYrr_VHADDPSrr_VHSUBPDYrr_VHSUBPDrr_VHSUBPSYrr_VHSUBPSrr") 1, false, false, 427, 2,  6, 1,  0, 0}, // #909
+  {DBGFIELD("HADDPDrm_HADDPSrm_HSUBPDrm_HSUBPSrm_VHADDPDYrm_VHADDPDrm_VHADDPSYrm_VHADDPSrm_VHSUBPDYrm_VHSUBPDrm_VHSUBPSYrm_VHSUBPSrm") 1, false, false, 1174, 3, 16, 1,  4, 1}, // #910
+  {DBGFIELD("MULPDrr_VMULPDrr")   1, false, false, 1202, 3,  3, 1,  0, 0}, // #911
+  {DBGFIELD("MULPSrr_VMULPSrr")   1, false, false, 1202, 3,  3, 1,  0, 0}, // #912
+  {DBGFIELD("MULSDrr_MULSDrr_Int_VMULSDrr_VMULSDrr_Int") 1, false, false, 1202, 3,  3, 1,  0, 0}, // #913
+  {DBGFIELD("MULSSrr_MULSSrr_Int_VMULSSrr_VMULSSrr_Int") 1, false, false, 1202, 3,  3, 1,  0, 0}, // #914
+  {DBGFIELD("MULPDrm_MULPSrm_VMULPDrm_VMULPSrm") 1, false, false, 1198, 4, 10, 1,  4, 1}, // #915
+  {DBGFIELD("MULSDrm_MULSDrm_Int_MULSSrm_MULSSrm_Int_VMULSDrm_VMULSDrm_Int_VMULSSrm_VMULSSrm_Int") 1, false, false, 1198, 4, 10, 1,  4, 1}, // #916
+  {DBGFIELD("VDIVPSYrr")          1, false, false, 1192, 3, 53, 1,  0, 0}, // #917
+  {DBGFIELD("VDIVPSYrm")          1, false, false, 1188, 4, 52, 1,  4, 1}, // #918
+  {DBGFIELD("VDIVPDYrr")          1, false, false, 1192, 3, 53, 1,  0, 0}, // #919
+  {DBGFIELD("VDIVPDYrm")          1, false, false, 1188, 4, 52, 1,  4, 1}, // #920
+  {DBGFIELD("VRCPPSYr")           1, false, false, 1172, 2,  3, 1,  0, 0}, // #921
+  {DBGFIELD("VRCPPSYm")           1, false, false, 1180, 3, 10, 1,  0, 0}, // #922
+  {DBGFIELD("ROUNDPDr_ROUNDPSr_VROUNDPDr_VROUNDPSr_VROUNDYPDr_VROUNDYPSr") 1, false, false, 427, 2,  6, 1,  0, 0}, // #923
+  {DBGFIELD("ROUNDSDr_ROUNDSDr_Int_ROUNDSSr_ROUNDSSr_Int_VROUNDSDr_VROUNDSDr_Int_VROUNDSSr_VROUNDSSr_Int") 1, false, false, 427, 2,  6, 1,  0, 0}, // #924
+  {DBGFIELD("ROUNDPDm_VROUNDPDm_VROUNDYPDm") 1, false, false, 1174, 3, 16, 1,  0, 0}, // #925
+  {DBGFIELD("ROUNDPSm_VROUNDPSm_VROUNDYPSm") 1, false, false, 1174, 3, 16, 1,  0, 0}, // #926
+  {DBGFIELD("ROUNDSDm_ROUNDSDm_Int_ROUNDSSm_ROUNDSSm_Int_VROUNDSDm_VROUNDSDm_Int_VROUNDSSm_VROUNDSSm_Int") 1, false, false, 1174, 3, 16, 1,  4, 1}, // #927
+  {DBGFIELD("DPPSrri_VDPPSYrri_VDPPSrri") 1, false, false, 427, 2,  6, 1,  0, 0}, // #928
+  {DBGFIELD("DPPSrmi_VDPPSYrmi_VDPPSrmi") 1, false, false, 1174, 3, 16, 1,  4, 1}, // #929
+  {DBGFIELD("DPPDrri")            1, false, false, 427, 2,  6, 1,  0, 0}, // #930
+  {DBGFIELD("VDPPDrri")           1, false, false, 427, 2,  6, 1,  0, 0}, // #931
+  {DBGFIELD("DPPDrmi_VDPPDrmi")   1, false, false, 1174, 3, 16, 1,  4, 1}, // #932
+  {DBGFIELD("VFMADDPD4rr_VFMADDPD4rr_REV_VFMADDPS4rr_VFMADDPS4rr_REV_VFMADDSD4rr_VFMADDSD4rr_Int_VFMADDSD4rr_REV_VFMADDSS4rr_VFMADDSS4rr_Int_VFMADDSS4rr_REV_VFMSUBPD4rr_VFMSUBPD4rr_REV_VFMSUBPS4rr_VFMSUBPS4rr_REV_VFMSUBSD4rr_VFMSUBSD4rr_Int_VFMSUBSD4rr_REV_VFMSUBSS4rr_VFMSUBSS4rr_Int_VFMSUBSS4rr_REV_VFNMADDPD4rr_VFNMADDPD4rr_REV_VFNMADDPS4rr_VFNMADDPS4rr_REV_VFNMADDSD4rr_VFNMADDSD4rr_Int_VFNMADDSD4rr_REV_VFNMADDSS4rr_VFNMADDSS4rr_Int_VFNMADDSS4rr_REV_VFNMSUBPD4rr_VFNMSUBPD4rr_REV_VFNMSUBPS4rr_VFNMSUBPS4rr_REV_VFNMSUBSD4rr_VFNMSUBSD4rr_Int_VFNMSUBSD4rr_REV_VFNMSUBSS4rr_VFNMSUBSS4rr_Int_VFNMSUBSS4rr_REV") 0, false, false,  0, 0,  0, 0,  0, 0}, // #933
+  {DBGFIELD("VFMADDPD4mr_VFMADDPD4rm_VFMADDPS4mr_VFMADDPS4rm_VFMADDSD4mr_VFMADDSD4mr_Int_VFMADDSD4rm_VFMADDSD4rm_Int_VFMADDSS4mr_VFMADDSS4mr_Int_VFMADDSS4rm_VFMADDSS4rm_Int_VFMSUBPD4mr_VFMSUBPD4rm_VFMSUBPS4mr_VFMSUBPS4rm_VFMSUBSD4mr_VFMSUBSD4mr_Int_VFMSUBSD4rm_VFMSUBSD4rm_Int_VFMSUBSS4mr_VFMSUBSS4mr_Int_VFMSUBSS4rm_VFMSUBSS4rm_Int_VFNMADDPD4mr_VFNMADDPD4rm_VFNMADDPS4mr_VFNMADDPS4rm_VFNMADDSD4mr_VFNMADDSD4mr_Int_VFNMADDSD4rm_VFNMADDSD4rm_Int_VFNMADDSS4mr_VFNMADDSS4mr_Int_VFNMADDSS4rm_VFNMADDSS4rm_Int_VFNMSUBPD4mr_VFNMSUBPD4rm_VFNMSUBPS4mr_VFNMSUBPS4rm_VFNMSUBSD4mr_VFNMSUBSD4mr_Int_VFNMSUBSD4rm_VFNMSUBSD4rm_Int_VFNMSUBSS4mr_VFNMSUBSS4mr_Int_VFNMSUBSS4rm_VFNMSUBSS4rm_Int") 0, false, false,  0, 0,  0, 0,  0, 0}, // #934
+  {DBGFIELD("VSQRTPSYr")          1, false, false, 1172, 2, 24, 1,  0, 0}, // #935
+  {DBGFIELD("VSQRTPSYm")          1, false, false, 1180, 3, 39, 1,  0, 0}, // #936
+  {DBGFIELD("VSQRTPDYr")          1, false, false, 1172, 2, 24, 1,  0, 0}, // #937
+  {DBGFIELD("VSQRTPDYm")          1, false, false, 1180, 3, 39, 1,  0, 0}, // #938
+  {DBGFIELD("RSQRTPSr_VRSQRTPSr") 1, false, false, 1172, 2,  3, 1,  0, 0}, // #939
+  {DBGFIELD("RSQRTSSr_VRSQRTSSr") 1, false, false, 1172, 2,  3, 1,  0, 0}, // #940
+  {DBGFIELD("RSQRTSSr_Int")       1, false, false, 1180, 3, 10, 1,  4, 1}, // #941
+  {DBGFIELD("VRSQRTSSr_Int")      1, false, false, 1180, 3, 10, 1,  0, 0}, // #942
+  {DBGFIELD("RSQRTPSm_VRSQRTPSm") 1, false, false, 1180, 3, 10, 1,  0, 0}, // #943
+  {DBGFIELD("RSQRTSSm_VRSQRTSSm") 1, false, false, 1180, 3, 10, 1,  4, 1}, // #944
+  {DBGFIELD("RSQRTSSm_Int_VRSQRTSSm_Int") 1, false, false, 1180, 3, 10, 1,  4, 1}, // #945
+  {DBGFIELD("VRSQRTPSYr")         1, false, false, 1172, 2,  3, 1,  0, 0}, // #946
+  {DBGFIELD("VRSQRTPSYm")         1, false, false, 1180, 3, 10, 1,  0, 0}, // #947
+  {DBGFIELD("ANDNPDrr_ANDNPSrr_ANDPDrr_ANDPSrr_ORPDrr_ORPSrr_VANDNPDYrr_VANDNPDrr_VANDNPSYrr_VANDNPSrr_VANDPDYrr_VANDPDrr_VANDPSYrr_VANDPSrr_VORPDYrr_VORPDrr_VORPSYrr_VORPSrr_VXORPDYrr_VXORPDrr_VXORPSYrr_VXORPSrr_XORPDrr_XORPSrr") 1, false, false, 13, 1,  2, 1,  0, 0}, // #948
+  {DBGFIELD("ANDNPDrm_ANDNPSrm_ANDPDrm_ANDPSrm_ORPDrm_ORPSrm_VANDNPDYrm_VANDNPDrm_VANDNPSYrm_VANDNPSrm_VANDPDYrm_VANDPDrm_VANDPSYrm_VANDPSrm_VORPDYrm_VORPDrm_VORPSYrm_VORPSrm_VXORPDYrm_VXORPDrm_VXORPSYrm_VXORPSrm_XORPDrm_XORPSrm") 1, false, false, 13, 2,  9, 1,  4, 1}, // #949
+  {DBGFIELD("VZEROUPPER")         0, false, false,  0, 0,  0, 0,  0, 0}, // #950
+  {DBGFIELD("VZEROALL")           0, false, false,  0, 0,  0, 0,  0, 0}, // #951
+  {DBGFIELD("LDMXCSR_VLDMXCSR")   1, false, false, 14, 1,  6, 1,  0, 0}, // #952
+  {DBGFIELD("STMXCSR_VSTMXCSR")   1, false, false, 386, 2,  2, 1,  0, 0} // #953
 }; // SLMModelSchedClasses
 
 static const llvm::MCSchedModel NoSchedModel = {
@@ -6522,7 +6561,7 @@ static const llvm::MCSchedModel HaswellModel = {
   HaswellModelProcResources,
   HaswellModelSchedClasses,
   20,
-  948,
+  954,
   nullptr}; // No Itinerary
 
 // {Name, NumUnits, SuperIdx, IsBuffered}
@@ -6555,7 +6594,7 @@ static const llvm::MCSchedModel BtVer2Model = {
   BtVer2ModelProcResources,
   BtVer2ModelSchedClasses,
   13,
-  948,
+  954,
   nullptr}; // No Itinerary
 
 // {Name, NumUnits, SuperIdx, IsBuffered}
@@ -6586,7 +6625,7 @@ static const llvm::MCSchedModel SandyBridgeModel = {
   SandyBridgeModelProcResources,
   SandyBridgeModelSchedClasses,
   11,
-  948,
+  954,
   nullptr}; // No Itinerary
 
 static const llvm::MCSchedModel GenericPostRAModel = {
@@ -6630,7 +6669,7 @@ static const llvm::MCSchedModel SLMModel = {
   SLMModelProcResources,
   SLMModelSchedClasses,
   11,
-  948,
+  954,
   nullptr}; // No Itinerary
 
 // Sorted (by key) array of itineraries for CPU subtype.
@@ -6702,7 +6741,8 @@ extern const llvm::SubtargetInfoKV X86ProcSchedKV[] = {
   { "winchip-c6", (const void *)&GenericModel },
   { "winchip2", (const void *)&GenericModel },
   { "x86-64", (const void *)&SandyBridgeModel },
-  { "yonah", (const void *)&SandyBridgeModel }
+  { "yonah", (const void *)&SandyBridgeModel },
+  { "znver1", (const void *)&BtVer2Model }
 };
 #undef DBGFIELD
 static inline MCSubtargetInfo *createX86MCSubtargetInfoImpl(const Triple &TT, StringRef CPU, StringRef FS) {
@@ -6753,7 +6793,10 @@ void llvm::X86Subtarget::ParseSubtargetFeatures(StringRef CPU, StringRef FS) {
   if (Bits[X86::FeatureFMA4]) HasFMA4 = true;
   if (Bits[X86::FeatureFSGSBase]) HasFSGSBase = true;
   if (Bits[X86::FeatureFXSR]) HasFXSR = true;
+  if (Bits[X86::FeatureFastLZCNT]) HasFastLZCNT = true;
   if (Bits[X86::FeatureFastPartialYMMWrite]) HasFastPartialYMMWrite = true;
+  if (Bits[X86::FeatureFastScalarFSQRT]) HasFastScalarFSQRT = true;
+  if (Bits[X86::FeatureFastVectorFSQRT]) HasFastVectorFSQRT = true;
   if (Bits[X86::FeatureHLE]) HasHLE = true;
   if (Bits[X86::FeatureIFMA]) HasIFMA = true;
   if (Bits[X86::FeatureINVPCID]) HasInvPCId = true;
@@ -6792,6 +6835,7 @@ void llvm::X86Subtarget::ParseSubtargetFeatures(StringRef CPU, StringRef FS) {
   if (Bits[X86::FeatureSlowDivide64]) HasSlowDivide64 = true;
   if (Bits[X86::FeatureSlowIncDec]) SlowIncDec = true;
   if (Bits[X86::FeatureSlowLEA]) SlowLEA = true;
+  if (Bits[X86::FeatureSlowPMULLD]) IsPMULLDSlow = true;
   if (Bits[X86::FeatureSlowSHLD]) IsSHLDSlow = true;
   if (Bits[X86::FeatureSlowUAMem16]) IsUAMem16Slow = true;
   if (Bits[X86::FeatureSlowUAMem32]) IsUAMem32Slow = true;
@@ -6847,7 +6891,7 @@ extern const llvm::InstrStage X86Stages[];
 extern const unsigned X86OperandCycles[];
 extern const unsigned X86ForwardingPaths[];
 X86GenSubtargetInfo::X86GenSubtargetInfo(const Triple &TT, StringRef CPU, StringRef FS)
-  : TargetSubtargetInfo(TT, CPU, FS, makeArrayRef(X86FeatureKV, 82), makeArrayRef(X86SubTypeKV, 68),
+  : TargetSubtargetInfo(TT, CPU, FS, makeArrayRef(X86FeatureKV, 86), makeArrayRef(X86SubTypeKV, 69),
                         X86ProcSchedKV, X86WriteProcResTable, X86WriteLatencyTable, X86ReadAdvanceTable,
                         X86Stages, X86OperandCycles, X86ForwardingPaths) {}
 

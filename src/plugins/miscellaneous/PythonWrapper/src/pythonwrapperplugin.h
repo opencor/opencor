@@ -37,8 +37,8 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace SingleCellView {
-    class SingleCellViewWidget;
+namespace SimulationExperimentView {
+    class SimulationExperimentViewWidget;
 };
 
 //==============================================================================
@@ -49,7 +49,7 @@ namespace PythonWrapper {
 
 class PythonWrapperCore;
 class PythonWrapperDataStore;
-class PythonWrapperSingleCellView;
+class PythonWrapperSimulationExperimentView;
 
 //==============================================================================
 
@@ -72,16 +72,16 @@ public:
 
     static PythonWrapperPlugin *instance();
 
-    SingleCellView::SingleCellViewWidget *singleCellViewWidget();
+    SimulationExperimentView::SimulationExperimentViewWidget *simulationExperimentViewWidget();
 
 private:
     PythonQtObjectPtr mOpenCORModule;
 
     PythonWrapperCore *mPythonWrapperCore;
     PythonWrapperDataStore *mPythonWrapperDataStore;
-    PythonWrapperSingleCellView *mPythonWrapperSingleCellView;
+    PythonWrapperSimulationExperimentView *mPythonWrapperSimulationExperimentView;
 
-    SingleCellView::SingleCellViewWidget *mSingleCellViewWidget;
+    SimulationExperimentView::SimulationExperimentViewWidget *mSimulationExperimentViewWidget;
 };
 
 //==============================================================================

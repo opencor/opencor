@@ -30,7 +30,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                                 { "level": 2, "label": "PMRWindow", "link": "user/plugins/organisation/PMRWindow.html", "subMenuItem": true },
                                 { "level": 2, "label": "PMRWorkspacesWindow", "link": "user/plugins/organisation/PMRWorkspacesWindow.html", "subMenuItem": true },
                                 { "level": 1, "label": "Simulation", "subMenuHeader": true },
-                                { "level": 2, "label": "SingleCellView", "link": "user/plugins/simulation/SingleCellView.html", "subMenuItem": true },
+                                { "level": 2, "label": "SimulationExperimentView", "link": "user/plugins/simulation/SimulationExperimentView.html", "subMenuItem": true },
                                 { "level": 1, "label": "Solver", "subMenuHeader": true },
                                 { "level": 2, "label": "CVODESolver", "link": "user/plugins/solver/CVODESolver.html", "subMenuItem": true },
                                 { "level": 2, "label": "ForwardEulerSolver", "link": "user/plugins/solver/ForwardEulerSolver.html", "subMenuItem": true },

@@ -82,9 +82,6 @@ protected:
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
     virtual void paintEvent(QPaintEvent *pEvent);
 
-    virtual QSize minimumSizeHint() const;
-    virtual QSize sizeHint() const;
-
 private:
     QwtMathMLDocument mMathmlDocument;
 

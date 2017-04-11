@@ -17,7 +17,7 @@ ADD_PLUGIN(PythonWrapper
         src/pythonwrappercore.cpp
         src/pythonwrapperdatastore.cpp
         src/pythonwrapperplugin.cpp
-        src/pythonwrappersinglecellview.cpp
+        src/pythonwrappersimulationexperimentview.cpp
     HEADERS_MOC
         ../../datastoreinterface.h
         ../../plugin.h
@@ -26,7 +26,7 @@ ADD_PLUGIN(PythonWrapper
         src/pythonwrappercore.h
         src/pythonwrapperdatastore.h
         src/pythonwrapperplugin.h
-        src/pythonwrappersinglecellview.h
+        src/pythonwrappersimulationexperimentview.h
     INCLUDE_DIRS
         src
         ${NUMPY_INCLUDE_DIR}
@@ -34,5 +34,5 @@ ADD_PLUGIN(PythonWrapper
         Core
         Python
         PythonQtSupport
-        SingleCellView
+        SimulationExperimentView
 )

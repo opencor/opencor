@@ -259,7 +259,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     //       plugins. However, there may be things that require knowledge of
     //       what one or several other plugins are about, and this is something
     //       that can only be done once all the plugins have been initialised
-    //       (e.g. the SingleCellSimulationView plugin needs to know which
+    //       (e.g. the SimulationExperimentView plugin needs to know which
     //       solvers, if any, are available to it)...
 
     foreach (Plugin *plugin, mLoadedPluginPlugins)

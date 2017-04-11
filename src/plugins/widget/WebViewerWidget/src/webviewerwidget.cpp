@@ -301,17 +301,6 @@ void WebViewerWidget::wheelEvent(QWheelEvent *pEvent)
 
 //==============================================================================
 
-QSize WebViewerWidget::sizeHint() const
-{
-    // Suggest a default size for the help widget
-    // Note: this is critical if we want a docked widget, with a help widget on
-    //       it, to have a decent size when docked to the main window...
-
-    return defaultSize(0.15);
-}
-
-//==============================================================================
-
 bool WebViewerWidget::isUrlSchemeSupported(const QString &pUrlScheme)
 {
     Q_UNUSED(pUrlScheme);

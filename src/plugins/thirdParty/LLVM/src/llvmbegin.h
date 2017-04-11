@@ -22,8 +22,8 @@ limitations under the License.
 
 #if defined(Q_OS_WIN)
     #pragma warning(push)
+    #pragma warning(disable: 4141)
     #pragma warning(disable: 4146)
-    #pragma warning(disable: 4624)
 #elif defined(Q_OS_LINUX)
     #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     #pragma GCC diagnostic ignored "-Wstrict-aliasing"

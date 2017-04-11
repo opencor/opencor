@@ -24,8 +24,8 @@ limitations under the License.
 #include "pythonwrappercore.h"
 #include "pythonwrapperdatastore.h"
 #include "pythonwrapperplugin.h"
-#include "pythonwrappersinglecellview.h"
-#include "singlecellviewplugin.h"
+#include "pythonwrappersimulationexperimentview.h"
+#include "simulationexperimentviewplugin.h"
 
 //==============================================================================
 
@@ -42,7 +42,7 @@ PLUGININFO_FUNC PythonWrapperPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder... <a href=\"http://www.python.org/\">Python</a>."));
 
     return new PluginInfo(PluginInfo::Tools, true, false,
-                          QStringList() << "PythonQtSupport" << "SingleCellView",
+                          QStringList() << "PythonQtSupport" << "SimulationExperimentView",
                           descriptions);
 }
 
@@ -86,7 +86,7 @@ void PythonWrapperPlugin::initializePlugin()
 
     mPythonWrapperCore = new PythonWrapperCore(mOpenCORModule);
     mPythonWrapperDataStore = new PythonWrapperDataStore(mOpenCORModule);
-    mPythonWrapperSingleCellView = new PythonWrapperSingleCellView(mOpenCORModule);
+    mPythonWrapperSimulationExperimentView = new PythonWrapperSimulationExperimentView(mOpenCORModule);
 }
 
 //==============================================================================
@@ -104,10 +104,10 @@ void PythonWrapperPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
     foreach (Plugin *plugin, pLoadedPlugins) {
 
-        if (!plugin->name().compare("SingleCellView")) {
+        if (!plugin->name().compare("SimulationExperimentView")) {
 
-            auto *singleCellViewPlugin = qobject_cast<SingleCellView::SingleCellViewPlugin *>(plugin->instance());
-            instance()->mSingleCellViewWidget = singleCellViewPlugin->viewWidget();
+            auto *simulationExperimentViewPlugin = qobject_cast<SimulationExperimentView::SimulationExperimentViewPlugin *>(plugin->instance());
+            instance()->mSimulationExperimentViewWidget = simulationExperimentViewPlugin->viewWidget();
 
             break;
         }
@@ -156,9 +156,9 @@ PythonWrapperPlugin *PythonWrapperPlugin::instance(void)
 
 //==============================================================================
 
-SingleCellView::SingleCellViewWidget *PythonWrapperPlugin::singleCellViewWidget()
+SimulationExperimentView::SimulationExperimentViewWidget *PythonWrapperPlugin::simulationExperimentViewWidget()
 {
-    return mSingleCellViewWidget;
+    return mSimulationExperimentViewWidget;
 }
 
 //==============================================================================

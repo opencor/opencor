@@ -57,8 +57,8 @@ void Tests::doRuntimeTest(const QString &pFileName,
         return;
 
     // Retrieve the model parameters (i.e. the ones that would be shown in, say,
-    // the Single Cell view) for our model and check that they contain the
-    // information we would expect
+    // the Simulation Experiment view) for our model and check that they contain
+    // the information we would expect
 
     QStringList modelParameters = QStringList();
     OpenCOR::CellMLSupport::CellmlFileRuntimeParameters parameters = runtime->parameters();

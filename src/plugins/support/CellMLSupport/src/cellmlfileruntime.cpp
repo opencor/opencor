@@ -765,7 +765,7 @@ void CellmlFileRuntime::update()
     // Note: this is to avoid having to go through the ODE/DAE code information
     //       an unnecessary number of times when we want to retrieve either of
     //       those numbers (e.g. see
-    //       SingleCellViewSimulationResults::addPoint())...
+    //       SimulationExperimentViewSimulationResults::addPoint())...
 
     if (mModelType == CellmlFileRuntime::Ode) {
         mConstantsCount = mOdeCodeInformation->constantIndexCount();

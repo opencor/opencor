@@ -12,12 +12,20 @@ namespace sema {
 Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
         const MultiLevelTemplateArgumentList &TemplateArgs) {
   switch (At->getKind()) {
+    case attr::AMDGPUFlatWorkGroupSize: {
+      const auto *A = cast<AMDGPUFlatWorkGroupSizeAttr>(At);
+      return A->clone(C);
+    }
     case attr::AMDGPUNumSGPR: {
       const auto *A = cast<AMDGPUNumSGPRAttr>(At);
       return A->clone(C);
     }
     case attr::AMDGPUNumVGPR: {
       const auto *A = cast<AMDGPUNumVGPRAttr>(At);
+      return A->clone(C);
+    }
+    case attr::AMDGPUWavesPerEU: {
+      const auto *A = cast<AMDGPUWavesPerEUAttr>(At);
       return A->clone(C);
     }
     case attr::ARMInterrupt: {
@@ -88,6 +96,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     case attr::Aligned: {
       const auto *A = cast<AlignedAttr>(At);
       return A->clone(C);
+    }
+    case attr::AllocSize: {
+      const auto *A = cast<AllocSizeAttr>(At);
+      return new (C) AllocSizeAttr(A->getLocation(), C, A->getElemSizeParam(), A->getNumElemsParam(), A->getSpellingListIndex());
     }
     case attr::AlwaysInline: {
       const auto *A = cast<AlwaysInlineAttr>(At);
@@ -277,6 +289,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const auto *A = cast<ConsumableSetOnReadAttr>(At);
       return A->clone(C);
     }
+    case attr::Convergent: {
+      const auto *A = cast<ConvergentAttr>(At);
+      return A->clone(C);
+    }
     case attr::DLLExport: {
       const auto *A = cast<DLLExportAttr>(At);
       return A->clone(C);
@@ -292,6 +308,16 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     case attr::Destructor: {
       const auto *A = cast<DestructorAttr>(At);
       return A->clone(C);
+    }
+    case attr::DiagnoseIf: {
+      const auto *A = cast<DiagnoseIfAttr>(At);
+      Expr * tempInstCond;
+      {
+        EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
+        ExprResult Result = S.SubstExpr(A->getCond(), TemplateArgs);
+        tempInstCond = Result.getAs<Expr>();
+      }
+      return new (C) DiagnoseIfAttr(A->getLocation(), C, tempInstCond, A->getMessage(), A->getDiagnosticType(), A->getArgDependent(), A->getParent(), A->getSpellingListIndex());
     }
     case attr::DisableTailCalls: {
       const auto *A = cast<DisableTailCallsAttr>(At);
@@ -663,6 +689,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const auto *A = cast<ObjCRuntimeVisibleAttr>(At);
       return A->clone(C);
     }
+    case attr::ObjCSubclassingRestricted: {
+      const auto *A = cast<ObjCSubclassingRestrictedAttr>(At);
+      return A->clone(C);
+    }
     case attr::OpenCLAccess: {
       const auto *A = cast<OpenCLAccessAttr>(At);
       return A->clone(C);
@@ -737,6 +767,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const auto *A = cast<PureAttr>(At);
       return A->clone(C);
     }
+    case attr::RegCall: {
+      const auto *A = cast<RegCallAttr>(At);
+      return A->clone(C);
+    }
     case attr::ReleaseCapability: {
       const auto *A = cast<ReleaseCapabilityAttr>(At);
       auto *tempInstArgs = new (C, 16) Expr *[A->args_size()];
@@ -758,6 +792,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::ReqdWorkGroupSize: {
       const auto *A = cast<ReqdWorkGroupSizeAttr>(At);
+      return A->clone(C);
+    }
+    case attr::RequireConstantInit: {
+      const auto *A = cast<RequireConstantInitAttr>(At);
       return A->clone(C);
     }
     case attr::RequiresCapability: {

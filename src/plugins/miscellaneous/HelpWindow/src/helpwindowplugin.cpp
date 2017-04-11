@@ -59,7 +59,7 @@ void HelpWindowPlugin::retranslateUi()
     retranslateAction(mHelpAction, tr("Help"),
                       tr("Show/hide the OpenCOR help"));
 
-    // Retranslate our help window
+    // Retranslate our Help window
 
     mHelpWindow->retranslateUi();
 }
@@ -92,12 +92,12 @@ bool HelpWindowPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void HelpWindowPlugin::initializePlugin()
 {
-    // Create an action to show/hide our help window
+    // Create an action to show/hide our Help window
 
     mHelpAction = Core::newAction(true, QIcon(":/oxygen/apps/help-browser.png"),
                                   Qt::Key_F1, Core::mainWindow());
 
-    // Create our help window
+    // Create our Help window
 
     mHelpWindow = new HelpWindowWindow(Core::mainWindow());
 }
@@ -122,7 +122,7 @@ void HelpWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void HelpWindowPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our help window settings
+    // Retrieve our Help window settings
 
     pSettings->beginGroup(mHelpWindow->objectName());
         mHelpWindow->loadSettings(pSettings);
@@ -133,7 +133,7 @@ void HelpWindowPlugin::loadSettings(QSettings *pSettings)
 
 void HelpWindowPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our help window settings
+    // Keep track of our Help window settings
 
     pSettings->beginGroup(mHelpWindow->objectName());
         mHelpWindow->saveSettings(pSettings);
@@ -164,7 +164,7 @@ Qt::DockWidgetArea HelpWindowPlugin::windowDefaultDockArea() const
 
 QAction * HelpWindowPlugin::windowAction() const
 {
-    // Return our window action
+    // Return our Help window action
 
     return mHelpAction;
 }
@@ -173,7 +173,7 @@ QAction * HelpWindowPlugin::windowAction() const
 
 QDockWidget * HelpWindowPlugin::windowWidget() const
 {
-    // Return our window widget
+    // Return our Help window widget
 
     return mHelpWindow;
 }
