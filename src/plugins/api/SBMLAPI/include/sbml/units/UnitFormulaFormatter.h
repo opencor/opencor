@@ -9,7 +9,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -39,7 +39,7 @@
  *
  * A UnitFormulaFormatter object is created using a Model object
  * and uses the information from that Model to derive the units
- * of either an ASTNode respresenting a math expression or
+ * of either an ASTNode representing a math expression or
  * an appropriate SBML object. The derived units are formulated into
  * a UnitDefinition object.
  */
@@ -72,6 +72,8 @@
 LIBSBML_CPP_NAMESPACE_BEGIN
 
 class FormulaUnitsData;
+
+class ASTNode;
 
 class   LIBSBML_EXTERN UnitFormulaFormatter
 {
@@ -175,6 +177,15 @@ public:
 
    /**
    * Returns the unitDefinition constructed
+   * from the time units of this Model.
+   *
+   * @return the unitDefinition constructed to represent the time units
+   * of the Model.
+   */
+  UnitDefinition * getTimeUnitDefinition();
+
+   /**
+   * Returns the unitDefinition constructed
    * from the substance units of this Species.
    */
   UnitDefinition * getSpeciesSubstanceUnitDefinition(const Species * species);
@@ -260,6 +271,18 @@ public:
     bool inKL, int reactNo);
 
   /**
+   * returns the unitDefinition for the ASTNode from a rem function
+   */
+  UnitDefinition * getUnitDefinitionFromRem(const ASTNode *node,
+    bool inKL, int reactNo);
+
+  /**
+   * returns the unitDefinition for the ASTNode from a rateOf function
+   */
+  UnitDefinition * getUnitDefinitionFromRateOf(const ASTNode *node,
+    bool inKL, int reactNo);
+
+  /**
    * returns the unitDefinition for the ASTNode from a power function
    */
   UnitDefinition * getUnitDefinitionFromPower(const ASTNode *node,
@@ -326,6 +349,14 @@ public:
   bool possibleToUseUnitsData(FormulaUnitsData * fud);
 
   /** @endcond */
+
+protected:
+  /* @cond doxygenLibsbmlInternal */
+
+//  UnitDefinition * getTimeUnitDefinition();
+
+  /** @endcond */
+
 
 private:
   /* @cond doxygenLibsbmlInternal */

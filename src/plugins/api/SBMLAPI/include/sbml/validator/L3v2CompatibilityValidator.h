@@ -1,8 +1,8 @@
 /**
  * @cond doxygenLibsbmlInternal
  *
- * @file    L2v2CompatibilityValidator.h
- * @brief   Checks whether an SBML model can be converted from L2v2/3 to L2v1
+ * @file    L3v2CompatibilityValidator.h
+ * @brief   Checks whether an SBML model can be converted from L2v2/3 to L3v2
  * @author  Sarah Keating
  *
  * <!--------------------------------------------------------------------------
@@ -32,8 +32,8 @@
  * also available online as http://sbml.org/software/libsbml/license.html
  * ---------------------------------------------------------------------- -->*/
 
-#ifndef L2v2CompatibilityValidator_h
-#define L2v2CompatibilityValidator_h
+#ifndef L3v2CompatibilityValidator_h
+#define L3v2CompatibilityValidator_h
 
 
 #ifdef __cplusplus
@@ -43,14 +43,14 @@
 
 LIBSBML_CPP_NAMESPACE_BEGIN
 
-class L2v2CompatibilityValidator: public Validator
+class L3v2CompatibilityValidator: public Validator
 {
 public:
 
-  L2v2CompatibilityValidator () :
-    Validator( LIBSBML_CAT_SBML_L2V2_COMPAT ) { }
+  L3v2CompatibilityValidator () :
+    Validator( LIBSBML_CAT_SBML_L3V2_COMPAT ) { }
 
-  virtual ~L2v2CompatibilityValidator () { }
+  virtual ~L3v2CompatibilityValidator () { }
 
   /**
    * Initializes this Validator with a set of Constraints.
@@ -61,6 +61,6 @@ public:
 LIBSBML_CPP_NAMESPACE_END
 
 #endif  /* __cplusplus */
-#endif  /* L2v2CompatibilityValidator_h */
+#endif  /* L3v2CompatibilityValidator_h */
 /** @endcond */
 

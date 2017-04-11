@@ -1,7 +1,7 @@
 /**
- * @file    SBMLFunctionDefinitionConverter.h
- * @brief   Definition of SBMLFunctionDefinitionConverter, a converter replacing function definitions
- * @author  Frank Bergmann
+ * @file    SBMLRateOfConverter.h
+ * @brief   Definition of SBMLRateOfConverter, a converter changing reactions into rate rules
+ * @author  Sarah Keating
  *
  * <!--------------------------------------------------------------------------
  * This file is part of libSBML.  Please visit http://sbml.org for more
@@ -30,64 +30,53 @@
  * and also available online as http://sbml.org/software/libsbml/license.html
  * ------------------------------------------------------------------------ -->
  *
- * @class SBMLFunctionDefinitionConverter
- * @sbmlbrief{core} Converter to expand user-defined functions in-line.
+ * @class SBMLRateOfConverter
+ * @sbmlbrief{core} Converter to inteerchange csymbol 'rateOf' with FunctionDefinition.
  *
  * @htmlinclude libsbml-facility-only-warning.html
  *
- * This converter manipulates user-defined functions in an SBML file.  When
- * invoked on a model, it performs the following operations:
+ * This converter will take an SBML model and either replace the use of
+ * csymbol rateOf in the model with a FunctionDefinition, or replace a
+ * FunctionDefinition named 'rateOf' with use of the csymbol.
  *
- * @li Reads the list of user-defined functions in the model (i.e., the list
- * of FunctionDefinition objects);
- * @li Looks for invocations of the function in mathematical expressions
- * throughout the model; and
- * @li For each invocation found, replaces the invocation with a in-line copy
- * of the function's body, similar to how macro expansions might be performed
- * in scripting and programming languages.
+ * @section SBMLRateOfConverter-usage Configuration and use of SBMLRateOfConverter
  *
- * For example, suppose the model contains a function definition
- * representing the function <code>f(x, y) = x * y</code>.  Further
- * suppose this functions invoked somewhere else in the model, in
- * a mathematical formula, as <code>f(s, p)</code>.  The outcome of running
- * SBMLFunctionDefinitionConverter on the model will be to replace
- * the call to <code>f</code> with the expression <code>s * p</code>.
+ * SBMLRateOfConverter is enabled by creating a ConversionProperties object
+ * with the option @c "replaceRateOf", and passing this properties object
+ * to SBMLDocument::convert(@if java ConversionProperties@endif).  This
+ * converter does not offer any additional configuration options.
  *
- * @section usage Configuration and use of SBMLFunctionDefinitionConverter
+ * In addition, this converter offers the following options:
  *
- * SBMLFunctionDefinitionConverter is enabled by creating a
- * ConversionProperties object with the option @c
- * "expandFunctionDefinitions", and passing this properties object to
- * SBMLDocument::convert(@if java ConversionProperties@endif).
- * The converter accepts one option:
- *
- * @li @c "skipIds": if set, it should be a string containing a
- * comma-separated list of identifiers (SBML "id" values) that are to be
- * skipped during function conversion.  Functions whose identifiers are
- * found in this list will not be converted.
+ * @li @c "toFunction": If this option has the value @c true, then the
+ * conversion replaces csymbol with functionDefinition, if @c false, it
+ * replaces functionDefinition with csymbol.
  *
  * @copydetails doc_section_using_sbml_converters
  */
 
-#ifndef SBMLFunctionDefinitionConverter_h
-#define SBMLFunctionDefinitionConverter_h
+#ifndef SBMLRateOfConverter_h
+#define SBMLRateOfConverter_h
 
 #include <sbml/SBMLNamespaces.h>
 #include <sbml/conversion/SBMLConverter.h>
 #include <sbml/conversion/SBMLConverterRegister.h>
+#include <sbml/util/IdList.h>
 
 
 #ifdef __cplusplus
 
+#include <map>
+#include <string>
 
 LIBSBML_CPP_NAMESPACE_BEGIN
 
-
-class LIBSBML_EXTERN SBMLFunctionDefinitionConverter : public SBMLConverter
+class LIBSBML_EXTERN SBMLRateOfConverter : public SBMLConverter
 {
 public:
 
-  /** @cond doxygenLibsbmlInternal */
+  /** @cond doxygenLibsbmlInternal  */
+
   /**
    * Register with the ConversionRegistry.
    */
@@ -97,33 +86,33 @@ public:
 
 
   /**
-   * Creates a new SBMLFunctionDefinitionConverter object.
+   * Creates a new SBMLRateOfConverter object.
    */
-  SBMLFunctionDefinitionConverter();
+  SBMLRateOfConverter();
 
 
   /**
-   * Copy constructor; creates a copy of an SBMLFunctionDefinitionConverter
+   * Copy constructor; creates a copy of an SBMLRateOfConverter
    * object.
    *
-   * @param obj the SBMLFunctionDefinitionConverter object to copy.
+   * @param obj the SBMLRateOfConverter object to copy.
    */
-  SBMLFunctionDefinitionConverter(const SBMLFunctionDefinitionConverter& obj);
+  SBMLRateOfConverter(const SBMLRateOfConverter& obj);
 
 
   /**
-   * Creates and returns a deep copy of this SBMLFunctionDefinitionConverter
+   * Creates and returns a deep copy of this SBMLRateOfConverter
    * object.
    *
    * @return a (deep) copy of this converter.
    */
-  virtual SBMLFunctionDefinitionConverter* clone() const;
+  virtual SBMLRateOfConverter* clone() const;
 
 
   /**
-   * Destroy this SBMLFunctionDefinitionConverter object.
+   * Destroy this SBMLRateOfConverter object.
    */
-  virtual ~SBMLFunctionDefinitionConverter ();
+  virtual ~SBMLRateOfConverter ();
 
 
   /**
@@ -132,7 +121,7 @@ public:
    *
    * A typical use of this method involves creating a ConversionProperties
    * object, setting the options desired, and then calling this method on
-   * an SBMLFunctionDefinitionConverter object to find out if the object's
+   * an SBMLRateOfConverter object to find out if the object's
    * property values match the given ones.  This method is also used by
    * SBMLConverterRegistry::getConverterFor(@if java ConversionProperties@endif)
    * to search across all registered converters for one matching particular
@@ -179,12 +168,72 @@ public:
   virtual ConversionProperties getDefaultProperties() const;
 
 
+  /**
+   * Sets the current SBML document to the given SBMLDocument object.
+   *
+   * @param doc the document to use for this conversion.
+   *
+   * @warning Even though the @p doc is 'const', it is immediately cast
+   * to a non-const version, which is then usually changed by the
+   * converter upon a successful conversion.  This function is here
+   * solely to preserve backwards compatibility.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   */
+  virtual int setDocument(const SBMLDocument* doc);
+
+
+  /**
+   * Sets the current SBML document to the given SBMLDocument object.
+   *
+   * @param doc the document to use for this conversion.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   */
+  virtual int setDocument(SBMLDocument* doc);
+
+  /**
+   * Returns the direction of the conversion.
+   *
+   * @return @c true if adding functionDefinition has been requested, @c false
+   * otherwise.
+   */
+  bool getToFunctionDefinition();
+
+
 private:
-  /** @cond doxygenLibsbmlInternal */
-  bool expandFD_errors(unsigned int errors);
+
+    /** @cond doxygenLibsbmlInternal */
+
+  bool isDocumentValid();
+
+  bool isCSymbolRateOfUsed();
+
+  bool usesCSymbolRateOf(ASTNode * math);
+
+  bool isCSymbolRateOf(ASTNode * math);
+
+  bool isFDRateOfUsed();
+
+  bool usesFDRateOf(ASTNode * math);
+
+  bool isFDRateOf(ASTNode * math);
+
+  bool hasFunctionDefinitionForRateOf();
+
+  void addRateOfFunctionDefinition();
+
+  void removeRateOfFunctionDefinition();
+
+  // member variables
+
+  std::vector<ASTNode*> mRateOfMath;
+
+  Model * mOriginalModel;
 
   /** @endcond */
-
 
 };
 
@@ -203,5 +252,5 @@ END_C_DECLS
 LIBSBML_CPP_NAMESPACE_END
 
 #endif  /* !SWIG */
-#endif  /* SBMLFunctionDefinitionConverter_h */
+#endif  /* SBMLRateOfConverter_h */
 

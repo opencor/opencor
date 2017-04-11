@@ -9,7 +9,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -58,9 +58,9 @@ public:
   void append (const std::string UnitKind) { mKinds.push_back(UnitKind); }
 
   /**
-   * Returns true if @p UnitKind is already in this UnitKindList, false otherwise.
+   * Returns @c true if @p UnitKind is already in this UnitKindList, @c false otherwise.
    *
-   * @return true if UnitKind is already in this UnitKindList, false otherwise.
+   * @return @c true if UnitKind is already in this UnitKindList, @c false otherwise.
    */
   bool contains (const std::string UnitKind) const;
 

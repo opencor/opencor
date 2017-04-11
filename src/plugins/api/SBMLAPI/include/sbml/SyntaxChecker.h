@@ -7,7 +7,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -61,7 +61,7 @@ class LIBSBML_EXTERN SyntaxChecker
 public:
 
   /**
-   * Returns true @c true or @c false depending on whether the argument
+   * Returns @c true or @c false depending on whether the argument
    * string conforms to the syntax of SBML identifiers.
    *
    * @copydetails doc_what_is_sid
@@ -76,7 +76,24 @@ public:
    * @return @c true if the string conforms to type SBML data type
    * <code>SId</code>, @c false otherwise.
    *
-   * @copydetails doc_id_syntax
+   * The identifier given by an object's "id" attribute value
+   * is used to identify the object within the SBML model definition.
+   * Other objects can refer to the component using this identifier.  The
+   * data type of "id" is always <code>SId</code> or a type derived
+   * from that, such as <code>UnitSId</code>, depending on the object in
+   * question.  All data types are defined as follows:
+   * <pre style="margin-left: 2em; border: none; font-weight: bold; color: black">
+   *   letter ::= 'a'..'z','A'..'Z'
+   *   digit  ::= '0'..'9'
+   *   idChar ::= letter | digit | '_'
+   *   SId    ::= ( letter | '_' ) idChar*
+   * </pre>
+   *
+   * The equality of <code>SId</code> and <code>SId</code>-derived values
+   * in SBML is determined by an exact character sequence match; i.e.,
+   * comparisons of these identifiers must be performed in a case-sensitive
+   * manner.  This applies to all uses of <code>SId</code>,
+   * <code>SIdRef</code>, and derived types.
    *
    * @copydetails doc_note_static_methods
    *
@@ -93,8 +110,8 @@ public:
    * and returns LIBSBML_OPERATION_SUCCESS if the srcId is valid, otherwise
    * srcId is not set to the dstId and returns LIBSBML_INVALID_ATTRIBUTE_VALUE.
    *
-   * @param srcId the string of SId to be set to the dstId
-   * @param dstId the string of SId to be set by the srcId
+   * @param srcId the string of SId to be set to the dstId.
+   * @param dstId the string of SId to be set by the srcId.
    *
    * @return LIBSBML_OPERATION_SUCCESS if the srcId is valid, otherwise
    * LIBSBML_INVALID_ATTRIBUTE_VALUE will be returned.
@@ -262,7 +279,7 @@ public:
 
   /** @cond doxygenLibsbmlInternal */
   /**
-   * Returns true @c true or @c false depending on whether the argument
+   * Returns @c true or @c false depending on whether the argument
    * string conforms to the syntax of SBML identifiers or is empty.
    */
   static bool isValidInternalSId(std::string sid);
@@ -300,28 +317,28 @@ protected:
   /** @cond doxygenLibsbmlInternal */
   /**
    * Checks if a character is part of the Unicode Letter set.
-   * @return true if the character is a part of the set, false otherwise.
+   * @return @c true if the character is a part of the set, @c false otherwise.
    */
   static bool isUnicodeLetter(std::string::iterator, unsigned int);
 
 
   /**
    * Checks if a character is part of the Unicode Digit set.
-   * @return true if the character is a part of the set, false otherwise.
+   * @return @c true if the character is a part of the set, @c false otherwise.
    */
   static bool isUnicodeDigit(std::string::iterator, unsigned int);
 
 
   /**
    * Checks if a character is part of the Unicode CombiningChar set.
-   * @return true if the character is a part of the set, false otherwise.
+   * @return @c true if the character is a part of the set, @c false otherwise.
    */
   static bool isCombiningChar(std::string::iterator, unsigned int);
 
 
   /**
    * Checks if a character is part of the Unicode Extender set.
-   * @return true if the character is a part of the set, false otherwise.
+   * @return @c true if the character is a part of the set, @c false otherwise.
    */
   static bool isExtender(std::string::iterator, unsigned int);
 
@@ -342,7 +359,7 @@ BEGIN_C_DECLS
  * Predicate indicating whether the
  * argument string conforms to the SBML type SId.
  *
- * @param sid string to be checked for conformance
+ * @param sid string to be checked for conformance.
  *
  * @return @c true (non-zero) if the string conforms to type SId,
  * @c false (0) otherwise.
@@ -366,7 +383,7 @@ SyntaxChecker_isValidSBMLSId(const char * sid);
  * Predicate indicating whether the
  * argument string conforms to the XML 1.0 type ID.
  *
- * @param id string to be checked for conformance
+ * @param id string to be checked for conformance.
  *
  * @return @c true (non-zero) if the string conforms to type ID,
  * @c false (0) otherwise.
@@ -388,7 +405,7 @@ SyntaxChecker_isValidXMLID(const char * id);
  * Predicate indicating whether the
  * argument string conforms to the SBML type UnitSId.
  *
- * @param units string to be checked for conformance
+ * @param units string to be checked for conformance.
  *
  * @return @c true (non-zero) if the string conforms to type UnitSId,
  * @c false (0) otherwise.

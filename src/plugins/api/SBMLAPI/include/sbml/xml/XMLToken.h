@@ -7,7 +7,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -249,7 +249,7 @@ public:
   /**
    * Assignment operator for XMLToken.
    *
-   * @param rhs The XMLToken object whose values are used as the basis
+   * @param rhs the XMLToken object whose values are used as the basis
    * of the assignment.
    */
   XMLToken& operator=(const XMLToken& rhs);
@@ -359,7 +359,7 @@ public:
    *
    * @copydetails doc_only_for_start_elements
    *
-   * @param n an integer the index of the resource to be deleted
+   * @param n an integer the index of the resource to be deleted.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -949,6 +949,25 @@ public:
 
 
   /**
+  * Sets the characters for this XMLToken
+  *
+  * This method only makes sense for XMLToken objects that contains text.
+  * If this method is called on a token that represents an XML start or end
+  * tag, it will return the code @sbmlconstant{LIBSBML_OPERATION_FAILED,
+  * OperationReturnValues_t}.
+  *
+  * @param chars string, characters to append to the text of this token.
+  *
+  * @copydetails doc_returns_success_code
+  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+  * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+  *
+  * @see isText()
+  * @see isElement()
+  */
+  int setCharacters(const std::string& chars);
+
+  /**
    * Appends characters to the text content of token.
    *
    * This method only makes sense for XMLToken objects that contains text.
@@ -1214,7 +1233,7 @@ XMLToken_createWithTriple (const XMLTriple_t *triple);
 LIBLAX_EXTERN
 XMLToken_t *
 XMLToken_createWithTripleAttr (const XMLTriple_t *triple,
-			       const XMLAttributes_t *attr);
+             const XMLAttributes_t *attr);
 
 
 /**
@@ -1232,14 +1251,14 @@ XMLToken_createWithTripleAttr (const XMLTriple_t *triple,
 LIBLAX_EXTERN
 XMLToken_t *
 XMLToken_createWithTripleAttrNS (const XMLTriple_t *triple,
-				 const XMLAttributes_t *attr,
-				 const XMLNamespaces_t *ns);
+         const XMLAttributes_t *attr,
+         const XMLNamespaces_t *ns);
 
 
 /**
  * Creates a text XMLToken_t structure.
  *
- * @param text a string, the text to be added to the XMLToken_t structure
+ * @param text a string, the text to be added to the XMLToken_t structure.
  *
  * @return pointer to new XMLToken_t structure.
  *
@@ -1265,7 +1284,7 @@ XMLToken_free (XMLToken_t *token);
 /**
  * Creates a deep copy of the given XMLToken_t structure
  *
- * @param token the XMLToken_t structure to be copied
+ * @param token the XMLToken_t structure to be copied.
  *
  * @return a (deep) copy of the given XMLToken_t structure.
  *
@@ -1280,7 +1299,7 @@ XMLToken_clone (const XMLToken_t *token);
  * Appends characters to this XML text content.
  *
  * @param token XMLToken_t structure to be appended to.
- * @param text string, characters to append
+ * @param text string, characters to append.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1292,6 +1311,22 @@ LIBLAX_EXTERN
 int
 XMLToken_append (XMLToken_t *token, const char *text);
 
+
+/**
+* Sets characters of this XML text content.
+*
+* @param token XMLToken_t structure whose characters to set.
+* @param text string, characters to set.
+*
+* @copydetails doc_returns_success_code
+* @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+* @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+**
+* @memberof XMLToken_t
+*/
+LIBLAX_EXTERN
+int
+XMLToken_setCharacters(XMLToken_t *token, const char *text);
 
 /**
  * Returns the text of this element.
@@ -1405,7 +1440,7 @@ XMLToken_addAttr ( XMLToken_t *token,  const char* name, const char* value );
  * @param name a string, the local name of the attribute.
  * @param value a string, the value of the attribute.
  * @param namespaceURI a string, the namespace URI of the attribute.
- * @param prefix a string, the prefix of the namespace
+ * @param prefix a string, the prefix of the namespace.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1419,9 +1454,9 @@ XMLToken_addAttr ( XMLToken_t *token,  const char* name, const char* value );
 LIBLAX_EXTERN
 int
 XMLToken_addAttrWithNS ( XMLToken_t *token,  const char* name
-	                , const char* value
-    	                , const char* namespaceURI
-	                , const char* prefix      );
+                  , const char* value
+                      , const char* namespaceURI
+                  , const char* prefix      );
 
 
 /**
@@ -1453,7 +1488,7 @@ XMLToken_addAttrWithTriple (XMLToken_t *token, const XMLTriple_t *triple, const 
  * Nothing will be done if this XMLToken_t is not a start element.
  *
  * @param token XMLToken_t structure from which an attribute to be removed.
- * @param n an integer the index of the resource to be deleted
+ * @param n an integer the index of the resource to be deleted.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1824,7 +1859,7 @@ XMLToken_hasAttrWithNS (const XMLToken_t *token, const char* name, const char* u
  * this XMLToken_t
  *
  * @param token XMLToken_t structure to be queried.
- * @param triple an XMLTriple_t, the XML triple of the attribute
+ * @param triple an XMLTriple_t, the XML triple of the attribute.
  *
  * @return @c non-zero (true) if an attribute with the given XML triple exists
  * in the attribute set in this XMLToken_t, @c zero (false) otherwise.
@@ -1898,8 +1933,8 @@ XMLToken_setNamespaces(XMLToken_t *token, const XMLNamespaces_t* namespaces);
  * Nothing will be done if this XMLToken_t is not a start element.
  *
  * @param token XMLToken_t structure to be queried.
- * @param uri a string, the uri for the namespace
- * @param prefix a string, the prefix for the namespace
+ * @param uri a string, the uri for the namespace.
+ * @param prefix a string, the prefix for the namespace.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -2114,7 +2149,7 @@ XMLToken_isNamespacesEmpty (const XMLToken_t *token);
  * this XMLToken_t.
  *
  * @param token XMLToken_t structure to be queried.
- * @param uri a string, the uri for the namespace
+ * @param uri a string, the uri for the namespace.
  *
  * @return @c no-zero (true) if an XML Namespace with the given URI is
  * contained in the XMLNamespaces_t of this XMLToken_t,  @c zero (false) otherwise.
@@ -2132,7 +2167,7 @@ XMLToken_hasNamespaceURI(const XMLToken_t *token, const char* uri);
  * this XMLToken_t.
  *
  * @param token XMLToken_t structure to be queried.
- * @param prefix a string, the prefix for the namespace
+ * @param prefix a string, the prefix for the namespace.
  *
  * @return @c no-zero (true) if an XML Namespace with the given URI is
  * contained in the XMLNamespaces_t of this XMLToken_t, @c zero (false) otherwise.
@@ -2150,8 +2185,8 @@ XMLToken_hasNamespacePrefix(const XMLToken_t *token, const char* prefix);
  * XMLNamespaces_t ofthis XMLToken_t.
  *
  * @param token XMLToken_t structure to be queried.
- * @param uri a string, the uri for the namespace
- * @param prefix a string, the prefix for the namespace
+ * @param uri a string, the uri for the namespace.
+ * @param prefix a string, the prefix for the namespace.
  *
  * @return @c non-zero (true) if an XML Namespace with the given uri/prefix pair is
  * contained in the XMLNamespaces_t of this XMLToken_t,  @c zero (false) otherwise.
