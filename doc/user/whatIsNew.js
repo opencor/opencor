@@ -6,7 +6,8 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Preferences dialog." },
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Linux\">Linux</a>." },
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a>." },
-                           { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." }
+                           { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
+                           { "type": "Improved", "description": "Keyboard navigation in tree views." },
                          ]
                        },
                        { "name": "Data store",
