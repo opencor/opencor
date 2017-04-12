@@ -7,7 +7,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -248,6 +248,8 @@ public:
   /**
    * Returns @c true if the given term identifier comes from the stated branch of %SBO.
    *
+   * @note The @em "quantitative parameter" SBO term is now known as "systems description parameter".
+   *
    * @return @c true if @p term is-a %SBO <em>"quantiative parameter"</em>, @c false
    * otherwise.
    *
@@ -369,6 +371,8 @@ public:
   /**
    * Returns @c true if the given term identifier comes from the stated branch of %SBO.
    *
+   * @note The @em "interaction" SBO term is now known as "occurring entity representation".
+   *
    * @return @c true if @p term is-a %SBO <em>"interaction"</em>, @c false otherwise.
    *
    * @copydetails doc_note_static_methods
@@ -378,6 +382,8 @@ public:
 
   /**
    * Returns @c true if the given term identifier comes from the stated branch of %SBO.
+   *
+   * @note The @em "entity" SBO term is now known as "physical entity representation".
    *
    * @return @c true if @p term is-a %SBO <em>"entity"</em>, @c false otherwise.
    *
@@ -587,7 +593,7 @@ protected:
   /** @cond doxygenLibsbmlInternal */
  /**
    * Returns @c true if the given term identifier comes from the stated branch of %SBO.
-   * * @return true if the term is-a parent, false otherwise
+   * @return @c true if the term is-a parent, @c false otherwise
    */
   static bool isChildOf(unsigned int term, unsigned int parent);
 

@@ -9,7 +9,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -68,11 +68,11 @@ public:
 
 
   /**
-   * Returns true if there was an error reading from the underlying buffer
-   * (i.e. it's null), false otherwise.
+   * Returns @c true if there was an error reading from the underlying buffer
+   * (i.e. it's null), @c false otherwise.
    *
-   * @return true if there was an error reading from the underlying buffer,
-   * false otherwise.
+   * @return @c true if there was an error reading from the underlying buffer,
+   * @c false otherwise.
    */
   virtual bool error ();
 

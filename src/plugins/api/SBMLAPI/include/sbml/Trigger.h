@@ -7,7 +7,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -40,11 +40,20 @@
  *
  * A Trigger object in SBML Level&nbsp;2 and Level&nbsp;3 contains one
  * subelement named "math" containing a MathML expression.  The expression
- * must evaluate to a value of type @c boolean.  The exact moment at which
+ * is evaluated as a value of type @c boolean.  The exact moment at which
  * the expression evaluates to @c true is the time point when the Event is
  * @em triggered.  In SBML Level&nbsp;3, Trigger has additional attributes
  * that must be assigned values; they are discussed in a separate section
  * below.
+ *
+ * In SBML Level&nbsp;2 and SBML Level&nbsp;3 Version&nbsp;1, the "math"
+ * subelement is required, and it must evaluate to a @c boolean expression.
+ * In SBML Level&nbsp;3 Version&nbsp;2, those restrictions are relaxed:
+ * the "math" element is optional, and numeric values are allowed in
+ * Boolean contexts (a '0' is interpreted as @c false, and all other
+ * values are interpreted as @c true).  If a Trigger with no "math"
+ * is present in an Event, that Event will never @em trigger, unless that
+ * missing information is included in an SBML Level&nbsp;3 package.
  *
  * An event only @em triggers when its Trigger expression makes the
  * transition in value from @c false to @c true.  The event will also
@@ -169,10 +178,10 @@ public:
    * Creates a new Trigger using the given SBML @p level and @p version
    * values.
    *
-   * @param level an unsigned int, the SBML Level to assign to this Trigger
+   * @param level an unsigned int, the SBML Level to assign to this Trigger.
    *
    * @param version an unsigned int, the SBML Version to assign to this
-   * Trigger
+   * Trigger.
    *
    * @copydetails doc_throw_exception_lv
    *
@@ -213,7 +222,7 @@ public:
   /**
    * Assignment operator
    *
-   * @param rhs The object whose values are used as the basis of the
+   * @param rhs the object whose values are used as the basis of the
    * assignment.
    */
   Trigger& operator=(const Trigger& rhs);
@@ -243,9 +252,9 @@ public:
    * Get the mathematical formula for the trigger and return it
    * as an AST.
    *
-   * @return the math of this Trigger.
+   * @return the math of this Trigger, or @c NULL if the math is not set.
    */
-  const ASTNode* getMath () const;
+  virtual const ASTNode* getMath () const;
 
 
   /**
@@ -255,8 +264,8 @@ public:
    * @return the boolean value stored as the "initialValue" attribute value
    * in this Trigger.
    *
-   * @note The attribute "initialValue" is available in SBML Level&nbsp;3
-   * Version&nbsp;1 Core, but is not present in lower Levels of SBML.
+   * @note The attribute "initialValue" is available in SBML Level&nbsp;3,
+   * but is not present in lower Levels of SBML.
    */
   bool getInitialValue () const;
 
@@ -268,8 +277,8 @@ public:
    * @return the boolean value stored as the "persistent" attribute value
    * in this Trigger.
    *
-   * @note The attribute "persistent" is available in SBML Level&nbsp;3
-   * Version&nbsp;1 Core, but is not present in lower Levels of SBML.
+   * @note The attribute "persistent" is available in SBML Level&nbsp;3,
+   * but is not present in lower Levels of SBML.
    */
   bool getPersistent () const;
 
@@ -290,8 +299,8 @@ public:
    * @return @c true if the initialValue attribute of
    * this Trigger is set, @c false otherwise.
    *
-   * @note The attribute "initialValue" is available in SBML Level&nbsp;3
-   * Version&nbsp;1 Core, but is not present in lower Levels of SBML.
+   * @note The attribute "initialValue" is available in SBML Level&nbsp;3,
+   * but is not present in lower Levels of SBML.
    */
   bool isSetInitialValue () const;
 
@@ -303,8 +312,8 @@ public:
    * @return @c true if the persistent attribute of
    * this Trigger is set, @c false otherwise.
    *
-   * @note The attribute "persistent" is available in SBML Level&nbsp;3
-   * Version&nbsp;1 Core, but is not present in lower Levels of SBML.
+   * @note The attribute "persistent" is available in SBML Level&nbsp;3,
+   * but is not present in lower Levels of SBML.
    */
   bool isSetPersistent () const;
 
@@ -319,7 +328,7 @@ public:
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
    * @li @sbmlconstant{LIBSBML_INVALID_OBJECT, OperationReturnValues_t}
    */
-  int setMath (const ASTNode* math);
+  virtual int setMath (const ASTNode* math);
 
 
   /**
@@ -331,8 +340,8 @@ public:
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
    * @li @sbmlconstant{LIBSBML_UNEXPECTED_ATTRIBUTE, OperationReturnValues_t}
    *
-   * @note The attribute "initialValue" is available in SBML Level&nbsp;3
-   * Version&nbsp;1 Core, but is not present in lower Levels of SBML.
+   * @note The attribute "initialValue" is available in SBML Level&nbsp;3,
+   * but is not present in lower Levels of SBML.
    */
   int setInitialValue (bool initialValue);
 
@@ -346,8 +355,8 @@ public:
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
    * @li @sbmlconstant{LIBSBML_UNEXPECTED_ATTRIBUTE, OperationReturnValues_t}
    *
-   * @note The attribute "persistent" is available in SBML Level&nbsp;3
-   * Version&nbsp;1 Core, but is not present in lower Levels of SBML.
+   * @note The attribute "persistent" is available in SBML Level&nbsp;3,
+   * but is not present in lower Levels of SBML.
    */
   int setPersistent (bool persistent);
 
@@ -360,8 +369,8 @@ public:
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
    * @li @sbmlconstant{LIBSBML_UNEXPECTED_ATTRIBUTE, OperationReturnValues_t}
    *
-   * @note The attribute "initialValue" is available in SBML Level&nbsp;3
-   * Version&nbsp;1 Core, but is not present in lower Levels of SBML.
+   * @note The attribute "initialValue" is available in SBML Level&nbsp;3,
+   * but is not present in lower Levels of SBML.
    */
   int unsetInitialValue ();
 
@@ -374,8 +383,8 @@ public:
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
    * @li @sbmlconstant{LIBSBML_UNEXPECTED_ATTRIBUTE, OperationReturnValues_t}
    *
-   * @note The attribute "persistent" is available in SBML Level&nbsp;3
-   * Version&nbsp;1 Core, but is not present in lower Levels of SBML.
+   * @note The attribute "persistent" is available in SBML Level&nbsp;3,
+   * but is not present in lower Levels of SBML.
    */
   int unsetPersistent ();
 
@@ -392,7 +401,7 @@ public:
   /**
    * Sets the parent SBML object of this SBML object.
    *
-   * @param sb the SBML object to use
+   * @param sb the SBML object to use.
    */
   virtual void setParentSBMLObject (SBase* sb);
 
@@ -459,7 +468,7 @@ public:
   /** @cond doxygenLibsbmlInternal */
   /**
    * Subclasses should override this method to write out their contained
-   * SBML objects as XML elements.  Be sure to call your parents
+   * SBML objects as XML elements.  Be sure to call your parent's
    * implementation of this method as well.
    */
   virtual void writeElements (XMLOutputStream& stream) const;
@@ -472,7 +481,8 @@ public:
    * have been set.
    *
    * @note The required elements for a Trigger object are:
-   * @li "math"
+   * @li "math" inSBML Level&nbsp;2 and Level&nbsp;3 Version&nbsp;1.
+   *     (In SBML Level&nbsp;3 Version&nbsp;2+, it is no longer required.)
    *
    * @return a boolean value indicating whether all the required
    * elements for this object have been defined.
@@ -504,13 +514,295 @@ public:
   virtual int removeFromParentAndDelete();
 
 
+
+
+
+
+  #ifndef SWIG
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Gets the value of the "attributeName" attribute of this Trigger.
+   *
+   * @param attributeName, the name of the attribute to retrieve.
+   *
+   * @param value, the address of the value to record.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int getAttribute(const std::string& attributeName, bool& value)
+    const;
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Gets the value of the "attributeName" attribute of this Trigger.
+   *
+   * @param attributeName, the name of the attribute to retrieve.
+   *
+   * @param value, the address of the value to record.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int getAttribute(const std::string& attributeName, int& value) const;
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Gets the value of the "attributeName" attribute of this Trigger.
+   *
+   * @param attributeName, the name of the attribute to retrieve.
+   *
+   * @param value, the address of the value to record.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int getAttribute(const std::string& attributeName,
+                           double& value) const;
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Gets the value of the "attributeName" attribute of this Trigger.
+   *
+   * @param attributeName, the name of the attribute to retrieve.
+   *
+   * @param value, the address of the value to record.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int getAttribute(const std::string& attributeName,
+                           unsigned int& value) const;
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Gets the value of the "attributeName" attribute of this Trigger.
+   *
+   * @param attributeName, the name of the attribute to retrieve.
+   *
+   * @param value, the address of the value to record.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int getAttribute(const std::string& attributeName,
+                           std::string& value) const;
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Gets the value of the "attributeName" attribute of this Trigger.
+   *
+   * @param attributeName, the name of the attribute to retrieve.
+   *
+   * @param value, the address of the value to record.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int getAttribute(const std::string& attributeName,
+                           const char* value) const;
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Predicate returning @c true if this Trigger's attribute "attributeName" is
+   * set.
+   *
+   * @param attributeName, the name of the attribute to query.
+   *
+   * @return @c true if this Trigger's attribute "attributeName" has been set,
+   * otherwise @c false is returned.
+   */
+  virtual bool isSetAttribute(const std::string& attributeName) const;
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Sets the value of the "attributeName" attribute of this Trigger.
+   *
+   * @param attributeName, the name of the attribute to set.
+   *
+   * @param value, the value of the attribute to set.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int setAttribute(const std::string& attributeName, bool value);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Sets the value of the "attributeName" attribute of this Trigger.
+   *
+   * @param attributeName, the name of the attribute to set.
+   *
+   * @param value, the value of the attribute to set.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int setAttribute(const std::string& attributeName, int value);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Sets the value of the "attributeName" attribute of this Trigger.
+   *
+   * @param attributeName, the name of the attribute to set.
+   *
+   * @param value, the value of the attribute to set.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int setAttribute(const std::string& attributeName, double value);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Sets the value of the "attributeName" attribute of this Trigger.
+   *
+   * @param attributeName, the name of the attribute to set.
+   *
+   * @param value, the value of the attribute to set.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int setAttribute(const std::string& attributeName,
+                           unsigned int value);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Sets the value of the "attributeName" attribute of this Trigger.
+   *
+   * @param attributeName, the name of the attribute to set.
+   *
+   * @param value, the value of the attribute to set.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int setAttribute(const std::string& attributeName,
+                           const std::string& value);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Sets the value of the "attributeName" attribute of this Trigger.
+   *
+   * @param attributeName, the name of the attribute to set.
+   *
+   * @param value, the value of the attribute to set.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int setAttribute(const std::string& attributeName, const char*
+    value);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Unsets the value of the "attributeName" attribute of this Trigger.
+   *
+   * @param attributeName, the name of the attribute to query.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int unsetAttribute(const std::string& attributeName);
+
+  /** @endcond */
+
+
+
+
+  #endif /* !SWIG */
+
+
 protected:
   /** @cond doxygenLibsbmlInternal */
   /**
    * Subclasses should override this method to read (and store) XHTML,
    * MathML, etc. directly from the XMLInputStream.
    *
-   * @return true if the subclass read from the stream, false otherwise.
+   * @return @c true if the subclass read from the stream, @c false otherwise.
    */
   virtual bool readOtherXML (XMLInputStream& stream);
 
@@ -535,7 +827,7 @@ protected:
   /**
    * Subclasses should override this method to read values from the given
    * XMLAttributes set into their specific fields.  Be sure to call your
-   * parents implementation of this method as well.
+   * parent's implementation of this method as well.
    */
   virtual void readAttributes (const XMLAttributes& attributes,
                                const ExpectedAttributes& expectedAttributes);
@@ -547,7 +839,7 @@ protected:
 
   /**
    * Subclasses should override this method to write their XML attributes
-   * to the XMLOutputStream.  Be sure to call your parents implementation
+   * to the XMLOutputStream.  Be sure to call your parent's implementation
    * of this method as well.
    */
   virtual void writeAttributes (XMLOutputStream& stream) const;
@@ -597,10 +889,10 @@ BEGIN_C_DECLS
  * and @p version values.
  *
  * @param level an unsigned int, the SBML Level to assign to this
- * Trigger_t
+ * Trigger_t.
  *
  * @param version an unsigned int, the SBML Version to assign to this
- * Trigger_t
+ * Trigger_t.
  *
  * @return a pointer to the newly created Trigger_t structure.
  *
@@ -624,7 +916,7 @@ Trigger_create (unsigned int level, unsigned int version);
  * SBMLNamespaces_t structure.
  *
  * @param sbmlns SBMLNamespaces_t, a pointer to an SBMLNamespaces_t structure
- * to assign to this Trigger_t
+ * to assign to this Trigger_t.
  *
  * @return a pointer to the newly created Trigger_t structure.
  *
@@ -667,7 +959,7 @@ Trigger_clone (const Trigger_t *t);
  * Returns a list of XMLNamespaces_t associated with this Trigger_t
  * structure.
  *
- * @param t the Trigger_t structure
+ * @param t the Trigger_t structure.
  *
  * @return pointer to the XMLNamespaces_t structure associated with
  * this structure
@@ -692,7 +984,7 @@ Trigger_getMath (const Trigger_t *t);
 /**
  * Get the value of the "initialValue" attribute of this Trigger_t.
  *
- * @param t the Trigger_t structure
+ * @param t the Trigger_t structure.
  *
  * @return the "initialValue" attribute value
  * in this Trigger_t.
@@ -707,7 +999,7 @@ Trigger_getInitialValue (const Trigger_t *t);
 /**
  * Get the value of the "persistent" attribute of this Trigger_t.
  *
- * @param t the Trigger_t structure
+ * @param t the Trigger_t structure.
  *
  * @return the "persistent" attribute value
  * in this Trigger_t.
@@ -720,8 +1012,8 @@ Trigger_getPersistent (const Trigger_t *t);
 
 
 /**
- * @return true (non-zero) if the math (or equivalently the formula) of
- * this Trigger_t is set, false (0) otherwise.
+ * @return @c true (non-zero) if the math (or equivalently the formula) of
+ * this Trigger_t is set, @c false (0) otherwise.
  *
  * @memberof Trigger_t
  */
@@ -731,12 +1023,12 @@ Trigger_isSetMath (const Trigger_t *t);
 
 
 /**
- * Return true if the  "initialValue" attribute of this Trigger_t is set.
+ * Return @c true if the  "initialValue" attribute of this Trigger_t is set.
  *
- * @param t the Trigger_t structure
+ * @param t the Trigger_t structure.
  *
- * @return true if the "initialValue" attribute value
- * in this Trigger_t is set, false otherwise.
+ * @return @c true if the "initialValue" attribute value
+ * in this Trigger_t is set, @c false otherwise.
  *
  * @memberof Trigger_t
  */
@@ -746,12 +1038,12 @@ Trigger_isSetInitialValue (const Trigger_t *t);
 
 
 /**
- * Return true if the  "persistent" attribute of this Trigger_t is set.
+ * Return @c true if the  "persistent" attribute of this Trigger_t is set.
  *
- * @param t the Trigger_t structure
+ * @param t the Trigger_t structure.
  *
- * @return true if the "persisent" attribute value
- * in this Trigger_t is set, false otherwise.
+ * @return @c true if the "persisent" attribute value
+ * in this Trigger_t is set, @c false otherwise.
  *
  * @memberof Trigger_t
  */
@@ -777,7 +1069,7 @@ Trigger_setMath (Trigger_t *t, const ASTNode_t *math);
 /**
  * Sets the "initialValue" attribute of this Trigger_t instance.
  *
- * @param t the Trigger_t structure
+ * @param t the Trigger_t structure.
  * @param initialValue a boolean representing the initialValue to be set.
  *
  * @copydetails doc_returns_success_code
@@ -794,7 +1086,7 @@ Trigger_setInitialValue (Trigger_t *t, int initialValue);
 /**
  * Sets the "persistent" attribute of this Trigger_t instance.
  *
- * @param t the Trigger_t structure
+ * @param t the Trigger_t structure.
  * @param persistent a boolean representing the initialValue to be set.
  *
  * @copydetails doc_returns_success_code
@@ -811,7 +1103,7 @@ Trigger_setPersistent (Trigger_t *t, int persistent);
 /**
  * Unsets the "initialValue" attribute of this Trigger_t instance.
  *
- * @param t the Trigger_t structure
+ * @param t the Trigger_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -827,7 +1119,7 @@ Trigger_unsetInitialValue (Trigger_t *t);
 /**
  * Unsets the "persistent" attribute of this Trigger_t instance.
  *
- * @param t the Trigger_t structure
+ * @param t the Trigger_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}

@@ -7,7 +7,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -178,6 +178,12 @@
  * and validation facilities is provided in this manual in the
  * section @ref libsbml-example. @endif@~
  *
+ * It should be noted that as of SBML Level&nbsp;3 Version&nbsp;2, the Model
+ * became an optional child of SBMLDocument, instead of being required.  This
+ * means that one can no longer use SBMLDocument::getModel() as a cheap method
+ * of checking if an SBML document was read in properly: the more robust
+ * getError methods detailed above must be used instead.
+ *
  * @section converting Converting documents between Levels and Versions of SBML
  *
  * LibSBML provides facilities for limited translation of SBML between
@@ -205,7 +211,8 @@
  * @li SBMLDocument::checkL2v1Compatibility(),
  * @li SBMLDocument::checkL2v2Compatibility(),
  * @li SBMLDocument::checkL2v3Compatibility(),
- * @li SBMLDocument::checkL2v4Compatibility(), and
+ * @li SBMLDocument::checkL2v4Compatibility(),
+ * @li SBMLDocument::checkL2v5Compatibility(), and
  * @li SBMLDocument::checkL3v1Compatibility().
  *
  * Some changes between Versions of SBML Level&nbsp;2 may lead to
@@ -337,7 +344,7 @@ public:
    *
    * @copydetails doc_sbmldocument_default_level
    *
-   * @return an integer indicating the most recent SBML specification Level
+   * @return an integer indicating the most recent SBML specification Level.
    *
    * @copydetails doc_note_static_methods
    *
@@ -352,7 +359,7 @@ public:
    * @copydetails doc_sbmldocument_default_version
    *
    * @return an integer indicating the most recent SBML specification
-   * Version
+   * Version.
    *
    * @copydetails doc_note_static_methods
    *
@@ -382,9 +389,9 @@ public:
    * SBMLDocument::setLevelAndVersion(@if java long, long, boolean@endif)
    * shortly after creating the SBMLDocument object.
    *
-   * @param level an integer for the SBML Level
+   * @param level an integer for the SBML Level.
    *
-   * @param version an integer for the Version within the SBML Level
+   * @param version an integer for the Version within the SBML Level.
    *
    * @copydetails doc_throw_exception_lv
    *
@@ -427,7 +434,7 @@ public:
   /**
    * Assignment operator for SBMLDocument.
    *
-   * @param rhs The object whose values are used as the basis of the
+   * @param rhs the object whose values are used as the basis of the
    * assignment.
    */
   SBMLDocument& operator=(const SBMLDocument& rhs);
@@ -471,7 +478,7 @@ public:
    * or SBMLDocument::setModel(@if java Model@endif).
    * This method returns @c NULL if a model does not yet exist.
    *
-   * @return the Model contained in this SBMLDocument.
+   * @return the Model contained in this SBMLDocument, or @c NULL if no such model exists.
    *
    * @see createModel()
    */
@@ -493,12 +500,25 @@ public:
    */
   Model* getModel ();
 
+#ifndef SWIG
 
+  /** @cond doxygenLibsbmlInternal */
+
+   virtual unsigned int getNumObjects(const std::string& objectName);
+
+  /** @endcond */
+
+  /** @cond doxygenLibsbmlInternal */
+
+   virtual SBase* getObject(const std::string& objectName, unsigned int index);
+
+  /** @endcond */
+#endif
   /**
    * Returns the first child element found that has the given @p id in the
    * model-wide SId namespace, or @c NULL if no such object is found.
    *
-   * @param id string representing the id of objects to find
+   * @param id string representing the id of the object to find.
    *
    * @return pointer to the first element found with the given @p id.
    */
@@ -510,7 +530,7 @@ public:
    * itself if it has the given @p metaid, or @c NULL if no such object is
    * found.
    *
-   * @param metaid string representing the metaid of objects to find
+   * @param metaid string representing the metaid of the object to find.
    *
    * @return pointer to the first element found with the given @p metaid.
    */
@@ -520,6 +540,10 @@ public:
   /**
    * Returns a List of all child SBase objects, including those nested to an
    * arbitrary depth
+   *
+   * @param filter a pointer to an ElementFilter, which causes the function
+   * to return only elements that match a particular set of constraints.
+   * If NULL (the default), the function will return all child objects.
    *
    * @return a List of pointers to all children objects.
    */
@@ -596,7 +620,8 @@ public:
    * SBMLDocument::checkL2v1Compatibility(),
    * SBMLDocument::checkL2v2Compatibility(),
    * SBMLDocument::checkL2v3Compatibility(),
-   * SBMLDocument::checkL2v4Compatibility(), and
+   * SBMLDocument::checkL2v4Compatibility(),
+   * SBMLDocument::checkL2v5Compatibility(), and
    * SBMLDocument::checkL3v1Compatibility().
    *
    * The valid combinations of SBML Level and Version as of this release
@@ -607,7 +632,9 @@ public:
    * <li> Level&nbsp;2 Version&nbsp;2
    * <li> Level&nbsp;2 Version&nbsp;3
    * <li> Level&nbsp;2 Version&nbsp;4
+   * <li> Level&nbsp;2 Version&nbsp;5
    * <li> Level&nbsp;3 Version&nbsp;1
+   * <li> Level&nbsp;3 Version&nbsp;2
    * </ul>
    *
    * Strict conversion applies the additional criteria that both the
@@ -620,17 +647,17 @@ public:
    * and version.  Thus, information that cannot be converted
    * (e.g. sboTerms) will be lost.
    *
-   * @param level the desired SBML Level
+   * @param level the desired SBML Level.
    *
-   * @param version the desired Version within the SBML Level
+   * @param version the desired Version within the SBML Level.
    *
    * @param strict boolean indicating whether to check consistency
    * of both the source and target model when performing
-   * conversion (defaults to <code> true </code>)
+   * conversion (defaults to <code> true </code>).
    *
    * @param ignorePackages boolean indicating whether the presence of
    * packages should be ignored by the conversion routine
-   * (defaults to <code> false </code>)
+   * (defaults to <code> false </code>).
    *
    * @return @c true if the level and version of the document were
    * successfully set to the requested values (which may have required
@@ -652,7 +679,7 @@ public:
    * @see checkL2v2Compatibility()
    * @see checkL2v3Compatibility()
    * @see checkL2v4Compatibility()
-   * @see checkL3v1Compatibility()
+   * @see checkL2v5Compatibility()
    * @see checkL3v1Compatibility()
    */
   bool setLevelAndVersion (unsigned int level, unsigned int version,
@@ -661,9 +688,9 @@ public:
 
   /** @cond doxygenLibsbmlInternal */
   /**
-   * @param package
-   * @param level
-   * @param version
+   * @param package.
+   * @param level.
+   * @param version.
    */
   void updateSBMLNamespace(const std::string& package, unsigned int level,
                            unsigned int version);
@@ -768,7 +795,7 @@ public:
    * Performing this set of checks is highly recommended.  With respect to
    * the SBML specification, these concern failures in applying the
    * validation rules numbered 2xxxx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_IDENTIFIER_CONSISTENCY, SBMLErrorCategory_t}:
    * Correctness and consistency of identifiers used for model entities.  An
@@ -776,31 +803,31 @@ public:
    * reaction rate formula without first having declared the species.  With
    * respect to the SBML specification, these concern failures in applying
    * the validation rules numbered 103xx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_UNITS_CONSISTENCY, SBMLErrorCategory_t}:
    * Consistency of measurement units associated with quantities in a model.
    * With respect to the SBML specification, these concern failures in
    * applying the validation rules numbered 105xx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_MATHML_CONSISTENCY, SBMLErrorCategory_t}:
    * Syntax of MathML constructs.  With respect to the SBML specification,
    * these concern failures in applying the validation rules numbered 102xx
    * in the Level&nbsp;2 Versions&nbsp;2&ndash;4 and Level&nbsp;3
-   * Version&nbsp;1 specifications.
+   * Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_SBO_CONSISTENCY, SBMLErrorCategory_t}:
    * Consistency and validity of %SBO identifiers (if any) used in the model.
    * With respect to the SBML specification, these concern failures in
    * applying the validation rules numbered 107xx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_OVERDETERMINED_MODEL, SBMLErrorCategory_t}:
    * Static analysis of whether the system of equations implied by a model is
    * mathematically overdetermined.  With respect to the SBML specification,
    * this is validation rule #10601 in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_MODELING_PRACTICE, SBMLErrorCategory_t}:
    * Additional checks for recommended good modeling practice. (These are
@@ -870,7 +897,7 @@ public:
    * Performing this set of checks is highly recommended.  With respect to
    * the SBML specification, these concern failures in applying the
    * validation rules numbered 2xxxx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_IDENTIFIER_CONSISTENCY, SBMLErrorCategory_t}:
    * Correctness and consistency of identifiers used for model entities.  An
@@ -878,32 +905,32 @@ public:
    * reaction rate formula without first having declared the species.  With
    * respect to the SBML specification, these concern failures in applying
    * the validation rules numbered 103xx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_UNITS_CONSISTENCY, SBMLErrorCategory_t}:
 
    * Consistency of measurement units associated with quantities in a model.
    * With respect to the SBML specification, these concern failures in
    * applying the validation rules numbered 105xx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_MATHML_CONSISTENCY, SBMLErrorCategory_t}:
    * Syntax of MathML constructs.  With respect to the SBML specification,
    * these concern failures in applying the validation rules numbered 102xx
    * in the Level&nbsp;2 Versions&nbsp;2&ndash;4 and Level&nbsp;3
-   * Version&nbsp;1 specifications.
+   * Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_SBO_CONSISTENCY, SBMLErrorCategory_t}:
    * Consistency and validity of %SBO identifiers (if any) used in the model.
    * With respect to the SBML specification, these concern failures in
    * applying the validation rules numbered 107xx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_OVERDETERMINED_MODEL, SBMLErrorCategory_t}:
    * Static analysis of whether the system of equations implied by a model is
    * mathematically overdetermined.  With respect to the SBML specification,
    * this is validation rule #10601 in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_MODELING_PRACTICE, SBMLErrorCategory_t}:
    * Additional checks for recommended good modeling practice. (These are
@@ -1083,6 +1110,19 @@ public:
 
   /**
    * Performs a set of consistency checks on the document to establish
+   * whether it is compatible with SBML Level&nbsp;2 Version&nbsp;5 and can
+   * be converted to Level&nbsp;2 Version&nbsp;5.
+   *
+   * Callers should query the results of the consistency check by calling
+   * SBMLDocument::getError(@if java long@endif).
+   *
+   * @return the number of failed checks (errors) encountered.
+   */
+  unsigned int checkL2v5Compatibility ();
+
+
+  /**
+   * Performs a set of consistency checks on the document to establish
    * whether it is compatible with SBML Level&nbsp;3 Version&nbsp;1 and can
    * be converted to Level&nbsp;3 Version&nbsp;1.
    *
@@ -1092,6 +1132,19 @@ public:
    * @return the number of failed checks (errors) encountered.
    */
   unsigned int checkL3v1Compatibility ();
+
+
+  /**
+  * Performs a set of consistency checks on the document to establish
+  * whether it is compatible with SBML Level&nbsp;3 Version&nbsp;2 and can
+  * be converted to Level&nbsp;3 Version&nbsp;2.
+  *
+  * Callers should query the results of the consistency check by calling
+  * SBMLDocument::getError(@if java long@endif).
+  *
+  * @return the number of failed checks (errors) encountered.
+  */
+  unsigned int checkL3v2Compatibility();
 
 
   /**
@@ -1132,7 +1185,7 @@ public:
    * Returns the number of errors or warnings encountered during parsing,
    * consistency checking, or attempted translation of this model.
    *
-   * @return the number of errors or warnings encountered
+   * @return the number of errors or warnings encountered.
    *
    * @see SBMLDocument::getError(unsigned int n)
    */
@@ -1146,7 +1199,7 @@ public:
    *
    * @param severity the severity of the error sought.
    *
-   * @return the number of errors or warnings encountered
+   * @return the number of errors or warnings encountered.
    *
    * @see SBMLDocument::getError(unsigned int n)
    */
@@ -1239,7 +1292,7 @@ public:
    * Converts this document using the converter that best matches
    * the given conversion properties.
    *
-   * @param props the conversion properties to use
+   * @param props the conversion properties to use.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1291,7 +1344,7 @@ public:
    * Returns the list of errors or warnings logged during parsing,
    * consistency checking, or attempted translation of this model.
    *
-   * @return the SBMLErrorLog used for this SBMLDocument
+   * @return the SBMLErrorLog used for this SBMLDocument.
    *
    * @see SBMLDocument::getNumErrors()
    */
@@ -1303,7 +1356,7 @@ public:
    * logged during parsing, consistency checking, or attempted translation
    * of this model.
    *
-   * @return the SBMLErrorLog used for this SBMLDocument
+   * @return the SBMLErrorLog used for this SBMLDocument.
    *
    * @see SBMLDocument::getNumErrors()
    */
@@ -1314,7 +1367,7 @@ public:
    * Returns a list of XML Namespaces associated with the XML content
    * of this SBML document.
    *
-   * @return the XML Namespaces associated with this SBML object
+   * @return the XML Namespaces associated with this SBML object.
    */
   virtual XMLNamespaces* getNamespaces() const;
 
@@ -1348,7 +1401,7 @@ public:
    *
    * @param package the name or URI of the package extension.
    *
-   * @return a boolean
+   * @return a boolean indicating whether the given package's default namespace is enabled.
    */
   bool isEnabledDefaultNS(const std::string& package);
 
@@ -1394,7 +1447,7 @@ public:
    *
    * @param package the name or URI of the package extension.
    *
-   * @return a Boolean
+   * @return a Boolean indicating whether the package's 'required' flag is set.
    */
   bool isSetPackageRequired(const std::string& package);
 
@@ -1495,7 +1548,7 @@ public:
    *
    * @param pkgURI the URI of the package extension.
    *
-   * @return a boolean
+   * @return a boolean indicating whether the given package is being ignored.
    *
    * @deprecated Replaced in libSBML 5.2.0 by
    * isIgnoredPackage(@if java String@endif)
@@ -1517,7 +1570,7 @@ public:
   /** @cond doxygenLibsbmlInternal */
   /**
    * Subclasses should override this method to write out their contained
-   * SBML objects as XML elements.  Be sure to call your parents
+   * SBML objects as XML elements.  Be sure to call your parent's
    * implementation of this method as well.
    */
   virtual void writeElements (XMLOutputStream& stream) const;
@@ -1615,7 +1668,7 @@ protected:
   /**
    * Subclasses should override this method to read values from the given
    * XMLAttributes set into their specific fields.  Be sure to call your
-   * parents implementation of this method as well.
+   * parent's implementation of this method as well.
    */
   virtual void readAttributes (const XMLAttributes& attributes,
                                const ExpectedAttributes& expectedAttributes);
@@ -1623,7 +1676,7 @@ protected:
 
   /**
    * Subclasses should override this method to write their XML attributes
-   * to the XMLOutputStream.  Be sure to call your parents implementation
+   * to the XMLOutputStream.  Be sure to call your parent's implementation
    * of this method as well.
    */
   virtual void writeAttributes (XMLOutputStream& stream) const;
@@ -1631,11 +1684,21 @@ protected:
   /**
    *
    * Subclasses should override this method to write their xmlns attriubutes
-   * (if any) to the XMLOutputStream.  Be sure to call your parents implementation
+   * (if any) to the XMLOutputStream.  Be sure to call your parent's implementation
    * of this method as well.
    *
    */
   virtual void writeXMLNS (XMLOutputStream& stream) const;
+
+  /*
+  * function to set level to 0 on a doc that was just been created to read in to
+  * the SBMLReader will only do this if the file is found to be invalid
+  * this will allow for testing for an SBMLDocument without
+  * relying on it having a model to be valid
+  * (in L3V2 a missing model will be valid)
+  */
+  void setInvalidLevel();
+
 
 
   unsigned int mLevel;
@@ -1696,8 +1759,8 @@ SBMLDocument_create (void);
  * most recent SBML specification (at the time this libSBML was
  * released).
  *
- * @param level an integer for the SBML Level
- * @param version an integer for the Version within the SBML Level
+ * @param level an integer for the SBML Level.
+ * @param version an integer for the Version within the SBML Level.
  *
  * @return the SBMLDocument_t structure created
  *
@@ -1726,7 +1789,7 @@ SBMLDocument_createWithSBMLNamespaces (SBMLNamespaces_t *sbmlns);
 /**
  * Frees the given SBMLDocument_t structure.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @memberof SBMLDocument_t
  */
@@ -1738,7 +1801,7 @@ SBMLDocument_free (SBMLDocument_t *d);
 /**
  * Creates and returns a deep copy of the given SBMLDocument_t structure
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return a (deep) copy of the SBMLDocument_t structure
  *
@@ -1752,7 +1815,7 @@ SBMLDocument_clone (const SBMLDocument_t *d);
 /**
  * Returns the SBML Level of the given SBMLDocument_t structure.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return the SBML Level number
  *
@@ -1767,7 +1830,7 @@ SBMLDocument_getLevel (const SBMLDocument_t *d);
  * Returns the Version within the SBML Level of the given SBMLDocument_t
  * structure.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return the version number
  *
@@ -1782,7 +1845,7 @@ SBMLDocument_getVersion (const SBMLDocument_t *d);
  * Predicate for testing whether the identifier of a given SBMLDocument_t
  * structure is assigned.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return nonzero if the model object of this SBMLDocument_t structure is
  * set, zero (0) otherwise.
@@ -1797,7 +1860,7 @@ SBMLDocument_isSetModel(const SBMLDocument_t *d);
 /**
  * Returns the Model_t structure stored in this SBMLDocument_t structure.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return the Model_t contained in this SBMLDocument_t structure.
  *
@@ -1819,7 +1882,7 @@ SBMLDocument_getModel (SBMLDocument_t *d);
  * now represents the math expression: s * p and the model no longer
  * contains any FunctionDefinition_t's.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return true (non-zero) if the transformation was successful,
  * false (0) otherwise.
@@ -1848,7 +1911,7 @@ SBMLDocument_expandFunctionDefintions (SBMLDocument_t *d);
  * of the InitialAssignment_t and the corresponding InitialAssignment_t
  * has been removed from the Model_t.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return true (non-zero) if the transformation was successful,
  * false (0) otherwise.
@@ -1895,12 +1958,14 @@ SBMLDocument_expandInitialAssignments (SBMLDocument_t *d);
  * @li Level 2 Version 2
  * @li Level 2 Version 3
  * @li Level 2 Version 4
+ * @li Level 2 Version 5
+ * @li Level 3 Version 1
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
- * @param level the desired SBML Level
+ * @param level the desired SBML Level.
  *
- * @param version the desired Version within the SBML Level
+ * @param version the desired Version within the SBML Level.
  *
  * @note Calling this method will not @em necessarily lead to successful
  * conversion.  If the conversion fails, it will be logged in the error
@@ -1944,12 +2009,14 @@ SBMLDocument_setLevelAndVersion (  SBMLDocument_t *d
  * @li Level 2 Version 2
  * @li Level 2 Version 3
  * @li Level 2 Version 4
+ * @li Level 2 Version 5
+ * @li Level 3 Version 1
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
- * @param level the desired SBML Level
+ * @param level the desired SBML Level.
  *
- * @param version the desired Version within the SBML Level
+ * @param version the desired Version within the SBML Level.
  *
  * @note Calling this method will not @em necessarily lead to successful
  * conversion.  If the conversion fails, it will be logged in the error
@@ -2004,12 +2071,14 @@ SBMLDocument_setLevelAndVersionStrict (  SBMLDocument_t *d
  * @li Level 2 Version 2
  * @li Level 2 Version 3
  * @li Level 2 Version 4
+ * @li Level 2 Version 5
+ * @li Level 3 Version 1
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
- * @param level the desired SBML Level
+ * @param level the desired SBML Level.
  *
- * @param version the desired Version within the SBML Level
+ * @param version the desired Version within the SBML Level.
  *
  * @note Calling this method will not @em necessarily lead to successful
  * conversion.  If the conversion fails, it will be logged in the error
@@ -2033,7 +2102,7 @@ SBMLDocument_setLevelAndVersionNonStrict (  SBMLDocument_t *d
  * Sets the model contained in the given SBMLDocument_t structure to a copy
  * of the given Model_t structure.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @param m the new Model_t structure to use.
  *
@@ -2053,7 +2122,7 @@ SBMLDocument_setModel (SBMLDocument_t *d, const Model_t *m);
  * Creates a new Model_t structure inside the given SBMLDocument_t
  * structure and returns a pointer to it.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return the Model_t structure created
  *
@@ -2070,7 +2139,7 @@ SBMLDocument_createModel (SBMLDocument_t *d);
  * Called automatically when readSBMLFromFile() is used, but may be set
  * manually as well.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  * @param location the location URI of the document.
  *
  * @memberof SBMLDocument_t
@@ -2086,7 +2155,7 @@ SBMLDocument_setLocationURI (SBMLDocument_t *d, const char* location);
  * that filename or set location will be returned, otherwise, an empty
  * string is returned.
  *
- * @param d the SBMLDocument_t structure to query
+ * @param d the SBMLDocument_t structure to query.
  *
  * @return The filename or set location of the document, or an empty string if
  * no such information is found.
@@ -2131,10 +2200,10 @@ SBMLDocument_getLocationURI(SBMLDocument_t *d);
  * SBMLDocument_t structure @em unless setConsistencyChecks() is called to
  * indicate that only a subset should be applied.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @param category a value drawn from SBMLErrorCategory_t indicating the
- * consistency checking/validation to be turned on or off
+ * consistency checking/validation to be turned on or off.
  *
  * @param apply a boolean indicating whether the checks indicated by @p
  * category should be applied or not.
@@ -2189,10 +2258,10 @@ SBMLDocument_setConsistencyChecks(SBMLDocument_t *d,
  * SBMLDocument_t structure @em unless setConsistencyChecks() is called to
  * indicate that only a subset should be applied.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @param category a value drawn from SBMLErrorCategory_t indicating the
- * consistency checking/validation to be turned on or off
+ * consistency checking/validation to be turned on or off.
  *
  * @param apply a boolean indicating whether the checks indicated by @p
  * category should be applied or not.
@@ -2223,7 +2292,7 @@ SBMLDocument_setConsistencyChecksForConversion(SBMLDocument_t *d,
  * flag in the individual SBMLError_t structures returned by getError() to
  * determine the nature of the failures.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return the number of failed checks (errors) encountered.
  *
@@ -2247,7 +2316,7 @@ SBMLDocument_checkConsistency (SBMLDocument_t *d);
  *       in order to determine all errors for the document. This will
  *       also clear the error log.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return the number of failed checks (errors) encountered.
  *
@@ -2264,7 +2333,7 @@ SBMLDocument_validateSBML (SBMLDocument_t *d);
  * Performs consistency checking on libSBML's internal representation of
  * an SBML Model.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return the number of failed checks (errors) encountered.
  *
@@ -2281,13 +2350,13 @@ SBMLDocument_checkInternalConsistency (SBMLDocument_t *d);
 
 /**
  * Performs a set of consistency checks on the document to establish
- * whether it is compatible with SBML Level 1 and can be converted to
- * Level 1.
+ * whether it is compatible with SBML Level&nbsp;1 and can be converted to
+ * Level&nbsp;1.
  *
  * Callers should query the results of the consistency check by calling
  * getError().
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return the number of failed checks (errors) encountered.
  *
@@ -2300,13 +2369,13 @@ SBMLDocument_checkL1Compatibility (SBMLDocument_t *d);
 
 /**
  * Performs a set of consistency checks on the document to establish
- * whether it is compatible with SBML Level 2 Version 1 and can be
- * converted to Level 2 Version 1.
+ * whether it is compatible with SBML Level&nbsp;2 Version&nbsp;1 and can be
+ * converted to Level&nbsp;2 Version&nbsp;1.
  *
  * Callers should query the results of the consistency check by calling
  * getError().
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return the number of failed checks (errors) encountered.
  *
@@ -2319,13 +2388,13 @@ SBMLDocument_checkL2v1Compatibility (SBMLDocument_t *d);
 
 /**
  * Performs a set of consistency checks on the document to establish
- * whether it is compatible with SBML Level 2 Version 2 and can be
- * converted to Level 2 Version 2.
+ * whether it is compatible with SBML Level&nbsp;2 Version&nbsp;2 and can be
+ * converted to Level&nbsp;2 Version&nbsp;2.
  *
  * Callers should query the results of the consistency check by calling
  * getError().
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return the number of failed checks (errors) encountered.
  *
@@ -2338,13 +2407,13 @@ SBMLDocument_checkL2v2Compatibility (SBMLDocument_t *d);
 
 /**
  * Performs a set of consistency checks on the document to establish
- * whether it is compatible with SBML Level 2 Version 3 and can be
- * converted to Level 2 Version 3.
+ * whether it is compatible with SBML Level&nbsp;2 Version&nbsp;3 and can be
+ * converted to Level&nbsp;2 Version&nbsp;3.
  *
  * Callers should query the results of the consistency check by calling
  * getError().
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return the number of failed checks (errors) encountered.
  *
@@ -2357,13 +2426,13 @@ SBMLDocument_checkL2v3Compatibility (SBMLDocument_t *d);
 
 /**
  * Performs a set of consistency checks on the document to establish
- * whether it is compatible with SBML Level 2 Version 4 and can be
- * converted to Level 2 Version 4.
+ * whether it is compatible with SBML Level&nbsp;2 Version&nbsp;4 and can be
+ * converted to Level&nbsp;2 Version&nbsp;4.
  *
  * Callers should query the results of the consistency check by calling
  * getError().
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return the number of failed checks (errors) encountered.
  *
@@ -2376,13 +2445,32 @@ SBMLDocument_checkL2v4Compatibility (SBMLDocument_t *d);
 
 /**
  * Performs a set of consistency checks on the document to establish
+ * whether it is compatible with SBML Level 2 Version 5 and can be
+ * converted to Level 2 Version 5.
+ *
+ * Callers should query the results of the consistency check by calling
+ * getError().
+ *
+ * @param d the SBMLDocument_t structure
+ *
+ * @return the number of failed checks (errors) encountered.
+ *
+ * @memberof SBMLDocument_t
+ */
+LIBSBML_EXTERN
+unsigned int
+SBMLDocument_checkL2v5Compatibility (SBMLDocument_t *d);
+
+
+/**
+ * Performs a set of consistency checks on the document to establish
  * whether it is compatible with SBML Level 3 Version 1 and can be
  * converted to Level 3 Version 1.
  *
  * Callers should query the results of the consistency check by calling
  * getError().
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return the number of failed checks (errors) encountered.
  *
@@ -2404,7 +2492,7 @@ SBMLDocument_checkL3v1Compatibility (SBMLDocument_t *d);
  * @return the error or warning indexed by integer @p n, or return @c NULL
  * if n > (SBMLDocument_getNumErrors() - 1).
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @param n the index of the error sought.
  *
@@ -2429,7 +2517,7 @@ SBMLDocument_getError (SBMLDocument_t *d, unsigned int n);
  * @return the error or warning indexed by integer @p n, or return @c NULL
  * if n > (SBMLDocument_getNumErrorsWithSeverity() - 1).
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @param n the index of the error sought.
  * @param severity the severity of the error sought.
@@ -2450,7 +2538,7 @@ SBMLDocument_getErrorWithSeverity(SBMLDocument_t *d, unsigned int n, unsigned in
  * Returns the number of errors or warnings encountered during parsing,
  * consistency checking, or attempted translation of this model.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
  * @return the number of errors or warnings encountered
  *
@@ -2470,8 +2558,8 @@ SBMLDocument_getNumErrors (const SBMLDocument_t *d);
  * Returns the number of errors or warnings encountered during parsing,
  * consistency checking, or attempted translation of this model.
  *
- * @param d the SBMLDocument_t structure
- * @param severity the severity requested
+ * @param d the SBMLDocument_t structure.
+ * @param severity the severity requested.
  *
  * @return the number of errors or warnings encountered with the given severity
  * level
@@ -2501,9 +2589,9 @@ SBMLDocument_getNumErrorsWithSeverity (const SBMLDocument_t *d, unsigned int sev
  *   N error(s):
  *     line NNN: (id) message
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
- * @param stream the output stream where the messages should be printed
+ * @param stream the output stream where the messages should be printed.
  *
  * @memberof SBMLDocument_t
  */
@@ -2538,9 +2626,9 @@ SBMLDocument_getDefaultVersion ();
  * Returns a list of XMLNamespaces_t associated with the XML content
  * of this SBML document.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  *
- * @return pointer to the XMLNamespaces_t structure associated with this SBML structure
+ * @return pointer to the XMLNamespaces_t structure associated with this SBML structure.
  *
  * @memberof SBMLDocument_t
  */
@@ -2552,8 +2640,8 @@ SBMLDocument_getNamespaces(SBMLDocument_t *d);
 /**
  * Sets the SBMLnamespaces_t
  *
- * @param d the SBMLDocument_t structure to change
- * @param sbmlns The SBMLNamespaces_t structure to set
+ * @param d the SBMLDocument_t structure to change.
+ * @param sbmlns the SBMLNamespaces_t structure to set.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -2573,7 +2661,7 @@ SBMLDocument_setSBMLNamespaces (SBMLDocument_t *d, SBMLNamespaces_t * sbmlns);
  * @note The name of package must not be given if the package is not
  * enabled.
  *
- * @param d the SBMLDocument_t structure to check
+ * @param d the SBMLDocument_t structure to check.
  * @param package the name or URI of the package extension.
  *
  * @return true (non-zero) if the package is flagged as
@@ -2595,7 +2683,7 @@ SBMLDocument_getPkgRequired (SBMLDocument_t *d, const char * package);
  * @note The name of package must not be given if the package is not
  * enabled.
  *
- * @param d the SBMLDocument_t structure to check
+ * @param d the SBMLDocument_t structure to check.
  * @param package the name or URI of the package extension.
  *
  * @return true (non-zero) if the package is flagged as
@@ -2615,7 +2703,7 @@ SBMLDocument_getPackageRequired (SBMLDocument_t *d, const char * package);
  * @note The name of package must not be given if the package is not
  * enabled.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  * @param package the name or URI of the package extension.
  * @param flag a Boolean value.
  *
@@ -2639,7 +2727,7 @@ SBMLDocument_setPkgRequired (SBMLDocument_t *d, const char * package, int flag);
  * @note The name of package must not be given if the package is not
  * enabled.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  * @param package the name or URI of the package extension.
  * @param flag a Boolean value.
  *
@@ -2661,7 +2749,7 @@ SBMLDocument_setPackageRequired (SBMLDocument_t *d, const char * package, int fl
  * @note The name of package must not be given if the package is not
  * enabled.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  * @param package the name or URI of the package extension.
  *
  * @return @c non-zero (true) if the required attribute of the given package extension
@@ -2683,7 +2771,7 @@ SBMLDocument_isSetPkgRequired (SBMLDocument_t *d, const char * package);
  * @note The name of package must not be given if the package is not
  * enabled.
  *
- * @param d the SBMLDocument_t structure
+ * @param d the SBMLDocument_t structure.
  * @param package the name or URI of the package extension.
  *
  * @return @c non-zero (true) if the required attribute of the given package extension
@@ -2699,8 +2787,8 @@ SBMLDocument_isSetPackageRequired (SBMLDocument_t *d, const char * package);
  * Converts this document using the converter that best matches
  * the given conversion properties.
  *
- * @param d the SBMLDocument_t structure
- * @param props the conversion properties to use
+ * @param d the SBMLDocument_t structure.
+ * @param props the conversion properties to use.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}

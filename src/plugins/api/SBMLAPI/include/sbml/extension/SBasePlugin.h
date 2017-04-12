@@ -9,7 +9,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -82,7 +82,7 @@ public:
   /**
    * Assignment operator for SBasePlugin.
    *
-   * @param orig The object whose values are used as the basis of the
+   * @param orig the object whose values are used as the basis of the
    * assignment.
    */
   SBasePlugin& operator=(const SBasePlugin& orig);
@@ -141,7 +141,7 @@ public:
    * as if a model is invalid because of multiple objects having the same
    * identifier.
    *
-   * @param id string representing the identifier of the object to find
+   * @param id string representing the identifier of the object to find.
    *
    * @return pointer to the first object with the given @p id.
    */
@@ -168,8 +168,9 @@ public:
    * one, at any nesting depth.  Optionally, callers can supply a filter
    * that will establish the search criteria for matching objects.
    *
-   * @param filter an ElementFilter to use for determining the properties
-   * of the objects to be returned.
+   * @param filter a pointer to an ElementFilter, which causes the function
+   * to return only elements that match a particular set of constraints.
+   * If NULL (the default), the function will return all child objects.
    *
    * @return a List of pointers to all children objects.
    */
@@ -191,7 +192,7 @@ public:
    * called from Model::appendFrom, and is intended to be extended for
    * packages that add new things to the Model object.
    *
-   * @param The Model to merge with this one.
+   * @param model the Model to merge with this one.
    *
    */
   virtual int appendFrom(const Model* model);
@@ -218,7 +219,7 @@ public:
    * can't be parsed by SBase::readAnnotation(XMLInputStream& stream)
    * and/or SBase::readNotes(XMLInputStream& stream) functions.
    *
-   * @return true if the subclass read from the stream, false otherwise.
+   * @return @c true if the subclass read from the stream, @c false otherwise.
    */
   virtual bool readOtherXML (SBase* parentObject, XMLInputStream& stream);
   /** @endcond */
@@ -262,8 +263,8 @@ public:
    * Subclasses should override this function if they have their specific
    * elements.
    *
-   * @return true if this plugin object has all the required elements,
-   * otherwise false will be returned.
+   * @return @c true if this plugin object has all the required elements,
+   * otherwise @c false will be returned.
    */
   virtual bool hasRequiredElements() const ;
 
@@ -314,8 +315,8 @@ public:
    * Subclasses should override this function if if they have their specific
    * attributes.
    *
-   * @return true if this plugin object has all the required attributes,
-   * otherwise false will be returned.
+   * @return @c true if this plugin object has all the required attributes,
+   * otherwise @c false will be returned.
    */
   virtual bool hasRequiredAttributes() const ;
   /** @endcond */
@@ -350,7 +351,7 @@ public:
    * Subclasses which contain one or more SBase derived elements must
    * override this function.
    *
-   * @param d the SBMLDocument object to use
+   * @param d the SBMLDocument object to use.
    *
    * @see connectToParent()
    * @see enablePackageInternal()
@@ -371,7 +372,7 @@ public:
    * or more child elements. Also, SBasePlugin::connectToParent(@if java SBase@endif)
    * must be called in the overridden function.
    *
-   * @param sbase the SBase object to use
+   * @param sbase the SBase object to use.
    *
    * @if cpp
    * @see setSBMLDocument()
@@ -482,7 +483,7 @@ public:
    *
    * @param uri the URI to assign to this object.
    *
-   * @copydetails doc_returns_success_code
+   * @copydetails doc_returns_one_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
    *
    * @see getElementNamespace()
@@ -699,11 +700,151 @@ public:
 
   /** @endcond */
 
+  #ifndef SWIG
+   /** @cond doxygenLibsbmlInternal */
+
+  // ------------------------------------------------------------------
+  //
+  //  functions to faciliate matlab binding
+
+   virtual int getAttribute(const std::string& attributeName, double& value) const;
+
+  /** @endcond */
+
+  /** @cond doxygenLibsbmlInternal */
+
+   virtual int getAttribute(const std::string& attributeName, bool& value) const;
+
+  /** @endcond */
+
+  /** @cond doxygenLibsbmlInternal */
+
+   virtual int getAttribute(const std::string& attributeName, int& value) const;
+
+  /** @endcond */
+
+  /** @cond doxygenLibsbmlInternal */
+
+   virtual int getAttribute(const std::string& attributeName, unsigned int& value) const;
+
+  /** @endcond */
+
+  /** @cond doxygenLibsbmlInternal */
+
+   virtual int getAttribute(const std::string& attributeName, std::string& value) const;
+
+  /** @endcond */
+
+   virtual int getAttribute(const std::string& attributeName, const char * value) const;
+
+
+   virtual bool isSetAttribute(const std::string& attributeName) const;
+
+  /** @endcond */
+
+  /** @cond doxygenLibsbmlInternal */
+
+   virtual int setAttribute(const std::string& attributeName, double value);
+
+  /** @endcond */
+
+  /** @cond doxygenLibsbmlInternal */
+
+   virtual int setAttribute(const std::string& attributeName, bool value);
+
+  /** @endcond */
+
+  /** @cond doxygenLibsbmlInternal */
+
+   virtual int setAttribute(const std::string& attributeName, int value);
+
+  /** @endcond */
+
+  /** @cond doxygenLibsbmlInternal */
+
+   virtual int setAttribute(const std::string& attributeName, unsigned int value);
+
+  /** @endcond */
+
+  /** @cond doxygenLibsbmlInternal */
+
+   virtual int setAttribute(const std::string& attributeName, const std::string& value);
+
+  /** @endcond */
+
+  /** @cond doxygenLibsbmlInternal */
+
+   virtual int setAttribute(const std::string& attributeName, const char* value);
+
+  /** @endcond */
+
+  /** @cond doxygenLibsbmlInternal */
+
+   virtual int unsetAttribute(const std::string& attributeName);
+
+  /** @endcond */
+
+  /** @cond doxygenLibsbmlInternal */
+
+   virtual SBase* createChildObject(const std::string& elementName);
+
+  /** @endcond */
+
+     /** @cond doxygenLibsbmlInternal */
+
+   //virtual int setMath(const ASTNode* math);
+
+  /** @endcond */
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Returns the number of "elementName" in this FbcModelPlugin.
+   *
+   * @param elementName, the name of the element to get number of.
+   *
+   * unsigned int number of elements.
+   */
+  virtual unsigned int getNumObjects(const std::string& elementName);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Returns the nth object of "objectName" in this FbcModelPlugin.
+   *
+   * @param elementName, the name of the element to get number of.
+   *
+   * @param index, unsigned int teh index of teh object to retrieve.
+   *
+   * pointer to the object.
+   */
+  virtual SBase* getObject(const std::string& elementName, unsigned int index);
+
+  /** @endcond */
+
+
+#endif
+
+
 protected:
   /** @cond doxygenLibsbmlInternal */
   /**
-   * Constructor. Creates an SBasePlugin object with the URI and
-   * prefix of an package extension.
+   * Creates a new SBasePlugin object using the given parameters.
+   *
+   * @copydetails doc_what_are_xmlnamespaces
+   *
+   * @copydetails doc_what_are_sbmlnamespaces
+   *
+   * @param uri the URI of the SBML Level&nbsp;3 package implemented by
+   * this libSBML package extension.
+   *
+   * @param prefix the XML namespace prefix being used for the package.
+   *
+   * @param sbmlns the namespaces object for the package.
    */
   SBasePlugin (const std::string &uri, const std::string &prefix,
                SBMLNamespaces *sbmlns);
@@ -711,6 +852,8 @@ protected:
 
   /**
    * Copy constructor. Creates a copy of this SBase object.
+   *
+   * @param orig the instance to copy.
    */
   SBasePlugin(const SBasePlugin& orig);
 
@@ -815,9 +958,9 @@ BEGIN_C_DECLS
  * Returns the XML namespace (URI) of the package extension
  * of the given plugin structure.
  *
- * @param plugin the plugin structure
+ * @param plugin the plugin structure.
  *
- * @return the URI of the package extension of this plugin structure, or NULL
+ * @return the URI of the package extension of this plugin structure, or @c NULL
  * in case an invalid plugin structure is provided.
  *
  * @memberof SBasePlugin_t
@@ -829,9 +972,9 @@ SBasePlugin_getURI(SBasePlugin_t* plugin);
 /**
  * Returns the prefix of the given plugin structure.
  *
- * @param plugin the plugin structure
+ * @param plugin the plugin structure.
  *
- * @return the prefix of the given plugin structure, or NULL
+ * @return the prefix of the given plugin structure, or @c NULL
  * in case an invalid plugin structure is provided.
  *
  * @memberof SBasePlugin_t
@@ -843,9 +986,9 @@ SBasePlugin_getPrefix(SBasePlugin_t* plugin);
 /**
  * Returns the package name of the given plugin structure.
  *
- * @param plugin the plugin structure
+ * @param plugin the plugin structure.
  *
- * @return the package name of the given plugin structure, or NULL
+ * @return the package name of the given plugin structure, or @c NULL
  * in case an invalid plugin structure is provided.
  *
  * @memberof SBasePlugin_t
@@ -857,7 +1000,7 @@ SBasePlugin_getPackageName(SBasePlugin_t* plugin);
 /**
  * Creates a deep copy of the given SBasePlugin_t structure
  *
- * @param plugin the SBasePlugin_t structure to be copied
+ * @param plugin the SBasePlugin_t structure to be copied.
  *
  * @return a (deep) copy of the given SBasePlugin_t structure.
  *
@@ -870,7 +1013,7 @@ SBasePlugin_clone(SBasePlugin_t* plugin);
 /**
  * Frees the given SBasePlugin_t structure
  *
- * @param plugin the SBasePlugin_t structure to be freed
+ * @param plugin the SBasePlugin_t structure to be freed.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -887,8 +1030,8 @@ SBasePlugin_free(SBasePlugin_t* plugin);
  * return an SBML structure corresponding to the next XMLToken in the
  * XMLInputStream_t if they have their specific elements.
  *
- * @param plugin the SBasePlugin_t structure
- * @param stream the XMLInputStream_t structure to read from
+ * @param plugin the SBasePlugin_t structure.
+ * @param stream the XMLInputStream_t structure to read from.
  *
  * @return the SBML structure corresponding to next XMLToken in the
  * XMLInputStream_t or NULL if the token was not recognized or plugin or stream
@@ -906,11 +1049,11 @@ SBasePlugin_createObject(SBasePlugin_t* plugin, XMLInputStream_t* stream);
  * can't be parsed by SBase::readAnnotation() and/or SBase::readNotes()
  * functions
  *
- * @param plugin the SBasePlugin_t structure
+ * @param plugin the SBasePlugin_t structure.
  * @param parentObject the SBase_t structure that will store the annotation.
- * @param stream the XMLInputStream_t structure to read from
+ * @param stream the XMLInputStream_t structure to read from.
  *
- * @return true (1) if the subclass read from the stream, false (0) otherwise.
+ * @return @c true (1) if the subclass read from the stream, @c false (0) otherwise.
  * If an invalid plugin or stream was provided LIBSBML_INVALID_OBJECT is returned.
  *
  * @memberof SBasePlugin_t
@@ -923,8 +1066,8 @@ SBasePlugin_readOtherXML(SBasePlugin_t* plugin, SBase_t* parentObject, XMLInputS
  * Subclasses must override this method to write out their contained
  * SBML structures as XML elements if they have their specific elements.
  *
- * @param plugin the SBasePlugin_t structure
- * @param stream the XMLOutputStream_t structure to write to
+ * @param plugin the SBasePlugin_t structure.
+ * @param stream the XMLOutputStream_t structure to write to.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -942,10 +1085,10 @@ SBasePlugin_writeElements(SBasePlugin_t* plugin, XMLInputStream_t* stream);
  * Subclasses should override this function if they have their specific
  * elements.
  *
- * @param plugin the SBasePlugin_t structure
+ * @param plugin the SBasePlugin_t structure.
  *
- * @return true (1) if this plugin structure has all the required elements,
- * otherwise false (0) will be returned. If an invalid plugin
+ * @return @c true (1) if this plugin structure has all the required elements,
+ * otherwise @c false (0) will be returned. If an invalid plugin
  * was provided LIBSBML_INVALID_OBJECT is returned.
  *
  * @memberof SBasePlugin_t
@@ -960,8 +1103,8 @@ SBasePlugin_hasRequiredElements(SBasePlugin_t* plugin);
  * This function is invoked from corresponding readAttributes()
  * function.
  *
- * @param plugin the SBasePlugin_t structure
- * @param attributes the ExpectedAttributes_t structure
+ * @param plugin the SBasePlugin_t structure.
+ * @param attributes the ExpectedAttributes_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -978,9 +1121,9 @@ SBasePlugin_addExpectedAttributes(SBasePlugin_t* plugin,
  * Subclasses must override this method to read values from the given
  * XMLAttributes_t if they have their specific attributes.
  *
- * @param plugin the SBasePlugin_t structure
- * @param attributes the XMLAttributes_t structure
- * @param expectedAttributes the ExpectedAttributes_t structure
+ * @param plugin the SBasePlugin_t structure.
+ * @param attributes the XMLAttributes_t structure.
+ * @param expectedAttributes the ExpectedAttributes_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -998,8 +1141,8 @@ SBasePlugin_readAttributes(SBasePlugin_t* plugin,
  * Subclasses must override this method to write their XML attributes
  * to the XMLOutputStream_t if they have their specific attributes.
  *
- * @param plugin the SBasePlugin_t structure
- * @param stream the XMLOutputStream_t structure
+ * @param plugin the SBasePlugin_t structure.
+ * @param stream the XMLOutputStream_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1018,10 +1161,10 @@ SBasePlugin_writeAttributes(SBasePlugin_t* plugin,
  * Subclasses should override this function if they have their specific
  * attributes.
  *
- * @param plugin the SBasePlugin_t structure
+ * @param plugin the SBasePlugin_t structure.
  *
- * @return true (1) if this plugin structure has all the required attributes,
- * otherwise false (0) will be returned. If an invalid plugin
+ * @return @c true (1) if this plugin structure has all the required attributes,
+ * otherwise @c false (0) will be returned. If an invalid plugin
  * was provided LIBSBML_INVALID_OBJECT is returned.
  *
  * @memberof SBasePlugin_t
@@ -1038,8 +1181,8 @@ SBasePlugin_hasRequiredAttributes(SBasePlugin_t* plugin);
  * be added to Model_t element if this plugin structure connected to the Model_t
  * element.
  *
- * @param plugin the SBasePlugin_t structure
- * @param stream the XMLOutputStream_t structure
+ * @param plugin the SBasePlugin_t structure.
+ * @param stream the XMLOutputStream_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1057,8 +1200,8 @@ SBasePlugin_writeXMLNS(SBasePlugin_t* plugin, XMLOutputStream_t* stream);
  * Subclasses which contain one or more SBase derived elements must
  * override this function.
  *
- * @param plugin the SBasePlugin_t structure
- * @param d the SBMLDocument_t structure to use
+ * @param plugin the SBasePlugin_t structure.
+ * @param d the SBMLDocument_t structure to use.
  *
  * @see SBasePlugin_connectToParent
  * @see SBasePlugin_enablePackageInternal
@@ -1084,8 +1227,8 @@ SBasePlugin_setSBMLDocument(SBasePlugin_t* plugin, SBMLDocument_t* d);
  * or more child elements. Also, SBasePlugin::connectToParent()
  * must be called in the overridden function.
  *
- * @param plugin the SBasePlugin_t structure
- * @param sbase the SBase_t structure to use
+ * @param plugin the SBasePlugin_t structure.
+ * @param sbase the SBase_t structure to use.
  *
  * @see SBasePlugin_setSBMLDocument
  * @see SBasePlugin_enablePackageInternal
@@ -1110,10 +1253,10 @@ SBasePlugin_connectToParent(SBasePlugin_t* plugin, SBase_t* sbase);
  * override this function if elements defined in them can be extended by
  * some other package extension.
  *
- * @param plugin the SBasePlugin_t structure
- * @param pkgURI the package uri
- * @param pkgPrefix the package prefix
- * @param flag indicating whether the package should be enabled (1) or disabled(0)
+ * @param plugin the SBasePlugin_t structure.
+ * @param pkgURI the package uri.
+ * @param pkgPrefix the package prefix.
+ * @param flag indicating whether the package should be enabled (1) or disabled(0).
  *
  * @see SBasePlugin_setSBMLDocument
  * @see SBasePlugin_connectToParent
@@ -1132,7 +1275,7 @@ SBasePlugin_enablePackageInternal(SBasePlugin_t* plugin,
 /**
  * Returns the parent SBMLDocument of this plugin structure.
  *
- * @param plugin the SBasePlugin_t structure
+ * @param plugin the SBasePlugin_t structure.
  *
  * @return the parent SBMLDocument_t structure of this plugin structure or NULL if
  * no document is set, or the plugin structure is invalid.
@@ -1146,7 +1289,7 @@ SBasePlugin_getSBMLDocument(SBasePlugin_t* plugin);
 /**
  * Returns the parent SBase_t structure to which this plugin structure is connected.
  *
- * @param plugin the SBasePlugin_t structure
+ * @param plugin the SBasePlugin_t structure.
  *
  * @return the parent SBase_t structure to which this plugin structure is connected
  * or NULL if sbase structure is set, or the plugin structure is invalid.
@@ -1161,7 +1304,7 @@ SBasePlugin_getParentSBMLObject(SBasePlugin_t* plugin);
  * Returns the SBML level of the package extension of
  * this plugin structure.
  *
- * @param plugin the SBasePlugin_t structure
+ * @param plugin the SBasePlugin_t structure.
  *
  * @return the SBML level of the package extension of
  * this plugin structure or SBML_INT_MAX if the structure is invalid.
@@ -1176,7 +1319,7 @@ SBasePlugin_getLevel(SBasePlugin_t* plugin);
  * Returns the SBML version of the package extension of
  * this plugin structure.
  *
- * @param plugin the SBasePlugin_t structure
+ * @param plugin the SBasePlugin_t structure.
  *
  * @return the SBML version of the package extension of
  * this plugin structure or SBML_INT_MAX if the structure is invalid.
@@ -1191,7 +1334,7 @@ SBasePlugin_getVersion(SBasePlugin_t* plugin);
  * Returns the package version of the package extension of
  * this plugin structure.
  *
- * @param plugin the SBasePlugin_t structure
+ * @param plugin the SBasePlugin_t structure.
  *
  * @return the package version of the package extension of
  * this plugin structure or SBML_INT_MAX if the structure is invalid.

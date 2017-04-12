@@ -7,7 +7,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -136,8 +136,19 @@ typedef enum
   , AST_CONSTRUCTOR_PIECE/*!< Piece constructor (MathML <code>&lt;piece&gt;</code>) */
   , AST_CONSTRUCTOR_OTHERWISE/*!< Otherwise constructor (MathML <code>&lt;otherwise&gt;</code>) */
 
-  , AST_UNKNOWN /*!< Unknown node:  will not produce any MathML */
-  , AST_ORIGINATES_IN_PACKAGE /*!< This node uses math that is only available in an L3 package */
+  /* L3V2 */
+  , AST_FUNCTION_MAX /*!< Max (MathML <code>&lt;max&gt;</code>) */
+  , AST_FUNCTION_MIN /*!< Min (MathML <code>&lt;min&gt;</code>) */
+  , AST_FUNCTION_QUOTIENT /*!< Quotient (MathML <code>&lt;quotient&gt;</code>) */
+  , AST_FUNCTION_RATE_OF /*!< Derivative with respect to time (MathML <code>&lt;ci encoding="text" definitionURL="http://www.sbml.org/sbml/symbols/rateOf"&gt;</code>) */
+  , AST_FUNCTION_REM /*!< Rem (MathML <code>&lt;rem&gt;</code>) */
+  , AST_LOGICAL_IMPLIES /*!< Implies (MathML <code>&lt;implies&gt;</code>) */
+
+  , AST_CSYMBOL_FUNCTION = 400
+
+  , AST_UNKNOWN    /*!< Unknown node:  will not produce any MathML */
+  , AST_ORIGINATES_IN_PACKAGE  /*!< This node uses math that is only available in an L3 package */
+
 } ASTNodeType_t;
 
 
@@ -158,6 +169,7 @@ typedef enum
 , AST_TYPECODE_CSYMBOL_AVOGADRO
 , AST_TYPECODE_CSYMBOL_DELAY
 , AST_TYPECODE_CSYMBOL_TIME
+, AST_TYPECODE_CSYMBOL_RATE_OF
 , AST_TYPECODE_FUNCTION
 , AST_TYPECODE_FUNCTION_UNARY
 , AST_TYPECODE_FUNCTION_BINARY

@@ -9,7 +9,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -64,12 +64,12 @@ public:
   /**
    * Appends id to the list of ids.
    */
-  void append (const std::string& id) { mIds.push_back(id); }
+  void append (const std::string& id);
 
   /**
-   * Returns true if id is already in this IdList, false otherwise.
+   * Returns @c true if id is already in this IdList, @c false otherwise.
    *
-   * @return true if id is already in this IdList, false otherwise.
+   * @return @c true if id is already in this IdList, @c false otherwise.
    */
   bool contains (const std::string& id) const;
 
@@ -83,7 +83,7 @@ public:
    *
    * @return the number of ids in this IdList.
    */
-  unsigned int size () const { return (unsigned int)mIds.size(); }
+  unsigned int size () const;
 
 #ifndef SWIG
   /**
@@ -91,25 +91,19 @@ public:
    *
    * @return an iterator to the beginning of this IdList.
    */
-  std::vector<std::string>::const_iterator begin () const
-  {
-    return mIds.begin();
-  }
+  std::vector<std::string>::const_iterator begin () const;
 
   /**
    * Returns an iterator to the end of this IdList.
    *
    * @return an iterator to the end of this IdList.
    */
-  std::vector<std::string>::const_iterator end () const
-  {
-    return mIds.end();
-  }
+  std::vector<std::string>::const_iterator end () const;
 #endif
 
-  void clear() { mIds.clear(); }
+  void clear();
 
-  std::string at(int n) { return mIds.at((std::string::size_type)n); }
+  std::string at(int n);
 
 private:
 

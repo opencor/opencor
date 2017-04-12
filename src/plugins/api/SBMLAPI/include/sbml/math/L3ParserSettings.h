@@ -7,7 +7,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -191,6 +191,51 @@
  * become case sensitive.  In that mode, for example, the symbols @c "sin"
  * and @c "true" will match the built-in values, but the symbols @c "SIN",
  * @c "Sin", @c "True", @c "TRUE", and so on, will not.
+ *
+ * @class doc_modulo_l3v2_settings
+ *
+ * @par
+ * This setting affects whether the '%' symbol (modulo) is parsed as a
+ * piecewise equation that returns the modulo value of the entries on
+ * either side of the symbol, or whether it is parsed as the MathML
+ * 'rem' function, which was allowed in SBML Level&nbsp;3 Version&nbsp;2,
+ * but not in previous level/versions.  The latter is more succinct, but
+ * might not be legal SBML for the desired target SBML document.
+ *
+ * @class doc_modulo_l3v2_values
+ *
+ * <ul>
+ * <li> @sbmlconstant{L3P_MODULO_IS_REM,} (value = @c true): use the
+ * 'rem' MathML function (@sbmlconstant{AST_FUNCTION_REM,ASTNodeType_t}).
+ * <li> @sbmlconstant{L3P_MODULO_IS_PIECEWISE,} (value = @c false): use
+ * a piecewise function (@sbmlconstant{AST_FUNCTION_PIECEWISE,ASTNodeType_t})
+ * to encode the modulo rule explicitly.
+ * </ul>
+ *
+ * @class doc_l3v2_function_settings
+ *
+ * @par
+ * This setting affects whether the names of functions added in SBML
+ * Level&nbsp;3 Version&nbsp;2 are parsed as those added MathML functions,
+ * or whether they are added as generic functions with those names (to
+ * be used in SBML as function definitions).
+ *
+ * @class doc_l3v2_function_values
+ *
+ * <ul>
+ * <li> @sbmlconstant{L3P_PARSE_L3V2_FUNCTIONS_DIRECTLY,} (value = @c true): parse the
+ * strings 'rateOf', 'implies', 'max', 'min', 'quotient', and 'rem' as
+ * @sbmlconstant{AST_FUNCTION_RATE_OF,ASTNodeType_t},
+ * @sbmlconstant{AST_LOGICAL_IMPLIES,ASTNodeType_t},
+ * @sbmlconstant{AST_FUNCTION_MAX,ASTNodeType_t},
+ * @sbmlconstant{AST_FUNCTION_MIN,ASTNodeType_t},
+ * @sbmlconstant{AST_FUNCTION_QUOTIENT,ASTNodeType_t}, and
+ * @sbmlconstant{AST_FUNCTION_REM,ASTNodeType_t}, respectively.
+ * <li> @sbmlconstant{L3P_PARSE_L3V2_FUNCTIONS_AS_GENERIC,} (value = @c false):
+ * parse the strings 'rateOf', 'implies', 'max', 'min', 'quotient', and
+ * 'rem' all as @sbmlconstant{AST_FUNCTION,ASTNodeType_t} with the appropriate
+ * name set.
+ * </ul>
  */
 
 #ifndef L3ParserSettings_h
@@ -301,6 +346,39 @@ typedef enum
  */
 #define L3P_COMPARE_BUILTINS_CASE_SENSITIVE true
 
+ /**
+ * Parse the '%' symbol as the l3v2-allowed 'rem' symbol.
+ *
+ * @see L3ParserSettings::getParseModuloL3v2()
+ * @see L3ParserSettings::setParseModuloL3v2()
+ */
+#define L3P_MODULO_IS_REM true
+
+ /**
+ * Parse the '%' symbol as an expanded 'piecewise' function (valid in all levels/versions).
+ *
+ * @see L3ParserSettings::getParseModuloL3v2()
+ * @see L3ParserSettings::setParseModuloL3v2()
+ */
+#define L3P_MODULO_IS_PIECEWISE   false
+
+
+ /**
+ * Parse the functions added in l3v2.
+ *
+ * @see L3ParserSettings::getParseL3v2Functions()
+ * @see L3ParserSettings::setParseL3v2Functions()
+ */
+#define L3P_PARSE_L3V2_FUNCTIONS_DIRECTLY true
+
+ /**
+ * Parse the '%' symbol as an expanded 'piecewise' function (valid in all levels/versions).
+ *
+ * @see L3ParserSettings::getParseL3v2Functions()
+ * @see L3ParserSettings::setParseL3v2Functions()
+ */
+#define L3P_PARSE_L3V2_FUNCTIONS_AS_GENERIC  false
+
 
 typedef enum
 {
@@ -335,6 +413,8 @@ private:
   bool mParseunits;
   bool mAvoCsymbol;
   bool mStrCmpIsCaseSensitive;
+  bool mModuloL3v2;
+  bool ml3v2Functions;
 #ifndef LIBSBML_USE_LEGACY_MATH
   std::vector<ASTBasePlugin*> mPlugins;
 #endif
@@ -363,6 +443,9 @@ public:
    *
    * @li <em>caseSensitive</em> ("case sensitive") is set to
    * @sbmlconstant{L3P_COMPARE_BUILTINS_CASE_INSENSITIVE,}.
+   *
+   * @li <em>moduloL3v2</em> ("modulo l3v2") is set to
+   * @sbmlconstant{L3P_MODULO_IS_PIECEWISE,}.
    *
    * @li <em>sbmlns</em> ("SBML namespaces") is set to @c NULL (which
    * indicates that no syntax extensions due to SBML Level&nbsp;3 packages
@@ -423,6 +506,17 @@ public:
    * @sbmlconstant{L3P_COMPARE_BUILTINS_CASE_SENSITIVE,}, symbols are
    * interpreted in a case-sensitive manner.
    *
+   * @param moduloL3v2 ("modulo L3v2") a flag that controls how the
+   * parser will handle the '%' ('modulo') symbol in formulas.  By default,
+   * the parser will convert 'a % b' to a piecewise function that properly
+   * calculates the remainder of a with respect to be, but the parser can
+   * also be set to produce the MathML @c rem function, should the target
+   * of the produced ASTNode be an SBML Level&nbsp;3 Version&nbsp;2
+   * document, where the @c rem function is legal.
+   * The possible values of this field are
+   * @sbmlconstant{L3P_MODULO_IS_PIECEWISE,} (to parse '%' as a piecewise function) and
+   * @sbmlconstant{L3P_MODULO_IS_REM,} (to parse '%' as @c rem).
+   *
    * @param sbmlns ("SBML namespaces") an SBML namespaces object.  The
    * namespaces identify the SBML Level&nbsp;3 packages that can extend the
    * syntax understood by the formula parser.  When non-@c NULL, the parser
@@ -443,15 +537,22 @@ public:
    * @see setParseCollapseMinus(@if java boolean@endif)
    * @see getParseAvogadroCsymbol()
    * @see setParseAvogadroCsymbol(@if java boolean@endif)
+   * @see getParseModuloL3v2()
+   * @see setParseModuloL3v2(@if java boolean@endif)
+   * @see getParseL3v2Functions()
+   * @see setParseL3v2Functions(@if java boolean@endif)
    */
   L3ParserSettings(Model* model, ParseLogType_t parselog,
                    bool collapseminus, bool parseunits, bool avocsymbol,
                    bool caseSensitive = false,
-                   SBMLNamespaces* sbmlns = NULL);
+                   SBMLNamespaces* sbmlns = NULL, bool moduloL3v2 = false,
+                   bool l3v2functions = false);
 
 
   /**
    * Copy constructor.
+   *
+   * @param source the instance to copy.
    */
    L3ParserSettings(const L3ParserSettings& source);
 
@@ -597,7 +698,7 @@ public:
    *
    * This method sets the formula parser's behavior with respect to units.
    *
-   * @param units A boolean indicating whether to parse units.  The
+   * @param units a boolean indicating whether to parse units.  The
    * possible values are as follows:
    * @copydetails doc_parsing_units_values
    *
@@ -705,6 +806,82 @@ public:
 
 
   /**
+  * Sets the behavior for handling the '%' sumbol in mathematical
+  * formulas.
+  *
+  * @copydetails doc_modulo_l3v2_settings
+  *
+  * This method lets you tell the parser which behavior to use---either
+  * parse '%' as the 'rem' function or as a piecewise function with the
+  * same interpretation.  The two possibilities are
+  * represented using the following constants:
+  *
+  * @copydetails doc_modulo_l3v2_values
+  *
+  * @param modulol3v2 a boolean value (one of the constants
+  * @sbmlconstant{L3P_MODULO_IS_PIECEWISE,} or
+  * @sbmlconstant{L3P_MODULO_IS_REM,})
+  * indicating how the '%' symbol in the input should be handled.
+  *
+  * @see getParseModuloL3v2()
+  */
+  void setParseModuloL3v2(bool modulol3v2);
+
+
+  /**
+  * Indicates the current behavior set for handling the '%' sumbol in
+  * mathematical formulas.
+  *
+  * @copydetails doc_modulo_l3v2_settings
+  *
+  * @return A boolean indicating the behavior currently set.  The possible
+  * values are as follows:
+  * @copydetails doc_modulo_l3v2_values
+  *
+  * @see setParseModuloL3v2(@if java boolean@endif)
+  */
+  bool getParseModuloL3v2() const;
+
+
+  /**
+  * Sets the behavior for handling functions added in SBML L3v2
+  *
+  * @copydetails doc_l3v2_function_settings
+  *
+  * This method lets you tell the parser which behavior to use---either
+  * to parse the functions added in L3v2 as their built-in counterparts,
+  * or as generic functions with that name (to be defined by SBML as
+  * function definitions).  The two possibilities are
+  * represented using the following constants:
+  *
+  * @copydetails doc_l3v2_function_values
+  *
+  * @param l3v2functions a boolean value (one of the constants
+  * @sbmlconstant{L3P_PARSE_L3V2_FUNCTIONS_DIRECTLY,} or
+  * @sbmlconstant{L3P_PARSE_L3V2_FUNCTIONS_AS_GENERIC,})
+  * indicating how to interpret those function names.
+  *
+  * @see getParseL3v2Functions()
+  */
+  void setParseL3v2Functions(bool l3v2functions);
+
+
+  /**
+  * Indicates the current behavior set for handling the '%' sumbol in
+  * mathematical formulas.
+  *
+  * @copydetails doc_l3v2_function_settings
+  *
+  * @return A boolean indicating the behavior currently set.  The possible
+  * values are as follows:
+  * @copydetails doc_l3v2_function_values
+  *
+  * @see setParseModuloL3v2(@if java boolean@endif)
+  */
+  bool getParseL3v2Functions() const;
+
+
+  /**
    * Set up the plugins for this L3ParserSettings, based on the
    * SBMLNamespaces object.
    *
@@ -743,6 +920,7 @@ public:
 
 private:
   /** @cond doxygenLibsbmlInternal */
+
   /**
    * This function checks the provided ASTNode function to see if it is a
    * known function with the wrong number of arguments.  If so, the error is
@@ -814,7 +992,7 @@ L3ParserSettings_create ();
 /**
  * Frees the given L3ParserSettings_t structure.
  *
- * @param settings the L3ParserSettings_t to free
+ * @param settings the L3ParserSettings_t to free.
  *
  * @memberof L3ParserSettings_t
  */
@@ -831,7 +1009,7 @@ L3ParserSettings_free (L3ParserSettings_t * settings);
  * itself may affect future parsing.
  *
  * @param settings the L3ParserSettings_t structure on which to set the Model_t.
- * @param model The Model_t structure to which infix strings are to be compared.
+ * @param model the Model_t structure to which infix strings are to be compared.
  *
  * @memberof L3ParserSettings_t
  */
@@ -1002,6 +1180,51 @@ L3ParserSettings_setParseAvogadroCsymbol (L3ParserSettings_t * settings, int fla
 LIBSBML_EXTERN
 int
 L3ParserSettings_getParseAvogadroCsymbol (const L3ParserSettings_t * settings);
+
+
+/**
+* Sets the behavior for handling the '%' sumbol in mathematical
+* formulas.
+*
+* @copydetails doc_modulo_l3v2_settings
+*
+* This method lets you tell the parser which behavior to use---either
+* collapse minuses or always preserve them.  The two possibilities are
+* represented using the following constants:
+*
+* @copydetails doc_modulo_l3v2_values
+*
+* @param modulol3v2 a boolean value (one of the constants
+* @sbmlconstant{L3P_MODULO_IS_PIECEWISE,} or
+* @sbmlconstant{L3P_MODULO_IS_REM,})
+* indicating how the '%' symbol in the input should be handled.
+*
+* @see getParseModuloL3v2()
+*
+* @memberof L3ParserSettings_t
+*/
+LIBSBML_EXTERN
+void
+L3ParserSettings_setParseModuloL3v2(const L3ParserSettings_t * settings, int modulol3v2);
+
+
+/**
+* Indicates the current behavior set for handling the '%' sumbol in
+* mathematical formulas.
+*
+* @copydetails doc_modulo_l3v2_settings
+*
+* @return A boolean indicating the behavior currently set.  The possible
+* values are as follows:
+* @copydetails doc_unary_minus_values
+*
+* @see setParseModuloL3v2(@if java boolean@endif)
+*
+* @memberof L3ParserSettings_t
+*/
+LIBSBML_EXTERN
+int
+L3ParserSettings_getParseModuloL3v2(const L3ParserSettings_t * settings);
 
 
 /**
