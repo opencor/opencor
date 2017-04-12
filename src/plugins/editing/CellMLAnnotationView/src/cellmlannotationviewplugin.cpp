@@ -55,17 +55,6 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
 // File handling interface
 //==============================================================================
 
-bool CellMLAnnotationViewPlugin::isIndirectRemoteFile(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-
-    return false;
-}
-
-//==============================================================================
-
 bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
                                           const QString &pNewFileName,
                                           bool &pNeedFeedback)

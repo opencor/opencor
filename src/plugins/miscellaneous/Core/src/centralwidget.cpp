@@ -1693,9 +1693,7 @@ void CentralWidget::updateGui()
     if (fileName.isEmpty()) {
         newView = mLogoView;
     } else {
-        // There is a current file, so retrieve its view, showing our busy
-        // widget, if we are dealing with a remote file or if the view requires
-        // it
+        // There is a current file, so retrieve its view
 
         QString fileViewKey = viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName);
 
