@@ -32,7 +32,7 @@ extern "C" Q_DECL_EXPORT int fileHandlingInterfaceVersion()
 {
     // Version of the file handling interface
 
-    return 1;
+    return 2;
 }
 
 //==============================================================================
