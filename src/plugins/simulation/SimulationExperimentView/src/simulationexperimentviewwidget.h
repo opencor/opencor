@@ -54,12 +54,6 @@ class SimulationExperimentViewWidget : public Core::ViewWidget
     Q_OBJECT
 
 public:
-    enum FileType {
-        CellmlFile,
-        SedmlFile,
-        CombineArchive
-    };
-
     explicit SimulationExperimentViewWidget(SimulationExperimentViewPlugin *pPlugin,
                                             QWidget *pParent);
 
@@ -95,14 +89,6 @@ public:
     void checkSimulationResults(const QString &pFileName,
                                 const bool &pClearGraphs = false);
 
-    void retrieveFileDetails(const QString &pFileName,
-                             CellMLSupport::CellmlFile *&pCellmlFile,
-                             SEDMLSupport::SedmlFile *&pSedmlFile,
-                             COMBINESupport::CombineArchive *&pCombineArchive,
-                             FileType &pFileType,
-                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                             COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
-
 private:
     SimulationExperimentViewPlugin *mPlugin;
 
@@ -124,27 +110,7 @@ private:
     QMap<QString, qulonglong> mSimulationResultsSizes;
     QStringList mSimulationCheckResults;
 
-    QMap<QString, QString> mLocallyManagedCellmlFiles;
-    QMap<QString, QString> mLocallyManagedSedmlFiles;
-
     void updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget);
-
-    bool sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
-                                 SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
-    bool sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
-                            SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
-
-    bool combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
-                                 COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const;
-
-    void retrieveCellmlFile(const QString &pFileName,
-                            CellMLSupport::CellmlFile *&pCellmlFile,
-                            SEDMLSupport::SedmlFile *pSedmlFile,
-                            const FileType &pFileType,
-                            SEDMLSupport::SedmlFileIssues &pSedmlFileIssues);
-    void retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
-                           COMBINESupport::CombineArchive *pCombineArchive,
-                           COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
 
 private slots:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);
