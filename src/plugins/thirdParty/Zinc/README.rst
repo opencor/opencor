@@ -1,4 +1,4 @@
-We build our own copy of the `Zinc <http://physiomeproject.org/software/opencmiss/zinc>`__ library (on Linux and macOS for now), which requires doing the following from the command line:
+We build our own copy of the `Zinc <http://physiomeproject.org/software/opencmiss/zinc>`__ library, which requires doing the following from the command line:
 
 ::
 
