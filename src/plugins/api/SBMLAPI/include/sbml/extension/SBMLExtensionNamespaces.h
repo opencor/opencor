@@ -7,7 +7,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -78,9 +78,9 @@ public:
    * Creates a new SBMLExtensionNamespaces object corresponding to the given SBML
    * @p level, @p version and @p package version.
    *
-   * @param level   the SBML Level
-   * @param version the SBML Version
-   * @param pkgVersion the package version
+   * @param level   the SBML Level.
+   * @param version the SBML Version.
+   * @param pkgVersion the package version.
    * @param prefix  the prefix of the package namespace (e.g. "layout", "multi")
    *        to be added. The package's name will be used if the given string is empty
    *        (default).
@@ -247,7 +247,7 @@ BEGIN_C_DECLS
 /**
  * Creates a deep copy of the given SBMLExtensionNamespaces_t structure
  *
- * @param extns the SBMLExtensionNamespaces_t structure to be copied
+ * @param extns the SBMLExtensionNamespaces_t structure to be copied.
  *
  * @return a (deep) copy of the given SBMLExtensionNamespaces_t structure.
  *
@@ -260,7 +260,7 @@ SBMLExtensionNamespaces_clone(SBMLExtensionNamespaces_t* extns);
 /**
  * Frees the given SBMLExtensionNamespaces_t structure
  *
- * @param extns the SBMLExtensionNamespaces_t structure to be freed
+ * @param extns the SBMLExtensionNamespaces_t structure to be freed.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -276,7 +276,7 @@ SBMLExtensionNamespaces_free(SBMLExtensionNamespaces_t* extns);
  * Returns a copy of the string representing the Package XML namespace of the
  * given namespace structure.
  *
- * @param extns the SBMLExtensionNamespaces_t structure
+ * @param extns the SBMLExtensionNamespaces_t structure.
  *
  * @return a copy of the string representing the SBML namespace that reflects
  * the SBML Level and Version of the namespace structure.
@@ -290,7 +290,7 @@ SBMLExtensionNamespaces_getURI(SBMLExtensionNamespaces_t* extns);
 /**
  * Return the SBML Package Version of the SBMLExtensionNamespaces_t structure.
  *
- * @param extns the SBMLExtensionNamespaces_t structure
+ * @param extns the SBMLExtensionNamespaces_t structure.
  *
  * @return the SBML Package Version of the SBMLExtensionNamespaces_t structure.
  *
@@ -304,7 +304,7 @@ SBMLExtensionNamespaces_getPackageVersion(SBMLExtensionNamespaces_t* extns);
  * Returns a copy of the string representing the Package name of the
  * given namespace structure.
  *
- * @param extns the SBMLExtensionNamespaces_t structure
+ * @param extns the SBMLExtensionNamespaces_t structure.
  *
  * @return a copy of the string representing the package name that of the
  * namespace structure.
@@ -318,8 +318,8 @@ SBMLExtensionNamespaces_getPackageName(SBMLExtensionNamespaces_t* extns);
 /**
  * Sets the package version of the namespace structure.
  *
- * @param extns the SBMLExtensionNamespaces_t structure
- * @param pkgVersion the package version to use
+ * @param extns the SBMLExtensionNamespaces_t structure.
+ * @param pkgVersion the package version to use.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}

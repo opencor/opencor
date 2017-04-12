@@ -7,7 +7,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -119,8 +119,8 @@ public:
    * where <span style="background-color: purple; color: white; padding-left: 2px; padding-right: 2px">x</span>
    * represents the separator character, @p sepchar.
    *
-   * @param triplet a string representing the triplet as shown above
-   * @param sepchar a character, the sepchar used in the triplet
+   * @param triplet a string representing the triplet as shown above.
+   * @param sepchar a character, the sepchar used in the triplet.
    *
    * @ifnot hasDefaultArgs @htmlinclude warn-default-args-in-docs.html @endif@~
    */
@@ -138,7 +138,7 @@ public:
   /**
    * Assignment operator for XMLTriple.
    *
-   * @param rhs The XMLTriple object whose values are used as the basis
+   * @param rhs the XMLTriple object whose values are used as the basis
    * of the assignment.
    */
   XMLTriple& operator=(const XMLTriple& rhs);
@@ -281,7 +281,7 @@ XMLTriple_free (XMLTriple_t *triple);
 /**
  * Creates a deep copy of the given XMLTriple_t structure
  *
- * @param triple the XMLTriple_t structure to be copied
+ * @param triple the XMLTriple_t structure to be copied.
  *
  * @return a (deep) copy of the given XMLTriple_t structure.
  *

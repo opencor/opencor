@@ -7,7 +7,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -84,7 +84,7 @@
  * and "name", and both are optional.  As is the case for other SBML
  * components with "id" and "name" attributes, they must be used according
  * to the guidelines described in the SBML specifications.  (Within the
- * frameworks of SBML Level&nbsp;2 and Level&nbsp;3 Version&nbsp;1 Core, a
+ * frameworks of SBML Level&nbsp;2 and Level&nbsp;3, a
  * Model object identifier has no assigned meaning, but extension packages
  * planned for SBML Level&nbsp;3 are likely to make use of this
  * identifier.)
@@ -270,7 +270,7 @@ sp.setId("MySpecies");
  * @section model-l3-attrib Model attributes introduced in SBML Level&nbsp;3
  *
  * As mentioned above, the Model class has a number of optional attributes
- * in SBML Level&nbsp;3 Version&nbsp;1 Core.  These are "substanceUnits",
+ * in SBML Level&nbsp;3.  These are "substanceUnits",
  * "timeUnits", "volumeUnits", "areaUnits", "lengthUnits", "extentUnits",
  * and "conversionFactor.  The following provide more information about
  * them.
@@ -286,8 +286,7 @@ sp.setId("MySpecies");
  * define a value for this attribute, then there is no unit to inherit, and
  * all species that do not specify individual "substanceUnits" attribute
  * values then have <em>no</em> declared units for their quantities.  The
- * SBML Level&nbsp;3 Version&nbsp;1 Core specification provides more
- * details.
+ * SBML Level&nbsp;3 specifications provide more details.
  *
  * Note that when the identifier of a species appears in a model's
  * mathematical expressions, the unit of measurement associated with that
@@ -383,8 +382,8 @@ sp.setId("MySpecies");
  * inherits the conversion factor specified by the Model "conversionFactor"
  * attribute.  If the Model does not define a value for this attribute,
  * then there is no conversion factor to inherit.  More information about
- * conversion factors is provided in the SBML Level&nbsp;3 Version&nbsp;1
- * specification.
+ * conversion factors is provided in the SBML Level&nbsp;3
+ * specifications.
  */
 
 /**
@@ -457,6 +456,7 @@ sp.setId("MySpecies");
 #include <sbml/Event.h>
 
 #include <sbml/units/FormulaUnitsData.h>
+#include <sbml/util/IdList.h>
 
 #include <sbml/annotation/ModelHistory.h>
 
@@ -481,10 +481,10 @@ public:
    * Creates a new Model using the given SBML @p level and @p version
    * values.
    *
-   * @param level an unsigned int, the SBML Level to assign to this Model
+   * @param level an unsigned int, the SBML Level to assign to this Model.
    *
    * @param version an unsigned int, the SBML Version to assign to this
-   * Model
+   * Model.
    *
    * @copydetails doc_throw_exception_lv
    *
@@ -525,7 +525,7 @@ public:
   /**
    * Assignment operator for Model.
    *
-   * @param rhs The object whose values are used as the basis of the
+   * @param rhs the object whose values are used as the basis of the
    * assignment.
    */
   Model& operator=(const Model& rhs);
@@ -585,10 +585,11 @@ public:
    * @p filter's <code>filter()</code> method returns true will be added to
    * the list.
    *
-   * @param filter optional filter to apply to objects before putting them
-   * into the list to be returned.
+   * @param filter a pointer to an ElementFilter, which causes the function
+   * to return only elements that match a particular set of constraints.
+   * If NULL (the default), the function will return all child objects.
    *
-   * @return a List* of pointers to all children objects.
+   * @return a List of pointers to all children objects.
    */
   virtual List* getAllElements(ElementFilter* filter=NULL);
 
@@ -596,15 +597,26 @@ public:
   /**
    * Returns the value of the "id" attribute of this Model.
    *
+   * @note Because of the inconsistent behavior of this function with
+   * respect to assignments and rules, it is now recommended to
+   * use the getIdAttribute() function instead.
+   *
+   * @copydetails doc_id_attribute
+   *
    * @return the id of this Model.
+   *
+   * @see getIdAttribute()
+   * @see setIdAttribute(const std::string& sid)
+   * @see isSetIdAttribute()
+   * @see unsetIdAttribute()
    */
   virtual const std::string& getId () const;
 
 
   /**
-   * Returns the value of the "name" attribute of this Model.
+   * Returns the value of the "name" attribute of this Model object.
    *
-   * @return the name of this Model.
+   * @copydetails doc_get_name
    */
   virtual const std::string& getName () const;
 
@@ -690,8 +702,7 @@ public:
    * Predicate returning @c true if this
    * Model's "id" attribute is set.
    *
-   * @return @c true if the "id" attribute of this Model is
-   * set, @c false otherwise.
+   * @copydetails doc_isset_id
    */
   virtual bool isSetId () const;
 
@@ -700,8 +711,7 @@ public:
    * Predicate returning @c true if this
    * Model's "name" attribute is set.
    *
-   * @return @c true if the "name" attribute of this Model is
-   * set, @c false otherwise.
+   * @copydetails doc_isset_name
    */
   virtual bool isSetName () const;
 
@@ -800,29 +810,15 @@ public:
   /**
    * Sets the value of the "id" attribute of this Model.
    *
-   * The string @p sid is copied.
-   *
-   * @copydetails doc_id_syntax
-   *
-   * @param sid the string to use as the identifier of this Model
-   *
-   * @copydetails doc_returns_success_code
-   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
-   * @li @sbmlconstant{LIBSBML_INVALID_ATTRIBUTE_VALUE, OperationReturnValues_t}
+   * @copydetails doc_set_id
    */
-  virtual int setId (const std::string& sid);
+  virtual int setId(const std::string& sid);
 
 
   /**
    * Sets the value of the "name" attribute of this Model.
    *
-   * The string in @p name is copied.
-   *
-   * @param name the new name for the Model
-   *
-   * @copydetails doc_returns_success_code
-   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
-   * @li @sbmlconstant{LIBSBML_INVALID_ATTRIBUTE_VALUE, OperationReturnValues_t}
+   * @copydetails doc_set_name
    */
   virtual int setName (const std::string& name);
 
@@ -832,7 +828,7 @@ public:
    *
    * The string in @p units is copied.
    *
-   * @param units the new substanceUnits for the Model
+   * @param units the new substanceUnits for the Model.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -850,7 +846,7 @@ public:
    *
    * The string in @p units is copied.
    *
-   * @param units the new timeUnits for the Model
+   * @param units the new timeUnits for the Model.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -868,7 +864,7 @@ public:
    *
    * The string in @p units is copied.
    *
-   * @param units the new volumeUnits for the Model
+   * @param units the new volumeUnits for the Model.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -886,7 +882,7 @@ public:
    *
    * The string in @p units is copied.
    *
-   * @param units the new areaUnits for the Model
+   * @param units the new areaUnits for the Model.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -904,7 +900,7 @@ public:
    *
    * The string in @p units is copied.
    *
-   * @param units the new lengthUnits for the Model
+   * @param units the new lengthUnits for the Model.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -922,7 +918,7 @@ public:
    *
    * The string in @p units is copied.
    *
-   * @param units the new extentUnits for the Model
+   * @param units the new extentUnits for the Model.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -940,7 +936,7 @@ public:
    *
    * The string in @p units is copied.
    *
-   * @param units the new conversionFactor for the Model
+   * @param units the new conversionFactor for the Model.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -956,9 +952,7 @@ public:
   /**
    * Unsets the value of the "id" attribute of this Model.
    *
-   * @copydetails doc_returns_success_code
-   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
-   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   * @copydetails doc_unset_id
    */
   virtual int unsetId ();
 
@@ -966,9 +960,7 @@ public:
   /**
    * Unsets the value of the "name" attribute of this Model.
    *
-   * @copydetails doc_returns_success_code
-   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
-   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   * @copydetails doc_unset_name
    */
   virtual int unsetName ();
 
@@ -1071,7 +1063,7 @@ public:
   /**
    * Adds a copy of the given FunctionDefinition object to this Model.
    *
-   * @param fd the FunctionDefinition to add
+   * @param fd the FunctionDefinition to add.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1091,7 +1083,7 @@ public:
   /**
    * Adds a copy of the given UnitDefinition object to this Model.
    *
-   * @param ud the UnitDefinition object to add
+   * @param ud the UnitDefinition object to add.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1111,7 +1103,7 @@ public:
   /**
    * Adds a copy of the given CompartmentType object to this Model.
    *
-   * @param ct the CompartmentType object to add
+   * @param ct the CompartmentType object to add.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1135,7 +1127,7 @@ public:
   /**
    * Adds a copy of the given SpeciesType object to this Model.
    *
-   * @param st the SpeciesType object to add
+   * @param st the SpeciesType object to add.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1159,11 +1151,9 @@ public:
   /**
    * Adds a copy of the given Compartment object to this Model.
    *
-   * @param c the Compartment object to add
+   * @param c the Compartment object to add.
    *
-   * @return integer value indicating success/failure of the
-   * function.  The possible values
-   * returned by this function are:
+   * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
    * @li @sbmlconstant{LIBSBML_LEVEL_MISMATCH, OperationReturnValues_t}
    * @li @sbmlconstant{LIBSBML_VERSION_MISMATCH, OperationReturnValues_t}
@@ -1181,7 +1171,7 @@ public:
   /**
    * Adds a copy of the given Species object to this Model.
    *
-   * @param s the Species object to add
+   * @param s the Species object to add.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1201,7 +1191,7 @@ public:
   /**
    * Adds a copy of the given Parameter object to this Model.
    *
-   * @param p the Parameter object to add
+   * @param p the Parameter object to add.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1221,7 +1211,7 @@ public:
   /**
    * Adds a copy of the given InitialAssignment object to this Model.
    *
-   * @param ia the InitialAssignment object to add
+   * @param ia the InitialAssignment object to add.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1241,7 +1231,7 @@ public:
   /**
    * Adds a copy of the given Rule object to this Model.
    *
-   * @param r the Rule object to add
+   * @param r the Rule object to add.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1263,7 +1253,7 @@ public:
   /**
    * Adds a copy of the given Constraint object to this Model.
    *
-   * @param c the Constraint object to add
+   * @param c the Constraint object to add.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1282,7 +1272,7 @@ public:
   /**
    * Adds a copy of the given Reaction object to this Model.
    *
-   * @param r the Reaction object to add
+   * @param r the Reaction object to add.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1302,7 +1292,7 @@ public:
   /**
    * Adds a copy of the given Event object to this Model.
    *
-   * @param e the Event object to add
+   * @param e the Event object to add.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1326,7 +1316,7 @@ public:
    * any SBML package namespaces, are used to initialize this
    * object's corresponding attributes.
    *
-   * @return the FunctionDefinition object created
+   * @return the FunctionDefinition object created.
    *
    * @see addFunctionDefinition(const FunctionDefinition* fd)
    */
@@ -1340,7 +1330,7 @@ public:
    * any SBML package namespaces, are used to initialize this
    * object's corresponding attributes.
    *
-   * @return the UnitDefinition object created
+   * @return the UnitDefinition object created.
    *
    * @see addUnitDefinition(const UnitDefinition* ud)
    */
@@ -1359,7 +1349,7 @@ public:
    * significant.  If a UnitDefinition object does not exist in this model,
    * a new Unit is @em not created and @c NULL is returned instead.
    *
-   * @return the Unit object created
+   * @return the Unit object created.
    *
    * @see addUnitDefinition(const UnitDefinition* ud)
    */
@@ -1373,7 +1363,7 @@ public:
    * any SBML package namespaces, are used to initialize this
    * object's corresponding attributes.
    *
-   * @return the CompartmentType object created
+   * @return the CompartmentType object created.
    *
    * @note The CompartmentType object class is only available in SBML
    * Level&nbsp;2 Versions&nbsp;2&ndash;4.  It is not available in
@@ -1391,7 +1381,7 @@ public:
    * any SBML package namespaces, are used to initialize this
    * object's corresponding attributes.
    *
-   * @return the SpeciesType object created
+   * @return the SpeciesType object created.
    *
    * @note The SpeciesType object class is only available in SBML
    * Level&nbsp;2 Versions&nbsp;2&ndash;4.  It is not available in
@@ -1409,7 +1399,7 @@ public:
    * any SBML package namespaces, are used to initialize this
    * object's corresponding attributes.
    *
-   * @return the Compartment object created
+   * @return the Compartment object created.
    *
    * @see addCompartment(const Compartment *c)
    */
@@ -1423,7 +1413,7 @@ public:
    * any SBML package namespaces, are used to initialize this
    * object's corresponding attributes.
    *
-   * @return the Species object created
+   * @return the Species object created.
    *
    * @see addSpecies(const Species *s)
    */
@@ -1437,7 +1427,7 @@ public:
    * any SBML package namespaces, are used to initialize this
    * object's corresponding attributes.
    *
-   * @return the Parameter object created
+   * @return the Parameter object created.
    *
    * @see addParameter(const Parameter *p)
    */
@@ -1451,7 +1441,7 @@ public:
    * any SBML package namespaces, are used to initialize this
    * object's corresponding attributes.
    *
-   * @return the InitialAssignment object created
+   * @return the InitialAssignment object created.
    *
    * @see addInitialAssignment(const InitialAssignment* ia)
    */
@@ -1465,7 +1455,7 @@ public:
    * any SBML package namespaces, are used to initialize this
    * object's corresponding attributes.
    *
-   * @return the AlgebraicRule object created
+   * @return the AlgebraicRule object created.
    *
    * @see addRule(const Rule* r)
    */
@@ -1479,7 +1469,7 @@ public:
    * any SBML package namespaces, are used to initialize this
    * object's corresponding attributes.
    *
-   * @return the AssignmentRule object created
+   * @return the AssignmentRule object created.
    *
    * @see addRule(const Rule* r)
    */
@@ -1493,7 +1483,7 @@ public:
    * any SBML package namespaces, are used to initialize this
    * object's corresponding attributes.
    *
-   * @return the RateRule object created
+   * @return the RateRule object created.
    *
    * @see addRule(const Rule* r)
    */
@@ -1507,7 +1497,7 @@ public:
    * any SBML package namespaces, are used to initialize this
    * object's corresponding attributes.
    *
-   * @return the Constraint object created
+   * @return the Constraint object created.
    *
    * @see addConstraint(const Constraint *c)
    */
@@ -1521,7 +1511,7 @@ public:
    * any SBML package namespaces, are used to initialize this
    * object's corresponding attributes.
    *
-   * @return the Reaction object created
+   * @return the Reaction object created.
    *
    * @see addReaction(const Reaction *r)
    */
@@ -1638,7 +1628,7 @@ public:
    * any SBML package namespaces, are used to initialize this
    * object's corresponding attributes.
    *
-   * @return the Event object created
+   * @return the Event object created.
    */
   Event* createEvent ();
 
@@ -1653,7 +1643,7 @@ public:
    *
    * @copydetails doc_how_added_last_event_irrelevant
    *
-   * @return the EventAssignment object created
+   * @return the EventAssignment object created.
    */
   EventAssignment* createEventAssignment ();
 
@@ -1668,7 +1658,7 @@ public:
    *
    * @copydetails doc_how_added_last_event_irrelevant
    *
-   * @return the Trigger object created
+   * @return the Trigger object created.
    */
   Trigger* createTrigger ();
 
@@ -1683,7 +1673,7 @@ public:
    *
    * @copydetails doc_how_added_last_event_irrelevant
    *
-   * @return the Delay object created
+   * @return the Delay object created.
    */
   Delay* createDelay ();
 
@@ -1700,9 +1690,9 @@ public:
    * discarded.  An alternative may be to use appendAnnotation().
    *
    * @param annotation an XML structure that is to be used as the content
-   * of the "annotation" subelement of this object
+   * of the "annotation" subelement of this object.
    *
-   * @copydetails doc_returns_success_code
+   * @copydetails doc_returns_one_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
    *
    * @see appendAnnotation(const XMLNode* annotation)
@@ -1722,7 +1712,7 @@ public:
    * discarded.  An alternative may be to use appendAnnotation().
    *
    * @param annotation an XML string that is to be used as the content
-   * of the "annotation" subelement of this object
+   * of the "annotation" subelement of this object.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1742,7 +1732,7 @@ public:
    * adds its own data.
    *
    * @param annotation an XML structure that is to be copied and appended
-   * to the content of the "annotation" subelement of this object
+   * to the content of the "annotation" subelement of this object.
    *
    * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -1762,11 +1752,9 @@ public:
    * adds its own data.
    *
    * @param annotation an XML string that is to be copied and appended
-   * to the content of the "annotation" subelement of this object
+   * to the content of the "annotation" subelement of this object.
    *
-   * @return integer value indicating success/failure of the
-   * function.  The possible values
-   * returned by this function are:
+   * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
    * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
    *
@@ -2844,7 +2832,7 @@ public:
    * function defined in the Model's ListOfFunctionDefinitions, the model
    * is needed for lookup context.
    *
-   * @return true if the given ASTNode is a boolean.
+   * @return @c true if the given ASTNode is a boolean.
    */
   bool isBoolean (const ASTNode* node) const;
   /** @endcond */
@@ -2917,6 +2905,11 @@ public:
    * L1 and L3 that require the underlying Model to be changed.
    */
   void convertL3ToL2 (bool strict = false);
+
+  // specific down conversions from l3v2
+  void convertFromL3V2 (bool strict = false);
+
+  void dealWithFast();
 
   //void convertTimeWith(ASTNode* conversionFactor);
 
@@ -3027,7 +3020,7 @@ public:
   /*
    * Sets the parent SBMLDocument of this SBML object.
    *
-   * @param d the SBMLDocument object to set
+   * @param d the SBMLDocument object to set.
    */
   virtual void setSBMLDocument (SBMLDocument* d);
 
@@ -3088,11 +3081,337 @@ public:
   /** @cond doxygenLibsbmlInternal */
   /**
    * Subclasses should override this method to write out their contained
-   * SBML objects as XML elements.  Be sure to call your parents
+   * SBML objects as XML elements.  Be sure to call your parent's
    * implementation of this method as well.
    */
   virtual void writeElements (XMLOutputStream& stream) const;
   /** @endcond */
+
+
+
+
+
+  #ifndef SWIG
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Gets the value of the "attributeName" attribute of this Model.
+   *
+   * @param attributeName, the name of the attribute to retrieve.
+   *
+   * @param value, the address of the value to record.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int getAttribute(const std::string& attributeName, bool& value)
+    const;
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Gets the value of the "attributeName" attribute of this Model.
+   *
+   * @param attributeName, the name of the attribute to retrieve.
+   *
+   * @param value, the address of the value to record.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int getAttribute(const std::string& attributeName, int& value) const;
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Gets the value of the "attributeName" attribute of this Model.
+   *
+   * @param attributeName, the name of the attribute to retrieve.
+   *
+   * @param value, the address of the value to record.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int getAttribute(const std::string& attributeName,
+                           double& value) const;
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Gets the value of the "attributeName" attribute of this Model.
+   *
+   * @param attributeName, the name of the attribute to retrieve.
+   *
+   * @param value, the address of the value to record.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int getAttribute(const std::string& attributeName,
+                           unsigned int& value) const;
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Gets the value of the "attributeName" attribute of this Model.
+   *
+   * @param attributeName, the name of the attribute to retrieve.
+   *
+   * @param value, the address of the value to record.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int getAttribute(const std::string& attributeName,
+                           std::string& value) const;
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Gets the value of the "attributeName" attribute of this Model.
+   *
+   * @param attributeName, the name of the attribute to retrieve.
+   *
+   * @param value, the address of the value to record.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int getAttribute(const std::string& attributeName,
+                           const char* value) const;
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Predicate returning @c true if this Model's attribute "attributeName" is
+   * set.
+   *
+   * @param attributeName, the name of the attribute to query.
+   *
+   * @return @c true if this Model's attribute "attributeName" has been set,
+   * otherwise @c false is returned.
+   */
+  virtual bool isSetAttribute(const std::string& attributeName) const;
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Sets the value of the "attributeName" attribute of this Model.
+   *
+   * @param attributeName, the name of the attribute to set.
+   *
+   * @param value, the value of the attribute to set.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int setAttribute(const std::string& attributeName, bool value);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Sets the value of the "attributeName" attribute of this Model.
+   *
+   * @param attributeName, the name of the attribute to set.
+   *
+   * @param value, the value of the attribute to set.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int setAttribute(const std::string& attributeName, int value);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Sets the value of the "attributeName" attribute of this Model.
+   *
+   * @param attributeName, the name of the attribute to set.
+   *
+   * @param value, the value of the attribute to set.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int setAttribute(const std::string& attributeName, double value);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Sets the value of the "attributeName" attribute of this Model.
+   *
+   * @param attributeName, the name of the attribute to set.
+   *
+   * @param value, the value of the attribute to set.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int setAttribute(const std::string& attributeName,
+                           unsigned int value);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Sets the value of the "attributeName" attribute of this Model.
+   *
+   * @param attributeName, the name of the attribute to set.
+   *
+   * @param value, the value of the attribute to set.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int setAttribute(const std::string& attributeName,
+                           const std::string& value);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Sets the value of the "attributeName" attribute of this Model.
+   *
+   * @param attributeName, the name of the attribute to set.
+   *
+   * @param value, the value of the attribute to set.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int setAttribute(const std::string& attributeName, const char*
+    value);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Unsets the value of the "attributeName" attribute of this Model.
+   *
+   * @param attributeName, the name of the attribute to query.
+   *
+   * @copydetails doc_returns_success_code
+   * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
+   * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
+   */
+  virtual int unsetAttribute(const std::string& attributeName);
+
+  /** @endcond */
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Creates and returns an new "elementName" object in this Model.
+   *
+   * @param elementName, the name of the element to create.
+   *
+   * pointer to the element created.
+   */
+  virtual SBase* createChildObject(const std::string& elementName);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Returns the number of "elementName" in this Model.
+   *
+   * @param elementName, the name of the element to get number of.
+   *
+   * unsigned int number of elements.
+   */
+  virtual unsigned int getNumObjects(const std::string& elementName);
+
+  /** @endcond */
+
+
+
+  /** @cond doxygenLibsbmlInternal */
+
+  /**
+   * Returns the nth object of "objectName" in this Model.
+   *
+   * @param elementName, the name of the element to get number of.
+   *
+   * @param index, unsigned int teh index of teh object to retrieve.
+   *
+   * pointer to the object.
+   */
+  virtual SBase* getObject(const std::string& elementName, unsigned int index);
+
+  /** @endcond */
+
+
+  #endif /* !SWIG */
+
 
 
   /**
@@ -3153,11 +3472,12 @@ public:
   bool isPopulatedListFormulaUnitsData();
 
 
+
   /** @cond doxygenLibsbmlInternal */
   /**
    * Adds a copy of the given FormulaUnitsData object to this Model.
    *
-   * @param fud the FormulaUnitsData to add
+   * @param fud the FormulaUnitsData to add.
    */
   void addFormulaUnitsData (const FormulaUnitsData* fud);
 
@@ -3165,7 +3485,7 @@ public:
   /**
    * Creates a new FormulaUnitsData inside this Model and returns it.
    *
-   * @return the FormulaUnitsData object created
+   * @return the FormulaUnitsData object created.
    */
   FormulaUnitsData* createFormulaUnitsData ();
 
@@ -3282,6 +3602,100 @@ public:
 
 
   /**
+   * Populates the internal list of the identifiers of all elements within this Model object.
+   *
+   * This method tells libSBML to retrieve the identifiers of all elements
+   * of the enclosing Model object.  The result is stored in an internal list
+   * of ids.  Users can access the resulting data by calling the method
+   * getAllElementIdList().
+   *
+   * @warning Retrieving all elements within a model is a time-consuming operation.
+   * Callers may want to call isPopulatedAllElementIdList() to determine
+   * whether the id list may already have been populated.
+   *
+   * @see isPopulatedAllElementIdList()
+   */
+  void populateAllElementIdList();
+
+
+  /**
+   * Predicate returning @c true if libSBML has a list of the ids of all
+   * components of this model.
+   *
+   * @return @c true if the id list has already been populated, @c false
+   * otherwise.
+   */
+  bool isPopulatedAllElementIdList() const;
+
+
+  /**
+   * Returns the internal list of the identifiers of all elements within this Model object.
+   *
+   * @return an IdList of all the identifiers in the model.
+   *
+   * @see populateAllElementIdList()
+   * @see isPopulatedAllElementIdList()
+   */
+  IdList getAllElementIdList() const;
+
+
+  /**
+   * Clears the internal list of the identifiers of all elements within this Model object.
+   *
+   * @see populateAllElementIdList()
+   * @see isPopulatedAllElementIdList()
+   */
+  void clearAllElementIdList();
+
+
+  /**
+   * Populates the internal list of the metaids of all elements within this Model object.
+   *
+   * This method tells libSBML to retrieve the identifiers of all elements
+   * of the enclosing Model object.  The result is stored in an internal list
+   * of metaids.  Users can access the resulting data by calling the method
+   * getAllElementMetaIdList().
+   *
+   * @warning Retrieving all elements within a model is a time-consuming operation.
+   * Callers may want to call isPopulatedAllElementMetaIdList() to determine
+   * whether the metaid list may already have been populated.
+   *
+   * @see isPopulatedAllElementMetaIdList()
+   */
+  void populateAllElementMetaIdList();
+
+
+  /**
+   * Predicate returning @c true if libSBML has a list of the metaids of all
+   * components of this model.
+   *
+   * @return @c true if the metaid list has already been populated, @c false
+   * otherwise.
+   */
+  bool isPopulatedAllElementMetaIdList() const;
+
+
+  /**
+   * Returns the internal list of the metaids of all elements within this Model object.
+   *
+   * @return an IdList of all the metaids in the model.
+   *
+   * @see populateAllElementMetaIdList()
+   * @see isPopulatedAllElementMetaIdList()
+   */
+  IdList getAllElementMetaIdList() const;
+
+
+  /**
+   * Clears the internal list of the metaids of all elements within this Model object.
+   *
+   * @see populateAllElementMetaIdList()
+   * @see isPopulatedAllElementMetaIdList()
+   */
+  void clearAllElementMetaIdList();
+
+
+  /**
    * Predicate returning @c true if all the required elements for this Model
    * object have been set.
    *
@@ -3297,7 +3711,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param n the index of the FunctionDefinition object to remove
+   * @param n the index of the FunctionDefinition object to remove.
    *
    * @return the FunctionDefinition object removed, or @c NULL if the given
    * index is out of range.
@@ -3312,7 +3726,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param sid the identifier of the FunctionDefinition object to remove
+   * @param sid the identifier of the FunctionDefinition object to remove.
    *
    * @return the FunctionDefinition object removed, or @c NULL if no
    * FunctionDefinition object with the identifier exists in this Model
@@ -3327,7 +3741,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param n the index of the UnitDefinition object to remove
+   * @param n the index of the UnitDefinition object to remove.
    *
    * @return the UnitDefinition object removed., or @c NULL if the given
    * index is out of range.
@@ -3342,7 +3756,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param sid the identifier of the UnitDefinition object to remove
+   * @param sid the identifier of the UnitDefinition object to remove.
    *
    * @return the UnitDefinition object removed, or @c NULL if no
    * UnitDefinition object with the identifier exists in this Model object.
@@ -3356,7 +3770,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param n the index of the CompartmentType object to remove
+   * @param n the index of the CompartmentType object to remove.
    *
    * @return the ComapartmentType object removed, or @c NULL if the given
    * index is out of range.
@@ -3371,7 +3785,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param sid the identifier of the object to remove
+   * @param sid the identifier of the object to remove.
    *
    * @return the CompartmentType object removed, or @c NULL if no
    * CompartmentType object with the identifier exists in this Model object.
@@ -3385,7 +3799,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param n the index of the SpeciesType object to remove
+   * @param n the index of the SpeciesType object to remove.
    *
    * @return the SpeciesType object removed, or @c NULL if the given index is
    * out of range.
@@ -3400,7 +3814,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param sid the identifier of the SpeciesType object to remove
+   * @param sid the identifier of the SpeciesType object to remove.
    *
    * @return the SpeciesType object removed, or @c NULL if no SpeciesType
    * object with the identifier exists in this Model object.
@@ -3415,7 +3829,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param n the index of the Compartment object to remove
+   * @param n the index of the Compartment object to remove.
    *
    * @return the Compartment object removed, or @c NULL if the given index is
    * out of range.
@@ -3430,7 +3844,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param sid the identifier of the Compartment object to remove
+   * @param sid the identifier of the Compartment object to remove.
    *
    * @return the Compartment object removed, or @c NULL if no Compartment
    * object with the identifier exists in this Model object.
@@ -3444,7 +3858,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param n the index of the Species object to remove
+   * @param n the index of the Species object to remove.
    *
    * @return the Species object removed, or @c NULL if the given index is out
    * of range.
@@ -3459,7 +3873,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param sid the identifier of the Species object to remove
+   * @param sid the identifier of the Species object to remove.
    *
    * @return the Species object removed, or @c NULL if no Species object with
    * the identifier exists in this Model object.
@@ -3474,7 +3888,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param n the index of the Parameter object to remove
+   * @param n the index of the Parameter object to remove.
    *
    * @return the Parameter object removed, or @c NULL if the given index is
    * out of range.
@@ -3489,7 +3903,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param sid the identifier of the Parameter object to remove
+   * @param sid the identifier of the Parameter object to remove.
    *
    * @return the Parameter object removed, or @c NULL if no Parameter object
    * with the identifier exists in this Model object.
@@ -3503,7 +3917,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param n the index of the InitialAssignment object to remove
+   * @param n the index of the InitialAssignment object to remove.
    *
    * @return the InitialAssignment object removed, or @c NULL if the given
    * index is out of range.
@@ -3518,7 +3932,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param symbol the "symbol" attribute of the InitialAssignment object to remove
+   * @param symbol the "symbol" attribute of the InitialAssignment object to remove.
    *
    * @return the InitialAssignment object removed, or @c NULL if no
    * InitialAssignment object with the "symbol" attribute exists in this
@@ -3533,7 +3947,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param n the index of the Rule object to remove
+   * @param n the index of the Rule object to remove.
    *
    * @return the Rule object removed, or @c NULL if the given index is out of
    * range.
@@ -3548,7 +3962,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param variable the "variable" attribute of the Rule object to remove
+   * @param variable the "variable" attribute of the Rule object to remove.
    *
    * @return the Rule object removed, or @c NULL if no Rule object with the
    * "variable" attribute exists in this Model object.
@@ -3561,7 +3975,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param variable the "variable" attribute of the Rule object to remove
+   * @param variable the "variable" attribute of the Rule object to remove.
    *
    * @return the Rule object removed, or @c NULL if no Rule object with the
    * "variable" attribute exists in this Model object.
@@ -3575,7 +3989,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param n the index of the Constraint object to remove
+   * @param n the index of the Constraint object to remove.
    *
    * @return the Constraint object removed, or @c NULL if the given index is
    * out of range.
@@ -3590,7 +4004,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param n the index of the Reaction object to remove
+   * @param n the index of the Reaction object to remove.
    *
    * @return the Reaction object removed, or @c NULL if the given index is
    * out of range.
@@ -3605,7 +4019,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param sid the identifier of the Reaction object to remove
+   * @param sid the identifier of the Reaction object to remove.
    *
    * @return the Reaction object removed, or @c NULL if no Reaction object
    * with the identifier exists in this Model object.
@@ -3620,7 +4034,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param n the index of the Event object to remove
+   * @param n the index of the Event object to remove.
    *
    * @return the Event object removed, or @c NULL if the given index is out
    * of range.
@@ -3635,7 +4049,7 @@ public:
    *
    * The caller owns the returned object and is responsible for deleting it.
    *
-   * @param sid the identifier of the Event object to remove
+   * @param sid the identifier of the Event object to remove.
    *
    * @return the Event object removed, or @c NULL if no Event object with the
    * identifier exists in this Model object.
@@ -3678,7 +4092,7 @@ protected:
    * Subclasses should override this method to read (and store) XHTML,
    * MathML, etc. directly from the XMLInputStream.
    *
-   * @return true if the subclass read from the stream, false otherwise.
+   * @return @c true if the subclass read from the stream, @c false otherwise.
    */
   virtual bool readOtherXML (XMLInputStream& stream);
 
@@ -3704,7 +4118,7 @@ protected:
   /**
    * Subclasses should override this method to read values from the given
    * XMLAttributes set into their specific fields.  Be sure to call your
-   * parents implementation of this method as well.
+   * parent's implementation of this method as well.
    */
   virtual void readAttributes (const XMLAttributes& attributes,
                                const ExpectedAttributes& expectedAttributes);
@@ -3718,7 +4132,7 @@ protected:
 
   /**
    * Subclasses should override this method to write their XML attributes
-   * to the XMLOutputStream.  Be sure to call your parents implementation
+   * to the XMLOutputStream.  Be sure to call your parent's implementation
    * of this method as well.
    */
   virtual void writeAttributes (XMLOutputStream& stream) const;
@@ -3734,8 +4148,8 @@ protected:
    */
   virtual void syncAnnotation();
 
-  std::string     mId;
-  std::string     mName;
+  //std::string     mId;
+  //std::string     mName;
   std::string     mSubstanceUnits;
   std::string     mTimeUnits;
   std::string     mVolumeUnits;
@@ -3759,6 +4173,8 @@ protected:
   ListOfEvents               mEvents;
 
   List *                     mFormulaUnitsData;
+  IdList                     mIdList;
+  IdList                     mMetaidList;
 
 
   /* the validator classes need to be friends to access the
@@ -3929,10 +4345,10 @@ BEGIN_C_DECLS
  * and @p version values.
  *
  * @param level an unsigned int, the SBML Level to assign to this
- * Model_t
+ * Model_t.
  *
  * @param version an unsigned int, the SBML Version to assign to this
- * Model_t
+ * Model_t.
  *
  * @return a pointer to the newly created Model_t structure.
  *
@@ -3956,7 +4372,7 @@ Model_create (unsigned int level, unsigned int version);
  * SBMLNamespaces_t structure.
  *
  * @param sbmlns SBMLNamespaces_t, a pointer to an SBMLNamespaces_t structure
- * to assign to this Model_t
+ * to assign to this Model_t.
  *
  * @return a pointer to the newly created Model_t structure.
  *
@@ -3978,7 +4394,7 @@ Model_createWithNS (SBMLNamespaces_t *sbmlns);
 /**
  * Creates and returns a deep copy of a given Model_t structure.
  *
- * @param m the Model_t structure to copy
+ * @param m the Model_t structure to copy.
  *
  * @return a (deep) copy of this Model_t structure.
  *
@@ -3992,7 +4408,7 @@ Model_clone (const Model_t *m);
 /**
  * Frees the given Model_t structure.
  *
- * @param m the Model_structure to free
+ * @param m the Model_structure to free.
  *
  * @memberof Model_t
  */
@@ -4005,7 +4421,7 @@ Model_free (Model_t *m);
  * Returns a list of XMLNamespaces_t associated with this Model_t
  * structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return pointer to the XMLNamespaces_t structure associated with
  * this structure
@@ -4020,7 +4436,7 @@ Model_getNamespaces(Model_t *m);
 /**
  * Get the identifier of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the id of this Model_t structure.
  *
@@ -4034,7 +4450,7 @@ Model_getId (const Model_t *m);
 /**
  * Get the name of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the name of this Model_t structure.
  *
@@ -4048,7 +4464,7 @@ Model_getName (const Model_t *m);
 /**
  * Get the substanceUnits of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the substanceUnits of this Model_t structure.
  *
@@ -4062,7 +4478,7 @@ Model_getSubstanceUnits (const Model_t *m);
 /**
  * Get the timeUnits of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the timeUnits of this Model_t structure.
  *
@@ -4076,7 +4492,7 @@ Model_getTimeUnits (const Model_t *m);
 /**
  * Get the volumeUnits of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the volumeUnits of this Model_t structure.
  *
@@ -4090,7 +4506,7 @@ Model_getVolumeUnits (const Model_t *m);
 /**
  * Get the areaUnits of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the areaUnits of this Model_t structure.
  *
@@ -4104,7 +4520,7 @@ Model_getAreaUnits (const Model_t *m);
 /**
  * Get the lengthUnits of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the lengthUnits of this Model_t structure.
  *
@@ -4118,7 +4534,7 @@ Model_getLengthUnits (const Model_t *m);
 /**
  * Get the extentUnits of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the extentUnits of this Model_t structure.
  *
@@ -4132,7 +4548,7 @@ Model_getExtentUnits (const Model_t *m);
 /**
  * Get the conversionFactor of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the conversionFactor of this Model_t structure.
  *
@@ -4147,7 +4563,7 @@ Model_getConversionFactor (const Model_t *m);
  * Predicate for testing whether the identifier of a given Model_t
  * structure is assigned.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return nonzero if the "id" attribute of this Model_t structure is
  * set, zero (0) otherwise.
@@ -4163,7 +4579,7 @@ Model_isSetId (const Model_t *m);
  * Predicate for testing whether the name of a given Model_t structure is
  * assigned.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return nonzero if the "name" attribute of this Model_t structure is
  * set, zero (0) otherwise.
@@ -4179,7 +4595,7 @@ Model_isSetName (const Model_t *m);
  * Predicate for testing whether the substanceUnits of a given Model_t structure is
  * assigned.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return nonzero if the "substanceUnits" attribute of this Model_t structure is
  * set, zero (0) otherwise.
@@ -4195,7 +4611,7 @@ Model_isSetSubstanceUnits (const Model_t *m);
  * Predicate for testing whether the timeUnits of a given Model_t structure is
  * assigned.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return nonzero if the "timeUnits" attribute of this Model_t structure is
  * set, zero (0) otherwise.
@@ -4211,7 +4627,7 @@ Model_isSetTimeUnits (const Model_t *m);
  * Predicate for testing whether the volumeUnits of a given Model_t structure is
  * assigned.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return nonzero if the "volumeUnits" attribute of this Model_t structure is
  * set, zero (0) otherwise.
@@ -4227,7 +4643,7 @@ Model_isSetVolumeUnits (const Model_t *m);
  * Predicate for testing whether the areaUnits of a given Model_t structure is
  * assigned.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return nonzero if the "areaUnits" attribute of this Model_t structure is
  * set, zero (0) otherwise.
@@ -4243,7 +4659,7 @@ Model_isSetAreaUnits (const Model_t *m);
  * Predicate for testing whether the lengthUnits of a given Model_t structure is
  * assigned.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return nonzero if the "lengthUnits" attribute of this Model_t structure is
  * set, zero (0) otherwise.
@@ -4259,7 +4675,7 @@ Model_isSetLengthUnits (const Model_t *m);
  * Predicate for testing whether the extentUnits of a given Model_t structure is
  * assigned.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return nonzero if the "extentUnits" attribute of this Model_t structure is
  * set, zero (0) otherwise.
@@ -4275,7 +4691,7 @@ Model_isSetExtentUnits (const Model_t *m);
  * Predicate for testing whether the conversionFactor of a given Model_t structure is
  * assigned.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return nonzero if the "conversionFactor" attribute of this Model_t structure is
  * set, zero (0) otherwise.
@@ -4292,8 +4708,8 @@ Model_isSetConversionFactor (const Model_t *m);
  *
  * This copies the string in @p sid.
  *
- * @param m the Model_t structure
- * @param sid the identifier string
+ * @param m the Model_t structure.
+ * @param sid the identifier string.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4314,8 +4730,8 @@ Model_setId (Model_t *m, const char *sid);
  *
  * This copies the string in @p name.
  *
- * @param m the Model_t structure
- * @param name the name string
+ * @param m the Model_t structure.
+ * @param name the name string.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4336,8 +4752,8 @@ Model_setName (Model_t *m, const char *name);
  *
  * This copies the string in @p units.
  *
- * @param m the Model_t structure
- * @param units the identifier string
+ * @param m the Model_t structure.
+ * @param units the identifier string.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4359,8 +4775,8 @@ Model_setSubstanceUnits (Model_t *m, const char *units);
  *
  * This copies the string in @p units.
  *
- * @param m the Model_t structure
- * @param units the identifier string
+ * @param m the Model_t structure.
+ * @param units the identifier string.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4382,8 +4798,8 @@ Model_setTimeUnits (Model_t *m, const char *units);
  *
  * This copies the string in @p units.
  *
- * @param m the Model_t structure
- * @param units the identifier string
+ * @param m the Model_t structure.
+ * @param units the identifier string.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4405,8 +4821,8 @@ Model_setVolumeUnits (Model_t *m, const char *units);
  *
  * This copies the string in @p units.
  *
- * @param m the Model_t structure
- * @param units the identifier string
+ * @param m the Model_t structure.
+ * @param units the identifier string.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4428,8 +4844,8 @@ Model_setAreaUnits (Model_t *m, const char *units);
  *
  * This copies the string in @p units.
  *
- * @param m the Model_t structure
- * @param units the identifier string
+ * @param m the Model_t structure.
+ * @param units the identifier string.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4451,8 +4867,8 @@ Model_setLengthUnits (Model_t *m, const char *units);
  *
  * This copies the string in @p units.
  *
- * @param m the Model_t structure
- * @param units the identifier string
+ * @param m the Model_t structure.
+ * @param units the identifier string.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4474,8 +4890,8 @@ Model_setExtentUnits (Model_t *m, const char *units);
  *
  * This copies the string in @p sid.
  *
- * @param m the Model_t structure
- * @param sid the identifier string
+ * @param m the Model_t structure.
+ * @param sid the identifier string.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4495,7 +4911,7 @@ Model_setConversionFactor (Model_t *m, const char *sid);
 /**
  * Unsets the "id" attribute of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4511,7 +4927,7 @@ Model_unsetId (Model_t *m);
 /**
  * Unsets the "name" attribute of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4527,7 +4943,7 @@ Model_unsetName (Model_t *m);
 /**
  * Unsets the "substanceUnits" attribute of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4544,7 +4960,7 @@ Model_unsetSubstanceUnits (Model_t *m);
 /**
  * Unsets the "timeUnits" attribute of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4561,7 +4977,7 @@ Model_unsetTimeUnits (Model_t *m);
 /**
  * Unsets the "volumeUnits" attribute of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4578,7 +4994,7 @@ Model_unsetVolumeUnits (Model_t *m);
 /**
  * Unsets the "areaUnits" attribute of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4595,7 +5011,7 @@ Model_unsetAreaUnits (Model_t *m);
 /**
  * Unsets the "lengthUnits" attribute of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4612,7 +5028,7 @@ Model_unsetLengthUnits (Model_t *m);
 /**
  * Unsets the "extentUnits" attribute of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4629,7 +5045,7 @@ Model_unsetExtentUnits (Model_t *m);
 /**
  * Unsets the "conversionFactor" attribute of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4648,7 +5064,7 @@ Model_unsetConversionFactor (Model_t *m);
  *
  * @return the ModelHistory_t of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @memberof Model_t
  */
@@ -4661,7 +5077,7 @@ Model_getModelHistory(Model_t *m);
  * Predicate for testing whether the ModelHistory_t of a given Model_t structure is
  * assigned.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return nonzero if the ModelHistory_t of this Model_t structure is
  * set, zero (0) otherwise.
@@ -4676,8 +5092,8 @@ Model_isSetModelHistory(Model_t *m);
 /**
  * Set the ModelHistory_t of the given Model_t structure.
  *
- * @param m the Model_t structure
- * @param history the ModelHistory_t structure
+ * @param m the Model_t structure.
+ * @param history the ModelHistory_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4693,7 +5109,7 @@ Model_setModelHistory(Model_t *m, ModelHistory_t *history);
 /**
  * Unsets the ModelHistory_t of the given Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4710,8 +5126,8 @@ Model_unsetModelHistory(Model_t *m);
  * Adds a copy of a FunctionDefinition_t structure to a given Model_t
  * structure.
  *
- * @param m the Model_t structure
- * @param fd the FunctionDefinition_t structure to copy and add
+ * @param m the Model_t structure.
+ * @param fd the FunctionDefinition_t structure to copy and add.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4730,8 +5146,8 @@ Model_addFunctionDefinition (Model_t *m, const FunctionDefinition_t *fd);
 /**
  * Adds a copy of a UnitDefinition_t structure to a given Model_t structure.
  *
- * @param m the Model_t structure
- * @param ud the UnitDefinition_t structure to copy and add
+ * @param m the Model_t structure.
+ * @param ud the UnitDefinition_t structure to copy and add.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4750,8 +5166,8 @@ Model_addUnitDefinition (Model_t *m, const UnitDefinition_t *ud);
 /**
  * Adds a copy of a CompartmentType_t structure to a given Model_t structure.
  *
- * @param m the Model_t structure
- * @param ct the CompartmentType_t structure to copy and add
+ * @param m the Model_t structure.
+ * @param ct the CompartmentType_t structure to copy and add.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4770,8 +5186,8 @@ Model_addCompartmentType (Model_t *m, const CompartmentType_t *ct);
 /**
  * Adds a copy of a SpeciesType_t structure to a given Model_t structure.
  *
- * @param m the Model_t structure
- * @param st the SpeciesType_t structure to copy and add
+ * @param m the Model_t structure.
+ * @param st the SpeciesType_t structure to copy and add.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4790,8 +5206,8 @@ Model_addSpeciesType (Model_t *m, const SpeciesType_t *st);
 /**
  * Adds a copy of a Compartment_t structure to a given Model_t structure.
  *
- * @param m the Model_t structure
- * @param c the Compartment_t structure to copy and add
+ * @param m the Model_t structure.
+ * @param c the Compartment_t structure to copy and add.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4810,8 +5226,8 @@ Model_addCompartment (Model_t *m, const Compartment_t *c);
 /**
  * Adds a copy of a Species_t structure to a given Model_t structure.
  *
- * @param m the Model_t structure
- * @param s the Species_t structure to copy and add
+ * @param m the Model_t structure.
+ * @param s the Species_t structure to copy and add.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4830,8 +5246,8 @@ Model_addSpecies (Model_t *m, const Species_t *s);
 /**
  * Adds a copy of a Parameter_t structure to a given Model_t structure.
  *
- * @param m the Model_t structure
- * @param p the Parameter_t structure to copy and add
+ * @param m the Model_t structure.
+ * @param p the Parameter_t structure to copy and add.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4850,8 +5266,8 @@ Model_addParameter (Model_t *m, const Parameter_t *p);
 /**
  * Adds a copy of a InitialAssignment_t structure to a given Model_t structure.
  *
- * @param m the Model_t structure
- * @param ia the InitialAssignment_t structure to copy and add
+ * @param m the Model_t structure.
+ * @param ia the InitialAssignment_t structure to copy and add.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4870,8 +5286,8 @@ Model_addInitialAssignment (Model_t *m, const InitialAssignment_t *ia);
 /**
  * Adds a copy of a Rule_t structure to a given Model_t structure.
  *
- * @param m the Model_t structure
- * @param r the Rule_t structure to copy and add
+ * @param m the Model_t structure.
+ * @param r the Rule_t structure to copy and add.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4890,8 +5306,8 @@ Model_addRule (Model_t *m, const Rule_t *r);
 /**
  * Adds a copy of a Constraint_t structure to a given Model_t structure.
  *
- * @param m the Model_t structure
- * @param c the Constraint_t structure to copy and add
+ * @param m the Model_t structure.
+ * @param c the Constraint_t structure to copy and add.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4909,8 +5325,8 @@ Model_addConstraint (Model_t *m, const Constraint_t *c);
 /**
  * Adds a copy of a Reaction_t structure to a given Model_t structure.
  *
- * @param m the Model_t structure
- * @param r the Reaction_t structure to copy and add
+ * @param m the Model_t structure.
+ * @param r the Reaction_t structure to copy and add.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4929,8 +5345,8 @@ Model_addReaction (Model_t *m, const Reaction_t *r);
 /**
  * Adds a copy of a Event_t structure to a given Model_t structure.
  *
- * @param m the Model_t structure
- * @param e the Event_t structure to copy and add
+ * @param m the Model_t structure.
+ * @param e the Event_t structure to copy and add.
  *
  * @copydetails doc_returns_success_code
  * @li @sbmlconstant{LIBSBML_OPERATION_SUCCESS, OperationReturnValues_t}
@@ -4950,7 +5366,7 @@ Model_addEvent (Model_t *m, const Event_t *e);
  * Creates a new FunctionDefinition_t structure inside the given Model_t
  * and returns a pointer to it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the new FunctionDefinition_t structure
  *
@@ -4965,7 +5381,7 @@ Model_createFunctionDefinition (Model_t *m);
  * Creates a new UnitDefinition_t structure inside the given Model_t and
  * returns a pointer to it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the new UnitDefinition_t structure
  *
@@ -4984,7 +5400,7 @@ Model_createUnitDefinition (Model_t *m);
  * significant.  If a UnitDefinition_t does not exist in this model, a new
  * Unit_t structure is @em not created and @c NULL is returned instead.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the Unit_t structure created, or @c NULL.
  *
@@ -4999,7 +5415,7 @@ Model_createUnit (Model_t *m);
  * Creates a new CompartmentType_t structure inside the given Model_t and
  * returns a pointer to it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the CompartmentType_t structure created
  *
@@ -5014,7 +5430,7 @@ Model_createCompartmentType (Model_t *m);
  * Creates a new SpeciesType_t structure inside the given Model_t and
  * returns a pointer to it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the SpeciesType_t structure created
  *
@@ -5029,7 +5445,7 @@ Model_createSpeciesType (Model_t *m);
  * Creates a new Compartment_t structure inside the given Model_t and
  * returns a pointer to it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the Compartment_t structure created
  *
@@ -5044,7 +5460,7 @@ Model_createCompartment (Model_t *m);
  * Creates a new Species_t structure inside the given Model_t and returns a
  * pointer to it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the Species_t structure created
  *
@@ -5059,7 +5475,7 @@ Model_createSpecies (Model_t *m);
  * Creates a new Parameter_t structure inside the given Model_t and returns
  * a pointer to it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the Parameter_t structure created
  *
@@ -5074,7 +5490,7 @@ Model_createParameter (Model_t *m);
  * Creates a new InitialAssignment_t structure inside the given Model_t
  * structure and returns it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the InitialAssignment_t structure created
  *
@@ -5089,7 +5505,7 @@ Model_createInitialAssignment (Model_t *m);
  * Creates a new AlgebraicRule_t structure inside the given Model_t
  * structure and returns a pointer to it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the AlgebraicRule_t structure created.
  *
@@ -5104,7 +5520,7 @@ Model_createAlgebraicRule (Model_t *m);
  * Creates a new AssignmentRule_t structure inside the given Model_t
  * structure and returns a pointer to it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the AssignmentRule_t structure created
  *
@@ -5119,7 +5535,7 @@ Model_createAssignmentRule (Model_t *m);
  * Creates a new RateRule_t structure inside the given Model_t structure
  * and returns a pointer to it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the RateRule_t structure created.
  *
@@ -5134,7 +5550,7 @@ Model_createRateRule (Model_t *m);
  * Creates a new Constraint_t structure inside the given Model_t structure
  * and returns it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the Constraint_t structure created.
  *
@@ -5149,7 +5565,7 @@ Model_createConstraint (Model_t *m);
  * Creates a new Reaction_t structure inside the given Model_t structure
  * and returns a pointer to it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the Reaction_t structure created.
  *
@@ -5171,7 +5587,7 @@ Model_createReaction (Model_t *m);
  * Reaction_t structure does not exist, a new SpeciesReference_t structure
  * is @em not created and @c NULL is returned instead.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the SpeciesReference_t structure created
  *
@@ -5193,7 +5609,7 @@ Model_createReactant (Model_t *m);
  * Reaction_t structure does not exist, a new SpeciesReference_t structure
  * is @em not created and @c NULL is returned instead.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the SpeciesReference_t structure created
  *
@@ -5215,7 +5631,7 @@ Model_createProduct (Model_t *m);
  * Reaction_t structure does not exist, a new modifier SpeciesReference_t
  * structure is @em not created and @c NULL is returned instead.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the modifier SpeciesReference_t structure created
  *
@@ -5237,7 +5653,7 @@ Model_createModifier (Model_t *m);
  * structure exists but already contains a KineticLaw_t structure, a new
  * KineticLaw_t is @em not created and @c NULL is returned instead.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the KineticLaw_t structure created
  *
@@ -5262,7 +5678,7 @@ Model_createKineticLaw (Model_t *m);
  * KineticLaw_t structure, a new Parameter_t is @em not created and NULL is
  * returned instead.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the Parameter_t structure created
  *
@@ -5287,7 +5703,7 @@ Model_createKineticLawParameter (Model_t *m);
  * KineticLaw_t structure, a new Parameter_t is @em not created and NULL is
  * returned instead.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the LocalParameter_t structure created
  *
@@ -5302,7 +5718,7 @@ Model_createKineticLawLocalParameter (Model_t *m);
  * Creates a new Event inside the given Model_t structure and returns a
  * pointer to it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return a new Event_t structure
  *
@@ -5324,7 +5740,7 @@ Model_createEvent (Model_t *m);
  * exist, a new EventAssignment_t structure is @em not created and NULL is
  * returned instead.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the new EventAssignment_t structure
  *
@@ -5346,7 +5762,7 @@ Model_createEventAssignment (Model_t *m);
  * exist, a new Trigger_t structure is @em not created and NULL is
  * returned instead.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the new Trigger_t structure
  *
@@ -5368,7 +5784,7 @@ Model_createTrigger (Model_t *m);
  * exist, a new Delay_t structure is @em not created and NULL is
  * returned instead.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the new Delay_t structure
  *
@@ -5383,7 +5799,7 @@ Model_createDelay (Model_t *m);
  * Get the list of FunctionDefinition_t structures contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the list of FunctionDefinition_t structures
  *
@@ -5398,7 +5814,7 @@ Model_getListOfFunctionDefinitions (Model_t *m);
  * Get the list of UnitDefinition_t structures contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the list of UnitDefinition_t structures.
  *
@@ -5413,7 +5829,7 @@ Model_getListOfUnitDefinitions (Model_t *m);
  * Get the list of CompartmentType_t structures contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the list of CompartmentType_t structures.
  *
@@ -5428,7 +5844,7 @@ Model_getListOfCompartmentTypes (Model_t *m);
  * Get the list of SpeciesType_t structures contained in the given Model_t
  * structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the list of SpeciesType_t structures.
  *
@@ -5443,7 +5859,7 @@ Model_getListOfSpeciesTypes (Model_t *m);
  * Get the list of Compartment_t structures contained in the given Model_t
  * structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the list of Compartment_t structures.
  *
@@ -5458,7 +5874,7 @@ Model_getListOfCompartments (Model_t *m);
  * Get the list of Species_t structures contained in the given Model_t
  * structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the list of Specie_t structures.
  *
@@ -5473,7 +5889,7 @@ Model_getListOfSpecies (Model_t *m);
  * Get the list of Parameter_t structures contained in the given Model_t
  * structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the list of Parameter_t structures.
  *
@@ -5488,7 +5904,7 @@ Model_getListOfParameters (Model_t *m);
  * Get the list of InitialAssignment_t structures contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the list of InitialAssignment_t structures.
  *
@@ -5503,7 +5919,7 @@ Model_getListOfInitialAssignments (Model_t* m);
  * Get the list of Rule_t structures contained in the given Model_t
  * structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the list of Rule_t structures.
  *
@@ -5518,7 +5934,7 @@ Model_getListOfRules (Model_t *m);
  * Get the list of Constraint_t structures contained in the given Model_t
  * structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the list of Constraint_t structures.
  *
@@ -5533,7 +5949,7 @@ Model_getListOfConstraints (Model_t* m);
  * Get the list of Reaction_t structures contained in the given Model_t
  * structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the list of Reaction_t structures.
  *
@@ -5548,7 +5964,7 @@ Model_getListOfReactions (Model_t *m);
  * Get the list of Event_t structures contained in the given Model_t
  * structure.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the list of Event_t structures.
  *
@@ -5563,8 +5979,8 @@ Model_getListOfEvents (Model_t *m);
  * Get the nth FunctionDefinition_t structure contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
- * @param n the integer index of the FunctionDefinition_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the FunctionDefinition_t sought.
  *
  * @return the FunctionDefinition_t if found, or @c NULL if not found
  *
@@ -5579,8 +5995,8 @@ Model_getFunctionDefinition (Model_t *m, unsigned int n);
  * Get the FunctionDefinition_t structure whose identifier is @p sid in the
  * given Model_t structure.
  *
- * @param m the Model_t structure
- * @param sid the identifier of the FunctionDefinition_t structure sought
+ * @param m the Model_t structure.
+ * @param sid the identifier of the FunctionDefinition_t structure sought.
  *
  * @return the FunctionDefinition_t if found, or @c NULL if not found
  *
@@ -5595,8 +6011,8 @@ Model_getFunctionDefinitionById (Model_t *m, const char *sid);
  * Get the nth UnitDefinition_t structure contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
- * @param n the integer index of the UnitDefinition_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the UnitDefinition_t sought.
  *
  * @return the UnitDefinition_t if found, or @c NULL if not found
  *
@@ -5611,8 +6027,8 @@ Model_getUnitDefinition (Model_t *m, unsigned int n);
  * Get the UnitDefinition_t structure whose identifier is @p sid in the
  * given Model_t structure.
  *
- * @param m the Model_t structure
- * @param sid the identifier of the UnitDefinition_t structure sought
+ * @param m the Model_t structure.
+ * @param sid the identifier of the UnitDefinition_t structure sought.
  *
  * @return the UnitDefinition_t if found, or @c NULL if not found
  *
@@ -5627,8 +6043,8 @@ Model_getUnitDefinitionById (Model_t *m, const char *sid);
  * Get the nth CompartmentType_t structure contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
- * @param n the integer index of the CompartmentType_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the CompartmentType_t sought.
  *
  * @return the CompartmentType_t if found, or @c NULL if not found
  *
@@ -5643,8 +6059,8 @@ Model_getCompartmentType (Model_t *m, unsigned int n);
  * Get the CompartmentType_t structure whose identifier is @p sid in the
  * given Model_t structure.
  *
- * @param m the Model_t structure
- * @param sid the identifier of the CompartmentType_t structure sought
+ * @param m the Model_t structure.
+ * @param sid the identifier of the CompartmentType_t structure sought.
  *
  * @return the CompartmentType_t if found, or @c NULL if not found
  *
@@ -5659,8 +6075,8 @@ Model_getCompartmentTypeById (Model_t *m, const char *sid);
  * Get the nth SpeciesType_t structure contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
- * @param n the integer index of the SpeciesType_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the SpeciesType_t sought.
  *
  * @return the SpeciesType_t if found, or @c NULL if not found
  *
@@ -5675,8 +6091,8 @@ Model_getSpeciesType (Model_t *m, unsigned int n);
  * Get the SpeciesType_t structure whose identifier is @p sid in the
  * given Model_t structure.
  *
- * @param m the Model_t structure
- * @param sid the identifier of the SpeciesType_t structure sought
+ * @param m the Model_t structure.
+ * @param sid the identifier of the SpeciesType_t structure sought.
  *
  * @return the SpeciesType_t if found, or @c NULL if not found
  *
@@ -5691,8 +6107,8 @@ Model_getSpeciesTypeById (Model_t *m, const char *sid);
  * Get the nth Compartment_t structure contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
- * @param n the integer index of the Compartment_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the Compartment_t sought.
  *
  * @return the Compartment_t if found, or @c NULL if not found
  *
@@ -5707,8 +6123,8 @@ Model_getCompartment (Model_t *m, unsigned int n);
  * Get the Compartment_t structure whose identifier is @p sid in the
  * given Model_t structure.
  *
- * @param m the Model_t structure
- * @param sid the identifier of the Compartment_t structure sought
+ * @param m the Model_t structure.
+ * @param sid the identifier of the Compartment_t structure sought.
  *
  * @return the Compartment_t if found, or @c NULL if not found
  *
@@ -5723,8 +6139,8 @@ Model_getCompartmentById (Model_t *m, const char *sid);
  * Get the nth Species_t structure contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
- * @param n the integer index of the Species_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the Species_t sought.
  *
  * @return the Species_t if found, or @c NULL if not found
  *
@@ -5739,8 +6155,8 @@ Model_getSpecies (Model_t *m, unsigned int n);
  * Get the Species_t structure whose identifier is @p sid in the
  * given Model_t structure.
  *
- * @param m the Model_t structure
- * @param sid the identifier of the Species_t structure sought
+ * @param m the Model_t structure.
+ * @param sid the identifier of the Species_t structure sought.
  *
  * @return the Species_t if found, or @c NULL if not found
  *
@@ -5755,8 +6171,8 @@ Model_getSpeciesById (Model_t *m, const char *sid);
  * Get the nth Parameter_t structure contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
- * @param n the integer index of the Parameter_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the Parameter_t sought.
  *
  * @return the Parameter_t if found, or @c NULL if not found
  *
@@ -5771,8 +6187,8 @@ Model_getParameter (Model_t *m, unsigned int n);
  * Get the Parameter_t structure whose identifier is @p sid in the
  * given Model_t structure.
  *
- * @param m the Model_t structure
- * @param sid the identifier of the Parameter_t structure sought
+ * @param m the Model_t structure.
+ * @param sid the identifier of the Parameter_t structure sought.
  *
  * @return the Parameter_t if found, or @c NULL if not found
  *
@@ -5787,8 +6203,8 @@ Model_getParameterById (Model_t *m, const char *sid);
  * Get the nth InitialAssignment_t structure contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
- * @param n the integer index of the InitialAssignment_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the InitialAssignment_t sought.
  *
  * @return the InitialAssignment_t if found, or @c NULL if not found
  *
@@ -5803,8 +6219,8 @@ Model_getInitialAssignment (Model_t *m, unsigned int n);
  * @return the InitialAssignment_t in this Model_t with the given symbol or
  * @c NULL if no such InitialAssignment_t exists.
  *
- * @param m the Model_t structure
- * @param symbol the symbol to search for
+ * @param m the Model_t structure.
+ * @param symbol the symbol to search for.
  *
  * @memberof Model_t
  */
@@ -5817,8 +6233,8 @@ Model_getInitialAssignmentBySym (Model_t *m, const char *symbol);
  * Get the nth Rule_t structure contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
- * @param n the integer index of the Rule_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the Rule_t sought.
  *
  * @return the Rule_t if found, or @c NULL if not found
  *
@@ -5833,8 +6249,8 @@ Model_getRule (Model_t *m, unsigned int n);
  * @return the Rule_t in this Model_t with the given variable or @c NULL if no
  * such Rule_t exists.
  *
- * @param m the Model_t structure
- * @param variable the variable to search for
+ * @param m the Model_t structure.
+ * @param variable the variable to search for.
  *
  * @memberof Model_t
  */
@@ -5847,8 +6263,8 @@ Model_getRuleByVar (Model_t *m, const char *variable);
  * Get the nth Constraint_t structure contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
- * @param n the integer index of the Constraint_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the Constraint_t sought.
  *
  * @return the Constraint_t if found, or @c NULL if not found
  *
@@ -5863,8 +6279,8 @@ Model_getConstraint (Model_t *m, unsigned int n);
  * Get the nth Reaction_t structure contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
- * @param n the integer index of the Reaction_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the Reaction_t sought.
  *
  * @return the Reaction_t if found, or @c NULL if not found
  *
@@ -5879,8 +6295,8 @@ Model_getReaction (Model_t *m, unsigned int n);
  * Get the Reaction_t structure whose identifier is @p sid in the
  * given Model_t structure.
  *
- * @param m the Model_t structure
- * @param sid the identifier of the Reaction_t structure sought
+ * @param m the Model_t structure.
+ * @param sid the identifier of the Reaction_t structure sought.
  *
  * @return the Reaction_t if found, or @c NULL if not found
  *
@@ -5895,8 +6311,8 @@ Model_getReactionById (Model_t *m, const char *sid);
  * Get the SpeciesReference_t structure whose identifier is @p sid in the
  * given Model_t structure.
  *
- * @param m the Model_t structure
- * @param sid the identifier of the SpeciesReference_t structure sought
+ * @param m the Model_t structure.
+ * @param sid the identifier of the SpeciesReference_t structure sought.
  *
  * @return the SpeciesReference_t if found, or @c NULL if not found
  *
@@ -5911,8 +6327,8 @@ Model_getSpeciesReferenceById (Model_t *m, const char *sid);
  * Get the nth Event_t structure contained in the given
  * Model_t structure.
  *
- * @param m the Model_t structure
- * @param n the integer index of the Event_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the Event_t sought.
  *
  * @return the Event_t if found, or @c NULL if not found
  *
@@ -5927,8 +6343,8 @@ Model_getEvent (Model_t *m, unsigned int n);
  * Get the Event_t structure whose identifier is @p sid in the
  * given Model_t structure.
  *
- * @param m the Model_t structure
- * @param sid the identifier of the Event_t structure sought
+ * @param m the Model_t structure.
+ * @param sid the identifier of the Event_t structure sought.
  *
  * @return the Event_t if found, or @c NULL if not found
  *
@@ -5943,7 +6359,7 @@ Model_getEventById (Model_t *m, const char *sid);
  * Get the number of FunctionDefinition_t structures in the given
  * Model_t structure
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return an unsigned integer as the count of FunctionDefinition_t
  * structures in @p m
@@ -5959,7 +6375,7 @@ Model_getNumFunctionDefinitions (const Model_t *m);
  * Get the number of UnitDefinition_t structures in the given
  * Model_t structure
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return an unsigned integer as the count of UnitDefinition_t
  * structures in @p m
@@ -5975,7 +6391,7 @@ Model_getNumUnitDefinitions (const Model_t *m);
  * Get the number of CompartmentType_t structures in the given
  * Model_t structure
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return an unsigned integer as the count of CompartmentType_t
  * structures in @p m
@@ -5991,7 +6407,7 @@ Model_getNumCompartmentTypes (const Model_t *m);
  * Get the number of SpeciesType_t structures in the given
  * Model_t structure
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return an unsigned integer as the count of SpeciesType_t
  * structures in @p m
@@ -6007,7 +6423,7 @@ Model_getNumSpeciesTypes (const Model_t *m);
  * Get the number of Compartment_t structures in the given
  * Model_t structure
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return an unsigned integer as the count of Compartment_t
  * structures in @p m
@@ -6023,7 +6439,7 @@ Model_getNumCompartments (const Model_t *m);
  * Get the number of Specie_t structures in the given
  * Model_t structure
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return an unsigned integer as the count of Specie_t
  * structures in @p m
@@ -6039,7 +6455,7 @@ Model_getNumSpecies (const Model_t *m);
  * Get the number of Species_t structure in this Model_t structure having
  * nonzero values for their "boundaryCondition" attribute.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return an unsigned integer as the count of Species_t structures
  *
@@ -6054,7 +6470,7 @@ Model_getNumSpeciesWithBoundaryCondition (const Model_t *m);
  * Get the number of Parameter_t structures in the given
  * Model_t structure
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return an unsigned integer as the count of Parameter_t
  * structures in @p m
@@ -6070,7 +6486,7 @@ Model_getNumParameters (const Model_t *m);
  * Get the number of InitialAssignment_t structures in the given
  * Model_t structure
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return an unsigned integer as the count of InitialAssignment_t
  * structures in @p m
@@ -6086,7 +6502,7 @@ Model_getNumInitialAssignments (const Model_t *m);
  * Get the number of Rule_t structures in the given
  * Model_t structure
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return an unsigned integer as the count of Rule_t
  * structures in @p m
@@ -6102,7 +6518,7 @@ Model_getNumRules (const Model_t *m);
  * Get the number of Constraint_t structures in the given
  * Model_t structure
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return an unsigned integer as the count of Constraint_t
  * structures in @p m
@@ -6118,7 +6534,7 @@ Model_getNumConstraints (const Model_t *m);
  * Get the number of Reaction_t structures in the given
  * Model_t structure
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return an unsigned integer as the count of Reaction_t
  * structures in @p m
@@ -6134,7 +6550,7 @@ Model_getNumReactions (const Model_t *m);
  * Get the number of Event_t structures in the given
  * Model_t structure
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return an unsigned integer as the count of Event_t
  * structures in @p m
@@ -6164,7 +6580,7 @@ Model_getNumEvents (const Model_t *m);
  * Subsequent elements of the list record the units derived for
  * each mathematical expression encountered within the model.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @note This function is utilised by the Unit Consistency Validator.
  * The List is populated prior to running the validation and thus
@@ -6182,7 +6598,7 @@ Model_populateListFormulaUnitsData(Model_t *m);
  * Predicate returning @c true or @c false depending on whether
  * the list of FormulaUnitsData is populated.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return @c true if the list of FormulaUnitsData is populated,
  * @c false otherwise.
@@ -6200,8 +6616,8 @@ Model_isPopulatedListFormulaUnitsData(Model_t *m);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param n the integer index of the FunctionDefinition_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the FunctionDefinition_t sought.
  *
  * @return the FunctionDefinition_t structure removed.  As mentioned above,
  * the caller owns the returned item. @c NULL is returned if the given index
@@ -6220,8 +6636,8 @@ Model_removeFunctionDefinition (Model_t *m, unsigned int n);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param sid the string of the "id" attribute of the FunctionDefinition_t sought
+ * @param m the Model_t structure.
+ * @param sid the string of the "id" attribute of the FunctionDefinition_t sought.
  *
  * @return the FunctionDefinition_t structure removed.  As mentioned above, the
  * caller owns the returned structure. @c NULL is returned if no FunctionDefinition_t
@@ -6241,8 +6657,8 @@ Model_removeFunctionDefinitionById (Model_t *m, const char* sid);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param n the integer index of the UnitDefinition_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the UnitDefinition_t sought.
  *
  * @return the UnitDefinition_t structure removed.  As mentioned above,
  * the caller owns the returned item. @c NULL is returned if the given index
@@ -6261,8 +6677,8 @@ Model_removeUnitDefinition (Model_t *m, unsigned int n);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param sid the string of the "id" attribute of the UnitDefinition_t sought
+ * @param m the Model_t structure.
+ * @param sid the string of the "id" attribute of the UnitDefinition_t sought.
  *
  * @return the UnitDefinition_t structure removed.  As mentioned above, the
  * caller owns the returned structure. @c NULL is returned if no UnitDefinition_t
@@ -6281,8 +6697,8 @@ Model_removeUnitDefinitionById (Model_t *m, const char* sid);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param n the integer index of the CompartmentType_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the CompartmentType_t sought.
  *
  * @return the CompartmentType_t structure removed.  As mentioned above,
  * the caller owns the returned item. @c NULL is returned if the given index
@@ -6301,8 +6717,8 @@ Model_removeCompartmentType (Model_t *m, unsigned int n);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param sid the string of the "id" attribute of the CompartmentType_t sought
+ * @param m the Model_t structure.
+ * @param sid the string of the "id" attribute of the CompartmentType_t sought.
  *
  * @return the CompartmentType_t structure removed.  As mentioned above, the
  * caller owns the returned structure. @c NULL is returned if no CompartmentType_t
@@ -6321,8 +6737,8 @@ Model_removeCompartmentTypeById (Model_t *m, const char* sid);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param n the integer index of the SpeciesType_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the SpeciesType_t sought.
  *
  * @return the SpeciesType_t structure removed.  As mentioned above,
  * the caller owns the returned item. @c NULL is returned if the given index
@@ -6341,8 +6757,8 @@ Model_removeSpeciesType (Model_t *m, unsigned int n);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param sid the string of the "id" attribute of the SpeciesType_t sought
+ * @param m the Model_t structure.
+ * @param sid the string of the "id" attribute of the SpeciesType_t sought.
  *
  * @return the SpeciesType_t structure removed.  As mentioned above, the
  * caller owns the returned structure. @c NULL is returned if no SpeciesType_t
@@ -6361,8 +6777,8 @@ Model_removeSpeciesTypeById (Model_t *m, const char* sid);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param n the integer index of the Compartment_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the Compartment_t sought.
  *
  * @return the Compartment_t structure removed.  As mentioned above,
  * the caller owns the returned item. @c NULL is returned if the given index
@@ -6381,8 +6797,8 @@ Model_removeCompartment (Model_t *m, unsigned int n);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param sid the string of the "id" attribute of the Compartment_t sought
+ * @param m the Model_t structure.
+ * @param sid the string of the "id" attribute of the Compartment_t sought.
  *
  * @return the Compartment_t structure removed.  As mentioned above, the
  * caller owns the returned structure. @c NULL is returned if no Compartment_t
@@ -6401,8 +6817,8 @@ Model_removeCompartmentById (Model_t *m, const char* sid);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param n the integer index of the Species_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the Species_t sought.
  *
  * @return the Species_t structure removed.  As mentioned above,
  * the caller owns the returned item. @c NULL is returned if the given index
@@ -6421,8 +6837,8 @@ Model_removeSpecies (Model_t *m, unsigned int n);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param sid the string of the "id" attribute of the Species_t sought
+ * @param m the Model_t structure.
+ * @param sid the string of the "id" attribute of the Species_t sought.
  *
  * @return the Species_t structure removed.  As mentioned above, the
  * caller owns the returned structure. @c NULL is returned if no Species_t
@@ -6441,8 +6857,8 @@ Model_removeSpeciesById (Model_t *m, const char* sid);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param n the integer index of the Parameter_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the Parameter_t sought.
  *
  * @return the Parameter_t structure removed.  As mentioned above,
  * the caller owns the returned item. @c NULL is returned if the given index
@@ -6461,8 +6877,8 @@ Model_removeParameter (Model_t *m, unsigned int n);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param sid the string of the "id" attribute of the Parameter_t sought
+ * @param m the Model_t structure.
+ * @param sid the string of the "id" attribute of the Parameter_t sought.
  *
  * @return the Parameter_t structure removed.  As mentioned above, the
  * caller owns the returned structure. @c NULL is returned if no Parameter_t
@@ -6481,8 +6897,8 @@ Model_removeParameterById (Model_t *m, const char* sid);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param n the integer index of the InitialAssignment_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the InitialAssignment_t sought.
  *
  * @return the InitialAssignment_t structure removed.  As mentioned above,
  * the caller owns the returned item. @c NULL is returned if the given index
@@ -6501,8 +6917,8 @@ Model_removeInitialAssignment (Model_t *m, unsigned int n);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param symbol the string of the "symbol" attribute of the InitialAssignment_t sought
+ * @param m the Model_t structure.
+ * @param symbol the string of the "symbol" attribute of the InitialAssignment_t sought.
  *
  * @return the InitialAssignment_t structure removed.  As mentioned above, the
  * caller owns the returned structure. @c NULL is returned if no InitialAssignment_t
@@ -6521,8 +6937,8 @@ Model_removeInitialAssignmentBySym (Model_t *m, const char* symbol);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param n the integer index of the Rule_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the Rule_t sought.
  *
  * @return the Rule_t structure removed.  As mentioned above,
  * the caller owns the returned item. @c NULL is returned if the given index
@@ -6541,8 +6957,8 @@ Model_removeRule (Model_t *m, unsigned int n);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param variable the string of the "variable" attribute of the Rule_t sought
+ * @param m the Model_t structure.
+ * @param variable the string of the "variable" attribute of the Rule_t sought.
  *
  * @return the Rule_t structure removed.  As mentioned above, the
  * caller owns the returned structure. @c NULL is returned if no Rule_t
@@ -6561,8 +6977,8 @@ Model_removeRuleByVar (Model_t *m, const char* variable);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param n the integer index of the Constraint_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the Constraint_t sought.
  *
  * @return the Constraint_t structure removed.  As mentioned above,
  * the caller owns the returned item. @c NULL is returned if the given index
@@ -6581,8 +6997,8 @@ Model_removeConstraint (Model_t *m, unsigned int n);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param n the integer index of the Reaction_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the Reaction_t sought.
  *
  * @return the Reaction_t structure removed.  As mentioned above,
  * the caller owns the returned item. @c NULL is returned if the given index
@@ -6601,8 +7017,8 @@ Model_removeReaction (Model_t *m, unsigned int n);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param sid the string of the "id" attribute of the Reaction_t sought
+ * @param m the Model_t structure.
+ * @param sid the string of the "id" attribute of the Reaction_t sought.
  *
  * @return the Reaction_t structure removed.  As mentioned above, the
  * caller owns the returned structure. @c NULL is returned if no Reaction_t
@@ -6621,8 +7037,8 @@ Model_removeReactionById (Model_t *m, const char* sid);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param n the integer index of the Event_t sought
+ * @param m the Model_t structure.
+ * @param n the integer index of the Event_t sought.
  *
  * @return the Event_t structure removed.  As mentioned above,
  * the caller owns the returned item. @c NULL is returned if the given index
@@ -6641,8 +7057,8 @@ Model_removeEvent (Model_t *m, unsigned int n);
  *
  * The caller owns the returned structure and is responsible for deleting it.
  *
- * @param m the Model_t structure
- * @param sid the string of the "id" attribute of the Event_t sought
+ * @param m the Model_t structure.
+ * @param sid the string of the "id" attribute of the Event_t sought.
  *
  * @return the Event_t structure removed.  As mentioned above, the
  * caller owns the returned structure. @c NULL is returned if no Event_t
@@ -6658,8 +7074,8 @@ Model_removeEventById (Model_t *m, const char* sid);
 
  * Adds a copy of the given FormulaUnitsData_t structure to this Model_t.
  *
- * @param m the Model_t structure
- * @param fud the FormulaUnitsData_t structure to add
+ * @param m the Model_t structure.
+ * @param fud the FormulaUnitsData_t structure to add.
 
 LIBSBML_EXTERN
 void
@@ -6668,7 +7084,7 @@ Model_addFormulaUnitsData (Model_t *m, FormulaUnitsData_t* fud);
 
  * Creates a new FormulaUnitsData_t inside this Model_t and returns it.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the FormulaUnitsData_t structure created
 
@@ -6679,7 +7095,7 @@ Model_createFormulaUnitsData (Model_t *m);
 
  * Get the nth FormulaUnitsData_t structure in this Model_t.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the nth FormulaUnitsData_t of this Model_t.
 
@@ -6690,7 +7106,7 @@ Model_getFormulaUnitsData (Model_t *m, unsigned int n);
 
  * Get a FormulaUnitsData_t structure based on its unitReferenceId and typecode.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the FormulaUnitsData_t in this Model_t with the unitReferenceId @p sid
  * and the typecode (int) @p typecode or @c NULL
@@ -6712,7 +7128,7 @@ Model_getFormulaUnitsDataById(Model_t *m, const char* sid, int);
 
  * Get the number of FormulaUnitsData_t structures in this Model_t.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the number of FormulaUnitsData_t in this Model_t.
 
@@ -6723,7 +7139,7 @@ Model_getNumFormulaUnitsData (Model_t *m);
 
  * Get the list of FormulaUnitsData_t structure in this Model_t.
  *
- * @param m the Model_t structure
+ * @param m the Model_t structure.
  *
  * @return the list of FormulaUnitsData_t for this Model_t.
 

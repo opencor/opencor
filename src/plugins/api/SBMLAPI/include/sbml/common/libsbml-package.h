@@ -7,7 +7,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -38,17 +38,17 @@
 
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "libsbml-team@caltech.edu"
+#define PACKAGE_BUGREPORT "libsbml-team@googlegroups.com"
 
 /* Define to the full name of this package. */
 #define PACKAGE_NAME "libSBML"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libSBML 5.13.0"
+#define PACKAGE_STRING "libSBML 5.15.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libsbml"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "5.13.0"
+#define PACKAGE_VERSION "5.15.0"
 

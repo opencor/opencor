@@ -1,8 +1,8 @@
 /**
  * @cond doxygenLibsbmlInternal
  *
- * @file    ASTUnaryFunctionNode.h
- * @brief   UnaryFunction Abstract Syntax Tree (AST) class.
+ * @file    ASTCSymbolRateOfNode.h
+ * @brief   BinaryFunction Abstract Syntax Tree (AST) class.
  * @author  Sarah Keating
  *
  * <!--------------------------------------------------------------------------
@@ -33,62 +33,69 @@
  * ------------------------------------------------------------------------ -->
  */
 
-#ifndef ASTUnaryFunctionNode_h
-#define ASTUnaryFunctionNode_h
+#ifndef ASTCSymbolRateOfNode_h
+#define ASTCSymbolRateOfNode_h
 
 
 #include <sbml/common/extern.h>
 
-#include <sbml/math/ASTFunctionBase.h>
+#include <sbml/math/ASTUnaryFunctionNode.h>
 
 #ifdef __cplusplus
 
-#include <vector>
-
-/* open doxygen comment */
-
-/* end doxygen comment */
-
 LIBSBML_CPP_NAMESPACE_BEGIN
 
-class ASTFunction;
-
-class LIBSBML_EXTERN ASTUnaryFunctionNode : public ASTFunctionBase
+class LIBSBML_EXTERN ASTCSymbolRateOfNode : public ASTUnaryFunctionNode
 {
 public:
 
-  ASTUnaryFunctionNode (int type = AST_UNKNOWN);
+  ASTCSymbolRateOfNode (int type = AST_FUNCTION_RATE_OF);
+
 
   /**
-   * Copy constructor.
-   *
-   * @param orig the instance to copy.
+   * Copy constructor
    */
-  ASTUnaryFunctionNode (const ASTUnaryFunctionNode& orig);
+  ASTCSymbolRateOfNode (const ASTCSymbolRateOfNode& orig);
 
 
   /**
    * Assignment operator for ASTNode.
-   *
-   * @param rhs the object whose values are used as the basis of the
-   * assignment.
    */
-  ASTUnaryFunctionNode& operator=(const ASTUnaryFunctionNode& rhs);
+  ASTCSymbolRateOfNode& operator=(const ASTCSymbolRateOfNode& rhs);
 
 
   /**
    * Destroys this ASTNode, including any child nodes.
    */
-  virtual ~ASTUnaryFunctionNode ();
+  virtual ~ASTCSymbolRateOfNode ();
 
 
   /**
    * Creates a copy (clone).
    */
-  virtual ASTUnaryFunctionNode* deepCopy () const;
+  virtual ASTCSymbolRateOfNode* deepCopy () const;
 
   virtual int swapChildren(ASTFunction* that);
-  using ASTFunctionBase::swapChildren;
+
+  const std::string& getName() const;
+
+  bool isSetName() const;
+
+  int setName(const std::string& name);
+
+  int unsetName();
+
+  const std::string& getDefinitionURL() const;
+
+  bool isSetDefinitionURL() const;
+
+  int setDefinitionURL(const std::string& url);
+
+  int unsetDefinitionURL();
+  const std::string& getEncoding() const;
+  bool isSetEncoding() const;
+  int setEncoding(const std::string& encoding);
+  int unsetEncoding();
 
   virtual void write(XMLOutputStream& stream) const;
 
@@ -96,18 +103,27 @@ public:
   virtual bool read(XMLInputStream& stream, const std::string& reqd_prefix="");
 
 
+  virtual void addExpectedAttributes(ExpectedAttributes& attributes,
+                                     XMLInputStream& stream);
 
-  bool isLog10() const;
+  virtual bool readAttributes (const XMLAttributes& attributes,
+                               const ExpectedAttributes& expectedAttributes,
+                               XMLInputStream& stream, const XMLToken& element);
 
-  bool isSqrt() const;
-
-  virtual bool hasCorrectNumberArguments() const;
 
   virtual int getTypeCode () const;
 
 
 protected:
 
+  /* open doxygen comment */
+
+  std::string mEncoding;
+  std::string mName;
+  std::string mDefinitionURL;
+
+
+  /* end doxygen comment */
 };
 
 LIBSBML_CPP_NAMESPACE_END

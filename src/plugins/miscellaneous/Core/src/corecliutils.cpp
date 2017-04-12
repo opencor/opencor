@@ -499,8 +499,6 @@ void cleanContentMathml(QDomElement pDomElement)
     //       MathML namespace. Indeed, if we were to leave them in then the XSL
     //       transformation would either do nothing or, worst, crash OpenCOR...
 
-    static const QString MathmlNamespace = "http://www.w3.org/1998/Math/MathML";
-
     QDomNamedNodeMap attributes = pDomElement.attributes();
     QList<QDomNode> nonMathmlAttributes = QList<QDomNode>();
 

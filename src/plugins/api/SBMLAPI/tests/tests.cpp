@@ -41,7 +41,7 @@ void Tests::basicTests()
 
     // Check the version of libSBML
 
-    QCOMPARE(libsbml::getLibSBMLDottedVersion(), "5.13.0");
+    QCOMPARE(libsbml::getLibSBMLDottedVersion(), "5.15.0");
 
     // Check against which libraries libSBML has been compiled
 
