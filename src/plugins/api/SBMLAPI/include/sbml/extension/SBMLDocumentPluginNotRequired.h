@@ -9,7 +9,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -95,7 +95,7 @@ public:
   /**
    * Assignment operator for SBMLDocumentPluginNotRequired.
    *
-   * @param orig The object whose values are used as the basis of the
+   * @param orig the object whose values are used as the basis of the
    * assignment.
    */
   SBMLDocumentPluginNotRequired& operator=(const SBMLDocumentPluginNotRequired& orig);
@@ -142,10 +142,7 @@ public:
    * Doesn't do anything:  it is illegal to unset the 'required' attribute in this package,
    * as it must always be set to 'false'.
    *
-   * @return integer value indicating success/failure of the
-   * function.  @if clike The value is drawn from the
-   * enumeration #OperationReturnValues_t. @endif@~ The possible values
-   * returned by this function are:
+   * @copydetails doc_returns_success_code
    * @li @sbmlconstant{LIBSBML_OPERATION_FAILED, OperationReturnValues_t}
    */
   virtual int unsetRequired();

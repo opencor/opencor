@@ -9,7 +9,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -64,8 +64,10 @@ public:
 
   /**
    * Copy constructor.
+   *
+   * @param orig the instance to copy.
    */
-  SBMLExternalValidator(const SBMLExternalValidator&);
+  SBMLExternalValidator(const SBMLExternalValidator& orig);
 
 
   /**
@@ -83,17 +85,17 @@ public:
 
 
   /**
-   * the actual conversion
+   * the actual conversion.
    *
-   * @return status code represeting success/failure/conversion impossible
+   * @return status code represeting success/failure/conversion impossible.
    */
   virtual unsigned int validate();
 
 
   /**
-   * Returns the program name of the validator to be run
+   * Returns the program name of the validator to be run.
    *
-   * @return the program name of the validator to be run
+   * @return the program name of the validator to be run.
    */
   const std::string& getProgram()  const;
 
@@ -101,15 +103,15 @@ public:
   /**
    * Sets the name of the program to run
    *
-   * @param program the program to be started
+   * @param program the program to be started.
    */
   void setProgram (std::string program);
 
 
   /**
-   * Returns the output file name (this is the file the external program will write)
+   * Returns the output file name (this is the file the external program will write).
    *
-   * @return the output file name
+   * @return the output file name.
    */
   const std::string& getOutputFileName()  const;
 
@@ -117,13 +119,13 @@ public:
   /**
    * Sets the output file name
    *
-   * @param outputFileName the name of the output XML file
+   * @param outputFileName the name of the output XML file.
    */
   void setOutputFileName(std::string outputFileName);
 
 
   /**
-   * @return the name of the SBML file (the document of this validator will be written to it)
+   * @return the name of the SBML file (the document of this validator will be written to it).
    */
   const std::string& getSBMLFileName()  const;
 
@@ -131,7 +133,7 @@ public:
   /**
    * Sets the filename for the temporary file to be created
    *
-   * @param sbmlFileName the temporary name
+   * @param sbmlFileName the temporary name.
    */
   void setSBMLFileName(std::string sbmlFileName);
 
@@ -145,7 +147,7 @@ public:
   /**
    * Adds the given argument to the list of additional arguments
    *
-   * @param arg the argument
+   * @param arg the argument.
    */
   void addArgument(std::string arg);
 
@@ -167,7 +169,7 @@ public:
 
 
   /**
-   * @return all arguments
+   * @return all arguments.
    */
   const std::vector<std::string>& getArguments() const;
 
@@ -175,7 +177,7 @@ public:
   /**
    * Sets the additional arguments
    *
-   * @param args the additional arguments
+   * @param args the additional arguments.
    */
   void setArguments(std::vector<std::string> args);
 

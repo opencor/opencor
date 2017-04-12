@@ -7,7 +7,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -108,7 +108,7 @@ public:
    * Performing this set of checks is highly recommended.  With respect to
    * the SBML specification, these concern failures in applying the
    * validation rules numbered 2xxxx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_IDENTIFIER_CONSISTENCY, SBMLErrorCategory_t}:
    * Correctness and consistency of identifiers used for model entities.  An
@@ -116,31 +116,31 @@ public:
    * reaction rate formula without first having declared the species.  With
    * respect to the SBML specification, these concern failures in applying
    * the validation rules numbered 103xx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_UNITS_CONSISTENCY, SBMLErrorCategory_t}:
    * Consistency of measurement units associated with quantities in a model.
    * With respect to the SBML specification, these concern failures in
    * applying the validation rules numbered 105xx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_MATHML_CONSISTENCY, SBMLErrorCategory_t}:
    * Syntax of MathML constructs.  With respect to the SBML specification,
    * these concern failures in applying the validation rules numbered 102xx
    * in the Level&nbsp;2 Versions&nbsp;2&ndash;4 and Level&nbsp;3
-   * Version&nbsp;1 specifications.
+   * Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_SBO_CONSISTENCY, SBMLErrorCategory_t}:
    * Consistency and validity of %SBO identifiers (if any) used in the model.
    * With respect to the SBML specification, these concern failures in
    * applying the validation rules numbered 107xx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_OVERDETERMINED_MODEL, SBMLErrorCategory_t}:
    * Static analysis of whether the system of equations implied by a model is
    * mathematically overdetermined.  With respect to the SBML specification,
    * this is validation rule #10601 in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_MODELING_PRACTICE, SBMLErrorCategory_t}:
    * Additional checks for recommended good modeling practice. (These are
@@ -211,7 +211,7 @@ public:
    * Performing this set of checks is highly recommended.  With respect to
    * the SBML specification, these concern failures in applying the
    * validation rules numbered 2xxxx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_IDENTIFIER_CONSISTENCY, SBMLErrorCategory_t}:
    * Correctness and consistency of identifiers used for model entities.  An
@@ -219,31 +219,31 @@ public:
    * reaction rate formula without first having declared the species.  With
    * respect to the SBML specification, these concern failures in applying
    * the validation rules numbered 103xx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_UNITS_CONSISTENCY, SBMLErrorCategory_t}:
    * Consistency of measurement units associated with quantities in a model.
    * With respect to the SBML specification, these concern failures in
    * applying the validation rules numbered 105xx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_MATHML_CONSISTENCY, SBMLErrorCategory_t}:
    * Syntax of MathML constructs.  With respect to the SBML specification,
    * these concern failures in applying the validation rules numbered 102xx
    * in the Level&nbsp;2 Versions&nbsp;2&ndash;4 and Level&nbsp;3
-   * Version&nbsp;1 specifications.
+   * Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_SBO_CONSISTENCY, SBMLErrorCategory_t}:
    * Consistency and validity of %SBO identifiers (if any) used in the model.
    * With respect to the SBML specification, these concern failures in
    * applying the validation rules numbered 107xx in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_OVERDETERMINED_MODEL, SBMLErrorCategory_t}:
    * Static analysis of whether the system of equations implied by a model is
    * mathematically overdetermined.  With respect to the SBML specification,
    * this is validation rule #10601 in the Level&nbsp;2
-   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Version&nbsp;1 specifications.
+   * Versions&nbsp;2&ndash;4 and Level&nbsp;3 Versions&nbsp;1&ndash;2 specifications.
    *
    * <li> @sbmlconstant{LIBSBML_CAT_MODELING_PRACTICE, SBMLErrorCategory_t}:
    * Additional checks for recommended good modeling practice. (These are
@@ -391,6 +391,19 @@ public:
 
   /**
    * Performs a set of consistency checks on the document to establish
+   * whether it is compatible with SBML Level&nbsp;2 Version&nbsp;5 and can
+   * be converted to Level&nbsp;2 Version&nbsp;5.
+   *
+   * Callers should query the results of the consistency check by calling
+   * SBMLDocument::getError(@if java long@endif).
+   *
+   * @return the number of failed checks (errors) encountered.
+   */
+  unsigned int checkL2v5Compatibility ();
+
+
+  /**
+   * Performs a set of consistency checks on the document to establish
    * whether it is compatible with SBML Level&nbsp;3 Version&nbsp;1 and can
    * be converted to Level&nbsp;3 Version&nbsp;1.
    *
@@ -403,13 +416,26 @@ public:
 
 
   /**
-   * @return the current list of selected validators
+  * Performs a set of consistency checks on the document to establish
+  * whether it is compatible with SBML Level&nbsp;3 Version&nbsp;2 and can
+  * be converted to Level&nbsp;3 Version&nbsp;2.
+  *
+  * Callers should query the results of the consistency check by calling
+  * SBMLDocument::getError(@if java long@endif).
+  *
+  * @return the number of failed checks (errors) encountered.
+  */
+  unsigned int checkL3v2Compatibility();
+
+
+  /**
+   * @return the current list of selected validators.
    */
   unsigned char getApplicableValidators() const;
 
 
   /**
-   * @return the current list of selected validators for conversion
+   * @return the current list of selected validators for conversion.
    */
   unsigned char getConversionValidators() const;
 
@@ -417,7 +443,7 @@ public:
   /**
    * Set the current list of validators to be applied
    *
-   * @param appl the mask of validators to be applied
+   * @param appl the mask of validators to be applied.
    */
   void setApplicableValidators(unsigned char appl);
 
@@ -425,7 +451,7 @@ public:
   /**
    * Set the current list of conversion validators to be applied
    *
-   * @param appl the mask of validators to be applied
+   * @param appl the mask of validators to be applied.
    */
   void setConversionValidators(unsigned char appl);
 

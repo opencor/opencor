@@ -107,6 +107,12 @@ class SIMULATIONEXPERIMENTVIEW_EXPORT SimulationExperimentViewSimulationWidget :
     Q_OBJECT
 
 public:
+    enum FileType {
+        CellmlFile,
+        SedmlFile,
+        CombineArchive
+    };
+
     explicit SimulationExperimentViewSimulationWidget(SimulationExperimentViewPlugin *pPlugin,
                                                       const QString &pFileName,
                                                       QWidget *pParent);
@@ -134,7 +140,7 @@ public:
 
     SEDMLSupport::SedmlFile * sedmlFile() const;
 
-    SimulationExperimentViewWidget::FileType fileType() const;
+    FileType fileType() const;
 
     SimulationExperimentViewSimulation *simulation() const;
 
@@ -208,7 +214,7 @@ private:
     SEDMLSupport::SedmlFile *mSedmlFile;
     COMBINESupport::CombineArchive *mCombineArchive;
 
-    SimulationExperimentViewWidget::FileType mFileType;
+    FileType mFileType;
 
     SEDMLSupport::SedmlFileIssues mSedmlFileIssues;
     COMBINESupport::CombineArchiveIssues mCombineArchiveIssues;
@@ -225,6 +231,8 @@ private:
     bool mNeedUpdatePlots;
 
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong> mOldDataSizes;
+
+    QMap<QString, QString> mLocallyManagedCellmlFiles;
 
     void reloadView();
 
@@ -274,6 +282,31 @@ private:
     bool createSedmlFile(const QString &pFileName, const QString &pModelSource);
 
     void checkSimulationDataModified(const bool &pIsModified);
+
+    bool sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
+                                 SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
+    bool sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
+                            SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
+
+    bool combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
+                                 COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const;
+
+    void retrieveCellmlFile(const QString &pFileName,
+                            CellMLSupport::CellmlFile *&pCellmlFile,
+                            SEDMLSupport::SedmlFile *pSedmlFile,
+                            const FileType &pFileType,
+                            SEDMLSupport::SedmlFileIssues &pSedmlFileIssues);
+    void retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
+                           COMBINESupport::CombineArchive *pCombineArchive,
+                           COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
+
+    void retrieveFileDetails(const QString &pFileName,
+                             CellMLSupport::CellmlFile *&pCellmlFile,
+                             SEDMLSupport::SedmlFile *&pSedmlFile,
+                             COMBINESupport::CombineArchive *&pCombineArchive,
+                             FileType &pFileType,
+                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
+                             COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
 
 signals:
     void splitterMoved(const QIntList &pSizes);

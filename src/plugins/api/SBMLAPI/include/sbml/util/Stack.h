@@ -9,7 +9,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -125,7 +125,7 @@ Stack_pop (Stack_t *s);
  * to track or manipulate the intermediate items popped.
  *
  * @param s the Stack_t structure.
- * @param n The number of times to pop the Stack_t.
+ * @param n the number of times to pop the Stack_t.
  *
  * @memberof Stack_t
  */
@@ -149,7 +149,7 @@ Stack_peek (Stack_t *s);
  * If n is out of range (n < 0 or n >= Stack_size()) returns NULL.
  *
  * @param s the Stack_t structure.
- * @param n The index of the item to return.
+ * @param n the index of the item to return.
  *
  * @memberof Stack_t
  */

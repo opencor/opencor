@@ -9,7 +9,7 @@
  * This file is part of libSBML.  Please visit http://sbml.org for more
  * information about SBML, and the latest version of libSBML.
  *
- * Copyright (C) 2013-2016 jointly by the following organizations:
+ * Copyright (C) 2013-2017 jointly by the following organizations:
  *     1. California Institute of Technology, Pasadena, CA, USA
  *     2. EMBL European Bioinformatics Institute (EMBL-EBI), Hinxton, UK
  *     3. University of Heidelberg, Heidelberg, Germany
@@ -74,7 +74,7 @@ public:
    * which to read the XML content.  Otherwise, content is treated as a
    * null-terminated buffer containing XML data and is read directly.
    *
-   * @return true if the parse was successful, false otherwise.
+   * @return @c true if the parse was successful, @c false otherwise.
    */
   virtual bool parse (const char* content, bool isFile);
 
@@ -92,8 +92,8 @@ public:
    * which to read the XML content.  Otherwise, content is treated as a
    * buffer containing XML data and is read directly.
    *
-   * @return true if the first step of the progressive parse was
-   * successful, false otherwise.
+   * @return @c true if the first step of the progressive parse was
+   * successful, @c false otherwise.
    */
   virtual bool parseFirst (const char* content, bool isFile);
 
@@ -101,8 +101,8 @@ public:
   /**
    * Parses the next chunk of XML content.
    *
-   * @return true if the next step of the progressive parse was successful,
-   * false otherwise or when at EOF.
+   * @return @c true if the next step of the progressive parse was successful,
+   * @c false otherwise or when at EOF.
    */
   virtual bool parseNext ();
 
@@ -133,9 +133,9 @@ public:
 protected:
 
   /**
-   * Returns true if the parser encountered an error, false otherwise.
+   * Returns @c true if the parser encountered an error, @c false otherwise.
    *
-   * @return true if the parser encountered an error, false otherwise.
+   * @return @c true if the parser encountered an error, @c false otherwise.
    */
   bool error () const;
 
