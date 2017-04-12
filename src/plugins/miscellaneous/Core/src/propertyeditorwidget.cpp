@@ -1050,6 +1050,7 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     // Customise ourselves
 
     setRootIsDecorated(false);
+    setTabKeyNavigation(true);
 
     // Create and set our data model
 
