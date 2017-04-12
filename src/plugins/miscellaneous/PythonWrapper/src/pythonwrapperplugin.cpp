@@ -25,6 +25,7 @@ limitations under the License.
 #include "pythonwrapperdatastore.h"
 #include "pythonwrapperplugin.h"
 #include "pythonwrappersimulationexperimentview.h"
+#include "pythonwrappersolver.h"
 #include "simulationexperimentviewplugin.h"
 
 //==============================================================================
@@ -87,6 +88,7 @@ void PythonWrapperPlugin::initializePlugin()
     mPythonWrapperCore = new PythonWrapperCore(mOpenCORModule);
     mPythonWrapperDataStore = new PythonWrapperDataStore(mOpenCORModule);
     mPythonWrapperSimulationExperimentView = new PythonWrapperSimulationExperimentView(mOpenCORModule);
+    mPythonWrapperSolver = new PythonWrapperSolver(mOpenCORModule);
 }
 
 //==============================================================================

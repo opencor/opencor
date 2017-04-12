@@ -17,73 +17,32 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Python wrapper plugin
+// Python wrapper for Solver interface
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "plugininfo.h"
-#include "plugininterface.h"
+#include "PythonQtPythonInclude.h"
 
 //==============================================================================
 
-#include "PythonQt.h"
+#include <QObject>
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace SimulationExperimentView {
-    class SimulationExperimentViewWidget;
-};
-
-//==============================================================================
-
 namespace PythonWrapper {
 
 //==============================================================================
 
-class PythonWrapperCore;
-class PythonWrapperDataStore;
-class PythonWrapperSimulationExperimentView;
-class PythonWrapperSolver;
-
-//==============================================================================
-
-PLUGININFO_FUNC PythonWrapperPluginInfo();
-
-//==============================================================================
-
-class PythonWrapperPlugin : public QObject, public PluginInterface
+class PythonWrapperSolver : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonWrapperPlugin" FILE "pythonwrapperplugin.json")
-
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
 public:
-    explicit PythonWrapperPlugin();
-
-#include "plugininterface.inl"
-
-    static PythonWrapperPlugin *instance();
-
-    SimulationExperimentView::SimulationExperimentViewWidget *simulationExperimentViewWidget();
-
-private:
-    PythonQtObjectPtr mOpenCORModule;
-
-    PythonWrapperCore *mPythonWrapperCore;
-    PythonWrapperDataStore *mPythonWrapperDataStore;
-    PythonWrapperSimulationExperimentView *mPythonWrapperSimulationExperimentView;
-    PythonWrapperSolver *mPythonWrapperSolver;
-
-    SimulationExperimentView::SimulationExperimentViewWidget *mSimulationExperimentViewWidget;
+    explicit PythonWrapperSolver(PyObject *pModule, QObject *pParent=0);
 };
 
 //==============================================================================

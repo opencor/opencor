@@ -18,6 +18,7 @@ ADD_PLUGIN(PythonWrapper
         src/pythonwrapperdatastore.cpp
         src/pythonwrapperplugin.cpp
         src/pythonwrappersimulationexperimentview.cpp
+        src/pythonwrappersolver.cpp
     HEADERS_MOC
         ../../datastoreinterface.h
         ../../plugin.h
@@ -27,6 +28,7 @@ ADD_PLUGIN(PythonWrapper
         src/pythonwrapperdatastore.h
         src/pythonwrapperplugin.h
         src/pythonwrappersimulationexperimentview.h
+        src/pythonwrappersolver.h
     INCLUDE_DIRS
         src
         ${NUMPY_INCLUDE_DIR}

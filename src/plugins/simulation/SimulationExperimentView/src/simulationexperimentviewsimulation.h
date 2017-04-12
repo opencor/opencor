@@ -80,29 +80,9 @@ public:
 
     SolverInterface * odeSolverInterface() const;
 
-    QString odeSolverName() const;
-    void setOdeSolverName(const QString &pOdeSolverName);
-
-    Solver::Solver::Properties odeSolverProperties() const;
-    void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
-
     SolverInterface * daeSolverInterface() const;
 
-    QString daeSolverName() const;
-    void setDaeSolverName(const QString &pDaeSolverName);
-
-    Solver::Solver::Properties daeSolverProperties() const;
-    void addDaeSolverProperty(const QString &pName, const QVariant &pValue);
-
     SolverInterface * nlaSolverInterface() const;
-
-    QString nlaSolverName() const;
-    void setNlaSolverName(const QString &pNlaSolverName,
-                          const bool &pReset = true);
-
-    Solver::Solver::Properties nlaSolverProperties() const;
-    void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
-                              const bool &pReset = true);
 
     DataStore::DataStore * resultsDataStore() const;
 
@@ -128,6 +108,26 @@ public slots:
 
     double pointInterval() const;
     void setPointInterval(const double &pPointInterval);
+
+    QString odeSolverName() const;
+    void setOdeSolverName(const QString &pOdeSolverName);
+
+    Solver::Solver::Properties odeSolverProperties() const;
+    void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
+
+    QString daeSolverName() const;
+    void setDaeSolverName(const QString &pDaeSolverName);
+
+    Solver::Solver::Properties daeSolverProperties() const;
+    void addDaeSolverProperty(const QString &pName, const QVariant &pValue);
+
+    QString nlaSolverName() const;
+    void setNlaSolverName(const QString &pNlaSolverName,
+                          const bool &pReset = true);
+
+    Solver::Solver::Properties nlaSolverProperties() const;
+    void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
+                              const bool &pReset = true);
 
     void reset(const bool &pInitialize = true);
 

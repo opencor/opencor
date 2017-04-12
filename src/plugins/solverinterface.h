@@ -29,6 +29,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QList>
+#include <QMetaType>
 #include <QVariant>
 
 //==============================================================================
@@ -56,7 +57,7 @@ class Solver : public QObject
     Q_OBJECT
 
 public:
-    typedef QMap<QString, QVariant> Properties;
+    typedef QVariantMap Properties;
 
     explicit Solver();
 
@@ -243,6 +244,8 @@ typedef QList<SolverInterface *> SolverInterfaces;
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::SolverInterface, "OpenCOR::SolverInterface")
+
+Q_DECLARE_METATYPE(OpenCOR::Solver::Solver::Properties)
 
 //==============================================================================
 // End of file
