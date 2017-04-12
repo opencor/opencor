@@ -65,17 +65,6 @@ EditingViewPlugin::EditingViewPlugin() :
 // File handling interface
 //==============================================================================
 
-bool EditingViewPlugin::isIndirectRemoteFile(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-
-    return false;
-}
-
-//==============================================================================
-
 bool EditingViewPlugin::saveFile(const QString &pOldFileName,
                                  const QString &pNewFileName,
                                  bool &pNeedFeedback)

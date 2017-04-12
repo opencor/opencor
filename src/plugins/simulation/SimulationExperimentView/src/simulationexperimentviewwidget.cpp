@@ -163,40 +163,6 @@ void SimulationExperimentViewWidget::retranslateUi()
 
 //==============================================================================
 
-bool SimulationExperimentViewWidget::isIndirectRemoteFile(const QString &pFileName)
-{
-    // Return whether the given file is an indirect remote file by retrieving
-    // its details
-
-    Core::File *file = Core::FileManager::instance()->file(pFileName);
-
-    if (file->isLocal()) {
-        CellMLSupport::CellmlFile *cellmlFile = 0;
-        SEDMLSupport::SedmlFile *sedmlFile = 0;
-        COMBINESupport::CombineArchive *combineArchive = 0;
-        FileType fileType;
-        SEDMLSupport::SedmlFileIssues sedmlFileIssues;
-        COMBINESupport::CombineArchiveIssues combineArchiveIssues;
-        bool res = false;
-
-        retrieveFileDetails(pFileName, cellmlFile, sedmlFile, combineArchive,
-                            fileType, sedmlFileIssues, combineArchiveIssues,
-                            &res);
-
-        if (fileType != CellmlFile)
-            delete cellmlFile;
-
-        if (fileType != SedmlFile)
-            delete sedmlFile;
-
-        return res;
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
 void SimulationExperimentViewWidget::initialize(const QString &pFileName)
 {
     // Stop tracking changes in our 'old' simulation widget's property editors'
@@ -1246,8 +1212,7 @@ void SimulationExperimentViewWidget::retrieveCellmlFile(const QString &pFileName
                                                         CellMLSupport::CellmlFile *&pCellmlFile,
                                                         SEDMLSupport::SedmlFile *pSedmlFile,
                                                         const FileType &pFileType,
-                                                        SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                                                        bool *pIsDirectOrIndirectRemoteFile)
+                                                        SEDMLSupport::SedmlFileIssues &pSedmlFileIssues)
 {
     // Make sure that we support our SED-ML file
 
@@ -1262,93 +1227,79 @@ void SimulationExperimentViewWidget::retrieveCellmlFile(const QString &pFileName
     // Check whether we are dealing with a local file (which location is
     // relative to that of our SED-ML file) or a remote file
 
-    if (pIsDirectOrIndirectRemoteFile) {
-        // We only want to determine whether we are dealing with a local file or
-        // a remote one
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+    QString url = fileManagerInstance->file(pFileName)->url();
+    bool isLocalFile;
+    QString dummy;
 
-        QString dummy;
+    Core::checkFileNameOrUrl(modelSource, isLocalFile, dummy);
 
-        Core::checkFileNameOrUrl(modelSource, *pIsDirectOrIndirectRemoteFile, dummy);
+    if (isLocalFile && url.isEmpty()) {
+        // By default, our model source refers to a file name relative to our
+        // SED-ML file
 
-        *pIsDirectOrIndirectRemoteFile = !*pIsDirectOrIndirectRemoteFile;
-        // Note: since Core::checkFileNameOrUrl() tells us whether we are
-        //       dealing with a local file...
-    } else {
-        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-        QString url = fileManagerInstance->file(pFileName)->url();
-        bool isLocalFile;
-        QString dummy;
-
-        Core::checkFileNameOrUrl(modelSource, isLocalFile, dummy);
-
-        if (isLocalFile && url.isEmpty()) {
-            // By default, our model source refers to a file name relative to
-            // our SED-ML file
-
-            QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(pSedmlFile->fileName()).path()+QDir::separator()+modelSource);
+        QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(pSedmlFile->fileName()).path()+QDir::separator()+modelSource);
 
 #ifdef Q_OS_WIN
-            // On Windows, if our model source exists, it means that it refers
-            // to a file on a different drive rather than to a file name
-            // relative to our SED-ML file
+        // On Windows, if our model source exists, it means that it refers to a
+        // file on a different drive rather than to a file name relative to our
+        // SED-ML file
 
-            if (QFile::exists(modelSource))
-                cellmlFileName = modelSource;
+        if (QFile::exists(modelSource))
+            cellmlFileName = modelSource;
 #endif
 
-            if (QFile::exists(cellmlFileName)) {
-                pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
+        if (QFile::exists(cellmlFileName)) {
+            pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
 
-                // If possible, set our CellML file and its dependencies, if
-                // any, as dependencies for our SED-ML file
+            // If possible, set our CellML file and its dependencies, if any, as
+            // dependencies for our SED-ML file
 
-                if (pFileType == SedmlFile) {
-                    Core::FileManager::instance()->setDependencies(pFileName,
-                                                                   QStringList() << pCellmlFile->fileName()
-                                                                                 << pCellmlFile->dependencies(true));
-                }
-            } else {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                                 tr("%1 could not be found").arg(modelSource));
+            if (pFileType == SedmlFile) {
+                Core::FileManager::instance()->setDependencies(pFileName,
+                                                               QStringList() << pCellmlFile->fileName()
+                                                                             << pCellmlFile->dependencies(true));
             }
         } else {
-            // Handle the case where our model source is a relative remote file
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                             tr("%1 could not be found").arg(modelSource));
+        }
+    } else {
+        // Handle the case where our model source is a relative remote file
 
-            static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
+        static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
 
-            if (isLocalFile)
-                modelSource = url.remove(FileNameRegEx)+"/"+modelSource;
+        if (isLocalFile)
+            modelSource = url.remove(FileNameRegEx)+"/"+modelSource;
 
-            // Retrieve the contents of our model source
+        // Retrieve the contents of our model source
 
-            QString fileContents;
-            QString errorMessage;
+        QString fileContents;
+        QString errorMessage;
 
-            if (Core::readFileContentsFromUrlWithBusyWidget(modelSource, fileContents, &errorMessage)) {
-                // Save the contents of our model source to a local file and use
-                // that to create a CellML file object after having asked our
-                // file manager to manage it (so that CellML 1.1 files can be
-                // properly instantiated)
-                // Note: we also keep track of our model source's local file
-                //       since we will need to unmanage it when closing this
-                //       file...
+        if (Core::readFileContentsFromUrlWithBusyWidget(modelSource, fileContents, &errorMessage)) {
+            // Save the contents of our model source to a local file and use
+            // that to create a CellML file object after having asked our file
+            // manager to manage it (so that CellML 1.1 files can be properly
+            // instantiated)
+            // Note: we also keep track of our model source's local file since
+            //       we will need to unmanage it when closing this file...
 
-                QString cellmlFileName = Core::temporaryFileName();
+            QString cellmlFileName = Core::temporaryFileName();
 
-                if (Core::writeFileContentsToFile(cellmlFileName, fileContents)) {
-                    fileManagerInstance->manage(cellmlFileName, Core::File::Remote, modelSource);
+            if (Core::writeFileContentsToFile(cellmlFileName, fileContents)) {
+                fileManagerInstance->manage(cellmlFileName, Core::File::Remote, modelSource);
 
-                    pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
+                pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
 
-                    mLocallyManagedCellmlFiles.insert(pFileName, cellmlFileName);
-                } else {
-                    pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                                     tr("%1 could not be saved").arg(modelSource));
-                }
+                mLocallyManagedCellmlFiles.insert(pFileName, cellmlFileName);
             } else {
                 pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                                 tr("%1 could not be retrieved (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
+                                                                 tr("%1 could not be saved").arg(modelSource));
             }
+        } else {
+            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
+                                                             tr("%1 could not be retrieved (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
         }
     }
 }
@@ -1377,8 +1328,7 @@ void SimulationExperimentViewWidget::retrieveFileDetails(const QString &pFileNam
                                                          COMBINESupport::CombineArchive *&pCombineArchive,
                                                          FileType &pFileType,
                                                          SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                                                         COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues,
-                                                         bool *pIsDirectOrIndirectRemoteFile)
+                                                         COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues)
 {
     // Determine the type of file we are dealing with
 
@@ -1398,10 +1348,8 @@ void SimulationExperimentViewWidget::retrieveFileDetails(const QString &pFileNam
     if (pCombineArchive)
         retrieveSedmlFile(pSedmlFile, pCombineArchive, pCombineArchiveIssues);
 
-    if (pSedmlFile) {
-        retrieveCellmlFile(pFileName, pCellmlFile, pSedmlFile, pFileType,
-                           pSedmlFileIssues, pIsDirectOrIndirectRemoteFile);
-    }
+    if (pSedmlFile)
+        retrieveCellmlFile(pFileName, pCellmlFile, pSedmlFile, pFileType, pSedmlFileIssues);
 }
 
 //==============================================================================

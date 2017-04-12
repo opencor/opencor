@@ -68,8 +68,6 @@ public:
 
     virtual void retranslateUi();
 
-    bool isIndirectRemoteFile(const QString &pFileName);
-
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
 
@@ -103,8 +101,7 @@ public:
                              COMBINESupport::CombineArchive *&pCombineArchive,
                              FileType &pFileType,
                              SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                             COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues,
-                             bool *pIsDirectOrIndirectRemoteFile = 0);
+                             COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
 
 private:
     SimulationExperimentViewPlugin *mPlugin;
@@ -144,8 +141,7 @@ private:
                             CellMLSupport::CellmlFile *&pCellmlFile,
                             SEDMLSupport::SedmlFile *pSedmlFile,
                             const FileType &pFileType,
-                            SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                            bool *pIsDirectOrIndirectRemoteFile);
+                            SEDMLSupport::SedmlFileIssues &pSedmlFileIssues);
     void retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
                            COMBINESupport::CombineArchive *pCombineArchive,
                            COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
