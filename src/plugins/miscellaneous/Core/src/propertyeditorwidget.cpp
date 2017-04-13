@@ -1508,7 +1508,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
             //       would have to use currentIndex().row(), so we might as well
             //       use the latter all the time...
 
-            editProperty(property(currentIndex()));
+            editProperty(currentProperty());
         }
 
         // Accept the event
