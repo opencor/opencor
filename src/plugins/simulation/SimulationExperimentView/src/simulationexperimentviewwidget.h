@@ -54,12 +54,6 @@ class SimulationExperimentViewWidget : public Core::ViewWidget
     Q_OBJECT
 
 public:
-    enum FileType {
-        CellmlFile,
-        SedmlFile,
-        CombineArchive
-    };
-
     explicit SimulationExperimentViewWidget(SimulationExperimentViewPlugin *pPlugin,
                                             QWidget *pParent);
 
@@ -67,8 +61,6 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     virtual void retranslateUi();
-
-    bool isIndirectRemoteFile(const QString &pFileName);
 
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
@@ -97,15 +89,6 @@ public:
     void checkSimulationResults(const QString &pFileName,
                                 const bool &pClearGraphs = false);
 
-    void retrieveFileDetails(const QString &pFileName,
-                             CellMLSupport::CellmlFile *&pCellmlFile,
-                             SEDMLSupport::SedmlFile *&pSedmlFile,
-                             COMBINESupport::CombineArchive *&pCombineArchive,
-                             FileType &pFileType,
-                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                             COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues,
-                             bool *pIsDirectOrIndirectRemoteFile = 0);
-
 private:
     SimulationExperimentViewPlugin *mPlugin;
 
@@ -127,28 +110,7 @@ private:
     QMap<QString, qulonglong> mSimulationResultsSizes;
     QStringList mSimulationCheckResults;
 
-    QMap<QString, QString> mLocallyManagedCellmlFiles;
-    QMap<QString, QString> mLocallyManagedSedmlFiles;
-
     void updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget);
-
-    bool sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
-                                 SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
-    bool sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
-                            SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
-
-    bool combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
-                                 COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const;
-
-    void retrieveCellmlFile(const QString &pFileName,
-                            CellMLSupport::CellmlFile *&pCellmlFile,
-                            SEDMLSupport::SedmlFile *pSedmlFile,
-                            const FileType &pFileType,
-                            SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                            bool *pIsDirectOrIndirectRemoteFile);
-    void retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
-                           COMBINESupport::CombineArchive *pCombineArchive,
-                           COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
 
 private slots:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);

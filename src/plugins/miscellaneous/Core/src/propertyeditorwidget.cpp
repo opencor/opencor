@@ -65,33 +65,29 @@ void TextEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check some key combinations
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        && !(pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)) {
-        // None of the modifiers is selected
+    bool noModifiers =    !(pEvent->modifiers() & Qt::ShiftModifier)
+                       && !(pEvent->modifiers() & Qt::ControlModifier)
+                       && !(pEvent->modifiers() & Qt::AltModifier)
+                       && !(pEvent->modifiers() & Qt::MetaModifier);
 
-        if (pEvent->key() == Qt::Key_Up) {
-            // The user wants to go to the previous property
+    if (noModifiers && (   (pEvent->key() == Qt::Key_Up)
+                        || (pEvent->key() == Qt::Key_Backtab))) {
+        // The user wants to go to the previous property
 
-            emit goToPreviousPropertyRequested();
+        emit goToPreviousPropertyRequested();
 
-            // Accept the event
+        // Accept the event
 
-            pEvent->accept();
-        } else if (pEvent->key() == Qt::Key_Down) {
-            // The user wants to go to the next property
+        pEvent->accept();
+    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Down)
+                               || (pEvent->key() == Qt::Key_Tab))) {
+        // The user wants to go to the next property
 
-            emit goToNextPropertyRequested();
+        emit goToNextPropertyRequested();
 
-            // Accept the event
+        // Accept the event
 
-            pEvent->accept();
-        } else {
-            // Default handling of the event
-
-            QLineEdit::keyPressEvent(pEvent);
-        }
+        pEvent->accept();
     } else {
         // Default handling of the event
 
@@ -136,33 +132,29 @@ void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check some key combinations
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        && !(pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)) {
-        // None of the modifiers is selected
+    bool noModifiers =    !(pEvent->modifiers() & Qt::ShiftModifier)
+                       && !(pEvent->modifiers() & Qt::ControlModifier)
+                       && !(pEvent->modifiers() & Qt::AltModifier)
+                       && !(pEvent->modifiers() & Qt::MetaModifier);
 
-        if (pEvent->key() == Qt::Key_Up) {
-            // The user wants to go to the previous property
+    if (noModifiers && (   (pEvent->key() == Qt::Key_Up)
+                        || (pEvent->key() == Qt::Key_Backtab))) {
+        // The user wants to go to the previous property
 
-            emit goToPreviousPropertyRequested();
+        emit goToPreviousPropertyRequested();
 
-            // Accept the event
+        // Accept the event
 
-            pEvent->accept();
-        } else if (pEvent->key() == Qt::Key_Down) {
-            // The user wants to go to the next property
+        pEvent->accept();
+    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Down)
+                               || (pEvent->key() == Qt::Key_Tab))) {
+        // The user wants to go to the next property
 
-            emit goToNextPropertyRequested();
+        emit goToNextPropertyRequested();
 
-            // Accept the event
+        // Accept the event
 
-            pEvent->accept();
-        } else {
-            // Default handling of the event
-
-            QComboBox::keyPressEvent(pEvent);
-        }
+        pEvent->accept();
     } else {
         // Default handling of the event
 
@@ -1062,6 +1054,7 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     // Customise ourselves
 
     setRootIsDecorated(false);
+    setTabKeyNavigation(true);
 
     // Create and set our data model
 
@@ -1490,8 +1483,16 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check some key combinations
 
-    if (   (pEvent->modifiers() & Qt::ControlModifier)
-        && (pEvent->key() == Qt::Key_A)) {
+    bool noModifiers =    !(pEvent->modifiers() & Qt::ShiftModifier)
+                       && !(pEvent->modifiers() & Qt::ControlModifier)
+                       && !(pEvent->modifiers() & Qt::AltModifier)
+                       && !(pEvent->modifiers() & Qt::MetaModifier);
+    bool controlModifier =    !(pEvent->modifiers() & Qt::ShiftModifier)
+                           &&  (pEvent->modifiers() & Qt::ControlModifier)
+                           && !(pEvent->modifiers() & Qt::AltModifier)
+                           && !(pEvent->modifiers() & Qt::MetaModifier);
+
+    if (controlModifier && (pEvent->key() == Qt::Key_A)) {
         // The user wants to select everything which we don't want to allow,
         // so just accept the event...
 
@@ -1511,7 +1512,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
             //       would have to use currentIndex().row(), so we might as well
             //       use the latter all the time...
 
-            editProperty(property(currentIndex()));
+            editProperty(currentProperty());
         }
 
         // Accept the event
@@ -1525,33 +1526,24 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Accept the event
 
         pEvent->accept();
-    } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-               && !(pEvent->modifiers() & Qt::ControlModifier)
-               && !(pEvent->modifiers() & Qt::AltModifier)
-               && !(pEvent->modifiers() & Qt::MetaModifier)) {
-        // None of the modifiers is selected
+    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Up)
+                               || (pEvent->key() == Qt::Key_Backtab))) {
+        // The user wants to go the previous property
 
-        if (pEvent->key() == Qt::Key_Up) {
-            // The user wants to go the previous property
+        goToPreviousProperty();
 
-            goToPreviousProperty();
+        // Accept the event
 
-            // Accept the event
+        pEvent->accept();
+    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Down)
+                               || (pEvent->key() == Qt::Key_Tab))) {
+        // The user wants to go to the next property
 
-            pEvent->accept();
-        } else if (pEvent->key() == Qt::Key_Down) {
-            // The user wants to go to the next property
+        goToNextProperty();
 
-            goToNextProperty();
+        // Accept the event
 
-            // Accept the event
-
-            pEvent->accept();
-        } else {
-            // Default handling of the event
-
-            TreeViewWidget::keyPressEvent(pEvent);
-        }
+        pEvent->accept();
     } else {
         // Default handling of the event
 

@@ -63,17 +63,6 @@ SEDMLEditingViewPlugin::SEDMLEditingViewPlugin() :
 // File handling interface
 //==============================================================================
 
-bool SEDMLEditingViewPlugin::isIndirectRemoteFile(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-
-    return false;
-}
-
-//==============================================================================
-
 bool SEDMLEditingViewPlugin::saveFile(const QString &pOldFileName,
                                       const QString &pNewFileName,
                                       bool &pNeedFeedback)

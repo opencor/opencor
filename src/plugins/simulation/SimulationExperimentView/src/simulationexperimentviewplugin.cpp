@@ -71,15 +71,6 @@ SimulationExperimentViewPlugin::SimulationExperimentViewPlugin() :
 // File handling interface
 //==============================================================================
 
-bool SimulationExperimentViewPlugin::isIndirectRemoteFile(const QString &pFileName)
-{
-    // Check whether the given file is an indirect remote file
-
-    return mViewWidget->isIndirectRemoteFile(pFileName);
-}
-
-//==============================================================================
-
 bool SimulationExperimentViewPlugin::saveFile(const QString &pOldFileName,
                                               const QString &pNewFileName,
                                               bool &pNeedFeedback)

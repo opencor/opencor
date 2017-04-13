@@ -90,17 +90,6 @@ bool RawTextViewPlugin::isEditorWidgetContentsModified(const QString &pFileName)
 // File handling interface
 //==============================================================================
 
-bool RawTextViewPlugin::isIndirectRemoteFile(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-
-    return false;
-}
-
-//==============================================================================
-
 bool RawTextViewPlugin::saveFile(const QString &pOldFileName,
                                  const QString &pNewFileName,
                                  bool &pNeedFeedback)
