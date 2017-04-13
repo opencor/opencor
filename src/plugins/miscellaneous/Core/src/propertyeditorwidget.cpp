@@ -70,7 +70,8 @@ void TextEditorWidget::keyPressEvent(QKeyEvent *pEvent)
                        && !(pEvent->modifiers() & Qt::AltModifier)
                        && !(pEvent->modifiers() & Qt::MetaModifier);
 
-    if (noModifiers && (pEvent->key() == Qt::Key_Up)) {
+    if (noModifiers && (   (pEvent->key() == Qt::Key_Up)
+                        || (pEvent->key() == Qt::Key_Backtab))) {
         // The user wants to go to the previous property
 
         emit goToPreviousPropertyRequested();
@@ -78,7 +79,8 @@ void TextEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Accept the event
 
         pEvent->accept();
-    } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
+    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Down)
+                               || (pEvent->key() == Qt::Key_Tab))) {
         // The user wants to go to the next property
 
         emit goToNextPropertyRequested();
@@ -135,7 +137,8 @@ void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
                        && !(pEvent->modifiers() & Qt::AltModifier)
                        && !(pEvent->modifiers() & Qt::MetaModifier);
 
-    if (noModifiers && (pEvent->key() == Qt::Key_Up)) {
+    if (noModifiers && (   (pEvent->key() == Qt::Key_Up)
+                        || (pEvent->key() == Qt::Key_Backtab))) {
         // The user wants to go to the previous property
 
         emit goToPreviousPropertyRequested();
@@ -143,7 +146,8 @@ void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Accept the event
 
         pEvent->accept();
-    } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
+    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Down)
+                               || (pEvent->key() == Qt::Key_Tab))) {
         // The user wants to go to the next property
 
         emit goToNextPropertyRequested();
@@ -1508,7 +1512,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
             //       would have to use currentIndex().row(), so we might as well
             //       use the latter all the time...
 
-            editProperty(property(currentIndex()));
+            editProperty(currentProperty());
         }
 
         // Accept the event
@@ -1522,7 +1526,8 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Accept the event
 
         pEvent->accept();
-    } else if (noModifiers && (pEvent->key() == Qt::Key_Up)) {
+    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Up)
+                               || (pEvent->key() == Qt::Key_Backtab))) {
         // The user wants to go the previous property
 
         goToPreviousProperty();
@@ -1530,7 +1535,8 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Accept the event
 
         pEvent->accept();
-    } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
+    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Down)
+                               || (pEvent->key() == Qt::Key_Tab))) {
         // The user wants to go to the next property
 
         goToNextProperty();
