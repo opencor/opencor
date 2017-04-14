@@ -88,6 +88,15 @@ PmrWorkspaces PmrWorkspaceManager::workspaces() const
 
 //==============================================================================
 
+bool PmrWorkspaceManager::hasWorkspaces() const
+{
+    // Return whether we hold some workspaces
+
+    return !workspaces().isEmpty();
+}
+
+//==============================================================================
+
 bool PmrWorkspaceManager::hasWorkspace(const QString &pUrl) const
 {
     // Return whether we hold the workspace which URL is given
