@@ -299,6 +299,9 @@ void PmrWorkspacesWindowWindow::busy(const bool &pBusy)
 
     static int counter = 0;
 
+    if (!pBusy && !counter)
+        return;
+
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
