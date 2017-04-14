@@ -40,6 +40,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>General:</strong> don't make our windows have a minimum size <a href=\"https://github.com/opencor/opencor/issues/1260\">#1260</a>)." },
                        { "change": "<strong>File Handling interface:</strong> removed isIndirectRemoteFile() since it's not being used anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1267\">#1267</a>)." },
                        { "change": "<strong>Property Editor widget:</strong> allow for navigation using the (Shift+)Tab key(s) (see issue <a href=\"https://github.com/opencor/opencor/issues/1273\">#1273</a>)." },
+                       { "change": "<strong>PMR-based windows:</strong> now clear the contents of those windows before switching instances (see issue <a href=\"https://github.com/opencor/opencor/issues/1279\">#1279</a>)." },
                        { "change": "<strong>CellML Text view:</strong> the import of a CellML file is now always properly converted (see issue <a href=\"https://github.com/opencor/opencor/issues/1257\">#1257</a>)." },
                        { "change": "<strong>Single Cell view:</strong> renamed the view to Simulation Experiment view (see issue <a href=\"https://github.com/opencor/opencor/issues/1256\">#1256</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 3.2.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1264\">#1264</a>)" }
