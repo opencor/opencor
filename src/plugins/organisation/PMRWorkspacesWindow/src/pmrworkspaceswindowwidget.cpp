@@ -654,7 +654,7 @@ void PmrWorkspacesWindowWidget::reset(const QString &pPmrUrl)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::updateGui()
+void PmrWorkspacesWindowWidget::updateGui(const bool &pForceUserMessageVisibility)
 {
     // Determine the message to be displayed, if any
 
@@ -676,7 +676,8 @@ void PmrWorkspacesWindowWidget::updateGui()
 
     // Show/hide our user message widget
 
-    mUserMessageWidget->setVisible(!mUserMessageWidget->text().isEmpty());
+    mUserMessageWidget->setVisible(    pForceUserMessageVisibility
+                                   || !mUserMessageWidget->text().isEmpty());
 }
 
 //==============================================================================
@@ -765,7 +766,8 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
     foreach (PMRSupport::PmrWorkspace *workspace, workspaceManager->workspaces())
         addWorkspace(workspace);
 
-    updateGui();
+    updateGui(   (pWorkspaces == PMRSupport::PmrWorkspaces())
+              && pErrorMessage.isEmpty() && !pAuthenticated);
 
     mInitialized = true;
 }
