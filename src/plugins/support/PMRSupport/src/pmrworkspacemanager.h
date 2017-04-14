@@ -52,6 +52,7 @@ public:
 
     PmrWorkspaces workspaces() const;
 
+    bool hasWorkspaces() const;
     bool hasWorkspace(const QString &pUrl) const;
     PmrWorkspace * workspace(const QString &pUrl) const;
 

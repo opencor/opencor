@@ -221,6 +221,9 @@ void PmrWindowWindow::update(const QString &pPmrUrl)
     // Update our PMR web service and then reload ourselves, if needed
 
     if (pPmrUrl.compare(mPmrUrl)) {
+        if (mPmrWindowWidget->hasExposures())
+            mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(), QString());
+
         mPmrUrl = pPmrUrl;
 
         mPmrWebService->update(pPmrUrl);
@@ -248,6 +251,9 @@ void PmrWindowWindow::busy(const bool &pBusy)
     // Show ourselves as busy or not busy anymore
 
     static int counter = 0;
+
+    if (!pBusy && !counter)
+        return;
 
     counter += pBusy?1:-1;
 

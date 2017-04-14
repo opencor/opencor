@@ -238,7 +238,7 @@ private:
 
     void reset(const QString &pPmrUrl);
 
-    void updateGui();
+    void updateGui(const bool &pForceUserMessageVisibility = false);
 
     PmrWorkspacesWindowItem * currentItem() const;
     PmrWorkspacesWindowItem * workspaceItem(PMRSupport::PmrWorkspace *pWorkspace) const;
