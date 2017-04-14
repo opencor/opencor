@@ -638,6 +638,20 @@ ELSE()
             COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} . ${FILENAME})
             COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} bin ${FILENAME})
         ENDFOREACH()
+
+        # Finally, add Qt's version of the MESA 3D library so that we can run
+        # OpenCOR on machines that don't have 'proper' OpenGL support (e.g. on a
+        # Windows virtual machine in VirtualBox)
+
+        SET(MESA3D_FULL_FILENAME ${QT_BINARY_DIR}/opengl32sw.dll)
+
+        GET_FILENAME_COMPONENT(MESA3D_DIRNAME ${MESA3D_FULL_FILENAME} DIRECTORY)
+        GET_FILENAME_COMPONENT(ORIG_MESA3D_FILENAME ${MESA3D_FULL_FILENAME} NAME)
+
+        SET(NEW_MESA3D_FILENAME opengl32.dll)
+
+        COPY_FILE_TO_BUILD_DIR(DIRECT ${MESA3D_DIRNAME} . ${ORIG_MESA3D_FILENAME} ${NEW_MESA3D_FILENAME})
+        COPY_FILE_TO_BUILD_DIR(DIRECT ${MESA3D_DIRNAME} bin ${ORIG_MESA3D_FILENAME} ${NEW_MESA3D_FILENAME})
     ENDIF()
 ENDIF()
 
@@ -687,10 +701,14 @@ IF(WIN32)
     INSTALL(FILES ${PROJECT_BUILD_DIR}/bin/${CMAKE_PROJECT_NAME}.com
             DESTINATION bin)
 
-    # Additional files required by OpenCOR
+    # Additional files required by OpenCOR (incl. the MESA 3D Library)
 
     INSTALL(FILES ${ADDITIONAL_FILES}
             DESTINATION bin)
+
+    INSTALL(FILES ${MESA3D_FULL_FILENAME}
+            DESTINATION bin
+            RENAME ${NEW_MESA3D_FILENAME})
 
     # Qt libraries required by OpenCOR
 
