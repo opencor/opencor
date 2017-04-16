@@ -15,6 +15,15 @@ var jsonData = { "versions": [
                            { "type": "Improved", "description": "Selection of data." }
                          ]
                        },
+                       { "name": "API",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML API",
+                             "entries": [
+                               { "type": "Fixed", "description": "Memory access in the CUSES service." }
+                             ]
+                           }
+                         ]
+                       },
                        { "name": "Editing",
                          "entries": [
                            { "type": "subCategory", "name": "CellML Annotation view",

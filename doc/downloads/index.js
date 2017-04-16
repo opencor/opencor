@@ -37,8 +37,10 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>Build system:</strong> make sure that the dependencies of external binaries are properly referenced <a href=\"https://github.com/opencor/opencor/issues/1281\">#1281</a>)." },
                        { "change": "<strong>General:</strong> don't make our windows have a minimum size <a href=\"https://github.com/opencor/opencor/issues/1260\">#1260</a>)." },
                        { "change": "<strong>File Handling interface:</strong> removed isIndirectRemoteFile() since it's not being used anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1267\">#1267</a>)." },
+                       { "change": "<strong>CellML API:</strong> fixed a problem that made it crash OpenCOR when defining a certain type of unit (see issue <a href=\"https://github.com/opencor/opencor/issues/1278\">#1278</a>)." },
                        { "change": "<strong>Property Editor widget:</strong> allow for navigation using the (Shift+)Tab key(s) (see issue <a href=\"https://github.com/opencor/opencor/issues/1273\">#1273</a>)." },
                        { "change": "<strong>PMR-based windows:</strong> now clear the contents of those windows before switching instances (see issue <a href=\"https://github.com/opencor/opencor/issues/1279\">#1279</a>)." },
                        { "change": "<strong>CellML Text view:</strong> the import of a CellML file is now always properly converted (see issue <a href=\"https://github.com/opencor/opencor/issues/1257\">#1257</a>)." },
