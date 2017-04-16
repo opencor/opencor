@@ -638,8 +638,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             # Strip the external library of all its local symbols, if possible
 
             IF(NOT WIN32 AND RELEASE_MODE)
-                ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                                   COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                EXECUTE_PROCESS(COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
             ENDIF()
 
             # Link the plugin to the external library
@@ -660,9 +659,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             # On macOS, ensure that @rpath is set in the external library's id
 
             IF(APPLE)
-                EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
-                                WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-                )
+                EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
             ENDIF()
 
             # Package the external library, if needed
@@ -898,9 +895,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     # On macOS, ensure that @rpath is set in the plugin binary's id
 
     IF(APPLE)
-        EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${PLUGIN_FILENAME} ${PLUGIN_FILENAME}
-                        WORKING_DIRECTORY ${DEST_PLUGINS_DIR}
-        )
+        EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${PLUGIN_FILENAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
     ENDIF()
 
     # Package the plugin, but only if we are not on macOS since it will have
