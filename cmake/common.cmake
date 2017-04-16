@@ -461,6 +461,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         PLUGIN_BINARIES
         QT_MODULES
         EXTERNAL_BINARIES
+        EXTERNAL_BINARIES_DEPENDENCIES
         SYSTEM_BINARIES
         TESTS
     )
@@ -657,9 +658,16 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ENDIF()
 
             # On macOS, ensure that @rpath is set in the external library's id
+            # and that is used to reference the external library's dependencies
 
             IF(APPLE)
                 EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+
+                FOREACH(EXTERNAL_BINARIES_DEPENDENCY ${EXTERNAL_BINARIES_DEPENDENCIES})
+                    EXECUTE_PROCESS(COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DEPENDENCY}
+                                                                      @rpath/${EXTERNAL_BINARIES_DEPENDENCY}
+                                                                      ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                ENDFOREACH()
             ENDIF()
 
             # Package the external library, if needed
