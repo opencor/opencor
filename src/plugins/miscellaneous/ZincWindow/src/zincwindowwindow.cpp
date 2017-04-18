@@ -65,10 +65,10 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
             this, SLOT(devicePixelRatioChanged(const int &)));
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    mGui->layout->addWidget(new Core::BorderedWidget(QWidget::createWindowContainer(mZincWidget),
+    mGui->layout->addWidget(new Core::BorderedWidget(mZincWidget,
                                                      false, true, true, true));
 #elif defined(Q_OS_MAC)
-    mGui->layout->addWidget(QWidget::createWindowContainer(mZincWidget));
+    mGui->layout->addWidget(mZincWidget);
 #else
     #error Unsupported platform
 #endif

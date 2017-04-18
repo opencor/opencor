@@ -24,8 +24,9 @@ limitations under the License.
 
 //==============================================================================
 
+#include <QLayout>
 #include <QMouseEvent>
-#include <QOpenGLContext>
+#include <QOpenGLWindow>
 #include <QTimer>
 
 //==============================================================================
@@ -58,20 +59,192 @@ void ZincWidgetSceneViewerCallback::operator()(const OpenCMISS::Zinc::Sceneviewe
 //==============================================================================
 
 ZincWidget::ZincWidget(QWidget *pParent) :
-    QOpenGLWindow(),
-    Core::CommonWidget(pParent),
-    mGraphicsInitialized(false),
-    mDevicePixelRatio(-1),
-    mContext(0),
-    mSceneViewer(OpenCMISS::Zinc::Sceneviewer()),
-    mSceneViewerNotifier(OpenCMISS::Zinc::Sceneviewernotifier()),
-    mZincWidgetSceneViewerCallback(this)
+    Core::Widget(pParent)
 {
+    // Create and use our OpenGL window
+
+    mOpenglWindow = new ZincWidgetOpenglWindow(this);
+
+    createLayout();
+
+    layout()->addWidget(QWidget::createWindowContainer(mOpenglWindow, this));
+
+    // Forward some signals from our OpenGL window
+
+    connect(mOpenglWindow, SIGNAL(graphicsInitialized()),
+            this, SIGNAL(graphicsInitialized()));
+    connect(mOpenglWindow, SIGNAL(devicePixelRatioChanged(const int &)),
+            this, SIGNAL(devicePixelRatioChanged(const int &)));
+}
+
+//==============================================================================
+
+ZincWidget::~ZincWidget()
+{
+    // Delete some internal objects
+
+    delete mOpenglWindow;
 }
 
 //==============================================================================
 
 OpenCMISS::Zinc::Context * ZincWidget::context() const
+{
+    // Return the context of our OpenGL window
+
+    return mOpenglWindow->context();
+}
+
+//==============================================================================
+
+void ZincWidget::setContext(OpenCMISS::Zinc::Context *pContext)
+{
+    // Set the context of our OpenGL window
+
+    mOpenglWindow->setContext(pContext);
+}
+
+//==============================================================================
+
+OpenCMISS::Zinc::Sceneviewer ZincWidget::sceneViewer() const
+{
+    // Return the scene viewer of our OpenGL window
+
+    return mOpenglWindow->sceneViewer();
+}
+
+//==============================================================================
+
+ZincWidget::ProjectionMode ZincWidget::projectionMode()
+{
+    // Return the projection mode of our OpenGL window
+
+    return mOpenglWindow->projectionMode();
+}
+
+//==============================================================================
+
+void ZincWidget::setProjectionMode(const ProjectionMode &pProjectionMode)
+{
+    // Set the project mode of our OpenGL window
+
+    mOpenglWindow->setProjectionMode(pProjectionMode);
+}
+
+//==============================================================================
+
+int ZincWidget::viewParameters(double *pEye, double *pLookAt, double *pUp,
+                               double &pAngle)
+{
+    // Return the view parameters of our OpenGL window
+
+    return mOpenglWindow->viewParameters(pEye, pLookAt, pUp, pAngle);
+}
+
+//==============================================================================
+
+void ZincWidget::setViewParameters(double *pEye, double *pLookAt, double *pUp,
+                                   double &pAngle)
+{
+    // Set the view parameters of our OpenGL window
+
+    mOpenglWindow->setViewParameters(pEye, pLookAt, pUp, pAngle);
+}
+
+//==============================================================================
+
+OpenCMISS::Zinc::Scenefilter ZincWidget::sceneFilter()
+{
+    // Return the scene filter of our OpenGL window
+
+    return mOpenglWindow->sceneFilter();
+}
+
+//==============================================================================
+
+void ZincWidget::setSceneFilter(const OpenCMISS::Zinc::Scenefilter &pSceneFilter)
+{
+    // Set the scene filter of our OpenGL window
+
+    mOpenglWindow->setSceneFilter(pSceneFilter);
+}
+
+//==============================================================================
+
+double ZincWidget::tumbleRate()
+{
+    // Return the tumble rate of our OpenGL window
+
+    return mOpenglWindow->tumbleRate();
+}
+
+//==============================================================================
+
+void ZincWidget::setTumbleRate(const double &pTumbleRate)
+{
+    // Set the tumble rate of our OpenGL window
+
+    mOpenglWindow->setTumbleRate(pTumbleRate);
+}
+
+//==============================================================================
+
+int ZincWidget::project(double *pInCoordinates, double *pOutCoordinates)
+{
+    // Ask our OpenGL window to project the given point in global coordinates
+    // into window pixel coordinates with the origin at the window's top left
+    // pixel
+
+    return mOpenglWindow->project(pInCoordinates, pOutCoordinates);
+}
+
+//==============================================================================
+
+int ZincWidget::unproject(double *pInCoordinates, double *pOutCoordinates)
+{
+    // Ask our OpenGL window to unproject the given point in window pixel
+    // coordinates where the origin is at the window's top left pixel into
+    // global coordinates
+
+    return mOpenglWindow->unproject(pInCoordinates, pOutCoordinates);
+}
+
+//==============================================================================
+
+void ZincWidget::viewAll()
+{
+    // View all of the scene viewer of our OpenGL window
+
+    mOpenglWindow->viewAll();
+}
+
+//==============================================================================
+
+QSize ZincWidget::sizeHint() const
+{
+    // Suggest a default size for ourselves
+    // Note: this is critical if we want a docked widget, with ourselves on it,
+    //       to have a decent size when docked to the main window...
+
+    return defaultSize(0.15);
+}
+
+//==============================================================================
+
+ZincWidgetOpenglWindow::ZincWidgetOpenglWindow(ZincWidget *pZincWidget) :
+    QOpenGLWindow(),
+    mGraphicsInitialized(false),
+    mDevicePixelRatio(-1),
+    mContext(0),
+    mSceneViewer(OpenCMISS::Zinc::Sceneviewer()),
+    mSceneViewerNotifier(OpenCMISS::Zinc::Sceneviewernotifier()),
+    mZincWidgetSceneViewerCallback(pZincWidget)
+{
+}
+
+//==============================================================================
+
+OpenCMISS::Zinc::Context * ZincWidgetOpenglWindow::context() const
 {
     // Return our context
 
@@ -80,7 +253,7 @@ OpenCMISS::Zinc::Context * ZincWidget::context() const
 
 //==============================================================================
 
-void ZincWidget::setContext(OpenCMISS::Zinc::Context *pContext)
+void ZincWidgetOpenglWindow::setContext(OpenCMISS::Zinc::Context *pContext)
 {
     // Set our context
 
@@ -92,7 +265,7 @@ void ZincWidget::setContext(OpenCMISS::Zinc::Context *pContext)
 
 //==============================================================================
 
-OpenCMISS::Zinc::Sceneviewer ZincWidget::sceneViewer() const
+OpenCMISS::Zinc::Sceneviewer ZincWidgetOpenglWindow::sceneViewer() const
 {
     // Return our scene viewer
 
@@ -101,32 +274,32 @@ OpenCMISS::Zinc::Sceneviewer ZincWidget::sceneViewer() const
 
 //==============================================================================
 
-ZincWidget::ProjectionMode ZincWidget::projectionMode()
+ZincWidget::ProjectionMode ZincWidgetOpenglWindow::projectionMode()
 {
-    // Return our project mode
+    // Return our projection mode
 
     switch (mSceneViewer.getProjectionMode()) {
     case OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PARALLEL:
-        return Parallel;
+        return ZincWidget::Parallel;
     case OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE:
-        return Perspective;
+        return ZincWidget::Perspective;
     default:
-        return Invalid;
+        return ZincWidget::Invalid;
     }
 }
 
 //==============================================================================
 
-void ZincWidget::setProjectionMode(const ProjectionMode &pProjectionMode)
+void ZincWidgetOpenglWindow::setProjectionMode(const ZincWidget::ProjectionMode &pProjectionMode)
 {
     // Set our project mode
 
     switch (pProjectionMode) {
-    case Parallel:
+    case ZincWidget::Parallel:
         mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PARALLEL);
 
         break;
-    case Perspective:
+    case ZincWidget::Perspective:
         mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE);
 
         break;
@@ -139,8 +312,8 @@ void ZincWidget::setProjectionMode(const ProjectionMode &pProjectionMode)
 
 //==============================================================================
 
-int ZincWidget::viewParameters(double *pEye, double *pLookAt, double *pUp,
-                               double &pAngle)
+int ZincWidgetOpenglWindow::viewParameters(double *pEye, double *pLookAt,
+                                           double *pUp, double &pAngle)
 {
     // Return our view parameters
 
@@ -154,8 +327,8 @@ int ZincWidget::viewParameters(double *pEye, double *pLookAt, double *pUp,
 
 //==============================================================================
 
-void ZincWidget::setViewParameters(double *pEye, double *pLookAt, double *pUp,
-                                   double &pAngle)
+void ZincWidgetOpenglWindow::setViewParameters(double *pEye, double *pLookAt,
+                                               double *pUp, double &pAngle)
 {
     // Set our view parameters
 
@@ -167,7 +340,7 @@ void ZincWidget::setViewParameters(double *pEye, double *pLookAt, double *pUp,
 
 //==============================================================================
 
-OpenCMISS::Zinc::Scenefilter ZincWidget::sceneFilter()
+OpenCMISS::Zinc::Scenefilter ZincWidgetOpenglWindow::sceneFilter()
 {
     // Return our scene filter
 
@@ -176,7 +349,7 @@ OpenCMISS::Zinc::Scenefilter ZincWidget::sceneFilter()
 
 //==============================================================================
 
-void ZincWidget::setSceneFilter(const OpenCMISS::Zinc::Scenefilter &pSceneFilter)
+void ZincWidgetOpenglWindow::setSceneFilter(const OpenCMISS::Zinc::Scenefilter &pSceneFilter)
 {
     // Set our scene filter
 
@@ -185,7 +358,7 @@ void ZincWidget::setSceneFilter(const OpenCMISS::Zinc::Scenefilter &pSceneFilter
 
 //==============================================================================
 
-double ZincWidget::tumbleRate()
+double ZincWidgetOpenglWindow::tumbleRate()
 {
     // Return our tumble rate
 
@@ -194,7 +367,7 @@ double ZincWidget::tumbleRate()
 
 //==============================================================================
 
-void ZincWidget::setTumbleRate(const double &pTumbleRate)
+void ZincWidgetOpenglWindow::setTumbleRate(const double &pTumbleRate)
 {
     // Set our tumble rate
 
@@ -203,7 +376,8 @@ void ZincWidget::setTumbleRate(const double &pTumbleRate)
 
 //==============================================================================
 
-int ZincWidget::project(double *pInCoordinates, double *pOutCoordinates)
+int ZincWidgetOpenglWindow::project(double *pInCoordinates,
+                                    double *pOutCoordinates)
 {
     // Project the given point in global coordinates into window pixel
     // coordinates with the origin at the window's top left pixel
@@ -217,7 +391,8 @@ int ZincWidget::project(double *pInCoordinates, double *pOutCoordinates)
 
 //==============================================================================
 
-int ZincWidget::unproject(double *pInCoordinates, double *pOutCoordinates)
+int ZincWidgetOpenglWindow::unproject(double *pInCoordinates,
+                                      double *pOutCoordinates)
 {
     // Unproject the given point in window pixel coordinates where the origin is
     // at the window's top left pixel into global coordinates
@@ -231,7 +406,7 @@ int ZincWidget::unproject(double *pInCoordinates, double *pOutCoordinates)
 
 //==============================================================================
 
-void ZincWidget::viewAll()
+void ZincWidgetOpenglWindow::viewAll()
 {
     // View all of our scene viewer
 
@@ -240,7 +415,7 @@ void ZincWidget::viewAll()
 
 //==============================================================================
 
-void ZincWidget::createSceneViewer()
+void ZincWidgetOpenglWindow::createSceneViewer()
 {
     // Create our scene viewer and have it have the same OpenGL properties as
     // QOpenGLWidget
@@ -270,9 +445,9 @@ void ZincWidget::createSceneViewer()
 
 //==============================================================================
 
-void ZincWidget::updateSceneViewerViewerportSize(const int &pWidth,
-                                                 const int &pHeight,
-                                                 const bool &pCheckDevicePixelRatio)
+void ZincWidgetOpenglWindow::updateSceneViewerViewerportSize(const int &pWidth,
+                                                             const int &pHeight,
+                                                             const bool &pCheckDevicePixelRatio)
 {
     // Update the viewport size of our scene viewer, keeping in mind our device
     // pixel ratio
@@ -293,7 +468,41 @@ void ZincWidget::updateSceneViewerViewerportSize(const int &pWidth,
 
 //==============================================================================
 
-OpenCMISS::Zinc::Sceneviewerinput::ButtonType ZincWidget::buttonMap(const Qt::MouseButton &pButton) const
+void ZincWidgetOpenglWindow::initializeGL()
+{
+    // Create our scene viewer if we have a context
+
+    mGraphicsInitialized = true;
+
+    if (mContext)
+        createSceneViewer();
+
+    emit graphicsInitialized();
+}
+
+//==============================================================================
+
+void ZincWidgetOpenglWindow::paintGL()
+{
+    // Have our scene viewer render its scene
+
+    updateSceneViewerViewerportSize(width(), height(), true);
+
+    mSceneViewer.renderScene();
+}
+
+//==============================================================================
+
+void ZincWidgetOpenglWindow::resizeGL(int pWidth, int pHeight)
+{
+    // Update the viewport size of our scene viewer
+
+    updateSceneViewerViewerportSize(pWidth, pHeight);
+}
+
+//==============================================================================
+
+OpenCMISS::Zinc::Sceneviewerinput::ButtonType ZincWidgetOpenglWindow::buttonMap(const Qt::MouseButton &pButton) const
 {
     // Map the given button to a Zinc button
 
@@ -315,7 +524,7 @@ OpenCMISS::Zinc::Sceneviewerinput::ButtonType ZincWidget::buttonMap(const Qt::Mo
 
 //==============================================================================
 
-OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags ZincWidget::modifierMap(const Qt::KeyboardModifiers &pModifiers) const
+OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags ZincWidgetOpenglWindow::modifierMap(const Qt::KeyboardModifiers &pModifiers) const
 {
     // Map the given modifiers to Zinc modifiers
 
@@ -335,41 +544,7 @@ OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags ZincWidget::modifierMap(const Q
 
 //==============================================================================
 
-void ZincWidget::initializeGL()
-{
-    // Create our scene viewer if we have a context
-
-    mGraphicsInitialized = true;
-
-    if (mContext)
-        createSceneViewer();
-
-    emit graphicsInitialized();
-}
-
-//==============================================================================
-
-void ZincWidget::paintGL()
-{
-    // Have our scene viewer render its scene
-
-    updateSceneViewerViewerportSize(width(), height(), true);
-
-    mSceneViewer.renderScene();
-}
-
-//==============================================================================
-
-void ZincWidget::resizeGL(int pWidth, int pHeight)
-{
-    // Update the viewport size of our scene viewer
-
-    updateSceneViewerViewerportSize(pWidth, pHeight);
-}
-
-//==============================================================================
-
-void ZincWidget::mouseMoveEvent(QMouseEvent *pEvent)
+void ZincWidgetOpenglWindow::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Get our scene viewer to handle the given mouse move event
 
@@ -383,11 +558,13 @@ void ZincWidget::mouseMoveEvent(QMouseEvent *pEvent)
         sceneInput.setPosition(pEvent->x(), pEvent->y());
 
     mSceneViewer.processSceneviewerinput(sceneInput);
+
+    update();
 }
 
 //==============================================================================
 
-void ZincWidget::mousePressEvent(QMouseEvent *pEvent)
+void ZincWidgetOpenglWindow::mousePressEvent(QMouseEvent *pEvent)
 {
     // Get our scene viewer to handle the given mouse press event
 
@@ -399,11 +576,13 @@ void ZincWidget::mousePressEvent(QMouseEvent *pEvent)
     sceneInput.setPosition(pEvent->x(), pEvent->y());
 
     mSceneViewer.processSceneviewerinput(sceneInput);
+
+    update();
 }
 
 //==============================================================================
 
-void ZincWidget::mouseReleaseEvent(QMouseEvent *pEvent)
+void ZincWidgetOpenglWindow::mouseReleaseEvent(QMouseEvent *pEvent)
 {
     // Get our scene viewer to handle the given mouse release event
 
@@ -414,11 +593,13 @@ void ZincWidget::mouseReleaseEvent(QMouseEvent *pEvent)
     sceneInput.setPosition(pEvent->x(), pEvent->y());
 
     mSceneViewer.processSceneviewerinput(sceneInput);
+
+    update();
 }
 
 //==============================================================================
 
-void ZincWidget::wheelEvent(QWheelEvent *pEvent)
+void ZincWidgetOpenglWindow::wheelEvent(QWheelEvent *pEvent)
 {
     // Get our scene viewer to handle the given wheel event by first pretending
     // to press the right mouse button
@@ -449,17 +630,8 @@ void ZincWidget::wheelEvent(QWheelEvent *pEvent)
     sceneInput.setPosition(pEvent->x(), pEvent->y());
 
     mSceneViewer.processSceneviewerinput(sceneInput);
-}
 
-//==============================================================================
-
-QSize ZincWidget::sizeHint() const
-{
-    // Suggest a default size for ourselves
-    // Note: this is critical if we want a docked widget, with ourselves on it,
-    //       to have a decent size when docked to the main window...
-
-    return defaultSize(0.15);
+    update();
 }
 
 //==============================================================================
