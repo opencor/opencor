@@ -29,7 +29,7 @@ limitations under the License.
 
 //==============================================================================
 
-#include <QOpenGLWidget>
+#include <QOpenGLWindow>
 
 //==============================================================================
 
@@ -68,7 +68,7 @@ private:
 
 //==============================================================================
 
-class ZINCWIDGET_EXPORT ZincWidget : public QOpenGLWidget,
+class ZINCWIDGET_EXPORT ZincWidget : public QOpenGLWindow,
                                      public Core::CommonWidget
 {
     Q_OBJECT
@@ -138,7 +138,6 @@ private:
     OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags modifierMap(const Qt::KeyboardModifiers &pModifiers) const;
 
 signals:
-    void contextAboutToBeDestroyed();
     void graphicsInitialized();
     void devicePixelRatioChanged(const int &pDevicePixelRatio);
 };

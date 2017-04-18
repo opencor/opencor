@@ -58,8 +58,8 @@ void ZincWidgetSceneViewerCallback::operator()(const OpenCMISS::Zinc::Sceneviewe
 //==============================================================================
 
 ZincWidget::ZincWidget(QWidget *pParent) :
-    QOpenGLWidget(pParent),
-    Core::CommonWidget(this),
+    QOpenGLWindow(),
+    Core::CommonWidget(pParent),
     mGraphicsInitialized(false),
     mDevicePixelRatio(-1),
     mContext(0),
@@ -337,11 +337,6 @@ OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags ZincWidget::modifierMap(const Q
 
 void ZincWidget::initializeGL()
 {
-    // Forward the fact that our context is going to be destroyed
-
-    connect(QOpenGLWidget::context(), SIGNAL(aboutToBeDestroyed()),
-            this, SIGNAL(contextAboutToBeDestroyed()));
-
     // Create our scene viewer if we have a context
 
     mGraphicsInitialized = true;
