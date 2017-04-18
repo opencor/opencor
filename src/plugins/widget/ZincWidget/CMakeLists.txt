@@ -17,4 +17,6 @@ ADD_PLUGIN(ZincWidget
     PLUGINS
         Core
         Zinc
+    QT_MODULES
+        OpenGL
 )

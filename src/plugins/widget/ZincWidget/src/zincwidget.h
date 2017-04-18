@@ -24,12 +24,12 @@ limitations under the License.
 
 //==============================================================================
 
-#include "widget.h"
+#include "commonwidget.h"
 #include "zincwidgetglobal.h"
 
 //==============================================================================
 
-#include <QOpenGLWindow>
+#include <QGLWidget>
 
 //==============================================================================
 
@@ -68,11 +68,8 @@ private:
 
 //==============================================================================
 
-class ZincWidgetOpenglWindow;
-
-//==============================================================================
-
-class ZINCWIDGET_EXPORT ZincWidget : public Core::Widget
+class ZINCWIDGET_EXPORT ZincWidget : public QGLWidget,
+                                     public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -84,7 +81,6 @@ public:
     };
 
     explicit ZincWidget(QWidget *pParent);
-    ~ZincWidget();
 
     OpenCMISS::Zinc::Context * context() const;
     void setContext(OpenCMISS::Zinc::Context *pContext);
@@ -111,50 +107,6 @@ public:
     void viewAll();
 
 protected:
-    virtual QSize sizeHint() const;
-
-private:
-    ZincWidgetOpenglWindow *mOpenglWindow;
-
-signals:
-    void graphicsInitialized();
-    void devicePixelRatioChanged(const int &pDevicePixelRatio);
-};
-
-//==============================================================================
-
-class ZincWidgetOpenglWindow : public QOpenGLWindow
-{
-    Q_OBJECT
-
-public:
-    explicit ZincWidgetOpenglWindow(ZincWidget *pZincWidget);
-
-    OpenCMISS::Zinc::Context * context() const;
-    void setContext(OpenCMISS::Zinc::Context *pContext);
-
-    OpenCMISS::Zinc::Sceneviewer sceneViewer() const;
-
-    ZincWidget::ProjectionMode projectionMode();
-    void setProjectionMode(const ZincWidget::ProjectionMode &pProjectionMode);
-
-    int viewParameters(double *pEye, double *pLookAt, double *pUp,
-                       double &pAngle);
-    void setViewParameters(double *pEye, double *pLookAt, double *pUp,
-                           double &pAngle);
-
-    OpenCMISS::Zinc::Scenefilter sceneFilter();
-    void setSceneFilter(const OpenCMISS::Zinc::Scenefilter &pSceneFilter);
-
-    double tumbleRate();
-    void setTumbleRate(const double &pTumbleRate);
-
-    int project(double *pInCoordinates, double *pOutCoordinates);
-    int unproject(double *pInCoordinates, double *pOutCoordinates);
-
-    void viewAll();
-
-protected:
     virtual void initializeGL();
     virtual void paintGL();
     virtual void resizeGL(int pWidth, int pHeight);
@@ -163,6 +115,8 @@ protected:
     virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual void mouseReleaseEvent(QMouseEvent *pEvent);
     virtual void wheelEvent(QWheelEvent *pEvent);
+
+    virtual QSize sizeHint() const;
 
 private:
     bool mGraphicsInitialized;
