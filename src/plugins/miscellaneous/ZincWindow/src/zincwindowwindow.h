@@ -76,9 +76,12 @@ private:
     ZincWidget::ZincWidget *mZincWidget;
     OpenCMISS::Zinc::Context *mZincContext;
 
+    char *mZincSceneViewerDescription;
+
     int mAxesFontPointSize;
 
 private slots:
+    void createAndSetZincContext();
     void graphicsInitialized();
     void devicePixelRatioChanged(const int &pDevicePixelRatio);
 };

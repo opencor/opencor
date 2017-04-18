@@ -25,6 +25,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QMouseEvent>
+#include <QOpenGLContext>
 #include <QTimer>
 
 //==============================================================================
@@ -57,8 +58,8 @@ void ZincWidgetSceneViewerCallback::operator()(const OpenCMISS::Zinc::Sceneviewe
 //==============================================================================
 
 ZincWidget::ZincWidget(QWidget *pParent) :
-    QGLWidget(pParent),
-    Core::CommonWidget(pParent),
+    QOpenGLWidget(pParent),
+    Core::CommonWidget(this),
     mGraphicsInitialized(false),
     mDevicePixelRatio(-1),
     mContext(0),
@@ -294,6 +295,11 @@ void ZincWidget::updateSceneViewerViewerportSize(const int &pWidth,
 
 void ZincWidget::initializeGL()
 {
+    // Forward the fact that our context is going to be destroyed
+
+    connect(QOpenGLWidget::context(), SIGNAL(aboutToBeDestroyed()),
+            this, SIGNAL(contextAboutToBeDestroyed()));
+
     // Create our scene viewer if we have a context
 
     mGraphicsInitialized = true;

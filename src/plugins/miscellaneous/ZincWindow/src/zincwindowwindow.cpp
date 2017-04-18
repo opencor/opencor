@@ -49,6 +49,7 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
     mGui(new Ui::ZincWindowWindow),
     mZincContext(0),
+    mZincSceneViewerDescription(0),
     mAxesFontPointSize(0)
 {
     // Set up the GUI
@@ -59,6 +60,8 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
 
     mZincWidget = new ZincWidget::ZincWidget(this);
 
+    connect(mZincWidget, SIGNAL(contextAboutToBeDestroyed()),
+            this, SLOT(createAndSetZincContext()));
     connect(mZincWidget, SIGNAL(graphicsInitialized()),
             this, SLOT(graphicsInitialized()));
     connect(mZincWidget, SIGNAL(devicePixelRatioChanged(const int &)),
@@ -72,6 +75,41 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
 #else
     #error Unsupported platform
 #endif
+
+    // Create and set our Zinc context
+
+    createAndSetZincContext();
+}
+
+//==============================================================================
+
+ZincWindowWindow::~ZincWindowWindow()
+{
+    // Delete some internal objects
+
+    delete mZincContext;
+
+    // Delete the GUI
+
+    delete mGui;
+}
+
+//==============================================================================
+
+void ZincWindowWindow::retranslateUi()
+{
+    // Retranslate our whole window
+
+    mGui->retranslateUi(this);
+}
+
+//==============================================================================
+
+void ZincWindowWindow::createAndSetZincContext()
+{
+    // Keep track of our current scene viewer's description
+
+    mZincSceneViewerDescription = mZincWidget->sceneViewer().writeDescription();
 
     // Create and set our Zinc context
 
@@ -180,30 +218,12 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
 
 //==============================================================================
 
-ZincWindowWindow::~ZincWindowWindow()
-{
-    // Delete some internal objects
-
-    delete mZincContext;
-
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
-void ZincWindowWindow::retranslateUi()
-{
-    // Retranslate our whole window
-
-    mGui->retranslateUi(this);
-}
-
-//==============================================================================
-
 void ZincWindowWindow::graphicsInitialized()
 {
+    // Set our 'new' scene viewer's description
+
+    mZincWidget->sceneViewer().readDescription(mZincSceneViewerDescription);
+
     // Our Zinc widget has had its graphics initialised, so now we can set its
     // background colour
 
