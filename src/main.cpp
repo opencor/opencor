@@ -87,7 +87,8 @@ int main(int pArgC, char *pArgV[])
     //          used to generate the CLI version of OpenCOR...
     // Note #2: on macOS, if we were to try to open the OpenCOR bundle from the
     //          command line, then we would get an error message similar to:
-    //              LSOpenURLsWithRole() failed with error -10810 for the file [SomePath]/OpenCOR.app.
+    //              LSOpenURLsWithRole() failed with error -10810 for the file
+    //              [SomePath]/OpenCOR.app.
     //          Fortunately, when double clicking on the OpenCOR bundle or
     //          opening it from the command line, a special argument in the form
     //          of -psn_0_1234567 is passed to OpenCOR, so we can use that to
