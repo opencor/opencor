@@ -258,15 +258,13 @@ void PmrWindowWindow::busy(const bool &pBusy)
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        mPmrWindowWidget->showBusyWidget();
-
         mGui->dockWidgetContents->setEnabled(false);
+
+        mPmrWindowWidget->showBusyWidget();
     } else if (!pBusy && !counter) {
         // Re-enable the GUI side and give, within the current window, the focus
         // to mFilterValue, but only if the current window already has the
         // focus, or to mPmrWindowWidget if it was previously double clicked
-
-        mPmrWindowWidget->hideBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(true);
 
@@ -277,6 +275,8 @@ void PmrWindowWindow::busy(const bool &pBusy)
         } else {
             Core::setFocusTo(mFilterValue);
         }
+
+        mPmrWindowWidget->hideBusyWidget();
     }
 }
 
