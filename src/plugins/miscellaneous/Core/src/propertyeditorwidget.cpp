@@ -70,8 +70,16 @@ void TextEditorWidget::keyPressEvent(QKeyEvent *pEvent)
                        && !(pEvent->modifiers() & Qt::AltModifier)
                        && !(pEvent->modifiers() & Qt::MetaModifier);
 
-    if (noModifiers && (   (pEvent->key() == Qt::Key_Up)
-                        || (pEvent->key() == Qt::Key_Backtab))) {
+    if (noModifiers && (pEvent->key() == Qt::Key_Escape)) {
+        // The user wants to go cancel the editing
+
+        emit cancelEditingRequested();
+
+        // Accept the event
+
+        pEvent->accept();
+    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Up)
+                               || (pEvent->key() == Qt::Key_Backtab))) {
         // The user wants to go to the previous property
 
         emit goToPreviousPropertyRequested();
@@ -137,8 +145,16 @@ void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
                        && !(pEvent->modifiers() & Qt::AltModifier)
                        && !(pEvent->modifiers() & Qt::MetaModifier);
 
-    if (noModifiers && (   (pEvent->key() == Qt::Key_Up)
-                        || (pEvent->key() == Qt::Key_Backtab))) {
+    if (noModifiers && (pEvent->key() == Qt::Key_Escape)) {
+        // The user wants to go cancel the editing
+
+        emit cancelEditingRequested();
+
+        // Accept the event
+
+        pEvent->accept();
+    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Up)
+                               || (pEvent->key() == Qt::Key_Backtab))) {
         // The user wants to go to the previous property
 
         emit goToPreviousPropertyRequested();
@@ -342,6 +358,9 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     }
 
     // Propagate a few signals
+
+    connect(editor, SIGNAL(cancelEditingRequested()),
+            this, SIGNAL(cancelEditingRequested()));
 
     connect(editor, SIGNAL(goToPreviousPropertyRequested()),
             this, SIGNAL(goToPreviousPropertyRequested()));
@@ -1078,6 +1097,9 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     connect(propertyItemDelegate, SIGNAL(closeEditor(QWidget *, QAbstractItemDelegate::EndEditHint)),
             this, SLOT(editorClosed()));
 
+    connect(propertyItemDelegate, SIGNAL(cancelEditingRequested()),
+            this, SLOT(cancelEditing()));
+
     connect(propertyItemDelegate, SIGNAL(goToPreviousPropertyRequested()),
             this, SLOT(goToPreviousProperty()));
     connect(propertyItemDelegate, SIGNAL(goToNextPropertyRequested()),
@@ -1497,8 +1519,8 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // so just accept the event...
 
         pEvent->accept();
-    } else if (   (pEvent->key() == Qt::Key_Return)
-               || (pEvent->key() == Qt::Key_Enter)) {
+    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Return)
+                               || (pEvent->key() == Qt::Key_Enter))) {
         // The user wants to start/stop editing the property
 
         if (mPropertyEditor) {
@@ -1518,10 +1540,10 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Accept the event
 
         pEvent->accept();
-    } else if (pEvent->key() == Qt::Key_Escape) {
+    } else if (noModifiers && (pEvent->key() == Qt::Key_Escape)) {
         // The user wants to cancel the editing
 
-        finishEditing(false);
+        cancelEditing();
 
         // Accept the event
 
@@ -1599,7 +1621,7 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     mRightClicking = pEvent->button() == Qt::RightButton;
 
     if (mRightClicking)
-        finishEditing(false);
+        cancelEditing();
     else if (newProperty && (newProperty != oldProperty))
         editProperty(newProperty);
 }
@@ -1897,6 +1919,20 @@ void PropertyEditorWidget::finishEditing(const bool &pCommitData)
     // The user wants to finish the editing
 
     editProperty(0, pCommitData);
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::cancelEditing()
+{
+    // The user wants to cancel the editing, i.e. finish the editing without
+    // committing the editor's data
+    // Note: we temporarily disable tab key navigation since otherwise it will
+    //       get us to the next property, which we don't want...
+
+    setTabKeyNavigation(false);
+        finishEditing(false);
+    setTabKeyNavigation(true);
 }
 
 //==============================================================================
