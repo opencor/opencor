@@ -8,6 +8,10 @@
         <translation>Exemple</translation>
     </message>
     <message>
+        <source>Test</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Editing</source>
         <translation>Édition</translation>
     </message>
@@ -309,6 +313,10 @@
         <translation>Exemple</translation>
     </message>
     <message>
+        <source>Test</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Invalid</source>
         <translation>Invalide</translation>
     </message>
@@ -363,6 +371,10 @@
     <message>
         <source>Plugins that illustrate various plugin-related aspects.</source>
         <translation>Extensions qui illustrent diverses fonctionalités relatives à une extension.</translation>
+    </message>
+    <message>
+        <source>Plugins to test things.</source>
+        <translation>Extensions pour tester des choses.</translation>
     </message>
     <message>
         <source>Plugins that are not valid.</source>
