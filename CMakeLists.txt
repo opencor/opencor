@@ -10,7 +10,8 @@ INCLUDE(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
 # Our options
 
-OPTION(ENABLE_SAMPLES "Enable the sample plugins to be built" OFF)
+OPTION(ENABLE_SAMPLE_PLUGINS "Enable the sample plugins to be built" OFF)
+OPTION(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plugin" ON)
@@ -300,7 +301,7 @@ ENDIF()
 # Note: the build order must be such that plugins needed by others are built
 #       first...
 
-IF(ENABLE_SAMPLES)
+IF(ENABLE_SAMPLE_PLUGINS)
     SET(SAMPLE_PLUGINS
         sample/Sample
         sample/SampleTools
@@ -309,6 +310,14 @@ IF(ENABLE_SAMPLES)
     )
 ELSE()
     SET(SAMPLE_PLUGINS)
+ENDIF()
+
+IF(ENABLE_TEST_PLUGINS)
+    SET(TEST_PLUGINS
+        test/ZincWindow
+    )
+ELSE()
+    SET(TEST_PLUGINS)
 ENDIF()
 
 SET(PLUGINS
@@ -329,6 +338,7 @@ SET(PLUGINS
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
+    thirdParty/Zinc
     thirdParty/zlib
 
     # Plugins that build on top of some third-party libraries
@@ -353,6 +363,7 @@ SET(PLUGINS
     widget/GraphPanelWidget
     widget/MathMLViewerWidget
     widget/WebViewerWidget
+    widget/ZincWidget
 
     # Plugins that provide some generic features
 
@@ -398,9 +409,10 @@ SET(PLUGINS
 
     tools/CellMLTools
 
-    # Sample plugins
+    # Sample and test plugins
 
     ${SAMPLE_PLUGINS}
+    ${TEST_PLUGINS}
 )
 
 FOREACH(PLUGIN ${PLUGINS})
@@ -635,6 +647,16 @@ ELSE()
             COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} . ${FILENAME})
             COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} bin ${FILENAME})
         ENDFOREACH()
+
+        # Finally, add Qt's version of the MESA 3D library so that we can run
+        # OpenCOR on machines that don't have 'proper' OpenGL support (e.g. on a
+        # Windows virtual machine in VirtualBox)
+
+        SET(ORIG_MESA3D_FILENAME opengl32sw.dll)
+        SET(DEST_MESA3D_FILENAME opengl32.dll)
+
+        COPY_FILE_TO_BUILD_DIR(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA3D_FILENAME} ${DEST_MESA3D_FILENAME})
+        COPY_FILE_TO_BUILD_DIR(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA3D_FILENAME} ${DEST_MESA3D_FILENAME})
     ENDIF()
 ENDIF()
 
@@ -684,10 +706,14 @@ IF(WIN32)
     INSTALL(FILES ${PROJECT_BUILD_DIR}/bin/${CMAKE_PROJECT_NAME}.com
             DESTINATION bin)
 
-    # Additional files required by OpenCOR
+    # Additional files required by OpenCOR (incl. the MESA 3D Library)
 
     INSTALL(FILES ${ADDITIONAL_FILES}
             DESTINATION bin)
+
+    INSTALL(FILES ${QT_BINARY_DIR}/${ORIG_MESA3D_FILENAME}
+            DESTINATION bin
+            RENAME ${DEST_MESA3D_FILENAME})
 
     # Qt libraries required by OpenCOR
 
@@ -857,6 +883,15 @@ ELSE()
     LINUX_DEPLOY_QT_PLUGIN(platforms qxcb)
     LINUX_DEPLOY_QT_PLUGIN(printsupport cupsprintersupport)
     LINUX_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
+
+    IF(NOT ENABLE_TRAVIS_CI)
+        # We are building OpenCOR locally, so we can deploy the
+        # xcbglintegrations plugins
+        # Note: indeed, on Travis CI, the PPA we use doesn't have those
+        #       plugins...
+
+        LINUX_DEPLOY_QT_PLUGIN(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
+    ENDIF()
 
     # Shell script to run OpenCOR
 

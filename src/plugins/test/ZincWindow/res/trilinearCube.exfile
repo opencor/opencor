@@ -1,0 +1,185 @@
+Region: /
+ #Fields=1
+ 1) coordinates, coordinate, rectangular cartesian, #Components=3
+  x.  Value index=1, #Derivatives=0, #Versions=1
+  y.  Value index=2, #Derivatives=0, #Versions=1
+  z.  Value index=3, #Derivatives=0, #Versions=1
+ Node: 1
+  0.000000000000000e+00
+  0.000000000000000e+00
+  0.000000000000000e+00
+ Node: 2
+  1.000000000000000e+00
+  0.000000000000000e+00
+  0.000000000000000e+00
+ Node: 3
+  0.000000000000000e+00
+  1.000000000000000e+00
+  0.000000000000000e+00
+ Node: 4
+  1.000000000000000e+00
+  1.000000000000000e+00
+  0.000000000000000e+00
+ Node: 5
+  0.000000000000000e+00
+  0.000000000000000e+00
+  1.000000000000000e+00
+ Node: 6
+  1.000000000000000e+00
+  0.000000000000000e+00
+  1.000000000000000e+00
+ Node: 7
+  0.000000000000000e+00
+  1.000000000000000e+00
+  1.000000000000000e+00
+ Node: 8
+  1.000000000000000e+00
+  1.000000000000000e+00
+  1.000000000000000e+00
+ Shape. Dimension=1, line
+ #Scale factor sets=0
+ #Nodes=0
+ #Fields=0
+ Element: 0 0 1
+ Element: 0 0 2
+ Element: 0 0 3
+ Element: 0 0 4
+ Element: 0 0 5
+ Element: 0 0 6
+ Element: 0 0 7
+ Element: 0 0 8
+ Element: 0 0 9
+ Element: 0 0 10
+ Element: 0 0 11
+ Element: 0 0 12
+ Shape. Dimension=2, line*line
+ Element: 0 1 0
+ Faces:
+ 0 0 3
+ 0 0 7
+ 0 0 2
+ 0 0 10
+ Element: 0 2 0
+ Faces:
+ 0 0 5
+ 0 0 8
+ 0 0 4
+ 0 0 11
+ Element: 0 3 0
+ Faces:
+ 0 0 1
+ 0 0 9
+ 0 0 3
+ 0 0 5
+ Element: 0 4 0
+ Faces:
+ 0 0 6
+ 0 0 12
+ 0 0 7
+ 0 0 8
+ Element: 0 5 0
+ Faces:
+ 0 0 2
+ 0 0 4
+ 0 0 1
+ 0 0 6
+ Element: 0 6 0
+ Faces:
+ 0 0 10
+ 0 0 11
+ 0 0 9
+ 0 0 12
+ Shape. Dimension=3, line*line*line
+ #Scale factor sets=0
+ #Nodes=8
+ #Fields=1
+ 1) coordinates, coordinate, rectangular cartesian, #Components=3
+ x. l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
+   #Nodes=8
+   1. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   2. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   3. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   4. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   5. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   6. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   7. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   8. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+ y. l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
+   #Nodes=8
+   1. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   2. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   3. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   4. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   5. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   6. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   7. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   8. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+ z. l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
+   #Nodes=8
+   1. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   2. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   3. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   4. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   5. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   6. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   7. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+   8. #Values=1
+     Value labels: value
+     Scale factor indices: 0
+ Element: 1 0 0
+ Faces:
+ 0 1 0
+ 0 2 0
+ 0 3 0
+ 0 4 0
+ 0 5 0
+ 0 6 0
+ Nodes:
+ 1 2 3 4 5 6 7 8
+

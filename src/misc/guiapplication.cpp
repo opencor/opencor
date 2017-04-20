@@ -82,6 +82,8 @@ void GuiApplication::updateCanEmitFileOpenRequestSignal()
 
 bool GuiApplication::event(QEvent *pEvent)
 {
+    // Check whether we have been asked to open one or several files
+
     if (pEvent->type() == QEvent::FileOpen) {
         QFileOpenEvent *fileOpenEvent = static_cast<QFileOpenEvent*>(pEvent);
         QString fileNameOrOpencorUrl = fileOpenEvent->file();
