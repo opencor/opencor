@@ -883,7 +883,15 @@ ELSE()
     LINUX_DEPLOY_QT_PLUGIN(platforms qxcb)
     LINUX_DEPLOY_QT_PLUGIN(printsupport cupsprintersupport)
     LINUX_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
-    LINUX_DEPLOY_QT_PLUGIN(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
+
+    IF(NOT ENABLE_TRAVIS_CI)
+        # We are building OpenCOR locally, so we can deploy the
+        # xcbglintegrations plugins
+        # Note: indeed, on Travis CI, the PPA we use doesn't have those
+        #       plugins...
+
+        LINUX_DEPLOY_QT_PLUGIN(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
+    ENDIF()
 
     # Shell script to run OpenCOR
 
