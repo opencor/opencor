@@ -320,8 +320,8 @@ void CellMLToolsPlugin::runHelpCommand()
 {
     // Output the commands we support
 
-    std::cout << "Commands supported by CellMLTools:" << std::endl;
-    std::cout << " * Display the commands supported by CellMLTools:" << std::endl;
+    std::cout << "Commands supported by the CellMLTools plugin:" << std::endl;
+    std::cout << " * Display the commands supported by the CellMLTools plugin:" << std::endl;
     std::cout << "      help" << std::endl;
     std::cout << " * Export <file> to a <predefined_format> or a <user_defined_format_file>:" << std::endl;
     std::cout << "      export <file> <predefined_format>|<user_defined_format_file>" << std::endl;
