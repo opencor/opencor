@@ -305,15 +305,15 @@ void PmrWorkspacesWindowWindow::busy(const bool &pBusy)
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        mPmrWorkspacesWindowWidget->showBusyWidget();
-
         mGui->dockWidgetContents->setEnabled(false);
+
+        mPmrWorkspacesWindowWidget->showBusyWidget();
     } else if (!pBusy && !counter) {
         // Re-enable the GUI side
 
-        mPmrWorkspacesWindowWidget->hideBusyWidget();
-
         mGui->dockWidgetContents->setEnabled(true);
+
+        mPmrWorkspacesWindowWidget->hideBusyWidget();
     }
 }
 
