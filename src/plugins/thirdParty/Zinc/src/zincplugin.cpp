@@ -33,8 +33,8 @@ PLUGININFO_FUNC ZincPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"http://physiomeproject.org/software/opencmiss/zinc\">Zinc</a> library."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder la librairie <a href=\"http://physiomeproject.org/software/opencmiss/zinc\">Zinc</a>."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a> library."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder la librairie <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a>."));
 
     return new PluginInfo(PluginInfo::ThirdParty, false, false,
                           QStringList(),
