@@ -45,6 +45,9 @@ public:
 #ifdef ENABLE_SAMPLE_PLUGINS
         SampleMode,
 #endif
+#ifdef ENABLE_TEST_PLUGINS
+        TestMode,
+#endif
         EditingMode,
         SimulationMode,
         AnalysisMode

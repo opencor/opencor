@@ -167,6 +167,9 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 #ifdef ENABLE_SAMPLE_PLUGINS
     mModes.insert(ViewInterface::SampleMode, new CentralWidgetMode(this));
 #endif
+#ifdef ENABLE_TEST_PLUGINS
+    mModes.insert(ViewInterface::TestMode, new CentralWidgetMode(this));
+#endif
     mModes.insert(ViewInterface::EditingMode, new CentralWidgetMode(this));
     mModes.insert(ViewInterface::SimulationMode, new CentralWidgetMode(this));
     mModes.insert(ViewInterface::AnalysisMode, new CentralWidgetMode(this));
@@ -612,6 +615,10 @@ void CentralWidget::retranslateUi()
 #ifdef ENABLE_SAMPLE_PLUGINS
     mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::SampleMode, -1),
                           tr("Sample"));
+#endif
+#ifdef ENABLE_TEST_PLUGINS
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::TestMode, -1),
+                          tr("Test"));
 #endif
     mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::EditingMode, -1),
                           tr("Editing"));
@@ -1677,6 +1684,9 @@ void CentralWidget::updateGui()
 
 #ifdef ENABLE_SAMPLE_PLUGINS
     mModes.value(ViewInterface::SampleMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SampleMode));
+#endif
+#ifdef ENABLE_TEST_PLUGINS
+    mModes.value(ViewInterface::TestMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::TestMode));
 #endif
     mModes.value(ViewInterface::EditingMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::EditingMode));
     mModes.value(ViewInterface::SimulationMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SimulationMode));

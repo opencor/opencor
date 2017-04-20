@@ -89,6 +89,10 @@ QString pluginCategoryName(const PluginInfo::Category &pCategory)
     case PluginInfo::Sample:
         return QObject::tr("Sample");
 #endif
+#ifdef ENABLE_TEST_PLUGINS
+    case PluginInfo::Test:
+        return QObject::tr("Test");
+#endif
     case PluginInfo::Invalid:
         return QObject::tr("Invalid");
     case PluginInfo::Analysis:
@@ -132,6 +136,10 @@ QString pluginCategoryDescription(const PluginInfo::Category &pCategory)
 #ifdef ENABLE_SAMPLE_PLUGINS
     case PluginInfo::Sample:
         return QObject::tr("Plugins that illustrate various plugin-related aspects.");
+#endif
+#ifdef ENABLE_TEST_PLUGINS
+    case PluginInfo::Test:
+        return QObject::tr("Plugins to test things.");
 #endif
     case PluginInfo::Invalid:
         return QObject::tr("Plugins that are not valid.");

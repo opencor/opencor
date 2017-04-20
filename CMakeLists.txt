@@ -11,6 +11,7 @@ INCLUDE(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 # Our options
 
 OPTION(ENABLE_SAMPLE_PLUGINS "Enable the sample plugins to be built" OFF)
+OPTION(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plugin" ON)
@@ -311,6 +312,14 @@ ELSE()
     SET(SAMPLE_PLUGINS)
 ENDIF()
 
+IF(ENABLE_TEST_PLUGINS)
+    SET(TEST_PLUGINS
+        test/ZincWindow
+    )
+ELSE()
+    SET(TEST_PLUGINS)
+ENDIF()
+
 SET(PLUGINS
     # Plugins that have no dependencies
 
@@ -382,7 +391,6 @@ SET(PLUGINS
 
     miscellaneous/HelpWindow
     miscellaneous/WebBrowserWindow
-    miscellaneous/ZincWindow
 
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
@@ -401,9 +409,10 @@ SET(PLUGINS
 
     tools/CellMLTools
 
-    # Sample plugins
+    # Sample and test plugins
 
     ${SAMPLE_PLUGINS}
+    ${TEST_PLUGINS}
 )
 
 FOREACH(PLUGIN ${PLUGINS})

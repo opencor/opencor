@@ -41,6 +41,9 @@ static const auto ViewModeUnknown    = QStringLiteral("UnknownMode");
 #ifdef ENABLE_SAMPLE_PLUGINS
 static const auto ViewModeSample     = QStringLiteral("SampleMode");
 #endif
+#ifdef ENABLE_TEST_PLUGINS
+static const auto ViewModeTest       = QStringLiteral("TestMode");
+#endif
 static const auto ViewModeEditing    = QStringLiteral("EditingMode");
 static const auto ViewModeSimulation = QStringLiteral("SimulationMode");
 static const auto ViewModeAnalysis   = QStringLiteral("AnalysisMode");
@@ -57,6 +60,10 @@ QString ViewInterface::modeAsString(const Mode &pMode)
 #ifdef ENABLE_SAMPLE_PLUGINS
     case SampleMode:
         return ViewModeSample;
+#endif
+#ifdef ENABLE_TEST_PLUGINS
+    case TestMode:
+        return ViewModeTest;
 #endif
     case EditingMode:
         return ViewModeEditing;
@@ -77,9 +84,19 @@ ViewInterface::Mode ViewInterface::modeFromString(const QString &pMode)
 {
     // Return the mode string corresponding to the given mode
 
-#ifdef ENABLE_SAMPLE_PLUGINS
+#if defined(ENABLE_SAMPLE_PLUGINS) && defined(ENABLE_TEST_PLUGINS)
     if (!pMode.compare(ViewModeSample))
         return SampleMode;
+    else if (!pMode.compare(ViewModeTest))
+        return TestMode;
+    else if (!pMode.compare(ViewModeEditing))
+#elif defined(ENABLE_SAMPLE_PLUGINS)
+    if (!pMode.compare(ViewModeSample))
+        return SampleMode;
+    else if (!pMode.compare(ViewModeEditing))
+#elif defined(ENABLE_TEST_PLUGINS)
+    if (!pMode.compare(ViewModeTest))
+        return TestMode;
     else if (!pMode.compare(ViewModeEditing))
 #else
     if (!pMode.compare(ViewModeEditing))
