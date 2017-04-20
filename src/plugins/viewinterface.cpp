@@ -38,7 +38,7 @@ extern "C" Q_DECL_EXPORT int viewInterfaceVersion()
 //==============================================================================
 
 static const auto ViewModeUnknown    = QStringLiteral("UnknownMode");
-#ifdef ENABLE_SAMPLES
+#ifdef ENABLE_SAMPLE_PLUGINS
 static const auto ViewModeSample     = QStringLiteral("SampleMode");
 #endif
 static const auto ViewModeEditing    = QStringLiteral("EditingMode");
@@ -54,7 +54,7 @@ QString ViewInterface::modeAsString(const Mode &pMode)
     switch (pMode) {
     case UnknownMode:
         return ViewModeUnknown;
-#ifdef ENABLE_SAMPLES
+#ifdef ENABLE_SAMPLE_PLUGINS
     case SampleMode:
         return ViewModeSample;
 #endif
@@ -77,7 +77,7 @@ ViewInterface::Mode ViewInterface::modeFromString(const QString &pMode)
 {
     // Return the mode string corresponding to the given mode
 
-#ifdef ENABLE_SAMPLES
+#ifdef ENABLE_SAMPLE_PLUGINS
     if (!pMode.compare(ViewModeSample))
         return SampleMode;
     else if (!pMode.compare(ViewModeEditing))

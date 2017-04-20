@@ -63,8 +63,8 @@ class PluginInfo
 {
 public:
     enum Category {
-#ifdef ENABLE_SAMPLES
         Sample = -2,
+#ifdef ENABLE_SAMPLE_PLUGINS
 #endif
         Invalid = -1,
         Analysis,

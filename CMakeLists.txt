@@ -10,7 +10,7 @@ INCLUDE(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
 # Our options
 
-OPTION(ENABLE_SAMPLES "Enable the sample plugins to be built" OFF)
+OPTION(ENABLE_SAMPLE_PLUGINS "Enable the sample plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plugin" ON)
@@ -300,7 +300,7 @@ ENDIF()
 # Note: the build order must be such that plugins needed by others are built
 #       first...
 
-IF(ENABLE_SAMPLES)
+IF(ENABLE_SAMPLE_PLUGINS)
     SET(SAMPLE_PLUGINS
         sample/Sample
         sample/SampleTools

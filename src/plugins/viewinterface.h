@@ -42,7 +42,7 @@ class ViewInterface
 public:
     enum Mode {
         UnknownMode,
-#ifdef ENABLE_SAMPLES
+#ifdef ENABLE_SAMPLE_PLUGINS
         SampleMode,
 #endif
         EditingMode,

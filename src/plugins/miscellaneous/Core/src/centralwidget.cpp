@@ -164,7 +164,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our modes
 
-#ifdef ENABLE_SAMPLES
+#ifdef ENABLE_SAMPLE_PLUGINS
     mModes.insert(ViewInterface::SampleMode, new CentralWidgetMode(this));
 #endif
     mModes.insert(ViewInterface::EditingMode, new CentralWidgetMode(this));
@@ -609,7 +609,7 @@ void CentralWidget::retranslateUi()
 {
     // Retranslate our modes tab bar
 
-#ifdef ENABLE_SAMPLES
+#ifdef ENABLE_SAMPLE_PLUGINS
     mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::SampleMode, -1),
                           tr("Sample"));
 #endif
@@ -1675,7 +1675,7 @@ void CentralWidget::updateGui()
 
     int fileModeTabIndex = mModeTabs->currentIndex();
 
-#ifdef ENABLE_SAMPLES
+#ifdef ENABLE_SAMPLE_PLUGINS
     mModes.value(ViewInterface::SampleMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SampleMode));
 #endif
     mModes.value(ViewInterface::EditingMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::EditingMode));

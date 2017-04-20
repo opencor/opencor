@@ -53,7 +53,7 @@ void CliTests::cliTests()
 
     // List the CLI plugins
 
-#ifdef ENABLE_SAMPLES
+#ifdef ENABLE_SAMPLE_PLUGINS
     QCOMPARE(OpenCOR::runCli(QStringList() << "-p"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/Core/tests/data/cli/plugins_with_sample_tools.out")));
 #else
@@ -63,7 +63,7 @@ void CliTests::cliTests()
 
     // List the status of all the plugins
 
-#ifdef ENABLE_SAMPLES
+#ifdef ENABLE_SAMPLE_PLUGINS
     QCOMPARE(OpenCOR::runCli(QStringList() << "-s"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/Core/tests/data/cli/status_with_sample_tools.out")));
 #else
@@ -78,7 +78,7 @@ void CliTests::cliTests()
 
     // Try an unknown command
 
-#ifdef ENABLE_SAMPLES
+#ifdef ENABLE_SAMPLE_PLUGINS
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "::UnknownCommand"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/Core/tests/data/cli/unknown_command_with_sample_tools.out")));
 #else
