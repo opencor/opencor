@@ -121,16 +121,6 @@ void CliApplication::loadPlugins()
 
 //==============================================================================
 
-QString CliApplication::pluginDescription(Plugin *pPlugin) const
-{
-    // Retrieve and return the plugin's default description, stripped out of all
-    // its HTML (should it have some)
-
-    return plainString(pPlugin->info()->description());
-}
-
-//==============================================================================
-
 void CliApplication::about() const
 {
     // Output some information about OpenCOR
@@ -274,7 +264,7 @@ void CliApplication::plugins() const
         // Retrieve the CLI plugin and its default description
 
         QString pluginInfo = plugin->name();
-        QString pluginDesc = pluginDescription(plugin);
+        QString pluginDesc = plainString(plugin->info()->description());
 
         if (!pluginDesc.isEmpty())
             pluginInfo += ": "+pluginDesc;

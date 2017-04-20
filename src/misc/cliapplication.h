@@ -61,8 +61,6 @@ private:
 
     void loadPlugins();
 
-    QString pluginDescription(Plugin *pPlugin) const;
-
     void about() const;
     bool command(const QStringList &pArguments, int *pRes) const;
     void help() const;
