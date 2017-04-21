@@ -212,8 +212,8 @@ void SampleToolsPlugin::runHelpCommand()
 {
     // Output the commands we support
 
-    std::cout << "Commands supported by SampleTools:" << std::endl;
-    std::cout << " * Display the commands supported by SampleTools:" << std::endl;
+    std::cout << "Commands supported by the SampleTools plugin:" << std::endl;
+    std::cout << " * Display the commands supported by the SampleTools plugin:" << std::endl;
     std::cout << "      help" << std::endl;
     std::cout << " * Add two numbers:" << std::endl;
     std::cout << "      add <nb1> <nb2>" << std::endl;
