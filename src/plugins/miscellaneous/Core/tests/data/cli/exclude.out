@@ -1,3 +1,3 @@
  - Core: cannot be directly excluded.
- - HelpWindow: excluded from the GUI version of OpenCOR.
+ - PMRWindow: excluded from the GUI version of OpenCOR.
  - Unknown: unknown plugin.
