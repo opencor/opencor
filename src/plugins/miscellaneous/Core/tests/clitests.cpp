@@ -71,7 +71,7 @@ void CliTests::cliExcludeTests()
 {
     // Exclude some plugins
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-e" << "Core" << "PMRWindow" << "Unknown"),
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-e" << "Core" << "FileBrowserWindow" << "Unknown"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/Core/tests/data/cli/exclude.out")));
 }
 
@@ -93,7 +93,7 @@ void CliTests::cliIncludeTests()
 {
     // Include some plugins
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-i" << "Core" << "PMRWindow" << "Unknown"),
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-i" << "Core" << "FileBrowserWindow" << "Unknown"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/Core/tests/data/cli/include.out")));
 }
 
