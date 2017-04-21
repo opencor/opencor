@@ -60,6 +60,8 @@ private:
     Plugins mLoadedCliPlugins;
 
     void loadPlugins();
+    void includePlugins(const QStringList &pPluginNames,
+                        const bool &pInclude = true) const;
 
     void about() const;
     bool command(const QStringList &pArguments, int *pRes) const;

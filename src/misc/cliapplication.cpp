@@ -33,6 +33,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QCoreApplication>
+#include <QDir>
 #include <QSettings>
 
 //==============================================================================
@@ -116,6 +117,54 @@ void CliApplication::loadPlugins()
                 qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(&settings);
             settings.endGroup();
         settings.endGroup();
+    }
+}
+
+//==============================================================================
+
+void CliApplication::includePlugins(const QStringList &pPluginNames,
+                                    const bool &pInclude) const
+{
+    // Retrieve all the plugins that are available
+
+    QString pluginsDir = QCoreApplication::libraryPaths().first()+QDir::separator()+qAppName();
+    QFileInfoList fileInfoList = QDir(pluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);
+    QStringList availablePluginNames = QStringList();
+
+    foreach (const QFileInfo &fileInfo, fileInfoList)
+        availablePluginNames << Plugin::name(fileInfo.canonicalFilePath());
+
+    // Include/exclude the given plugins to/from the GUI version of OpenCOR,
+    // after having sorted them and made sure that they actually exist
+
+    QStringList pluginNames = pPluginNames;
+
+    std::sort(pluginNames.begin(), pluginNames.end());
+
+    foreach (const QString &pluginName, pluginNames) {
+        QString status;
+
+        if (availablePluginNames.contains(pluginName)) {
+            // Make sure that the plugin is selectable before including/excluding it
+
+            PluginInfo *pluginInfo = Plugin::info(Plugin::fileName(pluginsDir, pluginName));
+
+            if (pluginInfo) {
+                if (pluginInfo->isSelectable()) {
+                    Plugin::setLoad(pluginName, pInclude);
+
+                    status = QString("%1 the GUI version of OpenCOR").arg(pInclude?"included to":"excluded from");
+                } else {
+                    status = QString("cannot be directly %1").arg(pInclude?"included":"excluded");
+                }
+            } else {
+                status = "unknown error";
+            }
+        } else {
+            status = "unknown plugin";
+        }
+
+        std::cout << " - " << pluginName.toStdString() << ": " << status.toStdString() << "." << std::endl;
     }
 }
 
@@ -222,7 +271,9 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
 
 void CliApplication::exclude(const QStringList &pPluginNames) const
 {
-Q_UNUSED(pPluginNames);
+    // Exclude the given plugins from the GUI version of OpenCOR
+
+    includePlugins(pPluginNames, false);
 }
 
 //==============================================================================
@@ -258,7 +309,9 @@ void CliApplication::help() const
 
 void CliApplication::include(const QStringList &pPluginNames) const
 {
-Q_UNUSED(pPluginNames);
+    // Include the given plugins to the GUI version of OpenCOR
+
+    includePlugins(pPluginNames);
 }
 
 //==============================================================================
