@@ -52,9 +52,7 @@ PluginManager::PluginManager(const bool &pGuiMode) :
 
     // Retrieve the list of plugins available for loading
 
-    QFileInfoList fileInfoList = QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension),
-                                                                 QDir::Files);
-
+    QFileInfoList fileInfoList = QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);
     QStringList fileNames = QStringList();
 
     foreach (const QFileInfo &fileInfo, fileInfoList) {
@@ -216,7 +214,7 @@ bool PluginManager::guiMode() const
 
 Plugins PluginManager::plugins() const
 {
-    // Return a list of all our plugins, whether loaded
+    // Return a list of all our plugins, whether loaded or not
 
     return mPlugins;
 }
