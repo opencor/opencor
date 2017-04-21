@@ -1,5 +1,5 @@
-Commands supported by CellMLTools:
- * Display the commands supported by CellMLTools:
+Commands supported by the CellMLTools plugin:
+ * Display the commands supported by the CellMLTools plugin:
       help
  * Export <file> to a <predefined_format> or a <user_defined_format_file>:
       export <file> <predefined_format>|<user_defined_format_file>
