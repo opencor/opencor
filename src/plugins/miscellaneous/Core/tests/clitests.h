@@ -33,10 +33,10 @@ class CliTests : public QObject
     Q_OBJECT
 
 private slots:
-    void cliHelpTests();
     void cliAboutTests();
     void cliCommandTests();
     void cliExcludeTests();
+    void cliHelpTests();
     void cliIncludeTests();
     void cliPluginsTests();
     void cliResetTests();

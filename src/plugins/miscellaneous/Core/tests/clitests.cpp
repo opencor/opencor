@@ -33,18 +33,6 @@ limitations under the License.
 
 //==============================================================================
 
-void CliTests::cliHelpTests()
-{
-    // Ask for OpenCOR's CLI help
-
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-h"),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/Core/tests/data/cli/help.out")));
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-x"),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/Core/tests/data/cli/help.out")));
-}
-
-//==============================================================================
-
 void CliTests::cliAboutTests()
 {
     // Ask for the about information
@@ -85,6 +73,18 @@ void CliTests::cliExcludeTests()
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-e" << "Core" << "HelpWindow" << "Unknown"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/Core/tests/data/cli/exclude.out")));
+}
+
+//==============================================================================
+
+void CliTests::cliHelpTests()
+{
+    // Ask for OpenCOR's CLI help
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-h"),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/Core/tests/data/cli/help.out")));
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-x"),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/Core/tests/data/cli/help.out")));
 }
 
 //==============================================================================
