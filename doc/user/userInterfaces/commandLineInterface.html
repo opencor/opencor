@@ -23,21 +23,16 @@
         </div>
 
         <pre>$ ./OpenCOR -h
-Usage: OpenCOR [-a|--about] [-c|--command [&lt;plugin&gt;::]&lt;command&gt; &lt;options&gt;] [-h|--help] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [&lt;files&gt;]
+Usage: OpenCOR [-a|--about] [-c|--command [&lt;plugin&gt;::]&lt;command&gt; &lt;options&gt;] [-e|--exclude &lt;plugins&gt;] [-h|--help] [-i|--include &lt;plugins&gt;] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [&lt;files&gt;]
  -a, --about     Display some information about OpenCOR
  -c, --command   Send a command to one or all the <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> plugins
+ -e, --exclude   Exclude the given plugin(s)
  -h, --help      Display this help information
+ -i, --include   Include the given plugin(s)
  -p, --plugins   Display all the <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> plugins
  -r, --reset     Reset all your settings
  -s, --status    Display the status of all the plugins
  -v, --version   Display the version of OpenCOR</pre>
-
-        <div class="section">
-            Version
-        </div>
-
-        <pre>$ ./OpenCOR -v
-OpenCOR Version 0.5</pre>
 
         <div class="section">
             About
@@ -51,6 +46,45 @@ Copyright 2011-2016
 OpenCOR is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse CellML files.</pre>
 
         <div class="section">
+            Command
+        </div>
+
+        <pre>$ ./OpenCOR -c help
+Commands supported by <a href="../plugins/editing/CellMLTextView.html">CellMLTextView</a>:
+ * Display the commands supported by <a href="../plugins/editing/CellMLTextView.html">CellMLTextView</a>:
+      help
+ * Export a CellML Text &lt;file&gt; to CellML:
+      export &lt;file&gt;
+ * Import a CellML &lt;file&gt; to the CellML Text format:
+      import &lt;file&gt;
+
+Commands supported by <a href="../plugins/tools/CellMLTools.html">CellMLTools</a>:
+ * Display the commands supported by <a href="../plugins/tools/CellMLTools.html">CellMLTools</a>:
+      help
+ * Export &lt;file&gt; to a &lt;predefined_format&gt; or a &lt;user_defined_format_file&gt;:
+      export &lt;file&gt; &lt;predefined_format>|&lt;user_defined_format_file&gt;
+   &lt;predefined_format&gt; can take one of the following values:
+      cellml_1_0: to export a CellML 1.1 file to CellML 1.0</pre>
+
+        <div class="section">
+            Exclude
+        </div>
+
+        <pre>$ ./OpenCOR -e Core HelpWindow Unknown
+ - Core: cannot be directly excluded.
+ - HelpWindow: excluded from the GUI version of OpenCOR.
+ - Unknown: unknown plugin.</pre>
+
+        <div class="section">
+            Include
+        </div>
+
+        <pre>$ ./OpenCOR -e Core HelpWindow Unknown
+ - Core: cannot be directly included.
+ - HelpWindow: included to the GUI version of OpenCOR.
+ - Unknown: unknown plugin.</pre>
+
+        <div class="section">
             Plugins
         </div>
 
@@ -58,6 +92,13 @@ OpenCOR is a cross-platform modelling environment, which can be used to organise
 The following <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> plugins are available:
  - <a href="../plugins/editing/CellMLTextView.html">CellMLTextView</a>: a plugin to edit CellML files using the CellML Text format.
  - <a href="../plugins/tools/CellMLTools.html">CellMLTools</a>: a plugin to access various CellML-related tools.</pre>
+
+        <div class="section">
+            Reset
+        </div>
+
+        <pre>$ ./OpenCOR -r
+All your settings have been reset.</pre>
 
         <div class="section">
             Status
@@ -82,32 +123,11 @@ The following plugins are available:
  - StandardSupport: the plugin is loaded and fully functional.</pre>
 
         <div class="section">
-            Command
+            Version
         </div>
 
-        <pre>$ ./OpenCOR -c help
-Commands supported by <a href="../plugins/editing/CellMLTextView.html">CellMLTextView</a>:
- * Display the commands supported by <a href="../plugins/editing/CellMLTextView.html">CellMLTextView</a>:
-      help
- * Export a CellML Text &lt;file&gt; to CellML:
-      export &lt;file&gt;
- * Import a CellML &lt;file&gt; to the CellML Text format:
-      import &lt;file&gt;
-
-Commands supported by <a href="../plugins/tools/CellMLTools.html">CellMLTools</a>:
- * Display the commands supported by <a href="../plugins/tools/CellMLTools.html">CellMLTools</a>:
-      help
- * Export &lt;file&gt; to a &lt;predefined_format&gt; or a &lt;user_defined_format_file&gt;:
-      export &lt;file&gt; &lt;predefined_format>|&lt;user_defined_format_file&gt;
-   &lt;predefined_format&gt; can take one of the following values:
-      cellml_1_0: to export a CellML 1.1 file to CellML 1.0</pre>
-
-        <div class="section">
-            Reset
-        </div>
-
-        <pre>$ ./OpenCOR -r
-All your settings have been reset.</pre>
+        <pre>$ ./OpenCOR -v
+OpenCOR Version 0.5</pre>
 
         <script type="text/javascript">
             copyright("../..");

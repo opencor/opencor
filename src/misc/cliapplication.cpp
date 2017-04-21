@@ -33,6 +33,7 @@ limitations under the License.
 //==============================================================================
 
 #include <QCoreApplication>
+#include <QDir>
 #include <QSettings>
 
 //==============================================================================
@@ -121,12 +122,51 @@ void CliApplication::loadPlugins()
 
 //==============================================================================
 
-QString CliApplication::pluginDescription(Plugin *pPlugin) const
+void CliApplication::includePlugins(const QStringList &pPluginNames,
+                                    const bool &pInclude) const
 {
-    // Retrieve and return the plugin's default description, stripped out of all
-    // its HTML (should it have some)
+    // Retrieve all the plugins that are available
 
-    return plainString(pPlugin->info()->description());
+    QString pluginsDir = QCoreApplication::libraryPaths().first()+QDir::separator()+qAppName();
+    QFileInfoList fileInfoList = QDir(pluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);
+    QStringList availablePluginNames = QStringList();
+
+    foreach (const QFileInfo &fileInfo, fileInfoList)
+        availablePluginNames << Plugin::name(fileInfo.canonicalFilePath());
+
+    // Include/exclude the given plugins to/from the GUI version of OpenCOR,
+    // after having sorted them and made sure that they actually exist
+
+    QStringList pluginNames = pPluginNames;
+
+    std::sort(pluginNames.begin(), pluginNames.end());
+
+    foreach (const QString &pluginName, pluginNames) {
+        QString status;
+
+        if (availablePluginNames.contains(pluginName)) {
+            // Make sure that the plugin is selectable before including/excluding it
+
+            QString errorMessage;
+            PluginInfo *pluginInfo = Plugin::info(Plugin::fileName(pluginsDir, pluginName), &errorMessage);
+
+            if (pluginInfo) {
+                if (pluginInfo->isSelectable()) {
+                    Plugin::setLoad(pluginName, pInclude);
+
+                    status = QString("%1 the GUI version of OpenCOR").arg(pInclude?"included to":"excluded from");
+                } else {
+                    status = QString("cannot be directly %1").arg(pInclude?"included":"excluded");
+                }
+            } else {
+                status = QString("plugin information not found%1").arg(errorMessage.isEmpty()?QString():QString(" (%1)").arg(errorMessage));
+            }
+        } else {
+            status = "unknown plugin";
+        }
+
+        std::cout << " - " << pluginName.toStdString() << ": " << status.toStdString() << "." << std::endl;
+    }
 }
 
 //==============================================================================
@@ -230,18 +270,31 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
 
 //==============================================================================
 
+void CliApplication::exclude(const QStringList &pPluginNames) const
+{
+    // Exclude the given plugins from the GUI version of OpenCOR
+
+    includePlugins(pPluginNames, false);
+}
+
+//==============================================================================
+
 void CliApplication::help() const
 {
     // Output some help
 
     std::cout << "Usage: " << qAppName().toStdString()
-              << " [-a|--about] [-c|--command [<plugin>]::<command> <options>] [-h|--help] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
+              << " [-a|--about] [-c|--command [<plugin>]::<command> <options>] [-e|--exclude <plugins>] [-h|--help] [-i|--include <plugins>] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
               << std::endl;
     std::cout << " -a, --about     Display some information about OpenCOR"
               << std::endl;
     std::cout << " -c, --command   Send a command to one or all the CLI plugins"
               << std::endl;
+    std::cout << " -e, --exclude   Exclude the given plugin(s)"
+              << std::endl;
     std::cout << " -h, --help      Display this help information"
+              << std::endl;
+    std::cout << " -i, --include   Include the given plugin(s)"
               << std::endl;
     std::cout << " -p, --plugins   Display all the CLI plugins"
               << std::endl;
@@ -251,6 +304,15 @@ void CliApplication::help() const
               << std::endl;
     std::cout << " -v, --version   Display the version of OpenCOR"
               << std::endl;
+}
+
+//==============================================================================
+
+void CliApplication::include(const QStringList &pPluginNames) const
+{
+    // Include the given plugins to the GUI version of OpenCOR
+
+    includePlugins(pPluginNames);
 }
 
 //==============================================================================
@@ -274,7 +336,7 @@ void CliApplication::plugins() const
         // Retrieve the CLI plugin and its default description
 
         QString pluginInfo = plugin->name();
-        QString pluginDesc = pluginDescription(plugin);
+        QString pluginDesc = plainString(plugin->info()->description());
 
         if (!pluginDesc.isEmpty())
             pluginInfo += ": "+pluginDesc;
@@ -422,7 +484,9 @@ bool CliApplication::run(int *pRes)
         NoOption,
         AboutOption,
         CommandOption,
+        ExcludeOption,
         HelpOption,
+        IncludeOption,
         PluginsOption,
         ResetOption,
         StatusOption,
@@ -432,17 +496,20 @@ bool CliApplication::run(int *pRes)
     Option option = NoOption;
 
     QStringList appArguments = qApp->arguments();
-    QStringList commandArguments = QStringList();
+    QStringList arguments = QStringList();
 
     appArguments.removeFirst();
     // Note: we remove the first argument since it corresponds to the full path
     //       to our executable, which we are not interested in...
 
     foreach (const QString &appArgument, appArguments) {
-        if (option == CommandOption) {
-            // All arguments following a command are passed to the command
+        if (   (option == CommandOption)
+            || (option == ExcludeOption)
+            || (option == IncludeOption)) {
+            // Keep track of the arguments passed to a command, an exclude or an
+            // include call
 
-            commandArguments << appArgument;
+            arguments << appArgument;
         } else if (!appArgument.compare("-a") || !appArgument.compare("--about")) {
             if (option == NoOption) {
                 option = AboutOption;
@@ -455,9 +522,21 @@ bool CliApplication::run(int *pRes)
             } else {
                 *pRes = -1;
             }
+        } else if (!appArgument.compare("-e") || !appArgument.compare("--exclude")) {
+            if (option == NoOption) {
+                option = ExcludeOption;
+            } else {
+                *pRes = -1;
+            }
         } else if (!appArgument.compare("-h") || !appArgument.compare("--help")) {
             if (option == NoOption) {
                 option = HelpOption;
+            } else {
+                *pRes = -1;
+            }
+        } else if (!appArgument.compare("-i") || !appArgument.compare("--include")) {
+            if (option == NoOption) {
+                option = IncludeOption;
             } else {
                 *pRes = -1;
             }
@@ -509,14 +588,14 @@ bool CliApplication::run(int *pRes)
             // command itself) before loading the plugins and then sending the
             // command to the plugin(s)
 
-            if (commandArguments.isEmpty()) {
+            if (arguments.isEmpty()) {
                 *pRes = -1;
 
                 help();
             } else {
                 loadPlugins();
 
-                if (!command(commandArguments, pRes)) {
+                if (!command(arguments, pRes)) {
                     *pRes = -1;
 
                     help();
@@ -524,8 +603,34 @@ bool CliApplication::run(int *pRes)
             }
 
             break;
+        case ExcludeOption:
+            // Make sure that we have at least one argument (i.e. the name of a
+            // plugin)
+
+            if (arguments.isEmpty()) {
+                *pRes = -1;
+
+                help();
+            } else {
+                exclude(arguments);
+            }
+
+            break;
         case HelpOption:
             help();
+
+            break;
+        case IncludeOption:
+            // Make sure that we have at least one argument (i.e. the name of a
+            // plugin)
+
+            if (arguments.isEmpty()) {
+                *pRes = -1;
+
+                help();
+            } else {
+                include(arguments);
+            }
 
             break;
         case PluginsOption:

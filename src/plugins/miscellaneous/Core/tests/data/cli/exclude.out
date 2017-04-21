@@ -1,0 +1,3 @@
+ - Core: cannot be directly excluded.
+ - FileBrowserWindow: excluded from the GUI version of OpenCOR.
+ - Unknown: unknown plugin.
