@@ -23,7 +23,7 @@ install:
       && sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
       && sudo apt-add-repository -y ppa:beineri/opt-qt562-trusty
       && sudo apt-get -qq update
-      && sudo apt-get -qq install gcc-4.9 g++-4.9 lib32stdc++-4.9-dev
+      && sudo apt-get -qq install gcc-4.9 g++-4.9
       && sudo apt-get -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel
       && sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 50
       && sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 50
@@ -34,27 +34,28 @@ install:
       && brew install ./qt5.rb
       && export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
       && chmod -R 755 /usr/local/opt/qt5/*
+      && gcc --version
       ;
     fi
 
-script:
-  -    cd build
-    && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
-         ;
-       else
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
-         ;
-       fi
-    && make -j 3
-    && cd ..
-    && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         build/bin/runtests
-         ;
-       else
-         build/OpenCOR.app/Contents/MacOS/runtests
-         ;
-       fi
+# script:
+#   -    cd build
+#     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+#          cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
+#          ;
+#        else
+#          cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
+#          ;
+#        fi
+#     && make -j 3
+#     && cd ..
+#     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+#          build/bin/runtests
+#          ;
+#        else
+#          build/OpenCOR.app/Contents/MacOS/runtests
+#          ;
+#        fi
 
 notifications:
   email: team@opencor.ws
