@@ -147,7 +147,8 @@ void CliApplication::includePlugins(const QStringList &pPluginNames,
         if (availablePluginNames.contains(pluginName)) {
             // Make sure that the plugin is selectable before including/excluding it
 
-            PluginInfo *pluginInfo = Plugin::info(Plugin::fileName(pluginsDir, pluginName));
+            QString errorMessage;
+            PluginInfo *pluginInfo = Plugin::info(Plugin::fileName(pluginsDir, pluginName), &errorMessage);
 
             if (pluginInfo) {
                 if (pluginInfo->isSelectable()) {
@@ -158,7 +159,7 @@ void CliApplication::includePlugins(const QStringList &pPluginNames,
                     status = QString("cannot be directly %1").arg(pInclude?"included":"excluded");
                 }
             } else {
-                status = "plugin information not found";
+                status = QString("plugin information not found%1").arg(errorMessage.isEmpty()?QString():QString(" (%1)").arg(errorMessage));
             }
         } else {
             status = "unknown plugin";
