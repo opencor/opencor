@@ -158,7 +158,7 @@ void CliApplication::includePlugins(const QStringList &pPluginNames,
                     status = QString("cannot be directly %1").arg(pInclude?"included":"excluded");
                 }
             } else {
-                status = "unknown error";
+                status = "plugin information not found";
             }
         } else {
             status = "unknown plugin";
