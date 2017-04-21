@@ -63,7 +63,9 @@ private:
 
     void about() const;
     bool command(const QStringList &pArguments, int *pRes) const;
+    void exclude(const QStringList &pPluginNames) const;
     void help() const;
+    void include(const QStringList &pPluginNames) const;
     void plugins() const;
     void reset() const;
     void status() const;

@@ -220,18 +220,29 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
 
 //==============================================================================
 
+void CliApplication::exclude(const QStringList &pPluginNames) const
+{
+Q_UNUSED(pPluginNames);
+}
+
+//==============================================================================
+
 void CliApplication::help() const
 {
     // Output some help
 
     std::cout << "Usage: " << qAppName().toStdString()
-              << " [-a|--about] [-c|--command [<plugin>]::<command> <options>] [-h|--help] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
+              << " [-a|--about] [-c|--command [<plugin>]::<command> <options>] [-e|--exclude <plugins>] [-h|--help] [-i|--include <plugins>] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
               << std::endl;
     std::cout << " -a, --about     Display some information about OpenCOR"
               << std::endl;
     std::cout << " -c, --command   Send a command to one or all the CLI plugins"
               << std::endl;
+    std::cout << " -e, --exclude   Exclude the given plugin(s)"
+              << std::endl;
     std::cout << " -h, --help      Display this help information"
+              << std::endl;
+    std::cout << " -i, --include   Include the given plugin(s)"
               << std::endl;
     std::cout << " -p, --plugins   Display all the CLI plugins"
               << std::endl;
@@ -241,6 +252,13 @@ void CliApplication::help() const
               << std::endl;
     std::cout << " -v, --version   Display the version of OpenCOR"
               << std::endl;
+}
+
+//==============================================================================
+
+void CliApplication::include(const QStringList &pPluginNames) const
+{
+Q_UNUSED(pPluginNames);
 }
 
 //==============================================================================
@@ -412,7 +430,9 @@ bool CliApplication::run(int *pRes)
         NoOption,
         AboutOption,
         CommandOption,
+        ExcludeOption,
         HelpOption,
+        IncludeOption,
         PluginsOption,
         ResetOption,
         StatusOption,
@@ -422,17 +442,20 @@ bool CliApplication::run(int *pRes)
     Option option = NoOption;
 
     QStringList appArguments = qApp->arguments();
-    QStringList commandArguments = QStringList();
+    QStringList arguments = QStringList();
 
     appArguments.removeFirst();
     // Note: we remove the first argument since it corresponds to the full path
     //       to our executable, which we are not interested in...
 
     foreach (const QString &appArgument, appArguments) {
-        if (option == CommandOption) {
-            // All arguments following a command are passed to the command
+        if (   (option == CommandOption)
+            || (option == ExcludeOption)
+            || (option == IncludeOption)) {
+            // Keep track of the arguments passed to a command, an exclude or an
+            // include call
 
-            commandArguments << appArgument;
+            arguments << appArgument;
         } else if (!appArgument.compare("-a") || !appArgument.compare("--about")) {
             if (option == NoOption) {
                 option = AboutOption;
@@ -445,9 +468,21 @@ bool CliApplication::run(int *pRes)
             } else {
                 *pRes = -1;
             }
+        } else if (!appArgument.compare("-e") || !appArgument.compare("--exclude")) {
+            if (option == NoOption) {
+                option = ExcludeOption;
+            } else {
+                *pRes = -1;
+            }
         } else if (!appArgument.compare("-h") || !appArgument.compare("--help")) {
             if (option == NoOption) {
                 option = HelpOption;
+            } else {
+                *pRes = -1;
+            }
+        } else if (!appArgument.compare("-i") || !appArgument.compare("--include")) {
+            if (option == NoOption) {
+                option = IncludeOption;
             } else {
                 *pRes = -1;
             }
@@ -499,14 +534,14 @@ bool CliApplication::run(int *pRes)
             // command itself) before loading the plugins and then sending the
             // command to the plugin(s)
 
-            if (commandArguments.isEmpty()) {
+            if (arguments.isEmpty()) {
                 *pRes = -1;
 
                 help();
             } else {
                 loadPlugins();
 
-                if (!command(commandArguments, pRes)) {
+                if (!command(arguments, pRes)) {
                     *pRes = -1;
 
                     help();
@@ -514,8 +549,34 @@ bool CliApplication::run(int *pRes)
             }
 
             break;
+        case ExcludeOption:
+            // Make sure that we have at least one argument (i.e. the name of a
+            // plugin)
+
+            if (arguments.isEmpty()) {
+                *pRes = -1;
+
+                help();
+            } else {
+                exclude(arguments);
+            }
+
+            break;
         case HelpOption:
             help();
+
+            break;
+        case IncludeOption:
+            // Make sure that we have at least one argument (i.e. the name of a
+            // plugin)
+
+            if (arguments.isEmpty()) {
+                *pRes = -1;
+
+                help();
+            } else {
+                include(arguments);
+            }
 
             break;
         case PluginsOption:
