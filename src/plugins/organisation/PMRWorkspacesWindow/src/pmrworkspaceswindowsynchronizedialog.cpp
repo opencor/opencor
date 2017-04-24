@@ -654,54 +654,14 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
 
     diffMatchPatch.diff_cleanupEfficiency(diffs);
 
-    std::wstring html = L"<pre>";
-    std::wstring text = std::wstring();
+    QString html = "<pre>";
+    QString text = QString();
 
     for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
          diffIterator != endDiffIterator; ++diffIterator) {
-        std::wstring::size_type textSize = (*diffIterator).text.size();
-        std::wstring::const_pointer i;
-        std::wstring::const_pointer iMax;
-
-        for (i = (*diffIterator).text.c_str(), iMax = i+textSize; i != iMax; ++i) {
-            switch (*i) {
-            case L'<':
-            case L'>':
-                textSize += 3;
-
-                break;
-            case L'&':
-                textSize += 4;
-
-                break;
-            }
-        }
-
-        if (textSize == (*diffIterator).text.size()) {
-            text = (*diffIterator).text;
-        } else {
-            text.clear();
-            text.reserve(textSize);
-
-            for (i = (*diffIterator).text.c_str(); i != iMax; ++i) {
-                switch (*i) {
-                case L'<':
-                    text += L"&lt;";
-
-                    break;
-                case L'>':
-                    text += L"&gt;";
-
-                    break;
-                case L'&':
-                    text += L"&amp;";
-
-                    break;
-                default:
-                    text += *i;
-                }
-            }
-        }
+        text = QString::fromStdWString((*diffIterator).text).replace("<", "&lt;")
+                                                            .replace(">", "&gt;")
+                                                            .replace("&", "&amp;");
 
         switch ((*diffIterator).operation) {
         case DiffMatchPatch::EQUAL:
@@ -709,19 +669,19 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
 
             break;
         case DiffMatchPatch::INSERT:
-            html += L"<span class=\"insert\">"+text+L"</span>";
+            html += QString("<span class=\"insert\">%1</span>").arg(text);
 
             break;
         case DiffMatchPatch::DELETE:
-            html += L"<span class=\"delete\">"+text+L"</span>";
+            html += QString("<span class=\"delete\">%1</span>").arg(text);
 
             break;
         }
     }
 
-    html += L"</pre>";
+    html += "</pre>";
 
-    return QString::fromStdWString(html);
+    return html;
 }
 
 //==============================================================================
