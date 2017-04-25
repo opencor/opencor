@@ -1,7 +1,5 @@
 PROJECT(zlibPlugin)
 
-# set(USE_PREBUILT_ZLIB_PLUGIN OFF)
-
 # Specify the version of zlib we want to build
 
 SET(ZLIB_FULL_VERSION "1.2.11")
