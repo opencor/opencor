@@ -1,7 +1,9 @@
-Usage: OpenCOR [-a|--about] [-c|--command [<plugin>]::<command> <options>] [-h|--help] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]
+Usage: OpenCOR [-a|--about] [-c|--command [<plugin>]::<command> <options>] [-e|--exclude <plugins>] [-h|--help] [-i|--include <plugins>] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]
  -a, --about     Display some information about OpenCOR
  -c, --command   Send a command to one or all the CLI plugins
+ -e, --exclude   Exclude the given plugin(s)
  -h, --help      Display this help information
+ -i, --include   Include the given plugin(s)
  -p, --plugins   Display all the CLI plugins
  -r, --reset     Reset all your settings
  -s, --status    Display the status of all the plugins

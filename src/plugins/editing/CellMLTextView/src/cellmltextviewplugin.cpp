@@ -491,8 +491,8 @@ void CellMLTextViewPlugin::runHelpCommand()
 {
     // Output the commands we support
 
-    std::cout << "Commands supported by CellMLTextView:" << std::endl;
-    std::cout << " * Display the commands supported by CellMLTextView:" << std::endl;
+    std::cout << "Commands supported by the CellMLTextView plugin:" << std::endl;
+    std::cout << " * Display the commands supported by the CellMLTextView plugin:" << std::endl;
     std::cout << "      help" << std::endl;
     std::cout << " * Export a CellML Text <file> to CellML:" << std::endl;
     std::cout << "      export <file>" << std::endl;

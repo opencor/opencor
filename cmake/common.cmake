@@ -267,8 +267,12 @@ MACRO(INITIALISE_PROJECT)
 
     # Let OpenCOR know about the options with which it was built
 
-    IF(ENABLE_SAMPLES)
-        ADD_DEFINITIONS(-DENABLE_SAMPLES)
+    IF(ENABLE_SAMPLE_PLUGINS)
+        ADD_DEFINITIONS(-DENABLE_SAMPLE_PLUGINS)
+    ENDIF()
+
+    IF(ENABLE_TEST_PLUGINS)
+        ADD_DEFINITIONS(-DENABLE_TEST_PLUGINS)
     ENDIF()
 
     IF(ENABLE_TESTS)
@@ -469,6 +473,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         PLUGIN_BINARIES
         QT_MODULES
         EXTERNAL_BINARIES
+        EXTERNAL_BINARIES_DEPENDENCIES
         SYSTEM_BINARIES
         DEPENDS
         TESTS
@@ -666,8 +671,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             # Strip the external library of all its local symbols, if possible
 
             IF(NOT WIN32 AND RELEASE_MODE)
-                ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                                   COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                EXECUTE_PROCESS(COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
             ENDIF()
 
             # Link the plugin to the external library
@@ -696,6 +700,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                 )
+            ENDIF()
+
+            # On macOS, ensure that @rpath is set in the external library's id
+            # and that is used to reference the external library's dependencies
+
+            IF(APPLE)
+                EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+
+                FOREACH(EXTERNAL_BINARIES_DEPENDENCY ${EXTERNAL_BINARIES_DEPENDENCIES})
+                    EXECUTE_PROCESS(COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DEPENDENCY}
+                                                                      @rpath/${EXTERNAL_BINARIES_DEPENDENCY}
+                                                                      ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                ENDFOREACH()
             ENDIF()
 
             # Package the external library, if needed
@@ -950,9 +967,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     # On macOS, ensure that @rpath is set in the plugin binary's id
 
     IF(APPLE)
-        EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${PLUGIN_FILENAME} ${PLUGIN_FILENAME}
-                        WORKING_DIRECTORY ${DEST_PLUGINS_DIR}
-        )
+        EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${PLUGIN_FILENAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
     ENDIF()
 
     # Package the plugin, but only if we are not on macOS since it will have

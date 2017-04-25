@@ -617,19 +617,17 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
             genericLookUp();
     }
 
-    // Hide our busy widget (just to be on the safe side)
-
-    mOutput->hideBusyWidget();
-
     // Show/hide our output message and output for ontological terms
 
     mOutputMessage->setVisible(!pItems.count());
     mOutputOntologicalTerms->setVisible(pItems.count());
 
-    // Show our busy widget instead, if needed
+    // Show our busy widget, if needed, or hide it (to be on the safe side)
 
     if (showBusyWidget)
         mOutput->showBusyWidget();
+    else
+        mOutput->hideBusyWidget();
 }
 
 //==============================================================================

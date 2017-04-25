@@ -277,6 +277,9 @@ void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
     // needed
 
     if (pPmrUrl.compare(mPmrUrl)) {
+        if (PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
+            mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), QString(), false);
+
         mPmrUrl = pPmrUrl;
 
         mPmrWebService->update(pPmrUrl);
@@ -296,18 +299,21 @@ void PmrWorkspacesWindowWindow::busy(const bool &pBusy)
 
     static int counter = 0;
 
+    if (!pBusy && !counter)
+        return;
+
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        mPmrWorkspacesWindowWidget->showBusyWidget();
-
         mGui->dockWidgetContents->setEnabled(false);
+
+        mPmrWorkspacesWindowWidget->showBusyWidget();
     } else if (!pBusy && !counter) {
         // Re-enable the GUI side
 
-        mPmrWorkspacesWindowWidget->hideBusyWidget();
-
         mGui->dockWidgetContents->setEnabled(true);
+
+        mPmrWorkspacesWindowWidget->hideBusyWidget();
     }
 }
 
@@ -321,7 +327,7 @@ void PmrWorkspacesWindowWindow::showInformation(const QString &pMessage)
     //       information become available when trying to retrieve the list of
     //       workspaces at startup...
 
-    if (!PMRSupport::PmrWorkspaceManager::instance()->workspaces().isEmpty())
+    if (PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
         Core::informationMessageBox(windowTitle(), pMessage);
 }
 
@@ -335,7 +341,7 @@ void PmrWorkspacesWindowWindow::showWarning(const QString &pMessage)
     //       warning occur when trying to retrieve the list of workspaces at
     //       startup...
 
-    if (!PMRSupport::PmrWorkspaceManager::instance()->workspaces().isEmpty())
+    if (PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
         Core::warningMessageBox(windowTitle(), pMessage);
 }
 
@@ -350,7 +356,7 @@ void PmrWorkspacesWindowWindow::showError(const QString &pMessage)
     //       error occur when trying to retrieve the list of workspaces at
     //       startup...
 
-    if (PMRSupport::PmrWorkspaceManager::instance()->workspaces().isEmpty())
+    if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
         mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), pMessage);
     else
         Core::criticalMessageBox(windowTitle(), pMessage);

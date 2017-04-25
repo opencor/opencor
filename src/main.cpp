@@ -108,7 +108,8 @@ int main(int pArgC, char *pArgV[])
     //          used to generate the CLI version of OpenCOR...
     // Note #2: on macOS, if we were to try to open the OpenCOR bundle from the
     //          command line, then we would get an error message similar to:
-    //              LSOpenURLsWithRole() failed with error -10810 for the file [SomePath]/OpenCOR.app.
+    //              LSOpenURLsWithRole() failed with error -10810 for the file
+    //              [SomePath]/OpenCOR.app.
     //          Fortunately, when double clicking on the OpenCOR bundle or
     //          opening it from the command line, a special argument in the form
     //          of -psn_0_1234567 is passed to OpenCOR, so we can use that to
@@ -156,18 +157,6 @@ int main(int pArgC, char *pArgV[])
         //       end we need to go for its GUI version, so start over but with
         //       the GUI version of OpenCOR this time...
     }
-
-    // Make sure that we always use indirect rendering on Linux
-    // Note: indeed, depending on which plugins are selected, OpenCOR may need
-    //       LLVM. If that's the case, and in case the user's video card uses a
-    //       driver that relies on LLVM (e.g. Gallium3D and Mesa 3D), then there
-    //       may be a conflict between the version of LLVM used by OpenCOR and
-    //       the one used by the video card. One way to address this issue is by
-    //       using indirect rendering...
-
-#ifdef Q_OS_LINUX
-    qputenv("LIBGL_ALWAYS_INDIRECT", "1");
-#endif
 
     // Initialise the plugins path
 

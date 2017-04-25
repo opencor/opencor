@@ -5,7 +5,7 @@ dist: trusty
 
 os:
   - linux
-#  - osx
+  - osx
 
 env:
   - CONFIG=Release
@@ -41,17 +41,15 @@ script:
   # Note: on Linux, the linking of CellMLTextView_conversiontests and
   #       CellMLTextView_parsingtests results in an error regarding
   #       __cxa_throw_bad_array_new_length@Qt_5 not being defined in
-  #       libQScintilla.so. Everything works fine locally and when deployed, so
-  #       it is most likely related to the PPA version of Qt that we are using
-  #       here (due to the way it must have been built). However, a simple
-  #       workaround is to build QScintilla, so this is what we are doing
-  #       here...
+  #       libQScintilla.so. This is most likely related to our use of GCC/G++ 4.9.
+  #       However, a simple workaround is to build QScintilla, so this is what we
+  #       are doing here...
   -    cd build
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DUSE_PREBUILT_QSCINTILLA_PLUGIN=OFF -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DUSE_PREBUILT_QSCINTILLA_PLUGIN=OFF -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
          ;
        else
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
          ;
        fi
     && make -j 3

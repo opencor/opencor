@@ -221,6 +221,9 @@ void PmrWindowWindow::update(const QString &pPmrUrl)
     // Update our PMR web service and then reload ourselves, if needed
 
     if (pPmrUrl.compare(mPmrUrl)) {
+        if (mPmrWindowWidget->hasExposures())
+            mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(), QString());
+
         mPmrUrl = pPmrUrl;
 
         mPmrWebService->update(pPmrUrl);
@@ -249,18 +252,19 @@ void PmrWindowWindow::busy(const bool &pBusy)
 
     static int counter = 0;
 
+    if (!pBusy && !counter)
+        return;
+
     counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
-        mPmrWindowWidget->showBusyWidget();
-
         mGui->dockWidgetContents->setEnabled(false);
+
+        mPmrWindowWidget->showBusyWidget();
     } else if (!pBusy && !counter) {
         // Re-enable the GUI side and give, within the current window, the focus
         // to mFilterValue, but only if the current window already has the
         // focus, or to mPmrWindowWidget if it was previously double clicked
-
-        mPmrWindowWidget->hideBusyWidget();
 
         mGui->dockWidgetContents->setEnabled(true);
 
@@ -271,6 +275,8 @@ void PmrWindowWindow::busy(const bool &pBusy)
         } else {
             Core::setFocusTo(mFilterValue);
         }
+
+        mPmrWindowWidget->hideBusyWidget();
     }
 }
 

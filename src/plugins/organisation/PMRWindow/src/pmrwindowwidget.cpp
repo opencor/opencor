@@ -219,7 +219,7 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void PmrWindowWidget::updateGui()
+void PmrWindowWidget::updateGui(const bool &pForceUserMessageVisibility)
 {
     // Update the message to be displayed, if any
 
@@ -237,7 +237,8 @@ void PmrWindowWidget::updateGui()
 
     // Show/hide our user message widget
 
-    mUserMessageWidget->setVisible(!mUserMessageWidget->text().isEmpty());
+    mUserMessageWidget->setVisible(    pForceUserMessageVisibility
+                                   || !mUserMessageWidget->text().isEmpty());
 }
 
 //==============================================================================
@@ -278,7 +279,8 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
 
     resizeTreeViewToContents();
 
-    updateGui();
+    updateGui(   (pExposures == PMRSupport::PmrExposures())
+              && pFilter.isEmpty() && pErrorMessage.isEmpty());
 
     mInitialized = true;
 }

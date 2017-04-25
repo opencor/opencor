@@ -4,14 +4,25 @@ var jsonData = { "versions": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "Preferences dialog." },
+                           { "type": "Added", "description": "include/exclude plugins from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Linux\">Linux</a>." },
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a>." },
-                           { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." }
+                           { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
+                           { "type": "Improved", "description": "Keyboard navigation in tree views." },
                          ]
                        },
                        { "name": "Data store",
                          "entries": [
                            { "type": "Improved", "description": "Selection of data." }
+                         ]
+                       },
+                       { "name": "API",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML API",
+                             "entries": [
+                               { "type": "Fixed", "description": "Memory access in the CUSES service." }
+                             ]
+                           }
                          ]
                        },
                        { "name": "Editing",

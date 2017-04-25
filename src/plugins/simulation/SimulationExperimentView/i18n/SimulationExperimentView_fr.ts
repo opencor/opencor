@@ -516,9 +516,6 @@
         <source>%1 s using %2</source>
         <translation>%1 s avec %2</translation>
     </message>
-</context>
-<context>
-    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewWidget</name>
     <message>
         <source>only SED-ML files with one or two simulations with an algorithm are supported</source>
         <translation>seulement les fichiers SED-ML avec une ou deux simulations avec un algorithme sont supportés</translation>

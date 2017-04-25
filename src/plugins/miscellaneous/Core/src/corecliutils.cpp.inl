@@ -85,9 +85,13 @@ QString pluginCategoryName(const PluginInfo::Category &pCategory)
     // Return the name of the given category
 
     switch (pCategory) {
-#ifdef ENABLE_SAMPLES
+#ifdef ENABLE_SAMPLE_PLUGINS
     case PluginInfo::Sample:
         return QObject::tr("Sample");
+#endif
+#ifdef ENABLE_TEST_PLUGINS
+    case PluginInfo::Test:
+        return QObject::tr("Test");
 #endif
     case PluginInfo::Invalid:
         return QObject::tr("Invalid");
@@ -129,9 +133,13 @@ QString pluginCategoryDescription(const PluginInfo::Category &pCategory)
     // Return the description of the given category
 
     switch (pCategory) {
-#ifdef ENABLE_SAMPLES
+#ifdef ENABLE_SAMPLE_PLUGINS
     case PluginInfo::Sample:
         return QObject::tr("Plugins that illustrate various plugin-related aspects.");
+#endif
+#ifdef ENABLE_TEST_PLUGINS
+    case PluginInfo::Test:
+        return QObject::tr("Plugins to test things.");
 #endif
     case PluginInfo::Invalid:
         return QObject::tr("Plugins that are not valid.");

@@ -1,5 +1,5 @@
-Commands supported by CellMLTextView:
- * Display the commands supported by CellMLTextView:
+Commands supported by the CellMLTextView plugin:
+ * Display the commands supported by the CellMLTextView plugin:
       help
  * Export a CellML Text <file> to CellML:
       export <file>
