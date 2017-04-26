@@ -15,3 +15,13 @@
 #define HAVE_MEMCPY 1
 #define HAVE_MEMSET 1
 #define HAVE_STRLEN 1
+
+#ifdef _WIN32
+    #ifdef LibXDiff_PLUGIN
+        #define LIBXDIFF_EXPORT __declspec(dllexport)
+    #else
+        #define LIBXDIFF_EXPORT __declspec(dllimport)
+    #endif
+#else
+    #define LIBXDIFF_EXPORT
+#endif
