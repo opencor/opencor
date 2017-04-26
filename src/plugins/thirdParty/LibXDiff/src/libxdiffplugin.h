@@ -42,6 +42,9 @@ class LibXDiffPlugin : public QObject
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.LibXDiffPlugin" FILE "libxdiffplugin.json")
+
+public:
+    explicit LibXDiffPlugin();
 };
 
 //==============================================================================

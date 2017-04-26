@@ -24,6 +24,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include "xdiff.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace LibXDiff {
 
@@ -39,6 +43,44 @@ PLUGININFO_FUNC LibXDiffPluginInfo()
     return new PluginInfo(PluginInfo::ThirdParty, false, false,
                           QStringList(),
                           descriptions);
+}
+
+//==============================================================================
+
+static void *mallocWrapper(void *, unsigned int pSize)
+{
+    // Allocate some memory
+
+    return malloc(pSize);
+}
+
+//==============================================================================
+
+static void freeWrapper(void *, void *pPointer)
+{
+    // Free the given memory
+
+    free(pPointer);
+}
+
+//==============================================================================
+
+static void *reallocWrapper(void *, void *pPointer, unsigned int pSize)
+{
+    // Reallocate some memory
+
+    return realloc(pPointer, pSize);
+}
+
+//==============================================================================
+
+LibXDiffPlugin::LibXDiffPlugin()
+{
+    // Set our memory allocator
+
+    memallocator_t memoryAllocator = { 0, mallocWrapper, freeWrapper, reallocWrapper };
+
+    xdl_set_allocator(&memoryAllocator);
 }
 
 //==============================================================================
