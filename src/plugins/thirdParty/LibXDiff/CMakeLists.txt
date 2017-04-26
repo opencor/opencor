@@ -38,74 +38,6 @@ IF(USE_PREBUILT_LIBXDIFF_PLUGIN)
             src
     )
 ELSE()
-    # Check whether some include files exist
-
-    INCLUDE(CheckIncludeFiles)
-
-    CHECK_INCLUDE_FILES(limits.h HAVE_LIMITS_H)
-    CHECK_INCLUDE_FILES(stdio.h HAVE_STDIO_H)
-    CHECK_INCLUDE_FILES(stdlib.h HAVE_STDLIB_H)
-    CHECK_INCLUDE_FILES(string.h HAVE_STRING_H)
-    CHECK_INCLUDE_FILES(unistd.h HAVE_UNISTD_H)
-
-    # Check whether some functions exist
-
-    INCLUDE(CheckFunctionExists)
-
-    CHECK_FUNCTION_EXISTS(memchr HAVE_MEMCHR)
-    CHECK_FUNCTION_EXISTS(memcmp HAVE_MEMCMP)
-    CHECK_FUNCTION_EXISTS(memcpy HAVE_MEMCPY)
-    CHECK_FUNCTION_EXISTS(memset HAVE_MEMSET)
-    CHECK_FUNCTION_EXISTS(strlen HAVE_STRLEN)
-
-    # Default definitions
-
-    SET(DEFINITIONS HAVE_CONFIG_H)
-
-    # Specify our include definitions
-
-    IF(HAVE_LIMITS_H)
-        LIST(APPEND DEFINITIONS HAVE_LIMITS_H)
-    ENDIF()
-
-    IF(HAVE_STDIO_H)
-        LIST(APPEND DEFINITIONS HAVE_STDIO_H)
-    ENDIF()
-
-    IF(HAVE_STDLIB_H)
-        LIST(APPEND DEFINITIONS HAVE_STDLIB_H)
-    ENDIF()
-
-    IF(HAVE_STRING_H)
-        LIST(APPEND DEFINITIONS HAVE_STRING_H)
-    ENDIF()
-
-    IF(HAVE_UNISTD_H)
-        LIST(APPEND DEFINITIONS HAVE_UNISTD_H)
-    ENDIF()
-
-    # Specify our function definitions
-
-    IF(HAVE_MEMCHR)
-        LIST(APPEND DEFINITIONS HAVE_MEMCHR)
-    ENDIF()
-
-    IF(HAVE_MEMCMP)
-        LIST(APPEND DEFINITIONS HAVE_MEMCMP)
-    ENDIF()
-
-    IF(HAVE_MEMCPY)
-        LIST(APPEND DEFINITIONS HAVE_MEMCPY)
-    ENDIF()
-
-    IF(HAVE_MEMSET)
-        LIST(APPEND DEFINITIONS HAVE_MEMSET)
-    ENDIF()
-
-    IF(HAVE_STRLEN)
-        LIST(APPEND DEFINITIONS HAVE_STRLEN)
-    ENDIF()
-
     # Add the plugin
 
     SET(LIBXDIFF_PLUGIN LibXDiff PARENT_SCOPE)
@@ -135,7 +67,7 @@ ELSE()
         INCLUDE_DIRS
             src
         DEFINITIONS
-            ${DEFINITIONS}
+            HAVE_CONFIG_H
         QT_MODULES
             Core
     )

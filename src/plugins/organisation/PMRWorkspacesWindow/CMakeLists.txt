@@ -30,6 +30,8 @@ ADD_PLUGIN(PMRWorkspacesWindow
         src
     PLUGINS
         CellMLSupport
-        LibXDiff
+        ${LIBXDIFF_PLUGIN}
         PMRSupport
+    PLUGIN_BINARIES
+        ${LIBXDIFF_PLUGIN_BINARY}
 )

@@ -1,14 +1,17 @@
-/* Name of package */
+#pragma once
+
 #define PACKAGE "LibXDiff"
-
-/* Version number of package */
 #define VERSION "0.23"
-
-/* Define to the version of this package. */
 #define PACKAGE_VERSION "0.23"
-
-/* Define to the full name and version of this package. */
 #define PACKAGE_STRING "LibXDiff 0.23"
 
-/* Define to 1 if you have the ANSI C header files. */
-#define STDC_HEADERS 1
+#define HAVE_LIMITS_H 1
+#define HAVE_STDIO_H 1
+#define HAVE_STDLIB_H 1
+#define HAVE_STRING_H 1
+
+#define HAVE_MEMCHR 1
+#define HAVE_MEMCMP 1
+#define HAVE_MEMCPY 1
+#define HAVE_MEMSET 1
+#define HAVE_STRLEN 1
