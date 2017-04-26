@@ -22,8 +22,9 @@
 
 #if !defined(XDIFF_H)
 #define XDIFF_H
-
+//---OPENCOR--- BEGIN
 #include "config.h"
+//---OPENCOR--- END
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,55 +48,121 @@ extern "C" {
 
 
 
+/*---OPENCOR---
+typedef struct s_memallocator {
+*/
+//---OPENCOR--- BEGIN
 LIBXDIFF_EXPORT typedef struct s_memallocator {
-        void *priv;
-        void *(*malloc)(void *, unsigned int);
-        void (*free)(void *, void *);
-        void *(*realloc)(void *, void *, unsigned int);
+//---OPENCOR--- END
+	void *priv;
+	void *(*malloc)(void *, unsigned int);
+	void (*free)(void *, void *);
+	void *(*realloc)(void *, void *, unsigned int);
 } memallocator_t;
 
+/*---OPENCOR---
+typedef struct s_mmblock {
+*/
+//---OPENCOR--- BEGIN
 LIBXDIFF_EXPORT typedef struct s_mmblock {
-        struct s_mmblock *next;
-        unsigned long flags;
-        long size, bsize;
-        char *ptr;
+//---OPENCOR--- END
+	struct s_mmblock *next;
+	unsigned long flags;
+	long size, bsize;
+	char *ptr;
 } mmblock_t;
 
+/*---OPENCOR---
+typedef struct s_mmfile {
+*/
+//---OPENCOR--- BEGIN
 LIBXDIFF_EXPORT typedef struct s_mmfile {
-        unsigned long flags;
-        mmblock_t *head, *tail;
-        long bsize, fsize, rpos;
-        mmblock_t *rcur, *wcur;
+//---OPENCOR--- END
+	unsigned long flags;
+	mmblock_t *head, *tail;
+	long bsize, fsize, rpos;
+	mmblock_t *rcur, *wcur;
 } mmfile_t;
 
+/*---OPENCOR---
+typedef struct s_mmbuffer {
+*/
+//---OPENCOR--- BEGIN
 LIBXDIFF_EXPORT typedef struct s_mmbuffer {
-        char *ptr;
-        long size;
+//---OPENCOR--- END
+	char *ptr;
+	long size;
 } mmbuffer_t;
 
+/*---OPENCOR---
+typedef struct s_xpparam {
+*/
+//---OPENCOR--- BEGIN
 LIBXDIFF_EXPORT typedef struct s_xpparam {
-        unsigned long flags;
+//---OPENCOR--- END
+	unsigned long flags;
 } xpparam_t;
 
+/*---OPENCOR---
+typedef struct s_xdemitcb {
+*/
+//---OPENCOR--- BEGIN
 LIBXDIFF_EXPORT typedef struct s_xdemitcb {
-        void *priv;
-        int (*outf)(void *, mmbuffer_t *, int);
+//---OPENCOR--- END
+	void *priv;
+	int (*outf)(void *, mmbuffer_t *, int);
 } xdemitcb_t;
 
+/*---OPENCOR---
+typedef struct s_xdemitconf {
+*/
+//---OPENCOR--- BEGIN
 LIBXDIFF_EXPORT typedef struct s_xdemitconf {
-        long ctxlen;
+//---OPENCOR--- END
+	long ctxlen;
 } xdemitconf_t;
 
+/*---OPENCOR---
+typedef struct s_bdiffparam {
+*/
+//---OPENCOR--- BEGIN
 LIBXDIFF_EXPORT typedef struct s_bdiffparam {
-        long bsize;
+//---OPENCOR--- END
+	long bsize;
 } bdiffparam_t;
 
 
+/*---OPENCOR---
+int xdl_set_allocator(memallocator_t const *malt);
+void *xdl_malloc(unsigned int size);
+void xdl_free(void *ptr);
+void *xdl_realloc(void *ptr, unsigned int size);
+*/
+//---OPENCOR--- BEGIN
 LIBXDIFF_EXPORT int xdl_set_allocator(memallocator_t const *malt);
 LIBXDIFF_EXPORT void *xdl_malloc(unsigned int size);
 LIBXDIFF_EXPORT void xdl_free(void *ptr);
 LIBXDIFF_EXPORT void *xdl_realloc(void *ptr, unsigned int size);
+//---OPENCOR--- END
 
+/*---OPENCOR---
+int xdl_init_mmfile(mmfile_t *mmf, long bsize, unsigned long flags);
+void xdl_free_mmfile(mmfile_t *mmf);
+int xdl_mmfile_iscompact(mmfile_t *mmf);
+int xdl_seek_mmfile(mmfile_t *mmf, long off);
+long xdl_read_mmfile(mmfile_t *mmf, void *data, long size);
+long xdl_write_mmfile(mmfile_t *mmf, void const *data, long size);
+long xdl_writem_mmfile(mmfile_t *mmf, mmbuffer_t *mb, int nbuf);
+void *xdl_mmfile_writeallocate(mmfile_t *mmf, long size);
+long xdl_mmfile_ptradd(mmfile_t *mmf, char *ptr, long size, unsigned long flags);
+long xdl_copy_mmfile(mmfile_t *mmf, long size, xdemitcb_t *ecb);
+void *xdl_mmfile_first(mmfile_t *mmf, long *size);
+void *xdl_mmfile_next(mmfile_t *mmf, long *size);
+long xdl_mmfile_size(mmfile_t *mmf);
+int xdl_mmfile_cmp(mmfile_t *mmf1, mmfile_t *mmf2);
+int xdl_mmfile_compact(mmfile_t *mmfo, mmfile_t *mmfc, long bsize, unsigned long flags);
+*/
+//---OPENCOR--- BEGIN
 LIBXDIFF_EXPORT int xdl_init_mmfile(mmfile_t *mmf, long bsize, unsigned long flags);
 LIBXDIFF_EXPORT void xdl_free_mmfile(mmfile_t *mmf);
 LIBXDIFF_EXPORT int xdl_mmfile_iscompact(mmfile_t *mmf);
@@ -111,15 +178,40 @@ LIBXDIFF_EXPORT void *xdl_mmfile_next(mmfile_t *mmf, long *size);
 LIBXDIFF_EXPORT long xdl_mmfile_size(mmfile_t *mmf);
 LIBXDIFF_EXPORT int xdl_mmfile_cmp(mmfile_t *mmf1, mmfile_t *mmf2);
 LIBXDIFF_EXPORT int xdl_mmfile_compact(mmfile_t *mmfo, mmfile_t *mmfc, long bsize, unsigned long flags);
+//---OPENCOR--- END
 
+/*---OPENCOR---
+int xdl_diff(mmfile_t *mf1, mmfile_t *mf2, xpparam_t const *xpp,
+	     xdemitconf_t const *xecfg, xdemitcb_t *ecb);
+int xdl_patch(mmfile_t *mf, mmfile_t *mfp, int mode, xdemitcb_t *ecb,
+	      xdemitcb_t *rjecb);
+*/
+//---OPENCOR--- BEGIN
 LIBXDIFF_EXPORT int xdl_diff(mmfile_t *mf1, mmfile_t *mf2, xpparam_t const *xpp,
-                             xdemitconf_t const *xecfg, xdemitcb_t *ecb);
+	     xdemitconf_t const *xecfg, xdemitcb_t *ecb);
 LIBXDIFF_EXPORT int xdl_patch(mmfile_t *mf, mmfile_t *mfp, int mode, xdemitcb_t *ecb,
-                              xdemitcb_t *rjecb);
+	      xdemitcb_t *rjecb);
+//---OPENCOR--- END
 
+/*---OPENCOR---
+int xdl_merge3(mmfile_t *mmfo, mmfile_t *mmf1, mmfile_t *mmf2, xdemitcb_t *ecb,
+	       xdemitcb_t *rjecb);
+*/
+//---OPENCOR--- BEGIN
 LIBXDIFF_EXPORT int xdl_merge3(mmfile_t *mmfo, mmfile_t *mmf1, mmfile_t *mmf2, xdemitcb_t *ecb,
-                               xdemitcb_t *rjecb);
+	       xdemitcb_t *rjecb);
+//---OPENCOR--- END
 
+/*---OPENCOR---
+int xdl_bdiff_mb(mmbuffer_t *mmb1, mmbuffer_t *mmb2, bdiffparam_t const *bdp, xdemitcb_t *ecb);
+int xdl_bdiff(mmfile_t *mmf1, mmfile_t *mmf2, bdiffparam_t const *bdp, xdemitcb_t *ecb);
+int xdl_rabdiff_mb(mmbuffer_t *mmb1, mmbuffer_t *mmb2, xdemitcb_t *ecb);
+int xdl_rabdiff(mmfile_t *mmf1, mmfile_t *mmf2, xdemitcb_t *ecb);
+long xdl_bdiff_tgsize(mmfile_t *mmfp);
+int xdl_bpatch(mmfile_t *mmf, mmfile_t *mmfp, xdemitcb_t *ecb);
+int xdl_bpatch_multi(mmbuffer_t *base, mmbuffer_t *mbpch, int n, xdemitcb_t *ecb);
+*/
+//---OPENCOR--- BEGIN
 LIBXDIFF_EXPORT int xdl_bdiff_mb(mmbuffer_t *mmb1, mmbuffer_t *mmb2, bdiffparam_t const *bdp, xdemitcb_t *ecb);
 LIBXDIFF_EXPORT int xdl_bdiff(mmfile_t *mmf1, mmfile_t *mmf2, bdiffparam_t const *bdp, xdemitcb_t *ecb);
 LIBXDIFF_EXPORT int xdl_rabdiff_mb(mmbuffer_t *mmb1, mmbuffer_t *mmb2, xdemitcb_t *ecb);
@@ -127,6 +219,7 @@ LIBXDIFF_EXPORT int xdl_rabdiff(mmfile_t *mmf1, mmfile_t *mmf2, xdemitcb_t *ecb)
 LIBXDIFF_EXPORT long xdl_bdiff_tgsize(mmfile_t *mmfp);
 LIBXDIFF_EXPORT int xdl_bpatch(mmfile_t *mmf, mmfile_t *mmfp, xdemitcb_t *ecb);
 LIBXDIFF_EXPORT int xdl_bpatch_multi(mmbuffer_t *base, mmbuffer_t *mbpch, int n, xdemitcb_t *ecb);
+//---OPENCOR--- END
 
 
 #ifdef __cplusplus
@@ -134,3 +227,4 @@ LIBXDIFF_EXPORT int xdl_bpatch_multi(mmbuffer_t *base, mmbuffer_t *mbpch, int n,
 #endif /* #ifdef __cplusplus */
 
 #endif /* #if !defined(XDIFF_H) */
+
