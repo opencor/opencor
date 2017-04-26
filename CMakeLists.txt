@@ -417,6 +417,9 @@ SET(PLUGINS
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
 )
+SET(PLUGINS
+    thirdParty/LibXDiff
+)
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
