@@ -693,43 +693,45 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     xdl_free_mmfile(&oldBlock);
     xdl_free_mmfile(&newBlock);
 
+    return QString("<pre>%1</pre>").arg(differences);
+
     // Return the diff between the given old and new strings
 
-    typedef diff_match_patch<std::wstring> DiffMatchPatch;
+//    typedef diff_match_patch<std::wstring> DiffMatchPatch;
 
-    DiffMatchPatch diffMatchPatch;
-    DiffMatchPatch::Diffs diffs = diffMatchPatch.diff_main(pOld.toStdWString(), pNew.toStdWString());
+//    DiffMatchPatch diffMatchPatch;
+//    DiffMatchPatch::Diffs diffs = diffMatchPatch.diff_main(pOld.toStdWString(), pNew.toStdWString());
 
-    diffMatchPatch.diff_cleanupEfficiency(diffs);
+//    diffMatchPatch.diff_cleanupEfficiency(diffs);
 
-    QString html = "<pre>";
-    QString text = QString();
+//    QString html = "<pre>";
+//    QString text = QString();
 
-    for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
-         diffIterator != endDiffIterator; ++diffIterator) {
-        text = QString::fromStdWString((*diffIterator).text).replace("<", "&lt;")
-                                                            .replace(">", "&gt;")
-                                                            .replace("&", "&amp;");
+//    for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
+//         diffIterator != endDiffIterator; ++diffIterator) {
+//        text = QString::fromStdWString((*diffIterator).text).replace("<", "&lt;")
+//                                                            .replace(">", "&gt;")
+//                                                            .replace("&", "&amp;");
 
-        switch ((*diffIterator).operation) {
-        case DiffMatchPatch::EQUAL:
-            html += text;
+//        switch ((*diffIterator).operation) {
+//        case DiffMatchPatch::EQUAL:
+//            html += text;
 
-            break;
-        case DiffMatchPatch::INSERT:
-            html += QString("<span class=\"insert\">%1</span>").arg(text);
+//            break;
+//        case DiffMatchPatch::INSERT:
+//            html += QString("<span class=\"insert\">%1</span>").arg(text);
 
-            break;
-        case DiffMatchPatch::DELETE:
-            html += QString("<span class=\"delete\">%1</span>").arg(text);
+//            break;
+//        case DiffMatchPatch::DELETE:
+//            html += QString("<span class=\"delete\">%1</span>").arg(text);
 
-            break;
-        }
-    }
+//            break;
+//        }
+//    }
 
-    html += "</pre>";
+//    html += "</pre>";
 
-    return html;
+//    return html;
 }
 
 //==============================================================================
