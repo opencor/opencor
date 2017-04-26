@@ -645,50 +645,54 @@ bool PmrWorkspacesWindowSynchronizeDialog::cellmlText(const QString &pFileName,
 }
 
 //==============================================================================
-int xdiff_out(void *data, mmbuffer_t *mb, int nbuf)
+
+int xdiffCallback(void *data, mmbuffer_t *pBuffer, int pBufferSize)
 {
-    for (int i = 0; i < nbuf; ++i)
-        *static_cast<QString *>(data) += QString(mb[i].ptr).left(mb[i].size);
+    // Add the given buffer to the given data
+
+    for (int i = 0; i < pBufferSize; ++i)
+        *static_cast<QString *>(data) += QString(pBuffer[i].ptr).left(pBuffer[i].size);
 
     return 0;
 }
 
+//==============================================================================
+
 QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
                                                        const QString &pNew)
 {
-qDebug("---------");
+    // Retrieve the UNIX-like differences between the given old and new strings
 
-mmfile_t oldBlock;
-mmfile_t newBlock;
-QByteArray oldByteArray = pOld.toUtf8();
-QByteArray newByteArray = pNew.toUtf8();
+    mmfile_t oldBlock;
+    mmfile_t newBlock;
+    QByteArray oldByteArray = pOld.toUtf8();
+    QByteArray newByteArray = pNew.toUtf8();
 
-xdl_init_mmfile(&oldBlock, oldByteArray.size(), XDL_MMF_ATOMIC);
-xdl_init_mmfile(&newBlock, newByteArray.size(), XDL_MMF_ATOMIC);
+    xdl_init_mmfile(&oldBlock, oldByteArray.size(), XDL_MMF_ATOMIC);
+    xdl_init_mmfile(&newBlock, newByteArray.size(), XDL_MMF_ATOMIC);
 
-memcpy(xdl_mmfile_writeallocate(&oldBlock, oldByteArray.size()),
-       oldByteArray.constData(), oldByteArray.size());
-memcpy(xdl_mmfile_writeallocate(&newBlock, newByteArray.size()),
-       newByteArray.constData(), newByteArray.size());
+    memcpy(xdl_mmfile_writeallocate(&oldBlock, oldByteArray.size()),
+           oldByteArray.constData(), oldByteArray.size());
+    memcpy(xdl_mmfile_writeallocate(&newBlock, newByteArray.size()),
+           newByteArray.constData(), newByteArray.size());
 
-xpparam_t parameters;
-xdemitconf_t context;
-QString differences = QString();
-xdemitcb_t callback;
+    xpparam_t parameters;
+    xdemitconf_t context;
+    QString differences = QString();
+    xdemitcb_t callback;
 
-parameters.flags = 0;
+    parameters.flags = 0;
 
-context.ctxlen = 3;
+    context.ctxlen = 3;
 
-callback.priv = &differences;
-callback.outf = xdiff_out;
+    callback.priv = &differences;
+    callback.outf = xdiffCallback;
 
-xdl_diff(&oldBlock, &newBlock, &parameters, &context, &callback);
+    xdl_diff(&oldBlock, &newBlock, &parameters, &context, &callback);
 
-xdl_free_mmfile(&oldBlock);
-xdl_free_mmfile(&newBlock);
+    xdl_free_mmfile(&oldBlock);
+    xdl_free_mmfile(&newBlock);
 
-qDebug("%s", qPrintable(differences));
     // Return the diff between the given old and new strings
 
     typedef diff_match_patch<std::wstring> DiffMatchPatch;
