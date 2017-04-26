@@ -693,7 +693,9 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     xdl_free_mmfile(&oldBlock);
     xdl_free_mmfile(&newBlock);
 
-    return QString("<pre>%1</pre>").arg(differences);
+    return QString("<pre>%1</pre>").arg(differences.replace("&", "&amp;")
+                                                   .replace("<", "&lt;")
+                                                   .replace(">", "&gt;"));
 
     // Return the diff between the given old and new strings
 
@@ -709,9 +711,9 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
 
 //    for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
 //         diffIterator != endDiffIterator; ++diffIterator) {
-//        text = QString::fromStdWString((*diffIterator).text).replace("<", "&lt;")
-//                                                            .replace(">", "&gt;")
-//                                                            .replace("&", "&amp;");
+//        text = QString::fromStdWString((*diffIterator).text).replace("&", "&amp;")
+//                                                            .replace("<", "&lt;")
+//                                                            .replace(">", "&gt;");
 
 //        switch ((*diffIterator).operation) {
 //        case DiffMatchPatch::EQUAL:
