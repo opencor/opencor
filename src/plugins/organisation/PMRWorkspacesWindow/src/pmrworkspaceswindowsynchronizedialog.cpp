@@ -840,7 +840,6 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
         // they are listed)
 
         QString html = QString();
-        bool oneFile = indexes.count() == 1;
         bool firstFile = true;
 
         for (int i = 0, iMax = mProxyModel->rowCount(); i < iMax; ++i) {
@@ -864,11 +863,10 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
                 if (fileDiffHtml.isEmpty())
                     fileDiffHtml = diffHtml(fileName);
 
-                if (!oneFile && !firstFile)
+                if (!firstFile)
                     html += "<br>";
 
-                if (!oneFile)
-                    html += "<div>"+fileName+"</div>";
+                html += "<div>"+fileName+"</div>";
 
                 html += fileDiffHtml;
 
