@@ -659,6 +659,133 @@ int xdiffCallback(void *data, mmbuffer_t *pBuffer, int pBufferSize)
 
 //==============================================================================
 
+static const auto Row = QStringLiteral("    <tr class=\"%1\">\n"
+                                       "        <td class=\"linenumber shrink rightborder\">\n"
+                                       "            <code>%2</code>\n"
+                                       "        </td>\n"
+                                       "        <td class=\"linenumber shrink rightborder\">\n"
+                                       "            <code>%3</code>\n"
+                                       "        </td>\n"
+                                       "        <td class=\"tag shrink\">\n"
+                                       "            <code>%4</code>\n"
+                                       "        </td>\n"
+                                       "        <td class=\"expand\">\n"
+                                       "            <code>%5</code>\n"
+                                       "        </td>\n"
+                                       "    </tr>\n");
+
+//==============================================================================
+
+PmrWorkspacesWindowSynchronizeDialog::DifferenceData PmrWorkspacesWindowSynchronizeDialog::differenceData(const QString &pOperation,
+                                                                                                          const QString &pRemoveLineNumber,
+                                                                                                          const QString &pAddLineNumber,
+                                                                                                          const QChar &pTag,
+                                                                                                          const QString &pDifference)
+{
+    PmrWorkspacesWindowSynchronizeDialog::DifferenceData res = PmrWorkspacesWindowSynchronizeDialog::DifferenceData();
+
+    res.operation = pOperation;
+    res.removeLineNumber = pRemoveLineNumber;
+    res.addLineNumber = pAddLineNumber;
+    res.tag = pTag;
+    res.difference = pDifference;
+
+    return res;
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDifferencesData)
+{
+    // Make sure that we have some differences data
+
+    if (pDifferencesData.isEmpty()) {
+        return QString();
+    } else {
+        // Highlight the differences within our differences data' difference
+        // field
+
+        QString oldString = QString();
+        QString newString = QString();
+
+        foreach (const DifferenceData &differenceData, pDifferencesData) {
+            if (differenceData.tag == '+')
+                newString += differenceData.difference+"\n";
+            else
+                oldString += differenceData.difference+"\n";
+        }
+
+        typedef diff_match_patch<std::wstring> DiffMatchPatch;
+
+        DiffMatchPatch diffMatchPatch;
+        DiffMatchPatch::Diffs diffs = diffMatchPatch.diff_main(oldString.toStdWString(), newString.toStdWString());
+
+        diffMatchPatch.diff_cleanupEfficiency(diffs);
+
+        QString oldDiffString = QString();
+        QString newDiffString = QString();
+
+        for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
+             diffIterator != endDiffIterator; ++diffIterator) {
+            QString text = QString::fromStdWString((*diffIterator).text).toHtmlEscaped()
+                                                                        .replace(' ', "&nbsp;");
+
+            switch ((*diffIterator).operation) {
+            case DiffMatchPatch::EQUAL:
+                oldDiffString += text;
+                newDiffString += text;
+
+                break;
+            case DiffMatchPatch::INSERT:
+                newDiffString += oldString.isEmpty()?
+                                     text:
+                                     text.contains('\n')?
+                                         text.endsWith('\n')?
+                                             QString("<span class=\"add\">%1</span>\n").arg(text.remove('\n')):
+                                             QString("<span class=\"add\">%1</span>").arg(text.replace('\n', "</span>\n<span class=\"add\">")):
+                                         QString("<span class=\"add\">%1</span>").arg(text);
+
+                break;
+            case DiffMatchPatch::DELETE:
+                oldDiffString += newString.isEmpty()?
+                                     text:
+                                     text.contains('\n')?
+                                         text.endsWith('\n')?
+                                             QString("<span class=\"remove\">%1</span>\n").arg(text.remove('\n')):
+                                             QString("<span class=\"remove\">%1</span>").arg(text.replace('\n', "</span>\n<span class=\"remove\">")):
+                                         QString("<span class=\"remove\">%1</span>").arg(text);
+
+                break;
+            }
+        }
+
+        // Generate the HTML code for any differences data that we may have been
+        // given
+
+        QString html = QString();
+        QStringList oldDiffStrings = oldDiffString.split('\n');
+        QStringList newDiffStrings = newDiffString.split('\n');
+        int addLineNumber = -1;
+        int removeLineNumber = -1;
+
+        foreach (const DifferenceData &differenceData, pDifferencesData) {
+            html += Row.arg(differenceData.operation,
+                            differenceData.removeLineNumber,
+                            differenceData.addLineNumber,
+                            differenceData.tag,
+                            (differenceData.tag == '+')?
+                                newDiffStrings[++addLineNumber]:
+                                oldDiffStrings[++removeLineNumber]);
+        }
+
+        pDifferencesData.clear();
+
+        return html;
+    }
+}
+
+//==============================================================================
+
 QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
                                                        const QString &pNew)
 {
@@ -702,118 +829,64 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     static const QRegularExpression AfterLineNumberRegEx = QRegularExpression(",.*");
     static const QRegularExpression AfterNumberOfLinesRegEx = QRegularExpression(" .*");
 
-    static const QString Row = "    <tr class=\"%1\">\n"
-                               "        <td class=\"linenumber shrink rightborder\">\n"
-                               "            <code>%2</code>\n"
-                               "        </td>\n"
-                               "        <td class=\"linenumber shrink rightborder\">\n"
-                               "            <code>%3</code>\n"
-                               "        </td>\n"
-                               "        <td class=\"tag shrink\">\n"
-                               "            <code>%4</code>\n"
-                               "        </td>\n"
-                               "        <td class=\"expand\">\n"
-                               "            <code>%5</code>\n"
-                               "        </td>\n"
-                               "    </tr>\n";
-    static const QString HeaderTag = "@@";
-    static const QChar AddTag = '+';
-    static const QChar RemoveTag = '-';
-    static const QString Header = "header";
-    static const QString Default = "default";
-    static const QString LastDefault = "last "+Default;
-    static const QString Add = "add";
-    static const QString LastAdd = "last "+Add;
-    static const QString Remove = "remove";
-    static const QString LastRemove = "last "+Remove;
-    static const QString DotDotDot = "...";
-    static const QString Empty = QString();
-
     QString html = QString();
-    QStringList differencesList = differences.split("\n");
+    QStringList differencesList = differences.split('\n');
     int differenceNumber = 0;
     int differenceMaxNumber = differencesList.count()-1;
     int addLineNumber = 0;
     int addMaxLineNumber = 0;
     int removeLineNumber = 0;
+    DifferencesData differencesData = DifferencesData();
 
     foreach (const QString &difference, differencesList) {
         ++differenceNumber;
 
-        if (difference.startsWith(HeaderTag) && difference.endsWith(HeaderTag)) {
+        if (difference.startsWith("@@") && difference.endsWith("@@")) {
             addLineNumber = QString(difference).remove(BeforeAddLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
             addMaxLineNumber = addLineNumber+QString(difference).remove(BeforeAddNumberOfLinesRegEx).remove(AfterNumberOfLinesRegEx).toInt();
 
             removeLineNumber = QString(difference).remove(BeforeRemoveLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
 
-            html += Row.arg(Header, DotDotDot, DotDotDot, Empty, difference);
+            html += Row.arg("header", "...", "...", QString(), difference);
         } else {
             QString diff = difference;
             QChar tag = diff[0];
 
-            diff.remove(0, 1).replace("&", "&amp;")
-                             .replace(" ", "&nbsp;")
-                             .replace("<", "&lt;")
-                             .replace(">", "&gt;");
+            diff.remove(0, 1);
 
-            if (tag == AddTag) {
+            if (tag == '+') {
                 ++addLineNumber;
 
-                html += Row.arg((differenceNumber == differenceMaxNumber)?LastAdd:Add,
-                                Empty, QString::number(addLineNumber),
-                                AddTag, diff);
-            } else if (tag == RemoveTag) {
+                differencesData << differenceData((differenceNumber == differenceMaxNumber)?"last add":"add",
+                                                  QString(), QString::number(addLineNumber),
+                                                  '+', diff);
+            } else if (tag == '-') {
                 ++removeLineNumber;
 
-                html += Row.arg((differenceNumber == differenceMaxNumber)?LastRemove:Remove,
-                                QString::number(removeLineNumber), Empty,
-                                RemoveTag, diff);
+                differencesData << differenceData((differenceNumber == differenceMaxNumber)?"last remove":"remove",
+                                                  QString::number(removeLineNumber), QString(),
+                                                  '-', diff);
             } else if (addLineNumber != addMaxLineNumber) {
+                // Output any differences data that we may have
+
+                html += diffHtml(differencesData);
+
+                // Output the current line
+
                 ++addLineNumber;
                 ++removeLineNumber;
 
-                html += Row.arg((differenceNumber == differenceMaxNumber)?LastDefault:Default,
+                html += Row.arg((differenceNumber == differenceMaxNumber)?"last default":"default",
                                 QString::number(removeLineNumber), QString::number(addLineNumber),
-                                Empty, diff);
+                                QString(), diff.toHtmlEscaped()
+                                               .replace(' ', "&nbsp;"));
             }
         }
     }
 
-    // Return the diff between the given old and new strings
+    // Output any differences data that may be left
 
-//    typedef diff_match_patch<std::wstring> DiffMatchPatch;
-
-//    DiffMatchPatch diffMatchPatch;
-//    DiffMatchPatch::Diffs diffs = diffMatchPatch.diff_main(pOld.toStdWString(), pNew.toStdWString());
-
-//    diffMatchPatch.diff_cleanupEfficiency(diffs);
-
-//    QString html = "<pre>";
-//    QString text = QString();
-
-//    for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
-//         diffIterator != endDiffIterator; ++diffIterator) {
-//        text = QString::fromStdWString((*diffIterator).text).replace("&", "&amp;")
-//                                                            .replace("<", "&lt;")
-//                                                            .replace(">", "&gt;");
-
-//        switch ((*diffIterator).operation) {
-//        case DiffMatchPatch::EQUAL:
-//            html += text;
-
-//            break;
-//        case DiffMatchPatch::INSERT:
-//            html += QString("<span class=\"insert\">%1</span>").arg(text);
-
-//            break;
-//        case DiffMatchPatch::DELETE:
-//            html += QString("<span class=\"delete\">%1</span>").arg(text);
-
-//            break;
-//        }
-//    }
-
-//    html += "</pre>";
+    html += diffHtml(differencesData);
 
     return html;
 }
