@@ -520,19 +520,20 @@ void PmrWorkspacesWindowSynchronizeDialog::refreshChanges()
 
     // Delete old unused items
 
-    PmrWorkspacesWindowSynchronizeDialogItems oldItemsToDelete = PmrWorkspacesWindowSynchronizeDialogItems();
-
     foreach (PmrWorkspacesWindowSynchronizeDialogItem *oldItem, oldItems) {
-        if (!newItems.contains(oldItem))
-            oldItemsToDelete << oldItem;
+        if (!newItems.contains(oldItem)) {
+            mDiffHtmls.remove(oldItem->text());
+            mCellmlDiffHtmls.remove(oldItem->text());
+
+            mModel->invisibleRootItem()->removeRow(oldItem->row());
+        }
     }
 
-    foreach (PmrWorkspacesWindowSynchronizeDialogItem *oldItemToDelete, oldItemsToDelete) {
-        mDiffHtmls.remove(oldItemToDelete->text());
-        mCellmlDiffHtmls.remove(oldItemToDelete->text());
+    // Check whether we still have at least one item selected and, if not,
+    // select the 'new' first one
 
-        mModel->invisibleRootItem()->removeRow(oldItemToDelete->row());
-    }
+    if (mChangesValue->selectionModel()->selectedIndexes().isEmpty())
+        mChangesValue->setCurrentIndex(mProxyModel->index(0, 0));
 
     // Update our diff information, if needed
 
