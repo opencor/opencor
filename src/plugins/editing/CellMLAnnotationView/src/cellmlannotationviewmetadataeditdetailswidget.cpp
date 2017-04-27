@@ -388,7 +388,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     bool termIsDirect = isDirectTerm(mTermValue->text());
 
     if (termIsDirect) {
-        QStringList termInformation = mTermValue->text().split("/");
+        QStringList termInformation = mTermValue->text().split('/');
 
         if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier) {
             mAddTermButton->setEnabled(    fileReadableAndWritableAndNoIssues
@@ -637,7 +637,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
 {
     // Retrieve the information
 
-    QStringList itemInformation = pItemInformation.split("|");
+    QStringList itemInformation = pItemInformation.split('|');
     QString qualifier = (pInformationType != Qualifier)?QString():pItemInformation;
     QString resource = (pItemInformation.isEmpty() || (pInformationType == Qualifier))?QString():itemInformation[0];
     QString id = (pItemInformation.isEmpty() || (pInformationType == Qualifier))?QString():itemInformation[1];
@@ -881,7 +881,7 @@ bool CellmlAnnotationViewMetadataEditDetailsWidget::isDirectTerm(const QString &
     static const QRegularExpression DirectTermRegEx = QRegularExpression("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$");
 
     return    DirectTermRegEx.match(pTerm).hasMatch()
-           && (pTerm.count("/") == 1);
+           && (pTerm.count('/') == 1);
 }
 
 //==============================================================================
@@ -1041,7 +1041,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
     // Add the term to our CellML element as an RDF triple
 
     CellMLSupport::CellmlFileRdfTriple *rdfTriple;
-    QStringList termInformation = Core::stringFromPercentEncoding(mTermValue->text()).split("/");
+    QStringList termInformation = Core::stringFromPercentEncoding(mTermValue->text()).split('/');
 
     if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier) {
         rdfTriple = mCellmlFile->addRdfTriple(mElement,

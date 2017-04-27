@@ -100,7 +100,7 @@ QStringList fileContents(const QString &pFileName)
         file.close();
     }
 
-    return contents.split("\n");
+    return contents.split('\n');
 }
 
 //==============================================================================
@@ -160,7 +160,7 @@ QStringList runCli(const QStringList pArguments)
     QDir::setCurrent(origPath);
 #endif
 
-    return output.remove("\r").split("\n");
+    return output.remove('\r').split('\n');
 }
 
 //==============================================================================

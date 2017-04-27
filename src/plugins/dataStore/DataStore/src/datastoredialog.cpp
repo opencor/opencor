@@ -126,7 +126,7 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
 
                 QStandardItem *parentHierarchyItem = mModel->invisibleRootItem();
 
-                foreach (const QString &hierarchyPart, crtDataHierarchy.split("/")) {
+                foreach (const QString &hierarchyPart, crtDataHierarchy.split('/')) {
                     hierarchyItem = 0;
 
                     for (int i = 0, iMax = parentHierarchyItem->rowCount(); i < iMax; ++i) {

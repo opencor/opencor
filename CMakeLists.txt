@@ -15,6 +15,7 @@ OPTION(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plugin" ON)
+OPTION(USE_PREBUILT_LIBXDIFF_PLUGIN "Use the pre-built version of the LibXDiff plugin" ON)
 OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
 OPTION(USE_PREBUILT_OAUTH_PLUGIN "Use the pre-built version of the OAuth plugin" ON)
 OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
@@ -333,6 +334,7 @@ SET(PLUGINS
     support/StandardSupport
 
     thirdParty/libgit2
+    thirdParty/LibXDiff
     thirdParty/LLVM
     thirdParty/OAuth
     thirdParty/QScintilla

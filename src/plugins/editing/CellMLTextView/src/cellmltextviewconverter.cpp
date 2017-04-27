@@ -290,7 +290,7 @@ void CellMLTextViewConverter::outputString(const OutputType &pOutputType,
 
     if (pString.isEmpty()) {
         if (mLastOutputType != EmptyLine)
-            mOutput += "\n";
+            mOutput += '\n';
     } else {
         if (pOutputType == Comment) {
             // When converting a comment that is within a piecewise equation,
@@ -510,7 +510,7 @@ void CellMLTextViewConverter::processCommentNode(const QDomNode &pDomNode)
 {
     // Process the given comment node
 
-    QStringList commentLines = pDomNode.nodeValue().remove("\r").split("\n");
+    QStringList commentLines = pDomNode.nodeValue().remove('\r').split('\n');
     // Note #1: we don't know which end of line string is used by the file, so
     //          the above code ensures that we can handle both "\r\n" on Windows
     //          and "\n" on Linux/macOS...
@@ -1693,7 +1693,7 @@ QString CellMLTextViewConverter::processFunctionNode(const QString &pFunction,
     }
 
     if (!res.isEmpty())
-        res += ")";
+        res += ')';
 
     return res;
 }

@@ -658,7 +658,7 @@ bool SimulationExperimentViewInformationGraphsWidget::checkParameter(CellMLSuppo
     if (pRuntime) {
         // Retrieve the component and parameter of the property
 
-        QStringList info = pParameterProperty->value().split(".");
+        QStringList info = pParameterProperty->value().split('.');
         QStringList componentHierarchy = info;
 
         componentHierarchy.removeLast();
@@ -668,7 +668,7 @@ bool SimulationExperimentViewInformationGraphsWidget::checkParameter(CellMLSuppo
         QString parameterName = info.last();
         int parameterDegree = parameterName.length();
 
-        parameterName.replace("'", QString());
+        parameterName.replace('\'', QString());
 
         parameterDegree -= parameterName.length();
 

@@ -164,7 +164,7 @@ QString CellmlFileRuntimeParameter::formattedComponentHierarchy() const
 {
     // Return a formatted version of our component hierarchy
 
-    return mComponentHierarchy.join(".");
+    return mComponentHierarchy.join('.');
 }
 
 //==============================================================================
@@ -636,8 +636,8 @@ QString CellmlFileRuntime::functionCode(const QString &pFunctionSignature,
 
         res += pFunctionBody;
 
-        if (!pFunctionBody.endsWith("\n"))
-            res += "\n";
+        if (!pFunctionBody.endsWith('\n'))
+            res += '\n';
 
         if (pHasDefines) {
             res += "\n"
@@ -992,7 +992,7 @@ void CellmlFileRuntime::update()
 
     static const QRegularExpression InitializationStatementRegEx = QRegularExpression("^(CONSTANTS|RATES|STATES)\\[\\d*\\] = [+-]?\\d*\\.?\\d+([eE][+-]?\\d+)?;$");
 
-    QStringList initConstsList = cleanCode(genericCodeInformation->initConstsString()).split("\n");
+    QStringList initConstsList = cleanCode(genericCodeInformation->initConstsString()).split('\n');
     QString initConsts = QString();
     QString compCompConsts = QString();
 
@@ -1008,31 +1008,31 @@ void CellmlFileRuntime::update()
 
     modelCode += functionCode("int initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
                               initConsts, true);
-    modelCode += "\n";
+    modelCode += '\n';
     modelCode += functionCode("int computeComputedConstants(double *CONSTANTS, double *RATES, double *STATES)",
                               compCompConsts, true);
-    modelCode += "\n";
+    modelCode += '\n';
 
     // Retrieve the body of the remaining functions
 
     if (mModelType == CellmlFileRuntime::Ode) {
         modelCode += functionCode("int computeOdeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
                                   cleanCode(mOdeCodeInformation->ratesString()));
-        modelCode += "\n";
+        modelCode += '\n';
         modelCode += functionCode("int computeOdeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
                                   cleanCode(genericCodeInformation->variablesString()));
     } else {
         modelCode += functionCode("int computeDaeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
                                   cleanCode(mDaeCodeInformation->essentialVariablesString()));
-        modelCode += "\n";
+        modelCode += '\n';
         modelCode += functionCode("int computeDaeResiduals(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)",
                                   cleanCode(mDaeCodeInformation->ratesString()));
-        modelCode += "\n";
+        modelCode += '\n';
         modelCode += functionCode("int computeDaeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
                                   cleanCode(mDaeCodeInformation->rootInformationString()));
         modelCode += functionCode("int computeDaeStateInformation(double *SI)",
                                   cleanCode(mDaeCodeInformation->stateInformationString()));
-        modelCode += "\n";
+        modelCode += '\n';
         modelCode += functionCode("int computeDaeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)",
                                   cleanCode(genericCodeInformation->variablesString()));
     }

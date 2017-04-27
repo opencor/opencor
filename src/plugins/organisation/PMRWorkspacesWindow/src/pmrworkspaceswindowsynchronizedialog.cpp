@@ -59,6 +59,10 @@ limitations under the License.
 
 //==============================================================================
 
+#include "xdiff.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace PMRWorkspacesWindow {
 
@@ -516,19 +520,20 @@ void PmrWorkspacesWindowSynchronizeDialog::refreshChanges()
 
     // Delete old unused items
 
-    PmrWorkspacesWindowSynchronizeDialogItems oldItemsToDelete = PmrWorkspacesWindowSynchronizeDialogItems();
-
     foreach (PmrWorkspacesWindowSynchronizeDialogItem *oldItem, oldItems) {
-        if (!newItems.contains(oldItem))
-            oldItemsToDelete << oldItem;
+        if (!newItems.contains(oldItem)) {
+            mDiffHtmls.remove(oldItem->text());
+            mCellmlDiffHtmls.remove(oldItem->text());
+
+            mModel->invisibleRootItem()->removeRow(oldItem->row());
+        }
     }
 
-    foreach (PmrWorkspacesWindowSynchronizeDialogItem *oldItemToDelete, oldItemsToDelete) {
-        mDiffHtmls.remove(oldItemToDelete->text());
-        mCellmlDiffHtmls.remove(oldItemToDelete->text());
+    // Check whether we still have at least one item selected and, if not,
+    // select the 'new' first one
 
-        mModel->invisibleRootItem()->removeRow(oldItemToDelete->row());
-    }
+    if (mChangesValue->selectionModel()->selectedIndexes().isEmpty())
+        mChangesValue->setCurrentIndex(mProxyModel->index(0, 0));
 
     // Update our diff information, if needed
 
@@ -642,86 +647,248 @@ bool PmrWorkspacesWindowSynchronizeDialog::cellmlText(const QString &pFileName,
 
 //==============================================================================
 
+int xdiffCallback(void *data, mmbuffer_t *pBuffer, int pBufferSize)
+{
+    // Add the given buffer to the given data
+
+    for (int i = 0; i < pBufferSize; ++i)
+        *static_cast<QString *>(data) += QString(pBuffer[i].ptr).left(pBuffer[i].size);
+
+    return 0;
+}
+
+//==============================================================================
+
+static const auto Row = QStringLiteral("    <tr class=\"%1\">\n"
+                                       "        <td class=\"linenumber shrink rightborder\">\n"
+                                       "            <code>%2</code>\n"
+                                       "        </td>\n"
+                                       "        <td class=\"linenumber shrink rightborder\">\n"
+                                       "            <code>%3</code>\n"
+                                       "        </td>\n"
+                                       "        <td class=\"tag shrink\">\n"
+                                       "            <code>%4</code>\n"
+                                       "        </td>\n"
+                                       "        <td class=\"expand\">\n"
+                                       "            <code>%5</code>\n"
+                                       "        </td>\n"
+                                       "    </tr>\n");
+
+//==============================================================================
+
+PmrWorkspacesWindowSynchronizeDialog::DifferenceData PmrWorkspacesWindowSynchronizeDialog::differenceData(const QString &pOperation,
+                                                                                                          const QString &pRemoveLineNumber,
+                                                                                                          const QString &pAddLineNumber,
+                                                                                                          const QChar &pTag,
+                                                                                                          const QString &pDifference)
+{
+    PmrWorkspacesWindowSynchronizeDialog::DifferenceData res = PmrWorkspacesWindowSynchronizeDialog::DifferenceData();
+
+    res.operation = pOperation;
+    res.removeLineNumber = pRemoveLineNumber;
+    res.addLineNumber = pAddLineNumber;
+    res.tag = pTag;
+    res.difference = pDifference;
+
+    return res;
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDifferencesData)
+{
+    // Make sure that we have some differences data
+
+    if (pDifferencesData.isEmpty()) {
+        return QString();
+    } else {
+        // Highlight the differences within our differences data' difference
+        // field
+
+        QString oldString = QString();
+        QString newString = QString();
+
+        foreach (const DifferenceData &differenceData, pDifferencesData) {
+            if (differenceData.tag == '+')
+                newString += differenceData.difference+"\n";
+            else
+                oldString += differenceData.difference+"\n";
+        }
+
+        typedef diff_match_patch<std::wstring> DiffMatchPatch;
+
+        DiffMatchPatch diffMatchPatch;
+        DiffMatchPatch::Diffs diffs = diffMatchPatch.diff_main(oldString.toStdWString(), newString.toStdWString());
+
+        diffMatchPatch.diff_cleanupEfficiency(diffs);
+
+        QString oldDiffString = QString();
+        QString newDiffString = QString();
+
+        for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
+             diffIterator != endDiffIterator; ++diffIterator) {
+            QString text = QString::fromStdWString((*diffIterator).text).toHtmlEscaped()
+                                                                        .replace(' ', "&nbsp;");
+
+            switch ((*diffIterator).operation) {
+            case DiffMatchPatch::EQUAL:
+                oldDiffString += text;
+                newDiffString += text;
+
+                break;
+            case DiffMatchPatch::INSERT:
+                newDiffString += oldString.isEmpty()?
+                                     text:
+                                     text.contains('\n')?
+                                         text.endsWith('\n')?
+                                             QString("<span class=\"add\">%1</span>\n").arg(text.remove('\n')):
+                                             QString("<span class=\"add\">%1</span>").arg(text.replace('\n', "</span>\n<span class=\"add\">")):
+                                         QString("<span class=\"add\">%1</span>").arg(text);
+
+                break;
+            case DiffMatchPatch::DELETE:
+                oldDiffString += newString.isEmpty()?
+                                     text:
+                                     text.contains('\n')?
+                                         text.endsWith('\n')?
+                                             QString("<span class=\"remove\">%1</span>\n").arg(text.remove('\n')):
+                                             QString("<span class=\"remove\">%1</span>").arg(text.replace('\n', "</span>\n<span class=\"remove\">")):
+                                         QString("<span class=\"remove\">%1</span>").arg(text);
+
+                break;
+            }
+        }
+
+        // Generate the HTML code for any differences data that we may have been
+        // given
+
+        QString html = QString();
+        QStringList oldDiffStrings = oldDiffString.split('\n');
+        QStringList newDiffStrings = newDiffString.split('\n');
+        int addLineNumber = -1;
+        int removeLineNumber = -1;
+
+        foreach (const DifferenceData &differenceData, pDifferencesData) {
+            html += Row.arg(differenceData.operation,
+                            differenceData.removeLineNumber,
+                            differenceData.addLineNumber,
+                            differenceData.tag,
+                            (differenceData.tag == '+')?
+                                newDiffStrings[++addLineNumber]:
+                                oldDiffStrings[++removeLineNumber]);
+        }
+
+        pDifferencesData.clear();
+
+        return html;
+    }
+}
+
+//==============================================================================
+
 QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
                                                        const QString &pNew)
 {
-    // Return the diff between the given old and new strings
+    // Retrieve the UNIX-like differences between the given old and new strings
 
-    typedef diff_match_patch<std::wstring> DiffMatchPatch;
+    mmfile_t oldBlock;
+    mmfile_t newBlock;
+    QByteArray oldByteArray = pOld.toUtf8();
+    QByteArray newByteArray = pNew.toUtf8();
 
-    DiffMatchPatch diffMatchPatch;
-    DiffMatchPatch::Diffs diffs = diffMatchPatch.diff_main(pOld.toStdWString(), pNew.toStdWString());
+    xdl_init_mmfile(&oldBlock, oldByteArray.size(), XDL_MMF_ATOMIC);
+    xdl_init_mmfile(&newBlock, newByteArray.size(), XDL_MMF_ATOMIC);
 
-    diffMatchPatch.diff_cleanupEfficiency(diffs);
+    memcpy(xdl_mmfile_writeallocate(&oldBlock, oldByteArray.size()),
+           oldByteArray.constData(), oldByteArray.size());
+    memcpy(xdl_mmfile_writeallocate(&newBlock, newByteArray.size()),
+           newByteArray.constData(), newByteArray.size());
 
-    std::wstring html = L"<pre>";
-    std::wstring text = std::wstring();
+    xpparam_t parameters;
+    xdemitconf_t context;
+    QString differences = QString();
+    xdemitcb_t callback;
 
-    for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
-         diffIterator != endDiffIterator; ++diffIterator) {
-        std::wstring::size_type textSize = (*diffIterator).text.size();
-        std::wstring::const_pointer i;
-        std::wstring::const_pointer iMax;
+    parameters.flags = 0;
 
-        for (i = (*diffIterator).text.c_str(), iMax = i+textSize; i != iMax; ++i) {
-            switch (*i) {
-            case L'<':
-            case L'>':
-                textSize += 3;
+    context.ctxlen = 3;
 
-                break;
-            case L'&':
-                textSize += 4;
+    callback.priv = &differences;
+    callback.outf = xdiffCallback;
 
-                break;
-            }
-        }
+    xdl_diff(&oldBlock, &newBlock, &parameters, &context, &callback);
 
-        if (textSize == (*diffIterator).text.size()) {
-            text = (*diffIterator).text;
+    xdl_free_mmfile(&oldBlock);
+    xdl_free_mmfile(&newBlock);
+
+    // Generate the HTML code for those differences
+
+    static const QRegularExpression BeforeAddLineNumberRegEx = QRegularExpression("[^\\+]*\\+");
+    static const QRegularExpression BeforeAddNumberOfLinesRegEx = QRegularExpression("[^,]*,");
+    static const QRegularExpression BeforeRemoveLineNumberRegEx = QRegularExpression("[^-]*-");
+    static const QRegularExpression AfterLineNumberRegEx = QRegularExpression(",.*");
+    static const QRegularExpression AfterNumberOfLinesRegEx = QRegularExpression(" .*");
+
+    QString html = QString();
+    QStringList differencesList = differences.split('\n');
+    int differenceNumber = 0;
+    int differenceMaxNumber = differencesList.count()-1;
+    int addLineNumber = 0;
+    int addMaxLineNumber = 0;
+    int removeLineNumber = 0;
+    DifferencesData differencesData = DifferencesData();
+
+    foreach (const QString &difference, differencesList) {
+        ++differenceNumber;
+
+        if (difference.startsWith("@@") && difference.endsWith("@@")) {
+            addLineNumber = QString(difference).remove(BeforeAddLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
+            addMaxLineNumber = addLineNumber+QString(difference).remove(BeforeAddNumberOfLinesRegEx).remove(AfterNumberOfLinesRegEx).toInt();
+
+            removeLineNumber = QString(difference).remove(BeforeRemoveLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
+
+            html += Row.arg("header", "...", "...", QString(), difference);
         } else {
-            text.clear();
-            text.reserve(textSize);
+            QString diff = difference;
+            QChar tag = diff[0];
 
-            for (i = (*diffIterator).text.c_str(); i != iMax; ++i) {
-                switch (*i) {
-                case L'<':
-                    text += L"&lt;";
+            diff.remove(0, 1);
 
-                    break;
-                case L'>':
-                    text += L"&gt;";
+            if (tag == '+') {
+                ++addLineNumber;
 
-                    break;
-                case L'&':
-                    text += L"&amp;";
+                differencesData << differenceData((differenceNumber == differenceMaxNumber)?"last add":"add",
+                                                  QString(), QString::number(addLineNumber),
+                                                  '+', diff);
+            } else if (tag == '-') {
+                ++removeLineNumber;
 
-                    break;
-                default:
-                    text += *i;
-                }
+                differencesData << differenceData((differenceNumber == differenceMaxNumber)?"last remove":"remove",
+                                                  QString::number(removeLineNumber), QString(),
+                                                  '-', diff);
+            } else if (addLineNumber != addMaxLineNumber) {
+                // Output any differences data that we may have
+
+                html += diffHtml(differencesData);
+
+                // Output the current line
+
+                ++addLineNumber;
+                ++removeLineNumber;
+
+                html += Row.arg((differenceNumber == differenceMaxNumber)?"last default":"default",
+                                QString::number(removeLineNumber), QString::number(addLineNumber),
+                                QString(), diff.toHtmlEscaped()
+                                               .replace(' ', "&nbsp;"));
             }
-        }
-
-        switch ((*diffIterator).operation) {
-        case DiffMatchPatch::EQUAL:
-            html += text;
-
-            break;
-        case DiffMatchPatch::INSERT:
-            html += L"<span class=\"insert\">"+text+L"</span>";
-
-            break;
-        case DiffMatchPatch::DELETE:
-            html += L"<span class=\"delete\">"+text+L"</span>";
-
-            break;
         }
     }
 
-    html += L"</pre>";
+    // Output any differences data that may be left
 
-    return QString::fromStdWString(html);
+    html += diffHtml(differencesData);
+
+    return html;
 }
 
 //==============================================================================
@@ -800,7 +967,13 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
     } else {
         // We are dealing with a binary file
 
-        res = "<pre><span class=\"warning\">["+tr("Binary File")+"]</span></pre>";
+        static const QString BinaryFile = "    <tr class=\"binaryfile\">\n"
+                                          "        <td colspan=4>\n"
+                                          "            <code>%1</code>\n"
+                                          "        </td>\n"
+                                          "    </tr>\n";
+
+        res = BinaryFile.arg("["+tr("Binary File")+"]");
 
         mDiffHtmls.insert(pFileName, res);
     }
@@ -835,19 +1008,33 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
         // hasn't already been done, and show them (respecting the order in whic
         // they are listed)
 
-        QString html = QString();
-        bool oneFile = indexes.count() == 1;
+        static const QString Space = "    <tr class=\"space\"/>\n";
+        static const QString FileName = "    <tr class=\"filename\">\n"
+                                        "        <td colspan=4>\n"
+                                        "            %1\n"
+                                        "        </td>\n"
+                                        "    </tr>\n";
+
+        QString html = "<table>\n";
         bool firstFile = true;
 
         for (int i = 0, iMax = mProxyModel->rowCount(); i < iMax; ++i) {
             QModelIndex index = mProxyModel->index(i, 0);
 
             if (indexes.contains(index)) {
+                // Output the name of the current file
+
+                QString fileName = mModel->itemFromIndex(mProxyModel->mapToSource(index))->text();
+
+                if (!firstFile)
+                    html += Space;
+
+                html += FileName.arg(fileName);
+
                 // Try to retrieve the diff for the CellML Text based version
                 // or, failing that, the diff for the raw version and if that
                 // still fails, we compute the diff
 
-                QString fileName = mModel->itemFromIndex(mProxyModel->mapToSource(index))->text();
                 QString fileDiffHtml = mWebViewerCellmlTextFormatAction->isChecked()?
                                            mCellmlDiffHtmls.value(fileName):
                                            mDiffHtmls.value(fileName);
@@ -860,35 +1047,15 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
                 if (fileDiffHtml.isEmpty())
                     fileDiffHtml = diffHtml(fileName);
 
-                if (!oneFile && !firstFile)
-                    html += "<br>";
-
-                if (!oneFile)
-                    html += "<div>"+fileName+"</div>";
-
                 html += fileDiffHtml;
 
                 firstFile = false;
             }
         }
 
+        html += "</table>\n";
+
         mWebViewer->webView()->setHtml(mDiffTemplate.arg(html));
-
-        // Make sure that the width of our DIV elements, if any, is that of our
-        // frame's contents
-        // Note: indeed, by default, it will have the width of our viewport, so
-        //       it will look odd if our frame's contents is much wider and that
-        //       the user was to decide to scroll to the right... (Could that be
-        //       a bug in QtWebKit?)
-
-        QWebElementCollection divElements = mWebViewer->webView()->page()->mainFrame()->documentElement().findAll("div");
-
-        if (divElements.count()) {
-            QString divWidth = QString("%1px").arg(mWebViewer->webView()->page()->mainFrame()->contentsSize().width());
-
-            for (int i = 0, iMax = divElements.count(); i < iMax; ++i)
-                divElements[i].setStyleProperty("width", divWidth);
-        }
     }
 }
 

@@ -12,7 +12,54 @@
                 cursor: default;
             }
 
-            div {
+            span.add {
+                background: rgb(183, 252, 184);
+            }
+
+            span.remove {
+                background: rgb(255, 186, 184);
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            table td {
+                padding: 0px;
+                white-space: nowrap;
+            }
+
+            table td.expand {
+                width: 99%;
+            }
+
+            table td.tag {
+                padding: 0em 0.3em 0em 0.3em;
+                color: rgb(153, 153, 153);
+            }
+
+            table td.rightborder {
+                border-right: 1px solid rgba(0, 0, 0, 0.09);
+            }
+
+            table tr {
+                margin: 0px;
+                color: rgba(0, 0, 0, 0.69);
+            }
+
+            table tr td.linenumber {
+                padding: 0em 0.5em 0em 0.5em;
+                color: rgb(153, 153, 153);
+                text-align: right;
+            }
+
+            table tr.binaryfile {
+                background: rgba(228, 158, 37, 0.19);
+                color: rgb(150, 105, 26);
+            }
+
+            table tr.filename {
                 margin: 0em 0em 0.5em 0em;
                 background: rgba(16, 115, 176, 0.69);
                 font-size: 13pt;
@@ -20,23 +67,33 @@
                 color: rgb(255, 255, 255);
             }
 
-            pre {
-                margin: 0px;
+            table tr.add {
+                background: rgb(226, 254, 226);
             }
 
-            span.warning {
-                background: rgba(228, 158, 37, 0.19);
-                color: rgb(150, 105, 26);
+            table tr.add td.linenumber {
+                background: rgb(183, 252, 184);
             }
 
-            span.insert {
-                background: rgba(22, 157, 116, 0.19);
-                color: rgb(16, 105, 76);
+            table tr.header {
+                background: rgb(248, 248, 255);
+                color: rgb(153, 153, 153);
             }
 
-            span.delete {
-                background: rgba(211, 94, 26, 0.19);
-                color: rgb(140, 63, 18);
+            table tr.last {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+            }
+
+            table tr.remove {
+                background: rgb(255, 228, 228);
+            }
+
+            table tr.remove td.linenumber {
+                background: rgb(255, 186, 184);
+            }
+
+            table tr.space {
+                height: 0.5em;
             }
         </style>
     </head>
