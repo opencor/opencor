@@ -696,8 +696,10 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     // Generate the HTML code for those differences
 
     static const QRegularExpression BeforeAddLineNumberRegEx = QRegularExpression("[^\\+]*\\+");
+    static const QRegularExpression BeforeAddNumberOfLinesRegEx = QRegularExpression("[^,]*,");
     static const QRegularExpression BeforeRemoveLineNumberRegEx = QRegularExpression("[^-]*-");
     static const QRegularExpression AfterLineNumberRegEx = QRegularExpression(",.*");
+    static const QRegularExpression AfterNumberOfLinesRegEx = QRegularExpression(" .*");
 
     static const QString Row = "    <tr class=\"%1\">\n"
                                "        <td class=\"linenumber shrink rightborder\">\n"
@@ -718,24 +720,30 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     static const QChar RemoveTag = '-';
     static const QString Header = "header";
     static const QString Default = "default";
+    static const QString LastDefault = "last "+Default;
     static const QString Add = "add";
+    static const QString LastAdd = "last "+Add;
     static const QString Remove = "remove";
+    static const QString LastRemove = "last "+Remove;
     static const QString DotDotDot = "...";
     static const QString Empty = QString();
 
     QString html = QString();
+    QStringList differencesList = differences.split("\n");
+    int differenceNumber = 0;
+    int differenceMaxNumber = differencesList.count()-1;
     int addLineNumber = 0;
+    int addMaxLineNumber = 0;
     int removeLineNumber = 0;
 
-    foreach (const QString &difference, differences.split("\n")) {
+    foreach (const QString &difference, differencesList) {
+        ++differenceNumber;
+
         if (difference.startsWith(HeaderTag) && difference.endsWith(HeaderTag)) {
-            QString diff = difference;
+            addLineNumber = QString(difference).remove(BeforeAddLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
+            addMaxLineNumber = addLineNumber+QString(difference).remove(BeforeAddNumberOfLinesRegEx).remove(AfterNumberOfLinesRegEx).toInt();
 
-            addLineNumber = diff.remove(BeforeAddLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
-
-            diff = difference;
-
-            removeLineNumber = diff.remove(BeforeRemoveLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
+            removeLineNumber = QString(difference).remove(BeforeRemoveLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
 
             html += Row.arg(Header, DotDotDot, DotDotDot, Empty, difference);
         } else {
@@ -750,16 +758,22 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
             if (tag == AddTag) {
                 ++addLineNumber;
 
-                html += Row.arg(Add, Empty, QString::number(addLineNumber), AddTag, diff);
+                html += Row.arg((differenceNumber == differenceMaxNumber)?LastAdd:Add,
+                                Empty, QString::number(addLineNumber),
+                                AddTag, diff);
             } else if (tag == RemoveTag) {
                 ++removeLineNumber;
 
-                html += Row.arg(Remove, QString::number(removeLineNumber), Empty, RemoveTag, diff);
-            } else {
+                html += Row.arg((differenceNumber == differenceMaxNumber)?LastRemove:Remove,
+                                QString::number(removeLineNumber), Empty,
+                                RemoveTag, diff);
+            } else if (addLineNumber != addMaxLineNumber) {
                 ++addLineNumber;
                 ++removeLineNumber;
 
-                html += Row.arg(Default, QString::number(removeLineNumber), QString::number(addLineNumber), Empty, diff);
+                html += Row.arg((differenceNumber == differenceMaxNumber)?LastDefault:Default,
+                                QString::number(removeLineNumber), QString::number(addLineNumber),
+                                Empty, diff);
             }
         }
     }
