@@ -968,7 +968,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
         // We are dealing with a binary file
 
         static const QString BinaryFile = "    <tr class=\"binaryfile\">\n"
-                                          "        <td colspan=5>\n"
+                                          "        <td colspan=4>\n"
                                           "            <code>%1</code>\n"
                                           "        </td>\n"
                                           "    </tr>\n";
@@ -1010,7 +1010,7 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
 
         static const QString Space = "    <tr class=\"space\"/>\n";
         static const QString FileName = "    <tr class=\"filename\">\n"
-                                        "        <td colspan=5>\n"
+                                        "        <td colspan=4>\n"
                                         "            %1\n"
                                         "        </td>\n"
                                         "    </tr>\n";
