@@ -693,9 +693,76 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     xdl_free_mmfile(&oldBlock);
     xdl_free_mmfile(&newBlock);
 
-    return QString("<pre>%1</pre>").arg(differences.replace("&", "&amp;")
-                                                   .replace("<", "&lt;")
-                                                   .replace(">", "&gt;"));
+    // Generate the HTML code for those differences
+
+    static const QRegularExpression BeforeAddLineNumberRegEx = QRegularExpression("[^\\+]*\\+");
+    static const QRegularExpression BeforeRemoveLineNumberRegEx = QRegularExpression("[^-]*-");
+    static const QRegularExpression AfterLineNumberRegEx = QRegularExpression(",.*");
+
+    static const QString Row = "    <tr class=\"%1\">\n"
+                               "        <td class=\"linenumber shrink\">\n"
+                               "            <code>%2</code>\n"
+                               "        </td>\n"
+                               "        <td class=\"linenumber shrink\">\n"
+                               "            <code>%3</code>\n"
+                               "        </td>\n"
+                               "        <td class=\"tag shrink\">\n"
+                               "            <code>%4</code>\n"
+                               "        </td>\n"
+                               "        <td class=\"expand\">\n"
+                               "            <code>%5</code>\n"
+                               "        </td>\n"
+                               "    </tr>\n";
+    static const QString HeaderTag = "@@";
+    static const QChar AddTag = '+';
+    static const QChar RemoveTag = '-';
+    static const QString Header = "header";
+    static const QString Default = "default";
+    static const QString Add = "add";
+    static const QString Remove = "remove";
+    static const QString DotDotDot = "...";
+    static const QString Empty = QString();
+
+    QString html = QString();
+    int addLineNumber = 0;
+    int removeLineNumber = 0;
+
+    foreach (const QString &difference, differences.split("\n")) {
+        if (difference.startsWith(HeaderTag) && difference.endsWith(HeaderTag)) {
+            QString diff = difference;
+
+            addLineNumber = diff.remove(BeforeAddLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
+
+            diff = difference;
+
+            removeLineNumber = diff.remove(BeforeRemoveLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
+
+            html += Row.arg(Header, DotDotDot, DotDotDot, Empty, difference);
+        } else {
+            QString diff = difference;
+            QChar tag = diff[0];
+
+            diff.remove(0, 1).replace("&", "&amp;")
+                             .replace(" ", "&nbsp;")
+                             .replace("<", "&lt;")
+                             .replace(">", "&gt;");
+
+            if (tag == AddTag) {
+                ++addLineNumber;
+
+                html += Row.arg(Add, Empty, QString::number(addLineNumber), AddTag, diff);
+            } else if (tag == RemoveTag) {
+                ++removeLineNumber;
+
+                html += Row.arg(Remove, QString::number(removeLineNumber), Empty, RemoveTag, diff);
+            } else {
+                ++addLineNumber;
+                ++removeLineNumber;
+
+                html += Row.arg(Default, QString::number(removeLineNumber), QString::number(addLineNumber), Empty, diff);
+            }
+        }
+    }
 
     // Return the diff between the given old and new strings
 
@@ -733,7 +800,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
 
 //    html += "</pre>";
 
-//    return html;
+    return html;
 }
 
 //==============================================================================
@@ -812,7 +879,13 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
     } else {
         // We are dealing with a binary file
 
-        res = "<pre><span class=\"warning\">["+tr("Binary File")+"]</span></pre>";
+        static const QString BinaryFile = "    <tr class=\"binaryfile\">\n"
+                                          "        <td colspan=5>\n"
+                                          "            <code>%1</code>\n"
+                                          "        </td>\n"
+                                          "    </tr>\n";
+
+        res = BinaryFile.arg("["+tr("Binary File")+"]");
 
         mDiffHtmls.insert(pFileName, res);
     }
@@ -847,18 +920,33 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
         // hasn't already been done, and show them (respecting the order in whic
         // they are listed)
 
-        QString html = QString();
+        static const QString Space = "    <tr class=\"space\"/>\n";
+        static const QString FileName = "    <tr class=\"filename\">\n"
+                                        "        <td colspan=5>\n"
+                                        "            %1\n"
+                                        "        </td>\n"
+                                        "    </tr>\n";
+
+        QString html = "<table>\n";
         bool firstFile = true;
 
         for (int i = 0, iMax = mProxyModel->rowCount(); i < iMax; ++i) {
             QModelIndex index = mProxyModel->index(i, 0);
 
             if (indexes.contains(index)) {
+                // Output the name of the current file
+
+                QString fileName = mModel->itemFromIndex(mProxyModel->mapToSource(index))->text();
+
+                if (!firstFile)
+                    html += Space;
+
+                html += FileName.arg(fileName);
+
                 // Try to retrieve the diff for the CellML Text based version
                 // or, failing that, the diff for the raw version and if that
                 // still fails, we compute the diff
 
-                QString fileName = mModel->itemFromIndex(mProxyModel->mapToSource(index))->text();
                 QString fileDiffHtml = mWebViewerCellmlTextFormatAction->isChecked()?
                                            mCellmlDiffHtmls.value(fileName):
                                            mDiffHtmls.value(fileName);
@@ -871,34 +959,15 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
                 if (fileDiffHtml.isEmpty())
                     fileDiffHtml = diffHtml(fileName);
 
-                if (!firstFile)
-                    html += "<br>";
-
-                html += "<div>"+fileName+"</div>";
-
                 html += fileDiffHtml;
 
                 firstFile = false;
             }
         }
 
+        html += "</table>\n";
+
         mWebViewer->webView()->setHtml(mDiffTemplate.arg(html));
-
-        // Make sure that the width of our DIV elements, if any, is that of our
-        // frame's contents
-        // Note: indeed, by default, it will have the width of our viewport, so
-        //       it will look odd if our frame's contents is much wider and that
-        //       the user was to decide to scroll to the right... (Could that be
-        //       a bug in QtWebKit?)
-
-        QWebElementCollection divElements = mWebViewer->webView()->page()->mainFrame()->documentElement().findAll("div");
-
-        if (divElements.count()) {
-            QString divWidth = QString("%1px").arg(mWebViewer->webView()->page()->mainFrame()->contentsSize().width());
-
-            for (int i = 0, iMax = divElements.count(); i < iMax; ++i)
-                divElements[i].setStyleProperty("width", divWidth);
-        }
     }
 }
 
