@@ -86,12 +86,12 @@ void CliTests::exportTests()
 
     // Export the CellML Text version of the Noble 1962 model to CellML
 
-    QString expectedOutput = OpenCOR::fileContents(OpenCOR::fileName("models/noble_model_1962.cellml")).join("\n");
+    QString expectedOutput = OpenCOR::fileContents(OpenCOR::fileName("models/noble_model_1962.cellml")).join('\n');
 
     expectedOutput.replace("cellml/1.0#", "cellml/1.1#");
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::export" << OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/noble_model_1962.out")),
-             expectedOutput.split("\n"));
+             expectedOutput.split('\n'));
 }
 
 //==============================================================================

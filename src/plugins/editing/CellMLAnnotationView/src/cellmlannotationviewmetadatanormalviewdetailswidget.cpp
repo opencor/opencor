@@ -340,7 +340,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
 {
     // Retrieve the RDF triple information
 
-    QStringList rdfTripleInformation = pRdfTripleInformation.split("|");
+    QStringList rdfTripleInformation = pRdfTripleInformation.split('|');
     QString qualifier = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[0];
     QString resource = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[1];
     QString id = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[2];
@@ -558,7 +558,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
         // Call our generic look up function
 
-        QStringList rdfTripleInformation = mLink.split("|");
+        QStringList rdfTripleInformation = mLink.split('|');
 
         genericLookUp(mLink,
                       (!rdfTripleInformation[0].compare(mTextContent))?
@@ -590,7 +590,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkHovered()
         if (textContent.isEmpty()) {
             linkToolTip = tr("Remove Term");
         } else {
-            QStringList rdfTripleInformation = link.split("|");
+            QStringList rdfTripleInformation = link.split('|');
 
             linkToolTip = (!rdfTripleInformation[0].compare(textContent))?
                               tr("Look Up Qualifier"):
@@ -625,7 +625,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::copy()
 {
     // Copy the qualifier or the URL of the resource or id to the clipboard
 
-    QStringList rdfTripleInformation = mLink.split("|");
+    QStringList rdfTripleInformation = mLink.split('|');
 
     if (!rdfTripleInformation[0].compare(mTextContent))
         QApplication::clipboard()->setText(mTextContent);

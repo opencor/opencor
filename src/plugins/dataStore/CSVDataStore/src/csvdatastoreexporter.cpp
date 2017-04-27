@@ -61,19 +61,19 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
     QString data = QString();
 
     if (voi) {
-        data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
+        data += Header.arg(voi->uri().replace("/prime", "'").replace('/', " | "),
                            voi->unit());
     }
 
     foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables) {
         if (!data.isEmpty())
-            data += ",";
+            data += ',';
 
-        data += Header.arg(selectedVariable->uri().replace("/prime", "'").replace("/", " | "),
+        data += Header.arg(selectedVariable->uri().replace("/prime", "'").replace('/', " | "),
                            selectedVariable->unit());
     }
 
-    data += "\n";
+    data += '\n';
 
     // Data itself
 
@@ -85,7 +85,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
         foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables) {
             if (!rowData.isEmpty())
-                rowData += ",";
+                rowData += ',';
 
             rowData += QString::number(selectedVariable->value(i));
         }

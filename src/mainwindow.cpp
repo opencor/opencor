@@ -864,7 +864,7 @@ void MainWindow::reorderViewWindowsMenu()
             // accentuated characters by non-accentuated ones, making the
             // sorting sensible
 
-            QString menuItemTitle = menuItemAction->text().remove("&").normalized(QString::NormalizationForm_KD);
+            QString menuItemTitle = menuItemAction->text().remove('&').normalized(QString::NormalizationForm_KD);
 
             for (int i = menuItemTitle.length()-1; i >= 0; --i) {
                 if (menuItemTitle[i].category() == QChar::Mark_NonSpacing)
@@ -1059,12 +1059,12 @@ void MainWindow::handleUrl(const QUrl &pUrl)
         //       leading forward slash. Indeed, an open files request looks like
         //       opencor://openFiles//home/user/file1|/home/user/file2...
 
-        handleArguments(urlArguments(pUrl).split("|"));
+        handleArguments(urlArguments(pUrl).split('|'));
     } else {
         // We are dealing with an action that OpenCOR itself can't handle, but
         // maybe one of its loaded plugins can
 
-        QString pluginName = actionName.split(".").first();
+        QString pluginName = actionName.split('.').first();
 
         foreach (Plugin *plugin, mLoadedPluginPlugins) {
             if (!plugin->name().compare(pluginName, Qt::CaseInsensitive)) {
@@ -1093,7 +1093,7 @@ void MainWindow::handleMessage(const QString &pMessage)
 
     showSelf();
 
-    handleArguments(pMessage.split("|"));
+    handleArguments(pMessage.split('|'));
 }
 
 //==============================================================================

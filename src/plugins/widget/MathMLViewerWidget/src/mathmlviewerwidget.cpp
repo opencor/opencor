@@ -596,7 +596,7 @@ void MathmlViewerWidget::processNode(const QDomNode &pDomNode) const
                     // Split the value of the child node using the underscore as
                     // a separator
 
-                    QStringList domChildNodeSubValues = childNodeValue.split("_");
+                    QStringList domChildNodeSubValues = childNodeValue.split('_');
 
                     // Create a new node that is going to contain the subscript
                     // version of our current node
@@ -652,7 +652,7 @@ void MathmlViewerWidget::processNode(const QDomNode &pDomNode) const
                         endPos = childNodeValue.lastIndexOf(NotUnderscoreRegEx, fromPos);
 
                         if (endPos != -1) {
-                            startPos = childNodeValue.lastIndexOf("_", endPos);
+                            startPos = childNodeValue.lastIndexOf('_', endPos);
 
                             domChildNodeSubValue = childNodeValue.mid(startPos+1, endPos-startPos);
 

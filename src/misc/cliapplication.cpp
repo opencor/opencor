@@ -564,7 +564,7 @@ bool CliApplication::run(int *pRes)
             } else {
                 *pRes = -1;
             }
-        } else if (appArgument.startsWith("-")) {
+        } else if (appArgument.startsWith('-')) {
             // The user provided at least one unknown option
 
             *pRes = -1;

@@ -270,7 +270,7 @@ QString CellmlFileRdfTriple::metadataId() const
 
     if (mSubject->type() == CellmlFileRdfTripleElement::UriReference) {
         QString uriReference = mSubject->uriReference();
-        int hashPosition = uriReference.lastIndexOf("#");
+        int hashPosition = uriReference.lastIndexOf('#');
 
         if (hashPosition != -1)
             return uriReference.right(uriReference.length()-hashPosition-1);
@@ -530,7 +530,7 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
         // The term is a MIRIAM URN, so retrieve its corresponding resource and
         // id
 
-        QStringList miriamUrnList = pTerm.split(":");
+        QStringList miriamUrnList = pTerm.split(':');
 
         pResource = Core::stringFromPercentEncoding(miriamUrnList[2]);
         pId = Core::stringFromPercentEncoding(miriamUrnList[3]);
@@ -543,7 +543,7 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
         QString identifiersDotOrgUri = pTerm;
         // Note: the above is because pTerm is a const, so we can't directly use
         //       QString::remove() on it...
-        QStringList identifiersDotOrgUriList = identifiersDotOrgUri.remove("http://identifiers.org/").split("/");
+        QStringList identifiersDotOrgUriList = identifiersDotOrgUri.remove("http://identifiers.org/").split('/');
 
         pResource = Core::stringFromPercentEncoding(identifiersDotOrgUriList[0]);
         pId = Core::stringFromPercentEncoding(identifiersDotOrgUriList[1]);

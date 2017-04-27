@@ -48,7 +48,7 @@ int main(int pArgC, char *pArgV[])
 
     QString tests = OpenCOR::fileContents(":/tests").first();
     QMap<QString, QStringList> testsGroups;
-    QStringList testItems = tests.split("|");
+    QStringList testItems = tests.split('|');
     QString testGroup;
 
     for (int i = 0, iMax = testItems.count()-1; i < iMax; i += 2) {

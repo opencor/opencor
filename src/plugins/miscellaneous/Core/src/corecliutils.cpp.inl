@@ -61,7 +61,7 @@ QString shortVersion()
     QString res = QString();
     QString appVersion = qApp->applicationVersion();
 
-    if (!appVersion.contains("-"))
+    if (!appVersion.contains('-'))
         res += "Version ";
     else
         res += "Snapshot ";
