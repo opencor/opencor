@@ -700,10 +700,10 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     static const QRegularExpression AfterLineNumberRegEx = QRegularExpression(",.*");
 
     static const QString Row = "    <tr class=\"%1\">\n"
-                               "        <td class=\"linenumber shrink\">\n"
+                               "        <td class=\"linenumber shrink rightborder\">\n"
                                "            <code>%2</code>\n"
                                "        </td>\n"
-                               "        <td class=\"linenumber shrink\">\n"
+                               "        <td class=\"linenumber shrink rightborder\">\n"
                                "            <code>%3</code>\n"
                                "        </td>\n"
                                "        <td class=\"tag shrink\">\n"
