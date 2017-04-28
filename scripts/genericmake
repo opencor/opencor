@@ -11,6 +11,12 @@ fi
 
 shift
 
+if [ "`uname -s`" = "Linux" ]; then
+    compilers="-DCMAKE_C_COMPILER=/usr/bin/gcc-4.9 -DCMAKE_CXX_COMPILER=/usr/bin/g++-4.9"
+else
+    compilers=""
+fi
+
 if [ "`hash ninja 2>&1`" = "" ]; then
     ninjaFound=true
     generator="Ninja"
@@ -31,7 +37,7 @@ echo "\033[44;37;1mMaking OpenCOR$titleTests (using $generator)...\033[0m"
 
 cd build
 
-cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=$cmakeBuildType -DENABLE_TESTS=$enableTests ..
+cmake -G "$cmakeGenerator" $compilers -DCMAKE_BUILD_TYPE=$cmakeBuildType -DENABLE_TESTS=$enableTests ..
 
 exitCode=$?
 
