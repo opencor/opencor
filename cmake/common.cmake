@@ -1340,7 +1340,6 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
-
     SET(OPTIONS)
     SET(ONE_VALUE_KEYWORDS
         TARGET
@@ -1410,7 +1409,7 @@ FOREACH(FILENAME IN LISTS SHA1_FILES_LIST)
     SET(REAL_FILENAME \"${FULL_DIRNAME}/\$\{FILENAME\}\")
 
     IF(NOT EXISTS \$\{REAL_FILENAME\})
-        MESSAGE(FATAL_ERROR \"The file '\$\{REAL_FILENAME\}` is missing from '${PACKAGE_NAME}'.\")
+        MESSAGE(FATAL_ERROR \"The file '\$\{REAL_FILENAME\}` is missing from '${PACKAGE_NAME}'...\")
     ENDIF()
 
     FILE(SHA1 \$\{REAL_FILENAME\} SHA1_VALUE)
@@ -1439,7 +1438,7 @@ RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} \\$\\{${UC_PACKAGE_NAME}_PACKAGE_VERSION\\
 )\")
         MESSAGE(\"Use '${RETRIEVAL_SCRIPT}' to load '${PACKAGE_NAME}'.\")
     ELSE()
-        MESSAGE(FATAL_ERROR \"Unable to build a package for '${PACKAGE_NAME}'.\")
+        MESSAGE(FATAL_ERROR \"Unable to build a package for '${PACKAGE_NAME}'...\")
     ENDIF()
 ")
 
@@ -1453,7 +1452,6 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(CHECK_FILES DIRECTORY FILE_LIST SHA1_LIST)
-
     SET(CHECK_FILES_FAILED FALSE)
 
     # This enables CMake to see the parameters as lists
@@ -1545,7 +1543,7 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME S
         IF(${STATUS_CODE} EQUAL 0)
             CHECK_FILES("${FULL_DIRNAME}" "${COMPRESSED_FILENAME}" "${SHA1_VALUE}")
             IF(CHECK_FILES_FAILED)
-                MESSAGE(FATAL_ERROR "${COMPRESSED_FILENAME} does not have the expected SHA-1 value...")
+                MESSAGE(FATAL_ERROR "'${COMPRESSED_FILENAME}' does not have the expected SHA-1 value...")
             ENDIF()
 
             EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_COMPRESSED_FILENAME}
@@ -1566,7 +1564,7 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME S
         CHECK_FILES("${FULL_DIRNAME}" "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
         IF(CHECK_FILES_FAILED)
             FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
-            MESSAGE(FATAL_ERROR "The files in ${REAL_COMPRESSED_FILENAME} do not have the expected SHA-1 values...")
+            MESSAGE(FATAL_ERROR "The files in '${REAL_COMPRESSED_FILENAME}' do not have the expected SHA-1 values...")
         ENDIF()
     ENDIF()
 ENDMACRO()
