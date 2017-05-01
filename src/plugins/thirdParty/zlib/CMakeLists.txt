@@ -1,6 +1,6 @@
 PROJECT(zlibPlugin)
 
-# Specify the version of zlib we want to build
+# Version that we want to use
 
 SET(ZLIB_FULL_VERSION "1.2.11")
 SET(ZLIB_SHORT_VERSION "1")
@@ -42,7 +42,7 @@ ENDIF()
 # Use our pre-built version unless instructed otherwise
 
 IF(USE_PREBUILT_ZLIB_PLUGIN)
-    # Retrieve the plugin's file(s)
+    # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
            RELATIVE_PROJECT_SOURCE_DIR "${FULL_INSTALL_DIR}")
@@ -76,8 +76,9 @@ IF(USE_PREBUILT_ZLIB_PLUGIN)
             SHA1_VALUES e7a94eaf5cd6bfa099ffc700ea81f26e3030a065
         )
     ENDIF()
-
 ELSE()
+    # Rely on the ExternalProject module to build our package
+
     INCLUDE(ExternalProject)
 
     # Ignore some warnings on Windows
@@ -110,14 +111,16 @@ ELSE()
     )
 
     IF(WIN32)
-        # Our plugin code expects the DLL in the same directory as the import library.
+        # We want both our shared and import libraries to be in the same place
+
         ExternalProject_Add_Step(zlibBuild CopyDLL
             COMMAND ${CMAKE_COMMAND} -E copy ${FULL_INSTALL_DIR}/bin/${ZLIB_SHARED_LIBRARY}
                                              ${FULL_INSTALL_DIR}/lib
             DEPENDEES install)
     ELSE()
-        # We need to dereference the symbolic link to the library as CMake's `tar`
-        # can't do this...
+        # Dereference the symbolic link to the library since CMake's tar can't
+        # do this
+
         IF(APPLE)
             SET(ACTUAL_ZLIB_SHARED_LIBRARY
                 ${CMAKE_SHARED_LIBRARY_PREFIX}z.${ZLIB_FULL_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}
@@ -127,6 +130,7 @@ ELSE()
                 ${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX}.${ZLIB_FULL_VERSION}
             )
         ENDIF()
+
         ExternalProject_Add_Step(zlibBuild CopyLibrary
             COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_INSTALL_DIR}/lib/${ZLIB_SHARED_LIBRARY}
             COMMAND ${CMAKE_COMMAND} -E copy ${FULL_INSTALL_DIR}/lib/${ACTUAL_ZLIB_SHARED_LIBRARY}
@@ -141,7 +145,7 @@ ELSE()
         PACKAGED_FILES include ${CHECKED_FILES}
         CHECKED_FILES ${CHECKED_FILES}
         TARGET zlibBuild
-        )
+    )
 
     SET(PLUGIN_DEPENDS_ON zlibBuild)
 ENDIF()

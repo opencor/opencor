@@ -341,7 +341,7 @@ MACRO(INITIALISE_PROJECT)
         SET(DEST_PLUGINS_DIR ${PROJECT_BUILD_DIR}/plugins/${CMAKE_PROJECT_NAME})
     ENDIF()
 
-    # Default location of external dependencies
+    # Default location of external binaries and packages
 
     IF(WIN32)
         IF(RELEASE_MODE)
@@ -369,8 +369,6 @@ MACRO(INITIALISE_PROJECT)
     IF(NOT EXISTS ${FULL_DEST_EXTERNAL_BINARIES_DIR})
         FILE(MAKE_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR})
     ENDIF()
-
-    # Where external packages are installed
 
     IF(APPLE)
         SET(FULL_DEST_EXTERNAL_BASE_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR})
@@ -404,9 +402,10 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    # We specify where to build external projects because the default
-    # (to build external projects under their plugin's build directory)
-    # can result in path names being too long for Windows...
+    # Let the ExternalProject module know where we want to build build our
+    # external projects
+    # Note: indeed, otherwise on Windows we may end up with path names that are
+    #       too long...
 
     SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${CMAKE_BINARY_DIR}/external)
 
@@ -1336,10 +1335,10 @@ ENDMACRO()
 
 MACRO(CREATE_PACKAGE_FILE DIRNAME PACKAGE_NAME PACKAGE_VERSION)
 
-    SET(OPTIONS "")
+    SET(OPTIONS)
     SET(ONE_VALUE_KEYWORDS
         TARGET
-        )
+    )
     SET(MULTI_VALUE_KEYWORDS
         PACKAGED_FILES
         CHECKED_FILES
@@ -1347,15 +1346,15 @@ MACRO(CREATE_PACKAGE_FILE DIRNAME PACKAGE_NAME PACKAGE_VERSION)
 
     CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
 
-    # The full path to the package's files.
+    # The full path to the package's files
 
     SET(FULL_DIRNAME "${PROJECT_SOURCE_DIR}/${DIRNAME}")
 
-    # The package name in uppercase.
+    # The package name in uppercase
 
     STRING(TOUPPER ${PACKAGE_NAME} UC_PACKAGE_NAME)
 
-    # The name of the package's archive.
+    # The name of the package's archive
 
     SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz)
     SET(REAL_COMPRESSED_FILENAME ${FULL_DIRNAME}/${COMPRESSED_FILENAME})
@@ -1364,12 +1363,12 @@ MACRO(CREATE_PACKAGE_FILE DIRNAME PACKAGE_NAME PACKAGE_VERSION)
 
     FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
 
-    # Where we put CMake code to retrieve the archived package.
+    # Where we put CMake code to retrieve the archived package
 
     SET(RETRIEVAL_SCRIPT "${FULL_DIRNAME}/${PACKAGE_NAME}.cmake")
 
     # The actual packaging code goes into a separate CMake script file
-    # that is run as a POST_BUILD step.
+    # that is run as a POST_BUILD step
 
     SET(PACKAGING_SCRIPT "${PROJECT_BINARY_DIR}/package_${PACKAGE_NAME}.cmake")
     FILE(WRITE ${PACKAGING_SCRIPT} "# Package ${PACKAGE_NAME} files
@@ -1490,9 +1489,8 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION DIRNAME PACKAGE_NAME PACKAGE_VERSION SHA1_VALUE)
-
-    SET(OPTIONS "")
-    SET(ONE_VALUE_KEYWORDS "")
+    SET(OPTIONS)
+    SET(ONE_VALUE_KEYWORDS)
     SET(MULTI_VALUE_KEYWORDS
         CHECKED_FILES
         SHA1_VALUES
@@ -1525,7 +1523,6 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION DIRNAME PACKAGE_NAME PACKAGE_VERSION S
     CHECK_FILES("${FULL_DIRNAME}" "${ARG_CHECKED_FILES}" "${ARG_SHA1_VALUES}")
 
     IF(CHECK_FILES_FAILED)
-
         MESSAGE("Retrieving '${PACKAGE_NAME}' into '${FULL_DIRNAME}'...")
 
         SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz)
@@ -1565,9 +1562,7 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION DIRNAME PACKAGE_NAME PACKAGE_VERSION S
             FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
             MESSAGE(FATAL_ERROR "The files in ${REAL_COMPRESSED_FILENAME} do not have the expected SHA-1 values...")
         ENDIF()
-
     ENDIF()
-
 ENDMACRO()
 
 #===============================================================================
@@ -1640,7 +1635,6 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
             CHECK_FILES("${REAL_DIRNAME}" "${FILENAME}" "${SHA1_VALUE}")
 
             IF(CHECK_FILES_FAILED)
-
                 MESSAGE(FATAL_ERROR "'${FILENAME}' does not have the expected SHA-1 value...")
             ENDIF()
         ELSE()
