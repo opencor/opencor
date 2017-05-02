@@ -495,7 +495,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         EXTERNAL_BINARIES
         EXTERNAL_BINARIES_DEPENDENCIES
         SYSTEM_BINARIES
-        DEPENDS
+        DEPENDS_ON
         TESTS
     )
 
@@ -660,8 +660,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
         # What must be built before external binaries can be copied
 
-        IF(NOT "${ARG_DEPENDS}" STREQUAL "")
-            ADD_DEPENDENCIES(${COPY_EXTERNAL_BINARIES_TARGET} ${ARG_DEPENDS})
+        IF(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
+            ADD_DEPENDENCIES(${COPY_EXTERNAL_BINARIES_TARGET} ${ARG_DEPENDS_ON})
         ENDIF()
 
         FOREACH(ARG_EXTERNAL_BINARY ${ARG_EXTERNAL_BINARIES})
@@ -770,8 +770,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # What must be built before the plugin is built
 
-    IF(NOT "${ARG_DEPENDS}" STREQUAL "")
-        ADD_DEPENDENCIES(${PROJECT_NAME} ${ARG_DEPENDS})
+    IF(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
+        ADD_DEPENDENCIES(${PROJECT_NAME} ${ARG_DEPENDS_ON})
     ENDIF()
 
     # Some settings
