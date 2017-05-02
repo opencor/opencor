@@ -2,8 +2,8 @@ PROJECT(zlibPlugin)
 
 # Version that we want to use
 
-SET(ZLIB_VERSION "1.2.11")
 SET(ZLIB_MAJOR_VERSION "1")
+SET(ZLIB_VERSION "${ZLIB_MAJOR_VERSION}.2.11")
 
 # Specify where our local package will be installed
 
@@ -114,6 +114,8 @@ ELSE()
             <INSTALL_DIR>/lib/${ZLIB_IMPORT_LIBRARY}
     )
 
+    # Do some post-processing that is specific to each platform
+
     IF(WIN32)
         # We want both our shared and import libraries to be in the same place
 
@@ -125,21 +127,19 @@ ELSE()
         # Dereference the symbolic link to the library since CMake's tar can't
         # do this
 
+        SET(FULL_ZLIB_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${ZLIB_SHARED_LIBRARY})
+
         IF(APPLE)
-            SET(ACTUAL_ZLIB_SHARED_LIBRARY
-                ${CMAKE_SHARED_LIBRARY_PREFIX}z.${ZLIB_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}
-            )
+            SET(REAL_FULL_ZLIB_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}z.${ZLIB_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
         ELSE()
-            SET(ACTUAL_ZLIB_SHARED_LIBRARY
-                ${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX}.${ZLIB_VERSION}
-            )
+            SET(REAL_FULL_ZLIB_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX}.${ZLIB_VERSION})
         ENDIF()
 
         ExternalProject_Add_Step(zlibBuild CopyLibrary
-            COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${ZLIB_SHARED_LIBRARY}
-            COMMAND ${CMAKE_COMMAND} -E copy ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${ACTUAL_ZLIB_SHARED_LIBRARY}
-                                             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${ZLIB_SHARED_LIBRARY}
-            DEPENDEES install)
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_ZLIB_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_ZLIB_SHARED_LIBRARY}
+                                                                  ${FULL_ZLIB_SHARED_LIBRARY}
+                                 DEPENDEES install)
     ENDIF()
 
     # Package zlib's include files and library
