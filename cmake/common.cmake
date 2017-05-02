@@ -348,11 +348,13 @@ MACRO(INITIALISE_PROJECT)
             SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/release)
             SET(LOCAL_EXTERNAL_BINARIES_DIR bin/release)
 
+            SET(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR}/release)
             SET(LOCAL_EXTERNAL_PACKAGE_DIR ext/release)
         ELSE()
             SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/debug)
             SET(LOCAL_EXTERNAL_BINARIES_DIR bin/debug)
 
+            SET(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR}/debug)
             SET(LOCAL_EXTERNAL_PACKAGE_DIR ext/debug)
         ENDIF()
 
@@ -361,6 +363,7 @@ MACRO(INITIALISE_PROJECT)
         SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR})
         SET(LOCAL_EXTERNAL_BINARIES_DIR bin)
 
+        SET(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR})
         SET(LOCAL_EXTERNAL_PACKAGE_DIR ext)
 
         IF(APPLE)
@@ -1353,7 +1356,7 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
 
     # The full path to the package's files
 
-    SET(FULL_DIRNAME "${PROJECT_SOURCE_DIR}/${DIRNAME}")
+    SET(REAL_DIRNAME "${PROJECT_SOURCE_DIR}/${DIRNAME}")
 
     # The package name in uppercase
 
@@ -1362,7 +1365,7 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
     # The name of the package's archive
 
     SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz)
-    SET(REAL_COMPRESSED_FILENAME ${FULL_DIRNAME}/${COMPRESSED_FILENAME})
+    SET(REAL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
 
     # Remove any historical package archive
 
@@ -1370,7 +1373,7 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
 
     # Where we put CMake code to retrieve the archived package
 
-    SET(RETRIEVAL_SCRIPT "${FULL_DIRNAME}/${PACKAGE_NAME}.cmake")
+    SET(RETRIEVAL_SCRIPT "${REAL_DIRNAME}/${PACKAGE_NAME}.cmake")
 
     # The actual packaging code goes into a separate CMake script file
     # that is run as a POST_BUILD step
@@ -1406,7 +1409,7 @@ SET(SHA1_FILES_LIST)
 SET(SHA1_FILES)
 SET(SHA1_VALUES)
 FOREACH(FILENAME IN LISTS SHA1_FILES_LIST)
-    SET(REAL_FILENAME \"${FULL_DIRNAME}/\$\{FILENAME\}\")
+    SET(REAL_FILENAME \"${REAL_DIRNAME}/\$\{FILENAME\}\")
 
     IF(NOT EXISTS \$\{REAL_FILENAME\})
         MESSAGE(FATAL_ERROR \"The file '\$\{REAL_FILENAME\}` is missing from '${PACKAGE_NAME}'...\")
@@ -1421,7 +1424,7 @@ ENDFOREACH()
 MESSAGE(\"Packaging '${PACKAGE_NAME}' into '${REAL_COMPRESSED_FILENAME}'.\")
 
 EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -czf ${REAL_COMPRESSED_FILENAME} \$\{PACKAGED_FILES_LIST\}
-                WORKING_DIRECTORY ${FULL_DIRNAME} OUTPUT_QUIET)
+                WORKING_DIRECTORY ${REAL_DIRNAME} OUTPUT_QUIET)
 
 IF(EXISTS ${REAL_COMPRESSED_FILENAME})
     FILE(SHA1 ${REAL_COMPRESSED_FILENAME} SHA1_VALUE)
@@ -1492,7 +1495,8 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
+MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
+                                 SHA1_VALUE)
     SET(OPTIONS)
     SET(ONE_VALUE_KEYWORDS)
     SET(MULTI_VALUE_KEYWORDS
@@ -1500,37 +1504,39 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME S
         SHA1_VALUES
     )
 
-    # Check that we have at least the required arguments in order
-
-    set(_ARG_LIST ${ARGV} ${ARGN})
-    LIST(GET _ARG_LIST 5 _SHA1_FILES_NAME)
-    IF(NOT "${_SHA1_FILES_NAME}" STREQUAL "SHA1_FILES")
-        MESSAGE(FATAL_ERROR "Too few arguments for retreiving package ${PACKAGE_NAME}")
-    ENDIF()
-
     # Parse the argument list
 
     CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
 
-    # The full path to the package's files
+    # Make sure that we have at least one file for which we want to check the
+    # SHA-1 value is that the SHA-1 value(s) are available
 
-    SET(FULL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
+    LIST(LENGTH ARG_SHA1_FILES ARG_SHA1_FILES_COUNT)
+    LIST(LENGTH ARG_SHA1_VALUES ARG_SHA1_VALUES_COUNT)
 
-    # Create the destination folder, if needed
+    IF(       ARG_SHA1_FILES_COUNT EQUAL 0
+       OR NOT ARG_SHA1_FILES_COUNT EQUAL ARG_SHA1_VALUES_COUNT)
+        MESSAGE(FATAL_ERROR "At least one file must have its SHA-1 value checked in order to retrieve the '${PACKAGE_NAME}' package...")
+    ENDIF()
 
-    IF(NOT EXISTS ${FULL_DIRNAME})
-        FILE(MAKE_DIRECTORY ${FULL_DIRNAME})
+    # Create our destination folder, if needed
+
+    STRING(REPLACE "${PLATFORM_DIR}" "ext"
+           REAL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
+
+    IF(NOT EXISTS ${REAL_DIRNAME})
+        FILE(MAKE_DIRECTORY ${REAL_DIRNAME})
     ENDIF()
 
     # Check to see if we already have the package's files
 
-    CHECK_FILES("${FULL_DIRNAME}" "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
+    CHECK_FILES("${REAL_DIRNAME}" "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
 
     IF(CHECK_FILES_FAILED)
-        MESSAGE("Retrieving '${PACKAGE_NAME}' into '${FULL_DIRNAME}'...")
+        MESSAGE("Retrieving '${PACKAGE_NAME}' into '${REAL_DIRNAME}'...")
 
         SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz)
-        SET(REAL_COMPRESSED_FILENAME ${FULL_DIRNAME}/${COMPRESSED_FILENAME})
+        SET(REAL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
 
         FILE(DOWNLOAD "${LOCATION}/${DIRNAME}/${COMPRESSED_FILENAME}" ${REAL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
@@ -1541,13 +1547,18 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME S
         LIST(GET STATUS 0 STATUS_CODE)
 
         IF(${STATUS_CODE} EQUAL 0)
-            CHECK_FILES("${FULL_DIRNAME}" "${COMPRESSED_FILENAME}" "${SHA1_VALUE}")
+            CHECK_FILES("${REAL_DIRNAME}" "${COMPRESSED_FILENAME}" "${SHA1_VALUE}")
+
             IF(CHECK_FILES_FAILED)
                 MESSAGE(FATAL_ERROR "'${COMPRESSED_FILENAME}' does not have the expected SHA-1 value...")
             ENDIF()
 
+MESSAGE("EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_COMPRESSED_FILENAME}
+                         WORKING_DIRECTORY ${REAL_DIRNAME}
+                         OUTPUT_QUIET)")
             EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_COMPRESSED_FILENAME}
-                            WORKING_DIRECTORY ${FULL_DIRNAME} OUTPUT_QUIET)
+                            WORKING_DIRECTORY ${REAL_DIRNAME}
+                            OUTPUT_QUIET)
 
             FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
         ELSE()
@@ -1561,7 +1572,8 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME S
         # Check that the files, if we managed to retrieve them, have the expected
         # SHA-1 values
 
-        CHECK_FILES("${FULL_DIRNAME}" "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
+        CHECK_FILES("${REAL_DIRNAME}" "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
+
         IF(CHECK_FILES_FAILED)
             FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
             MESSAGE(FATAL_ERROR "The files in '${REAL_COMPRESSED_FILENAME}' do not have the expected SHA-1 values...")
@@ -1582,7 +1594,7 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
-    # Create the destination folder, if needed
+    # Create our destination folder, if needed
 
     STRING(REPLACE "${PLATFORM_DIR}" "bin"
            REAL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
