@@ -671,7 +671,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             # Only do a direct copy if the file exists and the plugin doesn't depend on any targets
 
-            IF(EXISTS ${FULL_EXTERNAL_BINARY} AND "${ARG_DEPENDS}" STREQUAL "")
+            IF(    EXISTS ${FULL_EXTERNAL_BINARY}
+               AND "${ARG_DEPENDS_ON}" STREQUAL "")
                 SET(COPY_TARGET DIRECT)
             ELSE()
                 SET(COPY_TARGET ${COPY_EXTERNAL_BINARIES_TARGET})
@@ -749,8 +750,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # Check whether an external package has files to install
 
-    IF(NOT "${ARG_EXTERNAL_DEST_DIR}" STREQUAL ""
-        AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL "")
+    IF(    NOT "${ARG_EXTERNAL_DEST_DIR}" STREQUAL ""
+       AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL "")
 
         # Copy the entire source directory to the destination
 

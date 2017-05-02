@@ -93,7 +93,9 @@ ELSE()
 
     # Build zlib as an external project
 
-    ExternalProject_Add(zlibBuild
+    SET(PACKAGE_BUILD zlibBuild)
+
+    ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
             ${PROJECT_SOURCE_DIR}/ext/proj
         INSTALL_DIR
@@ -119,7 +121,7 @@ ELSE()
     IF(WIN32)
         # We want both our shared and import libraries to be in the same place
 
-        ExternalProject_Add_Step(zlibBuild CopyDLL
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
                                  COMMAND ${CMAKE_COMMAND} -E copy ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/${ZLIB_SHARED_LIBRARY}
                                                                   ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
@@ -135,23 +137,23 @@ ELSE()
             SET(REAL_FULL_ZLIB_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX}.${ZLIB_VERSION})
         ENDIF()
 
-        ExternalProject_Add_Step(zlibBuild CopyLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_ZLIB_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_ZLIB_SHARED_LIBRARY}
                                                                   ${FULL_ZLIB_SHARED_LIBRARY}
                                  DEPENDEES install)
     ENDIF()
 
-    # Package zlib's include files and library
+    # Package our external project
 
     CREATE_PACKAGE_FILE(zlib ${ZLIB_VERSION}
         ${LOCAL_EXTERNAL_PACKAGE_DIR}
         PACKAGED_FILES include ${SHA1_FILES}
         SHA1_FILES ${SHA1_FILES}
-        TARGET zlibBuild
+        TARGET ${PACKAGE_BUILD}
     )
 
-    SET(PLUGIN_DEPENDS_ON zlibBuild)
+    SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
 # Allow other external projects to find our zlib
