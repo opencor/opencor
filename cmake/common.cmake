@@ -1461,41 +1461,49 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(CHECK_SHA1_FILES DIRECTORY FILE_LIST SHA1_LIST)
+MACRO(CHECK_SHA1_FILES DIRNAME SHA1_FILES SHA1_VALUES)
     # By default, everything is OK
 
     SET(CHECK_SHA1_FILES_OK TRUE)
 
-    # This enables CMake to see the parameters as lists
+    # See our parameters as lists
 
-    set(_LIST ${FILE_LIST})
-    set(_SHA1 ${SHA1_LIST})
+    SET(SHA1_FILES_LIST ${SHA1_FILES})
+    SET(SHA1_VALUES_LIST ${SHA1_VALUES})
 
-    LIST(LENGTH _LIST COUNT)
+    # Retrieve the number of SHA-1 files and values we have
+
+    LIST(LENGTH SHA1_FILES_LIST COUNT)
+
+    # Make sure that we have some SHA-1 files and values
+
     IF(COUNT)
-        MATH(EXPR RANGE "${COUNT} - 1")
-        FOREACH(i RANGE ${RANGE})
-            LIST(GET _LIST ${i} FILENAME)
-            LIST(GET _SHA1 ${i} SHA1_VALUE)
+        # Determine our range
 
-            # Make sure that the file, if it exists,
-            # has the expected SHA-1 value
+        MATH(EXPR RANGE "${COUNT}-1")
 
-            SET(REAL_FILENAME ${DIRECTORY}/${FILENAME})
+        # Make sure that our SHA-1 files, if they exist, have the expected SHA-1
+        # value
 
-            IF(EXISTS ${REAL_FILENAME})
-                FILE(SHA1 ${REAL_FILENAME} REAL_SHA1_VALUE)
+        FOREACH(I RANGE ${RANGE})
+            LIST(GET SHA1_FILES_LIST ${I} SHA1_FILE)
+            LIST(GET SHA1_VALUES_LIST ${I} SHA1_VALUE)
+
+            SET(REAL_SHA1_FILE ${DIRNAME}/${SHA1_FILE})
+
+            IF(EXISTS ${REAL_SHA1_FILE})
+                FILE(SHA1 ${REAL_SHA1_FILE} REAL_SHA1_VALUE)
 
                 IF(NOT "${REAL_SHA1_VALUE}" STREQUAL "${SHA1_VALUE}")
-                    # The file doesn't have the expected SHA-1 value
-                    # so remove it and fail the checks
+                    # The file doesn't have the expected SHA-1 value, so remove
+                    # it and fail the checks
 
-                    FILE(REMOVE ${REAL_FILENAME})
+                    FILE(REMOVE ${REAL_SHA1_FILE})
 
                     SET(CHECK_SHA1_FILES_OK FALSE)
                 ENDIF()
             ELSEIF(CHECK_SHA1_FILES_OK)
-                # The file is missing so fail the checks
+                # The file is missing, so fail the checks
 
                 SET(CHECK_SHA1_FILES_OK FALSE)
             ENDIF()
