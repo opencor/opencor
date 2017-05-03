@@ -1364,7 +1364,7 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
 
     # The package name in uppercase
 
-    STRING(TOUPPER ${PACKAGE_NAME} UC_PACKAGE_NAME)
+    STRING(TOUPPER ${PACKAGE_NAME} UPPER_PACKAGE_NAME)
 
     # The name of the package's archive
 
@@ -1375,76 +1375,80 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
 
     FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
 
-    # Where we put CMake code to retrieve the archived package
+    # Where we put the CMake code to retrieve the archived package
 
-    SET(RETRIEVAL_SCRIPT "${REAL_DIRNAME}/${PACKAGE_NAME}.cmake")
+    SET(RETRIEVAL_SCRIPT "${REAL_DIRNAME}/retrievePackage.cmake")
 
-    # The actual packaging code goes into a separate CMake script file
-    # that is run as a POST_BUILD step
+    # The actual packaging code goes into a separate CMake script file that is
+    # run as a POST_BUILD step
 
     SET(PACKAGING_SCRIPT "${PROJECT_BINARY_DIR}/package_${PACKAGE_NAME}.cmake")
-    FILE(WRITE ${PACKAGING_SCRIPT} "# Package ${PACKAGE_NAME} files
+MESSAGE(">>> PACKAGING_SCRIPT: ${PACKAGING_SCRIPT}")
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+    FILE(WRITE ${PACKAGING_SCRIPT} "CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
 
-# The files and directories to package
-SET(PACKAGED_FILES_LIST)
-")
+# Files and directories to package
+
+SET(PACKAGED_FILES\n")
 
     FOREACH(FILENAME IN LISTS ARG_PACKAGED_FILES)
-        FILE(APPEND ${PACKAGING_SCRIPT} "LIST(APPEND PACKAGED_FILES_LIST ${FILENAME})
-")
+        FILE(APPEND ${PACKAGING_SCRIPT} "    ${FILENAME}\n")
     ENDFOREACH()
 
-    FILE(APPEND ${PACKAGING_SCRIPT} "
-# The files to have SHA1 values checked
-SET(SHA1_FILES_LIST)
-")
+    FILE(APPEND ${PACKAGING_SCRIPT} ")\n")
+    FILE(APPEND ${PACKAGING_SCRIPT} "\n")
+    FILE(APPEND ${PACKAGING_SCRIPT} "# Files to have their SHA-1 value checked
+
+SET(SHA1_FILES\n")
 
     FOREACH(FILENAME IN LISTS ARG_SHA1_FILES)
-        FILE(APPEND ${PACKAGING_SCRIPT} "LIST(APPEND SHA1_FILES_LIST ${FILENAME})
-")
+        FILE(APPEND ${PACKAGING_SCRIPT} "    ${FILENAME}\n")
     ENDFOREACH()
 
-    FILE(APPEND ${PACKAGING_SCRIPT} "
+    FILE(APPEND ${PACKAGING_SCRIPT} ")\n")
+    FILE(APPEND ${PACKAGING_SCRIPT} "\n")
+    FILE(APPEND ${PACKAGING_SCRIPT} "# Calculate the SHA-1 value of our different files
 
-# Calculate SHA1 values for specified files
-
-SET(SHA1_FILES)
 SET(SHA1_VALUES)
-FOREACH(FILENAME IN LISTS SHA1_FILES_LIST)
-    SET(REAL_FILENAME \"${REAL_DIRNAME}/\$\{FILENAME\}\")
 
-    IF(NOT EXISTS \$\{REAL_FILENAME\})
-        MESSAGE(FATAL_ERROR \"The file '\$\{REAL_FILENAME\}` is missing from '${PACKAGE_NAME}'...\")
+FOREACH(SHA1_FILE IN LISTS SHA1_FILES)
+    SET(REAL_SHA1_FILENAME \"${REAL_DIRNAME}/\$\{SHA1_FILE\}\")
+
+    IF(NOT EXISTS \$\{REAL_SHA1_FILENAME\})
+        MESSAGE(FATAL_ERROR \"'\$\{REAL_SHA1_FILENAME\}' is missing from the '${PACKAGE_NAME}' package...\")
     ENDIF()
 
-    FILE(SHA1 \$\{REAL_FILENAME\} SHA1_VALUE)
+    FILE(SHA1 \$\{REAL_SHA1_FILENAME\} SHA1_VALUE)
 
-    LIST(APPEND SHA1_FILES \$\{FILENAME\})
     LIST(APPEND SHA1_VALUES \$\{SHA1_VALUE\})
 ENDFOREACH()
 
-EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -czf ${REAL_COMPRESSED_FILENAME} \$\{PACKAGED_FILES_LIST\}
+# Compress our package
+
+EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -czf ${REAL_COMPRESSED_FILENAME} \$\{PACKAGED_FILES\}
                 WORKING_DIRECTORY ${REAL_DIRNAME}
                 OUTPUT_QUIET)
 
+# Make sure that the compressed version of our package exists
+
 IF(EXISTS ${REAL_COMPRESSED_FILENAME})
+    # The compressed version of our package exists, so calculate its SHA-1 value
+    # and generate a small CMake file that tells us how we should call the
+    # RETRIEVE_PACKAGE_FILE() macro to retrieve that package
+
     FILE(SHA1 ${REAL_COMPRESSED_FILENAME} SHA1_VALUE)
-    IF(SHA1_VALUES)
-        STRING(REPLACE \";\" \"\\n                \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
-    ENDIF()
 
-    FILE(WRITE ${RETRIEVAL_SCRIPT} \"# Archive is at ${REAL_COMPRESSED_FILENAME}
+    STRING(REPLACE \";\" \"\\n                \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
 
-RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} \\$\\{${UC_PACKAGE_NAME}_PACKAGE_VERSION\\}
+    FILE(WRITE ${RETRIEVAL_SCRIPT} \"RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} \\$\\{${UPPER_PACKAGE_NAME}_VERSION\\}
     \\$\\{RELATIVE_PROJECT_SOURCE_DIR\\} \$\{SHA1_VALUE\}
     SHA1_FILES \\$\\{SHA1_FILES\\}
     SHA1_VALUES \$\{SHA1_VALUES\}
-)\")
-    ELSE()
-        MESSAGE(FATAL_ERROR \"Unable to build a package for '${PACKAGE_NAME}'...\")
-    ENDIF()
+)
+\")
+ELSE()
+    MESSAGE(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package could not be generated...")
+ENDIF()
 ")
 
     # Run the packaging script once the dependency target has been satisfied
