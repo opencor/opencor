@@ -1461,44 +1461,43 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(CHECK_FILES DIRNAME SHA1_FILES SHA1_VALUES)
+MACRO(CHECK_FILES DIRNAME FILENAMES SHA1_VALUES)
     # By default, everything is OK
 
     SET(CHECK_FILES_OK TRUE)
 
     # See our parameters as lists
 
-    SET(SHA1_FILES_LIST ${SHA1_FILES})
+    SET(FILENAMES_LIST ${FILENAMES})
     SET(SHA1_VALUES_LIST ${SHA1_VALUES})
 
     # Retrieve the number of SHA-1 files and values we have
 
-    LIST(LENGTH SHA1_FILES_LIST COUNT)
+    LIST(LENGTH FILENAMES_LIST FILENAMES_COUNT)
 
-    # Make sure that we have some SHA-1 files and values
+    # Make sure that we have some files
 
-    IF(COUNT)
+    IF(FILENAMES_COUNT)
         # Determine our range
 
-        MATH(EXPR RANGE "${COUNT}-1")
+        MATH(EXPR RANGE "${FILENAMES_COUNT}-1")
 
-        # Make sure that our SHA-1 files, if they exist, have the expected SHA-1
-        # value
+        # Make sure that our files, if they exist, have the expected SHA-1 value
 
         FOREACH(I RANGE ${RANGE})
-            LIST(GET SHA1_FILES_LIST ${I} SHA1_FILE)
+            LIST(GET FILENAMES_LIST ${I} FILENAME)
             LIST(GET SHA1_VALUES_LIST ${I} SHA1_VALUE)
 
-            SET(REAL_SHA1_FILE ${DIRNAME}/${SHA1_FILE})
+            SET(REAL_FILENAME ${DIRNAME}/${FILENAME})
 
-            IF(EXISTS ${REAL_SHA1_FILE})
-                FILE(SHA1 ${REAL_SHA1_FILE} REAL_SHA1_VALUE)
+            IF(EXISTS ${REAL_FILENAME})
+                FILE(SHA1 ${REAL_FILENAME} REAL_SHA1_VALUE)
 
                 IF(NOT "${REAL_SHA1_VALUE}" STREQUAL "${SHA1_VALUE}")
                     # The file doesn't have the expected SHA-1 value, so remove
                     # it and fail the checks
 
-                    FILE(REMOVE ${REAL_SHA1_FILE})
+                    FILE(REMOVE ${REAL_FILENAME})
 
                     SET(CHECK_FILES_OK FALSE)
                 ENDIF()
@@ -1513,10 +1512,10 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(CHECK_FILE DIRNAME SHA1_FILES SHA1_VALUES)
+MACRO(CHECK_FILE DIRNAME FILENAME SHA1_VALUE)
     # Convenience macro
 
-    CHECK_FILES(${DIRNAME} ${SHA1_FILES} ${SHA1_VALUES})
+    CHECK_FILES(${DIRNAME} ${FILENAME} ${SHA1_VALUE})
 
     SET(CHECK_FILE_OK ${CHECK_FILES_OK})
 ENDMACRO()
