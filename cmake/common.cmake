@@ -1046,6 +1046,7 @@ MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
     ELSE()
         # An argument was passed so use it to rename the file, which is to be
         # copied
+
         SET(FULL_DEST_FILENAME ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
     ENDIF()
 
