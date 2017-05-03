@@ -1461,8 +1461,8 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(CHECK_FILES DIRECTORY FILE_LIST SHA1_LIST)
-    SET(CHECK_FILES_FAILED FALSE)
+MACRO(CHECK_SHA1_FILES DIRECTORY FILE_LIST SHA1_LIST)
+    SET(CHECK_SHA1_FILES_FAILED FALSE)
 
     # This enables CMake to see the parameters as lists
 
@@ -1489,12 +1489,12 @@ MACRO(CHECK_FILES DIRECTORY FILE_LIST SHA1_LIST)
                     # so remove it and fail the checks
 
                     FILE(REMOVE ${REAL_FILENAME})
-                    SET(CHECK_FILES_FAILED TRUE)
+                    SET(CHECK_SHA1_FILES_FAILED TRUE)
                 ENDIF()
-            ELSEIF(NOT CHECK_FILES_FAILED)
+            ELSEIF(NOT CHECK_SHA1_FILES_FAILED)
                 # The file is missing so fail the checks
 
-                SET(CHECK_FILES_FAILED TRUE)
+                SET(CHECK_SHA1_FILES_FAILED TRUE)
             ENDIF()
         ENDFOREACH()
     ENDIF()
@@ -1537,9 +1537,9 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
 
     # Check to see if we already have the package's files
 
-    CHECK_FILES("${REAL_DIRNAME}" "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
+    CHECK_SHA1_FILES("${REAL_DIRNAME}" "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
 
-    IF(CHECK_FILES_FAILED)
+    IF(CHECK_SHA1_FILES_FAILED)
         MESSAGE("Retrieving '${PACKAGE_NAME}' into '${REAL_DIRNAME}'...")
 
         SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz)
@@ -1554,9 +1554,9 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
         LIST(GET STATUS 0 STATUS_CODE)
 
         IF(${STATUS_CODE} EQUAL 0)
-            CHECK_FILES("${REAL_DIRNAME}" "${COMPRESSED_FILENAME}" "${SHA1_VALUE}")
+            CHECK_SHA1_FILES("${REAL_DIRNAME}" "${COMPRESSED_FILENAME}" "${SHA1_VALUE}")
 
-            IF(CHECK_FILES_FAILED)
+            IF(CHECK_SHA1_FILES_FAILED)
                 MESSAGE(FATAL_ERROR "'${COMPRESSED_FILENAME}' does not have the expected SHA-1 value...")
             ENDIF()
 
@@ -1576,9 +1576,9 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
         # Check that the files, if we managed to retrieve them, have the expected
         # SHA-1 values
 
-        CHECK_FILES("${REAL_DIRNAME}" "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
+        CHECK_SHA1_FILES("${REAL_DIRNAME}" "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
 
-        IF(CHECK_FILES_FAILED)
+        IF(CHECK_SHA1_FILES_FAILED)
             FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
             MESSAGE(FATAL_ERROR "The files in '${REAL_COMPRESSED_FILENAME}' do not have the expected SHA-1 values...")
         ENDIF()
@@ -1611,7 +1611,7 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
 
     SET(REAL_FILENAME ${REAL_DIRNAME}/${FILENAME})
 
-    CHECK_FILES("${REAL_DIRNAME}" "${FILENAME}" "${SHA1_VALUE}")
+    CHECK_SHA1_FILES("${REAL_DIRNAME}" "${FILENAME}" "${SHA1_VALUE}")
 
     # Retrieve the file from the given location, if needed
     # Note: we would normally provide the SHA-1 value to the FILE(DOWNLOAD)
@@ -1655,9 +1655,9 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
         # SHA-1 value
 
         IF(EXISTS ${REAL_FILENAME})
-            CHECK_FILES("${REAL_DIRNAME}" "${FILENAME}" "${SHA1_VALUE}")
+            CHECK_SHA1_FILES("${REAL_DIRNAME}" "${FILENAME}" "${SHA1_VALUE}")
 
-            IF(CHECK_FILES_FAILED)
+            IF(CHECK_SHA1_FILES_FAILED)
                 MESSAGE(FATAL_ERROR "'${FILENAME}' does not have the expected SHA-1 value...")
             ENDIF()
         ELSE()
