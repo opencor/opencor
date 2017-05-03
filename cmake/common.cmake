@@ -649,16 +649,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # External binaries
 
     IF(NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
-        # We need a custom target for copying binaries as otherwise
-        # Ninja can get confused with circular references...
+        # Create a custom target for copying binaries
+        # Note: this is to prevent Ninja from getting confused with circular
+        #       references...
 
         SET(COPY_EXTERNAL_BINARIES_TARGET "COPY_${PROJECT_NAME}_EXTERNAL_BINARIES")
-        ADD_CUSTOM_TARGET(${COPY_EXTERNAL_BINARIES_TARGET}
-            COMMENT "Copying external binaries for ${PROJECT_NAME}"
-            )
-        ADD_DEPENDENCIES(${PROJECT_NAME} ${COPY_EXTERNAL_BINARIES_TARGET})
 
-        # What must be built before external binaries can be copied
+        ADD_CUSTOM_TARGET(${COPY_EXTERNAL_BINARIES_TARGET})
+        ADD_DEPENDENCIES(${PROJECT_NAME} ${COPY_EXTERNAL_BINARIES_TARGET})
 
         IF(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
             ADD_DEPENDENCIES(${COPY_EXTERNAL_BINARIES_TARGET} ${ARG_DEPENDS_ON})
@@ -669,7 +667,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             SET(FULL_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}")
 
-            # Only do a direct copy if the file exists and the plugin doesn't depend on any targets
+            # Only do a direct copy if the file exists and the plugin doesn't
+            # depend on any targets
 
             IF(    EXISTS ${FULL_EXTERNAL_BINARY}
                AND "${ARG_DEPENDS_ON}" STREQUAL "")
@@ -752,7 +751,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     IF(    NOT "${ARG_EXTERNAL_DEST_DIR}" STREQUAL ""
        AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL "")
-
         # Copy the entire source directory to the destination
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
