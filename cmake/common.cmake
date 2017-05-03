@@ -1382,31 +1382,29 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
     # The actual packaging code goes into a separate CMake script file that is
     # run as a POST_BUILD step
 
-    SET(PACKAGING_SCRIPT "${PROJECT_BINARY_DIR}/package_${PACKAGE_NAME}.cmake")
-
-    FILE(WRITE ${PACKAGING_SCRIPT} "CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+    SET(CMAKE_CODE "CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
 
 # Files and directories to package
 
-SET(PACKAGED_FILES\n")
+SET(PACKAGED_FILES")
 
     FOREACH(FILENAME IN LISTS ARG_PACKAGED_FILES)
-        FILE(APPEND ${PACKAGING_SCRIPT} "    ${FILENAME}\n")
+        SET(CMAKE_CODE "${CMAKE_CODE}\n    ${FILENAME}")
     ENDFOREACH()
 
-    FILE(APPEND ${PACKAGING_SCRIPT} ")\n")
-    FILE(APPEND ${PACKAGING_SCRIPT} "\n")
-    FILE(APPEND ${PACKAGING_SCRIPT} "# Files to have their SHA-1 value checked
+    SET(CMAKE_CODE "${CMAKE_CODE}\n)
 
-SET(SHA1_FILES\n")
+# Files to have their SHA-1 value checked
+
+SET(SHA1_FILES")
 
     FOREACH(FILENAME IN LISTS ARG_SHA1_FILES)
-        FILE(APPEND ${PACKAGING_SCRIPT} "    ${FILENAME}\n")
+        SET(CMAKE_CODE "${CMAKE_CODE}\n    ${FILENAME}")
     ENDFOREACH()
 
-    FILE(APPEND ${PACKAGING_SCRIPT} ")\n")
-    FILE(APPEND ${PACKAGING_SCRIPT} "\n")
-    FILE(APPEND ${PACKAGING_SCRIPT} "# Calculate the SHA-1 value of our different files
+    SET(CMAKE_CODE "${CMAKE_CODE}\n)
+
+# Calculate the SHA-1 value of our different files
 
 SET(SHA1_VALUES)
 
@@ -1446,9 +1444,13 @@ IF(EXISTS ${REAL_COMPRESSED_FILENAME})
 )
 \")
 ELSE()
-    MESSAGE(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package could not be generated...")
+    MESSAGE(FATAL_ERROR \"The compressed version of the '${PACKAGE_NAME}' package could not be generated...\")
 ENDIF()
 ")
+
+    SET(PACKAGING_SCRIPT ${PROJECT_BINARY_DIR}/package_${PACKAGE_NAME}.cmake)
+
+    FILE(WRITE ${PACKAGING_SCRIPT} ${CMAKE_CODE})
 
     # Run the packaging script once the dependency target has been satisfied
 
