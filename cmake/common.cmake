@@ -759,9 +759,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         # Copy the entire source directory to the destination
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy_directory
-                                   ${ARG_EXTERNAL_SOURCE_DIR}
-                                   ${FULL_DEST_EXTERNAL_BASE_DIR}/${ARG_EXTERNAL_DEST_DIR})
+                           COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
+                                                                      ${FULL_DEST_EXTERNAL_BASE_DIR}/${ARG_EXTERNAL_DEST_DIR})
     ENDIF()
 
     # System binaries
@@ -1428,7 +1427,8 @@ ENDFOREACH()
 MESSAGE(\"Packaging '${PACKAGE_NAME}' into '${REAL_COMPRESSED_FILENAME}'.\")
 
 EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -czf ${REAL_COMPRESSED_FILENAME} \$\{PACKAGED_FILES_LIST\}
-                WORKING_DIRECTORY ${REAL_DIRNAME} OUTPUT_QUIET)
+                WORKING_DIRECTORY ${REAL_DIRNAME}
+                OUTPUT_QUIET)
 
 IF(EXISTS ${REAL_COMPRESSED_FILENAME})
     FILE(SHA1 ${REAL_COMPRESSED_FILENAME} SHA1_VALUE)
