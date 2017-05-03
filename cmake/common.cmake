@@ -691,7 +691,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             # Strip the external library of all its local symbols, if possible
 
             IF(NOT WIN32 AND RELEASE_MODE)
-                EXECUTE_PROCESS(COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                IF(${COPY_TARGET} STREQUAL "DIRECT")
+                    EXECUTE_PROCESS(COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                ELSE()
+                    ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
+                                       COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                ENDIF()
             ENDIF()
 
             # Link the plugin to the external library
@@ -704,34 +709,34 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ${IMPORT_EXTERNAL_BINARY}
                 )
             ELSE()
-                IF(APPLE)
-                    IF(${COPY_TARGET} STREQUAL "DIRECT")
-                        EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
-                                        WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-                        )
-                    ELSE()
-                        ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
-                            COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
-                            WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-                        )
-                    ENDIF()
-                ENDIF()
-
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                 )
             ENDIF()
 
             # On macOS, ensure that @rpath is set in the external library's id
-            # and that is used to reference the external library's dependencies
+            # and that it is used to reference the external library's
+            # dependencies
 
             IF(APPLE)
-                EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                IF(${COPY_TARGET} STREQUAL "DIRECT")
+                    EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                ELSE()
+                    ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
+                                       COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                ENDIF()
 
                 FOREACH(EXTERNAL_BINARIES_DEPENDENCY ${EXTERNAL_BINARIES_DEPENDENCIES})
-                    EXECUTE_PROCESS(COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DEPENDENCY}
-                                                                      @rpath/${EXTERNAL_BINARIES_DEPENDENCY}
-                                                                      ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                    IF(${COPY_TARGET} STREQUAL "DIRECT")
+                        EXECUTE_PROCESS(COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DEPENDENCY}
+                                                                          @rpath/${EXTERNAL_BINARIES_DEPENDENCY}
+                                                                          ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                    ELSE()
+                        ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
+                                           COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DEPENDENCY}
+                                                                             @rpath/${EXTERNAL_BINARIES_DEPENDENCY}
+                                                                             ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                    ENDIF()
                 ENDFOREACH()
             ENDIF()
 
