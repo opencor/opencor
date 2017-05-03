@@ -28,7 +28,7 @@ SET(USE_PREBUILT_ZLIB_PLUGIN OFF)
 
 INITIALISE_PROJECT()
 
-# Keep track of our source and build directories
+# Keep track of our source and build directories (needed to run our tests)
 
 SET(SOURCE_DIRECTORY_FILENAME ${PROJECT_BUILD_DIR}/sourcedirectory.txt)
 SET(BUILD_DIRECTORY_FILENAME ${PROJECT_BUILD_DIR}/builddirectory.txt)
