@@ -658,7 +658,7 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
         fileCanonicalPath += QDir::separator();
 
     if (!fileCompleteSuffix.isEmpty())
-        fileCompleteSuffix.prepend(".");
+        fileCompleteSuffix.prepend('.');
 
     static const QString Space = " ";
     static const QString Hyphen = "-";
@@ -752,7 +752,7 @@ bool sortSerialisedAttributes(const QString &pSerialisedAttribute1,
     // Determine which of the two serialised attributes should be first based on
     // the attribute name, i.e. ignoring the "=<AttributeValue>" bit
 
-    return pSerialisedAttribute1.left(pSerialisedAttribute1.indexOf("=")).compare(pSerialisedAttribute2.left(pSerialisedAttribute2.indexOf("=")), Qt::CaseInsensitive) < 0;
+    return pSerialisedAttribute1.left(pSerialisedAttribute1.indexOf('=')).compare(pSerialisedAttribute2.left(pSerialisedAttribute2.indexOf('=')), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
@@ -821,7 +821,7 @@ void cleanDomElement(QDomElement &pDomElement,
 
         QString elementAttributes = QString("Element%1Attributes").arg(++attributeNumber, ULLONG_WIDTH, 10, QChar('0'));
 
-        pElementsAttributes.insert(elementAttributes, serialisedAttributes.join(" ").toUtf8());
+        pElementsAttributes.insert(elementAttributes, serialisedAttributes.join(' ').toUtf8());
 
         // Add a new attribute to the element
         // Note: this attribute, once serialised by QDomDocument::save(), will

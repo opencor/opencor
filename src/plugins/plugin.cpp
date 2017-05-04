@@ -96,7 +96,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                     mStatus = MissingOrInvalidDependencies;
 
                     if (!mStatusErrors.isEmpty())
-                        mStatusErrors += "\n";
+                        mStatusErrors += '\n';
 
                     mStatusErrors +=  (pPluginManager->guiMode()?QString():QString("   "))
                                      +" - "+dependency;
@@ -344,7 +344,7 @@ int Plugin::statusErrorsCount() const
 {
     // Return the number of plugin's status errors
 
-    int res = mStatusErrors.count("\n");
+    int res = mStatusErrors.count('\n');
 
     if (res)
         return res+1;
@@ -465,17 +465,17 @@ PluginInfo * Plugin::info(const QString &pFileName, QString *pErrorMessage)
 
             (*pErrorMessage)[0] = (*pErrorMessage)[0].toLower();
 
-            if (!pErrorMessage->endsWith("."))
-                *pErrorMessage += ".";
+            if (!pErrorMessage->endsWith('.'))
+                *pErrorMessage += '.';
 
-            pErrorMessage->replace("\n", ";");
+            pErrorMessage->replace('\n', ";");
             pErrorMessage->replace("  ", " ");
 
             int errorMessageSize = pErrorMessage->size();
             int from = 0;
             int pos;
 
-            while ((pos = pErrorMessage->indexOf(":", from)) != -1) {
+            while ((pos = pErrorMessage->indexOf(':', from)) != -1) {
                 pos += 2;
 
                 if (pos < errorMessageSize)

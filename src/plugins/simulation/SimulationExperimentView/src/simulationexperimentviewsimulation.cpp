@@ -634,9 +634,9 @@ QString SimulationExperimentViewSimulationData::uri(const QStringList &pComponen
 {
     // Generate an URI using the given component hierarchy and name
 
-    QString res = pComponentHierarchy.join("/")+"/"+pName;
+    QString res = pComponentHierarchy.join('/')+"/"+pName;
 
-    return res.replace("'", "/prime");
+    return res.replace('\'', "/prime");
 }
 
 //==============================================================================

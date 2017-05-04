@@ -114,20 +114,6 @@ void CliTests::cliPluginsTests()
 
 //==============================================================================
 
-void CliTests::cliResetTests()
-{
-    // Reset one's settings
-
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-r"),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/Core/tests/data/cli/reset.out")));
-
-    // Note: we could test for the version option, but this would require
-    //       updating the corresponding output file every single day since when
-    //       building a snapshot version of OpenCOR, so clearly not an option...
-}
-
-//==============================================================================
-
 void CliTests::cliStatusTests()
 {
     // List the status of all the plugins

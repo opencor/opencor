@@ -1536,7 +1536,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlVariableTarget(libsedml::
     QString variable = pVariable;
     int variableDegree = variable.length();
 
-    variable.replace("'", QString());
+    variable.replace('\'', QString());
 
     variableDegree -= variable.length();
 
@@ -1683,8 +1683,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
                 libsedml::SedVariable *sedmlVariableX = sedmlDataGeneratorX->createVariable();
                 libsedml::SedVariable *sedmlVariableY = sedmlDataGeneratorY->createVariable();
-                QStringList propertyX = property->properties()[1]->value().split(".");
-                QStringList propertyY = property->properties()[2]->value().split(".");
+                QStringList propertyX = property->properties()[1]->value().split('.');
+                QStringList propertyY = property->properties()[2]->value().split('.');
 
                 sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(graphPlotCounter),
                                                                     QString::number(graphCounter)).toStdString());

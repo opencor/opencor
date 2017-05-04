@@ -431,7 +431,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
                                 //       following a CellML export...
                             }
 
-                            errorMessage += ".";
+                            errorMessage += '.';
                         }
                     }
                 }

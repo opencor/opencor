@@ -39,7 +39,6 @@ private slots:
     void cliHelpTests();
     void cliIncludeTests();
     void cliPluginsTests();
-    void cliResetTests();
     void cliStatusTests();
 };
 

@@ -416,7 +416,7 @@ QDomElement CellmlTextViewParser::newNumberElement(const QString &pNumber,
     // Create and return a new number element with the given value
 
     QDomElement numberElement = mDomDocument.createElement("cn");
-    int ePos = pNumber.toUpper().indexOf("E");
+    int ePos = pNumber.toUpper().indexOf('E');
 
     if (ePos != -1) {
         numberElement.setAttribute("type", "e-notation");

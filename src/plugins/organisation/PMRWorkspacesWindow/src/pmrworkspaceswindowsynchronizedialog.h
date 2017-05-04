@@ -106,6 +106,16 @@ protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
 private:
+    typedef struct {
+        QString operation;
+        QString removeLineNumber;
+        QString addLineNumber;
+        QChar tag;
+        QString difference;
+    } DifferenceData;
+
+    typedef QList<DifferenceData> DifferencesData;
+
     QString mSettingsGroup;
 
     PMRSupport::PmrWorkspace *mWorkspace;
@@ -143,6 +153,13 @@ private:
 
     bool cellmlText(const QString &pFileName, QString &pCellmlText);
 
+    DifferenceData differenceData(const QString &pOperation,
+                                  const QString &pRemoveLineNumber,
+                                  const QString &pAddLineNumber,
+                                  const QChar &pTag,
+                                  const QString &pDifference);
+
+    QString diffHtml(DifferencesData &pDifferencesData);
     QString diffHtml(const QString &pOld, const QString &pNew);
     QString diffHtml(const QString &pFileName);
 
