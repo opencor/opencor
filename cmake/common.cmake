@@ -88,12 +88,24 @@ MACRO(INITIALISE_PROJECT)
     # Some initialisations related to our copy of QtWebKit
 
     IF(WIN32)
-        SET(PLATFORM_DIR windows)
-    ELSEIF(APPLE)
-        SET(PLATFORM_DIR macos)
+        SET(PLATFORM windows)
+
+        IF(RELEASE_MODE)
+            SET(TARGET_PLATFORM ${PLATFORM}.release)
+        ELSE()
+            SET(TARGET_PLATFORM ${PLATFORM}.debug)
+        ENDIF()
     ELSE()
-        SET(PLATFORM_DIR linux)
+        IF(APPLE)
+            SET(PLATFORM macos)
+        ELSE()
+            SET(PLATFORM linux)
+        ENDIF()
+
+        SET(TARGET_PLATFORM ${PLATFORM})
     ENDIF()
+
+    SET(PLATFORM_DIR ${PLATFORM})
 
     INCLUDE(${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/CMakeLists.txt)
 
@@ -341,21 +353,30 @@ MACRO(INITIALISE_PROJECT)
         SET(DEST_PLUGINS_DIR ${PROJECT_BUILD_DIR}/plugins/${CMAKE_PROJECT_NAME})
     ENDIF()
 
-    # Default location of external dependencies
+    # Default location of external binaries and packages
 
     IF(WIN32)
         IF(RELEASE_MODE)
             SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/release)
             SET(LOCAL_EXTERNAL_BINARIES_DIR bin/release)
+
+            SET(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR}/release)
+            SET(LOCAL_EXTERNAL_PACKAGE_DIR ext/release)
         ELSE()
             SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/debug)
             SET(LOCAL_EXTERNAL_BINARIES_DIR bin/debug)
+
+            SET(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR}/debug)
+            SET(LOCAL_EXTERNAL_PACKAGE_DIR ext/debug)
         ENDIF()
 
         SET(DEST_EXTERNAL_BINARIES_DIR bin)
     ELSE()
         SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR})
         SET(LOCAL_EXTERNAL_BINARIES_DIR bin)
+
+        SET(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR})
+        SET(LOCAL_EXTERNAL_PACKAGE_DIR ext)
 
         IF(APPLE)
             SET(DEST_EXTERNAL_BINARIES_DIR ${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
@@ -369,8 +390,6 @@ MACRO(INITIALISE_PROJECT)
     IF(NOT EXISTS ${FULL_DEST_EXTERNAL_BINARIES_DIR})
         FILE(MAKE_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR})
     ENDIF()
-
-    # Where external packages are installed
 
     IF(APPLE)
         SET(FULL_DEST_EXTERNAL_BASE_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR})
@@ -404,11 +423,12 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    # We specify where to build external projects because the default
-    # (to build external projects under their plugin's build directory)
-    # can result in path names being too long for Windows...
+    # Let the ExternalProject module know where we want to build build our
+    # external projects
+    # Note: indeed, otherwise on Windows we may end up with path names that are
+    #       too long...
 
-    SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${CMAKE_BINARY_DIR}/external)
+    SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${CMAKE_BINARY_DIR}/ext)
 
     # Show the build information
 
@@ -487,7 +507,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         EXTERNAL_BINARIES
         EXTERNAL_BINARIES_DEPENDENCIES
         SYSTEM_BINARIES
-        DEPENDS
+        DEPENDS_ON
         TESTS
     )
 
@@ -641,19 +661,17 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # External binaries
 
     IF(NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
-        # We need a custom target for copying binaries as otherwise
-        # Ninja can get confused with circular references...
+        # Create a custom target for copying binaries
+        # Note: this is to prevent Ninja from getting confused with circular
+        #       references...
 
         SET(COPY_EXTERNAL_BINARIES_TARGET "COPY_${PROJECT_NAME}_EXTERNAL_BINARIES")
-        ADD_CUSTOM_TARGET(${COPY_EXTERNAL_BINARIES_TARGET}
-            COMMENT "Copying external binaries for ${PROJECT_NAME}"
-            )
+
+        ADD_CUSTOM_TARGET(${COPY_EXTERNAL_BINARIES_TARGET})
         ADD_DEPENDENCIES(${PROJECT_NAME} ${COPY_EXTERNAL_BINARIES_TARGET})
 
-        # What must be built before external binaries can be copied
-
-        IF(NOT "${ARG_DEPENDS}" STREQUAL "")
-            ADD_DEPENDENCIES(${COPY_EXTERNAL_BINARIES_TARGET} ${ARG_DEPENDS})
+        IF(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
+            ADD_DEPENDENCIES(${COPY_EXTERNAL_BINARIES_TARGET} ${ARG_DEPENDS_ON})
         ENDIF()
 
         FOREACH(ARG_EXTERNAL_BINARY ${ARG_EXTERNAL_BINARIES})
@@ -661,9 +679,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             SET(FULL_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}")
 
-            # Only do a direct copy if the file exists and the plugin doesn't depend on any targets
+            # Only do a direct copy if the file exists and the plugin doesn't
+            # depend on any targets
 
-            IF(EXISTS ${FULL_EXTERNAL_BINARY} AND "${ARG_DEPENDS}" STREQUAL "")
+            IF(    EXISTS ${FULL_EXTERNAL_BINARY}
+               AND "${ARG_DEPENDS_ON}" STREQUAL "")
                 SET(COPY_TARGET DIRECT)
             ELSE()
                 SET(COPY_TARGET ${COPY_EXTERNAL_BINARIES_TARGET})
@@ -683,7 +703,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             # Strip the external library of all its local symbols, if possible
 
             IF(NOT WIN32 AND RELEASE_MODE)
-                EXECUTE_PROCESS(COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                IF(${COPY_TARGET} STREQUAL "DIRECT")
+                    EXECUTE_PROCESS(COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                ELSE()
+                    ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
+                                       COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                ENDIF()
             ENDIF()
 
             # Link the plugin to the external library
@@ -696,34 +721,34 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ${IMPORT_EXTERNAL_BINARY}
                 )
             ELSE()
-                IF(APPLE)
-                    IF(${COPY_TARGET} STREQUAL "DIRECT")
-                        EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
-                                        WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-                        )
-                    ELSE()
-                        ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
-                            COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${ARG_EXTERNAL_BINARY}
-                            WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-                        )
-                    ENDIF()
-                ENDIF()
-
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                 )
             ENDIF()
 
             # On macOS, ensure that @rpath is set in the external library's id
-            # and that is used to reference the external library's dependencies
+            # and that it is used to reference the external library's
+            # dependencies
 
             IF(APPLE)
-                EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                IF(${COPY_TARGET} STREQUAL "DIRECT")
+                    EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                ELSE()
+                    ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
+                                       COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                ENDIF()
 
                 FOREACH(EXTERNAL_BINARIES_DEPENDENCY ${EXTERNAL_BINARIES_DEPENDENCIES})
-                    EXECUTE_PROCESS(COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DEPENDENCY}
-                                                                      @rpath/${EXTERNAL_BINARIES_DEPENDENCY}
-                                                                      ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                    IF(${COPY_TARGET} STREQUAL "DIRECT")
+                        EXECUTE_PROCESS(COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DEPENDENCY}
+                                                                          @rpath/${EXTERNAL_BINARIES_DEPENDENCY}
+                                                                          ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                    ELSE()
+                        ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
+                                           COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DEPENDENCY}
+                                                                             @rpath/${EXTERNAL_BINARIES_DEPENDENCY}
+                                                                             ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
+                    ENDIF()
                 ENDFOREACH()
             ENDIF()
 
@@ -741,15 +766,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # Check whether an external package has files to install
 
-    IF(NOT "${ARG_EXTERNAL_DEST_DIR}" STREQUAL ""
-        AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL "")
-
+    IF(    NOT "${ARG_EXTERNAL_DEST_DIR}" STREQUAL ""
+       AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL "")
         # Copy the entire source directory to the destination
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy_directory
-                                   ${ARG_EXTERNAL_SOURCE_DIR}
-                                   ${FULL_DEST_EXTERNAL_BASE_DIR}/${ARG_EXTERNAL_DEST_DIR})
+                           COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
+                                                                      ${FULL_DEST_EXTERNAL_BASE_DIR}/${ARG_EXTERNAL_DEST_DIR})
     ENDIF()
 
     # System binaries
@@ -762,8 +785,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # What must be built before the plugin is built
 
-    IF(NOT "${ARG_DEPENDS}" STREQUAL "")
-        ADD_DEPENDENCIES(${PROJECT_NAME} ${ARG_DEPENDS})
+    IF(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
+        ADD_DEPENDENCIES(${PROJECT_NAME} ${ARG_DEPENDS_ON})
     ENDIF()
 
     # Some settings
@@ -1035,6 +1058,7 @@ MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
     ELSE()
         # An argument was passed so use it to rename the file, which is to be
         # copied
+
         SET(FULL_DEST_FILENAME ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
     ENDIF()
 
@@ -1334,109 +1358,114 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(CREATE_PACKAGE_FILE DIRNAME PACKAGE_NAME PACKAGE_VERSION)
+MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
+    # Various initialisations
 
-    SET(OPTIONS "")
+    SET(OPTIONS)
     SET(ONE_VALUE_KEYWORDS
         TARGET
-        )
+    )
     SET(MULTI_VALUE_KEYWORDS
         PACKAGED_FILES
-        CHECKED_FILES
+        SHA1_FILES
     )
 
     CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
 
-    # The full path to the package's files.
+    # Make sure that we have at least one file for which we want to check the
+    # SHA-1 value
 
-    SET(FULL_DIRNAME "${PROJECT_SOURCE_DIR}/${DIRNAME}")
+    LIST(LENGTH ARG_SHA1_FILES ARG_SHA1_FILES_COUNT)
 
-    # The package name in uppercase.
+    IF(ARG_SHA1_FILES_COUNT EQUAL 0)
+        MESSAGE(FATAL_ERROR "At least one file must have its SHA-1 value calculated in order to create the '${PACKAGE_NAME}' package...")
+    ENDIF()
 
-    STRING(TOUPPER ${PACKAGE_NAME} UC_PACKAGE_NAME)
+    # The full path to the package's files
 
-    # The name of the package's archive.
+    SET(REAL_DIRNAME "${PROJECT_SOURCE_DIR}/${DIRNAME}")
 
-    SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz)
-    SET(REAL_COMPRESSED_FILENAME ${FULL_DIRNAME}/${COMPRESSED_FILENAME})
+    # The package name in uppercase
+
+    STRING(TOUPPER ${PACKAGE_NAME} UPPER_PACKAGE_NAME)
 
     # Remove any historical package archive
 
-    FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+    SET(COMPRESSED_FILENAME ${PROJECT_BUILD_DIR}/${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
 
-    # Where we put CMake code to retrieve the archived package.
+    FILE(REMOVE ${COMPRESSED_FILENAME})
 
-    SET(RETRIEVAL_SCRIPT "${FULL_DIRNAME}/${PACKAGE_NAME}.cmake")
+    # The actual packaging code goes into a separate CMake script file that is
+    # run as a POST_BUILD step
 
-    # The actual packaging code goes into a separate CMake script file
-    # that is run as a POST_BUILD step.
+    SET(CMAKE_CODE "CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
 
-    SET(PACKAGING_SCRIPT "${PROJECT_BINARY_DIR}/package_${PACKAGE_NAME}.cmake")
-    FILE(WRITE ${PACKAGING_SCRIPT} "# Package ${PACKAGE_NAME} files
+# Files and directories to package
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
-
-# The files and directories to package
-SET(PACKAGED_FILES_LIST)
-")
+SET(PACKAGED_FILES")
 
     FOREACH(FILENAME IN LISTS ARG_PACKAGED_FILES)
-        FILE(APPEND ${PACKAGING_SCRIPT} "LIST(APPEND PACKAGED_FILES_LIST ${FILENAME})
-")
+        SET(CMAKE_CODE "${CMAKE_CODE}\n    ${FILENAME}")
     ENDFOREACH()
 
-    FILE(APPEND ${PACKAGING_SCRIPT} "
-# The files to have SHA1 values checked
-SET(CHECKED_FILES_LIST)
-")
+    SET(CMAKE_CODE "${CMAKE_CODE}\n)
 
-    FOREACH(FILENAME IN LISTS ARG_CHECKED_FILES)
-        FILE(APPEND ${PACKAGING_SCRIPT} "LIST(APPEND CHECKED_FILES_LIST ${FILENAME})
-")
+# Files to have their SHA-1 value checked
+
+SET(SHA1_FILES")
+
+    FOREACH(FILENAME IN LISTS ARG_SHA1_FILES)
+        SET(CMAKE_CODE "${CMAKE_CODE}\n    ${FILENAME}")
     ENDFOREACH()
 
-    FILE(APPEND ${PACKAGING_SCRIPT} "
+    SET(CMAKE_CODE "${CMAKE_CODE}\n)
 
-# Calculate SHA1 values for specified files
+# Calculate the SHA-1 value of our different files
 
-SET(CHECKED_FILES)
 SET(SHA1_VALUES)
-FOREACH(FILENAME IN LISTS CHECKED_FILES_LIST)
-    SET(REAL_FILENAME \"${FULL_DIRNAME}/\$\{FILENAME\}\")
 
-    IF(NOT EXISTS \$\{REAL_FILENAME\})
-        MESSAGE(FATAL_ERROR \"The file '\$\{REAL_FILENAME\}` is missing from '${PACKAGE_NAME}'.\")
+FOREACH(SHA1_FILE IN LISTS SHA1_FILES)
+    SET(REAL_SHA1_FILENAME \"${REAL_DIRNAME}/\$\{SHA1_FILE\}\")
+
+    IF(NOT EXISTS \$\{REAL_SHA1_FILENAME\})
+        MESSAGE(FATAL_ERROR \"'\$\{REAL_SHA1_FILENAME\}' is missing from the '${PACKAGE_NAME}' package...\")
     ENDIF()
 
-    FILE(SHA1 \$\{REAL_FILENAME\} SHA1_VALUE)
+    FILE(SHA1 \$\{REAL_SHA1_FILENAME\} SHA1_VALUE)
 
-    LIST(APPEND CHECKED_FILES \$\{FILENAME\})
     LIST(APPEND SHA1_VALUES \$\{SHA1_VALUE\})
 ENDFOREACH()
 
-MESSAGE(\"Packaging '${PACKAGE_NAME}' into '${REAL_COMPRESSED_FILENAME}'.\")
+# Compress our package
 
-EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -czf ${REAL_COMPRESSED_FILENAME} \$\{PACKAGED_FILES_LIST\}
-                WORKING_DIRECTORY ${FULL_DIRNAME} OUTPUT_QUIET)
+EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -czf ${COMPRESSED_FILENAME} \$\{PACKAGED_FILES\}
+                WORKING_DIRECTORY ${REAL_DIRNAME}
+                OUTPUT_QUIET)
 
-IF(EXISTS ${REAL_COMPRESSED_FILENAME})
-    FILE(SHA1 ${REAL_COMPRESSED_FILENAME} SHA1_VALUE)
-    IF(SHA1_VALUES)
-        STRING(REPLACE \";\" \"\\n                \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
-    ENDIF()
+# Make sure that the compressed version of our package exists
 
-    FILE(WRITE ${RETRIEVAL_SCRIPT} \"# Archive is at ${REAL_COMPRESSED_FILENAME}
+IF(EXISTS ${COMPRESSED_FILENAME})
+    # The compressed version of our package exists, so calculate its SHA-1 value
+    # and let people know how we should call the RETRIEVE_PACKAGE_FILE() macro
 
-RETRIEVE_PACKAGE_FILE(\\$\\{RELATIVE_PROJECT_SOURCE_DIR\\}
-    ${PACKAGE_NAME} \\$\\{${UC_PACKAGE_NAME}_PACKAGE_VERSION\\} \$\{SHA1_VALUE\}
-    CHECKED_FILES \\$\\{CHECKED_FILES\\}
+    FILE(SHA1 ${COMPRESSED_FILENAME} SHA1_VALUE)
+
+    STRING(REPLACE \"\;\" \"\\n                \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
+
+    MESSAGE(\"To retrieve the '${PACKAGE_NAME}' package, please call:
+RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} \\$\\{${UPPER_PACKAGE_NAME}_VERSION\\}
+    \\$\\{RELATIVE_PROJECT_SOURCE_DIR\\} \$\{SHA1_VALUE\}
+    SHA1_FILES \\$\\{SHA1_FILES\\}
     SHA1_VALUES \$\{SHA1_VALUES\}
 )\")
-        MESSAGE(\"Use '${RETRIEVAL_SCRIPT}' to load '${PACKAGE_NAME}'.\")
-    ELSE()
-        MESSAGE(FATAL_ERROR \"Unable to build a package for '${PACKAGE_NAME}'.\")
-    ENDIF()
+ELSE()
+    MESSAGE(FATAL_ERROR \"The compressed version of the '${PACKAGE_NAME}' package could not be generated...\")
+ENDIF()
 ")
+
+    SET(PACKAGING_SCRIPT ${PROJECT_BINARY_DIR}/package_${PACKAGE_NAME}.cmake)
+
+    FILE(WRITE ${PACKAGING_SCRIPT} ${CMAKE_CODE})
 
     # Run the packaging script once the dependency target has been satisfied
 
@@ -1447,41 +1476,50 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(CHECK_FILES DIRECTORY FILE_LIST SHA1_LIST)
+MACRO(CHECK_FILES DIRNAME FILENAMES SHA1_VALUES)
+    # By default, everything is OK
 
-    SET(CHECK_FILES_FAILED FALSE)
+    SET(CHECK_FILES_OK TRUE)
 
-    # This enables CMake to see the parameters as lists
+    # See our parameters as lists
 
-    set(_LIST ${FILE_LIST})
-    set(_SHA1 ${SHA1_LIST})
+    SET(FILENAMES_LIST ${FILENAMES})
+    SET(SHA1_VALUES_LIST ${SHA1_VALUES})
 
-    LIST(LENGTH _LIST COUNT)
-    IF(COUNT)
-        MATH(EXPR RANGE "${COUNT} - 1")
-        FOREACH(i RANGE ${RANGE})
-            LIST(GET _LIST ${i} FILENAME)
-            LIST(GET _SHA1 ${i} SHA1_VALUE)
+    # Retrieve the number of SHA-1 files and values we have
 
-            # Make sure that the file, if it exists,
-            # has the expected SHA-1 value
+    LIST(LENGTH FILENAMES_LIST FILENAMES_COUNT)
 
-            SET(REAL_FILENAME ${DIRECTORY}/${FILENAME})
+    # Make sure that we have some files
+
+    IF(FILENAMES_COUNT)
+        # Determine our range
+
+        MATH(EXPR RANGE "${FILENAMES_COUNT}-1")
+
+        # Make sure that our files, if they exist, have the expected SHA-1 value
+
+        FOREACH(I RANGE ${RANGE})
+            LIST(GET FILENAMES_LIST ${I} FILENAME)
+            LIST(GET SHA1_VALUES_LIST ${I} SHA1_VALUE)
+
+            SET(REAL_FILENAME ${DIRNAME}/${FILENAME})
 
             IF(EXISTS ${REAL_FILENAME})
                 FILE(SHA1 ${REAL_FILENAME} REAL_SHA1_VALUE)
 
                 IF(NOT "${REAL_SHA1_VALUE}" STREQUAL "${SHA1_VALUE}")
-                    # The file doesn't have the expected SHA-1 value
-                    # so remove it and fail the checks
+                    # The file doesn't have the expected SHA-1 value, so remove
+                    # it and fail the checks
 
                     FILE(REMOVE ${REAL_FILENAME})
-                    SET(CHECK_FILES_FAILED TRUE)
-                ENDIF()
-            ELSEIF(NOT CHECK_FILES_FAILED)
-                # The file is missing so fail the checks
 
-                SET(CHECK_FILES_FAILED TRUE)
+                    SET(CHECK_FILES_OK FALSE)
+                ENDIF()
+            ELSEIF(CHECK_FILES_OK)
+                # The file is missing, so fail the checks
+
+                SET(CHECK_FILES_OK FALSE)
             ENDIF()
         ENDFOREACH()
     ENDIF()
@@ -1489,98 +1527,109 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION DIRNAME PACKAGE_NAME PACKAGE_VERSION SHA1_VALUE)
+MACRO(CHECK_FILE DIRNAME FILENAME SHA1_VALUE)
+    # Convenience macro
 
-    SET(OPTIONS "")
-    SET(ONE_VALUE_KEYWORDS "")
+    CHECK_FILES(${DIRNAME} ${FILENAME} ${SHA1_VALUE})
+
+    SET(CHECK_FILE_OK ${CHECK_FILES_OK})
+ENDMACRO()
+
+#===============================================================================
+
+MACRO(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
+    # Various initialisations
+
+    SET(OPTIONS)
+    SET(ONE_VALUE_KEYWORDS)
     SET(MULTI_VALUE_KEYWORDS
-        CHECKED_FILES
+        SHA1_FILES
         SHA1_VALUES
     )
 
-    # Check that we have at least the required arguments in order
-
-    set(_ARG_LIST ${ARGV} ${ARGN})
-    LIST(GET _ARG_LIST 5 _CHECKED_FILES_NAME)
-    IF(NOT "${_CHECKED_FILES_NAME}" STREQUAL "CHECKED_FILES")
-        MESSAGE(FATAL_ERROR "Too few arguments for retreiving package ${PACKAGE_NAME}")
-    ENDIF()
-
-    # Parse the argument list
-
     CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
 
-    # The full path to the package's files
+    # Make sure that we have at least one file for which we need to check the
+    # SHA-1 value
 
-    SET(FULL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
+    LIST(LENGTH ARG_SHA1_FILES ARG_SHA1_FILES_COUNT)
+    LIST(LENGTH ARG_SHA1_VALUES ARG_SHA1_VALUES_COUNT)
 
-    # Create the destination folder, if needed
-
-    IF(NOT EXISTS ${FULL_DIRNAME})
-        FILE(MAKE_DIRECTORY ${FULL_DIRNAME})
+    IF(       ARG_SHA1_FILES_COUNT EQUAL 0
+       OR NOT ARG_SHA1_FILES_COUNT EQUAL ARG_SHA1_VALUES_COUNT)
+        MESSAGE(FATAL_ERROR "At least one file must have its SHA-1 value checked in order to retrieve the '${PACKAGE_NAME}' package...")
     ENDIF()
 
-    # Check to see if we already have the package's files
+    # Create our destination folder, if needed
 
-    CHECK_FILES("${FULL_DIRNAME}" "${ARG_CHECKED_FILES}" "${ARG_SHA1_VALUES}")
+    STRING(REPLACE "${PLATFORM_DIR}" "ext"
+           REAL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
 
-    IF(CHECK_FILES_FAILED)
+    IF(NOT EXISTS ${REAL_DIRNAME})
+        FILE(MAKE_DIRECTORY ${REAL_DIRNAME})
+    ENDIF()
 
-        MESSAGE("Retrieving '${PACKAGE_NAME}' into '${FULL_DIRNAME}'...")
+    # Make sure that we have the expected package's files
 
-        SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz)
-        SET(REAL_COMPRESSED_FILENAME ${FULL_DIRNAME}/${COMPRESSED_FILENAME})
+    CHECK_FILES(${REAL_DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
 
-        FILE(DOWNLOAD "${LOCATION}/${DIRNAME}/${COMPRESSED_FILENAME}" ${REAL_COMPRESSED_FILENAME}
+    IF(NOT CHECK_FILES_OK)
+        # Something went wrong with the package's files, so retrieve the package
+
+        MESSAGE("Retrieving the '${PACKAGE_NAME}' package...")
+
+        SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
+        SET(FULL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
+
+        FILE(DOWNLOAD "https://github.com/opencor/${PACKAGE_NAME}/releases/download/v${PACKAGE_VERSION}/${COMPRESSED_FILENAME}" ${FULL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
 
-        # Uncompress the compressed version of the file, should we have managed
-        # to retrieve it
+        # Uncompress the compressed version of the package, should we have
+        # managed to retrieve it
 
         LIST(GET STATUS 0 STATUS_CODE)
 
         IF(${STATUS_CODE} EQUAL 0)
-            CHECK_FILES("${FULL_DIRNAME}" "${COMPRESSED_FILENAME}" "${SHA1_VALUE}")
-            IF(CHECK_FILES_FAILED)
-                MESSAGE(FATAL_ERROR "${COMPRESSED_FILENAME} does not have the expected SHA-1 value...")
+            CHECK_FILE(${REAL_DIRNAME} ${COMPRESSED_FILENAME} ${SHA1_VALUE})
+
+            IF(NOT CHECK_FILE_OK)
+                MESSAGE(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package does not have the expected SHA-1 value...")
             ENDIF()
 
-            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_COMPRESSED_FILENAME}
-                            WORKING_DIRECTORY ${FULL_DIRNAME} OUTPUT_QUIET)
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${FULL_COMPRESSED_FILENAME}
+                            WORKING_DIRECTORY ${REAL_DIRNAME}
+                            OUTPUT_QUIET)
 
-            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+            FILE(REMOVE ${FULL_COMPRESSED_FILENAME})
         ELSE()
-            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+            FILE(REMOVE ${FULL_COMPRESSED_FILENAME})
             # Note: this is in case we had an HTTP error of sorts, in which case
             #       we would end up with an empty file...
 
             MESSAGE(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package could not be retrieved...")
         ENDIF()
 
-        # Check that the files, if we managed to retrieve them, have the expected
-        # SHA-1 values
+        # Check that the package's files, if we managed to uncompress the
+        # package, have the expected SHA-1 values
 
-        CHECK_FILES("${FULL_DIRNAME}" "${ARG_CHECKED_FILES}" "${ARG_SHA1_VALUES}")
-        IF(CHECK_FILES_FAILED)
-            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
-            MESSAGE(FATAL_ERROR "The files in ${REAL_COMPRESSED_FILENAME} do not have the expected SHA-1 values...")
+        LIST(GET STATUS 0 STATUS_CODE)
+
+        IF(${STATUS_CODE} EQUAL 0)
+            CHECK_FILES(${REAL_DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
+
+            IF(NOT CHECK_FILES_OK)
+                MESSAGE(FATAL_ERROR "The files in the '${PACKAGE_NAME}' package do not have the expected SHA-1 values...")
+            ENDIF()
+        ELSE()
+            MESSAGE(FATAL_ERROR "The files in the '${PACKAGE_NAME}' package could not be uncompressed...")
         ENDIF()
-
     ENDIF()
-
-ENDMACRO()
-
-#===============================================================================
-
-MACRO(RETRIEVE_PACKAGE_FILE DIRNAME PACKAGE_NAME PACKAGE_VERSION SHA1_VALUE)
-    RETRIEVE_PACKAGE_FILE_FROM("http://biosignalml.org/binaries"
-        ${DIRNAME} ${PACKAGE_NAME} ${PACKAGE_VERSION} ${SHA1_VALUE} ${ARGN})
 ENDMACRO()
 
 #===============================================================================
 
 MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
-    # Create the destination folder, if needed
+    # Create our destination folder, if needed
 
     STRING(REPLACE "${PLATFORM_DIR}" "bin"
            REAL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
@@ -1591,9 +1640,7 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
 
     # Make sure that the file, if it exists, has the expected SHA-1 value
 
-    SET(REAL_FILENAME ${REAL_DIRNAME}/${FILENAME})
-
-    CHECK_FILES("${REAL_DIRNAME}" "${FILENAME}" "${SHA1_VALUE}")
+    CHECK_FILE(${REAL_DIRNAME} ${FILENAME} ${SHA1_VALUE})
 
     # Retrieve the file from the given location, if needed
     # Note: we would normally provide the SHA-1 value to the FILE(DOWNLOAD)
@@ -1603,15 +1650,17 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
     #       value being wrong (as well as not being able to download the file),
     #       so we handle everything ourselves...
 
+    SET(REAL_FILENAME ${REAL_DIRNAME}/${FILENAME})
+
     IF(NOT EXISTS ${REAL_FILENAME})
         # Retrieve the compressed version of the file
 
         MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
 
         SET(COMPRESSED_FILENAME ${FILENAME}.tar.gz)
-        SET(REAL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
+        SET(FULL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
 
-        FILE(DOWNLOAD "${LOCATION}/${DIRNAME}/${COMPRESSED_FILENAME}" ${REAL_COMPRESSED_FILENAME}
+        FILE(DOWNLOAD "${LOCATION}/${DIRNAME}/${COMPRESSED_FILENAME}" ${FULL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
 
         # Uncompress the compressed version of the file, should we have managed
@@ -1620,32 +1669,31 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
         LIST(GET STATUS 0 STATUS_CODE)
 
         IF(${STATUS_CODE} EQUAL 0)
-            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_COMPRESSED_FILENAME}
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${FULL_COMPRESSED_FILENAME}
                             WORKING_DIRECTORY ${REAL_DIRNAME}
                             OUTPUT_QUIET)
 
-            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+            FILE(REMOVE ${FULL_COMPRESSED_FILENAME})
         ELSE()
-            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+            FILE(REMOVE ${FULL_COMPRESSED_FILENAME})
             # Note: this is in case we had an HTTP error of sorts, in which case
             #       we would end up with an empty file...
 
             MESSAGE(FATAL_ERROR "The compressed version of '${FILENAME}' could not be retrieved...")
         ENDIF()
 
-        # Check that the file, if we managed to retrieve it, has the expected
+        # Check that the file, if we managed to uncompress it, has the expected
         # SHA-1 value
 
-        IF(EXISTS ${REAL_FILENAME})
-            CHECK_FILES("${REAL_DIRNAME}" "${FILENAME}" "${SHA1_VALUE}")
+        LIST(GET STATUS 0 STATUS_CODE)
 
-            IF(CHECK_FILES_FAILED)
+        IF(${STATUS_CODE} EQUAL 0)
+            CHECK_FILE(${REAL_DIRNAME} ${FILENAME} ${SHA1_VALUE})
 
+            IF(NOT CHECK_FILE_OK)
                 MESSAGE(FATAL_ERROR "'${FILENAME}' does not have the expected SHA-1 value...")
             ENDIF()
         ELSE()
-            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
-
             MESSAGE(FATAL_ERROR "'${FILENAME}' could not be uncompressed...")
         ENDIF()
     ENDIF()
@@ -1654,5 +1702,8 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
-    RETRIEVE_BINARY_FILE_FROM("http://www.opencor.ws/binaries" ${DIRNAME} ${FILENAME} ${SHA1_VALUE})
+    # Retrieve the binary file off the OpenCOR website
+
+    RETRIEVE_BINARY_FILE_FROM("http://www.opencor.ws/binaries"
+                              ${DIRNAME} ${FILENAME} ${SHA1_VALUE})
 ENDMACRO()

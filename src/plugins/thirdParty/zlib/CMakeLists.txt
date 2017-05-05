@@ -1,83 +1,88 @@
 PROJECT(zlibPlugin)
 
-# Specify the version of zlib we want to build
+# Version that we want to use
 
-SET(ZLIB_FULL_VERSION "1.2.11")
-SET(ZLIB_SHORT_VERSION "1")
-SET(ZLIB_PACKAGE_VERSION ${ZLIB_SHORT_VERSION})
+SET(ZLIB_MAJOR_VERSION "1")
+SET(ZLIB_VERSION "${ZLIB_MAJOR_VERSION}.2.11")
 
-SET(ZLIB_GIT_TAG v${ZLIB_FULL_VERSION})
+# Specify where our local package will be installed
 
-# The names of the libraries built by zlib's build process
+SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+
+# Name of our package's shared library (and of its import library, if any)
 
 IF(WIN32)
     IF(RELEASE_MODE)
         SET(ZLIB_SHARED_LIBRARY zlib${CMAKE_SHARED_LIBRARY_SUFFIX})
-        SET(ZLIB_LINK_LIBRARY zlib${CMAKE_IMPORT_LIBRARY_SUFFIX})
+        SET(ZLIB_IMPORT_LIBRARY zlib${CMAKE_IMPORT_LIBRARY_SUFFIX})
     ELSE()
         SET(ZLIB_SHARED_LIBRARY zlibd${CMAKE_SHARED_LIBRARY_SUFFIX})
-        SET(ZLIB_LINK_LIBRARY zlibd${CMAKE_IMPORT_LIBRARY_SUFFIX})
+        SET(ZLIB_IMPORT_LIBRARY zlibd${CMAKE_IMPORT_LIBRARY_SUFFIX})
     ENDIF()
 ELSEIF(APPLE)
-    SET(ZLIB_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}z.${ZLIB_SHORT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(ZLIB_LINK_LIBRARY ${ZLIB_SHARED_LIBRARY})
+    SET(ZLIB_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}z.${ZLIB_MAJOR_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(ZLIB_IMPORT_LIBRARY ${ZLIB_SHARED_LIBRARY})
 ELSE()
-    SET(ZLIB_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX}.${ZLIB_SHORT_VERSION})
-    SET(ZLIB_LINK_LIBRARY ${ZLIB_SHARED_LIBRARY})
+    SET(ZLIB_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX}.${ZLIB_MAJOR_VERSION})
+    SET(ZLIB_IMPORT_LIBRARY ${ZLIB_SHARED_LIBRARY})
 ENDIF()
-SET(EXTERNAL_BINARIES ${ZLIB_SHARED_LIBRARY})
 
-# Specify where our local zlib will be installed
+# Retrieve our package's binaries
 
-SET(RELATIVE_INSTALL_DIR external/${REMOTE_EXTERNAL_BINARIES_DIR})
-SET(FULL_INSTALL_DIR ${PROJECT_SOURCE_DIR}/${RELATIVE_INSTALL_DIR})
+SET(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
 
-# Specify the files that will have their SHA1 checked when packaged
+SET(EXTERNAL_BINARIES
+    ${ZLIB_SHARED_LIBRARY}
+)
 
-SET(CHECKED_FILES lib/${ZLIB_SHARED_LIBRARY})
+# Specify the files that need to have their SHA-1 value checked
+
+SET(SHA1_FILES lib/${ZLIB_SHARED_LIBRARY})
+
 IF(WIN32)
-    LIST(APPEND CHECKED_FILES lib/${ZLIB_LINK_LIBRARY})
+    LIST(APPEND SHA1_FILES lib/${ZLIB_IMPORT_LIBRARY})
 ENDIF()
 
 # Use our pre-built version unless instructed otherwise
 
 IF(USE_PREBUILT_ZLIB_PLUGIN)
-    # Retrieve the plugin's file(s)
+    # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${FULL_INSTALL_DIR}")
+           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-                zlib ${ZLIB_PACKAGE_VERSION} 0a25227010050d08fb540c90c4cdd563970cb10f
-                CHECKED_FILES ${CHECKED_FILES}
-                SHA1_VALUES 4ffbb89d03c0e6eb406a48388c3150822d575adb
-                            e99a86117b9b108f292fbaeb7a5de42382439896
+            RETRIEVE_PACKAGE_FILE(zlib ${ZLIB_VERSION}
+                ${RELATIVE_PROJECT_SOURCE_DIR} 46f64af9fea228a3afa6d64bad1a0700ba20c67b
+                SHA1_FILES ${SHA1_FILES}
+                SHA1_VALUES 6a8408008702971d5cbf5e6f49953273d6e2f249
+                            63892d9f0e54248c4c6f97ca0ba5342938b52d0e
             )
         ELSE()
-            RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-                zlib ${ZLIB_PACKAGE_VERSION} 0f54b7b334982ce88e3a841ff108a9dc19c99da4
-                CHECKED_FILES ${CHECKED_FILES}
-                SHA1_VALUES 1be6ee880ddcfe59f55cc954f5d6c915a3d7bb35
-                            f62633335a92e9c79a6a8607bdc648283df24722
+            RETRIEVE_PACKAGE_FILE(zlib ${ZLIB_VERSION}
+                ${RELATIVE_PROJECT_SOURCE_DIR} b3695becf1f964b1207dc2371aa1978973d92459
+                SHA1_FILES ${SHA1_FILES}
+                SHA1_VALUES 2121f4b71cab6e851b2a01ac241a684a75ee06ad
+                            0ef60637c15c35954fe4ca17be1837cd72bd8f69
             )
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            zlib ${ZLIB_PACKAGE_VERSION} 619df9fa803b362e5952ba1462a5d2538bee72f2
-            CHECKED_FILES ${CHECKED_FILES}
+        RETRIEVE_PACKAGE_FILE(zlib ${ZLIB_VERSION}
+            ${RELATIVE_PROJECT_SOURCE_DIR} 4de712a64a9121424aaf23a9683165c6af349098
+            SHA1_FILES ${SHA1_FILES}
             SHA1_VALUES 2da040b5883c4a00166e9a22cc49c5400d09d025
         )
     ELSE()
-        RETRIEVE_PACKAGE_FILE(${RELATIVE_PROJECT_SOURCE_DIR}
-            zlib ${ZLIB_PACKAGE_VERSION} 64f4cdc837ac972c61a26b5ad0e1bd144ddb1daa
-            CHECKED_FILES ${CHECKED_FILES}
+        RETRIEVE_PACKAGE_FILE(zlib ${ZLIB_VERSION}
+            ${RELATIVE_PROJECT_SOURCE_DIR} f9934d635b4713cdceab4aa751745029fab4f82d
+            SHA1_FILES ${SHA1_FILES}
             SHA1_VALUES e7a94eaf5cd6bfa099ffc700ea81f26e3030a065
         )
     ENDIF()
-
 ELSE()
+    # Rely on the ExternalProject module to build our package
+
     INCLUDE(ExternalProject)
 
     # Ignore some warnings on Windows
@@ -88,15 +93,17 @@ ELSE()
 
     # Build zlib as an external project
 
-    ExternalProject_Add(zlibBuild
+    SET(PACKAGE_BUILD zlibBuild)
+
+    ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
-            ${PROJECT_SOURCE_DIR}/zlib
+            ${PROJECT_SOURCE_DIR}/ext/proj
         INSTALL_DIR
-            ${FULL_INSTALL_DIR}
+            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/madler/zlib.git
+            https://github.com/opencor/zlib.git
         GIT_TAG
-            ${ZLIB_GIT_TAG}
+            v${ZLIB_VERSION}
         PATCH_COMMAND
             ${CMAKE_COMMAND} -E remove <SOURCE_DIR>/zconf.h
         CMAKE_CACHE_ARGS
@@ -106,51 +113,54 @@ ELSE()
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DCMAKE_MACOSX_RPATH=1
         BUILD_BYPRODUCTS
-            <INSTALL_DIR>/lib/${ZLIB_LINK_LIBRARY}
+            <INSTALL_DIR>/lib/${ZLIB_IMPORT_LIBRARY}
     )
 
+    # Do some post-processing that is specific to each platform
+
     IF(WIN32)
-        # Our plugin code expects the DLL in the same directory as the import library.
-        ExternalProject_Add_Step(zlibBuild CopyDLL
-            COMMAND ${CMAKE_COMMAND} -E copy ${FULL_INSTALL_DIR}/bin/${ZLIB_SHARED_LIBRARY}
-                                             ${FULL_INSTALL_DIR}/lib
-            DEPENDEES install)
+        # We want both our shared and import libraries to be in the same place
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/${ZLIB_SHARED_LIBRARY}
+                                                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
+                                 DEPENDEES install)
     ELSE()
-        # We need to dereference the symbolic link to the library as CMake's `tar`
-        # can't do this...
+        # Dereference the symbolic link to the library since CMake's tar can't
+        # do this
+
+        SET(FULL_ZLIB_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${ZLIB_SHARED_LIBRARY})
+
         IF(APPLE)
-            SET(ACTUAL_ZLIB_SHARED_LIBRARY
-                ${CMAKE_SHARED_LIBRARY_PREFIX}z.${ZLIB_FULL_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}
-            )
+            SET(REAL_FULL_ZLIB_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}z.${ZLIB_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
         ELSE()
-            SET(ACTUAL_ZLIB_SHARED_LIBRARY
-                ${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX}.${ZLIB_FULL_VERSION}
-            )
+            SET(REAL_FULL_ZLIB_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX}.${ZLIB_VERSION})
         ENDIF()
-        ExternalProject_Add_Step(zlibBuild CopyLibrary
-            COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_INSTALL_DIR}/lib/${ZLIB_SHARED_LIBRARY}
-            COMMAND ${CMAKE_COMMAND} -E copy ${FULL_INSTALL_DIR}/lib/${ACTUAL_ZLIB_SHARED_LIBRARY}
-                                             ${FULL_INSTALL_DIR}/lib/${ZLIB_SHARED_LIBRARY}
-            DEPENDEES install)
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_ZLIB_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_ZLIB_SHARED_LIBRARY}
+                                                                  ${FULL_ZLIB_SHARED_LIBRARY}
+                                 DEPENDEES install)
     ENDIF()
 
-    # Package zlib's include files and library
+    # Package our external project
 
-    CREATE_PACKAGE_FILE(${RELATIVE_INSTALL_DIR}
-        zlib ${ZLIB_PACKAGE_VERSION}
-        PACKAGED_FILES include ${CHECKED_FILES}
-        CHECKED_FILES ${CHECKED_FILES}
-        TARGET zlibBuild
-        )
+    CREATE_PACKAGE_FILE(zlib ${ZLIB_VERSION}
+        ${LOCAL_EXTERNAL_PACKAGE_DIR}
+        PACKAGED_FILES include ${SHA1_FILES}
+        SHA1_FILES ${SHA1_FILES}
+        TARGET ${PACKAGE_BUILD}
+    )
 
-    SET(PLUGIN_DEPENDS_ON zlibBuild)
+    SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
 # Allow other external projects to find our zlib
 
-SET(ZLIB_ROOT_DIR ${FULL_INSTALL_DIR} PARENT_SCOPE)
-SET(ZLIB_INCLUDE_DIR ${FULL_INSTALL_DIR}/include PARENT_SCOPE)
-SET(ZLIB_LIBRARY ${FULL_INSTALL_DIR}/lib/${ZLIB_LINK_LIBRARY} PARENT_SCOPE)
+SET(ZLIB_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+SET(ZLIB_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+SET(ZLIB_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${ZLIB_IMPORT_LIBRARY} PARENT_SCOPE)
 
 # Add the plugin
 
@@ -163,14 +173,14 @@ ADD_PLUGIN(zlib
     HEADERS_MOC
         src/zlibplugin.h
     INCLUDE_DIRS
-        ${RELATIVE_INSTALL_DIR}/include
+        ${LOCAL_EXTERNAL_PACKAGE_DIR}/include
         src
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
-        ${FULL_INSTALL_DIR}/lib
+        ${EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
-    DEPENDS
+    DEPENDS_ON
         ${PLUGIN_DEPENDS_ON}
 )
