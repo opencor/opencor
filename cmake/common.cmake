@@ -1537,8 +1537,7 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
-                                 SHA1_VALUE)
+MACRO(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
     # Various initialisations
 
     SET(OPTIONS)
@@ -1582,7 +1581,7 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
         SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
         SET(FULL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
 
-        FILE(DOWNLOAD "${LOCATION}/${DIRNAME}/${COMPRESSED_FILENAME}" ${FULL_COMPRESSED_FILENAME}
+        FILE(DOWNLOAD "https://github.com/opencor/${PACKAGE_NAME}/releases/download/v${PACKAGE_VERSION}/${COMPRESSED_FILENAME}" ${FULL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
 
         # Uncompress the compressed version of the package, should we have
@@ -1625,16 +1624,6 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
             MESSAGE(FATAL_ERROR "The files in the '${PACKAGE_NAME}' package could not be uncompressed...")
         ENDIF()
     ENDIF()
-ENDMACRO()
-
-#===============================================================================
-
-MACRO(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
-    # Retrieve the package off the OpenCOR website
-
-    RETRIEVE_PACKAGE_FILE_FROM("http://www.opencor.ws/packages"
-                               ${PACKAGE_NAME} ${PACKAGE_VERSION}
-                               ${DIRNAME} ${SHA1_VALUE} ${ARGN})
 ENDMACRO()
 
 #===============================================================================
