@@ -88,12 +88,24 @@ MACRO(INITIALISE_PROJECT)
     # Some initialisations related to our copy of QtWebKit
 
     IF(WIN32)
-        SET(PLATFORM_DIR windows)
-    ELSEIF(APPLE)
-        SET(PLATFORM_DIR macos)
+        SET(PLATFORM windows)
+
+        IF(RELEASE_MODE)
+            SET(TARGET_PLATFORM ${PLATFORM}.release)
+        ELSE()
+            SET(TARGET_PLATFORM ${PLATFORM}.debug)
+        ENDIF()
     ELSE()
-        SET(PLATFORM_DIR linux)
+        IF(APPLE)
+            SET(PLATFORM macos)
+        ELSE()
+            SET(PLATFORM linux)
+        ENDIF()
+
+        SET(TARGET_PLATFORM ${PLATFORM})
     ENDIF()
+
+    SET(PLATFORM_DIR ${PLATFORM})
 
     INCLUDE(${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/CMakeLists.txt)
 
@@ -1377,14 +1389,11 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
 
     STRING(TOUPPER ${PACKAGE_NAME} UPPER_PACKAGE_NAME)
 
-    # The name of the package's archive
-
-    SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz)
-    SET(REAL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
-
     # Remove any historical package archive
 
-    FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+    SET(COMPRESSED_FILENAME ${REAL_DIRNAME}/${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
+
+    FILE(REMOVE ${COMPRESSED_FILENAME})
 
     # The actual packaging code goes into a separate CMake script file that is
     # run as a POST_BUILD step
@@ -1429,17 +1438,17 @@ ENDFOREACH()
 
 # Compress our package
 
-EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -czf ${REAL_COMPRESSED_FILENAME} \$\{PACKAGED_FILES\}
+EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -czf ${COMPRESSED_FILENAME} \$\{PACKAGED_FILES\}
                 WORKING_DIRECTORY ${REAL_DIRNAME}
                 OUTPUT_QUIET)
 
 # Make sure that the compressed version of our package exists
 
-IF(EXISTS ${REAL_COMPRESSED_FILENAME})
+IF(EXISTS ${COMPRESSED_FILENAME})
     # The compressed version of our package exists, so calculate its SHA-1 value
     # and let people know how we should call the RETRIEVE_PACKAGE_FILE() macro
 
-    FILE(SHA1 ${REAL_COMPRESSED_FILENAME} SHA1_VALUE)
+    FILE(SHA1 ${COMPRESSED_FILENAME} SHA1_VALUE)
 
     STRING(REPLACE \"\;\" \"\\n                \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
 
@@ -1570,10 +1579,10 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
 
         MESSAGE("Retrieving the '${PACKAGE_NAME}' package...")
 
-        SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz)
-        SET(REAL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
+        SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
+        SET(FULL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
 
-        FILE(DOWNLOAD "${LOCATION}/${DIRNAME}/${COMPRESSED_FILENAME}" ${REAL_COMPRESSED_FILENAME}
+        FILE(DOWNLOAD "${LOCATION}/${DIRNAME}/${COMPRESSED_FILENAME}" ${FULL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
 
         # Uncompress the compressed version of the package, should we have
@@ -1588,13 +1597,13 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
                 MESSAGE(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package does not have the expected SHA-1 value...")
             ENDIF()
 
-            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_COMPRESSED_FILENAME}
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${FULL_COMPRESSED_FILENAME}
                             WORKING_DIRECTORY ${REAL_DIRNAME}
                             OUTPUT_QUIET)
 
-            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+            FILE(REMOVE ${FULL_COMPRESSED_FILENAME})
         ELSE()
-            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+            FILE(REMOVE ${FULL_COMPRESSED_FILENAME})
             # Note: this is in case we had an HTTP error of sorts, in which case
             #       we would end up with an empty file...
 
@@ -1660,9 +1669,9 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
         MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
 
         SET(COMPRESSED_FILENAME ${FILENAME}.tar.gz)
-        SET(REAL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
+        SET(FULL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
 
-        FILE(DOWNLOAD "${LOCATION}/${DIRNAME}/${COMPRESSED_FILENAME}" ${REAL_COMPRESSED_FILENAME}
+        FILE(DOWNLOAD "${LOCATION}/${DIRNAME}/${COMPRESSED_FILENAME}" ${FULL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
 
         # Uncompress the compressed version of the file, should we have managed
@@ -1671,13 +1680,13 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
         LIST(GET STATUS 0 STATUS_CODE)
 
         IF(${STATUS_CODE} EQUAL 0)
-            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_COMPRESSED_FILENAME}
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${FULL_COMPRESSED_FILENAME}
                             WORKING_DIRECTORY ${REAL_DIRNAME}
                             OUTPUT_QUIET)
 
-            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+            FILE(REMOVE ${FULL_COMPRESSED_FILENAME})
         ELSE()
-            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+            FILE(REMOVE ${FULL_COMPRESSED_FILENAME})
             # Note: this is in case we had an HTTP error of sorts, in which case
             #       we would end up with an empty file...
 
