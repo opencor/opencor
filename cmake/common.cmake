@@ -1437,14 +1437,13 @@ EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -czf ${REAL_COMPRESSED_FILENAME}
 
 IF(EXISTS ${REAL_COMPRESSED_FILENAME})
     # The compressed version of our package exists, so calculate its SHA-1 value
-    # and generate a small CMake file that tells us how we should call the
-    # RETRIEVE_PACKAGE_FILE() macro to retrieve that package
+    # and let people know how we should call the RETRIEVE_PACKAGE_FILE() macro
 
     FILE(SHA1 ${REAL_COMPRESSED_FILENAME} SHA1_VALUE)
 
-    STRING(REPLACE \";\" \"\\n                \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
+    STRING(REPLACE \"\;\" \"\\n                \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
 
-    MESSAGE(\"To retrieve the '${PACKAGE_NAME}' package, you will need to call:
+    MESSAGE(\"To retrieve the '${PACKAGE_NAME}' package, please call:
 RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} \\$\\{${UPPER_PACKAGE_NAME}_VERSION\\}
     \\$\\{RELATIVE_PROJECT_SOURCE_DIR\\} \$\{SHA1_VALUE\}
     SHA1_FILES \\$\\{SHA1_FILES\\}
