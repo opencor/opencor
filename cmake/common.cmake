@@ -1386,10 +1386,6 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
 
     FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
 
-    # Where we put the CMake code to retrieve the archived package
-
-    SET(RETRIEVAL_SCRIPT "${REAL_DIRNAME}/retrievePackage.cmake")
-
     # The actual packaging code goes into a separate CMake script file that is
     # run as a POST_BUILD step
 
@@ -1448,12 +1444,12 @@ IF(EXISTS ${REAL_COMPRESSED_FILENAME})
 
     STRING(REPLACE \";\" \"\\n                \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
 
-    FILE(WRITE ${RETRIEVAL_SCRIPT} \"RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} \\$\\{${UPPER_PACKAGE_NAME}_VERSION\\}
+    MESSAGE(\"To retrieve the '${PACKAGE_NAME}' package, you will need to call:
+RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} \\$\\{${UPPER_PACKAGE_NAME}_VERSION\\}
     \\$\\{RELATIVE_PROJECT_SOURCE_DIR\\} \$\{SHA1_VALUE\}
     SHA1_FILES \\$\\{SHA1_FILES\\}
     SHA1_VALUES \$\{SHA1_VALUES\}
-)
-\")
+)\")
 ELSE()
     MESSAGE(FATAL_ERROR \"The compressed version of the '${PACKAGE_NAME}' package could not be generated...\")
 ENDIF()
