@@ -1537,8 +1537,8 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
 
     CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
 
-    # Make sure that we have at least one file for which we want to check the
-    # SHA-1 value is that the SHA-1 value(s) are available
+    # Make sure that we have at least one file for which we need to check the
+    # SHA-1 value
 
     LIST(LENGTH ARG_SHA1_FILES ARG_SHA1_FILES_COUNT)
     LIST(LENGTH ARG_SHA1_VALUES ARG_SHA1_VALUES_COUNT)
@@ -1557,12 +1557,14 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
         FILE(MAKE_DIRECTORY ${REAL_DIRNAME})
     ENDIF()
 
-    # Check to see if we already have the package's files
+    # Make sure that we have the expected package's files
 
     CHECK_FILES(${REAL_DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
 
     IF(NOT CHECK_FILES_OK)
-        MESSAGE("Retrieving '${PACKAGE_NAME}' into '${REAL_DIRNAME}'...")
+        # Something went wrong with the package's files, so retrieve the package
+
+        MESSAGE("Retrieving the '${PACKAGE_NAME}' package...")
 
         SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.tar.gz)
         SET(REAL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
@@ -1570,8 +1572,8 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
         FILE(DOWNLOAD "${LOCATION}/${DIRNAME}/${COMPRESSED_FILENAME}" ${REAL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
 
-        # Uncompress the compressed version of the file, should we have managed
-        # to retrieve it
+        # Uncompress the compressed version of the package, should we have
+        # managed to retrieve it
 
         LIST(GET STATUS 0 STATUS_CODE)
 
@@ -1579,7 +1581,7 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
             CHECK_FILE(${REAL_DIRNAME} ${COMPRESSED_FILENAME} ${SHA1_VALUE})
 
             IF(NOT CHECK_FILE_OK)
-                MESSAGE(FATAL_ERROR "'${COMPRESSED_FILENAME}' does not have the expected SHA-1 value...")
+                MESSAGE(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package does not have the expected SHA-1 value...")
             ENDIF()
 
             EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_COMPRESSED_FILENAME}
@@ -1595,13 +1597,12 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
             MESSAGE(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package could not be retrieved...")
         ENDIF()
 
-        # Check that the files, if we managed to retrieve them, have the expected
-        # SHA-1 values
+        # Check that the package's files, if we managed to retrieve the package,
+        # have the expected SHA-1 values
 
         CHECK_FILES(${REAL_DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
 
         IF(NOT CHECK_FILES_OK)
-            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
             MESSAGE(FATAL_ERROR "The files in '${REAL_COMPRESSED_FILENAME}' do not have the expected SHA-1 values...")
         ENDIF()
     ENDIF()
@@ -1676,16 +1677,10 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
         # Check that the file, if we managed to retrieve it, has the expected
         # SHA-1 value
 
-        IF(EXISTS ${REAL_FILENAME})
-            CHECK_FILE(${REAL_DIRNAME} ${FILENAME} ${SHA1_VALUE})
+        CHECK_FILE(${REAL_DIRNAME} ${FILENAME} ${SHA1_VALUE})
 
-            IF(NOT CHECK_FILE_OK)
-                MESSAGE(FATAL_ERROR "'${FILENAME}' does not have the expected SHA-1 value...")
-            ENDIF()
-        ELSE()
-            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
-
-            MESSAGE(FATAL_ERROR "'${FILENAME}' could not be uncompressed...")
+        IF(NOT CHECK_FILE_OK)
+            MESSAGE(FATAL_ERROR "'${FILENAME}' does not have the expected SHA-1 value...")
         ENDIF()
     ENDIF()
 ENDMACRO()
