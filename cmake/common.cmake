@@ -1347,6 +1347,8 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
+    # Various initialisations
+
     SET(OPTIONS)
     SET(ONE_VALUE_KEYWORDS
         TARGET
@@ -1524,14 +1526,14 @@ ENDMACRO()
 
 MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
                                  SHA1_VALUE)
+    # Various initialisations
+
     SET(OPTIONS)
     SET(ONE_VALUE_KEYWORDS)
     SET(MULTI_VALUE_KEYWORDS
         SHA1_FILES
         SHA1_VALUES
     )
-
-    # Parse the argument list
 
     CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
 
