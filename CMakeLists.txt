@@ -27,7 +27,7 @@ OPTION(USE_PREBUILT_ZLIB_PLUGIN "Use the pre-built version of the zlib plugin" O
 
 INITIALISE_PROJECT()
 
-# Keep track of our source and build directories
+# Keep track of our source and build directories (needed to run our tests)
 
 SET(SOURCE_DIRECTORY_FILENAME ${PROJECT_BUILD_DIR}/sourcedirectory.txt)
 SET(BUILD_DIRECTORY_FILENAME ${PROJECT_BUILD_DIR}/builddirectory.txt)
@@ -469,12 +469,15 @@ FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
 ENDFOREACH()
 
 # Build the CLI version of OpenCOR (Windows specific)
+# Note: when it comes WINDOWS_CLI_PROJECT_NAME, we used to have it set to
+#       ${CMAKE_PROJECT_NAME}.com, but Ninja used to find a duplicate rule (from
+#       a copy command), so we use '_' instead of '.'...
 
 IF(WIN32)
     QT5_WRAP_CPP(WINDOWS_CLI_SOURCES_MOC ${WINDOWS_CLI_HEADERS_MOC})
     QT5_ADD_RESOURCES(WINDOWS_CLI_SOURCES_RCS ${WINDOWS_CLI_RESOURCES})
 
-    SET(WINDOWS_CLI_PROJECT_NAME ${CMAKE_PROJECT_NAME}.com)
+    SET(WINDOWS_CLI_PROJECT_NAME ${CMAKE_PROJECT_NAME}_com)
 
     ADD_EXECUTABLE(${WINDOWS_CLI_PROJECT_NAME}
         ${WINDOWS_CLI_SOURCES}
@@ -486,7 +489,6 @@ IF(WIN32)
                                PRIVATE CLI_VERSION)
 
     SET_TARGET_PROPERTIES(${WINDOWS_CLI_PROJECT_NAME} PROPERTIES
-        OUTPUT_NAME ${WINDOWS_CLI_PROJECT_NAME}
         LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
 
@@ -579,10 +581,16 @@ ELSE()
         #       want to test OpenCOR as if it was deployed on someone's
         #       computer)...
 
-        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${PROJECT_BUILD_DIR} .
+        SET(WINDOWS_CLI_COPY ${WINDOWS_CLI_PROJECT_NAME}_COPY)
+
+        ADD_CUSTOM_TARGET(${WINDOWS_CLI_COPY} ALL)
+
+        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_COPY} ${PROJECT_BUILD_DIR} .
                                ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${CMAKE_PROJECT_NAME}.com)
-        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
+        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_COPY} ${PROJECT_BUILD_DIR} bin
                                ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${CMAKE_PROJECT_NAME}.com)
+
+        ADD_DEPENDENCIES(${WINDOWS_CLI_COPY} ${WINDOWS_CLI_PROJECT_NAME})
 
         # Additional files required by OpenCOR
         # Note: these files may or not be needed in order to test OpenCOR
