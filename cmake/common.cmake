@@ -1606,13 +1606,19 @@ MACRO(RETRIEVE_PACKAGE_FILE_FROM LOCATION PACKAGE_NAME PACKAGE_VERSION DIRNAME
             MESSAGE(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package could not be retrieved...")
         ENDIF()
 
-        # Check that the package's files, if we managed to retrieve the package,
-        # have the expected SHA-1 values
+        # Check that the package's files, if we managed to uncompress the
+        # package, have the expected SHA-1 values
 
-        CHECK_FILES(${REAL_DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
+        LIST(GET STATUS 0 STATUS_CODE)
 
-        IF(NOT CHECK_FILES_OK)
-            MESSAGE(FATAL_ERROR "The files in '${REAL_COMPRESSED_FILENAME}' do not have the expected SHA-1 values...")
+        IF(${STATUS_CODE} EQUAL 0)
+            CHECK_FILES(${REAL_DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
+
+            IF(NOT CHECK_FILES_OK)
+                MESSAGE(FATAL_ERROR "The files in the '${PACKAGE_NAME}' package do not have the expected SHA-1 values...")
+            ENDIF()
+        ELSE()
+            MESSAGE(FATAL_ERROR "The files in the '${PACKAGE_NAME}' package could not be uncompressed...")
         ENDIF()
     ENDIF()
 ENDMACRO()
@@ -1683,13 +1689,19 @@ MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
             MESSAGE(FATAL_ERROR "The compressed version of '${FILENAME}' could not be retrieved...")
         ENDIF()
 
-        # Check that the file, if we managed to retrieve it, has the expected
+        # Check that the file, if we managed to uncompress it, has the expected
         # SHA-1 value
 
-        CHECK_FILE(${REAL_DIRNAME} ${FILENAME} ${SHA1_VALUE})
+        LIST(GET STATUS 0 STATUS_CODE)
 
-        IF(NOT CHECK_FILE_OK)
-            MESSAGE(FATAL_ERROR "'${FILENAME}' does not have the expected SHA-1 value...")
+        IF(${STATUS_CODE} EQUAL 0)
+            CHECK_FILE(${REAL_DIRNAME} ${FILENAME} ${SHA1_VALUE})
+
+            IF(NOT CHECK_FILE_OK)
+                MESSAGE(FATAL_ERROR "'${FILENAME}' does not have the expected SHA-1 value...")
+            ENDIF()
+        ELSE()
+            MESSAGE(FATAL_ERROR "'${FILENAME}' could not be uncompressed...")
         ENDIF()
     ENDIF()
 ENDMACRO()
