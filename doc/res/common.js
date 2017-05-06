@@ -315,8 +315,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     // Show/hide our contents menu
 
     $(document).click(function() {
-        if ($("ul.contentsMenu > li > ul").css("visibility") === "visible")
-            $("ul.contentsMenu > li > ul").css("visibility", "hidden");
+        $("ul.contentsMenu > li > ul").css("visibility", "hidden");
     });
 
     $("ul.contentsMenu > li > img").click(function(event) {
@@ -347,12 +346,10 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
         return false;
     });
 
-    // Hide our contents menu if the ESC key is pressed when our contents menu
-    // is visible
+    // Hide our contents menu if the ESC key is pressed 
 
     $(document).keyup(function(event) {
-        if (   ($("ul.contentsMenu > li > ul").css("visibility") === "visible")
-            && (event.keyCode === 27)) {
+        if (event.keyCode === 27) {
             $("ul.contentsMenu > li > ul").css("visibility", "hidden");
         }
     });
