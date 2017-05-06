@@ -251,7 +251,8 @@ function versions(downloads) {
 
                         // Determine the file name, type and extra info, if any
 
-                        var fileName = versionFolder+"/OpenCOR-"+versionVersion+"-"+platformName.replace(" ", "")+((typeof fileBitness !== "undefined")?fileBitness:"")+fileExtension;
+                        var fileName = "OpenCOR-"+versionVersion+"-"+platformName.replace(" ", "")+((typeof fileBitness !== "undefined")?fileBitness:"")+fileExtension;
+                        var fullFileName = versionFolder+"/"+fileName;
 
                         if (   (fileExtension === ".exe")
                             || (fileExtension === ".dmg"))
@@ -270,7 +271,33 @@ function versions(downloads) {
 
                         // List the file for download
 
-                        document.write("                                        <li><a href=\""+fileName+"\">"+fileType+"</a>"+fileBitness+" <span class=\"fileSize\">("+fileSize(fileSizes[fileName])+")</span></li>\n");
+                        if (versionType !== 2) {
+                            document.write("                                        <li>\n");
+                            document.write("                                            "+fileType+fileBitness+" <span class=\"fileSize\">("+fileSize(fileSizes[fullFileName])+")</span>\n");
+                            document.write("                                            <ul submenus=\"0\">\n");
+                            document.write("                                                <li>\n");
+                            document.write("                                                    <div class=\"menuItemTable\">\n");
+                            document.write("                                                        <div class=\"menuItemTableRow clickableMenuItem\">\n");
+                            document.write("                                                            <div class=\"menuItemLabel\">\n");
+                            document.write("                                                                <a href=\""+fullFileName+"\">Download from here</a>\n");
+                            document.write("                                                            </div>\n");
+                            document.write("                                                        </div>\n");
+                            document.write("                                                    </div>\n");
+                            document.write("                                                </li>\n");
+                            document.write("                                                <li>\n");
+                            document.write("                                                    <div class=\"menuItemTable\">\n");
+                            document.write("                                                        <div class=\"menuItemTableRow clickableMenuItem\">\n");
+                            document.write("                                                            <div class=\"menuItemLabel\">\n");
+                            document.write("                                                                <a href=\"https://github.com/opencor/opencor/releases/download/v"+versionAnchor+"/"+fileName+"\">Download from GitHub</a>\n");
+                            document.write("                                                            </div>\n");
+                            document.write("                                                        </div>\n");
+                            document.write("                                                    </div>\n");
+                            document.write("                                                </li>\n");
+                            document.write("                                            </ul>\n");
+                            document.write("                                        </li>\n");
+                        } else {
+                            document.write("                                        <li><a href=\""+fullFileName+"\">"+fileType+"</a>"+fileBitness+" <span class=\"fileSize\">("+fileSize(fileSizes[fileName])+")</span></li>\n");
+                        }
                     }
                 }
             }
