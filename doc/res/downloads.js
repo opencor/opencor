@@ -16,6 +16,25 @@ function fileSize(size) {
     }
 }
 
+function hasVersions() {
+    return jsonData.versions.length;
+}
+
+function hasSnapshots() {
+    var versions = jsonData.versions;
+
+    if (versions.length) {
+        for (var versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
+            if (versions[versionIndex].type === 2)
+                return true;
+        }
+
+        return false;
+    } else {
+        return false;
+    }
+}
+
 function versions(downloads) {
     // Make sure that the jsonData variable is available
 

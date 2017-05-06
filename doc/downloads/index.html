@@ -19,12 +19,20 @@
         <script type="text/javascript">
             headerAndContentsMenu("Downloads", "..");
 
+            if (hasVersions()) {
+                document.write("        <p>\n");
+                document.write("            Official versions of OpenCOR can be found below, as well as on <a href=\"https://github.com/opencor/opencor/releases\">GitHub</a>.");
+
+                if (hasSnapshots())
+                    document.write(" The latest snapshot can also be found below while previous snapshots can be found <a href=\"previousSnapshots.html\">here</a>.\n");
+
+                document.write("        </p>\n");
+            }
+
             versions(true);
         </script>
 
-        <p class="note">
-            previous snapshots can be found <a href="previousSnapshots.html">here</a>.
-        </p>
+        <p/>
 
         <script type="text/javascript">
             copyright("..");
