@@ -72,6 +72,101 @@ function versions(downloads) {
     var versions = jsonData.versions;
 
     if (versions.length) {
+        // Some CSS for our downloads menus
+
+        document.write("<style>\n");
+        document.write("    span.fakeLink {\n");
+        document.write("        color: rgb(103, 103, 103);\n");
+        document.write("        cursor: pointer;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    span.fakeLink:hover {\n");
+        document.write("        margin: -1px;\n");
+        document.write("        border: 1px solid rgba(103, 103, 103, 0.13);\n");
+        document.write("        background: rgba(103, 103, 103, 0.05);\n");
+        document.write("        color: rgb(103, 103, 103);\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    table ul.downloadsMenu {\n");
+        document.write("        border-spacing: 0px;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    ul.downloadsMenu {\n");
+        document.write("        z-index: 999;\n");
+        document.write("        -khtml-user-select: none;\n");
+        document.write("        -moz-user-select: none;\n");
+        document.write("        -ms-user-select: none;\n");
+        document.write("        -webkit-touch-callout: none;\n");
+        document.write("        -webkit-user-select: none;\n");
+        document.write("        user-select: none;\n");
+        document.write("        position: absolute;\n");
+        document.write("        padding: 0px;\n");
+        document.write("        visibility: hidden;\n");
+        document.write("        background: rgb(249, 249, 249);\n");
+        document.write("        border: 1px solid rgb(103, 103, 103);\n");
+        document.write("        border-radius: 5px;\n");
+        document.write("        box-shadow: 0px 5px 5px -5px rgb(103, 103, 103);\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    ul.downloadsMenu > li {\n");
+        document.write("        list-style: none;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    ul.downloadsMenu > li {\n");
+        document.write("        cursor: default;\n");
+        document.write("        margin: 1px;\n");
+        document.write("        font-size: 8pt;\n");
+        document.write("        font-weight: normal;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    ul.downloadsMenu > li > div > div > div:hover {\n");
+        document.write("        background: rgba(103, 103, 103, 0.79);\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    ul.downloadsMenu > li div:hover a {\n");
+        document.write("        color: rgb(255, 255, 255);\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    ul.downloadsMenu > li div.firstMenuItem > div:hover {\n");
+        document.write("        border-radius: 3px 3px 0px 0px;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    ul.downloadsMenu > li div.lastMenuItem > div:hover {\n");
+        document.write("        border-radius: 0px 0px 3px 3px;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    ul.downloadsMenu > li div.menuItemLabel {\n");
+        document.write("        display: table-cell;\n");
+        document.write("        font-style: normal;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    ul.downloadsMenu > li div.menuItemTable {\n");
+        document.write("        display: table;\n");
+        document.write("        width: 100%;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    ul.downloadsMenu > li div.menuItemTableRow {\n");
+        document.write("        display: table-row;\n");
+        document.write("        vertical-align: middle;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    ul.downloadsMenu li a {\n");
+        document.write("        display: block;\n");
+        document.write("        padding: 1px;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    ul.downloadsMenu li a:hover {\n");
+        document.write("        margin: 0px;\n");
+        document.write("        border: 0px;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("</style>\n");
+        document.write("\n");
+
+        // Now, output the various requested downloadable files
+
+        var idCounter = 0;
+
         for (var versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
             var version = versions[versionIndex];
 
@@ -273,11 +368,11 @@ function versions(downloads) {
 
                         if (versionType !== 2) {
                             document.write("                                        <li>\n");
-                            document.write("                                            "+fileType+fileBitness+" <span class=\"fileSize\">("+fileSize(fileSizes[fullFileName])+")</span>\n");
-                            document.write("                                            <ul submenus=\"0\">\n");
+                            document.write("                                            <span class=\"fakeLink\" id=\"id"+(++idCounter)+"\">"+fileType+"</span>"+fileBitness+" <span class=\"fileSize\">("+fileSize(fileSizes[fullFileName])+")</span>\n");
+                            document.write("                                            <ul class=\"downloadsMenu\" id=\"id"+idCounter+"\">\n");
                             document.write("                                                <li>\n");
                             document.write("                                                    <div class=\"menuItemTable\">\n");
-                            document.write("                                                        <div class=\"menuItemTableRow clickableMenuItem\">\n");
+                            document.write("                                                        <div class=\"menuItemTableRow firstMenuItem\">\n");
                             document.write("                                                            <div class=\"menuItemLabel\">\n");
                             document.write("                                                                <a href=\""+fullFileName+"\">Download from here</a>\n");
                             document.write("                                                            </div>\n");
@@ -286,7 +381,7 @@ function versions(downloads) {
                             document.write("                                                </li>\n");
                             document.write("                                                <li>\n");
                             document.write("                                                    <div class=\"menuItemTable\">\n");
-                            document.write("                                                        <div class=\"menuItemTableRow clickableMenuItem\">\n");
+                            document.write("                                                        <div class=\"menuItemTableRow lastMenuItem\">\n");
                             document.write("                                                            <div class=\"menuItemLabel\">\n");
                             document.write("                                                                <a href=\"https://github.com/opencor/opencor/releases/download/v"+versionAnchor+"/"+fileName+"\">Download from GitHub</a>\n");
                             document.write("                                                            </div>\n");
@@ -295,6 +390,16 @@ function versions(downloads) {
                             document.write("                                                </li>\n");
                             document.write("                                            </ul>\n");
                             document.write("                                        </li>\n");
+
+                            // Show our downloads menu (and hide all the other
+                            // ones) if we click on our span element
+
+                            $("span#id"+idCounter).click(function(event) {
+                                $("ul.downloadsMenu").css("visibility", "hidden");
+                                $("ul#"+$(this).attr("id")).css("visibility", "visible");
+
+                                event.stopPropagation();
+                            });
                         } else {
                             document.write("                                        <li><a href=\""+fullFileName+"\">"+fileType+"</a>"+fileBitness+" <span class=\"fileSize\">("+fileSize(fileSizes[fileName])+")</span></li>\n");
                         }
@@ -340,6 +445,19 @@ function versions(downloads) {
 
             document.write("</div>\n");
         }
+
+        // Hide our downloads menus if the ESC key is pressed or if we press
+        // anywhere on the document
+
+        $(document).keyup(function(event) {
+            if (event.keyCode === 27) {
+                $("ul.downloadsMenu").css("visibility", "hidden");
+            }
+        });
+
+        $(document).click(function() {
+            $("ul.downloadsMenu").css("visibility", "hidden");
+        });
     } else {
         document.write("<p>\n");
         document.write("    No "+(downloads?"downloads":"previous snapshots")+" are available.\n");
