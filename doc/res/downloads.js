@@ -215,7 +215,7 @@ function versions(downloads) {
                 if (platformLocalIndex)
                     platformClasses += " leftSeparator";
 
-                document.write("            <td class=\""+platformClasses+"\" style=\"width: "+platformWidth+"\">\n");
+                document.write("                <td class=\""+platformClasses+"\" style=\"width: "+platformWidth+"\">\n");
 
                 var platform = versionPlatforms[platformIndex];
 
@@ -224,20 +224,20 @@ function versions(downloads) {
                     var platformSupported = platform.supported;
                     var platformFiles = platform.files;
 
-                    document.write("            <table>\n");
-                    document.write("                <tbody>\n");
-                    document.write("                    <tr>\n");
-                    document.write("                        <td class=\"logo\">\n");
-                    document.write("                            <img src=\"../res/pics/"+platformName.replace(" ", "").toLowerCase()+".png\" width=72 height=72>\n");
-                    document.write("                        </td>\n");
-                    document.write("                        <td>\n");
-                    document.write("                            <div class=\"name\">\n");
-                    document.write("                                "+platformName+"\n");
-                    document.write("                            </div>\n");
-                    document.write("                            <div class=\"supported\">\n");
-                    document.write("                                "+platformSupported+"\n");
-                    document.write("                            </div>\n");
-                    document.write("                            <ul>\n");
+                    document.write("                    <table>\n");
+                    document.write("                        <tbody>\n");
+                    document.write("                            <tr>\n");
+                    document.write("                                <td class=\"logo\">\n");
+                    document.write("                                    <img src=\"../res/pics/"+platformName.replace(" ", "").toLowerCase()+".png\" width=72 height=72>\n");
+                    document.write("                                </td>\n");
+                    document.write("                                <td>\n");
+                    document.write("                                    <div class=\"name\">\n");
+                    document.write("                                        "+platformName+"\n");
+                    document.write("                                    </div>\n");
+                    document.write("                                    <div class=\"supported\">\n");
+                    document.write("                                        "+platformSupported+"\n");
+                    document.write("                                    </div>\n");
+                    document.write("                                    <ul>\n");
 
                     // List the files
 
@@ -270,7 +270,7 @@ function versions(downloads) {
 
                         // List the file for download
 
-                        document.write("                            <li><a href=\""+fileName+"\">"+fileType+"</a>"+fileBitness+" <span class=\"fileSize\">("+fileSize(fileSizes[fileName])+")</span></li>\n");
+                        document.write("                                        <li><a href=\""+fileName+"\">"+fileType+"</a>"+fileBitness+" <span class=\"fileSize\">("+fileSize(fileSizes[fileName])+")</span></li>\n");
                     }
                 }
             }
