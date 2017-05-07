@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> now provide a mechanism to package and download pre-built libraries (see issue <a href=\"https://github.com/opencor/opencor/issues/1106\">#1106</a>). Can now download an official version of OpenCOR from either the OpenCOR website or GitHub (see issue <a href=\"https://github.com/opencor/opencor/issues/1154\">#1154</a>)." }
+                       { "change": "<strong>General:</strong> now provide a mechanism to package and download pre-built libraries (see issue <a href=\"https://github.com/opencor/opencor/issues/1106\">#1106</a>). Can now download an official version of OpenCOR from either the OpenCOR website or GitHub (see issue <a href=\"https://github.com/opencor/opencor/issues/1154\">#1154</a>). Changed our license to GPL v3.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1301\">#1301</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
