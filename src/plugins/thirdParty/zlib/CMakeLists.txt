@@ -88,7 +88,7 @@ ELSE()
     # Ignore some warnings on Windows
 
     IF(WIN32)
-        SET(ZLIB_C_FLAGS "${CMAKE_C_FLAGS} /wd4996")
+        SET(ZLIB_C_FLAGS "${CMAKE_C_FLAGS} /wd4267")
     ENDIF()
 
     # Build zlib as an external project
