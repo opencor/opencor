@@ -667,6 +667,16 @@ ELSE()
 
         COPY_FILE_TO_BUILD_DIR(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA3D_FILENAME} ${DEST_MESA3D_FILENAME})
         COPY_FILE_TO_BUILD_DIR(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA3D_FILENAME} ${DEST_MESA3D_FILENAME})
+    ELSE()
+        # Add our copy of the MESA 3D library so that we can run OpenCOR on
+        # machines that don't have 'proper' OpenGL support (e.g. on a Linux
+        # virtual machine in VirtualBox)
+
+        SET(MESA3D_FILENAME libGL.so.1)
+
+        RETRIEVE_BINARY_FILE(distrib/linux ${MESA3D_FILENAME} 0b2eb56efe43507026af87f036f96ec4e5b2c707)
+
+        COPY_FILE_TO_BUILD_DIR(DIRECT ${CMAKE_SOURCE_DIR}/distrib/bin lib ${MESA3D_FILENAME})
     ENDIF()
 ENDIF()
 
@@ -716,7 +726,7 @@ IF(WIN32)
     INSTALL(FILES ${PROJECT_BUILD_DIR}/bin/${CMAKE_PROJECT_NAME}.com
             DESTINATION bin)
 
-    # Additional files required by OpenCOR (incl. the MESA 3D Library)
+    # Additional files required by OpenCOR (incl. the Mesa 3D Library)
 
     INSTALL(FILES ${ADDITIONAL_FILES}
             DESTINATION bin)
@@ -852,6 +862,11 @@ ELSE()
                 DESTINATION lib
                 RENAME ${FULL_LIBRARY})
     ENDFOREACH()
+
+    # Mesa 3D graphics library
+
+    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/bin/${MESA3D_FILENAME}
+            DESTINATION lib)
 
     # Qt libraries required by OpenCOR
     # Note: unlike for Windows and macOS, we don't have a macro for deploying
