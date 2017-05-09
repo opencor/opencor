@@ -88,7 +88,7 @@ ELSE()
     # Ignore some warnings
 
     IF(WIN32)
-        SET(ZLIB_C_FLAGS "${CMAKE_C_FLAGS} /wd4267")
+        SET(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} /wd4267")
     ENDIF()
 
     # Build zlib as an external project
@@ -107,7 +107,7 @@ ELSE()
         PATCH_COMMAND
             ${CMAKE_COMMAND} -E remove <SOURCE_DIR>/zconf.h
         CMAKE_CACHE_ARGS
-            -DCMAKE_C_FLAGS:STRING=${ZLIB_C_FLAGS}
+            -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
         CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
