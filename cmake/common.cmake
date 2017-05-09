@@ -1452,7 +1452,7 @@ IF(EXISTS ${COMPRESSED_FILENAME})
 
     STRING(REPLACE \"\;\" \"\\n                \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
 
-    MESSAGE(\"To retrieve the '${PACKAGE_NAME}' package, please call:
+    MESSAGE(\"To retrieve the '${PACKAGE_NAME}' package, use:
 RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} \\$\\{${UPPER_PACKAGE_NAME}_VERSION\\}
     \\$\\{RELATIVE_PROJECT_SOURCE_DIR\\} \$\{SHA1_VALUE\}
     SHA1_FILES \\$\\{SHA1_FILES\\}
