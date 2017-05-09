@@ -1,4 +1,26 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 7, "month": 5, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> now provide a mechanism to package and download pre-built libraries (see issue <a href=\"https://github.com/opencor/opencor/issues/1106\">#1106</a>). Can now download an official version of OpenCOR from either the OpenCOR website or GitHub (see issue <a href=\"https://github.com/opencor/opencor/issues/1154\">#1154</a>). Changed our license to GPL v3.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1301\">#1301</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 28, "month": 4, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
