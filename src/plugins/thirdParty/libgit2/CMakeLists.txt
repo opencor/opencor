@@ -88,6 +88,14 @@ ELSE()
         SET(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-format")
     ENDIF()
 
+    # Some specific separate_arguments
+
+    IF(WIN32)
+        SET(STATIC_CRT_ARG "-DSTATIC_CRT=OFF")
+    ELSE()
+        SET(STATIC_CRT_ARG)
+    ENDIF()
+
     # Build libgit2 as an external project
 
     SET(PACKAGE_BUILD libgit2Build)
@@ -108,7 +116,8 @@ ELSE()
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DCMAKE_MACOSX_RPATH=1
-            -DSTATIC_CRT=OFF
+            ${STATIC_CRT_ARG}
+            -DUSE_SSH=OFF
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${PACKAGE_IMPORT_LIBRARY}
     )
