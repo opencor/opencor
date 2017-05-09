@@ -103,7 +103,7 @@ ELSE()
         GIT_REPOSITORY
             https://github.com/opencor/libgit2.git
         GIT_TAG
-            v${PACKAGE_VERSION}
+            maint/v0.25
         CMAKE_CACHE_ARGS
             -DCMAKE_C_FLAGS:STRING=${LIBGIT2_C_FLAGS}
         CMAKE_ARGS
