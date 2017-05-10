@@ -176,7 +176,6 @@ ELSE()
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} PostConfigure
                                  COMMAND "ms/do_win64a"
-                                 COMMENT "Post configuration step for 64-bit Windows"
                                  WORKING_DIRECTORY ${PACKAGE_BUILD_DIR}
                                  DEPENDEES configure
                                  DEPENDERS build)
