@@ -55,14 +55,6 @@ MACRO(INITIALISE_PROJECT)
         MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
     ENDIF()
 
-    # Make sure that OpenSSL is available on Linux and macOS
-    # Note: it's currently needed for libgit2, but it might be needed for other
-    #       things too in the future, so make sure it's available...
-
-    IF(NOT WIN32)
-        FIND_PACKAGE(OpenSSL REQUIRED QUIET)
-    ENDIF()
-
     # Required Qt modules and packages
 
     IF(ENABLE_TESTS)
@@ -285,7 +277,7 @@ MACRO(INITIALISE_PROJECT)
 
     ADD_DEFINITIONS(-DQT_DEPRECATED_WARNINGS)
 
-    # Let OpenCOR know about the options with which it was built
+    # Let OpenCOR know about some of the options with which it was built
 
     IF(ENABLE_SAMPLE_PLUGINS)
         ADD_DEFINITIONS(-DENABLE_SAMPLE_PLUGINS)
@@ -293,38 +285,6 @@ MACRO(INITIALISE_PROJECT)
 
     IF(ENABLE_TEST_PLUGINS)
         ADD_DEFINITIONS(-DENABLE_TEST_PLUGINS)
-    ENDIF()
-
-    IF(ENABLE_TESTS)
-        ADD_DEFINITIONS(-DENABLE_TESTS)
-    ENDIF()
-
-    IF(USE_PREBUILT_LIBGIT2_PLUGIN)
-        ADD_DEFINITIONS(-DUSE_PREBUILT_LIBGIT2_PLUGIN)
-    ENDIF()
-
-    IF(USE_PREBUILT_LIBXDIFF_PLUGIN)
-        ADD_DEFINITIONS(-DUSE_PREBUILT_LIBXDIFF_PLUGIN)
-    ENDIF()
-
-    IF(USE_PREBUILT_LLVM_PLUGIN)
-        ADD_DEFINITIONS(-DUSE_PREBUILT_LLVM_PLUGIN)
-    ENDIF()
-
-    IF(USE_PREBUILT_QSCINTILLA_PLUGIN)
-        ADD_DEFINITIONS(-DUSE_PREBUILT_QSCINTILLA_PLUGIN)
-    ENDIF()
-
-    IF(USE_PREBUILT_QWT_PLUGIN)
-        ADD_DEFINITIONS(-DUSE_PREBUILT_QWT_PLUGIN)
-    ENDIF()
-
-    IF(USE_PREBUILT_SUNDIALS_PLUGIN)
-        ADD_DEFINITIONS(-DUSE_PREBUILT_SUNDIALS_PLUGIN)
-    ENDIF()
-
-    IF(USE_PREBUILT_ZLIB_PLUGIN)
-        ADD_DEFINITIONS(-DUSE_PREBUILT_ZLIB_PLUGIN)
     ENDIF()
 
     # On macOS, make sure that we support 10.8 and later, unless a specific
@@ -1233,35 +1193,6 @@ MACRO(MACOS_CLEAN_UP_FILE PROJECT_TARGET DIRNAME FILENAME)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND install_name_tool -id @rpath/${FILENAME} ${FULL_FILENAME})
     ENDIF()
-
-    # Make sure that the file refers to our embedded copy of OpenSSL
-    # Note: we try two different paths for a given OpenSSL library since the
-    #       former path will be used by libssl.1.0.0.dylib while the latter path
-    #       will be used by our plugins...
-
-    FOREACH(OPENSSL_LIBRARY ${OPENSSL_LIBRARIES})
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY ${OPENSSL_LIBRARY} REALPATH)
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_DIRNAME ${OPENSSL_LIBRARY} DIRECTORY)
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_FILENAME ${REAL_OPENSSL_LIBRARY} NAME)
-
-        IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            EXECUTE_PROCESS(COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY}
-                                                              @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                              ${FULL_FILENAME})
-            EXECUTE_PROCESS(COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY_DIRNAME}/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                              @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                              ${FULL_FILENAME})
-        ELSE()
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY}
-                                                                 @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                                 ${FULL_FILENAME})
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY_DIRNAME}/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                                 @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                                 ${FULL_FILENAME})
-        ENDIF()
-    ENDFOREACH()
 ENDMACRO()
 
 #===============================================================================
@@ -1385,10 +1316,6 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
 
     SET(REAL_DIRNAME "${PROJECT_SOURCE_DIR}/${DIRNAME}")
 
-    # The package name in uppercase
-
-    STRING(TOUPPER ${PACKAGE_NAME} UPPER_PACKAGE_NAME)
-
     # Remove any historical package archive
 
     SET(COMPRESSED_FILENAME ${PROJECT_BUILD_DIR}/${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
@@ -1453,7 +1380,7 @@ IF(EXISTS ${COMPRESSED_FILENAME})
     STRING(REPLACE \"\;\" \"\\n                \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
 
     MESSAGE(\"To retrieve the '${PACKAGE_NAME}' package, please call:
-RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} \\$\\{${UPPER_PACKAGE_NAME}_VERSION\\}
+RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} \\$\\{PACKAGE_VERSION\\}
     \\$\\{RELATIVE_PROJECT_SOURCE_DIR\\} \$\{SHA1_VALUE\}
     SHA1_FILES \\$\\{SHA1_FILES\\}
     SHA1_VALUES \$\{SHA1_VALUES\}
@@ -1578,10 +1505,11 @@ MACRO(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
 
         MESSAGE("Retrieving the '${PACKAGE_NAME}' package...")
 
+        STRING(TOLOWER ${PACKAGE_NAME} LOWER_PACKAGE_NAME)
         SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
         SET(FULL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
 
-        FILE(DOWNLOAD "https://github.com/opencor/${PACKAGE_NAME}/releases/download/v${PACKAGE_VERSION}/${COMPRESSED_FILENAME}" ${FULL_COMPRESSED_FILENAME}
+        FILE(DOWNLOAD "https://github.com/opencor/${LOWER_PACKAGE_NAME}/releases/download/v${PACKAGE_VERSION}/${COMPRESSED_FILENAME}" ${FULL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
 
         # Uncompress the compressed version of the package, should we have

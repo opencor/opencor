@@ -18,10 +18,11 @@ OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plu
 OPTION(USE_PREBUILT_LIBXDIFF_PLUGIN "Use the pre-built version of the LibXDiff plugin" ON)
 OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
 OPTION(USE_PREBUILT_OAUTH_PLUGIN "Use the pre-built version of the OAuth plugin" ON)
+OPTION(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
 OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
-OPTION(USE_PREBUILT_ZLIB_PLUGIN "Use the pre-built version of the zlib plugin" ON)
+OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
 
 # Initialise the project
 
@@ -337,6 +338,7 @@ SET(PLUGINS
     thirdParty/LibXDiff
     thirdParty/LLVM
     thirdParty/OAuth
+    thirdParty/OpenSSL
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
@@ -469,9 +471,9 @@ FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
 ENDFOREACH()
 
 # Build the CLI version of OpenCOR (Windows specific)
-# Note: when it comes WINDOWS_CLI_PROJECT_NAME, we used to have it set to
-#       ${CMAKE_PROJECT_NAME}.com, but Ninja used to find a duplicate rule (from
-#       a copy command), so we use '_' instead of '.'...
+# Note: when it comes to WINDOWS_CLI_PROJECT_NAME, we used to have it set to
+#       ${CMAKE_PROJECT_NAME}.com, but Ninja found a duplicate rule (from a copy
+#       command), so now we use '_' instead of '.'...
 
 IF(WIN32)
     QT5_WRAP_CPP(WINDOWS_CLI_SOURCES_MOC ${WINDOWS_CLI_HEADERS_MOC})
@@ -536,16 +538,6 @@ IF(APPLE)
     # Clean up the OpenCOR executable
 
     MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
-
-    # Deploy the OpenSSL libraries
-
-    FOREACH(OPENSSL_LIBRARY ${OPENSSL_LIBRARIES})
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY ${OPENSSL_LIBRARY} REALPATH)
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_DIRNAME ${REAL_OPENSSL_LIBRARY} DIRECTORY)
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_FILENAME ${REAL_OPENSSL_LIBRARY} NAME)
-
-        MACOS_DEPLOY_LIBRARY(${REAL_OPENSSL_LIBRARY_DIRNAME} ${REAL_OPENSSL_LIBRARY_FILENAME})
-    ENDFOREACH()
 
     # Deploy our Qt libraries
     # Note: the Qt Brew formula that we use on Travis CI misses QtDBus, which
@@ -640,14 +632,6 @@ ELSE()
             ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-time-l1-1-0.dll
             ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-utility-l1-1-0.dll
             ${WINDOWS_KIT_DIRNAME}/ucrtbase.dll
-        )
-
-        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll d34a0ba0dd7b3b1f900a7e02772e197e974b4a73)
-        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll 2ee9966a0fc163da58408d91be36b84fa287c10b)
-
-        LIST(APPEND ADDITIONAL_FILES
-            ${CMAKE_SOURCE_DIR}/distrib/bin/libeay32.dll
-            ${CMAKE_SOURCE_DIR}/distrib/bin/ssleay32.dll
         )
 
         FOREACH(ADDITIONAL_FILE ${ADDITIONAL_FILES})
@@ -851,9 +835,9 @@ ELSE()
             DESTINATION lib
             RENAME libstdc++.so.6)
 
-    # Libraries needed on Fedora, but not on Ubuntu
+    # Library needed on Fedora, but not on Ubuntu
 
-    FOREACH(LIBRARY bz2.so.1.0 crypto.so.1.0.0 ssl.so.1.0.0)
+    FOREACH(LIBRARY bz2.so.1.0)
         SET(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
 
         GET_FILENAME_COMPONENT(REAL_FULL_LIBRARY /lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
