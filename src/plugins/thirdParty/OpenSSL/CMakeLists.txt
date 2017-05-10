@@ -189,17 +189,19 @@ ELSE()
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
     ELSEIF(APPLE)
+        # Make our libraries writable
+        # Note: this is because the build process creates write-protected
+        #       libraries...
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} FixupLibrary
+                                 COMMAND chmod 755 ${CRYPTO_SHARED_LIBRARY}
+                                 COMMAND chmod 755 ${SSL_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
+                                 DEPENDEES install)
+
         IF(APPLE)
-            # Make our libraries writable (so we can then set the RPATH
-            # information)
-
-            ExternalProject_Add_Step(${PACKAGE_BUILD} FixupLibrary
-                                     COMMAND chmod 755 ${CRYPTO_SHARED_LIBRARY}
-                                     COMMAND chmod 755 ${SSL_SHARED_LIBRARY}
-                                     WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
-                                     DEPENDEES install)
-
-            # Set the RPATH information to enable linking independent of library location
+            # Set the RPATH information to enable linking independent of library
+            # location
 
             ExternalProject_Add_Step(${PACKAGE_BUILD} SetRPath
                                      COMMAND install_name_tool -id @rpath/${CRYPTO_SHARED_LIBRARY} ${CRYPTO_SHARED_LIBRARY}
