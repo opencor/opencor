@@ -1,18 +1,19 @@
 /*******************************************************************************
 
-Copyright The University of Auckland
+Copyright (C) The University of Auckland
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+OpenCOR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+OpenCOR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 *******************************************************************************/
 
@@ -185,20 +186,13 @@ bool CompilerEngine::compileCode(const QString &pCode)
     driver.setCheckInputsExist(false);
 
     // Get a compilation object to which we pass some arguments
-    // Note: on Windows, we have both a pre-built release and a pre-built debug
-    //       version of LLVM, so we make sure that we use the right flags for
-    //       the right version, not least because with LLVM 3.9.x, to use an
-    //       optimisation flag with a pre-built debug version of LLVM results in
-    //       some of the Compiler and CellMLSupport tests to fail...
 
     llvm::StringRef dummyFileName("dummyFile.c");
     llvm::SmallVector<const char *, 16> compilationArguments;
 
     compilationArguments.push_back("clang");
     compilationArguments.push_back("-fsyntax-only");
-#if    defined(QT_DEBUG) \
-    && (   (defined(USE_PREBUILT_LLVM_PLUGIN) && defined(Q_OS_WIN)) \
-        || !defined(USE_PREBUILT_LLVM_PLUGIN))
+#ifdef QT_DEBUG
     compilationArguments.push_back("-g");
     compilationArguments.push_back("-O0");
 #else

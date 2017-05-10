@@ -18,19 +18,19 @@ OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plu
 OPTION(USE_PREBUILT_LIBXDIFF_PLUGIN "Use the pre-built version of the LibXDiff plugin" ON)
 OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
 OPTION(USE_PREBUILT_OAUTH_PLUGIN "Use the pre-built version of the OAuth plugin" ON)
-OPTION(USE_PREBUILT_OPENSSL_PLUGIN "Use the pre-built version of the OpenSSL plugin" ON)
+OPTION(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
 OPTION(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of Python" ON)
 OPTION(USE_PREBUILT_PYTHONQT_PACKAGE "Use the pre-built version of Python Qt" ON)
 OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
-OPTION(USE_PREBUILT_ZLIB_PLUGIN "Use the pre-built version of the zlib plugin" ON)
+OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
 
 # Initialise the project
 
 INITIALISE_PROJECT()
 
-# Keep track of our source and build directories
+# Keep track of our source and build directories (needed to run our tests)
 
 SET(SOURCE_DIRECTORY_FILENAME ${PROJECT_BUILD_DIR}/sourcedirectory.txt)
 SET(BUILD_DIRECTORY_FILENAME ${PROJECT_BUILD_DIR}/builddirectory.txt)
@@ -496,15 +496,15 @@ IF(NOT WIN32 AND NOT APPLE)
 ENDIF()
 
 # Build the CLI version of OpenCOR (Windows specific)
+# Note: when it comes to WINDOWS_CLI_PROJECT_NAME, we used to have it set to
+#       ${CMAKE_PROJECT_NAME}.com, but Ninja found a duplicate rule (from a copy
+#       command), so now we use '_' instead of '.'...
 
 IF(WIN32)
     QT5_WRAP_CPP(WINDOWS_CLI_SOURCES_MOC ${WINDOWS_CLI_HEADERS_MOC})
     QT5_ADD_RESOURCES(WINDOWS_CLI_SOURCES_RCS ${WINDOWS_CLI_RESOURCES})
 
-    # Ninja finds a duplicate rule (from copy command) if target name
-    # is `OpenCOR.com`
-
-    SET(WINDOWS_CLI_PROJECT_NAME ${CMAKE_PROJECT_NAME}_COM)
+    SET(WINDOWS_CLI_PROJECT_NAME ${CMAKE_PROJECT_NAME}_com)
 
     ADD_EXECUTABLE(${WINDOWS_CLI_PROJECT_NAME}
         ${WINDOWS_CLI_SOURCES}
@@ -600,10 +600,15 @@ ELSE()
 
         SET(WINDOWS_CLI_COPY ${WINDOWS_CLI_PROJECT_NAME}_COPY)
         ADD_CUSTOM_TARGET(${WINDOWS_CLI_COPY} ALL)
+
+        ADD_CUSTOM_TARGET(${WINDOWS_CLI_COPY} ALL)
+
         COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_COPY} ${PROJECT_BUILD_DIR} .
                                ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${CMAKE_PROJECT_NAME}.com)
         COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_COPY} ${PROJECT_BUILD_DIR} bin
                                ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${CMAKE_PROJECT_NAME}.com)
+        ADD_DEPENDENCIES(${WINDOWS_CLI_COPY} ${WINDOWS_CLI_PROJECT_NAME})
+
         ADD_DEPENDENCIES(${WINDOWS_CLI_COPY} ${WINDOWS_CLI_PROJECT_NAME})
 
         # Additional files required by OpenCOR
@@ -656,14 +661,6 @@ ELSE()
             ${WINDOWS_KIT_DIRNAME}/ucrtbase.dll
         )
 
-        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll d34a0ba0dd7b3b1f900a7e02772e197e974b4a73)
-        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll 2ee9966a0fc163da58408d91be36b84fa287c10b)
-
-        LIST(APPEND ADDITIONAL_FILES
-            ${CMAKE_SOURCE_DIR}/distrib/bin/libeay32.dll
-            ${CMAKE_SOURCE_DIR}/distrib/bin/ssleay32.dll
-        )
-
         FOREACH(ADDITIONAL_FILE ${ADDITIONAL_FILES})
             GET_FILENAME_COMPONENT(DIRNAME ${ADDITIONAL_FILE} DIRECTORY)
             GET_FILENAME_COMPONENT(FILENAME ${ADDITIONAL_FILE} NAME)
@@ -681,6 +678,16 @@ ELSE()
 
         COPY_FILE_TO_BUILD_DIR(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA3D_FILENAME} ${DEST_MESA3D_FILENAME})
         COPY_FILE_TO_BUILD_DIR(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA3D_FILENAME} ${DEST_MESA3D_FILENAME})
+    ELSE()
+        # Add our copy of the MESA 3D library so that we can run OpenCOR on
+        # machines that don't have 'proper' OpenGL support (e.g. on a Linux
+        # virtual machine in VirtualBox)
+
+        SET(MESA3D_FILENAME libGL.so.1)
+
+        RETRIEVE_BINARY_FILE(distrib/linux ${MESA3D_FILENAME} 0b2eb56efe43507026af87f036f96ec4e5b2c707)
+
+        COPY_FILE_TO_BUILD_DIR(DIRECT ${CMAKE_SOURCE_DIR}/distrib/bin lib ${MESA3D_FILENAME})
     ENDIF()
 ENDIF()
 
@@ -730,7 +737,7 @@ IF(WIN32)
     INSTALL(FILES ${PROJECT_BUILD_DIR}/bin/${CMAKE_PROJECT_NAME}.com
             DESTINATION bin)
 
-    # Additional files required by OpenCOR (incl. the MESA 3D Library)
+    # Additional files required by OpenCOR (incl. the Mesa 3D Library)
 
     INSTALL(FILES ${ADDITIONAL_FILES}
             DESTINATION bin)
@@ -855,9 +862,9 @@ ELSE()
             DESTINATION lib
             RENAME libstdc++.so.6)
 
-    # Libraries needed on Fedora, but not on Ubuntu
+    # Library needed on Fedora, but not on Ubuntu
 
-    FOREACH(LIBRARY bz2.so.1.0 crypto.so.1.0.0 ssl.so.1.0.0)
+    FOREACH(LIBRARY bz2.so.1.0)
         SET(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
 
         GET_FILENAME_COMPONENT(REAL_FULL_LIBRARY /lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
@@ -866,6 +873,11 @@ ELSE()
                 DESTINATION lib
                 RENAME ${FULL_LIBRARY})
     ENDFOREACH()
+
+    # Mesa 3D graphics library
+
+    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/bin/${MESA3D_FILENAME}
+            DESTINATION lib)
 
     # Qt libraries required by OpenCOR
     # Note: unlike for Windows and macOS, we don't have a macro for deploying

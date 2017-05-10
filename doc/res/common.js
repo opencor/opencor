@@ -87,141 +87,125 @@ function showContentsSubMenu(subMenuButton, showSubMenu) {
 function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     // Header
 
-    document.write("<div class=\"header\">");
-    document.write("    "+pageName);
-    document.write("</div>");
-    document.write("");
+    document.write("<div class=\"header\">\n");
+    document.write("    "+pageName+"\n");
+    document.write("</div>\n");
+    document.write("\n");
 
     // CSS styling for our contents menu
 
-    document.write("<style>");
-    document.write("    ul.contentsMenu {");
-    document.write("        z-index: 999;");
-    document.write("        -khtml-user-select: none;");
-    document.write("        -moz-user-select: none;");
-    document.write("        -ms-user-select: none;");
-    document.write("        -webkit-touch-callout: none;");
-    document.write("        -webkit-user-select: none;");
-    document.write("        user-select: none;");
-    document.write("        margin: 0px;");
-    document.write("        position: fixed;");
-    document.write("        top: 3px;");
-    document.write("        right: 3px;");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li,");
-    document.write("    ul.contentsMenu > li > ul > li {");
-    document.write("        list-style: none;");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul {");
-    document.write("        visibility: hidden;");
-    document.write("        margin: 0px;");
-    document.write("        padding: 0px;");
-    document.write("        position: fixed;");
-    document.write("        top: 29px;");
-    document.write("        right: 0px;");
-    document.write("        background: rgb(249, 249, 249);");
-    document.write("        border: 2px solid rgb("+r+", "+g+", "+b+");");
-    document.write("        border-top-style: none;");
-    document.write("        border-radius: 0px 0px 5px 5px;");
-    document.write("        box-shadow: 0px 5px 5px -5px rgb(103, 103, 103);");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul > li {");
-    document.write("        cursor: default;");
-    document.write("        margin: 1px;");
-    document.write("        font-size: 9pt;");
-    document.write("        font-weight: normal;");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem {");
-    document.write("        color: rgb("+r+", "+g+", "+b+");");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover {");
-    document.write("        background: rgba("+r+", "+g+", "+b+", 0.79);");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover,");
-    document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover div > a {");
-    document.write("        color: rgb(255, 255, 255);");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem.clickableMenuItem:hover {");
-    document.write("        background: rgb(249, 249, 249);");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem.clickableMenuItem > div:hover {");
-    document.write("        background: rgba("+r+", "+g+", "+b+", 0.79);");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem.clickableMenuItem > div:hover,");
-    document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem.selectedMenuItem > div a {");
-    document.write("        border-radius: 0px 0px 3px 3px;");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.menuItemLabel {");
-    document.write("        display: table-cell;");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.menuItemTable {");
-    document.write("        display: table;");
-    document.write("        width: 100%;");
-    document.write("        height: 16px;");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.menuItemTableRow {");
-    document.write("        display: table-row;");
-    document.write("        vertical-align: middle;");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.nonClickableMenuItem > div a {");
-    document.write("        cursor: default;");
-    document.write("        background: rgb(249, 249, 249);");
-    document.write("        color: rgb(0, 0, 0);");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div a {");
-    document.write("        cursor: default;");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div a,");
-    document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div.subMenuButton {");
-    document.write("        background: rgba("+r+", "+g+", "+b+", 0.13);");
-    document.write("        color: rgb("+r+", "+g+", "+b+");");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.subMenuButton {");
-    document.write("        cursor: pointer;");
-    document.write("        display: table-cell;");
-    document.write("        width: 1px;");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu li ul li a {");
-    document.write("        display: block;");
-    document.write("        padding: 1px;");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu li ul li a:hover {");
-    document.write("        margin: 0px;");
-    document.write("        border: 0px;");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu li ul li.separator {");
-    document.write("        margin: 0px;");
-    document.write("        padding: 0px;");
-    document.write("        border-top: 1px solid rgb("+r+", "+g+", "+b+");");
-    document.write("    }");
-    document.write("</style>");
-    document.write("");
+    document.write("<style>\n");
+    document.write("    ul.contentsMenu {\n");
+    document.write("        z-index: 999;\n");
+    document.write("        -khtml-user-select: none;\n");
+    document.write("        -moz-user-select: none;\n");
+    document.write("        -ms-user-select: none;\n");
+    document.write("        -webkit-touch-callout: none;\n");
+    document.write("        -webkit-user-select: none;\n");
+    document.write("        user-select: none;\n");
+    document.write("        margin: 0px;\n");
+    document.write("        position: fixed;\n");
+    document.write("        top: 3px;\n");
+    document.write("        right: 3px;\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu > li,\n");
+    document.write("    ul.contentsMenu > li > ul > li {\n");
+    document.write("        list-style: none;\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu > li > ul {\n");
+    document.write("        visibility: hidden;\n");
+    document.write("        padding: 0px;\n");
+    document.write("        position: fixed;\n");
+    document.write("        top: 29px;\n");
+    document.write("        right: 0px;\n");
+    document.write("        background: rgb(249, 249, 249);\n");
+    document.write("        border: 2px solid rgb("+r+", "+g+", "+b+");\n");
+    document.write("        border-top-style: none;\n");
+    document.write("        border-radius: 0px 0px 5px 5px;\n");
+    document.write("        box-shadow: 0px 5px 5px -5px rgb(103, 103, 103);\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu > li > ul > li {\n");
+    document.write("        cursor: default;\n");
+    document.write("        margin: 1px;\n");
+    document.write("        font-size: 9pt;\n");
+    document.write("        font-weight: normal;\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover {\n");
+    document.write("        background: rgba("+r+", "+g+", "+b+", 0.79);\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover div > a {\n");
+    document.write("        color: rgb(255, 255, 255);\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem.clickableMenuItem > div:hover,\n");
+    document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem.selectedMenuItem > div a {\n");
+    document.write("        border-radius: 0px 0px 3px 3px;\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu > li > ul > li div.menuItemLabel {\n");
+    document.write("        display: table-cell;\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu > li > ul > li div.menuItemTable {\n");
+    document.write("        display: table;\n");
+    document.write("        width: 100%;\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu > li > ul > li div.menuItemTableRow {\n");
+    document.write("        display: table-row;\n");
+    document.write("        vertical-align: middle;\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu > li > ul > li div.nonClickableMenuItem > div a {\n");
+    document.write("        cursor: default;\n");
+    document.write("        background: rgb(249, 249, 249);\n");
+    document.write("        color: rgb(0, 0, 0);\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div a {\n");
+    document.write("        cursor: default;\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div a,\n");
+    document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div.subMenuButton {\n");
+    document.write("        background: rgba("+r+", "+g+", "+b+", 0.13);\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu > li > ul > li div.subMenuButton {\n");
+    document.write("        cursor: pointer;\n");
+    document.write("        display: table-cell;\n");
+    document.write("        width: 1px;\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu li ul li a {\n");
+    document.write("        display: block;\n");
+    document.write("        padding: 1px;\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu li ul li a:hover {\n");
+    document.write("        margin: 0px;\n");
+    document.write("        border: 0px;\n");
+    document.write("    }\n");
+    document.write("\n");
+    document.write("    ul.contentsMenu li ul li.separator {\n");
+    document.write("        margin: 0px;\n");
+    document.write("        padding: 0px;\n");
+    document.write("        border-top: 1px solid rgb("+r+", "+g+", "+b+");\n");
+    document.write("    }\n");
+    document.write("</style>\n");
+    document.write("\n");
 
     // Contents menu
 
-    document.write("<ul class=\"contentsMenu\">");
-    document.write("    <li>");
-    document.write("        <img src=\""+relativePath+"/res/pics/oxygen/actions/help-about.png\" width=24 height=24>");
-    document.write("        <ul>");
+    document.write("<ul class=\"contentsMenu\">\n");
+    document.write("    <li>\n");
+    document.write("        <img src=\""+relativePath+"/res/pics/oxygen/actions/help-about.png\" width=24 height=24>\n");
+    document.write("        <ul>\n");
 
     var menuItems = data.menuItems;
     var subMenuCounter = 0;
@@ -233,7 +217,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
         if (menuItem.separator) {
             // We are dealing with a menu separator
 
-            document.write("            <li class=\"separator\"></li>");
+            document.write("            <li class=\"separator\"></li>\n");
         } else {
             // We are dealing with a menu item
 
@@ -292,25 +276,25 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
                 subMenuButton = "<div id=\"subMenu"+(++subMenuCounter)+"\" class=\"subMenuButton subMenuClosed\">...</div>";
             }
 
-            document.write("            <li"+(liId.length?" id=\""+liId+"\"":"")+liClass+">");
-            document.write("                <div class=\"menuItemTable\">");
-            document.write("                    <div class=\""+tableRowClasses+"\">");
-            document.write("                        <div class=\"menuItemLabel\">");
-            document.write("                            <a href=\""+menuItemLink+"\">"+menuItemIndent+menuItem.label+"</a>");
-            document.write("                        </div>");
+            document.write("            <li"+(liId.length?" id=\""+liId+"\"":"")+liClass+">\n");
+            document.write("                <div class=\"menuItemTable\">\n");
+            document.write("                    <div class=\""+tableRowClasses+"\">\n");
+            document.write("                        <div class=\"menuItemLabel\">\n");
+            document.write("                            <a href=\""+menuItemLink+"\">"+menuItemIndent+menuItem.label+"</a>\n");
+            document.write("                        </div>\n");
 
             if (subMenuButton.length)
-                document.write("                        "+subMenuButton);
+                document.write("                        "+subMenuButton+"\n");
 
-            document.write("                    </div>");
-            document.write("                </div>");
-            document.write("            </li>");
+            document.write("                    </div>\n");
+            document.write("                </div>\n");
+            document.write("            </li>\n");
         }
     }
 
-    document.write("        </ul>");
-    document.write("    </li>");
-    document.write("</ul>");
+    document.write("        </ul>\n");
+    document.write("    </li>\n");
+    document.write("</ul>\n");
 
     // Keep track of our number of sub-menus
 
@@ -331,8 +315,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     // Show/hide our contents menu
 
     $(document).click(function() {
-        if ($("ul.contentsMenu > li > ul").css("visibility") === "visible")
-            $("ul.contentsMenu > li > ul").css("visibility", "hidden");
+        $("ul.contentsMenu > li > ul").css("visibility", "hidden");
     });
 
     $("ul.contentsMenu > li > img").click(function(event) {
@@ -363,12 +346,10 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
         return false;
     });
 
-    // Hide our contents menu if the ESC key is pressed when our contents menu
-    // is visible
+    // Hide our contents menu if the ESC key is pressed 
 
     $(document).keyup(function(event) {
-        if (   ($("ul.contentsMenu > li > ul").css("visibility") === "visible")
-            && (event.keyCode === 27)) {
+        if (event.keyCode === 27) {
             $("ul.contentsMenu > li > ul").css("visibility", "hidden");
         }
     });
@@ -450,15 +431,15 @@ function katexRendering() {
 function copyright(relativePath) {
     var date = new Date();
 
-    document.write("<div class=\"copyright\">");
-    document.write("    <div class=\"left\">");
-    document.write("        Copyright 2011-"+date.getFullYear());
-    document.write("    </div>");
-    document.write("    <div class=\"center\">");
-    document.write("        <a class=\"copyright\" href=\"https://twitter.com/TeamOpenCOR/\"><img class=\"twitter\" src=\""+relativePath+"/res/pics/twitter.png\" width=30 height=30></a>");
-    document.write("    </div>");
-    document.write("    <div class=\"right\">");
-    document.write("        <a class=\"copyright\" href=\"http://www.virtualrat.org/\"><img class=\"vpr\" src=\""+relativePath+"/res/pics/vpr.png\" width=60 height=18></a>");
-    document.write("    </div>");
-    document.write("</div>");
+    document.write("<div class=\"copyright\">\n");
+    document.write("    <div class=\"left\">\n");
+    document.write("        Copyright 2011-"+date.getFullYear()+"\n");
+    document.write("    </div>\n");
+    document.write("    <div class=\"center\">\n");
+    document.write("        <a class=\"copyright\" href=\"https://twitter.com/TeamOpenCOR/\"><img class=\"twitter\" src=\""+relativePath+"/res/pics/twitter.png\" width=30 height=30></a>\n");
+    document.write("    </div>\n");
+    document.write("    <div class=\"right\">\n");
+    document.write("        <a class=\"copyright\" href=\"http://www.virtualrat.org/\"><img class=\"vpr\" src=\""+relativePath+"/res/pics/vpr.png\" width=60 height=18></a>\n");
+    document.write("    </div>\n");
+    document.write("</div>\n");
 }
