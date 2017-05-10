@@ -190,8 +190,7 @@ ELSE()
                                  DEPENDEES install)
     ELSEIF(APPLE)
         # Make our libraries writable
-        # Note: this is because the build process creates write-protected
-        #       libraries...
+        # Note: indeed, the build process creates write-protected libraries...
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} MakeWritable
                                  COMMAND chmod 755 ${CRYPTO_SHARED_LIBRARY}
