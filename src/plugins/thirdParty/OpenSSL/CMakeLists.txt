@@ -187,7 +187,7 @@ ELSE()
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${SSL_SHARED_LIBRARY} lib
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
-    ELSEIF(APPLE)
+    ELSE()
         # Make our libraries writable
         # Note: indeed, the build process creates write-protected libraries...
 
