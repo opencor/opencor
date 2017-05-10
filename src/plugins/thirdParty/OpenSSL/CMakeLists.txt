@@ -69,21 +69,21 @@ IF(USE_PREBUILT_OPENSSL_PLUGIN)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(OpenSSL ${OPENSSL_PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} 214d07f2b61c24018514213d4945883d0fbc32f9
+                ${RELATIVE_PROJECT_SOURCE_DIR} d19ce0fa534a50f0c3ca377e1adacb31106cad05
                 SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES 97ee464e4c5c8a73e1f4530f009bee9792ce5ce8
-                            eb96ee3dd2bf200cc8a322c29632ab91425b345e
-                            427d0649f695509638939f2a34f315ef8a470c2b
-                            6d304ee7cf50c8d3df2ce5bae44f68973757b0f5
+                SHA1_VALUES 79fb6b732873bb8b305564c58c7bb058c55d25a2
+                            cae8c550a333c9f9cd0852b1a46bf293a65a7b3b
+                            55fceaaf36d27d9fbbd7bfa2fa4bb2a7d1d6ea1f
+                            593c4f7ab3771229abb98a6847f3750e36e18e05
             )
         ELSE()
             RETRIEVE_PACKAGE_FILE(OpenSSL ${OPENSSL_PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} 214d07f2b61c24018514213d4945883d0fbc32f9
+                ${RELATIVE_PROJECT_SOURCE_DIR} bbd3f3b7ba9db734a2356db06a5d70151d707180
                 SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES 97ee464e4c5c8a73e1f4530f009bee9792ce5ce8
-                            eb96ee3dd2bf200cc8a322c29632ab91425b345e
-                            427d0649f695509638939f2a34f315ef8a470c2b
-                            6d304ee7cf50c8d3df2ce5bae44f68973757b0f5
+                SHA1_VALUES edd5cc505caf87cf218c463d3aa1a37b5b76550a
+                            186b94792db9b09872fd53b4b3d596967175e4c1
+                            8186d5f4db60680bc218e93e81d394273eca0bb6
+                            5ed10c376daf596a026d6c03d7fe962df8f95876
             )
         ENDIF()
     ELSEIF(APPLE)
