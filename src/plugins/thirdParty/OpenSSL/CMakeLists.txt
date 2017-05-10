@@ -183,7 +183,7 @@ ELSE()
 
         # We want both our shared and import libraries to be in the same place
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLLs
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${CRYPTO_SHARED_LIBRARY} lib
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${SSL_SHARED_LIBRARY} lib
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
@@ -193,7 +193,7 @@ ELSE()
         # Note: this is because the build process creates write-protected
         #       libraries...
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} FixupLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} MakeWritable
                                  COMMAND chmod 755 ${CRYPTO_SHARED_LIBRARY}
                                  COMMAND chmod 755 ${SSL_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
@@ -210,7 +210,7 @@ ELSE()
                                                                        @rpath/${CRYPTO_SHARED_LIBRARY}
                                                                        ${SSL_SHARED_LIBRARY}
                                      WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
-                                     DEPENDEES FixupLibrary)
+                                     DEPENDEES MakeWritable)
         ENDIF()
     ENDIF()
 
