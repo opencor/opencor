@@ -58,9 +58,9 @@ IF(WIN32)
     )
 ENDIF()
 
-# Use our pre-built version unless instructed otherwise
+# Use the pre-built version of our package unless instructed otherwise
 
-IF(USE_PREBUILT_OPENSSL_PLUGIN)
+IF(USE_PREBUILT_OPENSSL_PACKAGE)
     # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""

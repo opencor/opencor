@@ -51,9 +51,9 @@ IF(WIN32)
     LIST(APPEND SHA1_FILES lib/${ZLIB_IMPORT_LIBRARY})
 ENDIF()
 
-# Use our pre-built version unless instructed otherwise
+# Use the pre-built version of our package unless instructed otherwise
 
-IF(USE_PREBUILT_ZLIB_PLUGIN)
+IF(USE_PREBUILT_ZLIB_PACKAGE)
     # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
