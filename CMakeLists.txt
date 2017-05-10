@@ -470,7 +470,7 @@ ENDFOREACH()
 
 # Build the CLI version of OpenCOR (Windows specific)
 # Note: when it comes WINDOWS_CLI_PROJECT_NAME, we used to have it set to
-#       ${CMAKE_PROJECT_NAME}.com, but Ninja used to find a duplicate rule (from
+#       ${CMAKE_PROJECT_NAME}.com, but Ninja found a duplicate rule (from
 #       a copy command), so we use '_' instead of '.'...
 
 IF(WIN32)
