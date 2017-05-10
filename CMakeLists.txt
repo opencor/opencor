@@ -634,14 +634,6 @@ ELSE()
             ${WINDOWS_KIT_DIRNAME}/ucrtbase.dll
         )
 
-        RETRIEVE_BINARY_FILE(distrib/windows libeay32.dll d34a0ba0dd7b3b1f900a7e02772e197e974b4a73)
-        RETRIEVE_BINARY_FILE(distrib/windows ssleay32.dll 2ee9966a0fc163da58408d91be36b84fa287c10b)
-
-        LIST(APPEND ADDITIONAL_FILES
-            ${CMAKE_SOURCE_DIR}/distrib/bin/libeay32.dll
-            ${CMAKE_SOURCE_DIR}/distrib/bin/ssleay32.dll
-        )
-
         FOREACH(ADDITIONAL_FILE ${ADDITIONAL_FILES})
             GET_FILENAME_COMPONENT(DIRNAME ${ADDITIONAL_FILE} DIRECTORY)
             GET_FILENAME_COMPONENT(FILENAME ${ADDITIONAL_FILE} NAME)
@@ -843,9 +835,9 @@ ELSE()
             DESTINATION lib
             RENAME libstdc++.so.6)
 
-    # Libraries needed on Fedora, but not on Ubuntu
+    # Library needed on Fedora, but not on Ubuntu
 
-    FOREACH(LIBRARY bz2.so.1.0 crypto.so.1.0.0 ssl.so.1.0.0)
+    FOREACH(LIBRARY bz2.so.1.0)
         SET(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
 
         GET_FILENAME_COMPONENT(REAL_FULL_LIBRARY /lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
