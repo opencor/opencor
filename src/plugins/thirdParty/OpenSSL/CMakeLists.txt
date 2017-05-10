@@ -1,38 +1,41 @@
 PROJECT(OpenSSLPlugin)
 
-# Version that we want to use
-
-SET(GIT_TAG "OpenSSL_1_0_2k")
-
-# Version identifier for our created package
+# Version of our package
 
 SET(PACKAGE_VERSION "1.0.2k")
 
-# Library version numbers set by the build
+# Version of our library
 
 SET(LIBRARY_VERSION "1.0.0")
+
+# Git tag for our library
+
+SET(GIT_TAG "OpenSSL_1_0_2k")
 
 # Specify where our local package will be installed
 
 SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
 
-# Name of our package's shared library (and of its import library, if any)
+# Name of our package's shared libraries (and of their import libraries, if any)
 
 IF(WIN32)
     SET(CRYPTO_SHARED_LIBRARY libeay32${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(CRYPTO_IMPORT_LIBRARY libeay32${CMAKE_IMPORT_LIBRARY_SUFFIX})
-    SET(SSL_SHARED_LIBRARY    ssleay32${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(SSL_IMPORT_LIBRARY    ssleay32${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    SET(SSL_SHARED_LIBRARY ssleay32${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(SSL_IMPORT_LIBRARY ssleay32${CMAKE_IMPORT_LIBRARY_SUFFIX})
 ELSEIF(APPLE)
     SET(CRYPTO_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}crypto.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(CRYPTO_IMPORT_LIBRARY ${CRYPTO_SHARED_LIBRARY})
-    SET(SSL_SHARED_LIBRARY    ${CMAKE_SHARED_LIBRARY_PREFIX}ssl.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(SSL_IMPORT_LIBRARY    ${SSL_SHARED_LIBRARY})
+
+    SET(SSL_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}ssl.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(SSL_IMPORT_LIBRARY ${SSL_SHARED_LIBRARY})
 ELSE()
     SET(CRYPTO_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}crypto${CMAKE_SHARED_LIBRARY_SUFFIX}.${LIBRARY_VERSION})
     SET(CRYPTO_IMPORT_LIBRARY ${CRYPTO_SHARED_LIBRARY})
-    SET(SSL_SHARED_LIBRARY    ${CMAKE_SHARED_LIBRARY_PREFIX}ssl${CMAKE_SHARED_LIBRARY_SUFFIX}.${LIBRARY_VERSION})
-    SET(SSL_IMPORT_LIBRARY    ${SSL_SHARED_LIBRARY})
+
+    SET(SSL_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}ssl${CMAKE_SHARED_LIBRARY_SUFFIX}.${LIBRARY_VERSION})
+    SET(SSL_IMPORT_LIBRARY ${SSL_SHARED_LIBRARY})
 ENDIF()
 
 # Retrieve our package's binaries
@@ -53,8 +56,8 @@ SET(SHA1_FILES
 
 IF(WIN32)
     LIST(APPEND SHA1_FILES
-         lib/${CRYPTO_IMPORT_LIBRARY}
-         lib/${SSL_IMPORT_LIBRARY}
+        lib/${CRYPTO_IMPORT_LIBRARY}
+        lib/${SSL_IMPORT_LIBRARY}
     )
 ENDIF()
 
@@ -108,11 +111,7 @@ ELSE()
 
     # We require perl for OpenSSL's configuration tool
 
-    INCLUDE(FindPerl)
-
-    IF(NOT PERL_FOUND)
-        message(FATAL_ERROR "Perl is missing -- required to configure OpenSSL")
-    ENDIF()
+    FIND_PACKAGE(Perl REQUIRED QUIET)
 
     # Set platform specific configuration options and tool names
 
@@ -126,12 +125,15 @@ ELSE()
         SET(INSTALL_TARGET install)
     ELSE()
         LIST(APPEND CONFIG_OPTIONS "shared")
+
         IF(APPLE)
             SET(PLATFORM "darwin64-x86_64-cc")
         ELSE()
             SET(PLATFORM "linux-x86_64")
+
             LIST(APPEND CONFIG_OPTIONS "-Wa,--noexecstack")
         ENDIF()
+
         SET(MAKE_EXECUTABLE make)
         SET(MAKEFILE Makefile)
         SET(QUIET_MAKE --quiet)
@@ -172,59 +174,51 @@ ELSE()
     IF(WIN32)
         # Windows requires an additional configuration step
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD}
-            PostConfigure
-            COMMAND "ms/do_win64a"
-            COMMENT "Post configuration step for 64-bit Windows"
-            WORKING_DIRECTORY ${PACKAGE_BUILD_DIR}
-            DEPENDEES configure
-            DEPENDERS build
-        )
+        ExternalProject_Add_Step(${PACKAGE_BUILD} PostConfigure
+                                 COMMAND "ms/do_win64a"
+                                 COMMENT "Post configuration step for 64-bit Windows"
+                                 WORKING_DIRECTORY ${PACKAGE_BUILD_DIR}
+                                 DEPENDEES configure
+                                 DEPENDERS build)
 
         # We want both our shared and import libraries to be in the same place
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
-            COMMAND ${CMAKE_COMMAND} -E copy bin/${CRYPTO_SHARED_LIBRARY} lib
-            COMMAND ${CMAKE_COMMAND} -E copy bin/${SSL_SHARED_LIBRARY} lib
-            WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-            DEPENDEES install
-        )
-    ELSE()
-        # Fix up the newly created libraries
-
-        ExternalProject_Add_Step(${PACKAGE_BUILD} FixupLibrary
-            # The build process creates write-protected libraries
-            COMMAND chmod 755 ${CRYPTO_SHARED_LIBRARY}
-            COMMAND chmod 755 ${SSL_SHARED_LIBRARY}
-            WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
-            DEPENDEES install
-        )
-
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${CRYPTO_SHARED_LIBRARY} lib
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${SSL_SHARED_LIBRARY} lib
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+                                 DEPENDEES install)
+    ELSEIF(APPLE)
         IF(APPLE)
-            # Set RPATH to enable linking independent of library location
+            # Make our libraries writable (so we can then set the RPATH
+            # information)
+
+            ExternalProject_Add_Step(${PACKAGE_BUILD} FixupLibrary
+                                     COMMAND chmod 755 ${CRYPTO_SHARED_LIBRARY}
+                                     COMMAND chmod 755 ${SSL_SHARED_LIBRARY}
+                                     WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
+                                     DEPENDEES install)
+
+            # Set the RPATH information to enable linking independent of library location
 
             ExternalProject_Add_Step(${PACKAGE_BUILD} SetRPath
-                COMMAND install_name_tool -id @rpath/${CRYPTO_SHARED_LIBRARY}
-                                          ${CRYPTO_SHARED_LIBRARY}
-                COMMAND install_name_tool -id @rpath/${SSL_SHARED_LIBRARY}
-                                          ${SSL_SHARED_LIBRARY}
-                COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DIR}/${CRYPTO_SHARED_LIBRARY}
-                                                  @rpath/${CRYPTO_SHARED_LIBRARY}
-                                                  ${SSL_SHARED_LIBRARY}
-                WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
-                DEPENDEES FixupLibrary
-            )
+                                     COMMAND install_name_tool -id @rpath/${CRYPTO_SHARED_LIBRARY} ${CRYPTO_SHARED_LIBRARY}
+                                     COMMAND install_name_tool -id @rpath/${SSL_SHARED_LIBRARY} ${SSL_SHARED_LIBRARY}
+                                     COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DIR}/${CRYPTO_SHARED_LIBRARY}
+                                                                       @rpath/${CRYPTO_SHARED_LIBRARY}
+                                                                       ${SSL_SHARED_LIBRARY}
+                                     WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
+                                     DEPENDEES FixupLibrary)
         ENDIF()
     ENDIF()
 
     # Package our external project
 
     CREATE_PACKAGE_FILE(OpenSSL ${PACKAGE_VERSION}
-        ${LOCAL_EXTERNAL_PACKAGE_DIR}
-        PACKAGED_FILES include ${SHA1_FILES}
-        SHA1_FILES ${SHA1_FILES}
-        TARGET ${PACKAGE_BUILD}
-    )
+                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        PACKAGED_FILES include ${SHA1_FILES}
+                        SHA1_FILES ${SHA1_FILES}
+                        TARGET ${PACKAGE_BUILD})
 
     SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
@@ -237,7 +231,8 @@ SET(OPENSSL_CRYPTO_LIBRARY ${EXTERNAL_BINARIES_DIR}/${CRYPTO_IMPORT_LIBRARY} PAR
 SET(OPENSSL_SSL_LIBRARY ${EXTERNAL_BINARIES_DIR}/${SSL_IMPORT_LIBRARY} PARENT_SCOPE)
 SET(OPENSSL_LIBRARIES
     ${EXTERNAL_BINARIES_DIR}/${CRYPTO_IMPORT_LIBRARY}
-    ${EXTERNAL_BINARIES_DIR}/${SSL_IMPORT_LIBRARY} PARENT_SCOPE
+    ${EXTERNAL_BINARIES_DIR}/${SSL_IMPORT_LIBRARY}
+    PARENT_SCOPE
 )
 
 # Add the plugin
@@ -247,11 +242,13 @@ SET(OPENSSL_PLUGIN OpenSSL PARENT_SCOPE)
 ADD_PLUGIN(OpenSSL
     SOURCES
         ../../plugininfo.cpp
+
         src/opensslplugin.cpp
     HEADERS_MOC
         src/opensslplugin.h
     INCLUDE_DIRS
         ${LOCAL_EXTERNAL_PACKAGE_DIR}/include
+
         src
     QT_MODULES
         Core
