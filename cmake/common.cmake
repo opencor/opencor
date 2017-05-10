@@ -55,14 +55,6 @@ MACRO(INITIALISE_PROJECT)
         MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
     ENDIF()
 
-    # Make sure that OpenSSL is available on Linux and macOS
-    # Note: it's currently needed for libgit2, but it might be needed for other
-    #       things too in the future, so make sure it's available...
-
-    IF(NOT WIN32)
-        FIND_PACKAGE(OpenSSL REQUIRED QUIET)
-    ENDIF()
-
     # Required Qt modules and packages
 
     IF(ENABLE_TESTS)
@@ -1233,35 +1225,6 @@ MACRO(MACOS_CLEAN_UP_FILE PROJECT_TARGET DIRNAME FILENAME)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND install_name_tool -id @rpath/${FILENAME} ${FULL_FILENAME})
     ENDIF()
-
-    # Make sure that the file refers to our embedded copy of OpenSSL
-    # Note: we try two different paths for a given OpenSSL library since the
-    #       former path will be used by libssl.1.0.0.dylib while the latter path
-    #       will be used by our plugins...
-
-    FOREACH(OPENSSL_LIBRARY ${OPENSSL_LIBRARIES})
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY ${OPENSSL_LIBRARY} REALPATH)
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_DIRNAME ${OPENSSL_LIBRARY} DIRECTORY)
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_FILENAME ${REAL_OPENSSL_LIBRARY} NAME)
-
-        IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            EXECUTE_PROCESS(COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY}
-                                                              @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                              ${FULL_FILENAME})
-            EXECUTE_PROCESS(COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY_DIRNAME}/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                              @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                              ${FULL_FILENAME})
-        ELSE()
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY}
-                                                                 @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                                 ${FULL_FILENAME})
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${REAL_OPENSSL_LIBRARY_DIRNAME}/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                                 @rpath/${REAL_OPENSSL_LIBRARY_FILENAME}
-                                                                 ${FULL_FILENAME})
-        ENDIF()
-    ENDFOREACH()
 ENDMACRO()
 
 #===============================================================================

@@ -18,6 +18,7 @@ OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plu
 OPTION(USE_PREBUILT_LIBXDIFF_PLUGIN "Use the pre-built version of the LibXDiff plugin" ON)
 OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
 OPTION(USE_PREBUILT_OAUTH_PLUGIN "Use the pre-built version of the OAuth plugin" ON)
+OPTION(USE_PREBUILT_OPENSSL_PLUGIN "Use the pre-built version of the OpenSSL plugin" ON)
 OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
@@ -337,6 +338,7 @@ SET(PLUGINS
     thirdParty/LibXDiff
     thirdParty/LLVM
     thirdParty/OAuth
+    thirdParty/OpenSSL
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
@@ -536,16 +538,6 @@ IF(APPLE)
     # Clean up the OpenCOR executable
 
     MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
-
-    # Deploy the OpenSSL libraries
-
-    FOREACH(OPENSSL_LIBRARY ${OPENSSL_LIBRARIES})
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY ${OPENSSL_LIBRARY} REALPATH)
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_DIRNAME ${REAL_OPENSSL_LIBRARY} DIRECTORY)
-        GET_FILENAME_COMPONENT(REAL_OPENSSL_LIBRARY_FILENAME ${REAL_OPENSSL_LIBRARY} NAME)
-
-        MACOS_DEPLOY_LIBRARY(${REAL_OPENSSL_LIBRARY_DIRNAME} ${REAL_OPENSSL_LIBRARY_FILENAME})
-    ENDFOREACH()
 
     # Deploy our Qt libraries
     # Note: the Qt Brew formula that we use on Travis CI misses QtDBus, which
