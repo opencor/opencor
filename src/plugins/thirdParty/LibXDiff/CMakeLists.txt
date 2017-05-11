@@ -2,7 +2,7 @@ PROJECT(LibXDiffPlugin)
 
 # Use our pre-built version unless instructed otherwise
 
-IF(USE_PREBUILT_LIBXDIFF_PLUGIN)
+IF(USE_PREBUILT_LIBXDIFF_PACKAGE)
     # Retrieve the plugin's binary file(s)
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
