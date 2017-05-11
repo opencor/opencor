@@ -23,7 +23,6 @@ OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintil
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
-SET(USE_PREBUILT_LIBGIT2_PACKAGE OFF)
 
 # Initialise the project
 
@@ -418,9 +417,6 @@ SET(PLUGINS
 
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
-)
-SET(PLUGINS
-    thirdParty/libgit2
 )
 
 FOREACH(PLUGIN ${PLUGINS})
