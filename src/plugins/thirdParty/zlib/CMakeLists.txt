@@ -113,7 +113,7 @@ ELSE()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/zlib.git
+            https://github.com/opencor/zlib
         GIT_TAG
             ${GIT_TAG}
         PATCH_COMMAND
