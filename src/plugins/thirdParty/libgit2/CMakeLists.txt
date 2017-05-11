@@ -1,9 +1,17 @@
 PROJECT(libgit2Plugin)
 
-# Version that we want to use
+# Version of our package
 
-SET(PACKAGE_MAJOR_VERSION "0")
-SET(PACKAGE_VERSION "${PACKAGE_MAJOR_VERSION}.25.1")
+SET(PACKAGE_VERSION "0.25.1")
+
+# Version of our library
+
+SET(MAJOR_LIBRARY_VERSION "0")
+SET(LIBRARY_VERSION "${MAJOR_LIBRARY_VERSION}.25.1")
+
+# Git tag for our library
+
+SET(GIT_TAG "maint/v0.25")
 
 # Specify where our local package will be installed
 
@@ -12,14 +20,14 @@ SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 # Name of our package's shared library (and of its import library, if any)
 
 IF(WIN32)
-    SET(PACKAGE_SHARED_LIBRARY git2${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(PACKAGE_IMPORT_LIBRARY git2${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    SET(SHARED_LIBRARY git2${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(IMPORT_LIBRARY git2${CMAKE_IMPORT_LIBRARY_SUFFIX})
 ELSEIF(APPLE)
-    SET(PACKAGE_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}git2.${PACKAGE_MAJOR_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(PACKAGE_IMPORT_LIBRARY ${PACKAGE_SHARED_LIBRARY})
+    SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}git2.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(IMPORT_LIBRARY ${SHARED_LIBRARY})
 ELSE()
-    SET(PACKAGE_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}git2${CMAKE_SHARED_LIBRARY_SUFFIX}.${PACKAGE_MAJOR_VERSION})
-    SET(PACKAGE_IMPORT_LIBRARY ${PACKAGE_SHARED_LIBRARY})
+    SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}git2${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_LIBRARY_VERSION})
+    SET(IMPORT_LIBRARY ${SHARED_LIBRARY})
 ENDIF()
 
 # Retrieve our package's binaries
@@ -27,20 +35,24 @@ ENDIF()
 SET(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
 
 SET(EXTERNAL_BINARIES
-    ${PACKAGE_SHARED_LIBRARY}
+    ${SHARED_LIBRARY}
 )
 
 # Specify the files that need to have their SHA-1 value checked
 
-SET(SHA1_FILES lib/${PACKAGE_SHARED_LIBRARY})
+SET(SHA1_FILES
+    lib/${SHARED_LIBRARY}
+)
 
 IF(WIN32)
-    LIST(APPEND SHA1_FILES lib/${PACKAGE_IMPORT_LIBRARY})
+    LIST(APPEND SHA1_FILES
+        lib/${IMPORT_LIBRARY}
+    )
 ENDIF()
 
 # Use our pre-built version unless instructed otherwise
 
-IF(USE_PREBUILT_LIBGIT2_PLUGIN)
+IF(USE_PREBUILT_LIBGIT2_PACKAGE)
     # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
@@ -88,7 +100,7 @@ ELSE()
         SET(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-format")
     ENDIF()
 
-    # Some specific separate_arguments
+    # Some specific arguments
 
     IF(WIN32)
         SET(STATIC_CRT_ARG "-DSTATIC_CRT=OFF")
@@ -108,7 +120,7 @@ ELSE()
         GIT_REPOSITORY
             https://github.com/opencor/libgit2.git
         GIT_TAG
-            maint/v0.25
+            ${GIT_TAG}
         CMAKE_CACHE_ARGS
             -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
         CMAKE_ARGS
@@ -119,7 +131,7 @@ ELSE()
             ${STATIC_CRT_ARG}
             -DUSE_SSH=OFF
         BUILD_BYPRODUCTS
-            <INSTALL_DIR>/lib/${PACKAGE_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
 
     # Do some post-processing that is specific to each platform
@@ -128,36 +140,34 @@ ELSE()
         # We want both our shared and import libraries to be in the same place
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/${PACKAGE_SHARED_LIBRARY}
-                                                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} lib
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
     ELSE()
         # Dereference the symbolic link to the library since CMake's tar can't
         # do this
 
-        SET(FULL_PACKAGE_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${PACKAGE_SHARED_LIBRARY})
+        SET(FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY})
 
         IF(APPLE)
-            SET(REAL_FULL_PACKAGE_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}git2.${PACKAGE_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+            SET(REAL_FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}git2.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
         ELSE()
-            SET(REAL_FULL_PACKAGE_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}git2${CMAKE_SHARED_LIBRARY_SUFFIX}.${PACKAGE_VERSION})
+            SET(REAL_FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}git2${CMAKE_SHARED_LIBRARY_SUFFIX}.${LIBRARY_VERSION})
         ENDIF()
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
-                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_PACKAGE_SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_PACKAGE_SHARED_LIBRARY}
-                                                                  ${FULL_PACKAGE_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_SHARED_LIBRARY} ${FULL_SHARED_LIBRARY}
                                  DEPENDEES install)
     ENDIF()
 
     # Package our external project
 
     CREATE_PACKAGE_FILE(libgit2 ${PACKAGE_VERSION}
-        ${LOCAL_EXTERNAL_PACKAGE_DIR}
-        PACKAGED_FILES include ${SHA1_FILES}
-        SHA1_FILES ${SHA1_FILES}
-        TARGET ${PACKAGE_BUILD}
-    )
+                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        PACKAGED_FILES include ${SHA1_FILES}
+                        SHA1_FILES ${SHA1_FILES}
+                        TARGET ${PACKAGE_BUILD})
 
     SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
@@ -166,7 +176,7 @@ ENDIF()
 
 SET(LIBGIT2_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
 SET(LIBGIT2_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
-SET(LIBGIT2_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${PACKAGE_IMPORT_LIBRARY} PARENT_SCOPE)
+SET(LIBGIT2_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IMPORT_LIBRARY} PARENT_SCOPE)
 
 # Add the plugin
 
@@ -181,6 +191,7 @@ ADD_PLUGIN(libgit2
         src/libgit2plugin.h
     INCLUDE_DIRS
         ${LOCAL_EXTERNAL_PACKAGE_DIR}/include
+
         src
     QT_MODULES
         Core
