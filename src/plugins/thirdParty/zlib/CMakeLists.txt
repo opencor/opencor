@@ -116,8 +116,6 @@ ELSE()
             https://github.com/opencor/zlib
         GIT_TAG
             ${GIT_TAG}
-        PATCH_COMMAND
-            ${CMAKE_COMMAND} -E remove <SOURCE_DIR>/zconf.h
         CMAKE_CACHE_ARGS
             -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
         CMAKE_ARGS
