@@ -1,7 +1,8 @@
 PROJECT(zlibPlugin)
 
-# Version of our package
+# Name and version of our package
 
+SET(PACKAGE_NAME zlib)
 SET(PACKAGE_VERSION "1.2.11")
 
 # Version of our library
@@ -65,14 +66,14 @@ IF(USE_PREBUILT_ZLIB_PACKAGE)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(zlib ${PACKAGE_VERSION}
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                 ${RELATIVE_PROJECT_SOURCE_DIR} 46f64af9fea228a3afa6d64bad1a0700ba20c67b
                 SHA1_FILES ${SHA1_FILES}
                 SHA1_VALUES 6a8408008702971d5cbf5e6f49953273d6e2f249
                             63892d9f0e54248c4c6f97ca0ba5342938b52d0e
             )
         ELSE()
-            RETRIEVE_PACKAGE_FILE(zlib ${PACKAGE_VERSION}
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                 ${RELATIVE_PROJECT_SOURCE_DIR} b3695becf1f964b1207dc2371aa1978973d92459
                 SHA1_FILES ${SHA1_FILES}
                 SHA1_VALUES 2121f4b71cab6e851b2a01ac241a684a75ee06ad
@@ -80,13 +81,13 @@ IF(USE_PREBUILT_ZLIB_PACKAGE)
             )
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(zlib ${PACKAGE_VERSION}
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
             ${RELATIVE_PROJECT_SOURCE_DIR} 4de712a64a9121424aaf23a9683165c6af349098
             SHA1_FILES ${SHA1_FILES}
             SHA1_VALUES 2da040b5883c4a00166e9a22cc49c5400d09d025
         )
     ELSE()
-        RETRIEVE_PACKAGE_FILE(zlib ${PACKAGE_VERSION}
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
             ${RELATIVE_PROJECT_SOURCE_DIR} f9934d635b4713cdceab4aa751745029fab4f82d
             SHA1_FILES ${SHA1_FILES}
             SHA1_VALUES e7a94eaf5cd6bfa099ffc700ea81f26e3030a065
@@ -105,7 +106,7 @@ ELSE()
 
     # Build zlib as an external project
 
-    SET(PACKAGE_BUILD zlibBuild)
+    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
@@ -155,7 +156,7 @@ ELSE()
 
     # Package our external project
 
-    CREATE_PACKAGE_FILE(zlib ${PACKAGE_VERSION}
+    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
@@ -172,9 +173,9 @@ SET(ZLIB_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IMPORT_LIBRARY} PARENT
 
 # Add the plugin
 
-SET(ZLIB_PLUGIN zlib PARENT_SCOPE)
+SET(ZLIB_PLUGIN ${PACKAGE_NAME} PARENT_SCOPE)
 
-ADD_PLUGIN(zlib
+ADD_PLUGIN(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp
 
