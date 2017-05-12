@@ -32,6 +32,4 @@ ADD_PLUGIN(PMRWorkspacesWindow
         CellMLSupport
         ${LIBXDIFF_PLUGIN}
         PMRSupport
-    PLUGIN_BINARIES
-        ${LIBXDIFF_PLUGIN_BINARY}
 )
