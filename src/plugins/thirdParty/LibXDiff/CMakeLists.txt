@@ -93,6 +93,12 @@ ELSE()
 
     INCLUDE(ExternalProject)
 
+    # Ignore some warnings
+
+    IF(WIN32)
+        SET(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} /wd4101 /wd4244 /wd4267")
+    ENDIF()
+
     # Build LibXDiff as an external project
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
@@ -106,6 +112,8 @@ ELSE()
             https://github.com/opencor/libxdiff
         GIT_TAG
             ${GIT_TAG}
+        CMAKE_CACHE_ARGS
+            -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
         CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
