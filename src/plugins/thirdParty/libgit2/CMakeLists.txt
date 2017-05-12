@@ -1,7 +1,8 @@
 PROJECT(libgit2Plugin)
 
-# Version of our package
+# Name and version of our package
 
+SET(PACKAGE_NAME libgit2)
 SET(PACKAGE_VERSION "0.25.1")
 
 # Version of our library
@@ -60,14 +61,14 @@ IF(USE_PREBUILT_LIBGIT2_PACKAGE)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(libgit2 ${PACKAGE_VERSION}
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                 ${RELATIVE_PROJECT_SOURCE_DIR} de2a7191a23ad5c1f0477663eedc7eeffde5dc43
                 SHA1_FILES ${SHA1_FILES}
                 SHA1_VALUES 35bbdee04b20f196025803ff4ea7a352c230b56c
                             c0a1935fe1d5f002a5fa82db374fe3d7187b6b45
             )
         ELSE()
-            RETRIEVE_PACKAGE_FILE(libgit2 ${PACKAGE_VERSION}
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                 ${RELATIVE_PROJECT_SOURCE_DIR} 54e0d5d11ac0a79fad5b040426721a079136de6f
                 SHA1_FILES ${SHA1_FILES}
                 SHA1_VALUES 488549eecfac3e1bbf8fd79d5c525c88d94960be
@@ -75,13 +76,13 @@ IF(USE_PREBUILT_LIBGIT2_PACKAGE)
             )
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(libgit2 ${PACKAGE_VERSION}
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
             ${RELATIVE_PROJECT_SOURCE_DIR} fe776e0524593f639e813275fc24e0e8ad8a2152
             SHA1_FILES ${SHA1_FILES}
             SHA1_VALUES ccc41828d9356104b029964b888c559cfcaa75f2
         )
     ELSE()
-        RETRIEVE_PACKAGE_FILE(libgit2 ${PACKAGE_VERSION}
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
             ${RELATIVE_PROJECT_SOURCE_DIR} e3f75a85e72b81183094e356c5df95997936f0cd
             SHA1_FILES ${SHA1_FILES}
             SHA1_VALUES 35057dd98a8eb4af28bce496141b75c207756cb3
@@ -110,7 +111,7 @@ ELSE()
 
     # Build libgit2 as an external project
 
-    SET(PACKAGE_BUILD libgit2Build)
+    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
@@ -163,7 +164,7 @@ ELSE()
 
     # Package our external project
 
-    CREATE_PACKAGE_FILE(libgit2 ${PACKAGE_VERSION}
+    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
@@ -180,9 +181,9 @@ SET(LIBGIT2_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IMPORT_LIBRARY} PAR
 
 # Add the plugin
 
-SET(LIBGIT2_PLUGIN libgit2 PARENT_SCOPE)
+SET(LIBGIT2_PLUGIN ${PACKAGE_NAME} PARENT_SCOPE)
 
-ADD_PLUGIN(libgit2
+ADD_PLUGIN(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp
 
