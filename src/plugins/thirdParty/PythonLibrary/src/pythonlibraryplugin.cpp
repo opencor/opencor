@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Python plugin
+// Python library plugin
 //==============================================================================
 
 // This must be the first include file
@@ -27,7 +27,7 @@ limitations under the License.
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "pythonplugin.h"
+#include "pythonlibraryplugin.h"
 
 //==============================================================================
 
@@ -57,11 +57,11 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace Python {
+namespace PythonLibrary {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonPluginInfo()
+PLUGININFO_FUNC PythonLibraryPluginInfo()
 {
     Descriptions descriptions;
 
@@ -77,8 +77,8 @@ PLUGININFO_FUNC PythonPluginInfo()
 // CLI interface
 //==============================================================================
 
-int PythonPlugin::executeCommand(const QString &pCommand,
-                                 const QStringList &pArguments)
+int PythonLibraryPlugin::executeCommand(const QString &pCommand,
+                                        const QStringList &pArguments)
 {
     // Pass the given CLI command to the Python interpreter
 
@@ -106,7 +106,7 @@ int PythonPlugin::executeCommand(const QString &pCommand,
 // Plugin interface
 //==============================================================================
 
-bool PythonPlugin::definesPluginInterfaces()
+bool PythonLibraryPlugin::definesPluginInterfaces()
 {
     // We don't handle this interface...
 
@@ -115,7 +115,7 @@ bool PythonPlugin::definesPluginInterfaces()
 
 //==============================================================================
 
-bool PythonPlugin::pluginInterfacesOk(const QString &pFileName,
+bool PythonLibraryPlugin::pluginInterfacesOk(const QString &pFileName,
                                       QObject *pInstance)
 {
     Q_UNUSED(pFileName);
@@ -128,7 +128,7 @@ bool PythonPlugin::pluginInterfacesOk(const QString &pFileName,
 
 //==============================================================================
 
-void PythonPlugin::initializePlugin()
+void PythonLibraryPlugin::initializePlugin()
 {
     // We must set PYTHONHOME to where Python is 'installed' **before** calling
     // any Python library code. Calling `Py_SetPythonHome()` doesn't work as
@@ -161,14 +161,14 @@ void PythonPlugin::initializePlugin()
 
 //==============================================================================
 
-void PythonPlugin::finalizePlugin()
+void PythonLibraryPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void PythonPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void PythonLibraryPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -177,7 +177,7 @@ void PythonPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void PythonPlugin::loadSettings(QSettings *pSettings)
+void PythonLibraryPlugin::loadSettings(QSettings *pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -186,7 +186,7 @@ void PythonPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PythonPlugin::saveSettings(QSettings *pSettings) const
+void PythonLibraryPlugin::saveSettings(QSettings *pSettings) const
 {
     Q_UNUSED(pSettings);
 
@@ -195,7 +195,7 @@ void PythonPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void PythonPlugin::handleUrl(const QUrl &pUrl)
+void PythonLibraryPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -206,7 +206,7 @@ void PythonPlugin::handleUrl(const QUrl &pUrl)
 // Plugin specific
 //==============================================================================
 
-void PythonPlugin::runHelpCommand()
+void PythonLibraryPlugin::runHelpCommand()
 {
     // Output the commands we support
 
@@ -221,7 +221,7 @@ void PythonPlugin::runHelpCommand()
 
 //==============================================================================
 
-int PythonPlugin::runPythonShell(const QStringList &pArguments)
+int PythonLibraryPlugin::runPythonShell(const QStringList &pArguments)
 {
     // The following has been adapted from `Programs/python.c` in the Python sources.
 
@@ -286,7 +286,7 @@ int PythonPlugin::runPythonShell(const QStringList &pArguments)
 
 //==============================================================================
 
-}   // namespace Python
+}   // namespace PythonLibrary
 }   // namespace OpenCOR
 
 //==============================================================================

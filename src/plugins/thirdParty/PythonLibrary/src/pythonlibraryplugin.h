@@ -17,7 +17,7 @@ limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Python plugin
+// Python library plugin
 //==============================================================================
 
 #pragma once
@@ -31,20 +31,20 @@ limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace Python {
+namespace PythonLibrary {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonPluginInfo();
+PLUGININFO_FUNC PythonLibraryPluginInfo();
 
 //==============================================================================
 
-class PythonPlugin : public QObject, public CliInterface,
-                     public PluginInterface
+class PythonLibraryPlugin : public QObject, public CliInterface,
+                            public PluginInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonPlugin" FILE "pythonplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.PythonLibraryPlugin" FILE "pythonlibraryplugin.json")
 
     Q_INTERFACES(OpenCOR::CliInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
@@ -60,7 +60,7 @@ private:
 
 //==============================================================================
 
-}   // namespace Python
+}   // namespace PythonLibrary
 }   // namespace OpenCOR
 
 //==============================================================================

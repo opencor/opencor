@@ -1,6 +1,4 @@
-PROJECT(PythonPlugin)
-
-set(USE_PREBUILT_PYTHON_PACKAGE OFF)
+PROJECT(PythonLibraryPlugin)
 
 # Version of our package
 
@@ -15,23 +13,6 @@ STRING(REPLACE "." "" NUMERIC_LIBRARY_VERSION ${MAJOR_MINOR_LIBRARY_VERSION})
 # Git tag for our library
 
 SET(GIT_TAG "opencor")
-
-###################
-# The versions of the Python packages we bundle.
-
-SET(NUMPY_VERSION 1.12.0)
-SET(MATPLOTLIB_VERSION 1.5.3)
-SET(SCIPY_VERSION 0.18.1)
-
-SET(IPYKERNEL_VERSION 4.5.2)
-SET(IPYTHON_VERSION 5.2.2)
-
-# We use our own copies of some Windows packages from
-# http://www.lfd.uci.edu/~gohlke/pythonlibs/
-
-SET(WHEEL_REPOSITORY "http://biosignalml.org/binaries/wheels")
-
-####################
 
 # Set the ABI flag and version identifier
 
@@ -106,6 +87,10 @@ ENDIF()
 IF(NOT APPLE)
     SET(SQLITE3_SHARED_LIBRARY sqlite3${CMAKE_SHARED_LIBRARY_SUFFIX})
 
+    LIST(APPEND EXTERNAL_BINARIES
+        ${SQLITE3_SHARED_LIBRARY}
+    )
+
     LIST(APPEND SHA1_FILES
         ${LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
     )
@@ -130,7 +115,7 @@ ENDIF()
 
 # Use the pre-built version of our package unless instructed otherwise
 
-IF(USE_PREBUILT_PYTHON_PACKAGE)
+IF(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
     # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
@@ -138,23 +123,22 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(Python ${PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} 1c833ffa55c9cb0ff589193d67b5f46bc131398e
+            RETRIEVE_PACKAGE_FILE(PythonLibrary ${PACKAGE_VERSION}
+                ${RELATIVE_PROJECT_SOURCE_DIR} 4102456caa78e3d62fde6ca53997abb548c8b527
                 SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES fbb6cc35d424cb52b571dc1e0c8005a578a25db7
-                            3027decc9b74d5868aef26025648cdd3f52d7366
+                SHA1_VALUES 7a08861d684f2e525102b24909ada5c3302f6634
+                            177e5f55df070047d5818dcb5f81d6d2451bb36c
                             3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-                            d551ee5fd523dc61d823e7ef6d2b76ae9934f0c8
             )
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(Python ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} e566b66f2fb81897bf9d6f275a418c9cbf40c5eb
+        RETRIEVE_PACKAGE_FILE(PythonLibrary ${PACKAGE_VERSION}
+            ${RELATIVE_PROJECT_SOURCE_DIR} fa6eddc3a9cdd3233d146b29cec1383dfbf2a676
             SHA1_FILES ${SHA1_FILES}
-            SHA1_VALUES f50b1663e2028a2a204561b2b6877d421cee279e
+            SHA1_VALUES 2b4741d820dc26d1033aa671582f80271d934adc
         )
     ELSE()
-        RETRIEVE_PACKAGE_FILE(Python ${PACKAGE_VERSION}
+        RETRIEVE_PACKAGE_FILE(PythonLibrary ${PACKAGE_VERSION}
             ${RELATIVE_PROJECT_SOURCE_DIR} 0c8b8b07d6af7cdc8e6746cb472d9be5f45f20f0
             SHA1_FILES ${SHA1_FILES}
             SHA1_VALUES d755a6bc25f4864a57ade7fa9666f628fd6b24b9
@@ -211,24 +195,33 @@ ELSE()
         ENDIF()
 
         SET(SQLITE3_INCLUDE_DIR ${SQLITE3_DIR}/sqlite-amalgamation-${SQLITE3_VERSION})
-        SET(SQLITE3_LIBRARY ${SQLITE3_DIR}/sqlite3${CMAKE_IMPORT_LIBRARY_SUFFIX})
-    ELSEIF(APPLE)                   # Use Homebrew's SQLite
+        SET(SQLITE3_IMPORT_LIBRARY ${SQLITE3_DIR}/sqlite3${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    ELSEIF(APPLE)
+        # Use Homebrew's SQLite
 
         SET(SQLITE3_INCLUDE_DIR /usr/local/opt/sqlite/include)
-        # Use static library so there is no need to copy it
-        SET(SQLITE3_LIBRARY /usr/local/opt/sqlite/lib/libsqlite3.a)
-    ELSE()
 
+        # Link to static library so there is no need to bundle it
+
+        SET(SQLITE3_IMPORT_LIBRARY /usr/local/opt/sqlite/lib/libsqlite3.a)
+    ELSE()
         SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+
         FIND_PACKAGE(SQLite3 REQUIRED)
+
+        SET(SQLITE3_IMPORT_LIBRARY ${SQLITE3_LIBRARY})
     ENDIF()
 
-    # Put the SQLite3 library into the python runtime install directory
+    # Copy the SQLite3 library to the Python runtime install directory
 
     IF(NOT APPLE)
-        GET_FILENAME_COMPONENT(SQLITE3_LIBRARY_PATH ${SQLITE3_LIBRARY} DIRECTORY)
+        GET_FILENAME_COMPONENT(SQLITE3_LIBRARY_PATH ${SQLITE3_IMPORT_LIBRARY} DIRECTORY)
         EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_PATH}/${SQLITE3_SHARED_LIBRARY}
-                                                         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/${SQLITE3_SHARED_LIBRARY})
+                                                         ${EXTERNAL_BINARIES_DIR})
+        IF(WIN32)
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_IMPORT_LIBRARY}
+                                                             ${EXTERNAL_BINARIES_DIR})
+        ENDIF()
     ENDIF()
 
     # What our Python plugin depends upon being built
@@ -241,7 +234,7 @@ ELSE()
 
     # Build Python as an external project
 
-    SET(PACKAGE_BUILD PythonBuild)
+    SET(PACKAGE_BUILD PythonLibraryBuild)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         DEPENDS
@@ -278,7 +271,7 @@ ELSE()
             # IPython and Jupyter need SQLite
             -DENABLE_SQLITE3=ON
             -DSQLITE3_INCLUDE_PATH=${SQLITE3_INCLUDE_DIR}
-            -DSQLITE3_LIBRARY=${SQLITE3_LIBRARY}
+            -DSQLITE3_LIBRARY=${SQLITE3_IMPORT_LIBRARY}
 
             # Turn off things we don't want
             -DINSTALL_MANUAL=OFF
@@ -393,84 +386,16 @@ ELSE()
         DEPENDEES clean_site
         )
 
-    # Use our newly installed pip
-
-    SET(PIP_EXECUTABLE ${PYTHON_EXECUTABLE} -s -m pip)
-
-    # Install numpy
-
-    IF(WIN32)
-        # We use a version that is linked with the Intel Math Kernel Library
-        SET(NUMPY_WHEEL "numpy-${NUMPY_VERSION}+mkl-cp${NUMERIC_LIBRARY_VERSION}-cp${NUMERIC_LIBRARY_VERSION}${PYTHON_ABIFLAGS}-win_amd64.whl")
-        ExternalProject_Add_Step(${PACKAGE_BUILD} install_numpy
-            COMMAND ${PIP_EXECUTABLE} install ${WHEEL_REPOSITORY}/${NUMPY_WHEEL}
-            WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
-            DEPENDEES install_pip
-            )
-    ELSE()
-        ExternalProject_Add_Step(${PACKAGE_BUILD} install_numpy
-            COMMAND ${PIP_EXECUTABLE} install --only-binary all
-                numpy==${NUMPY_VERSION}
-            WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
-            DEPENDEES install_pip
-            )
-    ENDIF()
-
-    # Install matplotlib and patch Qt backend so that it works with PythonQt
-
-    ExternalProject_Add_Step(${PACKAGE_BUILD} install_matplotlib
-        COMMAND ${PIP_EXECUTABLE} install --only-binary all
-            matplotlib==${MATPLOTLIB_VERSION}
-        COMMAND ${PYTHON_EXECUTABLE} -s ${PROJECT_SOURCE_DIR}/bin/patch.py
-            --strip=2
-            --directory=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${RUNTIME_DIR}/site-packages/matplotlib
-            ${PROJECT_SOURCE_DIR}/src/matplotlib_${MATPLOTLIB_VERSION}.diff
-        WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
-        DEPENDEES install_numpy
-        )
-
-    # Install scipy
-
-    IF(WIN32)
-        SET(SCIPY_WHEEL "scipy-${SCIPY_VERSION}-cp${NUMERIC_LIBRARY_VERSION}-cp${NUMERIC_LIBRARY_VERSION}${PYTHON_ABIFLAGS}-win_amd64.whl")
-        ExternalProject_Add_Step(${PACKAGE_BUILD} install_scipy
-            COMMAND ${PIP_EXECUTABLE} install ${WHEEL_REPOSITORY}/${SCIPY_WHEEL}
-            WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
-            DEPENDEES install_matplotlib
-            )
-    ELSE()
-        ExternalProject_Add_Step(${PACKAGE_BUILD} install_scipy
-            COMMAND ${PIP_EXECUTABLE} install --only-binary all
-                scipy==${SCIPY_VERSION}
-            WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
-            DEPENDEES install_matplotlib
-            )
-    ENDIF()
-
-    # Install IPython and patch its kernel so that it works with PythonQt
-
-    ExternalProject_Add_Step(${PACKAGE_BUILD} install_ipython
-        COMMAND ${PIP_EXECUTABLE} install --only-binary all
-            ipython==${IPYTHON_VERSION}
-            ipykernel==${IPYKERNEL_VERSION}
-        COMMAND ${PYTHON_EXECUTABLE} -s ${PROJECT_SOURCE_DIR}/bin/patch.py
-            --strip=1
-            --directory=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${RUNTIME_DIR}/site-packages/IPython
-            ${PROJECT_SOURCE_DIR}/src/ipython_${IPYTHON_VERSION}.diff
-        WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
-        DEPENDEES install_scipy
-        )
-
     # Package Python's include files and libraries
 
-    CREATE_PACKAGE_FILE(Python ${PACKAGE_VERSION}
+    CREATE_PACKAGE_FILE(PythonLibrary ${PACKAGE_VERSION}
         ${LOCAL_EXTERNAL_PACKAGE_DIR}
         PACKAGED_FILES ${PACKAGED_FILES}
         SHA1_FILES ${SHA1_FILES}
-        TARGET PythonBuild
+        TARGET ${PACKAGE_BUILD}
         )
 
-    SET(PLUGIN_DEPENDS_ON PythonBuild)
+    SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
 # Allow other external projects to find our Python
@@ -485,21 +410,17 @@ ELSE()
     SET(PYTHON_EXECUTABLE ${ROOT_DIR}/bin/python PARENT_SCOPE)
 ENDIF()
 
-# Allow other external projects to find our NumPy include directory
-
-SET(NUMPY_INCLUDE_DIR ${ROOT_DIR}/${RUNTIME_DIR}/site-packages/numpy/core/include PARENT_SCOPE)
-
 # Add the plugin
 
-ADD_PLUGIN(Python
+ADD_PLUGIN(PythonLibrary
     SOURCES
         ../../cliinterface.cpp
         ../../plugininfo.cpp
         ../../plugininterface.cpp
 
-        src/pythonplugin.cpp
+        src/pythonlibraryplugin.cpp
     HEADERS_MOC
-        src/pythonplugin.h
+        src/pythonlibraryplugin.h
     INCLUDE_DIRS
         ${LOCAL_EXTERNAL_PACKAGE_DIR}/${INCLUDE_DIR}
 
@@ -519,13 +440,3 @@ ADD_PLUGIN(Python
     DEPENDS_ON
         ${PLUGIN_DEPENDS_ON}
 )
-
-# Copy the SQLite3 shared library to our runtime directory
-
-IF(NOT APPLE)
-    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME}
-        ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
-        ${DEST_EXTERNAL_BINARIES_DIR}
-        ${SQLITE3_SHARED_LIBRARY}
-    )
-ENDIF()
