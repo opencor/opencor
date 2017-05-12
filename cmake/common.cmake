@@ -361,12 +361,11 @@ MACRO(INITIALISE_PROJECT)
 
     IF(APPLE)
         SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-
         SET(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks;@executable_path/../PlugIns/${CMAKE_PROJECT_NAME}")
     ELSEIF(NOT WIN32)
         SET(CMAKE_SKIP_RPATH TRUE)
-        SET(LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN/../lib'")
 
+        SET(LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN/../lib'")
         SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARY_DIR} ${LINK_RPATH_FLAG}")
     ENDIF()
 
