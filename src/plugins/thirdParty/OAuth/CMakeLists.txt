@@ -62,28 +62,28 @@ IF(USE_PREBUILT_OAUTH_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} cdaf8b81c442cdc3d8c0eeb11aa78e35e0182bc9
+                ${RELATIVE_PROJECT_SOURCE_DIR} 881ea6a9dab9fbca2711cd4e66bfb304145eac1c
                 SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES 2daa033b6aebbe2fc563cead93566954e917c761
-                            6d7deb22f1fbae3ee35b37d7f0e5ddfffc1056a5
+                SHA1_VALUES 27c2eedf6ed605459f2e992f176e1767fb4935c1
+                            a8d3cbf3b2bae358df9e9758c87b1d6884d06a05
             )
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} ff5faf6515002b9028b090dd57bda765386fc133
+                ${RELATIVE_PROJECT_SOURCE_DIR} b858bf057e33f94c810162d74435e64df41ab145
                 SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES 0a54fee6c6265edae4653edd1c934ad6658718c0
-                            369be8872573cf5c0998ed695654134e82c59d6f
+                SHA1_VALUES b882b0145944e02c41680818dea3d747cc5f481b
+                            b8d3d6ec077b4d1cc4ddc3f1144d6c6fd877a50e
             )
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} 8c6f2f7dc7ec09582de357447b9f3c80c2bbc952
+            ${RELATIVE_PROJECT_SOURCE_DIR} 57e37b686703a3d4618aed1a76d4b873233702c6
             SHA1_FILES ${SHA1_FILES}
             SHA1_VALUES f7a8455efb8b83f1f668559c145fc1d5039cfa43
         )
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} 98c5bff3feb233a12b2bd9fcc57c6db6351ed38d
+            ${RELATIVE_PROJECT_SOURCE_DIR} 6a02f5057afdf02a4b29ca0ce24fba578df5261f
             SHA1_FILES ${SHA1_FILES}
             SHA1_VALUES 297f187a580f6489ed64223df93ebf4639efeceb
         )
