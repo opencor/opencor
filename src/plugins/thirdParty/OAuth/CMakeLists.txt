@@ -2,7 +2,7 @@ PROJECT(OAuthPlugin)
 
 # Name and version of our package
 
-SET(PACKAGE_NAME OAuth)
+SET(PACKAGE_NAME o2)
 SET(PACKAGE_VERSION "1.0.1")
 
 # Version of our library
