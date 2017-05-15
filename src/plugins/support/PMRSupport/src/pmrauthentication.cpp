@@ -28,9 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "o0globals.h"
-#include "o1requestor.h"
-#include "o0settingsstore.h"
+#include "o2/o0globals.h"
+#include "o2/o0settingsstore.h"
+#include "o2/o1requestor.h"
 
 //==============================================================================
 
