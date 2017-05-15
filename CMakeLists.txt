@@ -419,6 +419,9 @@ SET(PLUGINS
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
 )
+SET(PLUGINS
+    thirdParty/OAuth
+)
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
