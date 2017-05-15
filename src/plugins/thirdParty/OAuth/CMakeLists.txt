@@ -92,6 +92,12 @@ ELSE()
 
     INCLUDE(ExternalProject)
 
+    # Ignore some warnings
+
+    IF(WIN32)
+        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4061 /wd4127 /wd4242 /wd4365 /wd4464 /wd4548 /wd4571 /wd4619 /wd4625 /wd4626 /wd4711 /wd4820 /wd5026 /wd5027")
+    ENDIF()
+
     # Build OAuth as an external project
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
@@ -105,6 +111,8 @@ ELSE()
             https://github.com/opencor/o2
         GIT_TAG
             ${GIT_TAG}
+        CMAKE_CACHE_ARGS
+            -DCMAKE_CXX_FLAGS:STRING=${PACKAGE_CXX_FLAGS}
         CMAKE_ARGS
             -DBUILD_SHARED_LIBS=ON
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
