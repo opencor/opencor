@@ -41,6 +41,4 @@ ADD_PLUGIN(PMRSupport
         ${OAUTH_PLUGIN}
         WebViewerWidget
         ${ZLIB_PLUGIN}
-    PLUGIN_BINARIES
-        ${OAUTH_PLUGIN_BINARY}
 )

@@ -18,8 +18,6 @@ ADD_PLUGIN(IDASolver
         src
     PLUGINS
         ${SUNDIALS_PLUGIN}
-    PLUGIN_BINARIES
-        ${SUNDIALS_PLUGIN_BINARY}
     QT_MODULES
         Widgets
 )

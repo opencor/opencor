@@ -18,8 +18,6 @@ ADD_PLUGIN(CVODESolver
         src
     PLUGINS
         ${SUNDIALS_PLUGIN}
-    PLUGIN_BINARIES
-        ${SUNDIALS_PLUGIN_BINARY}
     QT_MODULES
         Widgets
 )

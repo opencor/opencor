@@ -382,6 +382,18 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
+    # A couple of variables that make it easier to specify library file names
+    # names with a version (e.g. to be able to reference libz.so.1 and
+    # libz.1.dylib, we could simply use libz${PRE}.1${POST})
+
+    IF(APPLE)
+        SET(CMAKE_SHARED_LIBRARY_SUFFIX_PRE)
+        SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST ${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ELSEIF(NOT WIN32)
+        SET(CMAKE_SHARED_LIBRARY_SUFFIX_PRE ${CMAKE_SHARED_LIBRARY_SUFFIX})
+        SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
+    ENDIF()
+
     # Let the ExternalProject module know where we want to build our external
     # projects
     # Note: indeed, otherwise on Windows we may end up with path names that are
