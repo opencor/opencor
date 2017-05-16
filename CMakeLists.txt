@@ -20,6 +20,7 @@ OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" O
 OPTION(USE_PREBUILT_OAUTH_PLUGIN "Use the pre-built version of the OAuth plugin" ON)
 OPTION(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
 OPTION(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE "Use the pre-built version of the Python library" ON)
+OPTION(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of Python site packages" ON)
 OPTION(USE_PREBUILT_PYTHONQT_PACKAGE "Use the pre-built version of Python Qt" ON)
 OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
@@ -353,6 +354,8 @@ SET(PLUGINS
 
     miscellaneous/Compiler
 
+    thirdParty/PythonLibrary
+    thirdParty/PythonPackages
     thirdParty/PythonQtAPI
 
     # Plugins that provide support for some third-party libraries
@@ -431,7 +434,6 @@ SET(PLUGINS
 
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
-    thirdParty/PythonLibrary
 )
 
 FOREACH(PLUGIN ${PLUGINS})
