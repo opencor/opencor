@@ -185,6 +185,12 @@ ELSE()
 
     INCLUDE(ExternalProject)
 
+    # Ignore some warnings
+
+    IF(WIN32)
+        SET(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244")
+    ENDIF()
+
     # Build SUNDIALS as an external project
     # Note: the --no-warn-unused-cli argument is to prevent CMake from warning
     #       us about NO_FPRINTF_OUTPUT not being used...
@@ -200,6 +206,8 @@ ELSE()
             https://github.com/opencor/sundials
         GIT_TAG
             ${GIT_TAG}
+        CMAKE_CACHE_ARGS
+            -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
         CMAKE_ARGS
             --no-warn-unused-cli
             -DBUILD_STATIC_LIBS=OFF
@@ -209,25 +217,18 @@ ELSE()
             -DEXAMPLES_ENABLE=OFF
             -DNO_FPRINTF_OUTPUT=ON
         BUILD_BYPRODUCTS
-            <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${ARKODE_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${CVODE_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${CVODES_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${IDA_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${IDAS_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${KINSOL_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${NVECSERIAL_IMPORT_LIBRARY}
     )
 
     # Do some post-processing that is specific to each platform
 
-    IF(WIN32)
-        # We want both our shared and import libraries to be in the same place
-
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLLs
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${ARKODE_SHARED_LIBRARY} lib
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${CVODE_SHARED_LIBRARY} lib
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${CVODES_SHARED_LIBRARY} lib
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${IDA_SHARED_LIBRARY} lib
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${IDAS_SHARED_LIBRARY} lib
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${KINSOL_SHARED_LIBRARY} lib
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${NVECSERIAL_SHARED_LIBRARY} lib
-                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-                                 DEPENDEES install)
-    ELSE()
+    IF(NOT WIN32)
         # Dereference the symbolic link to the libraries since CMake's tar can't
         # do this
 
