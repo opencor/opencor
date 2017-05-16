@@ -1,117 +1,363 @@
 PROJECT(SUNDIALSPlugin)
 
-# Use our pre-built version unless instructed otherwise
+# Name and version of our package
+
+SET(PACKAGE_NAME SUNDIALS)
+SET(PACKAGE_VERSION "2.7.0")
+
+# Version of our library and its components
+
+SET(LIBRARY_VERSION "2.7.0")
+
+SET(MAJOR_ARKODE_LIBRARY_VERSION 1)
+SET(ARKODE_LIBRARY_VERSION "${MAJOR_ARKODE_LIBRARY_VERSION}.1.0")
+
+SET(MAJOR_CVODE_LIBRARY_VERSION 2)
+SET(CVODE_LIBRARY_VERSION "${MAJOR_CVODE_LIBRARY_VERSION}.9.0")
+
+SET(MAJOR_CVODES_LIBRARY_VERSION 2)
+SET(CVODES_LIBRARY_VERSION "${MAJOR_CVODES_LIBRARY_VERSION}.9.0")
+
+SET(MAJOR_IDA_LIBRARY_VERSION 2)
+SET(IDA_LIBRARY_VERSION "${MAJOR_IDA_LIBRARY_VERSION}.9.0")
+
+SET(MAJOR_IDAS_LIBRARY_VERSION 1)
+SET(IDAS_LIBRARY_VERSION "${MAJOR_IDAS_LIBRARY_VERSION}.3.0")
+
+SET(MAJOR_KINSOL_LIBRARY_VERSION 2)
+SET(KINSOL_LIBRARY_VERSION "${MAJOR_KINSOL_LIBRARY_VERSION}.9.0")
+
+SET(MAJOR_NVECSERIAL_LIBRARY_VERSION 2)
+SET(NVECSERIAL_LIBRARY_VERSION "${MAJOR_NVECSERIAL_LIBRARY_VERSION}.7.0")
+
+# Git tag for our library
+
+SET(GIT_TAG "v2.7.0")
+
+# Specify where our local package will be installed
+
+SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+
+# Name of our package's shared libraries (and of their import libraries, if any)
+
+IF(WIN32)
+    SET(ARKODE_SHARED_LIBRARY sundials_arkode${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(ARKODE_IMPORT_LIBRARY sundials_arkode${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    SET(CVODE_SHARED_LIBRARY sundials_cvode${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(CVODE_IMPORT_LIBRARY sundials_cvode${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    SET(CVODES_SHARED_LIBRARY sundials_cvodes${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(CVODES_IMPORT_LIBRARY sundials_cvodes${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    SET(IDA_SHARED_LIBRARY sundials_ida${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(IDA_IMPORT_LIBRARY sundials_ida${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    SET(IDAS_SHARED_LIBRARY sundials_idas${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(IDAS_IMPORT_LIBRARY sundials_idas${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    SET(KINSOL_SHARED_LIBRARY sundials_kinsol${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(KINSOL_IMPORT_LIBRARY sundials_kinsol${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    SET(NVECSERIAL_SHARED_LIBRARY sundials_nvecserial${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(NVECSERIAL_IMPORT_LIBRARY sundials_nvecserial${CMAKE_IMPORT_LIBRARY_SUFFIX})
+ELSEIF(APPLE)
+    SET(ARKODE_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_arkode.${MAJOR_ARKODE_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(ARKODE_IMPORT_LIBRARY ${ARKODE_SHARED_LIBRARY})
+
+    SET(CVODE_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvode.${MAJOR_CVODE_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(CVODE_IMPORT_LIBRARY ${CVODE_SHARED_LIBRARY})
+
+    SET(CVODES_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvodes.${MAJOR_CVODES_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(CVODES_IMPORT_LIBRARY ${CVODES_SHARED_LIBRARY})
+
+    SET(IDA_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_ida.${MAJOR_IDA_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(IDA_IMPORT_LIBRARY ${IDA_SHARED_LIBRARY})
+
+    SET(IDAS_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_idas.${MAJOR_IDAS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(IDAS_IMPORT_LIBRARY ${IDAS_SHARED_LIBRARY})
+
+    SET(KINSOL_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_kinsol.${MAJOR_KINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(KINSOL_IMPORT_LIBRARY ${KINSOL_SHARED_LIBRARY})
+
+    SET(NVECSERIAL_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_nvecserial.${MAJOR_NVECSERIAL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(NVECSERIAL_IMPORT_LIBRARY ${NVECSERIAL_SHARED_LIBRARY})
+ELSE()
+    SET(ARKODE_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_arkode${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_ARKODE_LIBRARY_VERSION})
+    SET(ARKODE_IMPORT_LIBRARY ${ARKODE_SHARED_LIBRARY})
+
+    SET(CVODE_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvode${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_CVODE_LIBRARY_VERSION})
+    SET(CVODE_IMPORT_LIBRARY ${CVODE_SHARED_LIBRARY})
+
+    SET(CVODES_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvodes${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_CVODES_LIBRARY_VERSION})
+    SET(CVODES_IMPORT_LIBRARY ${CVODES_SHARED_LIBRARY})
+
+    SET(IDA_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_ida${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_IDA_LIBRARY_VERSION})
+    SET(IDA_IMPORT_LIBRARY ${IDA_SHARED_LIBRARY})
+
+    SET(IDAS_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_idas${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_IDAS_LIBRARY_VERSION})
+    SET(IDAS_IMPORT_LIBRARY ${IDAS_SHARED_LIBRARY})
+
+    SET(KINSOL_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_kinsol${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_KINSOL_LIBRARY_VERSION})
+    SET(KINSOL_IMPORT_LIBRARY ${KINSOL_SHARED_LIBRARY})
+
+    SET(NVECSERIAL_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_nvecserial${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_NVECSERIAL_LIBRARY_VERSION})
+    SET(NVECSERIAL_IMPORT_LIBRARY ${NVECSERIAL_SHARED_LIBRARY})
+ENDIF()
+
+# Retrieve our package's binaries
+
+SET(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
+
+SET(EXTERNAL_BINARIES
+    ${ARKODE_SHARED_LIBRARY}
+    ${CVODE_SHARED_LIBRARY}
+    ${CVODES_SHARED_LIBRARY}
+    ${IDA_SHARED_LIBRARY}
+    ${IDAS_SHARED_LIBRARY}
+    ${KINSOL_SHARED_LIBRARY}
+    ${NVECSERIAL_SHARED_LIBRARY}
+)
+
+# Specify the files that need to have their SHA-1 value checked
+
+SET(SHA1_FILES
+    lib/${ARKODE_SHARED_LIBRARY}
+    lib/${CVODE_SHARED_LIBRARY}
+    lib/${CVODES_SHARED_LIBRARY}
+    lib/${IDA_SHARED_LIBRARY}
+    lib/${IDAS_SHARED_LIBRARY}
+    lib/${KINSOL_SHARED_LIBRARY}
+    lib/${NVECSERIAL_SHARED_LIBRARY}
+)
+
+IF(WIN32)
+    LIST(APPEND SHA1_FILES
+        lib/${ARKODE_IMPORT_LIBRARY}
+        lib/${CVODE_IMPORT_LIBRARY}
+        lib/${CVODES_IMPORT_LIBRARY}
+        lib/${IDA_IMPORT_LIBRARY}
+        lib/${IDAS_IMPORT_LIBRARY}
+        lib/${KINSOL_IMPORT_LIBRARY}
+        lib/${NVECSERIAL_IMPORT_LIBRARY}
+    )
+ENDIF()
+
+# Use the pre-built version of our package unless instructed otherwise
 
 IF(USE_PREBUILT_SUNDIALS_PACKAGE)
-    # Retrieve the plugin's binary file(s)
+    # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_BINARIES_DIR}")
+           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} SUNDIALS.dll 1abd55bd4883fd64efdbb37804dbfba60e79f6b5)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} SUNDIALS.lib 8bbc0f42247b58eef39177196e1874f20d77f4a5)
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                SHA1_FILES ${SHA1_FILES}
+                SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            )
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} SUNDIALS.dll 133b4edf0b171a6e9b9aabdcef89157759924f8d)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} SUNDIALS.lib b2592c893bb84ddb06d837677b3050cf95040d9c)
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                SHA1_FILES ${SHA1_FILES}
+                SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            )
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libSUNDIALS.dylib 6eb9f60c7da9b90a408ae4e30635a5c0a9d18e6a)
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+            ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            SHA1_FILES ${SHA1_FILES}
+            SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        )
     ELSE()
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libSUNDIALS.so 519f2d6e5aace35e86dc3322d497edb7f794b9f8)
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+            ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            SHA1_FILES ${SHA1_FILES}
+            SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        )
     ENDIF()
-
-    # Add the plugin as a binary
-    # Note: in the case of Windows, we must refer to the distribution directory
-    #       as opposed to the plugins directory since we need the .lib file and
-    #       it's only there...
-
-    IF(WIN32)
-        SET(SUNDIALS_PLUGIN_BINARY ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR}/${CMAKE_IMPORT_LIBRARY_PREFIX}SUNDIALS${CMAKE_IMPORT_LIBRARY_SUFFIX} PARENT_SCOPE)
-    ELSE()
-        SET(SUNDIALS_PLUGIN_BINARY ${DEST_PLUGINS_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}SUNDIALS${CMAKE_SHARED_LIBRARY_SUFFIX} PARENT_SCOPE)
-    ENDIF()
-
-    ADD_PLUGIN_BINARY(SUNDIALS
-        INCLUDE_DIRS
-            include
-            src
-    )
 ELSE()
-    # Ignore some warnings on Windows
+    # Rely on the ExternalProject module to build our package
 
-    IF(WIN32)
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244")
-    ENDIF()
+    INCLUDE(ExternalProject)
 
-    # Add the plugin
+    # Build SUNDIALS as an external project
 
-    SET(SUNDIALS_PLUGIN SUNDIALS PARENT_SCOPE)
+    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
-    ADD_PLUGIN(SUNDIALS
-        THIRD_PARTY
-        SOURCES
-            ../../plugininfo.cpp
-
-            src/sundialsplugin.cpp
-
-            src/cvode/cvode.c
-            src/cvode/cvode_band.c
-            src/cvode/cvode_bandpre.c
-            src/cvode/cvode_bbdpre.c
-            src/cvode/cvode_dense.c
-            src/cvode/cvode_diag.c
-            src/cvode/cvode_direct.c
-            src/cvode/cvode_io.c
-            src/cvode/cvode_spbcgs.c
-            src/cvode/cvode_spgmr.c
-            src/cvode/cvode_spils.c
-            src/cvode/cvode_sptfqmr.c
-
-            src/ida/ida.c
-            src/ida/ida_band.c
-            src/ida/ida_bbdpre.c
-            src/ida/ida_dense.c
-            src/ida/ida_direct.c
-            src/ida/ida_ic.c
-            src/ida/ida_io.c
-            src/ida/ida_spbcgs.c
-            src/ida/ida_spgmr.c
-            src/ida/ida_spils.c
-            src/ida/ida_sptfqmr.c
-
-            src/kinsol/kinsol.c
-            src/kinsol/kinsol_band.c
-            src/kinsol/kinsol_bbdpre.c
-            src/kinsol/kinsol_dense.c
-            src/kinsol/kinsol_direct.c
-            src/kinsol/kinsol_io.c
-            src/kinsol/kinsol_spbcgs.c
-            src/kinsol/kinsol_spgmr.c
-            src/kinsol/kinsol_spils.c
-            src/kinsol/kinsol_sptfqmr.c
-
-            src/nvec_ser/nvector_serial.c
-
-            src/sundials/sundials_band.c
-            src/sundials/sundials_dense.c
-            src/sundials/sundials_direct.c
-            src/sundials/sundials_iterative.c
-            src/sundials/sundials_math.c
-            src/sundials/sundials_nvector.c
-            src/sundials/sundials_spbcgs.c
-            src/sundials/sundials_spgmr.c
-            src/sundials/sundials_sptfqmr.c
-        HEADERS_MOC
-            src/sundialsplugin.h
-        INCLUDE_DIRS
-            include
-            src
-        DEFINITIONS
-            BUILD_SUNDIALS_LIBRARY
-            NO_FPRINTF_OUTPUT
-        QT_MODULES
-            Core
+    ExternalProject_Add(${PACKAGE_BUILD}
+        SOURCE_DIR
+            ${PROJECT_SOURCE_DIR}/ext/proj
+        INSTALL_DIR
+            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+        GIT_REPOSITORY
+            https://github.com/opencor/sundials
+        GIT_TAG
+            ${GIT_TAG}
+        CMAKE_ARGS
+            -DBUILD_STATIC_LIBS=OFF
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+            -DCMAKE_MACOSX_RPATH=1
+            -DEXAMPLES_ENABLE=OFF
+            -DNO_FPRINTF_OUTPUT=ON
+        BUILD_BYPRODUCTS
+            <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
+
+    # Do some post-processing that is specific to each platform
+
+   IF(WIN32)
+        # We want both our shared and import libraries to be in the same place
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLLs
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${ARKODE_SHARED_LIBRARY} lib
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${CVODE_SHARED_LIBRARY} lib
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${CVODES_SHARED_LIBRARY} lib
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${IDA_SHARED_LIBRARY} lib
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${IDAS_SHARED_LIBRARY} lib
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${KINSOL_SHARED_LIBRARY} lib
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${NVECSERIAL_SHARED_LIBRARY} lib
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+                                 DEPENDEES install)
+   ELSE()
+        # Dereference the symbolic link to the libraries since CMake's tar can't
+        # do this
+
+        SET(FULL_ARKODE_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${ARKODE_SHARED_LIBRARY})
+
+        IF(APPLE)
+            SET(REAL_FULL_ARKODE_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_arkode.${ARKODE_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ELSE()
+            SET(REAL_FULL_ARKODE_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_arkode${CMAKE_SHARED_LIBRARY_SUFFIX}.${ARKODE_LIBRARY_VERSION})
+        ENDIF()
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyArkodeLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_ARKODE_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_ARKODE_SHARED_LIBRARY} ${FULL_ARKODE_SHARED_LIBRARY}
+                                 DEPENDEES install)
+
+        SET(FULL_CVODE_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CVODE_SHARED_LIBRARY})
+
+        IF(APPLE)
+            SET(REAL_FULL_CVODE_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvode.${CVODE_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ELSE()
+            SET(REAL_FULL_CVODE_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvode${CMAKE_SHARED_LIBRARY_SUFFIX}.${CVODE_LIBRARY_VERSION})
+        ENDIF()
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCvodeLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_CVODE_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_CVODE_SHARED_LIBRARY} ${FULL_CVODE_SHARED_LIBRARY}
+                                 DEPENDEES install)
+
+        SET(FULL_CVODES_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CVODES_SHARED_LIBRARY})
+
+        IF(APPLE)
+            SET(REAL_FULL_CVODES_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvodes.${CVODES_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ELSE()
+            SET(REAL_FULL_CVODES_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvodes${CMAKE_SHARED_LIBRARY_SUFFIX}.${CVODES_LIBRARY_VERSION})
+        ENDIF()
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCvodesLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_CVODES_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_CVODES_SHARED_LIBRARY} ${FULL_CVODES_SHARED_LIBRARY}
+                                 DEPENDEES install)
+
+        SET(FULL_IDA_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IDA_SHARED_LIBRARY})
+
+        IF(APPLE)
+            SET(REAL_FULL_IDA_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_ida.${IDA_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ELSE()
+            SET(REAL_FULL_IDA_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_ida${CMAKE_SHARED_LIBRARY_SUFFIX}.${IDA_LIBRARY_VERSION})
+        ENDIF()
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyIdaLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_IDA_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_IDA_SHARED_LIBRARY} ${FULL_IDA_SHARED_LIBRARY}
+                                 DEPENDEES install)
+
+        SET(FULL_IDAS_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IDAS_SHARED_LIBRARY})
+
+        IF(APPLE)
+            SET(REAL_FULL_IDAS_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_idas.${IDAS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ELSE()
+            SET(REAL_FULL_IDAS_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_idas${CMAKE_SHARED_LIBRARY_SUFFIX}.${IDAS_LIBRARY_VERSION})
+        ENDIF()
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyIdasLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_IDAS_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_IDAS_SHARED_LIBRARY} ${FULL_IDAS_SHARED_LIBRARY}
+                                 DEPENDEES install)
+
+        SET(FULL_KINSOL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${KINSOL_SHARED_LIBRARY})
+
+        IF(APPLE)
+            SET(REAL_FULL_KINSOL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_kinsol.${KINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ELSE()
+            SET(REAL_FULL_KINSOL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_kinsol${CMAKE_SHARED_LIBRARY_SUFFIX}.${KINSOL_LIBRARY_VERSION})
+        ENDIF()
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyKinsolLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_KINSOL_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_KINSOL_SHARED_LIBRARY} ${FULL_KINSOL_SHARED_LIBRARY}
+                                 DEPENDEES install)
+
+        SET(FULL_NVECSERIAL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${NVECSERIAL_SHARED_LIBRARY})
+
+        IF(APPLE)
+            SET(REAL_FULL_NVECSERIAL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_nvecserial.${NVECSERIAL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ELSE()
+            SET(REAL_FULL_NVECSERIAL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_nvecserial${CMAKE_SHARED_LIBRARY_SUFFIX}.${NVECSERIAL_LIBRARY_VERSION})
+        ENDIF()
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyNvecserialLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_NVECSERIAL_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_NVECSERIAL_SHARED_LIBRARY} ${FULL_NVECSERIAL_SHARED_LIBRARY}
+                                 DEPENDEES install)
+   ENDIF()
+
+    # Package our external project
+
+    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        PACKAGED_FILES include ${SHA1_FILES}
+                        SHA1_FILES ${SHA1_FILES}
+                        TARGET ${PACKAGE_BUILD})
+
+    SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
+
+# Allow other external projects to find our SUNDIALS package
+
+SET(SUNDIALS_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+SET(SUNDIALS_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+SET(SUNDIALS_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IMPORT_LIBRARY} PARENT_SCOPE)
+
+# Add the plugin
+
+SET(SUNDIALS_PLUGIN ${PACKAGE_NAME} PARENT_SCOPE)
+
+ADD_PLUGIN(${PACKAGE_NAME}
+    SOURCES
+        ../../plugininfo.cpp
+
+        src/sundialsplugin.cpp
+    HEADERS_MOC
+        src/sundialsplugin.h
+    INCLUDE_DIRS
+        ${LOCAL_EXTERNAL_PACKAGE_DIR}/include
+
+        src
+    QT_MODULES
+        Core
+    EXTERNAL_BINARIES_DIR
+        ${EXTERNAL_BINARIES_DIR}
+    EXTERNAL_BINARIES
+        ${EXTERNAL_BINARIES}
+    DEPENDS_ON
+        ${PLUGIN_DEPENDS_ON}
+)
