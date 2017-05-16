@@ -214,7 +214,7 @@ ELSE()
 
     # Do some post-processing that is specific to each platform
 
-   IF(WIN32)
+    IF(WIN32)
         # We want both our shared and import libraries to be in the same place
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLLs
@@ -227,7 +227,7 @@ ELSE()
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${NVECSERIAL_SHARED_LIBRARY} lib
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
-   ELSE()
+    ELSE()
         # Dereference the symbolic link to the libraries since CMake's tar can't
         # do this
 
@@ -279,7 +279,7 @@ ELSE()
                                                                   ${NVECSERIAL_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
-   ENDIF()
+    ENDIF()
 
     # Package our external project
 
