@@ -452,7 +452,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     )
     SET(ONE_VALUE_KEYWORDS
         EXTERNAL_BINARIES_DIR
-        EXTERNAL_DEST_DIR
+        EXTERNAL_DESTINATION_DIR
         EXTERNAL_SOURCE_DIR
     )
     SET(MULTI_VALUE_KEYWORDS
@@ -739,13 +739,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # Check whether an external package has files to install
 
-    IF(    NOT "${ARG_EXTERNAL_DEST_DIR}" STREQUAL ""
+    IF(    NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL ""
        AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL "")
         # Copy the entire source directory to the destination
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
-                                                                      ${FULL_DEST_EXTERNAL_BASE_DIR}/${ARG_EXTERNAL_DEST_DIR})
+                                                                      ${ARG_EXTERNAL_DESTINATION_DIR})
     ENDIF()
 
     # System binaries
