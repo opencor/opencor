@@ -137,12 +137,11 @@ ELSE()
         # Dereference the symbolic link to the library since CMake's tar can't
         # do this
 
-        SET(FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
-
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
-                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}o2${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${REAL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
-                                                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}o2${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${REAL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
     ENDIF()
 

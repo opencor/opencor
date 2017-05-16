@@ -231,48 +231,53 @@ ELSE()
         # Dereference the symbolic link to the libraries since CMake's tar can't
         # do this
 
-        SET(FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
-
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyArkodeLibrary
-                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${ARKODE_SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_arkode${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${ARKODE_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
-                                                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${ARKODE_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${ARKODE_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_arkode${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${ARKODE_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${ARKODE_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCvodeLibrary
-                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${CVODE_SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvode${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${CVODE_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
-                                                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${CVODE_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${CVODE_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvode${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${CVODE_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${CVODE_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCvodesLibrary
-                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${CVODES_SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvodes${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${CVODES_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
-                                                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${CVODES_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${CVODES_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvodes${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${CVODES_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${CVODES_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyIdaLibrary
-                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${IDA_SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_ida${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${IDA_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
-                                                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${IDA_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${IDA_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_ida${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${IDA_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${IDA_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyIdasLibrary
-                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${IDAS_SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_idas${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${IDAS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
-                                                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${IDAS_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${IDAS_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_idas${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${IDAS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${IDAS_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyKinsolLibrary
-                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${KINSOL_SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_kinsol${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${KINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
-                                                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${KINSOL_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${KINSOL_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_kinsol${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${KINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${KINSOL_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyNvecserialLibrary
-                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${NVECSERIAL_SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}sundials_nvecserial${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${NVECSERIAL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
-                                                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_LIB_DIR}/${NVECSERIAL_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${NVECSERIAL_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_nvecserial${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${NVECSERIAL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${NVECSERIAL_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
    ENDIF()
 
