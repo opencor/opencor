@@ -2,7 +2,7 @@ PROJECT(SUNDIALSPlugin)
 
 # Use our pre-built version unless instructed otherwise
 
-IF(USE_PREBUILT_SUNDIALS_PLUGIN)
+IF(USE_PREBUILT_SUNDIALS_PACKAGE)
     # Retrieve the plugin's binary file(s)
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
