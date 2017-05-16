@@ -1315,15 +1315,6 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
 
     CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
 
-    # Make sure that we have at least one file for which we want to check the
-    # SHA-1 value
-
-    LIST(LENGTH ARG_SHA1_FILES ARG_SHA1_FILES_COUNT)
-
-    IF(ARG_SHA1_FILES_COUNT EQUAL 0)
-        MESSAGE(FATAL_ERROR "At least one file must have its SHA-1 value calculated in order to create the '${PACKAGE_NAME}' package...")
-    ENDIF()
-
     # The full path to the package's files
 
     SET(REAL_DIRNAME "${PROJECT_SOURCE_DIR}/${DIRNAME}")
@@ -1494,9 +1485,8 @@ MACRO(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
     LIST(LENGTH ARG_SHA1_FILES ARG_SHA1_FILES_COUNT)
     LIST(LENGTH ARG_SHA1_VALUES ARG_SHA1_VALUES_COUNT)
 
-    IF(       ARG_SHA1_FILES_COUNT EQUAL 0
-       OR NOT ARG_SHA1_FILES_COUNT EQUAL ARG_SHA1_VALUES_COUNT)
-        MESSAGE(FATAL_ERROR "At least one file must have its SHA-1 value checked in order to retrieve the '${PACKAGE_NAME}' package...")
+    IF(NOT ARG_SHA1_FILES_COUNT EQUAL ARG_SHA1_VALUES_COUNT)
+        MESSAGE(FATAL_ERROR "Number of files is different to of SHA-1 values for '${PACKAGE_NAME}' package...")
     ENDIF()
 
     # Create our destination folder, if needed
