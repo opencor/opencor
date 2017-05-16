@@ -186,6 +186,8 @@ ELSE()
     INCLUDE(ExternalProject)
 
     # Build SUNDIALS as an external project
+    # Note: the --no-warn-unused-cli argument is to prevent CMake from warning
+    #       us about NO_FPRINTF_OUTPUT not being used...
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
@@ -199,6 +201,7 @@ ELSE()
         GIT_TAG
             ${GIT_TAG}
         CMAKE_ARGS
+            --no-warn-unused-cli
             -DBUILD_STATIC_LIBS=OFF
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
