@@ -51,7 +51,7 @@ IF(WIN32)
     )
 ENDIF()
 
-# Use our pre-built version unless instructed otherwise
+# Use the pre-built version of our package unless instructed otherwise
 
 IF(USE_PREBUILT_LIBGIT2_PACKAGE)
     # Retrieve the plugin's package

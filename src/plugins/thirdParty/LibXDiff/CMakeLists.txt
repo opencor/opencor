@@ -51,10 +51,10 @@ IF(WIN32)
     )
 ENDIF()
 
-# Use our pre-built version unless instructed otherwise
+# Use the pre-built version of our package unless instructed otherwise
 
 IF(USE_PREBUILT_LIBXDIFF_PACKAGE)
-    # Retrieve the plugin's binary file(s)
+    # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
            RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
