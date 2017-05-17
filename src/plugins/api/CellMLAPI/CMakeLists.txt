@@ -186,9 +186,12 @@ ELSE()
 
     INCLUDE(ExternalProject)
 
-    # Set some compilation flags and ignore some warnings
+    # Set some compilation flags and/or ignore some warnings
 
-    IF(NOT WIN32 AND NOT APPLE)
+    IF(WIN32)
+        SET(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} /wd4005 /wd4244 /wd4267 /wd4311 /wd4312")
+        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4477 /wd4530 /wd4577")
+    ELSEIF(NOT APPLE)
         SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wno-reorder -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable")
     ENDIF()
 
@@ -206,6 +209,7 @@ ELSE()
         GIT_TAG
             ${GIT_TAG}
         CMAKE_CACHE_ARGS
+            -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
             -DCMAKE_CXX_FLAGS:STRING=${PACKAGE_CXX_FLAGS}
         CMAKE_ARGS
             -DBUILD_TESTING=OFF
