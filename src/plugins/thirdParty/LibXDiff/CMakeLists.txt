@@ -3,16 +3,16 @@ PROJECT(LibXDiffPlugin)
 # Name and version of our package
 
 SET(PACKAGE_NAME LibXDiff)
-SET(PACKAGE_VERSION "0.23")
+SET(PACKAGE_VERSION 0.23)
 
 # Version of our library
 
-SET(MAJOR_LIBRARY_VERSION "0")
-SET(LIBRARY_VERSION "${MAJOR_LIBRARY_VERSION}.23")
+SET(MAJOR_LIBRARY_VERSION 0)
+SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.23)
 
 # Git tag for our library
 
-SET(GIT_TAG "v0.23")
+SET(GIT_TAG v0.23)
 
 # Specify where our local package will be installed
 

@@ -3,16 +3,16 @@ PROJECT(libgit2Plugin)
 # Name and version of our package
 
 SET(PACKAGE_NAME libgit2)
-SET(PACKAGE_VERSION "0.25.1")
+SET(PACKAGE_VERSION 0.25.1)
 
 # Version of our library
 
 SET(MAJOR_LIBRARY_VERSION 0)
-SET(LIBRARY_VERSION "${MAJOR_LIBRARY_VERSION}.25.1")
+SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.25.1)
 
 # Git tag for our library
 
-SET(GIT_TAG "maint/v0.25")
+SET(GIT_TAG maint/v0.25)
 
 # Specify where our local package will be installed
 
@@ -101,7 +101,7 @@ ELSE()
     # Some specific arguments
 
     IF(WIN32)
-        SET(STATIC_CRT_ARG "-DSTATIC_CRT=OFF")
+        SET(STATIC_CRT_ARG -DSTATIC_CRT=OFF)
     ELSE()
         SET(STATIC_CRT_ARG)
     ENDIF()

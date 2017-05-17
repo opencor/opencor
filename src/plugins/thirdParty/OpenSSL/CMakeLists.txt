@@ -3,15 +3,15 @@ PROJECT(OpenSSLPlugin)
 # Name and version of our package
 
 SET(PACKAGE_NAME OpenSSL)
-SET(PACKAGE_VERSION "1.0.2k")
+SET(PACKAGE_VERSION 1.0.2k)
 
 # Version of our library
 
-SET(LIBRARY_VERSION "1.0.0")
+SET(LIBRARY_VERSION 1.0.0)
 
 # Git tag for our library
 
-SET(GIT_TAG "OpenSSL_1_0_2k")
+SET(GIT_TAG OpenSSL_1_0_2k)
 
 # Specify where our local package will be installed
 
@@ -113,18 +113,18 @@ ELSE()
     SET(CONFIG_OPTIONS "--prefix=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}")
 
     IF(WIN32)
-        SET(PLATFORM "VC-WIN64A")
+        SET(PLATFORM VC-WIN64A)
         SET(MAKE_EXECUTABLE nmake)
         SET(MAKEFILE ms/ntdll.mak)
         SET(QUIET_MAKE -c)
         SET(INSTALL_TARGET install)
     ELSE()
-        LIST(APPEND CONFIG_OPTIONS "shared")
+        LIST(APPEND CONFIG_OPTIONS shared)
 
         IF(APPLE)
-            SET(PLATFORM "darwin64-x86_64-cc")
+            SET(PLATFORM darwin64-x86_64-cc)
         ELSE()
-            SET(PLATFORM "linux-x86_64")
+            SET(PLATFORM linux-x86_64)
 
             LIST(APPEND CONFIG_OPTIONS "-Wa,--noexecstack")
         ENDIF()

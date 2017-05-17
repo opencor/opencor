@@ -3,16 +3,16 @@ PROJECT(OAuthPlugin)
 # Name and version of our package
 
 SET(PACKAGE_NAME o2)
-SET(PACKAGE_VERSION "1.0.1")
+SET(PACKAGE_VERSION 1.0.1)
 
 # Version of our library
 
-SET(REAL_LIBRARY_VERSION "1.0.1")
-SET(USED_LIBRARY_VERSION "1.0.0")
+SET(REAL_LIBRARY_VERSION 1.0.1)
+SET(USED_LIBRARY_VERSION 1.0.0)
 
 # Git tag for our library
 
-SET(GIT_TAG "v1.0.1")
+SET(GIT_TAG v1.0.1)
 
 # Specify where our local package will be installed
 

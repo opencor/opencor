@@ -3,16 +3,16 @@ PROJECT(zlibPlugin)
 # Name and version of our package
 
 SET(PACKAGE_NAME zlib)
-SET(PACKAGE_VERSION "1.2.11")
+SET(PACKAGE_VERSION 1.2.11)
 
 # Version of our library
 
-SET(MAJOR_LIBRARY_VERSION "1")
-SET(LIBRARY_VERSION "${MAJOR_LIBRARY_VERSION}.2.11")
+SET(MAJOR_LIBRARY_VERSION 1)
+SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.2.11)
 
 # Git tag for our library
 
-SET(GIT_TAG "v1.2.11")
+SET(GIT_TAG v1.2.11)
 
 # Specify where our local package will be installed
 
