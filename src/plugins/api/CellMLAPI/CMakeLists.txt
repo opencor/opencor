@@ -186,6 +186,12 @@ ELSE()
 
     INCLUDE(ExternalProject)
 
+    # Some compilation flags
+
+    IF(NOT WIN32 AND NOT APPLE)
+        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    ENDIF()
+
     # Build the CellML API as an external project
     # Note: the --no-warn-unused-cli argument is to prevent CMake from warning
     #       us about NO_FPRINTF_OUTPUT not being used...
@@ -201,6 +207,8 @@ ELSE()
             https://github.com/opencor/cellml-api
         GIT_TAG
             ${GIT_TAG}
+        CMAKE_CACHE_ARGS
+            -DCMAKE_CXX_FLAGS:STRING=${PACKAGE_CXX_FLAGS}
         CMAKE_ARGS
             -DBUILD_TESTING=OFF
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
@@ -212,6 +220,7 @@ ELSE()
             -DENABLE_CELEDS_EXPORTER=ON
             -DENABLE_CEVAS=ON
             -DENABLE_CUSES=ON
+            -DENABLE_DOCUMENTATION=OFF
             -DENABLE_MALAES=ON
             -DENABLE_RDF=ON
             -DENABLE_VACSS=ON
