@@ -34,9 +34,10 @@ SET(MALAES_LIBRARY_VERSION 1.13)
 SET(MAJOR_VACSS_LIBRARY_VERSION 1)
 SET(VACSS_LIBRARY_VERSION 1.13)
 
-# Git tag for our library
+# Git and release tags for our library
 
 SET(GIT_TAG 1.12)
+SET(RELEASE_TAG 1.12)
 
 # Specify where our local package will be installed
 
@@ -312,6 +313,7 @@ ELSE()
 
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
