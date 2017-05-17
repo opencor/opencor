@@ -64,31 +64,27 @@ IF(USE_PREBUILT_ZLIB_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} 46f64af9fea228a3afa6d64bad1a0700ba20c67b
-                SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES 6a8408008702971d5cbf5e6f49953273d6e2f249
-                            63892d9f0e54248c4c6f97ca0ba5342938b52d0e
-            )
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 46f64af9fea228a3afa6d64bad1a0700ba20c67b
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 6a8408008702971d5cbf5e6f49953273d6e2f249
+                                              63892d9f0e54248c4c6f97ca0ba5342938b52d0e)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} b3695becf1f964b1207dc2371aa1978973d92459
-                SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES 2121f4b71cab6e851b2a01ac241a684a75ee06ad
-                            0ef60637c15c35954fe4ca17be1837cd72bd8f69
-            )
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} b3695becf1f964b1207dc2371aa1978973d92459
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 2121f4b71cab6e851b2a01ac241a684a75ee06ad
+                                              0ef60637c15c35954fe4ca17be1837cd72bd8f69)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} 4de712a64a9121424aaf23a9683165c6af349098
-            SHA1_FILES ${SHA1_FILES}
-            SHA1_VALUES 2da040b5883c4a00166e9a22cc49c5400d09d025
-        )
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 4de712a64a9121424aaf23a9683165c6af349098
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 2da040b5883c4a00166e9a22cc49c5400d09d025)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} f9934d635b4713cdceab4aa751745029fab4f82d
-            SHA1_FILES ${SHA1_FILES}
-            SHA1_VALUES e7a94eaf5cd6bfa099ffc700ea81f26e3030a065
-        )
+                              ${RELATIVE_PROJECT_SOURCE_DIR} f9934d635b4713cdceab4aa751745029fab4f82d
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES e7a94eaf5cd6bfa099ffc700ea81f26e3030a065)
     ENDIF()
 ELSE()
     # Rely on the ExternalProject module to build our package

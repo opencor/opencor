@@ -1390,23 +1390,22 @@ IF(EXISTS ${COMPRESSED_FILENAME})
 
     FILE(SHA1 ${COMPRESSED_FILENAME} SHA1_VALUE)
 
-    STRING(REPLACE \"\;\" \"\\n                \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
+    STRING(REPLACE \"\;\" \"\\n                                  \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
 
     MESSAGE(\"To retrieve the '${PACKAGE_NAME}' package, use:
 RETRIEVE_PACKAGE_FILE(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
-    \\$\\{RELATIVE_PROJECT_SOURCE_DIR\\} \$\{SHA1_VALUE\}")
+                      \\$\\{RELATIVE_PROJECT_SOURCE_DIR\\} \$\{SHA1_VALUE\}")
 
     IF(NOT "${ARG_PACKAGE_REPOSITORY}" STREQUAL "")
-        SET(CMAKE_CODE "${CMAKE_CODE}\n    PACKAGE_REPOSITORY \\$\\{PACKAGE_REPOSITORY\\}")
+        SET(CMAKE_CODE "${CMAKE_CODE}\n                      PACKAGE_REPOSITORY \\$\\{PACKAGE_REPOSITORY\\}")
     ENDIF()
 
     IF(NOT "${ARG_RELEASE_TAG}" STREQUAL "")
-        SET(CMAKE_CODE "${CMAKE_CODE}\n    RELEASE_TAG \\$\\{RELEASE_TAG\\}")
+        SET(CMAKE_CODE "${CMAKE_CODE}\n                      RELEASE_TAG \\$\\{RELEASE_TAG\\}")
     ENDIF()
 
-    SET(CMAKE_CODE "${CMAKE_CODE}\n    SHA1_FILES \\$\\{SHA1_FILES\\}
-    SHA1_VALUES \$\{SHA1_VALUES\}
-)\")
+    SET(CMAKE_CODE "${CMAKE_CODE}\n                      SHA1_FILES \\$\\{SHA1_FILES\\}
+                      SHA1_VALUES \$\{SHA1_VALUES\})\")
 ELSE()
     MESSAGE(FATAL_ERROR \"The compressed version of the '${PACKAGE_NAME}' package could not be generated...\")
 ENDIF()

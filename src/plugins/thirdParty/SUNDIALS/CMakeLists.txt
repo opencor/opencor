@@ -131,67 +131,63 @@ IF(USE_PREBUILT_SUNDIALS_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} bbce00643cd504907f021527c798ef5495125d32
-                SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES 22bc419e04d082b9106550db14917f20e27cd927
-                            a2a06d3e7e970c936c2f44970793e0cc1cc31801
-                            4b7b130fca85bf86cab1988bc76ef2ecc3f7834f
-                            30aa886246e6c83b8c11303d56f77a64e8a989f7
-                            63e6d2ab716197be83bf6a4eaf9ccae7124526ce
-                            ee357168d34d1f6cce0edf4fde2f4c79c5f4175d
-                            2d917d51607ecf2926c23ccad88ea89aa616b934
-                            48e912861cd29731b94a6d14611c487045717f88
-                            a2236a36563648d3bf3ec676616d127c1ef4a7ca
-                            b13b8301e0606cbe835511fcd2b09d67f790e2ea
-                            fc3113094113e605929a9cd0e9a0e5d998d1e9fa
-                            e6e2886afaf9a92e45c784da06b6ff0ed40755c7
-                            2c52c61febf5a4c2159e801c133e839d49108651
-                            66f5502347d192fed86b1d70d50df825d41dde86
-            )
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} bbce00643cd504907f021527c798ef5495125d32
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 22bc419e04d082b9106550db14917f20e27cd927
+                                              a2a06d3e7e970c936c2f44970793e0cc1cc31801
+                                              4b7b130fca85bf86cab1988bc76ef2ecc3f7834f
+                                              30aa886246e6c83b8c11303d56f77a64e8a989f7
+                                              63e6d2ab716197be83bf6a4eaf9ccae7124526ce
+                                              ee357168d34d1f6cce0edf4fde2f4c79c5f4175d
+                                              2d917d51607ecf2926c23ccad88ea89aa616b934
+                                              48e912861cd29731b94a6d14611c487045717f88
+                                              a2236a36563648d3bf3ec676616d127c1ef4a7ca
+                                              b13b8301e0606cbe835511fcd2b09d67f790e2ea
+                                              fc3113094113e605929a9cd0e9a0e5d998d1e9fa
+                                              e6e2886afaf9a92e45c784da06b6ff0ed40755c7
+                                              2c52c61febf5a4c2159e801c133e839d49108651
+                                              66f5502347d192fed86b1d70d50df825d41dde86)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} 330ebfde6521245f7e96387f3139d9fb84cfe1a2
-                SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES 9d791e1bfbe0999fd4e4f75efcb62130eaa4826e
-                            3422344f1a538bc15f040b115f118e2a8bc8e0e3
-                            2f778c2a73469df82dda3b724c08fb2ab2ea57bb
-                            713e845c7a038ce0e6b9b851a4e1931b5dcc3fa8
-                            0b2fc8920ebdc03de15bb824add61833f2a77c71
-                            199562dfed002fa53da865e999f0e7a6bda05474
-                            1d4555a7010e08b3df3aa2531b63b0ff4b18e7ef
-                            5e033fcc0676c7bd9a78fab74ad1235b952c0fa4
-                            a919cd14a167625e6271d484ab11c286babb187e
-                            90dd2248e09684d464429b9f6d6dd5956cc0c89d
-                            3ec2f98ffede8996f7ae87c290146d7644ef2a49
-                            0bbd55acedc5f0b514ef908277e35c71e4fc2207
-                            c869309c7438c80ab5524a0e3442b8a678861a9a
-                            3d2307416dc3e0541395a2ce3d1632c62fed0afe
-            )
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 330ebfde6521245f7e96387f3139d9fb84cfe1a2
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 9d791e1bfbe0999fd4e4f75efcb62130eaa4826e
+                                              3422344f1a538bc15f040b115f118e2a8bc8e0e3
+                                              2f778c2a73469df82dda3b724c08fb2ab2ea57bb
+                                              713e845c7a038ce0e6b9b851a4e1931b5dcc3fa8
+                                              0b2fc8920ebdc03de15bb824add61833f2a77c71
+                                              199562dfed002fa53da865e999f0e7a6bda05474
+                                              1d4555a7010e08b3df3aa2531b63b0ff4b18e7ef
+                                              5e033fcc0676c7bd9a78fab74ad1235b952c0fa4
+                                              a919cd14a167625e6271d484ab11c286babb187e
+                                              90dd2248e09684d464429b9f6d6dd5956cc0c89d
+                                              3ec2f98ffede8996f7ae87c290146d7644ef2a49
+                                              0bbd55acedc5f0b514ef908277e35c71e4fc2207
+                                              c869309c7438c80ab5524a0e3442b8a678861a9a
+                                              3d2307416dc3e0541395a2ce3d1632c62fed0afe)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} f6eec1ac37dc6d876ec9408a5c68f5bdfc328d57
-            SHA1_FILES ${SHA1_FILES}
-            SHA1_VALUES 47396d5517c9067bcba2d8b2b31b90a5e6f4f1f6
-                        597ac3239164a5659111696314cb38baa0761f5c
-                        a87d3fa5acbdb70c0ce2be7ac9c697925bef2d29
-                        47043ace0eeb34cf3b54c9498a527f4240e7c042
-                        a9eff6fa8aa28ddd6bf0895a84a78874c309b201
-                        e1f6625e79eafd81bed97ace2bca3af32f5cab46
-                        d31eede78680e80d9a5ee721cdd4067d8553c9af
-        )
+                              ${RELATIVE_PROJECT_SOURCE_DIR} f6eec1ac37dc6d876ec9408a5c68f5bdfc328d57
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 47396d5517c9067bcba2d8b2b31b90a5e6f4f1f6
+                                          597ac3239164a5659111696314cb38baa0761f5c
+                                          a87d3fa5acbdb70c0ce2be7ac9c697925bef2d29
+                                          47043ace0eeb34cf3b54c9498a527f4240e7c042
+                                          a9eff6fa8aa28ddd6bf0895a84a78874c309b201
+                                          e1f6625e79eafd81bed97ace2bca3af32f5cab46
+                                          d31eede78680e80d9a5ee721cdd4067d8553c9af)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} 0cb67f00d1c0eefa5b7272494e60a24d2ad1646d
-            SHA1_FILES ${SHA1_FILES}
-            SHA1_VALUES bcc5608415bf28f28f67a557b6466f5a4f1bbd96
-                        8bcde8cd47819a9937e34f021c0cc2de5f51d4ac
-                        d112ba8f2b4210ad80a805d5822803bd5300cdac
-                        3628bdb56b88274f712d7554326c8dd99901ef9a
-                        d5f5436f68fa01c6425288de263fe861e58deeca
-                        541af26d7ae909b434ff44ca4e4d264234ba6e95
-                        355c67781cf38437eafd94eec1ea042c59395656
-        )
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 0cb67f00d1c0eefa5b7272494e60a24d2ad1646d
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES bcc5608415bf28f28f67a557b6466f5a4f1bbd96
+                                          8bcde8cd47819a9937e34f021c0cc2de5f51d4ac
+                                          d112ba8f2b4210ad80a805d5822803bd5300cdac
+                                          3628bdb56b88274f712d7554326c8dd99901ef9a
+                                          d5f5436f68fa01c6425288de263fe861e58deeca
+                                          541af26d7ae909b434ff44ca4e4d264234ba6e95
+                                          355c67781cf38437eafd94eec1ea042c59395656)
     ENDIF()
 ELSE()
     # Rely on the ExternalProject module to build our package
