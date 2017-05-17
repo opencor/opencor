@@ -193,8 +193,6 @@ ELSE()
     ENDIF()
 
     # Build the CellML API as an external project
-    # Note: the --no-warn-unused-cli argument is to prevent CMake from warning
-    #       us about NO_FPRINTF_OUTPUT not being used...
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
