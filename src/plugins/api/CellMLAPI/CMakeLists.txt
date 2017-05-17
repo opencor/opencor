@@ -186,10 +186,10 @@ ELSE()
 
     INCLUDE(ExternalProject)
 
-    # Some compilation flags and ignore some warnings
+    # Set some compilation flags and ignore some warnings
 
     IF(NOT WIN32 AND NOT APPLE)
-        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wno-unused-parameter")
+        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wno-reorder -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable")
     ENDIF()
 
     # Build the CellML API as an external project
