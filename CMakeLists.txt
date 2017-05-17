@@ -15,7 +15,6 @@ OPTION(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
-SET(USE_PREBUILT_CELLMLAPI_PACKAGE OFF)
 
 OPTION(USE_PREBUILT_LIBGIT2_PACKAGE "Use the pre-built version of the libgit2 package" ON)
 OPTION(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff package" ON)
@@ -420,9 +419,6 @@ SET(PLUGINS
 
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
-)
-SET(PLUGINS
-    api/CellMLAPI
 )
 
 FOREACH(PLUGIN ${PLUGINS})
