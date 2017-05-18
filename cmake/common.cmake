@@ -119,6 +119,8 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_LIBRARY_DIR ${QT_DIR}/lib)
     SET(QT_PLUGINS_DIR ${QT_DIR}/plugins)
 
+    SET(QT_QMAKE ${Qt5Core_QMAKE_EXECUTABLE})
+
     # On macOS, keep track of the Qt libraries against which we need to link
 
     IF(APPLE)
