@@ -386,7 +386,7 @@ ELSE()
     # Install the Python package installer
 
     ExternalProject_Add_Step(${PACKAGE_BUILD} install_pip
-        COMMAND ${PYTHON_EXECUTABLE} -s ${PROJECT_SOURCE_DIR}/bin/get-pip.py
+        COMMAND ${PYTHON_EXECUTABLE} -s ${PROJECT_SOURCE_DIR}/scripts/get-pip.py
         WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
         DEPENDEES clean_site
         )
