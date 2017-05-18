@@ -133,9 +133,9 @@ IF(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(PythonLibrary ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} fa6eddc3a9cdd3233d146b29cec1383dfbf2a676
+            ${RELATIVE_PROJECT_SOURCE_DIR} b45f2930c941d034da7b10e9cd1c8b673c164a6d
             SHA1_FILES ${SHA1_FILES}
-            SHA1_VALUES 2b4741d820dc26d1033aa671582f80271d934adc
+            SHA1_VALUES b2a24eab5112fd14f71cf38970d9433ba031d33e
         )
     ELSE()
         RETRIEVE_PACKAGE_FILE(PythonLibrary ${PACKAGE_VERSION}
@@ -347,13 +347,19 @@ ELSE()
         SET(INSTALL_STEP copy_dlls)
     ELSEIF(APPLE)
         # Fix up the newly installed Python executable and shared library
-        # - add RPATH to executable so it can use installed libraries at build time
-        # - and when installed (into Frameworks/Python/bin)
-        # - also set RPATH in library to enable linking independent of location
+        # - add RPATH to executable so it can use already installed libraries when run at build time
+        # - add RPATH to executable so it can find Python library when run at build time
+        # - add RPATH to executable so it can use libraries when installed (into Frameworks/Python/bin)
+        # - use a relative path to the Python library
+        # - set RPATH in Python library to enable linking independent of location
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} set_rpath
             COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_BINARIES_DIR} bin/python
+            COMMAND install_name_tool -add_rpath @executable_path/.. bin/python
             COMMAND install_name_tool -add_rpath @executable_path/../.. bin/python
+            COMMAND install_name_tool -change ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY}
+                                              @rpath/lib/${SHARED_LIBRARY}
+                                              bin/python
             COMMAND install_name_tool -id @rpath/${SHARED_LIBRARY} lib/${SHARED_LIBRARY}
             WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
             DEPENDEES install
