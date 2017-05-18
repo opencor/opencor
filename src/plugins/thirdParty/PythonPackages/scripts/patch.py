@@ -696,9 +696,9 @@ class PatchSet(object):
       debug("normalize filenames")
     for i,p in enumerate(self.items):
       if debugmode:
-        debug("    patch type = " + p.type)
-        debug("    source = " + p.source)
-        debug("    target = " + p.target)
+        debug("    patch type = %s", p.type)
+        debug("    source = %s", p.source)
+        debug("    target = %s", p.target)
       if p.type in (HG, GIT):
         # TODO: figure out how to deal with /dev/null entries
         debug("stripping a/ and b/ prefixes")
