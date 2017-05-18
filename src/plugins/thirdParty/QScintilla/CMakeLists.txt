@@ -59,25 +59,25 @@ IF(USE_PREBUILT_QSCINTILLA_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} a3c108bc2c85756fd92c10b76a8e751ec3e53ac9
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 5fee3d470a94caf52a9a5845d9d68856850c791d
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 17f68b4ecad125c5fd499663086cd71a105e80e5
-                                              6c4a87940e8e1dbed81f0fd664f6260a67354566)
+                                  SHA1_VALUES 306e264145dbcbcc246775edbc16f38b37ec8aef
+                                              590391bab7acc405ef470a12e0190b3411f3a1fb)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} e4ca2b71da3b3d4ec6015e76c99072da8f16afe0
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 2aaa8d468a60010a3f2be04a2826d1f4884b8fa0
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 2b13ca4e6ea6c1310039f5b63137ed2c8bf3e408
-                                              3d72a1f4726ce07721b7e52bf815b6fec3f6429f)
+                                  SHA1_VALUES cc1541c2177055970e59bc186f7ecd4488cd49db
+                                              8d3d43de2213ac524ad8bb530e25d23b3ec05313)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f8e47fcabe1a8f46dd888f654cd31e825483d528
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 3736b481af073b9cf10f19e240c2d7c9fa97beae
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES f181f3d0cc640b06ac8b630ee9150da299ecd25a)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 03127ee34cd3c1b7b70cf27c4ebdfcbbeaaf7fce
+                              ${RELATIVE_PROJECT_SOURCE_DIR} de155cb55fc3a89f402adf03ebd0e2df4db6d623
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES bbb1b66d8fa7a1e42a732aa32119f8cef173e5fd)
     ENDIF()
