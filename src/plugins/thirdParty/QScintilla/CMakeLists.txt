@@ -90,9 +90,17 @@ ELSE()
 
     IF(WIN32)
         SET(MAKE_EXECUTABLE nmake)
+
+        IF(RELEASE_MODE)
+            SET(MAKEFILE Makefile.Release)
+        ELSE()
+            SET(MAKEFILE Makefile.Debug)
+        ENDIF()
+
         SET(QUIET_MAKE -c)
     ELSE()
         SET(MAKE_EXECUTABLE make)
+        SET(MAKEFILE Makefile)
         SET(QUIET_MAKE --quiet)
     ENDIF()
 
@@ -117,9 +125,9 @@ ELSE()
         CONFIGURE_COMMAND
             ${QT_QMAKE} Qt4Qt5/qscintilla.pro INSTALL_DIR=<INSTALL_DIR>
         BUILD_COMMAND
-            ${MAKE_EXECUTABLE} ${QUIET_MAKE}
+            ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE}
         INSTALL_COMMAND
-            ${MAKE_EXECUTABLE} install ${QUIET_MAKE}
+            ${MAKE_EXECUTABLE} -f ${MAKEFILE} install ${QUIET_MAKE}
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
