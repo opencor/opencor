@@ -13,6 +13,10 @@ SET(LIBRARY_VERSION 1.0.0)
 
 SET(GIT_TAG OpenSSL_1_0_2k)
 
+# Release tag
+
+SET(RELEASE_TAG OpenSSL_1_0_2k)
+
 # Specify where our local package will be installed
 
 SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
@@ -68,6 +72,7 @@ IF(USE_PREBUILT_OPENSSL_PACKAGE)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} d19ce0fa534a50f0c3ca377e1adacb31106cad05
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 79fb6b732873bb8b305564c58c7bb058c55d25a2
                                               cae8c550a333c9f9cd0852b1a46bf293a65a7b3b
@@ -76,6 +81,7 @@ IF(USE_PREBUILT_OPENSSL_PACKAGE)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} bbd3f3b7ba9db734a2356db06a5d70151d707180
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES edd5cc505caf87cf218c463d3aa1a37b5b76550a
                                               186b94792db9b09872fd53b4b3d596967175e4c1
@@ -85,11 +91,13 @@ IF(USE_PREBUILT_OPENSSL_PACKAGE)
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 137b4201cb2d0bd2dfa5f01ddd04f62b23cd82d2
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 205881f147902223779976ccaedf2ab40077016d
                                           6a91eaaeec5490f98371e7ec419d9d41a0fbba84)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              RELEASE_TAG ${RELEASE_TAG}
                               ${RELATIVE_PROJECT_SOURCE_DIR} ae07dd8526e627189c6cb995a3b42a9d4ef45070
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 29c32816ce9e98a13da9be7d001acd9342220507
@@ -207,6 +215,7 @@ ELSE()
 
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
