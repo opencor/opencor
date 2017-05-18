@@ -2,16 +2,16 @@ PROJECT(PythonQtAPIPlugin)
 
 # Version of our library
 
-SET(LIBRARY_VERSION "3.1")
+SET(LIBRARY_VERSION "3.1.0")
 
 # Git tag for our library
 
-SET(GIT_TAG "opencor_patched-7")
+SET(GIT_TAG "opencor")
 
 # Name and version of our package
 
 SET(PACKAGE_NAME PythonQt)
-SET(PACKAGE_VERSION 3.1)
+SET(PACKAGE_VERSION ${LIBRARY_VERSION})
 
 # Specify where our local package will be installed
 
@@ -23,7 +23,7 @@ IF(WIN32)
     SET(SHARED_LIBRARY PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(IMPORT_LIBRARY PythonQt${CMAKE_IMPORT_LIBRARY_SUFFIX})
 ELSE()
-    SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(IMPORT_LIBRARY ${SHARED_LIBRARY})
 ENDIF()
 
@@ -66,9 +66,9 @@ IF(USE_PREBUILT_PYTHONQT_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(PythonQt ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} 70a7fa3a122cf095e601584a167f55df0bbec966
+            ${RELATIVE_PROJECT_SOURCE_DIR} 3ed073926fbb8c8790cd250caeff004199cac353
             SHA1_FILES ${SHA1_FILES}
-            SHA1_VALUES 819971242aefcbe52bdd43c4031de5f3d7b9fd98
+            SHA1_VALUES e1876fd6928547a3794a535aba14842c80317c0f
         )
     ELSE()
         RETRIEVE_PACKAGE_FILE(PythonQt ${PACKAGE_VERSION}
@@ -82,30 +82,79 @@ ELSE()
 
     INCLUDE(ExternalProject)
 
+    # Set platform specific configuration options and tool names
+
+    IF(WIN32)
+        SET(QMAKE_PLATFORM_FLAGS "-tp vc")
+        SET(MAKE_COMMAND nmake)
+        SET(QUIET_MAKE -c)
+    ELSE()
+        SET(MAKE_COMMAND make)
+        SET(QUIET_MAKE --quiet)
+    ENDIF()
+
+    IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        SET(QMAKE_DEBUG_OPTION "CONFIG+=debug")
+    ENDIF()
+
+    # Configure qmake project files with our settings
+
+    SET(PYTHONQT_INSTALL_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
+    SET(PYTHONQT_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/proj)
+
+    CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/qmake/PythonQtOpenCOR.pro.in
+                   ${PROJECT_BINARY_DIR}/PythonQtOpenCOR.pro
+                   @ONLY)
+    CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/qmake/build/common.prf.in
+                   ${PROJECT_BINARY_DIR}/build/common.prf
+                   @ONLY)
+    CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/qmake/build/python.prf.in
+                   ${PROJECT_BINARY_DIR}/build/python.prf
+                   @ONLY)
+
+    # Build PythonQt as an external project
+
     SET(PACKAGE_BUILD PythonQtBuild)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         DEPENDS
             PythonLibraryPlugin
+        DOWNLOAD_DIR
+            ${PYTHONQT_SOURCE_DIR}
         SOURCE_DIR
-            ${PROJECT_SOURCE_DIR}/ext/proj
+            ${PYTHONQT_SOURCE_DIR}
+        BINARY_DIR
+            ${PYTHONQT_SOURCE_DIR}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/dbrnz/PythonQt-CommonTk
+            https://github.com/opencor/PythonQt
         GIT_TAG
             ${GIT_TAG}
-        CMAKE_ARGS
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-            -DCMAKE_MACOSX_RPATH=1
-            -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR}
-            -DPYTHON_LIBRARY=${PYTHON_LIBRARY}
-            -DPythonQt_Wrap_QtAll=1
-            -DQt5_DIR=1
+        CONFIGURE_COMMAND
+            qmake ${QMAKE_DEBUG_OPTION} ${QMAKE_PLATFORM_FLAGS} -r PythonQtOpenCOR.pro
+        BUILD_COMMAND
+            ${MAKE_COMMAND} all
+        INSTALL_COMMAND
+            ${MAKE_COMMAND} ${MAKE_QUIET} install
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
+
+    # Copy our configured qmake project files into the build
+
+    ExternalProject_Add_Step(${PACKAGE_BUILD} update_configuration
+        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/PythonQtOpenCOR.pro
+                                         ${PYTHONQT_SOURCE_DIR}/PythonQtOpenCOR.pro
+        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/build/common.prf
+                                         ${PYTHONQT_SOURCE_DIR}/build/common.prf
+        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/build/python.prf
+                                         ${PYTHONQT_SOURCE_DIR}/build/python.prf
+        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/qmake/extensions/PythonQt_QtAll/PythonQt_QtAll.pri
+                                         ${PYTHONQT_SOURCE_DIR}/extensions/PythonQt_QtAll
+        DEPENDEES update
+        DEPENDERS configure
+        )
 
     # Do some post-processing that is specific to each platform
 

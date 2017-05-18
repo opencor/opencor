@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <PythonQt.h>
-#include <PythonQt_QtBindings.h>
+#include <PythonQt_QtAll.h>
 
 //==============================================================================
 
@@ -95,7 +95,7 @@ void PythonQtSupportPlugin::initializePlugin()
 
     // Enable the Qt bindings for Python
 
-    PythonQt_init_QtBindings();
+    PythonQt_QtAll::init();
 
     // Save the manager in our instance
 
