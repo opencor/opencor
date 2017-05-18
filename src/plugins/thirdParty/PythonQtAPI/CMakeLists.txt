@@ -201,7 +201,7 @@ ENDIF()
 
 # Allow other external projects to find our PythonQt package
 
-SET(PYTHONQT_ROOT_DIR ${FULL_INSTALL_DIR} PARENT_SCOPE)
+SET(PYTHONQT_ROOT_DIR ${LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
 
 # Add the plugin
 

@@ -25,7 +25,7 @@
    All rights reserved.
 
    ParaView is a free software; you can redistribute it and/or modify it
-   under the terms of the ParaView license version 1.2. 
+   under the terms of the ParaView license version 1.2.
 
    See http://www.paraview.org/paraview/project/license.html for the full ParaView license.
    A copy of this license can be obtained by contacting
@@ -59,8 +59,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QVBoxLayout>
 
 // PythonQt includes
-#include <PythonQt.h>
-#include <PythonQtObjectPtr.h>
+#include <PythonQt/PythonQt.h>
+#include <PythonQt/PythonQtObjectPtr.h>
 
 // CTK includes
 #include <ctkConsole.h>

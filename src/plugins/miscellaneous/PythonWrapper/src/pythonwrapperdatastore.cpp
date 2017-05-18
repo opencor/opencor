@@ -22,10 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "datastoreinterface.h"
-#include "pythonqtconversion.h"
 #include "pythonwrapperdatastore.h"
 #include "pythonwrappernumpy.h"
 #include "pythonwrapperplugin.h"
+
+//==============================================================================
+
+#include <PythonQt/pythonqtconversion.h>
 
 //==============================================================================
 

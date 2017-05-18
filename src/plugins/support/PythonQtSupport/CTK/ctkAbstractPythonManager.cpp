@@ -26,10 +26,10 @@
 #include "ctkAbstractPythonManager.h"
 
 // PythonQT includes
-#include <PythonQt.h>
+#include <PythonQt/PythonQt.h>
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  #include <PythonQt_QtBindings.h>
+  #include <PythonQt/PythonQt_QtAll.h>
 #endif
 
 // STD includes
@@ -155,7 +155,7 @@ void ctkAbstractPythonManager::initPythonQt(int flags)
                 SLOT(printStderr(QString)));
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  PythonQt_init_QtBindings();
+  PythonQt_QtAll::init();
 #endif
 
   QStringList initCode;

@@ -28,7 +28,7 @@
 #include <QVariant>
 
 // PythonQt includes
-#include <PythonQtPythonInclude.h> // For PyObject
+#include <PythonQt/PythonQtPythonInclude.h> // For PyObject
 
 // OpenCOR includes
 #include "pythonqtsupportglobal.h"
