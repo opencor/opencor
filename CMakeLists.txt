@@ -25,7 +25,7 @@ OPTION(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScinti
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
-SET(USE_PREBUILT_QSCINTILLA_PACKAGE OFF)
+SET(USE_PREBUILT_OPENSSL_PACKAGE OFF)
 
 # Initialise the project
 
@@ -422,7 +422,7 @@ SET(PLUGINS
     ${TEST_PLUGINS}
 )
 SET(PLUGINS
-    thirdParty/QScintilla
+    thirdParty/OpenSSL
 )
 
 FOREACH(PLUGIN ${PLUGINS})

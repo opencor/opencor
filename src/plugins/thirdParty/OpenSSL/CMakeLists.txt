@@ -117,7 +117,12 @@ ELSE()
     SET(CONFIG_OPTIONS "--prefix=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}")
 
     IF(WIN32)
-        SET(PLATFORM VC-WIN64A)
+        IF(RELEASE_MODE)
+            SET(PLATFORM VC-WIN64A)
+        ELSE()
+            SET(PLATFORM debug-VC-WIN64A)
+        ENDIF()
+
         SET(MAKE_EXECUTABLE nmake)
         SET(MAKEFILE ms/ntdll.mak)
         SET(QUIET_MAKE -c)
