@@ -2,7 +2,7 @@ PROJECT(QScintillaPlugin)
 
 # Use our pre-built version unless instructed otherwise
 
-IF(USE_PREBUILT_QSCINTILLA_PLUGIN)
+IF(USE_PREBUILT_QSCINTILLA_PACKAGE)
     # Retrieve the plugin's binary file(s)
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
