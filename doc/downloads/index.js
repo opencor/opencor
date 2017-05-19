@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> OpenGL now works in an Ubuntu virtual machine (see issue <a href=\"https://github.com/opencor/opencor/issues/1307\">#1307</a>). Added OpenSSL as a third-party plugin (see issue <a href=\"https://github.com/opencor/opencor/issues/1101\">#1101</a>)." }
+                       { "change": "<strong>General:</strong> OpenGL now works in an Ubuntu virtual machine (see issue <a href=\"https://github.com/opencor/opencor/issues/1307\">#1307</a>). Added OpenSSL as a third-party plugin (see issues <a href=\"https://github.com/opencor/opencor/issues/1101\">#1101</a> and <a href=\"https://github.com/opencor/opencor/issues/1314\">#1314</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
