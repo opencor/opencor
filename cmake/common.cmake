@@ -394,8 +394,8 @@ MACRO(INITIALISE_PROJECT)
         SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
     ENDIF()
 
-    # Let the ExternalProject module know where we want to build build our
-    # external projects
+    # Let the ExternalProject module know where we want to build our external
+    # projects
     # Note: indeed, otherwise on Windows we may end up with path names that are
     #       too long...
 
