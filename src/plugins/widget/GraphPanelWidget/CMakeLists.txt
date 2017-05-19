@@ -25,6 +25,4 @@ ADD_PLUGIN(GraphPanelWidget
     PLUGINS
         Core
         ${QWT_PLUGIN}
-    PLUGIN_BINARIES
-        ${QWT_PLUGIN_BINARY}
 )
