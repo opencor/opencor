@@ -95,7 +95,7 @@ ELSE()
 
         # We use binary versions that are linked with the Intel Math Kernel Library
 
-        SET(NUMPY_WHEEL "numpy-${NUMPY_VERSION}+mkl-${WHEEL_SUFFIX}"
+        SET(NUMPY_WHEEL "numpy-${NUMPY_VERSION}+mkl-${WHEEL_SUFFIX}")
         SET(SCIPY_WHEEL "scipy-${SCIPY_VERSION}-${WHEEL_SUFFIX}")
         SET(MATPLOTLIB_WHEEL "matplotlib-${MATPLOTLIB_VERSION}-${WHEEL_SUFFIX}")
 
