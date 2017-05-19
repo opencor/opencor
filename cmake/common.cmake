@@ -382,6 +382,18 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
+    # A couple of variables that make it easier to specify library file names
+    # names with a version (e.g. to be able to reference libz.so.1 and
+    # libz.1.dylib, we could simply use libz${PRE}.1${POST})
+
+    IF(APPLE)
+        SET(CMAKE_SHARED_LIBRARY_SUFFIX_PRE)
+        SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST ${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ELSEIF(NOT WIN32)
+        SET(CMAKE_SHARED_LIBRARY_SUFFIX_PRE ${CMAKE_SHARED_LIBRARY_SUFFIX})
+        SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
+    ENDIF()
+
     # Let the ExternalProject module know where we want to build build our
     # external projects
     # Note: indeed, otherwise on Windows we may end up with path names that are
@@ -1293,6 +1305,8 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
 
     SET(OPTIONS)
     SET(ONE_VALUE_KEYWORDS
+        PACKAGE_REPOSITORY
+        RELEASE_TAG
         TARGET
     )
     SET(MULTI_VALUE_KEYWORDS
@@ -1376,14 +1390,22 @@ IF(EXISTS ${COMPRESSED_FILENAME})
 
     FILE(SHA1 ${COMPRESSED_FILENAME} SHA1_VALUE)
 
-    STRING(REPLACE \"\;\" \"\\n                \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
+    STRING(REPLACE \"\;\" \"\\n                                  \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
 
-    MESSAGE(\"To retrieve the '${PACKAGE_NAME}' package, please call:
-RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} \\$\\{PACKAGE_VERSION\\}
-    \\$\\{RELATIVE_PROJECT_SOURCE_DIR\\} \$\{SHA1_VALUE\}
-    SHA1_FILES \\$\\{SHA1_FILES\\}
-    SHA1_VALUES \$\{SHA1_VALUES\}
-)\")
+    MESSAGE(\"To retrieve the '${PACKAGE_NAME}' package, use:
+RETRIEVE_PACKAGE_FILE(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
+                      \\$\\{RELATIVE_PROJECT_SOURCE_DIR\\} \$\{SHA1_VALUE\}")
+
+    IF(NOT "${ARG_PACKAGE_REPOSITORY}" STREQUAL "")
+        SET(CMAKE_CODE "${CMAKE_CODE}\n                      PACKAGE_REPOSITORY \\$\\{PACKAGE_REPOSITORY\\}")
+    ENDIF()
+
+    IF(NOT "${ARG_RELEASE_TAG}" STREQUAL "")
+        SET(CMAKE_CODE "${CMAKE_CODE}\n                      RELEASE_TAG \\$\\{RELEASE_TAG\\}")
+    ENDIF()
+
+    SET(CMAKE_CODE "${CMAKE_CODE}\n                      SHA1_FILES \\$\\{SHA1_FILES\\}
+                      SHA1_VALUES \$\{SHA1_VALUES\})\")
 ELSE()
     MESSAGE(FATAL_ERROR \"The compressed version of the '${PACKAGE_NAME}' package could not be generated...\")
 ENDIF()
@@ -1467,7 +1489,10 @@ MACRO(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
     # Various initialisations
 
     SET(OPTIONS)
-    SET(ONE_VALUE_KEYWORDS)
+    SET(ONE_VALUE_KEYWORDS
+        PACKAGE_REPOSITORY
+        RELEASE_TAG
+    )
     SET(MULTI_VALUE_KEYWORDS
         SHA1_FILES
         SHA1_VALUES
@@ -1504,11 +1529,22 @@ MACRO(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
 
         MESSAGE("Retrieving the '${PACKAGE_NAME}' package...")
 
-        STRING(TOLOWER ${PACKAGE_NAME} LOWER_PACKAGE_NAME)
         SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
         SET(FULL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
 
-        FILE(DOWNLOAD "https://github.com/opencor/${LOWER_PACKAGE_NAME}/releases/download/v${PACKAGE_VERSION}/${COMPRESSED_FILENAME}" ${FULL_COMPRESSED_FILENAME}
+        IF("${ARG_PACKAGE_REPOSITORY}" STREQUAL "")
+            STRING(TOLOWER ${PACKAGE_NAME} PACKAGE_REPOSITORY)
+        ELSE()
+            SET(PACKAGE_REPOSITORY ${ARG_PACKAGE_REPOSITORY})
+        ENDIF()
+
+        IF("${ARG_RELEASE_TAG}" STREQUAL "")
+            SET(RELEASE_TAG v${PACKAGE_VERSION})
+        ELSE()
+            SET(RELEASE_TAG ${ARG_RELEASE_TAG})
+        ENDIF()
+
+        FILE(DOWNLOAD "https://github.com/opencor/${PACKAGE_REPOSITORY}/releases/download/${RELEASE_TAG}/${COMPRESSED_FILENAME}" ${FULL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
 
         # Uncompress the compressed version of the package, should we have
