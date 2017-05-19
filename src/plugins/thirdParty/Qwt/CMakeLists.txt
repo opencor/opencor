@@ -16,7 +16,7 @@ ENDIF()
 
 # Use our pre-built version unless instructed otherwise
 
-IF(USE_PREBUILT_QWT_PLUGIN)
+IF(USE_PREBUILT_QWT_PACKAGE)
     # Retrieve the plugin's binary file(s)
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
