@@ -107,15 +107,14 @@ ELSE()
         SET(MAKE_EXECUTABLE nmake)
 
         IF(RELEASE_MODE)
-            SET(MAKEFILE Makefile.Release)
+            SET(MAKEFILE_TARGET release)
         ELSE()
-            SET(MAKEFILE Makefile.Debug)
+            SET(MAKEFILE_TARGET debug)
         ENDIF()
 
         SET(QUIET_MAKE -c)
     ELSE()
         SET(MAKE_EXECUTABLE make)
-        SET(MAKEFILE Makefile)
         SET(QUIET_MAKE --quiet)
     ENDIF()
 
@@ -137,9 +136,9 @@ ELSE()
         CONFIGURE_COMMAND
             ${QT_QMAKE} <SOURCE_DIR>/qwt.pro CONFIG+=qt_no_framework OBJECTS_DIR=${EP_BASE}/Build/${PACKAGE_BUILD} INSTALL_DIR=<INSTALL_DIR>
         BUILD_COMMAND
-            ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE}
+            ${MAKE_EXECUTABLE} ${MAKEFILE_TARGET} ${QUIET_MAKE}
         INSTALL_COMMAND
-            ${MAKE_EXECUTABLE} -f ${MAKEFILE} install ${QUIET_MAKE}
+            ${MAKE_EXECUTABLE} install ${QUIET_MAKE}
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${QWT_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${QWTMATHML_IMPORT_LIBRARY}
