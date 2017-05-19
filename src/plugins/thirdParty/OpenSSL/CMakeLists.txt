@@ -125,7 +125,7 @@ ELSE()
 
         SET(MAKE_EXECUTABLE nmake)
         SET(MAKEFILE ms/ntdll.mak)
-        SET(QUIET_MAKE -c)
+        SET(QUIET_MAKE /C)
         SET(INSTALL_TARGET install)
     ELSE()
         LIST(APPEND CONFIG_OPTIONS shared)
