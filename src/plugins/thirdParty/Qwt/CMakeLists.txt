@@ -164,6 +164,18 @@ ELSE()
                                                                   ${QWTMATHML_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
+
+        IF(APPLE)
+            # Set the RPATH information to enable linking independent of library
+            # location
+
+            ExternalProject_Add_Step(${PACKAGE_BUILD} SetRPath
+                                     COMMAND install_name_tool -change ${QWT_SHARED_LIBRARY}
+                                                                       @rpath/${QWT_SHARED_LIBRARY}
+                                                                       ${QWTMATHML_SHARED_LIBRARY}
+                                     WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
+                                     DEPENDEES CopyQwtmathmlLibrary)
+        ENDIF()
     ENDIF()
 
     # Package our external project
