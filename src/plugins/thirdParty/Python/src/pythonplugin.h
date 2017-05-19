@@ -32,20 +32,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonLibrary {
+namespace Python {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonLibraryPluginInfo();
+PLUGININFO_FUNC PythonPluginInfo();
 
 //==============================================================================
 
-class PythonLibraryPlugin : public QObject, public CliInterface,
+class PythonPlugin : public QObject, public CliInterface,
                             public PluginInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonLibraryPlugin" FILE "pythonlibraryplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.PythonPlugin" FILE "pythonplugin.json")
 
     Q_INTERFACES(OpenCOR::CliInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
@@ -61,7 +61,7 @@ private:
 
 //==============================================================================
 
-}   // namespace PythonLibrary
+}   // namespace Python
 }   // namespace OpenCOR
 
 //==============================================================================

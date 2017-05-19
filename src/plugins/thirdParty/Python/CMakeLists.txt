@@ -1,4 +1,4 @@
-PROJECT(PythonLibraryPlugin)
+PROJECT(PythonPlugin)
 
 # Version of our library
 
@@ -115,7 +115,7 @@ ENDIF()
 
 # Use the pre-built version of our package unless instructed otherwise
 
-IF(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
+IF(USE_PREBUILT_PYTHON_PACKAGE)
     # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
@@ -123,7 +123,7 @@ IF(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(PythonLibrary ${PACKAGE_VERSION}
+            RETRIEVE_PACKAGE_FILE(Python ${PACKAGE_VERSION}
                 ${RELATIVE_PROJECT_SOURCE_DIR} 4102456caa78e3d62fde6ca53997abb548c8b527
                 SHA1_FILES ${SHA1_FILES}
                 SHA1_VALUES 7a08861d684f2e525102b24909ada5c3302f6634
@@ -132,13 +132,13 @@ IF(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE)
             )
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(PythonLibrary ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} b45f2930c941d034da7b10e9cd1c8b673c164a6d
-            SHA1_FILES ${SHA1_FILES}
-            SHA1_VALUES b2a24eab5112fd14f71cf38970d9433ba031d33e
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 31cd47bed76a51e3a4c17bc1bc03caae14fbd957
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES e30b869c125a6c6c54fd5786f25956ac218dac02)
         )
     ELSE()
-        RETRIEVE_PACKAGE_FILE(PythonLibrary ${PACKAGE_VERSION}
+        RETRIEVE_PACKAGE_FILE(Python ${PACKAGE_VERSION}
             ${RELATIVE_PROJECT_SOURCE_DIR} 0c8b8b07d6af7cdc8e6746cb472d9be5f45f20f0
             SHA1_FILES ${SHA1_FILES}
             SHA1_VALUES d755a6bc25f4864a57ade7fa9666f628fd6b24b9
@@ -239,7 +239,7 @@ ELSE()
 
     # Build Python as an external project
 
-    SET(PACKAGE_BUILD PythonLibraryBuild)
+    SET(PACKAGE_BUILD PythonBuild)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         DEPENDS
@@ -399,7 +399,7 @@ ELSE()
 
     # Package Python's include files and libraries
 
-    CREATE_PACKAGE_FILE(PythonLibrary ${PACKAGE_VERSION}
+    CREATE_PACKAGE_FILE(Python ${PACKAGE_VERSION}
         ${LOCAL_EXTERNAL_PACKAGE_DIR}
         PACKAGED_FILES ${PACKAGED_FILES}
         SHA1_FILES ${SHA1_FILES}
@@ -425,15 +425,15 @@ SET(PYTHON_VERSION ${LIBRARY_VERSION} PARENT_SCOPE)
 
 # Add the plugin
 
-ADD_PLUGIN(PythonLibrary
+ADD_PLUGIN(Python
     SOURCES
         ../../cliinterface.cpp
         ../../plugininfo.cpp
         ../../plugininterface.cpp
 
-        src/pythonlibraryplugin.cpp
+        src/pythonplugin.cpp
     HEADERS_MOC
-        src/pythonlibraryplugin.h
+        src/pythonplugin.h
     INCLUDE_DIRS
         ${LOCAL_EXTERNAL_PACKAGE_DIR}/${INCLUDE_DIR}
 

@@ -19,7 +19,7 @@ OPTION(USE_PREBUILT_LIBXDIFF_PLUGIN "Use the pre-built version of the LibXDiff p
 OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
 OPTION(USE_PREBUILT_OAUTH_PLUGIN "Use the pre-built version of the OAuth plugin" ON)
 OPTION(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
-OPTION(USE_PREBUILT_PYTHON_LIBRARY_PACKAGE "Use the pre-built version of the Python library" ON)
+OPTION(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python library" ON)
 OPTION(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of Python site packages" ON)
 OPTION(USE_PREBUILT_PYTHONQT_PACKAGE "Use the pre-built version of Python Qt" ON)
 OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
@@ -354,7 +354,7 @@ SET(PLUGINS
 
     miscellaneous/Compiler
 
-    thirdParty/PythonLibrary
+    thirdParty/Python
     thirdParty/PythonPackages
     thirdParty/PythonQtAPI
 
@@ -494,7 +494,7 @@ ENDFOREACH()
 IF(NOT WIN32 AND NOT APPLE)
     INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIR})
     TARGET_LINK_LIBRARIES(${CMAKE_PROJECT_NAME} ${PYTHON_LIBRARY})
-    ADD_DEPENDENCIES(${CMAKE_PROJECT_NAME} PythonLibraryPlugin)
+    ADD_DEPENDENCIES(${CMAKE_PROJECT_NAME} PythonPlugin)
 ENDIF()
 
 # Build the CLI version of OpenCOR (Windows specific)

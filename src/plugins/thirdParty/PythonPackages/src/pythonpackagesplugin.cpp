@@ -38,7 +38,7 @@ PLUGININFO_FUNC PythonPackagesPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension ..."));
 
     return new PluginInfo(PluginInfo::ThirdParty, false, false,
-                          QStringList() << "PythonLibrary",
+                          QStringList() << "Python",
                           descriptions);
 }
 

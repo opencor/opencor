@@ -40,7 +40,9 @@ SET(SHA1_FILES
 
 # Use the pre-built version of our package unless instructed otherwise
 
-IF(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
+# Rebuilding Python means we should also re-install its packages
+
+IF(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
@@ -53,11 +55,10 @@ IF(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
             )
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(PythonPackages ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} c63e63499f1c428dbbd025d3f81985b9eb06a89d
-            SHA1_FILES ${SHA1_FILES}
-            SHA1_VALUES 259b675eec7c9138893798095aea9ec468b87a37
-        )
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 4918ff85f1171a51a3e1f69776c9e43a2e87f6bf
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 259b675eec7c9138893798095aea9ec468b87a37)
     ELSE()
         RETRIEVE_PACKAGE_FILE(PythonPackages ${PACKAGE_VERSION}
             ${RELATIVE_PROJECT_SOURCE_DIR} 0c8b8b07d6af7cdc8e6746cb472d9be5f45f20f0
@@ -71,7 +72,7 @@ ELSE()
 
     # Installing Python packages requires the Python library
 
-    SET(BUILD_DEPENDENCIES PythonLibraryPlugin)
+    SET(BUILD_DEPENDENCIES PythonPlugin)
 
     # Ensure local site packages directory exists
 
@@ -171,7 +172,7 @@ ADD_PLUGIN(PythonPackages
     INCLUDE_DIRS
         src
     PLUGINS
-        PythonLibrary
+        Python
     EXTERNAL_DESTINATION_DIR
         ${PYTHON_SITE_PACKAGES_DIR}
     EXTERNAL_SOURCE_DIR

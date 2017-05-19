@@ -129,7 +129,7 @@ ELSE()
 
     ExternalProject_Add(${PACKAGE_BUILD}
         DEPENDS
-            PythonLibraryPlugin
+            PythonPlugin
         DOWNLOAD_DIR
             ${PYTHONQT_SOURCE_DIR}
         SOURCE_DIR
@@ -218,7 +218,7 @@ ADD_PLUGIN(PythonQtAPI
         src
     PLUGINS
         Core
-        PythonLibrary
+        Python
     EXTERNAL_BINARIES_DIR
         ${EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES
