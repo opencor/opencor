@@ -107,15 +107,12 @@ ELSE()
     # Build QScintilla as an external project
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
-    SET(PACKAGE_BUILD_DIR ${PROJECT_SOURCE_DIR}/ext/proj)
+
+    GET_PROPERTY(EP_BASE DIRECTORY PROPERTY EP_BASE)
 
     ExternalProject_Add(${PACKAGE_BUILD}
-        DOWNLOAD_DIR
-            ${PACKAGE_BUILD_DIR}
         SOURCE_DIR
-            ${PACKAGE_BUILD_DIR}
-        BINARY_DIR
-            ${PACKAGE_BUILD_DIR}
+            ${PROJECT_SOURCE_DIR}/ext/proj
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
@@ -123,7 +120,7 @@ ELSE()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${QT_QMAKE} Qt4Qt5/qscintilla.pro INSTALL_DIR=<INSTALL_DIR>
+            ${QT_QMAKE} <SOURCE_DIR>/Qt4Qt5/qscintilla.pro OBJECTS_DIR=${EP_BASE}/Build/${PACKAGE_BUILD} INSTALL_DIR=<INSTALL_DIR>
         BUILD_COMMAND
             ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE}
         INSTALL_COMMAND
@@ -131,6 +128,20 @@ ELSE()
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
+
+    # Do some post-processing that is specific to each platform
+
+    IF(NOT WIN32)
+        # Dereference the symbolic link to the library since CMake's tar can't
+        # do this
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}qscintilla2_qt${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
+                                 DEPENDEES install)
+    ENDIF()
 
     # Package our external project
 
