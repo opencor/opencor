@@ -10,8 +10,9 @@ STRING(REPLACE "." "" NUMERIC_LIBRARY_VERSION ${MAJOR_MINOR_LIBRARY_VERSION})
 
 SET(GIT_TAG "opencor")
 
-# Version of our package
+# Name and version of our package
 
+SET(PACKAGE_NAME Python)
 SET(PACKAGE_VERSION ${LIBRARY_VERSION})
 
 # Set the ABI flag and version identifier
@@ -123,7 +124,7 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(Python ${PACKAGE_VERSION}
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                 ${RELATIVE_PROJECT_SOURCE_DIR} 4102456caa78e3d62fde6ca53997abb548c8b527
                 SHA1_FILES ${SHA1_FILES}
                 SHA1_VALUES 7a08861d684f2e525102b24909ada5c3302f6634
@@ -136,9 +137,8 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
                               ${RELATIVE_PROJECT_SOURCE_DIR} 31cd47bed76a51e3a4c17bc1bc03caae14fbd957
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES e30b869c125a6c6c54fd5786f25956ac218dac02)
-        )
     ELSE()
-        RETRIEVE_PACKAGE_FILE(Python ${PACKAGE_VERSION}
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
             ${RELATIVE_PROJECT_SOURCE_DIR} 0c8b8b07d6af7cdc8e6746cb472d9be5f45f20f0
             SHA1_FILES ${SHA1_FILES}
             SHA1_VALUES d755a6bc25f4864a57ade7fa9666f628fd6b24b9
@@ -399,7 +399,7 @@ ELSE()
 
     # Package Python's include files and libraries
 
-    CREATE_PACKAGE_FILE(Python ${PACKAGE_VERSION}
+    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
         ${LOCAL_EXTERNAL_PACKAGE_DIR}
         PACKAGED_FILES ${PACKAGED_FILES}
         SHA1_FILES ${SHA1_FILES}

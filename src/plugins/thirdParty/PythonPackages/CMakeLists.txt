@@ -2,7 +2,7 @@ PROJECT(PythonPackagesPlugin)
 
 # Name and version of our package
 
-SET(PACKAGE_NAME python-packages)
+SET(PACKAGE_NAME PythonPackages)
 SET(PACKAGE_VERSION ${PYTHON_VERSION})
 
 # The versions of the Python packages we bundle.
@@ -146,7 +146,7 @@ ELSE()
 
     # Package the newly installed Python packages
 
-    CREATE_PACKAGE_FILE(PythonPackages ${PACKAGE_VERSION}
+    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
         ${LOCAL_EXTERNAL_PACKAGE_DIR}
         PACKAGED_FILES ${PACKAGED_FILES}
         SHA1_FILES ${SHA1_FILES}
