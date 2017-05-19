@@ -68,33 +68,33 @@ IF(USE_PREBUILT_QWT_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 8187df85bc30383dded2416641970e5b0a8f92ec
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
+                                  SHA1_VALUES d9d6cd59ec0d832f1a88473894414604268dc5c0
+                                              dfadacb070809c3612c82204df7444a18051bcdf
+                                              eb998efde526642bdbaed59ed471851c4b0523d2
+                                              61fe641bc97890b9426c8cc176454a635e713bae)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 27f0bc50e62e51ca41c4d4c014d4639e372a8105
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
+                                  SHA1_VALUES 3c97e1cc9d12efa525564c6f3787a691689e91aa
+                                              52ba39e5b70992ff96234afe44df55369d6f7191
+                                              b009aab49fe6425aa9c8ae5569a348c121e43978
+                                              e4a170c9562cb7c96e86d7bb9813bfb61005442a)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                              ${RELATIVE_PROJECT_SOURCE_DIR} a8f196a95ef68116b3f03d4e526b680a08c0ff35
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
+                              SHA1_VALUES 00cb93ecd2e8341af6bf6c7eba0ba9a5d2a5c761
+                                          27fcb3b467e9d9519fa4e12c518a6a0c985f27d8)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 6522e076725823058df0b51661866b8559654a71
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
+                              SHA1_VALUES 98c1869712832f83bff34774bc8c9d1dddec8fc7
+                                          eb652a5804420c45fe9ed843c0312f1eb1144ce5)
     ENDIF()
 ELSE()
     # Rely on the ExternalProject module to build our package
