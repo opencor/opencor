@@ -97,7 +97,7 @@ ELSE()
             SET(MAKEFILE Makefile.Debug)
         ENDIF()
 
-        SET(QUIET_MAKE /C)
+        SET(QUIET_MAKE -c)
     ELSE()
         SET(MAKE_EXECUTABLE make)
         SET(MAKEFILE Makefile)

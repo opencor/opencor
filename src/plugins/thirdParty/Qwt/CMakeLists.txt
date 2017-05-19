@@ -112,7 +112,7 @@ ELSE()
             SET(MAKEFILE_TARGET debug)
         ENDIF()
 
-        SET(QUIET_MAKE /C)
+        SET(QUIET_MAKE -c)
     ELSE()
         SET(MAKE_EXECUTABLE make)
         SET(QUIET_MAKE --quiet)
