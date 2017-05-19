@@ -34,7 +34,7 @@ ADD_PLUGIN(PythonWrapper
         ${NUMPY_INCLUDE_DIR}
     PLUGINS
         Core
-        Python
+        PythonPackages
         PythonQtSupport
         SimulationExperimentView
 )

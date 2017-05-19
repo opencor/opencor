@@ -44,7 +44,7 @@ PLUGININFO_FUNC PythonWrapperPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder... <a href=\"http://www.python.org/\">Python</a>."));
 
     return new PluginInfo(PluginInfo::Tools, true, false,
-                          QStringList() << "PythonQtSupport" << "SimulationExperimentView",
+                          QStringList() << "PythonPackages" << "PythonQtSupport" << "SimulationExperimentView",
                           descriptions);
 }
 
