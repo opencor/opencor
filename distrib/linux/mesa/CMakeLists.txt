@@ -82,7 +82,7 @@ ELSE()
                         TARGET ${PACKAGE_BUILD})
 ENDIF()
 
-# Allow other external projects to find our Mesa package
+# Allow our main CMake project to find our Mesa package
 
 SET(MESA_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
 SET(MESA_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY} PARENT_SCOPE)
