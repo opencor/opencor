@@ -14,6 +14,9 @@ OPTION(ENABLE_SAMPLE_PLUGINS "Enable the sample plugins to be built" OFF)
 OPTION(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
+OPTION(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
+SET(USE_PREBUILT_MESA_PACKAGE OFF)
+
 OPTION(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
 OPTION(USE_PREBUILT_SBMLAPI_PACKAGE "Use the pre-built version of the SBML API package" ON)
 OPTION(USE_PREBUILT_SEDMLAPI_PACKAGE "Use the pre-built version of the SED-ML API package" ON)
@@ -422,6 +425,7 @@ SET(PLUGINS
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
 )
+SET(PLUGINS)
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
@@ -660,11 +664,12 @@ ELSE()
         # machines that don't have 'proper' OpenGL support (e.g. on a Linux
         # virtual machine in VirtualBox)
 
-        SET(MESA_FILENAME libGL.so.1)
+        ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
 
-        RETRIEVE_BINARY_FILE(distrib/linux ${MESA_FILENAME} 0b2eb56efe43507026af87f036f96ec4e5b2c707)
+        GET_FILENAME_COMPONENT(MESA_DIRNAME ${MESA_LIBRARY} DIRECTORY)
+        GET_FILENAME_COMPONENT(MESA_FILENAME ${MESA_LIBRARY} NAME)
 
-        COPY_FILE_TO_BUILD_DIR(DIRECT ${CMAKE_SOURCE_DIR}/distrib/bin lib ${MESA_FILENAME})
+        COPY_FILE_TO_BUILD_DIR(DIRECT ${MESA_DIRNAME} lib ${MESA_FILENAME})
     ENDIF()
 ENDIF()
 
@@ -853,7 +858,7 @@ ELSE()
 
     # Mesa library
 
-    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/bin/${MESA_FILENAME}
+    INSTALL(FILES ${MESA_LIBRARY}
             DESTINATION lib)
 
     # Qt libraries required by OpenCOR
