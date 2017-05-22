@@ -909,6 +909,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     )
                 ENDFOREACH()
 
+                # Add the dependency, if any
+
+                IF(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
+                    ADD_DEPENDENCIES(${TEST_NAME} ${ARG_DEPENDS_ON})
+                ENDIF()
+
                 # Copy the test to our tests directory
                 # Note: DEST_TESTS_DIR is defined in our main CMake file...
 
