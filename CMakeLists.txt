@@ -200,7 +200,7 @@ UPDATE_LANGUAGE_FILES(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
 # Third-party library that must be directly embedded in the GUI version of
 # OpenCOR
 
-INCLUDE(src/3rdparty/QtSingleApplication/QtSingleApplication.cmake)
+INCLUDE(${CMAKE_SOURCE_DIR}/src/3rdparty/QtSingleApplication/QtSingleApplication.cmake)
 
 # Set the application icon, but only for Windows and macOS, since in the case of
 # Linux, it's done through the use of app_icon (see res/ui.qrc) when we register
