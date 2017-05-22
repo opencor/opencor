@@ -18,7 +18,7 @@ SET(GIT_TAG v6.1.3)
 
 SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
 
-# Name of our package's shared library (and of its import library, if any)
+# Name of our package's shared libraries (and of their import libraries, if any)
 
 IF(WIN32)
     SET(QWT_SHARED_LIBRARY qwt${CMAKE_SHARED_LIBRARY_SUFFIX})

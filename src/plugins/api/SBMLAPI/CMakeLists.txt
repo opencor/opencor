@@ -22,7 +22,7 @@ SET(PACKAGE_REPOSITORY libsbml)
 
 SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
 
-# Name of our package's shared libraries (and of their import libraries, if any)
+# Name of our package's shared library (and of its import library, if any)
 
 IF(WIN32)
     SET(SHARED_LIBRARY libsbml${CMAKE_SHARED_LIBRARY_SUFFIX})
