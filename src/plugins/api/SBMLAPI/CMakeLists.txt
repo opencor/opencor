@@ -2,7 +2,7 @@ PROJECT(SBMLAPIPlugin)
 
 # Name and version of our package
 
-SET(PACKAGE_NAME libSBML)
+SET(PACKAGE_NAME SBMLAPI)
 SET(PACKAGE_VERSION 5.15.0)
 
 # Version of our package's libraries
@@ -12,7 +12,7 @@ SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.15.0)
 
 # Git tag for our library
 
-SET(GIT_TAG 5.15.0)
+SET(GIT_TAG v5.15.0)
 
 # Specify where our local package will be installed
 
@@ -86,6 +86,12 @@ ELSE()
 
     INCLUDE(ExternalProject)
 
+    # Ignore some warnings
+
+    IF(APPLE)
+        SET(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-switch")
+    ENDIF()
+
     # Build the SBML API as an external project
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
@@ -99,10 +105,14 @@ ELSE()
             https://github.com/opencor/libsbml
         GIT_TAG
             ${GIT_TAG}
+        CMAKE_CACHE_ARGS
+            -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
         CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DCMAKE_MACOSX_RPATH=1
+            -WITH_CPP_NAMESPACE=ON
+            -WITH_SWIG=OFF
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
