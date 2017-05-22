@@ -111,8 +111,8 @@ ELSE()
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DCMAKE_MACOSX_RPATH=1
-            -WITH_CPP_NAMESPACE=ON
-            -WITH_SWIG=OFF
+            -DWITH_CPP_NAMESPACE=ON
+            -DWITH_SWIG=OFF
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
