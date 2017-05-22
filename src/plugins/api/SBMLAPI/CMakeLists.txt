@@ -14,6 +14,10 @@ SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.15.0)
 
 SET(GIT_TAG v5.15.0)
 
+# Package repository and release tag
+
+SET(PACKAGE_REPOSITORY libsbml)
+
 # Specify where our local package will be installed
 
 SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
@@ -60,12 +64,14 @@ IF(USE_PREBUILT_SBMLAPI_PACKAGE)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 3dc200a077c28701942b13fdabb5c0c043c68ed9
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES e58822c306fab96deca6fd93389e418e0bdbcfd5
                                               eb10bf3c7b87da6329d02c4530ad2d5330e2d9b7)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 2782400a91302875a897cd713bb4f385f15dd733
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES ad5c68fc1e4b68092eb7ebde1817b0ff7aa7bd41
                                               46c944193e41a9e7f4a866203e57b264b929f1cc)
@@ -73,11 +79,13 @@ IF(USE_PREBUILT_SBMLAPI_PACKAGE)
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 451c3ced1bf216343ae3ee062cafc80f7782ad64
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES d6db9d28fa73c4121bae4d28e5f75b46f8050210)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} d2b0aee93a8aa74a4a15ae95e6090162eff7e7c9
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES ef54aa2cb375db442f2c1b4a0416b1822d8b1c51)
     ENDIF()
@@ -184,6 +192,7 @@ ELSE()
 
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
