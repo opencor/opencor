@@ -17,7 +17,6 @@ OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 OPTION(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
 OPTION(USE_PREBUILT_SBMLAPI_PACKAGE "Use the pre-built version of the SBML API package" ON)
 OPTION(USE_PREBUILT_SEDMLAPI_PACKAGE "Use the pre-built version of the SED-ML API package" ON)
-SET(USE_PREBUILT_SEDMLAPI_PACKAGE OFF)
 
 OPTION(USE_PREBUILT_LIBGIT2_PACKAGE "Use the pre-built version of the libgit2 package" ON)
 OPTION(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff package" ON)
@@ -422,10 +421,6 @@ SET(PLUGINS
 
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
-)
-SET(PLUGINS
-    api/SBMLAPI
-    api/SEDMLAPI
 )
 
 FOREACH(PLUGIN ${PLUGINS})
