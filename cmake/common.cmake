@@ -1368,7 +1368,8 @@ SET(SHA1_FILES")
 
     SET(CMAKE_CODE "${CMAKE_CODE}\n)
 
-# Calculate the SHA-1 value of our different files
+# Calculate the SHA-1 value of our different files, after having stripped them,
+# if needed
 
 SET(SHA1_VALUES)
 
@@ -1377,6 +1378,10 @@ FOREACH(SHA1_FILE IN LISTS SHA1_FILES)
 
     IF(NOT EXISTS \$\{REAL_SHA1_FILENAME\})
         MESSAGE(FATAL_ERROR \"'\$\{REAL_SHA1_FILENAME\}' is missing from the '${PACKAGE_NAME}' package...\")
+    ENDIF()
+
+    IF(NOT WIN32 AND RELEASE_MODE)
+        EXECUTE_PROCESS(COMMAND strip -x \$\{REAL_SHA1_FILENAME\})
     ENDIF()
 
     FILE(SHA1 \$\{REAL_SHA1_FILENAME\} SHA1_VALUE)
@@ -1426,7 +1431,7 @@ ENDIF()
     # Run the packaging script once the dependency target has been satisfied
 
     ADD_CUSTOM_COMMAND(TARGET ${ARG_TARGET} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -P ${PACKAGING_SCRIPT}
+                       COMMAND ${CMAKE_COMMAND} -D RELEASE_MODE=${RELEASE_MODE} -P ${PACKAGING_SCRIPT}
                        VERBATIM)
 ENDMACRO()
 
