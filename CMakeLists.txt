@@ -424,6 +424,7 @@ SET(PLUGINS
     ${TEST_PLUGINS}
 )
 SET(PLUGINS
+    api/SBMLAPI
     api/SEDMLAPI
 )
 
