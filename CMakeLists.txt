@@ -663,7 +663,7 @@ ELSE()
         # machines that don't have 'proper' OpenGL support (e.g. on a Linux
         # virtual machine in VirtualBox)
 
-        ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
+        ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/distrib/mesa)
 
         GET_FILENAME_COMPONENT(MESA_DIRNAME ${MESA_LIBRARY} DIRECTORY)
         GET_FILENAME_COMPONENT(MESA_FILENAME ${MESA_LIBRARY} NAME)
