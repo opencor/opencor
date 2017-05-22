@@ -102,8 +102,6 @@ ELSE()
 
     IF(WIN32)
         SET(STATIC_CRT_ARG -DSTATIC_CRT=OFF)
-    ELSE()
-        SET(STATIC_CRT_ARG)
     ENDIF()
 
     # Build libgit2 as an external project
