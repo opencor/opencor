@@ -18,6 +18,4 @@ ADD_PLUGIN(QScintillaSupport
     PLUGINS
         Core
         ${QSCINTILLA_PLUGIN}
-    PLUGIN_BINARIES
-        ${QSCINTILLA_PLUGIN_BINARY}
 )
