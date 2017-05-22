@@ -16,6 +16,7 @@ OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
 OPTION(USE_PREBUILT_SBMLAPI_PACKAGE "Use the pre-built version of the SBML API package" ON)
+SET(USE_PREBUILT_SBMLAPI_PACKAGE OFF)
 
 OPTION(USE_PREBUILT_LIBGIT2_PACKAGE "Use the pre-built version of the libgit2 package" ON)
 OPTION(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff package" ON)
@@ -26,7 +27,6 @@ OPTION(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScinti
 OPTION(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
-SET(USE_PREBUILT_QWT_PACKAGE OFF)
 
 # Initialise the project
 
@@ -423,7 +423,7 @@ SET(PLUGINS
     ${TEST_PLUGINS}
 )
 SET(PLUGINS
-    thirdParty/Qwt
+    api/SBMLAPI
 )
 
 FOREACH(PLUGIN ${PLUGINS})
