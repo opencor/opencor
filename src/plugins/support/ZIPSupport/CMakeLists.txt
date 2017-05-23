@@ -14,7 +14,7 @@ ADD_PLUGIN(ZIPSupport
         src
     PLUGINS
         Core
-        ${ZLIB_PLUGIN}
+        zlib
     TESTS
         tests
 )

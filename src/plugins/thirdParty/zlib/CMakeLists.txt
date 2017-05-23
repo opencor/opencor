@@ -64,33 +64,29 @@ IF(USE_PREBUILT_ZLIB_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 46f64af9fea228a3afa6d64bad1a0700ba20c67b
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 40fb8671f71f4ecd30c497da77a056deff27e68e
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 6a8408008702971d5cbf5e6f49953273d6e2f249
-                                              63892d9f0e54248c4c6f97ca0ba5342938b52d0e)
+                                  SHA1_VALUES 14aa954cecdf06d43bb0781b293df7f53b5a525f
+                                              1f7132f2eb4416f2b9771f0ddb19f834783a3059)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} b3695becf1f964b1207dc2371aa1978973d92459
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} c453bb28a886e000af2351093ca0a883906955e5
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 2121f4b71cab6e851b2a01ac241a684a75ee06ad
-                                              0ef60637c15c35954fe4ca17be1837cd72bd8f69)
+                                  SHA1_VALUES eca444670fe39117f19027fda3608475a1ec1c91
+                                              d4ef983ceb32fcde51dffeb118f686394ccbf32f)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 4de712a64a9121424aaf23a9683165c6af349098
+                              ${RELATIVE_PROJECT_SOURCE_DIR} e98147832b1933945e5a29c194fd570669e49f0f
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 2da040b5883c4a00166e9a22cc49c5400d09d025)
+                              SHA1_VALUES 9c23f1d64dfa64a120e77521c896ac8e645156b1)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f9934d635b4713cdceab4aa751745029fab4f82d
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 26edcea05d4bac33346d80df88144d9f53d0565c
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e7a94eaf5cd6bfa099ffc700ea81f26e3030a065)
+                              SHA1_VALUES c1d95d3e676d5e070b803f68efe46618d983deaa)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
     # Ignore some warnings
 
     IF(WIN32)
@@ -149,7 +145,7 @@ ELSE()
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 
-    SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
+    SET(DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
 # Allow other external projects to find our zlib package
@@ -159,8 +155,6 @@ SET(ZLIB_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
 SET(ZLIB_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IMPORT_LIBRARY} PARENT_SCOPE)
 
 # Add the plugin
-
-SET(ZLIB_PLUGIN ${PACKAGE_NAME} PARENT_SCOPE)
 
 ADD_PLUGIN(${PACKAGE_NAME}
     SOURCES
@@ -180,5 +174,5 @@ ADD_PLUGIN(${PACKAGE_NAME}
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
     DEPENDS_ON
-        ${PLUGIN_DEPENDS_ON}
+        ${DEPENDS_ON}
 )
