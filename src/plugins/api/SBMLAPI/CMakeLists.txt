@@ -139,7 +139,7 @@ ELSE()
         SET(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-switch")
     ENDIF()
 
-    # Build the SBML API as an external project
+    # Build libSBML as an external project
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
@@ -198,7 +198,7 @@ ELSE()
     SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
-# Allow other external projects to find our SBML API package
+# Allow other external projects to find our libSBML package
 
 SET(SBMLAPI_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
 SET(SBMLAPI_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)

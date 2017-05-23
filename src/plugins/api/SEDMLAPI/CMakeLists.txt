@@ -95,7 +95,9 @@ IF(USE_PREBUILT_SEDMLAPI_PACKAGE)
                               SHA1_VALUES b4abe4f634f6a0b32b747a5c705284aaff6b4f47)
     ENDIF()
 ELSE()
-    # Build the SED-ML API as an external project
+    # Build libSEDML as an external project
+    # Note: we need libSBML to be built, so we can get access to it, as well as
+    #       to some of its dependencies...
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
@@ -180,7 +182,7 @@ ELSE()
     SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
-# Allow other external projects to find our SED-ML API package
+# Allow other external projects to find our libSEDML package
 
 SET(SEDMLAPI_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
 SET(SEDMLAPI_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
