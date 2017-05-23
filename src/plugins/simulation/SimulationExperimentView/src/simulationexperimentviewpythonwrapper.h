@@ -44,15 +44,16 @@ namespace DataStore {
 }
 
 namespace SimulationExperimentView {
-    class SimulationExperimentViewSimulation;
-    class SimulationExperimentViewSimulationData;
-    class SimulationExperimentViewSimulationResults;
-    class SimulationExperimentViewSimulationWidget;
-};
 
 //==============================================================================
 
-namespace PythonWrapper {
+    class SimulationExperimentViewSimulation;
+
+    class SimulationExperimentViewSimulationData;
+
+    class SimulationExperimentViewSimulationResults;
+
+    class SimulationExperimentViewSimulationWidget;
 
 //==============================================================================
 
@@ -95,7 +96,7 @@ public slots:
 
 //==============================================================================
 
-}   // namespace PythonWrapper
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================

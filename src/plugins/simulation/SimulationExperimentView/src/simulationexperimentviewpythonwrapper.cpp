@@ -23,10 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "centralwidget.h"
 #include "coreguiutils.h"
+#include "datastorepythonwrapper.h"
+
 #include "pythonwrapperplugin.h"
-#include "pythonwrapperdatastore.h"
-#include "pythonwrappersimulationexperimentview.h"
+
 #include "simulationexperimentviewplugin.h"
+#include "simulationexperimentviewpythonwrapper.h"
 #include "simulationexperimentviewsimulation.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
@@ -38,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonWrapper {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
@@ -219,7 +221,7 @@ PyObject * PythonWrapperSimulationExperimentView::algebraic(
 
 //==============================================================================
 
-}   // namespace PythonWrapper
+}   // namespace SimulationExperimentView
 }   // namespace OpenCOR
 
 //==============================================================================
