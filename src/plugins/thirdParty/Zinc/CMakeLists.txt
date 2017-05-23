@@ -54,7 +54,6 @@ ADD_PLUGIN(Zinc
         src/zincplugin.h
     INCLUDE_DIRS
         include
-        src
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
