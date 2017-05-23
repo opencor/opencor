@@ -15,10 +15,14 @@ OPTION(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
+SET(USE_PREBUILT_MESA_PACKAGE OFF)
 
 OPTION(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
 OPTION(USE_PREBUILT_SBMLAPI_PACKAGE "Use the pre-built version of the SBML API package" ON)
 OPTION(USE_PREBUILT_SEDMLAPI_PACKAGE "Use the pre-built version of the SED-ML API package" ON)
+SET(USE_PREBUILT_CELLMLAPI_PACKAGE OFF)
+SET(USE_PREBUILT_SBMLAPI_PACKAGE OFF)
+SET(USE_PREBUILT_SEDMLAPI_PACKAGE OFF)
 
 OPTION(USE_PREBUILT_LIBGIT2_PACKAGE "Use the pre-built version of the libgit2 package" ON)
 OPTION(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff package" ON)
@@ -29,6 +33,14 @@ OPTION(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScinti
 OPTION(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
+SET(USE_PREBUILT_LIBGIT2_PACKAGE OFF)
+SET(USE_PREBUILT_LIBXDIFF_PACKAGE OFF)
+SET(USE_PREBUILT_OAUTH_PACKAGE OFF)
+SET(USE_PREBUILT_OPENSSL_PACKAGE OFF)
+SET(USE_PREBUILT_QSCINTILLA_PACKAGE OFF)
+SET(USE_PREBUILT_QWT_PACKAGE OFF)
+SET(USE_PREBUILT_SUNDIALS_PACKAGE OFF)
+SET(USE_PREBUILT_ZLIB_PACKAGE OFF)
 
 # Initialise the project
 
@@ -424,7 +436,20 @@ SET(PLUGINS
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
 )
-SET(PLUGINS)
+SET(PLUGINS
+    api/CellMLAPI
+    api/SBMLAPI
+    api/SEDMLAPI
+
+    thirdParty/libgit2
+    thirdParty/LibXDiff
+    thirdParty/OAuth
+    thirdParty/OpenSSL
+    thirdParty/QScintilla
+    thirdParty/Qwt
+    thirdParty/SUNDIALS
+    thirdParty/zlib
+)
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
