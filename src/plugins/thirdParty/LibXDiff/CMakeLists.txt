@@ -59,16 +59,16 @@ IF(USE_PREBUILT_LIBXDIFF_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 5b0da2174aa1adbe444b81c208a963dc6d36a748
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 17edf6ae6a3c96e631d018a8c321311e1ac50b0b
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES b3b38474a32cb9c6dae6f1ead272d50e3995169f
-                                              251408a73dfe5869f4f276c1bd1f960ae4575987)
+                                  SHA1_VALUES bc05933f0452fe10b681003684bcb991ee4f46d3
+                                              dedc7b05e884f1f67fbf45b54ec205d6bf1d660b)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 7badad3a17d4dcaaf433f6f45afa27de555dcded
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 304e5eae0818c73465bfd4fddeef8254a175d7a4
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES edbd0889b522df147db280bed200e908782493e9
-                                              56b389809afb1b8812732053774077429e01faee)
+                                  SHA1_VALUES bacfee23d762a3f0e87ee1166fd992187d835c73
+                                              2b2783937c6e01fc246c9776ee511da3ecdd997e)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
