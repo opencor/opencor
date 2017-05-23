@@ -142,6 +142,8 @@ ELSE()
             -DWITH_ZLIB=ON
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
+        DEPENDS
+            SBMLAPIPlugin
     )
 
     # Do some post-processing that is specific to each platform
