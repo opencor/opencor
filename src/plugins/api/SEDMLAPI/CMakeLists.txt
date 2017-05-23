@@ -95,10 +95,6 @@ IF(USE_PREBUILT_SEDMLAPI_PACKAGE)
                               SHA1_VALUES b022728d8c089274ce821fda20fd07d7ad3efbf5)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
     # Build the SED-ML API as an external project
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)

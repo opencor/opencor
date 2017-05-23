@@ -82,10 +82,6 @@ IF(USE_PREBUILT_OAUTH_PACKAGE)
                               SHA1_VALUES 297f187a580f6489ed64223df93ebf4639efeceb)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
     # Ignore some warnings
 
     IF(WIN32)

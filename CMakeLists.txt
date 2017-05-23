@@ -318,8 +318,11 @@ IF(ENABLE_TESTS)
 ENDIF()
 
 # Build the OpenCOR plugins
-# Note: the build order must be such that plugins needed by others are built
-#       first...
+# Note #1: the build order must be such that plugins needed by others are built
+#          first...
+# Note #2: rely on the ExternalProject module to build our packages...
+
+INCLUDE(ExternalProject)
 
 IF(ENABLE_SAMPLE_PLUGINS)
     SET(SAMPLE_PLUGINS

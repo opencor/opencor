@@ -87,10 +87,6 @@ IF(USE_PREBUILT_ZLIB_PACKAGE)
                               SHA1_VALUES e7a94eaf5cd6bfa099ffc700ea81f26e3030a065)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
     # Ignore some warnings
 
     IF(WIN32)

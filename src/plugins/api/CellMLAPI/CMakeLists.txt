@@ -239,10 +239,6 @@ IF(USE_PREBUILT_CELLMLAPI_PACKAGE)
                                           b9a453f067de6cb600559c982aa3dcefa76e45d4)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
     # Set some compilation flags and/or ignore some warnings
 
     IF(WIN32)

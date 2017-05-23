@@ -82,10 +82,6 @@ IF(USE_PREBUILT_LIBXDIFF_PACKAGE)
                               SHA1_VALUES 6f63edeea34975d9fc80aae3724ccbad1c37797b)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
     # Ignore some warnings
 
     IF(WIN32)

@@ -104,10 +104,6 @@ IF(USE_PREBUILT_OPENSSL_PACKAGE)
                                           88583b407a4625ee157d25b35ce9328e023d8584)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
     # We require perl for OpenSSL's configuration tool
 
     FIND_PACKAGE(Perl REQUIRED QUIET)

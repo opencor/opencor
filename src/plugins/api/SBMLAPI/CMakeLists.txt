@@ -133,10 +133,6 @@ IF(USE_PREBUILT_SBMLAPI_PACKAGE)
                               SHA1_VALUES ef54aa2cb375db442f2c1b4a0416b1822d8b1c51)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
     # Ignore some warnings
 
     IF(APPLE)

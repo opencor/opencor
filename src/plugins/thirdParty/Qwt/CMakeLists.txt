@@ -97,10 +97,6 @@ IF(USE_PREBUILT_QWT_PACKAGE)
                                           eb652a5804420c45fe9ed843c0312f1eb1144ce5)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
     # Set platform specific configuration options and tool names
 
     IF(WIN32)

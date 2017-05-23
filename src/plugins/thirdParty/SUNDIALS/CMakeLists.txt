@@ -190,10 +190,6 @@ IF(USE_PREBUILT_SUNDIALS_PACKAGE)
                                           355c67781cf38437eafd94eec1ea042c59395656)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
     # Ignore some warnings
 
     IF(WIN32)

@@ -86,10 +86,6 @@ IF(USE_PREBUILT_LIBGIT2_PACKAGE)
                               SHA1_VALUES 35057dd98a8eb4af28bce496141b75c207756cb3)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
     # Ignore some warnings
 
     IF(WIN32)

@@ -41,10 +41,6 @@ IF(USE_PREBUILT_MESA_PACKAGE)
                           SHA1_FILES ${SHA1_FILES}
                           SHA1_VALUES 5f3e1487ca1adbaf3e738c12e73ecccc6715364c)
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
     # Build Mesa as an external project
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)

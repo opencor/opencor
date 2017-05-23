@@ -82,10 +82,6 @@ IF(USE_PREBUILT_QSCINTILLA_PACKAGE)
                               SHA1_VALUES 3d9d4c674d53825a97a934dfb282813a465b488d)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
     # Set platform specific configuration options and tool names
 
     IF(WIN32)
