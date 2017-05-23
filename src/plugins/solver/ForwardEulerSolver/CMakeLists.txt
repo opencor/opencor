@@ -14,8 +14,6 @@ ADD_PLUGIN(ForwardEulerSolver
         ../../solverinterface.h
 
         src/forwardeulersolverplugin.h
-    INCLUDE_DIRS
-        src
     QT_MODULES
         Widgets
 )

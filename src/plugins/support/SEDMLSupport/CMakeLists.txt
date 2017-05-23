@@ -18,8 +18,6 @@ ADD_PLUGIN(SEDMLSupport
         src/sedmlfile.h
         src/sedmlfilemanager.h
         src/sedmlsupportplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         CellMLSupport
         SBMLAPI

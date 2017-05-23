@@ -27,8 +27,6 @@ ADD_PLUGIN(HelpWindow
         src/helpwindowwindow.h
     UIS
         src/helpwindowwindow.ui
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
         WebViewerWidget

@@ -17,8 +17,6 @@ ADD_PLUGIN(BioSignalMLDataStore
 
         src/biosignalmldatastoredialog.h
         src/biosignalmldatastoreplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         BioSignalMLAPI
         DataStore

@@ -10,8 +10,6 @@ ADD_PLUGIN(Sample
         src/sampleutilities.cpp
     HEADERS_MOC
         src/sampleplugin.h
-    INCLUDE_DIRS
-        src
     QT_MODULES
         Core
 )

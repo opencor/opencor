@@ -14,8 +14,6 @@ ADD_PLUGIN(SecondOrderRungeKuttaSolver
         ../../solverinterface.h
 
         src/secondorderrungekuttasolverplugin.h
-    INCLUDE_DIRS
-        src
     QT_MODULES
         Widgets
 )

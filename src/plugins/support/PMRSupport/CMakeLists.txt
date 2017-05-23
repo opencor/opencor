@@ -33,8 +33,6 @@ ADD_PLUGIN(PMRSupport
         src/pmrworkspacemanager.h
     UIS
         src/pmrsupportpreferenceswidget.ui
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
         libgit2

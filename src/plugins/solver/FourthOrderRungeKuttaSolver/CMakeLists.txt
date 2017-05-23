@@ -14,8 +14,6 @@ ADD_PLUGIN(FourthOrderRungeKuttaSolver
         ../../solverinterface.h
 
         src/fourthorderrungekuttasolverplugin.h
-    INCLUDE_DIRS
-        src
     QT_MODULES
         Widgets
 )

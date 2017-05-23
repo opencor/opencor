@@ -17,8 +17,6 @@ ADD_PLUGIN(DataStore
         src/datastoreplugin.h
     UIS
         src/datastoredialog.ui
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
 )

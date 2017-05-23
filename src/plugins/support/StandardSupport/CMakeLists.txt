@@ -13,8 +13,6 @@ ADD_PLUGIN(StandardSupport
         src/standardfile.h
         src/standardfilemanager.h
         src/standardsupportplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
 )

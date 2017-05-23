@@ -20,8 +20,6 @@ ADD_PLUGIN(GraphPanelWidget
         src/graphpanelwidgetplugin.h
     UIS
         src/graphpanelwidgetcustomaxesdialog.ui
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
         Qwt

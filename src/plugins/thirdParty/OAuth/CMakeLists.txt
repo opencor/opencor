@@ -163,10 +163,6 @@ ADD_PLUGIN(OAuth
         src/oauthplugin.cpp
     HEADERS_MOC
         src/oauthplugin.h
-    INCLUDE_DIRS
-        ${LOCAL_EXTERNAL_PACKAGE_DIR}/include
-
-        src
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

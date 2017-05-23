@@ -15,14 +15,10 @@ OPTION(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
-SET(USE_PREBUILT_MESA_PACKAGE OFF)
 
 OPTION(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
 OPTION(USE_PREBUILT_SBMLAPI_PACKAGE "Use the pre-built version of the SBML API package" ON)
 OPTION(USE_PREBUILT_SEDMLAPI_PACKAGE "Use the pre-built version of the SED-ML API package" ON)
-SET(USE_PREBUILT_CELLMLAPI_PACKAGE OFF)
-SET(USE_PREBUILT_SBMLAPI_PACKAGE OFF)
-SET(USE_PREBUILT_SEDMLAPI_PACKAGE OFF)
 
 OPTION(USE_PREBUILT_LIBGIT2_PACKAGE "Use the pre-built version of the libgit2 package" ON)
 OPTION(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff package" ON)
@@ -33,14 +29,6 @@ OPTION(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScinti
 OPTION(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
-SET(USE_PREBUILT_LIBGIT2_PACKAGE OFF)
-SET(USE_PREBUILT_LIBXDIFF_PACKAGE OFF)
-SET(USE_PREBUILT_OAUTH_PACKAGE OFF)
-SET(USE_PREBUILT_OPENSSL_PACKAGE OFF)
-SET(USE_PREBUILT_QSCINTILLA_PACKAGE OFF)
-SET(USE_PREBUILT_QWT_PACKAGE OFF)
-SET(USE_PREBUILT_SUNDIALS_PACKAGE OFF)
-SET(USE_PREBUILT_ZLIB_PACKAGE OFF)
 
 # Initialise the project
 
@@ -317,10 +305,13 @@ IF(ENABLE_TESTS)
     ENDIF()
 ENDIF()
 
-# Build the OpenCOR plugins
-# Note #1: the build order must be such that plugins needed by others are built
-#          first...
-# Note #2: rely on the ExternalProject module to build our packages...
+# Build our plugins
+# Note: plugins can be listed in any order (dependencies are determined
+#       automatically). However, for this to work, all plugins must have
+#       [PLUGIN_DIR]/src as an include directory. In addition, all plugins
+#       linked to a packge (built using the ExternalProject module) must also
+#       have [PLUGIN_DIR]/[LOCAL_EXTERNAL_PACKAGE_DIR]/include as an include
+#       directory...
 
 INCLUDE(ExternalProject)
 
@@ -337,92 +328,49 @@ ENDIF()
 
 IF(ENABLE_TEST_PLUGINS)
     SET(TEST_PLUGINS
-        test/ZincWindow
+#---ISSUE1306--- THE PLUGINS THAT ARE DISABLED WILL BE SO UNTIL WE CAN ACTUALLY
+#                BUILD THE BioSignalML AND LLVM PACKAGES...
+#        test/ZincWindow
     )
 ELSE()
     SET(TEST_PLUGINS)
 ENDIF()
 
 SET(PLUGINS
-    # Plugins that have no dependencies
+#---ISSUE1306--- THE PLUGINS THAT ARE DISABLED WILL BE SO UNTIL WE CAN ACTUALLY
+#                BUILD THE BioSignalML AND LLVM PACKAGES...
+    ${SAMPLE_PLUGINS}
+    ${TEST_PLUGINS}
 
-    api/BioSignalMLAPI
+#    api/BioSignalMLAPI
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
 
-    miscellaneous/Core
-
-    support/StandardSupport
-
-    thirdParty/libgit2
-    thirdParty/LibXDiff
-    thirdParty/LLVM
-    thirdParty/OAuth
-    thirdParty/OpenSSL
-    thirdParty/QScintilla
-    thirdParty/Qwt
-    thirdParty/SUNDIALS
-    thirdParty/Zinc
-    thirdParty/zlib
-
-    # Plugins that build on top of some third-party libraries
-
-    miscellaneous/Compiler
-
-    # Plugins that provide support for some third-party libraries
-
-    support/CellMLSupport
-    support/QScintillaSupport
-    support/SEDMLSupport
-    support/ZIPSupport
-
-    # Plugins that provide support for some third-party libraries that have
-    # dependencies on others
-
-    support/COMBINESupport
-
-    # Plugins that extend some libraries (incl. third-party ones)
-
-    widget/EditorWidget
-    widget/GraphPanelWidget
-    widget/MathMLViewerWidget
-    widget/WebViewerWidget
-    widget/ZincWidget
-
-    # Plugins that provide some generic features
-
+#    dataStore/BioSignalMLDataStore
+    dataStore/CSVDataStore
     dataStore/DataStore
 
+#    editing/CellMLAnnotationView
+#    editing/CellMLEditingView
+#    editing/CellMLTextView
     editing/EditingView
-
-    # Plugins that have dependencies on others
-
-    editing/CellMLEditingView
-    editing/SEDMLEditingView
-
-    support/PMRSupport
-
-    # Selectable plugins
-
-    dataStore/BioSignalMLDataStore
-    dataStore/CSVDataStore
-
-    editing/CellMLAnnotationView
-    editing/CellMLTextView
-    editing/RawCellMLView
-    editing/RawSEDMLView
+#    editing/RawCellMLView
+#    editing/RawSEDMLView
     editing/RawTextView
+#    editing/SEDMLEditingView
 
+#    miscellaneous/Compiler
+    miscellaneous/Core
     miscellaneous/HelpWindow
     miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
     organisation/PMRWindow
-    organisation/PMRWorkspacesWindow
+#    organisation/PMRWorkspacesWindow
 
-    simulation/SimulationExperimentView
+#    simulation/SimulationExperimentView
 
     solver/CVODESolver
     solver/ForwardEulerSolver
@@ -432,41 +380,48 @@ SET(PLUGINS
     solver/KINSOLSolver
     solver/SecondOrderRungeKuttaSolver
 
-    tools/CellMLTools
-
-    # Sample and test plugins
-
-    ${SAMPLE_PLUGINS}
-    ${TEST_PLUGINS}
-)
-SET(PLUGINS
-    api/CellMLAPI
-    api/SBMLAPI
-    api/SEDMLAPI
+#    support/CellMLSupport
+    support/COMBINESupport
+    support/PMRSupport
+    support/QScintillaSupport
+#    support/SEDMLSupport
+    support/StandardSupport
+    support/ZIPSupport
 
     thirdParty/libgit2
     thirdParty/LibXDiff
+    thirdParty/LLVM
     thirdParty/OAuth
     thirdParty/OpenSSL
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
+#    thirdParty/Zinc
     thirdParty/zlib
+
+#    tools/CellMLTools
+
+    widget/EditorWidget
+    widget/GraphPanelWidget
+    widget/MathMLViewerWidget
+    widget/WebViewerWidget
+#    widget/ZincWidget
 )
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
 
-    ADD_SUBDIRECTORY(${PLUGIN_DIR})
-    # Note: this will process the CMakeLists.txt file of the plugin resulting in
-    #       PLUGIN_INCLUDE_DIRS being set, hence we can use it below to update
-    #       our include directories
+    IF(   "${PLUGIN}" MATCHES "^api/.*$"
+       OR "${PLUGIN}" MATCHES "^thirdParty/.*$")
+        INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR}/include)
+    ENDIF()
 
-    FOREACH(PLUGIN_INCLUDE_DIR ${PLUGIN_INCLUDE_DIRS})
-        INCLUDE_DIRECTORIES(${PLUGIN_DIR}/${PLUGIN_INCLUDE_DIR})
-    ENDFOREACH()
-
+    INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/src)
     INCLUDE_DIRECTORIES(${PROJECT_BUILD_DIR}/${PLUGIN_DIR})
+ENDFOREACH()
+
+FOREACH(PLUGIN ${PLUGINS})
+    ADD_SUBDIRECTORY(src/plugins/${PLUGIN})
 ENDFOREACH()
 
 # Build the GUI version of OpenCOR

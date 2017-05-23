@@ -200,10 +200,6 @@ ADD_PLUGIN(SEDMLAPI
         src/sedmlapiplugin.cpp
     HEADERS_MOC
         src/sedmlapiplugin.h
-    INCLUDE_DIRS
-        ${LOCAL_EXTERNAL_PACKAGE_DIR}/include
-
-        src
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

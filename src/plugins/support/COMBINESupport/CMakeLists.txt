@@ -17,8 +17,6 @@ ADD_PLUGIN(COMBINESupport
         src/combinearchive.h
         src/combinefilemanager.h
         src/combinesupportplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         StandardSupport
         ZIPSupport

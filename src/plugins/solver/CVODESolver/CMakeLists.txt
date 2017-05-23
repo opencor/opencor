@@ -14,8 +14,6 @@ ADD_PLUGIN(CVODESolver
         ../../solverinterface.h
 
         src/cvodesolverplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         SUNDIALS
     QT_MODULES

@@ -12,8 +12,6 @@ ADD_PLUGIN(ZincWidget
     HEADERS_MOC
         src/zincwidget.h
         src/zincwidgetplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
         Zinc

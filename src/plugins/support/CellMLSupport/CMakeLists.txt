@@ -28,8 +28,6 @@ ADD_PLUGIN(CellMLSupport
         src/cellmlfile.h
         src/cellmlfilemanager.h
         src/cellmlsupportplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         CellMLAPI
         Compiler

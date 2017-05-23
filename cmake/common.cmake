@@ -472,7 +472,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         SOURCES
         HEADERS_MOC
         UIS
-        INCLUDE_DIRS
         DEFINITIONS
         PLUGINS
         PLUGIN_BINARIES
@@ -516,12 +515,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
         ADD_DEFINITIONS(-DQT_NO_DEBUG_OUTPUT)
     ENDIF()
-
-    # Various include directories
-
-    SET(PLUGIN_INCLUDE_DIRS ${ARG_INCLUDE_DIRS} PARENT_SCOPE)
-
-    INCLUDE_DIRECTORIES(${ARG_INCLUDE_DIRS})
 
     # Resource files, if any
     # Note: ideally, we would have our resource files named i18n.qrc.in and
@@ -762,6 +755,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ADD_DEPENDENCIES(${PROJECT_NAME} ${ARG_DEPENDS_ON})
     ENDIF()
 
+    FOREACH(ARG_PLUGIN ${ARG_PLUGINS})
+        ADD_DEPENDENCIES(${PROJECT_NAME} ${ARG_PLUGIN}Plugin)
+    ENDFOREACH()
+
     # Some settings
 
     IF(XCODE)
@@ -915,6 +912,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ADD_DEPENDENCIES(${TEST_NAME} ${ARG_DEPENDS_ON})
                 ENDIF()
 
+                FOREACH(ARG_PLUGIN ${ARG_PLUGINS})
+                    ADD_DEPENDENCIES(${TEST_NAME} ${ARG_PLUGIN}Plugin)
+                ENDFOREACH()
+
                 # Copy the test to our tests directory
                 # Note: DEST_TESTS_DIR is defined in our main CMake file...
 
@@ -953,17 +954,9 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
     SET(OPTIONS)
     SET(ONE_VALUE_KEYWORDS)
-    SET(MULTI_VALUE_KEYWORDS
-        INCLUDE_DIRS
-    )
+    SET(MULTI_VALUE_KEYWORDS)
 
     CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
-
-    # Various include directories
-
-    SET(PLUGIN_INCLUDE_DIRS ${ARG_INCLUDE_DIRS} PARENT_SCOPE)
-
-    INCLUDE_DIRECTORIES(${ARG_INCLUDE_DIRS})
 
     # Some settings
 

@@ -12,8 +12,6 @@ ADD_PLUGIN(WebViewerWidget
     HEADERS_MOC
         src/webviewerwidget.h
         src/webviewerwidgetplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
     QT_MODULES

@@ -12,8 +12,6 @@ ADD_PLUGIN(Compiler
         src/compilerplugin.cpp
     HEADERS_MOC
         src/compilerplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
         ${LLVM_PLUGIN}
