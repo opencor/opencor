@@ -81,18 +81,18 @@ IF(USE_PREBUILT_SEDMLAPI_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} a09ed1c32affbdfec19f5d85897ea58f8ab6fbb0
+                              ${RELATIVE_PROJECT_SOURCE_DIR} f9c0689d452c54d5749e99dabcd858de0f391c6a
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES f72926e4536000d4b673b207626d2fa1f022ebee)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 9cb8713c96b06fd6d761a0303850f12222f777a0
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 0b7110fd0f3deba6cbafd2b9ec0b6ec438a0e3ab
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES b022728d8c089274ce821fda20fd07d7ad3efbf5)
+                              SHA1_VALUES b4abe4f634f6a0b32b747a5c705284aaff6b4f47)
     ENDIF()
 ELSE()
     # Build the SED-ML API as an external project

@@ -72,14 +72,14 @@ IF(USE_PREBUILT_LIBXDIFF_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 21b33a94977a7dbd1e38a6a2481bda4feb2d5f64
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 0fed25c6f3fc4d329e0d05a90d912008cd4f2593
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES d74f9864f2a173f076740486482f753e5604ab90)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} e8ef3ff0a764c189f52340591c18efd7cd07820b
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 4f408e6db26b59de32bf187308eb526f15c0a9a1
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 6f63edeea34975d9fc80aae3724ccbad1c37797b)
+                              SHA1_VALUES 0ebbddd08ef1c2eecd3551b6154153a1ecdf2ffd)
     ENDIF()
 ELSE()
     # Ignore some warnings

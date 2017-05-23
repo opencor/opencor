@@ -72,12 +72,12 @@ IF(USE_PREBUILT_QSCINTILLA_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} fb1c646f95481a89aae322e3f30937bb63181ac8
+                              ${RELATIVE_PROJECT_SOURCE_DIR} f1f7a1e33bc3502b577151b35589aa61c265b90c
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES e264ff3c575eaa197963776a32e36f2b1842e2c3)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} d0b10b2f71ae0ff240ba3b09f8b024da98edac88
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 55a45a3a724762e7a3eef0eab855d5a238e609db
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 3d9d4c674d53825a97a934dfb282813a465b488d)
     ENDIF()

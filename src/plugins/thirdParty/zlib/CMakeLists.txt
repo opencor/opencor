@@ -77,14 +77,14 @@ IF(USE_PREBUILT_ZLIB_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} aced028b34202cbd7777d03ca277c5fb96859905
+                              ${RELATIVE_PROJECT_SOURCE_DIR} e98147832b1933945e5a29c194fd570669e49f0f
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 9c23f1d64dfa64a120e77521c896ac8e645156b1)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f9934d635b4713cdceab4aa751745029fab4f82d
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 26edcea05d4bac33346d80df88144d9f53d0565c
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e7a94eaf5cd6bfa099ffc700ea81f26e3030a065)
+                              SHA1_VALUES c1d95d3e676d5e070b803f68efe46618d983deaa)
     ENDIF()
 ELSE()
     # Ignore some warnings

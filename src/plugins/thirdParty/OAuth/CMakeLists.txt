@@ -72,14 +72,14 @@ IF(USE_PREBUILT_OAUTH_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 873e8d1c85e625cb564890ec11bd4253104acf27
+                              ${RELATIVE_PROJECT_SOURCE_DIR} bf6072552d9650d54faeda1d5ebffd746de49f84
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 922108ebdaf0411e18aa4c388e68ec52439b2ee4)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 842c015bb7ac2969145ef52e778370990c03cc93
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 6fbd54cbd04c71478fe1a6d37160cf4f25f8715a
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 297f187a580f6489ed64223df93ebf4639efeceb)
+                              SHA1_VALUES 08836084bbd30cef8086c306f502c945bb2c30a8)
     ENDIF()
 ELSE()
     # Ignore some warnings
