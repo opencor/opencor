@@ -238,8 +238,6 @@ SET(OPENSSL_LIBRARIES
 
 # Add the plugin
 
-SET(OPENSSL_PLUGIN ${PACKAGE_NAME} PARENT_SCOPE)
-
 ADD_PLUGIN(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp

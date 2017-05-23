@@ -37,8 +37,8 @@ ADD_PLUGIN(PMRSupport
         src
     PLUGINS
         Core
-        ${LIBGIT2_PLUGIN}
-        ${OAUTH_PLUGIN}
+        libgit2
+        OAuth
         WebViewerWidget
-        ${ZLIB_PLUGIN}
+        zlib
 )

@@ -198,8 +198,6 @@ SET(QWT_LIBRARIES
 
 # Add the plugin
 
-SET(QWT_PLUGIN ${PACKAGE_NAME} PARENT_SCOPE)
-
 ADD_PLUGIN(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp

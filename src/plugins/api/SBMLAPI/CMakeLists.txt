@@ -209,8 +209,6 @@ SET(SBMLAPI_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IMPORT_LIBRARY} PAR
 #       can't be done here since the name of our package is different from that
 #       of our plugin...
 
-SET(SBMLAPI_PLUGIN SBMLAPI PARENT_SCOPE)
-
 ADD_PLUGIN(SBMLAPI
     SOURCES
         ../../plugininfo.cpp

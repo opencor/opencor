@@ -17,5 +17,5 @@ ADD_PLUGIN(QScintillaSupport
         src
     PLUGINS
         Core
-        ${QSCINTILLA_PLUGIN}
+        QScintilla
 )

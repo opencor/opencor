@@ -17,7 +17,7 @@ ADD_PLUGIN(IDASolver
     INCLUDE_DIRS
         src
     PLUGINS
-        ${SUNDIALS_PLUGIN}
+        SUNDIALS
     QT_MODULES
         Widgets
 )

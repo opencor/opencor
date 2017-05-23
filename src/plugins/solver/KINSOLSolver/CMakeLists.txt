@@ -16,7 +16,7 @@ ADD_PLUGIN(KINSOLSolver
     INCLUDE_DIRS
         src
     PLUGINS
-        ${SUNDIALS_PLUGIN}
+        SUNDIALS
     QT_MODULES
         Core
 )

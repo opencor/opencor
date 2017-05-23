@@ -193,8 +193,6 @@ SET(SEDMLAPI_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IMPORT_LIBRARY} PA
 #       can't be done here since the name of our package is different from that
 #       of our plugin...
 
-SET(SBMLAPI_PLUGIN SEDMLAPI PARENT_SCOPE)
-
 ADD_PLUGIN(SEDMLAPI
     SOURCES
         ../../plugininfo.cpp

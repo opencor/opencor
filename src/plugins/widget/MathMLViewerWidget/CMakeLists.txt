@@ -16,5 +16,5 @@ ADD_PLUGIN(MathMLViewerWidget
         src
     PLUGINS
         Core
-        ${QWT_PLUGIN}
+        Qwt
 )

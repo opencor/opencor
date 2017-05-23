@@ -156,8 +156,6 @@ SET(OAUTH_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IMPORT_LIBRARY} PAREN
 #       can't be done here since the name of our package is different from that
 #       of our plugin...
 
-SET(OAUTH_PLUGIN OAuth PARENT_SCOPE)
-
 ADD_PLUGIN(OAuth
     SOURCES
         ../../plugininfo.cpp

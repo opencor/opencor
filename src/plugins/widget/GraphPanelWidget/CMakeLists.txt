@@ -24,5 +24,5 @@ ADD_PLUGIN(GraphPanelWidget
         src
     PLUGINS
         Core
-        ${QWT_PLUGIN}
+        Qwt
 )
