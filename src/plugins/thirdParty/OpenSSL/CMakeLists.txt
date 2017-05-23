@@ -90,18 +90,18 @@ IF(USE_PREBUILT_OPENSSL_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 506711d5e1bc4d35f3522e3ca4fcad860e11a668
+                              ${RELATIVE_PROJECT_SOURCE_DIR} d348f274e1bd63b5224e068de69413d2aa0234de
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES fef82d73112a933c55c27454caffc2458c84f09d
-                                          f2733ac26ed67d1ed56a932828de1a2877cd674e)
+                              SHA1_VALUES 15ee34b4d987310df6214ac0838e2e084783490d
+                                          8d0c3218cb2090c42e11e013823115177a701ba1)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} b36071fe6d377596d1152fabef2e279862d68085
+                              ${RELATIVE_PROJECT_SOURCE_DIR} acc1dafdb5e5e2a3ce75779ba2956875300373c5
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES c24fac02bcecb0d3e7f438401562acd72333ea66
-                                          88583b407a4625ee157d25b35ce9328e023d8584)
+                              SHA1_VALUES 449160cd3e6420c180199f19c1e0685d0e5770a1
+                                          be3a2cc75ffcbfbdccf7eff62f0fc7bbc5a09cd8)
     ENDIF()
 ELSE()
     # We require perl for OpenSSL's configuration tool
