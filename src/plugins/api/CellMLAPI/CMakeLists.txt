@@ -371,7 +371,7 @@ ELSE()
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 
-    SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
+    SET(DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
 # Allow other external projects to find our CellML API package
@@ -418,5 +418,5 @@ ADD_PLUGIN(${PACKAGE_NAME}
     TESTS
         tests
     DEPENDS_ON
-        ${PLUGIN_DEPENDS_ON}
+        ${DEPENDS_ON}
 )
