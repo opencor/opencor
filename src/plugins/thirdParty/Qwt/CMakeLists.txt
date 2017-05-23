@@ -85,7 +85,7 @@ IF(USE_PREBUILT_QWT_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} a8f196a95ef68116b3f03d4e526b680a08c0ff35
+                              ${RELATIVE_PROJECT_SOURCE_DIR} d5b0077598bf9bba15d8d08e2696f59985d74521
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 00cb93ecd2e8341af6bf6c7eba0ba9a5d2a5c761
                                           27fcb3b467e9d9519fa4e12c518a6a0c985f27d8)

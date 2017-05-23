@@ -90,11 +90,11 @@ IF(USE_PREBUILT_OPENSSL_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 506711d5e1bc4d35f3522e3ca4fcad860e11a668
+                              ${RELATIVE_PROJECT_SOURCE_DIR} e8454ec99b192c97939a3af9a4435527cbe0c101
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES fef82d73112a933c55c27454caffc2458c84f09d
-                                          f2733ac26ed67d1ed56a932828de1a2877cd674e)
+                              SHA1_VALUES 15ee34b4d987310df6214ac0838e2e084783490d
+                                          8d0c3218cb2090c42e11e013823115177a701ba1)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} b36071fe6d377596d1152fabef2e279862d68085

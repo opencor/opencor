@@ -209,19 +209,19 @@ IF(USE_PREBUILT_CELLMLAPI_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 7bcd7aea05c76d3e832b26fe42d5341ed9a3668b
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 1708a958072452cf655206bfcc535a107f58aaf1
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES caad894dff64e07277943b661e3e4add6b357b44
-                                          be09fc2a937eb64ab4ea72ea6557027ac197e06b
-                                          66e336ebd8fa98ad1f05af5cbddf1cd9c8d6a04f
-                                          14e910e63cdb2c33f965a3498716f55124e8fc81
-                                          bf97bdbd744cd916b18cc338d99d7208d6a0aea1
-                                          27344c693162a2fbdfc2e9fff7113d856f295e99
-                                          fbfd360510598b5c3a70b2d70feddb3f2aa66049
-                                          1f39f07668a6df7ae269dfa5700f926d7eb6afcc
-                                          d0a4f710473af7fa40783526a223ae665bedbe6f)
+                              SHA1_VALUES 37380a773115647a87a2c3bb8aa7fc8f02182c22
+                                          37e9264ab6e88d392d4f5c30d80e58ed2f293cdb
+                                          c0b4920778643032150db5a54aff07f688058b90
+                                          b33810f5e4f7354189218ab810bf4e33cf0a7553
+                                          3cb6f6fbd91480553a5519157e47d7f2c831fa38
+                                          820081bd8c190c0c40a6bfccf974278d4f9368b2
+                                          baaa71a1a63cda4395d67068fe4605d1a320e2cf
+                                          2467dd28a8e263e7ef898ad29725f70311e06649
+                                          c5c3c5a6f5add63976c681fcd8ef4faea6c49bed)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 59d2eaf6606524d0d3b030e911f4771e78d85f94

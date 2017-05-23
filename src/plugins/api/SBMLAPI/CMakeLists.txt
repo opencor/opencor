@@ -121,10 +121,10 @@ IF(USE_PREBUILT_SBMLAPI_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 451c3ced1bf216343ae3ee062cafc80f7782ad64
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 3d83bf2395d7f24294d320550a2727618f3549b2
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES d6db9d28fa73c4121bae4d28e5f75b46f8050210)
+                              SHA1_VALUES 2dc2138e7eccfc1750bf8815e76205a15d7e8f07)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} d2b0aee93a8aa74a4a15ae95e6090162eff7e7c9

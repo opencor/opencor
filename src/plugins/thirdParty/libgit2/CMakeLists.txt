@@ -76,9 +76,9 @@ IF(USE_PREBUILT_LIBGIT2_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} fe776e0524593f639e813275fc24e0e8ad8a2152
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 05e1c61c1ab75ebd523fee3597b7a59fdc76edc4
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES ccc41828d9356104b029964b888c559cfcaa75f2)
+                              SHA1_VALUES 380f2b4c1fa8b48e16e89519e337b162fe81984f)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} e24a002558d3ffbd8e101a167aa2f4ad19ea69bb

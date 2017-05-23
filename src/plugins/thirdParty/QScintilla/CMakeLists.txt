@@ -72,7 +72,7 @@ IF(USE_PREBUILT_QSCINTILLA_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 4910851e63d82d611b74d8c2df071f0cd56ffc3a
+                              ${RELATIVE_PROJECT_SOURCE_DIR} fb1c646f95481a89aae322e3f30937bb63181ac8
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES e264ff3c575eaa197963776a32e36f2b1842e2c3)
     ELSE()

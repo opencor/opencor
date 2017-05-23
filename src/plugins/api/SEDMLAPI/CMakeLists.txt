@@ -81,11 +81,11 @@ IF(USE_PREBUILT_SEDMLAPI_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} caf9273c8931326c2e7d33a5962490b07d1ace7d
+                              ${RELATIVE_PROJECT_SOURCE_DIR} a09ed1c32affbdfec19f5d85897ea58f8ab6fbb0
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES f31ff234b629d2937e5a3b8ec4aa07a7981c2741)
+                              SHA1_VALUES f72926e4536000d4b673b207626d2fa1f022ebee)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 9cb8713c96b06fd6d761a0303850f12222f777a0

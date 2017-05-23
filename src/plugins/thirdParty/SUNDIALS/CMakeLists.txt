@@ -168,15 +168,15 @@ IF(USE_PREBUILT_SUNDIALS_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f6eec1ac37dc6d876ec9408a5c68f5bdfc328d57
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 4f3a31acdb90e290ac11671acb7b00b536321686
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 47396d5517c9067bcba2d8b2b31b90a5e6f4f1f6
-                                          597ac3239164a5659111696314cb38baa0761f5c
-                                          a87d3fa5acbdb70c0ce2be7ac9c697925bef2d29
-                                          47043ace0eeb34cf3b54c9498a527f4240e7c042
-                                          a9eff6fa8aa28ddd6bf0895a84a78874c309b201
-                                          e1f6625e79eafd81bed97ace2bca3af32f5cab46
-                                          d31eede78680e80d9a5ee721cdd4067d8553c9af)
+                              SHA1_VALUES 4caa69790860135deea7ea3c4f91aae0dfc400fa
+                                          c2cc5c1b20fabbc2748adb0e382fc429ed646421
+                                          7005fcb4eb20ed1d0afee0e6273e2243ec91ede3
+                                          a1e0ee55dd5f1ad4ab61065e64809afb053a2631
+                                          8f82bf373800c0b8382d7d4ad8150a1e5e644a8a
+                                          ea3e07230d3960d2fdf4bdc47b83a8f71da48877
+                                          642e874feb5f36cca092ea7554b45facaccdc458)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 0cb67f00d1c0eefa5b7272494e60a24d2ad1646d
