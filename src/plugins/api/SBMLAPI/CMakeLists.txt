@@ -2,7 +2,7 @@ PROJECT(SBMLAPIPlugin)
 
 # Name and version of our package
 
-SET(PACKAGE_NAME SBMLAPI)
+SET(PACKAGE_NAME libSBML)
 SET(PACKAGE_VERSION 5.15.0)
 
 # Version of our package's libraries
@@ -209,10 +209,13 @@ SET(SBMLAPI_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
 SET(SBMLAPI_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IMPORT_LIBRARY} PARENT_SCOPE)
 
 # Add the plugin
+# Note: we would normally use '${PACKAGE_NAME}' rather than 'SBMLAPI', but it
+#       can't be done here since the name of our package is different from that
+#       of our plugin...
 
-SET(SBMLAPI_PLUGIN ${PACKAGE_NAME} PARENT_SCOPE)
+SET(SBMLAPI_PLUGIN SBMLAPI PARENT_SCOPE)
 
-ADD_PLUGIN(${PACKAGE_NAME}
+ADD_PLUGIN(SBMLAPI
     SOURCES
         ../../plugininfo.cpp
 
