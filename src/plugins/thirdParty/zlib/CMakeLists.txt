@@ -64,16 +64,16 @@ IF(USE_PREBUILT_ZLIB_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 46f64af9fea228a3afa6d64bad1a0700ba20c67b
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 40fb8671f71f4ecd30c497da77a056deff27e68e
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 6a8408008702971d5cbf5e6f49953273d6e2f249
-                                              63892d9f0e54248c4c6f97ca0ba5342938b52d0e)
+                                  SHA1_VALUES 14aa954cecdf06d43bb0781b293df7f53b5a525f
+                                              1f7132f2eb4416f2b9771f0ddb19f834783a3059)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} b3695becf1f964b1207dc2371aa1978973d92459
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} c453bb28a886e000af2351093ca0a883906955e5
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 2121f4b71cab6e851b2a01ac241a684a75ee06ad
-                                              0ef60637c15c35954fe4ca17be1837cd72bd8f69)
+                                  SHA1_VALUES eca444670fe39117f19027fda3608475a1ec1c91
+                                              d4ef983ceb32fcde51dffeb118f686394ccbf32f)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}

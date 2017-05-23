@@ -68,20 +68,20 @@ IF(USE_PREBUILT_QWT_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 8187df85bc30383dded2416641970e5b0a8f92ec
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 179cf28ac9745456b1d8c694a137bf45f95d2810
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES d9d6cd59ec0d832f1a88473894414604268dc5c0
-                                              dfadacb070809c3612c82204df7444a18051bcdf
-                                              eb998efde526642bdbaed59ed471851c4b0523d2
-                                              61fe641bc97890b9426c8cc176454a635e713bae)
+                                  SHA1_VALUES b6c54099608108746598dec431453e69369143e7
+                                              7bc6ce0f4d1509d28d07eb73aa7fe4e07ad6e227
+                                              4fbace687c9a2854b2d33e36632ba09dd1170bc8
+                                              05f4792ba477583f02bbb70dd2bf99b8f7c8f669)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 27f0bc50e62e51ca41c4d4c014d4639e372a8105
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} d7230a4e188f3e603db14c36dfef9f7d593cab17
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 3c97e1cc9d12efa525564c6f3787a691689e91aa
-                                              52ba39e5b70992ff96234afe44df55369d6f7191
-                                              b009aab49fe6425aa9c8ae5569a348c121e43978
-                                              e4a170c9562cb7c96e86d7bb9813bfb61005442a)
+                                  SHA1_VALUES 0327ca013f03847f9ca7894ee2288380073b24e3
+                                              89df9bc7e1a13c954673a01a9902b1a978473496
+                                              d0492b2d8ff7f0a226b6f6ba125e3c5db2eb3d40
+                                              fa1337a017d8afb5ebfbcf1cbd4559987039e057)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}

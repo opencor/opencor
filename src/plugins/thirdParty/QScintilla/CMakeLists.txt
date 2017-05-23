@@ -59,16 +59,16 @@ IF(USE_PREBUILT_QSCINTILLA_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 4bc0b3d41dde905575a4d757be57d6f0df0281fd
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} ea83cfd4e3aa6a75ec778d16b48f3ab3663a0d96
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES ab9fffeb45a84eea67c7dc07c0e8e3665c8e6eb8
-                                              7ed9e552d6568f0a69c16f825f8547444dade0b0)
+                                  SHA1_VALUES 441549bde810298381a7f7bf37af6c90521a7117
+                                              c4612b483f4e7977f8ff1fc6466c6d368673d6c9)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 625d48b5e1e9bca75abc802433b79fa6733e9693
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 794f5640900618b1ec0fd615e2bab0248330d9af
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES c4e05d5d1e7cc34c6a1f28914c9fa5537545f446
-                                              1ab1a4173d6e6133997494b54b15fe9a99393f0e)
+                                  SHA1_VALUES 02909bd0333869d1c2c6e7bd962e3496f49d5b5e
+                                              8aa76a19c5dd301528aa7b92ed750b1c335c1014)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
