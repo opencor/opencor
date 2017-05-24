@@ -502,20 +502,6 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(RETRIEVE_CONFIG_FILES)
-    FOREACH(CONFIG_FILE ${ARGN})
-        STRING(REPLACE "PLATFORM_DIR/" "${PLATFORM_DIR}/"
-               CONFIG_FILE_ORIG "${CONFIG_FILE}")
-        STRING(REPLACE "PLATFORM_DIR/" ""
-               CONFIG_FILE_DEST "${CONFIG_FILE}")
-
-        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
-                                                         ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST})
-    ENDFOREACH()
-ENDMACRO()
-
-#===============================================================================
-
 MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the file (renaming it, if needed) to the destination folder
     # Note: DIRECT is used to copy a file that doesn't first need to be built.
@@ -734,25 +720,6 @@ MACRO(MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES PROJECT_TARGET DIRNAME FILENAME)
             ENDIF()
         ENDFOREACH()
     ENDIF()
-ENDMACRO()
-
-#===============================================================================
-
-MACRO(MACOS_DEPLOY_LIBRARY DIRNAME FILENAME)
-    # Copy the library
-
-    SET(DEST_DIRNAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
-
-    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${FILENAME}
-                                                     ${DEST_DIRNAME}/${FILENAME})
-
-    # Make sure the library is writable (so we can actually clean it up)
-
-    EXECUTE_PROCESS(COMMAND chmod 755 ${DEST_DIRNAME}/${FILENAME})
-
-    # Clean up the library
-
-    MACOS_CLEAN_UP_FILE(DIRECT ${DEST_DIRNAME} ${FILENAME})
 ENDMACRO()
 
 #===============================================================================
@@ -1093,86 +1060,4 @@ MACRO(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
             MESSAGE(FATAL_ERROR "The files in the '${PACKAGE_NAME}' package could not be uncompressed...")
         ENDIF()
     ENDIF()
-ENDMACRO()
-
-#===============================================================================
-
-MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
-    # Create our destination folder, if needed
-
-    STRING(REPLACE "${PLATFORM_DIR}" "bin"
-           REAL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
-
-    IF(NOT EXISTS ${REAL_DIRNAME})
-        FILE(MAKE_DIRECTORY ${REAL_DIRNAME})
-    ENDIF()
-
-    # Make sure that the file, if it exists, has the expected SHA-1 value
-
-    CHECK_FILE(${REAL_DIRNAME} ${FILENAME} ${SHA1_VALUE})
-
-    # Retrieve the file from the given location, if needed
-    # Note: we would normally provide the SHA-1 value to the FILE(DOWNLOAD)
-    #       call, but this would create an empty file to start with and if the
-    #       file cannot be downloaded for some reason or another, then we would
-    #       still have that file and CMake would then complain about its SHA-1
-    #       value being wrong (as well as not being able to download the file),
-    #       so we handle everything ourselves...
-
-    SET(REAL_FILENAME ${REAL_DIRNAME}/${FILENAME})
-
-    IF(NOT EXISTS ${REAL_FILENAME})
-        # Retrieve the compressed version of the file
-
-        MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
-
-        SET(COMPRESSED_FILENAME ${FILENAME}.tar.gz)
-        SET(FULL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
-
-        FILE(DOWNLOAD "${LOCATION}/${DIRNAME}/${COMPRESSED_FILENAME}" ${FULL_COMPRESSED_FILENAME}
-             SHOW_PROGRESS STATUS STATUS)
-
-        # Uncompress the compressed version of the file, should we have managed
-        # to retrieve it
-
-        LIST(GET STATUS 0 STATUS_CODE)
-
-        IF(${STATUS_CODE} EQUAL 0)
-            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${FULL_COMPRESSED_FILENAME}
-                            WORKING_DIRECTORY ${REAL_DIRNAME}
-                            OUTPUT_QUIET)
-
-            FILE(REMOVE ${FULL_COMPRESSED_FILENAME})
-        ELSE()
-            FILE(REMOVE ${FULL_COMPRESSED_FILENAME})
-            # Note: this is in case we had an HTTP error of sorts, in which case
-            #       we would end up with an empty file...
-
-            MESSAGE(FATAL_ERROR "The compressed version of '${FILENAME}' could not be retrieved...")
-        ENDIF()
-
-        # Check that the file, if we managed to uncompress it, has the expected
-        # SHA-1 value
-
-        LIST(GET STATUS 0 STATUS_CODE)
-
-        IF(${STATUS_CODE} EQUAL 0)
-            CHECK_FILE(${REAL_DIRNAME} ${FILENAME} ${SHA1_VALUE})
-
-            IF(NOT CHECK_FILE_OK)
-                MESSAGE(FATAL_ERROR "'${FILENAME}' does not have the expected SHA-1 value...")
-            ENDIF()
-        ELSE()
-            MESSAGE(FATAL_ERROR "'${FILENAME}' could not be uncompressed...")
-        ENDIF()
-    ENDIF()
-ENDMACRO()
-
-#===============================================================================
-
-MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
-    # Retrieve the binary file off the OpenCOR website
-
-    RETRIEVE_BINARY_FILE_FROM("http://www.opencor.ws/binaries"
-                              ${DIRNAME} ${FILENAME} ${SHA1_VALUE})
 ENDMACRO()
