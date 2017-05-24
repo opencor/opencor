@@ -315,8 +315,6 @@ ENDIF()
 #       have [PLUGIN_DIR]/[LOCAL_EXTERNAL_PACKAGE_DIR]/include as an include
 #       directory...
 
-INCLUDE(ExternalProject)
-
 IF(ENABLE_SAMPLE_PLUGINS)
     SET(SAMPLE_PLUGINS
         sample/Sample

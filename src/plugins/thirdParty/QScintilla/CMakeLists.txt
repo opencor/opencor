@@ -104,8 +104,6 @@ ELSE()
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
-    GET_PROPERTY(EP_BASE DIRECTORY PROPERTY EP_BASE)
-
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
             ${PROJECT_SOURCE_DIR}/ext/proj
