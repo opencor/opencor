@@ -113,6 +113,9 @@ ELSE()
             -DCMAKE_MACOSX_RPATH=1
             -DOPENCMISS_ROOT=<SOURCE_DIR>/..
             -DOPENCMISS_LIBRARIES=zinc
+        INSTALL_COMMAND
+               ${CMAKE_COMMAND} -E copy_directory <SOURCE_DIR>/../install/include/opencmiss <INSTALL_DIR>/include/opencmiss
+            && ${CMAKE_COMMAND} -E copy <SOURCE_DIR>/../install/lib/${IMPORT_LIBRARY} <INSTALL_DIR>/lib
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
