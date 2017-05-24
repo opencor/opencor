@@ -90,29 +90,21 @@ ELSE()
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
-    IF(WIN32)
-        SET(ZINC_CMAKE_GENERATOR "NMake Makefiles JOM")
-    ELSE()
-        SET(ZINC_CMAKE_GENERATOR "Unix Makefiles")
-    ENDIF()
-
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
             ${PROJECT_SOURCE_DIR}/ext/proj/setup
+        BINARY_DIR
+            ${PROJECT_SOURCE_DIR}/ext/proj/setup-build
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
             https://github.com/opencor/zinc
         GIT_TAG
             ${GIT_TAG}
-        CMAKE_GENERATOR
-            ${ZINC_CMAKE_GENERATOR}
-        CMAKE_ARGS
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-            -DCMAKE_MACOSX_RPATH=1
-            -DOPENCMISS_ROOT=<SOURCE_DIR>/..
-            -DOPENCMISS_LIBRARIES=zinc
+        CONFIGURE_COMMAND
+            ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_MACOSX_RPATH=1 -DOPENCMISS_ROOT=<BINARY_DIR>/.. -DOPENCMISS_LIBRARIES=zinc <SOURCE_DIR>
+        BUILD_COMMAND
+            ${CMAKE_COMMAND} --build .
         INSTALL_COMMAND
                ${CMAKE_COMMAND} -E copy_directory <SOURCE_DIR>/../install/include/opencmiss <INSTALL_DIR>/include/opencmiss
             && ${CMAKE_COMMAND} -E copy <SOURCE_DIR>/../install/lib/${IMPORT_LIBRARY} <INSTALL_DIR>/lib
