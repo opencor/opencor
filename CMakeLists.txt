@@ -119,6 +119,8 @@ SET(PLATFORM_DIR ${PLATFORM})
 INCLUDE(${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/CMakeLists.txt)
 
 # Required Qt modules and packages
+#---ISSUE1306--- WE OUGHT TO BE ABLE TO REMOVE THE NEED FOR THE Gui MODULE ONCE
+#                WE CAN BUILD QtWebKit AS A PACKAGE?...
 
 IF(WIN32)
     SET(WEBKIT WebKit)
@@ -129,6 +131,7 @@ IF(ENABLE_TESTS)
 ENDIF()
 
 SET(REQUIRED_QT_MODULES
+    Gui
     Network
     ${TEST}
     ${WEBKIT}
