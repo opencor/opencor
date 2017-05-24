@@ -788,7 +788,7 @@ SET(PLUGINS
 
     thirdParty/libgit2
     thirdParty/LibXDiff
-    thirdParty/LLVM
+#    thirdParty/LLVM
     thirdParty/OAuth
     thirdParty/OpenSSL
     thirdParty/QScintilla
@@ -804,9 +804,6 @@ SET(PLUGINS
     widget/MathMLViewerWidget
     widget/WebViewerWidget
     widget/ZincWidget
-)
-SET(PLUGINS
-    thirdParty/Zinc
 )
 
 FOREACH(PLUGIN ${PLUGINS})
