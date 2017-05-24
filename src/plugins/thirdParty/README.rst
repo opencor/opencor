@@ -1,5 +1,0 @@
-Some `third-party plugins <https://github.com/opencor/opencor/tree/master/src/plugins/thirdParty>`__ can take time to build, be it directly or indirectly. In the former case, the third-party library is built and embedded in the plugin (e.g. `LLVM <http://www.llvm.org/>`__) while in the latter case, the third-party library is built as a package and the plugin links to it (e.g. `OpenSSL <https://www.openssl.org/>`__).
-
-In both cases, there should never be a need to modify those third-party libraries. Therefore, there is no point in wasting time building them every time we build OpenCOR from scratch.
-
-So, unless we explicitly want to build one or all of them (except `Zinc <https://github.com/OpenCMISS/zinc>`__; by setting the ``USE_PREBUILT_LIBGIT2_PACKAGE``, ``USE_PREBUILT_LLVM_PLUGIN``, ``USE_PREBUILT_OPENSSL_PACKAGE``, ``USE_PREBUILT_QSCINTILLA_PACKAGE``, ``USE_PREBUILT_QWT_PACKAGE``, ``USE_PREBUILT_SUNDIALS_PACKAGE`` and/or ``USE_PREBUILT_ZLIB_PACKAGE`` option/s to ``OFF``), we retrieve their pre-built version off the `OpenCOR website <http://www.opencor.ws/>`__ (for direct plugins) or `GitHub <https://github.com/>`__ (for indirect plugins).
