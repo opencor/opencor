@@ -94,6 +94,30 @@ IF(NOT WIN32 AND NOT APPLE)
     ENDIF()
 ENDIF()
 
+# Some initialisations related to our copy of QtWebKit
+
+IF(WIN32)
+    SET(PLATFORM windows)
+
+    IF(RELEASE_MODE)
+        SET(TARGET_PLATFORM ${PLATFORM}.release)
+    ELSE()
+        SET(TARGET_PLATFORM ${PLATFORM}.debug)
+    ENDIF()
+ELSE()
+    IF(APPLE)
+        SET(PLATFORM macos)
+    ELSE()
+        SET(PLATFORM linux)
+    ENDIF()
+
+    SET(TARGET_PLATFORM ${PLATFORM})
+ENDIF()
+
+SET(PLATFORM_DIR ${PLATFORM})
+
+INCLUDE(${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/CMakeLists.txt)
+
 # Required Qt modules and packages
 
 IF(WIN32)
@@ -118,30 +142,6 @@ ENDFOREACH()
 # Make sure that anyone can access diff-match-patch
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch/src)
-
-# Some initialisations related to our copy of QtWebKit
-
-IF(WIN32)
-    SET(PLATFORM windows)
-
-    IF(RELEASE_MODE)
-        SET(TARGET_PLATFORM ${PLATFORM}.release)
-    ELSE()
-        SET(TARGET_PLATFORM ${PLATFORM}.debug)
-    ENDIF()
-ELSE()
-    IF(APPLE)
-        SET(PLATFORM macos)
-    ELSE()
-        SET(PLATFORM linux)
-    ENDIF()
-
-    SET(TARGET_PLATFORM ${PLATFORM})
-ENDIF()
-
-SET(PLATFORM_DIR ${PLATFORM})
-
-INCLUDE(${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/CMakeLists.txt)
 
 # Keep track of some information about Qt
 
