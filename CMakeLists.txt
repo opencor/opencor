@@ -18,7 +18,7 @@ OPTION(USE_PREBUILT_SEDMLAPI_PACKAGE "Use the pre-built version of the SED-ML AP
 
 OPTION(USE_PREBUILT_LIBGIT2_PACKAGE "Use the pre-built version of the libgit2 package" ON)
 OPTION(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff package" ON)
-OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
+OPTION(USE_PREBUILT_LLVM_PACKAGE "Use the pre-built version of the LLVM plugin" ON)
 OPTION(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth package" ON)
 OPTION(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
 OPTION(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
@@ -26,6 +26,7 @@ OPTION(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" O
 OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
 OPTION(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
+SET(USE_PREBUILT_LLVM_PACKAGE OFF)
 
 # Make sure that we are using the compiler we support
 
@@ -736,7 +737,7 @@ ENDIF()
 
 SET(PLUGINS
 #---ISSUE1306--- THE PLUGINS THAT ARE DISABLED WILL BE SO UNTIL WE CAN ACTUALLY
-#                BUILD THE BioSignalML AND LLVM PACKAGES...
+#                BUILD THE BioSignalML PACKAGE...
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
 
@@ -749,16 +750,16 @@ SET(PLUGINS
     dataStore/CSVDataStore
     dataStore/DataStore
 
-#    editing/CellMLAnnotationView
-#    editing/CellMLEditingView
-#    editing/CellMLTextView
+    editing/CellMLAnnotationView
+    editing/CellMLEditingView
+    editing/CellMLTextView
     editing/EditingView
-#    editing/RawCellMLView
-#    editing/RawSEDMLView
+    editing/RawCellMLView
+    editing/RawSEDMLView
     editing/RawTextView
-#    editing/SEDMLEditingView
+    editing/SEDMLEditingView
 
-#    miscellaneous/Compiler
+    miscellaneous/Compiler
     miscellaneous/Core
     miscellaneous/HelpWindow
     miscellaneous/WebBrowserWindow
@@ -766,9 +767,9 @@ SET(PLUGINS
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
     organisation/PMRWindow
-#    organisation/PMRWorkspacesWindow
+    organisation/PMRWorkspacesWindow
 
-#    simulation/SimulationExperimentView
+    simulation/SimulationExperimentView
 
     solver/CVODESolver
     solver/ForwardEulerSolver
@@ -778,17 +779,17 @@ SET(PLUGINS
     solver/KINSOLSolver
     solver/SecondOrderRungeKuttaSolver
 
-#    support/CellMLSupport
+    support/CellMLSupport
     support/COMBINESupport
     support/PMRSupport
     support/QScintillaSupport
-#    support/SEDMLSupport
+    support/SEDMLSupport
     support/StandardSupport
     support/ZIPSupport
 
     thirdParty/libgit2
     thirdParty/LibXDiff
-#    thirdParty/LLVM
+    thirdParty/LLVM
     thirdParty/OAuth
     thirdParty/OpenSSL
     thirdParty/QScintilla
@@ -797,13 +798,16 @@ SET(PLUGINS
     thirdParty/Zinc
     thirdParty/zlib
 
-#    tools/CellMLTools
+    tools/CellMLTools
 
     widget/EditorWidget
     widget/GraphPanelWidget
     widget/MathMLViewerWidget
     widget/WebViewerWidget
     widget/ZincWidget
+)
+SET(PLUGINS
+    thirdParty/LLVM
 )
 
 FOREACH(PLUGIN ${PLUGINS})
