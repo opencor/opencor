@@ -918,61 +918,6 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
-    # Various initialisations
-
-    SET(PLUGIN_NAME ${PLUGIN_NAME})
-
-    SET(OPTIONS)
-    SET(ONE_VALUE_KEYWORDS)
-    SET(MULTI_VALUE_KEYWORDS)
-
-    CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
-
-    # Some settings
-
-    SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR})
-    SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-
-    # Copy the plugin to our plugins directory
-    # Note: this is done so that we can, on Windows and Linux, test the use of
-    #       plugins in OpenCOR without first having to package and deploy
-    #       everything...
-
-    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                                                     ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-
-    # On macOS, ensure that @rpath is set in the plugin binary's id
-
-    IF(APPLE)
-        EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${PLUGIN_FILENAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-    ENDIF()
-
-    # Package the plugin, but only if we are not on macOS since it will have
-    # already been copied
-
-    IF(NOT APPLE)
-        INSTALL(FILES ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                DESTINATION plugins/${CMAKE_PROJECT_NAME})
-    ENDIF()
-
-    # On macOS, and in case we are on Travis CI, make sure that the plugin
-    # binary refers to the system version of the Qt libraries since we don't
-    # embed the Qt libraries in that case (see the main CMakeLists.txt file)
-
-    IF(APPLE AND ENABLE_TRAVIS_CI)
-        FOREACH(MACOS_QT_LIBRARY ${MACOS_QT_LIBRARIES})
-            SET(MACOS_QT_LIBRARY_FILENAME ${MACOS_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${MACOS_QT_LIBRARY})
-
-            EXECUTE_PROCESS(COMMAND install_name_tool -change @rpath/${MACOS_QT_LIBRARY_FILENAME}
-                                                              ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
-                                                              ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-        ENDFOREACH()
-    ENDIF()
-ENDMACRO()
-
-#===============================================================================
-
 MACRO(RETRIEVE_CONFIG_FILES)
     FOREACH(CONFIG_FILE ${ARGN})
         STRING(REPLACE "PLATFORM_DIR/" "${PLATFORM_DIR}/"
