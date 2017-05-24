@@ -83,7 +83,7 @@ ENDIF()
 # Try to build our runpath2rpath program, if we are on Linux
 
 IF(NOT WIN32 AND NOT APPLE)
-    SET(RUNPATH2RPATH ${PROJECT_BUILD_DIR}/runpath2rpath)
+    SET(RUNPATH2RPATH ${CMAKE_BINARY_DIR}/runpath2rpath)
 
     EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -o ${RUNPATH2RPATH} ${PROJECT_SOURCE_DIR}/cmake/runpath2rpath.c
                     RESULT_VARIABLE RESULT)
