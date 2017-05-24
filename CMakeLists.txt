@@ -28,7 +28,9 @@ OPTION(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL pa
 OPTION(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
 OPTION(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
+OPTION(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
+SET(USE_PREBUILT_ZINC_PACKAGE OFF)
 
 # Initialise the project
 
@@ -328,9 +330,7 @@ ENDIF()
 
 IF(ENABLE_TEST_PLUGINS)
     SET(TEST_PLUGINS
-#---ISSUE1306--- THE PLUGINS THAT ARE DISABLED WILL BE SO UNTIL WE CAN ACTUALLY
-#                BUILD THE BioSignalML AND LLVM PACKAGES...
-#        test/ZincWindow
+        test/ZincWindow
     )
 ELSE()
     SET(TEST_PLUGINS)
@@ -396,7 +396,7 @@ SET(PLUGINS
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
-#    thirdParty/Zinc
+    thirdParty/Zinc
     thirdParty/zlib
 
 #    tools/CellMLTools
@@ -405,7 +405,10 @@ SET(PLUGINS
     widget/GraphPanelWidget
     widget/MathMLViewerWidget
     widget/WebViewerWidget
-#    widget/ZincWidget
+    widget/ZincWidget
+)
+SET(PLUGINS
+    thirdParty/Zinc
 )
 
 FOREACH(PLUGIN ${PLUGINS})
