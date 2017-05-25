@@ -86,6 +86,14 @@ IF(USE_PREBUILT_ZINC_PACKAGE)
                               SHA1_VALUES 7935dd45b285c1e8b886d305b6dd12075f0b4bb0)
     ENDIF()
 ELSE()
+    # Windows-specific installation
+
+    IF(WIN32)
+        SET(SHARED_lIBRARY_DIR bin)
+    ELSE()
+        SET(SHARED_lIBRARY_DIR lib)
+    ENDIF()
+
     # Build Zinc as an external project
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
@@ -107,21 +115,11 @@ ELSE()
             ${CMAKE_COMMAND} --build .
         INSTALL_COMMAND
                ${CMAKE_COMMAND} -E copy_directory <SOURCE_DIR>/../install/include/opencmiss <INSTALL_DIR>/include/opencmiss
+            && ${CMAKE_COMMAND} -E copy <SOURCE_DIR>/../install/${SHARED_lIBRARY_DIR}/${SHARED_LIBRARY} <INSTALL_DIR>/lib
             && ${CMAKE_COMMAND} -E copy <SOURCE_DIR>/../install/lib/${IMPORT_LIBRARY} <INSTALL_DIR>/lib
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
-
-    # Do some post-processing that is specific to each platform
-
-    IF(WIN32)
-        # We want both our shared and import libraries to be in the same place
-
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}/install/bin/${SHARED_LIBRARY}
-                                                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
-                                 DEPENDEES install)
-    ENDIF()
 
     # Package our external project
 
