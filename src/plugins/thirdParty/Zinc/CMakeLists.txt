@@ -118,8 +118,8 @@ ELSE()
         # We want both our shared and import libraries to be in the same place
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} lib
-                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}/install/bin/${SHARED_LIBRARY}
+                                                                  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
     ENDIF()
 
