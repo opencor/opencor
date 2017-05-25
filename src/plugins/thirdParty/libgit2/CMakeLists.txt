@@ -97,7 +97,7 @@ ELSE()
     # Some specific arguments
 
     IF(WIN32)
-        SET(STATIC_CRT_ARG -DSTATIC_CRT=OFF)
+        SET(DEFINE_STATIC_CRT_ARG -DSTATIC_CRT=OFF)
     ENDIF()
 
     # Build libgit2 as an external project
@@ -119,8 +119,8 @@ ELSE()
             -DBUILD_CLAR=OFF
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-            -DCMAKE_MACOSX_RPATH=ON
-            ${STATIC_CRT_ARG}
+            ${DEFINE_CMAKE_MACOSX_RPATH}
+            ${DEFINE_STATIC_CRT_ARG}
             -DUSE_SSH=OFF
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
