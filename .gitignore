@@ -1,5 +1,5 @@
 /CMakeLists.txt.user
 
-/**/bin/
-/**/ext/
-/**/lib/
+/*/**/bin/
+/*/**/ext/
+/*/**/lib/

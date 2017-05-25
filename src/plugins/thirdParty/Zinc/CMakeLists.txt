@@ -92,7 +92,7 @@ ELSE()
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
-            ${PROJECT_SOURCE_DIR}/ext/proj/setup
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}/setup
         BINARY_DIR
             ${PROJECT_SOURCE_DIR}/ext/proj/setup-build
         INSTALL_DIR

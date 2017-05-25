@@ -143,7 +143,7 @@ ELSE()
     # Build OpenSSL as an external project
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
-    SET(PACKAGE_BUILD_DIR ${PROJECT_SOURCE_DIR}/ext/proj)
+    SET(PACKAGE_BUILD_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
 
     ExternalProject_Add(${PACKAGE_BUILD}
         DOWNLOAD_DIR

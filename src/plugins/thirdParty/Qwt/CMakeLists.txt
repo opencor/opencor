@@ -120,7 +120,7 @@ ELSE()
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
-            ${PROJECT_SOURCE_DIR}/ext/proj
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
