@@ -94,7 +94,7 @@ ELSE()
         SOURCE_DIR
             ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}/setup
         BINARY_DIR
-            ${PROJECT_SOURCE_DIR}/ext/proj/setup-build
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}/setup-build
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
