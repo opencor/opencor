@@ -86,7 +86,7 @@ IF(USE_PREBUILT_ZINC_PACKAGE)
                               SHA1_VALUES 7935dd45b285c1e8b886d305b6dd12075f0b4bb0)
     ENDIF()
 ELSE()
-    # Windows-specific installation
+    # Set platform specific configuration options
 
     IF(WIN32)
         SET(DEFINE_CMAKE_GENERATOR_PLATFORM -DCMAKE_GENERATOR_PLATFORM=x64)
