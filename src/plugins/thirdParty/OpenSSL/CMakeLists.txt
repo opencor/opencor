@@ -71,22 +71,22 @@ IF(USE_PREBUILT_OPENSSL_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 2bda3172badee3f1daca3a05fad02d914b975f56
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 3acf4912793bb796e91b5f88903e134ccc664b14
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 9322e41caec6b4087ad4a7ac9665b5dfb7bfc867
-                                              369340018f310bd7cb631a773ab5921812a568f0
-                                              d33797a9bd0df69694a39db0224de907cd382585
-                                              a61987feb80d7b1565da22f407c1e99c613d8ad1)
+                                  SHA1_VALUES ddbb7491d59caa3a61297f81a13d3e25b6c09bc0
+                                              3efe6f60e279b52f27934b92ac8c5d183d0e84d0
+                                              aa4cd8163b9cc97e87f872b3b71b520fb045a6aa
+                                              a87ba18be63256fdc0b87b563caa6356ee9f5279)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 07fea34f373bc63a63fe622802c14b13b6715763
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 993b7b921bea105477d359a48e7b84f555ead43c
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 2e5d35e882783398d8026d7ea8e604e7dcfcc690
-                                              3c1c6f367f38b1e5b9a0aca97e4bb910f48f11cf
-                                              1078cc30575d001248951db9cdeb0ed74635588e
-                                              55932ae5d960a309d137f3b919efe3a5a6907b2a)
+                                  SHA1_VALUES 6d3bc9a5c8cd8a9f2dc04062b36973e3d0b6eb73
+                                              1131626c1c72ec55a1e3eae86824c4df67d4673c
+                                              33dfed89cf676b95300a8c1b455169437a4f1c74
+                                              76059318ded5f4b06938191f3c1ef9e1b3e394bd)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -97,13 +97,17 @@ IF(USE_PREBUILT_OPENSSL_PACKAGE)
                                           8d0c3218cb2090c42e11e013823115177a701ba1)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} acc1dafdb5e5e2a3ce75779ba2956875300373c5
+                              ${RELATIVE_PROJECT_SOURCE_DIR} b36071fe6d377596d1152fabef2e279862d68085
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 449160cd3e6420c180199f19c1e0685d0e5770a1
-                                          be3a2cc75ffcbfbdccf7eff62f0fc7bbc5a09cd8)
+                              SHA1_VALUES c24fac02bcecb0d3e7f438401562acd72333ea66
+                                          88583b407a4625ee157d25b35ce9328e023d8584)
     ENDIF()
 ELSE()
+    # Rely on the ExternalProject module to build our package
+
+    INCLUDE(ExternalProject)
+
     # We require perl for OpenSSL's configuration tool
 
     FIND_PACKAGE(Perl REQUIRED QUIET)
@@ -221,7 +225,7 @@ ELSE()
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 
-    SET(DEPENDS_ON ${PACKAGE_BUILD})
+    SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
 # Allow other external projects to find our OpenSSL package
@@ -237,6 +241,8 @@ SET(OPENSSL_LIBRARIES
 )
 
 # Add the plugin
+
+SET(OPENSSL_PLUGIN ${PACKAGE_NAME} PARENT_SCOPE)
 
 ADD_PLUGIN(${PACKAGE_NAME}
     SOURCES
@@ -256,5 +262,5 @@ ADD_PLUGIN(${PACKAGE_NAME}
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
     DEPENDS_ON
-        ${DEPENDS_ON}
+        ${PLUGIN_DEPENDS_ON}
 )
