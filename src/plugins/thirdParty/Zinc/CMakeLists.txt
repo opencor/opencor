@@ -89,7 +89,9 @@ ELSE()
     # Set platform specific configuration options
 
     IF(WIN32)
-        SET(DEFINE_CMAKE_GENERATOR -G "Visual Studio 14 2015 Win64")
+        MATH(EXPR MSVC_VERSION "${CMAKE_CXX_COMPILER_VERSION_MAJOR}-4")
+
+        SET(DEFINE_CMAKE_GENERATOR -G "Visual Studio 14 20${MSVC_VERSION} Win64")
 
         SET(SHARED_lIBRARY_DIR bin)
     ELSE()
