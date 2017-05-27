@@ -509,7 +509,7 @@ void FileManager::reload(const QString &pFileName,
 
 //==============================================================================
 
-bool FileManager::newFile(QString &pFileName, const QString &pContents)
+bool FileManager::newFile(QString &pFileName, const QByteArray &pContents)
 {
     // Retrieve a temporary file name for our new file
 
@@ -531,7 +531,7 @@ bool FileManager::newFile(QString &pFileName, const QString &pContents)
 //==============================================================================
 
 FileManager::Status FileManager::create(const QString &pUrl,
-                                        const QString &pContents)
+                                        const QByteArray &pContents)
 {
     // Create a new file
 
@@ -546,6 +546,16 @@ FileManager::Status FileManager::create(const QString &pUrl,
     } else {
         return NotCreated;
     }
+}
+
+//==============================================================================
+
+FileManager::Status FileManager::create(const QString &pUrl,
+                                        const QString &pContents)
+{
+    // Create a new file
+
+    return create(pUrl, pContents.toUtf8());
 }
 
 //==============================================================================
@@ -589,7 +599,7 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
     if (nativeFile) {
         // The file is managed, so retrieve its contents
 
-        QString fileContents;
+        QByteArray fileContents;
 
         if (readFileContentsFromFile(pFileName, fileContents)) {
             // Now, we can create a new file, which contents will be that of our

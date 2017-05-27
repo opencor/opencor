@@ -860,7 +860,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
     if (fileName.isEmpty()) {
         // The remote file isn't already opened, so download its contents
 
-        QString fileContents;
+        QByteArray fileContents;
         QString errorMessage;
 
         if (readFileContentsFromUrlWithBusyWidget(fileNameOrUrl, fileContents, &errorMessage)) {
