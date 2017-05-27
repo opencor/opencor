@@ -136,7 +136,8 @@ public:
                 const bool &pForceFileChanged = false);
 
     Status create(const QString &pUrl = QString(),
-                  const QString &pContents = QString());
+                  const QByteArray &pContents = QByteArray());
+    Status create(const QString &pUrl, const QString &pContents);
     Status rename(const QString &pOldFileName, const QString &pNewFileName);
     Status duplicate(const QString &pFileName);
 
@@ -158,7 +159,8 @@ private:
 
     void startStopTimer();
 
-    bool newFile(QString &pFileName, const QString &pContents = QString());
+    bool newFile(QString &pFileName,
+                 const QByteArray &pContents = QByteArray());
 
     void emitFilePermissionsChanged(const QString &pFileName);
 
