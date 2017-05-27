@@ -63,27 +63,27 @@ IF(USE_PREBUILT_ZINC_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} b2937c2f64355969b15d463b3ade6234cc964e17
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
+                                  SHA1_VALUES 54924312f20456a943cfd912919252c2ed5674d0
+                                              61e5ca43308c59f210e166f0d4098dc0e4b0020e)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} fd91af3483e32c5d7271b8e48187635fd590c907
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
+                                  SHA1_VALUES 5ab5426ed541a7db2d8940deabcdb4a40b22a470
+                                              03397dfe00eed08972790dc7f7684d5436dd524d)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 80e42af66c2ea2d65fc76590fe76b16362cb136d
+                              ${RELATIVE_PROJECT_SOURCE_DIR} a38b5d939ab8df77d21366fa7d68f1a44c9b19cc
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 38cdefca68fe8ff4e5d81ba36cf738dfdd9e1417)
+                              SHA1_VALUES c84deed9557ac34cbb4a14f307f3e64dbb112ec6)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 82075e69cc3b524647e31603d08290286785d9c8
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 696d2df0e7369175db42a00e665cd3b014ec6cff
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 7935dd45b285c1e8b886d305b6dd12075f0b4bb0)
+                              SHA1_VALUES 454eba67fbd1eb42e22c2cfdd18b7dfb5ed4f64e)
     ENDIF()
 ELSE()
     # Set platform specific configuration options
