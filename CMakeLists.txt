@@ -18,7 +18,7 @@ OPTION(USE_PREBUILT_SEDMLAPI_PACKAGE "Use the pre-built version of the SED-ML AP
 
 OPTION(USE_PREBUILT_LIBGIT2_PACKAGE "Use the pre-built version of the libgit2 package" ON)
 OPTION(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff package" ON)
-OPTION(USE_PREBUILT_LLVM_PACKAGE "Use the pre-built version of the LLVM plugin" ON)
+OPTION(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang plugin" ON)
 OPTION(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth package" ON)
 OPTION(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
 OPTION(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
@@ -26,7 +26,7 @@ OPTION(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" O
 OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
 OPTION(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
-SET(USE_PREBUILT_LLVM_PACKAGE OFF)
+SET(USE_PREBUILT_LLVMCLANG_PACKAGE OFF)
 
 # Make sure that we are using the compiler we support
 
@@ -796,7 +796,7 @@ SET(PLUGINS
 
     thirdParty/libgit2
     thirdParty/LibXDiff
-    thirdParty/LLVM
+    thirdParty/LLVMClang
     thirdParty/OAuth
     thirdParty/OpenSSL
     thirdParty/QScintilla
@@ -814,7 +814,7 @@ SET(PLUGINS
     widget/ZincWidget
 )
 SET(PLUGINS
-    thirdParty/LLVM
+    thirdParty/LLVMClang
 )
 
 FOREACH(PLUGIN ${PLUGINS})

@@ -1,8 +1,8 @@
-PROJECT(LLVMPlugin)
+PROJECT(LLVMClangPlugin)
 
 # Name and version of our package
 
-SET(PACKAGE_NAME LLVM)
+SET(PACKAGE_NAME LLVMClang)
 SET(PACKAGE_VERSION 4.0.0)
 
 # Version of our library
@@ -66,7 +66,7 @@ ENDIF()
 
 # Use the pre-built version of our package unless instructed otherwise
 
-IF(USE_PREBUILT_LLVM_PACKAGE)
+IF(USE_PREBUILT_LLVMCLANG_PACKAGE)
     # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
@@ -92,19 +92,19 @@ IF(USE_PREBUILT_LLVM_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} fc158914d5dac1e328de2d3a00360c1b58cfff9a
+                              ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 9ab92754d9bb90ba9ed31acaa338c0889b198446
-                                          c4d8a48af5d1325c43b9156b19e9217a13c6b43d)
+                              SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                                          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 3c9d7ca74cd08094acfd04a826827a2d661d411c
+                              ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 4b959960b07bec31c79a2e9506a5506b2a88597f
-                                          76ee4d0f55c23101d4f9a09ef215b4e5bb2b54d0)
+                              SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                                          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
     ENDIF()
 ELSE()
-    # Build LLVM as an external project
+    # Build LLVM+Clang as an external project
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
@@ -114,7 +114,7 @@ ELSE()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/llvm
+            https://github.com/opencor/llvmclang
         GIT_TAG
             ${GIT_TAG}
         CMAKE_ARGS
@@ -153,15 +153,15 @@ ELSE()
     SET(DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
-# Allow other external projects to find our LLVM package
+# Allow other external projects to find our LLVM+Clang package
 
-SET(LLVM_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
-SET(LLVM_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
-SET(LLVM_LLVM_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${LLVM_IMPORT_LIBRARY} PARENT_SCOPE)
-SET(LLVM_CLANG_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CLANG_IMPORT_LIBRARY} PARENT_SCOPE)
-SET(LLVM_LIBRARIES
-    ${EXTERNAL_BINARIES_DIR}/${LLVM_LLVM_LIBRARY}
-    ${EXTERNAL_BINARIES_DIR}/${LLVM_CLANG_LIBRARY}
+SET(LLVMCLANG_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+SET(LLVMCLANG_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+SET(LLVMCLANG_LLVM_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${LLVM_IMPORT_LIBRARY} PARENT_SCOPE)
+SET(LLVMCLANG_CLANG_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CLANG_IMPORT_LIBRARY} PARENT_SCOPE)
+SET(LLVMCLANG_LIBRARIES
+    ${EXTERNAL_BINARIES_DIR}/${LLVMCLANG_LLVM_LIBRARY}
+    ${EXTERNAL_BINARIES_DIR}/${LLVMCLANG_CLANG_LIBRARY}
     PARENT_SCOPE
 )
 
@@ -171,9 +171,9 @@ ADD_PLUGIN(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp
 
-        src/llvmplugin.cpp
+        src/llvmclangplugin.cpp
     HEADERS_MOC
-        src/llvmplugin.h
+        src/llvmclangplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

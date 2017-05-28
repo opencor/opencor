@@ -18,34 +18,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// LLVM plugin
+// LLVMClang begin
 //==============================================================================
 
-#include "llvmplugin.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace LLVM {
-
-//==============================================================================
-
-PLUGININFO_FUNC LLVMPluginInfo()
-{
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://www.llvm.org/\">LLVM</a> (as well as <a href=\"http://clang.llvm.org/\">Clang</a>)."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"http://www.llvm.org/\">LLVM</a> (ainsi que <a href=\"http://clang.llvm.org/\">Clang</a>)."));
-
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
-                          QStringList(),
-                          descriptions);
-}
-
-//==============================================================================
-
-}   // namespace LLVM
-}   // namespace OpenCOR
+#if defined(Q_OS_WIN)
+    #pragma warning(push)
+    #pragma warning(disable: 4141)
+    #pragma warning(disable: 4146)
+#elif defined(Q_OS_LINUX)
+    #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+    #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+    #pragma GCC diagnostic ignored "-Wunused-parameter"
+#elif defined(Q_OS_MAC)
+    #pragma GCC diagnostic ignored "-Wunused-parameter"
+#else
+    #error Unsupported platform
+#endif
 
 //==============================================================================
 // End of file

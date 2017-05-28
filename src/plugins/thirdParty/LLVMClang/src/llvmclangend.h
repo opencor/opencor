@@ -18,19 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// LLVM begin
+// LLVMClang end
 //==============================================================================
 
 #if defined(Q_OS_WIN)
-    #pragma warning(push)
-    #pragma warning(disable: 4141)
-    #pragma warning(disable: 4146)
+    #pragma warning(pop)
 #elif defined(Q_OS_LINUX)
-    #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-    #pragma GCC diagnostic ignored "-Wstrict-aliasing"
-    #pragma GCC diagnostic ignored "-Wunused-parameter"
+    #pragma GCC diagnostic error "-Wmissing-field-initializers"
+    #pragma GCC diagnostic error "-Wstrict-aliasing"
+    #pragma GCC diagnostic error "-Wunused-parameter"
 #elif defined(Q_OS_MAC)
-    #pragma GCC diagnostic ignored "-Wunused-parameter"
+    #pragma GCC diagnostic error "-Wunused-parameter"
 #else
     #error Unsupported platform
 #endif

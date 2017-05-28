@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// LLVM plugin
+// LLVMClang plugin
 //==============================================================================
 
 #pragma once
@@ -30,24 +30,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace LLVM {
+namespace LLVMClang {
 
 //==============================================================================
 
-PLUGININFO_FUNC LLVMPluginInfo();
+PLUGININFO_FUNC LLVMClangPluginInfo();
 
 //==============================================================================
 
-class LLVMPlugin : public QObject
+class LLVMClangPlugin : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.LLVMPlugin" FILE "llvmplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.LLVMClangPlugin" FILE "llvmclangplugin.json")
 };
 
 //==============================================================================
 
-}   // namespace LLVM
+}   // namespace LLVMClang
 }   // namespace OpenCOR
 
 //==============================================================================
