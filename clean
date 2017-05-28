@@ -4,13 +4,11 @@ echo "\033[44;37;1mCleaning OpenCOR...\033[0m"
 
 rm -fr build/* build/.ninja* > /dev/null 2>&1
 
-if [ "$1" == "all" ]; then
+if [ "$1" = "all" ]; then
     rm -fr ext/* > /dev/null 2>&1
 
-    for i in distrib src
-    do
-        for j in `find $i -name ext`
-        do
+    for i in distrib src; do
+        for j in `find $i -name ext`; do
             rm -fr $j > /dev/null 2>&1
         done
     done
