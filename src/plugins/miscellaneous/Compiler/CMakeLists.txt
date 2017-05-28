@@ -14,9 +14,7 @@ ADD_PLUGIN(Compiler
         src/compilerplugin.h
     PLUGINS
         Core
-        ${LLVM_PLUGIN}
-    PLUGIN_BINARIES
-        ${LLVM_PLUGIN_BINARY}
+        LLVM
     TESTS
         tests
 )
