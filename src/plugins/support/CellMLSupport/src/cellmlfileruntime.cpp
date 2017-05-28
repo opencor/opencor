@@ -47,10 +47,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "llvmbegin.h"
+#include "llvmclangbegin.h"
     #include "llvm/ADT/StringRef.h"
     #include "llvm/Support/DynamicLibrary.h"
-#include "llvmend.h"
+#include "llvmclangend.h"
 
 //==============================================================================
 
