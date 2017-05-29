@@ -800,7 +800,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             QString additionalInformation = QString();
 
             if (cellmlFileRuntime->needNlaSolver())
-                additionalInformation = " + "+tr("NLA system(s)");
+                additionalInformation = "+"+tr("NLA system(s)");
 
             information += "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn;
             information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
