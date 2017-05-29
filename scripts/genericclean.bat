@@ -2,15 +2,15 @@
 
 IF "%1" == "all" GOTO ALL1
 
-:ALL1
-
-SET All=" all"
+TITLE Cleaning OpenCOR...
 
 GOTO NEXT
 
-:NEXT
+:ALL1
 
-TITLE Cleaning%All% OpenCOR...
+TITLE Cleaning all OpenCOR...
+
+:NEXT
 
 SET CurrentPath=%CD%
 
