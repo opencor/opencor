@@ -8,7 +8,7 @@ GOTO NEXT
 
 :ALL1
 
-TITLE Cleaning all OpenCOR...
+TITLE Cleaning all of OpenCOR...
 
 :NEXT
 
