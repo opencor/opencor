@@ -112,14 +112,16 @@ ELSE()
             https://github.com/opencor/llvmclang
         GIT_TAG
             ${GIT_TAG}
+        CMAKE_GENERATOR
+            ${CMAKE_GENERATOR}
         CMAKE_ARGS
-            ${DEFINE_CMAKE_OPTIONS}
-            ${DEFINE_CMAKE_APPLE_OPTIONS}
             -DCLANG_BUILD_TOOLS=OFF
             -DCLANG_ENABLE_ARCMT=OFF
             -DCLANG_ENABLE_STATIC_ANALYZER=OFF
             -DCLANG_INCLUDE_DOCS=OFF
             -DCLANG_INCLUDE_TESTS=OFF
+            ${DEFINE_CMAKE_APPLE_OPTIONS}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DLLVMCLANG_BUILD_SHARED_LIBS=ON
             -DLLVM_BUILD_RUNTIME=OFF

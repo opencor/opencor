@@ -213,11 +213,13 @@ ELSE()
             ${GIT_TAG}
         CMAKE_CACHE_ARGS
             -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
+        CMAKE_GENERATOR
+            ${CMAKE_GENERATOR}
         CMAKE_ARGS
-            ${DEFINE_CMAKE_OPTIONS}
-            ${DEFINE_CMAKE_APPLE_OPTIONS}
             --no-warn-unused-cli
             -DBUILD_STATIC_LIBS=OFF
+            ${DEFINE_CMAKE_APPLE_OPTIONS}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DEXAMPLES_ENABLE=OFF
             -DNO_FPRINTF_OUTPUT=ON

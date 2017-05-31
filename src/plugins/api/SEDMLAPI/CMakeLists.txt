@@ -131,14 +131,16 @@ ELSE()
             https://github.com/opencor/libSEDML
         GIT_TAG
             ${GIT_TAG}
+        CMAKE_GENERATOR
+            ${CMAKE_GENERATOR}
         CMAKE_ARGS
-            ${DEFINE_CMAKE_OPTIONS}
             ${DEFINE_CMAKE_APPLE_OPTIONS}
-            ${DEFINE_LIBZ_INCLUDE_DIR}
-            ${DEFINE_LIBZ_LIBRARY}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DLIBSBML_INCLUDE_DIR=${LIBSBML_INCLUDE_DIR}
             -DLIBSBML_LIBRARY=${LIBSBML_LIBRARY}
+            ${DEFINE_LIBZ_INCLUDE_DIR}
+            ${DEFINE_LIBZ_LIBRARY}
             -DWITH_CPP_NAMESPACE=ON
             -DWITH_SWIG=OFF
             -DWITH_ZLIB=ON
