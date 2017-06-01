@@ -1019,7 +1019,6 @@ void CellmlAnnotationViewCellmlListWidget::indexExpandAll(const QModelIndex &pIn
     //       not trying to expand an index which item has no children. Indeed,
     //       a call to expand() is quite expensive, so the fewer of those we
     //       make the better...
-pIndex.child(0, 0);
 
     if (pIndex.model()->index(0, 0, pIndex).isValid()) {
         mTreeViewWidget->expand(pIndex);
