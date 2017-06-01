@@ -102,9 +102,7 @@ ENDIF()
 SET(PACKAGED_FILES
     bin
     include
-    ${RUNTIME_DIR}/lib2to3
-    ${RUNTIME_DIR}/lib-dynload
-    ${RUNTIME_DIR}/site-packages
+    ${RUNTIME_DIR}
     ${SHA1_FILES}
     )
 
@@ -134,9 +132,9 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 31cd47bed76a51e3a4c17bc1bc03caae14fbd957
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 02fceddd890c9325a05ddbeb410789f8533bcbdc
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e30b869c125a6c6c54fd5786f25956ac218dac02)
+                              SHA1_VALUES e122e68c0593bf8758baab2d93ae3984a2071584)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
             ${RELATIVE_PROJECT_SOURCE_DIR} 0c8b8b07d6af7cdc8e6746cb472d9be5f45f20f0
@@ -393,7 +391,7 @@ ELSE()
 
     ExternalProject_Add_Step(${PACKAGE_BUILD} install_pip
         COMMAND ${PYTHON_EXECUTABLE} -s ${PROJECT_SOURCE_DIR}/scripts/get-pip.py
-        WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
+        WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         DEPENDEES clean_site
         )
 

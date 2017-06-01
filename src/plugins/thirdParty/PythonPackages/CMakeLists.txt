@@ -38,12 +38,13 @@ SET(PACKAGED_FILES site-packages)
 # XXXNo files need to have their SHA-1 value checked
 ## "35m" needs to come from say ${PYTHON_ABI_VERSION}
 
-SET(SHA1_FILES
-    site-packages/numpy/core/multiarray.cpython-35m-darwin.so
-)
+IF(APPLE)
+    SET(SHA1_FILES site-packages/numpy/core/multiarray.cpython-35m-darwin.so)
+ELSEIF(UNIX)
+    SET(SHA1_FILES site-packages/numpy/core/multiarray.cpython-35m-x86_64-linux-gnu.so)
+ENDIF()
 
 # Use the pre-built version of our package unless instructed otherwise
-
 # Rebuilding Python means we should also re-install its packages
 
 IF(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
@@ -60,7 +61,7 @@ IF(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 4918ff85f1171a51a3e1f69776c9e43a2e87f6bf
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 79175eea34add07fd68ae2b1a8a065a131145f3f
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 259b675eec7c9138893798095aea9ec468b87a37)
