@@ -175,7 +175,7 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
                 } else {
                     // The current item is expanded, so select its first child
 
-                    setCurrentIndex(crtIndex.child(0, 0));
+                    setCurrentIndex(crtIndex.model()->index(0, 0, crtIndex));
 
                     // Accept the event
 
