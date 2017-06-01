@@ -133,6 +133,9 @@ ELSE()
             -DLLVM_INCLUDE_TESTS=OFF
             -DLLVM_INCLUDE_UTILS=OFF
             -DLLVM_TARGETS_TO_BUILD=X86
+        BUILD_BYPRODUCTS
+            <INSTALL_DIR>/lib/${LLVM_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${CLANG_IMPORT_LIBRARY}
     )
 
     # Package our external project
