@@ -1020,7 +1020,7 @@ void CellmlAnnotationViewCellmlListWidget::indexExpandAll(const QModelIndex &pIn
     //       a call to expand() is quite expensive, so the fewer of those we
     //       make the better...
 
-    if (pIndex.child(0, 0).isValid()) {
+    if (pIndex.model()->index(0, 0, pIndex).isValid()) {
         mTreeViewWidget->expand(pIndex);
 
         QStandardItem *item = mTreeViewModel->itemFromIndex(pIndex);
@@ -1037,7 +1037,7 @@ void CellmlAnnotationViewCellmlListWidget::indexCollapseAll(const QModelIndex &p
     // Recursively collapse all the CellML elements below the current one
     // Note: see the note in indexExpandAll() above...
 
-    if (pIndex.child(0, 0).isValid()) {
+    if (pIndex.model()->index(0, 0, pIndex).isValid()) {
         QStandardItem *item = mTreeViewModel->itemFromIndex(pIndex);
 
         for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)
@@ -1055,7 +1055,7 @@ bool CellmlAnnotationViewCellmlListWidget::indexIsAllExpanded(const QModelIndex 
     // are expanded
     // Note: see the note in indexExpandAll() above...
 
-    if (pIndex.child(0, 0).isValid()) {
+    if (pIndex.model()->index(0, 0, pIndex).isValid()) {
         QStandardItem *item = mTreeViewModel->itemFromIndex(pIndex);
 
         for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)

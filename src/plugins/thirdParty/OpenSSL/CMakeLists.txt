@@ -1,16 +1,21 @@
 PROJECT(OpenSSLPlugin)
 
-# Version of our package
+# Name and version of our package
 
-SET(PACKAGE_VERSION "1.0.2k")
+SET(PACKAGE_NAME OpenSSL)
+SET(PACKAGE_VERSION 1.0.2k)
 
 # Version of our library
 
-SET(LIBRARY_VERSION "1.0.0")
+SET(LIBRARY_VERSION 1.0.0)
 
 # Git tag for our library
 
-SET(GIT_TAG "OpenSSL_1_0_2k")
+SET(GIT_TAG OpenSSL_1_0_2k)
+
+# Release tag
+
+SET(RELEASE_TAG OpenSSL_1_0_2k)
 
 # Specify where our local package will be installed
 
@@ -24,17 +29,11 @@ IF(WIN32)
 
     SET(SSL_SHARED_LIBRARY ssleay32${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(SSL_IMPORT_LIBRARY ssleay32${CMAKE_IMPORT_LIBRARY_SUFFIX})
-ELSEIF(APPLE)
-    SET(CRYPTO_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}crypto.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(CRYPTO_IMPORT_LIBRARY ${CRYPTO_SHARED_LIBRARY})
-
-    SET(SSL_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}ssl.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(SSL_IMPORT_LIBRARY ${SSL_SHARED_LIBRARY})
 ELSE()
-    SET(CRYPTO_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}crypto${CMAKE_SHARED_LIBRARY_SUFFIX}.${LIBRARY_VERSION})
+    SET(CRYPTO_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}crypto${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     SET(CRYPTO_IMPORT_LIBRARY ${CRYPTO_SHARED_LIBRARY})
 
-    SET(SSL_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}ssl${CMAKE_SHARED_LIBRARY_SUFFIX}.${LIBRARY_VERSION})
+    SET(SSL_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}ssl${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     SET(SSL_IMPORT_LIBRARY ${SSL_SHARED_LIBRARY})
 ENDIF()
 
@@ -71,38 +70,38 @@ IF(USE_PREBUILT_OPENSSL_PACKAGE)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(OpenSSL ${PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} d19ce0fa534a50f0c3ca377e1adacb31106cad05
-                SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES 79fb6b732873bb8b305564c58c7bb058c55d25a2
-                            cae8c550a333c9f9cd0852b1a46bf293a65a7b3b
-                            55fceaaf36d27d9fbbd7bfa2fa4bb2a7d1d6ea1f
-                            593c4f7ab3771229abb98a6847f3750e36e18e05
-            )
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 2bda3172badee3f1daca3a05fad02d914b975f56
+                                  RELEASE_TAG ${RELEASE_TAG}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 9322e41caec6b4087ad4a7ac9665b5dfb7bfc867
+                                              369340018f310bd7cb631a773ab5921812a568f0
+                                              d33797a9bd0df69694a39db0224de907cd382585
+                                              a61987feb80d7b1565da22f407c1e99c613d8ad1)
         ELSE()
-            RETRIEVE_PACKAGE_FILE(OpenSSL ${PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} bbd3f3b7ba9db734a2356db06a5d70151d707180
-                SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES edd5cc505caf87cf218c463d3aa1a37b5b76550a
-                            186b94792db9b09872fd53b4b3d596967175e4c1
-                            8186d5f4db60680bc218e93e81d394273eca0bb6
-                            5ed10c376daf596a026d6c03d7fe962df8f95876
-            )
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 07fea34f373bc63a63fe622802c14b13b6715763
+                                  RELEASE_TAG ${RELEASE_TAG}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 2e5d35e882783398d8026d7ea8e604e7dcfcc690
+                                              3c1c6f367f38b1e5b9a0aca97e4bb910f48f11cf
+                                              1078cc30575d001248951db9cdeb0ed74635588e
+                                              55932ae5d960a309d137f3b919efe3a5a6907b2a)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(OpenSSL ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} 137b4201cb2d0bd2dfa5f01ddd04f62b23cd82d2
-            SHA1_FILES ${SHA1_FILES}
-            SHA1_VALUES 205881f147902223779976ccaedf2ab40077016d
-                        6a91eaaeec5490f98371e7ec419d9d41a0fbba84
-        )
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} d348f274e1bd63b5224e068de69413d2aa0234de
+                              RELEASE_TAG ${RELEASE_TAG}
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 15ee34b4d987310df6214ac0838e2e084783490d
+                                          8d0c3218cb2090c42e11e013823115177a701ba1)
     ELSE()
-        RETRIEVE_PACKAGE_FILE(OpenSSL ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} ae07dd8526e627189c6cb995a3b42a9d4ef45070
-            SHA1_FILES ${SHA1_FILES}
-            SHA1_VALUES 29c32816ce9e98a13da9be7d001acd9342220507
-                        88583b407a4625ee157d25b35ce9328e023d8584
-        )
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} acc1dafdb5e5e2a3ce75779ba2956875300373c5
+                              RELEASE_TAG ${RELEASE_TAG}
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 449160cd3e6420c180199f19c1e0685d0e5770a1
+                                          be3a2cc75ffcbfbdccf7eff62f0fc7bbc5a09cd8)
     ENDIF()
 ELSE()
     # Rely on the ExternalProject module to build our package
@@ -118,18 +117,23 @@ ELSE()
     SET(CONFIG_OPTIONS "--prefix=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}")
 
     IF(WIN32)
-        SET(PLATFORM "VC-WIN64A")
+        IF(RELEASE_MODE)
+            SET(PLATFORM VC-WIN64A)
+        ELSE()
+            SET(PLATFORM debug-VC-WIN64A)
+        ENDIF()
+
         SET(MAKE_EXECUTABLE nmake)
         SET(MAKEFILE ms/ntdll.mak)
         SET(QUIET_MAKE -c)
         SET(INSTALL_TARGET install)
     ELSE()
-        LIST(APPEND CONFIG_OPTIONS "shared")
+        LIST(APPEND CONFIG_OPTIONS shared)
 
         IF(APPLE)
-            SET(PLATFORM "darwin64-x86_64-cc")
+            SET(PLATFORM darwin64-x86_64-cc)
         ELSE()
-            SET(PLATFORM "linux-x86_64")
+            SET(PLATFORM linux-x86_64)
 
             LIST(APPEND CONFIG_OPTIONS "-Wa,--noexecstack")
         ENDIF()
@@ -142,7 +146,7 @@ ELSE()
 
     # Build OpenSSL as an external project
 
-    SET(PACKAGE_BUILD OpenSSLBuild)
+    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
     SET(PACKAGE_BUILD_DIR ${PROJECT_SOURCE_DIR}/ext/proj)
 
     ExternalProject_Add(${PACKAGE_BUILD}
@@ -214,8 +218,9 @@ ELSE()
 
     # Package our external project
 
-    CREATE_PACKAGE_FILE(OpenSSL ${PACKAGE_VERSION}
+    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
@@ -237,9 +242,9 @@ SET(OPENSSL_LIBRARIES
 
 # Add the plugin
 
-SET(OPENSSL_PLUGIN OpenSSL PARENT_SCOPE)
+SET(OPENSSL_PLUGIN ${PACKAGE_NAME} PARENT_SCOPE)
 
-ADD_PLUGIN(OpenSSL
+ADD_PLUGIN(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp
 

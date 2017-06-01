@@ -287,12 +287,12 @@ MACRO(INITIALISE_PROJECT)
         ADD_DEFINITIONS(-DENABLE_TEST_PLUGINS)
     ENDIF()
 
-    # On macOS, make sure that we support 10.8 and later, unless a specific
+    # On macOS, make sure that we support 10.10 and later, unless a specific
     # deployment target has been specified
 
     IF(APPLE)
         IF("${CMAKE_OSX_DEPLOYMENT_TARGET}" STREQUAL "")
-            SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.8)
+            SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.10)
         ENDIF()
 
         IF(CMAKE_OSX_DEPLOYMENT_TARGET VERSION_LESS "10.12")
@@ -361,12 +361,11 @@ MACRO(INITIALISE_PROJECT)
 
     IF(APPLE)
         SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-
         SET(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks;@executable_path/../PlugIns/${CMAKE_PROJECT_NAME}")
     ELSEIF(NOT WIN32)
         SET(CMAKE_SKIP_RPATH TRUE)
-        SET(LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN/../lib'")
 
+        SET(LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN/../lib'")
         SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARY_DIR} ${LINK_RPATH_FLAG}")
     ENDIF()
 
@@ -383,8 +382,20 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    # Let the ExternalProject module know where we want to build build our
-    # external projects
+    # A couple of variables that make it easier to specify library file names
+    # names with a version (e.g. to be able to reference libz.so.1 and
+    # libz.1.dylib, we could simply use libz${PRE}.1${POST})
+
+    IF(APPLE)
+        SET(CMAKE_SHARED_LIBRARY_SUFFIX_PRE)
+        SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST ${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ELSEIF(NOT WIN32)
+        SET(CMAKE_SHARED_LIBRARY_SUFFIX_PRE ${CMAKE_SHARED_LIBRARY_SUFFIX})
+        SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
+    ENDIF()
+
+    # Let the ExternalProject module know where we want to build our external
+    # projects
     # Note: indeed, otherwise on Windows we may end up with path names that are
     #       too long...
 

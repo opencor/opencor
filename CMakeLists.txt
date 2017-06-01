@@ -201,7 +201,7 @@ UPDATE_LANGUAGE_FILES(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
 # Third-party library that must be directly embedded in the GUI version of
 # OpenCOR
 
-INCLUDE(src/3rdparty/QtSingleApplication/QtSingleApplication.cmake)
+INCLUDE(${CMAKE_SOURCE_DIR}/src/3rdparty/QtSingleApplication/QtSingleApplication.cmake)
 
 # Set the application icon, but only for Windows and macOS, since in the case of
 # Linux, it's done through the use of app_icon (see res/ui.qrc) when we register
@@ -305,8 +305,11 @@ IF(ENABLE_TESTS)
 ENDIF()
 
 # Build the OpenCOR plugins
-# Note: the build order must be such that plugins needed by others are built
-#       first...
+# Note #1: the build order must be such that plugins needed by others are built
+#          first...
+# Note #2: rely on the ExternalProject module to build our packages...
+
+INCLUDE(ExternalProject)
 
 IF(ENABLE_SAMPLE_PLUGINS)
     SET(SAMPLE_PLUGINS

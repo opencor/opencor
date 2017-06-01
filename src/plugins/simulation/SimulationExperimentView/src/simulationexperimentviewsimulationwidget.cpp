@@ -800,7 +800,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             QString additionalInformation = QString();
 
             if (cellmlFileRuntime->needNlaSolver())
-                additionalInformation = " + "+tr("NLA system(s)");
+                additionalInformation = "+"+tr("NLA system(s)");
 
             information += "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn;
             information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
@@ -3847,6 +3847,7 @@ bool SimulationExperimentViewSimulationWidget::combineArchiveSupported(COMBINESu
 void SimulationExperimentViewSimulationWidget::retrieveCellmlFile(const QString &pFileName,
                                                                   CellMLSupport::CellmlFile *&pCellmlFile,
                                                                   SEDMLSupport::SedmlFile *pSedmlFile,
+                                                                  COMBINESupport::CombineArchive *pCombineArchive,
                                                                   const FileType &pFileType,
                                                                   SEDMLSupport::SedmlFileIssues &pSedmlFileIssues)
 {
@@ -3870,7 +3871,7 @@ void SimulationExperimentViewSimulationWidget::retrieveCellmlFile(const QString 
 
     Core::checkFileNameOrUrl(modelSource, isLocalFile, dummy);
 
-    if (isLocalFile && url.isEmpty()) {
+    if (isLocalFile && (url.isEmpty() || pCombineArchive)) {
         // By default, our model source refers to a file name relative to our
         // SED-ML file
 
@@ -3984,8 +3985,10 @@ void SimulationExperimentViewSimulationWidget::retrieveFileDetails(const QString
     if (pCombineArchive)
         retrieveSedmlFile(pSedmlFile, pCombineArchive, pCombineArchiveIssues);
 
-    if (pSedmlFile)
-        retrieveCellmlFile(pFileName, pCellmlFile, pSedmlFile, pFileType, pSedmlFileIssues);
+    if (pSedmlFile) {
+        retrieveCellmlFile(pFileName, pCellmlFile, pSedmlFile, pCombineArchive,
+                           pFileType, pSedmlFileIssues);
+    }
 }
 
 //==============================================================================

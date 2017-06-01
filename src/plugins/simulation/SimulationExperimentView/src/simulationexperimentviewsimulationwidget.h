@@ -295,6 +295,7 @@ private:
     void retrieveCellmlFile(const QString &pFileName,
                             CellMLSupport::CellmlFile *&pCellmlFile,
                             SEDMLSupport::SedmlFile *pSedmlFile,
+                            COMBINESupport::CombineArchive *pCombineArchive,
                             const FileType &pFileType,
                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues);
     void retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
