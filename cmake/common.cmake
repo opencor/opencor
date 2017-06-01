@@ -287,12 +287,12 @@ MACRO(INITIALISE_PROJECT)
         ADD_DEFINITIONS(-DENABLE_TEST_PLUGINS)
     ENDIF()
 
-    # On macOS, make sure that we support 10.8 and later, unless a specific
+    # On macOS, make sure that we support 10.10 and later, unless a specific
     # deployment target has been specified
 
     IF(APPLE)
         IF("${CMAKE_OSX_DEPLOYMENT_TARGET}" STREQUAL "")
-            SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.8)
+            SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.10)
         ENDIF()
 
         IF(CMAKE_OSX_DEPLOYMENT_TARGET VERSION_LESS "10.12")
