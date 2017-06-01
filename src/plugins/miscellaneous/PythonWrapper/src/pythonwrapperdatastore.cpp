@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <PythonQt/pythonqtconversion.h>
+#include <PythonQt/PythonQtConversion.h>
 
 //==============================================================================
 
