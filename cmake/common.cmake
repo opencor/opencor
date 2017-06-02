@@ -129,7 +129,6 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
 
         SET(MACOS_QT_LIBRARIES
-            QtCLucene
             QtConcurrent
             QtCore
             QtGui
