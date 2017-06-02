@@ -68,33 +68,33 @@ IF(USE_PREBUILT_QWT_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 179cf28ac9745456b1d8c694a137bf45f95d2810
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} b4dfddaf9a9b16443577831600d81a69f86d3f4b
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES b6c54099608108746598dec431453e69369143e7
-                                              7bc6ce0f4d1509d28d07eb73aa7fe4e07ad6e227
-                                              4fbace687c9a2854b2d33e36632ba09dd1170bc8
-                                              05f4792ba477583f02bbb70dd2bf99b8f7c8f669)
+                                  SHA1_VALUES cbda8a65c76321817dda1af941022df93d95c9cf
+                                              0eb958d3c98d155ef7d223146b96927664c24292
+                                              f29821f5347b28768cdcf44b379986534aaaf4d5
+                                              2da97922cfe6d9af0c10b57f91de9f2d63f08a42)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} d7230a4e188f3e603db14c36dfef9f7d593cab17
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 6fc49330c80ed8416349a5d34a2b055d13dff646
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 0327ca013f03847f9ca7894ee2288380073b24e3
-                                              89df9bc7e1a13c954673a01a9902b1a978473496
-                                              d0492b2d8ff7f0a226b6f6ba125e3c5db2eb3d40
-                                              fa1337a017d8afb5ebfbcf1cbd4559987039e057)
+                                  SHA1_VALUES 3a7949c04947a4d8d233a1c47faafd593611d5da
+                                              d3f1947f483895b0d7d13658d98289f5d8a8b0f6
+                                              9e8c51c93336deb725e7640ecceaefa833626bac
+                                              ee23fc83de803b1207cbcb1cd0c3c8fc52e95616)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 023d4f1786c6456a7ed8f924024baebf88843677
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 58369ec6068ba6a08ce6b0623eaa588863d9c137
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 00cb93ecd2e8341af6bf6c7eba0ba9a5d2a5c761
-                                          27fcb3b467e9d9519fa4e12c518a6a0c985f27d8)
+                              SHA1_VALUES f249a20ad1b22b5e01bfc97db623e63eb1234694
+                                          1c406ea2fc6d4d6aba00c909611d626caf02c50c)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 416984feab975c33505ca55b33b851db22053b5b
+                              ${RELATIVE_PROJECT_SOURCE_DIR} b671fe6707cc9c928aeafef617806428955ffa10
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 98c1869712832f83bff34774bc8c9d1dddec8fc7
-                                          eb652a5804420c45fe9ed843c0312f1eb1144ce5)
+                              SHA1_VALUES 1fa0289c8429598bff3a67a7b3b63e13e6098850
+                                          b0da2100e670ce9a88d01d27757560f8b03e7440)
     ENDIF()
 ELSE()
     # Set platform specific configuration options and tool names

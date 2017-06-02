@@ -12,7 +12,7 @@ SET(USED_LIBRARY_VERSION 1.0.0)
 
 # Git tag for our library
 
-SET(GIT_TAG v1.0.1)
+SET(GIT_TAG 1.0.1b)
 
 # Specify where our local package will be installed
 
@@ -59,27 +59,27 @@ IF(USE_PREBUILT_OAUTH_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 1b1e20a63facaabd9b39b77c1b9305de96a69afe
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES fbb132cc0fb0a6cecd8e6b3360cdc0458f26304c
-                                              278ca034c2e9ee461789b53ad0de2d2fdf2baec9)
+                                  SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 337c1003a22ffec55cf331417b5cf22fa35f6903
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 4d92b203d0146dbde9a762d318cea41bd7bb061e
-                                              d32db50958f0e21d9fde5272a95713244903754a)
+                                  SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} bf6072552d9650d54faeda1d5ebffd746de49f84
+                              ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 922108ebdaf0411e18aa4c388e68ec52439b2ee4)
+                              SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 6fbd54cbd04c71478fe1a6d37160cf4f25f8715a
+                              ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 08836084bbd30cef8086c306f502c945bb2c30a8)
+                              SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
     ENDIF()
 ELSE()
     # Ignore some warnings

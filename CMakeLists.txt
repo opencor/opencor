@@ -816,8 +816,8 @@ SET(PLUGINS
 )
 SET(PLUGINS
     thirdParty/OAuth
-    thirdParty/QScintilla
-    thirdParty/Qwt
+#    thirdParty/QScintilla
+#    thirdParty/Qwt
 )
 
 FOREACH(PLUGIN ${PLUGINS})
