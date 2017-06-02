@@ -26,7 +26,9 @@ OPTION(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" O
 OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
 OPTION(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
-SET(USE_PREBUILT_LLVMCLANG_PACKAGE OFF)
+SET(USE_PREBUILT_OAUTH_PACKAGE OFF)
+SET(USE_PREBUILT_QSCINTILLA_PACKAGE OFF)
+SET(USE_PREBUILT_QWT_PACKAGE OFF)
 
 # Make sure that we are using the compiler we support
 
@@ -811,6 +813,11 @@ SET(PLUGINS
     widget/MathMLViewerWidget
     widget/WebViewerWidget
     widget/ZincWidget
+)
+SET(PLUGINS
+    thirdParty/OAuth
+    thirdParty/QScintilla
+    thirdParty/Qwt
 )
 
 FOREACH(PLUGIN ${PLUGINS})
