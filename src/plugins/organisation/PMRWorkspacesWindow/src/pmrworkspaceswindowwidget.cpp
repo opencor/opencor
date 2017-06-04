@@ -63,13 +63,15 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-void PmrWorkspacesWindowItem::constructor(const Type &pType,
-                                          Core::TreeViewWidget *pTreeViewWidget,
-                                          PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
-                                          PMRSupport::PmrWorkspace *pWorkspace,
-                                          PMRSupport::PmrWorkspaceFileNode *pFileNode,
-                                          const QIcon &pCollapsedIcon,
-                                          const QIcon &pExpandedIcon)
+PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+                                                 Core::TreeViewWidget *pTreeViewWidget,
+                                                 PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
+                                                 PMRSupport::PmrWorkspace *pWorkspace,
+                                                 PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                                 const QIcon &pIcon,
+                                                 const QIcon &pCollapsedIcon,
+                                                 const QIcon &pExpandedIcon) :
+    QStandardItem(pIcon, pFileNode->name())
 {
     // Some initialisations
 
@@ -94,12 +96,10 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  PMRSupport::PmrWorkspace *pWorkspace,
                                                  const QIcon &pCollapsedIcon,
                                                  const QIcon &pExpandedIcon) :
-    QStandardItem(pCollapsedIcon, pWorkspace->name())
+    PmrWorkspacesWindowItem(pType, pTreeViewWidget, pTreeViewProxyModel,
+                            pWorkspace, 0, pCollapsedIcon, pCollapsedIcon,
+                            pExpandedIcon)
 {
-    // Construct our object
-
-    constructor(pType, pTreeViewWidget, pTreeViewProxyModel,
-                pWorkspace, 0, pCollapsedIcon, pExpandedIcon);
 }
 
 //==============================================================================
@@ -111,12 +111,10 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                                  const QIcon &pCollapsedIcon,
                                                  const QIcon &pExpandedIcon) :
-    QStandardItem(pCollapsedIcon, pFileNode->name())
+    PmrWorkspacesWindowItem(pType, pTreeViewWidget, pTreeViewProxyModel,
+                            pWorkspace, pFileNode, pCollapsedIcon,
+                            pCollapsedIcon, pExpandedIcon)
 {
-    // Construct our object
-
-    constructor(pType, pTreeViewWidget, pTreeViewProxyModel,
-                pWorkspace, pFileNode, pCollapsedIcon, pExpandedIcon);
 }
 
 //==============================================================================
@@ -127,12 +125,9 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  PMRSupport::PmrWorkspace *pWorkspace,
                                                  PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                                  const QIcon &pIcon) :
-    QStandardItem(pIcon, pFileNode->name())
+    PmrWorkspacesWindowItem(pType, pTreeViewWidget, pTreeViewProxyModel,
+                            pWorkspace, pFileNode, pIcon, QIcon(), QIcon())
 {
-    // Construct our object
-
-    constructor(pType, pTreeViewWidget, pTreeViewProxyModel,
-                pWorkspace, pFileNode, QIcon(), QIcon());
 }
 
 //==============================================================================

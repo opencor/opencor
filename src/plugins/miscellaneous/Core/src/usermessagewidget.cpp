@@ -39,9 +39,12 @@ namespace Core {
 
 //==============================================================================
 
-void UserMessageWidget::constructor(const QString &pIcon,
-                                    const QString &pMessage,
-                                    const QString &pExtraMessage)
+UserMessageWidget::UserMessageWidget(const QString &pIcon,
+                                     const QString &pMessage,
+                                     const QString &pExtraMessage,
+                                     QWidget *pParent) :
+    QLabel(pParent),
+    CommonWidget(this)
 {
     // Some initialisations
 
@@ -67,49 +70,23 @@ void UserMessageWidget::constructor(const QString &pIcon,
 
 UserMessageWidget::UserMessageWidget(const QString &pIcon,
                                      const QString &pMessage,
-                                     const QString &pExtraMessage,
                                      QWidget *pParent) :
-    QLabel(pParent),
-    CommonWidget(this)
+    UserMessageWidget(pIcon, pMessage, QString(), pParent)
 {
-    // Construct our object
-
-    constructor(pIcon, pMessage, pExtraMessage);
-}
-
-//==============================================================================
-
-UserMessageWidget::UserMessageWidget(const QString &pIcon,
-                                     const QString &pMessage,
-                                     QWidget *pParent) :
-    QLabel(pParent),
-    CommonWidget(this)
-{
-    // Construct our object
-
-    constructor(pIcon, pMessage);
 }
 
 //==============================================================================
 
 UserMessageWidget::UserMessageWidget(const QString &pIcon, QWidget *pParent) :
-    QLabel(pParent),
-    CommonWidget(this)
+    UserMessageWidget(pIcon, QString(), QString(), pParent)
 {
-    // Construct our object
-
-    constructor(pIcon);
 }
 
 //==============================================================================
 
 UserMessageWidget::UserMessageWidget(QWidget *pParent) :
-    QLabel(pParent),
-    CommonWidget(this)
+    UserMessageWidget(QString(), QString(), QString(), pParent)
 {
-    // Construct our object
-
-    constructor();
 }
 
 //==============================================================================

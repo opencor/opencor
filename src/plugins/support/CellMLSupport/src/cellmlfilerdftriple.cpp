@@ -37,13 +37,13 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-void CellmlFileRdfTriple::constructor(CellmlFile *pCellmlFile,
-                                      iface::rdf_api::Triple *pRdfTriple,
-                                      const Type &pType,
-                                      const ModelQualifier &pModelQualifier,
-                                      const BioQualifier &pBioQualifier,
-                                      const QString &pResource,
-                                      const QString &pId)
+CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
+                                         iface::rdf_api::Triple *pRdfTriple,
+                                         const Type &pType,
+                                         const ModelQualifier &pModelQualifier,
+                                         const BioQualifier &pBioQualifier,
+                                         const QString &pResource,
+                                         const QString &pId)
 {
     mCellmlFile = pCellmlFile;
 
@@ -61,13 +61,10 @@ void CellmlFileRdfTriple::constructor(CellmlFile *pCellmlFile,
 //==============================================================================
 
 CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
-                                         iface::rdf_api::Triple *pRdfTriple)
+                                         iface::rdf_api::Triple *pRdfTriple) :
+    CellmlFileRdfTriple(pCellmlFile, pRdfTriple, Unknown, ModelUnknown,
+                        BioUnknown, QString(), QString())
 {
-    // Construct ourselves
-
-    constructor(pCellmlFile, pRdfTriple, Unknown,
-                ModelUnknown, BioUnknown, QString(), QString());
-
     // Retrieve the RDF triple's subject, predicate and object information
 
     ObjRef<iface::rdf_api::Resource> subject = pRdfTriple->subject();
@@ -159,13 +156,10 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          const QString pSubject,
                                          const ModelQualifier &pModelQualifier,
                                          const QString &pResource,
-                                         const QString &pId)
+                                         const QString &pId) :
+    CellmlFileRdfTriple(pCellmlFile, 0, BioModelsDotNetQualifier,
+                        pModelQualifier, BioUnknown, pResource, pId)
 {
-    // Construct ourselves
-
-    constructor(pCellmlFile, 0, BioModelsDotNetQualifier,
-                pModelQualifier, BioUnknown, pResource, pId);
-
     // Create our RDF triple elements
 
     static const QRegularExpression ModelRegEx = QRegularExpression("^model:");
@@ -181,13 +175,10 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          const QString pSubject,
                                          const BioQualifier &pBioQualifier,
                                          const QString &pResource,
-                                         const QString &pId)
+                                         const QString &pId) :
+    CellmlFileRdfTriple(pCellmlFile, 0, BioModelsDotNetQualifier, ModelUnknown,
+                        pBioQualifier, pResource, pId)
 {
-    // Construct ourselves
-
-    constructor(pCellmlFile, 0, BioModelsDotNetQualifier,
-                ModelUnknown, pBioQualifier, pResource, pId);
-
     // Create our RDF triple elements
 
     static const QRegularExpression BioRegEx = QRegularExpression("^bio:");

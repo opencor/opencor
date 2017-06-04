@@ -162,8 +162,11 @@ bool CheckForUpdatesEngine::hasNewerOfficialVersion() const
 
 //==============================================================================
 
-void CheckForUpdatesDialog::constructor(const QString &pApplicationDate,
-                                        CheckForUpdatesEngine *pEngine)
+CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
+                                             const QString &pApplicationDate,
+                                             CheckForUpdatesEngine *pEngine,
+                                             QWidget *pParent) :
+    Dialog(pSettings, pParent)
 {
     // We are not yet initialised
 
@@ -202,22 +205,16 @@ void CheckForUpdatesDialog::constructor(const QString &pApplicationDate,
 CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
                                              const QString &pApplicationDate,
                                              QWidget *pParent) :
-    Dialog(pSettings, pParent)
+    CheckForUpdatesDialog(pSettings, pApplicationDate, 0, pParent)
 {
-    // Construct our dialog
-
-    constructor(pApplicationDate, 0);
 }
 
 //==============================================================================
 
 CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
                                              CheckForUpdatesEngine *pEngine) :
-    Dialog(pSettings, 0)
+    CheckForUpdatesDialog(pSettings, QString(), pEngine, 0)
 {
-    // Construct our dialog
-
-    constructor(QString(), pEngine);
 }
 
 //==============================================================================
