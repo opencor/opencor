@@ -130,10 +130,6 @@ private:
     int mStagedCount;
     int mUnstagedCount;
 
-    void constructor(const bool &pOwned, const QString &pName,
-                     const QString &pUrl, const QString &pDescription,
-                     const QString &pOwner, PmrWebService *pParent);
-
     bool doCommit(const char *pMessage, const size_t &pParentCount,
                   const git_commit **pParents);
 

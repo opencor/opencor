@@ -68,10 +68,6 @@ private:
     int mColumn;
     QString mMessage;
     QString mImportedFile;
-
-    void constructor(const Type &pType, const int &pLine,
-                     const int &pColumn, const QString &pMessage,
-                     const QString &pImportedFile);
 };
 
 //==============================================================================

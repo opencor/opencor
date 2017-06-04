@@ -30,9 +30,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-void CellmlFileIssue::constructor(const Type &pType, const int &pLine,
-                                  const int &pColumn, const QString &pMessage,
-                                  const QString &pImportedFile)
+CellmlFileIssue::CellmlFileIssue(const Type &pType, const int &pLine,
+                                 const int &pColumn, const QString &pMessage,
+                                 const QString &pImportedFile)
 {
     // Some initialisations
 
@@ -48,22 +48,9 @@ void CellmlFileIssue::constructor(const Type &pType, const int &pLine,
 
 //==============================================================================
 
-CellmlFileIssue::CellmlFileIssue(const Type &pType, const int &pLine,
-                                 const int &pColumn, const QString &pMessage,
-                                 const QString &pImportedFile)
+CellmlFileIssue::CellmlFileIssue(const Type &pType, const QString &pMessage) :
+    CellmlFileIssue(pType, 0, 0, pMessage, QString())
 {
-    // Construct our object
-
-    constructor(pType, pLine, pColumn, pMessage, pImportedFile);
-}
-
-//==============================================================================
-
-CellmlFileIssue::CellmlFileIssue(const Type &pType, const QString &pMessage)
-{
-    // Construct our object
-
-    constructor(pType, 0, 0, pMessage, QString());
 }
 
 //==============================================================================

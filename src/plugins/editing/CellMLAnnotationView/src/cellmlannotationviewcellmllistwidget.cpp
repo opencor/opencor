@@ -86,10 +86,12 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlElementItem::constructor(const bool &pCategory,
-                                                        const Type &pType,
-                                                        iface::cellml_api::CellMLElement *pElement,
-                                                        const int &pNumber)
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const bool &pCategory,
+                                                                             const Type &pType,
+                                                                             const QString &pText,
+                                                                             iface::cellml_api::CellMLElement *pElement,
+                                                                             const int &pNumber) :
+    QStandardItem(pText)
 {
     // Some initialisations
 
@@ -105,12 +107,8 @@ void CellmlAnnotationViewCellmlElementItem::constructor(const bool &pCategory,
 
 CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const bool &pError,
                                                                              const QString &pText) :
-    QStandardItem(pText)
+    CellmlAnnotationViewCellmlElementItem(false, pError?Error:Warning, pText, 0, -1)
 {
-    // Constructor for either an error or a warning
-
-    constructor(false, pError?Error:Warning, 0, -1);
-
     // Disable the item and use its text as a tooltip (in case it's too long and
     // doesn't fit within the allocated space we have)
     // Note: the item will get 're-enabled' by our item delegate...
@@ -127,12 +125,8 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
 CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const Type &pType,
                                                                              const QString &pText) :
-    QStandardItem(pText)
+    CellmlAnnotationViewCellmlElementItem(true, pType, pText, 0, -1)
 {
-    // Constructor for a category
-
-    constructor(true, pType, 0, -1);
-
     // Use its text as a tooltip (in case it's too long and doesn't fit within
     // the allocated space we have)
 
@@ -148,12 +142,8 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const Type &pType,
                                                                              iface::cellml_api::CellMLElement *pElement,
                                                                              const int pNumber) :
-    QStandardItem()
+    CellmlAnnotationViewCellmlElementItem(false, pType, QString(), pElement, pNumber)
 {
-    // Constructor for a CellML element
-
-    constructor(false, pType, pElement, pNumber);
-
     // Set the text for some types
 
     enum {

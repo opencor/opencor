@@ -30,8 +30,8 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-void SedmlFileIssue::constructor(const Type &pType, const int &pLine,
-                                 const int &pColumn, const QString &pMessage)
+SedmlFileIssue::SedmlFileIssue(const Type &pType, const int &pLine,
+                               const int &pColumn, const QString &pMessage)
 {
     // Some initialisations
 
@@ -45,21 +45,9 @@ void SedmlFileIssue::constructor(const Type &pType, const int &pLine,
 
 //==============================================================================
 
-SedmlFileIssue::SedmlFileIssue(const Type &pType, const int &pLine,
-                               const int &pColumn, const QString &pMessage)
+SedmlFileIssue::SedmlFileIssue(const Type &pType, const QString &pMessage) :
+    SedmlFileIssue(pType, 0, 0, pMessage)
 {
-    // Construct our object
-
-    constructor(pType, pLine, pColumn, pMessage);
-}
-
-//==============================================================================
-
-SedmlFileIssue::SedmlFileIssue(const Type &pType, const QString &pMessage)
-{
-    // Construct our object
-
-    constructor(pType, 0, 0, pMessage);
 }
 
 //==============================================================================

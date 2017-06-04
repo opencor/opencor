@@ -30,7 +30,10 @@ namespace Core {
 
 //==============================================================================
 
-void SplitterWidget::constructor(const Qt::Orientation &pOrientation)
+SplitterWidget::SplitterWidget(const Qt::Orientation &pOrientation,
+                               QWidget *pParent) :
+    QSplitter(pParent),
+    CommonWidget(this)
 {
     // Customise ourselves so that we are as thin as possible and without an
     // image for our handle
@@ -44,25 +47,9 @@ void SplitterWidget::constructor(const Qt::Orientation &pOrientation)
 
 //==============================================================================
 
-SplitterWidget::SplitterWidget(const Qt::Orientation &pOrientation,
-                               QWidget *pParent) :
-    QSplitter(pParent),
-    CommonWidget(this)
-{
-    // Construct ourselves
-
-    constructor(pOrientation);
-}
-
-//==============================================================================
-
 SplitterWidget::SplitterWidget(QWidget *pParent) :
-    QSplitter(pParent),
-    CommonWidget(this)
+    SplitterWidget(Qt::Horizontal, pParent)
 {
-    // Construct ourselves
-
-    constructor(Qt::Horizontal);
 }
 
 //==============================================================================

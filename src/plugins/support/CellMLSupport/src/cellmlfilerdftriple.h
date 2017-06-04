@@ -152,11 +152,12 @@ private:
     QString mResource;
     QString mId;
 
-    void constructor(CellmlFile *pCellmlFile,
-                     iface::rdf_api::Triple *pRdfTriple, const Type &pType,
-                     const ModelQualifier &pModelQualifier,
-                     const BioQualifier &pBioQualifier,
-                     const QString &pResource, const QString &pId);
+    explicit CellmlFileRdfTriple(CellmlFile *pCellmlFile,
+                                 iface::rdf_api::Triple *pRdfTriple,
+                                 const Type &pType,
+                                 const ModelQualifier &pModelQualifier,
+                                 const BioQualifier &pBioQualifier,
+                                 const QString &pResource, const QString &pId);
 };
 
 //==============================================================================

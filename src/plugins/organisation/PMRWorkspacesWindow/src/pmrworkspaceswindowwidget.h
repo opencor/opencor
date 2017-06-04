@@ -117,11 +117,14 @@ private:
     QIcon mCollapsedIcon;
     QIcon mExpandedIcon;
 
-    void constructor(const Type &pType, Core::TreeViewWidget *pTreeViewWidget,
-                     PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
-                     PMRSupport::PmrWorkspace *pWorkspace,
-                     PMRSupport::PmrWorkspaceFileNode *pFileNode,
-                     const QIcon &pCollapsedIcon, const QIcon &pExpandedIcon);
+    explicit PmrWorkspacesWindowItem(const Type &pType,
+                                     Core::TreeViewWidget *pTreeViewWidget,
+                                     PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
+                                     PMRSupport::PmrWorkspace *pWorkspace,
+                                     PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                     const QIcon &pIcon,
+                                     const QIcon &pCollapsedIcon,
+                                     const QIcon &pExpandedIcon);
 };
 
 //==============================================================================
