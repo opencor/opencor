@@ -53,9 +53,10 @@ namespace PMRSupport {
 
 //==============================================================================
 
-void PmrWorkspace::constructor(const bool &pOwned, const QString &pName,
-                               const QString &pUrl, const QString &pDescription,
-                               const QString &pOwner, PmrWebService *pParent)
+PmrWorkspace::PmrWorkspace(const bool &pOwned, const QString &pName,
+                           const QString &pUrl, const QString &pDescription,
+                           const QString &pOwner, PmrWebService *pParent) :
+    QObject(pParent)
 {
     // Initialise ourselves
 
@@ -110,24 +111,9 @@ void PmrWorkspace::constructor(const bool &pOwned, const QString &pName,
 //==============================================================================
 
 PmrWorkspace::PmrWorkspace(const bool &pOwned, const QString &pName,
-                           const QString &pUrl, const QString &pDescription,
-                           const QString &pOwner, PmrWebService *pParent) :
-    QObject(pParent)
-{
-    // Construct our PMR workspace
-
-    constructor(pOwned, pName, pUrl, pDescription, pOwner, pParent);
-}
-
-//==============================================================================
-
-PmrWorkspace::PmrWorkspace(const bool &pOwned, const QString &pName,
                            const QString &pUrl, PmrWebService *pParent) :
-    QObject(pParent)
+    PmrWorkspace(pOwned, pName, pUrl, QString(), QString(), pParent)
 {
-    // Construct our PMR workspace
-
-    constructor(pOwned, pName, pUrl, QString(), QString(), pParent);
 }
 
 //==============================================================================

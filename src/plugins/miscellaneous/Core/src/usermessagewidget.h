@@ -73,10 +73,6 @@ private:
     QString mMessage;
     QString mExtraMessage;
 
-    void constructor(const QString &pIcon = QString(),
-                     const QString &pMessage = QString(),
-                     const QString &pExtraMessage = QString());
-
     void updateGui();
 };
 

@@ -30,10 +30,11 @@ namespace PMRSupport {
 
 //==============================================================================
 
-void PmrWorkspaceFileNode::constructor(const QString &pName,
-                                       const QString &pPath,
-                                       const CharPair &pStatus,
-                                       PmrWorkspaceFileNode *pParent)
+PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pName,
+                                           const QString &pPath,
+                                           const CharPair &pStatus,
+                                           PmrWorkspaceFileNode *pParent) :
+    QObject(pParent)
 {
     // Some initialisations
 
@@ -49,25 +50,9 @@ void PmrWorkspaceFileNode::constructor(const QString &pName,
 
 //==============================================================================
 
-PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pName,
-                                           const QString &pPath,
-                                           const CharPair &pStatus,
-                                           PmrWorkspaceFileNode *pParent) :
-    QObject(pParent)
-{
-    // Construct ourselves
-
-    constructor(pName, pPath, pStatus, pParent);
-}
-
-//==============================================================================
-
 PmrWorkspaceFileNode::PmrWorkspaceFileNode(PmrWorkspaceFileNode *pParent) :
-    QObject(pParent)
+    PmrWorkspaceFileNode(QString(), QString(), CharPair(), pParent)
 {
-    // Construct ourselves
-
-    constructor(QString(), QString(), CharPair(), pParent);
 }
 
 //==============================================================================

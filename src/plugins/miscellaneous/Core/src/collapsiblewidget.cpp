@@ -246,7 +246,9 @@ void CollapsibleHeaderWidget::toggleCollapsedState()
 
 //==============================================================================
 
-void CollapsibleWidget::constructor(const QColor &pSeparatorColor)
+CollapsibleWidget::CollapsibleWidget(const QColor &pSeparatorColor,
+                                     QWidget *pParent) :
+    Widget(QSize(), pParent)
 {
     // Some initialisations
 
@@ -265,23 +267,9 @@ void CollapsibleWidget::constructor(const QColor &pSeparatorColor)
 
 //==============================================================================
 
-CollapsibleWidget::CollapsibleWidget(const QColor &pSeparatorColor,
-                                     QWidget *pParent) :
-    Widget(QSize(), pParent)
-{
-    // Construct our object
-
-    constructor(pSeparatorColor);
-}
-
-//==============================================================================
-
 CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
-    Widget(QSize(), pParent)
+    CollapsibleWidget(borderColor(), pParent)
 {
-    // Construct our object
-
-    constructor();
 }
 
 //==============================================================================
