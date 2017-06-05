@@ -122,7 +122,7 @@ private:
                                      PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                      PMRSupport::PmrWorkspace *pWorkspace,
                                      PMRSupport::PmrWorkspaceFileNode *pFileNode,
-                                     const QIcon &pIcon,
+                                     const QIcon &pIcon, const QString &pText,
                                      const QIcon &pCollapsedIcon,
                                      const QIcon &pExpandedIcon);
 };

@@ -69,9 +69,10 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  PMRSupport::PmrWorkspace *pWorkspace,
                                                  PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                                  const QIcon &pIcon,
+                                                 const QString &pText,
                                                  const QIcon &pCollapsedIcon,
                                                  const QIcon &pExpandedIcon) :
-    QStandardItem(pIcon, pFileNode->name())
+    QStandardItem(pIcon, pText)
 {
     // Some initialisations
 
@@ -97,8 +98,8 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  const QIcon &pCollapsedIcon,
                                                  const QIcon &pExpandedIcon) :
     PmrWorkspacesWindowItem(pType, pTreeViewWidget, pTreeViewProxyModel,
-                            pWorkspace, 0, pCollapsedIcon, pCollapsedIcon,
-                            pExpandedIcon)
+                            pWorkspace, 0, pCollapsedIcon, pWorkspace->name(),
+                            pCollapsedIcon, pExpandedIcon)
 {
 }
 
@@ -113,7 +114,7 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  const QIcon &pExpandedIcon) :
     PmrWorkspacesWindowItem(pType, pTreeViewWidget, pTreeViewProxyModel,
                             pWorkspace, pFileNode, pCollapsedIcon,
-                            pCollapsedIcon, pExpandedIcon)
+                            pFileNode->name(), pCollapsedIcon, pExpandedIcon)
 {
 }
 
@@ -126,7 +127,8 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                                  const QIcon &pIcon) :
     PmrWorkspacesWindowItem(pType, pTreeViewWidget, pTreeViewProxyModel,
-                            pWorkspace, pFileNode, pIcon, QIcon(), QIcon())
+                            pWorkspace, pFileNode, pIcon, pFileNode->name(),
+                            QIcon(), QIcon())
 {
 }
 

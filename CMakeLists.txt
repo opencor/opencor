@@ -167,6 +167,7 @@ IF(APPLE)
     ENDIF()
 
     SET(MACOS_QT_LIBRARIES
+        QtCLucene
         QtConcurrent
         QtCore
         QtGui
@@ -325,12 +326,12 @@ IF(ENABLE_TEST_PLUGINS)
     ADD_DEFINITIONS(-DENABLE_TEST_PLUGINS)
 ENDIF()
 
-# On macOS, make sure that we support 10.8 and later, unless a specific
+# On macOS, make sure that we support 10.10 and later, unless a specific
 # deployment target has been specified
 
 IF(APPLE)
     IF("${CMAKE_OSX_DEPLOYMENT_TARGET}" STREQUAL "")
-        SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.8)
+        SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.10)
     ENDIF()
 
     IF(CMAKE_OSX_DEPLOYMENT_TARGET VERSION_LESS "10.12")
@@ -811,9 +812,6 @@ SET(PLUGINS
     widget/WebViewerWidget
     widget/ZincWidget
 )
-SET(PLUGINS
-    thirdParty/OAuth
-)
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
@@ -1122,7 +1120,7 @@ IF(WIN32)
         SET(TEST)
     ENDIF()
 
-    FOREACH(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
         WINDOWS_DEPLOY_QT_LIBRARY(Qt5${QT_LIBRARY})
     ENDFOREACH()
 
@@ -1260,7 +1258,7 @@ ELSE()
         SET(TEST)
     ENDIF()
 
-    FOREACH(QT_LIBRARY Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
         IF(   "${QT_LIBRARY}" STREQUAL "WebKit"
            OR "${QT_LIBRARY}" STREQUAL "WebKitWidgets")
             SET(REAL_QT_LIBRARY_DIR ${QT_WEBKIT_LIBRARIES_DIR})
