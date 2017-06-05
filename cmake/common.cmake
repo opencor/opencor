@@ -1418,7 +1418,7 @@ ENDIF()
     # Run the packaging script once the dependency target has been satisfied
 
     ADD_CUSTOM_COMMAND(TARGET ${ARG_TARGET} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -P ${PACKAGING_SCRIPT}
+                       COMMAND ${CMAKE_COMMAND} -D RELEASE_MODE=${RELEASE_MODE} -P ${PACKAGING_SCRIPT}
                        VERBATIM)
 ENDMACRO()
 
