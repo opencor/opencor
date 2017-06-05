@@ -27,8 +27,6 @@ OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS 
 OPTION(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
 SET(USE_PREBUILT_OAUTH_PACKAGE OFF)
-SET(USE_PREBUILT_QSCINTILLA_PACKAGE OFF)
-SET(USE_PREBUILT_QWT_PACKAGE OFF)
 
 # Make sure that we are using the compiler we support
 
@@ -816,8 +814,6 @@ SET(PLUGINS
 )
 SET(PLUGINS
     thirdParty/OAuth
-#    thirdParty/QScintilla
-#    thirdParty/Qwt
 )
 
 FOREACH(PLUGIN ${PLUGINS})
