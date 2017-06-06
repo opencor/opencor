@@ -429,7 +429,7 @@ SET(PLUGINS
     # Python wrappers depend on simulation plugins
 
     miscellaneous/PythonWrapper
-    miscellaneous/PythonConsoleWindow
+    miscellaneous/PythonQtConsoleWindow
 
     miscellaneous/JupyterKernel
 

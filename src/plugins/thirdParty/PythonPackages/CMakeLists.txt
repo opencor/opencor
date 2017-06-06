@@ -17,11 +17,17 @@ SET(SCIPY_VERSION 0.19.0)
 
 SET(IPYKERNEL_VERSION 4.6.1)
 SET(IPYTHON_VERSION 6.0.0)
+SET(QTCONSOLE_VERSION 4.3.0)
+SET(TRAITLETS_VERSION 4.3.2)
+
+# Our GitHub archive
+
+SET(GITHUB_OPENCOR https://github.com/opencor)
 
 # We use our own copies of some Windows packages from
 # http://www.lfd.uci.edu/~gohlke/pythonlibs/
 
-SET(WHEEL_REPOSITORY https://github.com/opencor/python/releases/download/wheels)
+SET(WHEEL_REPOSITORY ${GITHUB_OPENCOR}/python/releases/download/wheels)
 
 # Specify where our local package will be installed
 
@@ -61,7 +67,7 @@ IF(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 79175eea34add07fd68ae2b1a8a065a131145f3f
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 918c238e2a6403732a82000bb88762f460eabffe
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 259b675eec7c9138893798095aea9ec468b87a37)
@@ -86,7 +92,7 @@ ELSE()
 
     # Use our installed pip
 
-    SET(PIP_INSTALL_COMMAND ${PYTHON_EXECUTABLE} -s -m
+    SET(PIP_INSTALL_COMMAND PYTHONPATH=${LOCAL_SITE_PACKAGES_DIR} ${PYTHON_EXECUTABLE} -s -m
         pip install -t ${LOCAL_SITE_PACKAGES_DIR} --upgrade --upgrade-strategy only-if-needed)
 
     # Install numpy, scipy, and matplotlib
@@ -111,8 +117,10 @@ ELSE()
                 numpy==${NUMPY_VERSION}
                 scipy==${SCIPY_VERSION}
                 matplotlib==${MATPLOTLIB_VERSION}
+                traitlets==${TRAITLETS_VERSION}
                 ipython==${IPYTHON_VERSION}
                 ipykernel==${IPYKERNEL_VERSION}
+                qtconsole==${QTCONSOLE_VERSION}
             VERBATIM
         )
     ENDIF()
@@ -136,21 +144,22 @@ ELSE()
     ADD_DEPENDENCIES(patch_matplotlib install_packages)
     ADD_DEPENDENCIES(patch_matplotlib ${BUILD_DEPENDENCIES})
 
-    # Patch IPython so that it works with PythonQt
+    # Upgrade to our versions of packages which have been patched to work with PythonQt
 
-    ADD_CUSTOM_TARGET(patch_ipython
-        COMMAND ${PYTHON_EXECUTABLE} -s scripts/patch.py
-            --strip=1
-            --directory=${LOCAL_SITE_PACKAGES_DIR}/IPython
-            src/ipython_${IPYTHON_VERSION}.diff
-        WORKING_DIRECTORY
-            ${PROJECT_SOURCE_DIR}
+    SET(ARCHIVE_PYTHONQT archive/PythonQt-v)
+
+    ADD_CUSTOM_TARGET(pythonqt_packages
+        COMMAND ${PIP_INSTALL_COMMAND} --no-deps
+            ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_VERSION}.zip
+            ${GITHUB_OPENCOR}/ipython/${ARCHIVE_PYTHONQT}${IPYTHON_VERSION}.zip
+            ${GITHUB_OPENCOR}/ipykernel/${ARCHIVE_PYTHONQT}${IPYKERNEL_VERSION}.zip
+            ${GITHUB_OPENCOR}/qtconsole/${ARCHIVE_PYTHONQT}${QTCONSOLE_VERSION}.zip
         VERBATIM
     )
 
-    ADD_DEPENDENCIES(${PACKAGE_BUILD} patch_ipython)
-    ADD_DEPENDENCIES(patch_ipython install_packages)
-    ADD_DEPENDENCIES(patch_ipython ${BUILD_DEPENDENCIES})
+    ADD_DEPENDENCIES(${PACKAGE_BUILD} pythonqt_packages)
+    ADD_DEPENDENCIES(pythonqt_packages install_packages)
+    ADD_DEPENDENCIES(pythonqt_packages ${BUILD_DEPENDENCIES})
 
     # Package the newly installed Python packages
 

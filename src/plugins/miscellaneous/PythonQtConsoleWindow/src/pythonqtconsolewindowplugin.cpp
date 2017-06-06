@@ -18,12 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python Console Window plugin
+// An dockable iPython console window for Qt
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "pythonconsolewindowplugin.h"
-#include "pythonconsolewindow.h"
+#include "ctkAbstractPythonManager.h"
+#include "pythonqtconsolewindowplugin.h"
+#include "pythonqtconsolewindow.h"
+#include "pythonqtsupportplugin.h"
 
 //==============================================================================
 
@@ -34,16 +36,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonConsoleWindow {
+namespace PythonQtConsoleWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonConsoleWindowPluginInfo()
+PLUGININFO_FUNC PythonQtConsoleWindowPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("the Python Console window plugin."));
-    descriptions.insert("fr", QString::fromUtf8("the Python Console window plugin."));
+    descriptions.insert("en", QString::fromUtf8("the Python Qt Console window plugin."));
+    descriptions.insert("fr", QString::fromUtf8("the Python Qt Console window plugin."));
 
     return new PluginInfo(PluginInfo::Miscellaneous, true, false,
                           QStringList() << "Core" << "PythonQtSupport" << "PythonWrapper",
@@ -54,18 +56,18 @@ PLUGININFO_FUNC PythonConsoleWindowPluginInfo()
 // I18n interface
 //==============================================================================
 
-void PythonConsoleWindowPlugin::retranslateUi()
+void PythonQtConsoleWindowPlugin::retranslateUi()
 {
   // Retranslate our window action
-  retranslateAction(mPythonConsoleWindowAction,
-                    tr("Python"), tr("Show/hide the Python Console window"));
+  retranslateAction(mPythonQtConsoleWindowAction,
+                    tr("PythonQtConsole"), tr("Show/hide the Python Qt Console window"));
   }
 
 //==============================================================================
 // Plugin interface
 //==============================================================================
 
-bool PythonConsoleWindowPlugin::definesPluginInterfaces()
+bool PythonQtConsoleWindowPlugin::definesPluginInterfaces()
 {
     // We don't handle this interface...
 
@@ -74,8 +76,8 @@ bool PythonConsoleWindowPlugin::definesPluginInterfaces()
 
 //==============================================================================
 
-bool PythonConsoleWindowPlugin::pluginInterfacesOk(const QString &pFileName,
-                                                   QObject *pInstance)
+bool PythonQtConsoleWindowPlugin::pluginInterfacesOk(const QString &pFileName,
+                                                     QObject *pInstance)
 {
     Q_UNUSED(pFileName);
     Q_UNUSED(pInstance);
@@ -87,30 +89,27 @@ bool PythonConsoleWindowPlugin::pluginInterfacesOk(const QString &pFileName,
 
 //==============================================================================
 
-void PythonConsoleWindowPlugin::initializePlugin()
+void PythonQtConsoleWindowPlugin::initializePlugin()
 {
-    // Create an action to show/hide our Python window
+    // Create an action to show/hide our PythonQt window
 
-    mPythonConsoleWindowAction = Core::newAction(true, Core::mainWindow());
+    mPythonQtConsoleWindowAction = Core::newAction(true, Core::mainWindow());
 
-    // Create our Python window
+    // Create our PythonQt window
 
-    mPythonConsoleWindow = new PythonConsoleWindow(Core::mainWindow());
-
-
-//    matplotlib.use('PythonQt')
+    mPythonQtConsoleWindow = new PythonQtConsoleWindow(Core::mainWindow());
 }
 
 //==============================================================================
 
-void PythonConsoleWindowPlugin::finalizePlugin()
+void PythonQtConsoleWindowPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void PythonConsoleWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void PythonQtConsoleWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -119,34 +118,25 @@ void PythonConsoleWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins
 
 //==============================================================================
 
-static const auto SettingsCommandHistory = QStringLiteral("CommandHistory");
-
-//==============================================================================
-
-void PythonConsoleWindowPlugin::loadSettings(QSettings *pSettings)
+void PythonQtConsoleWindowPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our Python window settings
+    Q_UNUSED(pSettings);
 
-    pSettings->beginGroup(mPythonConsoleWindow->objectName());
-        auto commandHistory = pSettings->value(SettingsCommandHistory, QVariant(QStringList() << "")).toStringList();
-        mPythonConsoleWindow->setCommandHistory(commandHistory);
-    pSettings->endGroup();
+    // We don't handle this interface...
 }
 
 //==============================================================================
 
-void PythonConsoleWindowPlugin::saveSettings(QSettings *pSettings) const
+void PythonQtConsoleWindowPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our Python window settings
+    Q_UNUSED(pSettings);
 
-    pSettings->beginGroup(mPythonConsoleWindow->objectName());
-        pSettings->setValue(SettingsCommandHistory, QVariant(mPythonConsoleWindow->getCommandHistory()));
-    pSettings->endGroup();
+    // We don't handle this interface...
 }
 
 //==============================================================================
 
-void PythonConsoleWindowPlugin::handleUrl(const QUrl &pUrl)
+void PythonQtConsoleWindowPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -157,34 +147,34 @@ void PythonConsoleWindowPlugin::handleUrl(const QUrl &pUrl)
 // Window interface
 //==============================================================================
 
-Qt::DockWidgetArea PythonConsoleWindowPlugin::windowDefaultDockArea() const
+Qt::DockWidgetArea PythonQtConsoleWindowPlugin::windowDefaultDockArea() const
 {
     // Return our default dock area
 
-    return Qt::TopDockWidgetArea;
+    return Qt::RightDockWidgetArea;
 }
 
 //==============================================================================
 
-QAction * PythonConsoleWindowPlugin::windowAction() const
+QAction * PythonQtConsoleWindowPlugin::windowAction() const
 {
     // Return our window action
 
-    return mPythonConsoleWindowAction;
+    return mPythonQtConsoleWindowAction;
 }
 
 //==============================================================================
 
-QDockWidget * PythonConsoleWindowPlugin::windowWidget() const
+QDockWidget * PythonQtConsoleWindowPlugin::windowWidget() const
 {
     // Return our window widget
 
-    return mPythonConsoleWindow;
+    return mPythonQtConsoleWindow;
 }
 
 //==============================================================================
 
-}   // namespace PythonConsoleWindow
+}   // namespace PythonQtConsoleWindow
 }   // namespace OpenCOR
 
 //==============================================================================

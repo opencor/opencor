@@ -18,58 +18,54 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python Console Window plugin
+// An dockable iPython console window for Qt
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "plugininfo.h"
-#include "i18ninterface.h"
-#include "plugininterface.h"
-#include "windowinterface.h"
+#include "windowwidget.h"
+
+//==============================================================================
+
+#include <QtGlobal>
+#include <QWidget>
+
+//==============================================================================
+
+//class PythonQtScriptingConsole;
+
+//==============================================================================
+
+namespace Ui {
+    class PythonQtConsoleWindow;
+}
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonConsoleWindow {
+namespace PythonQtConsoleWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonConsoleWindowPluginInfo();
-
-//==============================================================================
-
-class PythonConsoleWindow;
-
-//==============================================================================
-
-class PythonConsoleWindowPlugin : public QObject, public I18nInterface,
-                                  public PluginInterface, public WindowInterface
+class PythonQtConsoleWindow : public Core::WindowWidget
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonConsoleWindowPlugin" FILE "pythonconsolewindowplugin.json")
-
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::WindowInterface)
+Q_OBJECT
 
 public:
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "windowinterface.inl"
+    explicit PythonQtConsoleWindow(QWidget *pParent);
+    ~PythonQtConsoleWindow();
 
 private:
-    QAction *mPythonConsoleWindowAction;
+    Ui::PythonQtConsoleWindow *mGui;
 
-    PythonConsoleWindow *mPythonConsoleWindow;
+    QWidget *mPythonQtConsoleWidget;
 };
 
 //==============================================================================
 
-}   // namespace PythonConsoleWindow
+}   // namespace PythonQtConsoleWindow
 }   // namespace OpenCOR
 
 //==============================================================================

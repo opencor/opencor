@@ -18,60 +18,60 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// An dockable Python console window
+// An dockable iPython console window for Qt
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "windowwidget.h"
-
-//==============================================================================
-
-#include <QtGlobal>
-
-//==============================================================================
-
-class ctkPythonConsole;
-
-//==============================================================================
-
-namespace Ui {
-    class PythonConsoleWindow;
-}
+#include "plugininfo.h"
+#include "i18ninterface.h"
+#include "plugininterface.h"
+#include "windowinterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonConsoleWindow {
+namespace PythonQtConsoleWindow {
 
 //==============================================================================
 
-class PythonConsoleWidget;
+PLUGININFO_FUNC PythonQtConsoleWindowPluginInfo();
 
 //==============================================================================
 
-class PythonConsoleWindow : public Core::WindowWidget
+class PythonQtConsoleWindow;
+
+//==============================================================================
+
+class PythonQtConsoleWindowPlugin : public QObject, public I18nInterface,
+                                    public PluginInterface, public WindowInterface
 {
-Q_OBJECT
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.PythonQtConsoleWindowPlugin" FILE "pythonqtconsolewindowplugin.json")
+
+    Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::WindowInterface)
 
 public:
-    explicit PythonConsoleWindow(QWidget *pParent);
-    ~PythonConsoleWindow();
-
-    QStringList getCommandHistory() const;
-    void setCommandHistory(const QStringList &pCommandHistory);
+#include "i18ninterface.inl"
+#include "plugininterface.inl"
+#include "windowinterface.inl"
 
 private:
-    Ui::PythonConsoleWindow *mGui;
+    void startConsole();
 
-    ctkPythonConsole *mPythonConsoleWidget;
+    QAction *mPythonQtConsoleWindowAction;
+
+    PythonQtConsoleWindow *mPythonQtConsoleWindow;
 };
 
 //==============================================================================
 
-}   // namespace PythonConsoleWindow
+}   // namespace PythonQtConsoleWindow
 }   // namespace OpenCOR
 
 //==============================================================================
