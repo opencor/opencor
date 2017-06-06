@@ -812,6 +812,7 @@ SET(PLUGINS
     widget/WebViewerWidget
     widget/ZincWidget
 )
+SET(PLUGINS)
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
