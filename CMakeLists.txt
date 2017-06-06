@@ -19,7 +19,6 @@ OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintil
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
-SET(USE_PREBUILT_OPENSSL_PACKAGE OFF)
 
 # Make sure that we are using the compiler we support
 
@@ -824,9 +823,6 @@ SET(PLUGINS
 
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
-)
-SET(PLUGINS
-    thirdParty/OpenSSL
 )
 
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
