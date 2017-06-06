@@ -93,10 +93,10 @@ IF(USE_PREBUILT_LLVMCLANG_PACKAGE)
                                           1a53170565c5a920991dec86c54fe41419e4d099)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                              ${RELATIVE_PROJECT_SOURCE_DIR} f873818949a24b2b98d6aac11a5e1ae401582301
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
+                              SHA1_VALUES fd397cddee8b7db88008bd8705eb3d3b4ac4cd99
+                                          e09d9093001e748a0469923c9f076300a9768cda)
     ENDIF()
 ELSE()
     # Build LLVM+Clang as an external project
