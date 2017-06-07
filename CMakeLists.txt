@@ -26,6 +26,7 @@ OPTION(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" O
 OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
 OPTION(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
+SET(USE_PREBUILT_LLVMCLANG_PACKAGE OFF)
 
 # Make sure that we are using the compiler we support
 
@@ -122,7 +123,8 @@ INCLUDE(${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/CMakeLists.txt)
 #                WE CAN BUILD QtWebKit AS A PACKAGE?...
 
 IF(WIN32)
-    SET(WEBKIT WebKit)
+#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
+#    SET(WEBKIT WebKit)
 ENDIF()
 
 IF(ENABLE_TESTS)
@@ -186,8 +188,9 @@ IF(APPLE)
         QtSvg
         ${QT_TEST}
         QtWebChannel
-        QtWebKit
-        QtWebKitWidgets
+#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
+#        QtWebKit
+#        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns
@@ -812,7 +815,9 @@ SET(PLUGINS
     widget/WebViewerWidget
     widget/ZincWidget
 )
-SET(PLUGINS)
+SET(PLUGINS
+    thirdParty/LLVMClang
+)
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
@@ -1121,13 +1126,16 @@ IF(WIN32)
         SET(TEST)
     ENDIF()
 
-    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
+#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
+#    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel Widgets Xml XmlPatterns)
         WINDOWS_DEPLOY_QT_LIBRARY(Qt5${QT_LIBRARY})
     ENDFOREACH()
 
-    FOREACH(QT_LIBRARY icudt icuin icuuc)
-        WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}57)
-    ENDFOREACH()
+#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
+#    FOREACH(QT_LIBRARY icudt icuin icuuc)
+#        WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}57)
+#    ENDFOREACH()
 
     # Qt plugins required by OpenCOR
 
@@ -1259,7 +1267,9 @@ ELSE()
         SET(TEST)
     ENDIF()
 
-    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
+#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
+#    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel Widgets XcbQpa Xml XmlPatterns)
         IF(   "${QT_LIBRARY}" STREQUAL "WebKit"
            OR "${QT_LIBRARY}" STREQUAL "WebKitWidgets")
             SET(REAL_QT_LIBRARY_DIR ${QT_WEBKIT_LIBRARIES_DIR})

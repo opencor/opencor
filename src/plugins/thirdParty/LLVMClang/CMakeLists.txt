@@ -99,6 +99,12 @@ IF(USE_PREBUILT_LLVMCLANG_PACKAGE)
                                           e09d9093001e748a0469923c9f076300a9768cda)
     ENDIF()
 ELSE()
+    # Ignore some warnings
+
+    IF(WIN32)
+        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275")
+    ENDIF()
+
     # Build LLVM+Clang as an external project
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
@@ -112,6 +118,8 @@ ELSE()
             https://github.com/opencor/llvmclang
         GIT_TAG
             ${GIT_TAG}
+        CMAKE_CACHE_ARGS
+            -DCMAKE_CXX_FLAGS:STRING=${PACKAGE_CXX_FLAGS}
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS

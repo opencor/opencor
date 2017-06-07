@@ -41,9 +41,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSettings>
 #include <QVariant>
 
-#ifdef Q_OS_WIN
-    #include <QWebSettings>
-#endif
+//---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
+//#ifdef Q_OS_WIN
+//    #include <QWebSettings>
+//#endif
 
 //==============================================================================
 
@@ -304,9 +305,10 @@ int main(int pArgC, char *pArgV[])
     // Note: the below must absolutely be done after calling guiApp->exec() and
     //       before deleting guiApp...
 
-#ifdef Q_OS_WIN
-    QWebSettings::clearMemoryCaches();
-#endif
+//---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
+//#ifdef Q_OS_WIN
+//    QWebSettings::clearMemoryCaches();
+//#endif
 
     // Delete our application
 
