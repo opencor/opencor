@@ -99,10 +99,10 @@ IF(USE_PREBUILT_LLVMCLANG_PACKAGE)
                                           e09d9093001e748a0469923c9f076300a9768cda)
     ENDIF()
 ELSE()
-    # Ignore some warnings
+    # Allow for big objects and ignore some warnings
 
     IF(WIN32)
-        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275 /wd4530")
+        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /wd4251 /wd4275 /wd4530")
     ENDIF()
 
     # Build LLVM+Clang as an external project
@@ -135,6 +135,7 @@ ELSE()
             -DLLVM_BUILD_RUNTIME=OFF
             -DLLVM_BUILD_TOOLS=OFF
             -DLLVM_BUILD_UTILS=OFF
+            -DLLVM_ENABLE_DIA_SDK=OFF
             -DLLVM_INCLUDE_DOCS=OFF
             -DLLVM_INCLUDE_EXAMPLES=OFF
             -DLLVM_INCLUDE_GO_TESTS=OFF
