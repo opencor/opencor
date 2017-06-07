@@ -36,9 +36,11 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-void GraphPanelWidget::constructor(const GraphPanelWidgets &pNeighbors,
+GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
                                    QAction *pSynchronizeXAxisAction,
-                                   QAction *pSynchronizeYAxisAction)
+                                   QAction *pSynchronizeYAxisAction,
+                                   QWidget *pParent) :
+    Widget(pParent)
 {
     // We are not active by default
 
@@ -98,25 +100,9 @@ void GraphPanelWidget::constructor(const GraphPanelWidgets &pNeighbors,
 //==============================================================================
 
 GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
-                                   QAction *pSynchronizeXAxisAction,
-                                   QAction *pSynchronizeYAxisAction,
                                    QWidget *pParent) :
-    Widget(pParent)
+    GraphPanelWidget(pNeighbors, 0, 0, pParent)
 {
-    // Construct our widget
-
-    constructor(pNeighbors, pSynchronizeXAxisAction, pSynchronizeYAxisAction);
-}
-
-//==============================================================================
-
-GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
-                                   QWidget *pParent) :
-    Widget(pParent)
-{
-    // Construct our widget
-
-    constructor(pNeighbors, 0, 0);
 }
 
 //==============================================================================

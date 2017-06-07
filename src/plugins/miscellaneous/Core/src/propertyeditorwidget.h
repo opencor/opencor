@@ -374,9 +374,6 @@ private:
 
     QMap<Property *, bool> mPropertyChecked;
 
-    void constructor(const bool &pShowUnits = true,
-                     const bool &pAutoUpdateHeight = false);
-
     void retranslateEmptyListProperties(QStandardItem *pItem);
 
     Property * addProperty(const Property::Type &pType, Property *pParent);

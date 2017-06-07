@@ -129,8 +129,6 @@ private:
 
     QList<CollapsibleHeaderWidget *> mHeaders;
 
-    void constructor(const QColor &pSeparatorColor = borderColor());
-
 signals:
     void collapsed(const int &pIndex, const bool &pCollapsed);
 

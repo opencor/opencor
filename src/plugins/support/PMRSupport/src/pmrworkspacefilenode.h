@@ -80,9 +80,6 @@ private:
     CharPair mStatus;
 
     PmrWorkspaceFileNodes mChildren;
-
-    void constructor(const QString &pName, const QString &pPath,
-                     const CharPair &pStatus, PmrWorkspaceFileNode *pParent);
 };
 
 //==============================================================================

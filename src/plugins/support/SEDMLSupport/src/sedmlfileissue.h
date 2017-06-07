@@ -66,9 +66,6 @@ private:
     int mLine;
     int mColumn;
     QString mMessage;
-
-    void constructor(const Type &pType, const int &pLine,
-                     const int &pColumn, const QString &pMessage);
 };
 
 //==============================================================================

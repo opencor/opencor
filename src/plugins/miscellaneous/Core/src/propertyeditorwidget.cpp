@@ -1054,8 +1054,10 @@ void Property::updateToolTip()
 
 //==============================================================================
 
-void PropertyEditorWidget::constructor(const bool &pShowUnits,
-                                       const bool &pAutoUpdateHeight)
+PropertyEditorWidget::PropertyEditorWidget(const bool &pShowUnits,
+                                           const bool &pAutoUpdateHeight,
+                                           QWidget *pParent) :
+    TreeViewWidget(pParent)
 {
     // Some initialisations
 
@@ -1132,35 +1134,17 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
 //==============================================================================
 
-PropertyEditorWidget::PropertyEditorWidget(const bool &pShowUnits,
-                                           const bool &pAutoUpdateHeight,
-                                           QWidget *pParent) :
-    TreeViewWidget(pParent)
-{
-    // Construct our object
-
-    constructor(pShowUnits, pAutoUpdateHeight);
-}
-
-//==============================================================================
-
 PropertyEditorWidget::PropertyEditorWidget(const bool &pAutoUpdateHeight,
                                            QWidget *pParent) :
-    TreeViewWidget(pParent)
+    PropertyEditorWidget(true, pAutoUpdateHeight, pParent)
 {
-    // Construct our object
-
-    constructor(true, pAutoUpdateHeight);
 }
 
 //==============================================================================
 
 PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
-    TreeViewWidget(pParent)
+    PropertyEditorWidget(true, false, pParent)
 {
-    // Construct our object
-
-    constructor();
 }
 
 //==============================================================================

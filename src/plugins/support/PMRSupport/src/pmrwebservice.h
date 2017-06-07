@@ -92,8 +92,6 @@ private:
     QMap<QString, PmrExposure *> mUrlExposures;
     QMap<PmrExposure *, int> mFileExposuresLeftCount;
 
-    void constructor(const QString &pPmrUrl);
-
     void requestWorkspaceInformation(const QString &pUrl,
                                      const QString &pPath,
                                      PmrExposure *pExposure = 0);
