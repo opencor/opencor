@@ -102,7 +102,7 @@ ELSE()
     # Ignore some warnings
 
     IF(WIN32)
-        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275")
+        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275 /wd4530")
     ENDIF()
 
     # Build LLVM+Clang as an external project
