@@ -11,10 +11,8 @@ SET(MAJOR_LIBRARY_VERSION 4)
 SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.0)
 
 # Git tag for our library
-#---ISSUE1306--- USE THE CORRECT GIT TAG ONCE WE ARE DONE TESTING THINGS...
 
-#SET(GIT_TAG v4.0.0)
-SET(GIT_TAG test)
+SET(GIT_TAG v4.0.0)
 
 # Specify where our local package will be installed
 
