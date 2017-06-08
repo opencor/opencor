@@ -26,7 +26,6 @@ OPTION(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" O
 OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
 OPTION(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
-SET(USE_PREBUILT_LLVMCLANG_PACKAGE OFF)
 
 # Make sure that we are using the compiler we support
 
@@ -759,7 +758,8 @@ SET(PLUGINS
     dataStore/CSVDataStore
     dataStore/DataStore
 
-    editing/CellMLAnnotationView
+#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
+#    editing/CellMLAnnotationView
     editing/CellMLEditingView
     editing/CellMLTextView
     editing/EditingView
@@ -770,13 +770,15 @@ SET(PLUGINS
 
     miscellaneous/Compiler
     miscellaneous/Core
-    miscellaneous/HelpWindow
-    miscellaneous/WebBrowserWindow
+#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
+#    miscellaneous/HelpWindow
+#    miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
-    organisation/PMRWindow
-    organisation/PMRWorkspacesWindow
+#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
+#    organisation/PMRWindow
+#    organisation/PMRWorkspacesWindow
 
     simulation/SimulationExperimentView
 
@@ -790,7 +792,8 @@ SET(PLUGINS
 
     support/CellMLSupport
     support/COMBINESupport
-    support/PMRSupport
+#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
+#    support/PMRSupport
     support/QScintillaSupport
     support/SEDMLSupport
     support/StandardSupport
@@ -812,11 +815,9 @@ SET(PLUGINS
     widget/EditorWidget
     widget/GraphPanelWidget
     widget/MathMLViewerWidget
-    widget/WebViewerWidget
+#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
+#    widget/WebViewerWidget
     widget/ZincWidget
-)
-SET(PLUGINS
-    thirdParty/LLVMClang
 )
 
 FOREACH(PLUGIN ${PLUGINS})
