@@ -65,10 +65,10 @@ IF(USE_PREBUILT_LLVMCLANG_PACKAGE)
                                               e4ebfe889ec1a04965f2d76ce67eb9514f269650)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 6e0797a26469a91459dd613d106d2c5912e2faa9
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
+                                  SHA1_VALUES 722aec5b0918f6296a6153b754fabfe6cd4ed963
+                                              0990dc6ee9b4347a727012bdc3c81e39c465b206)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
