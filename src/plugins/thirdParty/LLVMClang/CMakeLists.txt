@@ -64,30 +64,24 @@ IF(USE_PREBUILT_LLVMCLANG_PACKAGE)
                                   ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                                               XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                                               XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 287aa0a0cfead1b8de799f2678970cec1a89eb75
+                              ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 45a694ba7720125e3e973b00fa6734a1e57022a0
-                                          1a53170565c5a920991dec86c54fe41419e4d099)
+                              SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f873818949a24b2b98d6aac11a5e1ae401582301
+                              ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES fd397cddee8b7db88008bd8705eb3d3b4ac4cd99
-                                          e09d9093001e748a0469923c9f076300a9768cda)
+                              SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
     ENDIF()
 ELSE()
     # Allow for big objects and ignore some warnings
