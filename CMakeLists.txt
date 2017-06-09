@@ -117,7 +117,7 @@ ENDIF()
 
 SET(PLATFORM_DIR ${PLATFORM})
 
-INCLUDE(${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/CMakeLists.txt)
+ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
 
 # Required Qt modules and packages
 #---ISSUE1306--- WE OUGHT TO BE ABLE TO REMOVE THE NEED FOR THE Gui MODULE ONCE
