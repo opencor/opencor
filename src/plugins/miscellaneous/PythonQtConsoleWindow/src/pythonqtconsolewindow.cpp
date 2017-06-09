@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <PythonQt/PythonQt.h>
-#include <QDebug>   // **************************
 
 //==============================================================================
 
@@ -48,25 +47,11 @@ static QString PythonQtConsole = R"PYTHON(
 from qtconsole.inprocess import QtInProcessKernelManager
 from qtconsole.rich_jupyter_widget import RichJupyterWidget
 
-####
-# Saves having to patch code...
-#
-# `qApp` is missing in PythonQt
-#
-#from PythonQt import QtGui
-#
-#QtGui.qApp = QtGui.QApplication.instance()
-###
-
-
-# The widget we are creating -- its a global to stop it being
-# garbage collected
+# The widget we are creating -- it's a global so we can reference it from C++
 
 ipython_widget = None
 
-
 def create_ipython_widget():
-
     global ipython_widget
 
     # Create and start an in-process kernel manager
@@ -115,16 +100,13 @@ PythonQtConsoleWindow::PythonQtConsoleWindow(QWidget *pParent) :
 
     pythonQtInstance->call(qtConsoleModule, "create_ipython_widget");
 
-    PyObject *widgetObject = pythonQtInstance->lookupObject(qtConsoleModule, "ipython_widget");
+    PyObject *ipythonWidget = pythonQtInstance->lookupObject(qtConsoleModule, "ipython_widget");
 
-    if (widgetObject && PyObject_TypeCheck(widgetObject, &PythonQtInstanceWrapper_Type)) {
+    if (ipythonWidget && PyObject_TypeCheck(ipythonWidget, &PythonQtInstanceWrapper_Type)) {
 
-        PythonQtInstanceWrapper *widgetWrapper = (PythonQtInstanceWrapper*)widgetObject;
+        PythonQtInstanceWrapper *widgetWrapper = (PythonQtInstanceWrapper*)ipythonWidget;
 
         mPythonQtConsoleWidget = (QWidget *)widgetWrapper->_objPointerCopy;
-
-        // Add the widget to PythonQt's main module
-        // pythonManager->addObjectToPythonMain("PythonQtConsoleInstance", mPythonQtConsoleWidget);
 
         // Add the widget to our window
 
@@ -137,7 +119,6 @@ PythonQtConsoleWindow::PythonQtConsoleWindow(QWidget *pParent) :
 #else
         #error Unsupported platform
 #endif
-
     }
 }
 
