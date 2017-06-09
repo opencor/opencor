@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef _WIN32
     #define _SCL_SECURE_NO_WARNINGS
+
+    #define NOMINMAX
 #endif
 
 //==============================================================================
