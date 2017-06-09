@@ -95,7 +95,26 @@ IF(NOT WIN32 AND NOT APPLE)
     ENDIF()
 ENDIF()
 
-# Some initialisations related to our copy of QtWebKit
+# Make sure that we can use the ExternalProject module, and let it know where we
+# want to build our external packages
+# Note: indeed, otherwise on Windows we may end up with path names that are too
+#       long...
+
+INCLUDE(ExternalProject)
+
+SET(EXTERNAL_PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR}/ext)
+
+SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
+
+IF(APPLE)
+    SET(DEFINE_CMAKE_APPLE_OPTIONS "-DCMAKE_MACOSX_RPATH=ON -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+ENDIF()
+
+# Some in-house CMake macros
+
+INCLUDE(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
+
+# Determine our platform directory
 
 IF(WIN32)
     SET(PLATFORM windows)
@@ -116,6 +135,22 @@ ELSE()
 ENDIF()
 
 SET(PLATFORM_DIR ${PLATFORM})
+
+# Keep track of some basic information about Qt
+
+FIND_PACKAGE(Qt5Core REQUIRED)
+
+SET(QT_VERSION ${Qt5Core_VERSION})
+SET(QT_VERSION_MAJOR ${Qt5Core_VERSION_MAJOR})
+
+SET(QT_DIR ${_qt5Core_install_prefix})
+SET(QT_BINARY_DIR ${QT_DIR}/bin)
+SET(QT_LIBRARY_DIR ${QT_DIR}/lib)
+SET(QT_PLUGINS_DIR ${QT_DIR}/plugins)
+
+SET(QT_QMAKE ${Qt5Core_QMAKE_EXECUTABLE})
+
+# Retrieve or build our copy of QtWebKit
 
 ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
 
@@ -147,18 +182,6 @@ ENDFOREACH()
 # Make sure that anyone can access diff-match-patch
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch/src)
-
-# Keep track of some information about Qt
-
-SET(QT_VERSION ${Qt5Core_VERSION})
-SET(QT_VERSION_MAJOR ${Qt5Core_VERSION_MAJOR})
-
-SET(QT_DIR ${_qt5Core_install_prefix})
-SET(QT_BINARY_DIR ${QT_DIR}/bin)
-SET(QT_LIBRARY_DIR ${QT_DIR}/lib)
-SET(QT_PLUGINS_DIR ${QT_DIR}/plugins)
-
-SET(QT_QMAKE ${Qt5Core_QMAKE_EXECUTABLE})
 
 # On macOS, keep track of the Qt libraries against which we need to link
 
@@ -424,28 +447,9 @@ ELSEIF(NOT WIN32)
     SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
 ENDIF()
 
-# Make sure that we can use the ExternalProject module, and let it know where we
-# want to build our external packages
-# Note: indeed, otherwise on Windows we may end up with path names that are too
-#       long...
-
-INCLUDE(ExternalProject)
-
-SET(EXTERNAL_PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR}/ext)
-
-SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
-
-IF(APPLE)
-    SET(DEFINE_CMAKE_APPLE_OPTIONS "-DCMAKE_MACOSX_RPATH=ON -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}")
-ENDIF()
-
 # Show what we are about to build
 
 MESSAGE("${BUILD_INFORMATION} using Qt ${QT_VERSION}...")
-
-# Some in-house CMake macros
-
-INCLUDE(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
 # Keep track of our source and build directories (needed to run our tests)
 
