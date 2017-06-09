@@ -85,7 +85,7 @@ ELSE()
     # Set platform specific configuration options and tool names
 
     IF(WIN32)
-        SET(MAKE_EXECUTABLE nmake)
+        SET(MAKE_EXECUTABLE jom)
 
         IF(RELEASE_MODE)
             SET(MAKEFILE Makefile.Release)
@@ -93,7 +93,7 @@ ELSE()
             SET(MAKEFILE Makefile.Debug)
         ENDIF()
 
-        SET(QUIET_MAKE -c)
+        SET(QUIET_MAKE /s)
     ELSE()
         SET(MAKE_EXECUTABLE make)
         SET(MAKEFILE Makefile)

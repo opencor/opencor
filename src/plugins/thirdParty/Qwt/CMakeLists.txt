@@ -104,7 +104,7 @@ ELSE()
     # Set platform specific configuration options and tool names
 
     IF(WIN32)
-        SET(MAKE_EXECUTABLE nmake)
+        SET(MAKE_EXECUTABLE jom)
 
         IF(RELEASE_MODE)
             SET(MAKEFILE_TARGET release)
@@ -112,7 +112,7 @@ ELSE()
             SET(MAKEFILE_TARGET debug)
         ENDIF()
 
-        SET(QUIET_MAKE -c)
+        SET(QUIET_MAKE /s)
     ELSE()
         SET(MAKE_EXECUTABLE make)
         SET(QUIET_MAKE --quiet)
