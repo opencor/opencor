@@ -21,11 +21,15 @@ SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 # Name of our package's shared libraries (and of their import libraries, if any)
 
 IF(WIN32)
-    SET(QWT_SHARED_LIBRARY qwt${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(QWT_IMPORT_LIBRARY qwt${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    IF(NOT RELEASE_MODE)
+        SET(DEBUG_TAG d)
+    ENDIF()
 
-    SET(QWTMATHML_SHARED_LIBRARY qwtmathml${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(QWTMATHML_IMPORT_LIBRARY qwtmathml${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    SET(QWT_SHARED_LIBRARY qwt${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(QWT_IMPORT_LIBRARY qwt${DEBUG_TAG}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    SET(QWTMATHML_SHARED_LIBRARY qwtmathml${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(QWTMATHML_IMPORT_LIBRARY qwtmathml${DEBUG_TAG}${CMAKE_IMPORT_LIBRARY_SUFFIX})
 ELSE()
     SET(QWT_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}qwt${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     SET(QWT_IMPORT_LIBRARY ${QWT_SHARED_LIBRARY})
@@ -68,20 +72,20 @@ IF(USE_PREBUILT_QWT_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 5410cec84117e96de9040d4ff056bad2208fb3ab
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} d35a7ee6b343db879953658a4faab6a50aa3d030
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 4ea3e0eebc3582e71b4f145ccf030108f4b1314e
-                                              aa5fb8ecfbf0b58b3f5ad3608832a1fb94f76f07
-                                              5ee5531adbaa75538e3993d55b471267ec8e60ea
-                                              9685a1437544f549d7859241a2d74f327c866194)
+                                  SHA1_VALUES ec304b302f2daf62b7ea44185a5461b2f9bd7b9a
+                                              4ba1e9eaa888b79c25dc0f2d1403cf6dff0ce292
+                                              61fcf47e838787e6225d94c7dfca093c16d0fa1a
+                                              99fd797350511d3f793ce560886deb30c83dd23f)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 49f61e6b5b4cc20d99bb95a6b2d290cfcdf60207
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} b828771e900c071b28fbf0c03b665d665a97b284
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES ebcf05b89a862df2719c79f30e4d10114a67fddf
-                                              b8a40774fc44bfd3986451c1f116932867daa09d
-                                              5fd739a724e46d91c76ac6a7d843c661af181796
-                                              74571eb5c55258d4cc859b19feb54c1de2d626f6)
+                                  SHA1_VALUES 1a09e586dfad979a4048520211f0a7a76056b390
+                                              fa054ae8fe0eb9fdb83d6dc0fb80adf9cc818322
+                                              84a034e96ae14a916f63949a1d0349eb93781e58
+                                              2ecb9acbcd715f73eba5c11e7b5cdaafb812d28e)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -128,7 +132,7 @@ ELSE()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${QT_QMAKE} <SOURCE_DIR>/qwt.pro CONFIG-=warn_on CONFIG+=qt_no_framework OBJECTS_DIR=${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD} INSTALL_DIR=<INSTALL_DIR>
+            ${QT_QMAKE} <SOURCE_DIR>/qwt.pro CONFIG+=qt_no_framework OBJECTS_DIR=${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD} INSTALL_DIR=<INSTALL_DIR>
         BUILD_COMMAND
             ${MAKE_EXECUTABLE} ${MAKEFILE_TARGET} ${QUIET_MAKE}
         INSTALL_COMMAND
