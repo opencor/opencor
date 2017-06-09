@@ -104,7 +104,9 @@ void PythonQtConsoleWindowPlugin::initializePlugin()
 
 void PythonQtConsoleWindowPlugin::finalizePlugin()
 {
-    // We don't handle this interface...
+    // Delete our PythonQt window
+
+    delete mPythonQtConsoleWindow;
 }
 
 //==============================================================================
