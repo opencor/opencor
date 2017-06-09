@@ -1,6 +1,6 @@
-In order to build `QtWebKit <https://wiki.qt.io/QtWebKit>`__, we first need to ensure that we are all set for it:
+`QtWebKit <https://wiki.qt.io/QtWebKit>`__ has the following prerequisites:
 
-- **Windows**, i.e. install:
+- **Windows:** install:
 
   - `Perl 5.22 <http://www.activestate.com/activeperl/>`__;
   - `Python 2.7 <https://www.python.org/>`__;
@@ -11,7 +11,7 @@ In order to build `QtWebKit <https://wiki.qt.io/QtWebKit>`__, we first need to e
 
     **Note:** the `GnuWin32 <http://gnuwin32.sourceforge.net/>`__ version of `Flex <http://gnuwin32.sourceforge.net/packages/flex.htm>`__ is not suitable, hence we must use `Win flex-bison <https://sourceforge.net/projects/winflexbison/>`__ instead.
 
-- **Linux**, i.e. run the following command from the terminal:
+- **Linux:** run the following command from the terminal:
 
   ::
 
