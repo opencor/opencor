@@ -45,7 +45,7 @@ namespace PythonQtConsoleWindow {
 
 static QString PythonQtConsole = R"PYTHON(
 from qtconsole.inprocess import QtInProcessKernelManager
-from qtconsole.rich_jupyter_widget import RichJupyterWidget
+from qtconsole.inprocess import QtInProcessRichJupyterWidget
 
 # The widget we are creating -- it's a global so we can reference it from C++
 
@@ -72,7 +72,7 @@ def create_ipython_widget():
     # Create a Jupyter widget and connect it with our kernel and
     # its client
 
-    ipython_widget = RichJupyterWidget()
+    ipython_widget = QtInProcessRichJupyterWidget(font_size=12)
     ipython_widget.kernel_manager = kernel_manager
     ipython_widget.kernel_client = kernel_client
 )PYTHON";
