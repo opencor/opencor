@@ -222,8 +222,24 @@ SET(EXTERNAL_PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR}/ext)
 
 SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
 
+# A few constants to help with building an external project
+
 IF(APPLE)
     SET(DEFINE_CMAKE_APPLE_OPTIONS "-DCMAKE_MACOSX_RPATH=ON")
+ENDIF()
+
+IF(WIN32)
+    SET(MAKE_COMMAND jom /s)
+ELSE()
+    SET(MAKE_COMMAND make --quiet)
+
+    INCLUDE(ProcessorCount)
+
+    ProcessorCount(PROCESSOR_COUNT)
+
+    IF(NOT PROCESSOR_COUNT EQUAL 0)
+        SET(MAKE_COMMAND ${MAKE_COMMAND} -j ${PROCESSOR_COUNT})
+    ENDIF()
 ENDIF()
 
 # Retrieve or build our copy of QtWebKit

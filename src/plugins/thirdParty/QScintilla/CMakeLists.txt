@@ -82,22 +82,16 @@ IF(USE_PREBUILT_QSCINTILLA_PACKAGE)
                               SHA1_VALUES 4406b0343534f0bc53a57f4f0f843f8c5c1bab46)
     ENDIF()
 ELSE()
-    # Set platform specific configuration options and tool names
+    # Set platform specific configuration options
 
     IF(WIN32)
-        SET(MAKE_EXECUTABLE jom)
-
         IF(RELEASE_MODE)
-            SET(MAKEFILE Makefile.Release)
+            SET(MAKEFILE /f Makefile.Release)
         ELSE()
-            SET(MAKEFILE Makefile.Debug)
+            SET(MAKEFILE /f Makefile.Debug)
         ENDIF()
-
-        SET(QUIET_MAKE /s)
     ELSE()
-        SET(MAKE_EXECUTABLE make)
-        SET(MAKEFILE Makefile)
-        SET(QUIET_MAKE --quiet)
+        SET(MAKEFILE -f Makefile)
     ENDIF()
 
     # Build QScintilla as an external project
@@ -116,9 +110,9 @@ ELSE()
         CONFIGURE_COMMAND
             ${QT_QMAKE} <SOURCE_DIR>/Qt4Qt5 OBJECTS_DIR=${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD} INSTALL_DIR=<INSTALL_DIR>
         BUILD_COMMAND
-            ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE}
+            ${MAKE_COMMAND} ${MAKEFILE}
         INSTALL_COMMAND
-            ${MAKE_EXECUTABLE} -f ${MAKEFILE} install ${QUIET_MAKE}
+            ${MAKE_COMMAND} ${MAKEFILE} install
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )

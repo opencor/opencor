@@ -101,21 +101,14 @@ IF(USE_PREBUILT_QWT_PACKAGE)
                                           eb652a5804420c45fe9ed843c0312f1eb1144ce5)
     ENDIF()
 ELSE()
-    # Set platform specific configuration options and tool names
+    # Set platform specific configuration options
 
     IF(WIN32)
-        SET(MAKE_EXECUTABLE jom)
-
         IF(RELEASE_MODE)
             SET(MAKEFILE_TARGET release)
         ELSE()
             SET(MAKEFILE_TARGET debug)
         ENDIF()
-
-        SET(QUIET_MAKE /s)
-    ELSE()
-        SET(MAKE_EXECUTABLE make)
-        SET(QUIET_MAKE --quiet)
     ENDIF()
 
     # Build Qwt as an external project
@@ -134,9 +127,9 @@ ELSE()
         CONFIGURE_COMMAND
             ${QT_QMAKE} <SOURCE_DIR>/qwt.pro CONFIG+=qt_no_framework OBJECTS_DIR=${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD} INSTALL_DIR=<INSTALL_DIR>
         BUILD_COMMAND
-            ${MAKE_EXECUTABLE} ${MAKEFILE_TARGET} ${QUIET_MAKE}
+            ${MAKE_COMMAND} ${MAKEFILE_TARGET}
         INSTALL_COMMAND
-            ${MAKE_EXECUTABLE} install ${QUIET_MAKE}
+            ${MAKE_COMMAND} install
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${QWT_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${QWTMATHML_IMPORT_LIBRARY}

@@ -123,9 +123,7 @@ ELSE()
             SET(PLATFORM debug-VC-WIN64A)
         ENDIF()
 
-        SET(MAKE_EXECUTABLE nmake)
-        SET(MAKEFILE ms/ntdll.mak)
-        SET(QUIET_MAKE -c)
+        SET(MAKEFILE /f ms/ntdll.mak)
         SET(INSTALL_TARGET install)
     ELSE()
         LIST(APPEND CONFIG_OPTIONS shared)
@@ -138,9 +136,7 @@ ELSE()
             LIST(APPEND CONFIG_OPTIONS "-Wa,--noexecstack")
         ENDIF()
 
-        SET(MAKE_EXECUTABLE make)
-        SET(MAKEFILE Makefile)
-        SET(QUIET_MAKE --quiet)
+        SET(MAKEFILE -f Makefile)
         SET(INSTALL_TARGET install_sw)
     ENDIF()
 
@@ -165,9 +161,9 @@ ELSE()
         CONFIGURE_COMMAND
             ${PERL_EXECUTABLE} ./Configure ${PLATFORM} ${CONFIG_OPTIONS}
         BUILD_COMMAND
-            ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE}
+            ${MAKE_COMMAND} ${MAKEFILE}
         INSTALL_COMMAND
-            ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE} ${INSTALL_TARGET}
+            ${MAKE_COMMAND} ${MAKEFILE} ${INSTALL_TARGET}
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${CRYPTO_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${SSL_IMPORT_LIBRARY}

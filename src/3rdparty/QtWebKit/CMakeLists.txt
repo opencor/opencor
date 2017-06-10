@@ -97,16 +97,6 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
                               SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
     ENDIF()
 ELSE()
-    # Set platform specific configuration options and tool names
-
-    IF(WIN32)
-        SET(MAKE_EXECUTABLE nmake)
-        SET(QUIET_MAKE -c)
-    ELSE()
-        SET(MAKE_EXECUTABLE make)
-        SET(QUIET_MAKE --quiet)
-    ENDIF()
-
     # Build QtWebKit as an external project
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
@@ -121,11 +111,11 @@ ELSE()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${QT_QMAKE} <SOURCE_DIR> INSTALL_DIR=<INSTALL_DIR>
+            ${QT_QMAKE} <SOURCE_DIR>
         BUILD_COMMAND
-            ${MAKE_EXECUTABLE} ${QUIET_MAKE}
+            ${MAKE_COMMAND}
         INSTALL_COMMAND
-            ${MAKE_EXECUTABLE} install ${QUIET_MAKE}
+            ${MAKE_COMMAND} install
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${QTWEBKIT_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
