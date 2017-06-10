@@ -113,9 +113,9 @@ ELSE()
         CONFIGURE_COMMAND
             ${QT_QMAKE} <SOURCE_DIR>
         BUILD_COMMAND
-            ${MAKE_COMMAND}
+            ${MAKE_JOM_COMMAND}
         INSTALL_COMMAND
-            ${MAKE_COMMAND} install
+            ${MAKE_JOM_COMMAND} install
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${QTWEBKIT_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
