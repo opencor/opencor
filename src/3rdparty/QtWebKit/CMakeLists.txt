@@ -142,5 +142,9 @@ ENDIF()
 
 SET(QTWEBKIT_DIR ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
 
-LIST(APPEND CMAKE_PREFIX_PATH ${QTWEBKIT_DIR}/ext/lib/cmake/Qt5WebKit)
-LIST(APPEND CMAKE_PREFIX_PATH ${QTWEBKIT_DIR}/ext/lib/cmake/Qt5WebKitWidgets)
+SET(CMAKE_PREFIX_PATH
+    ${CMAKE_PREFIX_PATH}
+    ${QTWEBKIT_DIR}/ext/lib/cmake/Qt5WebKit
+    ${QTWEBKIT_DIR}/ext/lib/cmake/Qt5WebKitWidgets
+    PARENT_SCOPE
+)
