@@ -253,8 +253,7 @@ ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
 #                WE CAN BUILD QtWebKit AS A PACKAGE?...
 
 IF(WIN32)
-#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
-#    SET(WEBKIT WebKit)
+    SET(WEBKIT WebKit)
 ENDIF()
 
 IF(ENABLE_TESTS)
@@ -306,9 +305,8 @@ IF(APPLE)
         QtSvg
         ${QT_TEST}
         QtWebChannel
-#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
-#        QtWebKit
-#        QtWebKitWidgets
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns
@@ -782,8 +780,7 @@ SET(PLUGINS
     dataStore/CSVDataStore
     dataStore/DataStore
 
-#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
-#    editing/CellMLAnnotationView
+    editing/CellMLAnnotationView
     editing/CellMLEditingView
     editing/CellMLTextView
     editing/EditingView
@@ -794,15 +791,13 @@ SET(PLUGINS
 
     miscellaneous/Compiler
     miscellaneous/Core
-#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
-#    miscellaneous/HelpWindow
-#    miscellaneous/WebBrowserWindow
+    miscellaneous/HelpWindow
+    miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
-#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
-#    organisation/PMRWindow
-#    organisation/PMRWorkspacesWindow
+    organisation/PMRWindow
+    organisation/PMRWorkspacesWindow
 
     simulation/SimulationExperimentView
 
@@ -816,8 +811,7 @@ SET(PLUGINS
 
     support/CellMLSupport
     support/COMBINESupport
-#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
-#    support/PMRSupport
+    support/PMRSupport
     support/QScintillaSupport
     support/SEDMLSupport
     support/StandardSupport
@@ -839,8 +833,7 @@ SET(PLUGINS
     widget/EditorWidget
     widget/GraphPanelWidget
     widget/MathMLViewerWidget
-#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
-#    widget/WebViewerWidget
+    widget/WebViewerWidget
     widget/ZincWidget
 )
 SET(PLUGINS)
@@ -1152,16 +1145,13 @@ IF(WIN32)
         SET(TEST)
     ENDIF()
 
-#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
-#    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
-    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel Widgets Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
         WINDOWS_DEPLOY_QT_LIBRARY(Qt5${QT_LIBRARY})
     ENDFOREACH()
 
-#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
-#    FOREACH(QT_LIBRARY icudt icuin icuuc)
-#        WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}57)
-#    ENDFOREACH()
+    FOREACH(QT_LIBRARY icudt icuin icuuc)
+        WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}57)
+    ENDFOREACH()
 
     # Qt plugins required by OpenCOR
 
@@ -1293,9 +1283,7 @@ ELSE()
         SET(TEST)
     ENDIF()
 
-#---ISSUE1306--- REENABLE THE BELOW ONCE WE CAN BUILD QtWebKit...
-#    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
-    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel Widgets XcbQpa Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
         IF(   "${QT_LIBRARY}" STREQUAL "WebKit"
            OR "${QT_LIBRARY}" STREQUAL "WebKitWidgets")
             SET(REAL_QT_LIBRARY_DIR ${QT_WEBKIT_LIBRARIES_DIR})
