@@ -284,6 +284,11 @@ IF(APPLE)
         SET(QTTEST QtTest)
     ENDIF()
 
+    IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
+        SET(QTWEBKIT QtWebKit)
+        SET(QTWEBKITWIDGETS QtWebKitWidgets)
+    ENDIF()
+
     SET(MACOS_QT_LIBRARIES
         QtCLucene
         QtConcurrent
@@ -304,8 +309,8 @@ IF(APPLE)
         QtSvg
         ${QTTEST}
         QtWebChannel
-        QtWebKit
-        QtWebKitWidgets
+        ${QTWEBKIT}
+        ${QTWEBKITWIDGETS}
         QtWidgets
         QtXml
         QtXmlPatterns
@@ -835,7 +840,13 @@ SET(PLUGINS
     widget/WebViewerWidget
     widget/ZincWidget
 )
-SET(PLUGINS)
+
+IF(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
+    # We want to build our copy of the QtWebKit package, so don't build any
+    # plugins since some of them may require access to QtWebKit
+
+    SET(PLUGINS)
+ENDIF()
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
