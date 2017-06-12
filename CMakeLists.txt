@@ -249,7 +249,7 @@ ENDIF()
 
 ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
 
-# Required Qt modules and packages
+# Required Qt modules
 #---ISSUE1306--- WE OUGHT TO BE ABLE TO REMOVE THE NEED FOR THE Gui MODULE ONCE
 #                WE CAN BUILD QtWebKit AS A PACKAGE?...
 
@@ -281,9 +281,7 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch/src)
 
 IF(APPLE)
     IF(ENABLE_TESTS)
-        SET(QT_TEST QtTest)
-    ELSE()
-        SET(QT_TEST)
+        SET(QTTEST QtTest)
     ENDIF()
 
     SET(MACOS_QT_LIBRARIES
@@ -304,7 +302,7 @@ IF(APPLE)
         QtSensors
         QtSql
         QtSvg
-        ${QT_TEST}
+        ${QTTEST}
         QtWebChannel
         QtWebKit
         QtWebKitWidgets
