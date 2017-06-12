@@ -133,6 +133,25 @@ ELSE()
             <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
     )
 
+    # Try to build our patch program
+
+    SET(PATCH ${CMAKE_BINARY_DIR}/patchQtWebKitCMakeFile)
+
+    EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -o ${PATCH} ${PROJECT_SOURCE_DIR}/cmake/patch.c
+                    RESULT_VARIABLE RESULT)
+
+    IF(NOT RESULT EQUAL 0)
+        MESSAGE(FATAL_ERROR "patch could not be built...")
+    ENDIF()
+
+    # Patch our CMake files
+
+    ExternalProject_Add_Step(${PACKAGE_BUILD} PatchCMakeFiles
+                             COMMAND ${PATCH} Qt5WebKit/Qt5WebKitConfig.cmake
+                             COMMAND ${PATCH} Qt5WebKitWidgets/Qt5WebKitWidgetsConfig.cmake
+                             WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/cmake/
+                             DEPENDEES install)
+
     # Package our external project
 
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
