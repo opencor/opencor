@@ -119,7 +119,7 @@ ELSE()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${QT_QMAKE} <SOURCE_DIR>
+            ${QMAKE} <SOURCE_DIR>
         BUILD_COMMAND
             ${MAKE_JOM_COMMAND}
         INSTALL_COMMAND
