@@ -12,8 +12,7 @@ OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
 OPTION(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
-#---GRY---
-#SET(USE_PREBUILT_QTWEBKIT_PACKAGE OFF)
+SET(USE_PREBUILT_QTWEBKIT_PACKAGE OFF)
 
 OPTION(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
 OPTION(USE_PREBUILT_SBMLAPI_PACKAGE "Use the pre-built version of the SBML API package" ON)
@@ -29,8 +28,6 @@ OPTION(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" O
 OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
 OPTION(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
-#---GRY---
-SET(USE_PREBUILT_LLVMCLANG_PACKAGE OFF)
 
 # Make sure that we are using the compiler we support
 
@@ -250,8 +247,7 @@ ENDIF()
 
 # Retrieve or build our copy of QtWebKit
 
-#---GRY---
-#ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
+ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
 
 # Required Qt modules
 #---ISSUE1306--- WE OUGHT TO BE ABLE TO REMOVE THE NEED FOR THE Gui MODULE ONCE
@@ -269,8 +265,7 @@ SET(REQUIRED_QT_MODULES
     Gui
     Network
     ${TEST}
-#---GRY---
-#    ${WEBKIT}
+    ${WEBKIT}
     Widgets
 )
 
@@ -314,9 +309,8 @@ IF(APPLE)
         QtSvg
         ${QTTEST}
         QtWebChannel
-#---GRY---
-#        ${QTWEBKIT}
-#        ${QTWEBKITWIDGETS}
+        ${QTWEBKIT}
+        ${QTWEBKITWIDGETS}
         QtWidgets
         QtXml
         QtXmlPatterns
@@ -846,10 +840,6 @@ SET(PLUGINS
     widget/WebViewerWidget
     widget/ZincWidget
 )
-#---GRY---
-SET(PLUGINS
-    thirdParty/LLVMClang
-)
 
 IF(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
     # We want to build our copy of the QtWebKit package, so don't build any
@@ -1165,16 +1155,13 @@ IF(WIN32)
         SET(TEST)
     ENDIF()
 
-#---GRY---
-#    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
-    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel Widgets Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
         WINDOWS_DEPLOY_QT_LIBRARY(Qt5${QT_LIBRARY})
     ENDFOREACH()
 
-#---GRY---
-#    FOREACH(QT_LIBRARY icudt icuin icuuc)
-#        WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}57)
-#    ENDFOREACH()
+    FOREACH(QT_LIBRARY icudt icuin icuuc)
+        WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}57)
+    ENDFOREACH()
 
     # Qt plugins required by OpenCOR
 
@@ -1306,9 +1293,7 @@ ELSE()
         SET(TEST)
     ENDIF()
 
-#---GRY---
-#    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
-    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel Widgets XcbQpa Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
         IF(   "${QT_LIBRARY}" STREQUAL "WebKit"
            OR "${QT_LIBRARY}" STREQUAL "WebKitWidgets")
             SET(REAL_QT_LIBRARY_DIR ${QTWEBKIT_DIR}/ext/lib)
