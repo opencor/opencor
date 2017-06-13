@@ -1171,9 +1171,10 @@ IF(WIN32)
         WINDOWS_DEPLOY_QT_LIBRARY(Qt5${QT_LIBRARY})
     ENDFOREACH()
 
-    FOREACH(QT_LIBRARY icudt icuin icuuc)
-        WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}57)
-    ENDFOREACH()
+#---GRY---
+#    FOREACH(QT_LIBRARY icudt icuin icuuc)
+#        WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}57)
+#    ENDFOREACH()
 
     # Qt plugins required by OpenCOR
 
