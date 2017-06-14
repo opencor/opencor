@@ -17,7 +17,7 @@ To build `QtWebKit <https://wiki.qt.io/QtWebKit>`__:
 
     sudo apt-get install bison flex gperf libicu-dev libsqlite3-dev libxrender-dev
 
-  and build ICU from `source <http://site.icu-project.org/download/>`__ and from there:
+  and build ICU from `source <http://site.icu-project.org/download/>`__ (make sure to get the version used by `Qt <https://www.qt.io/>`__; ``find /opt/Qt -name *icu*``) and from there:
 
   ::
 
@@ -27,8 +27,6 @@ To build `QtWebKit <https://wiki.qt.io/QtWebKit>`__:
     ../source/runConfigureICU Linux --prefix=[ICU]/install
     make
     sudo make install
-
-**Note:** regarding ICU, make sure to get/build the version used by `Qt <https://www.qt.io/>`__ (check using ``find /opt/Qt -name *icu*``).
 
 From there, do the following from the command prompt or terminal:
 
