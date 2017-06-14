@@ -156,8 +156,7 @@ ELSE()
                                  DEPENDEES install)
 
         IF(APPLE)
-            # Set the RPATH information to enable linking independent of library
-            # location
+            # Fix the RPATH information
 
             ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
                                      COMMAND install_name_tool -change ${QWT_SHARED_LIBRARY}
