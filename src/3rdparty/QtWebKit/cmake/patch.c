@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 //==============================================================================
@@ -61,8 +60,9 @@ int error(char *pErrorMessage)
 
 int main(int pArgC, char *pArgV[])
 {
-    char *line = 0;
-    size_t lineSize = 0;
+    #define LINE_MAX 1024
+
+    char line[LINE_MAX];
 
     // Make sure that a file name has been provided
 
@@ -91,7 +91,7 @@ int main(int pArgC, char *pArgV[])
 
     // Process each line of the file and output it to our temporary file
 
-    while (getline(&line, &lineSize, in) != -1) {
+    while (fgets(line, LINE_MAX, in)) {
         if (!strcmp(line, "get_filename_component(_qt5WebKit_install_prefix \"${CMAKE_CURRENT_LIST_DIR}/../../../\" ABSOLUTE)\n"))
             fprintf(out, "set(_qt5WebKit_install_prefix ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/ext)\n");
         else if (!strcmp(line, "get_filename_component(_qt5WebKitWidgets_install_prefix \"${CMAKE_CURRENT_LIST_DIR}/../../../\" ABSOLUTE)\n"))
@@ -99,8 +99,6 @@ int main(int pArgC, char *pArgV[])
         else
             fprintf(out, "%s", line);
     }
-
-    free(line);
 
     if (rename(outFileName, pArgV[1]) == -1)
         return error("The file could not be patched.\n");

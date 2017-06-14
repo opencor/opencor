@@ -143,10 +143,16 @@ ELSE()
 
     # Try to build our patch program
 
-    SET(PATCH ${CMAKE_BINARY_DIR}/patchQtWebKitCMakeFile)
+    SET(PATCH ${CMAKE_BINARY_DIR}/patchQtWebKitCMakeFile${CMAKE_EXECUTABLE_SUFFIX})
+    SET(PATCH_SOURCE ${PROJECT_SOURCE_DIR}/cmake/patch.c)
 
-    EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -o ${PATCH} ${PROJECT_SOURCE_DIR}/cmake/patch.c
-                    RESULT_VARIABLE RESULT)
+    IF(WIN32)
+        EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} ${PATCH_SOURCE} /link /out:${PATCH}
+                        RESULT_VARIABLE RESULT)
+    ELSE()
+        EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -o ${PATCH} ${PATCH_SOURCE}
+                        RESULT_VARIABLE RESULT)
+    ENDIF()
 
     IF(NOT RESULT EQUAL 0)
         MESSAGE(FATAL_ERROR "patch could not be built...")
