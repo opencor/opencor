@@ -107,9 +107,27 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
     ENDIF()
 ELSE()
-    # Build QtWebKit as an external project
+    # Set platform specific configuration options
+    # Note: on Windows, we need to set some environment variables, something
+    #       that cannot be done using ExternalProject_Add, hence we don't have
+    #       a configure command as such and we call a batch file as part of our
+    #       build command...
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
+    SET(QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD})
+
+    IF(WIN32)
+        SET(CONFIGURE_COMMAND ECHO:)
+        SET(BUILD_COMMAND ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/buildCommand.bat)
+
+        CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/buildCommand.bat.in
+                        ${BUILD_COMMAND})
+    ELSE()
+        SET(CONFIGURE_COMMAND ${QMAKE} <SOURCE_DIR>)
+        SET(BUILD_COMMAND ${MAKE_JOM_COMMAND})
+    ENDIF()
+
+    # Build QtWebKit as an external project
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
@@ -121,15 +139,15 @@ ELSE()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${QMAKE} <SOURCE_DIR>
+            ${CONFIGURE_COMMAND}
         BUILD_COMMAND
-            ${MAKE_JOM_COMMAND}
+            ${BUILD_COMMAND}
         INSTALL_COMMAND
-               ${CMAKE_COMMAND} -E copy_directory ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD}/lib/cmake <INSTALL_DIR>/cmake
-            && ${CMAKE_COMMAND} -E copy_directory ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD}/lib/${QTWEBKIT_SHARED_LIBRARY_DIR}/Headers <INSTALL_DIR>/lib/${QTWEBKIT_SHARED_LIBRARY_DIR}/Headers
-            && ${CMAKE_COMMAND} -E copy_directory ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD}/lib/${QTWEBKITWIDGETS_SHARED_LIBRARY_DIR}/Headers <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_SHARED_LIBRARY_DIR}/Headers
-            && ${CMAKE_COMMAND} -E copy ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD}/lib/${QTWEBKIT_SHARED_LIBRARY} <INSTALL_DIR>/lib/${QTWEBKIT_SHARED_LIBRARY}
-            && ${CMAKE_COMMAND} -E copy ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD}/lib/${QTWEBKITWIDGETS_SHARED_LIBRARY} <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_SHARED_LIBRARY}
+               ${CMAKE_COMMAND} -E copy_directory ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/cmake <INSTALL_DIR>/cmake
+            && ${CMAKE_COMMAND} -E copy_directory ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKIT_SHARED_LIBRARY_DIR}/Headers <INSTALL_DIR>/lib/${QTWEBKIT_SHARED_LIBRARY_DIR}/Headers
+            && ${CMAKE_COMMAND} -E copy_directory ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKITWIDGETS_SHARED_LIBRARY_DIR}/Headers <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_SHARED_LIBRARY_DIR}/Headers
+            && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKIT_SHARED_LIBRARY} <INSTALL_DIR>/lib/${QTWEBKIT_SHARED_LIBRARY}
+            && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKITWIDGETS_SHARED_LIBRARY} <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_SHARED_LIBRARY}
             && ${CMAKE_COMMAND} -E create_symlink 5 <INSTALL_DIR>/lib/${QTWEBKIT_DIR}/Versions/Current
             && ${CMAKE_COMMAND} -E create_symlink Versions/Current/Headers <INSTALL_DIR>/lib/${QTWEBKIT_DIR}/Headers
             && ${CMAKE_COMMAND} -E create_symlink Versions/Current/QtWebKit <INSTALL_DIR>/lib/${QTWEBKIT_DIR}/QtWebKit
