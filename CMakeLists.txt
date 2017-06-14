@@ -253,8 +253,9 @@ ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
 #---ISSUE1306--- WE OUGHT TO BE ABLE TO REMOVE THE NEED FOR THE Gui MODULE ONCE
 #                WE CAN BUILD QtWebKit AS A PACKAGE?...
 
-IF(WIN32)
+IF(WIN32 AND USE_PREBUILT_QTWEBKIT_PACKAGE)
     SET(WEBKIT WebKit)
+    SET(WEBKITWIDGETS WebKitWidgets)
 ENDIF()
 
 IF(ENABLE_TESTS)
@@ -1155,13 +1156,17 @@ IF(WIN32)
         SET(TEST)
     ENDIF()
 
-    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
         WINDOWS_DEPLOY_QT_LIBRARY(Qt5${QT_LIBRARY})
     ENDFOREACH()
 
-    FOREACH(QT_LIBRARY icudt icuin icuuc)
-        WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}57)
-    ENDFOREACH()
+    IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
+        SET(ICU_VERSION 59)
+
+        FOREACH(QT_LIBRARY icudt icuin icuuc)
+            WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}${ICU_VERSION})
+        ENDFOREACH()
+    ENDIF()
 
     # Qt plugins required by OpenCOR
 
