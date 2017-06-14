@@ -201,7 +201,7 @@ ELSE()
             # Set the RPATH information to enable linking independent of library
             # location
 
-            ExternalProject_Add_Step(${PACKAGE_BUILD} SetRPath
+            ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
                                      COMMAND install_name_tool -id @rpath/${CRYPTO_SHARED_LIBRARY} ${CRYPTO_SHARED_LIBRARY}
                                      COMMAND install_name_tool -id @rpath/${SSL_SHARED_LIBRARY} ${SSL_SHARED_LIBRARY}
                                      COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DIR}/${CRYPTO_SHARED_LIBRARY}

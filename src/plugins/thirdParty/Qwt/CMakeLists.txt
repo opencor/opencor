@@ -159,7 +159,7 @@ ELSE()
             # Set the RPATH information to enable linking independent of library
             # location
 
-            ExternalProject_Add_Step(${PACKAGE_BUILD} SetRPath
+            ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
                                      COMMAND install_name_tool -change ${QWT_SHARED_LIBRARY}
                                                                        @rpath/${QWT_SHARED_LIBRARY}
                                                                        ${QWTMATHML_SHARED_LIBRARY}
