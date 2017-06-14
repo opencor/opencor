@@ -1,11 +1,11 @@
-`QtWebKit <https://wiki.qt.io/QtWebKit>`__ has the following prerequisites:
+To build `QtWebKit <https://wiki.qt.io/QtWebKit>`__:
 
 - **Windows:** install:
 
   - `Perl 5.22 <http://www.activestate.com/activeperl/>`__;
   - `Python 2.7 <https://www.python.org/>`__;
   - `Ruby >= 1.9 <http://rubyinstaller.org/>`__;
-  - `Bison and Flex <https://sourceforge.net/projects/winflexbison/>`__ (you will need to make a copy of ``win_flex.exe`` and name it ``flex.exe``);
+  - `Bison and Flex <https://sourceforge.net/projects/winflexbison/>`__ (make a copy of ``win_flex.exe`` and name it ``flex.exe``);
   - `gperf <http://gnuwin32.sourceforge.net/packages/gperf.htm>`__; and
   - `ICU <http://www.npcglib.org/~stathis/blog/precompiled-icu/>`__ (uncompress the binaries to ``C:\icu``).
 
@@ -17,7 +17,7 @@
 
     sudo apt-get install bison flex gperf libicu-dev libsqlite3-dev libxrender-dev
 
-  as well as build ICU from `source <http://site.icu-project.org/download/>`__ (make sure to get the version used by `Qt <https://www.qt.io/>`__; ``find /opt/Qt -name *icu*``) and from there:
+  and build ICU from `source <http://site.icu-project.org/download/>`__ (make sure to get the version used by `Qt <https://www.qt.io/>`__; ``find /opt/Qt -name *icu*``) and from there:
 
   ::
 
