@@ -89,10 +89,10 @@ IF(USE_PREBUILT_QWT_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 80ee367a9ba614c5ed8e142705f5c2653356a317
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 65704e0fd730903b7ba31651094550f4bcc2557f
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 00cb93ecd2e8341af6bf6c7eba0ba9a5d2a5c761
-                                          27fcb3b467e9d9519fa4e12c518a6a0c985f27d8)
+                              SHA1_VALUES 2f2341decf3a24faedb6f4e83165226266eba5f9
+                                          d5787ce81a8958a4a7453cc9a95cf77222d08a49)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 494191814485a53d2b70619d575f1da23cb0ef73
@@ -159,6 +159,10 @@ ELSE()
             # Fix the RPATH information
 
             ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
+                                     COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${QWT_SHARED_LIBRARY}
+                                     COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${QWT_SHARED_LIBRARY}
+                                     COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${QWTMATHML_SHARED_LIBRARY}
+                                     COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${QWTMATHML_SHARED_LIBRARY}
                                      COMMAND install_name_tool -change ${QWT_SHARED_LIBRARY}
                                                                        @rpath/${QWT_SHARED_LIBRARY}
                                                                        ${QWTMATHML_SHARED_LIBRARY}

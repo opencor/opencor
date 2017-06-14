@@ -72,9 +72,9 @@ IF(USE_PREBUILT_QSCINTILLA_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} be310dad0c7578bf9b777149574983b7474c1700
+                              ${RELATIVE_PROJECT_SOURCE_DIR} e99f67ef2ecb5f277c5221fa9091cb51d9d564ee
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES f55c4eba6881b08236843c17ad1359a51b3c0e31)
+                              SHA1_VALUES 24e72695f8d0112e0366edb1f42f612736d18eef)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 702b751943f13bd2c473bf10ee9baae2fe733def
@@ -129,6 +129,16 @@ ELSE()
                                                                   ${SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
+
+        IF(APPLE)
+            # Fix the RPATH information
+
+            ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
+                                     COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${SHARED_LIBRARY}
+                                     COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${SHARED_LIBRARY}
+                                     WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
+                                     DEPENDEES CopyLibrary)
+        ENDIF()
     ENDIF()
 
     # Package our external project
