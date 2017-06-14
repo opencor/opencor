@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSettings>
 #include <QVariant>
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) && defined(USE_PREBUILT_QTWEBKIT_PACKAGE)
     #include <QWebSettings>
 #endif
 
@@ -303,8 +303,9 @@ int main(int pArgC, char *pArgV[])
     // avoiding those leak messages...
     // Note: the below must absolutely be done after calling guiApp->exec() and
     //       before deleting guiApp...
+//---ISSUE1306--- DO WE STILL NEED THIS?...
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) && defined(USE_PREBUILT_QTWEBKIT_PACKAGE)
     QWebSettings::clearMemoryCaches();
 #endif
 
