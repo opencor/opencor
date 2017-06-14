@@ -28,7 +28,7 @@ To build `QtWebKit <https://wiki.qt.io/QtWebKit>`__:
     make
     sudo make install
 
-**Note:** regarding ICU, make sure to get/build the version used by `Qt <https://www.qt.io/>`__; ``find /opt/Qt -name *icu*``.
+**Note:** regarding ICU, make sure to get/build the version used by `Qt <https://www.qt.io/>`__ (check using ``find /opt/Qt -name *icu*``).
 
 From there, do the following from the command prompt or terminal:
 
