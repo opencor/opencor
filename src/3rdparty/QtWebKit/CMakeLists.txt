@@ -113,10 +113,16 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
     ENDIF()
 ELSE()
     # Set platform specific configuration options
-    # Note: on Windows, we need to set some environment variables, something
-    #       that cannot be done using ExternalProject_Add, hence we don't have
-    #       a configure command as such and we call a batch file as part of our
-    #       build command...
+    # Note #1: we would normally rely on [QtWebKit]/Tools/Scripts/build-webkit
+    #          to build and install QtWebKit, but this will not only build
+    #          QtWebKit in a folder under [QtWebKit] (!!), but it will also (try
+    #          to) install QtWebKit under [Qt] (!!) while we want to build
+    #          QtWebKit out of source and to install it under this directory.
+    #          So, instead, we build and install QtWebKit 'manually'...
+    # Note #2: on Windows, we need to set some environment variables, something
+    #          that cannot be done using ExternalProject_Add, hence we don't
+    #          have a configure command as such and we call a batch file as part
+    #          of our build command...
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
     SET(QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD})
