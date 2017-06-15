@@ -810,6 +810,7 @@ SET(PLUGINS
     editing/RawTextView
 
     miscellaneous/HelpWindow
+    miscellaneous/PythonQtConsoleWindow
     miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
@@ -832,7 +833,6 @@ SET(PLUGINS
     # Python wrappers depend on simulation plugins
 
     miscellaneous/PythonWrapper
-    miscellaneous/PythonQtConsoleWindow
 
     miscellaneous/JupyterKernel
 

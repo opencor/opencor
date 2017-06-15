@@ -22,5 +22,4 @@ ADD_PLUGIN(PythonQtConsoleWindow
     PLUGINS
         Core
         PythonQtSupport
-        PythonWrapper
 )
