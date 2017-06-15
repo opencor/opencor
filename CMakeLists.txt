@@ -245,6 +245,18 @@ ELSE()
     ENDIF()
 ENDIF()
 
+# A couple of variables that make it easier to specify library file names with a
+# version (e.g. to be able to reference libz.so.1 and libz.1.dylib, we could
+# simply use libz${PRE}.1${POST})
+
+IF(APPLE)
+    SET(CMAKE_SHARED_LIBRARY_SUFFIX_PRE)
+    SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST ${CMAKE_SHARED_LIBRARY_SUFFIX})
+ELSEIF(NOT WIN32)
+    SET(CMAKE_SHARED_LIBRARY_SUFFIX_PRE ${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
+ENDIF()
+
 # Retrieve or build our copy of QtWebKit
 
 ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
@@ -459,18 +471,6 @@ ELSEIF(NOT WIN32)
 
     SET(LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN/../lib'")
     SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARY_DIR} ${LINK_RPATH_FLAG}")
-ENDIF()
-
-# A couple of variables that make it easier to specify library file names with a
-# version (e.g. to be able to reference libz.so.1 and libz.1.dylib, we could
-# simply use libz${PRE}.1${POST})
-
-IF(APPLE)
-    SET(CMAKE_SHARED_LIBRARY_SUFFIX_PRE)
-    SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST ${CMAKE_SHARED_LIBRARY_SUFFIX})
-ELSEIF(NOT WIN32)
-    SET(CMAKE_SHARED_LIBRARY_SUFFIX_PRE ${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
 ENDIF()
 
 # Show what we are about to build
