@@ -19,7 +19,7 @@ index 31e47a495..db6ff6081 100644
          canvas.manager = self  # store a pointer to parent
          self.num = num
 diff --git lib/matplotlib/backends/backend_qt5.py lib/matplotlib/backends/backend_qt5.py
-index f92c06f66..ff2cfe3e1 100644
+index f92c06f66..8d4763af3 100644
 --- lib/matplotlib/backends/backend_qt5.py
 +++ lib/matplotlib/backends/backend_qt5.py
 @@ -24,6 +24,7 @@ from matplotlib.figure import Figure
@@ -86,34 +86,15 @@ index f92c06f66..ff2cfe3e1 100644
  
          self.window.setWindowTitle("Figure %d" % num)
          image = os.path.join(matplotlib.rcParams['datapath'],
-@@ -466,15 +478,15 @@ class FigureManagerQT(FigureManagerBase):
+@@ -466,7 +478,7 @@ class FigureManagerQT(FigureManagerBase):
          self.toolbar = self._get_toolbar(self.canvas, self.window)
          if self.toolbar is not None:
              self.window.addToolBar(self.toolbar)
 -            self.toolbar.message.connect(self.statusbar_label.setText)
--            tbs_height = self.toolbar.sizeHint().height()
 +            #self.toolbar.message.connect(self.statusbar_label.setText)
-+            tbs_height = self.toolbar.sizeHint.height()
+             tbs_height = self.toolbar.sizeHint().height()
          else:
              tbs_height = 0
- 
-         # resize the main window so it will display the canvas with the
-         # requested size:
-         cs = canvas.sizeHint()
--        sbs = self.window.statusBar().sizeHint()
-+        sbs = self.window.statusBar().sizeHint
-         self._status_and_tool_height = tbs_height + sbs.height()
-         height = cs.height() + self._status_and_tool_height
-         self.window.resize(cs.width(), height)
-@@ -541,7 +553,7 @@ class FigureManagerQT(FigureManagerBase):
-         self.window.close()
- 
-     def get_window_title(self):
--        return six.text_type(self.window.windowTitle())
-+        return six.text_type(self.window.windowTitle)
- 
-     def set_window_title(self, title):
-         self.window.setWindowTitle(title)
 @@ -553,7 +565,7 @@ class NavigationToolbar2QT(NavigationToolbar2, QtWidgets.QToolBar):
      def __init__(self, canvas, parent, coordinates=True):
          """ coordinates: should we show the coordinates on the right? """
@@ -178,44 +159,8 @@ index f92c06f66..ff2cfe3e1 100644
          self.donebutton.clicked.connect(self.close)
          self.resetbutton.clicked.connect(self.reset)
          self.tightlayout.clicked.connect(self.functight)
-@@ -762,7 +775,7 @@ class SubplotToolQt(SubplotTool, UiSubplotTool):
-             slider.setSliderPosition(int(self.defaults[attr] * 1000))
- 
-     def funcleft(self, val):
--        if val == self.sliderright.value():
-+        if val == self.sliderright.value:
-             val -= 1
-         val /= 1000.
-         self.targetfig.subplots_adjust(left=val)
-@@ -771,7 +784,7 @@ class SubplotToolQt(SubplotTool, UiSubplotTool):
-             self.targetfig.canvas.draw_idle()
- 
-     def funcright(self, val):
--        if val == self.sliderleft.value():
-+        if val == self.sliderleft.value:
-             val += 1
-         val /= 1000.
-         self.targetfig.subplots_adjust(right=val)
-@@ -780,7 +793,7 @@ class SubplotToolQt(SubplotTool, UiSubplotTool):
-             self.targetfig.canvas.draw_idle()
- 
-     def funcbottom(self, val):
--        if val == self.slidertop.value():
-+        if val == self.slidertop.value:
-             val -= 1
-         val /= 1000.
-         self.targetfig.subplots_adjust(bottom=val)
-@@ -789,7 +802,7 @@ class SubplotToolQt(SubplotTool, UiSubplotTool):
-             self.targetfig.canvas.draw_idle()
- 
-     def functop(self, val):
--        if val == self.sliderbottom.value():
-+        if val == self.sliderbottom.value:
-             val += 1
-         val /= 1000.
-         self.targetfig.subplots_adjust(top=val)
 diff --git lib/matplotlib/backends/backend_qt5agg.py lib/matplotlib/backends/backend_qt5agg.py
-index fcb3c478e..870a764e3 100644
+index fcb3c478e..65388a336 100644
 --- lib/matplotlib/backends/backend_qt5agg.py
 +++ lib/matplotlib/backends/backend_qt5agg.py
 @@ -6,7 +6,6 @@ from __future__ import (absolute_import, division, print_function,
@@ -282,7 +227,7 @@ index fcb3c478e..870a764e3 100644
  
      def __draw_idle_agg(self, *args):
 -        if self.height() < 0 or self.width() < 0:
-+        if self.height < 0 or self.width < 0:
++        if self.height() < 0 or self.width < 0:
              self._agg_draw_pending = False
              return
          try:
@@ -336,7 +281,7 @@ index 0546bdc7b..65383823d 100644
  
      Here I've opted to simple copy QtGui into QtWidgets as that
 diff --git lib/matplotlib/backends/qt_editor/formlayout.py lib/matplotlib/backends/qt_editor/formlayout.py
-index 4e9a2737f..1b738d9d7 100644
+index 4e9a2737f..9b68d8ecc 100644
 --- lib/matplotlib/backends/qt_editor/formlayout.py
 +++ lib/matplotlib/backends/qt_editor/formlayout.py
 @@ -90,16 +90,16 @@ class ColorButton(QtWidgets.QPushButton):
@@ -359,15 +304,6 @@ index 4e9a2737f..1b738d9d7 100644
  
  def col2hex(color):
      """Convert matplotlib color to hex before passing to Qt"""
-@@ -140,7 +140,7 @@ class ColorLayout(QtWidgets.QHBoxLayout):
-         self.lineedit.setText(color.name())
- 
-     def text(self):
--        return self.lineedit.text()
-+        return self.lineedit.text
- 
- 
- def font_is_installed(font):
 @@ -153,6 +153,8 @@ def tuple_to_qfont(tup):
      """
      Create a QFont from tuple:
@@ -377,42 +313,3 @@ index 4e9a2737f..1b738d9d7 100644
      """
      if not isinstance(tup, tuple) or len(tup) != 4 \
         or not font_is_installed(tup[0]) \
-@@ -217,7 +219,7 @@ class FontLayout(QtWidgets.QGridLayout):
- 
- 
- def is_edit_valid(edit):
--    text = edit.text()
-+    text = edit.text
-     state = edit.validator().validate(text, 0)[0]
- 
-     return state == QtGui.QDoubleValidator.Acceptable
-@@ -327,9 +329,9 @@ class FormWidget(QtWidgets.QWidget):
-             elif tuple_to_qfont(value) is not None:
-                 value = field.get_font()
-             elif isinstance(value, six.string_types) or is_color_like(value):
--                value = six.text_type(field.text())
-+                value = six.text_type(field.text)
-             elif isinstance(value, (list, tuple)):
--                index = int(field.currentIndex())
-+                index = int(field.currentIndex)
-                 if isinstance(value[0], (list, tuple)):
-                     value = value[index][0]
-                 else:
-@@ -337,7 +339,7 @@ class FormWidget(QtWidgets.QWidget):
-             elif isinstance(value, bool):
-                 value = field.checkState() == QtCore.Qt.Checked
-             elif isinstance(value, float):
--                value = float(str(field.text()))
-+                value = float(str(field.text))
-             elif isinstance(value, int):
-                 value = int(field.value())
-             elif isinstance(value, datetime.datetime):
-@@ -345,7 +347,7 @@ class FormWidget(QtWidgets.QWidget):
-             elif isinstance(value, datetime.date):
-                 value = field.date().toPyDate()
-             else:
--                value = eval(str(field.text()))
-+                value = eval(str(field.text))
-             valuelist.append(value)
-         return valuelist
- 
