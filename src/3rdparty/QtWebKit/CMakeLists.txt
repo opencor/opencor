@@ -218,7 +218,7 @@ ELSE()
     ExternalProject_Add_Step(${PACKAGE_BUILD} PatchCMakeFiles
                              COMMAND ${PATCH} Qt5WebKit/Qt5WebKitConfig.cmake
                              COMMAND ${PATCH} Qt5WebKitWidgets/Qt5WebKitWidgetsConfig.cmake
-                             WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/cmake/
+                             WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/cmake
                              DEPENDEES install)
 
     # Package our external project
