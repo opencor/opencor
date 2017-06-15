@@ -139,6 +139,12 @@ ELSE()
         SET(BUILD_COMMAND ${MAKE_JOM_COMMAND})
 
         IF(APPLE)
+            IF(RELEASE_MODE)
+                SET(BUILD_COMMAND ${BUILD_COMMAND} release)
+            ELSE()
+                SET(BUILD_COMMAND ${BUILD_COMMAND} debug)
+            ENDIF()
+
             SET(INSTALL_COMMAND
                    ${CMAKE_COMMAND} -E copy_directory ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/cmake <INSTALL_DIR>/cmake
                 && ${CMAKE_COMMAND} -E copy_directory ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKIT_SHARED_LIBRARY_DIR}/Headers <INSTALL_DIR>/lib/${QTWEBKIT_SHARED_LIBRARY_DIR}/Headers
