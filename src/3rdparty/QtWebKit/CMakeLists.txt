@@ -100,9 +100,9 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} b25a876ec8cde8ffe208df67205e8f182ff4e9b8
+                              ${RELATIVE_PROJECT_SOURCE_DIR} b94d50c37b9be59c34c991b837c61bb71d54267d
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES b0efeaea3b5362e2603bf02e819e7e5835199fef
+                              SHA1_VALUES 2e7fdc07fa2a01198df28573e62b56b3e5f96022
                                           19f7733bb892ff6b682d26a57b027d1236883705)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
