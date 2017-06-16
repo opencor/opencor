@@ -23,7 +23,12 @@ SET(TARGET_PLATFORM ${PLATFORM})
 # Note: on Windows, we would normally distinguish between release and debug 
 #       modes, but QtWebKit's build system doesn't, hence we go one folder up...
 
-SET(REAL_LOCAL_EXTERNAL_PACKAGE_DIR ${LOCAL_EXTERNAL_PACKAGE_DIR}/..)
+IF(WIN32)
+    STRING(REGEX REPLACE "/[^/]+$" "" REAL_LOCAL_EXTERNAL_PACKAGE_DIR ${LOCAL_EXTERNAL_PACKAGE_DIR})
+ELSE()
+    SET(REAL_LOCAL_EXTERNAL_PACKAGE_DIR ${LOCAL_EXTERNAL_PACKAGE_DIR})
+ENDIF()
+
 SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${REAL_LOCAL_EXTERNAL_PACKAGE_DIR})
 
 # Name of our package's shared library (and of its import library, if any)
@@ -38,6 +43,10 @@ IF(WIN32)
     SET(QTWEBKITWIDGETS_IMPORT_LIBRARY Qt${QT_VERSION_MAJOR}WebKitWidgets${CMAKE_IMPORT_LIBRARY_SUFFIX})
     SET(QTWEBKITWIDGETSD_SHARED_LIBRARY Qt${QT_VERSION_MAJOR}WebKitWidgetsd${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(QTWEBKITWIDGETSD_IMPORT_LIBRARY Qt${QT_VERSION_MAJOR}WebKitWidgetsd${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    
+    SET(ICUDT_SHARED_LIBRARY icudt${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(ICUIN_SHARED_LIBRARY icuin${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(ICUUC_SHARED_LIBRARY icuuc${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
 ELSEIF(APPLE)
     SET(QTWEBKIT_DIR QtWebKit.framework)
     SET(QTWEBKIT_SHARED_LIBRARY_DIR ${QTWEBKIT_DIR}/Versions/${QT_VERSION_MAJOR})
@@ -82,6 +91,10 @@ IF(WIN32)
         lib/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
         lib/${QTWEBKITD_IMPORT_LIBRARY}
         lib/${QTWEBKITWIDGETSD_IMPORT_LIBRARY}
+
+        bin/${ICUDT_SHARED_LIBRARY}
+        bin/${ICUIN_SHARED_LIBRARY}
+        bin/${ICUUC_SHARED_LIBRARY}
     )
 ENDIF()
 
@@ -95,17 +108,20 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
 
     IF(WIN32)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 72c4b5eb31c7b765902f2626ed1235f839a8e9f3
+                              ${RELATIVE_PROJECT_SOURCE_DIR} bab64899e99060ac22df888b16d01db7f5f18ffa
                               TARGET_PLATFORM ${TARGET_PLATFORM}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES fc201490aad70770d07787703628a1725a207008
-                                          4d179cc6be2208d384d281b3fbf4cc909081fec9
-                                          a7c0049c1f9e30789ce6297ef89ad9b4d2fcc7a5
-                                          0862f2508611479a9afb99b87a5a22b070903b78
-                                          b87c17a223f04415a231071ba5b1f26251fc58fc
-                                          94df3dd152587f29d001f8d0f29a7d393bbd0887
-                                          3b7d2ac14dde12de9f13c215002322e0e05bf8c3
-                                          6862b151d04b007648eb3be069c3a7dc22393bf1)
+                              SHA1_VALUES ab8e3ea99e76d0cfa5b07492359e352d994634e8
+                                          a9e654ae5fbac3bee3f49f1a2f749057ebef970b
+                                          0b879813e66a2f05a3579392c32c02e7eea898ff
+                                          95bbf30909d50b5bae3471f0ba1b2ade49e89104
+                                          627b449df6e4a3d649ce000868a231316f3ccb9e
+                                          ddb98e86ca53f2fc5f76aad59c6b0d96c54ccfe8
+                                          f1ea15a9c5bdc7a9b5f0966f7513869659375326
+                                          a7e7c72818d17ba5dfe315bcc345c748e3bad092
+                                          874175a6db51afe0902882f0b00f7855ab498c79
+                                          47cb72ba7c899ca218be75dd89a0c0f900b968b8
+                                          a386658900a742f31f1f08d55c0915d577af2d7e)
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} b94d50c37b9be59c34c991b837c61bb71d54267d
@@ -156,6 +172,9 @@ ELSE()
             && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKITWIDGETS_IMPORT_LIBRARY} <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
             && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKITWIDGETSD_SHARED_LIBRARY} <INSTALL_DIR>/bin/${QTWEBKITWIDGETSD_SHARED_LIBRARY}
             && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKITWIDGETSD_IMPORT_LIBRARY} <INSTALL_DIR>/lib/${QTWEBKITWIDGETSD_IMPORT_LIBRARY}
+            && ${CMAKE_COMMAND} -E copy C:/icu/bin64/${ICUDT_SHARED_LIBRARY} <INSTALL_DIR>/bin/${ICUDT_SHARED_LIBRARY}
+            && ${CMAKE_COMMAND} -E copy C:/icu/bin64/${ICUIN_SHARED_LIBRARY} <INSTALL_DIR>/bin/${ICUIN_SHARED_LIBRARY}
+            && ${CMAKE_COMMAND} -E copy C:/icu/bin64/${ICUUC_SHARED_LIBRARY} <INSTALL_DIR>/bin/${ICUUC_SHARED_LIBRARY}
         )
 
         LIST(APPEND BUILD_BYPRODUCTS

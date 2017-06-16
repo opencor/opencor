@@ -259,6 +259,12 @@ ELSEIF(NOT WIN32)
     SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
 ENDIF()
 
+# Version of ICU that we are using on Windows
+
+IF(WIN32)
+    SET(ICU_VERSION 57)
+ENDIF()
+
 # Retrieve or build our copy of QtWebKit
 
 ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
@@ -1168,8 +1174,6 @@ IF(WIN32)
     ENDFOREACH()
 
     IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
-        SET(ICU_VERSION 57)
-
         FOREACH(QT_LIBRARY icudt icuin icuuc)
             WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}${ICU_VERSION})
         ENDFOREACH()
