@@ -44,10 +44,14 @@ namespace PythonQtConsoleWindow {
 // An IPython console
 
 static QString PythonQtConsole = R"PYTHON(
+import logging
+import sys
+
 from qtconsole.inprocess import QtInProcessKernelManager
 from qtconsole.inprocess import QtInProcessRichJupyterWidget
 
-# The widget we are creating -- it's a global so we can reference it from C++
+# The widget we are creating -- it's a global so it doesn't get
+# garbage collected.
 
 ipython_widget = None
 
@@ -75,6 +79,14 @@ def create_ipython_widget():
     ipython_widget = QtInProcessRichJupyterWidget(font_size=12)
     ipython_widget.kernel_manager = kernel_manager
     ipython_widget.kernel_client = kernel_client
+
+    # `sys.stderr` will now be redirected to the console, however
+    # logging is still going to PythonQt (and the terminal shell)
+    # so we redirect logging output to the console.
+
+    logging.getLogger().handlers[0].stream = sys.stderr
+
+    return ipython_widget
 )PYTHON";
 
 
@@ -98,9 +110,9 @@ PythonQtConsoleWindow::PythonQtConsoleWindow(QWidget *pParent) :
 
     // Create and retrive an IPython widget
 
-    pythonQtInstance->call(qtConsoleModule, "create_ipython_widget");
+    PyObject *createWidget = pythonQtInstance->lookupObject(qtConsoleModule, "create_ipython_widget");
 
-    PyObject *ipythonWidget = pythonQtInstance->lookupObject(qtConsoleModule, "ipython_widget");
+    PyObject *ipythonWidget = pythonQtInstance->callAndReturnPyObject(createWidget);
 
     if (ipythonWidget && PyObject_TypeCheck(ipythonWidget, &PythonQtInstanceWrapper_Type)) {
 
