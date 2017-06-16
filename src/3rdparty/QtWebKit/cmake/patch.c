@@ -34,11 +34,14 @@ char outFileName[FILENAME_MAX];
 
 int cleanUp()
 {
-    fclose(in);
-    fclose(out);
+    if (in)
+        fclose(in);
 
-    if (out)
+    if (out) {
+        fclose(out);
+
         remove(outFileName);
+    }
 
     return 0;
 }
@@ -100,10 +103,17 @@ int main(int pArgC, char *pArgV[])
             fprintf(out, "%s", line);
     }
 
+    fclose(in);
+    fclose(out);
+
+    in = out = 0;
+
+    remove(pArgV[1]);
+
     if (rename(outFileName, pArgV[1]) == -1)
         return error("The file could not be patched.\n");
 
-    // We are all done, so clean up and leave
+    // We are all done
 
-    return cleanUp();
+    return 0;
 }
