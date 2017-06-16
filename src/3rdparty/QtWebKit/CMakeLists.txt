@@ -176,9 +176,11 @@ ELSE()
 
     # Build QtWebKit as an external project
 
+    SET(SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
+
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
+            ${SOURCE_DIR}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
@@ -220,6 +222,20 @@ ELSE()
                              COMMAND ${PATCH} Qt5WebKitWidgets/Qt5WebKitWidgetsConfig.cmake
                              WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/cmake
                              DEPENDEES install)
+
+    # Make sure that we have the actual contents of our header files
+    # Note: this is only for Windows and Linux since, on those platforms, some
+    #       of our 'installed' header files are indeed #including our copy of
+    #       the QtWebKit header files rather than having their actual
+    #       contents...
+
+    IF(WIN32 OR NOT APPLE)
+        ExternalProject_Add_Step(${PACKAGE_BUILD} PatchHeaderFiles
+                                 COMMAND ${CMAKE_COMMAND} -D SOURCE_DIR=${SOURCE_DIR}
+                                                          -D INCLUDE_DIR=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include
+                                                          -P ${PROJECT_SOURCE_DIR}/cmake/patch.cmake
+                                 DEPENDEES install)
+    ENDIF()
 
     # Package our external project
 
