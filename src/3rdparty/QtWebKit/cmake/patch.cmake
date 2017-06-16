@@ -12,17 +12,11 @@ FOREACH(HEADER_FILE ${HEADER_FILES})
     STRING(STRIP ${HEADER_FILE_CONTENTS} HEADER_FILE_CONTENTS)
 
     # Retrieve the directory of our header file and determine the relative path
-    # from it to our QtWebKit source directory, and account for the fact that on
-    # Windows we are one folder down too many (because we deploy our files under
-    # a 'release' or 'debug' folder)
+    # from it to our QtWebKit source directory
 
     GET_FILENAME_COMPONENT(HEADER_FILE_DIR ${HEADER_FILE} DIRECTORY)
 
-    IF(WIN32)
-        SET(UP_DIR /..)
-    ENDIF()
-
-    FILE(RELATIVE_PATH RELATIVE_PATH ${HEADER_FILE_DIR}${UP_DIR} ${SOURCE_DIR})
+    FILE(RELATIVE_PATH RELATIVE_PATH ${HEADER_FILE_DIR} ${SOURCE_DIR})
 
     # Check whether the contents of our header file is something like
     #     #include "<relative_path>...<header_file_name>"
@@ -37,11 +31,7 @@ FOREACH(HEADER_FILE ${HEADER_FILES})
         STRING(REGEX REPLACE "^#include \"" "" HEADER_FILE_RELATIVE_PATH ${INCLUDE_SOURCE_HEADER_FILE})
         STRING(REGEX REPLACE "\"$" "" HEADER_FILE_RELATIVE_PATH ${HEADER_FILE_RELATIVE_PATH})
 
-        IF(WIN32)
-            SET(UP_DIR ../)
-        ENDIF()
-
-        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${UP_DIR}${HEADER_FILE_RELATIVE_PATH} ${HEADER_FILE_NAME}
+        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${HEADER_FILE_RELATIVE_PATH} ${HEADER_FILE_NAME}
                         WORKING_DIRECTORY ${HEADER_FILE_DIR})
     ENDIF()
 ENDFOREACH()
