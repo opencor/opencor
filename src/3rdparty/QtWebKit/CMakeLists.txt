@@ -83,12 +83,12 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 0d86004bda2ea1b4a62d3a0832cbd53d8f785ee0
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
+                                  SHA1_VALUES fc201490aad70770d07787703628a1725a207008
+                                              4d179cc6be2208d384d281b3fbf4cc909081fec9
+                                              b87c17a223f04415a231071ba5b1f26251fc58fc
+                                              94df3dd152587f29d001f8d0f29a7d393bbd0887)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
