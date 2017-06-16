@@ -20,7 +20,7 @@ SET(GIT_TAG v5.6.2)
 SET(TARGET_PLATFORM ${PLATFORM})
 
 # Specify where our local package will be installed
-# Note: on Windows, we would normally distinguish between release and debug 
+# Note: on Windows, we would normally distinguish between release and debug
 #       modes, but QtWebKit's build system doesn't, hence we go one folder up...
 
 IF(WIN32)
@@ -43,7 +43,7 @@ IF(WIN32)
     SET(QTWEBKITWIDGETS_IMPORT_LIBRARY Qt${QT_VERSION_MAJOR}WebKitWidgets${CMAKE_IMPORT_LIBRARY_SUFFIX})
     SET(QTWEBKITWIDGETSD_SHARED_LIBRARY Qt${QT_VERSION_MAJOR}WebKitWidgetsd${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(QTWEBKITWIDGETSD_IMPORT_LIBRARY Qt${QT_VERSION_MAJOR}WebKitWidgetsd${CMAKE_IMPORT_LIBRARY_SUFFIX})
-    
+
     SET(ICUDT_SHARED_LIBRARY icudt${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(ICUIN_SHARED_LIBRARY icuin${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(ICUUC_SHARED_LIBRARY icuuc${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -181,7 +181,7 @@ ELSE()
             <INSTALL_DIR>/lib/${QTWEBKITD_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${QTWEBKITWIDGETSD_IMPORT_LIBRARY}
         )
-        
+
         CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/buildCommand.bat.in
                         ${BUILD_COMMAND})
     ELSE()
