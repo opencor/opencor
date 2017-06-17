@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #pragma warning(push)
     #pragma warning(disable: 4141)
     #pragma warning(disable: 4146)
+    #pragma warning(disable: 4267)
 #elif defined(Q_OS_LINUX)
     #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     #pragma GCC diagnostic ignored "-Wstrict-aliasing"

@@ -414,16 +414,6 @@ ELSE()
     ADD_DEFINITIONS(-D_DEBUG_POINTER_IMPL=)
 ENDIF()
 
-# Disable a warning that occurs on Windows
-# Note: the warning occurs in (at least) MSVC's algorithm header file. To
-#       disable it here means that we disable it for everything, but is there
-#       another solution?...
-#---ISSUE1306--- CHECK WHETHER THIS IS STILL NEEDED...
-
-IF(WIN32)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4267")
-ENDIF()
-
 # Ask for Qt deprecated uses to be reported
 
 ADD_DEFINITIONS(-DQT_DEPRECATED_WARNINGS)
