@@ -12,7 +12,6 @@ OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
 OPTION(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
-#SET(USE_PREBUILT_QTWEBKIT_PACKAGE OFF)
 
 OPTION(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
 OPTION(USE_PREBUILT_SBMLAPI_PACKAGE "Use the pre-built version of the SBML API package" ON)
@@ -419,11 +418,6 @@ ENDIF()
 ADD_DEFINITIONS(-DQT_DEPRECATED_WARNINGS)
 
 # Let OpenCOR know about some of the options with which it was built
-
-IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
-    #---ISSUE1306--- CHECK WHETHER THIS IS STILL NEEDED...
-    ADD_DEFINITIONS(-DUSE_PREBUILT_QTWEBKIT_PACKAGE)
-ENDIF()
 
 IF(ENABLE_SAMPLE_PLUGINS)
     ADD_DEFINITIONS(-DENABLE_SAMPLE_PLUGINS)
