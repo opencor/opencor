@@ -12,7 +12,7 @@ OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
 OPTION(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
-SET(USE_PREBUILT_QTWEBKIT_PACKAGE OFF)
+#SET(USE_PREBUILT_QTWEBKIT_PACKAGE OFF)
 
 OPTION(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
 OPTION(USE_PREBUILT_SBMLAPI_PACKAGE "Use the pre-built version of the SBML API package" ON)
@@ -1312,7 +1312,7 @@ ELSE()
     FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
         IF(   "${QT_LIBRARY}" STREQUAL "WebKit"
            OR "${QT_LIBRARY}" STREQUAL "WebKitWidgets")
-            SET(REAL_QT_LIBRARY_DIR ${QTWEBKIT_DIR}/ext/lib)
+            SET(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
         ELSE()
             SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
         ENDIF()
