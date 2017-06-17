@@ -1250,9 +1250,13 @@ ELSE()
     # Note: this is due to our use of GCC/G++ 4.9+, which is not originally
     #       present on Ubuntu 14.04 LTS...
 
-    INSTALL(FILES /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.22
+    SET(FULL_LIBRARY libstdc++.so.6)
+
+    GET_FILENAME_COMPONENT(REAL_FULL_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
+
+    INSTALL(FILES ${REAL_FULL_LIBRARY}
             DESTINATION lib
-            RENAME libstdc++.so.6)
+            RENAME ${FULL_LIBRARY})
 
     # Library needed on Fedora, but not on Ubuntu
 
