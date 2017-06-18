@@ -1,13 +1,3 @@
-Upgrades
---------
-
-numpy --> 1.12.1
-
-scipy --> 0.19.0
-
-matplotlib --> 2.0.2
-
-
 Windows
 -------
 
@@ -20,8 +10,9 @@ Matplotlib
 
 In our matplotlib's git controlled directory
 ::
-    git diff --no-prefix v1.5.3 v1.5.3-opencor \
-      > ~/build/OpenCOR-upstream/src/plugins/thirdparty/PythonPackages/src/matplotlib_1.5.3.diff
+
+    git diff --no-prefix v2.0.2 v2.0.2-opencor \
+      > ~/build/OpenCOR-upstream/src/plugins/thirdparty/PythonPackages/src/matplotlib_2.0.2.diff
 
 IPython
 -------
