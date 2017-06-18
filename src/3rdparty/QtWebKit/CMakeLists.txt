@@ -183,8 +183,8 @@ ELSE()
         )
 
         CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/buildCommand.bat.in
-                        ${BUILD_COMMAND})
     ELSE()
+                       ${BUILD_COMMAND})
         SET(CONFIGURE_COMMAND ${QMAKE_COMMAND} <SOURCE_DIR>)
         SET(BUILD_COMMAND ${MAKE_JOM_COMMAND})
 
