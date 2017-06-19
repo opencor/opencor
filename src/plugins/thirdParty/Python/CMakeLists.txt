@@ -15,6 +15,12 @@ SET(GIT_TAG "opencor")
 SET(PACKAGE_NAME Python)
 SET(PACKAGE_VERSION ${LIBRARY_VERSION})
 
+IF(WIN32)
+    # The version of SQLite to bundle
+
+    SET(SQLITE3_VERSION "3170000")
+ENDIF()
+
 # Set the ABI flag and version identifier
 
 SET(PYTHON_ABIFLAGS "m")
@@ -161,7 +167,6 @@ ELSE()
     # This could/should be in its own plugin...
 
     IF(WIN32)
-        SET(SQLITE3_VERSION "3170000")
         SET(SQLITE3_DIR ${PROJECT_BINARY_DIR}/sqlite3)
 
         IF(NOT EXISTS ${SQLITE3_DIR}/sqlite-amalgamation-${SQLITE3_VERSION}/sqlite3.h)
@@ -187,6 +192,9 @@ ELSE()
                 )
             EXECUTE_PROCESS(
                 COMMAND ${CMAKE_COMMAND} -E tar xf zips/${SQLITE3_DLL_ZIP} --format=zip
+                WORKING_DIRECTORY ${SQLITE3_DIR}
+                )
+            EXECUTE_PROCESS(
                 COMMAND lib /verbose /def:sqlite3.def /out:sqlite3.lib /machine:x64
                 WORKING_DIRECTORY ${SQLITE3_DIR}
                 )
