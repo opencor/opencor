@@ -33,12 +33,12 @@
 #include <cwchar>
 #include <time.h>
 
-#undef DELETE
-
-#undef min
-#undef max
-
 #ifdef _WIN32
+    #undef min
+    #undef max
+
+    #undef DELETE
+
     #pragma warning(push)
     #pragma warning(disable: 4267)
 #endif
