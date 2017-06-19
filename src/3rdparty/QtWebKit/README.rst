@@ -1,4 +1,4 @@
-To build `QtWebKit <https://wiki.qt.io/QtWebKit>`__:
+In order to build `QtWebKit <https://wiki.qt.io/QtWebKit>`__, we need to:
 
 - **Windows:** install:
 
