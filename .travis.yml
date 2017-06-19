@@ -4,8 +4,8 @@ sudo: required
 dist: trusty
 
 os:
-  - linux
-#  - osx
+#  - linux
+  - osx
 
 env:
   - CONFIG=Release
@@ -48,6 +48,11 @@ script:
        fi
     && make -j 3
     && cd ..
+    && build/OpenCOR.app/Contents/MacOS/OpenCOR -a
+    && build/OpenCOR.app/Contents/MacOS/OpenCOR -h
+    && build/OpenCOR.app/Contents/MacOS/OpenCOR -p
+    && build/OpenCOR.app/Contents/MacOS/OpenCOR -s
+    && build/OpenCOR.app/Contents/MacOS/OpenCOR -v
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          build/bin/runtests
          ;
