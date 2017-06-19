@@ -19,10 +19,56 @@ index bc5257bab..caf14dc54 100644
          canvas.manager = self  # store a pointer to parent
          self.num = num
 diff --git lib/matplotlib/backends/backend_qt5.py lib/matplotlib/backends/backend_qt5.py
-index 1fa7f9f03..05a5dee4a 100644
+index 1fa7f9f03..79ea0bf6b 100644
 --- lib/matplotlib/backends/backend_qt5.py
 +++ lib/matplotlib/backends/backend_qt5.py
-@@ -219,8 +219,9 @@ class TimerQT(TimerBase):
+@@ -26,7 +26,7 @@ from matplotlib.widgets import SubplotTool
+ import matplotlib.backends.qt_editor.figureoptions as figureoptions
+ 
+ from .qt_compat import (QtCore, QtGui, QtWidgets, _getSaveFileName,
+-                        __version__, is_pyqt5)
++                        __version__, is_qt5, is_pyqt5)
+ from matplotlib.backends.qt_editor.formsubplottool import UiSubplotTool
+ 
+ backend_version = __version__
+@@ -128,9 +128,9 @@ def _create_qApp():
+         if DEBUG:
+             print("Starting up QApplication")
+         app = QtWidgets.QApplication.instance()
+-        if app is None:
++        if is_pyqt5() and app is None:
+             # check for DISPLAY env variable on X11 build of Qt
+-            if is_pyqt5():
++            if is_qt5():
+                 try:
+                     from PyQt5 import QtX11Extras
+                     is_x11_build = True
+@@ -148,7 +148,7 @@ def _create_qApp():
+         else:
+             qApp = app
+ 
+-    if is_pyqt5():
++    if is_qt5():
+         try:
+             qApp.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
+             qApp.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+@@ -158,10 +158,11 @@ def _create_qApp():
+ 
+ class Show(ShowBase):
+     def mainloop(self):
+-        # allow KeyboardInterrupt exceptions to close the plot window.
+-        signal.signal(signal.SIGINT, signal.SIG_DFL)
+-        global qApp
+-        qApp.exec_()
++        if is_pyqt5():
++            # allow KeyboardInterrupt exceptions to close the plot window.
++            signal.signal(signal.SIGINT, signal.SIG_DFL)
++            global qApp
++            qApp.exec_()
+ 
+ 
+ show = Show()
+@@ -219,8 +220,9 @@ class TimerQT(TimerBase):
      def _timer_stop(self):
          self._timer.stop()
  
@@ -34,7 +80,7 @@ index 1fa7f9f03..05a5dee4a 100644
  
      # map Qt button codes to MouseEvent's ones:
      buttond = {QtCore.Qt.LeftButton: 1,
-@@ -440,8 +441,16 @@ class FigureCanvasQT(QtWidgets.QWidget, FigureCanvasBase):
+@@ -440,8 +442,16 @@ class FigureCanvasQT(QtWidgets.QWidget, FigureCanvasBase):
  class MainWindow(QtWidgets.QMainWindow):
      closing = QtCore.Signal()
  
@@ -52,7 +98,7 @@ index 1fa7f9f03..05a5dee4a 100644
          QtWidgets.QMainWindow.closeEvent(self, event)
  
  
-@@ -458,11 +467,12 @@ class FigureManagerQT(FigureManagerBase):
+@@ -458,11 +468,12 @@ class FigureManagerQT(FigureManagerBase):
      def __init__(self, canvas, num):
          if DEBUG:
              print('FigureManagerQT.%s' % fn_name())
@@ -68,7 +114,7 @@ index 1fa7f9f03..05a5dee4a 100644
  
          self.window.setWindowTitle("Figure %d" % num)
          image = os.path.join(matplotlib.rcParams['datapath'],
-@@ -576,7 +586,7 @@ class NavigationToolbar2QT(NavigationToolbar2, QtWidgets.QToolBar):
+@@ -576,7 +587,7 @@ class NavigationToolbar2QT(NavigationToolbar2, QtWidgets.QToolBar):
      def __init__(self, canvas, parent, coordinates=True):
          """ coordinates: should we show the coordinates on the right? """
          self.canvas = canvas
@@ -77,7 +123,27 @@ index 1fa7f9f03..05a5dee4a 100644
          self.coordinates = coordinates
          self._actions = {}
          """A mapping of toolitem method names to their QActions"""
-@@ -641,7 +651,7 @@ class NavigationToolbar2QT(NavigationToolbar2, QtWidgets.QToolBar):
+@@ -585,7 +596,7 @@ class NavigationToolbar2QT(NavigationToolbar2, QtWidgets.QToolBar):
+         NavigationToolbar2.__init__(self, canvas)
+ 
+     def _icon(self, name):
+-        if is_pyqt5():
++        if is_qt5():
+             name = name.replace('.png', '_large.png')
+         pm = QtGui.QPixmap(os.path.join(self.basedir, name))
+         if hasattr(pm, 'setDevicePixelRatio'):
+@@ -632,16 +643,16 @@ class NavigationToolbar2QT(NavigationToolbar2, QtWidgets.QToolBar):
+         # Esthetic adjustments - we need to set these explicitly in PyQt5
+         # otherwise the layout looks different - but we don't want to set it if
+         # not using HiDPI icons otherwise they look worse than before.
+-        if is_pyqt5():
++        if is_qt5():
+             self.setIconSize(QtCore.QSize(24, 24))
+             self.layout().setSpacing(12)
+ 
+-    if is_pyqt5():
++    if is_qt5():
+         # For some reason, self.setMinimumHeight doesn't seem to carry over to
          # the actual sizeHint, so override it instead in order to make the
          # aesthetic adjustments noted above.
          def sizeHint(self):
@@ -86,7 +152,7 @@ index 1fa7f9f03..05a5dee4a 100644
              size.setHeight(max(48, size.height()))
              return size
  
-@@ -714,7 +724,7 @@ class NavigationToolbar2QT(NavigationToolbar2, QtWidgets.QToolBar):
+@@ -714,7 +725,7 @@ class NavigationToolbar2QT(NavigationToolbar2, QtWidgets.QToolBar):
      def configure_subplots(self):
          image = os.path.join(matplotlib.rcParams['datapath'],
                               'images', 'matplotlib.png')
@@ -95,7 +161,7 @@ index 1fa7f9f03..05a5dee4a 100644
          dia.setWindowIcon(QtGui.QIcon(image))
          dia.exec_()
  
-@@ -737,7 +747,7 @@ class NavigationToolbar2QT(NavigationToolbar2, QtWidgets.QToolBar):
+@@ -737,7 +748,7 @@ class NavigationToolbar2QT(NavigationToolbar2, QtWidgets.QToolBar):
              filters.append(filter)
          filters = ';;'.join(filters)
  
@@ -104,7 +170,7 @@ index 1fa7f9f03..05a5dee4a 100644
                                           "Choose a filename to save to",
                                   start, filters, selectedFilter)
          if fname:
-@@ -761,7 +771,7 @@ class SubplotToolQt(SubplotTool, UiSubplotTool):
+@@ -761,7 +772,7 @@ class SubplotToolQt(SubplotTool, UiSubplotTool):
          UiSubplotTool.__init__(self, None)
  
          self.targetfig = targetfig
@@ -114,7 +180,7 @@ index 1fa7f9f03..05a5dee4a 100644
          self.resetbutton.clicked.connect(self.reset)
          self.tightlayout.clicked.connect(self.functight)
 diff --git lib/matplotlib/backends/qt_compat.py lib/matplotlib/backends/qt_compat.py
-index 085908443..4b01794f4 100644
+index 085908443..8feda278e 100644
 --- lib/matplotlib/backends/qt_compat.py
 +++ lib/matplotlib/backends/qt_compat.py
 @@ -14,9 +14,10 @@ QT_API_PYQT = 'PyQt4'       # API is not set here; Python 2.x default is V 1
@@ -174,12 +240,15 @@ index 085908443..4b01794f4 100644
      '''Import all used QtGui objects into QtWidgets
  
      Here I've opted to simple copy QtGui into QtWidgets as that
-@@ -199,4 +227,4 @@ if QT_API in (QT_API_PYQT, QT_API_PYQTv2, QT_API_PYSIDE):
+@@ -198,5 +226,8 @@ if QT_API in (QT_API_PYQT, QT_API_PYQTv2, QT_API_PYSIDE):
+     QtWidgets = QtGui
  
  
- def is_pyqt5():
--    return QT_API == QT_API_PYQT5
++def is_qt5():
 +    return QT_API in [QT_API_PYQT5, QT_API_PYTHONQT]
++
+ def is_pyqt5():
+     return QT_API == QT_API_PYQT5
 diff --git lib/matplotlib/backends/qt_editor/formlayout.py lib/matplotlib/backends/qt_editor/formlayout.py
 index 00a1a03a3..fa1bc5ad3 100644
 --- lib/matplotlib/backends/qt_editor/formlayout.py
