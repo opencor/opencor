@@ -108,7 +108,8 @@ SET(QT_PLUGINS_DIR ${QT_DIR}/plugins)
 
 GET_TARGET_PROPERTY(QMAKE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
 
-SET(QMAKE_COMMAND "${QMAKE} -Wnone")
+SET(QMAKE_COMMAND ${QMAKE} -Wnone)
+SET(QMAKE_COMMAND_AS_STRING "${QMAKE_COMMAND}")
 
 # Determine our platform directory
 
@@ -241,10 +242,13 @@ ELSE()
     ProcessorCount(PROCESSOR_COUNT)
 
     IF(NOT PROCESSOR_COUNT EQUAL 0)
-        SET(MAKE_NMAKE_COMMAND "${MAKE_NMAKE_COMMAND} -j ${PROCESSOR_COUNT}")
-        SET(MAKE_JOM_COMMAND "${MAKE_JOM_COMMAND} -j ${PROCESSOR_COUNT}")
+        SET(MAKE_NMAKE_COMMAND ${MAKE_NMAKE_COMMAND} -j ${PROCESSOR_COUNT})
+        SET(MAKE_JOM_COMMAND ${MAKE_JOM_COMMAND} -j ${PROCESSOR_COUNT})
     ENDIF()
 ENDIF()
+
+SET(MAKE_NMAKE_COMMAND_AS_STRING "${MAKE_NMAKE_COMMAND}")
+SET(MAKE_JOM_COMMAND_AS_STRING "${MAKE_JOM_COMMAND}")
 
 # A couple of variables that make it easier to specify library file names with a
 # version (e.g. to be able to reference libz.so.1 and libz.1.dylib, we could
