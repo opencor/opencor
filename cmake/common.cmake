@@ -243,7 +243,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 )
             ELSE()
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                    ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
+                    ${FULL_EXTERNAL_BINARY}
                 )
             ENDIF()
 
