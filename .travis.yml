@@ -5,12 +5,12 @@ dist: trusty
 group: edge
 
 os:
-  - linux
+#  - linux
   - osx
 
 env:
   - CONFIG=Release
-  - CONFIG=Debug
+#  - CONFIG=Debug
 
 branches:
   only:
@@ -58,6 +58,7 @@ script:
        fi
     && make -j 3
     && cd ..
+    && otool -L build/OpenCOR.app/Contents/MacOS/*
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          build/bin/runtests
          ;
