@@ -705,6 +705,10 @@ MACRO(MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES PROJECT_TARGET DIRNAME FILENAME)
     MACOS_CLEAN_UP_FILE(${PROJECT_TARGET} ${DIRNAME} ${FILENAME})
 
     # Make sure that the file refers to our embedded copy of the Qt libraries
+    # Note: we also check against the 'real' path to the Qt library directory in
+    #       case it is a symbolic link (as is the case on Travis CI)...
+
+    GET_FILENAME_COMPONENT(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR} REALPATH)
 
     FOREACH(MACOS_QT_LIBRARY ${MACOS_QT_LIBRARIES})
         SET(MACOS_QT_LIBRARY_FILENAME ${MACOS_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${MACOS_QT_LIBRARY})
@@ -712,10 +716,16 @@ MACRO(MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES PROJECT_TARGET DIRNAME FILENAME)
         IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
             EXECUTE_PROCESS(COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
                                                               @rpath/${MACOS_QT_LIBRARY_FILENAME}
+                                                              ${FULL_FILENAME}
+                            COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
+                                                              @rpath/${MACOS_QT_LIBRARY_FILENAME}
                                                               ${FULL_FILENAME})
         ELSE()
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                                COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
+                                                                 @rpath/${MACOS_QT_LIBRARY_FILENAME}
+                                                                 ${FULL_FILENAME}
+                               COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
                                                                  @rpath/${MACOS_QT_LIBRARY_FILENAME}
                                                                  ${FULL_FILENAME})
         ENDIF()
