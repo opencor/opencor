@@ -241,6 +241,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${IMPORT_EXTERNAL_BINARY}
                 )
+            ELSEIF(APPLE)
+                TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+                    ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
+                )
             ELSE()
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_EXTERNAL_BINARY}
