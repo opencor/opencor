@@ -5,7 +5,7 @@ dist: trusty
 group: edge
 
 os:
-#  - linux
+  - linux
   - osx
 
 env:
