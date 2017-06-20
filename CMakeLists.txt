@@ -731,7 +731,7 @@ IF(ENABLE_TESTS)
                        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${MAIN_TEST_FILENAME}
                                                         ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
 
-    # Clean up our test program, but only if we are on macOS
+    # Clean up our test program, if we are on macOS
 
     IF(APPLE)
         MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
@@ -968,10 +968,17 @@ IF(APPLE)
     MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
 
     # Deploy our Qt libraries
+    # Note: the Qt Brew formula that we use on Travis CI somehow results in some
+    #       of our tests generating messages about two frameworks being
+    #       available and that one of them will be used, but that we don't know
+    #       which one. So, to avoid those messages, we simply don't deploy the
+    #       Qt frameworks...
 
-    FOREACH(QT_LIBRARY ${MACOS_QT_LIBRARIES})
-        MACOS_DEPLOY_QT_LIBRARY(${QT_LIBRARY})
-    ENDFOREACH()
+    IF(NOT ENABLE_TRAVIS_CI)
+        FOREACH(QT_LIBRARY ${MACOS_QT_LIBRARIES})
+            MACOS_DEPLOY_QT_LIBRARY(${QT_LIBRARY})
+        ENDFOREACH()
+    ENDIF()
 
     # Deploy some plugins
 

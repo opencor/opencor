@@ -251,9 +251,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 )
             ENDIF()
 
-            # On macOS, ensure that @rpath is set in the external library's id
-            # and that it is used to reference the external library's
-            # dependencies
+            # On macOS, ensure that @rpath is set in the external library's id,
+            # that it is used to reference the external library's dependencies,
+            # and that it references the correct Qt libraries, if any at all
 
             IF(APPLE)
                 IF(${COPY_TARGET} STREQUAL "DIRECT")
@@ -275,6 +275,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                                                              ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                     ENDIF()
                 ENDFOREACH()
+
+                MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
             ENDIF()
 
             # Package the external library, if needed
@@ -344,11 +346,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                        COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
                                                         ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
-    # A few macOS specific things
+    # Clean up our plugin, if we are on macOS
 
     IF(APPLE)
-        # Clean up our plugin
-
         MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
     ENDIF()
 
@@ -490,11 +490,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                    COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${TEST_FILENAME}
                                                                     ${DEST_TESTS_DIR}/${TEST_FILENAME})
 
-                # A few macOS specific things
+                # Clean up our plugin's tests, if we are on macOS
 
                 IF(APPLE)
-                    # Clean up our plugin's tests
-
                     MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
                 ENDIF()
             ELSE()
@@ -704,30 +702,27 @@ MACRO(MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES PROJECT_TARGET DIRNAME FILENAME)
 
     MACOS_CLEAN_UP_FILE(${PROJECT_TARGET} ${DIRNAME} ${FILENAME})
 
-    # Make sure that the file refers to our embedded copy of the Qt libraries
-    # Note: we also check against the 'real' path to the Qt library directory in
-    #       case it is a symbolic link (as is the case on Travis CI)...
-
-    GET_FILENAME_COMPONENT(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR} REALPATH)
+    # Make sure that the file refers to our embedded copy of the Qt libraries,
+    # but only if we are not on Travis CI (since we don't embed the Qt libraries
+    # in that case; see the main CMakeLists.txt file)
 
     FOREACH(MACOS_QT_LIBRARY ${MACOS_QT_LIBRARIES})
         SET(MACOS_QT_LIBRARY_FILENAME ${MACOS_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${MACOS_QT_LIBRARY})
 
+        IF(ENABLE_TRAVIS_CI)
+            SET(OLD_REFERENCE @rpath/${MACOS_QT_LIBRARY_FILENAME})
+            SET(NEW_REFERENCE ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME})
+        ELSE()
+            SET(OLD_REFERENCE ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME})
+            SET(NEW_REFERENCE @rpath/${MACOS_QT_LIBRARY_FILENAME})
+        ENDIF()
+
         IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            EXECUTE_PROCESS(COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
-                                                              @rpath/${MACOS_QT_LIBRARY_FILENAME}
-                                                              ${FULL_FILENAME}
-                            COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
-                                                              @rpath/${MACOS_QT_LIBRARY_FILENAME}
-                                                              ${FULL_FILENAME})
+            EXECUTE_PROCESS(
+                            COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${FULL_FILENAME})
         ELSE()
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
-                                                                 @rpath/${MACOS_QT_LIBRARY_FILENAME}
-                                                                 ${FULL_FILENAME}
-                               COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
-                                                                 @rpath/${MACOS_QT_LIBRARY_FILENAME}
-                                                                 ${FULL_FILENAME})
+                               COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${FULL_FILENAME})
         ENDIF()
     ENDFOREACH()
 ENDMACRO()
