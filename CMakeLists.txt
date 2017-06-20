@@ -275,20 +275,18 @@ ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
 
 # Required Qt modules
 
-IF(NOT APPLE AND USE_PREBUILT_QTWEBKIT_PACKAGE)
-    SET(WEBKIT WebKit)
-    SET(WEBKITWIDGETS WebKitWidgets)
-ENDIF()
-
 IF(ENABLE_TESTS)
     SET(TEST Test)
 ENDIF()
 
+IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
+    SET(WEBKIT WebKit)
+    SET(WEBKITWIDGETS WebKitWidgets)
+ENDIF()
+
 SET(REQUIRED_QT_MODULES
-    Gui
     Network
     ${TEST}
-    ${WEBKIT}
     Widgets
 )
 
@@ -1136,12 +1134,6 @@ IF(WIN32)
 
     # Qt libraries required by OpenCOR
 
-    IF(ENABLE_TESTS)
-        SET(TEST Test)
-    ELSE()
-        SET(TEST)
-    ENDIF()
-
     FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
         WINDOWS_DEPLOY_QT_LIBRARY(Qt5${QT_LIBRARY})
     ENDFOREACH()
@@ -1279,12 +1271,6 @@ ELSE()
     #       file is appended to its suffix, so unless making the macro
     #       unnecessarily cumbersome to use, it's better to deploy one Qt
     #       library at a time...
-
-    IF(ENABLE_TESTS)
-        SET(TEST Test)
-    ELSE()
-        SET(TEST)
-    ENDIF()
 
     FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
         IF(   "${QT_LIBRARY}" STREQUAL "WebKit"
