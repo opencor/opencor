@@ -58,10 +58,6 @@ script:
        fi
     && make -j 3
     && cd ..
-    && ls -lR
-    && build/OpenCOR.app/Contents/MacOS/OpenCOR -a
-    && build/OpenCOR.app/Contents/MacOS/OpenCOR -h
-    && build/OpenCOR.app/Contents/MacOS/OpenCOR -v
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          build/bin/runtests
          ;
