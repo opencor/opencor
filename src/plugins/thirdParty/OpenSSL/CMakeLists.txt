@@ -104,11 +104,7 @@ IF(USE_PREBUILT_OPENSSL_PACKAGE)
                                           2d5d2a42e6bf83a14c30390a895ca351f70b6b19)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
-    # We require perl for OpenSSL's configuration tool
+    # We require perl to build OpenSSL
 
     FIND_PACKAGE(Perl REQUIRED QUIET)
 
@@ -123,9 +119,7 @@ ELSE()
             SET(PLATFORM debug-VC-WIN64A)
         ENDIF()
 
-        SET(MAKE_EXECUTABLE nmake)
-        SET(MAKEFILE ms/ntdll.mak)
-        SET(QUIET_MAKE -c)
+        SET(MAKEFILE /f ms/ntdll.mak)
         SET(INSTALL_TARGET install)
     ELSE()
         LIST(APPEND CONFIG_OPTIONS shared)
@@ -138,16 +132,14 @@ ELSE()
             LIST(APPEND CONFIG_OPTIONS "-Wa,--noexecstack")
         ENDIF()
 
-        SET(MAKE_EXECUTABLE make)
-        SET(MAKEFILE Makefile)
-        SET(QUIET_MAKE --quiet)
+        SET(MAKEFILE -f Makefile)
         SET(INSTALL_TARGET install_sw)
     ENDIF()
 
     # Build OpenSSL as an external project
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
-    SET(PACKAGE_BUILD_DIR ${PROJECT_SOURCE_DIR}/ext/proj)
+    SET(PACKAGE_BUILD_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
 
     ExternalProject_Add(${PACKAGE_BUILD}
         DOWNLOAD_DIR
@@ -165,9 +157,9 @@ ELSE()
         CONFIGURE_COMMAND
             ${PERL_EXECUTABLE} ./Configure ${PLATFORM} ${CONFIG_OPTIONS}
         BUILD_COMMAND
-            ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE}
+            ${MAKE_NMAKE_COMMAND} ${MAKEFILE}
         INSTALL_COMMAND
-            ${MAKE_EXECUTABLE} -f ${MAKEFILE} ${QUIET_MAKE} ${INSTALL_TARGET}
+            ${MAKE_NMAKE_COMMAND} ${MAKEFILE} ${INSTALL_TARGET}
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${CRYPTO_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${SSL_IMPORT_LIBRARY}
@@ -202,10 +194,9 @@ ELSE()
                                  DEPENDEES install)
 
         IF(APPLE)
-            # Set the RPATH information to enable linking independent of library
-            # location
+            # Fix the RPATH information
 
-            ExternalProject_Add_Step(${PACKAGE_BUILD} SetRPath
+            ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
                                      COMMAND install_name_tool -id @rpath/${CRYPTO_SHARED_LIBRARY} ${CRYPTO_SHARED_LIBRARY}
                                      COMMAND install_name_tool -id @rpath/${SSL_SHARED_LIBRARY} ${SSL_SHARED_LIBRARY}
                                      COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DIR}/${CRYPTO_SHARED_LIBRARY}
@@ -251,10 +242,6 @@ ADD_PLUGIN(${PACKAGE_NAME}
         src/opensslplugin.cpp
     HEADERS_MOC
         src/opensslplugin.h
-    INCLUDE_DIRS
-        ${LOCAL_EXTERNAL_PACKAGE_DIR}/include
-
-        src
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

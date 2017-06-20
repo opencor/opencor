@@ -1,333 +1,178 @@
 PROJECT(QScintillaPlugin)
 
-# Use our pre-built version unless instructed otherwise
+# Name and version of our package
 
-IF(USE_PREBUILT_QSCINTILLA_PLUGIN)
-    # Retrieve the plugin's binary file(s)
+SET(PACKAGE_NAME QScintilla)
+SET(PACKAGE_VERSION 2.10)
+
+# Version of our library
+
+SET(MAJOR_LIBRARY_VERSION 13)
+SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.0)
+
+# Git tag for our library
+
+SET(GIT_TAG v2.10)
+
+# Specify where our local package will be installed
+
+SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+
+# Name of our package's shared library (and of its import library, if any)
+
+IF(WIN32)
+    SET(SHARED_LIBRARY qscintilla2_qt${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(IMPORT_LIBRARY qscintilla2_qt${QT_VERSION_MAJOR}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+ELSE()
+    SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}qscintilla2_qt${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    SET(IMPORT_LIBRARY ${SHARED_LIBRARY})
+ENDIF()
+
+# Retrieve our package's binaries
+
+SET(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
+
+SET(EXTERNAL_BINARIES
+    ${SHARED_LIBRARY}
+)
+
+# Specify the files that need to have their SHA-1 value checked
+
+SET(SHA1_FILES
+    lib/${SHARED_LIBRARY}
+)
+
+IF(WIN32)
+    LIST(APPEND SHA1_FILES
+        lib/${IMPORT_LIBRARY}
+    )
+ENDIF()
+
+# Use the pre-built version of our package unless instructed otherwise
+
+IF(USE_PREBUILT_QSCINTILLA_PACKAGE)
+    # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_BINARIES_DIR}")
+           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} QScintilla.dll 2296e6f75019977788cdf2805dbe49b49bcb0754)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} QScintilla.lib b141dbee74f079c2706069ef955c885c33d2216e)
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} c477dd37fc48758e3167dd8ef8bf3a115eadd209
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 3132645d881f8d0d817a7c0b71c37c4547127eaa
+                                              9a7b12aa9396d691cb48d2950cc885ee9ecaec9e)
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} QScintilla.dll c96521980751241ab64b13feb227c1f622420276)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} QScintilla.lib 3a7b3e74cd64d59cda6f7b7ccf3540845b0dc77c)
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 9f2209693844476e8a9c5e5e8aa18b3bb15e0f0f
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 19cef97667b015d4879ca39874ea82475f1e6c80
+                                              839ac772f46f035275c0a8daf0272109425c7e32)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQScintilla.dylib 7123a26d129c9ffc693ba479608e6ffbff7e0a4b)
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} e99f67ef2ecb5f277c5221fa9091cb51d9d564ee
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 24e72695f8d0112e0366edb1f42f612736d18eef)
     ELSE()
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQScintilla.so 08a74e4ee080edd7c84ce2e1e599d964630a1f8a)
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 702b751943f13bd2c473bf10ee9baae2fe733def
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 4406b0343534f0bc53a57f4f0f843f8c5c1bab46)
     ENDIF()
-
-    # Add the plugin as a binary
-    # Note: in the case of Windows, we must refer to the distribution directory
-    #       as opposed to the plugins directory since we need the .lib file and
-    #       it's only there...
-
-    IF(WIN32)
-        SET(QSCINTILLA_PLUGIN_BINARY ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR}/${CMAKE_IMPORT_LIBRARY_PREFIX}QScintilla${CMAKE_IMPORT_LIBRARY_SUFFIX} PARENT_SCOPE)
-    ELSE()
-        SET(QSCINTILLA_PLUGIN_BINARY ${DEST_PLUGINS_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}QScintilla${CMAKE_SHARED_LIBRARY_SUFFIX} PARENT_SCOPE)
-    ENDIF()
-
-    ADD_PLUGIN_BINARY(QScintilla
-        INCLUDE_DIRS
-            include
-            lexlib
-            Qt4Qt5
-            src
-    )
 ELSE()
-    # Ignore some warnings on Windows
+    # Set platform specific configuration options
 
     IF(WIN32)
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4996")
-    ENDIF()
-
-    # Add the plugin
-
-    IF(APPLE)
-        SET(MAC_EXTRAS MacExtras)
+        IF(RELEASE_MODE)
+            SET(MAKEFILE /f Makefile.Release)
+        ELSE()
+            SET(MAKEFILE /f Makefile.Debug)
+        ENDIF()
     ELSE()
-        SET(MAC_EXTRAS)
+        SET(MAKEFILE -f Makefile)
     ENDIF()
 
-    SET(QSCINTILLA_PLUGIN QScintilla PARENT_SCOPE)
+    # Build QScintilla as an external project
 
-    ADD_PLUGIN(QScintilla
-        THIRD_PARTY
-        SOURCES
-            ../../plugininfo.cpp
+    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
-            lexers/LexA68k.cpp
-            lexers/LexAbaqus.cpp
-            lexers/LexAda.cpp
-            lexers/LexAPDL.cpp
-            lexers/LexAsm.cpp
-            lexers/LexAsn1.cpp
-            lexers/LexASY.cpp
-            lexers/LexAU3.cpp
-            lexers/LexAVE.cpp
-            lexers/LexAVS.cpp
-            lexers/LexBaan.cpp
-            lexers/LexBash.cpp
-            lexers/LexBasic.cpp
-            lexers/LexBatch.cpp
-            lexers/LexBibTeX.cpp
-            lexers/LexBullant.cpp
-            lexers/LexCaml.cpp
-            lexers/LexCLW.cpp
-            lexers/LexCmake.cpp
-            lexers/LexCOBOL.cpp
-            lexers/LexCoffeeScript.cpp
-            lexers/LexConf.cpp
-            lexers/LexCPP.cpp
-            lexers/LexCrontab.cpp
-            lexers/LexCsound.cpp
-            lexers/LexCSS.cpp
-            lexers/LexD.cpp
-            lexers/LexDiff.cpp
-            lexers/LexDMAP.cpp
-            lexers/LexDMIS.cpp
-            lexers/LexECL.cpp
-            lexers/LexEDIFACT.cpp
-            lexers/LexEiffel.cpp
-            lexers/LexErlang.cpp
-            lexers/LexErrorList.cpp
-            lexers/LexEScript.cpp
-            lexers/LexFlagship.cpp
-            lexers/LexForth.cpp
-            lexers/LexFortran.cpp
-            lexers/LexGAP.cpp
-            lexers/LexGui4Cli.cpp
-            lexers/LexHaskell.cpp
-            lexers/LexHex.cpp
-            lexers/LexHTML.cpp
-            lexers/LexInno.cpp
-            lexers/LexJSON.cpp
-            lexers/LexKix.cpp
-            lexers/LexKVIrc.cpp
-            lexers/LexLaTeX.cpp
-            lexers/LexLisp.cpp
-            lexers/LexLout.cpp
-            lexers/LexLua.cpp
-            lexers/LexMagik.cpp
-            lexers/LexMake.cpp
-            lexers/LexMarkdown.cpp
-            lexers/LexMatlab.cpp
-            lexers/LexMetapost.cpp
-            lexers/LexMMIXAL.cpp
-            lexers/LexModula.cpp
-            lexers/LexMPT.cpp
-            lexers/LexMSSQL.cpp
-            lexers/LexMySQL.cpp
-            lexers/LexNimrod.cpp
-            lexers/LexNsis.cpp
-            lexers/LexNull.cpp
-            lexers/LexOpal.cpp
-            lexers/LexOScript.cpp
-            lexers/LexPascal.cpp
-            lexers/LexPB.cpp
-            lexers/LexPerl.cpp
-            lexers/LexPLM.cpp
-            lexers/LexPO.cpp
-            lexers/LexPOV.cpp
-            lexers/LexPowerPro.cpp
-            lexers/LexPowerShell.cpp
-            lexers/LexProgress.cpp
-            lexers/LexProps.cpp
-            lexers/LexPS.cpp
-            lexers/LexPython.cpp
-            lexers/LexR.cpp
-            lexers/LexRebol.cpp
-            lexers/LexRegistry.cpp
-            lexers/LexRuby.cpp
-            lexers/LexRust.cpp
-            lexers/LexScriptol.cpp
-            lexers/LexSmalltalk.cpp
-            lexers/LexSML.cpp
-            lexers/LexSorcus.cpp
-            lexers/LexSpecman.cpp
-            lexers/LexSpice.cpp
-            lexers/LexSQL.cpp
-            lexers/LexSTTXT.cpp
-            lexers/LexTACL.cpp
-            lexers/LexTADS3.cpp
-            lexers/LexTAL.cpp
-            lexers/LexTCL.cpp
-            lexers/LexTCMD.cpp
-            lexers/LexTeX.cpp
-            lexers/LexTxt2tags.cpp
-            lexers/LexVB.cpp
-            lexers/LexVerilog.cpp
-            lexers/LexVHDL.cpp
-            lexers/LexVisualProlog.cpp
-            lexers/LexYAML.cpp
-
-            lexlib/Accessor.cpp
-            lexlib/CharacterCategory.cpp
-            lexlib/CharacterSet.cpp
-            lexlib/LexerBase.cpp
-            lexlib/LexerModule.cpp
-            lexlib/LexerNoExceptions.cpp
-            lexlib/LexerSimple.cpp
-            lexlib/PropSetSimple.cpp
-            lexlib/StyleContext.cpp
-            lexlib/WordList.cpp
-
-            Qt4Qt5/InputMethod.cpp
-            Qt4Qt5/ListBoxQt.cpp
-            Qt4Qt5/MacPasteboardMime.cpp
-            Qt4Qt5/PlatQt.cpp
-            Qt4Qt5/qsciabstractapis.cpp
-            Qt4Qt5/qsciapis.cpp
-            Qt4Qt5/qscicommand.cpp
-            Qt4Qt5/qscicommandset.cpp
-            Qt4Qt5/qscidocument.cpp
-            Qt4Qt5/qscilexer.cpp
-            Qt4Qt5/qscilexeravs.cpp
-            Qt4Qt5/qscilexerbash.cpp
-            Qt4Qt5/qscilexerbatch.cpp
-            Qt4Qt5/qscilexercmake.cpp
-            Qt4Qt5/qscilexercoffeescript.cpp
-            Qt4Qt5/qscilexercpp.cpp
-            Qt4Qt5/qscilexercsharp.cpp
-            Qt4Qt5/qscilexercss.cpp
-            Qt4Qt5/qscilexercustom.cpp
-            Qt4Qt5/qscilexerd.cpp
-            Qt4Qt5/qscilexerdiff.cpp
-            Qt4Qt5/qscilexerfortran.cpp
-            Qt4Qt5/qscilexerfortran77.cpp
-            Qt4Qt5/qscilexerhtml.cpp
-            Qt4Qt5/qscilexeridl.cpp
-            Qt4Qt5/qscilexerjava.cpp
-            Qt4Qt5/qscilexerjavascript.cpp
-            Qt4Qt5/qscilexerjson.cpp
-            Qt4Qt5/qscilexerlua.cpp
-            Qt4Qt5/qscilexermakefile.cpp
-            Qt4Qt5/qscilexermarkdown.cpp
-            Qt4Qt5/qscilexermatlab.cpp
-            Qt4Qt5/qscilexeroctave.cpp
-            Qt4Qt5/qscilexerpascal.cpp
-            Qt4Qt5/qscilexerperl.cpp
-            Qt4Qt5/qscilexerpo.cpp
-            Qt4Qt5/qscilexerpostscript.cpp
-            Qt4Qt5/qscilexerpov.cpp
-            Qt4Qt5/qscilexerproperties.cpp
-            Qt4Qt5/qscilexerpython.cpp
-            Qt4Qt5/qscilexerruby.cpp
-            Qt4Qt5/qscilexerspice.cpp
-            Qt4Qt5/qscilexersql.cpp
-            Qt4Qt5/qscilexertcl.cpp
-            Qt4Qt5/qscilexertex.cpp
-            Qt4Qt5/qscilexerverilog.cpp
-            Qt4Qt5/qscilexervhdl.cpp
-            Qt4Qt5/qscilexerxml.cpp
-            Qt4Qt5/qscilexeryaml.cpp
-            Qt4Qt5/qscimacro.cpp
-            Qt4Qt5/qsciprinter.cpp
-            Qt4Qt5/qsciscintilla.cpp
-            Qt4Qt5/qsciscintillabase.cpp
-            Qt4Qt5/qscistyle.cpp
-            Qt4Qt5/qscistyledtext.cpp
-            Qt4Qt5/SciClasses.cpp
-            Qt4Qt5/ScintillaQt.cpp
-
-            src/AutoComplete.cpp
-            src/CallTip.cpp
-            src/CaseConvert.cpp
-            src/CaseFolder.cpp
-            src/Catalogue.cpp
-            src/CellBuffer.cpp
-            src/CharClassify.cpp
-            src/ContractionState.cpp
-            src/Decoration.cpp
-            src/Document.cpp
-            src/EditModel.cpp
-            src/Editor.cpp
-            src/EditView.cpp
-            src/ExternalLexer.cpp
-            src/Indicator.cpp
-            src/KeyMap.cpp
-            src/LineMarker.cpp
-            src/MarginView.cpp
-            src/PerLine.cpp
-            src/PositionCache.cpp
-            src/qscintillaplugin.cpp
-            src/RESearch.cpp
-            src/RunStyles.cpp
-            src/ScintillaBase.cpp
-            src/Selection.cpp
-            src/Style.cpp
-            src/UniConversion.cpp
-            src/ViewStyle.cpp
-            src/XPM.cpp
-        HEADERS_MOC
-            Qt4Qt5/SciClasses.h
-            Qt4Qt5/ScintillaQt.h
-
-            Qt4Qt5/Qsci/qsciabstractapis.h
-            Qt4Qt5/Qsci/qsciapis.h
-            Qt4Qt5/Qsci/qscilexer.h
-            Qt4Qt5/Qsci/qscilexeravs.h
-            Qt4Qt5/Qsci/qscilexerbash.h
-            Qt4Qt5/Qsci/qscilexerbatch.h
-            Qt4Qt5/Qsci/qscilexercmake.h
-            Qt4Qt5/Qsci/qscilexercoffeescript.h
-            Qt4Qt5/Qsci/qscilexercpp.h
-            Qt4Qt5/Qsci/qscilexercsharp.h
-            Qt4Qt5/Qsci/qscilexercss.h
-            Qt4Qt5/Qsci/qscilexercustom.h
-            Qt4Qt5/Qsci/qscilexerd.h
-            Qt4Qt5/Qsci/qscilexerdiff.h
-            Qt4Qt5/Qsci/qscilexerfortran.h
-            Qt4Qt5/Qsci/qscilexerfortran77.h
-            Qt4Qt5/Qsci/qscilexerhtml.h
-            Qt4Qt5/Qsci/qscilexeridl.h
-            Qt4Qt5/Qsci/qscilexerjava.h
-            Qt4Qt5/Qsci/qscilexerjavascript.h
-            Qt4Qt5/Qsci/qscilexerjson.h
-            Qt4Qt5/Qsci/qscilexerlua.h
-            Qt4Qt5/Qsci/qscilexermakefile.h
-            Qt4Qt5/Qsci/qscilexermarkdown.h
-            Qt4Qt5/Qsci/qscilexermatlab.h
-            Qt4Qt5/Qsci/qscilexeroctave.h
-            Qt4Qt5/Qsci/qscilexerpascal.h
-            Qt4Qt5/Qsci/qscilexerperl.h
-            Qt4Qt5/Qsci/qscilexerpo.h
-            Qt4Qt5/Qsci/qscilexerpostscript.h
-            Qt4Qt5/Qsci/qscilexerpov.h
-            Qt4Qt5/Qsci/qscilexerproperties.h
-            Qt4Qt5/Qsci/qscilexerpython.h
-            Qt4Qt5/Qsci/qscilexerruby.h
-            Qt4Qt5/Qsci/qscilexerspice.h
-            Qt4Qt5/Qsci/qscilexersql.h
-            Qt4Qt5/Qsci/qscilexertcl.h
-            Qt4Qt5/Qsci/qscilexertex.h
-            Qt4Qt5/Qsci/qscilexerverilog.h
-            Qt4Qt5/Qsci/qscilexervhdl.h
-            Qt4Qt5/Qsci/qscilexerxml.h
-            Qt4Qt5/Qsci/qscilexeryaml.h
-            Qt4Qt5/Qsci/qscimacro.h
-            Qt4Qt5/Qsci/qsciscintilla.h
-            Qt4Qt5/Qsci/qsciscintillabase.h
-
-            src/qscintillaplugin.h
-        INCLUDE_DIRS
-            include
-            lexlib
-            Qt4Qt5
-            src
-        DEFINITIONS
-            QSCINTILLA_MAKE_DLL
-            SCINTILLA_QT
-            SCI_LEXER
-        QT_MODULES
-            ${MAC_EXTRAS}
-            PrintSupport
-            Widgets
+    ExternalProject_Add(${PACKAGE_BUILD}
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
+        INSTALL_DIR
+            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+        GIT_REPOSITORY
+            https://github.com/opencor/qscintilla
+        GIT_TAG
+            ${GIT_TAG}
+        CONFIGURE_COMMAND
+            ${QMAKE_COMMAND} <SOURCE_DIR>/Qt4Qt5 OBJECTS_DIR=${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD} INSTALL_DIR=<INSTALL_DIR>
+        BUILD_COMMAND
+            ${MAKE_JOM_COMMAND} ${MAKEFILE}
+        INSTALL_COMMAND
+            ${MAKE_JOM_COMMAND} ${MAKEFILE} install
+        BUILD_BYPRODUCTS
+            <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
+
+    # Do some post-processing that is specific to each platform
+
+    IF(NOT WIN32)
+        # Dereference the symbolic link to the library since CMake's tar can't
+        # do this
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}qscintilla2_qt${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
+                                 DEPENDEES install)
+
+        IF(APPLE)
+            # Fix the RPATH information
+
+            ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
+                                     COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${SHARED_LIBRARY}
+                                     COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${SHARED_LIBRARY}
+                                     WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
+                                     DEPENDEES CopyLibrary)
+        ENDIF()
+    ENDIF()
+
+    # Package our external project
+
+    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        PACKAGED_FILES include ${SHA1_FILES}
+                        SHA1_FILES ${SHA1_FILES}
+                        TARGET ${PACKAGE_BUILD})
+
+    SET(DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
+
+# Allow other external projects to find our QScintilla package
+
+SET(QSCINTILLA_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+SET(QSCINTILLA_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+SET(QSCINTILLA_LIBRARY ${EXTERNAL_BINARIES_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
+
+# Add the plugin
+
+ADD_PLUGIN(${PACKAGE_NAME}
+    SOURCES
+        ../../plugininfo.cpp
+
+        src/qscintillaplugin.cpp
+    HEADERS_MOC
+        src/qscintillaplugin.h
+    QT_MODULES
+        Core
+    EXTERNAL_BINARIES_DIR
+        ${EXTERNAL_BINARIES_DIR}
+    EXTERNAL_BINARIES
+        ${EXTERNAL_BINARIES}
+    DEPENDS_ON
+        ${DEPENDS_ON}
+)

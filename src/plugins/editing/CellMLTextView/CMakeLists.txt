@@ -23,8 +23,6 @@ ADD_PLUGIN(CellMLTextView
     HEADERS_MOC
         src/cellmltextviewplugin.h
         src/cellmltextviewwidget.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         CellMLEditingView
     TESTS

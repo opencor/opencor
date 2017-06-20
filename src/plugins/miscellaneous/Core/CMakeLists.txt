@@ -70,8 +70,6 @@ ADD_PLUGIN(Core
         src/widget.h
         src/windowwidget.h
         src/xsltransformer.h
-    INCLUDE_DIRS
-        src
     QT_MODULES
         Network
         Widgets

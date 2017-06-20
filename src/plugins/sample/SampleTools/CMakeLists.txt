@@ -13,8 +13,6 @@ ADD_PLUGIN(SampleTools
         src/sampletoolsplugin.cpp
     HEADERS_MOC
         src/sampletoolsplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
         Sample

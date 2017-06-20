@@ -34,8 +34,6 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewmetadataviewdetailswidget.h
         src/cellmlannotationviewplugin.h
         src/cellmlannotationviewwidget.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         CellMLSupport
         WebViewerWidget

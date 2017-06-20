@@ -10,8 +10,6 @@ ADD_PLUGIN(ZIPSupport
         src/zipsupportplugin.cpp
     HEADERS_MOC
         src/zipsupportplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
         zlib

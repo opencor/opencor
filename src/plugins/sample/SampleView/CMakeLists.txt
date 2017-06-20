@@ -17,8 +17,6 @@ ADD_PLUGIN(SampleView
         src/sampleviewwidget.h
     UIS
         src/sampleviewwidget.ui
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
 )

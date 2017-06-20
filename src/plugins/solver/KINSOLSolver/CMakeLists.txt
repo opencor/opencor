@@ -13,12 +13,8 @@ ADD_PLUGIN(KINSOLSolver
         ../../solverinterface.h
 
         src/kinsolsolverplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
-        ${SUNDIALS_PLUGIN}
-    PLUGIN_BINARIES
-        ${SUNDIALS_PLUGIN_BINARY}
+        SUNDIALS
     QT_MODULES
         Core
 )

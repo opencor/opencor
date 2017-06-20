@@ -14,8 +14,6 @@ ADD_PLUGIN(HeunSolver
         ../../solverinterface.h
 
         src/heunsolverplugin.h
-    INCLUDE_DIRS
-        src
     QT_MODULES
         Widgets
 )

@@ -48,9 +48,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     SET(PLUGIN_NAME ${PLUGIN_NAME})
 
-    SET(OPTIONS
-        THIRD_PARTY
-    )
+    SET(OPTIONS)
     SET(ONE_VALUE_KEYWORDS
         EXTERNAL_BINARIES_DIR
         EXTERNAL_DEST_DIR
@@ -60,7 +58,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         SOURCES
         HEADERS_MOC
         UIS
-        INCLUDE_DIRS
         DEFINITIONS
         PLUGINS
         PLUGIN_BINARIES
@@ -73,43 +70,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     )
 
     CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
-
-    # Check whether this is a third-party plugin
-
-    IF(ARG_THIRD_PARTY)
-        # Disable all C/C++ warnings since building a third-party plugin may
-        # generate some and this has nothing to do with us
-        # Note: on Windows, we can't simply add /w since it will otherwise
-        #       result in MSVC complaining about /W3 having been overridden by
-        #       /w...
-
-        IF(WIN32)
-            STRING(REPLACE "/W3" "/w"
-                   CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-            STRING(REPLACE "/W3" "/w"
-                   CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-        ELSE()
-            SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w")
-            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
-        ENDIF()
-
-        # Add a definition in case of compilation from within Qt Creator using
-        # MSVC and JOM since the latter overrides some of our settings
-
-        IF(WIN32)
-            ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
-        ENDIF()
-
-        # Prevent all debug outputs
-
-        ADD_DEFINITIONS(-DQT_NO_DEBUG_OUTPUT)
-    ENDIF()
-
-    # Various include directories
-
-    SET(PLUGIN_INCLUDE_DIRS ${ARG_INCLUDE_DIRS} PARENT_SCOPE)
-
-    INCLUDE_DIRECTORIES(${ARG_INCLUDE_DIRS})
 
     # Resource files, if any
     # Note: ideally, we would have our resource files named i18n.qrc.in and
@@ -281,15 +241,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${IMPORT_EXTERNAL_BINARY}
                 )
-            ELSE()
+            ELSEIF(APPLE)
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                 )
+            ELSE()
+                TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+                    ${FULL_EXTERNAL_BINARY}
+                )
             ENDIF()
 
-            # On macOS, ensure that @rpath is set in the external library's id
-            # and that it is used to reference the external library's
-            # dependencies
+            # On macOS, ensure that @rpath is set in the external library's id,
+            # that it is used to reference the external library's dependencies,
+            # and that it references the correct Qt libraries, if any at all
 
             IF(APPLE)
                 IF(${COPY_TARGET} STREQUAL "DIRECT")
@@ -311,6 +275,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                                                              ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                     ENDIF()
                 ENDFOREACH()
+
+                MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
             ENDIF()
 
             # Package the external library, if needed
@@ -350,6 +316,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ADD_DEPENDENCIES(${PROJECT_NAME} ${ARG_DEPENDS_ON})
     ENDIF()
 
+    FOREACH(ARG_PLUGIN ${ARG_PLUGINS})
+        ADD_DEPENDENCIES(${PROJECT_NAME} ${ARG_PLUGIN}Plugin)
+    ENDFOREACH()
+
     # Some settings
 
     IF(XCODE)
@@ -376,11 +346,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                        COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
                                                         ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
-    # A few macOS specific things
+    # Clean up our plugin, if we are on macOS
 
     IF(APPLE)
-        # Clean up our plugin
-
         MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
     ENDIF()
 
@@ -497,6 +465,16 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     )
                 ENDFOREACH()
 
+                # Add the dependency, if any
+
+                IF(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
+                    ADD_DEPENDENCIES(${TEST_NAME} ${ARG_DEPENDS_ON})
+                ENDIF()
+
+                FOREACH(ARG_PLUGIN ${ARG_PLUGINS})
+                    ADD_DEPENDENCIES(${TEST_NAME} ${ARG_PLUGIN}Plugin)
+                ENDFOREACH()
+
                 # Copy the test to our tests directory
                 # Note: DEST_TESTS_DIR is defined in our main CMake file...
 
@@ -512,11 +490,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                    COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${TEST_FILENAME}
                                                                     ${DEST_TESTS_DIR}/${TEST_FILENAME})
 
-                # A few macOS specific things
+                # Clean up our plugin's tests, if we are on macOS
 
                 IF(APPLE)
-                    # Clean up our plugin's tests
-
                     MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
                 ENDIF()
             ELSE()
@@ -524,83 +500,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ENDIF()
         ENDFOREACH()
     ENDIF()
-ENDMACRO()
-
-#===============================================================================
-
-MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
-    # Various initialisations
-
-    SET(PLUGIN_NAME ${PLUGIN_NAME})
-
-    SET(OPTIONS)
-    SET(ONE_VALUE_KEYWORDS)
-    SET(MULTI_VALUE_KEYWORDS
-        INCLUDE_DIRS
-    )
-
-    CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
-
-    # Various include directories
-
-    SET(PLUGIN_INCLUDE_DIRS ${ARG_INCLUDE_DIRS} PARENT_SCOPE)
-
-    INCLUDE_DIRECTORIES(${ARG_INCLUDE_DIRS})
-
-    # Some settings
-
-    SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR})
-    SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-
-    # Copy the plugin to our plugins directory
-    # Note: this is done so that we can, on Windows and Linux, test the use of
-    #       plugins in OpenCOR without first having to package and deploy
-    #       everything...
-
-    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                                                     ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-
-    # On macOS, ensure that @rpath is set in the plugin binary's id
-
-    IF(APPLE)
-        EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${PLUGIN_FILENAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-    ENDIF()
-
-    # Package the plugin, but only if we are not on macOS since it will have
-    # already been copied
-
-    IF(NOT APPLE)
-        INSTALL(FILES ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                DESTINATION plugins/${CMAKE_PROJECT_NAME})
-    ENDIF()
-
-    # On macOS, and in case we are on Travis CI, make sure that the plugin
-    # binary refers to the system version of the Qt libraries since we don't
-    # embed the Qt libraries in that case (see the main CMakeLists.txt file)
-
-    IF(APPLE AND ENABLE_TRAVIS_CI)
-        FOREACH(MACOS_QT_LIBRARY ${MACOS_QT_LIBRARIES})
-            SET(MACOS_QT_LIBRARY_FILENAME ${MACOS_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${MACOS_QT_LIBRARY})
-
-            EXECUTE_PROCESS(COMMAND install_name_tool -change @rpath/${MACOS_QT_LIBRARY_FILENAME}
-                                                              ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
-                                                              ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-        ENDFOREACH()
-    ENDIF()
-ENDMACRO()
-
-#===============================================================================
-
-MACRO(RETRIEVE_CONFIG_FILES)
-    FOREACH(CONFIG_FILE ${ARGN})
-        STRING(REPLACE "PLATFORM_DIR/" "${PLATFORM_DIR}/"
-               CONFIG_FILE_ORIG "${CONFIG_FILE}")
-        STRING(REPLACE "PLATFORM_DIR/" ""
-               CONFIG_FILE_DEST "${CONFIG_FILE}")
-
-        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
-                                                         ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST})
-    ENDFOREACH()
 ENDMACRO()
 
 #===============================================================================
@@ -643,10 +542,10 @@ MACRO(WINDOWS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
 
     IF(   "${LIBRARY_NAME}" STREQUAL "Qt5WebKit"
        OR "${LIBRARY_NAME}" STREQUAL "Qt5WebKitWidgets"
-       OR "${LIBRARY_NAME}" STREQUAL "icudt57"
-       OR "${LIBRARY_NAME}" STREQUAL "icuin57"
-       OR "${LIBRARY_NAME}" STREQUAL "icuuc57")
-        SET(REAL_QT_BINARY_DIR ${QT_WEBKIT_BINARIES_DIR})
+       OR "${LIBRARY_NAME}" STREQUAL "icudt${ICU_VERSION}"
+       OR "${LIBRARY_NAME}" STREQUAL "icuin${ICU_VERSION}"
+       OR "${LIBRARY_NAME}" STREQUAL "icuuc${ICU_VERSION}")
+        SET(REAL_QT_BINARY_DIR ${QTWEBKIT_BINARIES_DIR})
     ELSE()
         SET(REAL_QT_BINARY_DIR ${QT_BINARY_DIR})
     ENDIF()
@@ -807,41 +706,25 @@ MACRO(MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES PROJECT_TARGET DIRNAME FILENAME)
     # but only if we are not on Travis CI (since we don't embed the Qt libraries
     # in that case; see the main CMakeLists.txt file)
 
-    IF(NOT ENABLE_TRAVIS_CI)
-        FOREACH(MACOS_QT_LIBRARY ${MACOS_QT_LIBRARIES})
-            SET(MACOS_QT_LIBRARY_FILENAME ${MACOS_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${MACOS_QT_LIBRARY})
+    FOREACH(MACOS_QT_LIBRARY ${MACOS_QT_LIBRARIES})
+        SET(MACOS_QT_LIBRARY_FILENAME ${MACOS_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${MACOS_QT_LIBRARY})
 
-            IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
-                EXECUTE_PROCESS(COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
-                                                                  @rpath/${MACOS_QT_LIBRARY_FILENAME}
-                                                                  ${FULL_FILENAME})
-            ELSE()
-                ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                                   COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME}
-                                                                     @rpath/${MACOS_QT_LIBRARY_FILENAME}
-                                                                     ${FULL_FILENAME})
-            ENDIF()
-        ENDFOREACH()
-    ENDIF()
-ENDMACRO()
+        IF(ENABLE_TRAVIS_CI)
+            SET(OLD_REFERENCE @rpath/${MACOS_QT_LIBRARY_FILENAME})
+            SET(NEW_REFERENCE ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME})
+        ELSE()
+            SET(OLD_REFERENCE ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME})
+            SET(NEW_REFERENCE @rpath/${MACOS_QT_LIBRARY_FILENAME})
+        ENDIF()
 
-#===============================================================================
-
-MACRO(MACOS_DEPLOY_LIBRARY DIRNAME FILENAME)
-    # Copy the library
-
-    SET(DEST_DIRNAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
-
-    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${FILENAME}
-                                                     ${DEST_DIRNAME}/${FILENAME})
-
-    # Make sure the library is writable (so we can actually clean it up)
-
-    EXECUTE_PROCESS(COMMAND chmod 755 ${DEST_DIRNAME}/${FILENAME})
-
-    # Clean up the library
-
-    MACOS_CLEAN_UP_FILE(DIRECT ${DEST_DIRNAME} ${FILENAME})
+        IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
+            EXECUTE_PROCESS(
+                            COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${FULL_FILENAME})
+        ELSE()
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${FULL_FILENAME})
+        ENDIF()
+    ENDFOREACH()
 ENDMACRO()
 
 #===============================================================================
@@ -866,7 +749,7 @@ MACRO(MACOS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
 
     IF(   "${LIBRARY_NAME}" STREQUAL "QtWebKit"
        OR "${LIBRARY_NAME}" STREQUAL "QtWebKitWidgets")
-        SET(REAL_QT_LIBRARY_DIR ${QT_WEBKIT_LIBRARIES_DIR})
+        SET(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
     ELSE()
         SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
     ENDIF()
@@ -897,6 +780,7 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
     SET(ONE_VALUE_KEYWORDS
         PACKAGE_REPOSITORY
         RELEASE_TAG
+        TARGET_PLATFORM
         TARGET
     )
     SET(MULTI_VALUE_KEYWORDS
@@ -921,7 +805,13 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
 
     # Remove any historical package archive
 
-    SET(COMPRESSED_FILENAME ${PROJECT_BUILD_DIR}/${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
+    IF(NOT "${ARG_TARGET_PLATFORM}" STREQUAL "")
+        SET(REAL_TARGET_PLATFORM ${ARG_TARGET_PLATFORM})
+    ELSE()
+        SET(REAL_TARGET_PLATFORM ${TARGET_PLATFORM})
+    ENDIF()
+
+    SET(COMPRESSED_FILENAME ${PROJECT_BUILD_DIR}/${PACKAGE_NAME}.${PACKAGE_VERSION}.${REAL_TARGET_PLATFORM}.tar.gz)
 
     FILE(REMOVE ${COMPRESSED_FILENAME})
 
@@ -950,7 +840,8 @@ SET(SHA1_FILES")
 
     SET(CMAKE_CODE "${CMAKE_CODE}\n)
 
-# Calculate the SHA-1 value of our different files
+# Calculate the SHA-1 value of our different files, after having stripped them,
+# if needed
 
 SET(SHA1_VALUES)
 
@@ -959,6 +850,10 @@ FOREACH(SHA1_FILE IN LISTS SHA1_FILES)
 
     IF(NOT EXISTS \$\{REAL_SHA1_FILENAME\})
         MESSAGE(FATAL_ERROR \"'\$\{REAL_SHA1_FILENAME\}' is missing from the '${PACKAGE_NAME}' package...\")
+    ENDIF()
+
+    IF(NOT WIN32 AND RELEASE_MODE)
+        EXECUTE_PROCESS(COMMAND strip -x \$\{REAL_SHA1_FILENAME\})
     ENDIF()
 
     FILE(SHA1 \$\{REAL_SHA1_FILENAME\} SHA1_VALUE)
@@ -992,6 +887,10 @@ RETRIEVE_PACKAGE_FILE(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
 
     IF(NOT "${ARG_RELEASE_TAG}" STREQUAL "")
         SET(CMAKE_CODE "${CMAKE_CODE}\n                      RELEASE_TAG \\$\\{RELEASE_TAG\\}")
+    ENDIF()
+
+    IF(NOT "${ARG_TARGET_PLATFORM}" STREQUAL "")
+        SET(CMAKE_CODE "${CMAKE_CODE}\n                      TARGET_PLATFORM \\$\\{TARGET_PLATFORM\\}")
     ENDIF()
 
     SET(CMAKE_CODE "${CMAKE_CODE}\n                      SHA1_FILES \\$\\{SHA1_FILES\\}
@@ -1082,6 +981,7 @@ MACRO(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
     SET(ONE_VALUE_KEYWORDS
         PACKAGE_REPOSITORY
         RELEASE_TAG
+        TARGET_PLATFORM
     )
     SET(MULTI_VALUE_KEYWORDS
         SHA1_FILES
@@ -1119,7 +1019,13 @@ MACRO(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
 
         MESSAGE("Retrieving the '${PACKAGE_NAME}' package...")
 
-        SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.${TARGET_PLATFORM}.tar.gz)
+        IF(NOT "${ARG_TARGET_PLATFORM}" STREQUAL "")
+            SET(REAL_TARGET_PLATFORM ${ARG_TARGET_PLATFORM})
+        ELSE()
+            SET(REAL_TARGET_PLATFORM ${TARGET_PLATFORM})
+        ENDIF()
+
+        SET(COMPRESSED_FILENAME ${PACKAGE_NAME}.${PACKAGE_VERSION}.${REAL_TARGET_PLATFORM}.tar.gz)
         SET(FULL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
 
         IF("${ARG_PACKAGE_REPOSITORY}" STREQUAL "")
@@ -1177,86 +1083,4 @@ MACRO(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
             MESSAGE(FATAL_ERROR "The files in the '${PACKAGE_NAME}' package could not be uncompressed...")
         ENDIF()
     ENDIF()
-ENDMACRO()
-
-#===============================================================================
-
-MACRO(RETRIEVE_BINARY_FILE_FROM LOCATION DIRNAME FILENAME SHA1_VALUE)
-    # Create our destination folder, if needed
-
-    STRING(REPLACE "${PLATFORM_DIR}" "bin"
-           REAL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
-
-    IF(NOT EXISTS ${REAL_DIRNAME})
-        FILE(MAKE_DIRECTORY ${REAL_DIRNAME})
-    ENDIF()
-
-    # Make sure that the file, if it exists, has the expected SHA-1 value
-
-    CHECK_FILE(${REAL_DIRNAME} ${FILENAME} ${SHA1_VALUE})
-
-    # Retrieve the file from the given location, if needed
-    # Note: we would normally provide the SHA-1 value to the FILE(DOWNLOAD)
-    #       call, but this would create an empty file to start with and if the
-    #       file cannot be downloaded for some reason or another, then we would
-    #       still have that file and CMake would then complain about its SHA-1
-    #       value being wrong (as well as not being able to download the file),
-    #       so we handle everything ourselves...
-
-    SET(REAL_FILENAME ${REAL_DIRNAME}/${FILENAME})
-
-    IF(NOT EXISTS ${REAL_FILENAME})
-        # Retrieve the compressed version of the file
-
-        MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
-
-        SET(COMPRESSED_FILENAME ${FILENAME}.tar.gz)
-        SET(FULL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
-
-        FILE(DOWNLOAD "${LOCATION}/${DIRNAME}/${COMPRESSED_FILENAME}" ${FULL_COMPRESSED_FILENAME}
-             SHOW_PROGRESS STATUS STATUS)
-
-        # Uncompress the compressed version of the file, should we have managed
-        # to retrieve it
-
-        LIST(GET STATUS 0 STATUS_CODE)
-
-        IF(${STATUS_CODE} EQUAL 0)
-            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${FULL_COMPRESSED_FILENAME}
-                            WORKING_DIRECTORY ${REAL_DIRNAME}
-                            OUTPUT_QUIET)
-
-            FILE(REMOVE ${FULL_COMPRESSED_FILENAME})
-        ELSE()
-            FILE(REMOVE ${FULL_COMPRESSED_FILENAME})
-            # Note: this is in case we had an HTTP error of sorts, in which case
-            #       we would end up with an empty file...
-
-            MESSAGE(FATAL_ERROR "The compressed version of '${FILENAME}' could not be retrieved...")
-        ENDIF()
-
-        # Check that the file, if we managed to uncompress it, has the expected
-        # SHA-1 value
-
-        LIST(GET STATUS 0 STATUS_CODE)
-
-        IF(${STATUS_CODE} EQUAL 0)
-            CHECK_FILE(${REAL_DIRNAME} ${FILENAME} ${SHA1_VALUE})
-
-            IF(NOT CHECK_FILE_OK)
-                MESSAGE(FATAL_ERROR "'${FILENAME}' does not have the expected SHA-1 value...")
-            ENDIF()
-        ELSE()
-            MESSAGE(FATAL_ERROR "'${FILENAME}' could not be uncompressed...")
-        ENDIF()
-    ENDIF()
-ENDMACRO()
-
-#===============================================================================
-
-MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
-    # Retrieve the binary file off the OpenCOR website
-
-    RETRIEVE_BINARY_FILE_FROM("http://www.opencor.ws/binaries"
-                              ${DIRNAME} ${FILENAME} ${SHA1_VALUE})
 ENDMACRO()

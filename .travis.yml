@@ -2,6 +2,7 @@ language: cpp
 
 sudo: required
 dist: trusty
+group: edge
 
 os:
   - linux
@@ -19,11 +20,14 @@ branches:
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         sudo apt-get install software-properties-common
+         wget --no-check-certificate https://cmake.org/files/v3.3/cmake-3.3.0-Linux-x86_64.tar.gz
+      && tar -xzf cmake-3.3.0-Linux-x86_64.tar.gz
+      && sudo cp -fR cmake-3.3.0-Linux-x86_64/* /usr
+      && sudo apt-get install software-properties-common
       && sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
       && sudo apt-add-repository -y ppa:beineri/opt-qt562-trusty
       && sudo apt-get -qq update
-      && sudo apt-get -qq install gcc-4.9 g++-4.9
+      && sudo apt-get -qq install gcc-4.9 g++-4.9 libgl1-mesa-dev libglu1-mesa-dev
       && sudo apt-get -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel
       && sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 50
       && sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 50
@@ -41,12 +45,12 @@ script:
   # Note: on Linux, the linking of CellMLTextView_conversiontests and
   #       CellMLTextView_parsingtests results in an error regarding
   #       __cxa_throw_bad_array_new_length@Qt_5 not being defined in
-  #       libQScintilla.so. This is most likely related to our use of GCC/G++ 4.9.
-  #       However, a simple workaround is to build QScintilla, so this is what we
-  #       are doing here...
+  #       libqscintilla2_qt5.so.13. This is most likely related to our use of
+  #       GCC/G++ 4.9. However, a simple workaround is to build QScintilla, so
+  #       this is what we are doing here...
   -    cd build
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DUSE_PREBUILT_QSCINTILLA_PLUGIN=OFF -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DUSE_PREBUILT_QSCINTILLA_PACKAGE=OFF -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
          ;
        else
          cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..

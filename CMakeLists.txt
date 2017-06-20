@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.3)
 
 # Project definition
 
@@ -10,14 +10,22 @@ OPTION(ENABLE_SAMPLE_PLUGINS "Enable the sample plugins to be built" OFF)
 OPTION(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
-OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plugin" ON)
-OPTION(USE_PREBUILT_LIBXDIFF_PLUGIN "Use the pre-built version of the LibXDiff plugin" ON)
-OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
-OPTION(USE_PREBUILT_OAUTH_PLUGIN "Use the pre-built version of the OAuth plugin" ON)
+OPTION(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
+OPTION(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
+
+OPTION(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
+OPTION(USE_PREBUILT_SBMLAPI_PACKAGE "Use the pre-built version of the SBML API package" ON)
+OPTION(USE_PREBUILT_SEDMLAPI_PACKAGE "Use the pre-built version of the SED-ML API package" ON)
+
+OPTION(USE_PREBUILT_LIBGIT2_PACKAGE "Use the pre-built version of the libgit2 package" ON)
+OPTION(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff package" ON)
+OPTION(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang plugin" ON)
+OPTION(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth package" ON)
 OPTION(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
-OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
-OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
-OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
+OPTION(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
+OPTION(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
+OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
+OPTION(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
 
 # Make sure that we are using the compiler we support
@@ -86,7 +94,25 @@ IF(NOT WIN32 AND NOT APPLE)
     ENDIF()
 ENDIF()
 
-# Some initialisations related to our copy of QtWebKit
+# Keep track of some basic information about Qt
+
+FIND_PACKAGE(Qt5Core REQUIRED)
+
+SET(QT_VERSION ${Qt5Core_VERSION})
+SET(QT_VERSION_MAJOR ${Qt5Core_VERSION_MAJOR})
+
+SET(QT_DIR ${_qt5Core_install_prefix})
+SET(QT_BINARY_DIR ${QT_DIR}/bin)
+SET(QT_LIBRARY_DIR ${QT_DIR}/lib)
+SET(QT_PLUGINS_DIR ${QT_DIR}/plugins)
+
+GET_TARGET_PROPERTY(QMAKE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
+
+SET(QMAKE_COMMAND ${QMAKE} -Wnone)
+
+STRING(REPLACE ";" " " QMAKE_COMMAND_AS_STRING "${QMAKE_COMMAND}")
+
+# Determine our platform directory
 
 IF(WIN32)
     SET(PLATFORM windows)
@@ -107,83 +133,6 @@ ELSE()
 ENDIF()
 
 SET(PLATFORM_DIR ${PLATFORM})
-
-INCLUDE(${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit/CMakeLists.txt)
-
-# Required Qt modules and packages
-#---ISSUE1306--- WE OUGHT TO BE ABLE TO REMOVE THE NEED FOR THE Gui MODULE ONCE
-#                WE CAN BUILD QtWebKit AS A PACKAGE?...
-
-IF(WIN32)
-    SET(WEBKIT WebKit)
-ENDIF()
-
-IF(ENABLE_TESTS)
-    SET(TEST Test)
-ENDIF()
-
-SET(REQUIRED_QT_MODULES
-    Gui
-    Network
-    ${TEST}
-    ${WEBKIT}
-    Widgets
-)
-
-FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
-    FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
-ENDFOREACH()
-
-# Make sure that anyone can access diff-match-patch
-
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch/src)
-
-# Keep track of some information about Qt
-
-SET(QT_VERSION ${Qt5Core_VERSION})
-SET(QT_VERSION_MAJOR ${Qt5Core_VERSION_MAJOR})
-
-SET(QT_DIR ${_qt5Core_install_prefix})
-SET(QT_BINARY_DIR ${QT_DIR}/bin)
-SET(QT_LIBRARY_DIR ${QT_DIR}/lib)
-SET(QT_PLUGINS_DIR ${QT_DIR}/plugins)
-
-# On macOS, keep track of the Qt libraries against which we need to link
-
-IF(APPLE)
-    IF(ENABLE_TESTS)
-        SET(QT_TEST QtTest)
-    ELSE()
-        SET(QT_TEST)
-    ENDIF()
-
-    SET(MACOS_QT_LIBRARIES
-        QtCLucene
-        QtConcurrent
-        QtCore
-        QtGui
-        QtHelp
-        QtMacExtras
-        QtMultimedia
-        QtMultimediaWidgets
-        QtNetwork
-        QtOpenGL
-        QtPositioning
-        QtPrintSupport
-        QtQml
-        QtQuick
-        QtSensors
-        QtSql
-        QtSvg
-        ${QT_TEST}
-        QtWebChannel
-        QtWebKit
-        QtWebKitWidgets
-        QtWidgets
-        QtXml
-        QtXmlPatterns
-    )
-ENDIF()
 
 # Determine the effective build directory
 
@@ -215,6 +164,182 @@ ELSE()
     IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
         SET(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
     ENDIF()
+ENDIF()
+
+# Default location of external binaries and packages
+
+IF(WIN32)
+    IF(RELEASE_MODE)
+        SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/release)
+        SET(LOCAL_EXTERNAL_BINARIES_DIR bin/release)
+
+        SET(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR}/release)
+        SET(LOCAL_EXTERNAL_PACKAGE_DIR ext/release)
+    ELSE()
+        SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/debug)
+        SET(LOCAL_EXTERNAL_BINARIES_DIR bin/debug)
+
+        SET(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR}/debug)
+        SET(LOCAL_EXTERNAL_PACKAGE_DIR ext/debug)
+    ENDIF()
+
+    SET(DEST_EXTERNAL_BINARIES_DIR bin)
+ELSE()
+    SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR})
+    SET(LOCAL_EXTERNAL_BINARIES_DIR bin)
+
+    SET(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR})
+    SET(LOCAL_EXTERNAL_PACKAGE_DIR ext)
+
+    IF(APPLE)
+        SET(DEST_EXTERNAL_BINARIES_DIR ${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
+    ELSE()
+        SET(DEST_EXTERNAL_BINARIES_DIR lib)
+    ENDIF()
+ENDIF()
+
+SET(FULL_DEST_EXTERNAL_BINARIES_DIR ${PROJECT_BUILD_DIR}/${DEST_EXTERNAL_BINARIES_DIR})
+
+IF(NOT EXISTS ${FULL_DEST_EXTERNAL_BINARIES_DIR})
+    FILE(MAKE_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR})
+ENDIF()
+
+IF(APPLE)
+    SET(FULL_DEST_EXTERNAL_BASE_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR})
+ELSE()
+    SET(FULL_DEST_EXTERNAL_BASE_DIR ${PROJECT_BUILD_DIR})
+ENDIF()
+
+# Some in-house CMake macros
+
+INCLUDE(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
+
+# Make sure that we can use the ExternalProject module, and let it know where we
+# want to build our external packages
+# Note: indeed, otherwise on Windows we may end up with path names that are too
+#       long...
+
+INCLUDE(ExternalProject)
+
+SET(EXTERNAL_PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR}/ext)
+
+SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
+
+# A few constants to help with building an external project
+
+IF(APPLE)
+    SET(DEFINE_CMAKE_APPLE_OPTIONS "-DCMAKE_MACOSX_RPATH=ON")
+ENDIF()
+
+IF(WIN32)
+    SET(MAKE_NMAKE_COMMAND nmake)
+    SET(MAKE_JOM_COMMAND jom)
+ELSE()
+    SET(MAKE_NMAKE_COMMAND make)
+    SET(MAKE_JOM_COMMAND ${MAKE_NMAKE_COMMAND})
+
+    INCLUDE(ProcessorCount)
+
+    ProcessorCount(PROCESSOR_COUNT)
+
+    IF(NOT PROCESSOR_COUNT EQUAL 0)
+        SET(MAKE_NMAKE_COMMAND ${MAKE_NMAKE_COMMAND} -j ${PROCESSOR_COUNT})
+        SET(MAKE_JOM_COMMAND ${MAKE_JOM_COMMAND} -j ${PROCESSOR_COUNT})
+    ENDIF()
+ENDIF()
+
+STRING(REPLACE ";" " " MAKE_NMAKE_COMMAND_AS_STRING "${MAKE_NMAKE_COMMAND}")
+STRING(REPLACE ";" " " MAKE_JOM_COMMAND_AS_STRING "${MAKE_JOM_COMMAND}")
+
+# A couple of variables that make it easier to specify library file names with a
+# version (e.g. to be able to reference libz.so.1 and libz.1.dylib, we could
+# simply use libz${PRE}.1${POST})
+
+IF(APPLE)
+    SET(CMAKE_SHARED_LIBRARY_SUFFIX_PRE)
+    SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST ${CMAKE_SHARED_LIBRARY_SUFFIX})
+ELSEIF(NOT WIN32)
+    SET(CMAKE_SHARED_LIBRARY_SUFFIX_PRE ${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
+ENDIF()
+
+# Version of ICU that we are using on Windows
+
+IF(WIN32)
+    SET(ICU_VERSION 57)
+ENDIF()
+
+# Retrieve or build our copy of QtWebKit
+
+ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
+
+# Required Qt modules
+
+IF(ENABLE_TESTS)
+    SET(TEST Test)
+ENDIF()
+
+IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
+    SET(WEBKIT WebKit)
+    SET(WEBKITWIDGETS WebKitWidgets)
+ENDIF()
+
+SET(REQUIRED_QT_MODULES
+    Network
+    ${TEST}
+    Widgets
+)
+
+IF(WIN32)
+    LIST(APPEND REQUIRED_QT_MODULES ${WEBKIT})
+ENDIF()
+
+FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
+    FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
+ENDFOREACH()
+
+# Make sure that anyone can access diff-match-patch
+
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch/src)
+
+# On macOS, keep track of the Qt libraries against which we need to link
+
+IF(APPLE)
+    IF(ENABLE_TESTS)
+        SET(QTTEST QtTest)
+    ENDIF()
+
+    IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
+        SET(QTWEBKIT QtWebKit)
+        SET(QTWEBKITWIDGETS QtWebKitWidgets)
+    ENDIF()
+
+    SET(MACOS_QT_LIBRARIES
+        QtCLucene
+        QtConcurrent
+        QtCore
+        QtGui
+        QtHelp
+        QtMacExtras
+        QtMultimedia
+        QtMultimediaWidgets
+        QtNetwork
+        QtOpenGL
+        QtPositioning
+        QtPrintSupport
+        QtQml
+        QtQuick
+        QtSensors
+        QtSql
+        QtSvg
+        ${QTTEST}
+        QtWebChannel
+        ${QTWEBKIT}
+        ${QTWEBKITWIDGETS}
+        QtWidgets
+        QtXml
+        QtXmlPatterns
+    )
 ENDIF()
 
 # Some general build settings
@@ -280,27 +405,6 @@ ELSE()
     # Make sure that debugging is enabled in Qt
 
     ADD_DEFINITIONS(-DQT_DEBUG)
-
-    # Make sure that LLVM works fine when in debug mode
-    # Note: it needs to be done here since, by default, _DEBUG_POINTER_IMPL is
-    #       not defined and will therefore be as soon as we include xutility,
-    #       which will also give it the value _Debug_pointer while we want it to
-    #       be defined but without any value (so that pointer testing is
-    #       disabled)...
-#---ISSUE1306--- CHECK WHETHER THIS IS STILL NEEDED ONCE WE CAN BUILD LLVM AS A
-#                PACKAGE...
-
-    ADD_DEFINITIONS(-D_DEBUG_POINTER_IMPL=)
-ENDIF()
-
-# Disable a warning that occurs on Windows
-# Note: the warning occurs in (at least) MSVC's algorithm header file. To
-#       disable it here means that we disable it for everything, but is there
-#       another solution?...
-#---ISSUE1306--- CHECK WHETHER THIS IS STILL NEEDED...
-
-IF(WIN32)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4267")
 ENDIF()
 
 # Ask for Qt deprecated uses to be reported
@@ -308,6 +412,10 @@ ENDIF()
 ADD_DEFINITIONS(-DQT_DEPRECATED_WARNINGS)
 
 # Let OpenCOR know about some of the options with which it was built
+
+IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
+    ADD_DEFINITIONS(-DUSE_PREBUILT_QTWEBKIT_PACKAGE)
+ENDIF()
 
 IF(ENABLE_SAMPLE_PLUGINS)
     ADD_DEFINITIONS(-DENABLE_SAMPLE_PLUGINS)
@@ -343,50 +451,6 @@ ELSE()
     SET(DEST_PLUGINS_DIR ${PROJECT_BUILD_DIR}/plugins/${CMAKE_PROJECT_NAME})
 ENDIF()
 
-# Default location of external binaries and packages
-
-IF(WIN32)
-    IF(RELEASE_MODE)
-        SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/release)
-        SET(LOCAL_EXTERNAL_BINARIES_DIR bin/release)
-
-        SET(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR}/release)
-        SET(LOCAL_EXTERNAL_PACKAGE_DIR ext/release)
-    ELSE()
-        SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR}/debug)
-        SET(LOCAL_EXTERNAL_BINARIES_DIR bin/debug)
-
-        SET(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR}/debug)
-        SET(LOCAL_EXTERNAL_PACKAGE_DIR ext/debug)
-    ENDIF()
-
-    SET(DEST_EXTERNAL_BINARIES_DIR bin)
-ELSE()
-    SET(REMOTE_EXTERNAL_BINARIES_DIR ${PLATFORM_DIR})
-    SET(LOCAL_EXTERNAL_BINARIES_DIR bin)
-
-    SET(REMOTE_EXTERNAL_PACKAGE_DIR ${PLATFORM_DIR})
-    SET(LOCAL_EXTERNAL_PACKAGE_DIR ext)
-
-    IF(APPLE)
-        SET(DEST_EXTERNAL_BINARIES_DIR ${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
-    ELSE()
-        SET(DEST_EXTERNAL_BINARIES_DIR lib)
-    ENDIF()
-ENDIF()
-
-SET(FULL_DEST_EXTERNAL_BINARIES_DIR ${PROJECT_BUILD_DIR}/${DEST_EXTERNAL_BINARIES_DIR})
-
-IF(NOT EXISTS ${FULL_DEST_EXTERNAL_BINARIES_DIR})
-    FILE(MAKE_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR})
-ENDIF()
-
-IF(APPLE)
-    SET(FULL_DEST_EXTERNAL_BASE_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR})
-ELSE()
-    SET(FULL_DEST_EXTERNAL_BASE_DIR ${PROJECT_BUILD_DIR})
-ENDIF()
-
 # Set the RPATH (and RPATH link, if needed) information on Linux and macOS
 
 IF(APPLE)
@@ -399,40 +463,9 @@ ELSEIF(NOT WIN32)
     SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-rpath-link,${QT_LIBRARY_DIR} ${LINK_RPATH_FLAG}")
 ENDIF()
 
-# A couple of variables that make it easier to specify library file names with a
-# version (e.g. to be able to reference libz.so.1 and libz.1.dylib, we could
-# simply use libz${PRE}.1${POST})
-
-IF(APPLE)
-    SET(CMAKE_SHARED_LIBRARY_SUFFIX_PRE)
-    SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST ${CMAKE_SHARED_LIBRARY_SUFFIX})
-ELSEIF(NOT WIN32)
-    SET(CMAKE_SHARED_LIBRARY_SUFFIX_PRE ${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
-ENDIF()
-
-# Make sure that we can use the ExternalProject module, and let it know where we
-# want to build our external packages
-# Note: indeed, otherwise on Windows we may end up with path names that are too
-#       long...
-
-INCLUDE(ExternalProject)
-
-SET(EXTERNAL_PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR}/ext)
-
-SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
-
-IF(APPLE)
-    SET(DEFINE_CMAKE_APPLE_OPTIONS "-DCMAKE_MACOSX_RPATH=ON -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}")
-ENDIF()
-
 # Show what we are about to build
 
 MESSAGE("${BUILD_INFORMATION} using Qt ${QT_VERSION}...")
-
-# Some in-house CMake macros
-
-INCLUDE(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
 # Keep track of our source and build directories (needed to run our tests)
 
@@ -698,16 +731,20 @@ IF(ENABLE_TESTS)
                        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${MAIN_TEST_FILENAME}
                                                         ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
 
-    # Clean up our test program, but only if we are on macOS
+    # Clean up our test program, if we are on macOS
 
     IF(APPLE)
         MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
     ENDIF()
 ENDIF()
 
-# Build the OpenCOR plugins
-# Note: the build order must be such that plugins needed by others are built
-#       first...
+# Build our plugins
+# Note: plugins can be listed in any order (dependencies are determined
+#       automatically). However, for this to work, all plugins must have
+#       [PLUGIN_DIR]/src as an include directory. In addition, all plugins
+#       linked to a packge (built using the ExternalProject module) must also
+#       have [PLUGIN_DIR]/[LOCAL_EXTERNAL_PACKAGE_DIR]/include as an include
+#       directory...
 
 IF(ENABLE_SAMPLE_PLUGINS)
     SET(SAMPLE_PLUGINS
@@ -729,76 +766,31 @@ ELSE()
 ENDIF()
 
 SET(PLUGINS
-    # Plugins that have no dependencies
+#---OPENCOR--- THE PLUGINS THAT ARE DISABLED WILL BE SO UNTIL WE CAN ACTUALLY
+#              BUILD THE BioSignalML PACKAGE...
+    ${SAMPLE_PLUGINS}
+    ${TEST_PLUGINS}
 
-    api/BioSignalMLAPI
+#    api/BioSignalMLAPI
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
 
-    miscellaneous/Core
-
-    support/StandardSupport
-
-    thirdParty/libgit2
-    thirdParty/LibXDiff
-    thirdParty/LLVM
-    thirdParty/OAuth
-    thirdParty/OpenSSL
-    thirdParty/QScintilla
-    thirdParty/Qwt
-    thirdParty/SUNDIALS
-    thirdParty/Zinc
-    thirdParty/zlib
-
-    # Plugins that build on top of some third-party libraries
-
-    miscellaneous/Compiler
-
-    # Plugins that provide support for some third-party libraries
-
-    support/CellMLSupport
-    support/QScintillaSupport
-    support/SEDMLSupport
-    support/ZIPSupport
-
-    # Plugins that provide support for some third-party libraries that have
-    # dependencies on others
-
-    support/COMBINESupport
-
-    # Plugins that extend some libraries (incl. third-party ones)
-
-    widget/EditorWidget
-    widget/GraphPanelWidget
-    widget/MathMLViewerWidget
-    widget/WebViewerWidget
-    widget/ZincWidget
-
-    # Plugins that provide some generic features
-
+#    dataStore/BioSignalMLDataStore
+    dataStore/CSVDataStore
     dataStore/DataStore
 
-    editing/EditingView
-
-    # Plugins that have dependencies on others
-
-    editing/CellMLEditingView
-    editing/SEDMLEditingView
-
-    support/PMRSupport
-
-    # Selectable plugins
-
-    dataStore/BioSignalMLDataStore
-    dataStore/CSVDataStore
-
     editing/CellMLAnnotationView
+    editing/CellMLEditingView
     editing/CellMLTextView
+    editing/EditingView
     editing/RawCellMLView
     editing/RawSEDMLView
     editing/RawTextView
+    editing/SEDMLEditingView
 
+    miscellaneous/Compiler
+    miscellaneous/Core
     miscellaneous/HelpWindow
     miscellaneous/WebBrowserWindow
 
@@ -817,29 +809,57 @@ SET(PLUGINS
     solver/KINSOLSolver
     solver/SecondOrderRungeKuttaSolver
 
+    support/CellMLSupport
+    support/COMBINESupport
+    support/PMRSupport
+    support/QScintillaSupport
+    support/SEDMLSupport
+    support/StandardSupport
+    support/ZIPSupport
+
+    thirdParty/libgit2
+    thirdParty/LibXDiff
+    thirdParty/LLVMClang
+    thirdParty/OAuth
+    thirdParty/OpenSSL
+    thirdParty/QScintilla
+    thirdParty/Qwt
+    thirdParty/SUNDIALS
+    thirdParty/Zinc
+    thirdParty/zlib
+
     tools/CellMLTools
 
-    # Sample and test plugins
-
-    ${SAMPLE_PLUGINS}
-    ${TEST_PLUGINS}
+    widget/EditorWidget
+    widget/GraphPanelWidget
+    widget/MathMLViewerWidget
+    widget/WebViewerWidget
+    widget/ZincWidget
 )
 
-SET(CMAKE_INCLUDE_CURRENT_DIR ON)
+IF(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
+    # We want to build our copy of the QtWebKit package, so don't build any
+    # plugins since some of them may require access to QtWebKit
+
+    SET(PLUGINS)
+ENDIF()
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
 
-    ADD_SUBDIRECTORY(${PLUGIN_DIR})
-    # Note: this will process the CMakeLists.txt file of the plugin resulting in
-    #       PLUGIN_INCLUDE_DIRS being set, hence we can use it below to update
-    #       our include directories
+    IF(   "${PLUGIN}" MATCHES "^api/.*$"
+       OR "${PLUGIN}" MATCHES "^thirdParty/.*$")
+        INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR}/include)
+    ENDIF()
 
-    FOREACH(PLUGIN_INCLUDE_DIR ${PLUGIN_INCLUDE_DIRS})
-        INCLUDE_DIRECTORIES(${PLUGIN_DIR}/${PLUGIN_INCLUDE_DIR})
-    ENDFOREACH()
-
+    INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/src)
     INCLUDE_DIRECTORIES(${PROJECT_BUILD_DIR}/${PLUGIN_DIR})
+ENDFOREACH()
+
+SET(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+FOREACH(PLUGIN ${PLUGINS})
+    ADD_SUBDIRECTORY(src/plugins/${PLUGIN})
 ENDFOREACH()
 
 # Build the GUI version of OpenCOR
@@ -948,11 +968,11 @@ IF(APPLE)
     MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
 
     # Deploy our Qt libraries
-    # Note: the Qt Brew formula that we use on Travis CI misses QtDBus, which
-    #       results in some of our tests generating messages about two
-    #       frameworks being available and that one of them will be used, but
-    #       that we don't know which one. So, to avoid those messages, we simply
-    #       don't deploy the Qt frameworks...
+    # Note: the Qt Brew formula that we use on Travis CI somehow results in some
+    #       of our tests generating messages about two frameworks being
+    #       available and that one of them will be used, but that we don't know
+    #       which one. So, to avoid those messages, we simply don't deploy the
+    #       Qt frameworks...
 
     IF(NOT ENABLE_TRAVIS_CI)
         FOREACH(QT_LIBRARY ${MACOS_QT_LIBRARIES})
@@ -1064,11 +1084,7 @@ ELSE()
         # machines that don't have 'proper' OpenGL support (e.g. on a Linux
         # virtual machine in VirtualBox)
 
-        SET(MESA_FILENAME libGL.so.1)
-
-        RETRIEVE_BINARY_FILE(distrib/linux ${MESA_FILENAME} 0b2eb56efe43507026af87f036f96ec4e5b2c707)
-
-        COPY_FILE_TO_BUILD_DIR(DIRECT ${CMAKE_SOURCE_DIR}/distrib/bin lib ${MESA_FILENAME})
+        ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/distrib/mesa)
     ENDIF()
 ENDIF()
 
@@ -1129,19 +1145,15 @@ IF(WIN32)
 
     # Qt libraries required by OpenCOR
 
-    IF(ENABLE_TESTS)
-        SET(TEST Test)
-    ELSE()
-        SET(TEST)
-    ENDIF()
-
-    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
         WINDOWS_DEPLOY_QT_LIBRARY(Qt5${QT_LIBRARY})
     ENDFOREACH()
 
-    FOREACH(QT_LIBRARY icudt icuin icuuc)
-        WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}57)
-    ENDFOREACH()
+    IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
+        FOREACH(QT_LIBRARY icudt icuin icuuc)
+            WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}${ICU_VERSION})
+        ENDFOREACH()
+    ENDIF()
 
     # Qt plugins required by OpenCOR
 
@@ -1239,9 +1251,13 @@ ELSE()
     # Note: this is due to our use of GCC/G++ 4.9+, which is not originally
     #       present on Ubuntu 14.04 LTS...
 
-    INSTALL(FILES /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.22
+    SET(FULL_LIBRARY libstdc++.so.6)
+
+    GET_FILENAME_COMPONENT(REAL_FULL_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
+
+    INSTALL(FILES ${REAL_FULL_LIBRARY}
             DESTINATION lib
-            RENAME libstdc++.so.6)
+            RENAME ${FULL_LIBRARY})
 
     # Library needed on Fedora, but not on Ubuntu
 
@@ -1257,7 +1273,7 @@ ELSE()
 
     # Mesa library
 
-    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/bin/${MESA_FILENAME}
+    INSTALL(FILES ${MESA_LIBRARY}
             DESTINATION lib)
 
     # Qt libraries required by OpenCOR
@@ -1267,16 +1283,10 @@ ELSE()
     #       unnecessarily cumbersome to use, it's better to deploy one Qt
     #       library at a time...
 
-    IF(ENABLE_TESTS)
-        SET(TEST Test)
-    ELSE()
-        SET(TEST)
-    ENDIF()
-
-    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
         IF(   "${QT_LIBRARY}" STREQUAL "WebKit"
            OR "${QT_LIBRARY}" STREQUAL "WebKitWidgets")
-            SET(REAL_QT_LIBRARY_DIR ${QT_WEBKIT_LIBRARIES_DIR})
+            SET(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
         ELSE()
             SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
         ENDIF()

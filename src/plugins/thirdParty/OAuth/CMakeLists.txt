@@ -1,81 +1,184 @@
 PROJECT(OAuthPlugin)
 
-IF(USE_PREBUILT_OAUTH_PLUGIN)
-    # Retrieve the plugin's binary file(s)
+# Name and version of our package
+
+SET(PACKAGE_NAME o2)
+SET(PACKAGE_VERSION 1.0.1)
+
+# Version of our library
+
+SET(REAL_LIBRARY_VERSION 1.0.1)
+SET(USED_LIBRARY_VERSION 1.0.0)
+
+# Git tag for our library
+
+SET(GIT_TAG 1.0.1b)
+
+# Release tag
+
+SET(RELEASE_TAG 1.0.1b)
+
+# Specify where our local package will be installed
+
+SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+
+# Name of our package's shared library (and of its import library, if any)
+
+IF(WIN32)
+    SET(SHARED_LIBRARY o2${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(IMPORT_LIBRARY o2${CMAKE_IMPORT_LIBRARY_SUFFIX})
+ELSE()
+    SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}o2${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${USED_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    SET(IMPORT_LIBRARY ${SHARED_LIBRARY})
+ENDIF()
+
+# Retrieve our package's binaries
+
+SET(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
+
+SET(EXTERNAL_BINARIES
+    ${SHARED_LIBRARY}
+)
+
+# Specify the files that need to have their SHA-1 value checked
+
+SET(SHA1_FILES
+    lib/${SHARED_LIBRARY}
+)
+
+IF(WIN32)
+    LIST(APPEND SHA1_FILES
+        lib/${IMPORT_LIBRARY}
+    )
+ENDIF()
+
+# Use the pre-built version of our package unless instructed otherwise
+
+IF(USE_PREBUILT_OAUTH_PACKAGE)
+    # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_BINARIES_DIR}")
+           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} OAuth.dll 02228e8134ff6f2e3510423da7735830a47335e8)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} OAuth.lib be9cfc8269f984fa733addaf1336b9f7eaa10326)
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 5c19937bca96738ae10cb86c2f51f1ab55965a06
+                                  RELEASE_TAG ${RELEASE_TAG}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 800d744753f2699eaefc82644e536dbd08164b56
+                                              15dc1bf03871c1a437b18361a2f7860ef1fe9384)
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} OAuth.dll c147f65fc63f04f8fb62025eb6e44067e277f4df)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} OAuth.lib bd06c203bd24b5679fb8a112ae7465ce8416c8e3)
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} dc1fce6bd7c9ec138efbdd57e8360cd3976b0511
+                                  RELEASE_TAG ${RELEASE_TAG}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 21a23b33faafd582efa41dcff291db7c578700fa
+                                              b248168d0cda7466ee9174ea69ac5a1cf6eaad1a)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libOAuth.dylib 7b74ae141fa224b22fde8bc8000dfa673f7319db)
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} fff78b1215f4a5b499687fdf0c260e08bbd86e1e
+                              RELEASE_TAG ${RELEASE_TAG}
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 922108ebdaf0411e18aa4c388e68ec52439b2ee4)
     ELSE()
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libOAuth.so 392ce5692fdc949f57f6ea31a74decf95224228f)
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} c9a61ddc9cfc56417f92d0d294b9610028e83258
+                              RELEASE_TAG ${RELEASE_TAG}
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 08836084bbd30cef8086c306f502c945bb2c30a8)
     ENDIF()
-
-    # Add the plugin as a binary
-    # Note: in the case of Windows, we must refer to the distribution directory
-    #       as opposed to the plugins directory since we need the .lib file and
-    #       it's only there...
+ELSE()
+    # Ignore some warnings
 
     IF(WIN32)
-        SET(OAUTH_PLUGIN_BINARY ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR}/${CMAKE_IMPORT_LIBRARY_PREFIX}OAuth${CMAKE_IMPORT_LIBRARY_SUFFIX} PARENT_SCOPE)
-    ELSE()
-        SET(OAUTH_PLUGIN_BINARY ${DEST_PLUGINS_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}OAuth${CMAKE_SHARED_LIBRARY_SUFFIX} PARENT_SCOPE)
+        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4061 /wd4127 /wd4242 /wd4365 /wd4464 /wd4548 /wd4571 /wd4619 /wd4625 /wd4626 /wd4710 /wd4711 /wd4820 /wd5026  /wd5027")
     ENDIF()
 
-    ADD_PLUGIN_BINARY(OAuth
-        INCLUDE_DIRS
-            src
+    # Build OAuth as an external project
+
+    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
+
+    ExternalProject_Add(${PACKAGE_BUILD}
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
+        INSTALL_DIR
+            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+        GIT_REPOSITORY
+            https://github.com/opencor/o2
+        GIT_TAG
+            ${GIT_TAG}
+        CMAKE_CACHE_ARGS
+            -DCMAKE_CXX_FLAGS:STRING=${PACKAGE_CXX_FLAGS}
+        CMAKE_GENERATOR
+            ${CMAKE_GENERATOR}
+        CMAKE_ARGS
+            -DBUILD_SHARED_LIBS=ON
+            ${DEFINE_CMAKE_APPLE_OPTIONS}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+            -Do2_WITH_OAUTH1=ON
+        BUILD_BYPRODUCTS
+            <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
-ELSE()
-    # Add the plugin
 
-    SET(OAUTH_PLUGIN OAuth PARENT_SCOPE)
+    # Do some post-processing that is specific to each platform
 
-    ADD_PLUGIN(OAuth
-        THIRD_PARTY
-        SOURCES
-            ../../plugininfo.cpp
+    IF(WIN32)
+        # We want both our shared and import libraries to be in the same place
 
-            src/o0baseauth.cpp
-            src/o0settingsstore.cpp
-            src/o1.cpp
-            src/o1requestor.cpp
-            src/o1timedreply.cpp
-            src/o2.cpp
-            src/o2reply.cpp
-            src/o2replyserver.cpp
-            src/o2requestor.cpp
-            src/o2simplecrypt.cpp
-            src/oauthplugin.cpp
-        HEADERS_MOC
-            src/o0abstractstore.h
-            src/o0baseauth.h
-            src/o0settingsstore.h
-            src/o1.h
-            src/o1requestor.h
-            src/o1timedreply.h
-            src/o2.h
-            src/o2reply.h
-            src/o2replyserver.h
-            src/o2requestor.h
-            src/oauthplugin.h
-        INCLUDE_DIRS
-            src
-        DEFINITIONS
-            O2_DLL_EXPORT
-            QT_NO_DEBUG_OUTPUT
-            QT_NO_WARNING_OUTPUT
-        QT_MODULES
-            Core
-            Network
-    )
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} lib
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+                                 DEPENDEES install)
+    ELSE()
+        # Dereference the symbolic link to the library since CMake's tar can't
+        # do this
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}o2${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${REAL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
+                                 DEPENDEES install)
+    ENDIF()
+
+    # Package our external project
+
+    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        PACKAGED_FILES include ${SHA1_FILES}
+                        SHA1_FILES ${SHA1_FILES}
+                        TARGET ${PACKAGE_BUILD})
+
+    SET(DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
+
+# Allow other external projects to find our OAuth package
+
+SET(OAUTH_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+SET(OAUTH_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+SET(OAUTH_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IMPORT_LIBRARY} PARENT_SCOPE)
+
+# Add the plugin
+# Note: we would normally use '${PACKAGE_NAME}' rather than 'OAuth', but it
+#       can't be done here since the name of our package is different from that
+#       of our plugin...
+
+ADD_PLUGIN(OAuth
+    SOURCES
+        ../../plugininfo.cpp
+
+        src/oauthplugin.cpp
+    HEADERS_MOC
+        src/oauthplugin.h
+    QT_MODULES
+        Core
+    EXTERNAL_BINARIES_DIR
+        ${EXTERNAL_BINARIES_DIR}
+    EXTERNAL_BINARIES
+        ${EXTERNAL_BINARIES}
+    DEPENDS_ON
+        ${DEPENDS_ON}
+)

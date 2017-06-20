@@ -12,13 +12,9 @@ ADD_PLUGIN(Compiler
         src/compilerplugin.cpp
     HEADERS_MOC
         src/compilerplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
-        ${LLVM_PLUGIN}
-    PLUGIN_BINARIES
-        ${LLVM_PLUGIN_BINARY}
+        LLVMClang
     TESTS
         tests
 )

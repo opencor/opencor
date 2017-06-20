@@ -1,8 +1,3 @@
 /CMakeLists.txt.user
 
-/distrib/bin/
-
-/src/3rdparty/*/bin/
-/src/3rdparty/*/lib/
-/src/plugins/*/*/bin/
-/src/plugins/*/*/ext/
+/*/**/ext/
