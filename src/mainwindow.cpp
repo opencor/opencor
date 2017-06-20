@@ -319,15 +319,12 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 MainWindow::~MainWindow()
 {
     // Finalise our plugins
-    // Note: we do this in reverse to ensure dependent objects are deleted in
-    //       the correct order...
-    // Note: we only need to test for our default interface since we want to
-    //       call the finalize method and this method is not overriden by any
-    //       other interface...
+    // Note: we do this in reverse to ensure that dependent objects are deleted
+    //       in the correct order...
 
-    for (Plugins::reverse_iterator pPlugin = mLoadedPluginPlugins.rbegin();
-         pPlugin != mLoadedPluginPlugins.rend(); ++pPlugin) {
-        qobject_cast<PluginInterface *>((*pPlugin)  ->instance())->finalizePlugin();
+    for (auto plugin = mLoadedPluginPlugins.rbegin(), pluginEnd = mLoadedPluginPlugins.rend();
+         plugin != pluginEnd; ++plugin) {
+        qobject_cast<PluginInterface *>((*plugin)->instance())->finalizePlugin();
     }
 
     // Delete our central widget
