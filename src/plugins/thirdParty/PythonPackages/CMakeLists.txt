@@ -11,7 +11,7 @@ SET(PACKAGE_REPOSITORY python)
 
 # The versions of the Python packages we bundle.
 
-SET(NUMPY_VERSION 1.12.1)
+SET(NUMPY_VERSION 1.13.0)
 SET(MATPLOTLIB_VERSION 2.0.2)
 SET(SCIPY_VERSION 0.19.0)
 
