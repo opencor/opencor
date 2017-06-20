@@ -972,11 +972,11 @@ IF(APPLE)
     #       that we don't know which one. So, to avoid those messages, we simply
     #       don't deploy the Qt frameworks...
 
-    IF(NOT ENABLE_TRAVIS_CI)
+#    IF(NOT ENABLE_TRAVIS_CI)
         FOREACH(QT_LIBRARY ${MACOS_QT_LIBRARIES})
             MACOS_DEPLOY_QT_LIBRARY(${QT_LIBRARY})
         ENDFOREACH()
-    ENDIF()
+#    ENDIF()
 
     # Deploy some plugins
 
@@ -1304,7 +1304,7 @@ ELSE()
         LINUX_DEPLOY_QT_LIBRARY(${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
     ENDFOREACH()
 
-    IF(NOT ENABLE_TRAVIS_CI)
+#    IF(NOT ENABLE_TRAVIS_CI)
         # We are building OpenCOR locally, so we can deploy the ICU libraries
         # Note: indeed, on Travis CI, the PPA we use doesn't have those
         #       libraries...
@@ -1312,7 +1312,7 @@ ELSE()
         FOREACH(QT_FILE icudata icui18n icuuc)
             LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56)
         ENDFOREACH()
-    ENDIF()
+#    ENDIF()
 
     # Qt plugins required by OpenCOR
 
@@ -1321,14 +1321,14 @@ ELSE()
     LINUX_DEPLOY_QT_PLUGIN(printsupport cupsprintersupport)
     LINUX_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
 
-    IF(NOT ENABLE_TRAVIS_CI)
+#    IF(NOT ENABLE_TRAVIS_CI)
         # We are building OpenCOR locally, so we can deploy the
         # xcbglintegrations plugins
         # Note: indeed, on Travis CI, the PPA we use doesn't have those
         #       plugins...
 
         LINUX_DEPLOY_QT_PLUGIN(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
-    ENDIF()
+#    ENDIF()
 
     # Shell script to run OpenCOR
 
