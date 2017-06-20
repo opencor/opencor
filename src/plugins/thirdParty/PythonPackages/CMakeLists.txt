@@ -44,7 +44,9 @@ SET(PACKAGED_FILES site-packages)
 # XXXNo files need to have their SHA-1 value checked
 ## "35m" needs to come from say ${PYTHON_ABI_VERSION}
 
-IF(APPLE)
+IF(WIN32)
+    SET(SHA1_FILES site-packages/numpy/core/multiarray.cp35-win_amd64.pyd)
+ELSEIF(APPLE)
     SET(SHA1_FILES site-packages/numpy/core/multiarray.cpython-35m-darwin.so)
 ELSEIF(UNIX)
     SET(SHA1_FILES site-packages/numpy/core/multiarray.cpython-35m-x86_64-linux-gnu.so)
@@ -61,9 +63,11 @@ IF(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(PythonPackages ${PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} 1c833ffa55c9cb0ff589193d67b5f46bc131398e
-            )
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} cc2e641040bb118b2707c82e1cd1bcb4e9dc1834
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 97949f3f839adab391fc785d8f7459f569f63a4f)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -92,41 +96,45 @@ ELSE()
 
     # Use our installed pip
 
-    SET(PIP_INSTALL_COMMAND PYTHONPATH=${LOCAL_SITE_PACKAGES_DIR} ${PYTHON_EXECUTABLE} -s -m
+    SET(PIP_INSTALL_COMMAND
+        ${CMAKE_COMMAND} -E env "PYTHONPATH=${LOCAL_SITE_PACKAGES_DIR}"
+        ${PYTHON_EXECUTABLE} -s -m
         pip install -t ${LOCAL_SITE_PACKAGES_DIR} --upgrade --upgrade-strategy only-if-needed)
 
     # Install numpy, scipy, and matplotlib
 
     IF(WIN32)
-        SET(WHEEL_SUFFIX "cp${NUMERIC_LIBRARY_VERSION}-cp${NUMERIC_LIBRARY_VERSION}${PYTHON_ABIFLAGS}-win_amd64.whl")
+        STRING(REPLACE "." "" VERSION_ABIFLAGS ${PYTHON_FULL_VERSION})
+        STRING(SUBSTRING ${VERSION_ABIFLAGS} 0 2 NUMERIC_VERSION)
+        SET(WHEEL_SUFFIX "cp${NUMERIC_VERSION}-cp${VERSION_ABIFLAGS}-win_amd64.whl")
 
         # We use binary versions that are linked with the Intel Math Kernel Library
 
-        SET(NUMPY_WHEEL "numpy-${NUMPY_VERSION}+mkl-${WHEEL_SUFFIX}")
+        SET(NUMPY_WHEEL "numpy-${NUMPY_VERSION}.mkl-${WHEEL_SUFFIX}")
         SET(SCIPY_WHEEL "scipy-${SCIPY_VERSION}-${WHEEL_SUFFIX}")
         SET(MATPLOTLIB_WHEEL "matplotlib-${MATPLOTLIB_VERSION}-${WHEEL_SUFFIX}")
 
-        ADD_CUSTOM_TARGET(install_packages ${PIP_INSTALL_COMMAND}
-            ${WHEEL_REPOSITORY}/${NUMPY_WHEEL}
-            ${WHEEL_REPOSITORY}/${SCIPY_WHEEL}
-            ${WHEEL_REPOSITORY}/${MATPLOTLIB_WHEEL}
+        ADD_CUSTOM_TARGET(science_packages
+            COMMAND ${PIP_INSTALL_COMMAND}
+                ${WHEEL_REPOSITORY}/${NUMPY_WHEEL}
+                ${WHEEL_REPOSITORY}/${SCIPY_WHEEL}
+                ${WHEEL_REPOSITORY}/${MATPLOTLIB_WHEEL}
+            WORKING_DIRECTORY
+                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            VERBATIM
         )
     ELSE()
-        ADD_CUSTOM_TARGET(install_packages
+        ADD_CUSTOM_TARGET(science_packages
             COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
                 numpy==${NUMPY_VERSION}
                 scipy==${SCIPY_VERSION}
                 matplotlib==${MATPLOTLIB_VERSION}
-                traitlets==${TRAITLETS_VERSION}
-                ipython==${IPYTHON_VERSION}
-                ipykernel==${IPYKERNEL_VERSION}
-                qtconsole==${QTCONSOLE_VERSION}
             VERBATIM
         )
     ENDIF()
 
-    ADD_DEPENDENCIES(${PACKAGE_BUILD} install_packages)
-    ADD_DEPENDENCIES(install_packages ${BUILD_DEPENDENCIES})
+    ADD_DEPENDENCIES(${PACKAGE_BUILD} science_packages)
+    ADD_DEPENDENCIES(science_packages ${BUILD_DEPENDENCIES})
 
     # Patch matplotlib's Qt backend so that it works with PythonQt
 
@@ -141,25 +149,44 @@ ELSE()
     )
 
     ADD_DEPENDENCIES(${PACKAGE_BUILD} patch_matplotlib)
-    ADD_DEPENDENCIES(patch_matplotlib install_packages)
+    ADD_DEPENDENCIES(patch_matplotlib science_packages)
     ADD_DEPENDENCIES(patch_matplotlib ${BUILD_DEPENDENCIES})
+
+    # Install IPython and its dependencies
+
+    ADD_CUSTOM_TARGET(ipython_packages
+        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+            traitlets==${TRAITLETS_VERSION}
+            ipython==${IPYTHON_VERSION}
+            ipykernel==${IPYKERNEL_VERSION}
+            qtconsole==${QTCONSOLE_VERSION}
+        WORKING_DIRECTORY
+            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+        VERBATIM
+    )
+
+    ADD_DEPENDENCIES(${PACKAGE_BUILD} ipython_packages)
+    ADD_DEPENDENCIES(ipython_packages patch_matplotlib)
+    ADD_DEPENDENCIES(ipython_packages ${BUILD_DEPENDENCIES})
 
     # Upgrade to our versions of packages which have been patched to work with PythonQt
 
     SET(ARCHIVE_PYTHONQT archive/PythonQt-v)
 
-    ADD_CUSTOM_TARGET(pythonqt_packages
+    ADD_CUSTOM_TARGET(pythonqt_update
         COMMAND ${PIP_INSTALL_COMMAND} --no-deps
             ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_VERSION}.zip
             ${GITHUB_OPENCOR}/ipython/${ARCHIVE_PYTHONQT}${IPYTHON_VERSION}.zip
             ${GITHUB_OPENCOR}/ipykernel/${ARCHIVE_PYTHONQT}${IPYKERNEL_VERSION}.zip
             ${GITHUB_OPENCOR}/qtconsole/${ARCHIVE_PYTHONQT}${QTCONSOLE_VERSION}.zip
+        WORKING_DIRECTORY
+            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
         VERBATIM
     )
 
-    ADD_DEPENDENCIES(${PACKAGE_BUILD} pythonqt_packages)
-    ADD_DEPENDENCIES(pythonqt_packages install_packages)
-    ADD_DEPENDENCIES(pythonqt_packages ${BUILD_DEPENDENCIES})
+    ADD_DEPENDENCIES(${PACKAGE_BUILD} pythonqt_update)
+    ADD_DEPENDENCIES(pythonqt_update ipython_packages)
+    ADD_DEPENDENCIES(pythonqt_update ${BUILD_DEPENDENCIES})
 
     # Package the newly installed Python packages
 

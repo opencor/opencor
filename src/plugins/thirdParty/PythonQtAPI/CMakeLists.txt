@@ -21,8 +21,8 @@ SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 # Name of our package's shared libraries (and of their import libraries, if any)
 
 IF(WIN32)
-    SET(SHARED_LIBRARY PythonQt-Qt5-Python${PYTHON_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(IMPORT_LIBRARY PythonQt-Qt5-Python${PYTHON_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    SET(SHARED_LIBRARY PythonQt${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(IMPORT_LIBRARY PythonQt${MAJOR_LIBRARY_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
 ELSE()
     IF(APPLE)
         SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt-Qt5-Python${PYTHON_VERSION}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -63,11 +63,10 @@ IF(USE_PREBUILT_PYTHONQT_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} 70a7fa3a122cf095e601584a167f55df0bbec966
-                SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES 819971242aefcbe52bdd43c4031de5f3d7b9fd98
-                            0ecda8d0289c9574b4282587b688856f206c5bd6
-            )
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} b113f8faccd45529684960c489a239ae5d900e5a
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 79e213a4133960ad40c2016f3f0fb3ff5f3038c7
+                                              24da18bba076d5718f7676f2c066b96cd487bae3)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -92,8 +91,6 @@ ELSE()
     # Set platform specific configuration options and tool names
 
     IF(WIN32)
-        SET(QMAKE_PLATFORM_FLAGS "-tp vc")
-
         SET(MAKE_COMMAND nmake)
         SET(QUIET_MAKE -c)
     ELSE()
@@ -146,9 +143,9 @@ ELSE()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${QMAKE_EXECUTABLE} ${QMAKE_DEBUG_OPTION} ${QMAKE_PLATFORM_FLAGS} ${QMAKE_LFLAGS_OPTION} -r PythonQtOpenCOR.pro
+            ${QMAKE_EXECUTABLE} ${QMAKE_DEBUG_OPTION} ${QMAKE_LFLAGS_OPTION} -r PythonQtOpenCOR.pro
         BUILD_COMMAND
-            ${MAKE_COMMAND} all
+            ${MAKE_COMMAND}
         INSTALL_COMMAND
             ${MAKE_COMMAND} ${MAKE_QUIET} install
         BUILD_BYPRODUCTS
@@ -172,14 +169,7 @@ ELSE()
 
     # Do some post-processing that is specific to each platform
 
-    IF(WIN32)
-        # We want both our shared and import libraries to be in the same place
-
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
-                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} lib
-                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-                                 DEPENDEES install)
-    ELSE()
+    IF(NOT WIN32)
         # Dereference the symbolic link to the library since CMake's tar can't
         # do this
 
