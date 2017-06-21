@@ -23,7 +23,7 @@
 #include <QDebug>
 
 // CTK includes
-#include "ctkAbstractPythonManager.h"
+#include "CTK/ctkAbstractPythonManager.h"
 
 // PythonQT includes
 #include <PythonQt/PythonQt.h>

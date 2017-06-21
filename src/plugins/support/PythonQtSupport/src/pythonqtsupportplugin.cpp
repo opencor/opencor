@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "corecliutils.h"
 #include "pythonqtsupportplugin.h"
-#include "ctkAbstractPythonManager.h"
+#include "CTK/ctkAbstractPythonManager.h"
 
 //==============================================================================
 

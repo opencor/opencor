@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "borderedwidget.h"
-#include "ctkAbstractPythonManager.h"
+#include "CTK/ctkAbstractPythonManager.h"
 #include "pythonqtconsolewindow.h"
 #include "pythonqtsupportplugin.h"
 
