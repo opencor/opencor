@@ -232,6 +232,8 @@ SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
 
 IF(APPLE)
     SET(DEFINE_CMAKE_APPLE_OPTIONS "-DCMAKE_MACOSX_RPATH=ON")
+ELSE()
+    SET(DEFINE_CMAKE_APPLE_OPTIONS)
 ENDIF()
 
 IF(WIN32)
@@ -280,11 +282,16 @@ ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
 
 IF(ENABLE_TESTS)
     SET(TEST Test)
+ELSE()
+    SET(TEST)
 ENDIF()
 
 IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
     SET(WEBKIT WebKit)
     SET(WEBKITWIDGETS WebKitWidgets)
+ELSE()
+    SET(WEBKIT)
+    SET(WEBKITWIDGETS)
 ENDIF()
 
 SET(REQUIRED_QT_MODULES
@@ -310,11 +317,16 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch/src)
 IF(APPLE)
     IF(ENABLE_TESTS)
         SET(QTTEST QtTest)
+    ELSE()
+        SET(QTTEST)
     ENDIF()
 
     IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
         SET(QTWEBKIT QtWebKit)
         SET(QTWEBKITWIDGETS QtWebKitWidgets)
+    ELSE()
+        SET(QTWEBKIT)
+        SET(QTWEBKITWIDGETS)
     ENDIF()
 
     SET(MACOS_QT_LIBRARIES
@@ -1312,8 +1324,8 @@ ELSE()
     #       library at a time...
 
     FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
-        IF(   "${QT_LIBRARY}" STREQUAL "WebKit"
-           OR "${QT_LIBRARY}" STREQUAL "WebKitWidgets")
+        IF(   "${QT_LIBRARY}" STREQUAL "${WEBKIT}"
+           OR "${QT_LIBRARY}" STREQUAL "${WEBKITWIDGETS}")
             SET(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
         ELSE()
             SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})

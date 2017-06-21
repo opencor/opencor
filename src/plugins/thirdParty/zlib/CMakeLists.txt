@@ -21,7 +21,9 @@ SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 # Name of our package's shared library (and of its import library, if any)
 
 IF(WIN32)
-    IF(NOT RELEASE_MODE)
+    IF(RELEASE_MODE)
+        SET(DEBUG_TAG)
+    ELSE()
         SET(DEBUG_TAG d)
     ENDIF()
 
