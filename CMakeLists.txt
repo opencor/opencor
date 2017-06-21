@@ -322,8 +322,8 @@ IF(APPLE)
         SET(QTWEBKIT QtWebKit)
         SET(QTWEBKITWIDGETS QtWebKitWidgets)
     ELSE()
-        SET(QTWEBKIT QtWebKit)
-        SET(QTWEBKITWIDGETS QtWebKitWidgets)
+        SET(QTWEBKIT)
+        SET(QTWEBKITWIDGETS)
     ENDIF()
 
     SET(MACOS_QT_LIBRARIES
