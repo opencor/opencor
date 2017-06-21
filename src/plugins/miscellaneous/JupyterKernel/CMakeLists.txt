@@ -12,7 +12,6 @@ ADD_PLUGIN(JupyterKernel
     HEADERS_MOC
         src/jupyterkernelplugin.h
     INCLUDE_DIRS
-        src
     PLUGINS
         Core
         PythonQtSupport

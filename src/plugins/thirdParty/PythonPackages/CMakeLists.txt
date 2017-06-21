@@ -214,8 +214,6 @@ ADD_PLUGIN(PythonPackages
         src/pythonpackagesplugin.cpp
     HEADERS_MOC
         src/pythonpackagesplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         Python
     EXTERNAL_DESTINATION_DIR

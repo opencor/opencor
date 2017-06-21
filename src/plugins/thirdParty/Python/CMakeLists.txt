@@ -442,8 +442,6 @@ ADD_PLUGIN(Python
         src/pythonplugin.h
     INCLUDE_DIRS
         ${LOCAL_EXTERNAL_PACKAGE_DIR}/${INCLUDE_DIR}
-
-        src
     PLUGINS
         Core
         OpenSSL

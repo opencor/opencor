@@ -221,10 +221,6 @@ ADD_PLUGIN(PythonQtAPI
         src/pythonqtapiplugin.cpp
     HEADERS_MOC
         src/pythonqtapiplugin.h
-    INCLUDE_DIRS
-        ${LOCAL_EXTERNAL_PACKAGE_DIR}/include
-
-        src
     PLUGINS
         Core
         Python
