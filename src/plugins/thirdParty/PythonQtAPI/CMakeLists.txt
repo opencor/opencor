@@ -91,6 +91,7 @@ ELSE()
     # Set platform specific configuration options and tool names
 
     IF(WIN32)
+        SET(QMAKE_LFLAGS_OPTION)
         SET(MAKE_COMMAND nmake)
         SET(QUIET_MAKE -c)
     ELSE()
@@ -98,6 +99,8 @@ ELSE()
           # Make sure correct value of RPATH is set in library
 
             SET(QMAKE_LFLAGS_OPTION "QMAKE_LFLAGS+=\\'-Wl,-rpath,\\\$\\\$ORIGIN/../lib\\'")
+        ELSEIF()
+            SET(QMAKE_LFLAGS_OPTION)
         ENDIF()
 
         SET(MAKE_COMMAND make)
@@ -106,6 +109,8 @@ ELSE()
 
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         SET(QMAKE_DEBUG_OPTION "CONFIG+=debug")
+    ELSEIF()
+        SET(QMAKE_DEBUG_OPTION)
     ENDIF()
 
     # Configure qmake project files with our settings

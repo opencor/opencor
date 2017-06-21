@@ -158,6 +158,7 @@ ELSE()
         # Use the system's readline
         SET(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
     ELSE()
+        SET(CMAKE_INSTALL_RPATH_OPTION)
         # Use Python's built-in readline
         SET(PYTHON_READLINE_OPTION -DBUILTIN_READLINE=ON)
     ENDIF()
