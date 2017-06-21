@@ -18,8 +18,6 @@ ADD_PLUGIN(FileOrganiserWindow
         src/fileorganiserwindowwindow.h
     UIS
         src/fileorganiserwindowwindow.ui
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
 )

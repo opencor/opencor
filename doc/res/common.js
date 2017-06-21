@@ -346,7 +346,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
         return false;
     });
 
-    // Hide our contents menu if the ESC key is pressed 
+    // Hide our contents menu if the ESC key is pressed
 
     $(document).keyup(function(event) {
         if (event.keyCode === 27) {

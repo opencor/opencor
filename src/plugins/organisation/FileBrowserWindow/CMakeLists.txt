@@ -20,8 +20,6 @@ ADD_PLUGIN(FileBrowserWindow
         src/filebrowserwindowwindow.h
     UIS
         src/filebrowserwindowwindow.ui
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
 )

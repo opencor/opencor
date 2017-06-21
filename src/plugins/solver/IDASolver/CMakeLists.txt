@@ -14,12 +14,8 @@ ADD_PLUGIN(IDASolver
         ../../solverinterface.h
 
         src/idasolverplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
-        ${SUNDIALS_PLUGIN}
-    PLUGIN_BINARIES
-        ${SUNDIALS_PLUGIN_BINARY}
+        SUNDIALS
     QT_MODULES
         Widgets
 )

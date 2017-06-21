@@ -17,8 +17,6 @@ ADD_PLUGIN(RawTextView
     HEADERS_MOC
         src/rawtextviewplugin.h
         src/rawtextviewwidget.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         EditingView
 )

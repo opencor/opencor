@@ -16,8 +16,6 @@ ADD_PLUGIN(SampleWindow
         src/samplewindowwindow.h
     UIS
         src/samplewindowwindow.ui
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
         Sample

@@ -18,8 +18,6 @@ ADD_PLUGIN(CellMLTools
         ../../pluginmanager.h
 
         src/cellmltoolsplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         CellMLSupport
     TESTS

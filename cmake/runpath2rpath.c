@@ -67,11 +67,6 @@ int main(int pArgC, char *pArgV[])
     int hasRunpathTag;
     int runpathTagIndex;
 
-    // Some initialisations
-
-    fileDescriptor = -1;
-    dynamicSection = 0;
-
     // Make sure that a file name has been provided
 
     if (pArgC != 2) {
@@ -83,6 +78,7 @@ int main(int pArgC, char *pArgV[])
     // Open the file
 
     fileDescriptor = open(pArgV[1], O_RDWR);
+    dynamicSection = 0;
 
     if (fileDescriptor == -1)
         return error("The file could not be opened.\n");

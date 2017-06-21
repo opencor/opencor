@@ -14,8 +14,6 @@ ADD_PLUGIN(CSVDataStore
         ../../datastoreinterface.h
 
         src/csvdatastoreplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         DataStore
 )

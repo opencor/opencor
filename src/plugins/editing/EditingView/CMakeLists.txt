@@ -19,8 +19,6 @@ ADD_PLUGIN(EditingView
         ../../pluginmanager.h
 
         src/editingviewplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         EditorWidget
 )

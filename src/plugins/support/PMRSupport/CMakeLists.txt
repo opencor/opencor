@@ -33,15 +33,10 @@ ADD_PLUGIN(PMRSupport
         src/pmrworkspacemanager.h
     UIS
         src/pmrsupportpreferenceswidget.ui
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
-        ${LIBGIT2_PLUGIN}
-        ${OAUTH_PLUGIN}
+        libgit2
+        OAuth
         WebViewerWidget
         zlib
-    PLUGIN_BINARIES
-        ${LIBGIT2_PLUGIN_BINARY}
-        ${OAUTH_PLUGIN_BINARY}
 )

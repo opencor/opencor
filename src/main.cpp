@@ -51,7 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSettings>
 #include <QVariant>
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) && defined(USE_PREBUILT_QTWEBKIT_PACKAGE)
     #include <QWebSettings>
 #endif
 
@@ -319,17 +319,19 @@ int main(int pArgC, char *pArgV[])
 
     delete win;
 
-    // We use QtWebKit, and QWebPage in particular, which results in some leak
-    // messages being generated on Windows when leaving OpenCOR. This is because
-    // an object cache is shared between all QWebPage instances. So to destroy a
-    // QWebPage instance doesn't clear the cache, hence the leak messages.
-    // However, those messages are 'only' warnings, so we can safely live with
-    // them. Still, it doesn't look 'good', so we clear the memory caches, thus
-    // avoiding those leak messages...
-    // Note: the below must absolutely be done after calling guiApp->exec() and
-    //       before deleting guiApp...
+    // Clear QtWebKit's memory caches
+    // Note #1: indeed, our use of QtWebKit (and QWebPage in particular) may
+    //          result in some leak-related messages when leaving OpenCOR on
+    //          Windows. This is because an object cache is shared between all
+    //          of our QWebPage instances. So to destroy a QWebPage instance
+    //          doesn't clear the cache, hence the leak-related messages. Those
+    //          messages are 'only' warnings, so we could safely ignore them.
+    //          Still, they don't look 'good', hence we clear QtWebKit's memory
+    //          caches so as to avoid them...
+    // Note #2: the below must absolutely be done after calling guiApp->exec()
+    //          and before deleting guiApp...
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) && defined(USE_PREBUILT_QTWEBKIT_PACKAGE)
     QWebSettings::clearMemoryCaches();
 #endif
 

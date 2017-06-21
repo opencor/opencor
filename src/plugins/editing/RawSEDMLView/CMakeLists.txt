@@ -18,8 +18,6 @@ ADD_PLUGIN(RawSEDMLView
     HEADERS_MOC
         src/rawsedmlviewplugin.h
         src/rawsedmlviewwidget.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         SEDMLEditingView
 )

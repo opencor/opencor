@@ -33,9 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "llvmbegin.h"
+#include "llvmclangbegin.h"
     #include "llvm/ExecutionEngine/ExecutionEngine.h"
-#include "llvmend.h"
+#include "llvmclangend.h"
 
 //==============================================================================
 

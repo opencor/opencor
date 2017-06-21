@@ -16,8 +16,6 @@ ADD_PLUGIN(ZincWindow
         src/zincwindowwindow.h
     UIS
         src/zincwindowwindow.ui
-    INCLUDE_DIRS
-        src
     PLUGINS
         ZincWidget
 )

@@ -12,11 +12,7 @@ ADD_PLUGIN(MathMLViewerWidget
     HEADERS_MOC
         src/mathmlviewerwidget.h
         src/mathmlviewerwidgetplugin.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
-        ${QWT_PLUGIN}
-    PLUGIN_BINARIES
-        ${QWT_PLUGIN_BINARY}
+        Qwt
 )

@@ -18,8 +18,6 @@ ADD_PLUGIN(WebBrowserWindow
         src/webbrowserwindowwindow.h
     UIS
         src/webbrowserwindowwindow.ui
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
         WebViewerWidget

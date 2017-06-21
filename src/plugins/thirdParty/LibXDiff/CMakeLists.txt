@@ -1,74 +1,171 @@
 PROJECT(LibXDiffPlugin)
 
-# Use our pre-built version unless instructed otherwise
+# Name and version of our package
 
-IF(USE_PREBUILT_LIBXDIFF_PLUGIN)
-    # Retrieve the plugin's binary file(s)
+SET(PACKAGE_NAME LibXDiff)
+SET(PACKAGE_VERSION 0.23)
+
+# Version of our library
+
+SET(MAJOR_LIBRARY_VERSION 0)
+SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.23)
+
+# Git tag for our library
+
+SET(GIT_TAG v0.23)
+
+# Specify where our local package will be installed
+
+SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+
+# Name of our package's shared library (and of its import library, if any)
+
+IF(WIN32)
+    SET(SHARED_LIBRARY xdiff${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(IMPORT_LIBRARY xdiff${CMAKE_IMPORT_LIBRARY_SUFFIX})
+ELSE()
+    SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}xdiff${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    SET(IMPORT_LIBRARY ${SHARED_LIBRARY})
+ENDIF()
+
+# Retrieve our package's binaries
+
+SET(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
+
+SET(EXTERNAL_BINARIES
+    ${SHARED_LIBRARY}
+)
+
+# Specify the files that need to have their SHA-1 value checked
+
+SET(SHA1_FILES
+    lib/${SHARED_LIBRARY}
+)
+
+IF(WIN32)
+    LIST(APPEND SHA1_FILES
+        lib/${IMPORT_LIBRARY}
+    )
+ENDIF()
+
+# Use the pre-built version of our package unless instructed otherwise
+
+IF(USE_PREBUILT_LIBXDIFF_PACKAGE)
+    # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_BINARIES_DIR}")
+           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LibXDiff.dll 6d67d3371995a87ad562fb2a81902377925816fc)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LibXDiff.lib d47b3fb7cba7604ecd3d2b0ece9f1ee43e8e6865)
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 17edf6ae6a3c96e631d018a8c321311e1ac50b0b
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES bc05933f0452fe10b681003684bcb991ee4f46d3
+                                              dedc7b05e884f1f67fbf45b54ec205d6bf1d660b)
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LibXDiff.dll 5b2b6ba990ba00cc70c08bda05d2c8de89f0e2f6)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LibXDiff.lib f3f37332f61d7de3b26f35e15f4705a3c095f1f4)
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 304e5eae0818c73465bfd4fddeef8254a175d7a4
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES bacfee23d762a3f0e87ee1166fd992187d835c73
+                                              2b2783937c6e01fc246c9776ee511da3ecdd997e)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libLibXDiff.dylib e5555ee15bb9f2af44e45f1cadf0bd97fd3c1889)
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 0fed25c6f3fc4d329e0d05a90d912008cd4f2593
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES d74f9864f2a173f076740486482f753e5604ab90)
     ELSE()
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libLibXDiff.so 0c2af49f34a172016c33dca9b62b19e68ed6a32e)
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 4f408e6db26b59de32bf187308eb526f15c0a9a1
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 0ebbddd08ef1c2eecd3551b6154153a1ecdf2ffd)
     ENDIF()
-
-    # Add the plugin as a binary
-    # Note: in the case of Windows, we must refer to the distribution directory
-    #       as opposed to the plugins directory since we need the .lib file and
-    #       it's only there...
+ELSE()
+    # Ignore some warnings
 
     IF(WIN32)
-        SET(LIBXDIFF_PLUGIN_BINARY ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR}/${CMAKE_IMPORT_LIBRARY_PREFIX}LibXDiff${CMAKE_IMPORT_LIBRARY_SUFFIX} PARENT_SCOPE)
-    ELSE()
-        SET(LIBXDIFF_PLUGIN_BINARY ${DEST_PLUGINS_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}LibXDiff${CMAKE_SHARED_LIBRARY_SUFFIX} PARENT_SCOPE)
+        SET(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} /wd4101 /wd4244 /wd4267")
     ENDIF()
 
-    ADD_PLUGIN_BINARY(LibXDiff
-        INCLUDE_DIRS
-            src
+    # Build LibXDiff as an external project
+
+    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
+
+    ExternalProject_Add(${PACKAGE_BUILD}
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
+        INSTALL_DIR
+            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+        GIT_REPOSITORY
+            https://github.com/opencor/libxdiff
+        GIT_TAG
+            ${GIT_TAG}
+        CMAKE_CACHE_ARGS
+            -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
+        CMAKE_GENERATOR
+            ${CMAKE_GENERATOR}
+        CMAKE_ARGS
+            ${DEFINE_CMAKE_APPLE_OPTIONS}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+        BUILD_BYPRODUCTS
+            <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
-ELSE()
-    # Add the plugin
 
-    SET(LIBXDIFF_PLUGIN LibXDiff PARENT_SCOPE)
+    # Do some post-processing that is specific to each platform
 
-    ADD_PLUGIN(LibXDiff
-        THIRD_PARTY
-        SOURCES
-            ../../plugininfo.cpp
+    IF(WIN32)
+        # We want both our shared and import libraries to be in the same place
 
-            src/libxdiffplugin.cpp
-            src/xadler32.c
-            src/xalloc.c
-            src/xbdiff.c
-            src/xbpatchi.c
-            src/xdiffi.c
-            src/xemit.c
-            src/xmerge3.c
-            src/xmissing.c
-            src/xpatchi.c
-            src/xprepare.c
-            src/xrabdiff.c
-            src/xrabply.c
-            src/xutils.c
-            src/xversion.c
-        HEADERS_MOC
-            src/libxdiffplugin.h
-        INCLUDE_DIRS
-            src
-        DEFINITIONS
-            HAVE_CONFIG_H
-        QT_MODULES
-            Core
-    )
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} lib
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+                                 DEPENDEES install)
+    ELSE()
+        # Dereference the symbolic link to the library since CMake's tar can't
+        # do this
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}xdiff${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
+                                 DEPENDEES install)
+    ENDIF()
+
+    # Package our external project
+
+    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        PACKAGED_FILES include ${SHA1_FILES}
+                        SHA1_FILES ${SHA1_FILES}
+                        TARGET ${PACKAGE_BUILD})
+
+    SET(DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
+
+# Allow other external projects to find our LibXDiff package
+
+SET(LIBXDIFF_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+SET(LIBXDIFF_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+SET(LIBXDIFF_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IMPORT_LIBRARY} PARENT_SCOPE)
+
+# Add the plugin
+
+ADD_PLUGIN(${PACKAGE_NAME}
+    SOURCES
+        ../../plugininfo.cpp
+
+        src/libxdiffplugin.cpp
+    HEADERS_MOC
+        src/libxdiffplugin.h
+    QT_MODULES
+        Core
+    EXTERNAL_BINARIES_DIR
+        ${EXTERNAL_BINARIES_DIR}
+    EXTERNAL_BINARIES
+        ${EXTERNAL_BINARIES}
+    DEPENDS_ON
+        ${DEPENDS_ON}
+)

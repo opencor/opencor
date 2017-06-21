@@ -21,8 +21,6 @@ ADD_PLUGIN(CellMLEditingView
 
         src/cellmleditingviewplugin.h
         src/cellmleditingviewwidget.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         CellMLSupport
         EditingView
