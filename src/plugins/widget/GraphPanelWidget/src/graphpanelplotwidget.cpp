@@ -447,19 +447,16 @@ static const double DblMaxAxis = 0.3*DBL_MAX;
 // Note: normally, we would use DBL_MAX, but this means that our maximum axis
 //       range would be 2*DBL_MAX, which would cause problems with QwtPlot (e.g.
 //       to create ticks), so instead we use a value that results in a range
-//       that we know will work...
+//       that we know works...
 
 static const double MinAxis = -DblMaxAxis;
 static const double MaxAxis =  DblMaxAxis;
 
 static const double MaxAxisRange = MaxAxis-MinAxis;
-static const double MinAxisRange = 1.0e-5;
-// Note: we use double precision (as opposed to single precision), however it
-//       would seem that, at times, Qwt switches between the two types of
-//       precisions. Indeed, if we are to zoom in too much then graphs may be
-//       rendered incorrectly. So, knowing that single precision corresponds to
-//       a 6-digit precision, we give ourselves a bit of a safety net and allow
-//       minimum axis range of 10^-5...
+static const double MinAxisRange = 1000*DBL_MIN;
+// Note: normally, we would use DBL_MIN, but this would cause problems with
+//       QwtPlot (e.g. to create ticks), so instead we use a value that results
+//       in a range that we know works...
 
 //==============================================================================
 
