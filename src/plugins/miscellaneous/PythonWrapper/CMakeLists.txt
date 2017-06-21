@@ -30,6 +30,7 @@ ADD_PLUGIN(PythonWrapper
         src/pythonwrappersimulationexperimentview.h
         src/pythonwrappersolver.h
     INCLUDE_DIRS
+        ${PYTHON_INCLUDE_DIR}
         ${NUMPY_INCLUDE_DIR}
     PLUGINS
         Core
