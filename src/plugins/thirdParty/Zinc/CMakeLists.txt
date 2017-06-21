@@ -21,7 +21,9 @@ SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 # Name of our package's shared libraries (and of their import libraries, if any)
 
 IF(WIN32)
-    IF(NOT RELEASE_MODE)
+    IF(RELEASE_MODE)
+        SET(DEBUG_TAG)
+    ELSE()
         SET(DEBUG_TAG d)
     ENDIF()
 
@@ -92,9 +94,9 @@ ELSE()
         MATH(EXPR MSVC_VERSION "${CMAKE_CXX_COMPILER_VERSION_MAJOR}-4")
 
         SET(DEFINE_CMAKE_GENERATOR -G "Visual Studio 14 20${MSVC_VERSION} Win64")
-
         SET(SHARED_lIBRARY_DIR bin)
     ELSE()
+        SET(DEFINE_CMAKE_GENERATOR)
         SET(SHARED_lIBRARY_DIR lib)
     ENDIF()
 

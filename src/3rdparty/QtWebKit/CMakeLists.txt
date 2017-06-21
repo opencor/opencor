@@ -257,6 +257,8 @@ ELSE()
             DEPENDS
                 icuBuild
         )
+    ELSE()
+        SET(DEFINE_DEPENDS)
     ENDIF()
 
     ExternalProject_Add(${PACKAGE_BUILD}
@@ -326,8 +328,6 @@ ELSE()
                         PACKAGED_FILES .
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
-
-    SET(DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
 # Make sure that QtWebKit and its CMake files can be found
