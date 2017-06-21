@@ -723,8 +723,7 @@ MACRO(MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES PROJECT_TARGET DIRNAME FILENAME)
         ENDIF()
 
         IF("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            EXECUTE_PROCESS(
-                            COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${FULL_FILENAME})
+            EXECUTE_PROCESS(COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${FULL_FILENAME})
         ELSE()
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                                COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${FULL_FILENAME})
