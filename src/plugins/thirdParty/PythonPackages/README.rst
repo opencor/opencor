@@ -19,5 +19,5 @@ IPython
 
 In our IPython's git controlled directory
 ::
-    git diff --no-prefix 6.0.0 v6.0.0-opencor \
-      > ~/build/OpenCOR-upstream/src/plugins/thirdparty/PythonPackages/src/ipython_6.0.0.diff
+    git diff --no-prefix 6.1.0 PythonQt-v6.1.0 \
+      > ~/build/OpenCOR-upstream/src/plugins/thirdparty/PythonPackages/src/ipython_6.1.0.diff
