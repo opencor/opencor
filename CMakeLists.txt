@@ -771,18 +771,6 @@ ELSE()
 ENDIF()
 
 SET(PLUGINS
-# Python plugins must be declared in order
-
-    thirdParty/Python
-    thirdParty/PythonPackages
-    thirdParty/PythonQtAPI
-
-    support/PythonQtSupport
-
-    miscellaneous/JupyterKernel
-    miscellaneous/PythonQtConsoleWindow
-    miscellaneous/PythonWrapper
-
 #---OPENCOR--- THE PLUGINS THAT ARE DISABLED WILL BE SO UNTIL WE CAN ACTUALLY
 #              BUILD THE BioSignalML PACKAGE...
     ${SAMPLE_PLUGINS}
@@ -852,6 +840,19 @@ SET(PLUGINS
     widget/MathMLViewerWidget
     widget/WebViewerWidget
     widget/ZincWidget
+
+    # Python plugins must be declared in order and after other third-party
+    # plugins
+
+    thirdParty/Python
+    thirdParty/PythonPackages
+    thirdParty/PythonQtAPI
+
+    support/PythonQtSupport
+
+    miscellaneous/JupyterKernel
+    miscellaneous/PythonQtConsoleWindow
+    miscellaneous/PythonWrapper
 )
 
 IF(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
