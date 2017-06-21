@@ -401,7 +401,7 @@ function versions(downloads) {
                                 event.stopPropagation();
                             });
                         } else {
-                            document.write("                                        <li><a href=\""+fullFileName+"\">"+fileType+"</a>"+fileBitness+" <span class=\"fileSize\">("+fileSize(fileSizes[fileName])+")</span></li>\n");
+                            document.write("                                        <li><a href=\""+fullFileName+"\">"+fileType+"</a>"+fileBitness+" <span class=\"fileSize\">("+fileSize(fileSizes[fullFileName])+")</span></li>\n");
                         }
                     }
                 }
