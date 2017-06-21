@@ -771,6 +771,18 @@ ELSE()
 ENDIF()
 
 SET(PLUGINS
+# Python plugins must be declared in order
+
+    thirdParty/Python
+    thirdParty/PythonPackages
+    thirdParty/PythonQtAPI
+
+    support/PythonQtSupport
+
+    miscellaneous/JupyterKernel
+    miscellaneous/PythonQtConsoleWindow
+    miscellaneous/PythonWrapper
+
 #---OPENCOR--- THE PLUGINS THAT ARE DISABLED WILL BE SO UNTIL WE CAN ACTUALLY
 #              BUILD THE BioSignalML PACKAGE...
     ${SAMPLE_PLUGINS}
@@ -797,9 +809,6 @@ SET(PLUGINS
     miscellaneous/Compiler
     miscellaneous/Core
     miscellaneous/HelpWindow
-    miscellaneous/JupyterKernel
-    miscellaneous/PythonQtConsoleWindow
-    miscellaneous/PythonWrapper
     miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
@@ -820,7 +829,6 @@ SET(PLUGINS
     support/CellMLSupport
     support/COMBINESupport
     support/PMRSupport
-    support/PythonQtSupport
     support/QScintillaSupport
     support/SEDMLSupport
     support/StandardSupport
@@ -831,9 +839,6 @@ SET(PLUGINS
     thirdParty/LLVMClang
     thirdParty/OAuth
     thirdParty/OpenSSL
-    thirdParty/Python
-    thirdParty/PythonPackages
-    thirdParty/PythonQtAPI
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
