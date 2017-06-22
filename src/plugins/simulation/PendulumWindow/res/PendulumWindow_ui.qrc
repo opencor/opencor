@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/PendulumWindow">
+        <file>data.csv</file>
+    </qresource>
+</RCC>

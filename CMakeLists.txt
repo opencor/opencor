@@ -811,6 +811,7 @@ SET(PLUGINS
     organisation/PMRWindow
     organisation/PMRWorkspacesWindow
 
+    simulation/PendulumWindow
     simulation/SimulationExperimentView
 
     solver/CVODESolver
