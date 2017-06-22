@@ -3,7 +3,7 @@ PROJECT(libgit2Plugin)
 # Name and version of our package
 
 SET(PACKAGE_NAME libgit2)
-SET(PACKAGE_VERSION 0.25.1)
+SET(PACKAGE_VERSION 0.26)
 
 # Version of our library
 
@@ -13,7 +13,7 @@ SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.1)
 
 # Git tag for our library
 
-SET(GIT_TAG maint/v0.25)
+SET(GIT_TAG maint/v0.26)
 
 # Specify where our local package will be installed
 
