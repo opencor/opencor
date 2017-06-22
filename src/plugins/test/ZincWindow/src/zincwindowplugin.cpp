@@ -93,11 +93,11 @@ bool ZincWindowPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void ZincWindowPlugin::initializePlugin()
 {
-    // Create an action to show/hide our web browser window
+    // Create an action to show/hide our Zinc window
 
     mZincWindowAction = Core::newAction(true, Core::mainWindow());
 
-    // Create our web browser window
+    // Create our Zinc window
 
     mZincWindowWindow = new ZincWindowWindow(Core::mainWindow());
 }
