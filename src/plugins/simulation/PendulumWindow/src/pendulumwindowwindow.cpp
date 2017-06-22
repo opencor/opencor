@@ -120,6 +120,15 @@ void PendulumWindowWindow::createAndSetZincContext()
     mZincContext->getGlyphmodule().defineStandardGlyphs();
 
     mZincWidget->setContext(mZincContext);
+
+    // Some data
+
+    #include "data.inc"
+
+    Q_UNUSED(timeValues);
+    Q_UNUSED(q1Values);
+    Q_UNUSED(thetaValues);
+    Q_UNUSED(r0_value);
 }
 
 //==============================================================================
