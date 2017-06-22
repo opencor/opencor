@@ -1,77 +1,193 @@
 PROJECT(BioSignalMLAPIPlugin)
 
-# Retrieve the plugin's binary file(s)
+# Name and version of our package
 
-STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-       RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_BINARIES_DIR}")
+SET(PACKAGE_NAME BioSignalMLAPI)
+SET(PACKAGE_VERSION 1.0)
 
-SET(BIOSIGNALML_MAJOR_VERSION "0")
-SET(TYPEDOBJECT_MAJOR_VERSION "1")
+# Version of our package's libraries
+
+SET(MAJOR_BIOSIGNALML_LIBRARY_VERSION 0)
+SET(BIOSIGNALML_LIBRARY_VERSION 0.8)
+
+SET(MAJOR_TYPEDOBJECT_LIBRARY_VERSION 1)
+SET(TYPEDOBJECT_LIBRARY_VERSION 1.1)
+
+# Git tags for our libraries
+
+SET(GIT_TAG_BIOSIGNALML v0.8.3)
+SET(GIT_TAG_TYPEDOBJECT v1.1.1)
+
+# Package repository and release tag
+
+SET(PACKAGE_REPOSITORY libbiosignalml)
+SET(RELEASE_TAG 0.8.3)
+
+# Specify where our local package will be installed
+
+SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+
+# Name of our package's shared libraries (and of their import libraries, if any)
 
 IF(WIN32)
-    IF(RELEASE_MODE)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.dll 94bc0c933d41d1e317e3568576dec96077239271)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.lib 49b708bb230a8be7ae0a2eaa17eb0bd44c6f6158)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.dll 037b31ac63d2e4a809b29bbb35056de37b8fb3fd)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.lib 37db06977e3f26317afcf4400b0fefc99994a432)
+    SET(BIOSIGNALML_SHARED_LIBRARY libbiosignalml${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(BIOSIGNALML_IMPORT_LIBRARY libbiosignalml${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    SET(TYPEDOBJECT_SHARED_LIBRARY typedobject${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(TYPEDOBJECT_IMPORT_LIBRARY typedobject${CMAKE_IMPORT_LIBRARY_SUFFIX})
+ELSE()
+    SET(BIOSIGNALML_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}biosignalml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_BIOSIGNALML_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    SET(BIOSIGNALML_IMPORT_LIBRARY ${BIOSIGNALML_SHARED_LIBRARY})
+
+    SET(TYPEDOBJECT_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}typedobject${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_TYPEDOBJECT_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    SET(TYPEDOBJECT_IMPORT_LIBRARY ${TYPEDOBJECT_SHARED_LIBRARY})
+ENDIF()
+
+# Retrieve our package's binaries
+
+SET(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
+
+SET(EXTERNAL_BINARIES
+    ${BIOSIGNALML_SHARED_LIBRARY}
+    ${TYPEDOBJECT_SHARED_LIBRARY}
+)
+
+# Specify the files that need to have their SHA-1 value checked
+
+SET(SHA1_FILES
+    lib/${BIOSIGNALML_SHARED_LIBRARY}
+    lib/${TYPEDOBJECT_SHARED_LIBRARY}
+)
+
+IF(WIN32)
+    LIST(APPEND SHA1_FILES
+        lib/${BIOSIGNALML_IMPORT_LIBRARY}
+        lib/${TYPEDOBJECT_IMPORT_LIBRARY}
+    )
+ENDIF()
+
+# Use the pre-built version of our package unless instructed otherwise
+
+IF(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE)
+    # Retrieve the plugin's package
+
+    STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
+           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
+
+    IF(WIN32)
+        IF(RELEASE_MODE)
+            ##
+        ELSE()
+            ##
+        ENDIF()
+    ELSEIF(APPLE)
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 7b3df53034d4a556385c8d58b21772c779d601df
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 49cec96abbcc4556a407808e71dabfc49e89a2fa
+                                          45c0881a12f28dc54dcbb80d586946aced288246)
     ELSE()
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.dll 779f4064b06ad4d8ec2998ed8553dec16f815c93)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} biosignalml.lib 8ab6470168ad40a1717e64d46c0e8eaab53ebb85)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.dll 2fef49bbfc259656e698bc0b3749a928c254999c)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} typedobject.lib 34f28e57932941cd06f5acef49a46cb38b5185b1)
+        ##
     ENDIF()
-ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libbiosignalml.${BIOSIGNALML_MAJOR_VERSION}.dylib c12d1455b71dd2c19107edf02bb59c6ed78d917a)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libtypedobject.${TYPEDOBJECT_MAJOR_VERSION}.dylib c45259f4e0d64c44c343201f497a67c5489f9e54)
 ELSE()
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libbiosignalml.so.${BIOSIGNALML_MAJOR_VERSION} 0c2f927841fa7e474745e38db1d803e570bf9e5e)
-        RETRIEVE_BINARY_FILE_FROM("http://biosignalml.org/binaries" ${RELATIVE_PROJECT_SOURCE_DIR} libtypedobject.so.${TYPEDOBJECT_MAJOR_VERSION} d0e619e47c28e029fa51db15e534fd201154a1bd)
-ENDIF()
 
-# Retrieve the BioSignalML API external binaries
+    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
-SET(EXTERNAL_BINARIES_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR})
+    # First build typedobject library as an external project
 
-IF(WIN32)
-    SET(EXTERNAL_BINARIES
-        biosignalml${CMAKE_SHARED_LIBRARY_SUFFIX}
-        typedobject${CMAKE_SHARED_LIBRARY_SUFFIX}
+    ExternalProject_Add(TypedObjectBuild
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/typedobject
+        INSTALL_DIR
+            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+        GIT_REPOSITORY
+            git@github.com:opencor/typedobject.git
+        GIT_TAG
+            ${GIT_TAG_TYPEDOBJECT}
+        CMAKE_GENERATOR
+            ${CMAKE_GENERATOR}
+        CMAKE_ARGS
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+        BUILD_BYPRODUCTS
+            <INSTALL_DIR>/lib/${TYPEDOBJECT_IMPORT_LIBRARY}
     )
-ELSEIF(APPLE)
-    SET(EXTERNAL_BINARIES
-        libbiosignalml.${BIOSIGNALML_MAJOR_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}
-        libtypedobject.${TYPEDOBJECT_MAJOR_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}
-    )
-ELSE()
-    SET(EXTERNAL_BINARIES
-        libbiosignalml${CMAKE_SHARED_LIBRARY_SUFFIX}.${BIOSIGNALML_MAJOR_VERSION}
-        libtypedobject${CMAKE_SHARED_LIBRARY_SUFFIX}.${TYPEDOBJECT_MAJOR_VERSION}
-    )
-ENDIF()
 
-IF(APPLE)
-    SET(EXTERNAL_BINARIES_DEPENDENCIES ${EXTERNAL_BINARIES})
-ELSE()
-    SET(EXTERNAL_BINARIES_DEPENDENCIES)
+
+    ExternalProject_Add(${PACKAGE_BUILD}
+        DEPENDS
+            TypedObjectBuild
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
+        INSTALL_DIR
+            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+        GIT_REPOSITORY
+            git@github.com:opencor/libbiosignalml.git
+        GIT_TAG
+            ${GIT_TAG_BIOSIGNALML}
+        CMAKE_GENERATOR
+            ${CMAKE_GENERATOR}
+        CMAKE_ARGS
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+
+            # Specify location of our newly built typedobject
+            -Dtypedobject_INCLUDE_DIR=<INSTALL_DIR>/include
+            -Dtypedobject_LIBRARY=<INSTALL_DIR>/lib/${TYPEDOBJECT_IMPORT_LIBRARY}
+            -Dtypedobject_DIR=<INSTALL_DIR>/lib/cmake/typedobject
+        BUILD_BYPRODUCTS
+            <INSTALL_DIR>/lib/${BIOSIGNALML_IMPORT_LIBRARY}
+    )
+
+    IF(NOT WIN32)
+        # Dereference the symbolic link to the libraries since CMake's tar can't
+        # do this
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyAnnotoolsLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${BIOSIGNALML_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}biosignalml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${BIOSIGNALML_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${BIOSIGNALML_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
+                                 DEPENDEES install)
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCcgsLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${TYPEDOBJECT_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}typedobject${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${TYPEDOBJECT_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${TYPEDOBJECT_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
+                                 DEPENDEES install)
+    ENDIF()
+
+    # Package our external project
+
+    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                        RELEASE_TAG ${RELEASE_TAG}
+                        PACKAGED_FILES include ${SHA1_FILES}
+                        SHA1_FILES ${SHA1_FILES}
+                        TARGET ${PACKAGE_BUILD})
+
+    SET(DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
 # Add the plugin
 
-ADD_PLUGIN(BioSignalMLAPI
+ADD_PLUGIN(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp
 
         src/biosignalmlapiplugin.cpp
     HEADERS_MOC
         src/biosignalmlapiplugin.h
-    INCLUDE_DIRS
-        include
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
         ${EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
-    EXTERNAL_BINARIES_DEPENDENCIES
-        ${EXTERNAL_BINARIES_DEPENDENCIES}
+    DEPENDS_ON
+        ${DEPENDS_ON}
 )

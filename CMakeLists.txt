@@ -13,6 +13,7 @@ OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 OPTION(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
 OPTION(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
 
+OPTION(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE "Use the pre-built version of the BioSignalML API package" ON)
 OPTION(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
 OPTION(USE_PREBUILT_SBMLAPI_PACKAGE "Use the pre-built version of the SBML API package" ON)
 OPTION(USE_PREBUILT_SEDMLAPI_PACKAGE "Use the pre-built version of the SED-ML API package" ON)
@@ -778,17 +779,15 @@ ELSE()
 ENDIF()
 
 SET(PLUGINS
-#---OPENCOR--- THE PLUGINS THAT ARE DISABLED WILL BE SO UNTIL WE CAN ACTUALLY
-#              BUILD THE BioSignalML PACKAGE...
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
 
-#    api/BioSignalMLAPI
+    api/BioSignalMLAPI
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
 
-#    dataStore/BioSignalMLDataStore
+    dataStore/BioSignalMLDataStore
     dataStore/CSVDataStore
     dataStore/DataStore
 
