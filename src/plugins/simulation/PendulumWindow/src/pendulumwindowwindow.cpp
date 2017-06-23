@@ -209,8 +209,8 @@ void PendulumWindowWindow::createAndSetZincContext()
 
         OpenCMISS::Zinc::FieldNodeLookup nodeCoordinates = fieldModule.createFieldNodeLookup(rcCoordinates, node);
 
-        // xiTime_coordinates converts the time variation to be spatial, showing
-        // the values of nodeCoordinates at xiTime
+        // xiTimeNodeCoordinates converts the time variation to be spatial,
+        // showing the values of nodeCoordinates at xiTime
 
         OpenCMISS::Zinc::FieldTimeLookup xiTimeNodeCoordinates = fieldModule.createFieldTimeLookup(nodeCoordinates, xiTime);
 
@@ -255,7 +255,7 @@ void PendulumWindowWindow::createAndSetZincContext()
     OpenCMISS::Zinc::Tessellationmodule tessellationModule = scene.getTessellationmodule();
     OpenCMISS::Zinc::Tessellation tessellation = tessellationModule.createTessellation();
 
-    const int tessellationData[] = { 10000 };
+    const int tessellationData[] = { DataSize };
 
     tessellation.setMinimumDivisions(1, tessellationData);
 
