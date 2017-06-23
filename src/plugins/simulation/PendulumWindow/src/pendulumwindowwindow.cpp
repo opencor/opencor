@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "borderedwidget.h"
 #include "corecliutils.h"
 #include "pendulumwindowwindow.h"
+#include "widget.h"
 #include "zincwidget.h"
 
 //==============================================================================
@@ -32,7 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QCheckBox>
 #include <QDir>
+#include <QLabel>
 
 //==============================================================================
 
@@ -77,9 +80,48 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     mGui->layout->addWidget(new Core::BorderedWidget(mZincWidget,
                                                      true, true, true, true));
 
+    // Create and add our time label and check box
+
+    Core::Widget *timeWidget = new Core::Widget(QSize(), this);
+
+    timeWidget->createLayout(Core::Widget::HorizontalLayout);
+
+    mTimeLabel = new QLabel(timeWidget);
+
+    mTimeLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+
+    timeWidget->layout()->addWidget(mTimeLabel);
+
+    mTimeCheckBox = new QCheckBox(timeWidget);
+
+    mTimeCheckBox->setText(tr("Auto"));
+
+    connect(mTimeCheckBox, SIGNAL(toggled(bool)),
+            this, SLOT(autoMode()));
+
+    timeWidget->layout()->addWidget(mTimeCheckBox);
+
+    mGui->layout->addWidget(timeWidget);
+
+    // Create and add our time slider
+
+    mTimeSlider = new QSlider(this);
+
+    mTimeSlider->setOrientation(Qt::Horizontal);
+
+    connect(mTimeSlider, SIGNAL(valueChanged(int)),
+            this, SLOT(updateScene(const int &)));
+
+    mGui->layout->addWidget(mTimeSlider);
+
     // Create and set our Zinc context
 
     createAndSetZincContext();
+
+    // Customise our timer
+
+    connect(&mTimer, SIGNAL(timeout()),
+            this, SLOT(updateScene()));
 }
 
 //==============================================================================
@@ -268,12 +310,16 @@ void PendulumWindowWindow::createAndSetZincContext()
     // Set the range of valid times in the default timekeeper
 
     OpenCMISS::Zinc::Timekeepermodule timeKeeperModule = mZincContext->getTimekeepermodule();
-    OpenCMISS::Zinc::Timekeeper timeKeeper = timeKeeperModule.getDefaultTimekeeper();
 
-    timeKeeper.setMinimumTime(timeValues[0]);
-    timeKeeper.setMaximumTime(timeValues[DataSize-1]);
+    mTimeKeeper = timeKeeperModule.getDefaultTimekeeper();
 
-    timeKeeper.setTime(timeValues[0]);
+    mTimeKeeper.setMinimumTime(timeValues[0]);
+    mTimeKeeper.setMaximumTime(timeValues[DataSize-1]);
+
+    mTimeSlider->setMinimum(timeValues[0]);
+    mTimeSlider->setMaximum(100*timeValues[DataSize-1]);
+
+    updateScene(timeValues[0]);
 
     // Now set up some graphics
 
@@ -386,6 +432,51 @@ void PendulumWindowWindow::devicePixelRatioChanged(const int &pDevicePixelRatio)
     scene.beginChange();
         scene.createGraphicsPoints().getGraphicspointattributes().getFont().setPointSize(pDevicePixelRatio*mAxesFontPointSize);
     scene.endChange();
+}
+
+//==============================================================================
+
+void PendulumWindowWindow::updateScene(const int &pTime)
+{
+    // Update our scene
+
+    if (mTimeKeeper.isValid()) {
+        double time = 0.01*pTime;
+
+        mTimeLabel->setText(tr("Time: %1 s").arg(time));
+
+        mTimeKeeper.setTime(time);
+    }
+}
+
+//==============================================================================
+
+void PendulumWindowWindow::updateScene()
+{
+    // Update our scene
+
+    if (mTimeKeeper.isValid()) {
+        int value = mTimeSlider->value();
+
+        if (value == mTimeSlider->maximum())
+            value = 0;
+        else
+            ++value;
+
+        mTimeSlider->setValue(value);
+    }
+}
+
+//==============================================================================
+
+void PendulumWindowWindow::autoMode()
+{
+    // Enable/disable our timer
+
+    if (mTimeCheckBox->isChecked())
+        mTimer.start();
+    else
+        mTimer.stop();
 }
 
 //==============================================================================

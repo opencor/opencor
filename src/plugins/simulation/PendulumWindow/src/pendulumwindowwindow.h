@@ -29,6 +29,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QTimer>
+
+//==============================================================================
+
+#include "opencmiss/zinc/timekeeper.hpp"
+
+//==============================================================================
+
+class QCheckBox;
+class QLabel;
+class QSlider;
+
+//==============================================================================
+
 namespace Ui {
     class PendulumWindowWindow;
 }
@@ -73,6 +87,13 @@ private:
     ZincWidget::ZincWidget *mZincWidget;
     OpenCMISS::Zinc::Context *mZincContext;
 
+    QTimer mTimer;
+
+    QLabel *mTimeLabel;
+    QSlider *mTimeSlider;
+    QCheckBox *mTimeCheckBox;
+    OpenCMISS::Zinc::Timekeeper mTimeKeeper;
+
     char *mZincSceneViewerDescription;
 
     int mAxesFontPointSize;
@@ -81,6 +102,11 @@ private slots:
     void createAndSetZincContext();
     void graphicsInitialized();
     void devicePixelRatioChanged(const int &pDevicePixelRatio);
+
+    void updateScene(const int &pTime);
+    void updateScene();
+
+    void autoMode();
 };
 
 //==============================================================================

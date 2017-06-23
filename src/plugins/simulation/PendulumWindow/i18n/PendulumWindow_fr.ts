@@ -13,6 +13,17 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PendulumWindow::PendulumWindowWindow</name>
+    <message>
+        <source>Auto</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Time: %1 s</source>
+        <translation>Temps : %1 s</translation>
+    </message>
+</context>
+<context>
     <name>PendulumWindowWindow</name>
     <message>
         <source>Pendulum</source>
