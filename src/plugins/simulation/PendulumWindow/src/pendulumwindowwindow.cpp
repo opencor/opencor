@@ -74,14 +74,8 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     connect(mZincWidget, SIGNAL(devicePixelRatioChanged(const int &)),
             this, SLOT(devicePixelRatioChanged(const int &)));
 
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mZincWidget,
-                                                     false, true, true, true));
-#elif defined(Q_OS_MAC)
-    mGui->layout->addWidget(mZincWidget);
-#else
-    #error Unsupported platform
-#endif
+                                                     true, true, true, true));
 
     // Create and set our Zinc context
 
@@ -148,30 +142,16 @@ void PendulumWindowWindow::createAndSetZincContext()
         OpenCMISS::Zinc::FieldFiniteElement q1 = fieldModule.createFieldFiniteElement(1);
         OpenCMISS::Zinc::FieldFiniteElement theta = fieldModule.createFieldFiniteElement(1);
 
-        r0.setName("r0");
-        r0.setManaged(true);
-
-        q1.setName("q1");
-        q1.setManaged(true);
-
-        theta.setName("theta");
-        theta.setManaged(true);
-
         // Defining fields as functions of other fields
 
         OpenCMISS::Zinc::FieldAdd r = fieldModule.createFieldAdd(r0, q1);
-
-        r.setName("r");
-        r.setManaged(true);
 
         // Define cylindrical polar coordinates
 
         OpenCMISS::Zinc::Field coordinatesData[] = { r, theta };
         OpenCMISS::Zinc::FieldConcatenate coordinates = fieldModule.createFieldConcatenate(2, coordinatesData);
 
-        coordinates.setName("coordinates");
         coordinates.setCoordinateSystemType(OpenCMISS::Zinc::Field::COORDINATE_SYSTEM_TYPE_CYLINDRICAL_POLAR);
-        coordinates.setManaged(true);
 
         // Define a constant field at the [default rectangular cartesian] origin
 
@@ -179,23 +159,15 @@ void PendulumWindowWindow::createAndSetZincContext()
 
         OpenCMISS::Zinc::FieldConstant rcOrigin = fieldModule.createFieldConstant(3, rcOriginData);
 
-        rcOrigin.setName("rcOorigin");
-        rcOrigin.setManaged(true);
-
         // Define a field converting the polar coordinates to RC
 
         OpenCMISS::Zinc::FieldCoordinateTransformation rcCoordinates = fieldModule.createFieldCoordinateTransformation(coordinates);
 
-        rcCoordinates.setName("rcCoordinates");
         rcCoordinates.setCoordinateSystemType(OpenCMISS::Zinc::Field::COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN);
-        rcCoordinates.setManaged(true);
 
         // Get the difference from rcCoordinates to rcOrigin
 
         OpenCMISS::Zinc::FieldSubtract delta = fieldModule.createFieldSubtract(rcCoordinates, rcOrigin);
-
-        delta.setName("delta");
-        delta.setManaged(true);
 
         // Create a single node with storage for constant r0 and time-varying q1
         // and theta
@@ -222,9 +194,6 @@ void PendulumWindowWindow::createAndSetZincContext()
 
         xi = fieldModule.createFieldComponent(xi, 1);
 
-        xi.setName("xi");
-        xi.setManaged(true);
-
         // Fixed scale factor to work for the entire range of times
         // Note: if we are reading times during solution, we could dynamically
         //       change it (and the fine tessellation below)...
@@ -233,29 +202,17 @@ void PendulumWindowWindow::createAndSetZincContext()
 
         OpenCMISS::Zinc::FieldConstant fieldConstant = fieldModule.createFieldConstant(1, constantData);
 
-        fieldConstant.setName("fieldConstant");
-        fieldConstant.setManaged(true);
-
         OpenCMISS::Zinc::FieldMultiply xiTime = fieldModule.createFieldMultiply(xi, fieldConstant);
-
-        xiTime.setName("xiTime");
-        xiTime.setManaged(true);
 
         // xiCoordinates returns node's value of rcCoordinates at the current
         // time on any other domain
 
         OpenCMISS::Zinc::FieldNodeLookup nodeCoordinates = fieldModule.createFieldNodeLookup(rcCoordinates, node);
 
-        nodeCoordinates.setName("nodeCoordinates");
-        nodeCoordinates.setManaged(true);
-
         // xiTime_coordinates converts the time variation to be spatial, showing
         // the values of nodeCoordinates at xiTime
 
         OpenCMISS::Zinc::FieldTimeLookup xiTimeNodeCoordinates = fieldModule.createFieldTimeLookup(nodeCoordinates, xiTime);
-
-        xiTimeNodeCoordinates.setName("xiTimeNodeCoordinates");
-        xiTimeNodeCoordinates.setManaged(true);
 
         // Assign parameters at the node for the above fields
 
@@ -300,8 +257,6 @@ void PendulumWindowWindow::createAndSetZincContext()
 
     const int tessellationData[] = { 10000 };
 
-    tessellation.setName("fine");
-    tessellation.setManaged(true);
     tessellation.setMinimumDivisions(1, tessellationData);
 
     // Also increase the circle divisions quality of the default points
@@ -402,9 +357,6 @@ void PendulumWindowWindow::createAndSetZincContext()
         path.setTessellation(tessellation);
         path.setMaterial(materialModule.findMaterialByName("grey50"));
     scene.endChange();
-
-    // Note: to animate the scne, we need to call timekeeper.setTime(time) as
-    //       our simulation time changes...
 }
 
 //==============================================================================
