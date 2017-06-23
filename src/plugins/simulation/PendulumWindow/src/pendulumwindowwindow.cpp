@@ -215,17 +215,7 @@ void PendulumWindowWindow::createAndSetZincContext()
 
         OpenCMISS::Zinc::Node node = nodeSet.createNode(1, nodeTemplate);
 
-        // Create a single 1D element with only 1D xi coordinates to provide a
-        // domain for visualising the coordinates time path
-
-        OpenCMISS::Zinc::Mesh mesh = fieldModule.findMeshByDimension(1);
-        OpenCMISS::Zinc::Elementtemplate elementTemplate = mesh.createElementtemplate();
-
-        elementTemplate.setElementShapeType(OpenCMISS::Zinc::Element::SHAPE_TYPE_LINE);
-
-        OpenCMISS::Zinc::Element element = mesh.createElement(1, elementTemplate);
-
-        // Create fields looking up the node coordinates at time as a function
+        // Create a field looking up the node coordinates at time as a function
         // of element xi
 
         OpenCMISS::Zinc::Field xi = fieldModule.findFieldByName("xi");
