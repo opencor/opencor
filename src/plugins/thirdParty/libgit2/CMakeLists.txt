@@ -63,16 +63,16 @@ IF(USE_PREBUILT_LIBGIT2_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 5669b5291fe7fca0af534061fdb16594eb823d89
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 929ea4b53343353fa685ff745762588779d30cc9
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 77cd9b8f1402c3b329ddfc5857e0f84659559024
-                                              091f205f7864c855b0908817ddc67e72c9b0b259)
+                                  SHA1_VALUES d415d2e64e9b8dd4732155530923ef45052de3bb
+                                              160db4acf97ee193b21294d704a362f3c0e41d2a)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 91a282288b97e5f47ff44aa32612717cf02b85d4
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 4446e5c79ad865c9f779b2e78abca10d74af3cca
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES d5fd5ba5cfcf921f247e4e2b9b801d7ba95d3d89
-                                              2f25f1ef3d657b788d59b1ff1a27658fae570247)
+                                  SHA1_VALUES 9da9f60fb833aac3c77dd3ba7be53c52b63ef509
+                                              72d1ad271ea068410bece8622f0d249e56d6021c)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
