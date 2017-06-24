@@ -186,12 +186,11 @@ ELSE()
                        ${BUILD_COMMAND})
     ELSEIF(APPLE)
         SET(CONFIGURE_COMMAND ${QMAKE_COMMAND} <SOURCE_DIR>)
-        SET(BUILD_COMMAND ${MAKE_JOM_COMMAND})
 
         IF(RELEASE_MODE)
-            SET(BUILD_COMMAND ${BUILD_COMMAND} release)
+            SET(BUILD_COMMAND ${MAKE_JOM_COMMAND} release)
         ELSE()
-            SET(BUILD_COMMAND ${BUILD_COMMAND} debug)
+            SET(BUILD_COMMAND ${MAKE_JOM_COMMAND} debug)
         ENDIF()
 
         SET(INSTALL_COMMAND
