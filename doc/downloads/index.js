@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26 (see issue <a href=\"https://github.com/opencor/opencor/issues/1340\">#1340</a>)." }
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26 (see issue <a href=\"https://github.com/opencor/opencor/issues/1340\">#1340</a>). Added <a href=\"http://code.qt.io/cgit/qt/qtcharts.git/tree/\">Qt Charts</a> as a package (see issue <a href=\"https://github.com/opencor/opencor/issues/1342\">#1342</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
