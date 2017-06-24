@@ -76,13 +76,13 @@ IF(USE_PREBUILT_QTCHARTS_PACKAGE)
 
     IF(WIN32)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                              ${RELATIVE_PROJECT_SOURCE_DIR} d7290d479c488964e43088bdc0c855494fa105ab
                               TARGET_PLATFORM ${TARGET_PLATFORM}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
+                              SHA1_VALUES 9d73b40c8528472746988f7e6bb8c923f2972d10
+                                          336e7ff0119f0b26ecbb0208e3f014933e8c6ca6
+                                          6258729d778866c63eea221eb96428eb81c855f6
+                                          87b1ba707145d080fa90261358739179aad4e435)
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 1b570cf296aefc49f8e742b234e3cfaa5f8b3ac7
@@ -91,11 +91,10 @@ IF(USE_PREBUILT_QTCHARTS_PACKAGE)
                               SHA1_VALUES c819db40834569161082e4d95ef78efcbfe5811b)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 9f7c14a13d42f5ecc34c1a4663e9484300dc1382
                               TARGET_PLATFORM ${TARGET_PLATFORM}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
+                              SHA1_VALUES 91a78fef36643c0c499c64f94960cdeb3fd22731)
     ENDIF()
 ELSE()
     # Set platform specific configuration options
