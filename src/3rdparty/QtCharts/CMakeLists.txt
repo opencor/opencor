@@ -168,15 +168,6 @@ ELSE()
 
     SET(SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
 
-    IF(NOT WIN32 AND NOT APPLE)
-        SET(DEFINE_DEPENDS
-            DEPENDS
-                icuBuild
-        )
-    ELSE()
-        SET(DEFINE_DEPENDS)
-    ENDIF()
-
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
             ${SOURCE_DIR}
@@ -194,7 +185,6 @@ ELSE()
             ${INSTALL_COMMAND}
         BUILD_BYPRODUCTS
             ${BUILD_BYPRODUCTS}
-        ${DEFINE_DEPENDS}
     )
 
     # Try to build our patch program
