@@ -280,28 +280,15 @@ ELSE()
         ${DEFINE_DEPENDS}
     )
 
-    # Try to build our patch program
+    # (Try to) build our patch CMake program
 
-    SET(PATCH ${CMAKE_BINARY_DIR}/patchQtWebKitCMakeFile${CMAKE_EXECUTABLE_SUFFIX})
-    SET(PATCH_SOURCE ${PROJECT_SOURCE_DIR}/cmake/patch.c)
-
-    IF(WIN32)
-        EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} ${PATCH_SOURCE} /link /out:${PATCH}
-                        RESULT_VARIABLE RESULT)
-    ELSE()
-        EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -o ${PATCH} ${PATCH_SOURCE}
-                        RESULT_VARIABLE RESULT)
-    ENDIF()
-
-    IF(NOT RESULT EQUAL 0)
-        MESSAGE(FATAL_ERROR "patch could not be built...")
-    ENDIF()
+	BUILD_PATCHCMAKE()
 
     # Patch our CMake files
 
     ExternalProject_Add_Step(${PACKAGE_BUILD} PatchCMakeFiles
-                             COMMAND ${PATCH} Qt5WebKit/Qt5WebKitConfig.cmake
-                             COMMAND ${PATCH} Qt5WebKitWidgets/Qt5WebKitWidgetsConfig.cmake
+                             COMMAND ${PATCH} Qt5WebKit/Qt5WebKitConfig.cmake WebKit
+                             COMMAND ${PATCH} Qt5WebKitWidgets/Qt5WebKitWidgetsConfig.cmake WebKitWidgets
                              WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/cmake
                              DEPENDEES install)
 
@@ -315,7 +302,7 @@ ELSE()
         ExternalProject_Add_Step(${PACKAGE_BUILD} PatchHeaderFiles
                                  COMMAND ${CMAKE_COMMAND} -D SOURCE_DIR=${SOURCE_DIR}
                                                           -D INCLUDE_DIR=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include
-                                                          -P ${PROJECT_SOURCE_DIR}/cmake/patch.cmake
+                                                          -P ${CMAKE_SOURCE_DIR}/cmake/patchheaderfiles.cmake
                                  DEPENDEES install)
     ENDIF()
 
