@@ -15,8 +15,8 @@ SET(TYPEDOBJECT_LIBRARY_VERSION 1.1)
 
 # Git tags for our libraries
 
-SET(GIT_TAG_BIOSIGNALML v0.8.3)
-SET(GIT_TAG_TYPEDOBJECT v1.1.1)
+SET(GIT_TAG_BIOSIGNALML v0.8.4)
+SET(GIT_TAG_TYPEDOBJECT v1.1.2)
 
 # Package repository and release tag
 
@@ -30,8 +30,8 @@ SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 # Name of our package's shared libraries (and of their import libraries, if any)
 
 IF(WIN32)
-    SET(BIOSIGNALML_SHARED_LIBRARY libbiosignalml${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(BIOSIGNALML_IMPORT_LIBRARY libbiosignalml${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    SET(BIOSIGNALML_SHARED_LIBRARY biosignalml${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(BIOSIGNALML_IMPORT_LIBRARY biosignalml${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
     SET(TYPEDOBJECT_SHARED_LIBRARY typedobject${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(TYPEDOBJECT_IMPORT_LIBRARY typedobject${CMAKE_IMPORT_LIBRARY_SUFFIX})
@@ -76,20 +76,42 @@ IF(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            ##
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} e2ca2a020750760c611b72b35edfa956bc55c593
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 379e38afc9eb015b54cd327aac0d725f25fb95fc
+                                              c18a129f49429083c40c3621f61256ddcbe83c05
+                                              c4bf89a74703d73220e7b8be29944c409fca1a06
+                                              a10d81c681fae3efc41d7855c4250f7333821256)
         ELSE()
-            ##
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} f01b5c1219ab792476ae6eaadf3be0329784c948
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 6ffeea24b14d9769e5b50aed663ce5091cd43101
+                                              136f63617ad96a272d56b0e13f3d0b090f096d75
+                                              0dcde52f7037472d6d642e71f9e616f0fac18095
+                                              556aa50cf56cd0e934a5cd7c392cef4be1d01d1c)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 7b3df53034d4a556385c8d58b21772c779d601df
+                              ${RELATIVE_PROJECT_SOURCE_DIR} a9842f187002c5b9bae273bc2cd3224592f87ef2
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 49cec96abbcc4556a407808e71dabfc49e89a2fa
-                                          45c0881a12f28dc54dcbb80d586946aced288246)
+                              SHA1_VALUES 7141316b23d7cace02e72466808f6710ad40a4b8
+                                          8e6ca96135ae670a53422a44827579740108d559)
     ELSE()
-        ##
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 02a4ba32fce20cd13f9f5fbf966000ce0abb2b9b
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES ecb1f7171e724140b57114c5de6af8b0f36871de
+                                          6d80493dc3187a71ac3755ef689191d50325dce4)
     ENDIF()
 ELSE()
 
@@ -141,19 +163,23 @@ ELSE()
             <INSTALL_DIR>/lib/${BIOSIGNALML_IMPORT_LIBRARY}
     )
 
-    IF(NOT WIN32)
+    IF(WIN32)
+        # We want both our shared and import libraries to be in the same place
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLLs
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${BIOSIGNALML_SHARED_LIBRARY} lib
+                                 COMMAND ${CMAKE_COMMAND} -E copy bin/${TYPEDOBJECT_SHARED_LIBRARY} lib
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+                                 DEPENDEES install)
+    ELSE()
         # Dereference the symbolic link to the libraries since CMake's tar can't
         # do this
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyAnnotoolsLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibraries
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${BIOSIGNALML_SHARED_LIBRARY}
+                                                                       ${TYPEDOBJECT_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}biosignalml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${BIOSIGNALML_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${BIOSIGNALML_SHARED_LIBRARY}
-                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
-                                 DEPENDEES install)
-
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCcgsLibrary
-                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${TYPEDOBJECT_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}typedobject${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${TYPEDOBJECT_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${TYPEDOBJECT_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
