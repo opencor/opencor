@@ -8,10 +8,10 @@ SET(PACKAGE_VERSION 1.0)
 # Version of our package's libraries
 
 SET(MAJOR_BIOSIGNALML_LIBRARY_VERSION 0)
-SET(BIOSIGNALML_LIBRARY_VERSION 0.8)
+SET(BIOSIGNALML_LIBRARY_VERSION ${MAJOR_BIOSIGNALML_LIBRARY_VERSION}.8)
 
 SET(MAJOR_TYPEDOBJECT_LIBRARY_VERSION 1)
-SET(TYPEDOBJECT_LIBRARY_VERSION 1.1)
+SET(TYPEDOBJECT_LIBRARY_VERSION ${MAJOR_TYPEDOBJECT_LIBRARY_VERSION}.1)
 
 # Git tags for our libraries
 
@@ -21,7 +21,7 @@ SET(GIT_TAG_TYPEDOBJECT v1.1.2)
 # Package repository and release tag
 
 SET(PACKAGE_REPOSITORY libbiosignalml)
-SET(RELEASE_TAG 0.8.3)
+SET(RELEASE_TAG v0.8.4)
 
 # Specify where our local package will be installed
 
@@ -114,10 +114,7 @@ IF(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE)
                                           6d80493dc3187a71ac3755ef689191d50325dce4)
     ENDIF()
 ELSE()
-
-    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
-
-    # First build typedobject library as an external project
+    # Build typedobject as an external project
 
     ExternalProject_Add(TypedObjectBuild
         SOURCE_DIR
@@ -125,7 +122,7 @@ ELSE()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            git@github.com:opencor/typedobject.git
+            https://github.com/opencor/typedobject
         GIT_TAG
             ${GIT_TAG_TYPEDOBJECT}
         CMAKE_GENERATOR
@@ -137,16 +134,15 @@ ELSE()
             <INSTALL_DIR>/lib/${TYPEDOBJECT_IMPORT_LIBRARY}
     )
 
+    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
-        DEPENDS
-            TypedObjectBuild
         SOURCE_DIR
             ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            git@github.com:opencor/libbiosignalml.git
+            https://github.com/opencor/libbiosignalml
         GIT_TAG
             ${GIT_TAG_BIOSIGNALML}
         CMAKE_GENERATOR
@@ -154,13 +150,13 @@ ELSE()
         CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-
-            # Specify location of our newly built typedobject
+            -Dtypedobject_DIR=<INSTALL_DIR>/lib/cmake/typedobject
             -Dtypedobject_INCLUDE_DIR=<INSTALL_DIR>/include
             -Dtypedobject_LIBRARY=<INSTALL_DIR>/lib/${TYPEDOBJECT_IMPORT_LIBRARY}
-            -Dtypedobject_DIR=<INSTALL_DIR>/lib/cmake/typedobject
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${BIOSIGNALML_IMPORT_LIBRARY}
+        DEPENDS
+            TypedObjectBuild
     )
 
     IF(WIN32)
