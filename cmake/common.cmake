@@ -43,6 +43,30 @@ ENDMACRO()
 
 #===============================================================================
 
+MACRO(BUILD_PATCHCMAKE)
+    # Try to build our patch CMake program
+    
+    SET(PATCH ${CMAKE_BINARY_DIR}/patchcmake${CMAKE_EXECUTABLE_SUFFIX})
+    
+    IF(NOT EXISTS ${PATH})
+        SET(PATCH_SOURCE ${CMAKE_SOURCE_DIR}/cmake/patchcmake.c)
+
+        IF(WIN32)
+            EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} ${PATCH_SOURCE} /link /out:${PATCH}
+                            RESULT_VARIABLE RESULT)
+        ELSE()
+            EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -o ${PATCH} ${PATCH_SOURCE}
+                            RESULT_VARIABLE RESULT)
+        ENDIF()
+
+        IF(NOT RESULT EQUAL 0)
+            MESSAGE(FATAL_ERROR "patchcmake could not be built...")
+        ENDIF()
+    ENDIF()
+ENDMACRO()
+
+#===============================================================================
+
 MACRO(ADD_PLUGIN PLUGIN_NAME)
     # Various initialisations
 
