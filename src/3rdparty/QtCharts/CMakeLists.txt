@@ -220,7 +220,7 @@ ELSE()
         ExternalProject_Add_Step(${PACKAGE_BUILD} PatchHeaderFiles
                                  COMMAND ${CMAKE_COMMAND} -D SOURCE_DIR=${SOURCE_DIR}
                                                           -D INCLUDE_DIR=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include
-                                                          -P ${PROJECT_SOURCE_DIR}/cmake/patch.cmake
+                                                          -P ${CMAKE_SOURCE_DIR}/cmake/patchheaderfiles.cmake
                                  DEPENDEES install)
     ENDIF()
 
