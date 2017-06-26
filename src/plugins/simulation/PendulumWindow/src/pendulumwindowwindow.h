@@ -81,13 +81,8 @@ public:
 
     virtual void retranslateUi();
 
-    void setDataSize(const int &pDataSize);
-
-    void setTimeValues(double *pTimeValues);
-    void setQ1Values(double *pQ1Values);
-    void setThetaValues(double *pThetaValues);
-
-    void setR0Value(const double &pR0Value);
+    void setData(const int &pDataSize, double *pTimeValues, double *pR0Values,
+                 double *pQ1Values, double *pThetaValues);
 
 private:
     Ui::PendulumWindowWindow *mGui;
@@ -109,10 +104,9 @@ private:
     int mDataSize;
 
     double *mTimeValues;
+    double *mR0Values;
     double *mQ1Values;
     double *mThetaValues;
-
-    double mR0Value;
 
 private slots:
     void createAndSetZincContext();

@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "collapsiblewidget.h"
 #include "filemanager.h"
+#include "pendulumwindowwindow.h"
 #include "simulationexperimentviewcontentswidget.h"
 #include "simulationexperimentviewinformationgraphswidget.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
@@ -493,13 +494,37 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     if (!simulationWidget)
         return;
 
+    // Some basic checks to see whether we are dealing with our pendulum model
+    // (be it its CellML or SED-ML version)
+
+    SimulationExperimentViewSimulation *simulation = simulationWidget->simulation();
+    CellMLSupport::CellmlFileRuntimeParameter *q1Parameter = 0;
+    CellMLSupport::CellmlFileRuntimeParameter *thetaParameter = 0;
+    CellMLSupport::CellmlFileRuntimeParameter *r0Parameter = 0;
+
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, simulation->runtime()->parameters()) {
+        QString parameterFullyFormattedName = parameter->fullyFormattedName();
+
+        if (!parameterFullyFormattedName.compare("main.q1"))
+            q1Parameter = parameter;
+        else if (!parameterFullyFormattedName.compare("main.theta"))
+            thetaParameter = parameter;
+        else if (!parameterFullyFormattedName.compare("main.r0"))
+            r0Parameter = parameter;
+    }
+
+    bool pendulumModel =    q1Parameter && thetaParameter && r0Parameter
+                         && (q1Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
+                         && (thetaParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
+                         && (r0Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant);
+
     // Update all of our simulation widgets' results, but only if needed
     // Note: to update only the given simulation widget's results is not enough
     //       since another simulation widget may have graphs that refer to the
     //       given simulation widget...
 
-    SimulationExperimentViewSimulation *simulation = simulationWidget->simulation();
-    qulonglong simulationResultsSize = simulation->results()->size();
+    SimulationExperimentViewSimulationResults *simulationResults = simulation->results();
+    qulonglong simulationResultsSize = simulationResults->size();
 
     if (   pClearGraphs
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
@@ -507,13 +532,21 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
         foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets)
             currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize, pClearGraphs);
+
+        if (pendulumModel) {
+            mPlugin->pendulumWindowWindow()->setData(simulationResultsSize,
+                                                     simulationResults->points(),
+                                                     simulationResults->constants(r0Parameter->index()),
+                                                     simulationResults->states(q1Parameter->index()),
+                                                     simulationResults->states(thetaParameter->index()));
+        }
     }
 
     // Ask to recheck our simulation widget's results, but only if its
     // simulation is still running
 
     if (   simulation->isRunning()
-        || (simulationResultsSize != simulation->results()->size())) {
+        || (simulationResultsSize != simulationResults->size())) {
         // Note: we cannot ask QTimer::singleShot() to call
         //       callCheckSimulationResults() since it expects a simulation
         //       widget as a parameter, so instead we call a method with no

@@ -63,9 +63,9 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     mAxesFontPointSize(0),
     mDataSize(0),
     mTimeValues(0),
+    mR0Values(0),
     mQ1Values(0),
-    mThetaValues(0),
-    mR0Value(0)
+    mThetaValues(0)
 {
     // Set up the GUI
 
@@ -155,47 +155,18 @@ void PendulumWindowWindow::retranslateUi()
 
 //==============================================================================
 
-void PendulumWindowWindow::setDataSize(const int &pDataSize)
+void PendulumWindowWindow::setData(const int &pDataSize, double *pTimeValues,
+                                   double *pR0Values, double *pQ1Values,
+                                   double *pThetaValues)
 {
-    // Set our data size
+    // Set our data
 
     mDataSize = pDataSize;
-}
-
-//==============================================================================
-
-void PendulumWindowWindow::setTimeValues(double *pTimeValues)
-{
-    // Set our time values
 
     mTimeValues = pTimeValues;
-}
-
-//==============================================================================
-
-void PendulumWindowWindow::setQ1Values(double *pQ1Values)
-{
-    // Set our q1 values
-
+    mR0Values = pR0Values;
     mQ1Values = pQ1Values;
-}
-
-//==============================================================================
-
-void PendulumWindowWindow::setThetaValues(double *pThetaValues)
-{
-    // Set our theta values
-
     mThetaValues = pThetaValues;
-}
-
-//==============================================================================
-
-void PendulumWindowWindow::setR0Value(const double &pR0Value)
-{
-    // Set our r0 value
-
-    mR0Value = pR0Value;
 }
 
 //==============================================================================
@@ -255,8 +226,7 @@ void PendulumWindowWindow::createAndSetZincContext()
 
         OpenCMISS::Zinc::FieldSubtract delta = fieldModule.createFieldSubtract(rcCoordinates, rcOrigin);
 
-        // Create a single node with storage for constant r0 and time-varying q1
-        // and theta
+        // Create a single node with storage for time-varying r0, q1 and theta
 
         OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(mDataSize, mTimeValues);
         OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
@@ -319,28 +289,20 @@ void PendulumWindowWindow::createAndSetZincContext()
 
         fieldCache.setNode(node);
 
-        // First the constant value for r0 at the node
+        // Assign the time-varying parameters for r0, q1 and theta
 
-        const double r0Data[] = { mR0Value };
-
-        r0.assignReal(fieldCache, 1, r0Data);
-
-        // The above could also be done with FieldFiniteElement's
-        // setNodeParameters() method, particularly if we have derivatives and
-        // versions next assign the time-varying parameters for q1 and theta,
-        // here for all times, but you may do it only up to the times you know,
-        // but be sure to adjust the time keeper min/max and current time to
-        // match what parameters are properly set
-
+        double r0Data[1];
         double q1Data[1];
         double thetaData[1];
 
         for (int i = 0; i < mDataSize; ++i) {
             fieldCache.setTime(mTimeValues[i]);
 
+            r0Data[0] = mR0Values[i];
             q1Data[0] = mQ1Values[i];
             thetaData[0] = mThetaValues[i];
 
+            r0.assignReal(fieldCache, 1, r0Data);
             q1.assignReal(fieldCache, 1, q1Data);
             theta.assignReal(fieldCache, 1, thetaData);
         }
