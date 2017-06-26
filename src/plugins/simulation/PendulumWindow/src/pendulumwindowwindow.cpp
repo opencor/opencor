@@ -195,13 +195,14 @@ void PendulumWindowWindow::createAndSetZincContext()
 
         coordinates.setCoordinateSystemType(OpenCMISS::Zinc::Field::COORDINATE_SYSTEM_TYPE_CYLINDRICAL_POLAR);
 
-        // Define a constant field at the [default rectangular cartesian] origin
+        // Define a constant field at the (default rectangular cartesian) origin
 
         const double rcOriginData[] = { 0.0, 0.0, 0.0 };
 
         OpenCMISS::Zinc::FieldConstant rcOrigin = fieldModule.createFieldConstant(3, rcOriginData);
 
-        // Define a field converting the polar coordinates to RC
+        // Define a field converting the polar coordinates to rectangular
+        // cartesian
 
         OpenCMISS::Zinc::FieldCoordinateTransformation rcCoordinates = fieldModule.createFieldCoordinateTransformation(coordinates);
 
@@ -272,7 +273,7 @@ void PendulumWindowWindow::createAndSetZincContext()
         // setNodeParameters() method, particularly if we have derivatives and
         // versions next assign the time-varying parameters for q1 and theta,
         // here for all times, but you may do it only up to the times you know,
-        // but be sure to adjust the timekeeper min/max and current time to
+        // but be sure to adjust the time keeper min/max and current time to
         // match what parameters are properly set
 
         double q1Data[1];
@@ -307,7 +308,7 @@ void PendulumWindowWindow::createAndSetZincContext()
 
     tessellationModule.getDefaultPointsTessellation().setCircleDivisions(36);
 
-    // Set the range of valid times in the default timekeeper
+    // Set the range of valid times in the default time keeper
 
     OpenCMISS::Zinc::Timekeepermodule timeKeeperModule = mZincContext->getTimekeepermodule();
 
