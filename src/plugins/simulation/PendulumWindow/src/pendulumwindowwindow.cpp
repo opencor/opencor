@@ -167,11 +167,6 @@ void PendulumWindowWindow::createAndSetZincContext()
 
     #include "data.inc"
 
-    Q_UNUSED(timeValues);
-    Q_UNUSED(q1Values);
-    Q_UNUSED(thetaValues);
-    Q_UNUSED(r0Value);
-
     // Get the field module of our default region and do a few things with it
 
     OpenCMISS::Zinc::Region defaultRegion = mZincContext->getDefaultRegion();
