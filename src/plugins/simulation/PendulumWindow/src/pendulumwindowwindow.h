@@ -81,6 +81,14 @@ public:
 
     virtual void retranslateUi();
 
+    void setDataSize(const int &pDataSize);
+
+    void setTimeValues(double *pTimeValues);
+    void setQ1Values(double *pQ1Values);
+    void setThetaValues(double *pThetaValues);
+
+    void setR0Value(const double &pR0Value);
+
 private:
     Ui::PendulumWindowWindow *mGui;
 
@@ -97,6 +105,14 @@ private:
     char *mZincSceneViewerDescription;
 
     int mAxesFontPointSize;
+
+    int mDataSize;
+
+    double *mTimeValues;
+    double *mQ1Values;
+    double *mThetaValues;
+
+    double mR0Value;
 
 private slots:
     void createAndSetZincContext();

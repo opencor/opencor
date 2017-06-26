@@ -60,7 +60,12 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     mGui(new Ui::PendulumWindowWindow),
     mZincContext(0),
     mZincSceneViewerDescription(0),
-    mAxesFontPointSize(0)
+    mAxesFontPointSize(0),
+    mDataSize(0),
+    mTimeValues(0),
+    mQ1Values(0),
+    mThetaValues(0),
+    mR0Value(0)
 {
     // Set up the GUI
 
@@ -94,6 +99,7 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
 
     mTimeCheckBox = new QCheckBox(timeWidget);
 
+    mTimeCheckBox->setEnabled(false);
     mTimeCheckBox->setText(tr("Auto"));
 
     connect(mTimeCheckBox, SIGNAL(toggled(bool)),
@@ -107,6 +113,7 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
 
     mTimeSlider = new QSlider(this);
 
+    mTimeSlider->setEnabled(false);
     mTimeSlider->setOrientation(Qt::Horizontal);
 
     connect(mTimeSlider, SIGNAL(valueChanged(int)),
@@ -148,6 +155,51 @@ void PendulumWindowWindow::retranslateUi()
 
 //==============================================================================
 
+void PendulumWindowWindow::setDataSize(const int &pDataSize)
+{
+    // Set our data size
+
+    mDataSize = pDataSize;
+}
+
+//==============================================================================
+
+void PendulumWindowWindow::setTimeValues(double *pTimeValues)
+{
+    // Set our time values
+
+    mTimeValues = pTimeValues;
+}
+
+//==============================================================================
+
+void PendulumWindowWindow::setQ1Values(double *pQ1Values)
+{
+    // Set our q1 values
+
+    mQ1Values = pQ1Values;
+}
+
+//==============================================================================
+
+void PendulumWindowWindow::setThetaValues(double *pThetaValues)
+{
+    // Set our theta values
+
+    mThetaValues = pThetaValues;
+}
+
+//==============================================================================
+
+void PendulumWindowWindow::setR0Value(const double &pR0Value)
+{
+    // Set our r0 value
+
+    mR0Value = pR0Value;
+}
+
+//==============================================================================
+
 void PendulumWindowWindow::createAndSetZincContext()
 {
     // Keep track of our current scene viewer's description
@@ -162,10 +214,6 @@ void PendulumWindowWindow::createAndSetZincContext()
     mZincContext->getGlyphmodule().defineStandardGlyphs();
 
     mZincWidget->setContext(mZincContext);
-
-    // Some data
-
-    #include "data.inc"
 
     // Get the field module of our default region and do a few things with it
 
@@ -210,7 +258,7 @@ void PendulumWindowWindow::createAndSetZincContext()
         // Create a single node with storage for constant r0 and time-varying q1
         // and theta
 
-        OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(DataSize, timeValues);
+        OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(mDataSize, mTimeValues);
         OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
         OpenCMISS::Zinc::Nodetemplate nodeTemplate = nodeSet.createNodetemplate();
 
@@ -273,7 +321,7 @@ void PendulumWindowWindow::createAndSetZincContext()
 
         // First the constant value for r0 at the node
 
-        const double r0Data[] = { r0Value };
+        const double r0Data[] = { mR0Value };
 
         r0.assignReal(fieldCache, 1, r0Data);
 
@@ -287,11 +335,11 @@ void PendulumWindowWindow::createAndSetZincContext()
         double q1Data[1];
         double thetaData[1];
 
-        for (int i = 0; i < DataSize; ++i) {
-            fieldCache.setTime(timeValues[i]);
+        for (int i = 0; i < mDataSize; ++i) {
+            fieldCache.setTime(mTimeValues[i]);
 
-            q1Data[0] = q1Values[i];
-            thetaData[0] = thetaValues[i];
+            q1Data[0] = mQ1Values[i];
+            thetaData[0] = mThetaValues[i];
 
             q1.assignReal(fieldCache, 1, q1Data);
             theta.assignReal(fieldCache, 1, thetaData);
@@ -306,7 +354,7 @@ void PendulumWindowWindow::createAndSetZincContext()
     OpenCMISS::Zinc::Tessellationmodule tessellationModule = scene.getTessellationmodule();
     OpenCMISS::Zinc::Tessellation tessellation = tessellationModule.createTessellation();
 
-    const int tessellationData[] = { DataSize };
+    const int tessellationData[] = { mDataSize };
 
     tessellation.setMinimumDivisions(1, tessellationData);
 
@@ -322,13 +370,15 @@ void PendulumWindowWindow::createAndSetZincContext()
 
     mTimeKeeper = timeKeeperModule.getDefaultTimekeeper();
 
-    mTimeKeeper.setMinimumTime(timeValues[0]);
-    mTimeKeeper.setMaximumTime(timeValues[DataSize-1]);
+    if (mDataSize) {
+        mTimeKeeper.setMinimumTime(mTimeValues[0]);
+        mTimeKeeper.setMaximumTime(mTimeValues[mDataSize-1]);
 
-    mTimeSlider->setMinimum(timeValues[0]);
-    mTimeSlider->setMaximum(100*timeValues[DataSize-1]);
+        mTimeSlider->setMinimum(mTimeValues[0]);
+        mTimeSlider->setMaximum(100*mTimeValues[mDataSize-1]);
 
-    updateScene(timeValues[0]);
+        updateScene(mTimeValues[0]);
+    }
 
     // Now set up some graphics
 
