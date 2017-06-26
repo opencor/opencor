@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "opencmiss/zinc/fieldcache.hpp"
+#include "opencmiss/zinc/fieldfiniteelement.hpp"
 #include "opencmiss/zinc/timekeeper.hpp"
 
 //==============================================================================
@@ -81,8 +83,11 @@ public:
 
     virtual void retranslateUi();
 
-    void setData(const int &pDataSize, double *pTimeValues, double *pR0Values,
-                 double *pQ1Values, double *pThetaValues);
+    void initData(const int &pDataSize, const double &pMinimumTime,
+                  const double &pMaximumTime, const double &pTimeInterval,
+                  double *pTimeValues, double *pR0Values, double *pQ1Values,
+                  double *pThetaValues);
+    void addData(const int &pCurrentDataSize);
 
 private:
     Ui::PendulumWindowWindow *mGui;
@@ -95,18 +100,31 @@ private:
     QLabel *mTimeLabel;
     QSlider *mTimeSlider;
     QCheckBox *mTimeCheckBox;
+
+    OpenCMISS::Zinc::Fieldmodule mFieldModule;
     OpenCMISS::Zinc::Timekeeper mTimeKeeper;
+    OpenCMISS::Zinc::FieldFiniteElement mR0;
+    OpenCMISS::Zinc::FieldFiniteElement mQ1;
+    OpenCMISS::Zinc::FieldFiniteElement mTheta;
+    OpenCMISS::Zinc::Fieldcache mFieldCache;
 
     char *mZincSceneViewerDescription;
 
     int mAxesFontPointSize;
 
     int mDataSize;
+    int mCurrentDataSize;
+
+    double mMinimumTime;
+    double mMaximumTime;
+    double mTimeInterval;
 
     double *mTimeValues;
     double *mR0Values;
     double *mQ1Values;
     double *mThetaValues;
+
+    void customizeZincContext();
 
 private slots:
     void createAndSetZincContext();

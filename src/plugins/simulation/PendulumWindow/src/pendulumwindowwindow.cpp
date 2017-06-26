@@ -43,7 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "opencmiss/zinc/fieldcomposite.hpp"
 #include "opencmiss/zinc/fieldconstant.hpp"
 #include "opencmiss/zinc/fieldcoordinatetransformation.hpp"
-#include "opencmiss/zinc/fieldfiniteelement.hpp"
 #include "opencmiss/zinc/fieldmodule.hpp"
 #include "opencmiss/zinc/fieldtime.hpp"
 #include "opencmiss/zinc/fieldvectoroperators.hpp"
@@ -62,6 +61,10 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     mZincSceneViewerDescription(0),
     mAxesFontPointSize(0),
     mDataSize(0),
+    mCurrentDataSize(0),
+    mMinimumTime(0.0),
+    mMaximumTime(0.0),
+    mTimeInterval(0.0),
     mTimeValues(0),
     mR0Values(0),
     mQ1Values(0),
@@ -155,18 +158,61 @@ void PendulumWindowWindow::retranslateUi()
 
 //==============================================================================
 
-void PendulumWindowWindow::setData(const int &pDataSize, double *pTimeValues,
-                                   double *pR0Values, double *pQ1Values,
-                                   double *pThetaValues)
+void PendulumWindowWindow::initData(const int &pDataSize,
+                                    const double &pMinimumTime,
+                                    const double &pMaximumTime,
+                                    const double &pTimeInterval,
+                                    double *pTimeValues, double *pR0Values,
+                                    double *pQ1Values, double *pThetaValues)
 {
-    // Set our data
+    // Initialise our data
 
     mDataSize = pDataSize;
+    mCurrentDataSize = 0;
+
+    mMinimumTime = pMinimumTime;
+    mMaximumTime = pMaximumTime;
+    mTimeInterval = pTimeInterval;
 
     mTimeValues = pTimeValues;
     mR0Values = pR0Values;
     mQ1Values = pQ1Values;
     mThetaValues = pThetaValues;
+
+    // Customise our Zinc context
+
+    customizeZincContext();
+}
+
+//==============================================================================
+
+void PendulumWindowWindow::addData(const int &pCurrentDataSize)
+{
+    // Make sure that we have a valid field module
+
+    if (!mFieldModule.isValid())
+        return;
+
+    // Assign the time-varying parameters for r0, q1 and theta
+
+    mFieldModule.beginChange();
+        for (int i = mCurrentDataSize; i < pCurrentDataSize; ++i) {
+            mFieldCache.setTime(mTimeValues[i]);
+
+            mR0.assignReal(mFieldCache, 1, mR0Values+i);
+            mQ1.assignReal(mFieldCache, 1, mQ1Values+i);
+            mTheta.assignReal(mFieldCache, 1, mThetaValues+i);
+        }
+    mFieldModule.endChange();
+
+    mCurrentDataSize = pCurrentDataSize;
+
+    // Enable/disable our time-related widgets
+
+    mTimeCheckBox->setEnabled(pCurrentDataSize);
+    mTimeSlider->setEnabled(pCurrentDataSize);
+
+    mTimeSlider->setValue(pCurrentDataSize);
 }
 
 //==============================================================================
@@ -185,27 +231,33 @@ void PendulumWindowWindow::createAndSetZincContext()
     mZincContext->getGlyphmodule().defineStandardGlyphs();
 
     mZincWidget->setContext(mZincContext);
+}
 
+//==============================================================================
+
+void PendulumWindowWindow::customizeZincContext()
+{
     // Get the field module of our default region and do a few things with it
 
     OpenCMISS::Zinc::Region defaultRegion = mZincContext->getDefaultRegion();
-    OpenCMISS::Zinc::Fieldmodule fieldModule = defaultRegion.getFieldmodule();
 
-    fieldModule.beginChange();
+    mFieldModule = defaultRegion.getFieldmodule();
+
+    mFieldModule.beginChange();
         // Declare our stored finite element fields
 
-        OpenCMISS::Zinc::FieldFiniteElement r0 = fieldModule.createFieldFiniteElement(1);
-        OpenCMISS::Zinc::FieldFiniteElement q1 = fieldModule.createFieldFiniteElement(1);
-        OpenCMISS::Zinc::FieldFiniteElement theta = fieldModule.createFieldFiniteElement(1);
+        mR0 = mFieldModule.createFieldFiniteElement(1);
+        mQ1 = mFieldModule.createFieldFiniteElement(1);
+        mTheta = mFieldModule.createFieldFiniteElement(1);
 
         // Defining fields as functions of other fields
 
-        OpenCMISS::Zinc::FieldAdd r = fieldModule.createFieldAdd(r0, q1);
+        OpenCMISS::Zinc::FieldAdd r = mFieldModule.createFieldAdd(mR0, mQ1);
 
         // Define cylindrical polar coordinates
 
-        OpenCMISS::Zinc::Field coordinatesData[] = { r, theta };
-        OpenCMISS::Zinc::FieldConcatenate coordinates = fieldModule.createFieldConcatenate(2, coordinatesData);
+        OpenCMISS::Zinc::Field coordinatesData[] = { r, mTheta };
+        OpenCMISS::Zinc::FieldConcatenate coordinates = mFieldModule.createFieldConcatenate(2, coordinatesData);
 
         coordinates.setCoordinateSystemType(OpenCMISS::Zinc::Field::COORDINATE_SYSTEM_TYPE_CYLINDRICAL_POLAR);
 
@@ -213,31 +265,31 @@ void PendulumWindowWindow::createAndSetZincContext()
 
         const double rcOriginData[] = { 0.0, 0.0, 0.0 };
 
-        OpenCMISS::Zinc::FieldConstant rcOrigin = fieldModule.createFieldConstant(3, rcOriginData);
+        OpenCMISS::Zinc::FieldConstant rcOrigin = mFieldModule.createFieldConstant(3, rcOriginData);
 
         // Define a field converting the polar coordinates to rectangular
         // cartesian
 
-        OpenCMISS::Zinc::FieldCoordinateTransformation rcCoordinates = fieldModule.createFieldCoordinateTransformation(coordinates);
+        OpenCMISS::Zinc::FieldCoordinateTransformation rcCoordinates = mFieldModule.createFieldCoordinateTransformation(coordinates);
 
         rcCoordinates.setCoordinateSystemType(OpenCMISS::Zinc::Field::COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN);
 
         // Get the difference from rcCoordinates to rcOrigin
 
-        OpenCMISS::Zinc::FieldSubtract delta = fieldModule.createFieldSubtract(rcCoordinates, rcOrigin);
+        OpenCMISS::Zinc::FieldSubtract delta = mFieldModule.createFieldSubtract(rcCoordinates, rcOrigin);
 
         // Create a single node with storage for time-varying r0, q1 and theta
 
-        OpenCMISS::Zinc::Timesequence timeSequence = fieldModule.getMatchingTimesequence(mDataSize, mTimeValues);
-        OpenCMISS::Zinc::Nodeset nodeSet = fieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+        OpenCMISS::Zinc::Timesequence timeSequence = mFieldModule.getMatchingTimesequence(mDataSize, mTimeValues);
+        OpenCMISS::Zinc::Nodeset nodeSet = mFieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
         OpenCMISS::Zinc::Nodetemplate nodeTemplate = nodeSet.createNodetemplate();
 
-        nodeTemplate.defineField(r0);
-        nodeTemplate.defineField(q1);
-        nodeTemplate.defineField(theta);
+        nodeTemplate.defineField(mR0);
+        nodeTemplate.defineField(mQ1);
+        nodeTemplate.defineField(mTheta);
 
-        nodeTemplate.setTimesequence(q1, timeSequence);
-        nodeTemplate.setTimesequence(theta, timeSequence);
+        nodeTemplate.setTimesequence(mQ1, timeSequence);
+        nodeTemplate.setTimesequence(mTheta, timeSequence);
 
         // Create a single node with the above field definitions
 
@@ -246,23 +298,23 @@ void PendulumWindowWindow::createAndSetZincContext()
         // Create a single 1D element with only 1D xi coordinates to provide a
         // domain for visualising the coordinates time path
 
-        OpenCMISS::Zinc::Mesh mesh = fieldModule.findMeshByDimension(1);
+        OpenCMISS::Zinc::Mesh mesh = mFieldModule.findMeshByDimension(1);
         OpenCMISS::Zinc::Elementtemplate elementTemplate = mesh.createElementtemplate();
 
         elementTemplate.setElementShapeType(OpenCMISS::Zinc::Element::SHAPE_TYPE_LINE);
 
         mesh.createElement(1, elementTemplate);
-    fieldModule.endChange();
+    mFieldModule.endChange();
 
-    fieldModule.beginChange();
+    mFieldModule.beginChange();
         // Create a field looking up the node coordinates at time as a function
         // of element xi
         // Note: Zinc has a known defect in that the xi field doesn't appear
         //       until change caching ends, hence the need to call endChange()
         //       and beginChange() above, to get things to work as expected...
 
-        OpenCMISS::Zinc::Field xi = fieldModule.findFieldByName("xi");
-        OpenCMISS::Zinc::FieldComponent xi1 = fieldModule.createFieldComponent(xi, 1);
+        OpenCMISS::Zinc::Field xi = mFieldModule.findFieldByName("xi");
+        OpenCMISS::Zinc::FieldComponent xi1 = mFieldModule.createFieldComponent(xi, 1);
 
         // Fixed scale factor to work for the entire range of times
         // Note: if we are reading times during solution, we could dynamically
@@ -270,43 +322,25 @@ void PendulumWindowWindow::createAndSetZincContext()
 
         const double constantData[] = { 100.0 };
 
-        OpenCMISS::Zinc::FieldConstant fieldConstant = fieldModule.createFieldConstant(1, constantData);
-        OpenCMISS::Zinc::FieldMultiply xi1Time = fieldModule.createFieldMultiply(xi1, fieldConstant);
+        OpenCMISS::Zinc::FieldConstant fieldConstant = mFieldModule.createFieldConstant(1, constantData);
+        OpenCMISS::Zinc::FieldMultiply xi1Time = mFieldModule.createFieldMultiply(xi1, fieldConstant);
 
         // xiCoordinates returns node's value of rcCoordinates at the current
         // time on any other domain
 
-        OpenCMISS::Zinc::FieldNodeLookup nodeCoordinates = fieldModule.createFieldNodeLookup(rcCoordinates, node);
+        OpenCMISS::Zinc::FieldNodeLookup nodeCoordinates = mFieldModule.createFieldNodeLookup(rcCoordinates, node);
 
         // xiTimeNodeCoordinates converts the time variation to be spatial,
         // showing the values of nodeCoordinates at xi1Time
 
-        OpenCMISS::Zinc::FieldTimeLookup xi1TimeNodeCoordinates = fieldModule.createFieldTimeLookup(nodeCoordinates, xi1Time);
+        OpenCMISS::Zinc::FieldTimeLookup xi1TimeNodeCoordinates = mFieldModule.createFieldTimeLookup(nodeCoordinates, xi1Time);
 
         // Assign parameters at the node for the above fields
 
-        OpenCMISS::Zinc::Fieldcache fieldCache = fieldModule.createFieldcache();
+        mFieldCache = mFieldModule.createFieldcache();
 
-        fieldCache.setNode(node);
-
-        // Assign the time-varying parameters for r0, q1 and theta
-
-        double r0Data[1];
-        double q1Data[1];
-        double thetaData[1];
-
-        for (int i = 0; i < mDataSize; ++i) {
-            fieldCache.setTime(mTimeValues[i]);
-
-            r0Data[0] = mR0Values[i];
-            q1Data[0] = mQ1Values[i];
-            thetaData[0] = mThetaValues[i];
-
-            r0.assignReal(fieldCache, 1, r0Data);
-            q1.assignReal(fieldCache, 1, q1Data);
-            theta.assignReal(fieldCache, 1, thetaData);
-        }
-    fieldModule.endChange();
+        mFieldCache.setNode(node);
+    mFieldModule.endChange();
 
     // Use a fine tessellation with as many divisions as time steps, so that we
     // visualise the time path of coordinates on the element with sufficient
@@ -332,15 +366,13 @@ void PendulumWindowWindow::createAndSetZincContext()
 
     mTimeKeeper = timeKeeperModule.getDefaultTimekeeper();
 
-    if (mDataSize) {
-        mTimeKeeper.setMinimumTime(mTimeValues[0]);
-        mTimeKeeper.setMaximumTime(mTimeValues[mDataSize-1]);
+    mTimeKeeper.setMinimumTime(mMinimumTime);
+    mTimeKeeper.setMaximumTime(mMaximumTime);
 
-        mTimeSlider->setMinimum(mTimeValues[0]);
-        mTimeSlider->setMaximum(100*mTimeValues[mDataSize-1]);
+    mTimeSlider->setMinimum(mMinimumTime/mTimeInterval);
+    mTimeSlider->setMaximum(mMaximumTime/mTimeInterval);
 
-        updateScene(mTimeValues[0]);
-    }
+    updateScene(mTimeValues[0]);
 
     // Now set up some graphics
 
