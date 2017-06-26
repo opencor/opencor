@@ -37,6 +37,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace PendulumWindow {
+    class PendulumWindowWindow;
+}   // namespace PendulumWindow
+
+//==============================================================================
+
 namespace SimulationExperimentView {
 
 //==============================================================================
@@ -83,6 +92,8 @@ public:
     FileTypeInterface * sedmlFileTypeInterface() const;
     FileTypeInterface * combineFileTypeInterface() const;
 
+    PendulumWindow::PendulumWindowWindow * pendulumWindowWindow() const;
+
 private:
     SimulationExperimentViewWidget *mViewWidget;
 
@@ -93,6 +104,8 @@ private:
 
     FileTypeInterface *mSedmlFileTypeInterface;
     FileTypeInterface *mCombineFileTypeInterface;
+
+    PendulumWindow::PendulumWindowWindow *mPendulumWindowWindow;
 };
 
 //==============================================================================

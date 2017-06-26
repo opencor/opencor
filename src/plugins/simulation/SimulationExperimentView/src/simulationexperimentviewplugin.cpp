@@ -26,11 +26,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "combinefilemanager.h"
 #include "combinesupportplugin.h"
 #include "coreguiutils.h"
+#include "pendulumwindowwindow.h"
 #include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
+#include "windowinterface.h"
 
 //==============================================================================
 
@@ -251,6 +253,13 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
             else if (!plugin->name().compare("COMBINESupport"))
                 mCombineFileTypeInterface = fileTypeInterface;
         }
+
+        // Look for our pendulum window
+
+        WindowInterface *windowInterface = qobject_cast<WindowInterface *>(plugin->instance());
+
+        if (windowInterface && !plugin->name().compare("PendulumWindow"))
+            mPendulumWindowWindow = static_cast<PendulumWindow::PendulumWindowWindow *>(windowInterface->windowWidget());
     }
 }
 
@@ -431,6 +440,15 @@ FileTypeInterface * SimulationExperimentViewPlugin::combineFileTypeInterface() c
     // Return our COMBINE file type interface
 
     return mCombineFileTypeInterface;
+}
+
+//==============================================================================
+
+PendulumWindow::PendulumWindowWindow * SimulationExperimentViewPlugin::pendulumWindowWindow() const
+{
+    // Return our pendulum window
+
+    return mPendulumWindowWindow;
 }
 
 //==============================================================================
