@@ -66,7 +66,8 @@ SimulationExperimentViewPlugin::SimulationExperimentViewPlugin() :
     mCellmlEditingViewPlugins(Plugins()),
     mCellmlSimulationViewPlugins(Plugins()),
     mSedmlFileTypeInterface(0),
-    mCombineFileTypeInterface(0)
+    mCombineFileTypeInterface(0),
+    mPendulumWindowWindow(0)
 {
 }
 
