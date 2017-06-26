@@ -43,6 +43,30 @@ ENDMACRO()
 
 #===============================================================================
 
+MACRO(BUILD_PATCHCMAKE)
+    # Try to build our patch CMake program
+    
+    SET(PATCH ${CMAKE_BINARY_DIR}/patchcmake${CMAKE_EXECUTABLE_SUFFIX})
+    
+    IF(NOT EXISTS ${PATH})
+        SET(PATCH_SOURCE ${CMAKE_SOURCE_DIR}/cmake/patchcmake.c)
+
+        IF(WIN32)
+            EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} ${PATCH_SOURCE} /link /out:${PATCH}
+                            RESULT_VARIABLE RESULT)
+        ELSE()
+            EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -o ${PATCH} ${PATCH_SOURCE}
+                            RESULT_VARIABLE RESULT)
+        ENDIF()
+
+        IF(NOT RESULT EQUAL 0)
+            MESSAGE(FATAL_ERROR "patchcmake could not be built...")
+        ENDIF()
+    ENDIF()
+ENDMACRO()
+
+#===============================================================================
+
 MACRO(ADD_PLUGIN PLUGIN_NAME)
     # Various initialisations
 
@@ -544,11 +568,13 @@ MACRO(WINDOWS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
     # test things both from within Qt Creator and without first having to deploy
     # OpenCOR
 
-    IF(   "${LIBRARY_NAME}" STREQUAL "Qt5WebKit"
-       OR "${LIBRARY_NAME}" STREQUAL "Qt5WebKitWidgets"
-       OR "${LIBRARY_NAME}" STREQUAL "icudt${ICU_VERSION}"
-       OR "${LIBRARY_NAME}" STREQUAL "icuin${ICU_VERSION}"
-       OR "${LIBRARY_NAME}" STREQUAL "icuuc${ICU_VERSION}")
+    IF(   "${LIBRARY_NAME}" STREQUAL "Qt5Charts")
+        SET(REAL_QT_BINARY_DIR ${QTCHARTS_BINARIES_DIR})
+    ELSEIF(   "${LIBRARY_NAME}" STREQUAL "Qt5WebKit"
+           OR "${LIBRARY_NAME}" STREQUAL "Qt5WebKitWidgets"
+           OR "${LIBRARY_NAME}" STREQUAL "icudt${ICU_VERSION}"
+           OR "${LIBRARY_NAME}" STREQUAL "icuin${ICU_VERSION}"
+           OR "${LIBRARY_NAME}" STREQUAL "icuuc${ICU_VERSION}")
         SET(REAL_QT_BINARY_DIR ${QTWEBKIT_BINARIES_DIR})
     ELSE()
         SET(REAL_QT_BINARY_DIR ${QT_BINARY_DIR})
@@ -750,8 +776,10 @@ MACRO(MACOS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
 
     SET(QT_FRAMEWORK_DIR ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
 
-    IF(   "${LIBRARY_NAME}" STREQUAL "${QTWEBKIT}"
-       OR "${LIBRARY_NAME}" STREQUAL "${QTWEBKITWIDGETS}")
+    IF("${LIBRARY_NAME}" STREQUAL "${QTCHARTS}")
+        SET(REAL_QT_LIBRARY_DIR ${QTCHARTS_LIBRARIES_DIR})
+    ELSEIF(   "${LIBRARY_NAME}" STREQUAL "${QTWEBKIT}"
+           OR "${LIBRARY_NAME}" STREQUAL "${QTWEBKITWIDGETS}")
         SET(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
     ELSE()
         SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})

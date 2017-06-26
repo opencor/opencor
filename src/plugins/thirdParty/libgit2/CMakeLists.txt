@@ -3,17 +3,17 @@ PROJECT(libgit2Plugin)
 # Name and version of our package
 
 SET(PACKAGE_NAME libgit2)
-SET(PACKAGE_VERSION 0.25.1)
+SET(PACKAGE_VERSION 0.26.0)
 
 # Version of our library
 
 SET(MAJOR_LIBRARY_VERSION 0)
-SET(MINOR_LIBRARY_VERSION 25)
-SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.1)
+SET(MINOR_LIBRARY_VERSION 26)
+SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
 # Git tag for our library
 
-SET(GIT_TAG maint/v0.25)
+SET(GIT_TAG maint/v0.26)
 
 # Specify where our local package will be installed
 
@@ -63,27 +63,27 @@ IF(USE_PREBUILT_LIBGIT2_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} db2bde02e46ffd7ea4dcbb48e9b238bf16fd0a33
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 929ea4b53343353fa685ff745762588779d30cc9
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 5c245aa1abec55d74667de0262f3a048b55e63d0
-                                              cf424073a311d271dd155a5cb1e88bdb8aeb9d9d)
+                                  SHA1_VALUES d415d2e64e9b8dd4732155530923ef45052de3bb
+                                              160db4acf97ee193b21294d704a362f3c0e41d2a)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} d5005ffc6e8e09be3e6bfefa8ebbba81af14b5a6
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 4446e5c79ad865c9f779b2e78abca10d74af3cca
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 644d569aafbba1588ef218235bca214fc3d74237
-                                              9537b7a0ee8171a5335cab92ff44c813b2c47e79)
+                                  SHA1_VALUES 9da9f60fb833aac3c77dd3ba7be53c52b63ef509
+                                              72d1ad271ea068410bece8622f0d249e56d6021c)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 12617eecc9522a38b7703b86e8d7aa7ad6fa2561
+                              ${RELATIVE_PROJECT_SOURCE_DIR} f159c9ff7a036210a296f113b5e9d220539f87b4
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 380f2b4c1fa8b48e16e89519e337b162fe81984f)
+                              SHA1_VALUES 8f9a5c5049fb86f68aafa455f4521dc111d7cb10)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} dbdcefc91266b53114414ea72f6356fc1b2c4fb4
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 44fc17745a59b5459751b48ef599bfc95b5dfd4b
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 7fafd49a6472f48d64b1145e23803950285dbdb9)
+                              SHA1_VALUES c8d3d6bdc856d36ea338bc5fd37ec21d36b7b1bb)
     ENDIF()
 ELSE()
     # Ignore some warnings

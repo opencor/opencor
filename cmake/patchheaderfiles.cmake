@@ -12,7 +12,7 @@ FOREACH(HEADER_FILE ${HEADER_FILES})
     STRING(STRIP ${HEADER_FILE_CONTENTS} HEADER_FILE_CONTENTS)
 
     # Retrieve the directory of our header file and determine the relative path
-    # from it to our QtWebKit source directory
+    # from it to our Qt package's source directory
 
     GET_FILENAME_COMPONENT(HEADER_FILE_DIR ${HEADER_FILE} DIRECTORY)
 

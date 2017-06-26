@@ -37,9 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> our API and third-party libraries are now taking advantage of our new packaging mechanism (see issue <a href=\"https://github.com/opencor/opencor/issues/1306\">#1306</a>). OpenGL now works in an Ubuntu virtual machine (see issue <a href=\"https://github.com/opencor/opencor/issues/1307\">#1307</a>). Added OpenSSL as a third-party plugin (see issues <a href=\"https://github.com/opencor/opencor/issues/1101\">#1101</a> and <a href=\"https://github.com/opencor/opencor/issues/1314\">#1314</a>). Can now open remote binary files (see issue <a href=\"https://github.com/opencor/opencor/issues/1319\">#1319</a>)." },
-                       { "change": "<strong>Graph Panel widget:</strong> improved the plotting of small values (see issue <a href=\"https://github.com/opencor/opencor/issues/1322\">#1322</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2l (see issue <a href=\"https://github.com/opencor/opencor/issues/1318\">#1318</a>)." }
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26 (see issue <a href=\"https://github.com/opencor/opencor/issues/1340\">#1340</a>). Added <a href=\"http://code.qt.io/cgit/qt/qtcharts.git/tree/\">Qt Charts</a> as a package (see issue <a href=\"https://github.com/opencor/opencor/issues/1342\">#1342</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
