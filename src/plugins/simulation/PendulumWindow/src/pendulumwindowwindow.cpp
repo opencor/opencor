@@ -230,12 +230,26 @@ void PendulumWindowWindow::createAndSetZincContext()
 
         OpenCMISS::Zinc::Node node = nodeSet.createNode(1, nodeTemplate);
 
+        // Create a single 1D element with only 1D xi coordinates to provide a
+        // domain for visualising the coordinates time path
+
+        OpenCMISS::Zinc::Mesh mesh = fieldModule.findMeshByDimension(1);
+        OpenCMISS::Zinc::Elementtemplate elementTemplate = mesh.createElementtemplate();
+
+        elementTemplate.setElementShapeType(OpenCMISS::Zinc::Element::SHAPE_TYPE_LINE);
+
+        mesh.createElement(1, elementTemplate);
+    fieldModule.endChange();
+
+    fieldModule.beginChange();
         // Create a field looking up the node coordinates at time as a function
         // of element xi
+        // Note: Zinc has a known defect in that the xi field doesn't appear
+        //       until change caching ends, hence the need to call endChange()
+        //       and beginChange() above, to get things to work as expected...
 
         OpenCMISS::Zinc::Field xi = fieldModule.findFieldByName("xi");
-
-        xi = fieldModule.createFieldComponent(xi, 1);
+        OpenCMISS::Zinc::FieldComponent xi1 = fieldModule.createFieldComponent(xi, 1);
 
         // Fixed scale factor to work for the entire range of times
         // Note: if we are reading times during solution, we could dynamically
@@ -244,8 +258,7 @@ void PendulumWindowWindow::createAndSetZincContext()
         const double constantData[] = { 100.0 };
 
         OpenCMISS::Zinc::FieldConstant fieldConstant = fieldModule.createFieldConstant(1, constantData);
-
-        OpenCMISS::Zinc::FieldMultiply xiTime = fieldModule.createFieldMultiply(xi, fieldConstant);
+        OpenCMISS::Zinc::FieldMultiply xi1Time = fieldModule.createFieldMultiply(xi1, fieldConstant);
 
         // xiCoordinates returns node's value of rcCoordinates at the current
         // time on any other domain
@@ -253,9 +266,9 @@ void PendulumWindowWindow::createAndSetZincContext()
         OpenCMISS::Zinc::FieldNodeLookup nodeCoordinates = fieldModule.createFieldNodeLookup(rcCoordinates, node);
 
         // xiTimeNodeCoordinates converts the time variation to be spatial,
-        // showing the values of nodeCoordinates at xiTime
+        // showing the values of nodeCoordinates at xi1Time
 
-        OpenCMISS::Zinc::FieldTimeLookup xiTimeNodeCoordinates = fieldModule.createFieldTimeLookup(nodeCoordinates, xiTime);
+        OpenCMISS::Zinc::FieldTimeLookup xi1TimeNodeCoordinates = fieldModule.createFieldTimeLookup(nodeCoordinates, xi1Time);
 
         // Assign parameters at the node for the above fields
 
@@ -400,7 +413,7 @@ void PendulumWindowWindow::createAndSetZincContext()
 
         OpenCMISS::Zinc::GraphicsLines path = scene.createGraphicsLines();
 
-        path.setCoordinateField(xiTimeNodeCoordinates);
+        path.setCoordinateField(xi1TimeNodeCoordinates);
         path.setTessellation(tessellation);
         path.setMaterial(materialModule.findMaterialByName("grey50"));
     scene.endChange();
