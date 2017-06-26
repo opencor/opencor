@@ -45,5 +45,6 @@ ADD_PLUGIN(SimulationExperimentView
     PLUGINS
         COMBINESupport
         GraphPanelWidget
+        PendulumWindow
         SEDMLSupport
 )
