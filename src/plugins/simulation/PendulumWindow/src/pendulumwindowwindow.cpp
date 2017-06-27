@@ -233,7 +233,7 @@ void PendulumWindowWindow::initData(const int &pDataSize,
         // Create a single node with storage for time-varying mR0, mQ1 and
         // mTheta
 
-        OpenCMISS::Zinc::Timesequence timeSequence = mFieldModule.getMatchingTimesequence(pDataSize, mTimeValues);
+        OpenCMISS::Zinc::Timesequence timeSequence = mFieldModule.getMatchingTimesequence(pDataSize, pTimeValues);
         OpenCMISS::Zinc::Nodeset nodeSet = mFieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
         OpenCMISS::Zinc::Nodetemplate nodeTemplate = nodeSet.createNodetemplate();
 
@@ -325,7 +325,7 @@ void PendulumWindowWindow::initData(const int &pDataSize,
     mTimeSlider->setMinimum(pMinimumTime/pTimeInterval);
     mTimeSlider->setMaximum(pMaximumTime/pTimeInterval);
 
-    updateScene(mTimeValues[0]);
+    updateScene(pTimeValues[0]);
 
     // Now set up some graphics
 
