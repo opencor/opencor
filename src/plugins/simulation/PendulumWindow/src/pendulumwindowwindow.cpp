@@ -448,6 +448,10 @@ void PendulumWindowWindow::customizeZincContext()
         path.setTessellation(tessellation);
         path.setMaterial(materialModule.findMaterialByName("grey50"));
     scene.endChange();
+
+    // Make sure that all of our Zinc scene is visible
+
+    mZincWidget->viewAll();
 }
 
 //==============================================================================
@@ -466,16 +470,6 @@ void PendulumWindowWindow::graphicsInitialized()
     double backgroundColor[4] = { 1.0, 1.0, 1.0, 1.0 };
 
     sceneViewer.setBackgroundColourRGBA(backgroundColor);
-
-    // Our initial look at and eye positions, and up vector
-
-    const double lookAtPosition[] = { 5.0, 0.0, 0.0 };
-    const double eyePosition[] = { 5.0, 0.0, -25.0 };
-    const double upVector[] = { -1.0, 0.0, 0.0 };
-
-    sceneViewer.setLookatPosition(lookAtPosition);
-    sceneViewer.setEyePosition(eyePosition);
-    sceneViewer.setUpVector(upVector);
 }
 
 //==============================================================================
