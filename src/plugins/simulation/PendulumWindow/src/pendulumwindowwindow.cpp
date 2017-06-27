@@ -60,11 +60,7 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     mZincContext(0),
     mZincSceneViewerDescription(0),
     mAxesFontPointSize(0),
-    mDataSize(0),
     mCurrentDataSize(0),
-    mMinimumTime(0.0),
-    mMaximumTime(0.0),
-    mTimeInterval(0.0),
     mTimeValues(0),
     mR0Values(0),
     mQ1Values(0),
@@ -167,12 +163,7 @@ void PendulumWindowWindow::initData(const int &pDataSize,
 {
     // Initialise our data
 
-    mDataSize = pDataSize;
     mCurrentDataSize = 0;
-
-    mMinimumTime = pMinimumTime;
-    mMaximumTime = pMaximumTime;
-    mTimeInterval = pTimeInterval;
 
     mTimeValues = pTimeValues;
     mR0Values = pR0Values;
@@ -193,7 +184,7 @@ void PendulumWindowWindow::addData(const int &pCurrentDataSize)
     if (!mFieldModule.isValid())
         return;
 
-    // Assign the time-varying parameters for r0, q1 and theta
+    // Assign the time-varying parameters for mR0, mQ1 and mTheta
 
     mFieldModule.beginChange();
         for (int i = mCurrentDataSize; i < pCurrentDataSize; ++i) {
@@ -278,9 +269,10 @@ void PendulumWindowWindow::customizeZincContext()
 
         OpenCMISS::Zinc::FieldSubtract delta = mFieldModule.createFieldSubtract(rcCoordinates, rcOrigin);
 
-        // Create a single node with storage for time-varying r0, q1 and theta
+        // Create a single node with storage for time-varying mR0, mQ1 and
+        // mTheta
 
-        OpenCMISS::Zinc::Timesequence timeSequence = mFieldModule.getMatchingTimesequence(mDataSize, mTimeValues);
+        OpenCMISS::Zinc::Timesequence timeSequence = mFieldModule.getMatchingTimesequence(pDataSize, mTimeValues);
         OpenCMISS::Zinc::Nodeset nodeSet = mFieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
         OpenCMISS::Zinc::Nodetemplate nodeTemplate = nodeSet.createNodetemplate();
 
@@ -330,7 +322,7 @@ void PendulumWindowWindow::customizeZincContext()
 
         OpenCMISS::Zinc::FieldNodeLookup nodeCoordinates = mFieldModule.createFieldNodeLookup(rcCoordinates, node);
 
-        // xiTimeNodeCoordinates converts the time variation to be spatial,
+        // xi1TimeNodeCoordinates converts the time variation to be spatial,
         // showing the values of nodeCoordinates at xi1Time
 
         OpenCMISS::Zinc::FieldTimeLookup xi1TimeNodeCoordinates = mFieldModule.createFieldTimeLookup(nodeCoordinates, xi1Time);
@@ -350,7 +342,7 @@ void PendulumWindowWindow::customizeZincContext()
     OpenCMISS::Zinc::Tessellationmodule tessellationModule = scene.getTessellationmodule();
     OpenCMISS::Zinc::Tessellation tessellation = tessellationModule.createTessellation();
 
-    const int tessellationData[] = { mDataSize };
+    const int tessellationData[] = { pDataSize };
 
     tessellation.setMinimumDivisions(1, tessellationData);
 
@@ -366,11 +358,11 @@ void PendulumWindowWindow::customizeZincContext()
 
     mTimeKeeper = timeKeeperModule.getDefaultTimekeeper();
 
-    mTimeKeeper.setMinimumTime(mMinimumTime);
-    mTimeKeeper.setMaximumTime(mMaximumTime);
+    mTimeKeeper.setMinimumTime(pMinimumTime);
+    mTimeKeeper.setMaximumTime(pMaximumTime);
 
-    mTimeSlider->setMinimum(mMinimumTime/mTimeInterval);
-    mTimeSlider->setMaximum(mMaximumTime/mTimeInterval);
+    mTimeSlider->setMinimum(pMinimumTime/pTimeInterval);
+    mTimeSlider->setMaximum(pMaximumTime/pTimeInterval);
 
     updateScene(mTimeValues[0]);
 

@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "opencmiss/zinc/fieldcache.hpp"
 #include "opencmiss/zinc/fieldfiniteelement.hpp"
 #include "opencmiss/zinc/timekeeper.hpp"
 
@@ -112,12 +111,7 @@ private:
 
     int mAxesFontPointSize;
 
-    int mDataSize;
     int mCurrentDataSize;
-
-    double mMinimumTime;
-    double mMaximumTime;
-    double mTimeInterval;
 
     double *mTimeValues;
     double *mR0Values;
