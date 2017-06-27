@@ -154,6 +154,24 @@ void PendulumWindowWindow::retranslateUi()
 
 //==============================================================================
 
+void PendulumWindowWindow::createAndSetZincContext()
+{
+    // Keep track of our current scene viewer's description
+
+    mZincSceneViewerDescription = mZincWidget->sceneViewer().writeDescription();
+
+    // Create and set our Zinc context
+
+    mZincContext = new OpenCMISS::Zinc::Context("PendulumWindowWindow");
+
+    mZincContext->getMaterialmodule().defineStandardMaterials();
+    mZincContext->getGlyphmodule().defineStandardGlyphs();
+
+    mZincWidget->setContext(mZincContext);
+}
+
+//==============================================================================
+
 void PendulumWindowWindow::initData(const int &pDataSize,
                                     const double &pMinimumTime,
                                     const double &pMaximumTime,
@@ -425,24 +443,6 @@ void PendulumWindowWindow::addData(const int &pCurrentDataSize)
     mTimeSlider->setEnabled(pCurrentDataSize);
 
     mTimeSlider->setValue(pCurrentDataSize);
-}
-
-//==============================================================================
-
-void PendulumWindowWindow::createAndSetZincContext()
-{
-    // Keep track of our current scene viewer's description
-
-    mZincSceneViewerDescription = mZincWidget->sceneViewer().writeDescription();
-
-    // Create and set our Zinc context
-
-    mZincContext = new OpenCMISS::Zinc::Context("PendulumWindowWindow");
-
-    mZincContext->getMaterialmodule().defineStandardMaterials();
-    mZincContext->getGlyphmodule().defineStandardGlyphs();
-
-    mZincWidget->setContext(mZincContext);
 }
 
 //==============================================================================
