@@ -177,11 +177,17 @@ PluginManager::PluginManager(const bool &pGuiMode) :
     //       Experiment view depends on it...
 
     static const QRegularExpression PendulumWindowPluginRegEx = QRegularExpression(".*PendulumWindow.*");
+    static const QRegularExpression SimulationExperimentViewPluginRegEx = QRegularExpression(".*SimulationExperiment.*");
 
     int pendulumWindowPluginIndex = pluginFileNames.indexOf(PendulumWindowPluginRegEx);
 
     if (pendulumWindowPluginIndex != -1)
         pluginFileNames.move(pendulumWindowPluginIndex, pluginFileNames.count()-1);
+
+    int simulationExperimentViewPluginIndex = pluginFileNames.indexOf(SimulationExperimentViewPluginRegEx);
+
+    if (simulationExperimentViewPluginIndex != -1)
+        pluginFileNames.move(simulationExperimentViewPluginIndex, pluginFileNames.count()-1);
 
     // Deal with all the plugins we need and want
 
