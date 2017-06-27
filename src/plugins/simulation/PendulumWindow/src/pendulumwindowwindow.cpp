@@ -556,7 +556,7 @@ void PendulumWindowWindow::updateScene(const int &pTime)
         sceneViewer.getViewingVolume(&left, &right, &bottom, &top, &nearPlane, &farPlane);
 
         qDebug("---------");
-        qDebug("sceneViewer.setViewingVolume(%f, %f, %f, %f, %f, %f);", left, right, bottom, top, nearPlane, farPlane);
+        qDebug("sceneViewer.setViewingVolume(%f, %f, %f, %f, %f, %f);\n", left, right, bottom, top, nearPlane, farPlane);
 
         double lookAtPosition[3];
         double eyePosition[3];
@@ -566,7 +566,6 @@ void PendulumWindowWindow::updateScene(const int &pTime)
         sceneViewer.getEyePosition(eyePosition);
         sceneViewer.getUpVector(upVector);
 
-        qDebug("");
         qDebug("const double lookAtPosition[] = { %f, %f, %f };", lookAtPosition[0], lookAtPosition[1], lookAtPosition[2]);
         qDebug("const double eyePosition[] = { %f, %f, %f };", eyePosition[0], eyePosition[1], eyePosition[2]);
         qDebug("const double upVector[] = { %f, %f, %f };", upVector[0], upVector[1], upVector[2]);
