@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "pendulumwindowglobal.h"
 #include "windowwidget.h"
 
 //==============================================================================
@@ -72,7 +73,7 @@ namespace PendulumWindow {
 
 //==============================================================================
 
-class PendulumWindowWindow : public Core::WindowWidget
+class PENDULUMWINDOW_EXPORT PendulumWindowWindow : public Core::WindowWidget
 {
     Q_OBJECT
 
