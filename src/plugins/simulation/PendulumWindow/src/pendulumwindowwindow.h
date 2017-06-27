@@ -84,8 +84,7 @@ public:
 
     void initData(const int &pDataSize, const double &pMinimumTime,
                   const double &pMaximumTime, const double &pTimeInterval,
-                  double *pTimeValues, double *pR0Values, double *pQ1Values,
-                  double *pThetaValues);
+                  double *pR0Values, double *pQ1Values, double *pThetaValues);
     void addData(const int &pCurrentDataSize);
 
 private:
@@ -110,6 +109,8 @@ private:
     char *mZincSceneViewerDescription;
 
     int mAxesFontPointSize;
+
+    bool mInitialiseZincScene;
 
     int mCurrentDataSize;
 

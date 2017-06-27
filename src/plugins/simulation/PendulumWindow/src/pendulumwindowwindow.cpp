@@ -60,6 +60,7 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     mZincContext(0),
     mZincSceneViewerDescription(0),
     mAxesFontPointSize(0),
+    mInitialiseZincScene(true),
     mCurrentDataSize(0),
     mTimeValues(0),
     mR0Values(0),
@@ -139,6 +140,8 @@ PendulumWindowWindow::~PendulumWindowWindow()
 
     delete mZincContext;
 
+    delete mTimeValues;
+
     // Delete the GUI
 
     delete mGui;
@@ -177,147 +180,269 @@ void PendulumWindowWindow::initData(const int &pDataSize,
                                     const double &pMinimumTime,
                                     const double &pMaximumTime,
                                     const double &pTimeInterval,
-                                    double *pTimeValues, double *pR0Values,
-                                    double *pQ1Values, double *pThetaValues)
+                                    double *pR0Values, double *pQ1Values,
+                                    double *pThetaValues)
 {
     // Initialise our data
+    // Note: mTimeValues must be fully populated for Zinc to work as expected.
+    //       However, the list of simulation's results' points is effectively
+    //       empty when coming here (see the call to this method from
+    //       SimulationExperimentViewWidget::checkSimulationResults()), hence we
+    //       we create and populate mTimeValues ourselves...
 
     mCurrentDataSize = 0;
 
-    mTimeValues = pTimeValues;
+    if (mTimeValues)
+        delete mTimeValues;
+
+    mTimeValues = new double[pDataSize];
+
+    for (int i = 0; i < pDataSize; ++i)
+        mTimeValues[i] = i*pTimeInterval;
+
     mR0Values = pR0Values;
     mQ1Values = pQ1Values;
     mThetaValues = pThetaValues;
 
-    // Get the field module of our default region and do a few things with it
+    // Initialise our Zinc scene, if needed, or reset it
 
-    OpenCMISS::Zinc::Region defaultRegion = mZincContext->getDefaultRegion();
+    if (mInitialiseZincScene) {
+        mInitialiseZincScene = false;
 
-    mFieldModule = defaultRegion.getFieldmodule();
+        // Retrieve the default time keeper
 
-    mFieldModule.beginChange();
-        // Declare our stored finite element fields
+        OpenCMISS::Zinc::Timekeepermodule timeKeeperModule = mZincContext->getTimekeepermodule();
 
-        mR0 = mFieldModule.createFieldFiniteElement(1);
-        mQ1 = mFieldModule.createFieldFiniteElement(1);
-        mTheta = mFieldModule.createFieldFiniteElement(1);
+        mTimeKeeper = timeKeeperModule.getDefaultTimekeeper();
 
-        // Defining fields as functions of other fields
+        // Get the field module of our default region and do a few things with
+        // it
 
-        OpenCMISS::Zinc::FieldAdd r = mFieldModule.createFieldAdd(mR0, mQ1);
+        OpenCMISS::Zinc::Region defaultRegion = mZincContext->getDefaultRegion();
 
-        // Define cylindrical polar coordinates
+        mFieldModule = defaultRegion.getFieldmodule();
 
-        OpenCMISS::Zinc::Field coordinatesData[] = { r, mTheta };
-        OpenCMISS::Zinc::FieldConcatenate coordinates = mFieldModule.createFieldConcatenate(2, coordinatesData);
+        mFieldModule.beginChange();
+            // Declare our stored finite element fields
 
-        coordinates.setCoordinateSystemType(OpenCMISS::Zinc::Field::COORDINATE_SYSTEM_TYPE_CYLINDRICAL_POLAR);
+            mR0 = mFieldModule.createFieldFiniteElement(1);
+            mQ1 = mFieldModule.createFieldFiniteElement(1);
+            mTheta = mFieldModule.createFieldFiniteElement(1);
 
-        // Define a constant field at the (default rectangular cartesian) origin
+            // Defining fields as functions of other fields
 
-        const double rcOriginData[] = { 0.0, 0.0, 0.0 };
+            OpenCMISS::Zinc::FieldAdd r = mFieldModule.createFieldAdd(mR0, mQ1);
 
-        OpenCMISS::Zinc::FieldConstant rcOrigin = mFieldModule.createFieldConstant(3, rcOriginData);
+            // Define cylindrical polar coordinates
 
-        // Define a field converting the polar coordinates to rectangular
-        // cartesian
+            OpenCMISS::Zinc::Field coordinatesData[] = { r, mTheta };
+            OpenCMISS::Zinc::FieldConcatenate coordinates = mFieldModule.createFieldConcatenate(2, coordinatesData);
 
-        OpenCMISS::Zinc::FieldCoordinateTransformation rcCoordinates = mFieldModule.createFieldCoordinateTransformation(coordinates);
+            coordinates.setCoordinateSystemType(OpenCMISS::Zinc::Field::COORDINATE_SYSTEM_TYPE_CYLINDRICAL_POLAR);
 
-        rcCoordinates.setCoordinateSystemType(OpenCMISS::Zinc::Field::COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN);
+            // Define a constant field at the (default rectangular cartesian)
+            // origin
 
-        // Get the difference from rcCoordinates to rcOrigin
+            const double rcOriginData[] = { 0.0, 0.0, 0.0 };
 
-        OpenCMISS::Zinc::FieldSubtract delta = mFieldModule.createFieldSubtract(rcCoordinates, rcOrigin);
+            OpenCMISS::Zinc::FieldConstant rcOrigin = mFieldModule.createFieldConstant(3, rcOriginData);
 
-        // Create a single node with storage for time-varying mR0, mQ1 and
-        // mTheta
+            // Define a field converting the polar coordinates to rectangular
+            // cartesian
 
-        OpenCMISS::Zinc::Timesequence timeSequence = mFieldModule.getMatchingTimesequence(pDataSize, pTimeValues);
-        OpenCMISS::Zinc::Nodeset nodeSet = mFieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-        OpenCMISS::Zinc::Nodetemplate nodeTemplate = nodeSet.createNodetemplate();
+            OpenCMISS::Zinc::FieldCoordinateTransformation rcCoordinates = mFieldModule.createFieldCoordinateTransformation(coordinates);
 
-        nodeTemplate.defineField(mR0);
-        nodeTemplate.defineField(mQ1);
-        nodeTemplate.defineField(mTheta);
+            rcCoordinates.setCoordinateSystemType(OpenCMISS::Zinc::Field::COORDINATE_SYSTEM_TYPE_RECTANGULAR_CARTESIAN);
 
-        nodeTemplate.setTimesequence(mQ1, timeSequence);
-        nodeTemplate.setTimesequence(mTheta, timeSequence);
+            // Get the difference from rcCoordinates to rcOrigin
 
-        // Create a single node with the above field definitions
+            OpenCMISS::Zinc::FieldSubtract delta = mFieldModule.createFieldSubtract(rcCoordinates, rcOrigin);
 
-        OpenCMISS::Zinc::Node node = nodeSet.createNode(1, nodeTemplate);
+            // Create a single node with storage for time-varying mR0, mQ1 and
+            // mTheta
 
-        // Create a single 1D element with only 1D xi coordinates to provide a
-        // domain for visualising the coordinates time path
+            OpenCMISS::Zinc::Timesequence timeSequence = mFieldModule.getMatchingTimesequence(pDataSize, mTimeValues);
+            OpenCMISS::Zinc::Nodeset nodeSet = mFieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+            OpenCMISS::Zinc::Nodetemplate nodeTemplate = nodeSet.createNodetemplate();
 
-        OpenCMISS::Zinc::Mesh mesh = mFieldModule.findMeshByDimension(1);
-        OpenCMISS::Zinc::Elementtemplate elementTemplate = mesh.createElementtemplate();
+            nodeTemplate.defineField(mR0);
+            nodeTemplate.defineField(mQ1);
+            nodeTemplate.defineField(mTheta);
 
-        elementTemplate.setElementShapeType(OpenCMISS::Zinc::Element::SHAPE_TYPE_LINE);
+            nodeTemplate.setTimesequence(mQ1, timeSequence);
+            nodeTemplate.setTimesequence(mTheta, timeSequence);
 
-        mesh.createElement(1, elementTemplate);
-    mFieldModule.endChange();
+            // Create a single node with the above field definitions
 
-    mFieldModule.beginChange();
-        // Create a field looking up the node coordinates at time as a function
-        // of element xi
-        // Note: Zinc has a known defect in that the xi field doesn't appear
-        //       until change caching ends, hence the need to call endChange()
-        //       and beginChange() above, to get things to work as expected...
+            OpenCMISS::Zinc::Node node = nodeSet.createNode(1, nodeTemplate);
 
-        OpenCMISS::Zinc::Field xi = mFieldModule.findFieldByName("xi");
-        OpenCMISS::Zinc::FieldComponent xi1 = mFieldModule.createFieldComponent(xi, 1);
+            // Create a single 1D element with only 1D xi coordinates to provide
+            // a domain for visualising the coordinates time path
 
-        // Fixed scale factor to work for the entire range of times
-        // Note: if we are reading times during solution, we could dynamically
-        //       change it (and the fine tessellation below)...
+            OpenCMISS::Zinc::Mesh mesh = mFieldModule.findMeshByDimension(1);
+            OpenCMISS::Zinc::Elementtemplate elementTemplate = mesh.createElementtemplate();
 
-        const double constantData[] = { 100.0 };
+            elementTemplate.setElementShapeType(OpenCMISS::Zinc::Element::SHAPE_TYPE_LINE);
 
-        OpenCMISS::Zinc::FieldConstant fieldConstant = mFieldModule.createFieldConstant(1, constantData);
-        OpenCMISS::Zinc::FieldMultiply xi1Time = mFieldModule.createFieldMultiply(xi1, fieldConstant);
+            mesh.createElement(1, elementTemplate);
+        mFieldModule.endChange();
 
-        // xiCoordinates returns node's value of rcCoordinates at the current
-        // time on any other domain
+        mFieldModule.beginChange();
+            // Create a field looking up the node coordinates at time as a
+            // function of element xi
+            // Note: Zinc has a known defect in that the xi field doesn't appear
+            //       until change caching ends, hence the need to call
+            //       endChange() and beginChange() above, to get things to work
+            //       as expected...
 
-        OpenCMISS::Zinc::FieldNodeLookup nodeCoordinates = mFieldModule.createFieldNodeLookup(rcCoordinates, node);
+            OpenCMISS::Zinc::Field xi = mFieldModule.findFieldByName("xi");
+            OpenCMISS::Zinc::FieldComponent xi1 = mFieldModule.createFieldComponent(xi, 1);
 
-        // xi1TimeNodeCoordinates converts the time variation to be spatial,
-        // showing the values of nodeCoordinates at xi1Time
+            // Fixed scale factor to work for the entire range of times
+            // Note: if we are reading times during solution, we could
+            //       dynamically change it (and the fine tessellation below)...
 
-        OpenCMISS::Zinc::FieldTimeLookup xi1TimeNodeCoordinates = mFieldModule.createFieldTimeLookup(nodeCoordinates, xi1Time);
+            const double constantData[] = { 100.0 };
 
-        // Assign parameters at the node for the above fields
+            OpenCMISS::Zinc::FieldConstant fieldConstant = mFieldModule.createFieldConstant(1, constantData);
+            OpenCMISS::Zinc::FieldMultiply xi1Time = mFieldModule.createFieldMultiply(xi1, fieldConstant);
 
-        mFieldCache = mFieldModule.createFieldcache();
+            // xiCoordinates returns node's value of rcCoordinates at the
+            // current time on any other domain
 
-        mFieldCache.setNode(node);
-    mFieldModule.endChange();
+            OpenCMISS::Zinc::FieldNodeLookup nodeCoordinates = mFieldModule.createFieldNodeLookup(rcCoordinates, node);
 
-    // Use a fine tessellation with as many divisions as time steps, so that we
-    // visualise the time path of coordinates on the element with sufficient
-    // resolution
+            // xi1TimeNodeCoordinates converts the time variation to be spatial,
+            // showing the values of nodeCoordinates at xi1Time
 
-    OpenCMISS::Zinc::Scene scene = defaultRegion.getScene();
-    OpenCMISS::Zinc::Tessellationmodule tessellationModule = scene.getTessellationmodule();
-    OpenCMISS::Zinc::Tessellation tessellation = tessellationModule.createTessellation();
+            OpenCMISS::Zinc::FieldTimeLookup xi1TimeNodeCoordinates = mFieldModule.createFieldTimeLookup(nodeCoordinates, xi1Time);
 
-    const int tessellationData[] = { pDataSize };
+            // Assign parameters at the node for the above fields
 
-    tessellation.setMinimumDivisions(1, tessellationData);
+            mFieldCache = mFieldModule.createFieldcache();
 
-    // Also increase the circle divisions quality of the default points
-    // tessellation (so the cylinder used for the weights looks better than the
-    // default 12 divisions)
+            mFieldCache.setNode(node);
+        mFieldModule.endChange();
 
-    tessellationModule.getDefaultPointsTessellation().setCircleDivisions(36);
+        // Use a fine tessellation with as many divisions as time steps, so that
+        // we visualise the time path of coordinates on the element with
+        // sufficient resolution
 
-    // Set the range of valid times in the default time keeper
+        OpenCMISS::Zinc::Scene scene = defaultRegion.getScene();
+        OpenCMISS::Zinc::Tessellationmodule tessellationModule = scene.getTessellationmodule();
+        OpenCMISS::Zinc::Tessellation tessellation = tessellationModule.createTessellation();
 
-    OpenCMISS::Zinc::Timekeepermodule timeKeeperModule = mZincContext->getTimekeepermodule();
+        const int tessellationData[] = { pDataSize };
 
-    mTimeKeeper = timeKeeperModule.getDefaultTimekeeper();
+        tessellation.setMinimumDivisions(1, tessellationData);
+
+        // Also increase the circle divisions quality of the default points
+        // tessellation (so the cylinder used for the weights looks better than
+        // the default 12 divisions)
+
+        tessellationModule.getDefaultPointsTessellation().setCircleDivisions(36);
+
+        // Now set up some graphics
+
+        scene.beginChange();
+            OpenCMISS::Zinc::Materialmodule materialModule = scene.getMaterialmodule();
+
+            // Draw the axes at the origin
+
+            OpenCMISS::Zinc::GraphicsPoints axes = scene.createGraphicsPoints();
+
+            axes.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_POINT);
+
+            OpenCMISS::Zinc::Graphicspointattributes pointAttributes = axes.getGraphicspointattributes();
+
+            double pointAttributesData[] = { 1.0, 1.0, 1.0 };
+
+            pointAttributes.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_AXES_XYZ);
+            pointAttributes.setBaseSize(3, pointAttributesData);
+
+            axes.setMaterial(materialModule.findMaterialByName("blue"));
+
+            // Make a thin cylinder glyph representing the string of the
+            // pendulum, which starts from rcOrigin extending in the direction
+            // and magnitude of delta
+
+            OpenCMISS::Zinc::GraphicsPoints string = scene.createGraphicsPoints();
+
+            string.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+            string.setCoordinateField(rcOrigin);
+
+            pointAttributes = string.getGraphicspointattributes();
+
+            pointAttributes.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_CYLINDER);
+            pointAttributes.setOrientationScaleField(delta);
+
+            pointAttributesData[0] = 0.0;
+            pointAttributesData[1] = 0.05;
+            pointAttributesData[2] = 0.05;
+
+            pointAttributes.setBaseSize(3, pointAttributesData);
+
+            pointAttributesData[0] = 1.0;
+            pointAttributesData[1] = 0.0;
+            pointAttributesData[2] = 0.0;
+
+            pointAttributes.setScaleFactors(3, pointAttributesData);
+
+            string.setMaterial(materialModule.findMaterialByName("silver"));
+
+            // Make a cylinder to represent the weight
+
+            OpenCMISS::Zinc::GraphicsPoints weight = scene.createGraphicsPoints();
+
+            weight.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
+            weight.setCoordinateField(rcCoordinates);
+
+            pointAttributes = weight.getGraphicspointattributes();
+
+            pointAttributes.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_CYLINDER_SOLID);
+            pointAttributes.setOrientationScaleField(delta);
+
+            pointAttributesData[0] = 0.5;
+            pointAttributesData[1] = 0.5;
+            pointAttributesData[2] = 0.5;
+
+            pointAttributes.setBaseSize(3, pointAttributesData);
+
+            pointAttributesData[0] = 0.0;
+            pointAttributesData[1] = 0.0;
+            pointAttributesData[2] = 0.0;
+
+            pointAttributes.setScaleFactors(3, pointAttributesData);
+
+            weight.setMaterial(materialModule.findMaterialByName("gold"));
+
+            // Draw the time path of the pendulum coordinates
+
+            OpenCMISS::Zinc::GraphicsLines path = scene.createGraphicsLines();
+
+            path.setCoordinateField(xi1TimeNodeCoordinates);
+            path.setTessellation(tessellation);
+            path.setMaterial(materialModule.findMaterialByName("grey50"));
+        scene.endChange();
+    } else {
+        // 'Reset' our different fields
+        //---GRY--- THIS IS ONLY SETTING THINGS TO ZERO, BUT IS THERE A 'PROPER'
+        //          WAY TO RESET A FIELD?...
+
+        static const double zero = 0.0;
+
+        mFieldModule.beginChange();
+            for (int i = 0; i < pDataSize; ++i) {
+                mFieldCache.setTime(mTimeValues[i]);
+
+                mR0.assignReal(mFieldCache, 1, &zero);
+                mQ1.assignReal(mFieldCache, 1, &zero);
+                mTheta.assignReal(mFieldCache, 1, &zero);
+            }
+        mFieldModule.endChange();
+    }
+
+    // Set the range of valid times in our default time keeper
 
     mTimeKeeper.setMinimumTime(pMinimumTime);
     mTimeKeeper.setMaximumTime(pMaximumTime);
@@ -325,94 +450,14 @@ void PendulumWindowWindow::initData(const int &pDataSize,
     mTimeSlider->setMinimum(pMinimumTime/pTimeInterval);
     mTimeSlider->setMaximum(pMaximumTime/pTimeInterval);
 
-    updateScene(pTimeValues[0]);
+    // Disable our time-related widgets
 
-    // Now set up some graphics
+    mTimeLabel->setEnabled(false);
+    mTimeCheckBox->setEnabled(false);
+    mTimeSlider->setEnabled(false);
 
-    scene.beginChange();
-        OpenCMISS::Zinc::Materialmodule materialModule = scene.getMaterialmodule();
-
-        // Draw the axes at the origin
-
-        OpenCMISS::Zinc::GraphicsPoints axes = scene.createGraphicsPoints();
-
-        axes.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_POINT);
-
-        OpenCMISS::Zinc::Graphicspointattributes pointAttributes = axes.getGraphicspointattributes();
-
-        double pointAttributesData[] = { 1.0, 1.0, 1.0 };
-
-        pointAttributes.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_AXES_XYZ);
-        pointAttributes.setBaseSize(3, pointAttributesData);
-
-        axes.setMaterial(materialModule.findMaterialByName("blue"));
-
-        // Make a thin cylinder glyph representing the string of the pendulum,
-        // which starts from rcOrigin extending in the direction and magnitude
-        // of delta
-
-        OpenCMISS::Zinc::GraphicsPoints string = scene.createGraphicsPoints();
-
-        string.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-        string.setCoordinateField(rcOrigin);
-
-        pointAttributes = string.getGraphicspointattributes();
-
-        pointAttributes.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_CYLINDER);
-        pointAttributes.setOrientationScaleField(delta);
-
-        pointAttributesData[0] = 0.0;
-        pointAttributesData[1] = 0.05;
-        pointAttributesData[2] = 0.05;
-
-        pointAttributes.setBaseSize(3, pointAttributesData);
-
-        pointAttributesData[0] = 1.0;
-        pointAttributesData[1] = 0.0;
-        pointAttributesData[2] = 0.0;
-
-        pointAttributes.setScaleFactors(3, pointAttributesData);
-
-        string.setMaterial(materialModule.findMaterialByName("silver"));
-
-        // Make a cylinder to represent the weight
-
-        OpenCMISS::Zinc::GraphicsPoints weight = scene.createGraphicsPoints();
-
-        weight.setFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
-        weight.setCoordinateField(rcCoordinates);
-
-        pointAttributes = weight.getGraphicspointattributes();
-
-        pointAttributes.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_CYLINDER_SOLID);
-        pointAttributes.setOrientationScaleField(delta);
-
-        pointAttributesData[0] = 0.5;
-        pointAttributesData[1] = 0.5;
-        pointAttributesData[2] = 0.5;
-
-        pointAttributes.setBaseSize(3, pointAttributesData);
-
-        pointAttributesData[0] = 0.0;
-        pointAttributesData[1] = 0.0;
-        pointAttributesData[2] = 0.0;
-
-        pointAttributes.setScaleFactors(3, pointAttributesData);
-
-        weight.setMaterial(materialModule.findMaterialByName("gold"));
-
-        // Draw the time path of the pendulum coordinates
-
-        OpenCMISS::Zinc::GraphicsLines path = scene.createGraphicsLines();
-
-        path.setCoordinateField(xi1TimeNodeCoordinates);
-        path.setTessellation(tessellation);
-        path.setMaterial(materialModule.findMaterialByName("grey50"));
-    scene.endChange();
-
-    // Make sure that all of our Zinc scene is visible
-
-    mZincWidget->viewAll();
+    mTimeCheckBox->setChecked(false);
+    mTimeSlider->setValue(mTimeSlider->minimum());
 }
 
 //==============================================================================
@@ -431,17 +476,16 @@ void PendulumWindowWindow::addData(const int &pCurrentDataSize)
         }
     mFieldModule.endChange();
 
-    mZincWidget->viewAll();
-
     mCurrentDataSize = pCurrentDataSize;
 
-    // Enable/disable our time-related widgets
+    // Enable our time-related widgets
 
-    mTimeLabel->setEnabled(pCurrentDataSize);
-    mTimeCheckBox->setEnabled(pCurrentDataSize);
-    mTimeSlider->setEnabled(pCurrentDataSize);
+    mTimeLabel->setEnabled(true);
+    mTimeCheckBox->setEnabled(true);
+    mTimeSlider->setEnabled(true);
 
-    mTimeSlider->setValue(pCurrentDataSize);
+    mTimeCheckBox->setChecked(pCurrentDataSize-1 == mTimeSlider->maximum());
+    mTimeSlider->setValue(pCurrentDataSize-1);
 }
 
 //==============================================================================
@@ -460,6 +504,18 @@ void PendulumWindowWindow::graphicsInitialized()
     double backgroundColor[4] = { 1.0, 1.0, 1.0, 1.0 };
 
     sceneViewer.setBackgroundColourRGBA(backgroundColor);
+
+    // Our initial look at and eye positions, and up vector
+
+    sceneViewer.setViewingVolume(-1.922499, 1.922499, -1.922499, 1.922499, 0.632076, 22.557219);
+
+    const double lookAtPosition[] = { 0.612522, -0.044677, 0.000000 };
+    const double eyePosition[] = { 0.612522, -0.044677, 7.469910 };
+    const double upVector[] = { -1.000000, 0.000000, 0.000000 };
+
+    sceneViewer.setLookatPosition(lookAtPosition);
+    sceneViewer.setEyePosition(eyePosition);
+    sceneViewer.setUpVector(upVector);
 }
 
 //==============================================================================
@@ -486,6 +542,35 @@ void PendulumWindowWindow::updateScene(const int &pTime)
     mTimeLabel->setText(tr("Time: %1 s").arg(time));
 
     mTimeKeeper.setTime(time);
+
+    // Retrieve the viewing volume, as well as look at and eye positions, and
+    // the vector
+    // Note: this is so that we can customise the way we want our pendulum scene
+    //       to look...
+
+    if (0) {
+        OpenCMISS::Zinc::Sceneviewer sceneViewer = mZincWidget->sceneViewer();
+
+        double left, right, bottom, top, nearPlane, farPlane;
+
+        sceneViewer.getViewingVolume(&left, &right, &bottom, &top, &nearPlane, &farPlane);
+
+        qDebug("---------");
+        qDebug("sceneViewer.setViewingVolume(%f, %f, %f, %f, %f, %f);", left, right, bottom, top, nearPlane, farPlane);
+
+        double lookAtPosition[3];
+        double eyePosition[3];
+        double upVector[3];
+
+        sceneViewer.getLookatPosition(lookAtPosition);
+        sceneViewer.getEyePosition(eyePosition);
+        sceneViewer.getUpVector(upVector);
+
+        qDebug("");
+        qDebug("const double lookAtPosition[] = { %f, %f, %f };", lookAtPosition[0], lookAtPosition[1], lookAtPosition[2]);
+        qDebug("const double eyePosition[] = { %f, %f, %f };", eyePosition[0], eyePosition[1], eyePosition[2]);
+        qDebug("const double upVector[] = { %f, %f, %f };", upVector[0], upVector[1], upVector[2]);
+    }
 }
 
 //==============================================================================
