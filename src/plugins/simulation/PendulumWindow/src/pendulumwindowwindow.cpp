@@ -419,11 +419,6 @@ void PendulumWindowWindow::initData(const int &pDataSize,
 
 void PendulumWindowWindow::addData(const int &pCurrentDataSize)
 {
-    // Make sure that we have a valid field module
-
-    if (!mFieldModule.isValid())
-        return;
-
     // Assign the time-varying parameters for mR0, mQ1 and mTheta
 
     mFieldModule.beginChange();
@@ -484,13 +479,11 @@ void PendulumWindowWindow::updateScene(const int &pTime)
 {
     // Update our scene
 
-    if (mTimeKeeper.isValid()) {
-        double time = 0.01*pTime;
+    double time = 0.01*pTime;
 
-        mTimeLabel->setText(tr("Time: %1 s").arg(time));
+    mTimeLabel->setText(tr("Time: %1 s").arg(time));
 
-        mTimeKeeper.setTime(time);
-    }
+    mTimeKeeper.setTime(time);
 }
 
 //==============================================================================
@@ -499,16 +492,14 @@ void PendulumWindowWindow::updateScene()
 {
     // Update our scene
 
-    if (mTimeKeeper.isValid()) {
-        int value = mTimeSlider->value();
+    int value = mTimeSlider->value();
 
-        if (value == mTimeSlider->maximum())
-            value = 0;
-        else
-            ++value;
+    if (value == mTimeSlider->maximum())
+        value = 0;
+    else
+        ++value;
 
-        mTimeSlider->setValue(value);
-    }
+    mTimeSlider->setValue(value);
 }
 
 //==============================================================================
