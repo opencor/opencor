@@ -431,6 +431,8 @@ void PendulumWindowWindow::addData(const int &pCurrentDataSize)
         }
     mFieldModule.endChange();
 
+    mZincWidget->viewAll();
+
     mCurrentDataSize = pCurrentDataSize;
 
     // Enable/disable our time-related widgets
