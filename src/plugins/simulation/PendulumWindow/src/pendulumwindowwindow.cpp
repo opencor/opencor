@@ -170,64 +170,6 @@ void PendulumWindowWindow::initData(const int &pDataSize,
     mQ1Values = pQ1Values;
     mThetaValues = pThetaValues;
 
-    // Customise our Zinc context
-
-    customizeZincContext();
-}
-
-//==============================================================================
-
-void PendulumWindowWindow::addData(const int &pCurrentDataSize)
-{
-    // Make sure that we have a valid field module
-
-    if (!mFieldModule.isValid())
-        return;
-
-    // Assign the time-varying parameters for mR0, mQ1 and mTheta
-
-    mFieldModule.beginChange();
-        for (int i = mCurrentDataSize; i < pCurrentDataSize; ++i) {
-            mFieldCache.setTime(mTimeValues[i]);
-
-            mR0.assignReal(mFieldCache, 1, mR0Values+i);
-            mQ1.assignReal(mFieldCache, 1, mQ1Values+i);
-            mTheta.assignReal(mFieldCache, 1, mThetaValues+i);
-        }
-    mFieldModule.endChange();
-
-    mCurrentDataSize = pCurrentDataSize;
-
-    // Enable/disable our time-related widgets
-
-    mTimeCheckBox->setEnabled(pCurrentDataSize);
-    mTimeSlider->setEnabled(pCurrentDataSize);
-
-    mTimeSlider->setValue(pCurrentDataSize);
-}
-
-//==============================================================================
-
-void PendulumWindowWindow::createAndSetZincContext()
-{
-    // Keep track of our current scene viewer's description
-
-    mZincSceneViewerDescription = mZincWidget->sceneViewer().writeDescription();
-
-    // Create and set our Zinc context
-
-    mZincContext = new OpenCMISS::Zinc::Context("PendulumWindowWindow");
-
-    mZincContext->getMaterialmodule().defineStandardMaterials();
-    mZincContext->getGlyphmodule().defineStandardGlyphs();
-
-    mZincWidget->setContext(mZincContext);
-}
-
-//==============================================================================
-
-void PendulumWindowWindow::customizeZincContext()
-{
     // Get the field module of our default region and do a few things with it
 
     OpenCMISS::Zinc::Region defaultRegion = mZincContext->getDefaultRegion();
@@ -452,6 +394,55 @@ void PendulumWindowWindow::customizeZincContext()
     // Make sure that all of our Zinc scene is visible
 
     mZincWidget->viewAll();
+}
+
+//==============================================================================
+
+void PendulumWindowWindow::addData(const int &pCurrentDataSize)
+{
+    // Make sure that we have a valid field module
+
+    if (!mFieldModule.isValid())
+        return;
+
+    // Assign the time-varying parameters for mR0, mQ1 and mTheta
+
+    mFieldModule.beginChange();
+        for (int i = mCurrentDataSize; i < pCurrentDataSize; ++i) {
+            mFieldCache.setTime(mTimeValues[i]);
+
+            mR0.assignReal(mFieldCache, 1, mR0Values+i);
+            mQ1.assignReal(mFieldCache, 1, mQ1Values+i);
+            mTheta.assignReal(mFieldCache, 1, mThetaValues+i);
+        }
+    mFieldModule.endChange();
+
+    mCurrentDataSize = pCurrentDataSize;
+
+    // Enable/disable our time-related widgets
+
+    mTimeCheckBox->setEnabled(pCurrentDataSize);
+    mTimeSlider->setEnabled(pCurrentDataSize);
+
+    mTimeSlider->setValue(pCurrentDataSize);
+}
+
+//==============================================================================
+
+void PendulumWindowWindow::createAndSetZincContext()
+{
+    // Keep track of our current scene viewer's description
+
+    mZincSceneViewerDescription = mZincWidget->sceneViewer().writeDescription();
+
+    // Create and set our Zinc context
+
+    mZincContext = new OpenCMISS::Zinc::Context("PendulumWindowWindow");
+
+    mZincContext->getMaterialmodule().defineStandardMaterials();
+    mZincContext->getGlyphmodule().defineStandardGlyphs();
+
+    mZincWidget->setContext(mZincContext);
 }
 
 //==============================================================================

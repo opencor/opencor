@@ -118,8 +118,6 @@ private:
     double *mQ1Values;
     double *mThetaValues;
 
-    void customizeZincContext();
-
 private slots:
     void createAndSetZincContext();
     void graphicsInitialized();
