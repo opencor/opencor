@@ -535,9 +535,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
         if (pendulumModel) {
             if (pClearGraphs) {
-                mPlugin->pendulumWindowWindow()->initData(pClearGraphs?
-                                                              simulation->size():
-                                                              -1,
+                mPlugin->pendulumWindowWindow()->initData(simulation->size(),
                                                           simulation->data()->startingPoint(),
                                                           simulation->data()->endingPoint(),
                                                           simulation->data()->pointInterval(),
@@ -545,9 +543,9 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
                                                           simulationResults->constants(r0Parameter->index()),
                                                           simulationResults->states(q1Parameter->index()),
                                                           simulationResults->states(thetaParameter->index()));
+            } else {
+                mPlugin->pendulumWindowWindow()->addData(simulationResultsSize);
             }
-
-            mPlugin->pendulumWindowWindow()->addData(simulationResultsSize);
         }
     }
 
