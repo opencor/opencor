@@ -524,6 +524,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     //       given simulation widget...
 
     SimulationExperimentViewSimulationResults *simulationResults = simulation->results();
+    SimulationExperimentViewSimulationData *simulationData = simulation->data();
     qulonglong simulationResultsSize = simulationResults->size();
 
     if (   pClearGraphs
@@ -536,10 +537,9 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
         if (pendulumModel) {
             if (pClearGraphs) {
                 mPlugin->pendulumWindowWindow()->initData(simulation->size(),
-                                                          simulation->data()->startingPoint(),
-                                                          simulation->data()->endingPoint(),
-                                                          simulation->data()->pointInterval(),
-                                                          simulationResults->points(),
+                                                          simulationData->startingPoint(),
+                                                          simulationData->endingPoint(),
+                                                          simulationData->pointInterval(),
                                                           simulationResults->constants(r0Parameter->index()),
                                                           simulationResults->states(q1Parameter->index()),
                                                           simulationResults->states(thetaParameter->index()));
