@@ -92,6 +92,7 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
 
     mTimeLabel = new QLabel(timeWidget);
 
+    mTimeLabel->setEnabled(false);
     mTimeLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 
     timeWidget->layout()->addWidget(mTimeLabel);
@@ -439,6 +440,7 @@ void PendulumWindowWindow::addData(const int &pCurrentDataSize)
 
     // Enable/disable our time-related widgets
 
+    mTimeLabel->setEnabled(pCurrentDataSize);
     mTimeCheckBox->setEnabled(pCurrentDataSize);
     mTimeSlider->setEnabled(pCurrentDataSize);
 
