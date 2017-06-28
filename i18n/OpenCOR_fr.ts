@@ -232,12 +232,12 @@
         <translation>l&apos;extension est installée et pleinement fonctionnelle.</translation>
     </message>
     <message>
-        <source>the plugin could not be loaded due to the following problem: %1.</source>
-        <translation>l&apos;extension n&apos;a pas pu être installée à cause du problème suivant : %1.</translation>
+        <source>the plugin could not be loaded (%1).</source>
+        <translation>l&apos;extension n&apos;a pas pu être installée (%1).</translation>
     </message>
     <message>
-        <source>this is not a plugin.</source>
-        <translation>ce n&apos;est pas une extension.</translation>
+        <source>this is not a plugin (%1).</source>
+        <translation>ce n&apos;est pas une extension (%1).</translation>
     </message>
     <message>
         <source>the plugin could not be loaded (one or several of the interfaces it supports are too old).</source>

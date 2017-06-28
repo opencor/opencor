@@ -262,9 +262,9 @@ QString PluginsDialog::statusDescription(Plugin *pPlugin) const
     case Plugin::Loaded:
         return tr("the plugin is loaded and fully functional.");
     case Plugin::NotLoaded:
-        return tr("the plugin could not be loaded due to the following problem: %1.").arg(formatMessage(pPlugin->statusErrors()));
+        return tr("the plugin could not be loaded (%1).").arg(formatMessage(pPlugin->statusErrors()));
     case Plugin::NotPlugin:
-        return tr("this is not a plugin.");
+        return tr("this is not a plugin (%1).").arg(formatMessage(pPlugin->statusErrors()));
     case Plugin::OldPlugin:
         return tr("the plugin could not be loaded (one or several of the interfaces it supports are too old).");
     case Plugin::NotCorePlugin:
