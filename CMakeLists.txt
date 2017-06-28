@@ -360,6 +360,7 @@ IF(APPLE)
         QtPrintSupport
         QtQml
         QtQuick
+        QtQuickWidgets
         QtSensors
         QtSql
         QtSvg
