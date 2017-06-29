@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> provide an error message when a plugin is considered to be invalid (see issue <a href=\"https://github.com/opencor/opencor/issues/1347\">#1347</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26 (see issue <a href=\"https://github.com/opencor/opencor/issues/1340\">#1340</a>). Added <a href=\"http://code.qt.io/cgit/qt/qtcharts.git/tree/\">Qt Charts</a> as a package (see issue <a href=\"https://github.com/opencor/opencor/issues/1342\">#1342</a>)." }
                      ]
                    },

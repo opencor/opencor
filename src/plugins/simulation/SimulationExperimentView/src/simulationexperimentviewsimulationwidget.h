@@ -143,7 +143,7 @@ public:
 
     FileType fileType() const;
 
-    SimulationExperimentViewSimulation *simulation() const;
+    SimulationExperimentViewSimulation * simulation() const;
 
     void updateGui(const bool &pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
