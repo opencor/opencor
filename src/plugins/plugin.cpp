@@ -259,6 +259,17 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
         //       version of PluginInfo...
 
         mStatus = Plugin::info(pFileName)?OldPlugin:NotPlugin;
+
+        if (mStatus == NotPlugin) {
+            // Apparently, we are not dealing with a plugin, so load it so that
+            // we can retrieve its corresponding error
+
+            QPluginLoader pluginLoader(pFileName);
+
+            pluginLoader.load();
+
+            mStatusErrors = pluginLoader.errorString();
+        }
     }
 }
 
