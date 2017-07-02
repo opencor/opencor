@@ -79,8 +79,7 @@ void TextEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Accept the event
 
         pEvent->accept();
-    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Up)
-                               || (pEvent->key() == Qt::Key_Backtab))) {
+    } else if (noModifiers && (pEvent->key() == Qt::Key_Up)) {
         // The user wants to go to the previous property
 
         emit goToPreviousPropertyRequested();
@@ -88,8 +87,7 @@ void TextEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Accept the event
 
         pEvent->accept();
-    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Down)
-                               || (pEvent->key() == Qt::Key_Tab))) {
+    } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
         // The user wants to go to the next property
 
         emit goToNextPropertyRequested();
@@ -154,8 +152,7 @@ void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Accept the event
 
         pEvent->accept();
-    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Up)
-                               || (pEvent->key() == Qt::Key_Backtab))) {
+    } else if (noModifiers && (pEvent->key() == Qt::Key_Up)) {
         // The user wants to go to the previous property
 
         emit goToPreviousPropertyRequested();
@@ -163,8 +160,7 @@ void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Accept the event
 
         pEvent->accept();
-    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Down)
-                               || (pEvent->key() == Qt::Key_Tab))) {
+    } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
         // The user wants to go to the next property
 
         emit goToNextPropertyRequested();
@@ -1076,7 +1072,6 @@ PropertyEditorWidget::PropertyEditorWidget(const bool &pShowUnits,
     // Customise ourselves
 
     setRootIsDecorated(false);
-    setTabKeyNavigation(true);
 
     // Create and set our data model
 
@@ -1524,8 +1519,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Accept the event
 
         pEvent->accept();
-    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Up)
-                               || (pEvent->key() == Qt::Key_Backtab))) {
+    } else if (noModifiers && (pEvent->key() == Qt::Key_Up)) {
         // The user wants to go the previous property
 
         goToPreviousProperty();
@@ -1533,8 +1527,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Accept the event
 
         pEvent->accept();
-    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Down)
-                               || (pEvent->key() == Qt::Key_Tab))) {
+    } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
         // The user wants to go to the next property
 
         goToNextProperty();
@@ -1903,12 +1896,8 @@ void PropertyEditorWidget::cancelEditing()
 {
     // The user wants to cancel the editing, i.e. finish the editing without
     // committing the editor's data
-    // Note: we temporarily disable tab key navigation since otherwise it will
-    //       get us to the next property, which we don't want...
 
-    setTabKeyNavigation(false);
-        finishEditing(false);
-    setTabKeyNavigation(true);
+    finishEditing(false);
 }
 
 //==============================================================================
