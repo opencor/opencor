@@ -116,7 +116,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     QFont newFont = mPmrInstanceLabel->font();
 
-    newFont.setPointSizeF(0.75*newFont.pointSizeF());
+    newFont.setPointSizeF(0.7*newFont.pointSizeF());
 
     mPmrInstanceLabel->setAlignment(Qt::AlignCenter);
     mPmrInstanceLabel->setEnabled(false);
