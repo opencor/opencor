@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 7, "month": 5, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 21, "month": 6, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -37,7 +37,9 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> OpenGL now works in an Ubuntu virtual machine (see issue <a href=\"https://github.com/opencor/opencor/issues/1307\">#1307</a>). Added OpenSSL as a third-party plugin (see issue <a href=\"https://github.com/opencor/opencor/issues/1101\">#1101</a>)." }
+                       { "change": "<strong>General:</strong> provide an error message when a plugin is considered to be invalid (see issue <a href=\"https://github.com/opencor/opencor/issues/1347\">#1347</a>)." },
+                       { "change": "<strong>Property Editor widget:</strong> disallow navigation using the (Shift+)Tab key(s) (see issue <a href=\"https://github.com/opencor/opencor/issues/1354\">#1354</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26 (see issue <a href=\"https://github.com/opencor/opencor/issues/1340\">#1340</a>). Added <a href=\"http://code.qt.io/cgit/qt/qtcharts.git/tree/\">Qt Charts</a> as a package (see issue <a href=\"https://github.com/opencor/opencor/issues/1342\">#1342</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 4.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1352\">#1352</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,

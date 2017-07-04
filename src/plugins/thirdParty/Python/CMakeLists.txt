@@ -15,6 +15,12 @@ SET(GIT_TAG "opencor")
 SET(PACKAGE_NAME Python)
 SET(PACKAGE_VERSION ${LIBRARY_VERSION})
 
+IF(WIN32)
+    # The version of SQLite to bundle
+
+    SET(SQLITE3_VERSION "3170000")
+ENDIF()
+
 # Set the ABI flag and version identifier
 
 SET(PYTHON_ABIFLAGS "m")
@@ -102,9 +108,7 @@ ENDIF()
 SET(PACKAGED_FILES
     bin
     include
-    ${RUNTIME_DIR}/lib2to3
-    ${RUNTIME_DIR}/lib-dynload
-    ${RUNTIME_DIR}/site-packages
+    ${RUNTIME_DIR}
     ${SHA1_FILES}
     )
 
@@ -124,19 +128,18 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} 4102456caa78e3d62fde6ca53997abb548c8b527
-                SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES 7a08861d684f2e525102b24909ada5c3302f6634
-                            177e5f55df070047d5818dcb5f81d6d2451bb36c
-                            3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-            )
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} f4d857d42e585223c71bc542653372353767b1fb
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 64d44c4da3bc594cd7e9768c1218bbea1999e462
+                                          811688579aeec4bcc9a8b52ee9d60ce72d6e7288
+                                          3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 31cd47bed76a51e3a4c17bc1bc03caae14fbd957
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 02fceddd890c9325a05ddbeb410789f8533bcbdc
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e30b869c125a6c6c54fd5786f25956ac218dac02)
+                              SHA1_VALUES e122e68c0593bf8758baab2d93ae3984a2071584)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
             ${RELATIVE_PROJECT_SOURCE_DIR} 0c8b8b07d6af7cdc8e6746cb472d9be5f45f20f0
@@ -155,6 +158,7 @@ ELSE()
         # Use the system's readline
         SET(PYTHON_READLINE_OPTION -DUSE_SYSTEM_READLINE=ON)
     ELSE()
+        SET(CMAKE_INSTALL_RPATH_OPTION)
         # Use Python's built-in readline
         SET(PYTHON_READLINE_OPTION -DBUILTIN_READLINE=ON)
     ENDIF()
@@ -163,7 +167,6 @@ ELSE()
     # This could/should be in its own plugin...
 
     IF(WIN32)
-        SET(SQLITE3_VERSION "3170000")
         SET(SQLITE3_DIR ${PROJECT_BINARY_DIR}/sqlite3)
 
         IF(NOT EXISTS ${SQLITE3_DIR}/sqlite-amalgamation-${SQLITE3_VERSION}/sqlite3.h)
@@ -189,6 +192,9 @@ ELSE()
                 )
             EXECUTE_PROCESS(
                 COMMAND ${CMAKE_COMMAND} -E tar xf zips/${SQLITE3_DLL_ZIP} --format=zip
+                WORKING_DIRECTORY ${SQLITE3_DIR}
+                )
+            EXECUTE_PROCESS(
                 COMMAND lib /verbose /def:sqlite3.def /out:sqlite3.lib /machine:x64
                 WORKING_DIRECTORY ${SQLITE3_DIR}
                 )
@@ -373,11 +379,11 @@ ELSE()
     # Use our newly installed python
 
     IF(WIN32)
-        SET(PYTHON_EXECUTABLE ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python.exe)
+        SET(PYTHON_EXECUTABLE python.exe)
     ELSEIF(NOT APPLE)
-        SET(PYTHON_EXECUTABLE "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
+        SET(PYTHON_EXECUTABLE "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" python)
     ELSE()
-        SET(PYTHON_EXECUTABLE ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
+        SET(PYTHON_EXECUTABLE python)
     ENDIF()
 
     # Clean our site-packages directory
@@ -422,6 +428,7 @@ SET(PYTHON_LIBRARY ${ROOT_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
 SET(PYTHON_ROOT_DIR ${ROOT_DIR} PARENT_SCOPE)
 SET(PYTHON_SITE_PACKAGES_DIR ${ROOT_DIR}/${RUNTIME_DIR}/site-packages PARENT_SCOPE)
 SET(PYTHON_VERSION ${LIBRARY_VERSION} PARENT_SCOPE)
+SET(PYTHON_FULL_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS} PARENT_SCOPE)
 
 # Add the plugin
 
@@ -436,8 +443,6 @@ ADD_PLUGIN(Python
         src/pythonplugin.h
     INCLUDE_DIRS
         ${LOCAL_EXTERNAL_PACKAGE_DIR}/${INCLUDE_DIR}
-
-        src
     PLUGINS
         Core
         OpenSSL

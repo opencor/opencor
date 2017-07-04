@@ -61,8 +61,6 @@ protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
 signals:
-    void cancelEditingRequested();
-
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
 };
@@ -102,8 +100,6 @@ protected:
     virtual void mousePressEvent(QMouseEvent *pEvent);
 
 signals:
-    void cancelEditingRequested();
-
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
 };
@@ -146,8 +142,6 @@ private:
 
 signals:
     void openEditor(QWidget *pEditor) const;
-
-    void cancelEditingRequested();
 
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
@@ -374,9 +368,6 @@ private:
 
     QMap<Property *, bool> mPropertyChecked;
 
-    void constructor(const bool &pShowUnits = true,
-                     const bool &pAutoUpdateHeight = false);
-
     void retranslateEmptyListProperties(QStandardItem *pItem);
 
     Property * addProperty(const Property::Type &pType, Property *pParent);
@@ -400,8 +391,6 @@ private slots:
 
     void editorOpened(QWidget *pEditor);
     void editorClosed();
-
-    void cancelEditing();
 
     void goToPreviousProperty();
     void goToNextProperty();

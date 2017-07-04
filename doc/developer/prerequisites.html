@@ -26,19 +26,20 @@
 
         <ul>
             <li><a href="https://git-scm.com/">Git</a>: a distributed version control system;</li>
-            <li><a href="https://www.cmake.org/">CMake</a> 3.2 or later: a cross-platform build system;</li>
+            <li><a href="https://www.cmake.org/">CMake</a> 3.3 or later: a cross-platform build system;</li>
             <li><a href="https://ninja-build.org/">Ninja</a> (optional): a small build system with a focus on speed;</li>
+            <li><a href="https://ccache.samba.org/">ccache</a> (optional and Linux/macOS only): a compiler cache;</li>
             <li>
                 C++ toolchain: a set of C++ tools. The toolchain is different depending on the platform you are using:
 
                 <ul>
                     <li><strong>Windows:</strong> <a href="https://www.visualstudio.com/downloads/download-visual-studio-vs">Visual Studio Community 2015</a>;</li>
-                    <li><strong>Linux:</strong> GCC/G++ 4.9+ (<code>g++-4.9</code> package or <a href="https://gist.github.com/ibogun/ec0a4005c25df57a1b9d">manual installation</a>), as well as OpenGL (<code>mesa-common-dev</code> package) and SSL support (<code>libssl-dev</code> package) on Ubuntu; and</li>
-                    <li><strong>macOS:</strong> <a href="https://developer.apple.com/xcode/">Xcode</a> 8.3.2 (including its <a href="https://developer.apple.com/downloads/?q=Command%20Line%20Tools">command line tools</a>) and SSL support (<code>openssl</code> formula from <a href="http://brew.sh/">Homebrew</a>).</li>
+                    <li><strong>Linux:</strong> GCC/G++ 4.9+ (<code>g++-4.9</code> package or <a href="https://gist.github.com/ibogun/ec0a4005c25df57a1b9d">manual installation</a>), as well as OpenGL (<code>mesa-common-dev</code> package) on Ubuntu; and</li>
+                    <li><strong>macOS:</strong> <a href="https://developer.apple.com/xcode/">Xcode</a> 8.3.3 (including its <a href="https://developer.apple.com/downloads/?q=Command%20Line%20Tools">command line tools</a>).</li>
                 </ul>
             </li>
             <li>
-                <a href="https://www.qt.io/">Qt</a> 5.6.2 LTS: a cross-platform application and UI framework (<a href="https://www.qt.io/ide/">Qt Creator</a> 4.2.1 is its supporting IDE):
+                <a href="https://www.qt.io/">Qt</a> 5.6.2 LTS: a cross-platform application and UI framework (<a href="https://www.qt.io/ide/">Qt Creator</a> is its supporting IDE):
 
                 <ul>
                     <li><strong><a href="https://download.qt.io/official_releases/online_installers/qt-unified-windows-x86-online.exe">Windows</a></strong> (64-bit);</li>
@@ -59,10 +60,6 @@
             <li><strong>Linux:</strong> <code>/opt/Qt/5.6/gcc_64/bin</code> in <code>/etc/environment</code> on Ubuntu; and</li>
             <li><strong>macOS:</strong> <code>/Applications/Qt/5.6/clang_64/bin</code> in <code>/etc/profile</code>.</li>
         </ul>
-
-        <p>
-            On macOS, you will also need to export <code>OPENSSL_ROOT_DIR=/usr/local/opt/openssl</code>.
-        </p>
 
         <script type="text/javascript">
             copyright("..");

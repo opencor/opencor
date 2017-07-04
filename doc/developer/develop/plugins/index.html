@@ -95,7 +95,7 @@
         </ul>
 
         <p>
-            Some plugins do not implement any interface (e.g. the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/thirdParty/LLVM/">LLVM</a> plugin) while others may implement one or several interfaces (e.g. the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin implements the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">Core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">File Handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a> interfaces).
+            Some plugins do not implement any interface (e.g. the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/thirdParty/LLVMClang/">LLVMClang</a> plugin) while others may implement one or several interfaces (e.g. the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin implements the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">Core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">File Handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a> interfaces).
         </p>
 
         <p class="note">
@@ -255,15 +255,15 @@ public:
 ...</pre>
 
         <p>
-            On the other hand, the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/thirdParty/LLVM/">LLVM</a> plugin does not need to implement any interface since its sole purpose is to provide other plugins with access to <a href="http://www.llvm.org/">LLVM</a> (incl. <a href="http://clang.llvm.org/">Clang</a>). Hence, its much simpler class definition:
+            On the other hand, the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/thirdParty/LLVMClang/">LLVMClang</a> plugin does not need to implement any interface since its sole purpose is to provide other plugins with access to <a href="http://www.llvm.org/">LLVM</a> and <a href="http://clang.llvm.org/">Clang</a>. Hence, its much simpler class definition:
         </p>
 
         <pre class="prettyprint">...
-class LLVMPlugin : public QObject
+class LLVMClangPlugin : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.LLVMPlugin" FILE "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/thirdParty/LLVM/src/llvmplugin.json"><code>llvmplugin.json</code></a>")
+    Q_PLUGIN_METADATA(IID "OpenCOR.LLVMClangPlugin" FILE "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/thirdParty/LLVMClang/src/llvmclangplugin.json"><code>llvmclangplugin.json</code></a>")
 };
 ...</pre>
 

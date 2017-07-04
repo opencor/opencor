@@ -96,8 +96,10 @@ private:
 
     bool mInitialized;
 
-    void constructor(const QString &pApplicationDate,
-                     CheckForUpdatesEngine *pEngine);
+    explicit CheckForUpdatesDialog(QSettings *pSettings,
+                                   const QString &pApplicationDate,
+                                   CheckForUpdatesEngine *pEngine,
+                                   QWidget *pParent);
 
     void updateGui();
 

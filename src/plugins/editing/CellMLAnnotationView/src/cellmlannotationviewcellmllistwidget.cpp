@@ -86,10 +86,12 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlElementItem::constructor(const bool &pCategory,
-                                                        const Type &pType,
-                                                        iface::cellml_api::CellMLElement *pElement,
-                                                        const int &pNumber)
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const bool &pCategory,
+                                                                             const Type &pType,
+                                                                             const QString &pText,
+                                                                             iface::cellml_api::CellMLElement *pElement,
+                                                                             const int &pNumber) :
+    QStandardItem(pText)
 {
     // Some initialisations
 
@@ -105,12 +107,8 @@ void CellmlAnnotationViewCellmlElementItem::constructor(const bool &pCategory,
 
 CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const bool &pError,
                                                                              const QString &pText) :
-    QStandardItem(pText)
+    CellmlAnnotationViewCellmlElementItem(false, pError?Error:Warning, pText, 0, -1)
 {
-    // Constructor for either an error or a warning
-
-    constructor(false, pError?Error:Warning, 0, -1);
-
     // Disable the item and use its text as a tooltip (in case it's too long and
     // doesn't fit within the allocated space we have)
     // Note: the item will get 're-enabled' by our item delegate...
@@ -127,12 +125,8 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
 CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const Type &pType,
                                                                              const QString &pText) :
-    QStandardItem(pText)
+    CellmlAnnotationViewCellmlElementItem(true, pType, pText, 0, -1)
 {
-    // Constructor for a category
-
-    constructor(true, pType, 0, -1);
-
     // Use its text as a tooltip (in case it's too long and doesn't fit within
     // the allocated space we have)
 
@@ -148,12 +142,8 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const Type &pType,
                                                                              iface::cellml_api::CellMLElement *pElement,
                                                                              const int pNumber) :
-    QStandardItem()
+    CellmlAnnotationViewCellmlElementItem(false, pType, QString(), pElement, pNumber)
 {
-    // Constructor for a CellML element
-
-    constructor(false, pType, pElement, pNumber);
-
     // Set the text for some types
 
     enum {
@@ -1020,7 +1010,7 @@ void CellmlAnnotationViewCellmlListWidget::indexExpandAll(const QModelIndex &pIn
     //       a call to expand() is quite expensive, so the fewer of those we
     //       make the better...
 
-    if (pIndex.child(0, 0).isValid()) {
+    if (pIndex.model()->index(0, 0, pIndex).isValid()) {
         mTreeViewWidget->expand(pIndex);
 
         QStandardItem *item = mTreeViewModel->itemFromIndex(pIndex);
@@ -1037,7 +1027,7 @@ void CellmlAnnotationViewCellmlListWidget::indexCollapseAll(const QModelIndex &p
     // Recursively collapse all the CellML elements below the current one
     // Note: see the note in indexExpandAll() above...
 
-    if (pIndex.child(0, 0).isValid()) {
+    if (pIndex.model()->index(0, 0, pIndex).isValid()) {
         QStandardItem *item = mTreeViewModel->itemFromIndex(pIndex);
 
         for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)
@@ -1055,7 +1045,7 @@ bool CellmlAnnotationViewCellmlListWidget::indexIsAllExpanded(const QModelIndex 
     // are expanded
     // Note: see the note in indexExpandAll() above...
 
-    if (pIndex.child(0, 0).isValid()) {
+    if (pIndex.model()->index(0, 0, pIndex).isValid()) {
         QStandardItem *item = mTreeViewModel->itemFromIndex(pIndex);
 
         for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)

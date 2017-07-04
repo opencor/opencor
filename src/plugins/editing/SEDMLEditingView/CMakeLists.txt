@@ -21,8 +21,6 @@ ADD_PLUGIN(SEDMLEditingView
 
         src/sedmleditingviewplugin.h
         src/sedmleditingviewwidget.h
-    INCLUDE_DIRS
-        src
     PLUGINS
         EditingView
         SEDMLSupport

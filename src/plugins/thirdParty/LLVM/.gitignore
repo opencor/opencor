@@ -1,9 +1,0 @@
-/include/llvm/Config/abi-breaking.h
-/include/llvm/Config/config.h
-/include/llvm/Config/llvm-config.h
-
-/include/llvm/Support/DataTypes.h
-
-/lib/Target/X86/X86GenAsmMatcher.inc
-
-/tools/clang/include/clang/Config/config.h

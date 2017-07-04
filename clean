@@ -1,7 +1,3 @@
 #!/bin/sh
 
-echo "\033[44;37;1mCleaning OpenCOR...\033[0m"
-
-rm -fr build/* build/.ninja* > /dev/null 2>&1
-
-echo "\033[42;37;1mAll done!\033[0m"
+scripts/genericclean

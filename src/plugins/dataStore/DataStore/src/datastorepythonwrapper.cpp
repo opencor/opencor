@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <PythonQt/pythonqtconversion.h>
+#include <PythonQt/PythonQtConversion.h>
 
 //==============================================================================
 
@@ -201,6 +201,9 @@ error:
 
 //==============================================================================
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+
 // A `valuesdict` is a dictionary sub-class for mapping between the next values
 // of a DataStoreVariables list and Python.
 
@@ -245,6 +248,8 @@ static PyTypeObject valuesdict_type = {
 //    PyDict_Type.tp_new,                         /* tp_new */
 //    PyObject_GC_Del,                            /* tp_free */
 };
+
+#pragma GCC diagnostic pop
 
 //==============================================================================
 

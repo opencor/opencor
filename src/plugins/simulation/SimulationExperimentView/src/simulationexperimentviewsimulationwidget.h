@@ -143,7 +143,7 @@ public:
 
     FileType fileType() const;
 
-    SimulationExperimentViewSimulation *simulation() const;
+    SimulationExperimentViewSimulation * simulation() const;
 
     void updateGui(const bool &pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
@@ -295,6 +295,7 @@ private:
     void retrieveCellmlFile(const QString &pFileName,
                             CellMLSupport::CellmlFile *&pCellmlFile,
                             SEDMLSupport::SedmlFile *pSedmlFile,
+                            COMBINESupport::CombineArchive *pCombineArchive,
                             const FileType &pFileType,
                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues);
     void retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,

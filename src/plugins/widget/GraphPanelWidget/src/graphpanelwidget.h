@@ -84,10 +84,6 @@ private:
 
     bool mActive;
 
-    void constructor(const GraphPanelWidgets &pNeighbors,
-                     QAction *pSynchronizeXAxisAction,
-                     QAction *pSynchronizeYAxisAction);
-
     void updateMarkerColor();
 
 signals:

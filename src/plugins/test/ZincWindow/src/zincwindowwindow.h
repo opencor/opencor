@@ -57,10 +57,6 @@ namespace ZincWindow {
 
 //==============================================================================
 
-class ZincWindowWidget;
-
-//==============================================================================
-
 class ZincWindowWindow : public Core::WindowWidget
 {
     Q_OBJECT

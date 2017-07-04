@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Jupyter kernel plugin
 //==============================================================================
 
-#include "ctkAbstractPythonManager.h"
+#include "CTK/ctkAbstractPythonManager.h"
 #include "jupyterkernelplugin.h"
 #include "pythonqtsupportplugin.h"
 

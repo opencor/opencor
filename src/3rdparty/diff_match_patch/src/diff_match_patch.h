@@ -33,6 +33,16 @@
 #include <cwchar>
 #include <time.h>
 
+#ifdef _WIN32
+    #undef min
+    #undef max
+
+    #undef DELETE
+
+    #pragma warning(push)
+    #pragma warning(disable: 4267)
+#endif
+
 /*
  * Functions for diff, match and patch.
  * Computes the difference between two texts to create a patch.
@@ -2591,6 +2601,10 @@ template <> struct diff_match_patch_traits<char> : diff_match_patch_utf32_direct
   static const char eol = '\n';
   static const char tab = '\t';
 };
+
+#ifdef _WIN32
+    #pragma warning(pop)
+#endif
 
 
 #endif // DIFF_MATCH_PATCH_H

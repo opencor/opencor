@@ -13,11 +13,7 @@ ADD_PLUGIN(QScintillaSupport
         src/qscintillawidget.h
     DEFINITIONS
         QSCINTILLA_DLL
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
-        ${QSCINTILLA_PLUGIN}
-    PLUGIN_BINARIES
-        ${QSCINTILLA_PLUGIN_BINARY}
+        QScintilla
 )

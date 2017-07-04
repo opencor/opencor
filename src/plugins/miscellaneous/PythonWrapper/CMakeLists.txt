@@ -3,10 +3,6 @@ PROJECT(PythonWrapperPlugin)
 # Add the plugin
 
 ADD_PLUGIN(PythonWrapper
-    # Suppress warnings when using Python C API headers
-
-    THIRD_PARTY
-
     SOURCES
         ../../datastoreinterface.cpp
         ../../plugin.cpp
@@ -30,11 +26,12 @@ ADD_PLUGIN(PythonWrapper
         src/pythonwrappersimulationexperimentview.h
         src/pythonwrappersolver.h
     INCLUDE_DIRS
-        src
+        ${PYTHON_INCLUDE_DIR}
         ${NUMPY_INCLUDE_DIR}
     PLUGINS
         Core
-        PythonPackages
         PythonQtSupport
         SimulationExperimentView
+    DEPENDS_ON
+        PythonPackagesPlugin
 )

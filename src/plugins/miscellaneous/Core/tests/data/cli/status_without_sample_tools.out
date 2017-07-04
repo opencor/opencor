@@ -8,7 +8,7 @@ The following plugins are available:
  - Core: the plugin is loaded and fully functional.
  - EditingView: the plugin is loaded and fully functional.
  - EditorWidget: the plugin is loaded and fully functional.
- - LLVM: the plugin is loaded and fully functional.
+ - LLVMClang: the plugin is loaded and fully functional.
  - MathMLViewerWidget: the plugin is loaded and fully functional.
  - QScintilla: the plugin is loaded and fully functional.
  - QScintillaSupport: the plugin is loaded and fully functional.

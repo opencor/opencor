@@ -223,14 +223,16 @@ void ZincWindowWindow::graphicsInitialized()
 {
     // Set our 'new' scene viewer's description
 
-    mZincWidget->sceneViewer().readDescription(mZincSceneViewerDescription);
+    OpenCMISS::Zinc::Sceneviewer sceneViewer = mZincWidget->sceneViewer();
+
+    sceneViewer.readDescription(mZincSceneViewerDescription);
 
     // Our Zinc widget has had its graphics initialised, so now we can set its
     // background colour
 
     double backgroundColor[4] = { 1.0, 1.0, 1.0, 1.0 };
 
-    mZincWidget->sceneViewer().setBackgroundColourRGBA(backgroundColor);
+    sceneViewer.setBackgroundColourRGBA(backgroundColor);
 }
 
 //==============================================================================

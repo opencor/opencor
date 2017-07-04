@@ -61,7 +61,7 @@ PmrWorkspaceManager * PmrWorkspaceManager::instance()
     static PmrWorkspaceManager instance;
 
     return static_cast<PmrWorkspaceManager *>(Core::globalInstance("OpenCOR::PMRSupport::PmrWorkspaceManager::instance()",
-                                                                    &instance));
+                                                                   &instance));
 }
 
 //==============================================================================

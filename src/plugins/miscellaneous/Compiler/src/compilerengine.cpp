@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "llvmbegin.h"
+#include "llvmclangbegin.h"
     #include "llvm/ADT/IntrusiveRefCntPtr.h"
     #include "llvm/Support/TargetSelect.h"
 
@@ -46,7 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "clang/Driver/Tool.h"
     #include "clang/Frontend/CompilerInstance.h"
     #include "clang/Lex/PreprocessorOptions.h"
-#include "llvmend.h"
+#include "llvmclangend.h"
 
 //==============================================================================
 

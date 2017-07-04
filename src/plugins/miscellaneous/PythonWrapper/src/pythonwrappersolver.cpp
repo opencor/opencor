@@ -38,6 +38,8 @@ namespace PythonWrapper {
 
 PythonWrapperSolver::PythonWrapperSolver(PyObject *pModule, QObject *pParent) : QObject(pParent)
 {
+    Q_UNUSED(pModule);
+
     qRegisterMetaType<OpenCOR::Solver::Solver::Properties>("Solver::Solver::Properties");
 }
 

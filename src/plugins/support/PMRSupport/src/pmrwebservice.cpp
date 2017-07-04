@@ -49,7 +49,8 @@ namespace PMRSupport {
 
 //==============================================================================
 
-void PmrWebService::constructor(const QString &pPmrUrl)
+PmrWebService::PmrWebService(const QString &pPmrUrl, QObject *pParent) :
+    QObject(pParent)
 {
     // Some initialisations
 
@@ -76,22 +77,9 @@ void PmrWebService::constructor(const QString &pPmrUrl)
 
 //==============================================================================
 
-PmrWebService::PmrWebService(const QString &pPmrUrl, QObject *pParent) :
-    QObject(pParent)
-{
-    // Construct our object
-
-    constructor(pPmrUrl);
-}
-
-//==============================================================================
-
 PmrWebService::PmrWebService(QObject *pParent) :
-    QObject(pParent)
+    PmrWebService(QString(), pParent)
 {
-    // Construct our object
-
-    constructor(QString());
 }
 
 //==============================================================================

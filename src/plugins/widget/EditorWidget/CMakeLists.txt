@@ -18,8 +18,6 @@ ADD_PLUGIN(EditorWidget
         src/editorwidgetplugin.h
     UIS
         src/editorwidgetfindreplacewidget.ui
-    INCLUDE_DIRS
-        src
     PLUGINS
         QScintillaSupport
 )

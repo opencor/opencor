@@ -1,209 +1,216 @@
 PROJECT(QwtPlugin)
 
-# Retrieve Qwt's definitions
+# Name and version of our package
 
-SET(DEFINITIONS
-    MML_TEST
+SET(PACKAGE_NAME Qwt)
+SET(PACKAGE_VERSION 6.1.3)
+
+# Version of our library
+
+SET(MAJOR_LIBRARY_VERSION 6)
+SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.3)
+
+# Git tag for our library
+
+SET(GIT_TAG v6.1.3)
+
+# Specify where our local package will be installed
+
+SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+
+# Name of our package's shared libraries (and of their import libraries, if any)
+
+IF(WIN32)
+    IF(RELEASE_MODE)
+        SET(DEBUG_TAG)
+    ELSE()
+        SET(DEBUG_TAG d)
+    ENDIF()
+
+    SET(QWT_SHARED_LIBRARY qwt${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(QWT_IMPORT_LIBRARY qwt${DEBUG_TAG}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    SET(QWTMATHML_SHARED_LIBRARY qwtmathml${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(QWTMATHML_IMPORT_LIBRARY qwtmathml${DEBUG_TAG}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+ELSE()
+    SET(QWT_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}qwt${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    SET(QWT_IMPORT_LIBRARY ${QWT_SHARED_LIBRARY})
+
+    SET(QWTMATHML_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}qwtmathml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    SET(QWTMATHML_IMPORT_LIBRARY ${QWTMATHML_SHARED_LIBRARY})
+ENDIF()
+
+# Retrieve our package's binaries
+
+SET(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
+
+SET(EXTERNAL_BINARIES
+    ${QWT_SHARED_LIBRARY}
+    ${QWTMATHML_SHARED_LIBRARY}
+)
+
+# Specify the files that need to have their SHA-1 value checked
+
+SET(SHA1_FILES
+    lib/${QWT_SHARED_LIBRARY}
+    lib/${QWTMATHML_SHARED_LIBRARY}
 )
 
 IF(WIN32)
-    LIST(APPEND DEFINITIONS
-        _SCL_SECURE_NO_WARNINGS
-
-        QWT_DLL
+    LIST(APPEND SHA1_FILES
+        lib/${QWT_IMPORT_LIBRARY}
+        lib/${QWTMATHML_IMPORT_LIBRARY}
     )
 ENDIF()
 
-# Use our pre-built version unless instructed otherwise
+# Use the pre-built version of our package unless instructed otherwise
 
-IF(USE_PREBUILT_QWT_PLUGIN)
-    # Retrieve the plugin's binary file(s)
+IF(USE_PREBUILT_QWT_PACKAGE)
+    # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
-           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_BINARIES_DIR}")
+           RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.dll 6496cb8de8eb3cb9d55d584139522a1be682a389)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.lib 21e00e4c5480e7cdbc290f25f2c545a575a760c0)
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} d35a7ee6b343db879953658a4faab6a50aa3d030
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES ec304b302f2daf62b7ea44185a5461b2f9bd7b9a
+                                              4ba1e9eaa888b79c25dc0f2d1403cf6dff0ce292
+                                              61fcf47e838787e6225d94c7dfca093c16d0fa1a
+                                              99fd797350511d3f793ce560886deb30c83dd23f)
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.dll 9ac602f169a4e2749d979b2868f259657d77c4e4)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.lib 901ed5008bafdfb396b73eaf8e20bae6603c5fd4)
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} b828771e900c071b28fbf0c03b665d665a97b284
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 1a09e586dfad979a4048520211f0a7a76056b390
+                                              fa054ae8fe0eb9fdb83d6dc0fb80adf9cc818322
+                                              84a034e96ae14a916f63949a1d0349eb93781e58
+                                              2ecb9acbcd715f73eba5c11e7b5cdaafb812d28e)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQwt.dylib 8f744ddff71ab844da7619b504e370b57dd46509)
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 65704e0fd730903b7ba31651094550f4bcc2557f
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 2f2341decf3a24faedb6f4e83165226266eba5f9
+                                          d5787ce81a8958a4a7453cc9a95cf77222d08a49)
     ELSE()
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQwt.so 3fe7ac19326dc4702c03867f0cc3e6d00838f99f)
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 494191814485a53d2b70619d575f1da23cb0ef73
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 98c1869712832f83bff34774bc8c9d1dddec8fc7
+                                          eb652a5804420c45fe9ed843c0312f1eb1144ce5)
     ENDIF()
-
-    # Add the plugin as a binary
-    # Note: in the case of Windows, we must refer to the distribution directory
-    #       as opposed to the plugins directory since we need the .lib file and
-    #       it's only there...
+ELSE()
+    # Set platform specific configuration options
 
     IF(WIN32)
-        SET(QWT_PLUGIN_BINARY ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_BINARIES_DIR}/${CMAKE_IMPORT_LIBRARY_PREFIX}Qwt${CMAKE_IMPORT_LIBRARY_SUFFIX} PARENT_SCOPE)
-    ELSE()
-        SET(QWT_PLUGIN_BINARY ${DEST_PLUGINS_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qwt${CMAKE_SHARED_LIBRARY_SUFFIX} PARENT_SCOPE)
+        IF(RELEASE_MODE)
+            SET(MAKEFILE_TARGET release)
+        ELSE()
+            SET(MAKEFILE_TARGET debug)
+        ENDIF()
     ENDIF()
 
-    ADD_PLUGIN_BINARY(Qwt
-        INCLUDE_DIRS
-            src
-            textengines/mathml
+    # Build Qwt as an external project
+
+    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
+
+    ExternalProject_Add(${PACKAGE_BUILD}
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
+        INSTALL_DIR
+            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+        GIT_REPOSITORY
+            https://github.com/opencor/qwt
+        GIT_TAG
+            ${GIT_TAG}
+        CONFIGURE_COMMAND
+            ${QMAKE_COMMAND} <SOURCE_DIR> CONFIG+=qt_no_framework OBJECTS_DIR=${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD} INSTALL_DIR=<INSTALL_DIR>
+        BUILD_COMMAND
+            ${MAKE_JOM_COMMAND} ${MAKEFILE_TARGET}
+        INSTALL_COMMAND
+            ${MAKE_JOM_COMMAND} install
+        BUILD_BYPRODUCTS
+            <INSTALL_DIR>/lib/${QWT_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${QWTMATHML_IMPORT_LIBRARY}
     )
-ELSE()
-    # Add the plugin
 
-    SET(QWT_PLUGIN Qwt PARENT_SCOPE)
+    # Do some post-processing that is specific to each platform
 
-    ADD_PLUGIN(Qwt
-        THIRD_PARTY
-        SOURCES
-            ../../plugininfo.cpp
+    IF(NOT WIN32)
+        # Dereference the symbolic link to the library since CMake's tar can't
+        # do this
 
-            src/qwt_abstract_legend.cpp
-            src/qwt_abstract_scale.cpp
-            src/qwt_abstract_scale_draw.cpp
-            src/qwt_abstract_slider.cpp
-            src/qwt_analog_clock.cpp
-            src/qwt_arrow_button.cpp
-            src/qwt_clipper.cpp
-            src/qwt_color_map.cpp
-            src/qwt_column_symbol.cpp
-            src/qwt_compass.cpp
-            src/qwt_compass_rose.cpp
-            src/qwt_counter.cpp
-            src/qwt_curve_fitter.cpp
-            src/qwt_date.cpp
-            src/qwt_date_scale_draw.cpp
-            src/qwt_date_scale_engine.cpp
-            src/qwt_dial.cpp
-            src/qwt_dial_needle.cpp
-            src/qwt_dyngrid_layout.cpp
-            src/qwt_event_pattern.cpp
-            src/qwt_graphic.cpp
-            src/qwt_interval.cpp
-            src/qwt_interval_symbol.cpp
-            src/qwt_knob.cpp
-            src/qwt_legend.cpp
-            src/qwt_legend_data.cpp
-            src/qwt_legend_label.cpp
-            src/qwt_magnifier.cpp
-            src/qwt_math.cpp
-            src/qwt_matrix_raster_data.cpp
-            src/qwt_null_paintdevice.cpp
-            src/qwt_painter.cpp
-            src/qwt_painter_command.cpp
-            src/qwt_panner.cpp
-            src/qwt_picker.cpp
-            src/qwt_picker_machine.cpp
-            src/qwt_pixel_matrix.cpp
-            src/qwt_plot.cpp
-            src/qwt_plot_abstract_barchart.cpp
-            src/qwt_plot_axis.cpp
-            src/qwt_plot_barchart.cpp
-            src/qwt_plot_canvas.cpp
-            src/qwt_plot_curve.cpp
-            src/qwt_plot_dict.cpp
-            src/qwt_plot_directpainter.cpp
-            src/qwt_plot_glcanvas.cpp
-            src/qwt_plot_grid.cpp
-            src/qwt_plot_histogram.cpp
-            src/qwt_plot_intervalcurve.cpp
-            src/qwt_plot_item.cpp
-            src/qwt_plot_layout.cpp
-            src/qwt_plot_legenditem.cpp
-            src/qwt_plot_magnifier.cpp
-            src/qwt_plot_marker.cpp
-            src/qwt_plot_multi_barchart.cpp
-            src/qwt_plot_panner.cpp
-            src/qwt_plot_picker.cpp
-            src/qwt_plot_rasteritem.cpp
-            src/qwt_plot_renderer.cpp
-            src/qwt_plot_rescaler.cpp
-            src/qwt_plot_scaleitem.cpp
-            src/qwt_plot_seriesitem.cpp
-            src/qwt_plot_shapeitem.cpp
-            src/qwt_plot_spectrocurve.cpp
-            src/qwt_plot_spectrogram.cpp
-            src/qwt_plot_svgitem.cpp
-            src/qwt_plot_textlabel.cpp
-            src/qwt_plot_tradingcurve.cpp
-            src/qwt_plot_xml.cpp
-            src/qwt_plot_zoneitem.cpp
-            src/qwt_plot_zoomer.cpp
-            src/qwt_point_3d.cpp
-            src/qwt_point_data.cpp
-            src/qwt_point_mapper.cpp
-            src/qwt_point_polar.cpp
-            src/qwt_raster_data.cpp
-            src/qwt_round_scale_draw.cpp
-            src/qwt_sampling_thread.cpp
-            src/qwt_scale_div.cpp
-            src/qwt_scale_draw.cpp
-            src/qwt_scale_engine.cpp
-            src/qwt_scale_map.cpp
-            src/qwt_scale_widget.cpp
-            src/qwt_series_data.cpp
-            src/qwt_slider.cpp
-            src/qwt_spline.cpp
-            src/qwt_symbol.cpp
-            src/qwt_system_clock.cpp
-            src/qwt_text.cpp
-            src/qwt_text_engine.cpp
-            src/qwt_text_label.cpp
-            src/qwt_thermo.cpp
-            src/qwt_transform.cpp
-            src/qwt_wheel.cpp
-            src/qwt_widget_overlay.cpp
-            src/qwtplugin.cpp
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyQwtLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${QWT_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}qwt${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${QWT_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
+                                 DEPENDEES install)
 
-            textengines/mathml/qwt_mathml_text_engine.cpp
-            textengines/mathml/qwt_mml_document.cpp
-            textengines/mathml/qwt_mml_entity_table.cpp
-        HEADERS_MOC
-            src/qwt_abstract_legend.h
-            src/qwt_abstract_scale.h
-            src/qwt_abstract_slider.h
-            src/qwt_analog_clock.h
-            src/qwt_compass.h
-            src/qwt_counter.h
-            src/qwt_dial.h
-            src/qwt_dyngrid_layout.h
-            src/qwt_knob.h
-            src/qwt_legend.h
-            src/qwt_legend_label.h
-            src/qwt_magnifier.h
-            src/qwt_panner.h
-            src/qwt_picker.h
-            src/qwt_plot.h
-            src/qwt_plot_canvas.h
-            src/qwt_plot_glcanvas.h
-            src/qwt_plot_magnifier.h
-            src/qwt_plot_panner.h
-            src/qwt_plot_picker.h
-            src/qwt_plot_renderer.h
-            src/qwt_plot_zoomer.h
-            src/qwt_sampling_thread.h
-            src/qwt_scale_widget.h
-            src/qwt_slider.h
-            src/qwt_text_label.h
-            src/qwt_thermo.h
-            src/qwt_wheel.h
-            src/qwtplugin.h
-        INCLUDE_DIRS
-            src
-            textengines/mathml
-        DEFINITIONS
-            ${DEFINITIONS}
-            QWT_MAKEDLL
-        QT_MODULES
-            Concurrent
-            OpenGL
-            PrintSupport
-            Svg
-            Widgets
-            Xml
-    )
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyQwtmathmlLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${QWTMATHML_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}qwtmathml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${QWTMATHML_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
+                                 DEPENDEES install)
+
+        IF(APPLE)
+            # Fix the RPATH information
+
+            ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
+                                     COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${QWT_SHARED_LIBRARY}
+                                     COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${QWT_SHARED_LIBRARY}
+                                     COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${QWTMATHML_SHARED_LIBRARY}
+                                     COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${QWTMATHML_SHARED_LIBRARY}
+                                     COMMAND install_name_tool -change ${QWT_SHARED_LIBRARY}
+                                                                       @rpath/${QWT_SHARED_LIBRARY}
+                                                                       ${QWTMATHML_SHARED_LIBRARY}
+                                     WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
+                                     DEPENDEES CopyQwtmathmlLibrary)
+        ENDIF()
+    ENDIF()
+
+    # Package our external project
+
+    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        PACKAGED_FILES include ${SHA1_FILES}
+                        SHA1_FILES ${SHA1_FILES}
+                        TARGET ${PACKAGE_BUILD})
+
+    SET(DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
+
+# Allow other external projects to find our Qwt package
+
+SET(QWT_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+SET(QWT_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+SET(QWT_QWT_LIBRARY ${EXTERNAL_BINARIES_DIR}/${QWT_IMPORT_LIBRARY} PARENT_SCOPE)
+SET(QWT_QWTMATHML_LIBRARY ${EXTERNAL_BINARIES_DIR}/${QWTMATHML_IMPORT_LIBRARY} PARENT_SCOPE)
+SET(QWT_LIBRARIES
+    ${EXTERNAL_BINARIES_DIR}/${QWT_IMPORT_LIBRARY}
+    ${EXTERNAL_BINARIES_DIR}/${QWTMATHML_IMPORT_LIBRARY}
+    PARENT_SCOPE
+)
+
+# Add the plugin
+
+ADD_PLUGIN(${PACKAGE_NAME}
+    SOURCES
+        ../../plugininfo.cpp
+
+        src/qwtplugin.cpp
+    HEADERS_MOC
+        src/qwtplugin.h
+    QT_MODULES
+        Core
+    EXTERNAL_BINARIES_DIR
+        ${EXTERNAL_BINARIES_DIR}
+    EXTERNAL_BINARIES
+        ${EXTERNAL_BINARIES}
+    DEPENDS_ON
+        ${DEPENDS_ON}
+)

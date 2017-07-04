@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ "$1" = "all" ]; then
+    echo "\033[44;37;1mCleaning all of OpenCOR...\033[0m"
+else
+    echo "\033[44;37;1mCleaning OpenCOR...\033[0m"
+fi
+
+rm -fr build/* build/.ninja* > /dev/null 2>&1
+
+if [ "$1" = "all" ]; then
+    rm -fr ext/* > /dev/null 2>&1
+
+    for i in distrib src; do
+        for j in `find $i -name ext`; do
+            rm -fr $j > /dev/null 2>&1
+        done
+    done
+fi
+
+echo "\033[42;37;1mAll done!\033[0m"

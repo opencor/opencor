@@ -1,17 +1,18 @@
 PROJECT(zlibPlugin)
 
-# Version of our package
+# Name and version of our package
 
-SET(PACKAGE_VERSION "1.2.11")
+SET(PACKAGE_NAME zlib)
+SET(PACKAGE_VERSION 1.2.11)
 
 # Version of our library
 
-SET(MAJOR_LIBRARY_VERSION "1")
-SET(LIBRARY_VERSION "${MAJOR_LIBRARY_VERSION}.2.11")
+SET(MAJOR_LIBRARY_VERSION 1)
+SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.2.11)
 
 # Git tag for our library
 
-SET(GIT_TAG "v1.2.11")
+SET(GIT_TAG v1.2.11)
 
 # Specify where our local package will be installed
 
@@ -21,17 +22,15 @@ SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 
 IF(WIN32)
     IF(RELEASE_MODE)
-        SET(SHARED_LIBRARY zlib${CMAKE_SHARED_LIBRARY_SUFFIX})
-        SET(IMPORT_LIBRARY zlib${CMAKE_IMPORT_LIBRARY_SUFFIX})
+        SET(DEBUG_TAG)
     ELSE()
-        SET(SHARED_LIBRARY zlibd${CMAKE_SHARED_LIBRARY_SUFFIX})
-        SET(IMPORT_LIBRARY zlibd${CMAKE_IMPORT_LIBRARY_SUFFIX})
+        SET(DEBUG_TAG d)
     ENDIF()
-ELSEIF(APPLE)
-    SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}z.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(IMPORT_LIBRARY ${SHARED_LIBRARY})
+
+    SET(SHARED_LIBRARY zlib${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(IMPORT_LIBRARY zlib${DEBUG_TAG}${CMAKE_IMPORT_LIBRARY_SUFFIX})
 ELSE()
-    SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_LIBRARY_VERSION})
+    SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     SET(IMPORT_LIBRARY ${SHARED_LIBRARY})
 ENDIF()
 
@@ -65,38 +64,30 @@ IF(USE_PREBUILT_ZLIB_PACKAGE)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(zlib ${PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} 46f64af9fea228a3afa6d64bad1a0700ba20c67b
-                SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES 6a8408008702971d5cbf5e6f49953273d6e2f249
-                            63892d9f0e54248c4c6f97ca0ba5342938b52d0e
-            )
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 40fb8671f71f4ecd30c497da77a056deff27e68e
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 14aa954cecdf06d43bb0781b293df7f53b5a525f
+                                              1f7132f2eb4416f2b9771f0ddb19f834783a3059)
         ELSE()
-            RETRIEVE_PACKAGE_FILE(zlib ${PACKAGE_VERSION}
-                ${RELATIVE_PROJECT_SOURCE_DIR} b3695becf1f964b1207dc2371aa1978973d92459
-                SHA1_FILES ${SHA1_FILES}
-                SHA1_VALUES 2121f4b71cab6e851b2a01ac241a684a75ee06ad
-                            0ef60637c15c35954fe4ca17be1837cd72bd8f69
-            )
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} c453bb28a886e000af2351093ca0a883906955e5
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES eca444670fe39117f19027fda3608475a1ec1c91
+                                              d4ef983ceb32fcde51dffeb118f686394ccbf32f)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(zlib ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} 4de712a64a9121424aaf23a9683165c6af349098
-            SHA1_FILES ${SHA1_FILES}
-            SHA1_VALUES 2da040b5883c4a00166e9a22cc49c5400d09d025
-        )
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} e98147832b1933945e5a29c194fd570669e49f0f
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 9c23f1d64dfa64a120e77521c896ac8e645156b1)
     ELSE()
-        RETRIEVE_PACKAGE_FILE(zlib ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} f9934d635b4713cdceab4aa751745029fab4f82d
-            SHA1_FILES ${SHA1_FILES}
-            SHA1_VALUES e7a94eaf5cd6bfa099ffc700ea81f26e3030a065
-        )
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 26edcea05d4bac33346d80df88144d9f53d0565c
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES c1d95d3e676d5e070b803f68efe46618d983deaa)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
     # Ignore some warnings
 
     IF(WIN32)
@@ -105,25 +96,25 @@ ELSE()
 
     # Build zlib as an external project
 
-    SET(PACKAGE_BUILD zlibBuild)
+    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
-            ${PROJECT_SOURCE_DIR}/ext/proj
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/zlib.git
+            https://github.com/opencor/zlib
         GIT_TAG
             ${GIT_TAG}
-        PATCH_COMMAND
-            ${CMAKE_COMMAND} -E remove <SOURCE_DIR>/zconf.h
         CMAKE_CACHE_ARGS
             -DCMAKE_C_FLAGS:STRING=${PACKAGE_C_FLAGS}
+        CMAKE_GENERATOR
+            ${CMAKE_GENERATOR}
         CMAKE_ARGS
+            ${DEFINE_CMAKE_APPLE_OPTIONS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-            -DCMAKE_MACOSX_RPATH=1
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
@@ -141,29 +132,23 @@ ELSE()
         # Dereference the symbolic link to the library since CMake's tar can't
         # do this
 
-        SET(FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY})
-
-        IF(APPLE)
-            SET(REAL_FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}z.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-        ELSE()
-            SET(REAL_FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX}.${LIBRARY_VERSION})
-        ENDIF()
-
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
-                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_SHARED_LIBRARY} ${FULL_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}z${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
     ENDIF()
 
     # Package our external project
 
-    CREATE_PACKAGE_FILE(zlib ${PACKAGE_VERSION}
+    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 
-    SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
+    SET(DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
 # Allow other external projects to find our zlib package
@@ -174,19 +159,13 @@ SET(ZLIB_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IMPORT_LIBRARY} PARENT
 
 # Add the plugin
 
-SET(ZLIB_PLUGIN zlib PARENT_SCOPE)
-
-ADD_PLUGIN(zlib
+ADD_PLUGIN(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp
 
         src/zlibplugin.cpp
     HEADERS_MOC
         src/zlibplugin.h
-    INCLUDE_DIRS
-        ${LOCAL_EXTERNAL_PACKAGE_DIR}/include
-
-        src
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
@@ -194,5 +173,5 @@ ADD_PLUGIN(zlib
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
     DEPENDS_ON
-        ${PLUGIN_DEPENDS_ON}
+        ${DEPENDS_ON}
 )
