@@ -98,7 +98,7 @@ int main(int pArgC, char *pArgV[])
 
     sprintf(oldLine, "get_filename_component(_qt5%s_install_prefix \"${CMAKE_CURRENT_LIST_DIR}/../../../\" ABSOLUTE)\n", pArgV[2]);
     sprintf(newLine, "set(_qt5%s_install_prefix ${CMAKE_SOURCE_DIR}/src/3rdparty/Qt%s/ext)\n", pArgV[2], pArgV[2]);
-    
+
     while (fgets(line, LINE_MAX, in)) {
         if (!strcmp(line, oldLine))
             fprintf(out, newLine);
