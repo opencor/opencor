@@ -3,7 +3,7 @@ PROJECT(QScintillaPlugin)
 # Name and version of our package
 
 SET(PACKAGE_NAME QScintilla)
-SET(PACKAGE_VERSION 2.10)
+SET(PACKAGE_VERSION 2.10.1)
 
 # Version of our library
 
@@ -12,7 +12,7 @@ SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.0)
 
 # Git tag for our library
 
-SET(GIT_TAG v2.10)
+SET(GIT_TAG v2.10.1)
 
 # Specify where our local package will be installed
 
