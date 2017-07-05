@@ -46,8 +46,8 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellMLAnnotationViewPlugin *pPlugin,
-                                                                                     CellmlAnnotationViewWidget *pViewWidget,
-                                                                                     CellmlAnnotationViewEditingWidget *pViewEditingWidget,
+                                                                                     CellmlAnnotationViewWidget *pAnnotationWidget,
+                                                                                     CellmlAnnotationViewEditingWidget *pEditingWidget,
                                                                                      CellMLSupport::CellmlFile *pCellmlFile,
                                                                                      QWidget *pParent) :
     Widget(pParent),
@@ -86,7 +86,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our details widgets
 
-    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pViewWidget, pViewEditingWidget, pCellmlFile, mSplitter);
+    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pAnnotationWidget, pEditingWidget, pCellmlFile, mSplitter);
     mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pCellmlFile, mSplitter);
     mWebViewer = new WebViewerWidget::WebViewerWidget(mSplitter);
 

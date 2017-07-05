@@ -47,7 +47,7 @@ namespace CellMLAnnotationView {
 
 CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnotationViewPlugin *pPlugin,
                                                                      const QString &pFileName,
-                                                                     CellmlAnnotationViewWidget *pViewWidget,
+                                                                     CellmlAnnotationViewWidget *pAnnotationWidget,
                                                                      QWidget *pParent) :
     Core::SplitterWidget(pParent)
 {
@@ -77,7 +77,7 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
     // Create our two main parts
 
     mCellmlList = new CellmlAnnotationViewCellmlListWidget(this);
-    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(pPlugin, pViewWidget, this, mCellmlFile, this);
+    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(pPlugin, pAnnotationWidget, this, mCellmlFile, this);
 
     // Populate ourselves
 
