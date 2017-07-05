@@ -159,7 +159,6 @@ function versions(downloads) {
         document.write("        margin: 0px;\n");
         document.write("        border: 0px;\n");
         document.write("    }\n");
-        document.write("\n");
         document.write("</style>\n");
         document.write("\n");
 
