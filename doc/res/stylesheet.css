@@ -53,6 +53,14 @@ div.section {
     color: rgb(103, 103, 103);
 }
 
+div.warning {
+    border-radius: 5px;
+    border: 1px solid rgb(250, 235, 204);
+    background: rgb(252, 248, 227);
+    color: rgb(138, 109, 59);
+    padding: 7px 7px 1px 7px;
+}
+
 img.downloads {
     margin: -1px;
     border: 1px solid rgba(103, 103, 103, 0.13);
