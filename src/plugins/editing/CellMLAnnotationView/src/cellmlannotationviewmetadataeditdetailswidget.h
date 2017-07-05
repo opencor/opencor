@@ -104,8 +104,8 @@ class CellmlAnnotationViewMetadataEditDetailsWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pViewWidget,
-                                                           CellmlAnnotationViewEditingWidget *pViewEditingWidget,
+    explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pAnnotationWidget,
+                                                           CellmlAnnotationViewEditingWidget *pEditingWidget,
                                                            CellMLSupport::CellmlFile *pCellmlFile,
                                                            QWidget *pParent);
 
@@ -121,8 +121,8 @@ private:
         Id
     };
 
-    CellmlAnnotationViewWidget *mViewWidget;
-    CellmlAnnotationViewEditingWidget *mViewEditingWidget;
+    CellmlAnnotationViewWidget *mAnnotationWidget;
+    CellmlAnnotationViewEditingWidget *mEditingWidget;
 
     QNetworkAccessManager *mNetworkAccessManager;
 

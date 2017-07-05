@@ -69,7 +69,7 @@ public:
 
     virtual void retranslateUi();
 
-    void updateSettings(SedmlEditingViewWidget *pSedmlEditingViewWidget);
+    void updateSettings(SedmlEditingViewWidget *pEditingWidget);
 
     EditorWidget::EditorWidget * editorWidget() const;
     EditorWidget::EditorListWidget * editorListWidget() const;

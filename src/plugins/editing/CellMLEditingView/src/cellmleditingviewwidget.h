@@ -75,7 +75,7 @@ public:
 
     virtual void retranslateUi();
 
-    void updateSettings(CellmlEditingViewWidget *pCellmlEditingViewWidget);
+    void updateSettings(CellmlEditingViewWidget *pEditingWidget);
 
     MathMLViewerWidget::MathmlViewerWidget * mathmlViewer() const;
     EditorWidget::EditorWidget * editorWidget() const;

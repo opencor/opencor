@@ -67,8 +67,8 @@ class CellmlAnnotationViewMetadataDetailsWidget : public Core::Widget
 
 public:
     explicit CellmlAnnotationViewMetadataDetailsWidget(CellMLAnnotationViewPlugin *pPlugin,
-                                                       CellmlAnnotationViewWidget *pViewWidget,
-                                                       CellmlAnnotationViewEditingWidget *pViewEditingWidget,
+                                                       CellmlAnnotationViewWidget *pAnnotationWidget,
+                                                       CellmlAnnotationViewEditingWidget *pEditingWidget,
                                                        CellMLSupport::CellmlFile *pCellmlFile,
                                                        QWidget *pParent);
 
