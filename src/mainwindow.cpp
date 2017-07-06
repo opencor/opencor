@@ -282,7 +282,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     loadSettings();
 
-    // Check if any plugin may want to run the main event loop
+    // Check if any plugin wants to run the main event loop
 
     foreach (Plugin *plugin, mLoadedPluginPlugins) {
 
