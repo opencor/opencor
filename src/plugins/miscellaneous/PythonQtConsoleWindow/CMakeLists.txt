@@ -17,8 +17,6 @@ ADD_PLUGIN(PythonQtConsoleWindow
         src/pythonqtconsolewindow.h
     UIS
         src/pythonqtconsolewindow.ui
-    INCLUDE_DIRS
-        ${PYTHON_INCLUDE_DIR}
     PLUGINS
         Core
         PythonQtSupport

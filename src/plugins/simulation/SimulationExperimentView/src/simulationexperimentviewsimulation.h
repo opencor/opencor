@@ -64,7 +64,7 @@ class SIMULATIONEXPERIMENTVIEW_EXPORT SimulationExperimentViewSimulationData : p
 {
     Q_OBJECT
 
-    friend class PythonWrapper::PythonWrapperSimulationExperimentView;
+    friend class SimulationExperimentViewPythonWrapper;
 
 public:
     explicit SimulationExperimentViewSimulationData(SimulationExperimentViewSimulation *pSimulation,
@@ -202,7 +202,7 @@ class SIMULATIONEXPERIMENTVIEW_EXPORT SimulationExperimentViewSimulationResults 
 {
     Q_OBJECT
 
-    friend class PythonWrapper::PythonWrapperSimulationExperimentView;
+    friend class SimulationExperimentViewPythonWrapper;
 
 public:
     explicit SimulationExperimentViewSimulationResults(SimulationExperimentViewSimulation *pSimulation);

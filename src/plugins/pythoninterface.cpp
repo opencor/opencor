@@ -18,57 +18,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python Qt Support plugin
+// Python interface
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "plugininfo.h"
-#include "plugininterface.h"
-#include "pythonqtsupportglobal.h"
-
-//==============================================================================
-
-#include <PythonQt/PythonQt.h>
-
-//==============================================================================
-
-class ctkAbstractPythonManager;
+#include "pythoninterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonQtSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonQtSupportPluginInfo();
-
-//==============================================================================
-
-class PYTHONQTSUPPORT_EXPORT PythonQtSupportPlugin : public QObject, public PluginInterface
+extern "C" Q_DECL_EXPORT int pythonInterfaceVersion()
 {
-    Q_OBJECT
+    // Version of the Python interface
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonQtSupportPlugin" FILE "pythonqtsupportplugin.json")
-
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
-public:
-    explicit PythonQtSupportPlugin();
-
-#include "plugininterface.inl"
-
-private:
-    ctkAbstractPythonManager *mPythonManager;
-    PythonQtObjectPtr mOpenCORModule;
-};
+    return 1;
+}
 
 //==============================================================================
 
-}   // namespace PythonQtSupport
 }   // namespace OpenCOR
 
 //==============================================================================

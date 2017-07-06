@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python wrapper for Solver interface
+// Python wrapper for DataStore classes
 //==============================================================================
 
 #pragma once
@@ -34,23 +34,65 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonWrapper {
 
 //==============================================================================
 
-class PythonWrapperSolver : public QObject
+namespace DataStore {
+
+//==============================================================================
+
+class DataStore;
+class DataStoreArray;
+class DataStoreVariable;
+class DataStoreVariables;
+
+//==============================================================================
+
+class DataStorePythonWrapper : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit PythonWrapperSolver(PyObject *pModule, QObject *pParent=0);
+    explicit DataStorePythonWrapper(PyObject *pModule, QObject *pParent=0);
+
+    static PyObject * newNumPyArray(DataStoreArray *pDataStoreArray);
+    static PyObject * newNumPyArray(DataStoreVariable *pDataStoreVariable);
+
+    static PyObject *dataStoreValuesDict(const DataStoreVariables &pDataStoreVariables);
+    static PyObject *dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
+
+public slots:
+    PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable) const;
+
+    PyObject * variables(OpenCOR::DataStore::DataStore *pDataStore);
+    PyObject * voiAndVariables(OpenCOR::DataStore::DataStore *pDataStore);
 };
 
 //==============================================================================
 
-}   // namespace PythonWrapper
+class NumPyPythonWrapper : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit NumPyPythonWrapper(DataStoreArray *pDataStoreArray, qulonglong pSize=0);
+    ~NumPyPythonWrapper();
+
+    PyObject * numpyArray() const;
+    PyObject * pythonObject() const;
+
+private:
+    DataStoreArray *mArray;
+    PyObject *mNumPyArray;
+    PyObject *mPythonObject;
+};
+
+//==============================================================================
+
+}   // namespace DataStore
 }   // namespace OpenCOR
 
 //==============================================================================
 // End of file
 //==============================================================================
+

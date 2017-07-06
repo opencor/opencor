@@ -201,9 +201,14 @@ ELSE()
     SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
-# Allow other external projects to find our NumPy include directory
+# Copy the numpy include directory to a place that OpenCOR can use
 
-SET(NUMPY_INCLUDE_DIR ${PYTHON_SITE_PACKAGES_DIR}/numpy/core/include PARENT_SCOPE)
+ADD_CUSTOM_TARGET(copy_numpy_headers
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${PYTHON_SITE_PACKAGES_DIR}/numpy/core/include ${PYTHON_INCLUDE_DIR}
+    )
+
+ADD_DEPENDENCIES(copy_numpy_headers PythonPackagesPlugin)
 
 # Add the plugin
 

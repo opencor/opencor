@@ -21,9 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Python Qt Support plugin
 //==============================================================================
 
+#include "CTK/ctkAbstractPythonManager.h"
 #include "corecliutils.h"
 #include "pythonqtsupportplugin.h"
-#include "CTK/ctkAbstractPythonManager.h"
+#include "pythoninterface.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -51,6 +53,14 @@ PLUGININFO_FUNC PythonQtSupportPluginInfo()
     return new PluginInfo(PluginInfo::Support, false, false,
                           QStringList() << "PythonQtAPI",
                           descriptions);
+}
+
+//==============================================================================
+
+PythonQtSupportPlugin::PythonQtSupportPlugin() :
+    mPythonManager(0),
+    mOpenCORModule(0)
+{
 }
 
 //==============================================================================
@@ -87,35 +97,46 @@ void PythonQtSupportPlugin::initializePlugin()
 
     // Create and initialise a new CTK Python manager
 
-    auto pythonManager = new ctkAbstractPythonManager(this);
+    mPythonManager = new ctkAbstractPythonManager(this);
 
     // This also initialises Python Qt
 
-    pythonManager->initialize();
+    mPythonManager->initialize();
 
     // Enable the Qt bindings for Python
 
     PythonQt_QtAll::init();
 
-    // Save the manager in our instance
+    // Create a Python module to access OpenCOR's objects
 
-    instance()->mPythonManager = pythonManager;
+    mOpenCORModule = PythonQt::self()->createModuleFromScript("OpenCOR");
 }
 
 //==============================================================================
 
 void PythonQtSupportPlugin::finalizePlugin()
 {
-    delete instance()->mPythonManager;
+    delete mPythonManager;
 }
 
 //==============================================================================
 
 void PythonQtSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    // We need to register the Solver::Properties class with Qt so it gets automatically
+    // wrapped to Python
 
-    // We don't handle this interface...
+    qRegisterMetaType<OpenCOR::Solver::Solver::Properties>("Solver::Solver::Properties");
+
+    // Register wrappers for every plugin that has a Python interface
+
+    foreach (Plugin *plugin, pLoadedPlugins) {
+        PythonInterface *pythonInterface = qobject_cast<PythonInterface *>(plugin->instance());
+
+        if (pythonInterface) {
+            pythonInterface->registerPythonClasses(mOpenCORModule);
+        }
+    }
 }
 
 //==============================================================================
@@ -143,25 +164,6 @@ void PythonQtSupportPlugin::handleUrl(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-//==============================================================================
-
-ctkAbstractPythonManager *PythonQtSupportPlugin::pythonManager(void)
-{
-    return instance()->mPythonManager;
-}
-
-//==============================================================================
-
-PythonQtSupportPlugin *PythonQtSupportPlugin::instance(void)
-{
-    // Return the 'global' instance of our Python Qt plugin
-
-    static PythonQtSupportPlugin pluginInstance;
-    return static_cast<PythonQtSupportPlugin *>(Core::globalInstance("OpenCOR::PythonQtSupport::PythonQtSupportPlugin",
-                                                                     &pluginInstance));
 }
 
 //==============================================================================

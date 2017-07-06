@@ -560,6 +560,7 @@ SET(SOURCES
     src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
+    src/plugins/pythoninterface.cpp
     src/plugins/solverinterface.cpp
     src/plugins/viewinterface.cpp
     src/plugins/windowinterface.cpp
@@ -615,6 +616,7 @@ IF(WIN32)
         src/plugins/plugininfo.cpp
         src/plugins/plugininterface.cpp
         src/plugins/pluginmanager.cpp
+        src/plugins/pythoninterface.cpp
         src/plugins/solverinterface.cpp
 
         src/windows/main.cpp
@@ -809,6 +811,8 @@ SET(PLUGINS
     miscellaneous/Compiler
     miscellaneous/Core
     miscellaneous/HelpWindow
+    miscellaneous/JupyterKernel
+    miscellaneous/PythonQtConsoleWindow
     miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
@@ -829,6 +833,7 @@ SET(PLUGINS
     support/CellMLSupport
     support/COMBINESupport
     support/PMRSupport
+    support/PythonQtSupport
     support/QScintillaSupport
     support/SEDMLSupport
     support/StandardSupport
@@ -845,6 +850,13 @@ SET(PLUGINS
     thirdParty/Zinc
     thirdParty/zlib
 
+    # Third-party Python plugins depend on CMake variables defined by the OpenSSL
+    # and zlib plugins as well as by the preceding Python plugins
+
+    thirdParty/Python
+    thirdParty/PythonPackages
+    thirdParty/PythonQtAPI
+
     tools/CellMLTools
 
     widget/EditorWidget
@@ -852,19 +864,6 @@ SET(PLUGINS
     widget/MathMLViewerWidget
     widget/WebViewerWidget
     widget/ZincWidget
-
-    # Python plugins must be declared in order and after other third-party
-    # plugins
-
-    thirdParty/Python
-    thirdParty/PythonPackages
-    thirdParty/PythonQtAPI
-
-    support/PythonQtSupport
-
-    miscellaneous/JupyterKernel
-    miscellaneous/PythonQtConsoleWindow
-    miscellaneous/PythonWrapper
 )
 
 IF(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)

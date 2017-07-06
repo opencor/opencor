@@ -18,80 +18,57 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python wrapper plugin
+// Python Qt support functions
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "plugininfo.h"
-#include "plugininterface.h"
-
-//==============================================================================
-
-#include <PythonQt/PythonQt.h>
+#include "pythonqtsupport.h"
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace PythonQtSupport {
 
 //==============================================================================
 
-namespace SimulationExperimentView {
-    class SimulationExperimentViewWidget;
-};
-
-//==============================================================================
-
-namespace PythonWrapper {
-
-//==============================================================================
-
-class PythonWrapperCore;
-class PythonWrapperDataStore;
-class PythonWrapperSimulationExperimentView;
-class PythonWrapperSolver;
-
-//==============================================================================
-
-PLUGININFO_FUNC PythonWrapperPluginInfo();
-
-//==============================================================================
-
-class PythonWrapperPlugin : public QObject, public PluginInterface
+void addInstanceDecorators(QObject *pQObject)
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonWrapperPlugin" FILE "pythonwrapperplugin.json")
-
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
-public:
-    explicit PythonWrapperPlugin();
-
-#include "plugininterface.inl"
-
-    static PythonWrapperPlugin *instance();
-
-    SimulationExperimentView::SimulationExperimentViewWidget *simulationExperimentViewWidget();
-
-private:
-    PythonQtObjectPtr mOpenCORModule;
-
-    PythonWrapperCore *mPythonWrapperCore;
-    PythonWrapperDataStore *mPythonWrapperDataStore;
-    PythonWrapperSimulationExperimentView *mPythonWrapperSimulationExperimentView;
-    PythonWrapperSolver *mPythonWrapperSolver;
-
-    SimulationExperimentView::SimulationExperimentViewWidget *mSimulationExperimentViewWidget;
-};
+    PythonQt::self()->addInstanceDecorators(pQObject);
+}
 
 //==============================================================================
 
-}   // namespace PythonWrapper
+void addObject(PyObject *pObject, const QString &pName, QObject *pQObject)
+{
+    PythonQt::self()->addObject(pObject, pName, pQObject);
+}
+
+//==============================================================================
+
+QVariant evalScript(const QString &pScript)
+{
+    return PythonQt::self()->evalScript(PythonQt::self()->getMainModule(), pScript);
+}
+
+//==============================================================================
+
+void registerClass(const QMetaObject *pMetaObject)
+{
+    PythonQt::self()->registerClass(pMetaObject);
+}
+
+//==============================================================================
+
+PyObject *wrapQObject(QObject *pQObject)
+{
+    return PythonQt::priv()->wrapQObject(pQObject);
+}
+
+//==============================================================================
+
+}   // namespace PythonQtSupport
 }   // namespace OpenCOR
 
 //==============================================================================
 // End of file
 //==============================================================================
+

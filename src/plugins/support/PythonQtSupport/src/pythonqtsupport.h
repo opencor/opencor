@@ -18,36 +18,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python wrapper for Solver interface
+// Python Qt support functions
 //==============================================================================
 
-#include "pythonwrappersolver.h"
-#include "pythonwrapperplugin.h"
-#include "solverinterface.h"
+#pragma once
 
 //==============================================================================
 
-#include <QMetaType>
+#include <PythonQt/PythonQt.h>
+
+//==============================================================================
+
+#include <QObject>
+#include <QMetaObject>
+#include <QString>
+#include <QVariant>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonWrapper {
+namespace PythonQtSupport {
 
 //==============================================================================
 
-PythonWrapperSolver::PythonWrapperSolver(PyObject *pModule, QObject *pParent) : QObject(pParent)
-{
-    Q_UNUSED(pModule);
+void addInstanceDecorators(QObject *pQObject);
 
-    qRegisterMetaType<OpenCOR::Solver::Solver::Properties>("Solver::Solver::Properties");
-}
+void addObject(PyObject *pObject, const QString &pName, QObject *pQObject);
+
+QVariant evalScript(const QString &pScript);
+
+void registerClass(const QMetaObject *pMetaObject);
+
+PyObject *wrapQObject(QObject *pQObject);
 
 //==============================================================================
 
-}   // namespace PythonWrapper
+}   // namespace PythonQtSupport
 }   // namespace OpenCOR
 
 //==============================================================================
 // End of file
 //==============================================================================
+

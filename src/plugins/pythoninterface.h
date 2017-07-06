@@ -18,10 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python wrapper for DataStore classes
+// Python interface
 //==============================================================================
 
 #pragma once
+
+//==============================================================================
+
+#include "plugin.h"
 
 //==============================================================================
 
@@ -29,72 +33,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QObject>
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
 
-namespace DataStore {
-    class DataStore;
-    class DataStoreArray;
-    class DataStoreVariable;
-    class DataStoreVariables;
-};
+extern "C" Q_DECL_EXPORT int pythonInterfaceVersion();
 
 //==============================================================================
 
-namespace PythonWrapper {
-
-//==============================================================================
-
-class PythonWrapperDataStore : public QObject
+class PythonInterface
 {
-    Q_OBJECT
-
 public:
-    explicit PythonWrapperDataStore(PyObject *pModule, QObject *pParent=0);
-
-    static PyObject * newNumPyArray(DataStore::DataStoreArray *pDataStoreArray);
-    static PyObject * newNumPyArray(DataStore::DataStoreVariable *pDataStoreVariable);
-
-    static PyObject *dataStoreValuesDict(const DataStore::DataStoreVariables &pDataStoreVariables);
-    static PyObject *dataStoreVariablesDict(const DataStore::DataStoreVariables &pDataStoreVariables);
-
-public slots:
-    PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable) const;
-
-    PyObject * variables(OpenCOR::DataStore::DataStore *pDataStore);
-    PyObject * voiAndVariables(OpenCOR::DataStore::DataStore *pDataStore);
+#define INTERFACE_DEFINITION
+    #include "pythoninterface.inl"
+#undef INTERFACE_DEFINITION
 };
 
 //==============================================================================
 
-class PythonWrapperNumPy : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit PythonWrapperNumPy(DataStore::DataStoreArray *pDataStoreArray, qulonglong pSize=0);
-    ~PythonWrapperNumPy();
-
-    PyObject * numpyArray() const;
-    PyObject * pythonObject() const;
-
-private:
-    DataStore::DataStoreArray *mArray;
-    PyObject *mNumPyArray;
-    PyObject *mPythonObject;
-};
-
-//==============================================================================
-
-}   // namespace PythonWrapper
 }   // namespace OpenCOR
+
+//==============================================================================
+
+Q_DECLARE_INTERFACE(OpenCOR::PythonInterface, "OpenCOR::PythonInterface")
 
 //==============================================================================
 // End of file
 //==============================================================================
-

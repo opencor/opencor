@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "datastoreplugin.h"
+#include "datastorepythonwrapper.h"
 
 //==============================================================================
 
@@ -43,6 +44,13 @@ PLUGININFO_FUNC DataStorePluginInfo()
 }
 
 //==============================================================================
+
+DataStorePlugin::DataStorePlugin() :
+    mDataStorePythonWrapper(0)
+{
+}
+
+//==============================================================================
 // I18n interface
 //==============================================================================
 
@@ -52,6 +60,15 @@ void DataStorePlugin::retranslateUi()
     // Note: even though we don't handle this interface, we still want to
     //       support it since some other aspects of our plugin are
     //       multilingual...
+}
+
+//==============================================================================
+// Python interface
+//==============================================================================
+
+void DataStorePlugin::registerPythonClasses(PyObject *pModule)
+{
+    mDataStorePythonWrapper = new DataStorePythonWrapper(pModule, this);
 }
 
 //==============================================================================
