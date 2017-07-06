@@ -74,6 +74,8 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
                                                                const DataStoreInterfaces &pDataStoreInterfaces,
                                                                const Plugins &pCellmlEditingViewPlugins,
                                                                const Plugins &pCellmlSimulationViewPlugins,
+                                                               FileTypeInterface *pSedmlFileTypeInterface,
+                                                               FileTypeInterface *pCombineFileTypeInterface,
                                                                QWidget *pParent) :
     ViewWidget(pParent),
     mPlugin(pPlugin),
@@ -81,6 +83,8 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     mDataStoreInterfaces(pDataStoreInterfaces),
     mCellmlEditingViewPlugins(pCellmlEditingViewPlugins),
     mCellmlSimulationViewPlugins(pCellmlSimulationViewPlugins),
+    mSedmlFileTypeInterface(pSedmlFileTypeInterface),
+    mCombineFileTypeInterface(pCombineFileTypeInterface),
     mSimulationWidgetSizes(QIntList()),
     mContentsWidgetSizes(QIntList()),
     mCollapsibleWidgetCollapsed(QBoolList()),
@@ -467,6 +471,24 @@ Plugins SimulationExperimentViewWidget::cellmlSimulationViewPlugins() const
     // Return our CellML simulation view plugins
 
     return mCellmlSimulationViewPlugins;
+}
+
+//==============================================================================
+
+FileTypeInterface * SimulationExperimentViewWidget::sedmlFileTypeInterface() const
+{
+    // Return our SED-ML file type interface
+
+    return mSedmlFileTypeInterface;
+}
+
+//==============================================================================
+
+FileTypeInterface * SimulationExperimentViewWidget::combineFileTypeInterface() const
+{
+    // Return our COMBINE file type interface
+
+    return mCombineFileTypeInterface;
 }
 
 //==============================================================================

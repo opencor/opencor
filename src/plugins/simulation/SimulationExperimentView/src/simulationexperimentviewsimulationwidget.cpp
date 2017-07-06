@@ -1734,7 +1734,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
     QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString sedmlFileName = cellmlFileName;
-    QStringList sedmlFilters = Core::filters(FileTypeInterfaces() << mPlugin->sedmlFileTypeInterface());
+    QStringList sedmlFilters = Core::filters(FileTypeInterfaces() << mViewWidget->sedmlFileTypeInterface());
     QString firstSedmlFilter = sedmlFilters.first();
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {
@@ -1788,7 +1788,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
     QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString combineArchiveName = cellmlFileName;
-    QStringList combineFilters = Core::filters(FileTypeInterfaces() << mPlugin->combineFileTypeInterface());
+    QStringList combineFilters = Core::filters(FileTypeInterfaces() << mViewWidget->combineFileTypeInterface());
     QString firstCombineFilter = combineFilters.first();
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {

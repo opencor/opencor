@@ -72,9 +72,6 @@ public:
 #include "plugininterface.inl"
 #include "viewinterface.inl"
 
-    FileTypeInterface * sedmlFileTypeInterface() const;
-    FileTypeInterface * combineFileTypeInterface() const;
-
 private:
     SimulationExperimentViewWidget *mViewWidget;
 

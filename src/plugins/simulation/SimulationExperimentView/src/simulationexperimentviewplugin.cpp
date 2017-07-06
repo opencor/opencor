@@ -187,6 +187,8 @@ void SimulationExperimentViewPlugin::initializePlugin()
                                                      mDataStoreInterfaces,
                                                      mCellmlEditingViewPlugins,
                                                      mCellmlSimulationViewPlugins,
+                                                     mSedmlFileTypeInterface,
+                                                     mCombineFileTypeInterface,
                                                      Core::mainWindow());
 
     mViewWidget->setObjectName("SimulationExperimentViewWidget");
@@ -370,26 +372,6 @@ QIcon SimulationExperimentViewPlugin::fileTabIcon(const QString &pFileName) cons
     // Return the requested file tab icon
 
     return mViewWidget->fileTabIcon(pFileName);
-}
-
-//==============================================================================
-// Plugin specific
-//==============================================================================
-
-FileTypeInterface * SimulationExperimentViewPlugin::sedmlFileTypeInterface() const
-{
-    // Return our SED-ML file type interface
-
-    return mSedmlFileTypeInterface;
-}
-
-//==============================================================================
-
-FileTypeInterface * SimulationExperimentViewPlugin::combineFileTypeInterface() const
-{
-    // Return our COMBINE file type interface
-
-    return mCombineFileTypeInterface;
 }
 
 //==============================================================================
