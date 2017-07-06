@@ -43,26 +43,25 @@ namespace DataStore {
     class DataStoreVariables;
 }
 
+//==============================================================================
+
 namespace SimulationExperimentView {
 
 //==============================================================================
 
-    class SimulationExperimentViewSimulation;
-
-    class SimulationExperimentViewSimulationData;
-
-    class SimulationExperimentViewSimulationResults;
-
-    class SimulationExperimentViewSimulationWidget;
+class SimulationExperimentViewSimulation;
+class SimulationExperimentViewSimulationData;
+class SimulationExperimentViewSimulationResults;
+class SimulationExperimentViewSimulationWidget;
 
 //==============================================================================
 
-class PythonWrapperSimulationExperimentView : public QObject
+class SimulationExperimentViewPythonWrapper : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit PythonWrapperSimulationExperimentView(PyObject *pModule, QObject *pParent=0);
+    explicit SimulationExperimentViewPythonWrapper(PyObject *pModule, QObject *pParent=0);
 
 public slots:
     bool run(OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulation *pSimulationExperimentViewSimulation);

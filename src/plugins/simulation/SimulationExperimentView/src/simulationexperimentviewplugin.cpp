@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
 #include "simulationexperimentviewplugin.h"
+#include "simulationexperimentviewpythonwrapper.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 
@@ -52,7 +53,8 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour exécuter une expérience de simulation."));
 
     return new PluginInfo(PluginInfo::Simulation, true, false,
-                          QStringList() << "COMBINESupport"<< "GraphPanelWidget" << "Qwt" << "SEDMLSupport",
+                          QStringList() << "COMBINESupport"<< "DataStore" << "GraphPanelWidget"
+                                        << "PythonQtSupport" << "Qwt" << "SEDMLSupport",
                           descriptions);
 }
 
@@ -64,7 +66,8 @@ SimulationExperimentViewPlugin::SimulationExperimentViewPlugin() :
     mCellmlEditingViewPlugins(Plugins()),
     mCellmlSimulationViewPlugins(Plugins()),
     mSedmlFileTypeInterface(0),
-    mCombineFileTypeInterface(0)
+    mCombineFileTypeInterface(0),
+    mSimulationExperimentViewPythonWrapper(0)
 {
 }
 
@@ -191,6 +194,10 @@ void SimulationExperimentViewPlugin::initializePlugin()
     // shown in  our central widget
 
     mViewWidget->setVisible(false);
+
+    // Save the view widget for our Python wrapper
+
+    instance()->mViewWidget = mViewWidget;
 }
 
 //==============================================================================
@@ -369,7 +376,27 @@ QIcon SimulationExperimentViewPlugin::fileTabIcon(const QString &pFileName) cons
 }
 
 //==============================================================================
+// Python interface
+//==============================================================================
+
+void SimulationExperimentViewPlugin::registerPythonClasses(PyObject *pModule)
+{
+    mSimulationExperimentViewPythonWrapper = new SimulationExperimentViewPythonWrapper(pModule, this);
+}
+
+//==============================================================================
 // Plugin specific
+//==============================================================================
+
+SimulationExperimentViewPlugin * SimulationExperimentViewPlugin::instance(void)
+{
+    // Return the 'global' instance of our Python Qt plugin
+
+    static SimulationExperimentViewPlugin pluginInstance;
+    return static_cast<SimulationExperimentViewPlugin *>(Core::globalInstance("OpenCOR::SimulationExperimentView::SimulationExperimentViewPlugin",
+                                                         &pluginInstance));
+}
+
 //==============================================================================
 
 SimulationExperimentViewWidget * SimulationExperimentViewPlugin::viewWidget() const

@@ -17,6 +17,7 @@ ADD_PLUGIN(Core
         ../../plugininterface.cpp
         ../../pluginmanager.cpp
         ../../preferencesinterface.cpp
+        ../../pythoninterface.cpp
         ../../solverinterface.cpp
         ../../viewinterface.cpp
         ../../windowinterface.cpp

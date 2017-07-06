@@ -16,5 +16,4 @@ ADD_PLUGIN(JupyterKernel
     PLUGINS
         Core
         PythonQtSupport
-        PythonWrapper
 )

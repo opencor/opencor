@@ -168,6 +168,17 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewPythonWrapper</name>
+    <message>
+        <source>The simulation requires %1 of memory and you have only %2 left.</source>
+        <translation type="unfinished">La simulation requiert %1 de mémoire et il ne vous en reste que %2.</translation>
+    </message>
+    <message>
+        <source>We could not allocate the %1 of memory required for the simulation.</source>
+        <translation type="unfinished">Nous n&apos;avons pas pu allouer les %1 de mémoire nécessaires pour la simulation.</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulation</name>
     <message>
         <source>the starting and ending points cannot have the same value</source>

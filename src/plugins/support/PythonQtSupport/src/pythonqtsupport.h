@@ -18,39 +18,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python wrapper for Solver interface
+// Python Qt support functions
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include <PythonQt/PythonQtPythonInclude.h>
+#include <PythonQt/PythonQt.h>
 
 //==============================================================================
 
 #include <QObject>
+#include <QMetaObject>
+#include <QString>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonWrapper {
+namespace PythonQtSupport {
 
 //==============================================================================
 
-class PythonWrapperSolver : public QObject
-{
-    Q_OBJECT
+void addInstanceDecorators(QObject *pQObject);
 
-public:
-    explicit PythonWrapperSolver(PyObject *pModule, QObject *pParent=0);
-};
+void addObject(PyObject *pObject, const QString &pName, QObject *pQObject);
+
+void registerClass(const QMetaObject *pMetaObject);
+
+PyObject *wrapQObject(QObject *pQObject);
 
 //==============================================================================
 
-}   // namespace PythonWrapper
+}   // namespace PythonQtSupport
 }   // namespace OpenCOR
 
 //==============================================================================
 // End of file
 //==============================================================================
+

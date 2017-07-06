@@ -23,10 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "centralwidget.h"
 #include "coreguiutils.h"
+#include "datastoreinterface.h"
 #include "datastorepythonwrapper.h"
-
-#include "pythonwrapperplugin.h"
-
+#include "pythonqtsupport.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewpythonwrapper.h"
 #include "simulationexperimentviewsimulation.h"
@@ -35,12 +34,62 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <PythonQt/PythonQt.h>
+namespace OpenCOR {
+namespace SimulationExperimentView {
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace SimulationExperimentView {
+static PyObject *initializeSimulation(const QString &pFileName)
+{
+    SimulationExperimentView::SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
+
+    if (simulationExperimentViewWidget) {
+        simulationExperimentViewWidget->initialize(pFileName);
+        auto simulation = simulationExperimentViewWidget->simulation(pFileName);
+        if (simulation) return PythonQt::priv()->wrapQObject(simulation);
+    }
+    Py_RETURN_NONE;
+}
+
+//==============================================================================
+
+static PyObject *openSimulation(PyObject *self, PyObject *args)
+{
+    Q_UNUSED(self);
+
+    PyObject *bytes;
+    char *name;
+    Py_ssize_t len;
+    if (!PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &bytes)) {
+        Py_RETURN_NONE;
+    }
+    PyBytes_AsStringAndSize(bytes, &name, &len);
+    QString fileName = QString::fromUtf8(name, len);
+    Py_DECREF(bytes);
+
+    Core::centralWidget()->openFile(fileName);
+    return initializeSimulation(fileName);
+}
+
+//==============================================================================
+
+static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
+{
+    Q_UNUSED(self);
+
+    PyObject *bytes;
+    char *name;
+    Py_ssize_t len;
+    if (!PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &bytes)) {
+        Py_RETURN_NONE;
+    }
+    PyBytes_AsStringAndSize(bytes, &name, &len);
+    QString url = QString::fromUtf8(name, len);
+    Py_DECREF(bytes);
+
+    Core::centralWidget()->openRemoteFile(url);
+    return initializeSimulation(Core::centralWidget()->localFileName(url));
+}
 
 //==============================================================================
 
@@ -50,12 +99,12 @@ static PyObject *OpenCOR_simulations(PyObject *self,  PyObject *args)
     Q_UNUSED(args);
 
     PyObject *simulationDict = PyDict_New();
-    SimulationExperimentView::SimulationExperimentViewWidget *simulationExperimentViewWidget = PythonWrapperPlugin::instance()->simulationExperimentViewWidget();
+    SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
 
     if (simulationExperimentViewWidget) {
         foreach (const QString &fileName, simulationExperimentViewWidget->fileNames()) {
             auto simulation = simulationExperimentViewWidget->simulation(fileName);
-            PythonQt::self()->addObject(simulationDict, fileName, simulation);
+            PythonQtSupport::addObject(simulationDict, fileName, simulation);
         }
     }
 
@@ -64,15 +113,15 @@ static PyObject *OpenCOR_simulations(PyObject *self,  PyObject *args)
 
 //==============================================================================
 
-PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
+static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
 {
     Q_UNUSED(self);
     Q_UNUSED(args);
 
-    SimulationExperimentView::SimulationExperimentViewWidget *simulationExperimentViewWidget = PythonWrapperPlugin::instance()->simulationExperimentViewWidget();
+    SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
     if (simulationExperimentViewWidget) {
         auto simulation = simulationExperimentViewWidget->simulation(Core::centralWidget()->currentFileName());
-        return PythonQt::priv()->wrapQObject(simulation);
+        return PythonQtSupport::wrapQObject(simulation);
     } else {
         Py_INCREF(Py_None);
         return Py_None;
@@ -81,7 +130,9 @@ PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
 
 //==============================================================================
 
-static PyMethodDef wrappedSimulationExperimentViewMethods[] = {
+static PyMethodDef pythonSimulationExperimentViewMethods[] = {
+    {"openSimulation",  openSimulation, METH_VARARGS, "Open a simulation."},
+    {"openRemoteSimulation",  openRemoteSimulation, METH_VARARGS, "Open a remote simulation."},
     {"simulation",  OpenCOR_simulation, METH_VARARGS, "Current simulation."},
     {"simulations",  OpenCOR_simulations, METH_VARARGS, "Dictionary of simulations."},
     {NULL, NULL, 0, NULL}
@@ -89,28 +140,29 @@ static PyMethodDef wrappedSimulationExperimentViewMethods[] = {
 
 //==============================================================================
 
-PythonWrapperSimulationExperimentView::PythonWrapperSimulationExperimentView(PyObject *pModule, QObject *pParent) : QObject(pParent)
+SimulationExperimentViewPythonWrapper::SimulationExperimentViewPythonWrapper(PyObject *pModule, QObject *pParent) : QObject(pParent)
 {
-    PythonQt::self()->registerClass(&OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulation::staticMetaObject);
-    PythonQt::self()->registerClass(&OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulationData::staticMetaObject);
-    PythonQt::self()->registerClass(&OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulationResults::staticMetaObject);
-    PythonQt::self()->registerClass(&OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulationWidget::staticMetaObject);
-    PythonQt::self()->addInstanceDecorators(this);
+    PythonQtSupport::registerClass(&OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulation::staticMetaObject);
+    PythonQtSupport::registerClass(&OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulationData::staticMetaObject);
+    PythonQtSupport::registerClass(&OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulationResults::staticMetaObject);
+    PythonQtSupport::registerClass(&OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulationWidget::staticMetaObject);
+    PythonQtSupport::addInstanceDecorators(this);
 
-    PyModule_AddFunctions(pModule, wrappedSimulationExperimentViewMethods);
+    PyModule_AddFunctions(pModule, pythonSimulationExperimentViewMethods);
 }
 
 //==============================================================================
 
-SimulationExperimentView::SimulationExperimentViewSimulationWidget * PythonWrapperSimulationExperimentView::widget(SimulationExperimentView::SimulationExperimentViewSimulation *pSimulationExperimentViewSimulation) const
+SimulationExperimentViewSimulationWidget * SimulationExperimentViewPythonWrapper::widget(
+    SimulationExperimentViewSimulation *pSimulationExperimentViewSimulation) const
 {
-    auto simulationExperimentViewWidget = PythonWrapperPlugin::instance()->simulationExperimentViewWidget();
+    SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
     return simulationExperimentViewWidget->simulationWidget(pSimulationExperimentViewSimulation->fileName());
 }
 
 //==============================================================================
 
-bool PythonWrapperSimulationExperimentView::run(SimulationExperimentView::SimulationExperimentViewSimulation *pSimulationExperimentViewSimulation)
+bool SimulationExperimentViewPythonWrapper::run(SimulationExperimentViewSimulation *pSimulationExperimentViewSimulation)
 {
     // Check that we have enough memory to run our simulation
 
@@ -130,7 +182,7 @@ bool PythonWrapperSimulationExperimentView::run(SimulationExperimentView::Simula
 
         runSimulation = pSimulationExperimentViewSimulation->results()->reset();
 
-        PythonWrapperPlugin::instance()->simulationExperimentViewWidget()->checkSimulationResults(pSimulationExperimentViewSimulation->fileName(), true);
+        SimulationExperimentViewPlugin::instance()->viewWidget()->checkSimulationResults(pSimulationExperimentViewSimulation->fileName(), true);
         // Note: this will, among other things, clear our plots...
 
         // Effectively run our simulation in case we were able to
@@ -149,74 +201,74 @@ bool PythonWrapperSimulationExperimentView::run(SimulationExperimentView::Simula
 
 //==============================================================================
 
-PyObject * PythonWrapperSimulationExperimentView::constants(
-    SimulationExperimentView::SimulationExperimentViewSimulationData *pSimulationExperimentViewSimulationData) const
+PyObject * SimulationExperimentViewPythonWrapper::constants(
+    SimulationExperimentViewSimulationData *pSimulationExperimentViewSimulationData) const
 {
-    return PythonWrapperDataStore::dataStoreValuesDict(pSimulationExperimentViewSimulationData->mConstantVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationExperimentViewSimulationData->mConstantVariables);
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperSimulationExperimentView::rates(
-    SimulationExperimentView::SimulationExperimentViewSimulationData *pSimulationExperimentViewSimulationData) const
+PyObject * SimulationExperimentViewPythonWrapper::rates(
+    SimulationExperimentViewSimulationData *pSimulationExperimentViewSimulationData) const
 {
-    return PythonWrapperDataStore::dataStoreValuesDict(pSimulationExperimentViewSimulationData->mRateVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationExperimentViewSimulationData->mRateVariables);
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperSimulationExperimentView::states(
-    SimulationExperimentView::SimulationExperimentViewSimulationData *pSimulationExperimentViewSimulationData) const
+PyObject * SimulationExperimentViewPythonWrapper::states(
+    SimulationExperimentViewSimulationData *pSimulationExperimentViewSimulationData) const
 {
-    return PythonWrapperDataStore::dataStoreValuesDict(pSimulationExperimentViewSimulationData->mStateVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationExperimentViewSimulationData->mStateVariables);
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperSimulationExperimentView::algebraic(
-    SimulationExperimentView::SimulationExperimentViewSimulationData *pSimulationExperimentViewSimulationData) const
+PyObject * SimulationExperimentViewPythonWrapper::algebraic(
+    SimulationExperimentViewSimulationData *pSimulationExperimentViewSimulationData) const
 {
-    return PythonWrapperDataStore::dataStoreValuesDict(pSimulationExperimentViewSimulationData->mAlgebraicVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationExperimentViewSimulationData->mAlgebraicVariables);
 }
 
 //==============================================================================
 
-const OpenCOR::DataStore::DataStoreVariable * PythonWrapperSimulationExperimentView::points(
-    SimulationExperimentView::SimulationExperimentViewSimulationResults *pSimulationExperimentViewSimulationResults) const
+const OpenCOR::DataStore::DataStoreVariable * SimulationExperimentViewPythonWrapper::points(
+    SimulationExperimentViewSimulationResults *pSimulationExperimentViewSimulationResults) const
 {
     return pSimulationExperimentViewSimulationResults->mPointVariable;
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperSimulationExperimentView::constants(
-    SimulationExperimentView::SimulationExperimentViewSimulationResults *pSimulationExperimentViewSimulationResults) const
+PyObject * SimulationExperimentViewPythonWrapper::constants(
+    SimulationExperimentViewSimulationResults *pSimulationExperimentViewSimulationResults) const
 {
-    return PythonWrapperDataStore::dataStoreVariablesDict(pSimulationExperimentViewSimulationResults->mConstantVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationExperimentViewSimulationResults->mConstantVariables);
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperSimulationExperimentView::rates(
-    SimulationExperimentView::SimulationExperimentViewSimulationResults *pSimulationExperimentViewSimulationResults) const
+PyObject * SimulationExperimentViewPythonWrapper::rates(
+    SimulationExperimentViewSimulationResults *pSimulationExperimentViewSimulationResults) const
 {
-    return PythonWrapperDataStore::dataStoreVariablesDict(pSimulationExperimentViewSimulationResults->mRateVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationExperimentViewSimulationResults->mRateVariables);
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperSimulationExperimentView::states(
-    SimulationExperimentView::SimulationExperimentViewSimulationResults *pSimulationExperimentViewSimulationResults) const
+PyObject * SimulationExperimentViewPythonWrapper::states(
+    SimulationExperimentViewSimulationResults *pSimulationExperimentViewSimulationResults) const
 {
-    return PythonWrapperDataStore::dataStoreVariablesDict(pSimulationExperimentViewSimulationResults->mStateVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationExperimentViewSimulationResults->mStateVariables);
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperSimulationExperimentView::algebraic(
-    SimulationExperimentView::SimulationExperimentViewSimulationResults *pSimulationExperimentViewSimulationResults) const
+PyObject * SimulationExperimentViewPythonWrapper::algebraic(
+    SimulationExperimentViewSimulationResults *pSimulationExperimentViewSimulationResults) const
 {
-    return PythonWrapperDataStore::dataStoreVariablesDict(pSimulationExperimentViewSimulationResults->mAlgebraicVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationExperimentViewSimulationResults->mAlgebraicVariables);
 }
 
 //==============================================================================

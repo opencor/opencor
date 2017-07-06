@@ -18,36 +18,50 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python wrapper for Solver interface
+// Python Qt support functions
 //==============================================================================
 
-#include "pythonwrappersolver.h"
-#include "pythonwrapperplugin.h"
-#include "solverinterface.h"
-
-//==============================================================================
-
-#include <QMetaType>
+#include "pythonqtsupport.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonWrapper {
+namespace PythonQtSupport {
 
 //==============================================================================
 
-PythonWrapperSolver::PythonWrapperSolver(PyObject *pModule, QObject *pParent) : QObject(pParent)
+void addInstanceDecorators(QObject *pQObject)
 {
-    Q_UNUSED(pModule);
-
-    qRegisterMetaType<OpenCOR::Solver::Solver::Properties>("Solver::Solver::Properties");
+    PythonQt::self()->addInstanceDecorators(pQObject);
 }
 
 //==============================================================================
 
-}   // namespace PythonWrapper
+void addObject(PyObject *pObject, const QString &pName, QObject *pQObject)
+{
+    PythonQt::self()->addObject(pObject, pName, pQObject);
+}
+
+//==============================================================================
+
+void registerClass(const QMetaObject *pMetaObject)
+{
+    PythonQt::self()->registerClass(pMetaObject);
+}
+
+//==============================================================================
+
+PyObject *wrapQObject(QObject *pQObject)
+{
+    return PythonQt::priv()->wrapQObject(pQObject);
+}
+
+//==============================================================================
+
+}   // namespace PythonQtSupport
 }   // namespace OpenCOR
 
 //==============================================================================
 // End of file
 //==============================================================================
+

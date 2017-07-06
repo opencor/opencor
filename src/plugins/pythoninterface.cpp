@@ -31,7 +31,7 @@ namespace OpenCOR {
 
 extern "C" Q_DECL_EXPORT int pythonInterfaceVersion()
 {
-    // Version of the core interface
+    // Version of the Python interface
 
     return 1;
 }

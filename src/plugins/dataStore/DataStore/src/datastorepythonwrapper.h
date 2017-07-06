@@ -38,30 +38,28 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace DataStore {
-    class DataStore;
-    class DataStoreArray;
-    class DataStoreVariable;
-    class DataStoreVariables;
-};
 
 //==============================================================================
 
-namespace PythonWrapper {
+class DataStore;
+class DataStoreArray;
+class DataStoreVariable;
+class DataStoreVariables;
 
 //==============================================================================
 
-class PythonWrapperDataStore : public QObject
+class DataStorePythonWrapper : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit PythonWrapperDataStore(PyObject *pModule, QObject *pParent=0);
+    explicit DataStorePythonWrapper(PyObject *pModule, QObject *pParent=0);
 
-    static PyObject * newNumPyArray(DataStore::DataStoreArray *pDataStoreArray);
-    static PyObject * newNumPyArray(DataStore::DataStoreVariable *pDataStoreVariable);
+    static PyObject * newNumPyArray(DataStoreArray *pDataStoreArray);
+    static PyObject * newNumPyArray(DataStoreVariable *pDataStoreVariable);
 
-    static PyObject *dataStoreValuesDict(const DataStore::DataStoreVariables &pDataStoreVariables);
-    static PyObject *dataStoreVariablesDict(const DataStore::DataStoreVariables &pDataStoreVariables);
+    static PyObject *dataStoreValuesDict(const DataStoreVariables &pDataStoreVariables);
+    static PyObject *dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
 
 public slots:
     PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable) const;
@@ -72,26 +70,26 @@ public slots:
 
 //==============================================================================
 
-class PythonWrapperNumPy : public QObject
+class NumPyPythonWrapper : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit PythonWrapperNumPy(DataStore::DataStoreArray *pDataStoreArray, qulonglong pSize=0);
-    ~PythonWrapperNumPy();
+    explicit NumPyPythonWrapper(DataStoreArray *pDataStoreArray, qulonglong pSize=0);
+    ~NumPyPythonWrapper();
 
     PyObject * numpyArray() const;
     PyObject * pythonObject() const;
 
 private:
-    DataStore::DataStoreArray *mArray;
+    DataStoreArray *mArray;
     PyObject *mNumPyArray;
     PyObject *mPythonObject;
 };
 
 //==============================================================================
 
-}   // namespace PythonWrapper
+}   // namespace DataStore
 }   // namespace OpenCOR
 
 //==============================================================================

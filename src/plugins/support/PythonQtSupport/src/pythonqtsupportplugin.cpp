@@ -21,9 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Python Qt Support plugin
 //==============================================================================
 
+#include "CTK/ctkAbstractPythonManager.h"
 #include "corecliutils.h"
 #include "pythonqtsupportplugin.h"
-#include "CTK/ctkAbstractPythonManager.h"
+#include "pythoninterface.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -51,6 +53,14 @@ PLUGININFO_FUNC PythonQtSupportPluginInfo()
     return new PluginInfo(PluginInfo::Support, false, false,
                           QStringList() << "PythonQtAPI",
                           descriptions);
+}
+
+//==============================================================================
+
+PythonQtSupportPlugin::PythonQtSupportPlugin() :
+    mPythonManager(0),
+    mOpenCORModule(0)
+{
 }
 
 //==============================================================================
@@ -113,9 +123,20 @@ void PythonQtSupportPlugin::finalizePlugin()
 
 void PythonQtSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    // We need to register the Solver::Properties class with Qt so it gets automatically
+    // wrapped to Python
 
-    // We don't handle this interface...
+    qRegisterMetaType<OpenCOR::Solver::Solver::Properties>("Solver::Solver::Properties");
+
+    // Register wrappers for every plugin that has a Python interface
+
+    foreach (Plugin *plugin, pLoadedPlugins) {
+        PythonInterface *pythonInterface = qobject_cast<PythonInterface *>(plugin->instance());
+
+        if (pythonInterface) {
+            pythonInterface->registerPythonClasses(mOpenCORModule);
+        }
+    }
 }
 
 //==============================================================================

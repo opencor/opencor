@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
+#include "pythoninterface.h"
 #include "simulationexperimentviewglobal.h"
 #include "solverinterface.h"
 #include "viewinterface.h"
@@ -46,6 +47,7 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo();
 
 //==============================================================================
 
+class SimulationExperimentViewPythonWrapper;
 class SimulationExperimentViewWidget;
 
 //==============================================================================
@@ -54,6 +56,7 @@ class SIMULATIONEXPERIMENTVIEW_EXPORT SimulationExperimentViewPlugin : public QO
                                                                        public FileHandlingInterface,
                                                                        public I18nInterface,
                                                                        public PluginInterface,
+                                                                       public PythonInterface,
                                                                        public ViewInterface
 {
     Q_OBJECT
@@ -63,6 +66,7 @@ class SIMULATIONEXPERIMENTVIEW_EXPORT SimulationExperimentViewPlugin : public QO
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::PythonInterface)
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
@@ -71,7 +75,10 @@ public:
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
+#include "pythoninterface.inl"
 #include "viewinterface.inl"
+
+    static SimulationExperimentViewPlugin * instance();
 
     SimulationExperimentViewWidget * viewWidget() const;
 
@@ -94,6 +101,8 @@ private:
 
     FileTypeInterface *mSedmlFileTypeInterface;
     FileTypeInterface *mCombineFileTypeInterface;
+
+    SimulationExperimentViewPythonWrapper *mSimulationExperimentViewPythonWrapper;
 };
 
 //==============================================================================

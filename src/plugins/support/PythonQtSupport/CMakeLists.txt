@@ -8,6 +8,7 @@ ADD_PLUGIN(PythonQtSupport
         ../../plugininterface.cpp
 
         src/CTK/ctkAbstractPythonManager.cpp
+        src/pythonqtsupport.cpp
         src/pythonqtsupportplugin.cpp
 
     HEADERS_MOC

@@ -22,9 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "datastoreinterface.h"
-#include "pythonwrapperdatastore.h"
-#include "pythonwrappernumpy.h"
-#include "pythonwrapperplugin.h"
+#include "datastorepythonwrapper.h"  // Needs to come before numpy includes
+#include "datastorenumpy.h"
+#include "pythonqtsupport.h"
 
 //==============================================================================
 
@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonWrapper {
+namespace DataStore {
 
 //==============================================================================
 
@@ -47,15 +47,15 @@ static bool init_numpy()
 
 //==============================================================================
 
-static DataStore::DataStoreVariable *getVariable(PyDictObject *valuesDict, PyObject *key)
+static DataStoreVariable *getVariable(PyDictObject *valuesDict, PyObject *key)
 {
-    DataStore::DataStoreVariable *variable = 0;
+    DataStoreVariable *variable = 0;
 
     PyObject *obj = PyDict_GetItem((PyObject *)valuesDict, key);
 
     if (obj && PyObject_TypeCheck(obj, &PythonQtInstanceWrapper_Type)) {
         PythonQtInstanceWrapper* wrap = (PythonQtInstanceWrapper*)obj;
-        variable = (DataStore::DataStoreVariable *)wrap->_objPointerCopy;
+        variable = (DataStoreVariable *)wrap->_objPointerCopy;
     }
 
     return variable;
@@ -65,7 +65,7 @@ static DataStore::DataStoreVariable *getVariable(PyDictObject *valuesDict, PyObj
 
 static PyObject *valuesdict_subscript(PyDictObject *valuesDict, PyObject *key)
 {
-    DataStore::DataStoreVariable *variable = getVariable(valuesDict, key);
+    DataStoreVariable *variable = getVariable(valuesDict, key);
 
     if (variable) {
         return PyFloat_FromDouble(variable->nextValue());
@@ -84,7 +84,7 @@ static int valuesdict_ass_subscript(PyDictObject *valuesDict, PyObject *key, PyO
     }
 
     else if (PyNumber_Check(value)) {
-        DataStore::DataStoreVariable *variable = getVariable(valuesDict, key);
+        DataStoreVariable *variable = getVariable(valuesDict, key);
 
         if (variable) {
             variable->setNextValue(PyFloat_AS_DOUBLE(PyNumber_Float(value)));
@@ -166,7 +166,7 @@ static PyObject* valuesdict_repr(PyDictObject *valuesDict)
 
         if (PyObject_TypeCheck(value, &PythonQtInstanceWrapper_Type)) {
             PythonQtInstanceWrapper* wrap = (PythonQtInstanceWrapper*)value;
-            DataStore::DataStoreVariable *variable = (DataStore::DataStoreVariable *)wrap->_objPointerCopy;
+            DataStoreVariable *variable = (DataStoreVariable *)wrap->_objPointerCopy;
             Py_CLEAR(value);
             value = PyFloat_FromDouble(variable->nextValue());
         }
@@ -253,7 +253,7 @@ static PyTypeObject valuesdict_type = {
 
 //==============================================================================
 
-PythonWrapperDataStore::PythonWrapperDataStore(PyObject *pModule, QObject *pParent) : QObject(pParent)
+DataStorePythonWrapper::DataStorePythonWrapper(PyObject *pModule, QObject *pParent) : QObject(pParent)
 {
     Q_UNUSED(pModule);
 
@@ -265,18 +265,18 @@ PythonWrapperDataStore::PythonWrapperDataStore(PyObject *pModule, QObject *pPare
 
     PyType_Ready(&valuesdict_type);
 
-    PythonQt::self()->registerClass(&OpenCOR::DataStore::DataStore::staticMetaObject);
-    PythonQt::self()->registerClass(&OpenCOR::DataStore::DataStoreVariable::staticMetaObject);
+    PythonQtSupport::registerClass(&OpenCOR::DataStore::DataStore::staticMetaObject);
+    PythonQtSupport::registerClass(&OpenCOR::DataStore::DataStoreVariable::staticMetaObject);
 
-    PythonQt::self()->addInstanceDecorators(this);
+    PythonQtSupport::addInstanceDecorators(this);
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperDataStore::newNumPyArray(DataStore::DataStoreArray *pDataStoreArray)
+PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreArray *pDataStoreArray)
 {
     if (pDataStoreArray) {
-        auto numpyArray = new PythonWrapperNumPy(pDataStoreArray);
+        auto numpyArray = new NumPyPythonWrapper(pDataStoreArray);
         return numpyArray->numpyArray();
     } else {
         Py_INCREF(Py_None);
@@ -286,10 +286,10 @@ PyObject * PythonWrapperDataStore::newNumPyArray(DataStore::DataStoreArray *pDat
 
 //==============================================================================
 
-PyObject * PythonWrapperDataStore::newNumPyArray(DataStore::DataStoreVariable *pDataStoreVariable)
+PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVariable)
 {
     if (pDataStoreVariable) {
-        auto numpyArray = new PythonWrapperNumPy(pDataStoreVariable->array(), pDataStoreVariable->size());
+        auto numpyArray = new NumPyPythonWrapper(pDataStoreVariable->array(), pDataStoreVariable->size());
         return numpyArray->numpyArray();
     } else {
         Py_INCREF(Py_None);
@@ -299,54 +299,54 @@ PyObject * PythonWrapperDataStore::newNumPyArray(DataStore::DataStoreVariable *p
 
 //==============================================================================
 
-PyObject * PythonWrapperDataStore::values(DataStore::DataStoreVariable *pDataStoreVariable) const
+PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable) const
 {
-    return PythonWrapperDataStore::newNumPyArray(pDataStoreVariable);
+    return DataStorePythonWrapper::newNumPyArray(pDataStoreVariable);
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperDataStore::dataStoreValuesDict(
-    const DataStore::DataStoreVariables &pDataStoreVariables)
+PyObject * DataStorePythonWrapper::dataStoreValuesDict(
+    const DataStoreVariables &pDataStoreVariables)
 {
     PyObject *valuesDict = PyDict_New();
     valuesDict->ob_type = &valuesdict_type;
 
-    foreach (DataStore::DataStoreVariable *variable, pDataStoreVariables)
-        PythonQt::self()->addObject(valuesDict, variable->uri(), variable);
+    foreach (DataStoreVariable *variable, pDataStoreVariables)
+        PythonQtSupport::addObject(valuesDict, variable->uri(), variable);
 
     return valuesDict;
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperDataStore::dataStoreVariablesDict(
-    const DataStore::DataStoreVariables &pDataStoreVariables)
+PyObject * DataStorePythonWrapper::dataStoreVariablesDict(
+    const DataStoreVariables &pDataStoreVariables)
 {
     PyObject *variablesDict = PyDict_New();
-    foreach (DataStore::DataStoreVariable *variable, pDataStoreVariables)
-        PythonQt::self()->addObject(variablesDict, variable->uri(), variable);
+    foreach (DataStoreVariable *variable, pDataStoreVariables)
+        PythonQtSupport::addObject(variablesDict, variable->uri(), variable);
 
     return variablesDict;
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperDataStore::variables(DataStore::DataStore *pDataStore)
+PyObject * DataStorePythonWrapper::variables(DataStore *pDataStore)
 {
     return dataStoreVariablesDict(pDataStore->variables());
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperDataStore::voiAndVariables(DataStore::DataStore *pDataStore)
+PyObject * DataStorePythonWrapper::voiAndVariables(DataStore *pDataStore)
 {
     return dataStoreVariablesDict(pDataStore->voiAndVariables());
 }
 
 //==============================================================================
 
-PythonWrapperNumPy::PythonWrapperNumPy(DataStore::DataStoreArray *pDataStoreArray, qulonglong pSize) :
+NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray, qulonglong pSize) :
     mArray(pDataStoreArray)
 {
     npy_intp dims[1];
@@ -355,34 +355,34 @@ PythonWrapperNumPy::PythonWrapperNumPy(DataStore::DataStoreArray *pDataStoreArra
     mArray->incReference();
     mNumPyArray = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, (void *)mArray->values());
 
-    mPythonObject = PythonQt::priv()->wrapQObject(this);
+    mPythonObject = PythonQtSupport::wrapQObject(this);
     PyArray_SetBaseObject((PyArrayObject *)mNumPyArray, mPythonObject);
 }
 
 //==============================================================================
 
-PythonWrapperNumPy::~PythonWrapperNumPy()
+NumPyPythonWrapper::~NumPyPythonWrapper()
 {
     mArray->decReference();
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperNumPy::numpyArray() const
+PyObject * NumPyPythonWrapper::numpyArray() const
 {
     return mNumPyArray;
 }
 
 //==============================================================================
 
-PyObject * PythonWrapperNumPy::pythonObject() const
+PyObject * NumPyPythonWrapper::pythonObject() const
 {
     return mPythonObject;
 }
 
 //==============================================================================
 
-}   // namespace PythonWrapper
+}   // namespace DataStore
 }   // namespace OpenCOR
 
 //==============================================================================

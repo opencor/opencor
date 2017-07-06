@@ -560,6 +560,7 @@ SET(SOURCES
     src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
+    src/plugins/pythoninterface.cpp
     src/plugins/solverinterface.cpp
     src/plugins/viewinterface.cpp
     src/plugins/windowinterface.cpp
@@ -615,6 +616,7 @@ IF(WIN32)
         src/plugins/plugininfo.cpp
         src/plugins/plugininterface.cpp
         src/plugins/pluginmanager.cpp
+        src/plugins/pythoninterface.cpp
         src/plugins/solverinterface.cpp
 
         src/windows/main.cpp
@@ -864,7 +866,6 @@ SET(PLUGINS
 
     miscellaneous/JupyterKernel
     miscellaneous/PythonQtConsoleWindow
-    miscellaneous/PythonWrapper
 )
 
 IF(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)

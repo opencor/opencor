@@ -29,11 +29,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <PythonQt/PythonQtPythonInclude.h>
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
 
-extern "C" Q_DECL_EXPORT int coreInterfaceVersion();
+extern "C" Q_DECL_EXPORT int pythonInterfaceVersion();
 
 //==============================================================================
 
