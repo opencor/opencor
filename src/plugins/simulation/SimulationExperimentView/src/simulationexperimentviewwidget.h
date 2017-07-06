@@ -60,6 +60,8 @@ public:
     explicit SimulationExperimentViewWidget(SimulationExperimentViewPlugin *pPlugin,
                                             const SolverInterfaces &pSolverInterfaces,
                                             const DataStoreInterfaces &pDataStoreInterfaces,
+                                            const Plugins &pCellmlEditingViewPlugins,
+                                            const Plugins &pCellmlSimulationViewPlugins,
                                             QWidget *pParent);
 
     virtual void loadSettings(QSettings *pSettings);
@@ -86,6 +88,9 @@ public:
     SolverInterfaces solverInterfaces() const;
     DataStoreInterfaces dataStoreInterfaces() const;
 
+    Plugins cellmlEditingViewPlugins() const;
+    Plugins cellmlSimulationViewPlugins() const;
+
     SimulationExperimentViewSimulationWidget * simulationWidget(const QString &pFileName) const;
     SimulationExperimentViewSimulation * simulation(const QString &pFileName) const;
     CellMLSupport::CellmlFileRuntime * runtime(const QString &pFileName) const;
@@ -102,6 +107,9 @@ private:
 
     SolverInterfaces mSolverInterfaces;
     DataStoreInterfaces mDataStoreInterfaces;
+
+    Plugins mCellmlEditingViewPlugins;
+    Plugins mCellmlSimulationViewPlugins;
 
     QIntList mSimulationWidgetSizes;
     QIntList mContentsWidgetSizes;

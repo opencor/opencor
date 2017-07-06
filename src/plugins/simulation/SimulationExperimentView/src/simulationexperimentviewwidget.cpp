@@ -72,11 +72,15 @@ namespace SimulationExperimentView {
 SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperimentViewPlugin *pPlugin,
                                                                const SolverInterfaces &pSolverInterfaces,
                                                                const DataStoreInterfaces &pDataStoreInterfaces,
+                                                               const Plugins &pCellmlEditingViewPlugins,
+                                                               const Plugins &pCellmlSimulationViewPlugins,
                                                                QWidget *pParent) :
     ViewWidget(pParent),
     mPlugin(pPlugin),
     mSolverInterfaces(pSolverInterfaces),
     mDataStoreInterfaces(pDataStoreInterfaces),
+    mCellmlEditingViewPlugins(pCellmlEditingViewPlugins),
+    mCellmlSimulationViewPlugins(pCellmlSimulationViewPlugins),
     mSimulationWidgetSizes(QIntList()),
     mContentsWidgetSizes(QIntList()),
     mCollapsibleWidgetCollapsed(QBoolList()),
@@ -445,6 +449,24 @@ DataStoreInterfaces SimulationExperimentViewWidget::dataStoreInterfaces() const
     // Return our data store interfaces
 
     return mDataStoreInterfaces;
+}
+
+//==============================================================================
+
+Plugins SimulationExperimentViewWidget::cellmlEditingViewPlugins() const
+{
+    // Return our CellML editing view plugins
+
+    return mCellmlEditingViewPlugins;
+}
+
+//==============================================================================
+
+Plugins SimulationExperimentViewWidget::cellmlSimulationViewPlugins() const
+{
+    // Return our CellML simulation view plugins
+
+    return mCellmlSimulationViewPlugins;
 }
 
 //==============================================================================

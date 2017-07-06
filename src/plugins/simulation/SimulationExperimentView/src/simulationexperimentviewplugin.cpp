@@ -185,6 +185,8 @@ void SimulationExperimentViewPlugin::initializePlugin()
 
     mViewWidget = new SimulationExperimentViewWidget(this, mSolverInterfaces,
                                                      mDataStoreInterfaces,
+                                                     mCellmlEditingViewPlugins,
+                                                     mCellmlSimulationViewPlugins,
                                                      Core::mainWindow());
 
     mViewWidget->setObjectName("SimulationExperimentViewWidget");
@@ -372,24 +374,6 @@ QIcon SimulationExperimentViewPlugin::fileTabIcon(const QString &pFileName) cons
 
 //==============================================================================
 // Plugin specific
-//==============================================================================
-
-Plugins SimulationExperimentViewPlugin::cellmlEditingViewPlugins() const
-{
-    // Return our CellML editing view plugins
-
-    return mCellmlEditingViewPlugins;
-}
-
-//==============================================================================
-
-Plugins SimulationExperimentViewPlugin::cellmlSimulationViewPlugins() const
-{
-    // Return our CellML simulation view plugins
-
-    return mCellmlSimulationViewPlugins;
-}
-
 //==============================================================================
 
 FileTypeInterface * SimulationExperimentViewPlugin::sedmlFileTypeInterface() const

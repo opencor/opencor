@@ -219,7 +219,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     cellmlOpenToolButton->setMenu(cellmlOpenDropDownMenu);
     cellmlOpenToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
-    foreach (Plugin *cellmlEditingViewPlugin, pPlugin->cellmlEditingViewPlugins()) {
+    foreach (Plugin *cellmlEditingViewPlugin, pViewWidget->cellmlEditingViewPlugins()) {
         QAction *action = Core::newAction(Core::mainWindow());
 
         cellmlOpenDropDownMenu->addAction(action);
@@ -232,7 +232,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     cellmlOpenDropDownMenu->addSeparator();
 
-    foreach (Plugin *cellmlSimulationViewPlugin, pPlugin->cellmlSimulationViewPlugins()) {
+    foreach (Plugin *cellmlSimulationViewPlugin, pViewWidget->cellmlSimulationViewPlugins()) {
         QAction *action = Core::newAction(Core::mainWindow());
 
         cellmlOpenDropDownMenu->addAction(action);

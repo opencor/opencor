@@ -72,9 +72,6 @@ public:
 #include "plugininterface.inl"
 #include "viewinterface.inl"
 
-    Plugins cellmlEditingViewPlugins() const;
-    Plugins cellmlSimulationViewPlugins() const;
-
     FileTypeInterface * sedmlFileTypeInterface() const;
     FileTypeInterface * combineFileTypeInterface() const;
 
