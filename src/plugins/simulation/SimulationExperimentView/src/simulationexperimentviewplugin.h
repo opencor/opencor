@@ -72,8 +72,6 @@ public:
 #include "plugininterface.inl"
 #include "viewinterface.inl"
 
-    DataStoreInterfaces dataStoreInterfaces() const;
-
     Plugins cellmlEditingViewPlugins() const;
     Plugins cellmlSimulationViewPlugins() const;
 

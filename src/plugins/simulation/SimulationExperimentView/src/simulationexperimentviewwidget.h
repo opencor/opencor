@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlfile.h"
 #include "combinearchive.h"
 #include "corecliutils.h"
+#include "datastoreinterface.h"
 #include "sedmlfile.h"
 #include "solverinterface.h"
 #include "viewwidget.h"
@@ -58,6 +59,7 @@ class SimulationExperimentViewWidget : public Core::ViewWidget
 public:
     explicit SimulationExperimentViewWidget(SimulationExperimentViewPlugin *pPlugin,
                                             const SolverInterfaces &pSolverInterfaces,
+                                            const DataStoreInterfaces &pDataStoreInterfaces,
                                             QWidget *pParent);
 
     virtual void loadSettings(QSettings *pSettings);
@@ -82,6 +84,7 @@ public:
     QStringList fileNames() const;
 
     SolverInterfaces solverInterfaces() const;
+    DataStoreInterfaces dataStoreInterfaces() const;
 
     SimulationExperimentViewSimulationWidget * simulationWidget(const QString &pFileName) const;
     SimulationExperimentViewSimulation * simulation(const QString &pFileName) const;
@@ -98,6 +101,7 @@ private:
     SimulationExperimentViewPlugin *mPlugin;
 
     SolverInterfaces mSolverInterfaces;
+    DataStoreInterfaces mDataStoreInterfaces;
 
     QIntList mSimulationWidgetSizes;
     QIntList mContentsWidgetSizes;

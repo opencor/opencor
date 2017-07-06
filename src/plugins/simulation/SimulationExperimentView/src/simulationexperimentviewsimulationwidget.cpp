@@ -261,7 +261,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     simulationDataExportToolButton->setMenu(mSimulationDataExportDropDownMenu);
     simulationDataExportToolButton->setPopupMode(QToolButton::InstantPopup);
 
-    foreach (DataStoreInterface *dataStoreInterface, pPlugin->dataStoreInterfaces()) {
+    foreach (DataStoreInterface *dataStoreInterface, pViewWidget->dataStoreInterfaces()) {
         QString dataStoreName = dataStoreInterface->dataStoreName();
         QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreName+"...");
 

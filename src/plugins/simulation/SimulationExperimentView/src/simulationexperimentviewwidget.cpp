@@ -71,10 +71,12 @@ namespace SimulationExperimentView {
 
 SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperimentViewPlugin *pPlugin,
                                                                const SolverInterfaces &pSolverInterfaces,
+                                                               const DataStoreInterfaces &pDataStoreInterfaces,
                                                                QWidget *pParent) :
     ViewWidget(pParent),
     mPlugin(pPlugin),
     mSolverInterfaces(pSolverInterfaces),
+    mDataStoreInterfaces(pDataStoreInterfaces),
     mSimulationWidgetSizes(QIntList()),
     mContentsWidgetSizes(QIntList()),
     mCollapsibleWidgetCollapsed(QBoolList()),
@@ -434,6 +436,15 @@ SolverInterfaces SimulationExperimentViewWidget::solverInterfaces() const
     // Return our solver interfaces
 
     return mSolverInterfaces;
+}
+
+//==============================================================================
+
+DataStoreInterfaces SimulationExperimentViewWidget::dataStoreInterfaces() const
+{
+    // Return our data store interfaces
+
+    return mDataStoreInterfaces;
 }
 
 //==============================================================================

@@ -184,6 +184,7 @@ void SimulationExperimentViewPlugin::initializePlugin()
     // Create our Simulation Experiment view widget
 
     mViewWidget = new SimulationExperimentViewWidget(this, mSolverInterfaces,
+                                                     mDataStoreInterfaces,
                                                      Core::mainWindow());
 
     mViewWidget->setObjectName("SimulationExperimentViewWidget");
@@ -371,15 +372,6 @@ QIcon SimulationExperimentViewPlugin::fileTabIcon(const QString &pFileName) cons
 
 //==============================================================================
 // Plugin specific
-//==============================================================================
-
-DataStoreInterfaces SimulationExperimentViewPlugin::dataStoreInterfaces() const
-{
-    // Return our data store interfaces
-
-    return mDataStoreInterfaces;
-}
-
 //==============================================================================
 
 Plugins SimulationExperimentViewPlugin::cellmlEditingViewPlugins() const
