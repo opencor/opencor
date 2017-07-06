@@ -46,12 +46,12 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
-SimulationExperimentViewInformationGraphsWidget::SimulationExperimentViewInformationGraphsWidget(SimulationExperimentViewPlugin *pPlugin,
+SimulationExperimentViewInformationGraphsWidget::SimulationExperimentViewInformationGraphsWidget(SimulationExperimentViewWidget *pViewWidget,
                                                                                                  SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                                                  QWidget *pParent) :
     QStackedWidget(pParent),
     Core::CommonWidget(this),
-    mPlugin(pPlugin),
+    mViewWidget(pViewWidget),
     mSimulationWidget(pSimulationWidget),
     mGraphPanels(QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *>()),
     mPropertyEditors(QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *>()),
@@ -756,7 +756,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     //       assignment...
 
     bool graphOk = true;
-    CellMLSupport::CellmlFileRuntime *runtime = mPlugin->viewWidget()->runtime(fileName);
+    CellMLSupport::CellmlFileRuntime *runtime = mViewWidget->runtime(fileName);
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterX());
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY());
 
@@ -855,7 +855,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
 
     QStringList modelListValues = QStringList();
 
-    foreach (const QString &fileName, mPlugin->viewWidget()->fileNames()) {
+    foreach (const QString &fileName, mViewWidget->fileNames()) {
         Core::File *file = Core::FileManager::instance()->file(fileName);
         QString fileNameOrUrl = file->isLocal()?fileName:file->url();
 

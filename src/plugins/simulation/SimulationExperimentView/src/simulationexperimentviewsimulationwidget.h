@@ -115,6 +115,7 @@ public:
     };
 
     explicit SimulationExperimentViewSimulationWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                      SimulationExperimentViewWidget *pViewWidget,
                                                       const QString &pFileName,
                                                       QWidget *pParent);
     ~SimulationExperimentViewSimulationWidget();
@@ -162,6 +163,8 @@ private:
     };
 
     SimulationExperimentViewPlugin *mPlugin;
+
+    SimulationExperimentViewWidget *mViewWidget;
 
     QString mFileName;
 

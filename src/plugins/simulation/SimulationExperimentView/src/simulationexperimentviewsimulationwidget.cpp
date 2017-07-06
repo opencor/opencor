@@ -90,10 +90,12 @@ namespace SimulationExperimentView {
 //==============================================================================
 
 SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                                                   SimulationExperimentViewWidget *pViewWidget,
                                                                                    const QString &pFileName,
                                                                                    QWidget *pParent) :
     Widget(pParent),
     mPlugin(pPlugin),
+    mViewWidget(pViewWidget),
     mFileName(pFileName),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
     mCellmlBasedViewPlugins(QMap<QAction *, Plugin *>()),
@@ -217,7 +219,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     cellmlOpenToolButton->setMenu(cellmlOpenDropDownMenu);
     cellmlOpenToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
-    foreach (Plugin *cellmlEditingViewPlugin, pPlugin->cellmlEditingViewPlugins()) {
+    foreach (Plugin *cellmlEditingViewPlugin, pViewWidget->cellmlEditingViewPlugins()) {
         QAction *action = Core::newAction(Core::mainWindow());
 
         cellmlOpenDropDownMenu->addAction(action);
@@ -230,7 +232,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     cellmlOpenDropDownMenu->addSeparator();
 
-    foreach (Plugin *cellmlSimulationViewPlugin, pPlugin->cellmlSimulationViewPlugins()) {
+    foreach (Plugin *cellmlSimulationViewPlugin, pViewWidget->cellmlSimulationViewPlugins()) {
         QAction *action = Core::newAction(Core::mainWindow());
 
         cellmlOpenDropDownMenu->addAction(action);
@@ -259,7 +261,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     simulationDataExportToolButton->setMenu(mSimulationDataExportDropDownMenu);
     simulationDataExportToolButton->setPopupMode(QToolButton::InstantPopup);
 
-    foreach (DataStoreInterface *dataStoreInterface, pPlugin->dataStoreInterfaces()) {
+    foreach (DataStoreInterface *dataStoreInterface, pViewWidget->dataStoreInterfaces()) {
         QString dataStoreName = dataStoreInterface->dataStoreName();
         QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreName+"...");
 
@@ -321,7 +323,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Create our contents widget
 
-    mContentsWidget = new SimulationExperimentViewContentsWidget(pPlugin, this, this);
+    mContentsWidget = new SimulationExperimentViewContentsWidget(pViewWidget, this, this);
 
     mContentsWidget->setObjectName("Contents");
 
@@ -452,7 +454,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                         mFileType, mSedmlFileIssues, mCombineArchiveIssues);
 
     mSimulation = new SimulationExperimentViewSimulation(mCellmlFile?mCellmlFile->runtime(true):0,
-                                                         pPlugin->solverInterfaces());
+                                                         pViewWidget->solverInterfaces());
 
     connect(mSimulation, SIGNAL(running(const bool &)),
             this, SLOT(simulationRunning(const bool &)));
@@ -1325,7 +1327,7 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
 
                 runSimulation = mSimulation->results()->reset();
 
-                mPlugin->viewWidget()->checkSimulationResults(mFileName, true);
+                mViewWidget->checkSimulationResults(mFileName, true);
                 // Note: this will, among other things, clear our plots...
 
                 // Effectively run our simulation in case we were able to
@@ -1376,7 +1378,7 @@ void SimulationExperimentViewSimulationWidget::clearSimulationData()
 
     updateSimulationMode();
 
-    mPlugin->viewWidget()->checkSimulationResults(mFileName, true);
+    mViewWidget->checkSimulationResults(mFileName, true);
 }
 
 //==============================================================================
@@ -1732,7 +1734,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
     QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString sedmlFileName = cellmlFileName;
-    QStringList sedmlFilters = Core::filters(FileTypeInterfaces() << mPlugin->sedmlFileTypeInterface());
+    QStringList sedmlFilters = Core::filters(FileTypeInterfaces() << mViewWidget->sedmlFileTypeInterface());
     QString firstSedmlFilter = sedmlFilters.first();
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {
@@ -1786,7 +1788,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
     QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString combineArchiveName = cellmlFileName;
-    QStringList combineFilters = Core::filters(FileTypeInterfaces() << mPlugin->combineFileTypeInterface());
+    QStringList combineFilters = Core::filters(FileTypeInterfaces() << mViewWidget->combineFileTypeInterface());
     QString firstCombineFilter = combineFilters.first();
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {
@@ -2155,7 +2157,7 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
     Core::Properties solverProperties = Core::Properties();
     QString kisaoId = QString::fromStdString(algorithm->getKisaoID());
 
-    foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
+    foreach (SolverInterface *solverInterface, mViewWidget->solverInterfaces()) {
         if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
             usedSolverInterface = solverInterface;
             solverProperties = solverData->solversProperties().value(solverInterface->solverName());
@@ -2289,7 +2291,7 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
             mustHaveNlaSolver = true;
             nlaSolverName = QString::fromStdString(node.getAttrValue(node.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
 
-            foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
+            foreach (SolverInterface *solverInterface, mViewWidget->solverInterfaces()) {
                 if (!nlaSolverName.compare(solverInterface->solverName())) {
                     informationWidget->solversWidget()->nlaSolverData()->solversListProperty()->setValue(nlaSolverName);
 
@@ -2482,7 +2484,7 @@ void SimulationExperimentViewSimulationWidget::simulationRunning(const bool &pIs
 
     updateSimulationMode();
 
-    mPlugin->viewWidget()->checkSimulationResults(mFileName);
+    mViewWidget->checkSimulationResults(mFileName);
 }
 
 //==============================================================================
@@ -2496,7 +2498,7 @@ void SimulationExperimentViewSimulationWidget::simulationPaused()
 
     mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint());
 
-    mPlugin->viewWidget()->checkSimulationResults(mFileName);
+    mViewWidget->checkSimulationResults(mFileName);
 }
 
 //==============================================================================
@@ -2561,7 +2563,7 @@ void SimulationExperimentViewSimulationWidget::resetFileTabIcon()
 
     static const QIcon NoIcon = QIcon();
 
-    emit mPlugin->viewWidget()->updateFileTabIcon(mPlugin->viewName(), mFileName, NoIcon);
+    emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, NoIcon);
 }
 
 //==============================================================================
@@ -2789,7 +2791,7 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(OpenCOR::GraphPanel
         //       indeed refer to a file that has not yet been activated and
         //       therefore doesn't yet have a simulation associated with it...
 
-        SimulationExperimentViewSimulation *simulation = mPlugin->viewWidget()->simulation(graph->fileName());
+        SimulationExperimentViewSimulation *simulation = mViewWidget->simulation(graph->fileName());
 
         updateGraphData(graph, simulation?simulation->results()->size():0);
 
@@ -2873,7 +2875,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 
     foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, pPlot->graphs()) {
         if (graph->isValid() && graph->isSelected()) {
-            SimulationExperimentViewSimulation *simulation = mPlugin->viewWidget()->simulation(graph->fileName());
+            SimulationExperimentViewSimulation *simulation = mViewWidget->simulation(graph->fileName());
             double startingPoint = simulation->data()->startingPoint();
             double endingPoint = simulation->data()->endingPoint();
 
@@ -2987,7 +2989,7 @@ void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget:
     // Update our graph's data
 
     if (pGraph->isValid()) {
-        SimulationExperimentViewSimulation *simulation = mPlugin->viewWidget()->simulation(pGraph->fileName());
+        SimulationExperimentViewSimulation *simulation = mViewWidget->simulation(pGraph->fileName());
 
         pGraph->setRawSamples(dataPoints(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
                               dataPoints(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
@@ -3028,7 +3030,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisib
 
     // Make sure that our progress bar is up to date
 
-    mProgressBarWidget->setValue(mPlugin->viewWidget()->simulationResultsSize(mFileName)/mSimulation->size());
+    mProgressBarWidget->setValue(mViewWidget->simulationResultsSize(mFileName)/mSimulation->size());
 }
 
 //==============================================================================
@@ -3188,7 +3190,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
     // Update our progress bar or our tab icon, if needed
 
     if (simulation == mSimulation) {
-        double simulationProgress = mPlugin->viewWidget()->simulationResultsSize(mFileName)/simulation->size();
+        double simulationProgress = mViewWidget->simulationResultsSize(mFileName)/simulation->size();
 
         if (pClearGraphs || visible) {
             mProgressBarWidget->setValue(simulationProgress);
@@ -3209,7 +3211,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 // Let people know about the file tab icon to be used for the
                 // model
 
-                emit mPlugin->viewWidget()->updateFileTabIcon(mPlugin->viewName(), mFileName, fileTabIcon());
+                emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, fileTabIcon());
             }
         }
     }
@@ -3326,7 +3328,7 @@ bool SimulationExperimentViewSimulationWidget::sedmlAlgorithmSupported(const lib
     SolverInterface *usedSolverInterface = 0;
     QString kisaoId = QString::fromStdString(pSedmlAlgorithm->getKisaoID());
 
-    foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
+    foreach (SolverInterface *solverInterface, mViewWidget->solverInterfaces()) {
         if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
             usedSolverInterface = solverInterface;
 

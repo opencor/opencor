@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
 #include "simulationexperimentviewinformationsolverswidget.h"
-#include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewsimulation.h"
+#include "simulationexperimentviewwidget.h"
 
 //==============================================================================
 
@@ -83,7 +83,7 @@ QMap<QString, Core::Properties> SimulationExperimentViewInformationSolversWidget
 
 //==============================================================================
 
-SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInformationSolversWidget(SimulationExperimentViewPlugin *pPlugin,
+SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInformationSolversWidget(SimulationExperimentViewWidget *pViewWidget,
                                                                                                    QWidget *pParent) :
     PropertyEditorWidget(true, pParent),
     mDescriptions(QMap<Core::Property *, Descriptions>())
@@ -94,9 +94,9 @@ SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInform
 
     // Add properties for our different solvers
 
-    mOdeSolverData = addSolverProperties(pPlugin->solverInterfaces(), Solver::Ode);
-    mDaeSolverData = addSolverProperties(pPlugin->solverInterfaces(), Solver::Dae);
-    mNlaSolverData = addSolverProperties(pPlugin->solverInterfaces(), Solver::Nla);
+    mOdeSolverData = addSolverProperties(pViewWidget->solverInterfaces(), Solver::Ode);
+    mDaeSolverData = addSolverProperties(pViewWidget->solverInterfaces(), Solver::Dae);
+    mNlaSolverData = addSolverProperties(pViewWidget->solverInterfaces(), Solver::Nla);
 
     // Show/hide the relevant properties
 

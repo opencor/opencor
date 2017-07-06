@@ -146,21 +146,21 @@ void CellmlEditingViewWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlEditingViewWidget::updateSettings(CellmlEditingViewWidget *pCellmlEditingViewWidget)
+void CellmlEditingViewWidget::updateSettings(CellmlEditingViewWidget *pEditingWidget)
 {
     // Make sure that we are given another editing widget
 
-    if (!pCellmlEditingViewWidget || (pCellmlEditingViewWidget == this))
+    if (!pEditingWidget || (pEditingWidget == this))
         return;
 
     // Update our sizes, MathML viewer and editor widgets' settings
 
-    mEditingWidgetSizes = pCellmlEditingViewWidget->editingWidgetSizes();
+    mEditingWidgetSizes = pEditingWidget->editingWidgetSizes();
 
     setSizes(mEditingWidgetSizes);
 
-    mMathmlViewerWidget->updateSettings(pCellmlEditingViewWidget->mathmlViewer());
-    mEditorWidget->updateSettings(pCellmlEditingViewWidget->editorWidget());
+    mMathmlViewerWidget->updateSettings(pEditingWidget->mathmlViewer());
+    mEditorWidget->updateSettings(pEditingWidget->editorWidget());
 }
 
 //==============================================================================

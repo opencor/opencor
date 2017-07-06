@@ -82,20 +82,12 @@ public:
 
     SimulationExperimentViewWidget * viewWidget() const;
 
-    SolverInterfaces solverInterfaces() const;
-    DataStoreInterfaces dataStoreInterfaces() const;
-
-    Plugins cellmlEditingViewPlugins() const;
-    Plugins cellmlSimulationViewPlugins() const;
-
-    FileTypeInterface * sedmlFileTypeInterface() const;
-    FileTypeInterface * combineFileTypeInterface() const;
-
 private:
     SimulationExperimentViewWidget *mViewWidget;
 
     SolverInterfaces mSolverInterfaces;
     DataStoreInterfaces mDataStoreInterfaces;
+
     Plugins mCellmlEditingViewPlugins;
     Plugins mCellmlSimulationViewPlugins;
 
