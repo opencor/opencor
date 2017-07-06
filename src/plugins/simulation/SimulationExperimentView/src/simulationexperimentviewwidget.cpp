@@ -70,9 +70,21 @@ namespace SimulationExperimentView {
 //==============================================================================
 
 SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                               const SolverInterfaces &pSolverInterfaces,
+                                                               const DataStoreInterfaces &pDataStoreInterfaces,
+                                                               const Plugins &pCellmlEditingViewPlugins,
+                                                               const Plugins &pCellmlSimulationViewPlugins,
+                                                               FileTypeInterface *pSedmlFileTypeInterface,
+                                                               FileTypeInterface *pCombineFileTypeInterface,
                                                                QWidget *pParent) :
     ViewWidget(pParent),
     mPlugin(pPlugin),
+    mSolverInterfaces(pSolverInterfaces),
+    mDataStoreInterfaces(pDataStoreInterfaces),
+    mCellmlEditingViewPlugins(pCellmlEditingViewPlugins),
+    mCellmlSimulationViewPlugins(pCellmlSimulationViewPlugins),
+    mSedmlFileTypeInterface(pSedmlFileTypeInterface),
+    mCombineFileTypeInterface(pCombineFileTypeInterface),
     mSimulationWidgetSizes(QIntList()),
     mContentsWidgetSizes(QIntList()),
     mCollapsibleWidgetCollapsed(QBoolList()),
@@ -193,7 +205,7 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
     if (!mSimulationWidget) {
         // No simulation widget exists for the given file, so create one
 
-        mSimulationWidget = new SimulationExperimentViewSimulationWidget(mPlugin, pFileName, this);
+        mSimulationWidget = new SimulationExperimentViewSimulationWidget(mPlugin, this, pFileName, this);
 
         // Keep track of our editing widget
 
@@ -423,6 +435,60 @@ QStringList SimulationExperimentViewWidget::fileNames() const
     // Return our file names
 
     return mFileNames;
+}
+
+//==============================================================================
+
+SolverInterfaces SimulationExperimentViewWidget::solverInterfaces() const
+{
+    // Return our solver interfaces
+
+    return mSolverInterfaces;
+}
+
+//==============================================================================
+
+DataStoreInterfaces SimulationExperimentViewWidget::dataStoreInterfaces() const
+{
+    // Return our data store interfaces
+
+    return mDataStoreInterfaces;
+}
+
+//==============================================================================
+
+Plugins SimulationExperimentViewWidget::cellmlEditingViewPlugins() const
+{
+    // Return our CellML editing view plugins
+
+    return mCellmlEditingViewPlugins;
+}
+
+//==============================================================================
+
+Plugins SimulationExperimentViewWidget::cellmlSimulationViewPlugins() const
+{
+    // Return our CellML simulation view plugins
+
+    return mCellmlSimulationViewPlugins;
+}
+
+//==============================================================================
+
+FileTypeInterface * SimulationExperimentViewWidget::sedmlFileTypeInterface() const
+{
+    // Return our SED-ML file type interface
+
+    return mSedmlFileTypeInterface;
+}
+
+//==============================================================================
+
+FileTypeInterface * SimulationExperimentViewWidget::combineFileTypeInterface() const
+{
+    // Return our COMBINE file type interface
+
+    return mCombineFileTypeInterface;
 }
 
 //==============================================================================

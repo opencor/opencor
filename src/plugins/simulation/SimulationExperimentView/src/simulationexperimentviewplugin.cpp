@@ -183,7 +183,13 @@ void SimulationExperimentViewPlugin::initializePlugin()
 {
     // Create our Simulation Experiment view widget
 
-    mViewWidget = new SimulationExperimentViewWidget(this, Core::mainWindow());
+    mViewWidget = new SimulationExperimentViewWidget(this, mSolverInterfaces,
+                                                     mDataStoreInterfaces,
+                                                     mCellmlEditingViewPlugins,
+                                                     mCellmlSimulationViewPlugins,
+                                                     mSedmlFileTypeInterface,
+                                                     mCombineFileTypeInterface,
+                                                     Core::mainWindow());
 
     mViewWidget->setObjectName("SimulationExperimentViewWidget");
 
@@ -366,71 +372,6 @@ QIcon SimulationExperimentViewPlugin::fileTabIcon(const QString &pFileName) cons
     // Return the requested file tab icon
 
     return mViewWidget->fileTabIcon(pFileName);
-}
-
-//==============================================================================
-// Plugin specific
-//==============================================================================
-
-SimulationExperimentViewWidget * SimulationExperimentViewPlugin::viewWidget() const
-{
-    // Return our view widget
-
-    return mViewWidget;
-}
-
-//==============================================================================
-
-SolverInterfaces SimulationExperimentViewPlugin::solverInterfaces() const
-{
-    // Return our solver interfaces
-
-    return mSolverInterfaces;
-}
-
-//==============================================================================
-
-DataStoreInterfaces SimulationExperimentViewPlugin::dataStoreInterfaces() const
-{
-    // Return our data store interfaces
-
-    return mDataStoreInterfaces;
-}
-
-//==============================================================================
-
-Plugins SimulationExperimentViewPlugin::cellmlEditingViewPlugins() const
-{
-    // Return our CellML editing view plugins
-
-    return mCellmlEditingViewPlugins;
-}
-
-//==============================================================================
-
-Plugins SimulationExperimentViewPlugin::cellmlSimulationViewPlugins() const
-{
-    // Return our CellML simulation view plugins
-
-    return mCellmlSimulationViewPlugins;
-}
-
-//==============================================================================
-
-FileTypeInterface * SimulationExperimentViewPlugin::sedmlFileTypeInterface() const
-{
-    // Return our SED-ML file type interface
-
-    return mSedmlFileTypeInterface;
-}
-
-//==============================================================================
-
-FileTypeInterface * SimulationExperimentViewPlugin::combineFileTypeInterface() const
-{
-    // Return our COMBINE file type interface
-
-    return mCombineFileTypeInterface;
 }
 
 //==============================================================================
