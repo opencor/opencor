@@ -72,7 +72,6 @@ public:
 #include "plugininterface.inl"
 #include "viewinterface.inl"
 
-    SolverInterfaces solverInterfaces() const;
     DataStoreInterfaces dataStoreInterfaces() const;
 
     Plugins cellmlEditingViewPlugins() const;
@@ -86,6 +85,7 @@ private:
 
     SolverInterfaces mSolverInterfaces;
     DataStoreInterfaces mDataStoreInterfaces;
+
     Plugins mCellmlEditingViewPlugins;
     Plugins mCellmlSimulationViewPlugins;
 

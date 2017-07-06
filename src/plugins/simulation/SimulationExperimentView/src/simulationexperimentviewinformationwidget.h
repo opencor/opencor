@@ -51,7 +51,6 @@ class SimulationExperimentViewInformationGraphsWidget;
 class SimulationExperimentViewInformationParametersWidget;
 class SimulationExperimentViewInformationSimulationWidget;
 class SimulationExperimentViewInformationSolversWidget;
-class SimulationExperimentViewPlugin;
 class SimulationExperimentViewSimulationWidget;
 class SimulationExperimentViewWidget;
 
@@ -63,8 +62,7 @@ class SimulationExperimentViewInformationWidget : public QScrollArea,
     Q_OBJECT
 
 public:
-    explicit SimulationExperimentViewInformationWidget(SimulationExperimentViewPlugin *pPlugin,
-                                                       SimulationExperimentViewWidget *pViewWidget,
+    explicit SimulationExperimentViewInformationWidget(SimulationExperimentViewWidget *pViewWidget,
                                                        SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                        QWidget *pParent);
 

@@ -70,9 +70,11 @@ namespace SimulationExperimentView {
 //==============================================================================
 
 SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                               const SolverInterfaces &pSolverInterfaces,
                                                                QWidget *pParent) :
     ViewWidget(pParent),
     mPlugin(pPlugin),
+    mSolverInterfaces(pSolverInterfaces),
     mSimulationWidgetSizes(QIntList()),
     mContentsWidgetSizes(QIntList()),
     mCollapsibleWidgetCollapsed(QBoolList()),
@@ -423,6 +425,15 @@ QStringList SimulationExperimentViewWidget::fileNames() const
     // Return our file names
 
     return mFileNames;
+}
+
+//==============================================================================
+
+SolverInterfaces SimulationExperimentViewWidget::solverInterfaces() const
+{
+    // Return our solver interfaces
+
+    return mSolverInterfaces;
 }
 
 //==============================================================================

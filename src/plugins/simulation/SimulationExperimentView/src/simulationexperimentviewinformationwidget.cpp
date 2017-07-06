@@ -40,8 +40,7 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
-SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWidget(SimulationExperimentViewPlugin *pPlugin,
-                                                                                     SimulationExperimentViewWidget *pViewWidget,
+SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWidget(SimulationExperimentViewWidget *pViewWidget,
                                                                                      SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                                      QWidget *pParent) :
     QScrollArea(pParent),
@@ -74,7 +73,7 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
 
     // Create our solvers widget
 
-    mSolversWidget = new SimulationExperimentViewInformationSolversWidget(pPlugin, mCollapsibleWidget);
+    mSolversWidget = new SimulationExperimentViewInformationSolversWidget(pViewWidget, mCollapsibleWidget);
 
     mSolversWidget->setObjectName("Solvers");
 

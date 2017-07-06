@@ -323,7 +323,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Create our contents widget
 
-    mContentsWidget = new SimulationExperimentViewContentsWidget(pPlugin, pViewWidget, this, this);
+    mContentsWidget = new SimulationExperimentViewContentsWidget(pViewWidget, this, this);
 
     mContentsWidget->setObjectName("Contents");
 
@@ -454,7 +454,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                         mFileType, mSedmlFileIssues, mCombineArchiveIssues);
 
     mSimulation = new SimulationExperimentViewSimulation(mCellmlFile?mCellmlFile->runtime(true):0,
-                                                         pPlugin->solverInterfaces());
+                                                         pViewWidget->solverInterfaces());
 
     connect(mSimulation, SIGNAL(running(const bool &)),
             this, SLOT(simulationRunning(const bool &)));
@@ -2157,7 +2157,7 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
     Core::Properties solverProperties = Core::Properties();
     QString kisaoId = QString::fromStdString(algorithm->getKisaoID());
 
-    foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
+    foreach (SolverInterface *solverInterface, mViewWidget->solverInterfaces()) {
         if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
             usedSolverInterface = solverInterface;
             solverProperties = solverData->solversProperties().value(solverInterface->solverName());
@@ -2291,7 +2291,7 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
             mustHaveNlaSolver = true;
             nlaSolverName = QString::fromStdString(node.getAttrValue(node.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
 
-            foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
+            foreach (SolverInterface *solverInterface, mViewWidget->solverInterfaces()) {
                 if (!nlaSolverName.compare(solverInterface->solverName())) {
                     informationWidget->solversWidget()->nlaSolverData()->solversListProperty()->setValue(nlaSolverName);
 
@@ -3328,7 +3328,7 @@ bool SimulationExperimentViewSimulationWidget::sedmlAlgorithmSupported(const lib
     SolverInterface *usedSolverInterface = 0;
     QString kisaoId = QString::fromStdString(pSedmlAlgorithm->getKisaoID());
 
-    foreach (SolverInterface *solverInterface, mPlugin->solverInterfaces()) {
+    foreach (SolverInterface *solverInterface, mViewWidget->solverInterfaces()) {
         if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
             usedSolverInterface = solverInterface;
 

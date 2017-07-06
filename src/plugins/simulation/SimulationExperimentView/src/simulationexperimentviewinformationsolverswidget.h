@@ -38,8 +38,8 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SimulationExperimentViewPlugin;
 class SimulationExperimentViewSimulation;
+class SimulationExperimentViewWidget;
 
 //==============================================================================
 
@@ -74,7 +74,7 @@ class SimulationExperimentViewInformationSolversWidget : public Core::PropertyEd
     Q_OBJECT
 
 public:
-    explicit SimulationExperimentViewInformationSolversWidget(SimulationExperimentViewPlugin *pPlugin,
+    explicit SimulationExperimentViewInformationSolversWidget(SimulationExperimentViewWidget *pViewWidget,
                                                               QWidget *pParent);
     ~SimulationExperimentViewInformationSolversWidget();
 

@@ -183,7 +183,8 @@ void SimulationExperimentViewPlugin::initializePlugin()
 {
     // Create our Simulation Experiment view widget
 
-    mViewWidget = new SimulationExperimentViewWidget(this, Core::mainWindow());
+    mViewWidget = new SimulationExperimentViewWidget(this, mSolverInterfaces,
+                                                     Core::mainWindow());
 
     mViewWidget->setObjectName("SimulationExperimentViewWidget");
 
@@ -370,15 +371,6 @@ QIcon SimulationExperimentViewPlugin::fileTabIcon(const QString &pFileName) cons
 
 //==============================================================================
 // Plugin specific
-//==============================================================================
-
-SolverInterfaces SimulationExperimentViewPlugin::solverInterfaces() const
-{
-    // Return our solver interfaces
-
-    return mSolverInterfaces;
-}
-
 //==============================================================================
 
 DataStoreInterfaces SimulationExperimentViewPlugin::dataStoreInterfaces() const
