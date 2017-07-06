@@ -82,7 +82,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         SOURCES
         HEADERS_MOC
         UIS
-        INCLUDE_DIRS
         DEFINITIONS
         PLUGINS
         PLUGIN_BINARIES
@@ -95,10 +94,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     )
 
     CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
-
-    # Additional include directories
-
-    INCLUDE_DIRECTORIES(${ARG_INCLUDE_DIRS})
 
     # Resource files, if any
     # Note: ideally, we would have our resource files named i18n.qrc.in and

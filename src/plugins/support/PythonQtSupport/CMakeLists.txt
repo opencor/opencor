@@ -14,8 +14,6 @@ ADD_PLUGIN(PythonQtSupport
     HEADERS_MOC
         src/CTK/ctkAbstractPythonManager.h
         src/pythonqtsupportplugin.h
-    INCLUDE_DIRS
-        ${PYTHON_INCLUDE_DIR}
     PLUGINS
         PythonQtAPI
 )

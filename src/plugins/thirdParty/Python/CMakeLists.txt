@@ -60,11 +60,9 @@ ENDIF()
 # Include and library directories
 
 IF(WIN32)
-    SET(INCLUDE_DIR include)
     SET(LIBRARY_DIR Libs)
     SET(RUNTIME_DIR lib)
 ELSE()
-    SET(INCLUDE_DIR include/python${PYTHON_BUILT_VERSION})
     SET(LIBRARY_DIR lib)
     SET(RUNTIME_DIR lib/python${MAJOR_MINOR_LIBRARY_VERSION})
 ENDIF()
@@ -322,6 +320,15 @@ ELSE()
             <INSTALL_DIR>/${LIBRARY_DIR}/${IMPORT_LIBRARY}
     )
 
+    IF(NOT WIN32)
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copy_headers
+            COMMAND ${CMAKE_COMMAND} -E copy_directory include/python${PYTHON_BUILT_VERSION} include
+            COMMAND ${CMAKE_COMMAND} -E remove_directory include/python${PYTHON_BUILT_VERSION}
+            WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+            DEPENDEES install
+            )
+    ENDIF()
+
     IF(WIN32)
         # _freeze_importlib.exe, run as part of the Python build, needs our zlib DLL...
 
@@ -423,7 +430,7 @@ ELSE()
     SET(PYTHON_EXECUTABLE ${ROOT_DIR}/bin/python PARENT_SCOPE)
 ENDIF()
 
-SET(PYTHON_INCLUDE_DIR ${ROOT_DIR}/${INCLUDE_DIR} PARENT_SCOPE)
+SET(PYTHON_INCLUDE_DIR ${ROOT_DIR}/include PARENT_SCOPE)
 SET(PYTHON_LIBRARY ${ROOT_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
 SET(PYTHON_ROOT_DIR ${ROOT_DIR} PARENT_SCOPE)
 SET(PYTHON_SITE_PACKAGES_DIR ${ROOT_DIR}/${RUNTIME_DIR}/site-packages PARENT_SCOPE)
@@ -441,8 +448,6 @@ ADD_PLUGIN(Python
         src/pythonplugin.cpp
     HEADERS_MOC
         src/pythonplugin.h
-    INCLUDE_DIRS
-        ${LOCAL_EXTERNAL_PACKAGE_DIR}/${INCLUDE_DIR}
     PLUGINS
         Core
         OpenSSL
