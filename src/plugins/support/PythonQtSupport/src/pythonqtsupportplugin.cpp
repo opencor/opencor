@@ -97,26 +97,26 @@ void PythonQtSupportPlugin::initializePlugin()
 
     // Create and initialise a new CTK Python manager
 
-    auto pythonManager = new ctkAbstractPythonManager(this);
+    mPythonManager = new ctkAbstractPythonManager(this);
 
     // This also initialises Python Qt
 
-    pythonManager->initialize();
+    mPythonManager->initialize();
 
     // Enable the Qt bindings for Python
 
     PythonQt_QtAll::init();
 
-    // Save the manager in our instance
+    // Create a Python module to access OpenCOR's objects
 
-    instance()->mPythonManager = pythonManager;
+    mOpenCORModule = PythonQt::self()->createModuleFromScript("OpenCOR");
 }
 
 //==============================================================================
 
 void PythonQtSupportPlugin::finalizePlugin()
 {
-    delete instance()->mPythonManager;
+    delete mPythonManager;
 }
 
 //==============================================================================
@@ -164,25 +164,6 @@ void PythonQtSupportPlugin::handleUrl(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-//==============================================================================
-
-ctkAbstractPythonManager *PythonQtSupportPlugin::pythonManager(void)
-{
-    return instance()->mPythonManager;
-}
-
-//==============================================================================
-
-PythonQtSupportPlugin *PythonQtSupportPlugin::instance(void)
-{
-    // Return the 'global' instance of our Python Qt plugin
-
-    static PythonQtSupportPlugin pluginInstance;
-    return static_cast<PythonQtSupportPlugin *>(Core::globalInstance("OpenCOR::PythonQtSupport::PythonQtSupportPlugin",
-                                                                     &pluginInstance));
 }
 
 //==============================================================================

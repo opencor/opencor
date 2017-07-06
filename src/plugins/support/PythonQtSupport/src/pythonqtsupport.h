@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QMetaObject>
 #include <QString>
+#include <QVariant>
 
 //==============================================================================
 
@@ -43,6 +44,8 @@ namespace PythonQtSupport {
 void addInstanceDecorators(QObject *pQObject);
 
 void addObject(PyObject *pObject, const QString &pName, QObject *pQObject);
+
+QVariant evalScript(const QString &pScript);
 
 void registerClass(const QMetaObject *pMetaObject);
 

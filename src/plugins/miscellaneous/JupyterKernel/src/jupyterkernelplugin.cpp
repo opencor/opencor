@@ -197,7 +197,7 @@ int JupyterKernelPlugin::runKernel()
 {
     // Run the the kernel using our connection file
 
-    PythonQtSupport::PythonQtSupportPlugin::pythonManager()->executeString(jupyterKernel.arg(mConnectionFile));
+    PythonQtSupport::evalScript(jupyterKernel.arg(mConnectionFile));
 
     // TODO: return gui->exec()
     return 0;

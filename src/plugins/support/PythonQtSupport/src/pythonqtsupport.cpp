@@ -44,6 +44,13 @@ void addObject(PyObject *pObject, const QString &pName, QObject *pQObject)
 
 //==============================================================================
 
+QVariant evalScript(const QString &pScript)
+{
+    return PythonQt::self()->evalScript(PythonQt::self()->getMainModule(), pScript);
+}
+
+//==============================================================================
+
 void registerClass(const QMetaObject *pMetaObject)
 {
     PythonQt::self()->registerClass(pMetaObject);

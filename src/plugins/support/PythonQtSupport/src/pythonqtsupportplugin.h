@@ -57,14 +57,13 @@ class PYTHONQTSUPPORT_EXPORT PythonQtSupportPlugin : public QObject, public Plug
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
+    explicit PythonQtSupportPlugin();
+
 #include "plugininterface.inl"
-
-    static ctkAbstractPythonManager *pythonManager();
-
-    static PythonQtSupportPlugin *instance();
 
 private:
     ctkAbstractPythonManager *mPythonManager;
+    PythonQtObjectPtr mOpenCORModule;
 };
 
 //==============================================================================
