@@ -72,8 +72,6 @@ public:
 #include "plugininterface.inl"
 #include "viewinterface.inl"
 
-    SimulationExperimentViewWidget * viewWidget() const;
-
     SolverInterfaces solverInterfaces() const;
     DataStoreInterfaces dataStoreInterfaces() const;
 

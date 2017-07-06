@@ -41,6 +41,7 @@ namespace SimulationExperimentView {
 //==============================================================================
 
 SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                                                     SimulationExperimentViewWidget *pViewWidget,
                                                                                      SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                                      QWidget *pParent) :
     QScrollArea(pParent),
@@ -79,7 +80,7 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
 
     // Create our graphs widget
 
-    mGraphsWidget = new SimulationExperimentViewInformationGraphsWidget(pPlugin, pSimulationWidget, mCollapsibleWidget);
+    mGraphsWidget = new SimulationExperimentViewInformationGraphsWidget(pViewWidget, pSimulationWidget, mCollapsibleWidget);
 
     mGraphsWidget->setObjectName("Graphs");
 

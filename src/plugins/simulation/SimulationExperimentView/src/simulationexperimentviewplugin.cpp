@@ -372,15 +372,6 @@ QIcon SimulationExperimentViewPlugin::fileTabIcon(const QString &pFileName) cons
 // Plugin specific
 //==============================================================================
 
-SimulationExperimentViewWidget * SimulationExperimentViewPlugin::viewWidget() const
-{
-    // Return our view widget
-
-    return mViewWidget;
-}
-
-//==============================================================================
-
 SolverInterfaces SimulationExperimentViewPlugin::solverInterfaces() const
 {
     // Return our solver interfaces

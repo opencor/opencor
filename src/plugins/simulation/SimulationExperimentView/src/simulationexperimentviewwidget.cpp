@@ -193,7 +193,7 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
     if (!mSimulationWidget) {
         // No simulation widget exists for the given file, so create one
 
-        mSimulationWidget = new SimulationExperimentViewSimulationWidget(mPlugin, pFileName, this);
+        mSimulationWidget = new SimulationExperimentViewSimulationWidget(mPlugin, this, pFileName, this);
 
         // Keep track of our editing widget
 

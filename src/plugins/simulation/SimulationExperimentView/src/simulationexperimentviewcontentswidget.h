@@ -47,6 +47,7 @@ namespace SimulationExperimentView {
 class SimulationExperimentViewInformationWidget;
 class SimulationExperimentViewPlugin;
 class SimulationExperimentViewSimulationWidget;
+class SimulationExperimentViewWidget;
 
 //==============================================================================
 
@@ -56,6 +57,7 @@ class SimulationExperimentViewContentsWidget : public Core::SplitterWidget
 
 public:
     explicit SimulationExperimentViewContentsWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                    SimulationExperimentViewWidget *pViewWidget,
                                                     SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                     QWidget *pParent);
 
