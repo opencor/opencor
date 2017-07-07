@@ -297,19 +297,6 @@ CellmlFileRdfTriple::ModelQualifier CellmlFileRdfTriple::modelQualifier() const
 
 //==============================================================================
 
-CellmlFileRdfTriple::ModelQualifier CellmlFileRdfTriple::modelQualifier(const QString &pModelQualifier)
-{
-    // Return the given RDF triple's model qualifier
-
-    for (int i = FirstModelQualifier; i <= LastModelQualifier; ++i)
-        if (!pModelQualifier.compare(modelQualifierAsString(ModelQualifier(i))))
-            return ModelQualifier(i);
-
-    return ModelUnknown;
-}
-
-//==============================================================================
-
 QString CellmlFileRdfTriple::modelQualifierAsString() const
 {
     // Return the RDF triple's model qualifier as a string
@@ -350,20 +337,6 @@ CellmlFileRdfTriple::BioQualifier CellmlFileRdfTriple::bioQualifier() const
     // Return the RDF triple's bio(logy) qualifier
 
     return mBioQualifier;
-}
-
-//==============================================================================
-
-CellmlFileRdfTriple::BioQualifier CellmlFileRdfTriple::bioQualifier(const QString &pBioQualifier)
-{
-    // Return the given RDF triple's bio(logy) qualifier
-
-    for (int i = FirstBioQualifier; i <= LastBioQualifier; ++i) {
-        if (!pBioQualifier.compare(bioQualifierAsString(BioQualifier(i))))
-            return BioQualifier(i);
-    }
-
-    return BioUnknown;
 }
 
 //==============================================================================

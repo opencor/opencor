@@ -119,12 +119,10 @@ public:
     QString qualifierAsString() const;
 
     ModelQualifier modelQualifier() const;
-    static ModelQualifier modelQualifier(const QString &pModelQualifier);
     QString modelQualifierAsString() const;
     static QString modelQualifierAsString(const ModelQualifier &pModelQualifier);
 
     BioQualifier bioQualifier() const;
-    static BioQualifier bioQualifier(const QString &pBioQualifier);
     QString bioQualifierAsString() const;
     static QString bioQualifierAsString(const BioQualifier &pBioQualifier);
 
