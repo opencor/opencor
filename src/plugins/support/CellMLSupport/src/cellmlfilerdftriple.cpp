@@ -488,8 +488,8 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
     // Decode the term, based on whether it matches that of a MIRIAN URN or an
     // identifiers.org URI
 
-    static const QRegularExpression MiriamUrnRegEx = QRegularExpression("^urn:miriam:"+ResourceRegExp+":"+IdRegExp);
-    static const QRegularExpression IdentifierDotOrgRegEx = QRegularExpression("^http://identifiers.org/"+ResourceRegExp+"/#?"+IdRegExp);
+    static const QRegularExpression MiriamUrnRegEx = QRegularExpression("^urn:miriam:"+ResourceRegEx+":"+IdRegEx);
+    static const QRegularExpression IdentifierDotOrgRegEx = QRegularExpression("^http://identifiers.org/"+ResourceRegEx+"/#?"+IdRegEx);
 
     if (MiriamUrnRegEx.match(pTerm).hasMatch()) {
         // The term is a MIRIAM URN, so retrieve its corresponding resource and
