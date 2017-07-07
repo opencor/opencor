@@ -545,7 +545,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
         QString foundString = mScanner.tokenString();
 
         if (mScanner.tokenType() != CellmlTextViewScanner::EofToken)
-            foundString = QString("'%1'").arg(QScintillaSupport::QScintillaWidget::checkString(foundString));
+            foundString = QString("'%1'").arg(QScintillaSupport::QScintillaWidget::specials(foundString));
 
         addUnexpectedTokenErrorMessage(pExpectedString, foundString);
 
