@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // CellML Annotation view metadata edit details widget
 //==============================================================================
 
+#include "cellmlannotationview.h"
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
@@ -565,13 +566,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
             QString itemInformation = item.resource()+"|"+item.id();
             QString itemInformationSha1 = Core::sha1(itemInformation);
-            QString resourceUrl = CellmlAnnotationViewWidget::resourceUrl(item.resource());
-            QString idUrl = CellmlAnnotationViewWidget::idUrl(item.resource(), item.id());
 
             if (!mUrls.contains(item.resource()))
-                mUrls.insert(item.resource(), resourceUrl);
+                mUrls.insert(item.resource(), resourceUrl(item.resource()));
 
-            mUrls.insert(itemInformation, idUrl);
+            mUrls.insert(itemInformation, idUrl(item.resource(), item.id()));
 
             mItemInformationSha1s << itemInformationSha1;
 
