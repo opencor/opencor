@@ -73,11 +73,6 @@ public:
 
     QString siteName() const;
 
-    static QString getEmptyDirectory();
-    static QString getNonGitDirectory();
-
-    static bool isGitDirectory(const QString &pDirName);
-
 private:
     enum Action {
         None,
