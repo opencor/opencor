@@ -21,8 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // BioSignalML API plugin
 //==============================================================================
 
-#ifndef BioSignalMLAPIPLUGIN_H
-#define BioSignalMLAPIPLUGIN_H
+#pragma once
 
 //==============================================================================
 
