@@ -18,19 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CellML Annotation view widget
+// CellML Annotation view
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "corecliutils.h"
-#include "viewwidget.h"
-
-//==============================================================================
-
-#include <QMap>
+#include <QString>
 
 //==============================================================================
 
@@ -39,50 +34,8 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewEditingWidget;
-class CellMLAnnotationViewPlugin;
-
-//==============================================================================
-
-class CellmlAnnotationViewWidget : public Core::ViewWidget
-{
-    Q_OBJECT
-
-public:
-    explicit CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPlugin,
-                                        QWidget *pParent);
-
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
-    virtual void retranslateUi();
-
-    bool contains(const QString &pFileName) const;
-
-    void initialize(const QString &pFileName);
-    void finalize(const QString &pFileName);
-
-    void filePermissionsChanged(const QString &pFileName);
-    void fileReloaded(const QString &pFileName);
-    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
-
-    virtual QWidget * widget(const QString &pFileName);
-
-    bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
-
-private:
-    CellMLAnnotationViewPlugin *mPlugin;
-
-    CellmlAnnotationViewEditingWidget *mEditingWidget;
-    QMap<QString, CellmlAnnotationViewEditingWidget *> mEditingWidgets;
-
-    QIntList mEditingWidgetSizes;
-    QIntList mMetadataDetailsWidgetSizes;
-
-private slots:
-    void editingWidgetSplitterMoved(const QIntList &pSizes);
-    void metadataDetailsWidgetSplitterMoved(const QIntList &pSizes);
-};
+QString resourceUrl(const QString &pResource);
+QString idUrl(const QString &pResource, const QString &pId);
 
 //==============================================================================
 

@@ -22,13 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "borderedwidget.h"
+#include "cellmlannotationview.h"
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
 #include "cellmlannotationviewplugin.h"
-#include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "treeviewwidget.h"
@@ -295,7 +295,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(WebVi
     // The user requested a resource to be looked up, so retrieve it using
     // identifiers.org
 
-    pWebViewer->webView()->load(CellmlAnnotationViewWidget::resourceUrl(pResource));
+    pWebViewer->webView()->load(resourceUrl(pResource));
 }
 
 //==============================================================================
@@ -307,7 +307,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(WebViewerWi
     // The user requested a resource id to be looked up, so retrieve it using
     // identifiers.org
 
-    pWebViewer->webView()->load(CellmlAnnotationViewWidget::idUrl(pResource, pId));
+    pWebViewer->webView()->load(idUrl(pResource, pId));
 }
 
 //==============================================================================

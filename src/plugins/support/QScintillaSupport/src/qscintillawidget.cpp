@@ -112,8 +112,7 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
     // Add support for Specials (Unicode block)
     // Note #1: see issue #709 for more information...
-    // Note #2: make sure that checkString() supports the below
-    //          representations...
+    // Note #2: make sure that specials() supports the below representations...
 
     SendScintilla(SCI_SETREPRESENTATION, "\xef\xbf\xb9", "IAA");
     SendScintilla(SCI_SETREPRESENTATION, "\xef\xbf\xba", "IAS");
@@ -475,7 +474,7 @@ int QScintillaWidget::zoomLevel() const
 
 //==============================================================================
 
-QString QScintillaWidget::checkString(const QString &pString)
+QString QScintillaWidget::specials(const QString &pString)
 {
     // Check whether the given string is one of the Specials (Unicode block)
     // Note: see the customised representation of the Specials (Unicode block)

@@ -55,9 +55,6 @@ namespace GraphPanelWidget {
 static const double DefMinAxis =    0.0;
 static const double DefMaxAxis = 1000.0;
 
-static const QRectF DefPlotRect = QRectF(DefMinAxis, DefMinAxis,
-                                         DefMaxAxis, DefMaxAxis);
-
 //==============================================================================
 
 class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraph : public QwtPlotCurve
