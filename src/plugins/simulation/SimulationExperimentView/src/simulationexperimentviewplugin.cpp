@@ -184,26 +184,7 @@ bool SimulationExperimentViewPlugin::pluginInterfacesOk(const QString &pFileName
 
 void SimulationExperimentViewPlugin::initializePlugin()
 {
-    // Create our Simulation Experiment view widget
-
-    mViewWidget = new SimulationExperimentViewWidget(this, mSolverInterfaces,
-                                                     mDataStoreInterfaces,
-                                                     mCellmlEditingViewPlugins,
-                                                     mCellmlSimulationViewPlugins,
-                                                     mSedmlFileTypeInterface,
-                                                     mCombineFileTypeInterface,
-                                                     Core::mainWindow());
-
-    mViewWidget->setObjectName("SimulationExperimentViewWidget");
-
-    // Hide our Simulation Experiment view widget since it may not initially be
-    // shown in  our central widget
-
-    mViewWidget->setVisible(false);
-
-    // Save the view widget for our Python wrapper
-
-    instance()->mViewWidget = mViewWidget;
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -265,6 +246,27 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
                 mCombineFileTypeInterface = fileTypeInterface;
         }
     }
+
+    // Create our Simulation Experiment view widget
+
+    mViewWidget = new SimulationExperimentViewWidget(this, mSolverInterfaces,
+                                                     mDataStoreInterfaces,
+                                                     mCellmlEditingViewPlugins,
+                                                     mCellmlSimulationViewPlugins,
+                                                     mSedmlFileTypeInterface,
+                                                     mCombineFileTypeInterface,
+                                                     Core::mainWindow());
+
+    mViewWidget->setObjectName("SimulationExperimentViewWidget");
+
+    // Hide our Simulation Experiment view widget since it may not initially be
+    // shown in  our central widget
+
+    mViewWidget->setVisible(false);
+
+    // Save the view widget for our Python wrapper
+
+    instance()->mViewWidget = mViewWidget;
 }
 
 //==============================================================================
