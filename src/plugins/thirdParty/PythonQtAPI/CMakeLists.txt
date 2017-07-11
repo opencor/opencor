@@ -80,14 +80,6 @@ IF(USE_PREBUILT_PYTHONQT_PACKAGE)
                               SHA1_VALUES e2ddd1bc147a0bb8f6c56e000f6a53695d45b403)
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
-
-    # Use the `qmake` that is in our PATH
-
-    FIND_PROGRAM(QMAKE_EXECUTABLE qmake)
-
     # Set platform specific configuration options and tool names
 
     IF(WIN32)
@@ -148,7 +140,7 @@ ELSE()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${QMAKE_EXECUTABLE} ${QMAKE_DEBUG_OPTION} ${QMAKE_LFLAGS_OPTION} -r PythonQtOpenCOR.pro
+            ${QMAKE_COMMAND} ${QMAKE_DEBUG_OPTION} ${QMAKE_LFLAGS_OPTION} -r PythonQtOpenCOR.pro
         BUILD_COMMAND
             ${MAKE_COMMAND}
         INSTALL_COMMAND

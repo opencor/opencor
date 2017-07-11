@@ -147,9 +147,7 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
         )
     ENDIF()
 ELSE()
-    # Rely on the ExternalProject module to build our package
-
-    INCLUDE(ExternalProject)
+    # Set platform specific configuration options
 
     IF(UNIX AND NOT APPLE)
         SET(CMAKE_INSTALL_RPATH_OPTION -DCMAKE_INSTALL_RPATH=$ORIGIN/../lib)
