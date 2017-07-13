@@ -91,16 +91,12 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
                                                                              const QString &pText,
                                                                              iface::cellml_api::CellMLElement *pElement,
                                                                              const int &pNumber) :
-    QStandardItem(pText)
+    QStandardItem(pText),
+    mCategory(pCategory),
+    mType(pType),
+    mElement(pElement),
+    mNumber(pNumber)
 {
-    // Some initialisations
-
-    mCategory = pCategory;
-    mType = pType;
-
-    mElement = pElement;
-
-    mNumber = pNumber;
 }
 
 //==============================================================================

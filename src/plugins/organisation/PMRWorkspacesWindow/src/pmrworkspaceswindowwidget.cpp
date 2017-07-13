@@ -73,18 +73,15 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  const QString &pText,
                                                  const QIcon &pCollapsedIcon,
                                                  const QIcon &pExpandedIcon) :
-    QStandardItem(pIcon, pText)
+    QStandardItem(pIcon, pText),
+    mType(pType),
+    mTreeViewWidget(pTreeViewWidget),
+    mTreeViewProxyModel(pTreeViewProxyModel),
+    mWorkspace(pWorkspace),
+    mFileNode(pFileNode),
+    mCollapsedIcon(pCollapsedIcon),
+    mExpandedIcon(pExpandedIcon)
 {
-    // Some initialisations
-
-    mType = pType;
-    mTreeViewWidget = pTreeViewWidget;
-    mTreeViewProxyModel = pTreeViewProxyModel;
-    mWorkspace = pWorkspace;
-    mFileNode = pFileNode;
-    mCollapsedIcon = pCollapsedIcon;
-    mExpandedIcon = pExpandedIcon;
-
     // Customise ourselves
 
     setToolTip(text());
