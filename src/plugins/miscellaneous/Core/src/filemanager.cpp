@@ -183,7 +183,7 @@ File * FileManager::file(const QString &pFileName) const
 {
     // Return the File object, if any, associated with the given file
 
-    return mFiles.value(nativeCanonicalFileName(pFileName), 0);
+    return mFiles.value(nativeCanonicalFileName(pFileName));
 }
 
 //==============================================================================
@@ -565,8 +565,7 @@ FileManager::Status FileManager::rename(const QString &pOldFileName,
 {
     // Make sure that the given 'old' file is managed
 
-    QString oldNativeFileName = nativeCanonicalFileName(pOldFileName);
-    File *nativeFile = file(oldNativeFileName);
+    File *nativeFile = file(pOldFileName);
 
     if (nativeFile) {
         // The 'old' file is managed, so rename it and let people know about it
@@ -574,7 +573,9 @@ FileManager::Status FileManager::rename(const QString &pOldFileName,
         QString newNativeFileName = nativeCanonicalFileName(pNewFileName);
 
         if (nativeFile->setFileName(newNativeFileName)) {
-            mFiles.insert(newNativeFileName, mFiles.value(oldNativeFileName));
+            QString oldNativeFileName = nativeCanonicalFileName(pOldFileName);
+
+            mFiles.insert(newNativeFileName, nativeFile);
             mFiles.remove(oldNativeFileName);
 
             emit fileRenamed(oldNativeFileName, newNativeFileName);

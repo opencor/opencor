@@ -40,14 +40,11 @@ namespace PMRSupport {
 //==============================================================================
 
 PmrWebService::PmrWebService(const QString &pPmrUrl, QObject *pParent) :
-    QObject(pParent)
+    QObject(pParent),
+    mPmrUrl(pPmrUrl),
+    mUrlExposures(QMap<QString, PmrExposure *>()),
+    mFileExposuresLeftCount(QMap<PmrExposure *, int>())
 {
-    // Some initialisations
-
-    mPmrUrl = pPmrUrl;
-    mUrlExposures = QMap<QString, PmrExposure *>();
-    mFileExposuresLeftCount = QMap<PmrExposure *, int>();
-
     // Create a PMR web service manager so that we can retrieve various things
     // from PMR
 

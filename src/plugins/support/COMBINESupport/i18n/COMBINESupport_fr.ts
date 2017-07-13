@@ -9,7 +9,7 @@
     </message>
 </context>
 <context>
-    <name>QObject</name>
+    <name>OpenCOR::COMBINESupport::CombineArchive</name>
     <message>
         <source>the archive does not exist</source>
         <translation>l&apos;archive n&apos;existe pas</translation>

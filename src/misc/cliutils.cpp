@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QCoreApplication>
 #include <QDir>
-#include <QFileInfo>
 #include <QNetworkAccessManager>
 #include <QNetworkInterface>
 #include <QNetworkProxyFactory>

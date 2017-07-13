@@ -26,7 +26,9 @@ ADD_PLUGIN(CellMLSupport
         ../../solverinterface.h
 
         src/cellmlfile.h
+        src/cellmlfilecellml10exporter.h
         src/cellmlfilemanager.h
+        src/cellmlfileruntime.h
         src/cellmlsupportplugin.h
     PLUGINS
         CellMLAPI

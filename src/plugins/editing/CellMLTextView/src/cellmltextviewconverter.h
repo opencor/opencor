@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDomNode>
 #include <QMap>
+#include <QObject>
 #include <QStringList>
 
 //==============================================================================
@@ -58,8 +59,10 @@ typedef QList<CellMLTextViewConverterWarning> CellMLTextViewConverterWarnings;
 
 //==============================================================================
 
-class CellMLTextViewConverter
+class CellMLTextViewConverter : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit CellMLTextViewConverter();
 

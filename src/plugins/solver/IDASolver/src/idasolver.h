@@ -117,8 +117,10 @@ private:
 
 //==============================================================================
 
-class IdaSolver : public Solver::DaeSolver
+class IdaSolver : public OpenCOR::Solver::DaeSolver
 {
+    Q_OBJECT
+
 public:
     explicit IdaSolver();
     ~IdaSolver();

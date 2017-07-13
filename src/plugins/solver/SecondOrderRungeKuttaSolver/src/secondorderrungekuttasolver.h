@@ -42,8 +42,10 @@ static const double StepDefaultValue = 1.0;
 
 //==============================================================================
 
-class SecondOrderRungeKuttaSolver : public Solver::OdeSolver
+class SecondOrderRungeKuttaSolver : public OpenCOR::Solver::OdeSolver
 {
+    Q_OBJECT
+
 public:
     explicit SecondOrderRungeKuttaSolver();
     ~SecondOrderRungeKuttaSolver();

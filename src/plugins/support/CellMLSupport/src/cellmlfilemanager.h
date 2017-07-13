@@ -52,9 +52,9 @@ public:
     CellmlFile * cellmlFile(const QString &pFileName);
 
 protected:
-    virtual bool canLoadFile(const QString &pFileName) const;
+    virtual bool canLoad(const QString &pFileName) const;
 
-    virtual QObject * newFile(const QString &pFileName) const;
+    virtual QObject * create(const QString &pFileName) const;
 };
 
 //==============================================================================

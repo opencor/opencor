@@ -161,6 +161,9 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
     file.flush();
 
     libsedml::SedDocument *sedmlDocument = libsedml::readSedML(file.fileName().toUtf8().constData());
+
+    file.close();
+
     libsedml::SedErrorLog *errorLog = sedmlDocument->getErrorLog();
 
     for (uint i = 0, iMax = errorLog->getNumErrors(); i < iMax; ++i) {
@@ -192,8 +195,6 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
         pIssues << SedmlFileIssue(issueType, error->getLine(), error->getColumn(), errorMessage);
     }
-
-    file.close();
 
     // Only consider the given file contents SED-ML valid if it has no errors
 

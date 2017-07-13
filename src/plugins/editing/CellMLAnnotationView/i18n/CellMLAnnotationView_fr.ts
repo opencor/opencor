@@ -9,6 +9,17 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlElementItem</name>
+    <message>
+        <source>Group #%1</source>
+        <translation>Groupe n° %1</translation>
+    </message>
+    <message>
+        <source>Connection #%1</source>
+        <translation>Connexion n° %1</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewCellmlListWidget</name>
     <message>
         <source>Expand All</source>
@@ -408,17 +419,6 @@
     <message>
         <source>Object</source>
         <translation>Objet</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Group #%1</source>
-        <translation>Groupe n° %1</translation>
-    </message>
-    <message>
-        <source>Connection #%1</source>
-        <translation>Connexion n° %1</translation>
     </message>
 </context>
 </TS>

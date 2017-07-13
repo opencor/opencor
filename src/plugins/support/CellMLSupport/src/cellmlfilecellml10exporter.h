@@ -49,6 +49,8 @@ namespace CellMLSupport {
 
 class CellmlFileCellml10Exporter : public CellmlFileCellmlExporter
 {
+    Q_OBJECT
+
 public:
     explicit CellmlFileCellml10Exporter(iface::cellml_api::Model *pModel,
                                         const QString &pFileName);
