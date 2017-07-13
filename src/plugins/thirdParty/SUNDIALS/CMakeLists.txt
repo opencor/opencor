@@ -10,14 +10,8 @@ SET(PACKAGE_VERSION 2.7.0)
 SET(MAJOR_ARKODE_LIBRARY_VERSION 1)
 SET(ARKODE_LIBRARY_VERSION ${MAJOR_ARKODE_LIBRARY_VERSION}.1.0)
 
-SET(MAJOR_CVODE_LIBRARY_VERSION 2)
-SET(CVODE_LIBRARY_VERSION ${MAJOR_CVODE_LIBRARY_VERSION}.9.0)
-
 SET(MAJOR_CVODES_LIBRARY_VERSION 2)
 SET(CVODES_LIBRARY_VERSION ${MAJOR_CVODES_LIBRARY_VERSION}.9.0)
-
-SET(MAJOR_IDA_LIBRARY_VERSION 2)
-SET(IDA_LIBRARY_VERSION ${MAJOR_IDA_LIBRARY_VERSION}.9.0)
 
 SET(MAJOR_IDAS_LIBRARY_VERSION 1)
 SET(IDAS_LIBRARY_VERSION ${MAJOR_IDAS_LIBRARY_VERSION}.3.0)
@@ -42,14 +36,8 @@ IF(WIN32)
     SET(ARKODE_SHARED_LIBRARY sundials_arkode${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(ARKODE_IMPORT_LIBRARY sundials_arkode${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
-    SET(CVODE_SHARED_LIBRARY sundials_cvode${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(CVODE_IMPORT_LIBRARY sundials_cvode${CMAKE_IMPORT_LIBRARY_SUFFIX})
-
     SET(CVODES_SHARED_LIBRARY sundials_cvodes${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(CVODES_IMPORT_LIBRARY sundials_cvodes${CMAKE_IMPORT_LIBRARY_SUFFIX})
-
-    SET(IDA_SHARED_LIBRARY sundials_ida${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(IDA_IMPORT_LIBRARY sundials_ida${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
     SET(IDAS_SHARED_LIBRARY sundials_idas${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(IDAS_IMPORT_LIBRARY sundials_idas${CMAKE_IMPORT_LIBRARY_SUFFIX})
@@ -63,14 +51,8 @@ ELSE()
     SET(ARKODE_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_arkode${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_ARKODE_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     SET(ARKODE_IMPORT_LIBRARY ${ARKODE_SHARED_LIBRARY})
 
-    SET(CVODE_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvode${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_CVODE_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-    SET(CVODE_IMPORT_LIBRARY ${CVODE_SHARED_LIBRARY})
-
     SET(CVODES_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvodes${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_CVODES_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     SET(CVODES_IMPORT_LIBRARY ${CVODES_SHARED_LIBRARY})
-
-    SET(IDA_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_ida${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_IDA_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-    SET(IDA_IMPORT_LIBRARY ${IDA_SHARED_LIBRARY})
 
     SET(IDAS_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_idas${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_IDAS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     SET(IDAS_IMPORT_LIBRARY ${IDAS_SHARED_LIBRARY})
@@ -88,9 +70,7 @@ SET(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
 
 SET(EXTERNAL_BINARIES
     ${ARKODE_SHARED_LIBRARY}
-    ${CVODE_SHARED_LIBRARY}
     ${CVODES_SHARED_LIBRARY}
-    ${IDA_SHARED_LIBRARY}
     ${IDAS_SHARED_LIBRARY}
     ${KINSOL_SHARED_LIBRARY}
     ${NVECSERIAL_SHARED_LIBRARY}
@@ -100,9 +80,7 @@ SET(EXTERNAL_BINARIES
 
 SET(SHA1_FILES
     lib/${ARKODE_SHARED_LIBRARY}
-    lib/${CVODE_SHARED_LIBRARY}
     lib/${CVODES_SHARED_LIBRARY}
-    lib/${IDA_SHARED_LIBRARY}
     lib/${IDAS_SHARED_LIBRARY}
     lib/${KINSOL_SHARED_LIBRARY}
     lib/${NVECSERIAL_SHARED_LIBRARY}
@@ -111,9 +89,7 @@ SET(SHA1_FILES
 IF(WIN32)
     LIST(APPEND SHA1_FILES
         lib/${ARKODE_IMPORT_LIBRARY}
-        lib/${CVODE_IMPORT_LIBRARY}
         lib/${CVODES_IMPORT_LIBRARY}
-        lib/${IDA_IMPORT_LIBRARY}
         lib/${IDAS_IMPORT_LIBRARY}
         lib/${KINSOL_IMPORT_LIBRARY}
         lib/${NVECSERIAL_IMPORT_LIBRARY}
@@ -131,60 +107,48 @@ IF(USE_PREBUILT_SUNDIALS_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 9d43ca35e4c9e2fd8b43e9e6aa855976f01e588b
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 65d6cfa2bd3a0b80d9a6fb0178cbd1b7a80ee618
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES a8fb82dfaa68842509822a22cede007e9231a336
-                                              bc3c32eb02d2e57620f14142e6a01be49cbd3782
-                                              a0c06e21ae76f5cab8a6750037df0da3d3f89808
-                                              c03b69c6674eb61ebdbd9f6919b983e0659a5b37
-                                              b1b836bcbcdc7026a39a4bce2fcc482e1995a949
-                                              3aa3803990175d2e84119494ac8380413ec2b247
-                                              9597ce789d0ac17636c4649eb65294ca391b9a2e
-                                              3268af524ad4a8705a8e3fc2b295cbbdec53f07f
-                                              40a6ec5798f980125ce21b64f3a610ea8bfff15c
-                                              7c1909283853a3e68f2a738c5460848572bef721
-                                              9e75774f626042dc8c648fd8dff1dea3390e4c02
-                                              30bad4f68af01abed35685a69479dc7951f4cf84
-                                              58c63672456a4e9371d0b5d072487d07860a3eb0
-                                              ddbd155406887c614384e3e2c337fc1e18640171)
+                                  SHA1_VALUES 981a74f64f8b3957cc862b370c03a6d67f87e917
+                                              312e944cc07c6d821b7064e82dfcfd920cafd946
+                                              1f7719286684786637e38f8a2b694c9dd35c23b7
+                                              c1ad870853bf2e8339e830f526c7ec1a13b3d1bd
+                                              05f2d80718b504b9768aa94bcdac4398fb84ae9a
+                                              31c4f1dd3e792126b24603ab9ee2e82a88a9437f
+                                              6fb7bfa1820b8a11faecc1505a99deb266cbb8c3
+                                              6c800b44ec8613446c23466b9ccc694119220d1d
+                                              2b56025cd7e4b9d02287835fc9759e79b15f34f4
+                                              2c72755f32a0d910d9f48e7f33fe99ae0016d676)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 75d9ec874ead43a9be9b4765ee1133ca9380d5c1
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 8c9009c727e1b8f19758275f91d34f5c34686a84
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES c3e1583f21ca75f1dde63d6d55ee9119feafc41e
-                                              e601a04e0b5848522b9c42241b996951c436ab5b
-                                              c2591bc9d6fc41c9d74b4bd5d2f73b246c78efef
-                                              19e50452318df2554dcafac4106f62562b15b75d
-                                              bee74ca116cca95adb4cebf37d5d0768a47115f9
-                                              acc1ca4d80c0be2f2403632a862679421d1786a4
-                                              3d366ac08277d7c325a73c9550b43cbdc2719080
-                                              0c8644a078305a28f221e74c254a02d746936956
-                                              e50bdcaa5085442c566fb5b4a5dbd692594ef9be
-                                              07c6c938182eb9b193f7ed7e91f02c2b26c472ae
-                                              1a7c175e6f5db4e268cfaef9e65a1fe414cbd8b0
-                                              d3daddcabcf7303b5d58325362e1676a914436ac
-                                              7a8ee171507bea1120a845767f94cf28c07ca40c
-                                              4033f46c9daec99c2b8afdd0f2d30819bcbfd5e4)
+                                  SHA1_VALUES 561ea165db15174a74935d3ae4b0c4c5bffce816
+                                              89e863398b63a06643692832666e21544730675b
+                                              b59a082bb323e3dba116e5f78c98c02d061f0b81
+                                              9343663072e6c62781238e1fbea5fb4b55b1c3c2
+                                              e109e10e48e6d6c03fa137420a2fa02b08b6d700
+                                              cde7347ae68095b0c7269feeb27702574917fc99
+                                              66eb18f42754f6a7a7b17fd6803e79382f4975cf
+                                              ef54253fdd622418b453e27b4209ad68cefc9900
+                                              4c525ac83068dfa00da13c76782a6b861aa1bf60
+                                              6527a14051c9509ee66d20e891ea4900c683f7bb)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 1796c98ea737c207bd376e95c25bb3c224f630b0
+                              ${RELATIVE_PROJECT_SOURCE_DIR} da45377e8456b5419d85a545e6b48d0e4f0abb64
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 4caa69790860135deea7ea3c4f91aae0dfc400fa
-                                          c2cc5c1b20fabbc2748adb0e382fc429ed646421
                                           7005fcb4eb20ed1d0afee0e6273e2243ec91ede3
-                                          a1e0ee55dd5f1ad4ab61065e64809afb053a2631
                                           8f82bf373800c0b8382d7d4ad8150a1e5e644a8a
                                           ea3e07230d3960d2fdf4bdc47b83a8f71da48877
                                           642e874feb5f36cca092ea7554b45facaccdc458)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 3b0551acc4b9ef7f72db17e3e9809250eefc9fe4
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 1c53165d1d16f9cffd4c117e6c5b35d670f43fcf
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 8285005ceb95212af91f51cee8d4be53849a4ee7
-                                          64dacb60af2f993682bb766d49eef986e1be5e6a
                                           d02a46720eb935cd6342f5e0289551c77b139ddf
-                                          2cdd1262fbe50108d11e18e2b8e2882ac5d0acf4
                                           b2a7ea41b5796582b536113f156bcee99bf73204
                                           b9b009f5513764cd0af2ecab8c9fce31d63cc334
                                           e4916654986ea7efc63cbd1cb510cc68582fc144)
@@ -217,6 +181,8 @@ ELSE()
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
             --no-warn-unused-cli
+            -DBUILD_CVODE=OFF
+            -DBUILD_IDA=OFF
             -DBUILD_STATIC_LIBS=OFF
             ${DEFINE_CMAKE_APPLE_OPTIONS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
@@ -225,9 +191,7 @@ ELSE()
             -DNO_FPRINTF_OUTPUT=ON
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${ARKODE_IMPORT_LIBRARY}
-            <INSTALL_DIR>/lib/${CVODE_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${CVODES_IMPORT_LIBRARY}
-            <INSTALL_DIR>/lib/${IDA_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${IDAS_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${KINSOL_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${NVECSERIAL_IMPORT_LIBRARY}
@@ -246,24 +210,10 @@ ELSE()
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCvodeLibrary
-                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${CVODE_SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvode${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${CVODE_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
-                                                                  ${CVODE_SHARED_LIBRARY}
-                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
-                                 DEPENDEES install)
-
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCvodesLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${CVODES_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvodes${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${CVODES_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${CVODES_SHARED_LIBRARY}
-                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
-                                 DEPENDEES install)
-
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyIdaLibrary
-                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${IDA_SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_ida${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${IDA_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
-                                                                  ${IDA_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
@@ -305,17 +255,13 @@ ENDIF()
 SET(SUNDIALS_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
 SET(SUNDIALS_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
 SET(SUNDIALS_ARKODE_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${ARKODE_IMPORT_LIBRARY} PARENT_SCOPE)
-SET(SUNDIALS_CVODE_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CVODE_IMPORT_LIBRARY} PARENT_SCOPE)
 SET(SUNDIALS_CVODES_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CVODES_IMPORT_LIBRARY} PARENT_SCOPE)
-SET(SUNDIALS_IDA_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IDA_IMPORT_LIBRARY} PARENT_SCOPE)
 SET(SUNDIALS_IDAS_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IDAS_IMPORT_LIBRARY} PARENT_SCOPE)
 SET(SUNDIALS_KINSOL_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${KINSOL_IMPORT_LIBRARY} PARENT_SCOPE)
 SET(SUNDIALS_NVECSERIAL_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${NVECSERIAL_IMPORT_LIBRARY} PARENT_SCOPE)
 SET(SUNDIALS_LIBRARIES
     ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_ARKODE_LIBRARY}
-    ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_CVODE_LIBRARY}
     ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_CVODES_LIBRARY}
-    ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_IDA_LIBRARY}
     ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_IDAS_LIBRARY}
     ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_KINSOL_LIBRARY}
     ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_NVECSERIAL_LIBRARY}
