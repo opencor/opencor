@@ -11,6 +11,7 @@ ADD_PLUGIN(Compiler
         src/compilermath.cpp
         src/compilerplugin.cpp
     HEADERS_MOC
+        src/compilerengine.h
         src/compilerplugin.h
     PLUGINS
         Core

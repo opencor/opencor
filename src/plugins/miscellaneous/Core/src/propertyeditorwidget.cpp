@@ -1005,7 +1005,7 @@ void Property::updateToolTip()
     QString toolTip = mName->text();
 
     if (mType != Section) {
-        toolTip += QObject::tr(": ");
+        toolTip += tr(": ");
 
         if (mValue->text().isEmpty())
             toolTip += UnknownValue;

@@ -13,6 +13,7 @@ ADD_PLUGIN(CVODESolver
     HEADERS_MOC
         ../../solverinterface.h
 
+        src/cvodesolver.h
         src/cvodesolverplugin.h
     PLUGINS
         SUNDIALS

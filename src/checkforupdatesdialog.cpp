@@ -110,9 +110,9 @@ void CheckForUpdatesEngine::check()
 
             mStatus = QString();
         } else {
-            mStatus =  QObject::tr("The version information is mal-formatted.")
+            mStatus =  tr("The version information is mal-formatted.")
                       +"<br/>"
-                      +QObject::tr("Please <a href=\"http://opencor.ws/user/contactUs.html\">contact us</a> about this error.");
+                      +tr("Please <a href=\"http://opencor.ws/user/contactUs.html\">contact us</a> about this error.");
         }
     } else {
         mStatus = formatMessage(errorMessage, false, true);

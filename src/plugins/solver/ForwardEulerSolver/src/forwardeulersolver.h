@@ -42,8 +42,10 @@ static const double StepDefaultValue = 1.0;
 
 //==============================================================================
 
-class ForwardEulerSolver : public Solver::OdeSolver
+class ForwardEulerSolver : public OpenCOR::Solver::OdeSolver
 {
+    Q_OBJECT
+
 public:
     explicit ForwardEulerSolver();
 

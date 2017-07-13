@@ -471,7 +471,7 @@ void CellmlTextViewScanner::getMultilineComment()
     }
 
     mTokenType = InvalidToken;
-    mTokenComment = QObject::tr("The comment is incomplete.");
+    mTokenComment = tr("The comment is incomplete.");
 }
 
 //==============================================================================
@@ -608,7 +608,7 @@ void CellmlTextViewScanner::getNumber()
             // We started an exponent part, but it isn't followed by digits
 
             mTokenType = InvalidToken;
-            mTokenComment = QObject::tr("The exponent has no digits.");
+            mTokenComment = tr("The exponent has no digits.");
 
             return;
         }
@@ -623,7 +623,7 @@ void CellmlTextViewScanner::getNumber()
     mTokenType = NumberToken;
 
     if (!validNumber)
-        mTokenComment = QObject::tr("The number is not valid (e.g. too big, too small).");
+        mTokenComment = tr("The number is not valid (e.g. too big, too small).");
 }
 
 //==============================================================================
@@ -652,7 +652,7 @@ void CellmlTextViewScanner::getString()
         getNextChar();
     } else {
         mTokenType = InvalidToken;
-        mTokenComment = QObject::tr("The string is incomplete.");
+        mTokenComment = tr("The string is incomplete.");
     }
 }
 
@@ -763,7 +763,7 @@ void CellmlTextViewScanner::getNextToken()
         break;
     case EofChar:
         mTokenType = EofToken;
-        mTokenString = QObject::tr("the end of the file");
+        mTokenString = tr("the end of the file");
 
         break;
     default:

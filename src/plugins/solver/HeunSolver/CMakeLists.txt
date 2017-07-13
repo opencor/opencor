@@ -13,6 +13,7 @@ ADD_PLUGIN(HeunSolver
     HEADERS_MOC
         ../../solverinterface.h
 
+        src/heunsolver.h
         src/heunsolverplugin.h
     QT_MODULES
         Widgets

@@ -70,8 +70,11 @@ public:
 
 //==============================================================================
 
-class CellmlAnnotationViewCellmlElementItem : public QStandardItem
+class CellmlAnnotationViewCellmlElementItem : public QObject,
+                                              public QStandardItem
 {
+    Q_OBJECT
+
 public:
     enum Type {
         Error                 = QStandardItem::UserType,

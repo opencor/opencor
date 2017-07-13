@@ -117,8 +117,10 @@ typedef QList<CellmlFileRuntimeParameter *> CellmlFileRuntimeParameters;
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileRuntime
+class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
 {
+    Q_OBJECT
+
 public:
     enum ModelType {
         Ode,

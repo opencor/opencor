@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>QObject</name>
+    <name>OpenCOR::IDASolver::IdaSolver</name>
     <message>
         <source>the &apos;maximum step&apos; property value could not be retrieved</source>
         <translation>la valeur de la propriété &apos;pas maximum&apos; n&apos;a pas pu être retrouvée</translation>

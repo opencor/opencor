@@ -83,8 +83,10 @@ typedef QDomElement (CellmlTextViewParser::*ParseNormalMathematicalExpressionFun
 
 //==============================================================================
 
-class CellmlTextViewParser
+class CellmlTextViewParser : public QObject
 {
+    Q_OBJECT
+
 public:
     enum StatementType {
         Unknown,

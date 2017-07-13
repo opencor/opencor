@@ -29,13 +29,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QObject>
 #include <QString>
 
 //==============================================================================
 
-#include "llvmclangbegin.h"
-    #include "llvm/ExecutionEngine/ExecutionEngine.h"
-#include "llvmclangend.h"
+namespace llvm {
+    class ExecutionEngine;
+}   // namespace llvm
 
 //==============================================================================
 
@@ -44,10 +45,13 @@ namespace Compiler {
 
 //==============================================================================
 
-class COMPILER_EXPORT CompilerEngine
+class COMPILER_EXPORT CompilerEngine : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit CompilerEngine();
+    ~CompilerEngine();
 
     bool hasError() const;
     QString error() const;
@@ -57,7 +61,7 @@ public:
     void * getFunction(const QString &pFunctionName);
 
 private:
-    std::unique_ptr<llvm::ExecutionEngine> mExecutionEngine;
+    llvm::ExecutionEngine *mExecutionEngine;
 
     QString mError;
 };

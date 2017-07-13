@@ -183,6 +183,17 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::CheckForUpdatesEngine</name>
+    <message>
+        <source>The version information is mal-formatted.</source>
+        <translation>Les informations sur la version sont mal formatées.</translation>
+    </message>
+    <message>
+        <source>Please &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
+        <translation>Veuillez &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::MainWindow</name>
     <message>
         <source>New</source>
@@ -351,14 +362,6 @@
 </context>
 <context>
     <name>QObject</name>
-    <message>
-        <source>The version information is mal-formatted.</source>
-        <translation>Les informations sur la version sont mal formatées.</translation>
-    </message>
-    <message>
-        <source>Please &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
-        <translation>Veuillez &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
-    </message>
     <message>
         <source>%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt; files.</source>
         <translation>%1 est un environnement de modélisation multiplate-forme, qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;.</translation>
