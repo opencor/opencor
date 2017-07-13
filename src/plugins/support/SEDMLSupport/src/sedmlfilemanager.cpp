@@ -46,7 +46,7 @@ SedmlFileManager * SedmlFileManager::instance()
 
     static SedmlFileManager instance;
 
-    return static_cast<SedmlFileManager *>(Core::globalInstance("OpenCOR::SEDMLSupport::SedmlFileManager",
+    return static_cast<SedmlFileManager *>(Core::globalInstance("OpenCOR::SEDMLSupport::SedmlFileManager::instance()",
                                                                 &instance));
 }
 

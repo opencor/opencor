@@ -44,7 +44,7 @@ CellmlFileManager * CellmlFileManager::instance()
 
     static CellmlFileManager instance;
 
-    return static_cast<CellmlFileManager *>(Core::globalInstance("OpenCOR::CellMLSupport::CellmlFileManager",
+    return static_cast<CellmlFileManager *>(Core::globalInstance("OpenCOR::CellMLSupport::CellmlFileManager::instance()",
                                                                  &instance));
 }
 

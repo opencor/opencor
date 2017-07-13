@@ -39,7 +39,7 @@ CombineFileManager * CombineFileManager::instance()
 
     static CombineFileManager instance;
 
-    return static_cast<CombineFileManager *>(Core::globalInstance("OpenCOR::COMBINESupport::CombineFileManager",
+    return static_cast<CombineFileManager *>(Core::globalInstance("OpenCOR::COMBINESupport::CombineFileManager::instance()",
                                                                   &instance));
 }
 

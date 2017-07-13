@@ -128,7 +128,7 @@ void CORE_EXPORT stringLineColumnAsPosition(const QString &pString,
                                             const int &pColumn, int &pPosition);
 
 void CORE_EXPORT * globalInstance(const QString &pObjectName,
-                                  void *pDefaultGlobalInstance);
+                                  void *pDefaultGlobalInstance = 0);
 
 QString CORE_EXPORT activeDirectory();
 void CORE_EXPORT setActiveDirectory(const QString &pDirName);
