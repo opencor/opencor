@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QMap>
+#include <QObject>
 #include <QString>
 
 //==============================================================================
@@ -39,8 +40,10 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-class CellmlTextViewScanner
+class CellmlTextViewScanner : public QObject
 {
+    Q_OBJECT
+
 public:
     enum TokenType {
         UnknownToken, SingleLineCommentToken, MultilineCommentToken,

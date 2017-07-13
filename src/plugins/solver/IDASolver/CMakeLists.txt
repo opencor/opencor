@@ -13,6 +13,7 @@ ADD_PLUGIN(IDASolver
     HEADERS_MOC
         ../../solverinterface.h
 
+        src/idasolver.h
         src/idasolverplugin.h
     PLUGINS
         SUNDIALS

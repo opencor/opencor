@@ -44,17 +44,13 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon,
                                      const QString &pExtraMessage,
                                      QWidget *pParent) :
     QLabel(pParent),
-    CommonWidget(this)
+    CommonWidget(this),
+    mScale(0.0),
+    mDefaultFontScale(1.35*font().pointSize()),
+    mIcon(pIcon),
+    mMessage(pMessage),
+    mExtraMessage(pExtraMessage)
 {
-    // Some initialisations
-
-    mScale = 0.0;
-    mDefaultFontScale = 1.35*font().pointSize();
-
-    mIcon = pIcon;
-    mMessage = pMessage;
-    mExtraMessage = pExtraMessage;
-
     // Some customisations
 
     setContextMenuPolicy(Qt::NoContextMenu);

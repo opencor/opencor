@@ -22,5 +22,4 @@ ADD_PLUGIN(SEDMLSupport
         CellMLSupport
         SBMLAPI
         SEDMLAPI
-        StandardSupport
 )

@@ -91,16 +91,12 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
                                                                              const QString &pText,
                                                                              iface::cellml_api::CellMLElement *pElement,
                                                                              const int &pNumber) :
-    QStandardItem(pText)
+    QStandardItem(pText),
+    mCategory(pCategory),
+    mType(pType),
+    mElement(pElement),
+    mNumber(pNumber)
 {
-    // Some initialisations
-
-    mCategory = pCategory;
-    mType = pType;
-
-    mElement = pElement;
-
-    mNumber = pNumber;
 }
 
 //==============================================================================
@@ -163,7 +159,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
         break;
     case Group:
-        setText(QObject::tr("Group #%1").arg(pNumber));
+        setText(tr("Group #%1").arg(pNumber));
 
         break;
     case RelationshipReference: {
@@ -179,7 +175,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
         break;
     case Connection:
-        setText(QObject::tr("Connection #%1").arg(pNumber));
+        setText(tr("Connection #%1").arg(pNumber));
 
         break;
     case ComponentMapping: {

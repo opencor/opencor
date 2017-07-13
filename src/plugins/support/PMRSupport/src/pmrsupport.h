@@ -18,57 +18,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Compiler engine
+// PMR support
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "compilerglobal.h"
+#include "pmrsupportglobal.h"
 
 //==============================================================================
 
-#include <QObject>
 #include <QString>
 
 //==============================================================================
 
-namespace llvm {
-    class ExecutionEngine;
-}   // namespace llvm
-
-//==============================================================================
-
 namespace OpenCOR {
-namespace Compiler {
+namespace PMRSupport {
 
 //==============================================================================
 
-class COMPILER_EXPORT CompilerEngine : public QObject
-{
-    Q_OBJECT
+QString PMRSUPPORT_EXPORT getEmptyDirectory();
+QString PMRSUPPORT_EXPORT getNonGitDirectory();
 
-public:
-    explicit CompilerEngine();
-    ~CompilerEngine();
-
-    bool hasError() const;
-    QString error() const;
-
-    bool compileCode(const QString &pCode);
-
-    void * getFunction(const QString &pFunctionName);
-
-private:
-    llvm::ExecutionEngine *mExecutionEngine;
-
-    QString mError;
-};
+bool PMRSUPPORT_EXPORT isGitDirectory(const QString &pDirName);
 
 //==============================================================================
 
-}   // namespace Compiler
+}   // namespace PMRSupport
 }   // namespace OpenCOR
 
 //==============================================================================

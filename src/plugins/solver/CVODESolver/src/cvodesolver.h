@@ -125,8 +125,10 @@ private:
 
 //==============================================================================
 
-class CvodeSolver : public Solver::OdeSolver
+class CvodeSolver : public OpenCOR::Solver::OdeSolver
 {
+    Q_OBJECT
+
 public:
     explicit CvodeSolver();
     ~CvodeSolver();

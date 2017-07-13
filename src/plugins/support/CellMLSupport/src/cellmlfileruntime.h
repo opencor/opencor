@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QList>
+#include <QObject>
 #ifdef Q_OS_WIN
     #include <QSet>
     #include <QVector>
@@ -117,8 +118,10 @@ typedef QList<CellmlFileRuntimeParameter *> CellmlFileRuntimeParameters;
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileRuntime
+class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
 {
+    Q_OBJECT
+
 public:
     enum ModelType {
         Ode,

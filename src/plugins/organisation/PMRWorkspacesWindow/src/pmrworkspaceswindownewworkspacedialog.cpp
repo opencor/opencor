@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "corecliutils.h"
 #include "coreguiutils.h"
-#include "pmrwebservice.h"
+#include "pmrsupport.h"
 #include "pmrworkspace.h"
 #include "pmrworkspaceswindownewworkspacedialog.h"
 
@@ -137,7 +137,7 @@ void PmrWorkspacesWindowNewWorkspaceDialog::updateOkButton()
 
     mGui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(   !mGui->titleValue->text().trimmed().isEmpty()
                                                               &&  Core::isDirectory(dirName)
-                                                              && !PMRSupport::PmrWebService::isGitDirectory(dirName));
+                                                              && !PMRSupport::isGitDirectory(dirName));
 }
 
 //==============================================================================
@@ -146,7 +146,7 @@ void PmrWorkspacesWindowNewWorkspaceDialog::choosePath()
 {
     // Choose a non-Git directory for our new workspace
 
-    QString dirName = PMRSupport::PmrWebService::getNonGitDirectory();
+    QString dirName = PMRSupport::getNonGitDirectory();
 
     if (!dirName.isEmpty())
         mGui->folderValue->setText(dirName);

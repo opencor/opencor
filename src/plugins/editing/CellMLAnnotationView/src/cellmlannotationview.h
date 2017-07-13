@@ -18,57 +18,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Compiler engine
+// CellML Annotation view
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "compilerglobal.h"
-
-//==============================================================================
-
-#include <QObject>
 #include <QString>
 
 //==============================================================================
 
-namespace llvm {
-    class ExecutionEngine;
-}   // namespace llvm
-
-//==============================================================================
-
 namespace OpenCOR {
-namespace Compiler {
+namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class COMPILER_EXPORT CompilerEngine : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit CompilerEngine();
-    ~CompilerEngine();
-
-    bool hasError() const;
-    QString error() const;
-
-    bool compileCode(const QString &pCode);
-
-    void * getFunction(const QString &pFunctionName);
-
-private:
-    llvm::ExecutionEngine *mExecutionEngine;
-
-    QString mError;
-};
+QString resourceUrl(const QString &pResource);
+QString idUrl(const QString &pResource, const QString &pId);
 
 //==============================================================================
 
-}   // namespace Compiler
+}   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 
 //==============================================================================

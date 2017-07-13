@@ -13,6 +13,7 @@ ADD_PLUGIN(ForwardEulerSolver
     HEADERS_MOC
         ../../solverinterface.h
 
+        src/forwardeulersolver.h
         src/forwardeulersolverplugin.h
     QT_MODULES
         Widgets

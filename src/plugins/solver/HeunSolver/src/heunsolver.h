@@ -42,8 +42,10 @@ static const double StepDefaultValue = 1.0;
 
 //==============================================================================
 
-class HeunSolver : public Solver::OdeSolver
+class HeunSolver : public OpenCOR::Solver::OdeSolver
 {
+    Q_OBJECT
+
 public:
     explicit HeunSolver();
     ~HeunSolver();

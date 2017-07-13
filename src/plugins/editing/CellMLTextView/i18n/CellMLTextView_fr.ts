@@ -2,41 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::CellMLTextView::CellMLTextViewPlugin</name>
-    <message>
-        <source>the &lt;a href=&quot;http://cellml-api.sourceforge.net/&quot;&gt;CellML validation service&lt;/a&gt; cannot be used in this view, so only validation against the &lt;a href=&quot;http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format&quot;&gt;CellML Text format&lt;/a&gt; was performed. For full CellML validation, you might want to use the Raw CellML view instead.</source>
-        <translation>le &lt;a href=&quot;http://cellml-api.sourceforge.net/&quot;&gt;service de validation CellML&lt;/a&gt; ne peut pas être utilisé dans cette vue, donc seule une validation du &lt;a href=&quot;http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format&quot;&gt;format CellML Text&lt;/a&gt; a été faite. Pour une validation CellML complète, vous pouvez utiliser la vue CellML Brut.</translation>
-    </message>
-    <message>
-        <source>CellML Text</source>
-        <translation>Texte CellML</translation>
-    </message>
-</context>
-<context>
-    <name>OpenCOR::CellMLTextView::CellmlTextViewWidget</name>
-    <message>
-        <source>%1.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>You might want to use the Raw (CellML) view to edit the file.</source>
-        <translation>Vous pouvez utiliser la vue (CellML) Brut pour éditer le fichier.</translation>
-    </message>
-    <message>
-        <source>Save File</source>
-        <translation>Sauvegarder Fichier</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; nécessite des fonctionnalités qui ne sont pas présentes dans %2 et devrait donc être sauvegardé comme fichier %3. Voulez-vous continuer ?</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be saved. Do you want to save the contents of the view to a text file?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé. Voulez-vous sauvegarder le contenu de la vue dans un fichier texte ?</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
+    <name>OpenCOR::CellMLTextView::CellMLTextViewConverter</name>
     <message>
         <source>A &apos;base_units&apos; attribute must have a value of &apos;yes&apos; or &apos;no&apos;.</source>
         <translation>Un attribut &apos;base_units&apos; doit avoir une valeur de &apos;yes&apos; ou &apos;no&apos;.</translation>
@@ -229,54 +195,20 @@
         <source>A%1 &apos;%2&apos; element was found in the original CellML file, but it is not supported and cannot therefore be processed.</source>
         <translation>Un élément &apos;%2&apos; a été trouvé dans le fichier CellML d&apos;origine, mais il n&apos;est pas supporté et ne peut donc pas être traité.</translation>
     </message>
+</context>
+<context>
+    <name>OpenCOR::CellMLTextView::CellMLTextViewPlugin</name>
     <message>
-        <source>Default</source>
-        <translation>Défaut</translation>
+        <source>the &lt;a href=&quot;http://cellml-api.sourceforge.net/&quot;&gt;CellML validation service&lt;/a&gt; cannot be used in this view, so only validation against the &lt;a href=&quot;http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format&quot;&gt;CellML Text format&lt;/a&gt; was performed. For full CellML validation, you might want to use the Raw CellML view instead.</source>
+        <translation>le &lt;a href=&quot;http://cellml-api.sourceforge.net/&quot;&gt;service de validation CellML&lt;/a&gt; ne peut pas être utilisé dans cette vue, donc seule une validation du &lt;a href=&quot;http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format&quot;&gt;format CellML Text&lt;/a&gt; a été faite. Pour une validation CellML complète, vous pouvez utiliser la vue CellML Brut.</translation>
     </message>
     <message>
-        <source>Single line comment</source>
-        <translation>Commentaire sur une ligne</translation>
+        <source>CellML Text</source>
+        <translation>Texte CellML</translation>
     </message>
-    <message>
-        <source>Multiline comment</source>
-        <translation>Commentaire sur plusieurs lignes</translation>
-    </message>
-    <message>
-        <source>Keyword</source>
-        <translation>Mot-clef</translation>
-    </message>
-    <message>
-        <source>CellML keyword</source>
-        <translation>Mot-clef CellML</translation>
-    </message>
-    <message>
-        <source>Number</source>
-        <translation>Nombre</translation>
-    </message>
-    <message>
-        <source>String</source>
-        <translation>Chaîne</translation>
-    </message>
-    <message>
-        <source>Parameter block</source>
-        <translation>Bloc paramètre</translation>
-    </message>
-    <message>
-        <source>Parameter keyword</source>
-        <translation>Mot-clef paramètre</translation>
-    </message>
-    <message>
-        <source>Parameter CellML keyword</source>
-        <translation>Mot-clef CellML paramètre</translation>
-    </message>
-    <message>
-        <source>Parameter number</source>
-        <translation>Nombre paramètre</translation>
-    </message>
-    <message>
-        <source>Parameter string</source>
-        <translation>Chaîne paramètre</translation>
-    </message>
+</context>
+<context>
+    <name>OpenCOR::CellMLTextView::CellmlTextViewParser</name>
     <message>
         <source>the end of the file</source>
         <translation>la fin du fichier</translation>
@@ -361,6 +293,9 @@
         <source>There can only be one &apos;otherwise&apos; clause.</source>
         <translation>Il ne peut y avoir qu&apos;une clause &apos;otherwise&apos;.</translation>
     </message>
+</context>
+<context>
+    <name>OpenCOR::CellMLTextView::CellmlTextViewScanner</name>
     <message>
         <source>The comment is incomplete.</source>
         <translation>Le commentaire est incomplet.</translation>
@@ -376,6 +311,84 @@
     <message>
         <source>The string is incomplete.</source>
         <translation>La chaîne est incomplète.</translation>
+    </message>
+    <message>
+        <source>the end of the file</source>
+        <translation>la fin du fichier</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::CellMLTextView::CellmlTextViewWidget</name>
+    <message>
+        <source>%1.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>You might want to use the Raw (CellML) view to edit the file.</source>
+        <translation>Vous pouvez utiliser la vue (CellML) Brut pour éditer le fichier.</translation>
+    </message>
+    <message>
+        <source>Save File</source>
+        <translation>Sauvegarder Fichier</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; nécessite des fonctionnalités qui ne sont pas présentes dans %2 et devrait donc être sauvegardé comme fichier %3. Voulez-vous continuer ?</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be saved. Do you want to save the contents of the view to a text file?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé. Voulez-vous sauvegarder le contenu de la vue dans un fichier texte ?</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Default</source>
+        <translation>Défaut</translation>
+    </message>
+    <message>
+        <source>Single line comment</source>
+        <translation>Commentaire sur une ligne</translation>
+    </message>
+    <message>
+        <source>Multiline comment</source>
+        <translation>Commentaire sur plusieurs lignes</translation>
+    </message>
+    <message>
+        <source>Keyword</source>
+        <translation>Mot-clef</translation>
+    </message>
+    <message>
+        <source>CellML keyword</source>
+        <translation>Mot-clef CellML</translation>
+    </message>
+    <message>
+        <source>Number</source>
+        <translation>Nombre</translation>
+    </message>
+    <message>
+        <source>String</source>
+        <translation>Chaîne</translation>
+    </message>
+    <message>
+        <source>Parameter block</source>
+        <translation>Bloc paramètre</translation>
+    </message>
+    <message>
+        <source>Parameter keyword</source>
+        <translation>Mot-clef paramètre</translation>
+    </message>
+    <message>
+        <source>Parameter CellML keyword</source>
+        <translation>Mot-clef CellML paramètre</translation>
+    </message>
+    <message>
+        <source>Parameter number</source>
+        <translation>Nombre paramètre</translation>
+    </message>
+    <message>
+        <source>Parameter string</source>
+        <translation>Chaîne paramètre</translation>
     </message>
 </context>
 </TS>

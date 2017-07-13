@@ -197,8 +197,6 @@ CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
     mSettingsGroup(QString()),
     mEditingWidget(0),
     mData(QMap<QString, CellmlTextViewWidgetData *>()),
-    mConverter(CellMLTextViewConverter()),
-    mParser(CellmlTextViewParser()),
     mEditorLists(QList<EditorWidget::EditorListWidget *>()),
     mPresentationMathmlEquations(QMap<QString, QString>()),
     mContentMathmlEquation(QString())
