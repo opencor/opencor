@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QChar>
 #include <QCryptographicHash>
 #include <QDir>
-#include <QFileInfo>
 #include <QIODevice>
 #include <QLocale>
 #include <QMap>
