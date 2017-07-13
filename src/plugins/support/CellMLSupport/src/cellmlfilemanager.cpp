@@ -68,7 +68,7 @@ CellmlFile * CellmlFileManager::cellmlFile(const QString &pFileName)
 
 //==============================================================================
 
-bool CellmlFileManager::canLoadFile(const QString &pFileName) const
+bool CellmlFileManager::canLoad(const QString &pFileName) const
 {
     // Try to load the CellML file
 
@@ -79,7 +79,7 @@ bool CellmlFileManager::canLoadFile(const QString &pFileName) const
 
 //==============================================================================
 
-QObject * CellmlFileManager::newFile(const QString &pFileName) const
+QObject * CellmlFileManager::create(const QString &pFileName) const
 {
     // Create and return a new CellML file
 

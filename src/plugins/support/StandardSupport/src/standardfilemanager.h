@@ -59,18 +59,18 @@ protected:
     explicit StandardFileManager();
     ~StandardFileManager();
 
-    virtual bool canLoadFile(const QString &pFileName) const = 0;
+    virtual bool canLoad(const QString &pFileName) const = 0;
 
-    virtual QObject * newFile(const QString &pFileName) const = 0;
+    virtual QObject * create(const QString &pFileName) const = 0;
 
 private slots:
-    void manageFile(const QString &pFileName);
-    void unmanageFile(const QString &pFileName);
+    void manage(const QString &pFileName);
+    void unmanage(const QString &pFileName);
 
-    void reloadFile(const QString &pFileName, const bool &pFileChanged);
-    void renameFile(const QString &pOldFileName, const QString &pNewFileName);
+    void reload(const QString &pFileName, const bool &pFileChanged);
+    void rename(const QString &pOldFileName, const QString &pNewFileName);
 
-    void saveFile(const QString &pFileName);
+    void save(const QString &pFileName);
 };
 
 //==============================================================================

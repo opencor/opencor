@@ -63,7 +63,7 @@ CombineArchive * CombineFileManager::combineArchive(const QString &pFileName)
 
 //==============================================================================
 
-bool CombineFileManager::canLoadFile(const QString &pFileName) const
+bool CombineFileManager::canLoad(const QString &pFileName) const
 {
     // Try to load the COMBINE archive
 
@@ -74,7 +74,7 @@ bool CombineFileManager::canLoadFile(const QString &pFileName) const
 
 //==============================================================================
 
-QObject * CombineFileManager::newFile(const QString &pFileName) const
+QObject * CombineFileManager::create(const QString &pFileName) const
 {
     // Create and return a new COMBINE archive
 

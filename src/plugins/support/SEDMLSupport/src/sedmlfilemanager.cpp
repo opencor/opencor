@@ -70,7 +70,7 @@ SedmlFile * SedmlFileManager::sedmlFile(const QString &pFileName)
 
 //==============================================================================
 
-bool SedmlFileManager::canLoadFile(const QString &pFileName) const
+bool SedmlFileManager::canLoad(const QString &pFileName) const
 {
     // Try to load the SED-ML file
 
@@ -81,7 +81,7 @@ bool SedmlFileManager::canLoadFile(const QString &pFileName) const
 
 //==============================================================================
 
-QObject * SedmlFileManager::newFile(const QString &pFileName) const
+QObject * SedmlFileManager::create(const QString &pFileName) const
 {
     // Create and return a new SED-ML file
 
