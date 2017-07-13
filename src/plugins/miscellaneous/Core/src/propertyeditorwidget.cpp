@@ -1034,22 +1034,15 @@ void Property::updateToolTip()
 PropertyEditorWidget::PropertyEditorWidget(const bool &pShowUnits,
                                            const bool &pAutoUpdateHeight,
                                            QWidget *pParent) :
-    TreeViewWidget(pParent)
+    TreeViewWidget(pParent),
+    mShowUnits(pShowUnits),
+    mAutoUpdateHeight(pAutoUpdateHeight),
+    mProperties(Properties()),
+    mProperty(0),
+    mPropertyEditor(0),
+    mRightClicking(false),
+    mPropertyChecked(QMap<Property *, bool>())
 {
-    // Some initialisations
-
-    mShowUnits = pShowUnits;
-    mAutoUpdateHeight = pAutoUpdateHeight;
-
-    mProperties = Properties();
-
-    mProperty = 0;
-    mPropertyEditor = 0;
-
-    mRightClicking = false;
-
-    mPropertyChecked.clear();
-
     // Customise ourselves
 
     setRootIsDecorated(false);
