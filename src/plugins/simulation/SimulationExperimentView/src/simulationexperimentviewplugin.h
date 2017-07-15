@@ -25,12 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "datastoreinterface.h"
 #include "filehandlinginterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
-#include "solverinterface.h"
 #include "viewinterface.h"
 
 //==============================================================================
@@ -73,9 +71,6 @@ public:
 
 private:
     SimulationExperimentViewWidget *mViewWidget;
-
-    SolverInterfaces mSolverInterfaces;
-    DataStoreInterfaces mDataStoreInterfaces;
 
     Plugins mCellmlEditingViewPlugins;
     Plugins mCellmlSimulationViewPlugins;

@@ -59,8 +59,6 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
 //==============================================================================
 
 SimulationExperimentViewPlugin::SimulationExperimentViewPlugin() :
-    mSolverInterfaces(SolverInterfaces()),
-    mDataStoreInterfaces(DataStoreInterfaces()),
     mCellmlEditingViewPlugins(Plugins()),
     mCellmlSimulationViewPlugins(Plugins())
 {
@@ -191,25 +189,9 @@ void SimulationExperimentViewPlugin::finalizePlugin()
 
 void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    // Retrieve the different solvers and data stores that are available to us
+    // Look for CellML capable editing or simulation views
 
     foreach (Plugin *plugin, pLoadedPlugins) {
-        // Look for a solver
-
-        SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
-
-        if (solverInterface)
-            mSolverInterfaces << solverInterface;
-
-        // Look for a data store
-
-        DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
-
-        if (dataStoreInterface)
-            mDataStoreInterfaces << dataStoreInterface;
-
-        // Look for a CellML capable editing or simulation view
-
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
         if (   viewInterface
@@ -229,8 +211,7 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
 
     // Create our Simulation Experiment view widget
 
-    mViewWidget = new SimulationExperimentViewWidget(this, mSolverInterfaces,
-                                                     mDataStoreInterfaces,
+    mViewWidget = new SimulationExperimentViewWidget(this,
                                                      mCellmlEditingViewPlugins,
                                                      mCellmlSimulationViewPlugins,
                                                      Core::mainWindow());

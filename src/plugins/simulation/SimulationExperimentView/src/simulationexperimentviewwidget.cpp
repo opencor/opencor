@@ -70,15 +70,11 @@ namespace SimulationExperimentView {
 //==============================================================================
 
 SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperimentViewPlugin *pPlugin,
-                                                               const SolverInterfaces &pSolverInterfaces,
-                                                               const DataStoreInterfaces &pDataStoreInterfaces,
                                                                const Plugins &pCellmlEditingViewPlugins,
                                                                const Plugins &pCellmlSimulationViewPlugins,
                                                                QWidget *pParent) :
     ViewWidget(pParent),
     mPlugin(pPlugin),
-    mSolverInterfaces(pSolverInterfaces),
-    mDataStoreInterfaces(pDataStoreInterfaces),
     mCellmlEditingViewPlugins(pCellmlEditingViewPlugins),
     mCellmlSimulationViewPlugins(pCellmlSimulationViewPlugins),
     mSimulationWidgetSizes(QIntList()),
@@ -431,24 +427,6 @@ QStringList SimulationExperimentViewWidget::fileNames() const
     // Return our file names
 
     return mFileNames;
-}
-
-//==============================================================================
-
-SolverInterfaces SimulationExperimentViewWidget::solverInterfaces() const
-{
-    // Return our solver interfaces
-
-    return mSolverInterfaces;
-}
-
-//==============================================================================
-
-DataStoreInterfaces SimulationExperimentViewWidget::dataStoreInterfaces() const
-{
-    // Return our data store interfaces
-
-    return mDataStoreInterfaces;
 }
 
 //==============================================================================

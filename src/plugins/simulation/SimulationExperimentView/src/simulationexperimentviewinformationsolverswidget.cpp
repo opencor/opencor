@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
+#include "interfaces.h"
 #include "simulationexperimentviewinformationsolverswidget.h"
 #include "simulationexperimentviewsimulation.h"
 #include "simulationexperimentviewwidget.h"
@@ -83,8 +84,7 @@ QMap<QString, Core::Properties> SimulationExperimentViewInformationSolversWidget
 
 //==============================================================================
 
-SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInformationSolversWidget(SimulationExperimentViewWidget *pViewWidget,
-                                                                                                   QWidget *pParent) :
+SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInformationSolversWidget(QWidget *pParent) :
     PropertyEditorWidget(true, pParent),
     mDescriptions(QMap<Core::Property *, Descriptions>())
 {
@@ -94,9 +94,9 @@ SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInform
 
     // Add properties for our different solvers
 
-    mOdeSolverData = addSolverProperties(pViewWidget->solverInterfaces(), Solver::Ode);
-    mDaeSolverData = addSolverProperties(pViewWidget->solverInterfaces(), Solver::Dae);
-    mNlaSolverData = addSolverProperties(pViewWidget->solverInterfaces(), Solver::Nla);
+    mOdeSolverData = addSolverProperties(Solver::Ode);
+    mDaeSolverData = addSolverProperties(Solver::Dae);
+    mNlaSolverData = addSolverProperties(Solver::Nla);
 
     // Show/hide the relevant properties
 
@@ -192,14 +192,8 @@ void SimulationExperimentViewInformationSolversWidget::retranslateUi()
 
 //==============================================================================
 
-SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewInformationSolversWidget::addSolverProperties(const SolverInterfaces &pSolverInterfaces,
-                                                                                                                             const Solver::Type &pSolverType)
+SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewInformationSolversWidget::addSolverProperties(const Solver::Type &pSolverType)
 {
-    // Make sure that we have at least one solver interface
-
-    if (pSolverInterfaces.isEmpty())
-        return 0;
-
     // Retrieve the name of the solvers which type is the one in which we are
     // interested
 
@@ -209,7 +203,7 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
     QStringList solversNames = QStringList();
     QMap<QString, Core::Properties> solversProperties = QMap<QString, Core::Properties>();
 
-    foreach (SolverInterface *solverInterface, pSolverInterfaces) {
+    foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
         if (solverInterface->solverType() == pSolverType) {
             // Keep track of the solver's interface
 

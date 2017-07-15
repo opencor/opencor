@@ -39,7 +39,6 @@ namespace SimulationExperimentView {
 //==============================================================================
 
 class SimulationExperimentViewSimulation;
-class SimulationExperimentViewWidget;
 
 //==============================================================================
 
@@ -74,8 +73,7 @@ class SimulationExperimentViewInformationSolversWidget : public Core::PropertyEd
     Q_OBJECT
 
 public:
-    explicit SimulationExperimentViewInformationSolversWidget(SimulationExperimentViewWidget *pViewWidget,
-                                                              QWidget *pParent);
+    explicit SimulationExperimentViewInformationSolversWidget(QWidget *pParent);
     ~SimulationExperimentViewInformationSolversWidget();
 
     virtual void retranslateUi();
@@ -101,8 +99,7 @@ private:
 
     void updateSolverGui(SimulationExperimentViewInformationSolversWidgetData *pSolverData);
 
-    SimulationExperimentViewInformationSolversWidgetData * addSolverProperties(const SolverInterfaces &pSolverInterfaces,
-                                                                               const Solver::Type &pSolverType);
+    SimulationExperimentViewInformationSolversWidgetData * addSolverProperties(const Solver::Type &pSolverType);
 
     void doSolverChanged(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
                          const QString &pSolverName);

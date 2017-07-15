@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "graphpanelswidget.h"
+#include "interfaces.h"
 #include "progressbarwidget.h"
 #include "sedmlfilemanager.h"
 #include "sedmlinterface.h"
@@ -263,7 +264,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     simulationDataExportToolButton->setMenu(mSimulationDataExportDropDownMenu);
     simulationDataExportToolButton->setPopupMode(QToolButton::InstantPopup);
 
-    foreach (DataStoreInterface *dataStoreInterface, pViewWidget->dataStoreInterfaces()) {
+    foreach (DataStoreInterface *dataStoreInterface, Core::dataStoreInterfaces()) {
         QString dataStoreName = dataStoreInterface->dataStoreName();
         QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreName+"...");
 
@@ -455,8 +456,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     retrieveFileDetails(pFileName, mCellmlFile, mSedmlFile, mCombineArchive,
                         mFileType, mSedmlFileIssues, mCombineArchiveIssues);
 
-    mSimulation = new SimulationExperimentViewSimulation(mCellmlFile?mCellmlFile->runtime(true):0,
-                                                         pViewWidget->solverInterfaces());
+    mSimulation = new SimulationExperimentViewSimulation(mCellmlFile?mCellmlFile->runtime(true):0);
 
     connect(mSimulation, SIGNAL(running(const bool &)),
             this, SLOT(simulationRunning(const bool &)));
@@ -2156,10 +2156,11 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                                                                            informationWidget->solversWidget()->daeSolverData();
     const libsedml::SedAlgorithm *algorithm = uniformTimeCourseSimulation->getAlgorithm();
     SolverInterface *usedSolverInterface = 0;
+    SolverInterfaces solverInterfaces = Core::solverInterfaces();
     Core::Properties solverProperties = Core::Properties();
     QString kisaoId = QString::fromStdString(algorithm->getKisaoID());
 
-    foreach (SolverInterface *solverInterface, mViewWidget->solverInterfaces()) {
+    foreach (SolverInterface *solverInterface, solverInterfaces) {
         if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
             usedSolverInterface = solverInterface;
             solverProperties = solverData->solversProperties().value(solverInterface->solverName());
@@ -2293,7 +2294,7 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
             mustHaveNlaSolver = true;
             nlaSolverName = QString::fromStdString(node.getAttrValue(node.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
 
-            foreach (SolverInterface *solverInterface, mViewWidget->solverInterfaces()) {
+            foreach (SolverInterface *solverInterface, solverInterfaces) {
                 if (!nlaSolverName.compare(solverInterface->solverName())) {
                     informationWidget->solversWidget()->nlaSolverData()->solversListProperty()->setValue(nlaSolverName);
 
@@ -3330,7 +3331,7 @@ bool SimulationExperimentViewSimulationWidget::sedmlAlgorithmSupported(const lib
     SolverInterface *usedSolverInterface = 0;
     QString kisaoId = QString::fromStdString(pSedmlAlgorithm->getKisaoID());
 
-    foreach (SolverInterface *solverInterface, mViewWidget->solverInterfaces()) {
+    foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
         if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
             usedSolverInterface = solverInterface;
 

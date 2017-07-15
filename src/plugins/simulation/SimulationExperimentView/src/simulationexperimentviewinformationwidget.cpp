@@ -73,7 +73,7 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
 
     // Create our solvers widget
 
-    mSolversWidget = new SimulationExperimentViewInformationSolversWidget(pViewWidget, mCollapsibleWidget);
+    mSolversWidget = new SimulationExperimentViewInformationSolversWidget(mCollapsibleWidget);
 
     mSolversWidget->setObjectName("Solvers");
 
