@@ -21,6 +21,7 @@ ADD_PLUGIN(CellMLSupport
         src/cellmlfilerdftriple.cpp
         src/cellmlfilerdftripleelement.cpp
         src/cellmlfileruntime.cpp
+        src/cellmlinterface.cpp
         src/cellmlsupportplugin.cpp
     HEADERS_MOC
         ../../solverinterface.h

@@ -58,8 +58,7 @@ class SimulationExperimentViewSimulationData : public QObject
     Q_OBJECT
 
 public:
-    explicit SimulationExperimentViewSimulationData(SimulationExperimentViewSimulation *pSimulation,
-                                                    const SolverInterfaces &pSolverInterfaces);
+    explicit SimulationExperimentViewSimulationData(SimulationExperimentViewSimulation *pSimulation);
     ~SimulationExperimentViewSimulationData();
 
     void update();
@@ -124,8 +123,6 @@ private:
     SimulationExperimentViewSimulation *mSimulation;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
-
-    SolverInterfaces mSolverInterfaces;
 
     int mDelay;
 
@@ -220,8 +217,7 @@ class SimulationExperimentViewSimulation : public QObject
     friend class SimulationExperimentViewSimulationWorker;
 
 public:
-    explicit SimulationExperimentViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                const SolverInterfaces &pSolverInterfaces);
+    explicit SimulationExperimentViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime);
     ~SimulationExperimentViewSimulation();
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
@@ -256,8 +252,6 @@ private:
     SimulationExperimentViewSimulationWorker *mWorker;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
-
-    SolverInterfaces mSolverInterfaces;
 
     SimulationExperimentViewSimulationData *mData;
     SimulationExperimentViewSimulationResults *mResults;

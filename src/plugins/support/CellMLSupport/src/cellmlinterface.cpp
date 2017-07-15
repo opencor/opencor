@@ -18,67 +18,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Simulation Experiment view plugin
+// CellML interface
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "filehandlinginterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
-#include "viewinterface.h"
+#include "cellmlinterface.h"
+#include "corecliutils.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SimulationExperimentView {
+namespace CellMLSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC SimulationExperimentViewPluginInfo();
-
-//==============================================================================
-
-class SimulationExperimentViewWidget;
-
-//==============================================================================
-
-class SimulationExperimentViewPlugin : public QObject,
-                                       public FileHandlingInterface,
-                                       public I18nInterface,
-                                       public PluginInterface,
-                                       public ViewInterface
+CellmlInterfaceData::CellmlInterfaceData(FileTypeInterface *pFileTypeInterface) :
+    mFileTypeInterface(pFileTypeInterface)
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.SimulationExperimentViewPlugin" FILE "simulationexperimentviewplugin.json")
-
-    Q_INTERFACES(OpenCOR::FileHandlingInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::ViewInterface)
-
-public:
-    explicit SimulationExperimentViewPlugin();
-
-#include "filehandlinginterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "viewinterface.inl"
-
-private:
-    SimulationExperimentViewWidget *mViewWidget;
-
-    Plugins mCellmlEditingViewPlugins;
-    Plugins mCellmlSimulationViewPlugins;
-};
+}
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
+FileTypeInterface * CellmlInterfaceData::fileTypeInterface() const
+{
+    // Return our file type interface
+
+    return mFileTypeInterface;
+}
+
+//==============================================================================
+
+FileTypeInterface * fileTypeInterface()
+{
+    // Return our file type interface
+
+    return static_cast<CellmlInterfaceData *>(Core::globalInstance(CellmlInterfaceDataSignature))->fileTypeInterface();
+}
+
+//==============================================================================
+
+}   // namespace CellMLSupport
 }   // namespace OpenCOR
 
 //==============================================================================

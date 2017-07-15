@@ -18,67 +18,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Simulation Experiment view plugin
+// COMBINE interface
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "filehandlinginterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
-#include "viewinterface.h"
+#include "filetypeinterface.h"
+#include "combinesupportglobal.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SimulationExperimentView {
+namespace COMBINESupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC SimulationExperimentViewPluginInfo();
+static const auto CombineInterfaceDataSignature = QStringLiteral("OpenCOR::COMBINESupport::CombineInterfaceData");
 
 //==============================================================================
 
-class SimulationExperimentViewWidget;
-
-//==============================================================================
-
-class SimulationExperimentViewPlugin : public QObject,
-                                       public FileHandlingInterface,
-                                       public I18nInterface,
-                                       public PluginInterface,
-                                       public ViewInterface
+class CombineInterfaceData
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.SimulationExperimentViewPlugin" FILE "simulationexperimentviewplugin.json")
-
-    Q_INTERFACES(OpenCOR::FileHandlingInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::ViewInterface)
-
 public:
-    explicit SimulationExperimentViewPlugin();
+    explicit CombineInterfaceData(FileTypeInterface *pFileTypeInterface);
 
-#include "filehandlinginterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "viewinterface.inl"
+    FileTypeInterface * fileTypeInterface() const;
 
 private:
-    SimulationExperimentViewWidget *mViewWidget;
-
-    Plugins mCellmlEditingViewPlugins;
-    Plugins mCellmlSimulationViewPlugins;
+    FileTypeInterface *mFileTypeInterface;
 };
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
+FileTypeInterface COMBINESUPPORT_EXPORT * fileTypeInterface();
+
+//==============================================================================
+
+}   // namespace COMBINESupport
 }   // namespace OpenCOR
 
 //==============================================================================
