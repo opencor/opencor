@@ -12,6 +12,7 @@ ADD_PLUGIN(COMBINESupport
         src/combinearchive.cpp
         src/combinearchiveissue.cpp
         src/combinefilemanager.cpp
+        src/combineinterface.cpp
         src/combinesupportplugin.cpp
     HEADERS_MOC
         src/combinearchive.h

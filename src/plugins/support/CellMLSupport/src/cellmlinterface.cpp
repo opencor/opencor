@@ -18,18 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CellML support plugin
+// CellML interface
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "filetypeinterface.h"
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
+#include "cellmlinterface.h"
+#include "corecliutils.h"
 
 //==============================================================================
 
@@ -38,42 +31,28 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLSupportPluginInfo();
-
-//==============================================================================
-
-static const auto CellmlMimeType      = QStringLiteral("application/cellml+xml");
-static const auto CellmlFileExtension = QStringLiteral("cellml");
-
-//==============================================================================
-
-class CellMLSupportPlugin : public QObject, public FileTypeInterface,
-                            public GuiInterface, public I18nInterface,
-                            public PluginInterface
+CellmlInterfaceData::CellmlInterfaceData(FileTypeInterface *pFileTypeInterface) :
+    mFileTypeInterface(pFileTypeInterface)
 {
-    Q_OBJECT
+}
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLSupportPlugin" FILE "cellmlsupportplugin.json")
+//==============================================================================
 
-    Q_INTERFACES(OpenCOR::FileTypeInterface)
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
+FileTypeInterface * CellmlInterfaceData::fileTypeInterface() const
+{
+    // Return our file type interface
 
-public:
-    explicit CellMLSupportPlugin();
+    return mFileTypeInterface;
+}
 
-#include "filetypeinterface.inl"
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
+//==============================================================================
 
-private:
-    QAction *mFileNewCellmlFileAction;
+FileTypeInterface * fileTypeInterface()
+{
+    // Return our file type interface
 
-private slots:
-    void newCellmlFile();
-};
+    return static_cast<CellmlInterfaceData *>(Core::globalInstance(CellmlInterfaceDataSignature))->fileTypeInterface();
+}
 
 //==============================================================================
 

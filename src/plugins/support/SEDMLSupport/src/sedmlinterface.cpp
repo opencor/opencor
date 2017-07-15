@@ -18,66 +18,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CellML support plugin
+// SED-ML interface
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "filetypeinterface.h"
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
+#include "corecliutils.h"
+#include "sedmlinterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace SEDMLSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLSupportPluginInfo();
-
-//==============================================================================
-
-static const auto CellmlMimeType      = QStringLiteral("application/cellml+xml");
-static const auto CellmlFileExtension = QStringLiteral("cellml");
-
-//==============================================================================
-
-class CellMLSupportPlugin : public QObject, public FileTypeInterface,
-                            public GuiInterface, public I18nInterface,
-                            public PluginInterface
+SedmlInterfaceData::SedmlInterfaceData(FileTypeInterface *pFileTypeInterface) :
+    mFileTypeInterface(pFileTypeInterface)
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLSupportPlugin" FILE "cellmlsupportplugin.json")
-
-    Q_INTERFACES(OpenCOR::FileTypeInterface)
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
-public:
-    explicit CellMLSupportPlugin();
-
-#include "filetypeinterface.inl"
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-
-private:
-    QAction *mFileNewCellmlFileAction;
-
-private slots:
-    void newCellmlFile();
-};
+}
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+FileTypeInterface * SedmlInterfaceData::fileTypeInterface() const
+{
+    // Return our file type interface
+
+    return mFileTypeInterface;
+}
+
+//==============================================================================
+
+FileTypeInterface * fileTypeInterface()
+{
+    // Return our file type interface
+
+    return static_cast<SedmlInterfaceData *>(Core::globalInstance(SedmlInterfaceDataSignature))->fileTypeInterface();
+}
+
+//==============================================================================
+
+}   // namespace SEDMLSupport
 }   // namespace OpenCOR
 
 //==============================================================================
