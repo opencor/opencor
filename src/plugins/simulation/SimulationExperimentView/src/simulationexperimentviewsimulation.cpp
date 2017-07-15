@@ -696,7 +696,7 @@ bool SimulationExperimentViewSimulationResults::createDataStore()
 
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-            mPoints->setIcon(SimulationExperimentViewSimulationWidget::parameterIcon(parameter->type()));
+            mPoints->setIcon(parameter->icon());
             mPoints->setUri(uri(mRuntime->variableOfIntegration()->componentHierarchy(),
                                 mRuntime->variableOfIntegration()->name()));
             mPoints->setLabel(mRuntime->variableOfIntegration()->name());
@@ -727,7 +727,7 @@ bool SimulationExperimentViewSimulationResults::createDataStore()
         }
 
         if (variable) {
-            variable->setIcon(SimulationExperimentViewSimulationWidget::parameterIcon(parameter->type()));
+            variable->setIcon(parameter->icon());
             variable->setUri(uri(parameter->componentHierarchy(),
                                  parameter->formattedName()));
             variable->setLabel(parameter->formattedName());

@@ -199,6 +199,41 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
 
 //==============================================================================
 
+QIcon CellmlFileRuntimeParameter::icon() const
+{
+    // Return an icon that illustrates the type of a parameter
+
+    static const QIcon VoiIcon              = QIcon(":/CellMLSupport/voi.png");
+    static const QIcon ConstantIcon         = QIcon(":/CellMLSupport/constant.png");
+    static const QIcon ComputedConstantIcon = QIcon(":/CellMLSupport/computedConstant.png");
+    static const QIcon RateIcon             = QIcon(":/CellMLSupport/rate.png");
+    static const QIcon StateIcon            = QIcon(":/CellMLSupport/state.png");
+    static const QIcon AlgebraicIcon        = QIcon(":/CellMLSupport/algebraic.png");
+    static const QIcon ErrorNodeIcon        = QIcon(":/oxygen/emblems/emblem-important.png");
+
+    switch (mType) {
+    case Voi:
+        return VoiIcon;
+    case Constant:
+        return ConstantIcon;
+    case ComputedConstant:
+        return ComputedConstantIcon;
+    case Rate:
+        return RateIcon;
+    case State:
+        return StateIcon;
+    case Algebraic:
+        return AlgebraicIcon;
+    default:
+        // Not a relevant type, so return an error node icon
+        // Note: we should never reach this point...
+
+        return ErrorNodeIcon;
+    }
+}
+
+//==============================================================================
+
 CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
     mCellmlFile(pCellmlFile),
     mOdeCodeInformation(0),

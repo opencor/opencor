@@ -62,8 +62,6 @@ class SimulationExperimentViewPlugin : public QObject,
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
-    explicit SimulationExperimentViewPlugin();
-
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
@@ -71,9 +69,6 @@ public:
 
 private:
     SimulationExperimentViewWidget *mViewWidget;
-
-    Plugins mCellmlEditingViewPlugins;
-    Plugins mCellmlSimulationViewPlugins;
 };
 
 //==============================================================================

@@ -57,14 +57,6 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
 }
 
 //==============================================================================
-
-SimulationExperimentViewPlugin::SimulationExperimentViewPlugin() :
-    mCellmlEditingViewPlugins(Plugins()),
-    mCellmlSimulationViewPlugins(Plugins())
-{
-}
-
-//==============================================================================
 // File handling interface
 //==============================================================================
 
@@ -189,7 +181,10 @@ void SimulationExperimentViewPlugin::finalizePlugin()
 
 void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    // Look for CellML capable editing or simulation views
+    // Retrieve the different CellML capable editing and simulation views
+
+    Plugins cellmlEditingViewPlugins = Plugins();
+    Plugins cellmlSimulationViewPlugins = Plugins();
 
     foreach (Plugin *plugin, pLoadedPlugins) {
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
@@ -202,9 +197,9 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
             if (   viewMimeTypes.isEmpty()
                 || viewMimeTypes.contains(CellMLSupport::CellmlMimeType)) {
                 if (viewInterface->viewMode() == EditingMode)
-                    mCellmlEditingViewPlugins << plugin;
+                    cellmlEditingViewPlugins << plugin;
                 else
-                    mCellmlSimulationViewPlugins << plugin;
+                    cellmlSimulationViewPlugins << plugin;
             }
         }
     }
@@ -212,8 +207,8 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
     // Create our Simulation Experiment view widget
 
     mViewWidget = new SimulationExperimentViewWidget(this,
-                                                     mCellmlEditingViewPlugins,
-                                                     mCellmlSimulationViewPlugins,
+                                                     cellmlEditingViewPlugins,
+                                                     cellmlSimulationViewPlugins,
                                                      Core::mainWindow());
 
     mViewWidget->setObjectName("SimulationExperimentViewWidget");

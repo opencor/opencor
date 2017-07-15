@@ -713,16 +713,16 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                             mFileType, mSedmlFileIssues, mCombineArchiveIssues);
     }
 
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mCellmlFile?mCellmlFile->runtime(pReloadingView):0;
+    CellMLSupport::CellmlFileRuntime *runtime = mCellmlFile?mCellmlFile->runtime(pReloadingView):0;
 
     if (pReloadingView)
-        mSimulation->update(cellmlFileRuntime);
+        mSimulation->update(runtime);
 
     // Retrieve our variable of integration, if possible
 
-    bool validCellmlFileRuntime = cellmlFileRuntime && cellmlFileRuntime->isValid();
+    bool validRuntime = runtime && runtime->isValid();
 
-    CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validCellmlFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
+    CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validRuntime?runtime->variableOfIntegration():0;
 
     // Clean up our output, if needed
 
@@ -792,7 +792,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                 break;
             }
 
-            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, sedmlFileIssue.message());
+            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(sedmlFileIssue.message()));
         }
     } else {
         information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
@@ -803,11 +803,11 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
             QString additionalInformation = QString();
 
-            if (cellmlFileRuntime->needNlaSolver())
+            if (runtime->needNlaSolver())
                 additionalInformation = "+"+tr("NLA system(s)");
 
             information += "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn;
-            information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
+            information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((runtime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
                                                                                                                                        additionalInformation);
         } else {
             // We couldn't retrieve a variable of integration, which means that
@@ -821,9 +821,9 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
             updateInvalidModelMessageWidget();
 
-            information += "<span"+OutputBad+">"+(cellmlFileRuntime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
+            information += "<span"+OutputBad+">"+(runtime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
 
-            if (validCellmlFileRuntime) {
+            if (validRuntime) {
                 // We have a valid runtime, but no variable of integration,
                 // which means that the model doesn't contain any ODE or DAE
 
@@ -833,7 +833,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                 // problems with the CellML file or its runtime
 
                 foreach (const CellMLSupport::CellmlFileIssue &issue,
-                         cellmlFileRuntime?cellmlFileRuntime->issues():mCellmlFile->issues()) {
+                         runtime?runtime->issues():mCellmlFile->issues()) {
                     information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
                                                                                                                          issue.message());
                 }
@@ -854,7 +854,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     //       mode, so we are fine...
 
     if (pReloadingView)
-       clearSimulationData();
+        clearSimulationData();
     else
         updateSimulationMode();
 
@@ -878,9 +878,9 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
         // Check whether we have at least one ODE or DAE solver and, if needed,
         // at least one NLA solver
 
-        if (cellmlFileRuntime->needNlaSolver()) {
+        if (runtime->needNlaSolver()) {
             if (solversWidget->nlaSolvers().isEmpty()) {
-                if (cellmlFileRuntime->needOdeSolver()) {
+                if (runtime->needOdeSolver()) {
                     if (solversWidget->odeSolvers().isEmpty()) {
                         simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
                                         InvalidSimulationEnvironment);
@@ -897,22 +897,22 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                                         InvalidSimulationEnvironment);
                     }
                 }
-            } else if (   cellmlFileRuntime->needOdeSolver()
+            } else if (   runtime->needOdeSolver()
                        && solversWidget->odeSolvers().isEmpty()) {
                 simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
                                 InvalidSimulationEnvironment);
-            } else if (   cellmlFileRuntime->needDaeSolver()
+            } else if (   runtime->needDaeSolver()
                        && solversWidget->daeSolvers().isEmpty()) {
                     simulationError(tr("the model needs both a DAE and an NLA solver, but no DAE solver is available"),
                                     InvalidSimulationEnvironment);
             } else {
                 validSimulationEnvironment = true;
             }
-        } else if (   cellmlFileRuntime->needOdeSolver()
+        } else if (   runtime->needOdeSolver()
                    && solversWidget->odeSolvers().isEmpty()) {
             simulationError(tr("the model needs an ODE solver, but none is available"),
                             InvalidSimulationEnvironment);
-        } else if (   cellmlFileRuntime->needDaeSolver()
+        } else if (   runtime->needDaeSolver()
                    && solversWidget->daeSolvers().isEmpty()) {
             simulationError(tr("the model needs a DAE solver, but none is available"),
                             InvalidSimulationEnvironment);
@@ -1455,13 +1455,14 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     //       parameter using an annotation...
 
     libsedml::SedAlgorithm *sedmlAlgorithm = pSedmlSimulation->createAlgorithm();
-    SolverInterface *solverInterface = mSimulation->runtime()->needOdeSolver()?
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+    SolverInterface *solverInterface = runtime->needOdeSolver()?
                                            mSimulation->data()->odeSolverInterface():
                                            mSimulation->data()->daeSolverInterface();
-    QString solverName = mSimulation->runtime()->needOdeSolver()?
+    QString solverName = runtime->needOdeSolver()?
                              mSimulation->data()->odeSolverName():
                              mSimulation->data()->daeSolverName();
-    Solver::Solver::Properties solverProperties = mSimulation->runtime()->needOdeSolver()?
+    Solver::Solver::Properties solverProperties = runtime->needOdeSolver()?
                                                       mSimulation->data()->odeSolverProperties():
                                                       mSimulation->data()->daeSolverProperties();
     QString voiSolverProperties = QString();
@@ -1492,7 +1493,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     // SED-ML simulation known about it through an annotation (since we cannot
     // have more than one SED-ML algorithm per SED-ML simulation)
 
-    if (mSimulation->runtime()->needNlaSolver()) {
+    if (runtime->needNlaSolver()) {
         QString nlaSolverProperties = QString();
 
         foreach (const QString &solverProperty, mSimulation->data()->nlaSolverProperties().keys()) {
@@ -1746,7 +1747,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
         sedmlFileName += "."+SEDMLSupport::SedmlFileExtension;
     }
 
-    sedmlFileName = Core::getSaveFileName(QObject::tr("Export To SED-ML File"),
+    sedmlFileName = Core::getSaveFileName(tr("Export To SED-ML File"),
                                           sedmlFileName,
                                           sedmlFilters, &firstSedmlFilter);
 
@@ -1800,7 +1801,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
         combineArchiveName += "."+COMBINESupport::CombineFileExtension;
     }
 
-    combineArchiveName = Core::getSaveFileName(QObject::tr("Export To COMBINE Archive"),
+    combineArchiveName = Core::getSaveFileName(tr("Export To COMBINE Archive"),
                                                combineArchiveName,
                                                combineFilters, &firstCombineFilter);
 
@@ -3222,50 +3223,16 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
 //==============================================================================
 
-QIcon SimulationExperimentViewSimulationWidget::parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType)
-{
-    // Return an icon that illustrates the type of a parameter
-
-    static const QIcon VoiIcon              = QIcon(":/SimulationExperimentView/voi.png");
-    static const QIcon ConstantIcon         = QIcon(":/SimulationExperimentView/constant.png");
-    static const QIcon ComputedConstantIcon = QIcon(":/SimulationExperimentView/computedConstant.png");
-    static const QIcon RateIcon             = QIcon(":/SimulationExperimentView/rate.png");
-    static const QIcon StateIcon            = QIcon(":/SimulationExperimentView/state.png");
-    static const QIcon AlgebraicIcon        = QIcon(":/SimulationExperimentView/algebraic.png");
-    static const QIcon ErrorNodeIcon        = QIcon(":/oxygen/emblems/emblem-important.png");
-
-    switch (pParameterType) {
-    case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-        return VoiIcon;
-    case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-        return ConstantIcon;
-    case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        return ComputedConstantIcon;
-    case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        return RateIcon;
-    case CellMLSupport::CellmlFileRuntimeParameter::State:
-        return StateIcon;
-    case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        return AlgebraicIcon;
-    default:
-        // Not a relevant type, so return an error node icon
-        // Note: we should never reach this point...
-
-        return ErrorNodeIcon;
-    }
-}
-
-//==============================================================================
-
 void SimulationExperimentViewSimulationWidget::openCellmlFile()
 {
     // Ask OpenCOR to open our referenced CellML file
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+    QString cellmlFileName = mCellmlFile->fileName();
 
-    QDesktopServices::openUrl(QString("opencor://openFile/%1").arg(fileManagerInstance->isRemote(mCellmlFile->fileName())?
-                                                                       fileManagerInstance->url(mCellmlFile->fileName()):
-                                                                       mCellmlFile->fileName()));
+    QDesktopServices::openUrl(QString("opencor://openFile/%1").arg(fileManagerInstance->isRemote(cellmlFileName)?
+                                                                       fileManagerInstance->url(cellmlFileName):
+                                                                       cellmlFileName));
 
     // Ask OpenCOR to switch to the requested CellML editing view
 
