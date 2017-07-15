@@ -792,7 +792,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                 break;
             }
 
-            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, sedmlFileIssue.message());
+            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(sedmlFileIssue.message()));
         }
     } else {
         information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
