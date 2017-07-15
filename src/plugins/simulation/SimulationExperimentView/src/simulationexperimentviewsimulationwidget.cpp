@@ -3222,41 +3222,6 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
 //==============================================================================
 
-QIcon SimulationExperimentViewSimulationWidget::parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType)
-{
-    // Return an icon that illustrates the type of a parameter
-
-    static const QIcon VoiIcon              = QIcon(":/SimulationExperimentView/voi.png");
-    static const QIcon ConstantIcon         = QIcon(":/SimulationExperimentView/constant.png");
-    static const QIcon ComputedConstantIcon = QIcon(":/SimulationExperimentView/computedConstant.png");
-    static const QIcon RateIcon             = QIcon(":/SimulationExperimentView/rate.png");
-    static const QIcon StateIcon            = QIcon(":/SimulationExperimentView/state.png");
-    static const QIcon AlgebraicIcon        = QIcon(":/SimulationExperimentView/algebraic.png");
-    static const QIcon ErrorNodeIcon        = QIcon(":/oxygen/emblems/emblem-important.png");
-
-    switch (pParameterType) {
-    case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-        return VoiIcon;
-    case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-        return ConstantIcon;
-    case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        return ComputedConstantIcon;
-    case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        return RateIcon;
-    case CellMLSupport::CellmlFileRuntimeParameter::State:
-        return StateIcon;
-    case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        return AlgebraicIcon;
-    default:
-        // Not a relevant type, so return an error node icon
-        // Note: we should never reach this point...
-
-        return ErrorNodeIcon;
-    }
-}
-
-//==============================================================================
-
 void SimulationExperimentViewSimulationWidget::openCellmlFile()
 {
     // Ask OpenCOR to open our referenced CellML file
