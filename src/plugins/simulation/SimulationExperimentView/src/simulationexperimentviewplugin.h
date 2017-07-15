@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "datastoreinterface.h"
 #include "filehandlinginterface.h"
-#include "filetypeinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
@@ -80,9 +79,6 @@ private:
 
     Plugins mCellmlEditingViewPlugins;
     Plugins mCellmlSimulationViewPlugins;
-
-    FileTypeInterface *mSedmlFileTypeInterface;
-    FileTypeInterface *mCombineFileTypeInterface;
 };
 
 //==============================================================================

@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "combinearchive.h"
 #include "corecliutils.h"
 #include "datastoreinterface.h"
-#include "filetypeinterface.h"
 #include "sedmlfile.h"
 #include "solverinterface.h"
 #include "viewwidget.h"
@@ -63,8 +62,6 @@ public:
                                             const DataStoreInterfaces &pDataStoreInterfaces,
                                             const Plugins &pCellmlEditingViewPlugins,
                                             const Plugins &pCellmlSimulationViewPlugins,
-                                            FileTypeInterface *pSedmlFileTypeInterface,
-                                            FileTypeInterface *pCombineFileTypeInterface,
                                             QWidget *pParent);
 
     virtual void loadSettings(QSettings *pSettings);
@@ -94,9 +91,6 @@ public:
     Plugins cellmlEditingViewPlugins() const;
     Plugins cellmlSimulationViewPlugins() const;
 
-    FileTypeInterface * sedmlFileTypeInterface() const;
-    FileTypeInterface * combineFileTypeInterface() const;
-
     SimulationExperimentViewSimulationWidget * simulationWidget(const QString &pFileName) const;
     SimulationExperimentViewSimulation * simulation(const QString &pFileName) const;
     CellMLSupport::CellmlFileRuntime * runtime(const QString &pFileName) const;
@@ -116,9 +110,6 @@ private:
 
     Plugins mCellmlEditingViewPlugins;
     Plugins mCellmlSimulationViewPlugins;
-
-    FileTypeInterface *mSedmlFileTypeInterface;
-    FileTypeInterface *mCombineFileTypeInterface;
 
     QIntList mSimulationWidgetSizes;
     QIntList mContentsWidgetSizes;

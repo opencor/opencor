@@ -62,9 +62,7 @@ SimulationExperimentViewPlugin::SimulationExperimentViewPlugin() :
     mSolverInterfaces(SolverInterfaces()),
     mDataStoreInterfaces(DataStoreInterfaces()),
     mCellmlEditingViewPlugins(Plugins()),
-    mCellmlSimulationViewPlugins(Plugins()),
-    mSedmlFileTypeInterface(0),
-    mCombineFileTypeInterface(0)
+    mCellmlSimulationViewPlugins(Plugins())
 {
 }
 
@@ -193,8 +191,7 @@ void SimulationExperimentViewPlugin::finalizePlugin()
 
 void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    // Retrieve the different solvers and data stores that are available to us,
-    // as well as the file types supported by the SEDMLSupport plugin
+    // Retrieve the different solvers and data stores that are available to us
 
     foreach (Plugin *plugin, pLoadedPlugins) {
         // Look for a solver
@@ -228,18 +225,6 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
                     mCellmlSimulationViewPlugins << plugin;
             }
         }
-
-        // Keep track of the file type interfaces for the SEDMLSupport and
-        // COMBINESupport plugins
-
-        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
-
-        if (fileTypeInterface) {
-            if (!plugin->name().compare("SEDMLSupport"))
-                mSedmlFileTypeInterface = fileTypeInterface;
-            else if (!plugin->name().compare("COMBINESupport"))
-                mCombineFileTypeInterface = fileTypeInterface;
-        }
     }
 
     // Create our Simulation Experiment view widget
@@ -248,8 +233,6 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
                                                      mDataStoreInterfaces,
                                                      mCellmlEditingViewPlugins,
                                                      mCellmlSimulationViewPlugins,
-                                                     mSedmlFileTypeInterface,
-                                                     mCombineFileTypeInterface,
                                                      Core::mainWindow());
 
     mViewWidget->setObjectName("SimulationExperimentViewWidget");

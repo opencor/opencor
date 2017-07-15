@@ -24,12 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlfilemanager.h"
 #include "centralwidget.h"
 #include "combinefilemanager.h"
+#include "combineinterface.h"
 #include "combinesupportplugin.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "graphpanelswidget.h"
 #include "progressbarwidget.h"
 #include "sedmlfilemanager.h"
+#include "sedmlinterface.h"
 #include "sedmlsupportplugin.h"
 #include "simulationexperimentviewcontentswidget.h"
 #include "simulationexperimentviewinformationgraphswidget.h"
@@ -1734,7 +1736,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
     QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString sedmlFileName = cellmlFileName;
-    QStringList sedmlFilters = Core::filters(FileTypeInterfaces() << mViewWidget->sedmlFileTypeInterface());
+    QStringList sedmlFilters = Core::filters(FileTypeInterfaces() << SEDMLSupport::fileTypeInterface());
     QString firstSedmlFilter = sedmlFilters.first();
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {
@@ -1788,7 +1790,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
     QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString combineArchiveName = cellmlFileName;
-    QStringList combineFilters = Core::filters(FileTypeInterfaces() << mViewWidget->combineFileTypeInterface());
+    QStringList combineFilters = Core::filters(FileTypeInterfaces() << COMBINESupport::fileTypeInterface());
     QString firstCombineFilter = combineFilters.first();
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {
