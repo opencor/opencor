@@ -1747,7 +1747,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
         sedmlFileName += "."+SEDMLSupport::SedmlFileExtension;
     }
 
-    sedmlFileName = Core::getSaveFileName(QObject::tr("Export To SED-ML File"),
+    sedmlFileName = Core::getSaveFileName(tr("Export To SED-ML File"),
                                           sedmlFileName,
                                           sedmlFilters, &firstSedmlFilter);
 
@@ -1801,7 +1801,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
         combineArchiveName += "."+COMBINESupport::CombineFileExtension;
     }
 
-    combineArchiveName = Core::getSaveFileName(QObject::tr("Export To COMBINE Archive"),
+    combineArchiveName = Core::getSaveFileName(tr("Export To COMBINE Archive"),
                                                combineArchiveName,
                                                combineFilters, &firstCombineFilter);
 

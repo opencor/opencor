@@ -625,15 +625,4 @@
         <translation>%1 n&apos;a pas pu être retrouvé (%2)</translation>
     </message>
 </context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Export To SED-ML File</source>
-        <translation>Exporter Vers Fichier SED-ML</translation>
-    </message>
-    <message>
-        <source>Export To COMBINE Archive</source>
-        <translation>Exporter Vers Archive COMBINE</translation>
-    </message>
-</context>
 </TS>
