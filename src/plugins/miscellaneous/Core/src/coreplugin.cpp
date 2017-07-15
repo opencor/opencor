@@ -25,9 +25,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "coreplugin.h"
+#include "datastoreinterface.h"
 #include "filemanager.h"
+#include "filetypeinterface.h"
+#include "interfaces.h"
 #include "organisationwidget.h"
 #include "plugin.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -541,29 +545,48 @@ void CorePlugin::finalizePlugin()
 
 void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
+    // Retrieve the different file type, solver and data store interfaces that
+    // are available to us
+
+    FileTypeInterfaces fileTypeInterfaces = FileTypeInterfaces();
+    SolverInterfaces solverInterfaces = SolverInterfaces();
+    DataStoreInterfaces dataStoreInterfaces = DataStoreInterfaces();
+
+    foreach (Plugin *plugin, pLoadedPlugins) {
+        // Look for a file type
+
+        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
+
+        if (fileTypeInterface)
+            fileTypeInterfaces << fileTypeInterface;
+
+        // Look for a solver
+
+        SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
+
+        if (solverInterface)
+            solverInterfaces << solverInterface;
+
+        // Look for a data store
+
+        DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
+
+        if (dataStoreInterface)
+            dataStoreInterfaces << dataStoreInterface;
+    }
+
+    // Keep track of our various interfaces
+
+    static InterfacesData data(fileTypeInterfaces, solverInterfaces,
+                               dataStoreInterfaces);
+
+    Core::globalInstance(InterfacesDataSignature, &data);
+
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
 
     if (!mainWindow())
         return;
-
-    // Retrieve the file type interfaces supported by our various plugins and
-    // make our central widget aware of them
-
-    FileTypeInterfaces fileTypeInterfaces = FileTypeInterfaces();
-
-    foreach (Plugin *plugin, pLoadedPlugins) {
-        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
-
-        if (fileTypeInterface) {
-            // The plugin implements our file type interface, so add it to our
-            // list
-
-            fileTypeInterfaces << fileTypeInterface;
-        }
-    }
-
-    mCentralWidget->setFileTypeInterfaces(fileTypeInterfaces);
 
     // Check, based on the loaded plugins, which views, if any, our central
     // widget should support
