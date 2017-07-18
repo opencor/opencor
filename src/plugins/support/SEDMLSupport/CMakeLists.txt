@@ -13,6 +13,7 @@ ADD_PLUGIN(SEDMLSupport
         src/sedmlfile.cpp
         src/sedmlfileissue.cpp
         src/sedmlfilemanager.cpp
+        src/sedmlinterface.cpp
         src/sedmlsupportplugin.cpp
     HEADERS_MOC
         src/sedmlfile.h

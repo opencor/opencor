@@ -25,15 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "datastoreinterface.h"
 #include "filehandlinginterface.h"
-#include "filetypeinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
 #include "pythoninterface.h"
 #include "simulationexperimentviewglobal.h"
-#include "solverinterface.h"
 #include "viewinterface.h"
 
 //==============================================================================
@@ -70,8 +67,6 @@ class SIMULATIONEXPERIMENTVIEW_EXPORT SimulationExperimentViewPlugin : public QO
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
-    explicit SimulationExperimentViewPlugin();
-
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
@@ -84,15 +79,6 @@ public:
 
 private:
     SimulationExperimentViewWidget *mViewWidget;
-
-    SolverInterfaces mSolverInterfaces;
-    DataStoreInterfaces mDataStoreInterfaces;
-
-    Plugins mCellmlEditingViewPlugins;
-    Plugins mCellmlSimulationViewPlugins;
-
-    FileTypeInterface *mSedmlFileTypeInterface;
-    FileTypeInterface *mCombineFileTypeInterface;
 
     SimulationExperimentViewPythonWrapper *mSimulationExperimentViewPythonWrapper;
 };

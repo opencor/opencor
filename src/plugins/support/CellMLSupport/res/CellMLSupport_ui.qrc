@@ -1,17 +1,23 @@
 <RCC>
     <qresource prefix="/CellMLSupport">
-        <file>modelNode.png</file>
-        <file>importNode.png</file>
-        <file>unitNode.png</file>
-        <file>unitElementNode.png</file>
+        <file>algebraic.png</file>
         <file>componentNode.png</file>
-        <file>variableNode.png</file>
-        <file>modifiableVariableNode.png</file>
-        <file>mathmlElementNode.png</file>
-        <file>groupNode.png</file>
-        <file>relationshipNode.png</file>
+        <file>computedConstant.png</file>
         <file>connectionNode.png</file>
-        <file>metadataNode.png</file>
+        <file>constant.png</file>
+        <file>groupNode.png</file>
+        <file>importNode.png</file>
         <file>logo.png</file>
+        <file>mathmlElementNode.png</file>
+        <file>metadataNode.png</file>
+        <file>modelNode.png</file>
+        <file>modifiableVariableNode.png</file>
+        <file>rate.png</file>
+        <file>relationshipNode.png</file>
+        <file>state.png</file>
+        <file>unitElementNode.png</file>
+        <file>unitNode.png</file>
+        <file>variableNode.png</file>
+        <file>voi.png</file>
     </qresource>
 </RCC>

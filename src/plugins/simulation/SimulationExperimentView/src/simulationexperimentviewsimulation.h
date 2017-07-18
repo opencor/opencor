@@ -67,8 +67,7 @@ class SIMULATIONEXPERIMENTVIEW_EXPORT SimulationExperimentViewSimulationData : p
     friend class SimulationExperimentViewPythonWrapper;
 
 public:
-    explicit SimulationExperimentViewSimulationData(SimulationExperimentViewSimulation *pSimulation,
-                                                    const SolverInterfaces &pSolverInterfaces);
+    explicit SimulationExperimentViewSimulationData(SimulationExperimentViewSimulation *pSimulation);
     ~SimulationExperimentViewSimulationData();
 
     void update();
@@ -143,8 +142,6 @@ private:
     SimulationExperimentViewSimulation *mSimulation;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
-
-    SolverInterfaces mSolverInterfaces;
 
     int mDelay;
 
@@ -253,8 +250,7 @@ class SIMULATIONEXPERIMENTVIEW_EXPORT SimulationExperimentViewSimulation : publi
     friend class SimulationExperimentViewSimulationWorker;
 
 public:
-    explicit SimulationExperimentViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                const SolverInterfaces &pSolverInterfaces);
+    explicit SimulationExperimentViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime);
     ~SimulationExperimentViewSimulation();
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
@@ -290,8 +286,6 @@ private:
     SimulationExperimentViewSimulationWorker *mWorker;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
-
-    SolverInterfaces mSolverInterfaces;
 
     SimulationExperimentViewSimulationData *mData;
     SimulationExperimentViewSimulationResults *mResults;

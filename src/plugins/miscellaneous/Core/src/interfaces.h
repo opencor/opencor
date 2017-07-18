@@ -18,66 +18,55 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CellML support plugin
+// Interfaces
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
+#include "coreglobal.h"
+#include "datastoreinterface.h"
 #include "filetypeinterface.h"
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace Core {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLSupportPluginInfo();
+static const auto InterfacesDataSignature = QStringLiteral("OpenCOR::Core::InterfacesData");
 
 //==============================================================================
 
-static const auto CellmlMimeType      = QStringLiteral("application/cellml+xml");
-static const auto CellmlFileExtension = QStringLiteral("cellml");
-
-//==============================================================================
-
-class CellMLSupportPlugin : public QObject, public FileTypeInterface,
-                            public GuiInterface, public I18nInterface,
-                            public PluginInterface
+class InterfacesData
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLSupportPlugin" FILE "cellmlsupportplugin.json")
-
-    Q_INTERFACES(OpenCOR::FileTypeInterface)
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
 public:
-    explicit CellMLSupportPlugin();
+    explicit InterfacesData(const FileTypeInterfaces &pFileTypeInterfaces,
+                            const SolverInterfaces &pSolverInterfaces,
+                            const DataStoreInterfaces &pDataStoreInterfaces);
 
-#include "filetypeinterface.inl"
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
+    FileTypeInterfaces fileTypeInterfaces() const;
+    SolverInterfaces solverInterfaces() const;
+    DataStoreInterfaces dataStoreInterfaces() const;
 
 private:
-    QAction *mFileNewCellmlFileAction;
-
-private slots:
-    void newCellmlFile();
+    FileTypeInterfaces mFileTypeInterfaces;
+    SolverInterfaces mSolverInterfaces;
+    DataStoreInterfaces mDataStoreInterfaces;
 };
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+FileTypeInterfaces CORE_EXPORT fileTypeInterfaces();
+SolverInterfaces CORE_EXPORT solverInterfaces();
+DataStoreInterfaces CORE_EXPORT dataStoreInterfaces();
+
+//==============================================================================
+
+}   // namespace Core
 }   // namespace OpenCOR
 
 //==============================================================================

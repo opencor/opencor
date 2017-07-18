@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CellML support plugin
+// COMBINE interface
 //==============================================================================
 
 #pragma once
@@ -26,58 +26,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "filetypeinterface.h"
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
+#include "combinesupportglobal.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace COMBINESupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLSupportPluginInfo();
+static const auto CombineInterfaceDataSignature = QStringLiteral("OpenCOR::COMBINESupport::CombineInterfaceData");
 
 //==============================================================================
 
-static const auto CellmlMimeType      = QStringLiteral("application/cellml+xml");
-static const auto CellmlFileExtension = QStringLiteral("cellml");
-
-//==============================================================================
-
-class CellMLSupportPlugin : public QObject, public FileTypeInterface,
-                            public GuiInterface, public I18nInterface,
-                            public PluginInterface
+class CombineInterfaceData
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLSupportPlugin" FILE "cellmlsupportplugin.json")
-
-    Q_INTERFACES(OpenCOR::FileTypeInterface)
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
 public:
-    explicit CellMLSupportPlugin();
+    explicit CombineInterfaceData(FileTypeInterface *pFileTypeInterface);
 
-#include "filetypeinterface.inl"
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
+    FileTypeInterface * fileTypeInterface() const;
 
 private:
-    QAction *mFileNewCellmlFileAction;
-
-private slots:
-    void newCellmlFile();
+    FileTypeInterface *mFileTypeInterface;
 };
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+FileTypeInterface COMBINESUPPORT_EXPORT * fileTypeInterface();
+
+//==============================================================================
+
+}   // namespace COMBINESupport
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "filehandlinginterface.h"
 #include "filemanager.h"
 #include "guiinterface.h"
+#include "interfaces.h"
 #include "tabbarwidget.h"
 #include "usermessagewidget.h"
 #include "viewinterface.h"
@@ -140,7 +141,6 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mModeModeTabIndexes(QMap<ViewInterface::Mode, int>()),
     mFileModeTabIndexes(QMap<QString, int>()),
     mFileModeViewTabIndexes(QMap<QString, QMap<int, int>>()),
-    mFileTypeInterfaces(FileTypeInterfaces()),
     mFileNames(QStringList()),
     mModes(QMap<ViewInterface::Mode, CentralWidgetMode *>()),
     mRemoteLocalFileNames(QMap<QString, QString>()),
@@ -653,15 +653,6 @@ void CentralWidget::retranslateUi()
 
 //==============================================================================
 
-void CentralWidget::setFileTypeInterfaces(const FileTypeInterfaces &pFileTypeInterfaces)
-{
-    // Set the file type interfaces
-
-    mFileTypeInterfaces = pFileTypeInterfaces;
-}
-
-//==============================================================================
-
 QString CentralWidget::currentFileName() const
 {
     // Return the current file name, if any
@@ -835,7 +826,7 @@ void CentralWidget::openFile()
     // Ask for the file(s) to be opened
 
     QStringList files = getOpenFileNames(tr("Open File"),
-                                         filters(mFileTypeInterfaces));
+                                         filters(fileTypeInterfaces()));
 
     // Open the file(s)
 
@@ -1107,7 +1098,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         // under a new name, so we ask the user for a file name based on the
         // MIME types supported by our current view
 
-        QStringList supportedFilters = filters(mFileTypeInterfaces, viewInterface->viewMimeTypes(ViewInterface::SaveMimeTypeMode));
+        QStringList supportedFilters = filters(fileTypeInterfaces(), viewInterface->viewMimeTypes(ViewInterface::SaveMimeTypeMode));
         QString firstSupportedFilter = supportedFilters.isEmpty()?QString():supportedFilters.first();
 
         newFileName = getSaveFileName(pNeedNewFileName?

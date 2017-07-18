@@ -32,6 +32,7 @@ ADD_PLUGIN(Core
         src/coreplugin.cpp
         src/file.cpp
         src/filemanager.cpp
+        src/interfaces.cpp
         src/mathmlconverter.cpp
         src/organisationwidget.cpp
         src/progressbarwidget.cpp

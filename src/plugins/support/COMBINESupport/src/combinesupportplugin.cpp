@@ -22,7 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "combinefilemanager.h"
+#include "combineinterface.h"
 #include "combinesupportplugin.h"
+#include "corecliutils.h"
 
 //==============================================================================
 
@@ -41,6 +43,17 @@ PLUGININFO_FUNC COMBINESupportPluginInfo()
     return new PluginInfo(PluginInfo::Support, false, false,
                           QStringList() << "StandardSupport" << "ZIPSupport",
                           descriptions);
+}
+
+//==============================================================================
+
+COMBINESupportPlugin::COMBINESupportPlugin()
+{
+    // Keep track of our file type interface
+
+    static CombineInterfaceData data(qobject_cast<FileTypeInterface *>(this));
+
+    Core::globalInstance(CombineInterfaceDataSignature, &data);
 }
 
 //==============================================================================

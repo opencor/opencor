@@ -59,19 +59,6 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
 }
 
 //==============================================================================
-
-SimulationExperimentViewPlugin::SimulationExperimentViewPlugin() :
-    mSolverInterfaces(SolverInterfaces()),
-    mDataStoreInterfaces(DataStoreInterfaces()),
-    mCellmlEditingViewPlugins(Plugins()),
-    mCellmlSimulationViewPlugins(Plugins()),
-    mSedmlFileTypeInterface(0),
-    mCombineFileTypeInterface(0),
-    mSimulationExperimentViewPythonWrapper(0)
-{
-}
-
-//==============================================================================
 // File handling interface
 //==============================================================================
 
@@ -196,26 +183,12 @@ void SimulationExperimentViewPlugin::finalizePlugin()
 
 void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    // Retrieve the different solvers and data stores that are available to us,
-    // as well as the file types supported by the SEDMLSupport plugin
+    // Retrieve the different CellML capable editing and simulation views
+
+    Plugins cellmlEditingViewPlugins = Plugins();
+    Plugins cellmlSimulationViewPlugins = Plugins();
 
     foreach (Plugin *plugin, pLoadedPlugins) {
-        // Look for a solver
-
-        SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
-
-        if (solverInterface)
-            mSolverInterfaces << solverInterface;
-
-        // Look for a data store
-
-        DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
-
-        if (dataStoreInterface)
-            mDataStoreInterfaces << dataStoreInterface;
-
-        // Look for a CellML capable editing or simulation view
-
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
         if (   viewInterface
@@ -226,33 +199,18 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
             if (   viewMimeTypes.isEmpty()
                 || viewMimeTypes.contains(CellMLSupport::CellmlMimeType)) {
                 if (viewInterface->viewMode() == EditingMode)
-                    mCellmlEditingViewPlugins << plugin;
+                    cellmlEditingViewPlugins << plugin;
                 else
-                    mCellmlSimulationViewPlugins << plugin;
+                    cellmlSimulationViewPlugins << plugin;
             }
-        }
-
-        // Keep track of the file type interfaces for the SEDMLSupport and
-        // COMBINESupport plugins
-
-        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
-
-        if (fileTypeInterface) {
-            if (!plugin->name().compare("SEDMLSupport"))
-                mSedmlFileTypeInterface = fileTypeInterface;
-            else if (!plugin->name().compare("COMBINESupport"))
-                mCombineFileTypeInterface = fileTypeInterface;
         }
     }
 
     // Create our Simulation Experiment view widget
 
-    mViewWidget = new SimulationExperimentViewWidget(this, mSolverInterfaces,
-                                                     mDataStoreInterfaces,
-                                                     mCellmlEditingViewPlugins,
-                                                     mCellmlSimulationViewPlugins,
-                                                     mSedmlFileTypeInterface,
-                                                     mCombineFileTypeInterface,
+    mViewWidget = new SimulationExperimentViewWidget(this,
+                                                     cellmlEditingViewPlugins,
+                                                     cellmlSimulationViewPlugins,
                                                      Core::mainWindow());
 
     mViewWidget->setObjectName("SimulationExperimentViewWidget");

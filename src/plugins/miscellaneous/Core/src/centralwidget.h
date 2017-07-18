@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "coreglobal.h"
 #include "file.h"
-#include "filetypeinterface.h"
 #include "guiinterface.h"
 #include "widget.h"
 #include "viewinterface.h"
@@ -105,8 +104,6 @@ public:
 
     virtual void retranslateUi();
 
-    void setFileTypeInterfaces(const FileTypeInterfaces &pFileTypeInterfaces);
-
     void addView(Plugin *pPlugin);
 
     TabBarWidget * newTabBarWidget(const QTabBar::Shape &pShape,
@@ -158,8 +155,6 @@ private:
 
     QMap<QString, int> mFileModeTabIndexes;
     QMap<QString, QMap<int, int>> mFileModeViewTabIndexes;
-
-    FileTypeInterfaces mFileTypeInterfaces;
 
     QStringList mFileNames;
 

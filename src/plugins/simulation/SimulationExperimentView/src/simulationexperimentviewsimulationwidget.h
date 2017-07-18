@@ -153,8 +153,6 @@ public:
 
     void resetSimulationProgress();
 
-    static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
-
 private:
     enum ErrorType {
         General,

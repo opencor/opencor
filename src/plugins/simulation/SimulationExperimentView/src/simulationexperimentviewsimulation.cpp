@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "cellmlfile.h"
 #include "cellmlfileruntime.h"
+#include "interfaces.h"
 #include "simulationexperimentviewsimulation.h"
 #include "simulationexperimentviewsimulationwidget.h"
 
@@ -37,11 +38,9 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
-SimulationExperimentViewSimulationData::SimulationExperimentViewSimulationData(SimulationExperimentViewSimulation *pSimulation,
-                                                                               const SolverInterfaces &pSolverInterfaces) :
+SimulationExperimentViewSimulationData::SimulationExperimentViewSimulationData(SimulationExperimentViewSimulation *pSimulation) :
     mSimulation(pSimulation),
     mRuntime(pSimulation->runtime()),
-    mSolverInterfaces(pSolverInterfaces),
     mDelay(0),
     mStartingPoint(0.0),
     mEndingPoint(1000.0),
@@ -222,7 +221,7 @@ SolverInterface * SimulationExperimentViewSimulationData::solverInterface(const 
 {
     // Return the named solver interface, if any
 
-    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
+    foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
         if (!solverInterface->solverName().compare(pSolverName))
             return solverInterface;
     }
@@ -664,7 +663,7 @@ void SimulationExperimentViewSimulationData::createResultsDataStore()
 
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-            mPointVariable->setIcon(SimulationExperimentViewSimulationWidget::parameterIcon(parameter->type()));
+            mPointVariable->setIcon(parameter->icon());
             mPointVariable->setUri(uri(mRuntime->variableOfIntegration()->componentHierarchy(),
                                    mRuntime->variableOfIntegration()->name()));
             mPointVariable->setLabel(mRuntime->variableOfIntegration()->name());
@@ -695,7 +694,7 @@ void SimulationExperimentViewSimulationData::createResultsDataStore()
         }
 
         if (variable) {
-            variable->setIcon(SimulationExperimentViewSimulationWidget::parameterIcon(parameter->type()));
+            variable->setIcon(parameter->icon());
             variable->setUri(uri(parameter->componentHierarchy(),
                                  parameter->formattedName()));
             variable->setLabel(parameter->formattedName());
@@ -917,12 +916,10 @@ double * SimulationExperimentViewSimulationResults::algebraic(const int &pIndex)
 
 //==============================================================================
 
-SimulationExperimentViewSimulation::SimulationExperimentViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                                       const SolverInterfaces &pSolverInterfaces) :
+SimulationExperimentViewSimulation::SimulationExperimentViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime) :
     mWorker(0),
     mRuntime(pRuntime),
-    mSolverInterfaces(pSolverInterfaces),
-    mData(new SimulationExperimentViewSimulationData(this, pSolverInterfaces)),
+    mData(new SimulationExperimentViewSimulationData(this)),
     mResults(new SimulationExperimentViewSimulationResults(this))
 {
     // Keep track of any error occurring in our data

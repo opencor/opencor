@@ -629,7 +629,7 @@ void SimulationExperimentViewInformationGraphsWidget::populateParametersContextM
 
         // Add the current parameter to the 'current' component menu
 
-        QAction *parameterAction = componentMenu->addAction(SimulationExperimentViewSimulationWidget::parameterIcon(parameter->type()),
+        QAction *parameterAction = componentMenu->addAction(parameter->icon(),
                                                             parameter->formattedName());
 
         // Create a connection to handle the parameter value update

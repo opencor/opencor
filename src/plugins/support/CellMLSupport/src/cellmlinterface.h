@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CellML support plugin
+// CellML interface
 //==============================================================================
 
 #pragma once
@@ -26,10 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "filetypeinterface.h"
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
+#include "cellmlsupportglobal.h"
 
 //==============================================================================
 
@@ -38,42 +35,24 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLSupportPluginInfo();
+static const auto CellmlInterfaceDataSignature = QStringLiteral("OpenCOR::CellMLSupport::CellmlInterfaceData");
 
 //==============================================================================
 
-static const auto CellmlMimeType      = QStringLiteral("application/cellml+xml");
-static const auto CellmlFileExtension = QStringLiteral("cellml");
-
-//==============================================================================
-
-class CellMLSupportPlugin : public QObject, public FileTypeInterface,
-                            public GuiInterface, public I18nInterface,
-                            public PluginInterface
+class CellmlInterfaceData
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLSupportPlugin" FILE "cellmlsupportplugin.json")
-
-    Q_INTERFACES(OpenCOR::FileTypeInterface)
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
 public:
-    explicit CellMLSupportPlugin();
+    explicit CellmlInterfaceData(FileTypeInterface *pFileTypeInterface);
 
-#include "filetypeinterface.inl"
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
+    FileTypeInterface * fileTypeInterface() const;
 
 private:
-    QAction *mFileNewCellmlFileAction;
-
-private slots:
-    void newCellmlFile();
+    FileTypeInterface *mFileTypeInterface;
 };
+
+//==============================================================================
+
+FileTypeInterface CELLMLSUPPORT_EXPORT * fileTypeInterface();
 
 //==============================================================================
 
