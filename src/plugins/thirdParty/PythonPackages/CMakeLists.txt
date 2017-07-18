@@ -37,9 +37,12 @@ SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 
 SET(LOCAL_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/site-packages)
 
-# Package the site-packages directory
+# Package the include and site-packages directory
 
-SET(PACKAGED_FILES site-packages)
+SET(PACKAGED_FILES
+    include
+    site-packages
+)
 
 # XXXNo files need to have their SHA-1 value checked
 ## "35m" needs to come from say ${PYTHON_ABI_VERSION}
@@ -71,7 +74,7 @@ IF(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 4ba74e7a7755fab19a1a684f5b656d1db9d7d04b
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 3581400b929ebe2c43668bc95b5be515045729e7
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 404333b7075ec857401b22c5de977ad5869dd6fc)
@@ -88,7 +91,7 @@ ELSE()
 
     # Installing Python packages requires the Python library
 
-    SET(BUILD_DEPENDENCIES PythonPlugin)
+    SET(BUILD_DEPENDENCIES PythonPlugin_EXTERNAL_SOURCES)
 
     # Ensure local site packages directory exists
 
@@ -135,6 +138,18 @@ ELSE()
 
     ADD_DEPENDENCIES(${PACKAGE_BUILD} science_packages)
     ADD_DEPENDENCIES(science_packages ${BUILD_DEPENDENCIES})
+
+    # Copy the numpy include directory to a place that OpenCOR can use
+
+    ADD_CUSTOM_TARGET(copy_numpy_headers
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/include include
+        WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+
+    )
+
+    ADD_DEPENDENCIES(${PACKAGE_BUILD} copy_numpy_headers)
+    ADD_DEPENDENCIES(copy_numpy_headers science_packages)
 
     # Patch matplotlib's Qt backend so that it works with PythonQt
 
@@ -200,15 +215,6 @@ ELSE()
 
     SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
-
-# Copy the numpy include directory to a place that OpenCOR can use
-
-ADD_CUSTOM_TARGET(copy_numpy_headers
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${PYTHON_SITE_PACKAGES_DIR}/numpy/core/include ${PYTHON_INCLUDE_DIR}
-    )
-
-ADD_DEPENDENCIES(copy_numpy_headers PythonPackagesPlugin)
 
 # Add the plugin
 

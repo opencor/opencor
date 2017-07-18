@@ -81,4 +81,6 @@ ADD_PLUGIN(Core
         clitests
         generaltests
         mathmltests
+    DEPENDS_ON
+        PythonPlugin_EXTERNAL_SOURCES
 )

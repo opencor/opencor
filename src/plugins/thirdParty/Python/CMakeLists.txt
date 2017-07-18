@@ -135,9 +135,9 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 02fceddd890c9325a05ddbeb410789f8533bcbdc
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 22786346f56097485b8542593599ff90c3005d71
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e122e68c0593bf8758baab2d93ae3984a2071584)
+                              SHA1_VALUES d87312719ed58dddbb4e16a3ad9db28776b2a4b5)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
             ${RELATIVE_PROJECT_SOURCE_DIR} 0c8b8b07d6af7cdc8e6746cb472d9be5f45f20f0
@@ -321,7 +321,6 @@ ELSE()
     IF(NOT WIN32)
         ExternalProject_Add_Step(${PACKAGE_BUILD} copy_headers
             COMMAND ${CMAKE_COMMAND} -E copy_directory include/python${PYTHON_BUILT_VERSION} include
-            COMMAND ${CMAKE_COMMAND} -E remove_directory include/python${PYTHON_BUILT_VERSION}
             WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
             DEPENDEES install
             )
@@ -384,11 +383,11 @@ ELSE()
     # Use our newly installed python
 
     IF(WIN32)
-        SET(PYTHON_EXECUTABLE python.exe)
+        SET(PYTHON_EXECUTABLE  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python.exe)
     ELSEIF(NOT APPLE)
-        SET(PYTHON_EXECUTABLE "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" python)
+        SET(PYTHON_EXECUTABLE "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}"  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
     ELSE()
-        SET(PYTHON_EXECUTABLE python)
+        SET(PYTHON_EXECUTABLE  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
     ENDIF()
 
     # Clean our site-packages directory
@@ -404,7 +403,6 @@ ELSE()
 
     ExternalProject_Add_Step(${PACKAGE_BUILD} install_pip
         COMMAND ${PYTHON_EXECUTABLE} -s ${PROJECT_SOURCE_DIR}/scripts/get-pip.py
-        WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
         DEPENDEES clean_site
         )
 

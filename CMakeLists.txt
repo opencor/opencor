@@ -760,12 +760,24 @@ IF(ENABLE_TESTS)
 ENDIF()
 
 # Build our plugins
-# Note: plugins can be listed in any order (dependencies are determined
-#       automatically). However, for this to work, all plugins must have
-#       [PLUGIN_DIR]/src as an include directory. In addition, all plugins
-#       linked to a packge (built using the ExternalProject module) must also
-#       have [PLUGIN_DIR]/[LOCAL_EXTERNAL_PACKAGE_DIR]/include as an include
-#       directory...
+# Note: apart from Python related third-party plugins, plugins can be listed in
+#       any order (dependencies are determined automatically). However, for this
+#       to work, all plugins must have [PLUGIN_DIR]/src as an include directory.
+#       In addition, all plugins linked to a packge (built using the ExternalProject
+#       module) must also have [PLUGIN_DIR]/[LOCAL_EXTERNAL_PACKAGE_DIR]/include
+#       as an include directory...
+
+# Third-party Python plugins depend on CMake variables defined by the OpenSSL and
+# zlib plugins as well as by the preceding Python plugins
+
+SET(PYTHON_PLUGINS
+    thirdParty/OpenSSL
+    thirdParty/zlib
+
+    thirdParty/Python
+    thirdParty/PythonPackages
+    thirdParty/PythonQtAPI
+)
 
 IF(ENABLE_SAMPLE_PLUGINS)
     SET(SAMPLE_PLUGINS
@@ -787,6 +799,7 @@ ELSE()
 ENDIF()
 
 SET(PLUGINS
+    ${PYTHON_PLUGINS}
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
 
@@ -843,19 +856,10 @@ SET(PLUGINS
     thirdParty/LibXDiff
     thirdParty/LLVMClang
     thirdParty/OAuth
-    thirdParty/OpenSSL
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
     thirdParty/Zinc
-    thirdParty/zlib
-
-    # Third-party Python plugins depend on CMake variables defined by the OpenSSL
-    # and zlib plugins as well as by the preceding Python plugins
-
-    thirdParty/Python
-    thirdParty/PythonPackages
-    thirdParty/PythonQtAPI
 
     tools/CellMLTools
 
@@ -910,6 +914,11 @@ ADD_EXECUTABLE(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${SOURCES_RCS}
 )
 
+# We can't compile Python interface code until after the Python headers are in
+# place
+
+ADD_DEPENDENCIES(${CMAKE_PROJECT_NAME} PythonPlugin_EXTERNAL_SOURCES)
+
 SET_TARGET_PROPERTIES(${CMAKE_PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${CMAKE_PROJECT_NAME}
     LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
@@ -953,6 +962,11 @@ IF(WIN32)
         ${WINDOWS_CLI_SOURCES_MOC}
         ${WINDOWS_CLI_SOURCES_RCS}
     )
+
+    # We can't compile Python interface code until after the Python headers are
+    # in place
+
+    ADD_DEPENDENCIES(${WINDOWS_CLI_PROJECT_NAME} PythonPlugin_EXTERNAL_SOURCES)
 
     TARGET_COMPILE_DEFINITIONS(${WINDOWS_CLI_PROJECT_NAME}
                                PRIVATE CLI_VERSION)
