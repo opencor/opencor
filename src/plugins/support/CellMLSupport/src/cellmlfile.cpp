@@ -684,28 +684,49 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
 
 //==============================================================================
 
-bool CellmlFile::isValid(const QString &pFileContents,
-                         CellmlFileIssues &pIssues, const bool &pWithBusyWidget)
+bool CellmlFile::doIsValid(const QString &pFileContents,
+                           ObjRef<iface::cellml_api::Model> *pModel,
+                           CellmlFileIssues &pIssues,
+                           const bool &pWithBusyWidget)
 {
-    // Check whether the given file contents is CellML valid, so first create a
-    // model
+    // Try to load our model
 
-    ObjRef<iface::cellml_api::Model> model;
-
-    if (doLoad(mFileName, pFileContents, &model, pIssues)) {
+    if (doLoad(pFileContents, pModel, pIssues)) {
         // The file contents was properly loaded, so make sure that its imports,
         // if any, are fully instantiated
 
-        if (fullyInstantiateImports(model, pIssues, pWithBusyWidget)) {
+        if (fullyInstantiateImports(*pModel, pIssues, pWithBusyWidget)) {
             // Now, we can check whether the file contents is CellML valid
 
-            return doIsValid(model, pIssues);
+            return doIsValid(*pModel, pIssues);
         } else {
             return false;
         }
     } else {
         return false;
     }
+}
+
+//==============================================================================
+
+bool CellmlFile::isValid(const QString &pFileContents,
+                         CellmlFileIssues &pIssues, const bool &pWithBusyWidget)
+{
+    // Check whether the given file contents is CellML valid, so for this create
+    // a temporary model
+
+    ObjRef<iface::cellml_api::Model> model;
+
+    return doIsValid(pFileContents, &model, pIssues, pWithBusyWidget);
+}
+
+//==============================================================================
+
+bool CellmlFile::isValid(const bool &pWithBusyWidget)
+{
+    // Return whether we are valid
+
+    return doIsValid(QString(), &mModel, mIssues, pWithBusyWidget);
 }
 
 //==============================================================================

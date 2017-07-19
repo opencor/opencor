@@ -81,6 +81,7 @@ public:
 
     bool isValid(const QString &pFileContents, CellmlFileIssues &pIssues,
                  const bool &pWithBusyWidget = false);
+    bool isValid(const bool &pWithBusyWidget = false);
 
     bool isModified() const;
     void setModified(const bool &pModified) const;
@@ -174,6 +175,10 @@ private:
     bool doLoad(const QString &pFileContents,
                 ObjRef<iface::cellml_api::Model> *pModel,
                 CellmlFileIssues &pIssues);
+
+    bool doIsValid(const QString &pFileContents,
+                   ObjRef<iface::cellml_api::Model> *pModel,
+                   CellmlFileIssues &pIssues, const bool &pWithBusyWidget);
 
     void retrieveCmetaIdsFromCellmlElement(iface::cellml_api::CellMLElement *pElement);
     void clearCmetaIdsFromCellmlElement(const QDomElement &pElement,
