@@ -311,7 +311,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
 //==============================================================================
 
-bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
+bool CellmlFile::doLoad(const QString &pFileContents,
                         ObjRef<iface::cellml_api::Model> *pModel,
                         CellmlFileIssues &pIssues)
 {
@@ -328,7 +328,7 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
 
     try {
         if (pFileContents.isEmpty())
-            *pModel = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
+            *pModel = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(mFileName).toEncoded()).toStdWString());
         else
             *pModel = modelLoader->createFromText(pFileContents.toStdWString());
     } catch (iface::cellml_api::CellMLException &exception) {
@@ -351,16 +351,16 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     ObjRef<iface::cellml_api::URI> baseUri = (*pModel)->xmlBase();
 
-    if (fileManagerInstance->isRemote(pFileName)) {
+    if (fileManagerInstance->isRemote(mFileName)) {
         // We are dealing with a remote file, so its XML base value should point
         // to its remote location
 
-        baseUri->asText(fileManagerInstance->url(pFileName).toStdWString());
+        baseUri->asText(fileManagerInstance->url(mFileName).toStdWString());
     } else if (!pFileContents.isEmpty()) {
         // We are dealing with a file which contents was directly passed onto
         // us, so its XML base value should point to its actual location
 
-        baseUri->asText(pFileName.toStdWString());
+        baseUri->asText(mFileName.toStdWString());
     }
 
     return true;
@@ -431,7 +431,7 @@ bool CellmlFile::load()
 
     // Try to load the model
 
-    if (!doLoad(mFileName, QString(), &mModel, mIssues))
+    if (!doLoad(QString(), &mModel, mIssues))
         return false;
 
     // Retrieve all the RDF triples associated with the model and initialise our

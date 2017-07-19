@@ -171,7 +171,7 @@ private:
                                  CellmlFileIssues &pIssues,
                                  const bool &pWithBusyWidget = false);
 
-    bool doLoad(const QString &pFileName, const QString &pFileContents,
+    bool doLoad(const QString &pFileContents,
                 ObjRef<iface::cellml_api::Model> *pModel,
                 CellmlFileIssues &pIssues);
 
