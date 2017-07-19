@@ -46,6 +46,7 @@ class QwtWheel;
 //==============================================================================
 
 namespace libsedml {
+    class SedAlgorithm;
     class SedDocument;
     class SedModel;
     class SedRepeatedTask;
@@ -60,7 +61,6 @@ namespace OpenCOR {
 //==============================================================================
 
 class DataStoreInterface;
-class ViewInterface;
 
 //==============================================================================
 
