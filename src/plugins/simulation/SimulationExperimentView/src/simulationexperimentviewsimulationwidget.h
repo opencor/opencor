@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
 #include "sedmlfileissue.h"
+#include "simulationexperimentviewsimulation.h"
 #include "simulationexperimentviewwidget.h"
 #include "widget.h"
 
@@ -98,7 +99,6 @@ namespace SimulationExperimentView {
 
 class SimulationExperimentViewContentsWidget;
 class SimulationExperimentViewPlugin;
-class SimulationExperimentViewSimulation;
 
 //==============================================================================
 
@@ -107,12 +107,6 @@ class SimulationExperimentViewSimulationWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    enum FileType {
-        CellmlFile,
-        SedmlFile,
-        CombineArchive
-    };
-
     explicit SimulationExperimentViewSimulationWidget(SimulationExperimentViewPlugin *pPlugin,
                                                       SimulationExperimentViewWidget *pViewWidget,
                                                       const QString &pFileName,
@@ -141,7 +135,7 @@ public:
 
     SEDMLSupport::SedmlFile * sedmlFile() const;
 
-    FileType fileType() const;
+    SimulationExperimentViewSimulation::FileType fileType() const;
 
     SimulationExperimentViewSimulation * simulation() const;
 
@@ -215,7 +209,7 @@ private:
     SEDMLSupport::SedmlFile *mSedmlFile;
     COMBINESupport::CombineArchive *mCombineArchive;
 
-    FileType mFileType;
+    SimulationExperimentViewSimulation::FileType mFileType;
 
     SEDMLSupport::SedmlFileIssues mSedmlFileIssues;
     COMBINESupport::CombineArchiveIssues mCombineArchiveIssues;
@@ -296,7 +290,7 @@ private:
                             CellMLSupport::CellmlFile *&pCellmlFile,
                             SEDMLSupport::SedmlFile *pSedmlFile,
                             COMBINESupport::CombineArchive *pCombineArchive,
-                            const FileType &pFileType,
+                            const SimulationExperimentViewSimulation::FileType &pFileType,
                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues);
     void retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
                            COMBINESupport::CombineArchive *pCombineArchive,
@@ -306,7 +300,7 @@ private:
                              CellMLSupport::CellmlFile *&pCellmlFile,
                              SEDMLSupport::SedmlFile *&pSedmlFile,
                              COMBINESupport::CombineArchive *&pCombineArchive,
-                             FileType &pFileType,
+                             SimulationExperimentViewSimulation::FileType &pFileType,
                              SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
                              COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
 

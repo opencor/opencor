@@ -108,7 +108,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mCellmlFile(0),
     mSedmlFile(0),
     mCombineArchive(0),
-    mFileType(CellmlFile),
+    mFileType(SimulationExperimentViewSimulation::CellmlFile),
     mSedmlFileIssues(SEDMLSupport::SedmlFileIssues()),
     mCombineArchiveIssues(COMBINESupport::CombineArchiveIssues()),
     mErrorType(General),
@@ -475,7 +475,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     // is readable/writable and of CellML type
 
     mDevelopmentModeAction->setEnabled(   Core::FileManager::instance()->isReadableAndWritable(pFileName)
-                                       && (mFileType == CellmlFile));
+                                       && (mFileType == SimulationExperimentViewSimulation::CellmlFile));
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -491,10 +491,10 @@ SimulationExperimentViewSimulationWidget::~SimulationExperimentViewSimulationWid
 
     delete mSimulation;
 
-    if (mFileType != CellmlFile)
+    if (mFileType != SimulationExperimentViewSimulation::CellmlFile)
         delete mCellmlFile;
 
-    if (mFileType != SedmlFile)
+    if (mFileType != SimulationExperimentViewSimulation::SedmlFile)
         delete mSedmlFile;
 }
 
@@ -628,8 +628,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
     mSimulationDataExportAction->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
                                             &&  mSimulation->results()->size()
                                             && !simulationModeEnabled);
-    mCellmlOpenAction->setEnabled(mFileType != CellmlFile);
-    mSedmlExportAction->setEnabled(    (mFileType == CellmlFile)
+    mCellmlOpenAction->setEnabled(mFileType != SimulationExperimentViewSimulation::CellmlFile);
+    mSedmlExportAction->setEnabled(    (mFileType == SimulationExperimentViewSimulation::CellmlFile)
                                    &&  mSimulation->results()->size()
                                    && !simulationModeEnabled);
 
@@ -994,7 +994,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     //       that all the other events have been properly handled...
 
     if (    validSimulationEnvironment
-        && (mFileType != CellmlFile)) {
+        && (mFileType != SimulationExperimentViewSimulation::CellmlFile)) {
         QTimer::singleShot(0, this, SLOT(furtherInitialize()));
     }
 }
@@ -1094,7 +1094,7 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
 
     QString importedParameters = QString();
 
-    if (   (mFileType == CellmlFile)
+    if (   (mFileType == SimulationExperimentViewSimulation::CellmlFile)
         && mDevelopmentModeAction->isChecked()) {
         ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellmlFile->model()->localComponents();
         QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
@@ -1120,16 +1120,16 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
     // Now, we can effectively save our given file and let the user know if some
     // parameter values couldn't be saved
 
-    bool res = (mFileType == CellmlFile)?
+    bool res = (mFileType == SimulationExperimentViewSimulation::CellmlFile)?
                    mCellmlFile->save(pFileName):
-                   (mFileType == SedmlFile)?
+                   (mFileType == SimulationExperimentViewSimulation::SedmlFile)?
                        mSedmlFile->save(pFileName):
                        mCombineArchive->save(pFileName);
 
     if (res) {
-        mFileName = (mFileType == CellmlFile)?
+        mFileName = (mFileType == SimulationExperimentViewSimulation::CellmlFile)?
                         mCellmlFile->fileName():
-                        (mFileType == SedmlFile)?
+                        (mFileType == SimulationExperimentViewSimulation::SedmlFile)?
                             mSedmlFile->fileName():
                             mCombineArchive->fileName();
 
@@ -1150,7 +1150,7 @@ void SimulationExperimentViewSimulationWidget::filePermissionsChanged()
     // track of its checked status or recheck it, as necessary
 
      if (Core::FileManager::instance()->isReadableAndWritable(mFileName)) {
-         mDevelopmentModeAction->setEnabled(mFileType == CellmlFile);
+         mDevelopmentModeAction->setEnabled(mFileType == SimulationExperimentViewSimulation::CellmlFile);
          mDevelopmentModeAction->setChecked(mLockedDevelopmentMode);
      } else {
          mLockedDevelopmentMode = mDevelopmentModeAction->isChecked();
@@ -1241,7 +1241,7 @@ SEDMLSupport::SedmlFile * SimulationExperimentViewSimulationWidget::sedmlFile() 
 
 //==============================================================================
 
-SimulationExperimentViewSimulationWidget::FileType SimulationExperimentViewSimulationWidget::fileType() const
+SimulationExperimentViewSimulation::FileType SimulationExperimentViewSimulationWidget::fileType() const
 {
     // Return our file type
 
@@ -3820,7 +3820,7 @@ void SimulationExperimentViewSimulationWidget::retrieveCellmlFile(const QString 
                                                                   CellMLSupport::CellmlFile *&pCellmlFile,
                                                                   SEDMLSupport::SedmlFile *pSedmlFile,
                                                                   COMBINESupport::CombineArchive *pCombineArchive,
-                                                                  const FileType &pFileType,
+                                                                  const SimulationExperimentViewSimulation::FileType &pFileType,
                                                                   SEDMLSupport::SedmlFileIssues &pSedmlFileIssues)
 {
     // Make sure that we support our SED-ML file
@@ -3864,7 +3864,7 @@ void SimulationExperimentViewSimulationWidget::retrieveCellmlFile(const QString 
             // If possible, set our CellML file and its dependencies, if any, as
             // dependencies for our SED-ML file
 
-            if (pFileType == SedmlFile) {
+            if (pFileType == SimulationExperimentViewSimulation::SedmlFile) {
                 Core::FileManager::instance()->setDependencies(pFileName,
                                                                QStringList() << pCellmlFile->fileName()
                                                                              << pCellmlFile->dependencies(true));
@@ -3935,7 +3935,7 @@ void SimulationExperimentViewSimulationWidget::retrieveFileDetails(const QString
                                                                    CellMLSupport::CellmlFile *&pCellmlFile,
                                                                    SEDMLSupport::SedmlFile *&pSedmlFile,
                                                                    COMBINESupport::CombineArchive *&pCombineArchive,
-                                                                   FileType &pFileType,
+                                                                   SimulationExperimentViewSimulation::FileType &pFileType,
                                                                    SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
                                                                    COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues)
 {
@@ -3945,7 +3945,11 @@ void SimulationExperimentViewSimulationWidget::retrieveFileDetails(const QString
     pSedmlFile = pCellmlFile?0:SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName);
     pCombineArchive = pSedmlFile?0:COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName);
 
-    pFileType = pCellmlFile?CellmlFile:pSedmlFile?SedmlFile:CombineArchive;
+    pFileType = pCellmlFile?
+                    SimulationExperimentViewSimulation::CellmlFile:
+                    pSedmlFile?
+                        SimulationExperimentViewSimulation::SedmlFile:
+                        SimulationExperimentViewSimulation::CombineArchive;
 
     // In the case of a COMBINE archive, we need to retrieve the corresponding
     // SED-ML file while, in the case of a SED-ML file, we need to retrieve the
