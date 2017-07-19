@@ -1232,24 +1232,6 @@ void SimulationExperimentViewSimulationWidget::setFileName(const QString &pFileN
 
 //==============================================================================
 
-SEDMLSupport::SedmlFile * SimulationExperimentViewSimulationWidget::sedmlFile() const
-{
-    // Return our SED-ML file
-
-    return mSedmlFile;
-}
-
-//==============================================================================
-
-SimulationExperimentViewSimulation::FileType SimulationExperimentViewSimulationWidget::fileType() const
-{
-    // Return our file type
-
-    return mFileType;
-}
-
-//==============================================================================
-
 SimulationExperimentViewSimulation * SimulationExperimentViewSimulationWidget::simulation() const
 {
     // Return our simulation

@@ -87,12 +87,6 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-namespace SEDMLSupport {
-    class SedmlFile;
-}   // namespace SEDMLSupport
-
-//==============================================================================
-
 namespace SimulationExperimentView {
 
 //==============================================================================
@@ -132,10 +126,6 @@ public:
 
     QString fileName() const;
     void setFileName(const QString &pFileName);
-
-    SEDMLSupport::SedmlFile * sedmlFile() const;
-
-    SimulationExperimentViewSimulation::FileType fileType() const;
 
     SimulationExperimentViewSimulation * simulation() const;
 
