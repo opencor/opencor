@@ -609,10 +609,6 @@
         <translation>une courbe doit référencer des générateurs de donnée qui existent</translation>
     </message>
     <message>
-        <source>only COMBINE archives with one master file are supported</source>
-        <translation>seulement les archives COMBINE avec un fichier maître sont supportés</translation>
-    </message>
-    <message>
         <source>%1 could not be found</source>
         <translation>%1 n&apos;a pas pu être trouvé</translation>
     </message>
