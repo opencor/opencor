@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace libsedml {
+    class SedAlgorithm;
     class SedDocument;
 }   // namespace libsedml
 
@@ -87,6 +88,9 @@ public:
     bool isValid();
 
     SedmlFileIssues issues() const;
+
+    static bool algorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
+                                   SedmlFileIssues &pIssues);
 
 private:
     QString mOwnerFileName;

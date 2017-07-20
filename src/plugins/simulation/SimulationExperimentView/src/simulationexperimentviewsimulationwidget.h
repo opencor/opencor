@@ -268,8 +268,6 @@ private:
 
     void checkSimulationDataModified(const bool &pIsModified);
 
-    bool sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
-                                 SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
     bool sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
 
