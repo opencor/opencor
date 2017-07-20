@@ -433,14 +433,17 @@ void CellmlAnnotationViewCellmlListWidget::retranslateUi()
 
 void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem)
 {
-    // Retranslate some of the CellML element's children
+    // Retranslate our CellML element's children
 
     for (int i = 0, iMax = pCellmlElementItem->rowCount(); i < iMax; ++i)
         retranslateDataItem(static_cast<CellmlAnnotationViewCellmlElementItem *>(pCellmlElementItem->child(i)));
 
-    // Check whether we are dealing with a category
+    // Retranslate our CellML element item, if it's not our model's invisible
+    // root item
 
-    if (pCellmlElementItem->isCategory()) {
+    if (pCellmlElementItem == mTreeViewModel->invisibleRootItem())
+        return;
+    else if (pCellmlElementItem->isCategory()) {
         // We are dealing with a category, so retranslate its type
 
         switch (pCellmlElementItem->type()) {

@@ -217,6 +217,12 @@ class SimulationExperimentViewSimulation : public QObject
     friend class SimulationExperimentViewSimulationWorker;
 
 public:
+    enum FileType {
+        CellmlFile,
+        SedmlFile,
+        CombineArchive
+    };
+
     explicit SimulationExperimentViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime);
     ~SimulationExperimentViewSimulation();
 

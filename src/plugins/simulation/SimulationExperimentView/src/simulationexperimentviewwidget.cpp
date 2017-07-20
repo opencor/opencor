@@ -38,29 +38,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QDesktopWidget>
-#include <QDir>
 #include <QHeaderView>
 #include <QLayout>
 #include <QSettings>
 #include <QTimer>
-
-//==============================================================================
-
-#include "sbmlapibegin.h"
-    #include "sbml/math/ASTNode.h"
-#include "sbmlapiend.h"
-
-//==============================================================================
-
-#include "sedmlapibegin.h"
-    #include "sedml/SedAlgorithm.h"
-    #include "sedml/SedDocument.h"
-    #include "sedml/SedOneStep.h"
-    #include "sedml/SedPlot2D.h"
-    #include "sedml/SedRepeatedTask.h"
-    #include "sedml/SedUniformTimeCourse.h"
-    #include "sedml/SedVectorRange.h"
-#include "sedmlapiend.h"
 
 //==============================================================================
 

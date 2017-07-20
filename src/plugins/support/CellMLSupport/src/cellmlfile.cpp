@@ -311,7 +311,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
 //==============================================================================
 
-bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
+bool CellmlFile::doLoad(const QString &pFileContents,
                         ObjRef<iface::cellml_api::Model> *pModel,
                         CellmlFileIssues &pIssues)
 {
@@ -328,7 +328,7 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
 
     try {
         if (pFileContents.isEmpty())
-            *pModel = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
+            *pModel = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(mFileName).toEncoded()).toStdWString());
         else
             *pModel = modelLoader->createFromText(pFileContents.toStdWString());
     } catch (iface::cellml_api::CellMLException &exception) {
@@ -351,16 +351,16 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     ObjRef<iface::cellml_api::URI> baseUri = (*pModel)->xmlBase();
 
-    if (fileManagerInstance->isRemote(pFileName)) {
+    if (fileManagerInstance->isRemote(mFileName)) {
         // We are dealing with a remote file, so its XML base value should point
         // to its remote location
 
-        baseUri->asText(fileManagerInstance->url(pFileName).toStdWString());
+        baseUri->asText(fileManagerInstance->url(mFileName).toStdWString());
     } else if (!pFileContents.isEmpty()) {
         // We are dealing with a file which contents was directly passed onto
         // us, so its XML base value should point to its actual location
 
-        baseUri->asText(pFileName.toStdWString());
+        baseUri->asText(mFileName.toStdWString());
     }
 
     return true;
@@ -431,7 +431,7 @@ bool CellmlFile::load()
 
     // Try to load the model
 
-    if (!doLoad(mFileName, QString(), &mModel, mIssues))
+    if (!doLoad(QString(), &mModel, mIssues))
         return false;
 
     // Retrieve all the RDF triples associated with the model and initialise our
@@ -684,28 +684,49 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
 
 //==============================================================================
 
-bool CellmlFile::isValid(const QString &pFileContents,
-                         CellmlFileIssues &pIssues, const bool &pWithBusyWidget)
+bool CellmlFile::doIsValid(const QString &pFileContents,
+                           ObjRef<iface::cellml_api::Model> *pModel,
+                           CellmlFileIssues &pIssues,
+                           const bool &pWithBusyWidget)
 {
-    // Check whether the given file contents is CellML valid, so first create a
-    // model
+    // Try to load our model
 
-    ObjRef<iface::cellml_api::Model> model;
-
-    if (doLoad(mFileName, pFileContents, &model, pIssues)) {
+    if (doLoad(pFileContents, pModel, pIssues)) {
         // The file contents was properly loaded, so make sure that its imports,
         // if any, are fully instantiated
 
-        if (fullyInstantiateImports(model, pIssues, pWithBusyWidget)) {
+        if (fullyInstantiateImports(*pModel, pIssues, pWithBusyWidget)) {
             // Now, we can check whether the file contents is CellML valid
 
-            return doIsValid(model, pIssues);
+            return doIsValid(*pModel, pIssues);
         } else {
             return false;
         }
     } else {
         return false;
     }
+}
+
+//==============================================================================
+
+bool CellmlFile::isValid(const QString &pFileContents,
+                         CellmlFileIssues &pIssues, const bool &pWithBusyWidget)
+{
+    // Check whether the given file contents is CellML valid, so for this create
+    // a temporary model
+
+    ObjRef<iface::cellml_api::Model> model;
+
+    return doIsValid(pFileContents, &model, pIssues, pWithBusyWidget);
+}
+
+//==============================================================================
+
+bool CellmlFile::isValid(const bool &pWithBusyWidget)
+{
+    // Return whether we are valid
+
+    return doIsValid(QString(), &mModel, mIssues, pWithBusyWidget);
 }
 
 //==============================================================================

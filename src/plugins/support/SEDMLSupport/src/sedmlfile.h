@@ -36,12 +36,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace libsedml {
+    class SedAlgorithm;
     class SedDocument;
 }   // namespace libsedml
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CellMLSupport {
+    class CellmlFile;
+}   // namespace CellMLSupport
 
 //==============================================================================
 
@@ -73,6 +80,8 @@ class SEDMLSUPPORT_EXPORT SedmlFile : public StandardSupport::StandardFile
     Q_OBJECT
 
 public:
+    explicit SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
+                       const bool &pNew = false);
     explicit SedmlFile(const QString &pFileName, const bool &pNew = false);
     ~SedmlFile();
 
@@ -82,14 +91,28 @@ public:
     virtual bool save(const QString &pFileName = QString());
 
     bool isValid(const QString &pFileContents, SedmlFileIssues &pIssues);
+    bool isValid();
+    bool isSupported();
+
+    CellMLSupport::CellmlFile * cellmlFile();
+
+    SedmlFileIssues issues() const;
 
 private:
+    QString mOwnerFileName;
+
     libsedml::SedDocument *mSedmlDocument;
 
     bool mNew;
     bool mLoadingNeeded;
 
+    CellMLSupport::CellmlFile *mCellmlFile;
+
+    SedmlFileIssues mIssues;
+
     virtual void reset();
+
+    bool algorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm);
 };
 
 //==============================================================================

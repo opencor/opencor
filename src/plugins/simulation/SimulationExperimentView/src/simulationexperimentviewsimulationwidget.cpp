@@ -108,7 +108,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mCellmlFile(0),
     mSedmlFile(0),
     mCombineArchive(0),
-    mFileType(CellmlFile),
+    mFileType(SimulationExperimentViewSimulation::CellmlFile),
     mSedmlFileIssues(SEDMLSupport::SedmlFileIssues()),
     mCombineArchiveIssues(COMBINESupport::CombineArchiveIssues()),
     mErrorType(General),
@@ -117,8 +117,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false),
     mNeedUpdatePlots(false),
-    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong>()),
-    mLocallyManagedCellmlFiles(QMap<QString, QString>())
+    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong>())
 {
     // Create a tool bar
 
@@ -475,7 +474,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     // is readable/writable and of CellML type
 
     mDevelopmentModeAction->setEnabled(   Core::FileManager::instance()->isReadableAndWritable(pFileName)
-                                       && (mFileType == CellmlFile));
+                                       && (mFileType == SimulationExperimentViewSimulation::CellmlFile));
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -490,12 +489,6 @@ SimulationExperimentViewSimulationWidget::~SimulationExperimentViewSimulationWid
     // Delete some internal objects
 
     delete mSimulation;
-
-    if (mFileType != CellmlFile)
-        delete mCellmlFile;
-
-    if (mFileType != SedmlFile)
-        delete mSedmlFile;
 }
 
 //==============================================================================
@@ -628,8 +621,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
     mSimulationDataExportAction->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
                                             &&  mSimulation->results()->size()
                                             && !simulationModeEnabled);
-    mCellmlOpenAction->setEnabled(mFileType != CellmlFile);
-    mSedmlExportAction->setEnabled(    (mFileType == CellmlFile)
+    mCellmlOpenAction->setEnabled(mFileType != SimulationExperimentViewSimulation::CellmlFile);
+    mSedmlExportAction->setEnabled(    (mFileType == SimulationExperimentViewSimulation::CellmlFile)
                                    &&  mSimulation->results()->size()
                                    && !simulationModeEnabled);
 
@@ -994,7 +987,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     //       that all the other events have been properly handled...
 
     if (    validSimulationEnvironment
-        && (mFileType != CellmlFile)) {
+        && (mFileType != SimulationExperimentViewSimulation::CellmlFile)) {
         QTimer::singleShot(0, this, SLOT(furtherInitialize()));
     }
 }
@@ -1010,17 +1003,6 @@ void SimulationExperimentViewSimulationWidget::finalize()
 
     informationWidget->graphsWidget()->finalize();
     informationWidget->parametersWidget()->finalize();
-
-    // Then, we ask our file manager to stop managing our locally managed CellML
-    // file, if any
-
-    QString cellmlFileName = mLocallyManagedCellmlFiles.value(mFileName);
-
-    if (!cellmlFileName.isEmpty()) {
-        Core::FileManager::instance()->unmanage(cellmlFileName);
-
-        mLocallyManagedCellmlFiles.remove(mFileName);
-    }
 }
 
 //==============================================================================
@@ -1094,7 +1076,7 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
 
     QString importedParameters = QString();
 
-    if (   (mFileType == CellmlFile)
+    if (   (mFileType == SimulationExperimentViewSimulation::CellmlFile)
         && mDevelopmentModeAction->isChecked()) {
         ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellmlFile->model()->localComponents();
         QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
@@ -1120,16 +1102,16 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
     // Now, we can effectively save our given file and let the user know if some
     // parameter values couldn't be saved
 
-    bool res = (mFileType == CellmlFile)?
+    bool res = (mFileType == SimulationExperimentViewSimulation::CellmlFile)?
                    mCellmlFile->save(pFileName):
-                   (mFileType == SedmlFile)?
+                   (mFileType == SimulationExperimentViewSimulation::SedmlFile)?
                        mSedmlFile->save(pFileName):
                        mCombineArchive->save(pFileName);
 
     if (res) {
-        mFileName = (mFileType == CellmlFile)?
+        mFileName = (mFileType == SimulationExperimentViewSimulation::CellmlFile)?
                         mCellmlFile->fileName():
-                        (mFileType == SedmlFile)?
+                        (mFileType == SimulationExperimentViewSimulation::SedmlFile)?
                             mSedmlFile->fileName():
                             mCombineArchive->fileName();
 
@@ -1150,7 +1132,7 @@ void SimulationExperimentViewSimulationWidget::filePermissionsChanged()
     // track of its checked status or recheck it, as necessary
 
      if (Core::FileManager::instance()->isReadableAndWritable(mFileName)) {
-         mDevelopmentModeAction->setEnabled(mFileType == CellmlFile);
+         mDevelopmentModeAction->setEnabled(mFileType == SimulationExperimentViewSimulation::CellmlFile);
          mDevelopmentModeAction->setChecked(mLockedDevelopmentMode);
      } else {
          mLockedDevelopmentMode = mDevelopmentModeAction->isChecked();
@@ -1228,24 +1210,6 @@ void SimulationExperimentViewSimulationWidget::setFileName(const QString &pFileN
     // Set our file name
 
     mFileName = pFileName;
-}
-
-//==============================================================================
-
-SEDMLSupport::SedmlFile * SimulationExperimentViewSimulationWidget::sedmlFile() const
-{
-    // Return our SED-ML file
-
-    return mSedmlFile;
-}
-
-//==============================================================================
-
-SimulationExperimentViewSimulationWidget::FileType SimulationExperimentViewSimulationWidget::fileType() const
-{
-    // Return our file type
-
-    return mFileType;
 }
 
 //==============================================================================
@@ -1737,7 +1701,10 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
     QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString sedmlFileName = cellmlFileName;
-    QStringList sedmlFilters = Core::filters(FileTypeInterfaces() << SEDMLSupport::fileTypeInterface());
+    FileTypeInterface *sedmlFileTypeInterface = SEDMLSupport::fileTypeInterface();
+    QStringList sedmlFilters = sedmlFileTypeInterface?
+                                   Core::filters(FileTypeInterfaces() << sedmlFileTypeInterface):
+                                   QStringList();
     QString firstSedmlFilter = sedmlFilters.first();
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {
@@ -1791,7 +1758,10 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
     QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString combineArchiveName = cellmlFileName;
-    QStringList combineFilters = Core::filters(FileTypeInterfaces() << COMBINESupport::fileTypeInterface());
+    FileTypeInterface *combineFileTypeInterface = COMBINESupport::fileTypeInterface();
+    QStringList combineFilters = combineFileTypeInterface?
+                                     Core::filters(FileTypeInterfaces() << combineFileTypeInterface):
+                                     QStringList();
     QString firstCombineFilter = combineFilters.first();
 
     if (!cellmlFileCompleteSuffix.isEmpty()) {
@@ -3281,661 +3251,11 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(const dou
 
 //==============================================================================
 
-bool SimulationExperimentViewSimulationWidget::sedmlAlgorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm,
-                                                                       SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const
-{
-    // Make sure that we have an algorithm
-
-    if (!pSedmlAlgorithm) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files with one or two simulations with an algorithm are supported"));
-
-        return false;
-    }
-
-    // Make sure that the given algorithm relies on an algorithm that we support
-
-    SolverInterface *usedSolverInterface = 0;
-    QString kisaoId = QString::fromStdString(pSedmlAlgorithm->getKisaoID());
-
-    foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
-        if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
-            usedSolverInterface = solverInterface;
-
-            break;
-        }
-    }
-
-    if (!usedSolverInterface) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("unsupported algorithm (%1)").arg(kisaoId));
-
-        return false;
-    }
-
-    // Make sure that the algorithm parameters are also supported
-
-    for (int i = 0, iMax = pSedmlAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
-        QString kisaoId = QString::fromStdString(pSedmlAlgorithm->getAlgorithmParameter(i)->getKisaoID());
-        QString id = usedSolverInterface->id(kisaoId);
-
-        if (id.isEmpty() || !id.compare(usedSolverInterface->solverName())) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("unsupported algorithm parameter (%1)").arg(kisaoId));
-
-            return false;
-        }
-    }
-
-    // Make sure that the annotation, if any, contains at least the kind of
-    // information we would expect
-
-    libsbml::XMLNode *annotation = pSedmlAlgorithm->getAnnotation();
-
-    if (annotation) {
-        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const XMLNode &node = annotation->getChild(i);
-
-            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                || QString::fromStdString(node.getName()).compare(SEDMLSupport::SolverProperties)) {
-                continue;
-            }
-
-            bool validSolverProperties = true;
-
-            for (uint j = 0, jMax = node.getNumChildren(); j < jMax; ++j) {
-                const XMLNode &solverPropertyNode = node.getChild(j);
-
-                if (   QString::fromStdString(solverPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                    || QString::fromStdString(solverPropertyNode.getName()).compare(SEDMLSupport::SolverProperty)) {
-                    continue;
-                }
-
-                int idIndex = solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyId.toStdString());
-                int valueIndex = solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyValue.toStdString());
-
-                if (   (idIndex == -1) || (valueIndex == -1)
-                    || solverPropertyNode.getAttrValue(idIndex).empty()
-                    || solverPropertyNode.getAttrValue(valueIndex).empty()) {
-                    validSolverProperties = false;
-
-                    break;
-                }
-            }
-
-            if (!validSolverProperties) {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                 tr("incomplete algorithm annotation (missing algorithm property information)"));
-
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
-//==============================================================================
-
-bool SimulationExperimentViewSimulationWidget::sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
-                                                                  SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const
-{
-    // Make sure that there is only one model
-
-    libsedml::SedDocument *sedmlDocument = pSedmlFile->sedmlDocument();
-
-    if (sedmlDocument->getNumModels() != 1) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files with one model are supported"));
-
-        return false;
-    }
-
-    // Make sure that the model is of CellML type
-
-    libsedml::SedModel *model = sedmlDocument->getModel(0);
-    QString language = QString::fromStdString(model->getLanguage());
-
-    if (   language.compare(SEDMLSupport::Language::Cellml)
-        && language.compare(SEDMLSupport::Language::Cellml_1_0)
-        && language.compare(SEDMLSupport::Language::Cellml_1_1)) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files with a CellML file are supported"));
-
-        return false;
-    }
-
-    // Make sure that there is either one or two simulations
-
-    int nbOfSimulations = sedmlDocument->getNumSimulations();
-
-    if ((nbOfSimulations != 1) && (nbOfSimulations != 2)) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files with one or two simulations are supported"));
-
-        return false;
-    }
-
-    // Make sure that the first simulation is a uniform time course simulation
-
-    libsedml::SedSimulation *firstSimulation = sedmlDocument->getSimulation(0);
-
-    if (firstSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_UNIFORMTIMECOURSE) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files with a uniform time course as a (first) simulation are supported"));
-
-        return false;
-    }
-
-    // Make sure that the initial time and output start time are the same, that
-    // the output start time and output end time are different, and that the
-    // number of points is greater than zero
-
-    libsedml::SedUniformTimeCourse *uniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(firstSimulation);
-    double initialTime = uniformTimeCourse->getInitialTime();
-    double outputStartTime = uniformTimeCourse->getOutputStartTime();
-    double outputEndTime = uniformTimeCourse->getOutputEndTime();
-    int nbOfPoints = uniformTimeCourse->getNumberOfPoints();
-
-    if (initialTime != outputStartTime) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files with the same values for initialTime and outputStartTime are supported"));
-
-        return false;
-    }
-
-    if (outputStartTime == outputEndTime) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                         tr("the values for outputStartTime and outputEndTime must be different"));
-
-        return false;
-    }
-
-    if (nbOfPoints <= 0) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                         tr("the value for numberOfPoints must be greater than zero"));
-
-        return false;
-    }
-
-    // Make sure that the algorithm used for the first simulation is supported
-
-    if (!sedmlAlgorithmSupported(firstSimulation->getAlgorithm(), pSedmlFileIssues))
-        return false;
-
-    // Make sure that the annotation, if any, contains at least the kind of
-    // information we would expect
-
-    libsbml::XMLNode *firstSimulationAnnotation = firstSimulation->getAnnotation();
-
-    if (firstSimulationAnnotation) {
-        bool hasNlaSolver = false;
-
-        for (uint i = 0, iMax = firstSimulationAnnotation->getNumChildren(); i < iMax; ++i) {
-            const libsbml::XMLNode &node = firstSimulationAnnotation->getChild(i);
-
-            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                || QString::fromStdString(node.getName()).compare(SEDMLSupport::NlaSolver)) {
-                continue;
-            }
-
-            int nameIndex = node.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString());
-
-            if ((nameIndex != -1) && !node.getAttrValue(nameIndex).empty()) {
-                if (hasNlaSolver) {
-                    pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                     tr("only one NLA solver is allowed"));
-
-                    return false;
-                } else {
-                    hasNlaSolver = true;
-                }
-            } else {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                 tr("incomplete simulation annotation (missing NLA solver name)"));
-
-                return false;
-            }
-        }
-    }
-
-    // Check whether there is a second simulation
-
-    libsedml::SedSimulation *secondSimulation = sedmlDocument->getSimulation(1);
-
-    if (secondSimulation) {
-        // Make sure that the second simulation is a one-step simulation
-
-        if (secondSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_ONESTEP) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with a one-step as a second simulation are supported"));
-
-            return false;
-        }
-
-        // Make sure that its step is greater than zero
-
-        if (static_cast<libsedml::SedOneStep *>(secondSimulation)->getStep() <= 0) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                             tr("the value for step must be greater than zero"));
-
-            return false;
-        }
-
-        // Make sure that its algorithm and annotation, if any, is the same as
-        // for the first simulation
-
-        std::stringstream firstStream;
-        std::stringstream secondStream;
-        libsbml::XMLOutputStream firstXmlStream(firstStream);
-        libsbml::XMLOutputStream secondXmlStream(secondStream);
-
-        firstSimulation->getAlgorithm()->write(firstXmlStream);
-
-        if (secondSimulation->getAlgorithm())
-            secondSimulation->getAlgorithm()->write(secondXmlStream);
-
-        libsbml::XMLNode *secondSimulationAnnotation = secondSimulation->getAnnotation();
-
-        if (firstSimulationAnnotation)
-            firstSimulationAnnotation->write(firstXmlStream);
-
-        if (secondSimulationAnnotation)
-            secondSimulationAnnotation->write(secondXmlStream);
-
-        if (firstStream.str().compare(secondStream.str())) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with two simulations with the same algorithm are supported"));
-
-            return false;
-        }
-    }
-
-    // Make sure that we have only one repeated task, which aim is to execute
-    // each simulation (using a sub-task) once
-
-    uint totalNbOfTasks = secondSimulation?3:2;
-
-    if (sedmlDocument->getNumTasks() != totalNbOfTasks) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files that execute one or two simulations once are supported"));
-
-        return false;
-    }
-
-    libsedml::SedRepeatedTask *repeatedTask = 0;
-
-    bool repeatedTaskOk = false;
-    std::string repeatedTaskFirstSubTaskId = std::string();
-    std::string repeatedTaskSecondSubTaskId = std::string();
-
-    bool firstSubTaskOk = false;
-    std::string firstSubTaskId = std::string();
-
-    bool secondSubTaskOk = false;
-    std::string secondSubTaskId = std::string();
-
-    for (uint i = 0; i < totalNbOfTasks; ++i) {
-        libsedml::SedTask *task = sedmlDocument->getTask(i);
-
-        if (task->getTypeCode() == libsedml::SEDML_TASK_REPEATEDTASK) {
-            // Make sure that the repeated task asks for the model to be reset,
-            // that it has one range, no task change and one/two sub-task/s
-
-            repeatedTask = static_cast<libsedml::SedRepeatedTask *>(task);
-
-            if (    repeatedTask->getResetModel()
-                &&  (repeatedTask->getNumRanges() == 1)
-                && !repeatedTask->getNumTaskChanges()
-                &&  (repeatedTask->getNumSubTasks() == totalNbOfTasks-1)) {
-                // Make sure that the range is a vector range and that it's the
-                // one referenced in the repeated task
-
-                libsedml::SedRange *range = repeatedTask->getRange(0);
-
-                if (    (range->getTypeCode() == libsedml::SEDML_RANGE_VECTORRANGE)
-                    && !repeatedTask->getRangeId().compare(range->getId())) {
-                    // Make sure that the vector range has one value that is
-                    // equal to 1
-
-                    libsedml::SedVectorRange *vectorRange = static_cast<libsedml::SedVectorRange *>(range);
-
-                    if (   (vectorRange->getNumValues() == 1)
-                        && (vectorRange->getValues().front() == 1)) {
-                        // Make sure that the one/two sub-tasks have the correct
-                        // order and retrieve their id
-
-                        for (uint i = 0, iMax = totalNbOfTasks-1; i < iMax; ++i) {
-                            libsedml::SedSubTask *subTask = repeatedTask->getSubTask(i);
-
-                            if (subTask->getOrder() == 1)
-                                repeatedTaskFirstSubTaskId = subTask->getTask();
-                            else if (subTask->getOrder() == 2)
-                                repeatedTaskSecondSubTaskId = subTask->getTask();
-                        }
-
-                        repeatedTaskOk = true;
-                    }
-                }
-            }
-        } else if (task->getTypeCode() == libsedml::SEDML_TASK) {
-            // Make sure the sub-task references the correct model and
-            // simulation
-
-            if (   !task->getModelReference().compare(model->getId())
-                && !task->getSimulationReference().compare(firstSimulation->getId())) {
-                firstSubTaskOk = true;
-                firstSubTaskId = task->getId();
-            } else if (   secondSimulation
-                       && !task->getModelReference().compare(model->getId())
-                       && !task->getSimulationReference().compare(secondSimulation->getId())) {
-                secondSubTaskOk = true;
-                secondSubTaskId = task->getId();
-            }
-        }
-    }
-
-    if (   !repeatedTaskOk
-        || !firstSubTaskOk || repeatedTaskFirstSubTaskId.compare(firstSubTaskId)
-        || (     secondSimulation
-            && (!secondSubTaskOk || repeatedTaskSecondSubTaskId.compare(secondSubTaskId)))) {
-        pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                         tr("only SED-ML files that execute one or two simulations once are supported"));
-
-        return false;
-    }
-
-    // Make sure that all the data generators have one variable that references
-    // the repeated task, that follows the correct CellML format for their
-    // target (and OpenCOR format for their degree, if any), and that is not
-    // modified
-
-    for (uint i = 0, iMax = sedmlDocument->getNumDataGenerators(); i < iMax; ++i) {
-        libsedml::SedDataGenerator *dataGenerator = sedmlDocument->getDataGenerator(i);
-
-        if ((dataGenerator->getNumVariables() != 1) || dataGenerator->getNumParameters()) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with data generators for one variable are supported"));
-
-            return false;
-        }
-
-        libsedml::SedVariable *variable = dataGenerator->getVariable(0);
-
-        if (variable->getSymbol().size() || variable->getModelReference().size()) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with data generators for one variable with a target and a task reference are supported"));
-
-            return false;
-        }
-
-        if (variable->getTaskReference().compare(repeatedTask->getId())) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with data generators for one variable with a reference to a repeated task are supported"));
-
-            return false;
-        }
-
-        static const QRegularExpression TargetStartRegEx  = QRegularExpression("^\\/cellml:model\\/cellml:component\\[@name='");
-        static const QRegularExpression TargetMiddleRegEx = QRegularExpression("']\\/cellml:variable\\[@name='");
-        static const QRegularExpression TargetEndRegEx    = QRegularExpression("'\\]$");
-
-        bool referencingCellmlVariable = false;
-        QString target = QString::fromStdString(variable->getTarget());
-
-        if (target.contains(TargetStartRegEx) && target.contains(TargetEndRegEx)) {
-            static const QString Separator = "|";
-
-            target.remove(TargetStartRegEx);
-            target.replace(TargetMiddleRegEx, Separator);
-            target.remove(TargetEndRegEx);
-
-            QStringList identifiers = target.split(Separator);
-
-            if (identifiers.count() == 2) {
-                static const QRegularExpression IdentifierRegEx = QRegularExpression("^[[:alpha:]_][[:alnum:]_]*$");
-
-                QString componentName = identifiers.first();
-                QString variableName = identifiers.last();
-
-                referencingCellmlVariable =    IdentifierRegEx.match(componentName).hasMatch()
-                                            && IdentifierRegEx.match(variableName).hasMatch();
-            }
-        }
-
-        if (!referencingCellmlVariable) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with data generators for one variable with a reference to a CellML variable are supported"));
-
-            return false;
-        }
-
-        libsbml::XMLNode *annotation = variable->getAnnotation();
-
-        if (annotation) {
-            for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-                const XMLNode &node = annotation->getChild(i);
-
-                if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                    || QString::fromStdString(node.getName()).compare(SEDMLSupport::VariableDegree)) {
-                    continue;
-                }
-
-                bool validVariableDegree = false;
-
-                if (node.getNumChildren() == 1) {
-                    bool conversionOk;
-                    int variableDegree = QString::fromStdString(node.getChild(0).getCharacters()).toInt(&conversionOk);
-
-                    validVariableDegree = conversionOk && (variableDegree >= 0);
-                }
-
-                if (!validVariableDegree) {
-                    pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                     tr("only SED-ML files with data generators for one variable that is derived or not are supported"));
-
-                    return false;
-                }
-            }
-        }
-
-        const libsbml::ASTNode *mathNode = dataGenerator->getMath();
-
-        if (   (mathNode->getType() != libsbml::AST_NAME)
-            || variable->getId().compare(mathNode->getName())) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with data generators for one variable that is not modified are supported"));
-
-            return false;
-        }
-    }
-
-    // Make sure that all the outputs are 2D outputs
-
-    for (uint i = 0, iMax = sedmlDocument->getNumOutputs(); i < iMax; ++i) {
-        libsedml::SedOutput *output = sedmlDocument->getOutput(i);
-
-        if (output->getTypeCode() != libsedml::SEDML_OUTPUT_PLOT2D) {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                             tr("only SED-ML files with 2D outputs are supported"));
-
-            return false;
-        }
-
-        // Make sure that the curves reference listed data generators and don't
-        // use logarithmic axes
-
-        libsedml::SedPlot2D *plot = static_cast<libsedml::SedPlot2D *>(output);
-
-        for (uint j = 0, jMax = plot->getNumCurves(); j < jMax; ++j) {
-            libsedml::SedCurve *curve = plot->getCurve(j);
-
-            if (curve->getLogX() || curve->getLogY()) {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Information,
-                                                                 tr("only SED-ML files with linear 2D outputs are supported"));
-
-                return false;
-            }
-
-            if (   !sedmlDocument->getDataGenerator(curve->getXDataReference())
-                || !sedmlDocument->getDataGenerator(curve->getYDataReference())) {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                                 tr("a curve must reference existing data generators"));
-
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
-//==============================================================================
-
-bool SimulationExperimentViewSimulationWidget::combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
-                                                                       COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const
-{
-    // Load and make sure that our COMBINE archive is valid
-
-    if (   !pCombineArchive->load()
-        || !pCombineArchive->isValid(pCombineArchiveIssues)) {
-        return false;
-    }
-
-    // Make sure that there is only one master file in our COMBINE archive
-
-    if (pCombineArchive->masterFiles().count() != 1) {
-        pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
-                                                                     tr("only COMBINE archives with one master file are supported"));
-
-        return false;
-    }
-
-    return true;
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::retrieveCellmlFile(const QString &pFileName,
-                                                                  CellMLSupport::CellmlFile *&pCellmlFile,
-                                                                  SEDMLSupport::SedmlFile *pSedmlFile,
-                                                                  COMBINESupport::CombineArchive *pCombineArchive,
-                                                                  const FileType &pFileType,
-                                                                  SEDMLSupport::SedmlFileIssues &pSedmlFileIssues)
-{
-    // Make sure that we support our SED-ML file
-
-    if (!sedmlFileSupported(pSedmlFile, pSedmlFileIssues))
-        return;
-
-    // Retrieve the source of the CellML file, if any, referenced in our SED-ML
-    // file
-
-    QString modelSource = QString::fromStdString(pSedmlFile->sedmlDocument()->getModel(0)->getSource());
-
-    // Check whether we are dealing with a local file (which location is
-    // relative to that of our SED-ML file) or a remote file
-
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    QString url = fileManagerInstance->file(pFileName)->url();
-    bool isLocalFile;
-    QString dummy;
-
-    Core::checkFileNameOrUrl(modelSource, isLocalFile, dummy);
-
-    if (isLocalFile && (url.isEmpty() || pCombineArchive)) {
-        // By default, our model source refers to a file name relative to our
-        // SED-ML file
-
-        QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(pSedmlFile->fileName()).path()+QDir::separator()+modelSource);
-
-#ifdef Q_OS_WIN
-        // On Windows, if our model source exists, it means that it refers to a
-        // file on a different drive rather than to a file name relative to our
-        // SED-ML file
-
-        if (QFile::exists(modelSource))
-            cellmlFileName = modelSource;
-#endif
-
-        if (QFile::exists(cellmlFileName)) {
-            pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
-
-            // If possible, set our CellML file and its dependencies, if any, as
-            // dependencies for our SED-ML file
-
-            if (pFileType == SedmlFile) {
-                Core::FileManager::instance()->setDependencies(pFileName,
-                                                               QStringList() << pCellmlFile->fileName()
-                                                                             << pCellmlFile->dependencies(true));
-            }
-        } else {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                             tr("%1 could not be found").arg(modelSource));
-        }
-    } else {
-        // Handle the case where our model source is a relative remote file
-
-        static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
-
-        if (isLocalFile)
-            modelSource = url.remove(FileNameRegEx)+"/"+modelSource;
-
-        // Retrieve the contents of our model source
-
-        QString fileContents;
-        QString errorMessage;
-
-        if (Core::readFileContentsFromUrlWithBusyWidget(modelSource, fileContents, &errorMessage)) {
-            // Save the contents of our model source to a local file and use
-            // that to create a CellML file object after having asked our file
-            // manager to manage it (so that CellML 1.1 files can be properly
-            // instantiated)
-            // Note: we also keep track of our model source's local file since
-            //       we will need to unmanage it when closing this file...
-
-            QString cellmlFileName = Core::temporaryFileName();
-
-            if (Core::writeFileContentsToFile(cellmlFileName, fileContents)) {
-                fileManagerInstance->manage(cellmlFileName, Core::File::Remote, modelSource);
-
-                pCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
-
-                mLocallyManagedCellmlFiles.insert(pFileName, cellmlFileName);
-            } else {
-                pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                                 tr("%1 could not be saved").arg(modelSource));
-            }
-        } else {
-            pSedmlFileIssues << SEDMLSupport::SedmlFileIssue(SEDMLSupport::SedmlFileIssue::Error,
-                                                             tr("%1 could not be retrieved (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
-        }
-    }
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
-                                                                 COMBINESupport::CombineArchive *pCombineArchive,
-                                                                 COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues)
-{
-    // Make sure that we support our COMBINE archive
-
-    if (!combineArchiveSupported(pCombineArchive, pCombineArchiveIssues))
-        return;
-
-    // Create a SED-ML file object for our COMBINE archive's master file
-
-    pSedmlFile = new SEDMLSupport::SedmlFile(pCombineArchive->masterFiles().first().fileName());
-}
-
-//==============================================================================
-
 void SimulationExperimentViewSimulationWidget::retrieveFileDetails(const QString &pFileName,
                                                                    CellMLSupport::CellmlFile *&pCellmlFile,
                                                                    SEDMLSupport::SedmlFile *&pSedmlFile,
                                                                    COMBINESupport::CombineArchive *&pCombineArchive,
-                                                                   FileType &pFileType,
+                                                                   SimulationExperimentViewSimulation::FileType &pFileType,
                                                                    SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
                                                                    COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues)
 {
@@ -3945,7 +3265,11 @@ void SimulationExperimentViewSimulationWidget::retrieveFileDetails(const QString
     pSedmlFile = pCellmlFile?0:SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName);
     pCombineArchive = pSedmlFile?0:COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName);
 
-    pFileType = pCellmlFile?CellmlFile:pSedmlFile?SedmlFile:CombineArchive;
+    pFileType = pCellmlFile?
+                    SimulationExperimentViewSimulation::CellmlFile:
+                    pSedmlFile?
+                        SimulationExperimentViewSimulation::SedmlFile:
+                        SimulationExperimentViewSimulation::CombineArchive;
 
     // In the case of a COMBINE archive, we need to retrieve the corresponding
     // SED-ML file while, in the case of a SED-ML file, we need to retrieve the
@@ -3954,12 +3278,16 @@ void SimulationExperimentViewSimulationWidget::retrieveFileDetails(const QString
     pSedmlFileIssues.clear();
     pCombineArchiveIssues.clear();
 
-    if (pCombineArchive)
-        retrieveSedmlFile(pSedmlFile, pCombineArchive, pCombineArchiveIssues);
+    if (pCombineArchive) {
+        pSedmlFile = pCombineArchive->sedmlFile();
+
+        pCombineArchiveIssues = pCombineArchive->issues();
+    }
 
     if (pSedmlFile) {
-        retrieveCellmlFile(pFileName, pCellmlFile, pSedmlFile, pCombineArchive,
-                           pFileType, pSedmlFileIssues);
+        pCellmlFile = pSedmlFile->cellmlFile();
+
+        pSedmlFileIssues = pSedmlFile->issues();
     }
 }
 

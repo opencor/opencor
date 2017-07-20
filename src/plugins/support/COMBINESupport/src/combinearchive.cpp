@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "combinearchive.h"
 #include "corecliutils.h"
+#include "sedmlfile.h"
 
 //==============================================================================
 
@@ -123,7 +124,8 @@ CombineArchiveFile::Format CombineArchiveFile::format(const QString &pFormat)
 CombineArchive::CombineArchive(const QString &pFileName, const bool &pNew) :
     StandardSupport::StandardFile(pFileName),
     mDirName(Core::temporaryDirName()),
-    mNew(pNew)
+    mNew(pNew),
+    mSedmlFile(0)
 {
     // Reset ourselves
 
@@ -154,6 +156,10 @@ void CombineArchive::reset()
     mFiles.clear();
 
     mIssues.clear();
+
+    delete mSedmlFile;
+
+    mSedmlFile = 0;
 }
 
 //==============================================================================
@@ -304,14 +310,14 @@ bool CombineArchive::save(const QString &pFileName)
 
 //==============================================================================
 
-bool CombineArchive::isValid(CombineArchiveIssues &pIssues)
+bool CombineArchive::isValid()
 {
     // Make sure that we are loaded and fine
 
     if (!load())
         return false;
     else
-        pIssues.clear();
+        mIssues.clear();
 
     // Consider ourselves valid if new
 
@@ -323,7 +329,7 @@ bool CombineArchive::isValid(CombineArchiveIssues &pIssues)
     QString manifestFileName = mDirName+QDir::separator()+ManifestFileName;
 
     if (!QFile::exists(manifestFileName)) {
-        pIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
                                        tr("the archive does not have a manifest"));
 
         return false;
@@ -338,7 +344,7 @@ bool CombineArchive::isValid(CombineArchiveIssues &pIssues)
     Core::readFileContentsFromFile(":/COMBINESupport/omex.xsd", schemaContents);
 
     if (!Core::validXml(manifestContents, schemaContents)) {
-        pIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
                                        tr("the manifest is not a valid OMEX file"));
 
         return false;
@@ -359,7 +365,7 @@ bool CombineArchive::isValid(CombineArchiveIssues &pIssues)
         QString fileName = mDirName+QDir::separator()+location;
 
         if (!QFile::exists(fileName)) {
-            pIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+            mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
                                            tr("<strong>%1</strong> could not be found").arg(location));
 
             mFiles.clear();
@@ -393,10 +399,31 @@ bool CombineArchive::isValid(CombineArchiveIssues &pIssues)
     }
 
     if (!combineArchiveReferenceFound) {
-        pIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
                                        tr("no reference to the COMBINE archive itself could be found"));
 
         mFiles.clear();
+
+        return false;
+    }
+
+    return true;
+}
+
+//==============================================================================
+
+bool CombineArchive::isSupported()
+{
+    // Make sure that we are valid
+
+    if (!isValid())
+        return false;
+
+    // Make sure that we have only one master file
+
+    if (masterFiles().count() != 1) {
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Information,
+                                       tr("only COMBINE archives with one master file are supported"));
 
         return false;
     }
@@ -477,6 +504,20 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
         return false;
 
     return true;
+}
+
+//==============================================================================
+
+SEDMLSupport::SedmlFile * CombineArchive::sedmlFile()
+{
+    // Return our SED-ML file, after having created it, if necessary
+
+    if (!mSedmlFile && isSupported()) {
+        mSedmlFile = new SEDMLSupport::SedmlFile(masterFiles().first().fileName(),
+                                                 mFileName);
+    }
+
+    return mSedmlFile;
 }
 
 //==============================================================================

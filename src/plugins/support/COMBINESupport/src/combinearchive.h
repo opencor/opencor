@@ -39,6 +39,12 @@ namespace OpenCOR {
 
 //==============================================================================
 
+namespace SEDMLSupport {
+    class SedmlFile;
+}   // namespace SEDMLSupport
+
+//==============================================================================
+
 namespace COMBINESupport {
 
 //==============================================================================
@@ -92,7 +98,8 @@ public:
     virtual bool load();
     virtual bool save(const QString &pFileName = QString());
 
-    bool isValid(CombineArchiveIssues &pIssues);
+    bool isValid();
+    bool isSupported();
 
     QString location(const CombineArchiveFile &pFile) const;
 
@@ -102,6 +109,8 @@ public:
                  const CombineArchiveFile::Format &pFormat,
                  const bool &pMaster = false);
 
+    SEDMLSupport::SedmlFile * sedmlFile();
+
     CombineArchiveIssues issues() const;
 
 private:
@@ -109,6 +118,8 @@ private:
 
     bool mNew;
     bool mLoadingNeeded;
+
+    SEDMLSupport::SedmlFile *mSedmlFile;
 
     CombineArchiveFiles mFiles;
     CombineArchiveIssues mIssues;

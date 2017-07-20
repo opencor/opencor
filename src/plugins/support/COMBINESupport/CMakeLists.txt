@@ -19,7 +19,7 @@ ADD_PLUGIN(COMBINESupport
         src/combinefilemanager.h
         src/combinesupportplugin.h
     PLUGINS
-        StandardSupport
+        SEDMLSupport
         ZIPSupport
     TESTS
         tests

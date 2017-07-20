@@ -58,7 +58,7 @@ CombineArchive * CombineFileManager::combineArchive(const QString &pFileName)
 {
     // Return the CombineArchive object, if any, associated with the given file
 
-    return static_cast<COMBINESupport::CombineArchive *>(instance()->file(pFileName));
+    return static_cast<CombineArchive *>(instance()->file(pFileName));
 }
 
 //==============================================================================
