@@ -84,6 +84,9 @@ public:
     virtual bool save(const QString &pFileName = QString());
 
     bool isValid(const QString &pFileContents, SedmlFileIssues &pIssues);
+    bool isValid();
+
+    SedmlFileIssues issues() const;
 
 private:
     QString mOwnerFileName;
@@ -92,6 +95,8 @@ private:
 
     bool mNew;
     bool mLoadingNeeded;
+
+    SedmlFileIssues mIssues;
 
     virtual void reset();
 };

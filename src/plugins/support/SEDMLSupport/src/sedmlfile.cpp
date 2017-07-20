@@ -84,6 +84,8 @@ void SedmlFile::reset()
     mSedmlDocument = 0;
 
     mLoadingNeeded = true;
+
+    mIssues = SedmlFileIssues();
 }
 
 //==============================================================================
@@ -147,10 +149,17 @@ bool SedmlFile::save(const QString &pFileName)
 
 bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 {
-    // Check whether the given file contents is SED-ML valid and, if not,
-    // populate pIssues with the problems found (after having emptied its
-    // contents)
-    // Note: normally, we would create a temporary SED-ML document using
+    // Make sure that we are loaded, if the given file contents is empty (i.e.
+    // we want to validate ourselves rather than some given file contents)
+
+    if (pFileContents.isEmpty())
+        load();
+
+    // Check whether our SED-ML document or the given file contents is SED-ML
+    // valid and, if not, populate pIssues with the problems found (after having
+    // emptied its contents)
+    // Note: in case we have to validate the given file contents, we would
+    //       normally create a temporary SED-ML document using
     //       libsedml::readSedMLFromString(), but if the given file contents
     //       doesn't start with:
     //           <?xml version='1.0' encoding='UTF-8'?>
@@ -161,17 +170,21 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
     pIssues.clear();
 
-    QTemporaryFile file;
-    QByteArray fileContentsByteArray = pFileContents.toUtf8();
+    libsedml::SedDocument *sedmlDocument = mSedmlDocument;
 
-    file.open();
+    if (!pFileContents.isEmpty()) {
+        QTemporaryFile file;
+        QByteArray fileContentsByteArray = pFileContents.toUtf8();
 
-    file.write(fileContentsByteArray);
-    file.flush();
+        file.open();
 
-    libsedml::SedDocument *sedmlDocument = libsedml::readSedML(file.fileName().toUtf8().constData());
+        file.write(fileContentsByteArray);
+        file.flush();
 
-    file.close();
+        sedmlDocument = libsedml::readSedML(file.fileName().toUtf8().constData());
+
+        file.close();
+    }
 
     libsedml::SedErrorLog *errorLog = sedmlDocument->getErrorLog();
 
@@ -205,9 +218,32 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
         pIssues << SedmlFileIssue(issueType, error->getLine(), error->getColumn(), errorMessage);
     }
 
-    // Only consider the given file contents SED-ML valid if it has no errors
+    // Only consider our SED-ML document valid if it has no errors
 
-    return !sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
+    bool res = !sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
+
+    if (!pFileContents.isEmpty())
+        delete sedmlDocument;
+
+    return res;
+}
+
+//==============================================================================
+
+bool SedmlFile::isValid()
+{
+    // Return whether we are valid
+
+    return isValid(QString(), mIssues);
+}
+
+//==============================================================================
+
+SedmlFileIssues SedmlFile::issues() const
+{
+    // Return our issues
+
+    return mIssues;
 }
 
 //==============================================================================
