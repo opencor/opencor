@@ -117,7 +117,9 @@ void SedmlEditingViewWidget::saveSettings(QSettings *pSettings) const
 
     // Keep track of our editor widget's settings
 
-    mEditorWidget->saveSettings(pSettings);
+    pSettings->beginGroup(mEditorWidget->objectName());
+        mEditorWidget->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
