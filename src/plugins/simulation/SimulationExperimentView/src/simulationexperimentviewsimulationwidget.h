@@ -217,8 +217,6 @@ private:
 
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong> mOldDataSizes;
 
-    QMap<QString, QString> mLocallyManagedCellmlFiles;
-
     void reloadView();
 
     void output(const QString &pMessage);

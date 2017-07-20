@@ -117,8 +117,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false),
     mNeedUpdatePlots(false),
-    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong>()),
-    mLocallyManagedCellmlFiles(QMap<QString, QString>())
+    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong>())
 {
     // Create a tool bar
 
@@ -1004,17 +1003,6 @@ void SimulationExperimentViewSimulationWidget::finalize()
 
     informationWidget->graphsWidget()->finalize();
     informationWidget->parametersWidget()->finalize();
-
-    // Then, we ask our file manager to stop managing our locally managed CellML
-    // file, if any
-
-    QString cellmlFileName = mLocallyManagedCellmlFiles.value(mFileName);
-
-    if (!cellmlFileName.isEmpty()) {
-        Core::FileManager::instance()->unmanage(cellmlFileName);
-
-        mLocallyManagedCellmlFiles.remove(mFileName);
-    }
 }
 
 //==============================================================================
