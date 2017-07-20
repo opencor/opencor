@@ -273,18 +273,12 @@ private:
     bool sedmlFileSupported(SEDMLSupport::SedmlFile *pSedmlFile,
                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues) const;
 
-    bool combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
-                                 COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const;
-
     void retrieveCellmlFile(const QString &pFileName,
                             CellMLSupport::CellmlFile *&pCellmlFile,
                             SEDMLSupport::SedmlFile *pSedmlFile,
                             COMBINESupport::CombineArchive *pCombineArchive,
                             const SimulationExperimentViewSimulation::FileType &pFileType,
                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues);
-    void retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
-                           COMBINESupport::CombineArchive *pCombineArchive,
-                           COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
 
     void retrieveFileDetails(const QString &pFileName,
                              CellMLSupport::CellmlFile *&pCellmlFile,

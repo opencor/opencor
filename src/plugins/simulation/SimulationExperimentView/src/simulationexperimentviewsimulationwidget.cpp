@@ -493,9 +493,6 @@ SimulationExperimentViewSimulationWidget::~SimulationExperimentViewSimulationWid
 
     if (mFileType != SimulationExperimentViewSimulation::CellmlFile)
         delete mCellmlFile;
-
-    if (mFileType != SimulationExperimentViewSimulation::SedmlFile)
-        delete mSedmlFile;
 }
 
 //==============================================================================
@@ -3774,30 +3771,6 @@ bool SimulationExperimentViewSimulationWidget::sedmlFileSupported(SEDMLSupport::
 
 //==============================================================================
 
-bool SimulationExperimentViewSimulationWidget::combineArchiveSupported(COMBINESupport::CombineArchive *pCombineArchive,
-                                                                       COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues) const
-{
-    // Load and make sure that our COMBINE archive is valid
-
-    if (   !pCombineArchive->load()
-        || !pCombineArchive->isValid(pCombineArchiveIssues)) {
-        return false;
-    }
-
-    // Make sure that there is only one master file in our COMBINE archive
-
-    if (pCombineArchive->masterFiles().count() != 1) {
-        pCombineArchiveIssues << COMBINESupport::CombineArchiveIssue(COMBINESupport::CombineArchiveIssue::Information,
-                                                                     tr("only COMBINE archives with one master file are supported"));
-
-        return false;
-    }
-
-    return true;
-}
-
-//==============================================================================
-
 void SimulationExperimentViewSimulationWidget::retrieveCellmlFile(const QString &pFileName,
                                                                   CellMLSupport::CellmlFile *&pCellmlFile,
                                                                   SEDMLSupport::SedmlFile *pSedmlFile,
@@ -3897,22 +3870,6 @@ void SimulationExperimentViewSimulationWidget::retrieveCellmlFile(const QString 
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::retrieveSedmlFile(SEDMLSupport::SedmlFile *&pSedmlFile,
-                                                                 COMBINESupport::CombineArchive *pCombineArchive,
-                                                                 COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues)
-{
-    // Make sure that we support our COMBINE archive
-
-    if (!combineArchiveSupported(pCombineArchive, pCombineArchiveIssues))
-        return;
-
-    // Create a SED-ML file object for our COMBINE archive's master file
-
-    pSedmlFile = new SEDMLSupport::SedmlFile(pCombineArchive->masterFiles().first().fileName());
-}
-
-//==============================================================================
-
 void SimulationExperimentViewSimulationWidget::retrieveFileDetails(const QString &pFileName,
                                                                    CellMLSupport::CellmlFile *&pCellmlFile,
                                                                    SEDMLSupport::SedmlFile *&pSedmlFile,
@@ -3940,8 +3897,11 @@ void SimulationExperimentViewSimulationWidget::retrieveFileDetails(const QString
     pSedmlFileIssues.clear();
     pCombineArchiveIssues.clear();
 
-    if (pCombineArchive)
-        retrieveSedmlFile(pSedmlFile, pCombineArchive, pCombineArchiveIssues);
+    if (pCombineArchive) {
+        pSedmlFile = pCombineArchive->sedmlFile();
+
+        pCombineArchiveIssues = pCombineArchive->issues();
+    }
 
     if (pSedmlFile) {
         retrieveCellmlFile(pFileName, pCellmlFile, pSedmlFile, pCombineArchive,
