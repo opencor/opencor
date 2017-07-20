@@ -73,6 +73,8 @@ class SEDMLSUPPORT_EXPORT SedmlFile : public StandardSupport::StandardFile
     Q_OBJECT
 
 public:
+    explicit SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
+                       const bool &pNew = false);
     explicit SedmlFile(const QString &pFileName, const bool &pNew = false);
     ~SedmlFile();
 
@@ -84,6 +86,8 @@ public:
     bool isValid(const QString &pFileContents, SedmlFileIssues &pIssues);
 
 private:
+    QString mOwnerFileName;
+
     libsedml::SedDocument *mSedmlDocument;
 
     bool mNew;

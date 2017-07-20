@@ -512,8 +512,10 @@ SEDMLSupport::SedmlFile * CombineArchive::sedmlFile()
 {
     // Return our SED-ML file, after having created it, if necessary
 
-    if (!mSedmlFile && isSupported())
-        mSedmlFile = new SEDMLSupport::SedmlFile(masterFiles().first().fileName());
+    if (!mSedmlFile && isSupported()) {
+        mSedmlFile = new SEDMLSupport::SedmlFile(masterFiles().first().fileName(),
+                                                 mFileName);
+    }
 
     return mSedmlFile;
 }
