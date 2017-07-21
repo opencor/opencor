@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "interfaces.h"
 #include "simulation.h"
 #include "simulationexperimentviewinformationsolverswidget.h"
-#include "simulationexperimentviewwidget.h"
 
 //==============================================================================
 

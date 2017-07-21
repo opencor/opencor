@@ -25,9 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "graphpanelwidget.h"
+#include "i18ninterface.h"
 #include "simulation.h"
 #include "simulationexperimentviewinformationgraphswidget.h"
-#include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 

@@ -57,7 +57,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
-#include <QSettings>
 #include <QTextEdit>
 #include <QTimer>
 #include <QToolButton>
