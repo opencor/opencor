@@ -21,9 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Simulation Experiment view simulation widget
 //==============================================================================
 
-#include "cellmlfilemanager.h"
 #include "centralwidget.h"
-#include "combinefilemanager.h"
 #include "combineinterface.h"
 #include "combinesupportplugin.h"
 #include "coreguiutils.h"
@@ -31,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "graphpanelswidget.h"
 #include "interfaces.h"
 #include "progressbarwidget.h"
-#include "sedmlfilemanager.h"
 #include "sedmlinterface.h"
 #include "sedmlsupportplugin.h"
 #include "simulation.h"
@@ -44,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
+#include "simulationmanager.h"
 #include "toolbarwidget.h"
 #include "usermessagewidget.h"
 
@@ -442,9 +440,14 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     setFocusProxy(mContentsWidget);
 
-    // Create our simulation object and a few connections for it
+    // Ask our simulation manager to manage our file and then retrieve the
+    // corresponding simulation from it
 
-    mSimulation = new SimulationSupport::Simulation(pFileName);
+    SimulationSupport::SimulationManager *simulationManager = SimulationSupport::SimulationManager::instance();
+
+    simulationManager->manage(pFileName);
+
+    mSimulation = simulationManager->simulation(pFileName);
 
     connect(mSimulation, SIGNAL(running(const bool &)),
             this, SLOT(simulationRunning(const bool &)));
@@ -475,9 +478,9 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
 SimulationExperimentViewSimulationWidget::~SimulationExperimentViewSimulationWidget()
 {
-    // Delete some internal objects
+    // Ask our simulation manager to unmanage our file
 
-    delete mSimulation;
+    SimulationSupport::SimulationManager::instance()->unmanage(mFileName);
 }
 
 //==============================================================================
@@ -687,11 +690,6 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     // Reset our progress
 
     mProgress = -1;
-
-    // Reload ourselves, if needed
-
-    if (pReloadingView)
-        mSimulation->reload();
 
     // Retrieve our variable of integration, if possible
 
