@@ -5,17 +5,16 @@ dist: trusty
 
 os:
   - linux
-  - osx
+#  - osx
 
 env:
   - CONFIG=Release
-  - CONFIG=Debug
+#  - CONFIG=Debug
 
 branches:
   only:
     - master
     - /^\d+\.\d+(\.\d+)?$/
-    - travis-ci
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
@@ -26,7 +25,7 @@ install:
       && sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
       && sudo apt-add-repository -y ppa:beineri/opt-qt562-trusty
       && sudo apt-get -qq update
-      && sudo apt-get -qq install gcc-4.9 g++-4.9 libgl1-mesa-dev libglu1-mesa-dev
+      && sudo apt-get -qq install gcc-4.9 g++-4.9 libgl1-mesa-dev libglu1-mesa-dev ninja-build
       && sudo apt-get -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel
       && sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 50
       && sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 50
@@ -34,7 +33,7 @@ install:
     else
          brew update
       && curl -O https://raw.githubusercontent.com/Homebrew/homebrew-core/106d0878ee812cb8f5c403f717bdebe836445aee/Formula/qt5.rb
-      && brew install ./qt5.rb
+      && brew install ./qt5.rb ninja
       && export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
       && chmod -R 755 /usr/local/opt/qt5/*
       ;
@@ -49,13 +48,13 @@ script:
   #       this is what we are doing here...
   -    cd build
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DUSE_PREBUILT_QSCINTILLA_PACKAGE=OFF -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
+         cmake -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DUSE_PREBUILT_QSCINTILLA_PACKAGE=OFF -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
          ;
        else
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
+         cmake -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
          ;
        fi
-    && make -j 3
+    && ninja
     && cd ..
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          build/bin/runtests
