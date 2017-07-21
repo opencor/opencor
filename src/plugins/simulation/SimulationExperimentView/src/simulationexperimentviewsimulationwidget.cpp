@@ -108,8 +108,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mSedmlFile(0),
     mCombineArchive(0),
     mFileType(SimulationSupport::Simulation::CellmlFile),
-    mSedmlFileIssues(SEDMLSupport::SedmlFileIssues()),
-    mCombineArchiveIssues(COMBINESupport::CombineArchiveIssues()),
     mErrorType(General),
     mPlots(GraphPanelWidget::GraphPanelPlotWidgets()),
     mUpdatablePlotViewports(QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool>()),
@@ -451,8 +449,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     // Create our simulation object and a few connections for it, after having
     // retrieved our file details
 
-    retrieveFileDetails(pFileName, mCellmlFile, mSedmlFile, mCombineArchive,
-                        mFileType, mSedmlFileIssues, mCombineArchiveIssues);
+    retrieveFileDetails(pFileName, mCellmlFile, mSedmlFile, mCombineArchive, mFileType);
 
     mSimulation = new SimulationSupport::Simulation(mCellmlFile?mCellmlFile->runtime(true):0);
 
@@ -700,10 +697,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
     // Retrieve our file details and update our simulation object, if needed
 
-    if (pReloadingView) {
-        retrieveFileDetails(mFileName, mCellmlFile, mSedmlFile, mCombineArchive,
-                            mFileType, mSedmlFileIssues, mCombineArchiveIssues);
-    }
+    if (pReloadingView)
+        retrieveFileDetails(mFileName, mCellmlFile, mSedmlFile, mCombineArchive, mFileType);
 
     CellMLSupport::CellmlFileRuntime *runtime = mCellmlFile?mCellmlFile->runtime(pReloadingView):0;
 
@@ -730,12 +725,18 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                                fileManagerInstance->url(mFileName):
                                mFileName;
     QString information =  "<strong>"+fileName+"</strong>"+OutputBrLn;
+    SEDMLSupport::SedmlFileIssues sedmlFileIssues = mSedmlFile?
+                                                        mSedmlFile->issues():
+                                                        SEDMLSupport::SedmlFileIssues();
+    COMBINESupport::CombineArchiveIssues combineArchiveIssues = mCombineArchive?
+                                                                    mCombineArchive->issues():
+                                                                    COMBINESupport::CombineArchiveIssues();
 
-    if (!mCombineArchiveIssues.isEmpty()) {
+    if (!combineArchiveIssues.isEmpty()) {
         // There is one or several issues with our COMBINE archive, so list
         // it/them
 
-        foreach (const COMBINESupport::CombineArchiveIssue &combineArchiveIssue, mCombineArchiveIssues) {
+        foreach (const COMBINESupport::CombineArchiveIssue &combineArchiveIssue, combineArchiveIssues) {
             QString issueType;
 
             switch (combineArchiveIssue.type()) {
@@ -759,10 +760,10 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
             information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, combineArchiveIssue.message());
         }
-    } else if (!mSedmlFileIssues.isEmpty()) {
+    } else if (!sedmlFileIssues.isEmpty()) {
         // There is one or several issues with our SED-ML file, so list it/them
 
-        foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, mSedmlFileIssues) {
+        foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, sedmlFileIssues) {
             QString issueType;
 
             switch (sedmlFileIssue.type()) {
@@ -3268,9 +3269,7 @@ void SimulationExperimentViewSimulationWidget::retrieveFileDetails(const QString
                                                                    CellMLSupport::CellmlFile *&pCellmlFile,
                                                                    SEDMLSupport::SedmlFile *&pSedmlFile,
                                                                    COMBINESupport::CombineArchive *&pCombineArchive,
-                                                                   SimulationSupport::Simulation::FileType &pFileType,
-                                                                   SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                                                                   COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues)
+                                                                   SimulationSupport::Simulation::FileType &pFileType)
 {
     // Determine the type of file we are dealing with
 
@@ -3288,20 +3287,11 @@ void SimulationExperimentViewSimulationWidget::retrieveFileDetails(const QString
     // SED-ML file while, in the case of a SED-ML file, we need to retrieve the
     // corresponding CellML file
 
-    pSedmlFileIssues.clear();
-    pCombineArchiveIssues.clear();
-
-    if (pCombineArchive) {
+    if (pCombineArchive)
         pSedmlFile = pCombineArchive->sedmlFile();
 
-        pCombineArchiveIssues = pCombineArchive->issues();
-    }
-
-    if (pSedmlFile) {
+    if (pSedmlFile)
         pCellmlFile = pSedmlFile->cellmlFile();
-
-        pSedmlFileIssues = pSedmlFile->issues();
-    }
 }
 
 //==============================================================================

@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
-#include "sedmlfileissue.h"
 #include "simulation.h"
 #include "simulationexperimentviewwidget.h"
 #include "widget.h"
@@ -202,9 +201,6 @@ private:
 
     SimulationSupport::Simulation::FileType mFileType;
 
-    SEDMLSupport::SedmlFileIssues mSedmlFileIssues;
-    COMBINESupport::CombineArchiveIssues mCombineArchiveIssues;
-
     ErrorType mErrorType;
 
     GraphPanelWidget::GraphPanelPlotWidgets mPlots;
@@ -271,9 +267,7 @@ private:
                              CellMLSupport::CellmlFile *&pCellmlFile,
                              SEDMLSupport::SedmlFile *&pSedmlFile,
                              COMBINESupport::CombineArchive *&pCombineArchive,
-                             SimulationSupport::Simulation::FileType &pFileType,
-                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                             COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
+                             SimulationSupport::Simulation::FileType &pFileType);
 
 signals:
     void splitterMoved(const QIntList &pSizes);
