@@ -4,8 +4,8 @@ sudo: required
 dist: trusty
 
 os:
-  - linux
-#  - osx
+#  - linux
+  - osx
 
 env:
   - CONFIG=Release
