@@ -43,7 +43,6 @@ ADD_PLUGIN(SimulationExperimentView
         src/simulationexperimentviewsimulationwidget.h
         src/simulationexperimentviewwidget.h
     PLUGINS
-        COMBINESupport
         GraphPanelWidget
-        SEDMLSupport
+        SimulationSupport
 )
