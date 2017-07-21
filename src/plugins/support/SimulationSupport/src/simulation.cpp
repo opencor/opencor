@@ -857,13 +857,16 @@ double * SimulationResults::algebraic(const int &pIndex) const
 
 Simulation::Simulation(const QString &pFileName) :
     mFileName(pFileName),
-    mWorker(0),
-    mData(new SimulationData(this)),
-    mResults(new SimulationResults(this))
+    mWorker(0)
 {
     // Retrieve our file details
 
     retrieveFileDetails();
+
+    // Create our data and results objects, now that we are all set
+
+    mData = new SimulationData(this);
+    mResults = new SimulationResults(this);
 
     // Keep track of any error occurring in our data
 
