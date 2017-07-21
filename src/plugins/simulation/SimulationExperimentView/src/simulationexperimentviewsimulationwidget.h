@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
 #include "sedmlfileissue.h"
-#include "simulationexperimentviewsimulation.h"
+#include "simulation.h"
 #include "simulationexperimentviewwidget.h"
 #include "widget.h"
 
@@ -128,7 +128,7 @@ public:
 
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    SimulationExperimentViewSimulation * simulation() const;
+    SimulationSupport::Simulation * simulation() const;
 
     void updateGui(const bool &pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
@@ -154,7 +154,7 @@ private:
 
     QMap<QAction *, Plugin *> mCellmlBasedViewPlugins;
 
-    SimulationExperimentViewSimulation *mSimulation;
+    SimulationSupport::Simulation *mSimulation;
 
     Core::ProgressBarWidget *mProgressBarWidget;
 
@@ -200,7 +200,7 @@ private:
     SEDMLSupport::SedmlFile *mSedmlFile;
     COMBINESupport::CombineArchive *mCombineArchive;
 
-    SimulationExperimentViewSimulation::FileType mFileType;
+    SimulationSupport::Simulation::FileType mFileType;
 
     SEDMLSupport::SedmlFileIssues mSedmlFileIssues;
     COMBINESupport::CombineArchiveIssues mCombineArchiveIssues;
@@ -238,7 +238,7 @@ private:
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                     const bool &pForceReplot = false);
 
-    double * dataPoints(SimulationExperimentViewSimulation *pSimulation,
+    double * dataPoints(SimulationSupport::Simulation *pSimulation,
                         CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
@@ -271,7 +271,7 @@ private:
                              CellMLSupport::CellmlFile *&pCellmlFile,
                              SEDMLSupport::SedmlFile *&pSedmlFile,
                              COMBINESupport::CombineArchive *&pCombineArchive,
-                             SimulationExperimentViewSimulation::FileType &pFileType,
+                             SimulationSupport::Simulation::FileType &pFileType,
                              SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
                              COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
 

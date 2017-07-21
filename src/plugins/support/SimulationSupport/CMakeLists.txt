@@ -4,6 +4,8 @@ PROJECT(SimulationSupportPlugin)
 
 ADD_PLUGIN(SimulationSupport
     SOURCES
+        ../../i18ninterface.cpp
+
         src/simulation.cpp
         src/simulationsupportplugin.cpp
         src/simulationworker.cpp

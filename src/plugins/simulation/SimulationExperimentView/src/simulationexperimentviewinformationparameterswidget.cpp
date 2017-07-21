@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "simulation.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
-#include "simulationexperimentviewsimulation.h"
 #include "simulationexperimentviewsimulationwidget.h"
 
 //==============================================================================
@@ -110,7 +110,7 @@ void SimulationExperimentViewInformationParametersWidget::contextMenuEvent(QCont
 
 //==============================================================================
 
-void SimulationExperimentViewInformationParametersWidget::initialize(SimulationExperimentViewSimulation *pSimulation,
+void SimulationExperimentViewInformationParametersWidget::initialize(SimulationSupport::Simulation *pSimulation,
                                                                      const bool &pReloadingView)
 {
     // Keep track of the simulation

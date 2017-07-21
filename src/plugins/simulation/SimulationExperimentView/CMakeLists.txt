@@ -21,8 +21,6 @@ ADD_PLUGIN(SimulationExperimentView
         src/simulationexperimentviewinformationsolverswidget.cpp
         src/simulationexperimentviewinformationwidget.cpp
         src/simulationexperimentviewplugin.cpp
-        src/simulationexperimentviewsimulation.cpp
-        src/simulationexperimentviewsimulationworker.cpp
         src/simulationexperimentviewsimulationwidget.cpp
         src/simulationexperimentviewwidget.cpp
     HEADERS_MOC
@@ -38,8 +36,6 @@ ADD_PLUGIN(SimulationExperimentView
         src/simulationexperimentviewinformationsolverswidget.h
         src/simulationexperimentviewinformationwidget.h
         src/simulationexperimentviewplugin.h
-        src/simulationexperimentviewsimulation.h
-        src/simulationexperimentviewsimulationworker.h
         src/simulationexperimentviewsimulationwidget.h
         src/simulationexperimentviewwidget.h
     PLUGINS

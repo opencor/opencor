@@ -25,9 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "graphpanelwidget.h"
+#include "simulation.h"
 #include "simulationexperimentviewinformationgraphswidget.h"
 #include "simulationexperimentviewplugin.h"
-#include "simulationexperimentviewsimulation.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 
@@ -131,7 +131,7 @@ void SimulationExperimentViewInformationGraphsWidget::retranslateUi()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::initialize(SimulationExperimentViewSimulation *pSimulation)
+void SimulationExperimentViewInformationGraphsWidget::initialize(SimulationSupport::Simulation *pSimulation)
 {
     // Populate our parameters context menu
 

@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
 #include "interfaces.h"
+#include "simulation.h"
 #include "simulationexperimentviewinformationsolverswidget.h"
-#include "simulationexperimentviewsimulation.h"
 #include "simulationexperimentviewwidget.h"
 
 //==============================================================================
@@ -326,7 +326,7 @@ void SimulationExperimentViewInformationSolversWidget::setPropertiesUnit(Simulat
 
 //==============================================================================
 
-void SimulationExperimentViewInformationSolversWidget::initialize(SimulationExperimentViewSimulation *pSimulation)
+void SimulationExperimentViewInformationSolversWidget::initialize(SimulationSupport::Simulation *pSimulation)
 {
     // Make sure that the CellML file runtime is valid
 

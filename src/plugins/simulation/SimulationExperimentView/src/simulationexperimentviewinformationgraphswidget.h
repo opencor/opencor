@@ -53,11 +53,16 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
+namespace SimulationSupport {
+    class Simulation;
+}   // namespace SimulationSupport
+
+//==============================================================================
+
 namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SimulationExperimentViewSimulation;
 class SimulationExperimentViewSimulationWidget;
 class SimulationExperimentViewWidget;
 
@@ -75,7 +80,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(SimulationExperimentViewSimulation *pSimulation);
+    void initialize(SimulationSupport::Simulation *pSimulation);
     void finalize();
 
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);

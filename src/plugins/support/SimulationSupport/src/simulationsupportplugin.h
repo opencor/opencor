@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "i18ninterface.h"
 #include "plugininfo.h"
 
 //==============================================================================
@@ -38,11 +39,16 @@ PLUGININFO_FUNC SimulationSupportPluginInfo();
 
 //==============================================================================
 
-class SimulationSupportPlugin : public QObject
+class SimulationSupportPlugin : public QObject, public I18nInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.SimulationSupportPlugin" FILE "simulationsupportplugin.json")
+
+    Q_INTERFACES(OpenCOR::I18nInterface)
+
+public:
+#include "i18ninterface.inl"
 };
 
 //==============================================================================

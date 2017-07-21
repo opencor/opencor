@@ -43,6 +43,18 @@ PLUGININFO_FUNC SimulationSupportPluginInfo()
 }
 
 //==============================================================================
+// I18n interface
+//==============================================================================
+
+void SimulationSupportPlugin::retranslateUi()
+{
+    // We don't handle this interface...
+    // Note: even though we don't handle this interface, we still want to
+    //       support it since some other aspects of our plugin are
+    //       multilingual...
+}
+
+//==============================================================================
 
 }   // namespace SimulationSupport
 }   // namespace OpenCOR
