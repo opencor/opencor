@@ -18,16 +18,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Simulation support plugin
+// Simulation manager
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "filehandlinginterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
+#include "simulationsupportglobal.h"
+
+//==============================================================================
+
+#include <QMap>
+#include <QObject>
 
 //==============================================================================
 
@@ -36,23 +39,29 @@ namespace SimulationSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC SimulationSupportPluginInfo();
+class Simulation;
 
 //==============================================================================
 
-class SimulationSupportPlugin : public QObject, public FileHandlingInterface,
-                                public I18nInterface
+class SIMULATIONSUPPORT_EXPORT SimulationManager : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.SimulationSupportPlugin" FILE "simulationsupportplugin.json")
-
-    Q_INTERFACES(OpenCOR::FileHandlingInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-
 public:
-#include "filehandlinginterface.inl"
-#include "i18ninterface.inl"
+    explicit SimulationManager();
+
+    static SimulationManager * instance();
+
+    void manage(const QString &pFileName);
+    void unmanage(const QString &pFileName);
+
+    void reload(const QString &pFileName);
+    void rename(const QString &pOldFileName, const QString &pNewFileName);
+
+    Simulation * simulation(const QString &pFileName) const;
+
+private:
+    QMap<QString, Simulation *> mSimulations;
 };
 
 //==============================================================================

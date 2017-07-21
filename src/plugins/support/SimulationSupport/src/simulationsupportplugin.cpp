@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Simulation support plugin
 //==============================================================================
 
+#include "simulationmanager.h"
 #include "simulationsupportplugin.h"
 
 //==============================================================================
@@ -40,6 +41,82 @@ PLUGININFO_FUNC SimulationSupportPluginInfo()
     return new PluginInfo(PluginInfo::Support, false, false,
                           QStringList() << "COMBINESupport",
                           descriptions);
+}
+
+//==============================================================================
+// File handling interface
+//==============================================================================
+
+bool SimulationSupportPlugin::saveFile(const QString &pOldFileName,
+                                       const QString &pNewFileName,
+                                       bool &pNeedFeedback)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+    Q_UNUSED(pNeedFeedback);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+void SimulationSupportPlugin::fileOpened(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SimulationSupportPlugin::filePermissionsChanged(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SimulationSupportPlugin::fileModified(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SimulationSupportPlugin::fileReloaded(const QString &pFileName,
+                                           const bool &pFileChanged)
+{
+    // The given file has been reloaded, so let our simulation manager know
+    // about it
+
+    if (pFileChanged)
+        SimulationManager::instance()->reload(pFileName);
+}
+
+//==============================================================================
+
+void SimulationSupportPlugin::fileRenamed(const QString &pOldFileName,
+                                          const QString &pNewFileName)
+{
+    // The given file has been renamed, so let our simulation manager know
+    // about it
+
+    SimulationManager::instance()->rename(pOldFileName, pNewFileName);
+}
+
+//==============================================================================
+
+void SimulationSupportPlugin::fileClosed(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================
