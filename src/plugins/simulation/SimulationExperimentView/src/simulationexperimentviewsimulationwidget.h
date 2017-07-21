@@ -126,6 +126,8 @@ public:
     QString fileName() const;
     void setFileName(const QString &pFileName);
 
+    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
+
     SimulationExperimentViewSimulation * simulation() const;
 
     void updateGui(const bool &pCheckVisibility = false);

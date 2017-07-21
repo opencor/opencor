@@ -78,6 +78,8 @@ public:
     void initialize(SimulationExperimentViewSimulation *pSimulation);
     void finalize();
 
+    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
+
     void updateGui();
 
     void finishEditing();
@@ -112,6 +114,8 @@ private:
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
+    QMap<QString, QString> mRenamedModelListValues;
+
     bool mCanEmitGraphsUpdatedSignal;
 
     int mHorizontalScrollBarValue;
@@ -122,6 +126,8 @@ private:
                         GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                         Core::Property *pParameterProperty,
                         const bool &pParameterX) const;
+
+    QString modelListValue(const QString &pFileName) const;
 
     void updateGraphInfo(Core::Property *pProperty, const QString &pFileName);
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);

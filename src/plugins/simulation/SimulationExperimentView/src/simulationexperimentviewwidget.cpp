@@ -381,10 +381,10 @@ void SimulationExperimentViewWidget::fileRenamed(const QString &pOldFileName,
         mSimulationWidgets.remove(pOldFileName);
     }
 
-    // Make sure that the GUI of our simulation widgets is up to date
+    // Let our simulation widgets know that a file has been renamed
 
     foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->updateGui(true);
+        simulationWidget->fileRenamed(pOldFileName, pNewFileName);
 }
 
 //==============================================================================

@@ -1214,6 +1214,20 @@ void SimulationExperimentViewSimulationWidget::setFileName(const QString &pFileN
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::fileRenamed(const QString &pOldFileName,
+                                                           const QString &pNewFileName)
+{
+    // Let our graphs widget know that a file has been renamed
+
+    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
+
+    // Make sure that our GUI is up to date
+
+    updateGui(true);
+}
+
+//==============================================================================
+
 SimulationExperimentViewSimulation * SimulationExperimentViewSimulationWidget::simulation() const
 {
     // Return our simulation
