@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
 #include "simulation.h"
-#include "simulationexperimentviewwidget.h"
 #include "widget.h"
 
 //==============================================================================
@@ -85,12 +84,19 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
+namespace SEDMLSupport {
+    class SedmlFile;
+}   // namespace SEDMLSupport
+
+//==============================================================================
+
 namespace SimulationExperimentView {
 
 //==============================================================================
 
 class SimulationExperimentViewContentsWidget;
 class SimulationExperimentViewPlugin;
+class SimulationExperimentViewWidget;
 
 //==============================================================================
 
