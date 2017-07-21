@@ -21,9 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Simulation
 //==============================================================================
 
-#include "cellmlfile.h"
-#include "cellmlfileruntime.h"
+#include "cellmlfilemanager.h"
+#include "combinefilemanager.h"
 #include "interfaces.h"
+#include "sedmlfilemanager.h"
 #include "simulation.h"
 #include "simulationworker.h"
 
@@ -68,9 +69,9 @@ SimulationData::~SimulationData()
 
 //==============================================================================
 
-void SimulationData::update()
+void SimulationData::reload()
 {
-    // Update ourselves by updating our runtime, and deleting and recreating our
+    // Reload ourselves by updating our runtime, and deleting and recreating our
     // arrays
 
     mRuntime = mSimulation->runtime();
@@ -505,8 +506,10 @@ void SimulationData::recomputeComputedConstantsAndVariables(const double &pCurre
 
         // Recompute some 'constant' algebraic variables
 
-        if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
-            mRuntime->computeOdeRates()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
+        if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode) {
+            mRuntime->computeOdeRates()(pCurrentPoint, mConstants, mRates,
+                                        mStates, mAlgebraic);
+        }
 
         // Recompute our 'variables'
 
@@ -527,10 +530,13 @@ void SimulationData::recomputeVariables(const double &pCurrentPoint)
 
     // Recompute our 'variables'
 
-    if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
-        mRuntime->computeOdeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
-    else
-        mRuntime->computeDaeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
+    if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode) {
+        mRuntime->computeOdeVariables()(pCurrentPoint, mConstants, mRates,
+                                        mStates, mAlgebraic);
+    } else {
+        mRuntime->computeDaeVariables()(pCurrentPoint, mConstants, mRates,
+                                        mStates, mAlgebraic, mCondVar);
+    }
 }
 
 //==============================================================================
@@ -751,9 +757,9 @@ void SimulationResults::deleteDataStore()
 
 //==============================================================================
 
-void SimulationResults::update()
+void SimulationResults::reload()
 {
-    // Update ourselves by updating our runtime and deleting our data store
+    // Reload ourselves by updating our runtime and deleting our data store
 
     mRuntime = mSimulation->runtime();
 
@@ -849,30 +855,16 @@ double * SimulationResults::algebraic(const int &pIndex) const
 
 //==============================================================================
 
-Simulation::Simulation(CellMLSupport::CellmlFileRuntime *pRuntime) :
+Simulation::Simulation(const QString &pFileName) :
+    mFileName(pFileName),
     mWorker(0),
-    mRuntime(pRuntime),
     mData(new SimulationData(this)),
     mResults(new SimulationResults(this))
 {
-    // Initialise ourselves
+    // Retrieve our file details
 
-    initialize();
-}
+    retrieveFileDetails();
 
-//==============================================================================
-
-Simulation::~Simulation()
-{
-    // Finalise ourselves
-
-    finalize();
-}
-
-//==============================================================================
-
-void Simulation::initialize()
-{
     // Keep track of any error occurring in our data
 
     connect(mData, SIGNAL(error(const QString &)),
@@ -881,11 +873,9 @@ void Simulation::initialize()
 
 //==============================================================================
 
-void Simulation::finalize()
+Simulation::~Simulation()
 {
     // Stop our worker
-    // Note: we don't need to delete mWorker since it will be done as part of
-    //       its thread being stopped...
 
     stop();
 
@@ -893,6 +883,67 @@ void Simulation::finalize()
 
     delete mResults;
     delete mData;
+}
+
+//==============================================================================
+
+void Simulation::retrieveFileDetails()
+{
+    // Retrieve our CellML and SED-ML files, as well as COMBINE archive
+
+    mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
+    mSedmlFile = mCellmlFile?0:SEDMLSupport::SedmlFileManager::instance()->sedmlFile(mFileName);
+    mCombineArchive = mSedmlFile?0:COMBINESupport::CombineFileManager::instance()->combineArchive(mFileName);
+
+    // Determine the type of our file
+
+    mFileType = mCellmlFile?CellmlFile:mSedmlFile?SedmlFile:CombineArchive;
+
+    // We have a COMBINE archive, so we need to retrieve its corresponding
+    // SED-ML file
+
+    if (mCombineArchive)
+        mSedmlFile = mCombineArchive->sedmlFile();
+
+    // We have a SED-ML file (either a direct one or through a COMBINE archive),
+    // so we need to retrieve its corresponding CellML file
+
+    if (mSedmlFile)
+        mCellmlFile = mSedmlFile->cellmlFile();
+
+    // Keep track of our runtime, if any
+
+    mRuntime = mCellmlFile?mCellmlFile->runtime(true):0;
+}
+
+//==============================================================================
+
+void Simulation::reload()
+{
+    // Stop our worker
+    // Note: we don't need to delete mWorker since it will be done as part of
+    //       its thread being stopped...
+
+    stop();
+
+    // Retrieve our file details
+
+    retrieveFileDetails();
+
+    // Ask our data and results to update themselves
+
+    mData->reload();
+    mResults->reload();
+}
+
+//==============================================================================
+
+void Simulation::rename(const QString &pFileName)
+{
+    // Rename ourselves by simply updating our file name
+//---ISSUE1266--- CHECK THAT THIS IS REALLY ALL THAT IS NEEDED...
+
+    mFileName = pFileName;
 }
 
 //==============================================================================
@@ -906,11 +957,38 @@ CellMLSupport::CellmlFileRuntime * Simulation::runtime() const
 
 //==============================================================================
 
-QString Simulation::fileName() const
+Simulation::FileType Simulation::fileType() const
 {
-    // Return the name of the CellML file
+    // Return our file type
 
-    return mRuntime?mRuntime->cellmlFile()->fileName():QString();
+    return mFileType;
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFile * Simulation::cellmlFile() const
+{
+    // Return our CellML file object
+
+    return mCellmlFile;
+}
+
+//==============================================================================
+
+SEDMLSupport::SedmlFile * Simulation::sedmlFile() const
+{
+    // Return our SED-ML file object
+
+    return mSedmlFile;
+}
+
+//==============================================================================
+
+COMBINESupport::CombineArchive * Simulation::combineArchive() const
+{
+    // Return our COBMINE archive object
+
+    return mCombineArchive;
 }
 
 //==============================================================================
@@ -929,21 +1007,6 @@ SimulationResults * Simulation::results() const
     // Return our results
 
     return mResults;
-}
-
-//==============================================================================
-
-void Simulation::update(CellMLSupport::CellmlFileRuntime *pRuntime)
-{
-    // Update ourselves by first stopping ourselves, then by by updating our
-    // runtime, and asking our data and results to update themselves too
-
-    stop();
-
-    mRuntime = pRuntime;
-
-    mData->update();
-    mResults->update();
 }
 
 //==============================================================================

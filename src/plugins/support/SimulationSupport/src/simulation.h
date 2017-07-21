@@ -36,8 +36,21 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace CellMLSupport {
+    class CellmlFile;
     class CellmlFileRuntime;
 }   // namespace CellMLSupport
+
+//==============================================================================
+
+namespace COMBINESupport {
+    class CombineArchive;
+}   // namespace COMBINESupport
+
+//==============================================================================
+
+namespace SEDMLSupport {
+    class SedmlFile;
+}   // namespace SEDMLSupport
 
 //==============================================================================
 
@@ -58,7 +71,7 @@ public:
     explicit SimulationData(Simulation *pSimulation);
     ~SimulationData();
 
-    void update();
+    void reload();
 
     Simulation * simulation() const;
 
@@ -168,7 +181,7 @@ public:
     explicit SimulationResults(Simulation *pSimulation);
     ~SimulationResults();
 
-    void update();
+    void reload();
 
     bool reset(const bool &pCreateDataStore = true);
 
@@ -218,17 +231,22 @@ public:
         CombineArchive
     };
 
-    explicit Simulation(CellMLSupport::CellmlFileRuntime *pRuntime);
+    explicit Simulation(const QString &pFileName);
     ~Simulation();
+
+    void reload();
+    void rename(const QString &pFileName);
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
-    QString fileName() const;
+    Simulation::FileType fileType() const;
+
+    CellMLSupport::CellmlFile * cellmlFile() const;
+    SEDMLSupport::SedmlFile * sedmlFile() const;
+    COMBINESupport::CombineArchive * combineArchive() const;
 
     SimulationData * data() const;
     SimulationResults * results() const;
-
-    void update(CellMLSupport::CellmlFileRuntime *pRuntime);
 
     bool isRunning() const;
     bool isPaused() const;
@@ -250,15 +268,22 @@ public:
     bool reset();
 
 private:
-    SimulationWorker *mWorker;
+    QString mFileName;
+
+    FileType mFileType;
+
+    CellMLSupport::CellmlFile *mCellmlFile;
+    SEDMLSupport::SedmlFile *mSedmlFile;
+    COMBINESupport::CombineArchive *mCombineArchive;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
+
+    SimulationWorker *mWorker;
 
     SimulationData *mData;
     SimulationResults *mResults;
 
-    void initialize();
-    void finalize();
+    void retrieveFileDetails();
 
     bool simulationSettingsOk(const bool &pEmitSignal = true);
 

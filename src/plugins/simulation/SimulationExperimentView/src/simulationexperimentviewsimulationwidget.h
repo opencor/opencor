@@ -25,10 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "cellmlfileruntime.h"
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
-#include "simulation.h"
 #include "widget.h"
 
 //==============================================================================
@@ -62,9 +60,9 @@ class DataStoreInterface;
 
 //==============================================================================
 
-namespace COMBINESupport {
-    class CombineArchive;
-}   // namespace COMBINESupport
+namespace CellMLSupport {
+    class CellmlFileRuntimeParameter;
+}   // namespace CellMLSupport
 
 //==============================================================================
 
@@ -84,9 +82,9 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-namespace SEDMLSupport {
-    class SedmlFile;
-}   // namespace SEDMLSupport
+namespace SimulationSupport {
+    class Simulation;
+}   // namespace SimulationSupport
 
 //==============================================================================
 
@@ -201,12 +199,6 @@ private:
 
     QTextEdit *mOutputWidget;
 
-    CellMLSupport::CellmlFile *mCellmlFile;
-    SEDMLSupport::SedmlFile *mSedmlFile;
-    COMBINESupport::CombineArchive *mCombineArchive;
-
-    SimulationSupport::Simulation::FileType mFileType;
-
     ErrorType mErrorType;
 
     GraphPanelWidget::GraphPanelPlotWidgets mPlots;
@@ -268,12 +260,6 @@ private:
     bool createSedmlFile(const QString &pFileName, const QString &pModelSource);
 
     void checkSimulationDataModified(const bool &pIsModified);
-
-    void retrieveFileDetails(const QString &pFileName,
-                             CellMLSupport::CellmlFile *&pCellmlFile,
-                             SEDMLSupport::SedmlFile *&pSedmlFile,
-                             COMBINESupport::CombineArchive *&pCombineArchive,
-                             SimulationSupport::Simulation::FileType &pFileType);
 
 signals:
     void splitterMoved(const QIntList &pSizes);
