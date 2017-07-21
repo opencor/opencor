@@ -59,6 +59,7 @@ SimulationExperimentViewInformationGraphsWidget::SimulationExperimentViewInforma
     mGraphs(QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *>()),
     mGraphProperties(QMap<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
+    mRenamedModelListValues(QMap<QString, QString>()),
     mHorizontalScrollBarValue(0)
 {
     // Create our context menus and populate our main context menu
@@ -396,6 +397,45 @@ void SimulationExperimentViewInformationGraphsWidget::unselectAllGraphs()
 
 //==============================================================================
 
+void SimulationExperimentViewInformationGraphsWidget::fileRenamed(const QString &pOldFileName,
+                                                                  const QString &pNewFileName)
+{
+    // Keep track of the renamed model list value (so that we can take advantage
+    // of it in our calls to updateGraphsInfo() in updateAllGraphsInfo())
+
+    QString oldModelListValue = modelListValue(pOldFileName);
+
+    if (mRenamedModelListValues.values().contains(oldModelListValue)) {
+        // A previous model list value has been renamed again, so find its
+        // original value and update its new renamed version, if needed
+
+        foreach (const QString &origModelListValue, mRenamedModelListValues.keys()) {
+            QString oldModelListValue = mRenamedModelListValues.value(origModelListValue);
+
+            if (!oldModelListValue.compare(oldModelListValue)) {
+                QString newModelListValue = modelListValue(pNewFileName);
+
+                if (!origModelListValue.compare(newModelListValue)) {
+                    // A model list value has been re-renamed to its original
+                    // value, so stop tracking it
+
+                    mRenamedModelListValues.remove(origModelListValue);
+                } else {
+                    mRenamedModelListValues.insert(origModelListValue, newModelListValue);
+                }
+
+                break;
+            }
+        }
+    } else {
+        // Not a renamed model list value that we know, so just keep track of it
+
+        mRenamedModelListValues.insert(oldModelListValue, modelListValue(pNewFileName));
+    }
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphsWidget::updateGui()
 {
     // Update our graphs information
@@ -712,6 +752,15 @@ bool SimulationExperimentViewInformationGraphsWidget::checkParameter(CellMLSuppo
 
 //==============================================================================
 
+QString SimulationExperimentViewInformationGraphsWidget::modelListValue(const QString &pFileName) const
+{
+    // Return the model list value for the given file name
+
+    return QFileInfo(pFileName).fileName()+PropertySeparator+pFileName;
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty,
                                                                       const QString &pFileName)
 {
@@ -859,9 +908,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
         Core::File *file = Core::FileManager::instance()->file(fileName);
         QString fileNameOrUrl = file->isLocal()?fileName:file->url();
 
-        modelListValues <<  QFileInfo(fileNameOrUrl).fileName()
-                           +PropertySeparator
-                           +fileNameOrUrl;
+        modelListValues << modelListValue(fileNameOrUrl);
     }
 
     modelListValues.sort();
@@ -894,15 +941,15 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
 
             newModelValue = graphProperty->properties()[0]->value();
         } else if (!modelListValues.contains(oldModelValue)) {
-            // Our old model value is not in our new model list values, which
-            // means that either the value of the model property was "Current"
-            // (and the locale got changed) or the current file got renamed, so
-            // we use that instead
+            // Our old model value is not in our new model list values anymore,
+            // which means that either the value of the model property was
+            // "Current" (and the locale got changed) or the current file got
+            // renamed
 
             if (oldModelValue.contains(PropertySeparator)) {
                 // The current file got renamed
 
-                newModelValue = QFileInfo(mSimulationWidget->fileName()).fileName()+PropertySeparator+mSimulationWidget->fileName();
+                newModelValue = mRenamedModelListValues.value(oldModelValue);
             } else {
                 // The value of the model property was "Current" (and the locale
                 // got changed)
@@ -939,6 +986,11 @@ void SimulationExperimentViewInformationGraphsWidget::updateAllGraphsInfo()
 
         updateGraphsInfo();
     }
+
+    // Our list of renamed model list values was used in our different calls to
+    // updateGraphsInfo() above, so it can now be reset
+
+    mRenamedModelListValues.clear();
 
     // Retrieve our originally active property editor
 
