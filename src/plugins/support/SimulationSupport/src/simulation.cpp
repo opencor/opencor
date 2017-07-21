@@ -855,6 +855,24 @@ Simulation::Simulation(CellMLSupport::CellmlFileRuntime *pRuntime) :
     mData(new SimulationData(this)),
     mResults(new SimulationResults(this))
 {
+    // Initialise ourselves
+
+    initialize();
+}
+
+//==============================================================================
+
+Simulation::~Simulation()
+{
+    // Finalise ourselves
+
+    finalize();
+}
+
+//==============================================================================
+
+void Simulation::initialize()
+{
     // Keep track of any error occurring in our data
 
     connect(mData, SIGNAL(error(const QString &)),
@@ -863,7 +881,7 @@ Simulation::Simulation(CellMLSupport::CellmlFileRuntime *pRuntime) :
 
 //==============================================================================
 
-Simulation::~Simulation()
+void Simulation::finalize()
 {
     // Stop our worker
     // Note: we don't need to delete mWorker since it will be done as part of

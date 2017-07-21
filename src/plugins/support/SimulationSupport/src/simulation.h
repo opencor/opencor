@@ -257,6 +257,9 @@ private:
     SimulationData *mData;
     SimulationResults *mResults;
 
+    void initialize();
+    void finalize();
+
     bool simulationSettingsOk(const bool &pEmitSignal = true);
 
 signals:
