@@ -18,33 +18,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// File handling interface
+// Simulation support global
 //==============================================================================
 
-#ifdef INTERFACE_DEFINITION
-    #define PURE = 0
+#pragma once
+
+//==============================================================================
+
+#ifdef _WIN32
+    #ifdef SimulationSupport_PLUGIN
+        #define SIMULATIONSUPPORT_EXPORT __declspec(dllexport)
+    #else
+        #define SIMULATIONSUPPORT_EXPORT __declspec(dllimport)
+    #endif
 #else
-    #define PURE
+    #define SIMULATIONSUPPORT_EXPORT
 #endif
-
-    // Note: make sure to update fileHandlingInterfaceVersion() whenever you
-    //       update this interface...
-
-    virtual bool saveFile(const QString &pOldFileName,
-                          const QString &pNewFileName,
-                          bool &pNeedFeedback) PURE;
-
-    virtual void fileOpened(const QString &pFileName) PURE;
-    virtual void filePermissionsChanged(const QString &pFileName) PURE;
-    virtual void fileModified(const QString &pFileName) PURE;
-    virtual void fileReloaded(const QString &pFileName,
-                              const bool &pFileChanged,
-                              const bool &pFileJustSaved) PURE;
-    virtual void fileRenamed(const QString &pOldFileName,
-                             const QString &pNewFileName) PURE;
-    virtual void fileClosed(const QString &pFileName) PURE;
-
-#undef PURE
 
 //==============================================================================
 // End of file

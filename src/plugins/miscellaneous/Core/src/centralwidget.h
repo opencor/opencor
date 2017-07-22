@@ -227,7 +227,7 @@ private slots:
     void fileModified(const QString &pFileName);
 
     void fileReloaded(const QString &pFileName, const bool &pFileChanged,
-                      const bool &pExcludeFileViewPlugin = false);
+                      const bool &pFileJustSaved = false);
 
     void fileCreated(const QString &pFileName, const QString &pUrl);
     void fileDuplicated(const QString &pFileName);

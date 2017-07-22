@@ -18,26 +18,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// File handling interface
+// Simulation support plugin
+//==============================================================================
+
+#pragma once
+
 //==============================================================================
 
 #include "filehandlinginterface.h"
+#include "i18ninterface.h"
+#include "plugininfo.h"
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace SimulationSupport {
 
 //==============================================================================
 
-extern "C" Q_DECL_EXPORT int fileHandlingInterfaceVersion()
+PLUGININFO_FUNC SimulationSupportPluginInfo();
+
+//==============================================================================
+
+class SimulationSupportPlugin : public QObject, public FileHandlingInterface,
+                                public I18nInterface
 {
-    // Version of the file handling interface
+    Q_OBJECT
 
-    return 3;
-}
+    Q_PLUGIN_METADATA(IID "OpenCOR.SimulationSupportPlugin" FILE "simulationsupportplugin.json")
+
+    Q_INTERFACES(OpenCOR::FileHandlingInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
+
+public:
+#include "filehandlinginterface.inl"
+#include "i18ninterface.inl"
+};
 
 //==============================================================================
 
+}   // namespace SimulationSupport
 }   // namespace OpenCOR
 
 //==============================================================================

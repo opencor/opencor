@@ -34,11 +34,13 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace SimulationExperimentView {
+namespace SimulationSupport {
+    class Simulation;
+}   // namespace SimulationSupport
 
 //==============================================================================
 
-class SimulationExperimentViewSimulation;
+namespace SimulationExperimentView {
 
 //==============================================================================
 
@@ -78,7 +80,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(SimulationExperimentViewSimulation *pSimulation);
+    void initialize(SimulationSupport::Simulation *pSimulation);
 
     QStringList odeSolvers() const;
     QStringList daeSolvers() const;

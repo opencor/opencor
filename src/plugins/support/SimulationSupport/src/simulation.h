@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Simulation Experiment view simulation
+// Simulation
 //==============================================================================
 
 #pragma once
@@ -26,12 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "datastoreinterface.h"
-#include "simulationexperimentviewsimulationworker.h"
+#include "simulationsupportglobal.h"
 #include "solverinterface.h"
-
-//==============================================================================
-
-#include <QObject>
 
 //==============================================================================
 
@@ -40,30 +36,44 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace CellMLSupport {
+    class CellmlFile;
     class CellmlFileRuntime;
 }   // namespace CellMLSupport
 
 //==============================================================================
 
-namespace SimulationExperimentView {
+namespace COMBINESupport {
+    class CombineArchive;
+}   // namespace COMBINESupport
 
 //==============================================================================
 
-class SimulationExperimentViewSimulation;
+namespace SEDMLSupport {
+    class SedmlFile;
+}   // namespace SEDMLSupport
 
 //==============================================================================
 
-class SimulationExperimentViewSimulationData : public QObject
+namespace SimulationSupport {
+
+//==============================================================================
+
+class Simulation;
+class SimulationWorker;
+
+//==============================================================================
+
+class SIMULATIONSUPPORT_EXPORT SimulationData : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit SimulationExperimentViewSimulationData(SimulationExperimentViewSimulation *pSimulation);
-    ~SimulationExperimentViewSimulationData();
+    explicit SimulationData(Simulation *pSimulation);
+    ~SimulationData();
 
-    void update();
+    void reload();
 
-    SimulationExperimentViewSimulation * simulation() const;
+    Simulation * simulation() const;
 
     double * constants() const;
     double * rates() const;
@@ -120,7 +130,7 @@ public:
     void checkForModifications();
 
 private:
-    SimulationExperimentViewSimulation *mSimulation;
+    Simulation *mSimulation;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 
@@ -163,15 +173,15 @@ signals:
 
 //==============================================================================
 
-class SimulationExperimentViewSimulationResults : public QObject
+class SIMULATIONSUPPORT_EXPORT SimulationResults : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit SimulationExperimentViewSimulationResults(SimulationExperimentViewSimulation *pSimulation);
-    ~SimulationExperimentViewSimulationResults();
+    explicit SimulationResults(Simulation *pSimulation);
+    ~SimulationResults();
 
-    void update();
+    void reload();
 
     bool reset(const bool &pCreateDataStore = true);
 
@@ -189,7 +199,7 @@ public:
     double * algebraic(const int &pIndex) const;
 
 private:
-    SimulationExperimentViewSimulation *mSimulation;
+    Simulation *mSimulation;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 
@@ -210,11 +220,9 @@ private:
 
 //==============================================================================
 
-class SimulationExperimentViewSimulation : public QObject
+class SIMULATIONSUPPORT_EXPORT Simulation : public QObject
 {
     Q_OBJECT
-
-    friend class SimulationExperimentViewSimulationWorker;
 
 public:
     enum FileType {
@@ -223,17 +231,22 @@ public:
         CombineArchive
     };
 
-    explicit SimulationExperimentViewSimulation(CellMLSupport::CellmlFileRuntime *pRuntime);
-    ~SimulationExperimentViewSimulation();
+    explicit Simulation(const QString &pFileName);
+    ~Simulation();
+
+    void reload();
+    void rename(const QString &pFileName);
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
-    QString fileName() const;
+    Simulation::FileType fileType() const;
 
-    SimulationExperimentViewSimulationData * data() const;
-    SimulationExperimentViewSimulationResults * results() const;
+    CellMLSupport::CellmlFile * cellmlFile() const;
+    SEDMLSupport::SedmlFile * sedmlFile() const;
+    COMBINESupport::CombineArchive * combineArchive() const;
 
-    void update(CellMLSupport::CellmlFileRuntime *pRuntime);
+    SimulationData * data() const;
+    SimulationResults * results() const;
 
     bool isRunning() const;
     bool isPaused() const;
@@ -255,12 +268,22 @@ public:
     bool reset();
 
 private:
-    SimulationExperimentViewSimulationWorker *mWorker;
+    QString mFileName;
+
+    FileType mFileType;
+
+    CellMLSupport::CellmlFile *mCellmlFile;
+    SEDMLSupport::SedmlFile *mSedmlFile;
+    COMBINESupport::CombineArchive *mCombineArchive;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 
-    SimulationExperimentViewSimulationData *mData;
-    SimulationExperimentViewSimulationResults *mResults;
+    SimulationWorker *mWorker;
+
+    SimulationData *mData;
+    SimulationResults *mResults;
+
+    void retrieveFileDetails();
 
     bool simulationSettingsOk(const bool &pEmitSignal = true);
 
@@ -274,7 +297,7 @@ signals:
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
+}   // namespace SimulationSupport
 }   // namespace OpenCOR
 
 //==============================================================================

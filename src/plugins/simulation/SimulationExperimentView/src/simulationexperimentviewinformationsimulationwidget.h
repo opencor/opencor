@@ -30,11 +30,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SimulationExperimentViewSimulation;
+namespace SimulationSupport {
+    class Simulation;
+}   // namespace SimulationSupport
+
+//==============================================================================
+
+namespace SimulationExperimentView {
 
 //==============================================================================
 
@@ -47,7 +52,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(SimulationExperimentViewSimulation *pSimulation);
+    void initialize(SimulationSupport::Simulation *pSimulation);
 
     Core::Property * startingPointProperty() const;
     Core::Property * endingPointProperty() const;

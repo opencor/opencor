@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "collapsiblewidget.h"
 #include "filemanager.h"
+#include "simulation.h"
 #include "simulationexperimentviewcontentswidget.h"
 #include "simulationexperimentviewinformationgraphswidget.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
@@ -30,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "simulationexperimentviewinformationsolverswidget.h"
 #include "simulationexperimentviewinformationwidget.h"
 #include "simulationexperimentviewplugin.h"
-#include "simulationexperimentviewsimulation.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 
@@ -439,7 +439,7 @@ SimulationExperimentViewSimulationWidget * SimulationExperimentViewWidget::simul
 
 //==============================================================================
 
-SimulationExperimentViewSimulation * SimulationExperimentViewWidget::simulation(const QString &pFileName) const
+SimulationSupport::Simulation * SimulationExperimentViewWidget::simulation(const QString &pFileName) const
 {
     // Return the simulation for the given file name
 
@@ -501,7 +501,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     //       since another simulation widget may have graphs that refer to the
     //       given simulation widget...
 
-    SimulationExperimentViewSimulation *simulation = simulationWidget->simulation();
+    SimulationSupport::Simulation *simulation = simulationWidget->simulation();
     qulonglong simulationResultsSize = simulation->results()->size();
 
     if (   pClearGraphs

@@ -25,12 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "cellmlfileruntime.h"
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
-#include "sedmlfileissue.h"
-#include "simulationexperimentviewsimulation.h"
-#include "simulationexperimentviewwidget.h"
 #include "widget.h"
 
 //==============================================================================
@@ -64,9 +60,9 @@ class DataStoreInterface;
 
 //==============================================================================
 
-namespace COMBINESupport {
-    class CombineArchive;
-}   // namespace COMBINESupport
+namespace CellMLSupport {
+    class CellmlFileRuntimeParameter;
+}   // namespace CellMLSupport
 
 //==============================================================================
 
@@ -86,12 +82,19 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
+namespace SimulationSupport {
+    class Simulation;
+}   // namespace SimulationSupport
+
+//==============================================================================
+
 namespace SimulationExperimentView {
 
 //==============================================================================
 
 class SimulationExperimentViewContentsWidget;
 class SimulationExperimentViewPlugin;
+class SimulationExperimentViewWidget;
 
 //==============================================================================
 
@@ -128,7 +131,7 @@ public:
 
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    SimulationExperimentViewSimulation * simulation() const;
+    SimulationSupport::Simulation * simulation() const;
 
     void updateGui(const bool &pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
@@ -154,7 +157,7 @@ private:
 
     QMap<QAction *, Plugin *> mCellmlBasedViewPlugins;
 
-    SimulationExperimentViewSimulation *mSimulation;
+    SimulationSupport::Simulation *mSimulation;
 
     Core::ProgressBarWidget *mProgressBarWidget;
 
@@ -196,15 +199,6 @@ private:
 
     QTextEdit *mOutputWidget;
 
-    CellMLSupport::CellmlFile *mCellmlFile;
-    SEDMLSupport::SedmlFile *mSedmlFile;
-    COMBINESupport::CombineArchive *mCombineArchive;
-
-    SimulationExperimentViewSimulation::FileType mFileType;
-
-    SEDMLSupport::SedmlFileIssues mSedmlFileIssues;
-    COMBINESupport::CombineArchiveIssues mCombineArchiveIssues;
-
     ErrorType mErrorType;
 
     GraphPanelWidget::GraphPanelPlotWidgets mPlots;
@@ -238,7 +232,7 @@ private:
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                     const bool &pForceReplot = false);
 
-    double * dataPoints(SimulationExperimentViewSimulation *pSimulation,
+    double * dataPoints(SimulationSupport::Simulation *pSimulation,
                         CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
@@ -266,14 +260,6 @@ private:
     bool createSedmlFile(const QString &pFileName, const QString &pModelSource);
 
     void checkSimulationDataModified(const bool &pIsModified);
-
-    void retrieveFileDetails(const QString &pFileName,
-                             CellMLSupport::CellmlFile *&pCellmlFile,
-                             SEDMLSupport::SedmlFile *&pSedmlFile,
-                             COMBINESupport::CombineArchive *&pCombineArchive,
-                             SimulationExperimentViewSimulation::FileType &pFileType,
-                             SEDMLSupport::SedmlFileIssues &pSedmlFileIssues,
-                             COMBINESupport::CombineArchiveIssues &pCombineArchiveIssues);
 
 signals:
     void splitterMoved(const QIntList &pSizes);

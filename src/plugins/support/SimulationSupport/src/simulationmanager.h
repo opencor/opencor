@@ -18,26 +18,55 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// File handling interface
+// Simulation manager
 //==============================================================================
 
-#include "filehandlinginterface.h"
+#pragma once
+
+//==============================================================================
+
+#include "simulationsupportglobal.h"
+
+//==============================================================================
+
+#include <QMap>
+#include <QObject>
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace SimulationSupport {
 
 //==============================================================================
 
-extern "C" Q_DECL_EXPORT int fileHandlingInterfaceVersion()
+class Simulation;
+
+//==============================================================================
+
+class SIMULATIONSUPPORT_EXPORT SimulationManager : public QObject
 {
-    // Version of the file handling interface
+    Q_OBJECT
 
-    return 3;
-}
+public:
+    explicit SimulationManager();
+
+    static SimulationManager * instance();
+
+    void manage(const QString &pFileName);
+    void unmanage(const QString &pFileName);
+
+    void reload(const QString &pFileName);
+    void rename(const QString &pOldFileName, const QString &pNewFileName);
+
+    Simulation * simulation(const QString &pFileName) const;
+
+private:
+    QMap<QString, Simulation *> mSimulations;
+};
 
 //==============================================================================
 
+}   // namespace SimulationSupport
 }   // namespace OpenCOR
 
 //==============================================================================

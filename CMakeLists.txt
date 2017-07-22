@@ -825,6 +825,7 @@ SET(PLUGINS
     support/PMRSupport
     support/QScintillaSupport
     support/SEDMLSupport
+    support/SimulationSupport
     support/StandardSupport
     support/ZIPSupport
 

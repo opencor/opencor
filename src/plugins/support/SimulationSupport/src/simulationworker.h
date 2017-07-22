@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Simulation Experiment view simulation worker
+// Simulation worker
 //==============================================================================
 
 #pragma once
@@ -40,21 +40,21 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-namespace SimulationExperimentView {
+namespace SimulationSupport {
 
 //==============================================================================
 
-class SimulationExperimentViewSimulation;
+class Simulation;
 
 //==============================================================================
 
-class SimulationExperimentViewSimulationWorker : public QObject
+class SimulationWorker : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit SimulationExperimentViewSimulationWorker(SimulationExperimentViewSimulation *pSimulation,
-                                                      SimulationExperimentViewSimulationWorker *&pSelf);
+    explicit SimulationWorker(Simulation *pSimulation,
+                              SimulationWorker *&pSelf);
 
     bool isRunning() const;
     bool isPaused() const;
@@ -71,7 +71,7 @@ public:
 private:
     QThread *mThread;
 
-    SimulationExperimentViewSimulation *mSimulation;
+    Simulation *mSimulation;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 
@@ -86,7 +86,7 @@ private:
 
     bool mError;
 
-    SimulationExperimentViewSimulationWorker *&mSelf;
+    SimulationWorker *&mSelf;
 
 signals:
     void running(const bool &pIsResuming);
@@ -104,7 +104,7 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
+}   // namespace SimulationSupport
 }   // namespace OpenCOR
 
 //==============================================================================

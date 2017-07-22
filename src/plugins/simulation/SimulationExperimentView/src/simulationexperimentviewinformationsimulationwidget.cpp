@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "simulation.h"
 #include "simulationexperimentviewinformationsimulationwidget.h"
-#include "simulationexperimentviewsimulation.h"
 
 //==============================================================================
 
@@ -59,7 +59,7 @@ void SimulationExperimentViewInformationSimulationWidget::retranslateUi()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationSimulationWidget::initialize(SimulationExperimentViewSimulation *pSimulation)
+void SimulationExperimentViewInformationSimulationWidget::initialize(SimulationSupport::Simulation *pSimulation)
 {
     // Iniialise the unit of our different properties
 
