@@ -109,8 +109,11 @@ void EditingViewPlugin::fileModified(const QString &pFileName)
 //==============================================================================
 
 void EditingViewPlugin::fileReloaded(const QString &pFileName,
-                                     const bool &pFileChanged)
+                                     const bool &pFileChanged,
+                                     const bool &pFileJustSaved)
 {
+    Q_UNUSED(pFileJustSaved);
+
     // A file has been reloaded, so update our internals, if needed
     // Note: we clearly still have an editor for the given file, but when
     //       reloading it, fileReloaded() will first be called for this plugin

@@ -90,12 +90,18 @@ void SimulationSupportPlugin::fileModified(const QString &pFileName)
 //==============================================================================
 
 void SimulationSupportPlugin::fileReloaded(const QString &pFileName,
-                                           const bool &pFileChanged)
+                                           const bool &pFileChanged,
+                                           const bool &pFileJustSaved)
 {
     // The given file has been reloaded, so let our simulation manager know
     // about it
+    // Note: we don't want to ask our simulation manager to reload the given
+    //       file if it has just been saved (resulting in our central widget
+    //       asking all the plugins that handle the file handling interface to
+    //       reload it) since it will result in its simulation to be reloaded,
+    //       which we don't want...
 
-    if (pFileChanged)
+    if (pFileChanged && !pFileJustSaved)
         SimulationManager::instance()->reload(pFileName);
 }
 

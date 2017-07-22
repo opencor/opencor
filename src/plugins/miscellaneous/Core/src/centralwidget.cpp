@@ -2008,7 +2008,7 @@ void CentralWidget::fileModified(const QString &pFileName)
 
 void CentralWidget::fileReloaded(const QString &pFileName,
                                  const bool &pFileChanged,
-                                 const bool &pExcludeFileViewPlugin)
+                                 const bool &pFileJustSaved)
 {
     // Let all our plugins, but the current one (if requested), know about the
     // file having been reloaded
@@ -2021,9 +2021,9 @@ void CentralWidget::fileReloaded(const QString &pFileName,
     Plugin *fileViewPlugin = viewPlugin(pFileName);
 
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
-        if (   !pExcludeFileViewPlugin
-            ||  (pExcludeFileViewPlugin && (plugin != fileViewPlugin))) {
-            qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName, pFileChanged);
+        if (   !pFileJustSaved
+            ||  (pFileJustSaved && (plugin != fileViewPlugin))) {
+            qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName, pFileChanged, pFileJustSaved);
         }
     }
 
@@ -2032,8 +2032,8 @@ void CentralWidget::fileReloaded(const QString &pFileName,
     // update their GUI
 
     foreach (Plugin *plugin, mLoadedGuiPlugins) {
-        if (   !pExcludeFileViewPlugin
-            ||  (pExcludeFileViewPlugin && (plugin != fileViewPlugin))) {
+        if (   !pFileJustSaved
+            ||  (pFileJustSaved && (plugin != fileViewPlugin))) {
             qobject_cast<GuiInterface *>(plugin->instance())->updateGui(fileViewPlugin, pFileName);
         }
     }

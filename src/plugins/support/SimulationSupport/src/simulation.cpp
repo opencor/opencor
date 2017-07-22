@@ -944,7 +944,6 @@ void Simulation::reload()
 void Simulation::rename(const QString &pFileName)
 {
     // Rename ourselves by simply updating our file name
-//---ISSUE1266--- CHECK THAT THIS IS REALLY ALL THAT IS NEEDED...
 
     mFileName = pFileName;
 }
