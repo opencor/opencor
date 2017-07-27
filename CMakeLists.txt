@@ -23,6 +23,9 @@ OPTION(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff 
 OPTION(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang plugin" ON)
 OPTION(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth package" ON)
 OPTION(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
+OPTION(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python library" ON)
+OPTION(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of Python site packages" ON)
+OPTION(USE_PREBUILT_PYTHONQT_PACKAGE "Use the pre-built version of Python Qt" ON)
 OPTION(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
 OPTION(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
@@ -342,6 +345,7 @@ IF(APPLE)
         QtPrintSupport
         QtQml
         QtQuick
+        QtQuickWidgets
         QtSensors
         QtSql
         QtSvg
@@ -546,6 +550,7 @@ SET(SOURCES
     src/plugins/cliinterface.cpp
     src/plugins/coreinterface.cpp
     src/plugins/datastoreinterface.cpp
+    src/plugins/eventloopinterface.cpp
     src/plugins/filehandlinginterface.cpp
     src/plugins/filetypeinterface.cpp
     src/plugins/guiinterface.cpp
@@ -555,6 +560,7 @@ SET(SOURCES
     src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
+    src/plugins/pythoninterface.cpp
     src/plugins/solverinterface.cpp
     src/plugins/viewinterface.cpp
     src/plugins/windowinterface.cpp
@@ -603,12 +609,14 @@ IF(WIN32)
         src/plugins/cliinterface.cpp
         src/plugins/coreinterface.cpp
         src/plugins/datastoreinterface.cpp
+        src/plugins/eventloopinterface.cpp
         src/plugins/filehandlinginterface.cpp
         src/plugins/filetypeinterface.cpp
         src/plugins/plugin.cpp
         src/plugins/plugininfo.cpp
         src/plugins/plugininterface.cpp
         src/plugins/pluginmanager.cpp
+        src/plugins/pythoninterface.cpp
         src/plugins/solverinterface.cpp
 
         src/windows/main.cpp
@@ -752,12 +760,24 @@ IF(ENABLE_TESTS)
 ENDIF()
 
 # Build our plugins
-# Note: plugins can be listed in any order (dependencies are determined
-#       automatically). However, for this to work, all plugins must have
-#       [PLUGIN_DIR]/src as an include directory. In addition, all plugins
-#       linked to a packge (built using the ExternalProject module) must also
-#       have [PLUGIN_DIR]/[LOCAL_EXTERNAL_PACKAGE_DIR]/include as an include
-#       directory...
+# Note: apart from Python related third-party plugins, plugins can be listed in
+#       any order (dependencies are determined automatically). However, for this
+#       to work, all plugins must have [PLUGIN_DIR]/src as an include directory.
+#       In addition, all plugins linked to a packge (built using the ExternalProject
+#       module) must also have [PLUGIN_DIR]/[LOCAL_EXTERNAL_PACKAGE_DIR]/include
+#       as an include directory...
+
+# Third-party Python plugins depend on CMake variables defined by the OpenSSL and
+# zlib plugins as well as by the preceding Python plugins
+
+SET(PYTHON_PLUGINS
+    thirdParty/OpenSSL
+    thirdParty/zlib
+
+    thirdParty/Python
+    thirdParty/PythonPackages
+    thirdParty/PythonQtAPI
+)
 
 IF(ENABLE_SAMPLE_PLUGINS)
     SET(SAMPLE_PLUGINS
@@ -779,6 +799,7 @@ ELSE()
 ENDIF()
 
 SET(PLUGINS
+    ${PYTHON_PLUGINS}
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
 
@@ -803,6 +824,8 @@ SET(PLUGINS
     miscellaneous/Compiler
     miscellaneous/Core
     miscellaneous/HelpWindow
+    miscellaneous/JupyterKernel
+    miscellaneous/PythonQtConsoleWindow
     miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
@@ -823,6 +846,7 @@ SET(PLUGINS
     support/CellMLSupport
     support/COMBINESupport
     support/PMRSupport
+    support/PythonQtSupport
     support/QScintillaSupport
     support/SEDMLSupport
     support/SimulationSupport
@@ -833,12 +857,10 @@ SET(PLUGINS
     thirdParty/LibXDiff
     thirdParty/LLVMClang
     thirdParty/OAuth
-    thirdParty/OpenSSL
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
     thirdParty/Zinc
-    thirdParty/zlib
 
     tools/CellMLTools
 
@@ -893,6 +915,11 @@ ADD_EXECUTABLE(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${SOURCES_RCS}
 )
 
+# We can't compile Python interface code until after the Python headers are in
+# place
+
+ADD_DEPENDENCIES(${CMAKE_PROJECT_NAME} PythonPlugin_EXTERNAL_SOURCES)
+
 SET_TARGET_PROPERTIES(${CMAKE_PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${CMAKE_PROJECT_NAME}
     LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
@@ -910,6 +937,16 @@ FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
     )
 ENDFOREACH()
 
+# Under Linux the Python library needs linking directly to the executable
+# as otherwise extension DSOs (which are loaded using dlopen()) can't find
+# symbols. (See https://www.akkadia.org/drepper/dsohowto.pdf for details.)
+
+IF(NOT WIN32 AND NOT APPLE)
+    INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIR})
+    TARGET_LINK_LIBRARIES(${CMAKE_PROJECT_NAME} ${PYTHON_LIBRARY})
+    ADD_DEPENDENCIES(${CMAKE_PROJECT_NAME} PythonPlugin)
+ENDIF()
+
 # Build the CLI version of OpenCOR (Windows specific)
 # Note: when it comes to WINDOWS_CLI_PROJECT_NAME, we used to have it set to
 #       ${CMAKE_PROJECT_NAME}.com, but Ninja found a duplicate rule (from a copy
@@ -926,6 +963,11 @@ IF(WIN32)
         ${WINDOWS_CLI_SOURCES_MOC}
         ${WINDOWS_CLI_SOURCES_RCS}
     )
+
+    # We can't compile Python interface code until after the Python headers are
+    # in place
+
+    ADD_DEPENDENCIES(${WINDOWS_CLI_PROJECT_NAME} PythonPlugin_EXTERNAL_SOURCES)
 
     TARGET_COMPILE_DEFINITIONS(${WINDOWS_CLI_PROJECT_NAME}
                                PRIVATE CLI_VERSION)

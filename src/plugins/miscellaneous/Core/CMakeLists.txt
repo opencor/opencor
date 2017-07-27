@@ -7,6 +7,7 @@ ADD_PLUGIN(Core
         ../../cliinterface.cpp
         ../../datastoreinterface.cpp
         ../../coreinterface.cpp
+        ../../eventloopinterface.cpp
         ../../filehandlinginterface.cpp
         ../../filetypeinterface.cpp
         ../../guiinterface.cpp
@@ -16,6 +17,7 @@ ADD_PLUGIN(Core
         ../../plugininterface.cpp
         ../../pluginmanager.cpp
         ../../preferencesinterface.cpp
+        ../../pythoninterface.cpp
         ../../solverinterface.cpp
         ../../viewinterface.cpp
         ../../windowinterface.cpp
@@ -80,4 +82,6 @@ ADD_PLUGIN(Core
         clitests
         generaltests
         mathmltests
+    DEPENDS_ON
+        PythonPlugin_EXTERNAL_SOURCES
 )

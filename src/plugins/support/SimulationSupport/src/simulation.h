@@ -58,6 +58,10 @@ namespace SimulationSupport {
 
 //==============================================================================
 
+class SimulationSupportPythonWrapper;
+
+//==============================================================================
+
 class Simulation;
 class SimulationWorker;
 
@@ -67,19 +71,48 @@ class SIMULATIONSUPPORT_EXPORT SimulationData : public QObject
 {
     Q_OBJECT
 
+    friend class SimulationSupportPythonWrapper;
+
 public:
     explicit SimulationData(Simulation *pSimulation);
     ~SimulationData();
-
-    void reload();
-
-    Simulation * simulation() const;
 
     double * constants() const;
     double * rates() const;
     double * states() const;
     double * algebraic() const;
     double * condVar() const;
+
+    SolverInterface * odeSolverInterface() const;
+
+    Solver::Solver::Properties odeSolverProperties() const;
+    void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
+
+    SolverInterface * daeSolverInterface() const;
+
+    Solver::Solver::Properties daeSolverProperties() const;
+    void addDaeSolverProperty(const QString &pName, const QVariant &pValue);
+
+    SolverInterface * nlaSolverInterface() const;
+
+    Solver::Solver::Properties nlaSolverProperties() const;
+    void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
+                              const bool &pReset = true);
+
+    DataStore::DataStore * resultsDataStore() const;
+
+    DataStore::DataStoreVariable * pointVariable() const;
+
+    DataStore::DataStoreVariables constantVariables() const;
+    DataStore::DataStoreVariables rateVariables() const;
+    DataStore::DataStoreVariables stateVariables() const;
+    DataStore::DataStoreVariables algebraicVariables() const;
+
+public slots:
+
+    void reload();
+
+    OpenCOR::SimulationSupport::Simulation * simulation() const;
 
     int delay() const;
     void setDelay(const int &pDelay);
@@ -94,31 +127,15 @@ public:
     double pointInterval() const;
     void setPointInterval(const double &pPointInterval);
 
-    SolverInterface * odeSolverInterface() const;
-
     QString odeSolverName() const;
     void setOdeSolverName(const QString &pOdeSolverName);
-
-    Solver::Solver::Properties odeSolverProperties() const;
-    void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
-
-    SolverInterface * daeSolverInterface() const;
 
     QString daeSolverName() const;
     void setDaeSolverName(const QString &pDaeSolverName);
 
-    Solver::Solver::Properties daeSolverProperties() const;
-    void addDaeSolverProperty(const QString &pName, const QVariant &pValue);
-
-    SolverInterface * nlaSolverInterface() const;
-
     QString nlaSolverName() const;
     void setNlaSolverName(const QString &pNlaSolverName,
                           const bool &pReset = true);
-
-    Solver::Solver::Properties nlaSolverProperties() const;
-    void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
-                              const bool &pReset = true);
 
     void reset(const bool &pInitialize = true);
 
@@ -149,6 +166,15 @@ private:
     QString mNlaSolverName;
     Solver::Solver::Properties mNlaSolverProperties;
 
+    DataStore::DataStore *mResultsDataStore;
+
+    DataStore::DataStoreVariable *mPointVariable;
+
+    DataStore::DataStoreVariables mConstantVariables;
+    DataStore::DataStoreVariables mRateVariables;
+    DataStore::DataStoreVariables mStateVariables;
+    DataStore::DataStoreVariables mAlgebraicVariables;
+
     double *mConstants;
     double *mRates;
     double *mStates;
@@ -161,6 +187,10 @@ private:
 
     void createArrays();
     void deleteArrays();
+
+    void createResultsDataStore();
+
+    QString uri(const QStringList &pComponentHierarchy, const QString &pName);
 
     SolverInterface * solverInterface(const QString &pSolverName) const;
 
@@ -177,26 +207,29 @@ class SIMULATIONSUPPORT_EXPORT SimulationResults : public QObject
 {
     Q_OBJECT
 
+    friend class SimulationSupportPythonWrapper;
+
 public:
     explicit SimulationResults(Simulation *pSimulation);
     ~SimulationResults();
 
     void reload();
 
-    bool reset(const bool &pCreateDataStore = true);
-
     void addPoint(const double &pPoint);
-
-    qulonglong size() const;
-
-    DataStore::DataStore * dataStore() const;
 
     double * points() const;
 
+    double * algebraic(const int &pIndex) const;
     double * constants(const int &pIndex) const;
     double * rates(const int &pIndex) const;
     double * states(const int &pIndex) const;
-    double * algebraic(const int &pIndex) const;
+
+public slots:
+    bool reset(const bool &pAllocateArrays = true);
+
+    qulonglong size() const;
+
+    OpenCOR::DataStore::DataStore * dataStore() const;
 
 private:
     Simulation *mSimulation;
@@ -205,17 +238,15 @@ private:
 
     DataStore::DataStore *mDataStore;
 
-    DataStore::DataStoreVariable *mPoints;
+    const DataStore::DataStoreVariable *mPointVariable;
 
-    DataStore::DataStoreVariables mConstants;
-    DataStore::DataStoreVariables mRates;
-    DataStore::DataStoreVariables mStates;
-    DataStore::DataStoreVariables mAlgebraic;
+    const DataStore::DataStoreVariables mConstantVariables;
+    const DataStore::DataStoreVariables mRateVariables;
+    const DataStore::DataStoreVariables mStateVariables;
+    const DataStore::DataStoreVariables mAlgebraicVariables;
 
-    bool createDataStore();
-    void deleteDataStore();
-
-    QString uri(const QStringList &pComponentHierarchy, const QString &pName);
+    bool createArrays();
+    void deleteArrays();
 };
 
 //==============================================================================
@@ -234,9 +265,6 @@ public:
     explicit Simulation(const QString &pFileName);
     ~Simulation();
 
-    void reload();
-    void rename(const QString &pFileName);
-
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
     Simulation::FileType fileType() const;
@@ -245,8 +273,19 @@ public:
     SEDMLSupport::SedmlFile * sedmlFile() const;
     COMBINESupport::CombineArchive * combineArchive() const;
 
-    SimulationData * data() const;
-    SimulationResults * results() const;
+    bool run();
+    bool pause();
+    bool resume();
+    bool stop();
+
+public slots:
+    QString fileName() const;
+
+    OpenCOR::SimulationSupport::SimulationData * data() const;
+    OpenCOR::SimulationSupport::SimulationResults * results() const;
+
+    void reload();
+    void rename(const QString &pFileName);
 
     bool isRunning() const;
     bool isPaused() const;
@@ -259,11 +298,6 @@ public:
     double requiredMemory();
 
     double size();
-
-    bool run();
-    bool pause();
-    bool resume();
-    bool stop();
 
     bool reset();
 

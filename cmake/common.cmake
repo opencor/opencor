@@ -75,14 +75,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(OPTIONS)
     SET(ONE_VALUE_KEYWORDS
         EXTERNAL_BINARIES_DIR
-        EXTERNAL_DEST_DIR
+        EXTERNAL_DESTINATION_DIR
         EXTERNAL_SOURCE_DIR
     )
     SET(MULTI_VALUE_KEYWORDS
         SOURCES
         HEADERS_MOC
         UIS
-        INCLUDE_DIRS
         DEFINITIONS
         PLUGINS
         PLUGIN_BINARIES
@@ -95,10 +94,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     )
 
     CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
-
-    # Additional include directories
-
-    INCLUDE_DIRECTORIES(${ARG_INCLUDE_DIRS})
 
     # Resource files, if any
     # Note: ideally, we would have our resource files named i18n.qrc.in and
@@ -322,13 +317,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # Check whether an external package has files to install
 
-    IF(    NOT "${ARG_EXTERNAL_DEST_DIR}" STREQUAL ""
+    IF(    NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL ""
        AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL "")
+
+        SET(COPY_EXTERNAL_SOURCES_TARGET "${PROJECT_NAME}_EXTERNAL_SOURCES")
+
+        ADD_CUSTOM_TARGET(${COPY_EXTERNAL_SOURCES_TARGET})
+        ADD_DEPENDENCIES(${PROJECT_NAME} ${COPY_EXTERNAL_SOURCES_TARGET})
+
         # Copy the entire source directory to the destination
 
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+        ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_SOURCES_TARGET}
                            COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
-                                                                      ${FULL_DEST_EXTERNAL_BASE_DIR}/${ARG_EXTERNAL_DEST_DIR})
+                                                                      ${ARG_EXTERNAL_DESTINATION_DIR})
     ENDIF()
 
     # System binaries
@@ -547,7 +548,6 @@ MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
     ELSE()
         # An argument was passed so use it to rename the file, which is to be
         # copied
-
         SET(FULL_DEST_FILENAME ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
     ENDIF()
 

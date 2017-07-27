@@ -21,6 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Main
 //==============================================================================
 
+// We need to know the state of Q_OS_LINUX
+
+#include <Qt>
+
+// The Python header must be included before <QObject> because of name clashes
+
+#ifdef Q_OS_LINUX
+    #include "Python.h"
+#endif
+
 #include "checkforupdatesdialog.h"
 #include "cliapplication.h"
 #include "cliutils.h"
@@ -49,6 +59,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 int main(int pArgC, char *pArgV[])
 {
+#ifdef Q_OS_LINUX
+    // The Python library needs linking directly to the executable as otherwise
+    // Python extension shared objects can't find symbols in the library. This is
+    // because the lookup scope changes for DSOs that are are loaded using dlopen()
+    // (see https://www.akkadia.org/drepper/dsohowto.pdf for details)
+
+    // This is sufficient to ensure the library is linked to the executable
+
+    Py_NoUserSiteDirectory = 1;
+#endif
+
     // Initialise Qt's message pattern
 
     OpenCOR::initQtMessagePattern();
@@ -279,8 +300,12 @@ int main(int pArgC, char *pArgV[])
 
     int res;
 
-    if (canExecuteAplication)
-        res = guiApp->exec();
+    if (canExecuteAplication) {
+        if (win->eventLoopPluginUseExec())
+            res = win->eventLoopPluginExec();
+        else
+            res = guiApp->exec();
+    }
     else
         res = 0;
 

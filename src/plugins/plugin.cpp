@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cliinterface.h"
 #include "coreinterface.h"
 #include "datastoreinterface.h"
+#include "eventloopinterface.h"
 #include "filehandlinginterface.h"
 #include "filetypeinterface.h"
 #ifndef CLI_VERSION
@@ -36,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CLI_VERSION
     #include "preferencesinterface.h"
 #endif
+#include "pythoninterface.h"
 #include "solverinterface.h"
 #ifndef CLI_VERSION
     #include "viewinterface.h"
@@ -135,6 +137,8 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                             && (interfaceVersion(pFileName, "coreInterfaceVersion") != coreInterfaceVersion()))
                         || (   qobject_cast<DataStoreInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "dataStoreInterfaceVersion") != dataStoreInterfaceVersion()))
+                        || (   qobject_cast<EventLoopInterface *>(mInstance)
+                            && (interfaceVersion(pFileName, "eventLoopInterfaceVersion") != eventLoopInterfaceVersion()))
                         || (   qobject_cast<FileHandlingInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "fileHandlingInterfaceVersion") != fileHandlingInterfaceVersion()))
                         || (   qobject_cast<FileTypeInterface *>(mInstance)
@@ -151,6 +155,8 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                         || (   qobject_cast<PreferencesInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "preferencesInterfaceVersion") != preferencesInterfaceVersion()))
 #endif
+                        || (   qobject_cast<PythonInterface *>(mInstance)
+                            && (interfaceVersion(pFileName, "pythonInterfaceVersion") != pythonInterfaceVersion()))
                         || (   qobject_cast<SolverInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "solverInterfaceVersion") != solverInterfaceVersion()))
 #ifndef CLI_VERSION

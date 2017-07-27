@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QObject>
 #ifndef CLI_VERSION
     #include <QIcon>
 #endif
@@ -40,11 +41,36 @@ namespace DataStore {
 
 //==============================================================================
 
-class DataStoreVariable
+class DataStoreArray
 {
 public:
-    explicit DataStoreVariable(const qulonglong &pCapacity, double *pValue = 0);
+    explicit DataStoreArray(const qulonglong &pCapacity);
+
+    qulonglong capacity() const;
+    void decReference();
+    void incReference();
+    double * values() const;
+
+private:
+    ~DataStoreArray();
+
+    const qulonglong mCapacity;
+    int mReferences;
+    double *mValues;
+};
+
+//==============================================================================
+
+class DataStoreVariable : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit DataStoreVariable(const qulonglong &pCapacity = 0, double *pNextValuePtr = 0);
     ~DataStoreVariable();
+
+    void createArray(const qulonglong &pCapacity);
+    void deleteArray();
 
     static bool compare(DataStoreVariable *pVariable1,
                         DataStoreVariable *pVariable2);
@@ -56,22 +82,35 @@ public:
     void setIcon(const QIcon &pIcon);
 #endif
 
-    QString uri() const;
     void setUri(const QString &pUri);
 
-    QString label() const;
     void setLabel(const QString &pLabel);
 
-    QString unit() const;
     void setUnit(const QString &pUnit);
 
-    qulonglong size() const;
+    void clearNextValuePtr();
+    void setNextValuePtr(double *pNextValuePtr);
 
     void addValue();
     void addValue(const double &pValue);
 
-    double value(const qulonglong &pPosition) const;
     double * values() const;
+
+    DataStoreArray * array() const;
+
+public slots:
+    QString uri() const;
+
+    QString label() const;
+
+    QString unit() const;
+
+    qulonglong size() const;
+
+    double nextValue() const;
+    void setNextValue(const double &pValue);
+
+    double value(const qulonglong &pPosition) const;
 
 private:
 #ifndef CLI_VERSION
@@ -81,16 +120,25 @@ private:
     QString mName;
     QString mUnit;
 
-    const qulonglong mCapacity;
+    qulonglong mCapacity;
     qulonglong mSize;
 
-    double *mValue;
+    DataStoreArray *mArray;
+    double *mNextValuePtr;
     double *mValues;
 };
 
 //==============================================================================
 
-typedef QList<DataStoreVariable *> DataStoreVariables;
+//typedef QList<DataStoreVariable *> DataStoreVariables;
+
+
+class DataStoreVariables : public QList<DataStoreVariable *>
+{
+public:
+    void clearNextValuePtrs();
+    void setNextValuePtrs(double *pNextValuePtrs);
+};
 
 //==============================================================================
 
@@ -110,31 +158,39 @@ private:
 
 //==============================================================================
 
-class DataStore
+class DataStore : public QObject
 {
+    Q_OBJECT
+
 public:
-    explicit DataStore(const QString &pUri, const qulonglong &pCapacity);
+    explicit DataStore(const QString &pUri);
     ~DataStore();
 
-    QString uri() const;
-
-    qulonglong size() const;
+    void createArrays(const qulonglong &pCapacity);
+    void deleteArrays();
 
     DataStoreVariables voiAndVariables();
 
-    DataStoreVariable * voi() const;
     DataStoreVariable * addVoi();
 
     DataStoreVariables variables();
-    DataStoreVariable * addVariable(double *pValue = 0);
-    DataStoreVariables addVariables(const int &pCount, double *pValues);
+    DataStoreVariable * addVariable(double *pNextValuePtr = 0);
+    DataStoreVariables addVariables(const int &pCount, double *pNextValuePtrs);
 
     void addValues(const double &pVoiValue);
+
+public slots:
+    QString uri() const;
+
+    qulonglong capacity() const;
+    qulonglong size() const;
+
+    OpenCOR::DataStore::DataStoreVariable * voi() const;
 
 private:
     QString mlUri;
 
-    const qulonglong mCapacity;
+    qulonglong mCapacity;
     qulonglong mSize;
 
     DataStoreVariable *mVoi;

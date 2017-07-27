@@ -51,11 +51,14 @@ SimulationData::SimulationData(Simulation *pSimulation) :
     mDaeSolverName(QString()),
     mDaeSolverProperties(Solver::Solver::Properties()),
     mNlaSolverName(QString()),
-    mNlaSolverProperties(Solver::Solver::Properties())
+    mNlaSolverProperties(Solver::Solver::Properties()),
+    mResultsDataStore(0)
 {
     // Create our various arrays
 
     createArrays();
+
+    createResultsDataStore();
 }
 
 //==============================================================================
@@ -592,6 +595,14 @@ void SimulationData::createArrays()
 
         mInitialConstants = new double[mRuntime->constantsCount()];
         mInitialStates = new double[mRuntime->statesCount()];
+
+        if (mResultsDataStore) {
+            mConstantVariables.setNextValuePtrs(mConstants);
+            mRateVariables.setNextValuePtrs(mRates);
+            mStateVariables.setNextValuePtrs(mStates);
+            mAlgebraicVariables.setNextValuePtrs(mAlgebraic);
+        }
+
     } else {
         mConstants = mRates = mStates = mDummyStates = mAlgebraic = mCondVar = 0;
         mInitialConstants = mInitialStates = 0;
@@ -613,35 +624,19 @@ void SimulationData::deleteArrays()
 
     delete[] mInitialConstants;
     delete[] mInitialStates;
+
+    if (mResultsDataStore) {
+        mConstantVariables.clearNextValuePtrs();
+        mRateVariables.clearNextValuePtrs();
+        mStateVariables.clearNextValuePtrs();
+        mAlgebraicVariables.clearNextValuePtrs();
+    }
 }
 
 //==============================================================================
 
-SimulationResults::SimulationResults(Simulation *pSimulation) :
-    mSimulation(pSimulation),
-    mRuntime(pSimulation->runtime()),
-    mDataStore(0),
-    mPoints(0),
-    mConstants(DataStore::DataStoreVariables()),
-    mRates(DataStore::DataStoreVariables()),
-    mStates(DataStore::DataStoreVariables()),
-    mAlgebraic(DataStore::DataStoreVariables())
-{
-}
-
-//==============================================================================
-
-SimulationResults::~SimulationResults()
-{
-    // Delete some internal objects
-
-    deleteDataStore();
-}
-
-//==============================================================================
-
-QString SimulationResults::uri(const QStringList &pComponentHierarchy,
-                               const QString &pName)
+QString SimulationData::uri(const QStringList &pComponentHierarchy,
+                            const QString &pName)
 {
     // Generate an URI using the given component hierarchy and name
 
@@ -652,46 +647,18 @@ QString SimulationResults::uri(const QStringList &pComponentHierarchy,
 
 //==============================================================================
 
-bool SimulationResults::createDataStore()
+void SimulationData::createResultsDataStore()
 {
-    // Note: the boolean value we return is true if we have had no problem
-    //       creating our data store, false otherwise. This is the reason, for
-    //       example, we return true when there is either no runtime or if the
-    //       simulation size is zero...
-
-    // Delete the previous data store, if any
-
-    deleteDataStore();
-
-    // Make sure that we have a runtime
-
-    if (!mRuntime)
-        return true;
-
-    // Retrieve the size of our data and make sure that it is valid
-
-    qulonglong simulationSize = qulonglong(mSimulation->size());
-
-    if (!simulationSize)
-        return true;
-
     // Create our data store and populate it with a variable of integration, as
     // well as with constant, rate, state and algebraic variables
 
-    try {
-        mDataStore = new DataStore::DataStore(mRuntime->cellmlFile()->xmlBase(),
-                                              simulationSize);
+    mResultsDataStore = new DataStore::DataStore(mRuntime->cellmlFile()->xmlBase());
 
-        mPoints = mDataStore->addVoi();
-        mConstants = mDataStore->addVariables(mRuntime->constantsCount(), mSimulation->data()->constants());
-        mRates = mDataStore->addVariables(mRuntime->ratesCount(), mSimulation->data()->rates());
-        mStates = mDataStore->addVariables(mRuntime->statesCount(), mSimulation->data()->states());
-        mAlgebraic = mDataStore->addVariables(mRuntime->algebraicCount(), mSimulation->data()->algebraic());
-    } catch (...) {
-        deleteDataStore();
-
-        return false;
-    }
+    mPointVariable = mResultsDataStore->addVoi();
+    mConstantVariables = mResultsDataStore->addVariables(mRuntime->constantsCount(), mConstants);
+    mRateVariables = mResultsDataStore->addVariables(mRuntime->ratesCount(), mRates);
+    mStateVariables = mResultsDataStore->addVariables(mRuntime->statesCount(), mStates);
+    mAlgebraicVariables = mResultsDataStore->addVariables(mRuntime->algebraicCount(), mAlgebraic);
 
     // Customise our variable of integration, as well as our constant, rate,
     // state and algebraic variables
@@ -702,28 +669,28 @@ bool SimulationResults::createDataStore()
 
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-            mPoints->setIcon(parameter->icon());
-            mPoints->setUri(uri(mRuntime->variableOfIntegration()->componentHierarchy(),
-                                mRuntime->variableOfIntegration()->name()));
-            mPoints->setLabel(mRuntime->variableOfIntegration()->name());
-            mPoints->setUnit(mRuntime->variableOfIntegration()->unit());
+            mPointVariable->setIcon(parameter->icon());
+            mPointVariable->setUri(uri(mRuntime->variableOfIntegration()->componentHierarchy(),
+                                   mRuntime->variableOfIntegration()->name()));
+            mPointVariable->setLabel(mRuntime->variableOfIntegration()->name());
+            mPointVariable->setUnit(mRuntime->variableOfIntegration()->unit());
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::Constant:
         case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-            variable = mConstants[parameter->index()];
+            variable = mConstantVariables[parameter->index()];
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-            variable = mRates[parameter->index()];
+            variable = mRateVariables[parameter->index()];
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::State:
-            variable = mStates[parameter->index()];
+            variable = mStateVariables[parameter->index()];
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-            variable = mAlgebraic[parameter->index()];
+            variable = mAlgebraicVariables[parameter->index()];
 
             break;
         default:
@@ -740,42 +707,142 @@ bool SimulationResults::createDataStore()
             variable->setUnit(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()));
         }
     }
+}
+
+//==============================================================================
+
+DataStore::DataStore * SimulationData::resultsDataStore() const
+{
+    return mResultsDataStore;
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariable * SimulationData::pointVariable() const
+{
+    return mPointVariable;
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariables SimulationData::constantVariables() const
+{
+    return mConstantVariables;
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariables SimulationData::rateVariables() const
+{
+    return mRateVariables;
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariables SimulationData::stateVariables() const
+{
+    return mStateVariables;
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariables SimulationData::algebraicVariables() const
+{
+    return mAlgebraicVariables;
+}
+
+//==============================================================================
+
+SimulationResults::SimulationResults(Simulation *pSimulation) :
+    mSimulation(pSimulation),
+    mRuntime(pSimulation->runtime()),
+    mDataStore(pSimulation->data()->resultsDataStore()),
+    mPointVariable(pSimulation->data()->pointVariable()),
+    mConstantVariables(pSimulation->data()->constantVariables()),
+    mRateVariables(pSimulation->data()->rateVariables()),
+    mStateVariables(pSimulation->data()->stateVariables()),
+    mAlgebraicVariables(pSimulation->data()->algebraicVariables())
+{
+}
+
+//==============================================================================
+
+SimulationResults::~SimulationResults()
+{
+    // Delete some internal objects
+
+    deleteArrays();
+}
+
+//==============================================================================
+
+bool SimulationResults::createArrays()
+{
+    // Note: the boolean value we return is true if we have had no problem
+    //       allocating our data store arrays, false otherwise. This is the
+    //       reason, for example, we return true when there is either no
+    //       runtime or if the simulation size is zero...
+
+    // Delete the previous data store arrays, if any
+
+    mDataStore->deleteArrays();
+
+    // Make sure that we have a runtime
+
+    if (!mRuntime)
+        return true;
+
+    // Retrieve the size of our data and make sure that it is valid
+
+    qulonglong simulationSize = qulonglong(mSimulation->size());
+
+    if (!simulationSize)
+        return true;
+
+    // Allocate our data store arrays
+
+    try {
+        mDataStore->createArrays(simulationSize);
+
+    } catch (...) {
+        mDataStore->deleteArrays();
+
+        return false;
+    }
 
     return true;
 }
 
 //==============================================================================
 
-void SimulationResults::deleteDataStore()
+void SimulationResults::deleteArrays()
 {
-    // Delete our data store
+    // Deallocate our data store arrays
 
-    delete mDataStore;
-
-    mDataStore = 0;
+    mDataStore->deleteArrays();
 }
 
 //==============================================================================
 
 void SimulationResults::reload()
 {
-    // Reload ourselves by updating our runtime and deleting our data store
+    // Update ourselves by updating our runtime and deleting our data store arrays
 
     mRuntime = mSimulation->runtime();
 
-    deleteDataStore();
+    deleteArrays();
 }
 
 //==============================================================================
 
-bool SimulationResults::reset(const bool &pCreateDataStore)
+bool SimulationResults::reset(const bool &pAllocateArrays)
 {
-    // Reset our data store
+    // Reset our data store arrays
 
-    if (pCreateDataStore) {
-        return createDataStore();
+    if (pAllocateArrays) {
+        return createArrays();
     } else {
-        deleteDataStore();
+        deleteArrays();
 
         return true;
     }
@@ -814,7 +881,7 @@ double * SimulationResults::points() const
 {
     // Return our points
 
-    return mPoints?mPoints->values():0;
+    return mPointVariable?mPointVariable->values():0;
 }
 
 //==============================================================================
@@ -823,7 +890,7 @@ double * SimulationResults::constants(const int &pIndex) const
 {
     // Return our constants data at the given index
 
-    return mConstants.isEmpty()?0:mConstants[pIndex]->values();
+    return mConstantVariables.isEmpty()?0:mConstantVariables[pIndex]->values();
 }
 
 //==============================================================================
@@ -832,7 +899,7 @@ double * SimulationResults::rates(const int &pIndex) const
 {
     // Return our rates data at the given index
 
-    return mRates.isEmpty()?0:mRates[pIndex]->values();
+    return mRateVariables.isEmpty()?0:mRateVariables[pIndex]->values();
 }
 
 //==============================================================================
@@ -841,7 +908,7 @@ double * SimulationResults::states(const int &pIndex) const
 {
     // Return our states data at the given index
 
-    return mStates.isEmpty()?0:mStates[pIndex]->values();
+    return mStateVariables.isEmpty()?0:mStateVariables[pIndex]->values();
 }
 
 //==============================================================================
@@ -850,7 +917,7 @@ double * SimulationResults::algebraic(const int &pIndex) const
 {
     // Return our algebraic data at the given index
 
-    return mAlgebraic.isEmpty()?0:mAlgebraic[pIndex]->values();
+    return mAlgebraicVariables.isEmpty()?0:mAlgebraicVariables[pIndex]->values();
 }
 
 //==============================================================================
@@ -1144,6 +1211,32 @@ bool Simulation::run()
 
         if (!simulationSettingsOk())
             return false;
+
+        // Make sure we have a data store in which to store results
+
+        if (!mResults->dataStore()) {
+            emit error(tr("no datastore for results"));
+
+            return false;
+        }
+
+        // Make sure the data store is big enough to store our results
+
+        if (size() > (mResults->dataStore()->capacity() - mResults->dataStore()->size())) {
+            emit error(tr("datastore doesn't have enough capacity"));
+
+            return false;
+        }
+
+        // Make sure we have a valid solver
+
+        if ((mRuntime->needOdeSolver() && !mData->odeSolverInterface())
+         || (!mRuntime->needOdeSolver() && !mData->daeSolverInterface())
+         || (mRuntime->needNlaSolver() && !mData->nlaSolverInterface())) {
+            emit error(tr("no valid solvers"));
+
+            return false;
+        }
 
         // Create our worker
 

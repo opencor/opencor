@@ -23,5 +23,28 @@
         <source>the simulation worker could not be created</source>
         <translation>l&apos;agent de simulation n&apos;a pas pu être créé</translation>
     </message>
+    <message>
+        <source>no datastore for results</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>datastore doesn&apos;t have enough capacity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>no valid solvers</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::SimulationSupport::SimulationSupportPythonWrapper</name>
+    <message>
+        <source>The simulation requires %1 of memory and you have only %2 left.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>We could not allocate the %1 of memory required for the simulation.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
