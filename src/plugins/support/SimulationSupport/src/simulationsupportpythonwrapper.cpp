@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "datastoreinterface.h"
 #include "datastorepythonwrapper.h"
-#include "pythonqtsupport.h"
+#include "pythonsupport.h"
 #include "simulation.h"
 #include "simulationsupportplugin.h"
 #include "simulationsupportpythonwrapper.h"
@@ -40,10 +40,10 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
 {
     Q_UNUSED(pModule);
 
-    PythonQtSupport::registerClass(&OpenCOR::SimulationSupport::Simulation::staticMetaObject);
-    PythonQtSupport::registerClass(&OpenCOR::SimulationSupport::SimulationData::staticMetaObject);
-    PythonQtSupport::registerClass(&OpenCOR::SimulationSupport::SimulationResults::staticMetaObject);
-    PythonQtSupport::addInstanceDecorators(this);
+    PythonSupport::registerClass(&OpenCOR::SimulationSupport::Simulation::staticMetaObject);
+    PythonSupport::registerClass(&OpenCOR::SimulationSupport::SimulationData::staticMetaObject);
+    PythonSupport::registerClass(&OpenCOR::SimulationSupport::SimulationResults::staticMetaObject);
+    PythonSupport::addInstanceDecorators(this);
 }
 
 //==============================================================================

@@ -21,51 +21,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Python Qt support functions
 //==============================================================================
 
-#include "pythonqtsupport.h"
+#pragma once
+
+//==============================================================================
+
+#include <PythonQt/PythonQt.h>
+
+//==============================================================================
+
+#include <QObject>
+#include <QMetaObject>
+#include <QString>
+#include <QVariant>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonQtSupport {
+namespace PythonSupport {
 
 //==============================================================================
 
-void addInstanceDecorators(QObject *pQObject)
-{
-    PythonQt::self()->addInstanceDecorators(pQObject);
-}
+void addInstanceDecorators(QObject *pQObject);
+
+void addObject(PyObject *pObject, const QString &pName, QObject *pQObject);
+
+QVariant evalScript(const QString &pScript);
+
+void registerClass(const QMetaObject *pMetaObject);
+
+PyObject *wrapQObject(QObject *pQObject);
 
 //==============================================================================
 
-void addObject(PyObject *pObject, const QString &pName, QObject *pQObject)
-{
-    PythonQt::self()->addObject(pObject, pName, pQObject);
-}
-
-//==============================================================================
-
-QVariant evalScript(const QString &pScript)
-{
-    return PythonQt::self()->evalScript(PythonQt::self()->getMainModule(), pScript);
-}
-
-//==============================================================================
-
-void registerClass(const QMetaObject *pMetaObject)
-{
-    PythonQt::self()->registerClass(pMetaObject);
-}
-
-//==============================================================================
-
-PyObject *wrapQObject(QObject *pQObject)
-{
-    return PythonQt::priv()->wrapQObject(pQObject);
-}
-
-//==============================================================================
-
-}   // namespace PythonQtSupport
+}   // namespace PythonSupport
 }   // namespace OpenCOR
 
 //==============================================================================

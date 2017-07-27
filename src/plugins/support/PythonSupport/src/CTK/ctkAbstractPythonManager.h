@@ -31,14 +31,14 @@
 #include <PythonQt/PythonQtPythonInclude.h> // For PyObject
 
 // OpenCOR includes
-#include "pythonqtsupportglobal.h"
+#include "pythonsupportglobal.h"
 
 class ctkAbstractPythonManagerPrivate;
 class PythonQtForeignWrapperFactory;
 class PythonQtObjectPtr;
 
 /// \ingroup Scripting_Python_Core
-class PYTHONQTSUPPORT_EXPORT ctkAbstractPythonManager : public QObject
+class PYTHONSUPPORT_EXPORT ctkAbstractPythonManager : public QObject
 {
   Q_OBJECT
 

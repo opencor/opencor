@@ -18,45 +18,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python Qt support functions
+// Python Qt Support global
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include <PythonQt/PythonQt.h>
-
-//==============================================================================
-
-#include <QObject>
-#include <QMetaObject>
-#include <QString>
-#include <QVariant>
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace PythonQtSupport {
-
-//==============================================================================
-
-void addInstanceDecorators(QObject *pQObject);
-
-void addObject(PyObject *pObject, const QString &pName, QObject *pQObject);
-
-QVariant evalScript(const QString &pScript);
-
-void registerClass(const QMetaObject *pMetaObject);
-
-PyObject *wrapQObject(QObject *pQObject);
-
-//==============================================================================
-
-}   // namespace PythonQtSupport
-}   // namespace OpenCOR
+#ifdef _WIN32
+    #ifdef PythonSupport_PLUGIN
+        #define PYTHONSUPPORT_EXPORT __declspec(dllexport)
+    #else
+        #define PYTHONSUPPORT_EXPORT __declspec(dllimport)
+    #endif
+#else
+    #define PYTHONSUPPORT_EXPORT
+#endif
 
 //==============================================================================
 // End of file
 //==============================================================================
-

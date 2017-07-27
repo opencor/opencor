@@ -22,7 +22,7 @@ ADD_PLUGIN(DataStore
         src/datastoredialog.ui
     PLUGINS
         Core
-        PythonQtSupport
+        PythonSupport
     DEPENDS_ON
         PythonPackagesPlugin
 )

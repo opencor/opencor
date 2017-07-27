@@ -28,5 +28,5 @@ ADD_PLUGIN(SimulationSupport
     PLUGINS
         COMBINESupport
         DataStore
-        PythonQtSupport
+        PythonSupport
 )

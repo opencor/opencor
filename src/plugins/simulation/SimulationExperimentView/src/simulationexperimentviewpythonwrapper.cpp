@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "centralwidget.h"
 #include "coreguiutils.h"
-#include "pythonqtsupport.h"
+#include "pythonsupport.h"
 #include "simulation.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewpythonwrapper.h"
@@ -102,7 +102,7 @@ static PyObject *OpenCOR_simulations(PyObject *self,  PyObject *args)
     if (simulationExperimentViewWidget) {
         foreach (const QString &fileName, simulationExperimentViewWidget->fileNames()) {
             auto simulation = simulationExperimentViewWidget->simulation(fileName);
-            PythonQtSupport::addObject(simulationDict, fileName, simulation);
+            PythonSupport::addObject(simulationDict, fileName, simulation);
         }
     }
 
@@ -119,7 +119,7 @@ static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
     SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
     if (simulationExperimentViewWidget) {
         auto simulation = simulationExperimentViewWidget->simulation(Core::centralWidget()->currentFileName());
-        return PythonQtSupport::wrapQObject(simulation);
+        return PythonSupport::wrapQObject(simulation);
     } else {
         Py_INCREF(Py_None);
         return Py_None;
@@ -140,7 +140,7 @@ static PyMethodDef pythonSimulationExperimentViewMethods[] = {
 
 SimulationExperimentViewPythonWrapper::SimulationExperimentViewPythonWrapper(PyObject *pModule, QObject *pParent) : QObject(pParent)
 {
-    PythonQtSupport::addInstanceDecorators(this);
+    PythonSupport::addInstanceDecorators(this);
 
     PyModule_AddFunctions(pModule, pythonSimulationExperimentViewMethods);
 }

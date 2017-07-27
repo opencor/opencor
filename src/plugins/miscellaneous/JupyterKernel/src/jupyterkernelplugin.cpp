@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CTK/ctkAbstractPythonManager.h"
 #include "jupyterkernelplugin.h"
-#include "pythonqtsupport.h"
+#include "pythonsupport.h"
 
 //==============================================================================
 
@@ -46,7 +46,7 @@ PLUGININFO_FUNC JupyterKernelPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("the Jupyter kernel plugin."));
 
     return new PluginInfo(PluginInfo::Miscellaneous, true, false,
-                          QStringList() << "Core" << "PythonQtSupport",
+                          QStringList() << "Core" << "PythonSupport",
                           descriptions);
 }
 
@@ -197,7 +197,7 @@ int JupyterKernelPlugin::runKernel()
 {
     // Run the the kernel using our connection file
 
-    PythonQtSupport::evalScript(jupyterKernel.arg(mConnectionFile));
+    PythonSupport::evalScript(jupyterKernel.arg(mConnectionFile));
 
     // TODO: return gui->exec()
     return 0;

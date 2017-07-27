@@ -18,22 +18,58 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python Qt Support global
+// Python Qt Support plugin
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef PythonQtSupport_PLUGIN
-        #define PYTHONQTSUPPORT_EXPORT __declspec(dllexport)
-    #else
-        #define PYTHONQTSUPPORT_EXPORT __declspec(dllimport)
-    #endif
-#else
-    #define PYTHONQTSUPPORT_EXPORT
-#endif
+#include "plugininfo.h"
+#include "plugininterface.h"
+#include "pythonsupportglobal.h"
+
+//==============================================================================
+
+#include <PythonQt/PythonQt.h>
+
+//==============================================================================
+
+class ctkAbstractPythonManager;
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace PythonSupport {
+
+//==============================================================================
+
+PLUGININFO_FUNC PythonSupportPluginInfo();
+
+//==============================================================================
+
+class PYTHONSUPPORT_EXPORT PythonSupportPlugin : public QObject, public PluginInterface
+{
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.PythonSupportPlugin" FILE "pythonsupportplugin.json")
+
+    Q_INTERFACES(OpenCOR::PluginInterface)
+
+public:
+    explicit PythonSupportPlugin();
+
+#include "plugininterface.inl"
+
+private:
+    ctkAbstractPythonManager *mPythonManager;
+    PythonQtObjectPtr mOpenCORModule;
+};
+
+//==============================================================================
+
+}   // namespace PythonSupport
+}   // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "CTK/ctkAbstractPythonManager.h"
 #include "pythonqtconsolewindowplugin.h"
 #include "pythonqtconsolewindow.h"
-#include "pythonqtsupportplugin.h"
+#include "pythonsupportplugin.h"
 
 //==============================================================================
 
@@ -48,7 +48,7 @@ PLUGININFO_FUNC PythonQtConsoleWindowPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("the Python Qt Console window plugin."));
 
     return new PluginInfo(PluginInfo::Miscellaneous, true, false,
-                          QStringList() << "Core" << "PythonQtSupport",
+                          QStringList() << "Core" << "PythonSupport",
                           descriptions);
 }
 

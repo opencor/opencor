@@ -18,59 +18,57 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python Qt Support plugin
+// Python Qt support functions
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "plugininfo.h"
-#include "plugininterface.h"
-#include "pythonqtsupportglobal.h"
-
-//==============================================================================
-
-#include <PythonQt/PythonQt.h>
-
-//==============================================================================
-
-class ctkAbstractPythonManager;
+#include "pythonsupport.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonQtSupport {
+namespace PythonSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonQtSupportPluginInfo();
-
-//==============================================================================
-
-class PYTHONQTSUPPORT_EXPORT PythonQtSupportPlugin : public QObject, public PluginInterface
+void addInstanceDecorators(QObject *pQObject)
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonQtSupportPlugin" FILE "pythonqtsupportplugin.json")
-
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
-public:
-    explicit PythonQtSupportPlugin();
-
-#include "plugininterface.inl"
-
-private:
-    ctkAbstractPythonManager *mPythonManager;
-    PythonQtObjectPtr mOpenCORModule;
-};
+    PythonQt::self()->addInstanceDecorators(pQObject);
+}
 
 //==============================================================================
 
-}   // namespace PythonQtSupport
+void addObject(PyObject *pObject, const QString &pName, QObject *pQObject)
+{
+    PythonQt::self()->addObject(pObject, pName, pQObject);
+}
+
+//==============================================================================
+
+QVariant evalScript(const QString &pScript)
+{
+    return PythonQt::self()->evalScript(PythonQt::self()->getMainModule(), pScript);
+}
+
+//==============================================================================
+
+void registerClass(const QMetaObject *pMetaObject)
+{
+    PythonQt::self()->registerClass(pMetaObject);
+}
+
+//==============================================================================
+
+PyObject *wrapQObject(QObject *pQObject)
+{
+    return PythonQt::priv()->wrapQObject(pQObject);
+}
+
+//==============================================================================
+
+}   // namespace PythonSupport
 }   // namespace OpenCOR
 
 //==============================================================================
 // End of file
 //==============================================================================
+

@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CTK/ctkAbstractPythonManager.h"
 #include "corecliutils.h"
-#include "pythonqtsupportplugin.h"
 #include "pythoninterface.h"
+#include "pythonsupportplugin.h"
 #include "solverinterface.h"
 
 //==============================================================================
@@ -39,11 +39,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonQtSupport {
+namespace PythonSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonQtSupportPluginInfo()
+PLUGININFO_FUNC PythonSupportPluginInfo()
 {
     Descriptions descriptions;
 
@@ -57,7 +57,7 @@ PLUGININFO_FUNC PythonQtSupportPluginInfo()
 
 //==============================================================================
 
-PythonQtSupportPlugin::PythonQtSupportPlugin() :
+PythonSupportPlugin::PythonSupportPlugin() :
     mPythonManager(0),
     mOpenCORModule(0)
 {
@@ -67,7 +67,7 @@ PythonQtSupportPlugin::PythonQtSupportPlugin() :
 // Plugin interface
 //==============================================================================
 
-bool PythonQtSupportPlugin::definesPluginInterfaces()
+bool PythonSupportPlugin::definesPluginInterfaces()
 {
     // We don't handle this interface...
 
@@ -76,7 +76,7 @@ bool PythonQtSupportPlugin::definesPluginInterfaces()
 
 //==============================================================================
 
-bool PythonQtSupportPlugin::pluginInterfacesOk(const QString &pFileName,
+bool PythonSupportPlugin::pluginInterfacesOk(const QString &pFileName,
                                                QObject *pInstance)
 {
     Q_UNUSED(pFileName);
@@ -89,7 +89,7 @@ bool PythonQtSupportPlugin::pluginInterfacesOk(const QString &pFileName,
 
 //==============================================================================
 
-void PythonQtSupportPlugin::initializePlugin()
+void PythonSupportPlugin::initializePlugin()
 {
     // Use our (patched) matplotlib backend for PythonQt
 
@@ -114,14 +114,14 @@ void PythonQtSupportPlugin::initializePlugin()
 
 //==============================================================================
 
-void PythonQtSupportPlugin::finalizePlugin()
+void PythonSupportPlugin::finalizePlugin()
 {
     delete mPythonManager;
 }
 
 //==============================================================================
 
-void PythonQtSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void PythonSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     // We need to register the Solver::Properties class with Qt so it gets automatically
     // wrapped to Python
@@ -141,7 +141,7 @@ void PythonQtSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void PythonQtSupportPlugin::loadSettings(QSettings *pSettings)
+void PythonSupportPlugin::loadSettings(QSettings *pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -150,7 +150,7 @@ void PythonQtSupportPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PythonQtSupportPlugin::saveSettings(QSettings *pSettings) const
+void PythonSupportPlugin::saveSettings(QSettings *pSettings) const
 {
     Q_UNUSED(pSettings);
 
@@ -159,7 +159,7 @@ void PythonQtSupportPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void PythonQtSupportPlugin::handleUrl(const QUrl &pUrl)
+void PythonSupportPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -168,7 +168,7 @@ void PythonQtSupportPlugin::handleUrl(const QUrl &pUrl)
 
 //==============================================================================
 
-}   // namespace PythonQtSupport
+}   // namespace PythonSupport
 }   // namespace OpenCOR
 
 //==============================================================================

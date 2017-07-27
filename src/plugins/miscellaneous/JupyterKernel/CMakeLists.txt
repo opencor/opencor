@@ -13,5 +13,5 @@ ADD_PLUGIN(JupyterKernel
         src/jupyterkernelplugin.h
     PLUGINS
         Core
-        PythonQtSupport
+        PythonSupport
 )

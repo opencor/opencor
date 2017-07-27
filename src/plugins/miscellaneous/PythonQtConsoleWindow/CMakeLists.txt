@@ -19,5 +19,5 @@ ADD_PLUGIN(PythonQtConsoleWindow
         src/pythonqtconsolewindow.ui
     PLUGINS
         Core
-        PythonQtSupport
+        PythonSupport
 )
