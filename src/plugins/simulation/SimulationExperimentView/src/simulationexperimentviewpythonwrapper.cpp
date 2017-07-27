@@ -24,9 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "centralwidget.h"
 #include "coreguiutils.h"
 #include "pythonqtsupport.h"
+#include "simulation.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewpythonwrapper.h"
-#include "simulationexperimentviewsimulation.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 

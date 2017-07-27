@@ -957,6 +957,15 @@ Simulation::~Simulation()
 
 //==============================================================================
 
+QString Simulation::fileName() const
+{
+    // Return our file name
+
+    return mFileName;
+}
+
+//==============================================================================
+
 void Simulation::retrieveFileDetails()
 {
     // Retrieve our CellML and SED-ML files, as well as COMBINE archive
