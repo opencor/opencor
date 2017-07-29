@@ -42,6 +42,7 @@ SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInf
     PropertyEditorWidget(false, pParent),
     mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
+    mGradientIndices(QSet<int>()),
     mSimulation(0),
     mNeedClearing(false),
     mVoiAccessible(false)
@@ -67,6 +68,8 @@ void SimulationExperimentViewInformationParametersWidget::retranslateContextMenu
             mContextMenu->actions()[0]->setText(tr("Plot Against Variable Of Integration"));
 
         mContextMenu->actions()[(mVoiAccessible?0:-1)+1]->setText(tr("Plot Against"));
+
+        mContextMenu->actions()[(mVoiAccessible?0:-1)+3]->setText(tr("Toggle gradient calculation for constant"));
     }
 }
 
@@ -102,6 +105,15 @@ void SimulationExperimentViewInformationParametersWidget::contextMenuEvent(QCont
 
     if (crtProperty->type() == Core::Property::Section)
         return;
+
+    // Show separator and item to toggle constants having gradients calculated
+
+    CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(crtProperty);
+
+    bool gradientActionVisible = (parameter && parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant);
+
+    mContextMenu->actions()[(mVoiAccessible?0:-1)+2]->setVisible(gradientActionVisible);
+    mContextMenu->actions()[(mVoiAccessible?0:-1)+3]->setVisible(gradientActionVisible);
 
     // Generate and show the context menu
 
@@ -402,7 +414,19 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 
     mContextMenu->addAction(plotAgainstMenu->menuAction());
 
-    // Initialise our two main menu items
+    // Create a hidden menu item to toggle whether constants have gradients calculated
+
+    QAction *gradientSeparator = mContextMenu->addSeparator();
+
+    gradientSeparator->setVisible(false);
+
+    QAction *gradientAction = mContextMenu->addAction(QString());
+
+    connect(gradientAction, SIGNAL(triggered(bool)), this, SLOT(toggleGradientFlag()));
+
+    gradientAction->setVisible(false);
+
+    // Initialise our menu items
 
     retranslateContextMenu();
 
@@ -552,6 +576,42 @@ void SimulationExperimentViewInformationParametersWidget::emitGraphRequired()
 
     emit graphRequired(mParameterActions.value(qobject_cast<QAction *>(sender())),
                        mParameters.value(currentProperty()));
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationParametersWidget::toggleGradientFlag()
+{
+    // Make sure that we have a current property
+
+    Core::Property *crtProperty = currentProperty();
+
+    if (!crtProperty)
+        return;
+
+    // Use the `checked` flag to indicate if a constant is to have gradients calculated
+    // and change its icon to show tihis
+
+    CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(crtProperty);
+
+    if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant) {
+        static const QIcon ConstantWithGradientIcon = QIcon(":/SimulationExperimentView/constantWithGradient.png");
+
+        if (mGradientIndices.contains(parameter->index())) {
+            mGradientIndices.remove(parameter->index());
+            crtProperty->setIcon(parameter->icon());
+        } else {
+            mGradientIndices << parameter->index();
+            crtProperty->setIcon(ConstantWithGradientIcon);
+        }
+    }
+}
+
+//==============================================================================
+
+QSet<int> SimulationExperimentViewInformationParametersWidget::gradientIndices() const
+{
+    return mGradientIndices;
 }
 
 //==============================================================================
