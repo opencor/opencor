@@ -771,12 +771,12 @@ SimulationResults::~SimulationResults()
 {
     // Delete some internal objects
 
-    deleteArrays();
+    deleteDataStoreArrays();
 }
 
 //==============================================================================
 
-bool SimulationResults::createArrays()
+bool SimulationResults::createDataStoreArrays()
 {
     // Note: the boolean value we return is true if we have had no problem
     //       allocating our data store arrays, false otherwise. This is the
@@ -815,7 +815,7 @@ bool SimulationResults::createArrays()
 
 //==============================================================================
 
-void SimulationResults::deleteArrays()
+void SimulationResults::deleteDataStoreArrays()
 {
     // Deallocate our data store arrays
 
@@ -830,7 +830,7 @@ void SimulationResults::reload()
 
     mRuntime = mSimulation->runtime();
 
-    deleteArrays();
+    deleteDataStoreArrays();
 }
 
 //==============================================================================
@@ -840,9 +840,9 @@ bool SimulationResults::reset(const bool &pAllocateArrays)
     // Reset our data store arrays
 
     if (pAllocateArrays) {
-        return createArrays();
+        return createDataStoreArrays();
     } else {
-        deleteArrays();
+        deleteDataStoreArrays();
 
         return true;
     }

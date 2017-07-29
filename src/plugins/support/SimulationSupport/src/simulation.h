@@ -245,8 +245,8 @@ private:
     const DataStore::DataStoreVariables mStateVariables;
     const DataStore::DataStoreVariables mAlgebraicVariables;
 
-    bool createArrays();
-    void deleteArrays();
+    bool createDataStoreArrays();
+    void deleteDataStoreArrays();
 };
 
 //==============================================================================
