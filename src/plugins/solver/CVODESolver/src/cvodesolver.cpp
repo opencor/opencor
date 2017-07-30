@@ -36,6 +36,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QVector>
+
+//==============================================================================
+
+#include <algorithm>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CVODESolver {
 
@@ -113,6 +121,8 @@ CvodeSolver::CvodeSolver() :
     mSolver(0),
     mStatesVector(0),
     mUserData(0),
+    mSensitivityVectors(0),
+    mSensitivityVectorsSize(0),
     mInterpolateSolution(InterpolateSolutionDefaultValue)
 {
 }
@@ -130,6 +140,9 @@ CvodeSolver::~CvodeSolver()
 
     N_VDestroy_Serial(mStatesVector);
 
+    if (mSensitivityVectors)
+        N_VDestroyVectorArray_Serial(mSensitivityVectors, mSensitivityVectorsSize);
+
     CVodeFree(&mSolver);
 
     delete mUserData;
@@ -142,6 +155,19 @@ void CvodeSolver::initialize(const double &pVoiStart,
                              double *pRates, double *pStates,
                              double *pAlgebraic,
                              ComputeRatesFunction pComputeRates)
+{
+    initialize(pVoiStart, pRatesStatesCount, pConstants, pRates, pStates, pAlgebraic, pComputeRates, 0, 0);
+}
+
+//==============================================================================
+
+void CvodeSolver::initialize(const double &pVoiStart,
+                             const int &pRatesStatesCount, double *pConstants,
+                             double *pRates, double *pStates,
+                             double *pAlgebraic,
+                             ComputeRatesFunction pComputeRates,
+                             QSet<int> *pGradientIndices,
+                             double *pGradients)
 {
     if (!mSolver) {
         // Retrieve some of the CVODE properties
@@ -376,6 +402,46 @@ void CvodeSolver::initialize(const double &pVoiStart,
         // Set the relative and absolute tolerances
 
         CVodeSStolerances(mSolver, relativeTolerance, absoluteTolerance);
+
+        // See if we are performing a sensitivity analysis
+
+        if (pGradientIndices && pGradients) {
+
+            // Get the number of constants that gradients are being computed for
+
+            mSensitivityVectorsSize = pGradientIndices->size();
+
+            // Allocate senstivity vectors
+
+            mSensitivityVectors = N_VCloneVectorArrayEmpty_Serial(mSensitivityVectorsSize, mStatesVector);
+
+            for (int i = 0; i < mSensitivityVectorsSize; i++) {
+                NV_DATA_S(mSensitivityVectors[i]) = pGradients;
+                pGradients += pRatesStatesCount;
+            }
+
+            // Initialise sensitivity code
+
+            CVodeSensInit1(mSolver, mSensitivityVectorsSize, CV_SIMULTANEOUS, NULL, mSensitivityVectors);
+
+            CVodeSensEEtolerances(mSolver);
+
+            CVodeSetSensErrCon(mSolver, TRUE);
+
+            CVodeSetSensDQMethod(mSolver, CV_CENTERED, 0.0);
+
+
+            // Get the set of constant indices into a sorted vector
+
+            QVector<int> indicesVector = pGradientIndices->toList().toVector();
+
+            std::sort(indicesVector.begin(), indicesVector.end());
+
+            // Specify which constants will have gradients calculated
+
+            CVodeSetSensParams(mSolver, pConstants, NULL, indicesVector.data());
+        }
+
     } else {
         // Reinitialise the CVODE object
 
@@ -393,6 +459,11 @@ void CvodeSolver::solve(double &pVoi, const double &pVoiEnd) const
         CVodeSetStopTime(mSolver, pVoiEnd);
 
     CVode(mSolver, pVoiEnd, mStatesVector, &pVoi, CV_NORMAL);
+
+    // Get the sensitivity solution vectors if we are doing sensitivity analysis
+
+    if (mSensitivityVectors)
+        CVodeGetSens(mSolver, &pVoi, mSensitivityVectors);
 
     // Compute the rates one more time to get up to date values for the rates
     // Note: another way of doing this would be to copy the contents of the
