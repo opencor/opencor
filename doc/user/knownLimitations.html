@@ -46,6 +46,24 @@
             <li>OpenCOR's <a href="plugins/organisation/FileBrowserWindow.html">FileBrowserWindow</a> plugin may, on some systems, result in OpenCOR being slow to respond at startup. This has nothing to do with OpenCOR, but most likely with a <a href="https://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a> shell add-on that is installed on your system. <a href="http://www.brighthub.com/computing/windows-platform/articles/86552.aspx">This page</a> may help you address the issue, but if not then you might have to unselect the <a href="plugins/organisation/FileBrowserWindow.html">FileBrowserWindow</a> plugin.</li>
         </ul>
 
+        <div class="section">
+            Linux
+        </div>
+
+        <ul>
+            <li>
+                Depending on how your computer is set up, you may get the following message when trying to run OpenCOR:
+                <pre>This application failed to start because it could not find or load the Qt platform plugin "xcb"
+in "".
+
+Available platform plugins are: xcb.
+
+Reinstalling the application may fix this problem.
+Aborted (core dumped)</pre>
+                If that happens, delete <code>[OpenCOR]/lib/libstdc++.so.6</code> and try again.
+            </li>
+        </ul>
+
         <script type="text/javascript">
             copyright("..");
         </script>
