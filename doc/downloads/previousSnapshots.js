@@ -1,4 +1,31 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 7, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> added a simulation support plugin (to separate out running of a simulation from its widget) (see issue <a href=\"https://github.com/opencor/opencor/issues/1266\">#1266</a>). Provide an error message when a plugin is considered to be invalid (see issue <a href=\"https://github.com/opencor/opencor/issues/1347\">#1347</a>). Make certain interfaces available to other plugins (see issue <a href=\"https://github.com/opencor/opencor/issues/1371\">#1371</a>)." },
+                       { "change": "<strong>Text-based editors:</strong> don't reset the font size anymore when reloading a file (see issue <a href=\"https://github.com/opencor/opencor/issues/1369\">#1369</a>)." },
+                       { "change": "<strong>Property Editor widget:</strong> disallow navigation using the (Shift+)Tab key(s) (see issue <a href=\"https://github.com/opencor/opencor/issues/1354\">#1354</a>)." },
+                       { "change": "<strong>SUNDIALS package:</strong> don't package <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> and <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> (to avoid conflicts with <a href=\"http://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> and <a href=\"http://computation.llnl.gov/projects/sundials/idas\">IDAS</a>; see issue <a href=\"https://github.com/opencor/opencor/issues/1367\">#1367</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> prevent the renaming of a file from messing up a locked graph (see issue <a href=\"https://github.com/opencor/opencor/issues/1365\">#1365</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26 (see issue <a href=\"https://github.com/opencor/opencor/issues/1340\">#1340</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 4.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1352\">#1352</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1358\">#1358</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 21, "month": 6, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
