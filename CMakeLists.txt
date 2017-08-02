@@ -438,6 +438,15 @@ IF(ENABLE_TEST_PLUGINS)
     ADD_DEFINITIONS(-DENABLE_TEST_PLUGINS)
 ENDIF()
 
+# On Linux, make sure that we don't use the C++11 ABI
+# Note: this is needed, on some Linux distributions, to prevent OpenCOR from not
+#       being able to "find or load the Qt platform plugin 'xcb'", even though
+#       it is present...
+
+IF(NOT WIN32 AND NOT APPLE)
+    ADD_DEFINITIONS(-D_GLIBCXX_USE_CXX11_ABI=0)
+ENDIF()
+
 # On macOS, make sure that we support 10.10 and later, unless a specific
 # deployment target has been specified
 
