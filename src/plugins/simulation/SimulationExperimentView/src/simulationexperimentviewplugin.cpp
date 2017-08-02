@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
-#include "simulationmanager.h"
 
 //==============================================================================
 
@@ -107,22 +106,10 @@ void SimulationExperimentViewPlugin::fileReloaded(const QString &pFileName,
 {
     Q_UNUSED(pFileJustSaved);
 
-    // The given file has been reloaded, so let our view widget know about it,
-    // after having made sure that our simulation manager has reloaded it
-    // Note: to save a file results in the fileReloaded() method being called
-    //       for all our plugins, except the one from which the saving was done.
-    //       Now, upon the 'proper' reloading of a file, the simulation support
-    //       plugin reloads the corresponding simulation, but when saving a
-    //       file, the fileReloaded() method doesn't do anything (see
-    //       SimulationSupportPlugin::fileReloaded()). This is as expected, but
-    //       this also means that we, here, need to reload the corresponding
-    //       simulation otherwise our parameters panel won't be up-to-date...
+    // The given file has been reloaded, so let our view widget know about it
 
-    if (pFileChanged) {
-        SimulationSupport::SimulationManager::instance()->reload(pFileName);
-
+    if (pFileChanged)
         mViewWidget->fileReloaded(pFileName);
-    }
 }
 
 //==============================================================================
