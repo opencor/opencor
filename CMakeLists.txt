@@ -46,8 +46,8 @@ ELSEIF(APPLE)
     ENDIF()
 ELSE()
     IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"
-       OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.9")
-        MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC/G++ 4.9+ on Linux...")
+       OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5")
+        MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC/G++ 5.x on Linux...")
     ENDIF()
 ENDIF()
 
@@ -1260,7 +1260,7 @@ ELSE()
     ENDFOREACH()
 
     # Library needed on Ubuntu 14.04 LTS, but not on Ubuntu 16.04 LTS
-    # Note: this is due to our use of GCC/G++ 4.9+, which is not originally
+    # Note: this is due to our use of GCC/G++ 5.x, which is not originally
     #       present on Ubuntu 14.04 LTS...
 
     SET(FULL_LIBRARY libstdc++.so.6)
