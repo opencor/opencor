@@ -428,7 +428,7 @@ void DataStore::createArrays(const qulonglong &pCapacity)
     mCapacity = pCapacity;
     mSize = 0;
 
-    mVoi->createArray(pCapacity);
+    if (mVoi) mVoi->createArray(pCapacity);
 
     foreach (DataStoreVariable *variable, mVariables)
         variable->createArray(pCapacity);
