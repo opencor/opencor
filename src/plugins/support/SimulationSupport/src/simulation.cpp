@@ -827,7 +827,9 @@ bool SimulationData::createGradientsStore(const QSet<int> &pGradientIndices)
                     DataStore::DataStoreVariable *variable = mGradientVariables[i*statesCount + j];
                     variable->setUri(uri(parameter->componentHierarchy(),
                                          parameter->formattedName()
-                                       + "/gradient/" + mStateVariables[j]->uri()));
+                                       + "/gradient_with/" + mStateVariables[j]->label()));
+                    variable->setLabel("d(" + parameter->formattedName() + ")"
+                                     + "/d(" + mStateVariables[j]->label() + ")");
                 }
             }
         } catch (...) {
@@ -859,6 +861,13 @@ int SimulationData::gradientsCount() const
     // Return the number of gradient indices
 
     return mGradientsIndices.size();
+}
+
+//==============================================================================
+
+DataStore::DataStore * SimulationData::gradientsDataStore() const
+{
+    return mGradientsDataStore;
 }
 
 //==============================================================================
@@ -981,6 +990,10 @@ void SimulationResults::addPoint(const double &pPoint)
     // Add the data to our data store
 
     mDataStore->addValues(pPoint);
+
+    // Add sensitivity gradients to their data store
+
+    mSimulation->data()->gradientsDataStore()->addValues(pPoint);
 }
 
 //==============================================================================

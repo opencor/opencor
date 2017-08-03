@@ -79,6 +79,10 @@ public slots:
     PyObject * constants(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * states(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * rates(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
+
+    // Access a simulation's sensitivity gradients
+
+    PyObject * gradients(OpenCOR::SimulationSupport::SimulationResults *pSimulationData) const;
 };
 
 //==============================================================================

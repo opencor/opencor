@@ -147,6 +147,13 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulation
 
 //==============================================================================
 
+PyObject * SimulationSupportPythonWrapper::gradients(SimulationResults *pSimulationResults) const
+{
+    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mSimulation->data()->gradientVariables());
+}
+
+//==============================================================================
+
 }   // namespace SimulationSupport
 }   // namespace OpenCOR
 

@@ -110,11 +110,13 @@ public:
 
     bool createGradientsStore(const QSet<int> &pGradientIndices);
 
-    DataStore::DataStoreVariables gradientVariables() const;
-
     double * gradients() const;
     int gradientsCount() const;
     int * gradientsIndices();
+
+    DataStore::DataStore * gradientsDataStore() const;
+
+    DataStore::DataStoreVariables gradientVariables() const;
 
 public slots:
 
