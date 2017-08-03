@@ -56,7 +56,8 @@ SimulationData::SimulationData(Simulation *pSimulation) :
     mNlaSolverProperties(Solver::Solver::Properties()),
     mResultsDataStore(0),
     mGradientsDataStore(0),
-    mGradientsIndices(QVector<int>())
+    mGradientsIndices(QVector<int>()),
+    mGradients(0)
 {
     // Create our various arrays
 
