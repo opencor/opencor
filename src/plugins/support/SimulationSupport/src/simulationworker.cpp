@@ -264,7 +264,11 @@ void SimulationWorker::started()
                               mSimulation->data()->rates(),
                               mSimulation->data()->states(),
                               mSimulation->data()->algebraic(),
-                              mRuntime->computeOdeRates());
+                              mRuntime->computeOdeRates(),
+                              mSimulation->data()->gradientsCount(),
+                              mSimulation->data()->gradientsIndices(),
+                              mSimulation->data()->gradients()
+                              );
     } else {
         daeSolver->setProperties(mSimulation->data()->daeSolverProperties());
 
