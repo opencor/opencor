@@ -108,6 +108,14 @@ public:
     DataStore::DataStoreVariables stateVariables() const;
     DataStore::DataStoreVariables algebraicVariables() const;
 
+    bool createGradientsStore(const QSet<int> &pGradientIndices);
+
+    DataStore::DataStoreVariables gradientVariables() const;
+
+    double * gradients() const;
+    int gradientsCount() const;
+    int * gradientsIndices();
+
 public slots:
 
     void reload();
@@ -168,6 +176,8 @@ private:
 
     DataStore::DataStore *mResultsDataStore;
 
+    DataStore::DataStore *mGradientsDataStore;
+
     DataStore::DataStoreVariable *mPointVariable;
 
     DataStore::DataStoreVariables mConstantVariables;
@@ -175,12 +185,17 @@ private:
     DataStore::DataStoreVariables mStateVariables;
     DataStore::DataStoreVariables mAlgebraicVariables;
 
+    DataStore::DataStoreVariables mGradientVariables;
+
     double *mConstants;
     double *mRates;
     double *mStates;
     double *mDummyStates;
     double *mAlgebraic;
     double *mCondVar;
+
+    QVector<int> mGradientsIndices;
+    double *mGradients;
 
     double *mInitialConstants;
     double *mInitialStates;

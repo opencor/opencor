@@ -1294,6 +1294,13 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
 
                 runSimulation = mSimulation->results()->reset();
 
+                if (runSimulation) {
+                    // Allocate additional memory for sensitivity analysis
+
+                    runSimulation = mSimulation->data()->createGradientsStore(
+                                        mContentsWidget->informationWidget()->parametersWidget()->gradientIndices());
+                }
+
                 mViewWidget->checkSimulationResults(mFileName, true);
                 // Note: this will, among other things, clear our plots...
 

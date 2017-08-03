@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QSet>
+#include <QVector>
 #include <QtMath>
 
 //==============================================================================
@@ -52,7 +54,9 @@ SimulationData::SimulationData(Simulation *pSimulation) :
     mDaeSolverProperties(Solver::Solver::Properties()),
     mNlaSolverName(QString()),
     mNlaSolverProperties(Solver::Solver::Properties()),
-    mResultsDataStore(0)
+    mResultsDataStore(0),
+    mGradientsDataStore(0),
+    mGradientsIndices(QVector<int>())
 {
     // Create our various arrays
 
@@ -622,6 +626,8 @@ void SimulationData::deleteArrays()
     delete[] mAlgebraic;
     delete[] mCondVar;
 
+    delete[] mGradients;
+
     delete[] mInitialConstants;
     delete[] mInitialStates;
 
@@ -749,6 +755,125 @@ DataStore::DataStoreVariables SimulationData::stateVariables() const
 DataStore::DataStoreVariables SimulationData::algebraicVariables() const
 {
     return mAlgebraicVariables;
+}
+
+//==============================================================================
+
+bool SimulationData::createGradientsStore(const QSet<int> &pGradientIndices)
+{
+    // Delete the previous gradients array and data store
+
+    delete[] mGradients;
+    delete mGradientsDataStore;
+
+    // Reset variables in case of failure
+
+    mGradients = 0;
+    mGradientsDataStore = 0;
+    mGradientsIndices = QVector<int>();
+
+    // Make sure that we have a runtime
+
+    if (!mRuntime)
+        return true;
+
+    // Retrieve the size of our data and make sure that it is valid
+
+    qulonglong simulationSize = qulonglong(mSimulation->size());
+
+    if (!simulationSize)
+        return true;
+
+    // Gradients are calculated for each constant wrt each state
+
+    int gradientsCount = pGradientIndices.size();
+
+    if (gradientsCount) {
+        try {
+            int statesCount = mRuntime->statesCount();
+
+            int gradientsSize = gradientsCount*statesCount;
+
+            // Allocate the array to hold sensitivity gradients at a single point
+
+            mGradients = new double[gradientsSize];
+
+            // Allocate a DataStore and variables to hold gradients for the simulation
+
+            mGradientsDataStore = new DataStore::DataStore(mRuntime->cellmlFile()->xmlBase() + "/gradients");
+
+            mGradientVariables = mGradientsDataStore->addVariables(gradientsSize, mGradients);
+
+            mGradientsDataStore->createArrays(simulationSize);
+
+            // All is well so remember in a sorted vector the constant indices
+            // for which we will have gradients
+
+            mGradientsIndices = pGradientIndices.toList().toVector();
+            std::sort(mGradientsIndices.begin(), mGradientsIndices.end());
+
+            // Customise our gradient variables
+
+            for (int i = 0; i < gradientsCount; ++i) {
+                int gradientIndex = mGradientsIndices[i];
+
+                CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[gradientIndex];
+                Q_ASSERT(parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant);
+
+                // Each constant has a gradient wrt each state variable
+
+                for (int j = 0; j < statesCount; ++j) {
+                    DataStore::DataStoreVariable *variable = mGradientVariables[i*statesCount + j];
+                    variable->setUri(uri(parameter->componentHierarchy(),
+                                         parameter->formattedName()
+                                       + "/gradient/" + mStateVariables[j]->uri()));
+                }
+            }
+        } catch (...) {
+            delete mGradients;
+
+            if (mGradientsDataStore)
+                mGradientsDataStore->deleteArrays();
+
+            return false;
+        }
+    }
+
+    return true;
+}
+
+//==============================================================================
+
+double * SimulationData::gradients() const
+{
+    // Return our algebraic array
+
+    return mGradients;
+}
+
+//==============================================================================
+
+int SimulationData::gradientsCount() const
+{
+    // Return the number of gradient indices
+
+    return mGradientsIndices.size();
+}
+
+//==============================================================================
+
+int * SimulationData::gradientsIndices()
+{
+    // Return our gradient's indices
+
+    return mGradientsIndices.data();
+}
+
+//==============================================================================
+
+DataStore::DataStoreVariables SimulationData::gradientVariables() const
+{
+    return mGradientVariables;
 }
 
 //==============================================================================
