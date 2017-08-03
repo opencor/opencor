@@ -1301,7 +1301,7 @@ ELSE()
                 RENAME ${FULL_LIBRARY})
     ENDFOREACH()
 
-    # Library needed on Ubuntu 14.04 LTS, but not on Ubuntu 16.06 LTS
+    # Library needed on Ubuntu 14.04 LTS, but not on Ubuntu 16.04 LTS
     # Note: this is due to our use of GCC/G++ 4.9+, which is not originally
     #       present on Ubuntu 14.04 LTS...
 
