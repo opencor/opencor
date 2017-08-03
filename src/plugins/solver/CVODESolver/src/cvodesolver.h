@@ -33,10 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QSet>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CVODESolver {
 
@@ -146,7 +142,8 @@ public:
                             const int &pRatesStatesCount, double *pConstants,
                             double *pRates, double *pStates, double *pAlgebraic,
                             ComputeRatesFunction pComputeRates,
-                            QSet<int> *pGradientIndices,
+                            const int &pGradientsCount,
+                            int *pGradientsIndices,
                             double *pGradients);
 
     virtual void solve(double &pVoi, const double &pVoiEnd) const;

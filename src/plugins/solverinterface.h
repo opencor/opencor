@@ -105,6 +105,14 @@ public:
                             double *pRates, double *pStates, double *pAlgebraic,
                             ComputeRatesFunction pComputeRates);
 
+    virtual void initialize(const double &pVoiStart,
+                            const int &pRatesStatesCount, double *pConstants,
+                            double *pRates, double *pStates, double *pAlgebraic,
+                            ComputeRatesFunction pComputeRates,
+                            const int &pGradientsCount,
+                            int *pGradientsIndices,
+                            double *pGradients);
+
 protected:
     ComputeRatesFunction mComputeRates;
 };

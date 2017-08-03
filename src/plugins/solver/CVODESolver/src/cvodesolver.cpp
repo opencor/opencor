@@ -36,10 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QVector>
-
-//==============================================================================
-
 #include <algorithm>
 
 //==============================================================================
@@ -156,7 +152,7 @@ void CvodeSolver::initialize(const double &pVoiStart,
                              double *pAlgebraic,
                              ComputeRatesFunction pComputeRates)
 {
-    initialize(pVoiStart, pRatesStatesCount, pConstants, pRates, pStates, pAlgebraic, pComputeRates, 0, 0);
+    initialize(pVoiStart, pRatesStatesCount, pConstants, pRates, pStates, pAlgebraic, pComputeRates, 0, 0, 0);
 }
 
 //==============================================================================
@@ -166,7 +162,8 @@ void CvodeSolver::initialize(const double &pVoiStart,
                              double *pRates, double *pStates,
                              double *pAlgebraic,
                              ComputeRatesFunction pComputeRates,
-                             QSet<int> *pGradientIndices,
+                             const int &pGradientsCount,
+                             int *pGradientsIndices,
                              double *pGradients)
 {
     if (!mSolver) {
@@ -405,11 +402,11 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
         // See if we are performing a sensitivity analysis
 
-        if (pGradientIndices && pGradients) {
+        if (pGradientsCount && pGradients) {
 
             // Get the number of constants that gradients are being computed for
 
-            mSensitivityVectorsSize = pGradientIndices->size();
+            mSensitivityVectorsSize = pGradientsCount;
 
             // Allocate senstivity vectors
 
@@ -430,16 +427,9 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
             CVodeSetSensDQMethod(mSolver, CV_CENTERED, 0.0);
 
-
-            // Get the set of constant indices into a sorted vector
-
-            QVector<int> indicesVector = pGradientIndices->toList().toVector();
-
-            std::sort(indicesVector.begin(), indicesVector.end());
-
             // Specify which constants will have gradients calculated
 
-            CVodeSetSensParams(mSolver, pConstants, NULL, indicesVector.data());
+            CVodeSetSensParams(mSolver, pConstants, NULL, pGradientsIndices);
         }
 
     } else {

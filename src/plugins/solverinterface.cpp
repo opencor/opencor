@@ -156,6 +156,23 @@ void OdeSolver::initialize(const double &pVoiStart,
 
 //==============================================================================
 
+void OdeSolver::initialize(const double &pVoiStart,
+                           const int &pRatesStatesCount, double *pConstants,
+                           double *pRates, double *pStates, double *pAlgebraic,
+                           ComputeRatesFunction pComputeRates,
+                           const int &pGradientsCount,
+                           int *pGradientsIndices,
+                           double *pGradients)
+{
+    Q_UNUSED(pGradientsCount);
+    Q_UNUSED(pGradientsIndices);
+    Q_UNUSED(pGradients);
+
+    initialize(pVoiStart, pRatesStatesCount, pConstants, pRates, pStates, pAlgebraic, pComputeRates);
+}
+
+//==============================================================================
+
 DaeSolver::DaeSolver() :
     VoiSolver(),
     mCondVarCount(0),
