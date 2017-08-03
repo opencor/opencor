@@ -86,28 +86,28 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
 PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->mAlgebraicVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->algebraicVariables());
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->mConstantVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->constantVariables());
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->mRateVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->rateVariables());
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->mStateVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->stateVariables());
 }
 
 //==============================================================================
