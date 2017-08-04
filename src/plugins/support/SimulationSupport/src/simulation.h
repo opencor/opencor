@@ -38,6 +38,7 @@ namespace OpenCOR {
 namespace CellMLSupport {
     class CellmlFile;
     class CellmlFileRuntime;
+    class CellmlFileRuntimeParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -108,11 +109,11 @@ public:
     DataStore::DataStoreVariables stateVariables() const;
     DataStore::DataStoreVariables algebraicVariables() const;
 
-    bool createGradientsDataStore(const QSet<int> &pGradientIndices);
+    bool createGradientsDataStore();
 
     double * gradients() const;
     int gradientsCount() const;
-    int * gradientsIndices();
+    int * gradientIndices();
 
     DataStore::DataStore * gradientsDataStore() const;
 
@@ -156,6 +157,9 @@ public slots:
     bool isModified() const;
     void checkForModifications();
 
+    void calculateGradients(const int &pIndex, bool pCalculate);
+    void calculateGradients(const QString &pConstantUri, bool pCalculate);
+
 private:
     Simulation *mSimulation;
 
@@ -196,7 +200,7 @@ private:
     double *mAlgebraic;
     double *mCondVar;
 
-    QVector<int> mGradientsIndices;
+    QVector<int> mGradientIndices;
     double *mGradients;
 
     double *mInitialConstants;
@@ -214,6 +218,8 @@ private:
 signals:
     void updated(const double &pCurrentPoint);
     void modified(const bool &pIsModified);
+
+    void gradientCalculation(CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate=true);
 
     void error(const QString &pMessage);
 };
@@ -241,7 +247,7 @@ public:
     double * rates(const int &pIndex) const;
     double * states(const int &pIndex) const;
 
-    bool createGradientsDataStore(const QSet<int> &pGradientIndices);
+    bool createGradientsDataStore();
 
 public slots:
     bool reset(const bool &pAllocateArrays = true);

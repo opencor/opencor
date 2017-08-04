@@ -266,7 +266,7 @@ void SimulationWorker::started()
                               mSimulation->data()->algebraic(),
                               mRuntime->computeOdeRates(),
                               mSimulation->data()->gradientsCount(),
-                              mSimulation->data()->gradientsIndices(),
+                              mSimulation->data()->gradientIndices(),
                               mSimulation->data()->gradients()
                               );
     } else {

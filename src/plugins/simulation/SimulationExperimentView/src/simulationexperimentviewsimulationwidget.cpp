@@ -462,6 +462,13 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(mSimulation->data(), SIGNAL(modified(const bool &)),
             this, SLOT(simulationDataModified(const bool &)));
 
+    // Enable SimulationData to toggle parameter widget's gradients' flag and widget to store index.
+
+    connect(mSimulation->data(), SIGNAL(gradientCalculation(CellMLSupport::CellmlFileRuntimeParameter *, const bool &)),
+            informationWidget->parametersWidget(), SLOT(gradientToggled(CellMLSupport::CellmlFileRuntimeParameter *, const bool &)));
+    connect(informationWidget->parametersWidget(), SIGNAL(calculateGradients(const int &, const bool &)),
+            mSimulation->data(), SLOT(calculateGradients(const int &, const bool &)));
+
     // Enable/disable our development mode action depending on whether our file
     // is readable/writable and of CellML type
 
@@ -1297,8 +1304,7 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
                 if (runSimulation) {
                     // Allocate additional memory for sensitivity analysis
 
-                    runSimulation = mSimulation->results()->createGradientsDataStore(
-                                        mContentsWidget->informationWidget()->parametersWidget()->gradientIndices());
+                    runSimulation = mSimulation->results()->createGradientsDataStore();
                 }
 
                 mViewWidget->checkSimulationResults(mFileName, true);

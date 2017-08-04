@@ -73,6 +73,8 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         runSimulation = pSimulation->results()->reset();
 
+        pSimulation->results()->createGradientsDataStore();
+
         // Effectively run our simulation in case we were able to
         // allocate all the memory we need to run the simulation
 
@@ -160,7 +162,7 @@ PyObject * SimulationSupportPythonWrapper::gradients(SimulationResults *pSimulat
     const DataStore::DataStoreVariables stateVariables = simulationData->stateVariables();
     const DataStore::DataStoreVariables gradientVariables = simulationData->gradientVariables();
 
-    int *indices = simulationData->gradientsIndices();
+    int *indices = simulationData->gradientIndices();
 
     int gradientsCount = simulationData->gradientsCount();
     int statesCount = pSimulationResults->mSimulation->runtime()->statesCount();

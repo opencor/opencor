@@ -65,8 +65,6 @@ public:
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
 
-    QSet<int> gradientIndices() const;
-
 protected:
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
 
@@ -94,8 +92,12 @@ signals:
     void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
+    void calculateGradients(const int &pIndex, const bool &pCalculate);
+
 public slots:
     void updateParameters(const double &pCurrentPoint);
+
+    void gradientToggled(CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate);
 
 private slots:
     void propertyChanged(Core::Property *pProperty);

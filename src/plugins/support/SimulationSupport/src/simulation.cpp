@@ -56,7 +56,7 @@ SimulationData::SimulationData(Simulation *pSimulation) :
     mNlaSolverProperties(Solver::Solver::Properties()),
     mResultsDataStore(0),
     mGradientsDataStore(0),
-    mGradientsIndices(QVector<int>()),
+    mGradientIndices(QVector<int>()),
     mGradients(0)
 {
     // Create our various arrays
@@ -760,18 +760,52 @@ DataStore::DataStoreVariables SimulationData::algebraicVariables() const
 
 //==============================================================================
 
-bool SimulationData::createGradientsStore(const QSet<int> &pGradientIndices)
+void SimulationData::calculateGradients(const int &pIndex, bool pCalculate)
+{
+    int pos = mGradientIndices.indexOf(pIndex);
+
+    if (pCalculate) {
+        if (pos == -1) mGradientIndices.append(pIndex);
+    } else if (pos > -1) {
+        mGradientIndices.remove(pos);
+    }
+}
+
+//==============================================================================
+
+void SimulationData::calculateGradients(const QString &pConstantUri, bool pCalculate)
+{
+    for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
+        CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
+
+        if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant
+                && pConstantUri == mConstantVariables[parameter->index()]->uri()) {
+            calculateGradients(parameter->index(), pCalculate);
+
+            // Update icon in parameter information widget
+
+            emit gradientCalculation(parameter, pCalculate);
+        }
+    }
+}
+
+//==============================================================================
+
+bool SimulationData::createGradientsDataStore()
 {
     // Delete the previous gradients array and data store
 
     delete[] mGradients;
     delete mGradientsDataStore;
 
+    // Indices to all constants having gradients calculated
+
+    QSet<int> gradientIndices = QSet<int>::fromList(mGradientIndices.toList());
+
     // Reset variables in case of early return
 
     mGradients = 0;
     mGradientsDataStore = 0;
-    mGradientsIndices = QVector<int>();
 
     // Make sure that we have a runtime
 
@@ -787,7 +821,7 @@ bool SimulationData::createGradientsStore(const QSet<int> &pGradientIndices)
 
     // Gradients are calculated for each state variable wrt each constant
 
-    int gradientsCount = pGradientIndices.size();
+    int gradientsCount = gradientIndices.size();
 
     if (gradientsCount) {
         try {
@@ -810,13 +844,13 @@ bool SimulationData::createGradientsStore(const QSet<int> &pGradientIndices)
             // All is well so remember in a sorted vector the constant indices
             // for which we will have gradients
 
-            mGradientsIndices = pGradientIndices.toList().toVector();
-            std::sort(mGradientsIndices.begin(), mGradientsIndices.end());
+            mGradientIndices = gradientIndices.toList().toVector();
+            std::sort(mGradientIndices.begin(), mGradientIndices.end());
 
             // Customise our gradient variables
 
             for (int i = 0; i < gradientsCount; ++i) {
-                DataStore::DataStoreVariable *constant = mConstantVariables[mGradientsIndices[i]];
+                DataStore::DataStoreVariable *constant = mConstantVariables[mGradientIndices[i]];
 
                 for (int j = 0; j < statesCount; ++j) {
                     DataStore::DataStoreVariable *state = mStateVariables[j];
@@ -834,6 +868,7 @@ bool SimulationData::createGradientsStore(const QSet<int> &pGradientIndices)
 
             delete mGradientsDataStore;
             mGradientsDataStore = 0;
+            mGradientIndices = QVector<int>();
 
             return false;
         }
@@ -857,7 +892,7 @@ int SimulationData::gradientsCount() const
 {
     // Return the number of gradient indices
 
-    return mGradientsIndices.size();
+    return mGradientIndices.size();
 }
 
 //==============================================================================
@@ -869,11 +904,11 @@ DataStore::DataStore * SimulationData::gradientsDataStore() const
 
 //==============================================================================
 
-int * SimulationData::gradientsIndices()
+int * SimulationData::gradientIndices()
 {
     // Return our gradient's indices
 
-    return mGradientsIndices.data();
+    return mGradientIndices.data();
 }
 
 //==============================================================================
@@ -957,9 +992,9 @@ void SimulationResults::deleteDataStoreArrays()
 
 //==============================================================================
 
-bool SimulationResults::createGradientsDataStore(const QSet<int> &pGradientIndices)
+bool SimulationResults::createGradientsDataStore()
 {
-    bool result = mSimulation->data()->createGradientsDataStore(pGradientIndices);
+    bool result = mSimulation->data()->createGradientsDataStore();
 
     mGradientsDataStore = mSimulation->data()->gradientsDataStore();
 

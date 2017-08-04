@@ -580,6 +580,29 @@ void SimulationExperimentViewInformationParametersWidget::emitGraphRequired()
 
 //==============================================================================
 
+void SimulationExperimentViewInformationParametersWidget::gradientToggled(
+    CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate)
+{
+    static const QIcon ConstantWithGradientIcon = QIcon(":/SimulationExperimentView/constantWithGradient.png");
+
+    Core::Property *property = mParameters.key(pParameter);
+
+    if (property) {
+        int index = pParameter->index();
+        if (mGradientIndices.contains(index)) {
+            if (!pCalculate) {
+                mGradientIndices.remove(index);
+                property->setIcon(pParameter->icon());
+            }
+        } else if (pCalculate) {
+            mGradientIndices << index;
+            property->setIcon(ConstantWithGradientIcon);
+        }
+    }
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationParametersWidget::toggleGradientFlag()
 {
     // Make sure that we have a current property
@@ -589,29 +612,12 @@ void SimulationExperimentViewInformationParametersWidget::toggleGradientFlag()
     if (!crtProperty)
         return;
 
-    // Use the `checked` flag to indicate if a constant is to have gradients calculated
-    // and change its icon to show tihis
-
     CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(crtProperty);
 
-    if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant) {
-        static const QIcon ConstantWithGradientIcon = QIcon(":/SimulationExperimentView/constantWithGradient.png");
+    if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
+        gradientToggled(parameter, !mGradientIndices.contains(parameter->index()));
 
-        if (mGradientIndices.contains(parameter->index())) {
-            mGradientIndices.remove(parameter->index());
-            crtProperty->setIcon(parameter->icon());
-        } else {
-            mGradientIndices << parameter->index();
-            crtProperty->setIcon(ConstantWithGradientIcon);
-        }
-    }
-}
-
-//==============================================================================
-
-QSet<int> SimulationExperimentViewInformationParametersWidget::gradientIndices() const
-{
-    return mGradientIndices;
+    emit calculateGradients(parameter->index(), mGradientIndices.contains(parameter->index()));
 }
 
 //==============================================================================
