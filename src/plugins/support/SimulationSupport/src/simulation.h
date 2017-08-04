@@ -108,7 +108,7 @@ public:
     DataStore::DataStoreVariables stateVariables() const;
     DataStore::DataStoreVariables algebraicVariables() const;
 
-    bool createGradientsStore(const QSet<int> &pGradientIndices);
+    bool createGradientsDataStore(const QSet<int> &pGradientIndices);
 
     double * gradients() const;
     int gradientsCount() const;
@@ -241,6 +241,8 @@ public:
     double * rates(const int &pIndex) const;
     double * states(const int &pIndex) const;
 
+    bool createGradientsDataStore(const QSet<int> &pGradientIndices);
+
 public slots:
     bool reset(const bool &pAllocateArrays = true);
 
@@ -254,6 +256,7 @@ private:
     CellMLSupport::CellmlFileRuntime *mRuntime;
 
     DataStore::DataStore *mDataStore;
+    DataStore::DataStore *mGradientsDataStore;
 
     const DataStore::DataStoreVariable *mPointVariable;
 

@@ -1297,7 +1297,7 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
                 if (runSimulation) {
                     // Allocate additional memory for sensitivity analysis
 
-                    runSimulation = mSimulation->data()->createGradientsStore(
+                    runSimulation = mSimulation->results()->createGradientsDataStore(
                                         mContentsWidget->informationWidget()->parametersWidget()->gradientIndices());
                 }
 

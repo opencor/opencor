@@ -889,6 +889,7 @@ SimulationResults::SimulationResults(Simulation *pSimulation) :
     mSimulation(pSimulation),
     mRuntime(pSimulation->runtime()),
     mDataStore(pSimulation->data()->resultsDataStore()),
+    mGradientsDataStore(0),
     mPointVariable(pSimulation->data()->pointVariable()),
     mConstantVariables(pSimulation->data()->constantVariables()),
     mRateVariables(pSimulation->data()->rateVariables()),
@@ -956,6 +957,17 @@ void SimulationResults::deleteDataStoreArrays()
 
 //==============================================================================
 
+bool SimulationResults::createGradientsDataStore(const QSet<int> &pGradientIndices)
+{
+    bool result = mSimulation->data()->createGradientsDataStore(pGradientIndices);
+
+    mGradientsDataStore = mSimulation->data()->gradientsDataStore();
+
+    return result;
+}
+
+//==============================================================================
+
 void SimulationResults::reload()
 {
     // Update ourselves by updating our runtime and deleting our data store arrays
@@ -990,7 +1002,8 @@ void SimulationResults::addPoint(const double &pPoint)
 
     // Add sensitivity gradients to their data store
 
-    mSimulation->data()->gradientsDataStore()->addValues(pPoint);
+    if (mGradientsDataStore)
+        mGradientsDataStore->addValues(pPoint);
 }
 
 //==============================================================================
