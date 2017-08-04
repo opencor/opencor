@@ -158,7 +158,7 @@ public slots:
     void checkForModifications();
 
     void calculateGradients(const int &pIndex, bool pCalculate);
-    void calculateGradients(const QString &pConstantUri, bool pCalculate);
+    void calculateGradients(const QString &pConstantUri, bool pCalculate = true);
 
 private:
     Simulation *mSimulation;
