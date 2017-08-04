@@ -71,6 +71,8 @@ class SIMULATIONSUPPORT_EXPORT SimulationData : public QObject
 {
     Q_OBJECT
 
+    friend class SimulationSupportPythonWrapper;
+
 public:
     explicit SimulationData(Simulation *pSimulation);
     ~SimulationData();

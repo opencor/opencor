@@ -767,7 +767,7 @@ bool SimulationData::createGradientsStore(const QSet<int> &pGradientIndices)
     delete[] mGradients;
     delete mGradientsDataStore;
 
-    // Reset variables in case of failure
+    // Reset variables in case of early return
 
     mGradients = 0;
     mGradientsDataStore = 0;
@@ -785,7 +785,7 @@ bool SimulationData::createGradientsStore(const QSet<int> &pGradientIndices)
     if (!simulationSize)
         return true;
 
-    // Gradients are calculated for each constant wrt each state
+    // Gradients are calculated for each state variable wrt each constant
 
     int gradientsCount = pGradientIndices.size();
 
@@ -816,27 +816,24 @@ bool SimulationData::createGradientsStore(const QSet<int> &pGradientIndices)
             // Customise our gradient variables
 
             for (int i = 0; i < gradientsCount; ++i) {
-                int gradientIndex = mGradientsIndices[i];
-
-                CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[gradientIndex];
-                Q_ASSERT(parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant);
-
-                // Each constant has a gradient wrt each state variable
+                DataStore::DataStoreVariable *constant = mConstantVariables[mGradientsIndices[i]];
 
                 for (int j = 0; j < statesCount; ++j) {
-                    DataStore::DataStoreVariable *variable = mGradientVariables[i*statesCount + j];
-                    variable->setUri(uri(parameter->componentHierarchy(),
-                                         parameter->formattedName()
-                                       + "/gradient_with/" + mStateVariables[j]->label()));
-                    variable->setLabel("d(" + parameter->formattedName() + ")"
-                                     + "/d(" + mStateVariables[j]->label() + ")");
+                    DataStore::DataStoreVariable *state = mStateVariables[j];
+                    DataStore::DataStoreVariable *gradient = mGradientVariables[i*statesCount + j];
+
+                    // Gradient is of state variable wrt each constant
+
+                    gradient->setUri(state->uri() + "/gradient_with/" + constant->uri());
+                    gradient->setLabel("d(" + state->label() + ")/d(" + constant->label() + ")");
                 }
             }
         } catch (...) {
             delete mGradients;
+            mGradients = 0;
 
-            if (mGradientsDataStore)
-                mGradientsDataStore->deleteArrays();
+            delete mGradientsDataStore;
+            mGradientsDataStore = 0;
 
             return false;
         }

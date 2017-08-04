@@ -22,12 +22,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "cellmlfileruntime.h"
 #include "datastoreinterface.h"
 #include "datastorepythonwrapper.h"
 #include "pythonsupport.h"
 #include "simulation.h"
 #include "simulationsupportplugin.h"
 #include "simulationsupportpythonwrapper.h"
+
+//==============================================================================
+
+#include <QMap>
 
 //==============================================================================
 
@@ -149,7 +154,42 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulation
 
 PyObject * SimulationSupportPythonWrapper::gradients(SimulationResults *pSimulationResults) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mSimulation->data()->gradientVariables());
+    SimulationData *simulationData = pSimulationResults->mSimulation->data();
+
+    const DataStore::DataStoreVariables constantVariables = simulationData->constantVariables();
+    const DataStore::DataStoreVariables stateVariables = simulationData->stateVariables();
+    const DataStore::DataStoreVariables gradientVariables = simulationData->gradientVariables();
+
+    int *indices = simulationData->gradientsIndices();
+
+    int gradientsCount = simulationData->gradientsCount();
+    int statesCount = pSimulationResults->mSimulation->runtime()->statesCount();
+
+    PyObject *gradientsDict = PyDict_New();
+    QMap<QString, PyObject *> stateGradientsDictionaries;
+
+    // We need to transpose gradients when building dictionary
+
+    for (int i = 0; i < gradientsCount; ++i) {
+        DataStore::DataStoreVariable *constant = constantVariables[indices[i]];
+
+        for (int j = 0; j < statesCount; ++j) {
+            DataStore::DataStoreVariable *state = stateVariables[j];
+            DataStore::DataStoreVariable *gradient = gradientVariables[i*statesCount + j];
+
+            // Each state variable has a dictionary containing gradients wrt each constant
+
+            PyObject *stateGradientsDict = stateGradientsDictionaries[state->uri()];
+            if (stateGradientsDict == 0) {
+                stateGradientsDict = PyDict_New();
+                PyDict_SetItemString(gradientsDict, state->uri().toLatin1().data(), stateGradientsDict);
+                stateGradientsDictionaries[state->uri()] = stateGradientsDict;
+            }
+
+            PythonSupport::addObject(stateGradientsDict, constant->uri(), gradient);
+        }
+    }
+    return gradientsDict;
 }
 
 //==============================================================================

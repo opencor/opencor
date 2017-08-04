@@ -404,7 +404,7 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
         if (pGradientsCount && pGradients) {
 
-            // Get the number of constants that gradients are being computed for
+            // The number of constants that state variables have gradients computed
 
             mSensitivityVectorsSize = pGradientsCount;
 
