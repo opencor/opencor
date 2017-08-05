@@ -25,7 +25,7 @@ var jsonData = { "versions": [
                            { "extension": ".exe" }, { "extension": ".zip" }
                          ]
                        },
-                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
                          "files": [
                            { "extension": ".tar.gz" }
                          ]
