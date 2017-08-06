@@ -11,7 +11,6 @@ OPTION(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 OPTION(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
-OPTION(USE_PREBUILT_QTCHARTS_PACKAGE "Use the pre-built version of the QtCharts package" ON)
 OPTION(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
 
 OPTION(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE "Use the pre-built version of the BioSignalML API package" ON)
@@ -273,9 +272,8 @@ IF(WIN32)
     SET(ICU_VERSION 57)
 ENDIF()
 
-# Retrieve or build our copy of Qt Charts and QtWebKit
+# Retrieve or build our copy of QtWebKit
 
-ADD_SUBDIRECTORY(src/3rdparty/QtCharts)
 ADD_SUBDIRECTORY(src/3rdparty/QtWebKit)
 
 # Required Qt modules
@@ -284,12 +282,6 @@ IF(ENABLE_TESTS)
     SET(TEST Test)
 ELSE()
     SET(TEST)
-ENDIF()
-
-IF(USE_PREBUILT_QTCHARTS_PACKAGE)
-    SET(CHARTS Charts)
-ELSE()
-    SET(CHARTS)
 ENDIF()
 
 IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
@@ -327,12 +319,6 @@ IF(APPLE)
         SET(QTTEST)
     ENDIF()
 
-    IF(USE_PREBUILT_QTCHARTS_PACKAGE)
-        SET(QTCHARTS QtCharts)
-    ELSE()
-        SET(QTCHARTS)
-    ENDIF()
-
     IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
         SET(QTWEBKIT QtWebKit)
         SET(QTWEBKITWIDGETS QtWebKitWidgets)
@@ -342,7 +328,6 @@ IF(APPLE)
     ENDIF()
 
     SET(MACOS_QT_LIBRARIES
-        ${QTCHARTS}
         QtCLucene
         QtConcurrent
         QtCore
@@ -864,11 +849,9 @@ SET(PLUGINS
     widget/ZincWidget
 )
 
-IF(   NOT USE_PREBUILT_QTCHARTS_PACKAGE
-   OR NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
-    # We want to build our copy of the QtCharts and/or QtWebKit package, so
-    # don't build any plugins since some of them may require access to Qt
-    # Charts and/or QtWebKit
+IF(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
+    # We want to build our copy of the QtWebKit package, so don't build any
+    # plugins since some of them may require access to QtWebKit
 
     SET(PLUGINS)
 ENDIF()
@@ -1174,7 +1157,7 @@ IF(WIN32)
 
     # Qt libraries required by OpenCOR
 
-    FOREACH(QT_LIBRARY ${CHARTS} CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
         WINDOWS_DEPLOY_QT_LIBRARY(Qt5${QT_LIBRARY})
     ENDFOREACH()
 
@@ -1312,11 +1295,9 @@ ELSE()
     #       unnecessarily cumbersome to use, it's better to deploy one Qt
     #       library at a time...
 
-    FOREACH(QT_LIBRARY ${CHARTS} CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
-        IF("${QT_LIBRARY}" STREQUAL "${CHARTS}")
-            SET(REAL_QT_LIBRARY_DIR ${QTCHARTS_LIBRARIES_DIR})
-        ELSEIF(   "${QT_LIBRARY}" STREQUAL "${WEBKIT}"
-               OR "${QT_LIBRARY}" STREQUAL "${WEBKITWIDGETS}")
+    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
+        IF(   "${QT_LIBRARY}" STREQUAL "${WEBKIT}"
+           OR "${QT_LIBRARY}" STREQUAL "${WEBKITWIDGETS}")
             SET(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
         ELSE()
             SET(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
