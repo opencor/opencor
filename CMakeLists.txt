@@ -46,8 +46,8 @@ ELSEIF(APPLE)
     ENDIF()
 ELSE()
     IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"
-       OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.9")
-        MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC/G++ 4.9+ on Linux...")
+       OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5")
+        MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC/G++ 5.x on Linux...")
     ENDIF()
 ENDIF()
 
@@ -1246,8 +1246,7 @@ ELSE()
 
     INSTALL(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
 
-    # Libraries needed on (at least) Ubuntu 16.04 LTS, but not on Ubuntu 14.04
-    # LTS
+    # Libraries needed on Ubuntu
 
     FOREACH(LIBRARY app base interfaces pbutils reamer video)
         SET(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}gst${LIBRARY}-0.10${CMAKE_SHARED_LIBRARY_SUFFIX}.0)
@@ -1258,18 +1257,6 @@ ELSE()
                 DESTINATION lib
                 RENAME ${FULL_LIBRARY})
     ENDFOREACH()
-
-    # Library needed on Ubuntu 14.04 LTS, but not on Ubuntu 16.04 LTS
-    # Note: this is due to our use of GCC/G++ 4.9+, which is not originally
-    #       present on Ubuntu 14.04 LTS...
-
-    SET(FULL_LIBRARY libstdc++.so.6)
-
-    GET_FILENAME_COMPONENT(REAL_FULL_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
-
-    INSTALL(FILES ${REAL_FULL_LIBRARY}
-            DESTINATION lib
-            RENAME ${FULL_LIBRARY})
 
     # Library needed on Fedora, but not on Ubuntu
 
