@@ -1402,6 +1402,8 @@ ENDFOREACH()
 SET(MODEL_FILES
     hodgkin_huxley_squid_axon_model_1952.cellml
     noble_model_1962.cellml
+    pendulum.cellml
+    pendulum.sedml
     van_der_pol_model_1928.cellml
 )
 
