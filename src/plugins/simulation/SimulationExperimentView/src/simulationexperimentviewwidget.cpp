@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "collapsiblewidget.h"
 #include "filemanager.h"
 #include "pendulumwindowwindow.h"
+#include "simulation.h"
 #include "simulationexperimentviewcontentswidget.h"
 #include "simulationexperimentviewinformationgraphswidget.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
@@ -31,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "simulationexperimentviewinformationsolverswidget.h"
 #include "simulationexperimentviewinformationwidget.h"
 #include "simulationexperimentviewplugin.h"
-#include "simulationexperimentviewsimulation.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 
@@ -39,29 +39,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QDesktopWidget>
-#include <QDir>
 #include <QHeaderView>
 #include <QLayout>
 #include <QSettings>
 #include <QTimer>
-
-//==============================================================================
-
-#include "sbmlapibegin.h"
-    #include "sbml/math/ASTNode.h"
-#include "sbmlapiend.h"
-
-//==============================================================================
-
-#include "sedmlapibegin.h"
-    #include "sedml/SedAlgorithm.h"
-    #include "sedml/SedDocument.h"
-    #include "sedml/SedOneStep.h"
-    #include "sedml/SedPlot2D.h"
-    #include "sedml/SedRepeatedTask.h"
-    #include "sedml/SedUniformTimeCourse.h"
-    #include "sedml/SedVectorRange.h"
-#include "sedmlapiend.h"
 
 //==============================================================================
 
@@ -71,9 +52,13 @@ namespace SimulationExperimentView {
 //==============================================================================
 
 SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperimentViewPlugin *pPlugin,
+                                                               const Plugins &pCellmlEditingViewPlugins,
+                                                               const Plugins &pCellmlSimulationViewPlugins,
                                                                QWidget *pParent) :
     ViewWidget(pParent),
     mPlugin(pPlugin),
+    mCellmlEditingViewPlugins(pCellmlEditingViewPlugins),
+    mCellmlSimulationViewPlugins(pCellmlSimulationViewPlugins),
     mSimulationWidgetSizes(QIntList()),
     mContentsWidgetSizes(QIntList()),
     mCollapsibleWidgetCollapsed(QBoolList()),
@@ -194,7 +179,7 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
     if (!mSimulationWidget) {
         // No simulation widget exists for the given file, so create one
 
-        mSimulationWidget = new SimulationExperimentViewSimulationWidget(mPlugin, pFileName, this);
+        mSimulationWidget = new SimulationExperimentViewSimulationWidget(mPlugin, this, pFileName, this);
 
         // Keep track of our editing widget
 
@@ -397,10 +382,10 @@ void SimulationExperimentViewWidget::fileRenamed(const QString &pOldFileName,
         mSimulationWidgets.remove(pOldFileName);
     }
 
-    // Make sure that the GUI of our simulation widgets is up to date
+    // Let our simulation widgets know that a file has been renamed
 
     foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
-        simulationWidget->updateGui(true);
+        simulationWidget->fileRenamed(pOldFileName, pNewFileName);
 }
 
 //==============================================================================
@@ -428,6 +413,24 @@ QStringList SimulationExperimentViewWidget::fileNames() const
 
 //==============================================================================
 
+Plugins SimulationExperimentViewWidget::cellmlEditingViewPlugins() const
+{
+    // Return our CellML editing view plugins
+
+    return mCellmlEditingViewPlugins;
+}
+
+//==============================================================================
+
+Plugins SimulationExperimentViewWidget::cellmlSimulationViewPlugins() const
+{
+    // Return our CellML simulation view plugins
+
+    return mCellmlSimulationViewPlugins;
+}
+
+//==============================================================================
+
 SimulationExperimentViewSimulationWidget * SimulationExperimentViewWidget::simulationWidget(const QString &pFileName) const
 {
     // Return the requested simulation widget
@@ -437,7 +440,7 @@ SimulationExperimentViewSimulationWidget * SimulationExperimentViewWidget::simul
 
 //==============================================================================
 
-SimulationExperimentViewSimulation * SimulationExperimentViewWidget::simulation(const QString &pFileName) const
+SimulationSupport::Simulation * SimulationExperimentViewWidget::simulation(const QString &pFileName) const
 {
     // Return the simulation for the given file name
 
@@ -497,7 +500,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     // Some basic checks to see whether we are dealing with our pendulum model
     // (be it its CellML or SED-ML version)
 
-    SimulationExperimentViewSimulation *simulation = simulationWidget->simulation();
+    SimulationSupport::Simulation *simulation = simulationWidget->simulation();
     CellMLSupport::CellmlFileRuntimeParameter *q1Parameter = 0;
     CellMLSupport::CellmlFileRuntimeParameter *thetaParameter = 0;
     CellMLSupport::CellmlFileRuntimeParameter *r0Parameter = 0;
@@ -523,9 +526,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     //       since another simulation widget may have graphs that refer to the
     //       given simulation widget...
 
-    SimulationExperimentViewSimulationResults *simulationResults = simulation->results();
-    SimulationExperimentViewSimulationData *simulationData = simulation->data();
-    qulonglong simulationResultsSize = simulationResults->size();
+    qulonglong simulationResultsSize = simulation->results()->size();
 
     if (   pClearGraphs
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
@@ -537,12 +538,12 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
         if (pendulumModel) {
             if (pClearGraphs) {
                 mPlugin->pendulumWindowWindow()->initData(simulation->size(),
-                                                          simulationData->startingPoint(),
-                                                          simulationData->endingPoint(),
-                                                          simulationData->pointInterval(),
-                                                          simulationResults->constants(r0Parameter->index()),
-                                                          simulationResults->states(q1Parameter->index()),
-                                                          simulationResults->states(thetaParameter->index()));
+                                                          simulation->data()->startingPoint(),
+                                                          simulation->data()->endingPoint(),
+                                                          simulation->data()->pointInterval(),
+                                                          simulation->results()->constants(r0Parameter->index()),
+                                                          simulation->results()->states(q1Parameter->index()),
+                                                          simulation->results()->states(thetaParameter->index()));
             } else {
                 mPlugin->pendulumWindowWindow()->addData(simulationResultsSize);
             }
@@ -553,7 +554,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     // simulation is still running
 
     if (   simulation->isRunning()
-        || (simulationResultsSize != simulationResults->size())) {
+        || (simulationResultsSize != simulation->results()->size())) {
         // Note: we cannot ask QTimer::singleShot() to call
         //       callCheckSimulationResults() since it expects a simulation
         //       widget as a parameter, so instead we call a method with no

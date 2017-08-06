@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // CellML Annotation view metadata normal view details widget
 //==============================================================================
 
-#include "cellmlannotationviewwidget.h"
+#include "cellmlannotationview.h"
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "corecliutils.h"
@@ -308,13 +308,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 
     // Keep track of some information
 
-    QString resourceUrl = CellmlAnnotationViewWidget::resourceUrl(pRdfTriple->resource());
-    QString idUrl = CellmlAnnotationViewWidget::idUrl(pRdfTriple->resource(), pRdfTriple->id());
-
     if (!mUrls.contains(pRdfTriple->resource()))
-        mUrls.insert(pRdfTriple->resource(), resourceUrl);
+        mUrls.insert(pRdfTriple->resource(), resourceUrl(pRdfTriple->resource()));
 
-    mUrls.insert(rdfTripleInformation, idUrl);
+    mUrls.insert(rdfTripleInformation, idUrl(pRdfTriple->resource(), pRdfTriple->id()));
 
     mRdfTripleInformationSha1s << rdfTripleInformationSha1;
 

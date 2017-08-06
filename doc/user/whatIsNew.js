@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 21, "month": 6, "year": 2017,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 23, "month": 7, "year": 2017,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -7,6 +7,7 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "include/exclude plugins from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Linux\">Linux</a>." },
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a>." },
+                           { "type": "Improved", "description": "Plugin framework." },
                            { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                            { "type": "Improved", "description": "Keyboard navigation in tree views." },
                          ]

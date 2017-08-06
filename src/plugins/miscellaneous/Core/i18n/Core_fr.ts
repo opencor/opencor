@@ -292,6 +292,13 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::Core::Property</name>
+    <message>
+        <source>: </source>
+        <translation> : </translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::Core::PropertyEditorWidget</name>
     <message>
         <source>Property</source>
@@ -487,10 +494,6 @@
     <message>
         <source>Please choose an empty directory.</source>
         <translation>Veuillez choisir un répertoire vide.</translation>
-    </message>
-    <message>
-        <source>: </source>
-        <translation> : </translation>
     </message>
 </context>
 </TS>

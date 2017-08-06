@@ -53,13 +53,18 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
+namespace SimulationSupport {
+    class Simulation;
+}   // namespace SimulationSupport
+
+//==============================================================================
+
 namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SimulationExperimentViewPlugin;
-class SimulationExperimentViewSimulation;
 class SimulationExperimentViewSimulationWidget;
+class SimulationExperimentViewWidget;
 
 //==============================================================================
 
@@ -69,14 +74,16 @@ class SimulationExperimentViewInformationGraphsWidget : public QStackedWidget,
     Q_OBJECT
 
 public:
-    explicit SimulationExperimentViewInformationGraphsWidget(SimulationExperimentViewPlugin *pPlugin,
+    explicit SimulationExperimentViewInformationGraphsWidget(SimulationExperimentViewWidget *pViewWidget,
                                                              SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                              QWidget *pParent);
 
     virtual void retranslateUi();
 
-    void initialize(SimulationExperimentViewSimulation *pSimulation);
+    void initialize(SimulationSupport::Simulation *pSimulation);
     void finalize();
+
+    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
     void updateGui();
 
@@ -91,7 +98,7 @@ public:
     void setColumnWidth(const int &pIndex, const int &pColumnWidth);
 
 private:
-    SimulationExperimentViewPlugin *mPlugin;
+    SimulationExperimentViewWidget *mViewWidget;
     SimulationExperimentViewSimulationWidget *mSimulationWidget;
 
     QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *> mGraphPanels;
@@ -112,6 +119,8 @@ private:
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
+    QMap<QString, QString> mRenamedModelListValues;
+
     bool mCanEmitGraphsUpdatedSignal;
 
     int mHorizontalScrollBarValue;
@@ -122,6 +131,8 @@ private:
                         GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                         Core::Property *pParameterProperty,
                         const bool &pParameterX) const;
+
+    QString modelListValue(const QString &pFileName) const;
 
     void updateGraphInfo(Core::Property *pProperty, const QString &pFileName);
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);

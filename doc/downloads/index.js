@@ -18,14 +18,14 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 21, "month": 6, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 7, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
                            { "extension": ".exe" }, { "extension": ".zip" }
                          ]
                        },
-                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
                          "files": [
                            { "extension": ".tar.gz" }
                          ]
@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26 (see issue <a href=\"https://github.com/opencor/opencor/issues/1340\">#1340</a>)." }
+                       { "change": "<strong>General:</strong> make sure that we can find the plugin 'xcb' on some Linux machines (see issue <a href=\"https://github.com/opencor/opencor/issues/1383\">#1383</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,

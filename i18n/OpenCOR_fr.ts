@@ -183,6 +183,17 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::CheckForUpdatesEngine</name>
+    <message>
+        <source>The version information is mal-formatted.</source>
+        <translation>Les informations sur la version sont mal formatées.</translation>
+    </message>
+    <message>
+        <source>Please &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
+        <translation>Veuillez &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::MainWindow</name>
     <message>
         <source>New</source>
@@ -232,12 +243,12 @@
         <translation>l&apos;extension est installée et pleinement fonctionnelle.</translation>
     </message>
     <message>
-        <source>the plugin could not be loaded due to the following problem: %1.</source>
-        <translation>l&apos;extension n&apos;a pas pu être installée à cause du problème suivant : %1.</translation>
+        <source>the plugin could not be loaded (%1).</source>
+        <translation>l&apos;extension n&apos;a pas pu être installée (%1).</translation>
     </message>
     <message>
-        <source>this is not a plugin.</source>
-        <translation>ce n&apos;est pas une extension.</translation>
+        <source>this is not a plugin (%1).</source>
+        <translation>ce n&apos;est pas une extension (%1).</translation>
     </message>
     <message>
         <source>the plugin could not be loaded (one or several of the interfaces it supports are too old).</source>
@@ -351,14 +362,6 @@
 </context>
 <context>
     <name>QObject</name>
-    <message>
-        <source>The version information is mal-formatted.</source>
-        <translation>Les informations sur la version sont mal formatées.</translation>
-    </message>
-    <message>
-        <source>Please &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
-        <translation>Veuillez &lt;a href=&quot;http://opencor.ws/user/contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
-    </message>
     <message>
         <source>%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt; files.</source>
         <translation>%1 est un environnement de modélisation multiplate-forme, qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;.</translation>

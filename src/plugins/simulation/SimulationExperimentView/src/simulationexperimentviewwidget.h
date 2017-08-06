@@ -33,19 +33,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-namespace libsedml {
-    class SedAlgorithm;
-}   // namespace libsedml
+namespace OpenCOR {
 
 //==============================================================================
 
-namespace OpenCOR {
+namespace SimulationSupport {
+    class Simulation;
+}   // namespace SimulationSupport
+
+//==============================================================================
+
 namespace SimulationExperimentView {
 
 //==============================================================================
 
 class SimulationExperimentViewPlugin;
-class SimulationExperimentViewSimulation;
 class SimulationExperimentViewSimulationWidget;
 
 //==============================================================================
@@ -56,6 +58,8 @@ class SimulationExperimentViewWidget : public Core::ViewWidget
 
 public:
     explicit SimulationExperimentViewWidget(SimulationExperimentViewPlugin *pPlugin,
+                                            const Plugins &pCellmlEditingViewPlugins,
+                                            const Plugins &pCellmlSimulationViewPlugins,
                                             QWidget *pParent);
 
     virtual void loadSettings(QSettings *pSettings);
@@ -79,8 +83,11 @@ public:
 
     QStringList fileNames() const;
 
+    Plugins cellmlEditingViewPlugins() const;
+    Plugins cellmlSimulationViewPlugins() const;
+
     SimulationExperimentViewSimulationWidget * simulationWidget(const QString &pFileName) const;
-    SimulationExperimentViewSimulation * simulation(const QString &pFileName) const;
+    SimulationSupport::Simulation * simulation(const QString &pFileName) const;
     CellMLSupport::CellmlFileRuntime * runtime(const QString &pFileName) const;
 
     virtual QWidget * widget(const QString &pFileName);
@@ -92,6 +99,9 @@ public:
 
 private:
     SimulationExperimentViewPlugin *mPlugin;
+
+    Plugins mCellmlEditingViewPlugins;
+    Plugins mCellmlSimulationViewPlugins;
 
     QIntList mSimulationWidgetSizes;
     QIntList mContentsWidgetSizes;

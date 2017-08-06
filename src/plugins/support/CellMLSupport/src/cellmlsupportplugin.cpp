@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
+#include "cellmlinterface.h"
 #include "cellmlsupportplugin.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
@@ -49,6 +50,17 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
     return new PluginInfo(PluginInfo::Support, false, false,
                           QStringList() << "CellMLAPI" << "Compiler" << "StandardSupport",
                           descriptions);
+}
+
+//==============================================================================
+
+CellMLSupportPlugin::CellMLSupportPlugin()
+{
+    // Keep track of our file type interface
+
+    static CellmlInterfaceData data(qobject_cast<FileTypeInterface *>(this));
+
+    Core::globalInstance(CellmlInterfaceDataSignature, &data);
 }
 
 //==============================================================================

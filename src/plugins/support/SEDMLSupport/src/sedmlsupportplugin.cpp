@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "sedmlfilemanager.h"
+#include "sedmlinterface.h"
 #include "sedmlsupportplugin.h"
 
 //==============================================================================
@@ -49,6 +50,17 @@ PLUGININFO_FUNC SEDMLSupportPluginInfo()
     return new PluginInfo(PluginInfo::Support, false, false,
                           QStringList() << "CellMLSupport" << "SBMLAPI" << "SEDMLAPI" << "StandardSupport",
                           descriptions);
+}
+
+//==============================================================================
+
+SEDMLSupportPlugin::SEDMLSupportPlugin()
+{
+    // Keep track of our file type interface
+
+    static SedmlInterfaceData data(qobject_cast<FileTypeInterface *>(this));
+
+    Core::globalInstance(SedmlInterfaceDataSignature, &data);
 }
 
 //==============================================================================

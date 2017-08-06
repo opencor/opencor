@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "simulation.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
-#include "simulationexperimentviewsimulation.h"
 #include "simulationexperimentviewsimulationwidget.h"
 
 //==============================================================================
@@ -110,7 +110,7 @@ void SimulationExperimentViewInformationParametersWidget::contextMenuEvent(QCont
 
 //==============================================================================
 
-void SimulationExperimentViewInformationParametersWidget::initialize(SimulationExperimentViewSimulation *pSimulation,
+void SimulationExperimentViewInformationParametersWidget::initialize(SimulationSupport::Simulation *pSimulation,
                                                                      const bool &pReloadingView)
 {
     // Keep track of the simulation
@@ -372,7 +372,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
         property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
                               || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State));
 
-        property->setIcon(SimulationExperimentViewSimulationWidget::parameterIcon(parameter->type()));
+        property->setIcon(parameter->icon());
 
         property->setName(parameter->formattedName(), false);
         property->setUnit(parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()), false);
@@ -479,7 +479,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 
         // Add the current parameter to the 'current' component menu
 
-        QAction *parameterAction = componentMenu->addAction(SimulationExperimentViewSimulationWidget::parameterIcon(parameter->type()),
+        QAction *parameterAction = componentMenu->addAction(parameter->icon(),
                                                             parameter->formattedName());
 
         // Create a connection to handle the graph requirement against our

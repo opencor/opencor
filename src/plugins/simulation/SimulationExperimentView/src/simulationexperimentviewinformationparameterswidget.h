@@ -40,11 +40,13 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-namespace SimulationExperimentView {
+namespace SimulationSupport {
+    class Simulation;
+}   // namespace SimulationSupport
 
 //==============================================================================
 
-class SimulationExperimentViewSimulation;
+namespace SimulationExperimentView {
 
 //==============================================================================
 
@@ -57,7 +59,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(SimulationExperimentViewSimulation *pSimulation,
+    void initialize(SimulationSupport::Simulation *pSimulation,
                     const bool &pReloadingView = false);
     void finalize();
 
@@ -72,7 +74,7 @@ private:
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
-    SimulationExperimentViewSimulation *mSimulation;
+    SimulationSupport::Simulation *mSimulation;
 
     bool mNeedClearing;
     bool mVoiAccessible;

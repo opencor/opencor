@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // CellML Annotation view metadata edit details widget
 //==============================================================================
 
+#include "cellmlannotationview.h"
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
@@ -126,13 +127,13 @@ QString CellmlAnnotationViewMetadataEditDetailsItem::id() const
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pViewWidget,
-                                                                                             CellmlAnnotationViewEditingWidget *pViewEditingWidget,
+CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pAnnotationWidget,
+                                                                                             CellmlAnnotationViewEditingWidget *pEditingWidget,
                                                                                              CellMLSupport::CellmlFile *pCellmlFile,
                                                                                              QWidget *pParent) :
     Core::Widget(pParent),
-    mViewWidget(pViewWidget),
-    mViewEditingWidget(pViewEditingWidget),
+    mAnnotationWidget(pAnnotationWidget),
+    mEditingWidget(pEditingWidget),
     mTermValue(0),
     mAddTermButton(0),
     mTerm(QString()),
@@ -285,7 +286,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     //       pParent, but this wouldn't work here since updateGui() gets called
     //       as part of the creation of this metadata details widget...
 
-    setTabOrder(qobject_cast<QWidget *>(mViewEditingWidget->cellmlList()->treeViewWidget()),
+    setTabOrder(qobject_cast<QWidget *>(mEditingWidget->cellmlList()->treeViewWidget()),
                 mQualifierValue);
     setTabOrder(mQualifierValue, mLookUpQualifierButton);
     setTabOrder(mLookUpQualifierButton, mTermValue);
@@ -416,7 +417,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     //       we were then our busy widget would get 'reset' every time, which
     //       doesn't look nice...
 
-    if (   (pResetItemsGui && !mViewWidget->isBusyWidgetVisible())
+    if (   (pResetItemsGui && !mAnnotationWidget->isBusyWidgetVisible())
         || termIsDirect) {
         updateItemsGui(CellmlAnnotationViewMetadataEditDetailsItems(),
                        !termIsDirect && !pFilePermissionsChanged);
@@ -565,13 +566,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
             QString itemInformation = item.resource()+"|"+item.id();
             QString itemInformationSha1 = Core::sha1(itemInformation);
-            QString resourceUrl = CellmlAnnotationViewWidget::resourceUrl(item.resource());
-            QString idUrl = CellmlAnnotationViewWidget::idUrl(item.resource(), item.id());
 
             if (!mUrls.contains(item.resource()))
-                mUrls.insert(item.resource(), resourceUrl);
+                mUrls.insert(item.resource(), resourceUrl(item.resource()));
 
-            mUrls.insert(itemInformation, idUrl);
+            mUrls.insert(itemInformation, idUrl(item.resource(), item.id()));
 
             mItemInformationSha1s << itemInformationSha1;
 
@@ -830,7 +829,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 
         // Ask our parent to update its GUI with the added RDF triple
 
-        mViewEditingWidget->metadataDetails()->metadataViewDetails()->normalView()->addRdfTriple(rdfTriple);
+        mEditingWidget->metadataDetails()->metadataViewDetails()->normalView()->addRdfTriple(rdfTriple);
     } else {
         // We have clicked on a resource/id link, so start by enabling the
         // looking up of information
@@ -879,7 +878,7 @@ bool CellmlAnnotationViewMetadataEditDetailsWidget::isDirectTerm(const QString &
 {
     // Return whether the given term is a direct one
 
-    static const QRegularExpression DirectTermRegEx = QRegularExpression("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$");
+    static const QRegularExpression DirectTermRegEx = QRegularExpression("^"+CellMLSupport::ResourceRegEx+"/"+CellMLSupport::IdRegEx+"$");
 
     return    DirectTermRegEx.match(pTerm).hasMatch()
            && (pTerm.count('/') == 1);
@@ -1065,7 +1064,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
 
     // Ask our parent to update its GUI with the added RDF triple
 
-    mViewEditingWidget->metadataDetails()->metadataViewDetails()->normalView()->addRdfTriple(rdfTriple);
+    mEditingWidget->metadataDetails()->metadataViewDetails()->normalView()->addRdfTriple(rdfTriple);
 }
 
 //==============================================================================

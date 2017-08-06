@@ -248,13 +248,10 @@ void CollapsibleHeaderWidget::toggleCollapsedState()
 
 CollapsibleWidget::CollapsibleWidget(const QColor &pSeparatorColor,
                                      QWidget *pParent) :
-    Widget(QSize(), pParent)
+    Widget(QSize(), pParent),
+    mSeparatorColor(pSeparatorColor),
+    mHeaders(QList<CollapsibleHeaderWidget *>())
 {
-    // Some initialisations
-
-    mSeparatorColor = pSeparatorColor;
-    mHeaders = QList<CollapsibleHeaderWidget *>();
-
     // Create a vertical layout that will contain our headers and widgets
 
     mLayout = new QVBoxLayout(this);

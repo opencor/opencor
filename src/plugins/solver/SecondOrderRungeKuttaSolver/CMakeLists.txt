@@ -13,6 +13,7 @@ ADD_PLUGIN(SecondOrderRungeKuttaSolver
     HEADERS_MOC
         ../../solverinterface.h
 
+        src/secondorderrungekuttasolver.h
         src/secondorderrungekuttasolverplugin.h
     QT_MODULES
         Widgets

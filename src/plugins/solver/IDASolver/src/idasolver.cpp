@@ -25,12 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "ida/ida.h"
-#include "ida/ida_band.h"
-#include "ida/ida_dense.h"
-#include "ida/ida_spbcgs.h"
-#include "ida/ida_spgmr.h"
-#include "ida/ida_sptfqmr.h"
+#include "idas/idas.h"
+#include "idas/idas_band.h"
+#include "idas/idas_dense.h"
+#include "idas/idas_spbcgs.h"
+#include "idas/idas_spgmr.h"
+#include "idas/idas_sptfqmr.h"
 
 //==============================================================================
 
@@ -251,7 +251,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
         if (mProperties.contains(MaximumStepId)) {
             maximumStep = mProperties.value(MaximumStepId).toDouble();
         } else {
-            emit error(QObject::tr("the 'maximum step' property value could not be retrieved"));
+            emit error(tr("the 'maximum step' property value could not be retrieved"));
 
             return;
         }
@@ -259,7 +259,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
         if (mProperties.contains(MaximumNumberOfStepsId)) {
             maximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsId).toInt();
         } else {
-            emit error(QObject::tr("the 'maximum number of steps' property value could not be retrieved"));
+            emit error(tr("the 'maximum number of steps' property value could not be retrieved"));
 
             return;
         }
@@ -273,12 +273,12 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
                     if (   (upperHalfBandwidth < 0)
                         || (upperHalfBandwidth >= pRatesStatesCount)) {
-                        emit error(QObject::tr("the 'upper half-bandwidth' property must have a value between 0 and %1").arg(pRatesStatesCount-1));
+                        emit error(tr("the 'upper half-bandwidth' property must have a value between 0 and %1").arg(pRatesStatesCount-1));
 
                         return;
                     }
                 } else {
-                    emit error(QObject::tr("the 'upper half-bandwidth' property value could not be retrieved"));
+                    emit error(tr("the 'upper half-bandwidth' property value could not be retrieved"));
 
                     return;
                 }
@@ -288,18 +288,18 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
                     if (   (lowerHalfBandwidth < 0)
                         || (lowerHalfBandwidth >= pRatesStatesCount)) {
-                        emit error(QObject::tr("the 'lower half-bandwidth' property must have a value between 0 and %1").arg(pRatesStatesCount-1));
+                        emit error(tr("the 'lower half-bandwidth' property must have a value between 0 and %1").arg(pRatesStatesCount-1));
 
                         return;
                     }
                 } else {
-                    emit error(QObject::tr("the 'lower half-bandwidth' property value could not be retrieved"));
+                    emit error(tr("the 'lower half-bandwidth' property value could not be retrieved"));
 
                     return;
                 }
             }
         } else {
-            emit error(QObject::tr("the 'linear solver' property value could not be retrieved"));
+            emit error(tr("the 'linear solver' property value could not be retrieved"));
 
             return;
         }
@@ -308,12 +308,12 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
             relativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
 
             if (relativeTolerance < 0) {
-                emit error(QObject::tr("the 'relative tolerance' property must have a value greater than or equal to 0"));
+                emit error(tr("the 'relative tolerance' property must have a value greater than or equal to 0"));
 
                 return;
             }
         } else {
-            emit error(QObject::tr("the 'relative tolerance' property value could not be retrieved"));
+            emit error(tr("the 'relative tolerance' property value could not be retrieved"));
 
             return;
         }
@@ -322,12 +322,12 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
             absoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
 
             if (absoluteTolerance < 0) {
-                emit error(QObject::tr("the 'absolute tolerance' property must have a value greater than or equal to 0"));
+                emit error(tr("the 'absolute tolerance' property must have a value greater than or equal to 0"));
 
                 return;
             }
         } else {
-            emit error(QObject::tr("the 'absolute tolerance' property value could not be retrieved"));
+            emit error(tr("the 'absolute tolerance' property value could not be retrieved"));
 
             return;
         }
@@ -335,7 +335,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
         if (mProperties.contains(InterpolateSolutionId)) {
             mInterpolateSolution = mProperties.value(InterpolateSolutionId).toBool();
         } else {
-            emit error(QObject::tr("the 'interpolate solution' property value could not be retrieved"));
+            emit error(tr("the 'interpolate solution' property value could not be retrieved"));
 
             return;
         }

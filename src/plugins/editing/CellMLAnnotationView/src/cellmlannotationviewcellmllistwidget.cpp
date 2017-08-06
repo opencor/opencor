@@ -91,16 +91,12 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
                                                                              const QString &pText,
                                                                              iface::cellml_api::CellMLElement *pElement,
                                                                              const int &pNumber) :
-    QStandardItem(pText)
+    QStandardItem(pText),
+    mCategory(pCategory),
+    mType(pType),
+    mElement(pElement),
+    mNumber(pNumber)
 {
-    // Some initialisations
-
-    mCategory = pCategory;
-    mType = pType;
-
-    mElement = pElement;
-
-    mNumber = pNumber;
 }
 
 //==============================================================================
@@ -163,7 +159,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
         break;
     case Group:
-        setText(QObject::tr("Group #%1").arg(pNumber));
+        setText(tr("Group #%1").arg(pNumber));
 
         break;
     case RelationshipReference: {
@@ -179,7 +175,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
         break;
     case Connection:
-        setText(QObject::tr("Connection #%1").arg(pNumber));
+        setText(tr("Connection #%1").arg(pNumber));
 
         break;
     case ComponentMapping: {
@@ -437,14 +433,17 @@ void CellmlAnnotationViewCellmlListWidget::retranslateUi()
 
 void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem)
 {
-    // Retranslate some of the CellML element's children
+    // Retranslate our CellML element's children
 
     for (int i = 0, iMax = pCellmlElementItem->rowCount(); i < iMax; ++i)
         retranslateDataItem(static_cast<CellmlAnnotationViewCellmlElementItem *>(pCellmlElementItem->child(i)));
 
-    // Check whether we are dealing with a category
+    // Retranslate our CellML element item, if it's not our model's invisible
+    // root item
 
-    if (pCellmlElementItem->isCategory()) {
+    if (pCellmlElementItem == mTreeViewModel->invisibleRootItem())
+        return;
+    else if (pCellmlElementItem->isCategory()) {
         // We are dealing with a category, so retranslate its type
 
         switch (pCellmlElementItem->type()) {

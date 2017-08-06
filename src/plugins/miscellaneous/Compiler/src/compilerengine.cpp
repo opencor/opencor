@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "llvmclangbegin.h"
     #include "llvm/ADT/IntrusiveRefCntPtr.h"
+    #include "llvm/ExecutionEngine/ExecutionEngine.h"
     #include "llvm/Support/TargetSelect.h"
 
     #include "llvm-c/Core.h"
@@ -60,9 +61,18 @@ namespace Compiler {
 //==============================================================================
 
 CompilerEngine::CompilerEngine() :
-    mExecutionEngine(std::unique_ptr<llvm::ExecutionEngine>()),
+    mExecutionEngine(0),
     mError(QString())
 {
+}
+
+//==============================================================================
+
+CompilerEngine::~CompilerEngine()
+{
+    // Delete some internal objects
+
+    delete mExecutionEngine;
 }
 
 //==============================================================================
@@ -89,7 +99,9 @@ bool CompilerEngine::compileCode(const QString &pCode)
 {
     // Reset ourselves
 
-    mExecutionEngine.reset();
+    delete mExecutionEngine;
+
+    mExecutionEngine = 0;
 
     mError = QString();
 
@@ -205,7 +217,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     std::unique_ptr<clang::driver::Compilation> compilation(driver.BuildCompilation(compilationArguments));
 
     if (!compilation) {
-        mError = QObject::tr("the compilation object could not be created");
+        mError = tr("the compilation object could not be created");
 
         return false;
     }
@@ -217,7 +229,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     if (    (jobs.size() != 1)
         || !llvm::isa<clang::driver::Command>(*jobs.begin())) {
-        mError = QObject::tr("the compilation object must contain only one command");
+        mError = tr("the compilation object must contain only one command");
 
         return false;
     }
@@ -228,7 +240,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     QString commandName = command.getCreator().getName();
 
     if (commandName.compare("clang")) {
-        mError = QObject::tr("a <strong>clang</strong> command was expected, but a <strong>%1</strong> command was found instead").arg(commandName);
+        mError = tr("a <strong>clang</strong> command was expected, but a <strong>%1</strong> command was found instead").arg(commandName);
 
         return false;
     }
@@ -260,7 +272,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     compilerInstance.createDiagnostics();
 
     if (!compilerInstance.hasDiagnostics()) {
-        mError = QObject::tr("the diagnostics engine could not be created");
+        mError = tr("the diagnostics engine could not be created");
 
         return false;
     }
@@ -270,7 +282,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     std::unique_ptr<clang::CodeGenAction> codeGenerationAction(new clang::EmitLLVMOnlyAction(llvm::unwrap(LLVMGetGlobalContext())));
 
     if (!compilerInstance.ExecuteAction(*codeGenerationAction)) {
-        mError = QObject::tr("the code could not be compiled");
+        mError = tr("the code could not be compiled");
 
         return false;
     }
@@ -288,10 +300,10 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Create and keep track of an execution engine
 
-    mExecutionEngine.reset(llvm::EngineBuilder(std::move(module)).setEngineKind(llvm::EngineKind::JIT).create());
+    mExecutionEngine = llvm::EngineBuilder(std::move(module)).setEngineKind(llvm::EngineKind::JIT).create();
 
     if (!mExecutionEngine) {
-        mError = QObject::tr("the execution engine could not be created");
+        mError = tr("the execution engine could not be created");
 
         module.reset();
 

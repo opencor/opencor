@@ -9,7 +9,7 @@
     </message>
 </context>
 <context>
-    <name>QObject</name>
+    <name>OpenCOR::COMBINESupport::CombineArchive</name>
     <message>
         <source>the archive does not exist</source>
         <translation>l&apos;archive n&apos;existe pas</translation>
@@ -41,6 +41,10 @@
     <message>
         <source>no reference to the COMBINE archive itself could be found</source>
         <translation>aucune référence à l&apos;archive COMBINE elle-même n&apos;a pu être trouvée</translation>
+    </message>
+    <message>
+        <source>only COMBINE archives with one master file are supported</source>
+        <translation>seulement les archives COMBINE avec un fichier maître sont supportées</translation>
     </message>
 </context>
 </TS>

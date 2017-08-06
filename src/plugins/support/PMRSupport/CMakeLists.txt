@@ -10,6 +10,7 @@ ADD_PLUGIN(PMRSupport
 
         src/pmrauthentication.cpp
         src/pmrexposure.cpp
+        src/pmrsupport.cpp
         src/pmrsupportplugin.cpp
         src/pmrsupportpreferenceswidget.cpp
         src/pmrwebservice.cpp

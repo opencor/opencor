@@ -199,6 +199,41 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
 
 //==============================================================================
 
+QIcon CellmlFileRuntimeParameter::icon() const
+{
+    // Return an icon that illustrates the type of a parameter
+
+    static const QIcon VoiIcon              = QIcon(":/CellMLSupport/voi.png");
+    static const QIcon ConstantIcon         = QIcon(":/CellMLSupport/constant.png");
+    static const QIcon ComputedConstantIcon = QIcon(":/CellMLSupport/computedConstant.png");
+    static const QIcon RateIcon             = QIcon(":/CellMLSupport/rate.png");
+    static const QIcon StateIcon            = QIcon(":/CellMLSupport/state.png");
+    static const QIcon AlgebraicIcon        = QIcon(":/CellMLSupport/algebraic.png");
+    static const QIcon ErrorNodeIcon        = QIcon(":/oxygen/emblems/emblem-important.png");
+
+    switch (mType) {
+    case Voi:
+        return VoiIcon;
+    case Constant:
+        return ConstantIcon;
+    case ComputedConstant:
+        return ComputedConstantIcon;
+    case Rate:
+        return RateIcon;
+    case State:
+        return StateIcon;
+    case Algebraic:
+        return AlgebraicIcon;
+    default:
+        // Not a relevant type, so return an error node icon
+        // Note: we should never reach this point...
+
+        return ErrorNodeIcon;
+    }
+}
+
+//==============================================================================
+
 CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
     mCellmlFile(pCellmlFile),
     mOdeCodeInformation(0),
@@ -515,7 +550,7 @@ void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
 void CellmlFileRuntime::couldNotGenerateModelCodeIssue(const QString &pExtraInfo)
 {
     mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                               QObject::tr("the model code could not be generated (%1)").arg(pExtraInfo));
+                               tr("the model code could not be generated (%1)").arg(pExtraInfo));
 }
 
 //==============================================================================
@@ -523,7 +558,7 @@ void CellmlFileRuntime::couldNotGenerateModelCodeIssue(const QString &pExtraInfo
 void CellmlFileRuntime::unknownProblemDuringModelCodeGenerationIssue()
 {
     mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                               QObject::tr("an unknown problem occurred while trying to generate the model code"));
+                               tr("an unknown problem occurred while trying to generate the model code"));
 }
 
 //==============================================================================
@@ -543,17 +578,17 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
 
         if (constraintLevel == iface::cellml_services::UNDERCONSTRAINED) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       QObject::tr("the model is underconstrained (i.e. some variables need to be initialised or computed)"));
+                                       tr("the model is underconstrained (i.e. some variables need to be initialised or computed)"));
         } else if (constraintLevel == iface::cellml_services::UNSUITABLY_CONSTRAINED) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       QObject::tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used)"));
+                                       tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used)"));
         } else if (constraintLevel == iface::cellml_services::OVERCONSTRAINED) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       QObject::tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)"));
+                                       tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)"));
         }
     } else {
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   QObject::tr("a problem occurred during the generation of the model code"));
+                                   tr("a problem occurred during the generation of the model code"));
     }
 }
 
@@ -940,7 +975,7 @@ void CellmlFileRuntime::update()
                     //       [CellMLSupport]/tests/data/bond_graph_model_old.cellml...
 
                     mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                               QObject::tr("a model can have only one variable of integration"));
+                                               tr("a model can have only one variable of integration"));
                 }
             }
 
@@ -1045,7 +1080,7 @@ void CellmlFileRuntime::update()
 
     if (modelCode.contains("defint(func")) {
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   QObject::tr("definite integrals are not yet supported"));
+                                   tr("definite integrals are not yet supported"));
     } else if (!mCompilerEngine->compileCode(modelCode)) {
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                    mCompilerEngine->error());
@@ -1099,7 +1134,7 @@ void CellmlFileRuntime::update()
 
         if (!functionsOk) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       QObject::tr("an unexpected problem occurred while trying to retrieve the model functions"));
+                                       tr("an unexpected problem occurred while trying to retrieve the model functions"));
 
             reset(true, false);
         }

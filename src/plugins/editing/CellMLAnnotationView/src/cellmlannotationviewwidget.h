@@ -70,9 +70,6 @@ public:
 
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
 
-    static QString resourceUrl(const QString &pResource);
-    static QString idUrl(const QString &pResource, const QString &pId);
-
 private:
     CellMLAnnotationViewPlugin *mPlugin;
 

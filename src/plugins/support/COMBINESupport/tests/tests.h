@@ -25,10 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "combinearchiveissue.h"
-
-//==============================================================================
-
 #include <QObject>
 
 //==============================================================================
@@ -47,7 +43,6 @@ class Tests : public QObject
 
 private:
     OpenCOR::COMBINESupport::CombineArchive *mCombineArchive;
-    OpenCOR::COMBINESupport::CombineArchiveIssues mIssues;
 
     void doBasicTests(const QString &pFileName = QString());
 

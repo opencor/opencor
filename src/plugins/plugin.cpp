@@ -45,7 +45,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QDir>
-#include <QFileInfo>
 #include <QLibrary>
 #include <QPluginLoader>
 #include <QSettings>
@@ -259,6 +258,17 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
         //       version of PluginInfo...
 
         mStatus = Plugin::info(pFileName)?OldPlugin:NotPlugin;
+
+        if (mStatus == NotPlugin) {
+            // Apparently, we are not dealing with a plugin, so load it so that
+            // we can retrieve its corresponding error
+
+            QPluginLoader pluginLoader(pFileName);
+
+            pluginLoader.load();
+
+            mStatusErrors = pluginLoader.errorString();
+        }
     }
 }
 

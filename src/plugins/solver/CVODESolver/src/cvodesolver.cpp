@@ -25,14 +25,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "cvode/cvode.h"
-#include "cvode/cvode_band.h"
-#include "cvode/cvode_bandpre.h"
-#include "cvode/cvode_dense.h"
-#include "cvode/cvode_diag.h"
-#include "cvode/cvode_spbcgs.h"
-#include "cvode/cvode_spgmr.h"
-#include "cvode/cvode_sptfqmr.h"
+#include "cvodes/cvodes.h"
+#include "cvodes/cvodes_band.h"
+#include "cvodes/cvodes_bandpre.h"
+#include "cvodes/cvodes_dense.h"
+#include "cvodes/cvodes_diag.h"
+#include "cvodes/cvodes_spbcgs.h"
+#include "cvodes/cvodes_spgmr.h"
+#include "cvodes/cvodes_sptfqmr.h"
 
 //==============================================================================
 
@@ -160,7 +160,7 @@ void CvodeSolver::initialize(const double &pVoiStart,
         if (mProperties.contains(MaximumStepId)) {
             maximumStep = mProperties.value(MaximumStepId).toDouble();
         } else {
-            emit error(QObject::tr("the 'maximum step' property value could not be retrieved"));
+            emit error(tr("the 'maximum step' property value could not be retrieved"));
 
             return;
         }
@@ -168,7 +168,7 @@ void CvodeSolver::initialize(const double &pVoiStart,
         if (mProperties.contains(MaximumNumberOfStepsId)) {
             maximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsId).toInt();
         } else {
-            emit error(QObject::tr("the 'maximum number of steps' property value could not be retrieved"));
+            emit error(tr("the 'maximum number of steps' property value could not be retrieved"));
 
             return;
         }
@@ -176,7 +176,7 @@ void CvodeSolver::initialize(const double &pVoiStart,
         if (mProperties.contains(IntegrationMethodId)) {
             integrationMethod = mProperties.value(IntegrationMethodId).toString();
         } else {
-            emit error(QObject::tr("the 'integration method' property value could not be retrieved"));
+            emit error(tr("the 'integration method' property value could not be retrieved"));
 
             return;
         }
@@ -209,7 +209,7 @@ void CvodeSolver::initialize(const double &pVoiStart,
                         if (mProperties.contains(PreconditionerId)) {
                             preconditioner = mProperties.value(PreconditionerId).toString();
                         } else {
-                            emit error(QObject::tr("the 'preconditioner' property value could not be retrieved"));
+                            emit error(tr("the 'preconditioner' property value could not be retrieved"));
 
                             return;
                         }
@@ -228,12 +228,12 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
                             if (   (upperHalfBandwidth < 0)
                                 || (upperHalfBandwidth >= pRatesStatesCount)) {
-                                emit error(QObject::tr("the 'upper half-bandwidth' property must have a value between 0 and %1").arg(pRatesStatesCount-1));
+                                emit error(tr("the 'upper half-bandwidth' property must have a value between 0 and %1").arg(pRatesStatesCount-1));
 
                                 return;
                             }
                         } else {
-                            emit error(QObject::tr("the 'upper half-bandwidth' property value could not be retrieved"));
+                            emit error(tr("the 'upper half-bandwidth' property value could not be retrieved"));
 
                             return;
                         }
@@ -243,24 +243,24 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
                             if (   (lowerHalfBandwidth < 0)
                                 || (lowerHalfBandwidth >= pRatesStatesCount)) {
-                                emit error(QObject::tr("the 'lower half-bandwidth' property must have a value between 0 and %1").arg(pRatesStatesCount-1));
+                                emit error(tr("the 'lower half-bandwidth' property must have a value between 0 and %1").arg(pRatesStatesCount-1));
 
                                 return;
                             }
                         } else {
-                            emit error(QObject::tr("the 'lower half-bandwidth' property value could not be retrieved"));
+                            emit error(tr("the 'lower half-bandwidth' property value could not be retrieved"));
 
                             return;
                         }
                     }
                 } else {
-                    emit error(QObject::tr("the 'linear solver' property value could not be retrieved"));
+                    emit error(tr("the 'linear solver' property value could not be retrieved"));
 
                     return;
                 }
             }
         } else {
-            emit error(QObject::tr("the 'iteration type' property value could not be retrieved"));
+            emit error(tr("the 'iteration type' property value could not be retrieved"));
 
             return;
         }
@@ -269,12 +269,12 @@ void CvodeSolver::initialize(const double &pVoiStart,
             relativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
 
             if (relativeTolerance < 0) {
-                emit error(QObject::tr("the 'relative tolerance' property must have a value greater than or equal to 0"));
+                emit error(tr("the 'relative tolerance' property must have a value greater than or equal to 0"));
 
                 return;
             }
         } else {
-            emit error(QObject::tr("the 'relative tolerance' property value could not be retrieved"));
+            emit error(tr("the 'relative tolerance' property value could not be retrieved"));
 
             return;
         }
@@ -283,12 +283,12 @@ void CvodeSolver::initialize(const double &pVoiStart,
             absoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
 
             if (absoluteTolerance < 0) {
-                emit error(QObject::tr("the 'absolute tolerance' property must have a value greater than or equal to 0"));
+                emit error(tr("the 'absolute tolerance' property must have a value greater than or equal to 0"));
 
                 return;
             }
         } else {
-            emit error(QObject::tr("the 'absolute tolerance' property value could not be retrieved"));
+            emit error(tr("the 'absolute tolerance' property value could not be retrieved"));
 
             return;
         }
@@ -296,7 +296,7 @@ void CvodeSolver::initialize(const double &pVoiStart,
         if (mProperties.contains(InterpolateSolutionId)) {
             mInterpolateSolution = mProperties.value(InterpolateSolutionId).toBool();
         } else {
-            emit error(QObject::tr("the 'interpolate solution' property value could not be retrieved"));
+            emit error(tr("the 'interpolate solution' property value could not be retrieved"));
 
             return;
         }

@@ -65,7 +65,7 @@ CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
     mEditorListWidget = new EditorWidget::EditorListWidget(this);
 
     mMathmlViewerWidget->setObjectName("MathmlViewerWidget");
-    mEditorWidget->setObjectName("mEditorWidget");
+    mEditorWidget->setObjectName("EditorWidget");
 
     connect(mEditorListWidget, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
             this, SLOT(itemRequested(OpenCOR::EditorWidget::EditorListItem *)));
@@ -129,8 +129,13 @@ void CellmlEditingViewWidget::saveSettings(QSettings *pSettings) const
 
     // Keep track of our MathML viewer and editor widgets' settings
 
-    mMathmlViewerWidget->saveSettings(pSettings);
-    mEditorWidget->saveSettings(pSettings);
+    pSettings->beginGroup(mMathmlViewerWidget->objectName());
+        mMathmlViewerWidget->saveSettings(pSettings);
+    pSettings->endGroup();
+
+    pSettings->beginGroup(mEditorWidget->objectName());
+        mEditorWidget->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -146,21 +151,21 @@ void CellmlEditingViewWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlEditingViewWidget::updateSettings(CellmlEditingViewWidget *pCellmlEditingViewWidget)
+void CellmlEditingViewWidget::updateSettings(CellmlEditingViewWidget *pEditingWidget)
 {
     // Make sure that we are given another editing widget
 
-    if (!pCellmlEditingViewWidget || (pCellmlEditingViewWidget == this))
+    if (!pEditingWidget || (pEditingWidget == this))
         return;
 
     // Update our sizes, MathML viewer and editor widgets' settings
 
-    mEditingWidgetSizes = pCellmlEditingViewWidget->editingWidgetSizes();
+    mEditingWidgetSizes = pEditingWidget->editingWidgetSizes();
 
     setSizes(mEditingWidgetSizes);
 
-    mMathmlViewerWidget->updateSettings(pCellmlEditingViewWidget->mathmlViewer());
-    mEditorWidget->updateSettings(pCellmlEditingViewWidget->editorWidget());
+    mMathmlViewerWidget->updateSettings(pEditingWidget->mathmlViewer());
+    mEditorWidget->updateSettings(pEditingWidget->editorWidget());
 }
 
 //==============================================================================

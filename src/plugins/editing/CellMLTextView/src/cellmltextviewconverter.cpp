@@ -596,7 +596,7 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
 
     if (!baseUnits.isEmpty() && baseUnits.compare("yes") && baseUnits.compare("no")) {
         mErrorLine = pDomNode.lineNumber();
-        mErrorMessage = QObject::tr("A 'base_units' attribute must have a value of 'yes' or 'no'.");
+        mErrorMessage = tr("A 'base_units' attribute must have a value of 'yes' or 'no'.");
 
         return false;
     }
@@ -945,7 +945,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
         // Make sure that we have at least one child
 
         if (!currentChildNodesCount) {
-            mErrorMessage = QObject::tr("An '%1' element must have at least one child element.").arg(domNode.localName());
+            mErrorMessage = tr("An '%1' element must have at least one child element.").arg(domNode.localName());
         } else {
             domNode = childNode(domNode, 0);
 
@@ -953,7 +953,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
 
             if (mathmlNode(domNode, "eq")) {
                 if (currentChildNodesCount != 3) {
-                    mErrorMessage = QObject::tr("An '%1' element must have two siblings.").arg(domNode.localName());
+                    mErrorMessage = tr("An '%1' element must have two siblings.").arg(domNode.localName());
                 } else if (mAssignmentDone) {
                     return processOperatorNode(" == ", pDomNode, pHasError);
                 } else {
@@ -965,13 +965,13 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                        || mathmlNode(domNode, "lt")
                        || mathmlNode(domNode, "leq")) {
                 if (currentChildNodesCount != 3)
-                    mErrorMessage = QObject::tr("An '%1' element must have two siblings.").arg(domNode.localName());
+                    mErrorMessage = tr("An '%1' element must have two siblings.").arg(domNode.localName());
                 else
                     return processOperatorNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
             } else if (   mathmlNode(domNode, "gt")
                        || mathmlNode(domNode, "geq")) {
                 if (currentChildNodesCount != 3)
-                    mErrorMessage = QObject::tr("A '%1' element must have two siblings.").arg(domNode.localName());
+                    mErrorMessage = tr("A '%1' element must have two siblings.").arg(domNode.localName());
                 else
                     return processOperatorNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
 
@@ -980,42 +980,42 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
             } else if (   mathmlNode(domNode, "plus")
                        || mathmlNode(domNode, "minus")) {
                 if (currentChildNodesCount < 2)
-                    mErrorMessage = QObject::tr("A '%1' element must have at least one sibling.").arg(domNode.localName());
+                    mErrorMessage = tr("A '%1' element must have at least one sibling.").arg(domNode.localName());
                 else
                     return processOperatorNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
             } else if (   mathmlNode(domNode, "times")
                        || mathmlNode(domNode, "divide")) {
                 if (currentChildNodesCount < 3)
-                    mErrorMessage = QObject::tr("A '%1' element must have at least two siblings.").arg(domNode.localName());
+                    mErrorMessage = tr("A '%1' element must have at least two siblings.").arg(domNode.localName());
                 else
                     return processOperatorNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
             } else if (mathmlNode(domNode, "power")) {
                 if (currentChildNodesCount != 3)
-                    mErrorMessage = QObject::tr("A '%1' element must have two siblings.").arg(domNode.localName());
+                    mErrorMessage = tr("A '%1' element must have two siblings.").arg(domNode.localName());
                 else
                     return processPowerNode(pDomNode, pHasError);
             } else if (mathmlNode(domNode, "root")) {
                 if ((currentChildNodesCount != 2) && (currentChildNodesCount != 3))
-                    mErrorMessage = QObject::tr("A '%1' element must have either one or two siblings.").arg(domNode.localName());
+                    mErrorMessage = tr("A '%1' element must have either one or two siblings.").arg(domNode.localName());
                 else
                     return processRootNode(pDomNode, pHasError);
             } else if (   mathmlNode(domNode, "abs")
                        || mathmlNode(domNode, "exp")
                        || mathmlNode(domNode, "ln")) {
                 if (currentChildNodesCount != 2)
-                    mErrorMessage = QObject::tr("An '%1' element must have one sibling.").arg(domNode.localName());
+                    mErrorMessage = tr("An '%1' element must have one sibling.").arg(domNode.localName());
                 else
                     return processFunctionNode(domNode.localName(), pDomNode, pHasError);
             } else if (mathmlNode(domNode, "log")) {
                 if ((currentChildNodesCount != 2) && (currentChildNodesCount != 3))
-                    mErrorMessage = QObject::tr("A '%1' element must have either one or two siblings.").arg(domNode.localName());
+                    mErrorMessage = tr("A '%1' element must have either one or two siblings.").arg(domNode.localName());
                 else
                     return processLogNode(pDomNode, pHasError);
             } else if (   mathmlNode(domNode, "ceiling")
                        || mathmlNode(domNode, "floor")
                        || mathmlNode(domNode, "factorial")) {
                 if (currentChildNodesCount != 2)
-                    mErrorMessage = QObject::tr("A '%1' element must have one sibling.").arg(domNode.localName());
+                    mErrorMessage = tr("A '%1' element must have one sibling.").arg(domNode.localName());
                 else
                     return processFunctionNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
 
@@ -1024,17 +1024,17 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
             } else if (   mathmlNode(domNode, "and")
                        || mathmlNode(domNode, "or")) {
                 if (currentChildNodesCount < 3)
-                    mErrorMessage = QObject::tr("An '%1' element must have at least two siblings.").arg(domNode.localName());
+                    mErrorMessage = tr("An '%1' element must have at least two siblings.").arg(domNode.localName());
                 else
                     return processOperatorNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
             } else if (mathmlNode(domNode, "xor")) {
                 if (currentChildNodesCount < 3)
-                    mErrorMessage = QObject::tr("A '%1' element must have at least two siblings.").arg(domNode.localName());
+                    mErrorMessage = tr("A '%1' element must have at least two siblings.").arg(domNode.localName());
                 else
                     return processOperatorNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
             } else if (mathmlNode(domNode, "not")) {
                 if (currentChildNodesCount != 2)
-                    mErrorMessage = QObject::tr("A '%1' element must have one sibling.").arg(domNode.localName());
+                    mErrorMessage = tr("A '%1' element must have one sibling.").arg(domNode.localName());
                 else
                     return processNotNode(pDomNode, pHasError);
 
@@ -1042,7 +1042,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
 
             } else if (mathmlNode(domNode, "diff")) {
                 if (currentChildNodesCount != 3)
-                    mErrorMessage = QObject::tr("A '%1' element must have two siblings.").arg(domNode.localName());
+                    mErrorMessage = tr("A '%1' element must have two siblings.").arg(domNode.localName());
                 else
                     return processDiffNode(pDomNode, pHasError);
 
@@ -1050,7 +1050,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
 
             } else if (mathmlNode(domNode, "min") || mathmlNode(domNode, "max")) {
                 if (currentChildNodesCount < 3)
-                    mErrorMessage = QObject::tr("A '%1' element must have at least two siblings.").arg(domNode.localName());
+                    mErrorMessage = tr("A '%1' element must have at least two siblings.").arg(domNode.localName());
                 else
                     return processFunctionNode(domNode.localName(), pDomNode, pHasError);
 
@@ -1058,7 +1058,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
 
             } else if (mathmlNode(domNode, "gcd") || mathmlNode(domNode, "lcm")) {
                 if (currentChildNodesCount < 3)
-                    mErrorMessage = QObject::tr("A '%1' element must have at least two siblings.").arg(domNode.localName());
+                    mErrorMessage = tr("A '%1' element must have at least two siblings.").arg(domNode.localName());
                 else
                     return processFunctionNode(domNode.localName(), pDomNode, pHasError);
 
@@ -1069,7 +1069,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                        || mathmlNode(domNode, "sinh") || mathmlNode(domNode, "cosh") || mathmlNode(domNode, "tanh")
                        || mathmlNode(domNode, "sech") || mathmlNode(domNode, "csch") || mathmlNode(domNode, "coth")) {
                 if (currentChildNodesCount != 2)
-                    mErrorMessage = QObject::tr("A '%1' element must have one sibling.").arg(domNode.localName());
+                    mErrorMessage = tr("A '%1' element must have one sibling.").arg(domNode.localName());
                 else
                     return processFunctionNode(domNode.localName(), pDomNode, pHasError);
             } else if (   mathmlNode(domNode,  "arcsin") || mathmlNode(domNode,  "arccos") || mathmlNode(domNode,  "arctan")
@@ -1077,7 +1077,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                        || mathmlNode(domNode, "arcsinh") || mathmlNode(domNode, "arccosh") || mathmlNode(domNode, "arctanh")
                        || mathmlNode(domNode, "arcsech") || mathmlNode(domNode, "arccsch") || mathmlNode(domNode, "arccoth")) {
                 if (currentChildNodesCount != 2)
-                    mErrorMessage = QObject::tr("An '%1' element must have one sibling.").arg(domNode.localName());
+                    mErrorMessage = tr("An '%1' element must have one sibling.").arg(domNode.localName());
                 else
                     return processFunctionNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
 
@@ -1085,7 +1085,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
 
             } else if (mathmlNode(domNode, "rem")) {
                 if (currentChildNodesCount != 3)
-                    mErrorMessage = QObject::tr("A '%1' element must have two siblings.").arg(domNode.localName());
+                    mErrorMessage = tr("A '%1' element must have two siblings.").arg(domNode.localName());
                 else
                     return processFunctionNode(domNode.localName(), pDomNode, pHasError);
 
@@ -1097,16 +1097,16 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
         }
     } else if (mathmlNode(domNode, "piecewise")) {
         if (mPiecewiseStatementUsed) {
-            mErrorMessage = QObject::tr("A 'piecewise' element cannot be used within another 'piecewise' element.");
+            mErrorMessage = tr("A 'piecewise' element cannot be used within another 'piecewise' element.");
         } else {
             QDomNode parentNode = domNode.parentNode();
 
             if (   (parentNode != mTopMathmlNode)
                 || parentNode.localName().compare("apply")
                 || childNode(parentNode, 0).localName().compare("eq")) {
-                mErrorMessage = QObject::tr("A 'piecewise' element can only be used within a top-level 'apply' element that has an 'eq' element as its first child element.");
+                mErrorMessage = tr("A 'piecewise' element can only be used within a top-level 'apply' element that has an 'eq' element as its first child element.");
             } else if (!currentChildNodesCount) {
-                mErrorMessage = QObject::tr("A '%1' element must have at least one child element.").arg(domNode.localName());
+                mErrorMessage = tr("A '%1' element must have at least one child element.").arg(domNode.localName());
             } else {
                 mPiecewiseStatementUsed = true;
 
@@ -1115,12 +1115,12 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
         }
     } else if (mathmlNode(domNode, "piece")) {
         if (currentChildNodesCount != 2)
-            mErrorMessage = QObject::tr("A '%1' element must have two child elements.").arg(domNode.localName());
+            mErrorMessage = tr("A '%1' element must have two child elements.").arg(domNode.localName());
         else
             return processPieceNode(pDomNode, pHasError);
     } else if (mathmlNode(domNode, "otherwise")) {
         if (currentChildNodesCount != 1)
-            mErrorMessage = QObject::tr("An '%1' element must have one child element.").arg(domNode.localName());
+            mErrorMessage = tr("An '%1' element must have one child element.").arg(domNode.localName());
         else
             return processOtherwiseNode(pDomNode, pHasError);
 
@@ -1133,27 +1133,27 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
             // Either no type (i.e. real type by default) or real type
 
             if (currentChildNodesCount != 1)
-                mErrorMessage = QObject::tr("A '%1' element must have a value.").arg(domNode.localName());
+                mErrorMessage = tr("A '%1' element must have a value.").arg(domNode.localName());
             else
                 return childNode(domNode, 0).nodeValue().trimmed()+"{"+cellmlAttributeNodeValue(domNode, "units")+"}";
         } else if (!type.compare("e-notation")) {
             // E-notation type
 
             if (currentChildNodesCount != 3) {
-                mErrorMessage = QObject::tr("A 'cn' element with an 'e-notation' type must have three child elements.");
+                mErrorMessage = tr("A 'cn' element with an 'e-notation' type must have three child elements.");
             } else {
                 QDomNode childNode1 = childNode(domNode, 0);
                 QDomNode childNode2 = childNode(domNode, 1);
                 QDomNode childNode3 = childNode(domNode, 2);
 
                 if (childNode1.nodeType() != QDomNode::TextNode) {
-                    mErrorMessage = QObject::tr("The first child element of a 'cn' element with an 'e-notation' type must be of 'text' type.");
+                    mErrorMessage = tr("The first child element of a 'cn' element with an 'e-notation' type must be of 'text' type.");
                 } else if (childNode2.nodeType() != QDomNode::ElementNode) {
-                    mErrorMessage = QObject::tr("The second child element of a 'cn' element with an 'e-notation' type must be of 'element' type.");
+                    mErrorMessage = tr("The second child element of a 'cn' element with an 'e-notation' type must be of 'element' type.");
                 } else if (childNode2.localName().compare("sep")) {
-                    mErrorMessage = QObject::tr("The name of the second child element of a 'cn' element with an 'e-notation' type must be 'sep'.");
+                    mErrorMessage = tr("The name of the second child element of a 'cn' element with an 'e-notation' type must be 'sep'.");
                 } else if (childNode3.nodeType() != QDomNode::TextNode) {
-                    mErrorMessage = QObject::tr("The third child element of a 'cn' element with an 'e-notation' type must be of 'text' type.");
+                    mErrorMessage = tr("The third child element of a 'cn' element with an 'e-notation' type must be of 'text' type.");
                 } else {
                     return childNode1.nodeValue().trimmed()+"e"+childNode3.nodeValue().trimmed()+"{"+cellmlAttributeNodeValue(domNode, "units")+"}";
                 }
@@ -1165,15 +1165,15 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                    || !type.compare("constant")) {
             // A known, but unsupported type
 
-            mErrorMessage = QObject::tr("The 'cn' element uses a '%1' type that is unsupported.").arg(type);
+            mErrorMessage = tr("The 'cn' element uses a '%1' type that is unsupported.").arg(type);
         } else {
             // An unknown type
 
-            mErrorMessage = QObject::tr("The 'cn' element uses a '%1' type that is unknown.").arg(type);
+            mErrorMessage = tr("The 'cn' element uses a '%1' type that is unknown.").arg(type);
         }
     } else if (mathmlNode(domNode, "ci")) {
         if (currentChildNodesCount != 1)
-            mErrorMessage = QObject::tr("A '%1' element must have a value.").arg(domNode.localName());
+            mErrorMessage = tr("A '%1' element must have a value.").arg(domNode.localName());
         else
             return childNode(domNode, 0).nodeValue().trimmed();
 
@@ -1182,12 +1182,12 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
     } else if (   mathmlNode(domNode, "degree")
                || mathmlNode(domNode, "logbase")) {
         if (currentChildNodesCount != 1)
-            mErrorMessage = QObject::tr("A '%1' element must have one child element.").arg(domNode.localName());
+            mErrorMessage = tr("A '%1' element must have one child element.").arg(domNode.localName());
         else
             return processChildNode(pDomNode, pHasError);
     } else if (mathmlNode(domNode, "bvar")) {
         if ((currentChildNodesCount != 1) && (currentChildNodesCount != 2))
-            mErrorMessage = QObject::tr("A '%1' element must have one or two child elements.").arg(domNode.localName());
+            mErrorMessage = tr("A '%1' element must have one or two child elements.").arg(domNode.localName());
         else
             return processBvarNode(pDomNode, pHasError);
 
@@ -1198,17 +1198,17 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                || mathmlNode(domNode, "notanumber")
                || mathmlNode(domNode, "pi")) {
         if (currentChildNodesCount == 1)
-            mErrorMessage = QObject::tr("A '%1' element cannot have a child element.").arg(domNode.localName());
+            mErrorMessage = tr("A '%1' element cannot have a child element.").arg(domNode.localName());
         else if (currentChildNodesCount)
-            mErrorMessage = QObject::tr("A '%1' element cannot have child elements.").arg(domNode.localName());
+            mErrorMessage = tr("A '%1' element cannot have child elements.").arg(domNode.localName());
         else
             return mMappings.value(domNode.localName());
     } else if (   mathmlNode(domNode, "infinity")
                || mathmlNode(domNode, "exponentiale")) {
         if (currentChildNodesCount == 1)
-            mErrorMessage = QObject::tr("An '%1' element cannot have a child element.").arg(domNode.localName());
+            mErrorMessage = tr("An '%1' element cannot have a child element.").arg(domNode.localName());
         else if (currentChildNodesCount)
-            mErrorMessage = QObject::tr("An '%1' element cannot have child elements.").arg(domNode.localName());
+            mErrorMessage = tr("An '%1' element cannot have child elements.").arg(domNode.localName());
         else
             return mMappings.value(domNode.localName());
 
@@ -1792,8 +1792,8 @@ QString CellMLTextViewConverter::processRootNode(const QDomNode &pDomNode,
                         res = "sqrt("+a+")";
                 } else {
                     if (childNode.localName().compare("degree")) {
-                        mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("root")
-                                                                                                                                    .arg("degree");
+                        mErrorMessage = tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("root")
+                                                                                                                           .arg("degree");
                         mErrorLine = childNode.lineNumber();
 
                         pHasError = true;
@@ -1955,8 +1955,8 @@ QString CellMLTextViewConverter::processDiffNode(const QDomNode &pDomNode,
                 ;
             } else if (childElementNodeNumber == 1) {
                 if (childNode.localName().compare("bvar")) {
-                    mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("diff")
-                                                                                                                                .arg("bvar");
+                    mErrorMessage = tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("diff")
+                                                                                                                       .arg("bvar");
                     mErrorLine = childNode.lineNumber();
 
                     pHasError = true;
@@ -2041,8 +2041,8 @@ QString CellMLTextViewConverter::processBvarNode(const QDomNode &pDomNode,
                     return QString();
             } else {
                 if (childNode.localName().compare("degree")) {
-                    mErrorMessage = QObject::tr("The second child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar")
-                                                                                                                                             .arg("degree");
+                    mErrorMessage = tr("The second child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar")
+                                                                                                                                    .arg("degree");
                     mErrorLine = childNode.lineNumber();
 
                     pHasError = true;
@@ -2162,7 +2162,7 @@ bool CellMLTextViewConverter::processRelationshipRefNode(const QDomNode &pDomNod
             isEncapsulation = true;
         } else if (relationship.compare("containment")) {
             mErrorLine = pDomNode.lineNumber();
-            mErrorMessage = QObject::tr("A 'relationship' attribute in the CellML namespace must have a value of 'encapsulation' or 'containment'.");
+            mErrorMessage = tr("A 'relationship' attribute in the CellML namespace must have a value of 'encapsulation' or 'containment'.");
 
             return false;
         }
@@ -2170,7 +2170,7 @@ bool CellMLTextViewConverter::processRelationshipRefNode(const QDomNode &pDomNod
 
     if (isEncapsulation && !name.isEmpty()) {
         mErrorLine = pDomNode.lineNumber();
-        mErrorMessage = QObject::tr("A 'relationship_ref' element with a 'relationship' attribute value of 'encapsulation' must not define a 'name' attribute.");
+        mErrorMessage = tr("A 'relationship_ref' element with a 'relationship' attribute value of 'encapsulation' must not define a 'name' attribute.");
 
         return false;
     }
@@ -2310,7 +2310,7 @@ bool CellMLTextViewConverter::processMapComponentsNode(const QDomNode &pDomNode,
 
     if (!pMapComponents.isEmpty()) {
         mErrorLine = pDomNode.lineNumber();
-        mErrorMessage = QObject::tr("A 'connection' element must contain exactly one 'map_components' element.");
+        mErrorMessage = tr("A 'connection' element must contain exactly one 'map_components' element.");
 
         return false;
     }
@@ -2394,67 +2394,67 @@ bool CellMLTextViewConverter::processUnknownNode(const QDomNode &pDomNode,
         break;
     case QDomNode::AttributeNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    QObject::tr("An attribute was found in the original CellML file, but it was not processed."));
+                                                    tr("An attribute was found in the original CellML file, but it was not processed."));
 
         break;
     case QDomNode::TextNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    QObject::tr("Some text was found in the original CellML file, but it was not processed."));
+                                                    tr("Some text was found in the original CellML file, but it was not processed."));
 
         break;
     case QDomNode::CDATASectionNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    QObject::tr("A CDATA section was found in the original CellML file, but it was not processed."));
+                                                    tr("A CDATA section was found in the original CellML file, but it was not processed."));
 
         break;
     case QDomNode::EntityReferenceNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    QObject::tr("An entity reference was found in the original CellML file, but it was not processed."));
+                                                    tr("An entity reference was found in the original CellML file, but it was not processed."));
 
         break;
     case QDomNode::EntityNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    QObject::tr("An entity was found in the original CellML file, but it was not processed."));
+                                                    tr("An entity was found in the original CellML file, but it was not processed."));
 
         break;
     case QDomNode::ProcessingInstructionNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    QObject::tr("A processing instruction was found in the original CellML file, but it is not known and cannot therefore be processed."));
+                                                    tr("A processing instruction was found in the original CellML file, but it is not known and cannot therefore be processed."));
 
         break;
     case QDomNode::CommentNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    QObject::tr("A comment was found in the original CellML file, but it was not processed."));
+                                                    tr("A comment was found in the original CellML file, but it was not processed."));
 
         break;
     case QDomNode::DocumentNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    QObject::tr("A document was found in the original CellML file, but it was not processed."));
+                                                    tr("A document was found in the original CellML file, but it was not processed."));
 
         break;
     case QDomNode::DocumentTypeNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    QObject::tr("A document type was found in the original CellML file, but it was not processed."));
+                                                    tr("A document type was found in the original CellML file, but it was not processed."));
 
         break;
     case QDomNode::DocumentFragmentNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    QObject::tr("A document fragment was found in the original CellML file, but it was not processed."));
+                                                    tr("A document fragment was found in the original CellML file, but it was not processed."));
 
         break;
     case QDomNode::NotationNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    QObject::tr("A notation was found in the original CellML file, but it was not processed."));
+                                                    tr("A notation was found in the original CellML file, but it was not processed."));
 
         break;
     case QDomNode::BaseNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    QObject::tr("A base was found in the original CellML file, but it was not processed."));
+                                                    tr("A base was found in the original CellML file, but it was not processed."));
 
         break;
     case QDomNode::CharacterDataNode:
         mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    QObject::tr("Some character data was found in the original CellML file, but it is not known and cannot therefore be processed."));
+                                                    tr("Some character data was found in the original CellML file, but it is not known and cannot therefore be processed."));
 
         break;
     }
@@ -2472,10 +2472,10 @@ void CellMLTextViewConverter::processUnsupportedNode(const QDomNode &pDomNode,
     // error or a warning, depending on the case
 
     int lineNumber = pDomNode.lineNumber();
-    QString message = QObject::tr("A%1 '%2' element was found in the original CellML file, but it is not supported and cannot therefore be processed.").arg(pExtra)
-                                                                                                                                                       .arg(pDomNode.prefix().isEmpty()?
-                                                                                                                                                                pDomNode.localName():
-                                                                                                                                                                pDomNode.prefix()+":"+pDomNode.localName());
+    QString message = tr("A%1 '%2' element was found in the original CellML file, but it is not supported and cannot therefore be processed.").arg(pExtra)
+                                                                                                                                              .arg(pDomNode.prefix().isEmpty()?
+                                                                                                                                                       pDomNode.localName():
+                                                                                                                                                       pDomNode.prefix()+":"+pDomNode.localName());
 
     if (pError) {
         mErrorLine = lineNumber;

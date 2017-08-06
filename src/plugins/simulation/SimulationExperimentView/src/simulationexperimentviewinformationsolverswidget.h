@@ -34,12 +34,13 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace SimulationExperimentView {
+namespace SimulationSupport {
+    class Simulation;
+}   // namespace SimulationSupport
 
 //==============================================================================
 
-class SimulationExperimentViewPlugin;
-class SimulationExperimentViewSimulation;
+namespace SimulationExperimentView {
 
 //==============================================================================
 
@@ -74,13 +75,12 @@ class SimulationExperimentViewInformationSolversWidget : public Core::PropertyEd
     Q_OBJECT
 
 public:
-    explicit SimulationExperimentViewInformationSolversWidget(SimulationExperimentViewPlugin *pPlugin,
-                                                              QWidget *pParent);
+    explicit SimulationExperimentViewInformationSolversWidget(QWidget *pParent);
     ~SimulationExperimentViewInformationSolversWidget();
 
     virtual void retranslateUi();
 
-    void initialize(SimulationExperimentViewSimulation *pSimulation);
+    void initialize(SimulationSupport::Simulation *pSimulation);
 
     QStringList odeSolvers() const;
     QStringList daeSolvers() const;
@@ -101,8 +101,7 @@ private:
 
     void updateSolverGui(SimulationExperimentViewInformationSolversWidgetData *pSolverData);
 
-    SimulationExperimentViewInformationSolversWidgetData * addSolverProperties(const SolverInterfaces &pSolverInterfaces,
-                                                                               const Solver::Type &pSolverType);
+    SimulationExperimentViewInformationSolversWidgetData * addSolverProperties(const Solver::Type &pSolverType);
 
     void doSolverChanged(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
                          const QString &pSolverName);

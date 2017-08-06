@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
-#include <QFileInfo>
 #include <QHeaderView>
 #include <QHelpEvent>
 #include <QModelIndex>

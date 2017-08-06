@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>QObject</name>
+    <name>OpenCOR::CSVDataStore::CSVDataStorePlugin</name>
     <message>
         <source>CSV File</source>
         <translation>Fichier CSV</translation>

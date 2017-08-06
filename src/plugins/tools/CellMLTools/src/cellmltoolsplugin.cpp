@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
+#include "cellmlinterface.h"
 #include "cellmltoolsplugin.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
@@ -60,7 +61,6 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
 //==============================================================================
 
 CellMLToolsPlugin::CellMLToolsPlugin() :
-    mCellmlFileTypeInterface(0),
     mFileName(QString())
 {
 }
@@ -234,20 +234,9 @@ void CellMLToolsPlugin::finalizePlugin()
 
 void CellMLToolsPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    // Retrieve the file type interfaces supported by the CellMLSupport plugin
+    Q_UNUSED(pLoadedPlugins);
 
-    foreach (Plugin *plugin, pLoadedPlugins) {
-        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
-
-        if (!plugin->name().compare("CellMLSupport") && fileTypeInterface) {
-            // This is the CellMLSupport plugin and, as expected, it implements
-            // our file type interface, so keep track of it
-
-            mCellmlFileTypeInterface = fileTypeInterface;
-
-            break;
-        }
-    }
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -288,7 +277,7 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
     QString format = (pVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
                          "CellML 1.0":
                          "CellML 1.1";
-    QStringList cellmlFilters = Core::filters(FileTypeInterfaces() << mCellmlFileTypeInterface);
+    QStringList cellmlFilters = Core::filters(FileTypeInterfaces() << CellMLSupport::fileTypeInterface());
     QString firstCellmlFilter = cellmlFilters.first();
     QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(format),
                                              Core::newFileName(mFileName, tr("Exported"), false),

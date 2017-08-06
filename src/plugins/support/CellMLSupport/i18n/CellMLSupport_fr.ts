@@ -13,7 +13,7 @@
     </message>
 </context>
 <context>
-    <name>QObject</name>
+    <name>OpenCOR::CellMLSupport::CellmlFile</name>
     <message>
         <source>the imports could not be fully instantiated</source>
         <translation>les importations n&apos;ont pas pu être complètement instanciées</translation>
@@ -46,10 +46,16 @@
         <source>the output file could not be saved</source>
         <translation>le fichier de sortie n&apos;a pas pu être sauvegardé</translation>
     </message>
+</context>
+<context>
+    <name>OpenCOR::CellMLSupport::CellmlFileCellml10Exporter</name>
     <message>
         <source>CeVAS error: %1</source>
         <translation>Erreur CeVAS : %1</translation>
     </message>
+</context>
+<context>
+    <name>OpenCOR::CellMLSupport::CellmlFileRuntime</name>
     <message>
         <source>the model code could not be generated (%1)</source>
         <translation>Le code pour le modèle n&apos;a pas pu être généré (%1)</translation>

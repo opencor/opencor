@@ -44,7 +44,7 @@ CellmlFileManager * CellmlFileManager::instance()
 
     static CellmlFileManager instance;
 
-    return static_cast<CellmlFileManager *>(Core::globalInstance("OpenCOR::CellMLSupport::CellmlFileManager",
+    return static_cast<CellmlFileManager *>(Core::globalInstance("OpenCOR::CellMLSupport::CellmlFileManager::instance()",
                                                                  &instance));
 }
 
@@ -63,12 +63,12 @@ CellmlFile * CellmlFileManager::cellmlFile(const QString &pFileName)
 {
     // Return the CellmlFile object, if any, associated with the given file
 
-    return static_cast<CellMLSupport::CellmlFile *>(instance()->file(pFileName));
+    return static_cast<CellmlFile *>(instance()->file(pFileName));
 }
 
 //==============================================================================
 
-bool CellmlFileManager::canLoadFile(const QString &pFileName) const
+bool CellmlFileManager::canLoad(const QString &pFileName) const
 {
     // Try to load the CellML file
 
@@ -79,7 +79,7 @@ bool CellmlFileManager::canLoadFile(const QString &pFileName) const
 
 //==============================================================================
 
-QObject * CellmlFileManager::newFile(const QString &pFileName) const
+QObject * CellmlFileManager::create(const QString &pFileName) const
 {
     // Create and return a new CellML file
 

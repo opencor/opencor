@@ -117,7 +117,9 @@ void SedmlEditingViewWidget::saveSettings(QSettings *pSettings) const
 
     // Keep track of our editor widget's settings
 
-    mEditorWidget->saveSettings(pSettings);
+    pSettings->beginGroup(mEditorWidget->objectName());
+        mEditorWidget->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -132,20 +134,20 @@ void SedmlEditingViewWidget::retranslateUi()
 
 //==============================================================================
 
-void SedmlEditingViewWidget::updateSettings(SedmlEditingViewWidget *pSedmlEditingViewWidget)
+void SedmlEditingViewWidget::updateSettings(SedmlEditingViewWidget *pEditingWidget)
 {
     // Make sure that we are given another editing widget
 
-    if (!pSedmlEditingViewWidget || (pSedmlEditingViewWidget == this))
+    if (!pEditingWidget || (pEditingWidget == this))
         return;
 
     // Update our sizes and editor widget's settings
 
-    mEditingWidgetSizes = pSedmlEditingViewWidget->editingWidgetSizes();
+    mEditingWidgetSizes = pEditingWidget->editingWidgetSizes();
 
     setSizes(mEditingWidgetSizes);
 
-    mEditorWidget->updateSettings(pSedmlEditingViewWidget->editorWidget());
+    mEditorWidget->updateSettings(pEditingWidget->editorWidget());
 }
 
 //==============================================================================

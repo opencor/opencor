@@ -111,10 +111,12 @@ void SEDMLEditingViewPlugin::fileModified(const QString &pFileName)
 //==============================================================================
 
 void SEDMLEditingViewPlugin::fileReloaded(const QString &pFileName,
-                                          const bool &pFileChanged)
+                                          const bool &pFileChanged,
+                                          const bool &pFileJustSaved)
 {
     Q_UNUSED(pFileName);
     Q_UNUSED(pFileChanged);
+    Q_UNUSED(pFileJustSaved);
 
     // We don't handle this interface...
 }

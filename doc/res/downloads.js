@@ -41,6 +41,19 @@ function versions(downloads) {
     if (typeof jsonData === "undefined")
         return;
 
+    // Put a warning about our change of license
+
+    document.write("<div class=\"warning\">\n");
+    document.write("    <strong>Change of license:</strong>\n");
+    document.write("\n");
+    document.write("    <ul>\n");
+    document.write("        <li>Version 0.1.x of OpenCOR is not released under any particular license.</li>\n");
+    document.write("        <li>Versions 0.2 to 0.5 of OpenCOR are released under the <a href=\"https://opensource.org/licenses/Apache-2.0\">Apache 2.0 license</a>.</li>\n");
+    document.write("        <li>Starting with the 2017-05-07 snapshot, OpenCOR is now released under the <a href=\"https://opensource.org/licenses/GPL-3.0\">GPL v3.0 license</a>.</li>\n");
+    document.write("        <li>This change allows us to keep using <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> (a text-based editing widget), which is also released under the <a href=\"https://opensource.org/licenses/GPL-3.0\">GPL v3.0 license</a>.</li>\n");
+    document.write("    </ul>\n");
+    document.write("</div>\n");
+
     // Retrieve the size of our various downloadable files, should we be
     // running this script from opencor.ws
     // Note: the URL used in the request must be based on the value of
@@ -159,7 +172,6 @@ function versions(downloads) {
         document.write("        margin: 0px;\n");
         document.write("        border: 0px;\n");
         document.write("    }\n");
-        document.write("\n");
         document.write("</style>\n");
         document.write("\n");
 

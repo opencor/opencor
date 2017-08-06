@@ -21,12 +21,15 @@ ADD_PLUGIN(CellMLSupport
         src/cellmlfilerdftriple.cpp
         src/cellmlfilerdftripleelement.cpp
         src/cellmlfileruntime.cpp
+        src/cellmlinterface.cpp
         src/cellmlsupportplugin.cpp
     HEADERS_MOC
         ../../solverinterface.h
 
         src/cellmlfile.h
+        src/cellmlfilecellml10exporter.h
         src/cellmlfilemanager.h
+        src/cellmlfileruntime.h
         src/cellmlsupportplugin.h
     PLUGINS
         CellMLAPI

@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>QObject</name>
+    <name>OpenCOR::FourthOrderRungeKuttaSolver::FourthOrderRungeKuttaSolver</name>
     <message>
         <source>the &apos;step&apos; property value cannot be equal to zero</source>
         <translation>la valeur de la propriété &apos;pas&apos; ne peut pas être égale à zéro</translation>

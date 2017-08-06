@@ -45,8 +45,8 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-static const auto ResourceRegExp = QStringLiteral("[0-9a-z]+((-|\\.)[0-9a-z]+)?");
-static const auto IdRegExp       = QStringLiteral("[0-9A-Za-z\\.%-_:]+(:[0-9A-Za-z\\.%-_:]+)?");
+static const auto ResourceRegEx = QStringLiteral("[0-9a-z]+((-|\\.)[0-9a-z]+)?");
+static const auto IdRegEx       = QStringLiteral("[0-9A-Za-z\\.%-_:]+(:[0-9A-Za-z\\.%-_:]+)?");
 
 //==============================================================================
 
@@ -119,12 +119,10 @@ public:
     QString qualifierAsString() const;
 
     ModelQualifier modelQualifier() const;
-    static ModelQualifier modelQualifier(const QString &pModelQualifier);
     QString modelQualifierAsString() const;
     static QString modelQualifierAsString(const ModelQualifier &pModelQualifier);
 
     BioQualifier bioQualifier() const;
-    static BioQualifier bioQualifier(const QString &pBioQualifier);
     QString bioQualifierAsString() const;
     static QString bioQualifierAsString(const BioQualifier &pBioQualifier);
 

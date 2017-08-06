@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "i18ninterface.h"
+#include "pmrsupport.h"
 #include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrworkspacemanager.h"
@@ -72,18 +73,15 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
                                                  const QString &pText,
                                                  const QIcon &pCollapsedIcon,
                                                  const QIcon &pExpandedIcon) :
-    QStandardItem(pIcon, pText)
+    QStandardItem(pIcon, pText),
+    mType(pType),
+    mTreeViewWidget(pTreeViewWidget),
+    mTreeViewProxyModel(pTreeViewProxyModel),
+    mWorkspace(pWorkspace),
+    mFileNode(pFileNode),
+    mCollapsedIcon(pCollapsedIcon),
+    mExpandedIcon(pExpandedIcon)
 {
-    // Some initialisations
-
-    mType = pType;
-    mTreeViewWidget = pTreeViewWidget;
-    mTreeViewProxyModel = pTreeViewProxyModel;
-    mWorkspace = pWorkspace;
-    mFileNode = pFileNode;
-    mCollapsedIcon = pCollapsedIcon;
-    mExpandedIcon = pExpandedIcon;
-
     // Customise ourselves
 
     setToolTip(text());
@@ -1383,7 +1381,7 @@ void PmrWorkspacesWindowWidget::makeLocalWorkspaceCopy()
 {
     // Make a local copy (i.e. clone) of the current owned workspace
 
-    QString dirName = PMRSupport::PmrWebService::getEmptyDirectory();
+    QString dirName = PMRSupport::getEmptyDirectory();
 
     if (!dirName.isEmpty()) {
         // Create, if needed, the folder where the workspace will be cloned

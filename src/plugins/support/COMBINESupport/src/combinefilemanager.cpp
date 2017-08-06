@@ -39,7 +39,7 @@ CombineFileManager * CombineFileManager::instance()
 
     static CombineFileManager instance;
 
-    return static_cast<CombineFileManager *>(Core::globalInstance("OpenCOR::COMBINESupport::CombineFileManager",
+    return static_cast<CombineFileManager *>(Core::globalInstance("OpenCOR::COMBINESupport::CombineFileManager::instance()",
                                                                   &instance));
 }
 
@@ -58,12 +58,12 @@ CombineArchive * CombineFileManager::combineArchive(const QString &pFileName)
 {
     // Return the CombineArchive object, if any, associated with the given file
 
-    return static_cast<COMBINESupport::CombineArchive *>(instance()->file(pFileName));
+    return static_cast<CombineArchive *>(instance()->file(pFileName));
 }
 
 //==============================================================================
 
-bool CombineFileManager::canLoadFile(const QString &pFileName) const
+bool CombineFileManager::canLoad(const QString &pFileName) const
 {
     // Try to load the COMBINE archive
 
@@ -74,7 +74,7 @@ bool CombineFileManager::canLoadFile(const QString &pFileName) const
 
 //==============================================================================
 
-QObject * CombineFileManager::newFile(const QString &pFileName) const
+QObject * CombineFileManager::create(const QString &pFileName) const
 {
     // Create and return a new COMBINE archive
 

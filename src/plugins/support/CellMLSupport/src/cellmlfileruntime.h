@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QIcon>
 #include <QList>
 #ifdef Q_OS_WIN
     #include <QSet>
@@ -102,6 +103,8 @@ public:
 
     QString formattedUnit(const QString &pVoiUnit) const;
 
+    QIcon icon() const;
+
 private:
     QString mName;
     int mDegree;
@@ -117,8 +120,10 @@ typedef QList<CellmlFileRuntimeParameter *> CellmlFileRuntimeParameters;
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileRuntime
+class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
 {
+    Q_OBJECT
+
 public:
     enum ModelType {
         Ode,

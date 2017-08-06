@@ -42,17 +42,17 @@ StandardFileManager::StandardFileManager() :
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
     connect(fileManagerInstance, SIGNAL(fileManaged(const QString &)),
-            this, SLOT(manageFile(const QString &)));
+            this, SLOT(manage(const QString &)));
     connect(fileManagerInstance, SIGNAL(fileUnmanaged(const QString &)),
-            this, SLOT(unmanageFile(const QString &)));
+            this, SLOT(unmanage(const QString &)));
 
     connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &, const bool &)),
-            this, SLOT(reloadFile(const QString &, const bool &)));
+            this, SLOT(reload(const QString &, const bool &)));
     connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
-            this, SLOT(renameFile(const QString &, const QString &)));
+            this, SLOT(rename(const QString &, const QString &)));
 
     connect(fileManagerInstance, SIGNAL(fileSaved(const QString &)),
-            this, SLOT(saveFile(const QString &)));
+            this, SLOT(save(const QString &)));
 }
 
 //==============================================================================
@@ -85,7 +85,7 @@ bool StandardFileManager::isFile(const QString &pFileName)
         if (fileContents.trimmed().isEmpty())
             return true;
 
-        return canLoadFile(nativeFileName);
+        return canLoad(nativeFileName);
     } else {
         return false;
     }
@@ -102,7 +102,7 @@ QObject * StandardFileManager::file(const QString &pFileName)
 
 //==============================================================================
 
-void StandardFileManager::manageFile(const QString &pFileName)
+void StandardFileManager::manage(const QString &pFileName)
 {
     QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
 
@@ -110,13 +110,13 @@ void StandardFileManager::manageFile(const QString &pFileName)
         // We are dealing with a file, which is not already managed, so we can
         // add it to our list of managed files
 
-        mFiles.insert(nativeFileName, newFile(nativeFileName));
+        mFiles.insert(nativeFileName, create(nativeFileName));
     }
 }
 
 //==============================================================================
 
-void StandardFileManager::unmanageFile(const QString &pFileName)
+void StandardFileManager::unmanage(const QString &pFileName)
 {
     QObject *crtFile = file(pFileName);
 
@@ -132,8 +132,8 @@ void StandardFileManager::unmanageFile(const QString &pFileName)
 
 //==============================================================================
 
-void StandardFileManager::reloadFile(const QString &pFileName,
-                                     const bool &pFileChanged)
+void StandardFileManager::reload(const QString &pFileName,
+                                 const bool &pFileChanged)
 {
     Q_UNUSED(pFileChanged);
 
@@ -152,13 +152,13 @@ void StandardFileManager::reloadFile(const QString &pFileName,
         if (isFile(pFileName))
             static_cast<StandardFile *>(crtFile)->reload();
         else
-            unmanageFile(pFileName);
+            unmanage(pFileName);
     } else {
         // The file is not managed, which means that previously it wasn't
         // considered as being a file, but things may be different now, so try
         // to remanage it and load it, if possible
 
-        manageFile(pFileName);
+        manage(pFileName);
 
         crtFile = file(pFileName);
 
@@ -169,8 +169,8 @@ void StandardFileManager::reloadFile(const QString &pFileName,
 
 //==============================================================================
 
-void StandardFileManager::renameFile(const QString &pOldFileName,
-                                     const QString &pNewFileName)
+void StandardFileManager::rename(const QString &pOldFileName,
+                                 const QString &pNewFileName)
 {
     // The file has been renamed, so we need to update our files mapping, if
     // needed
@@ -180,21 +180,23 @@ void StandardFileManager::renameFile(const QString &pOldFileName,
     if (!crtFile)
         return;
 
-    mFiles.insert(pNewFileName, crtFile);
-    mFiles.remove(pOldFileName);
+    QString newNativeFileName = Core::nativeCanonicalFileName(pNewFileName);
+
+    mFiles.insert(newNativeFileName, crtFile);
+    mFiles.remove(Core::nativeCanonicalFileName(pOldFileName));
 
     // We also need to ensure that our file object has its file name updated
 
-    static_cast<StandardFile *>(crtFile)->setFileName(pNewFileName);
+    static_cast<StandardFile *>(crtFile)->setFileName(newNativeFileName);
 }
 
 //==============================================================================
 
-void StandardFileManager::saveFile(const QString &pFileName)
+void StandardFileManager::save(const QString &pFileName)
 {
     // The file has been (modified and) saved, so we need to reload it
 
-    reloadFile(pFileName, true);
+    reload(pFileName, true);
 }
 
 //==============================================================================

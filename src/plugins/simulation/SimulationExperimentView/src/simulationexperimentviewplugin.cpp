@@ -54,21 +54,8 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour exécuter une expérience de simulation."));
 
     return new PluginInfo(PluginInfo::Simulation, true, false,
-                          QStringList() << "COMBINESupport"<< "GraphPanelWidget" << "PendulumWindow" << "Qwt" << "SEDMLSupport",
+                          QStringList() << "GraphPanelWidget" << "PendulumWindow" << "SimulationSupport",
                           descriptions);
-}
-
-//==============================================================================
-
-SimulationExperimentViewPlugin::SimulationExperimentViewPlugin() :
-    mSolverInterfaces(SolverInterfaces()),
-    mDataStoreInterfaces(DataStoreInterfaces()),
-    mCellmlEditingViewPlugins(Plugins()),
-    mCellmlSimulationViewPlugins(Plugins()),
-    mSedmlFileTypeInterface(0),
-    mCombineFileTypeInterface(0),
-    mPendulumWindowWindow(0)
-{
 }
 
 //==============================================================================
@@ -116,14 +103,15 @@ void SimulationExperimentViewPlugin::fileModified(const QString &pFileName)
 //==============================================================================
 
 void SimulationExperimentViewPlugin::fileReloaded(const QString &pFileName,
-                                                  const bool &pFileChanged)
+                                                  const bool &pFileChanged,
+                                                  const bool &pFileJustSaved)
 {
-    Q_UNUSED(pFileChanged);
+    Q_UNUSED(pFileJustSaved);
 
-    // The given file has been reloaded, so let its corresponding view widget
-    // know about it
+    // The given file has been reloaded, so let our view widget know about it
 
-    mViewWidget->fileReloaded(pFileName);
+    if (pFileChanged)
+        mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
@@ -184,16 +172,7 @@ bool SimulationExperimentViewPlugin::pluginInterfacesOk(const QString &pFileName
 
 void SimulationExperimentViewPlugin::initializePlugin()
 {
-    // Create our Simulation Experiment view widget
-
-    mViewWidget = new SimulationExperimentViewWidget(this, Core::mainWindow());
-
-    mViewWidget->setObjectName("SimulationExperimentViewWidget");
-
-    // Hide our Simulation Experiment view widget since it may not initially be
-    // shown in  our central widget
-
-    mViewWidget->setVisible(false);
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -207,26 +186,12 @@ void SimulationExperimentViewPlugin::finalizePlugin()
 
 void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    // Retrieve the different solvers and data stores that are available to us,
-    // as well as the file types supported by the SEDMLSupport plugin
+    // Retrieve the different CellML capable editing and simulation views
+
+    Plugins cellmlEditingViewPlugins = Plugins();
+    Plugins cellmlSimulationViewPlugins = Plugins();
 
     foreach (Plugin *plugin, pLoadedPlugins) {
-        // Look for a solver
-
-        SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
-
-        if (solverInterface)
-            mSolverInterfaces << solverInterface;
-
-        // Look for a data store
-
-        DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
-
-        if (dataStoreInterface)
-            mDataStoreInterfaces << dataStoreInterface;
-
-        // Look for a CellML capable editing or simulation view
-
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
         if (   viewInterface
@@ -237,22 +202,10 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
             if (   viewMimeTypes.isEmpty()
                 || viewMimeTypes.contains(CellMLSupport::CellmlMimeType)) {
                 if (viewInterface->viewMode() == EditingMode)
-                    mCellmlEditingViewPlugins << plugin;
+                    cellmlEditingViewPlugins << plugin;
                 else
-                    mCellmlSimulationViewPlugins << plugin;
+                    cellmlSimulationViewPlugins << plugin;
             }
-        }
-
-        // Keep track of the file type interfaces for the SEDMLSupport and
-        // COMBINESupport plugins
-
-        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
-
-        if (fileTypeInterface) {
-            if (!plugin->name().compare("SEDMLSupport"))
-                mSedmlFileTypeInterface = fileTypeInterface;
-            else if (!plugin->name().compare("COMBINESupport"))
-                mCombineFileTypeInterface = fileTypeInterface;
         }
 
         // Look for our pendulum window
@@ -262,6 +215,20 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
         if (windowInterface && !plugin->name().compare("PendulumWindow"))
             mPendulumWindowWindow = static_cast<PendulumWindow::PendulumWindowWindow *>(windowInterface->windowWidget());
     }
+
+    // Create our Simulation Experiment view widget
+
+    mViewWidget = new SimulationExperimentViewWidget(this,
+                                                     cellmlEditingViewPlugins,
+                                                     cellmlSimulationViewPlugins,
+                                                     Core::mainWindow());
+
+    mViewWidget->setObjectName("SimulationExperimentViewWidget");
+
+    // Hide our Simulation Experiment view widget since it may not initially be
+    // shown in  our central widget
+
+    mViewWidget->setVisible(false);
 }
 
 //==============================================================================
@@ -376,71 +343,6 @@ QIcon SimulationExperimentViewPlugin::fileTabIcon(const QString &pFileName) cons
     // Return the requested file tab icon
 
     return mViewWidget->fileTabIcon(pFileName);
-}
-
-//==============================================================================
-// Plugin specific
-//==============================================================================
-
-SimulationExperimentViewWidget * SimulationExperimentViewPlugin::viewWidget() const
-{
-    // Return our view widget
-
-    return mViewWidget;
-}
-
-//==============================================================================
-
-SolverInterfaces SimulationExperimentViewPlugin::solverInterfaces() const
-{
-    // Return our solver interfaces
-
-    return mSolverInterfaces;
-}
-
-//==============================================================================
-
-DataStoreInterfaces SimulationExperimentViewPlugin::dataStoreInterfaces() const
-{
-    // Return our data store interfaces
-
-    return mDataStoreInterfaces;
-}
-
-//==============================================================================
-
-Plugins SimulationExperimentViewPlugin::cellmlEditingViewPlugins() const
-{
-    // Return our CellML editing view plugins
-
-    return mCellmlEditingViewPlugins;
-}
-
-//==============================================================================
-
-Plugins SimulationExperimentViewPlugin::cellmlSimulationViewPlugins() const
-{
-    // Return our CellML simulation view plugins
-
-    return mCellmlSimulationViewPlugins;
-}
-
-//==============================================================================
-
-FileTypeInterface * SimulationExperimentViewPlugin::sedmlFileTypeInterface() const
-{
-    // Return our SED-ML file type interface
-
-    return mSedmlFileTypeInterface;
-}
-
-//==============================================================================
-
-FileTypeInterface * SimulationExperimentViewPlugin::combineFileTypeInterface() const
-{
-    // Return our COMBINE file type interface
-
-    return mCombineFileTypeInterface;
 }
 
 //==============================================================================

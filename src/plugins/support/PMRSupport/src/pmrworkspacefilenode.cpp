@@ -34,18 +34,13 @@ PmrWorkspaceFileNode::PmrWorkspaceFileNode(const QString &pName,
                                            const QString &pPath,
                                            const CharPair &pStatus,
                                            PmrWorkspaceFileNode *pParent) :
-    QObject(pParent)
+    QObject(pParent),
+    mParent(pParent),
+    mName(pName),
+    mPath(pPath),
+    mStatus(pStatus),
+    mChildren(PmrWorkspaceFileNodes())
 {
-    // Some initialisations
-
-    mParent = pParent;
-
-    mName = pName;
-    mPath = pPath;
-
-    mStatus = pStatus;
-
-    mChildren = PmrWorkspaceFileNodes();
 }
 
 //==============================================================================

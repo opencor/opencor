@@ -46,7 +46,7 @@ SedmlFileManager * SedmlFileManager::instance()
 
     static SedmlFileManager instance;
 
-    return static_cast<SedmlFileManager *>(Core::globalInstance("OpenCOR::SEDMLSupport::SedmlFileManager",
+    return static_cast<SedmlFileManager *>(Core::globalInstance("OpenCOR::SEDMLSupport::SedmlFileManager::instance()",
                                                                 &instance));
 }
 
@@ -65,12 +65,12 @@ SedmlFile * SedmlFileManager::sedmlFile(const QString &pFileName)
 {
     // Return the SedmlFile object, if any, associated with the given file
 
-    return static_cast<SEDMLSupport::SedmlFile *>(instance()->file(pFileName));
+    return static_cast<SedmlFile *>(instance()->file(pFileName));
 }
 
 //==============================================================================
 
-bool SedmlFileManager::canLoadFile(const QString &pFileName) const
+bool SedmlFileManager::canLoad(const QString &pFileName) const
 {
     // Try to load the SED-ML file
 
@@ -81,7 +81,7 @@ bool SedmlFileManager::canLoadFile(const QString &pFileName) const
 
 //==============================================================================
 
-QObject * SedmlFileManager::newFile(const QString &pFileName) const
+QObject * SedmlFileManager::create(const QString &pFileName) const
 {
     // Create and return a new SED-ML file
 

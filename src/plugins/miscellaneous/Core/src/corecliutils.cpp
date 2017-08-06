@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QChar>
 #include <QCryptographicHash>
 #include <QDir>
-#include <QFileInfo>
 #include <QIODevice>
 #include <QLocale>
 #include <QMap>
@@ -359,15 +358,16 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
     //       platform.) So, to address this issue, we keep track of the address
     //       of a 'global' instance as a qApp property...
 
-    QVariant res = qApp->property(pObjectName.toUtf8().constData());
+    QByteArray objectName = pObjectName.toUtf8().constData();
+    QVariant res = qApp->property(objectName);
 
     if (!res.isValid()) {
         // There is no 'global' instance associated with the given object, so
-        // use the object's default 'global' instance we were given
+        // use the object's default 'global' instance we were given, if any
 
         res = qulonglong(pDefaultGlobalInstance);
 
-        qApp->setProperty(pObjectName.toUtf8().constData(), res);
+        qApp->setProperty(objectName, res);
     }
 
     return (void *) res.toULongLong();

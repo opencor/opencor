@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "corecliutils.h"
-#include "coreguiutils.h"
+#include "pmrsupport.h"
 #include "pmrwebservice.h"
 #include "pmrwebservicemanager.h"
 #include "pmrwebserviceresponse.h"
@@ -30,17 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QFileDialog>
-#include <QJsonObject>
-#include <QMainWindow>
-
-//==============================================================================
-
 #include <QtConcurrent/QtConcurrent>
-
-//==============================================================================
-
-#include "git2/repository.h"
 
 //==============================================================================
 
@@ -50,14 +40,11 @@ namespace PMRSupport {
 //==============================================================================
 
 PmrWebService::PmrWebService(const QString &pPmrUrl, QObject *pParent) :
-    QObject(pParent)
+    QObject(pParent),
+    mPmrUrl(pPmrUrl),
+    mUrlExposures(QMap<QString, PmrExposure *>()),
+    mFileExposuresLeftCount(QMap<PmrExposure *, int>())
 {
-    // Some initialisations
-
-    mPmrUrl = pPmrUrl;
-    mUrlExposures = QMap<QString, PmrExposure *>();
-    mFileExposuresLeftCount = QMap<PmrExposure *, int>();
-
     // Create a PMR web service manager so that we can retrieve various things
     // from PMR
 
@@ -519,75 +506,6 @@ QString PmrWebService::siteName() const
     // Determine and return the name of our PMR site
 
     return tr("%1 Site").arg(Core::formatMessage(QUrl(mPmrUrl).host().split('.').first(), false));
-}
-
-//==============================================================================
-
-QString PmrWebService::getEmptyDirectory()
-{
-    // Retrieve and return the name of an empty directory
-
-    return Core::getEmptyDirectory(tr("Select Empty Directory"));
-}
-
-//==============================================================================
-
-QString PmrWebService::getNonGitDirectory()
-{
-    // Retrieve and return the name of a non-Git directory
-
-    QFileDialog dialog(Core::mainWindow(), tr("Select Directory"),
-                       Core::activeDirectory());
-
-    dialog.setFileMode(QFileDialog::DirectoryOnly);
-    dialog.setOption(QFileDialog::ShowDirsOnly);
-
-    forever {
-        if (dialog.exec() != QDialog::Accepted)
-            break;
-
-        QString res = Core::nativeCanonicalDirName(dialog.selectedFiles().first());
-
-        if (!res.isEmpty()) {
-            // We have retrieved a file name, so update our active directory
-
-            Core::setActiveDirectory(res);
-
-            // Check whether the directory is a Git directory
-
-            if (isGitDirectory(res)) {
-                Core::warningMessageBox(tr("Select Directory"),
-                                        tr("Please choose a non-Git directory."));
-
-                continue;
-            }
-        }
-
-        return res;
-    }
-
-    return QString();
-}
-
-//==============================================================================
-
-bool PmrWebService::isGitDirectory(const QString &pDirName)
-{
-    // Return whether the given directory is a Git directory
-
-    if (pDirName.isEmpty()) {
-        return false;
-    } else {
-        git_repository *gitRepository = 0;
-
-        if (!git_repository_open(&gitRepository, pDirName.toUtf8().constData())) {
-            git_repository_free(gitRepository);
-
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
 
 //==============================================================================

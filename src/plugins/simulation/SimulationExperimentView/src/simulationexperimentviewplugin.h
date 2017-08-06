@@ -25,13 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "datastoreinterface.h"
 #include "filehandlinginterface.h"
-#include "filetypeinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
-#include "solverinterface.h"
 #include "viewinterface.h"
 
 //==============================================================================
@@ -74,36 +71,15 @@ class SimulationExperimentViewPlugin : public QObject,
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
-    explicit SimulationExperimentViewPlugin();
-
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
 #include "viewinterface.inl"
 
-    SimulationExperimentViewWidget * viewWidget() const;
-
-    SolverInterfaces solverInterfaces() const;
-    DataStoreInterfaces dataStoreInterfaces() const;
-
-    Plugins cellmlEditingViewPlugins() const;
-    Plugins cellmlSimulationViewPlugins() const;
-
-    FileTypeInterface * sedmlFileTypeInterface() const;
-    FileTypeInterface * combineFileTypeInterface() const;
-
     PendulumWindow::PendulumWindowWindow * pendulumWindowWindow() const;
 
 private:
     SimulationExperimentViewWidget *mViewWidget;
-
-    SolverInterfaces mSolverInterfaces;
-    DataStoreInterfaces mDataStoreInterfaces;
-    Plugins mCellmlEditingViewPlugins;
-    Plugins mCellmlSimulationViewPlugins;
-
-    FileTypeInterface *mSedmlFileTypeInterface;
-    FileTypeInterface *mCombineFileTypeInterface;
 
     PendulumWindow::PendulumWindowWindow *mPendulumWindowWindow;
 };

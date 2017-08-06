@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "cellmlfile.h"
 #include "cliinterface.h"
-#include "filetypeinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
@@ -66,8 +65,6 @@ public:
 #include "plugininterface.inl"
 
 private:
-    FileTypeInterface *mCellmlFileTypeInterface;
-
     QString mFileName;
 
     QMenu *mCellmlFileExportToMenu;
