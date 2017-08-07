@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QEventLoop>
 #include <QList>
 #include <QObject>
 
@@ -61,6 +62,9 @@ class SimulationSupportPythonWrapper : public QObject
 public:
     explicit SimulationSupportPythonWrapper(PyObject *pModule, QObject *pParent=0);
 
+private:
+    QEventLoop *mSimulationRunEventLoop;
+
 public slots:
     bool run(OpenCOR::SimulationSupport::Simulation *pSimulationSupportSimulation);
 
@@ -83,6 +87,9 @@ public slots:
     // Access a simulation's sensitivity gradients
 
     PyObject * gradients(OpenCOR::SimulationSupport::SimulationResults *pSimulationData) const;
+
+private slots:
+    void simulationFinished(const qint64 &pElapsedTime);
 };
 
 //==============================================================================
