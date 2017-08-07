@@ -234,6 +234,30 @@ void DaeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
 //==============================================================================
 
+void DaeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
+                           const int &pRatesStatesCount,
+                           const int &pCondVarCount, double *pConstants,
+                           double *pRates, double *pStates, double *pAlgebraic,
+                           double *pCondVar,
+                           ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                           ComputeResidualsFunction pComputeResiduals,
+                           ComputeRootInformationFunction pComputeRootInformation,
+                           ComputeStateInformationFunction pComputeStateInformation,
+                           const int &pGradientsCount,
+                           int *pGradientsIndices,
+                           double *pGradients)
+{
+    Q_UNUSED(pGradientsCount);
+    Q_UNUSED(pGradientsIndices);
+    Q_UNUSED(pGradients);
+
+    initialize(pVoiStart, pVoiEnd, pRatesStatesCount, pCondVarCount,
+        pConstants, pRates, pStates, pAlgebraic, pCondVar,
+        pComputeEssentialVariables, pComputeResiduals, pComputeRootInformation, pComputeStateInformation);
+}
+
+//==============================================================================
+
 NlaSolver::NlaSolver() :
     mComputeSystem(0),
     mParameters(0),

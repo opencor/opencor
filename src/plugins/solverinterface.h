@@ -140,6 +140,19 @@ public:
                             ComputeRootInformationFunction pComputeRootInformation,
                             ComputeStateInformationFunction pComputeStateInformation);
 
+    virtual void initialize(const double &pVoiStart, const double &pVoiEnd,
+                            const int &pRatesStatesCount,
+                            const int &pCondVarCount, double *pConstants,
+                            double *pRates, double *pStates, double *pAlgebraic,
+                            double *pCondVar,
+                            ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                            ComputeResidualsFunction pComputeResiduals,
+                            ComputeRootInformationFunction pComputeRootInformation,
+                            ComputeStateInformationFunction pComputeStateInformation,
+                            const int &pGradientsCount,
+                            int *pGradientsIndices,
+                            double *pGradients);
+
 protected:
     int mCondVarCount;
 

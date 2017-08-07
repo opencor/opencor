@@ -267,8 +267,7 @@ void SimulationWorker::started()
                               mRuntime->computeOdeRates(),
                               mSimulation->data()->gradientsCount(),
                               mSimulation->data()->gradientIndices(),
-                              mSimulation->data()->gradients()
-                              );
+                              mSimulation->data()->gradients());
     } else {
         daeSolver->setProperties(mSimulation->data()->daeSolverProperties());
 
@@ -283,7 +282,10 @@ void SimulationWorker::started()
                               mRuntime->computeDaeEssentialVariables(),
                               mRuntime->computeDaeResiduals(),
                               mRuntime->computeDaeRootInformation(),
-                              mRuntime->computeDaeStateInformation());
+                              mRuntime->computeDaeStateInformation(),
+                              mSimulation->data()->gradientsCount(),
+                              mSimulation->data()->gradientIndices(),
+                              mSimulation->data()->gradients());
     }
 
     // Initialise our NLA solver
@@ -393,7 +395,10 @@ void SimulationWorker::started()
                                           mSimulation->data()->rates(),
                                           mSimulation->data()->states(),
                                           mSimulation->data()->algebraic(),
-                                          mRuntime->computeOdeRates());
+                                          mRuntime->computeOdeRates(),
+                                          mSimulation->data()->gradientsCount(),
+                                          mSimulation->data()->gradientIndices(),
+                                          mSimulation->data()->gradients());
                 } else {
                     daeSolver->initialize(mCurrentPoint, endingPoint,
                                           mRuntime->statesCount(),
@@ -406,7 +411,10 @@ void SimulationWorker::started()
                                           mRuntime->computeDaeEssentialVariables(),
                                           mRuntime->computeDaeResiduals(),
                                           mRuntime->computeDaeRootInformation(),
-                                          mRuntime->computeDaeStateInformation());
+                                          mRuntime->computeDaeStateInformation(),
+                                          mSimulation->data()->gradientsCount(),
+                                          mSimulation->data()->gradientIndices(),
+                                          mSimulation->data()->gradients());
                 }
 
                 mReset = false;

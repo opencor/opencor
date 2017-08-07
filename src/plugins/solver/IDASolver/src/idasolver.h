@@ -135,6 +135,19 @@ public:
                             ComputeRootInformationFunction pComputeRootInformation,
                             ComputeStateInformationFunction pComputeStateInformation);
 
+    virtual void initialize(const double &pVoiStart, const double &pVoiEnd,
+                            const int &pRatesStatesCount,
+                            const int &pCondVarCount, double *pConstants,
+                            double *pRates, double *pStates, double *pAlgebraic,
+                            double *pCondVar,
+                            ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                            ComputeResidualsFunction pComputeResiduals,
+                            ComputeRootInformationFunction pComputeRootInformation,
+                            ComputeStateInformationFunction pComputeStateInformation,
+                            const int &pGradientsCount,
+                            int *pGradientsIndices,
+                            double *pGradients);
+
     virtual void solve(double &pVoi, const double &pVoiEnd) const;
 
 private:
@@ -142,6 +155,10 @@ private:
     N_Vector mRatesVector;
     N_Vector mStatesVector;
     IdaSolverUserData *mUserData;
+
+    N_Vector *mRatesSensitivityVectors;
+    N_Vector *mStatesSensitivityVectors;
+    int mSensitivityVectorsSize;
 
     bool mInterpolateSolution;
 };

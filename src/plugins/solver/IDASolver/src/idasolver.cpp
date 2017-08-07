@@ -202,6 +202,9 @@ IdaSolver::IdaSolver() :
     mRatesVector(0),
     mStatesVector(0),
     mUserData(0),
+    mRatesSensitivityVectors(0),
+    mStatesSensitivityVectors(0),
+    mSensitivityVectorsSize(0),
     mInterpolateSolution(InterpolateSolutionDefaultValue)
 {
 }
@@ -220,6 +223,11 @@ IdaSolver::~IdaSolver()
     N_VDestroy_Serial(mRatesVector);
     N_VDestroy_Serial(mStatesVector);
 
+    if (mStatesSensitivityVectors) {
+        N_VDestroyVectorArray_Serial(mRatesSensitivityVectors, mSensitivityVectorsSize);
+        N_VDestroyVectorArray_Serial(mStatesSensitivityVectors, mSensitivityVectorsSize);
+    }
+
     IDAFree(&mSolver);
 
     delete mUserData;
@@ -236,6 +244,27 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                            ComputeResidualsFunction pComputeResiduals,
                            ComputeRootInformationFunction pComputeRootInformation,
                            ComputeStateInformationFunction pComputeStateInformation)
+{
+    initialize(pVoiStart, pVoiEnd, pRatesStatesCount, pCondVarCount,
+        pConstants, pRates, pStates, pAlgebraic, pCondVar,
+        pComputeEssentialVariables, pComputeResiduals, pComputeRootInformation, pComputeStateInformation,
+        0, 0, 0);
+}
+
+//==============================================================================
+
+void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
+                           const int &pRatesStatesCount,
+                           const int &pCondVarCount, double *pConstants,
+                           double *pRates, double *pStates, double *pAlgebraic,
+                           double *pCondVar,
+                           ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                           ComputeResidualsFunction pComputeResiduals,
+                           ComputeRootInformationFunction pComputeRootInformation,
+                           ComputeStateInformationFunction pComputeStateInformation,
+                           const int &pGradientsCount,
+                           int *pGradientsIndices,
+                           double *pGradients)
 {
     if (!mSolver) {
         // Retrieve some of the IDA properties
@@ -408,10 +437,50 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
         // Set the relative and absolute tolerances
 
         IDASStolerances(mSolver, relativeTolerance, absoluteTolerance);
+
+        // See if we are performing a sensitivity analysis
+
+        if (pGradientsCount && pGradients) {
+
+            // The number of constants that state variables have gradients computed
+
+            mSensitivityVectorsSize = pGradientsCount;
+
+            // Allocate senstivity vectors
+
+            mRatesSensitivityVectors = N_VCloneVectorArray_Serial(mSensitivityVectorsSize, mRatesVector);
+            mStatesSensitivityVectors = N_VCloneVectorArrayEmpty_Serial(mSensitivityVectorsSize, mStatesVector);
+
+            for (int i = 0; i < mSensitivityVectorsSize; i++) {
+                N_VConst(0.0, mRatesSensitivityVectors[i]);
+                NV_DATA_S(mStatesSensitivityVectors[i]) = pGradients;
+                pGradients += pRatesStatesCount;
+            }
+
+            // Initialise sensitivity code
+
+            IDASensInit(mSolver, mSensitivityVectorsSize, IDA_SIMULTANEOUS, NULL,
+                mStatesSensitivityVectors, mRatesSensitivityVectors);
+
+            IDASensEEtolerances(mSolver);
+
+            IDASetSensErrCon(mSolver, TRUE);
+
+            IDASetSensDQMethod(mSolver, IDA_CENTERED, 0.0);
+
+            // Specify which constants will have gradients calculated
+
+            IDASetSensParams(mSolver, pConstants, NULL, pGradientsIndices);
+        }
     } else {
         // Reinitialise the IDA object
 
         IDAReInit(mSolver, pVoiStart, mStatesVector, mRatesVector);
+
+        // Reinitialise sensitivity analysis
+
+        if (mStatesSensitivityVectors)
+            IDASensReInit(mSolver, IDA_SIMULTANEOUS, mStatesSensitivityVectors, mRatesSensitivityVectors);
     }
 
     // Compute the model's (new) initial conditions
@@ -442,6 +511,11 @@ void IdaSolver::solve(double &pVoi, const double &pVoiEnd) const
         IDASetStopTime(mSolver, pVoiEnd);
 
     IDASolve(mSolver, pVoiEnd, &pVoi, mStatesVector, mRatesVector, IDA_NORMAL);
+
+    // Get the sensitivity solution vectors if we are doing sensitivity analysis
+
+    if (mStatesSensitivityVectors)
+        IDAGetSens(mSolver, &pVoi, mStatesSensitivityVectors);
 
     memcpy(mOldRates, N_VGetArrayPointer(mRatesVector), mRatesStatesCount*OpenCOR::Solver::SizeOfDouble);
     memcpy(mOldStates, N_VGetArrayPointer(mStatesVector), mRatesStatesCount*OpenCOR::Solver::SizeOfDouble);
