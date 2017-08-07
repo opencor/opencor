@@ -431,11 +431,15 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
             CVodeSetSensParams(mSolver, pConstants, NULL, pGradientsIndices);
         }
-
     } else {
         // Reinitialise the CVODE object
 
         CVodeReInit(mSolver, pVoiStart, mStatesVector);
+
+        // Reinitialise sensitivity analysis
+
+        if (mSensitivityVectors)
+            CVodeSensReInit(mSolver, CV_SIMULTANEOUS, mSensitivityVectors);
     }
 }
 
