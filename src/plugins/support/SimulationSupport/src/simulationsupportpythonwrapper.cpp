@@ -36,7 +36,9 @@ namespace SimulationSupport {
 
 //==============================================================================
 
-SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule, QObject *pParent) : QObject(pParent)
+SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule, QObject *pParent) :
+    QObject(pParent),
+    mSimulationRunEventLoop(new QEventLoop())
 {
     Q_UNUSED(pModule);
 
@@ -48,11 +50,18 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
 
 //==============================================================================
 
+void SimulationSupportPythonWrapper::simulationFinished(const qint64 &pElapsedTime)
+{
+    Q_UNUSED(pElapsedTime);
+
+    QMetaObject::invokeMethod(mSimulationRunEventLoop, "quit", Qt::QueuedConnection);
+}
+
+//==============================================================================
+
 bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 {
     // Check that we have enough memory to run our simulation
-
-    bool runSimulation = true;
 
     double freeMemory = Core::freeMemory();
     double requiredMemory = pSimulation->requiredMemory();
@@ -66,13 +75,26 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
         // simulation, so try to allocate all the memory we need for the
         // simulation by resetting its settings
 
-        runSimulation = pSimulation->results()->reset();
+        bool runSimulation = pSimulation->results()->reset();
 
         // Effectively run our simulation in case we were able to
         // allocate all the memory we need to run the simulation
 
         if (runSimulation) {
-            return pSimulation->run();
+            // Signal our event loop when the simulation has finished
+
+            connect(pSimulation, SIGNAL(stopped(const qint64 &)), this, SLOT(simulationFinished(const qint64 &)));
+
+            // Start the simulation
+
+            bool simulationRunning = pSimulation->run();
+
+            // And wait for it to complete
+
+            if (simulationRunning)
+                mSimulationRunEventLoop->exec();
+
+            return simulationRunning;
         } else {
             throw std::runtime_error(
                 tr("We could not allocate the %1 of memory required for the simulation.")

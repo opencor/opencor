@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QEventLoop>
 #include <QList>
 #include <QObject>
 
@@ -61,6 +62,9 @@ class SimulationSupportPythonWrapper : public QObject
 public:
     explicit SimulationSupportPythonWrapper(PyObject *pModule, QObject *pParent=0);
 
+private:
+    QEventLoop *mSimulationRunEventLoop;
+
 public slots:
     bool run(OpenCOR::SimulationSupport::Simulation *pSimulationSupportSimulation);
 
@@ -79,6 +83,9 @@ public slots:
     PyObject * constants(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * states(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
     PyObject * rates(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
+
+private slots:
+    void simulationFinished(const qint64 &pElapsedTime);
 };
 
 //==============================================================================
