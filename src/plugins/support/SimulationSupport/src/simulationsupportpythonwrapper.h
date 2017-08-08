@@ -63,6 +63,7 @@ public:
     explicit SimulationSupportPythonWrapper(PyObject *pModule, QObject *pParent=0);
 
 private:
+    qint64 mElapsedTime;
     QEventLoop *mSimulationRunEventLoop;
 
 public slots:

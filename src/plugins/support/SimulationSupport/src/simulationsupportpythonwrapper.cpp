@@ -38,6 +38,7 @@ namespace SimulationSupport {
 
 SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule, QObject *pParent) :
     QObject(pParent),
+    mElapsedTime(-1),
     mSimulationRunEventLoop(new QEventLoop())
 {
     Q_UNUSED(pModule);
@@ -52,7 +53,7 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
 
 void SimulationSupportPythonWrapper::simulationFinished(const qint64 &pElapsedTime)
 {
-    Q_UNUSED(pElapsedTime);
+    mElapsedTime = pElapsedTime;
 
     QMetaObject::invokeMethod(mSimulationRunEventLoop, "quit", Qt::QueuedConnection);
 }
@@ -85,16 +86,16 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
             connect(pSimulation, SIGNAL(stopped(const qint64 &)), this, SLOT(simulationFinished(const qint64 &)));
 
-            // Start the simulation
+            // A succesfull run will set elapsed time
 
-            bool simulationRunning = pSimulation->run();
+            mElapsedTime = -1;
 
-            // And wait for it to complete
+            // Start the simulation and wait for it to complete
 
-            if (simulationRunning)
+            if (pSimulation->run())
                 mSimulationRunEventLoop->exec();
 
-            return simulationRunning;
+            return mElapsedTime >= 0;
         } else {
             throw std::runtime_error(
                 tr("We could not allocate the %1 of memory required for the simulation.")
