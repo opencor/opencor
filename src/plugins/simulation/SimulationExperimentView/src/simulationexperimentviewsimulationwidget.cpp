@@ -1144,11 +1144,6 @@ void SimulationExperimentViewSimulationWidget::reloadView()
 {
     // Reload ourselves, i.e. finalise and (re)initialise ourselves, meaning
     // that we have effectively been closed and (re)opened
-    // Note: we don't want to call fileClosed() between finalize() and
-    //       initialize() since it will trigger the description of existing
-    //       graphs to be updated, which will result in them being temporarily
-    //       shown as invalid even though they may actually be valid (since we
-    //       have finalised the simulation)...
 
     finalize();
     initialize(true);
