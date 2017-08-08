@@ -857,7 +857,8 @@ double * SimulationResults::algebraic(const int &pIndex) const
 
 Simulation::Simulation(const QString &pFileName) :
     mFileName(pFileName),
-    mWorker(0)
+    mWorker(0),
+    mDevelopmentMode(false)
 {
     // Retrieve our file details
 
@@ -923,6 +924,16 @@ void Simulation::retrieveFileDetails()
 
 void Simulation::reload()
 {
+    // Make sure that we are not in development mode
+    // Note: indeed, if we are (as might be the case using the Simulation
+    //       Experiment view), then to save a CellML file will result in its
+    //       corresponding simulation to be reloaded, which we don't want since
+    //       this will reset everything and this is not what we want when in
+    //       development mode...
+
+    if (mDevelopmentMode)
+        return;
+
     // Stop our worker
     // Note: we don't need to delete mWorker since it will be done as part of
     //       its thread being stopped...
@@ -1009,6 +1020,15 @@ SimulationResults * Simulation::results() const
     // Return our results
 
     return mResults;
+}
+
+//==============================================================================
+
+void Simulation::setDevelopmentMode(const bool &pDevelopmentMode)
+{
+    // Set our development mode
+
+    mDevelopmentMode = pDevelopmentMode;
 }
 
 //==============================================================================
