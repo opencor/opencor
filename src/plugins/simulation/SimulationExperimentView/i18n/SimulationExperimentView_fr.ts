@@ -426,12 +426,8 @@
         <translation>Les paramètres suivants sont importés et ne peuvent donc pas être sauvegardés :</translation>
     </message>
     <message>
-        <source>The simulation requires %1 of memory and you have only %2 left.</source>
-        <translation>La simulation requiert %1 de mémoire et il ne vous en reste que %2.</translation>
-    </message>
-    <message>
-        <source>We could not allocate the %1 of memory required for the simulation.</source>
-        <translation>Nous n&apos;avons pas pu allouer les %1 de mémoire nécessaires pour la simulation.</translation>
+        <source>We could not allocate the memory required for the simulation.</source>
+        <translation>Nous n&apos;avons pas pu allouer la mémoire nécessaire pour la simulation.</translation>
     </message>
     <message>
         <source>Export To SED-ML File</source>

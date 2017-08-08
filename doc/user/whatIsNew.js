@@ -57,6 +57,15 @@ var jsonData = { "versions": [
                            }
                          ]
                        },
+                       { "name": "Simulation",
+                         "entries": [
+                           { "type": "subCategory", "name": "Simulation Experiment view (formerly known as the Single Cell view)",
+                             "entries": [
+                               { "type": "Improved", "description": "Running of long simulations." }
+                             ]
+                           }
+                         ]
+                       },
                        { "name": "Support",
                          "entries": [
                            { "type": "subCategory", "name": "CellML support",
