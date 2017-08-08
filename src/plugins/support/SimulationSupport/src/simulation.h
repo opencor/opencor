@@ -248,6 +248,8 @@ public:
     SimulationData * data() const;
     SimulationResults * results() const;
 
+    void setDevelopmentMode(const bool &pDevelopmentMode);
+
     bool isRunning() const;
     bool isPaused() const;
 
@@ -282,6 +284,8 @@ private:
 
     SimulationData *mData;
     SimulationResults *mResults;
+
+    bool mDevelopmentMode;
 
     void retrieveFileDetails();
 

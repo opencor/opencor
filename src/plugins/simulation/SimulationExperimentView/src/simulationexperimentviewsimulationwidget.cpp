@@ -1144,11 +1144,6 @@ void SimulationExperimentViewSimulationWidget::reloadView()
 {
     // Reload ourselves, i.e. finalise and (re)initialise ourselves, meaning
     // that we have effectively been closed and (re)opened
-    // Note: we don't want to call fileClosed() between finalize() and
-    //       initialize() since it will trigger the description of existing
-    //       graphs to be updated, which will result in them being temporarily
-    //       shown as invalid even though they may actually be valid (since we
-    //       have finalised the simulation)...
 
     finalize();
     initialize(true);
@@ -1353,15 +1348,21 @@ void SimulationExperimentViewSimulationWidget::clearSimulationData()
 void SimulationExperimentViewSimulationWidget::developmentMode()
 {
     // The development mode has just been enabled/disabled, so update the
-    // modified state of our current file accordingly
+    // modified state of our current file accordingly, if needed
 
     if (!mDevelopmentModeAction->isChecked())
         Core::FileManager::instance()->setModified(mFileName, false);
 
+    // Let our simulation know that we are now in development mode
+    // Note: this will ensure that our simulation doesn't get reloaded if we
+    //       were to save our CellML file...
+
+    mSimulation->setDevelopmentMode(mDevelopmentModeAction->isChecked());
+
+    // Make sure that our reset button is properly enabled/disabled
+    // Note: this is needed if the development mode has just been disabled...
+
     checkSimulationDataModified(mSimulation->data()->isModified());
-    // Note: to call checkSimulationDataModified() will, in the case the
-    //       development mode has just been disabled, ensure that the reset
-    //       button is properly enabled/disabled...
 }
 
 //==============================================================================
