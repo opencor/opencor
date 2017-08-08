@@ -258,8 +258,6 @@ public:
     int delay() const;
     void setDelay(const int &pDelay);
 
-    double requiredMemory();
-
     double size();
 
     bool run();
