@@ -73,6 +73,8 @@ SimulationData::~SimulationData()
     // Delete some internal objects
 
     deleteArrays();
+
+    delete[] mGradients;
 }
 
 //==============================================================================
@@ -627,8 +629,6 @@ void SimulationData::deleteArrays()
     delete[] mAlgebraic;
     delete[] mCondVar;
 
-    delete[] mGradients;
-
     delete[] mInitialConstants;
     delete[] mInitialStates;
 
@@ -831,7 +831,7 @@ bool SimulationData::createGradientsDataStore()
 
             // Allocate the array to hold sensitivity gradients at a single point
 
-            mGradients = new double[gradientsSize];
+            mGradients = new double[gradientsSize]();
 
             // Allocate a DataStore and variables to hold gradients for the simulation
 

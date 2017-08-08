@@ -470,7 +470,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
             // Specify which constants will have gradients calculated
 
-            IDASetSensParams(mSolver, pConstants, NULL, pGradientsIndices);
+            IDASetSensParams(mSolver, mUserData->constants(), NULL, pGradientsIndices);
         }
     } else {
         // Reinitialise the IDA object
@@ -510,15 +510,15 @@ void IdaSolver::solve(double &pVoi, const double &pVoiEnd) const
     if (!mInterpolateSolution)
         IDASetStopTime(mSolver, pVoiEnd);
 
-    IDASolve(mSolver, pVoiEnd, &pVoi, mStatesVector, mRatesVector, IDA_NORMAL);
+    if (IDASolve(mSolver, pVoiEnd, &pVoi, mStatesVector, mRatesVector, IDA_NORMAL) >= 0) {
+        // Get the sensitivity solution vectors if we are doing sensitivity analysis
 
-    // Get the sensitivity solution vectors if we are doing sensitivity analysis
+        if (mStatesSensitivityVectors)
+            IDAGetSens(mSolver, &pVoi, mStatesSensitivityVectors);
 
-    if (mStatesSensitivityVectors)
-        IDAGetSens(mSolver, &pVoi, mStatesSensitivityVectors);
-
-    memcpy(mOldRates, N_VGetArrayPointer(mRatesVector), mRatesStatesCount*OpenCOR::Solver::SizeOfDouble);
-    memcpy(mOldStates, N_VGetArrayPointer(mStatesVector), mRatesStatesCount*OpenCOR::Solver::SizeOfDouble);
+        memcpy(mOldRates, N_VGetArrayPointer(mRatesVector), mRatesStatesCount*OpenCOR::Solver::SizeOfDouble);
+        memcpy(mOldStates, N_VGetArrayPointer(mStatesVector), mRatesStatesCount*OpenCOR::Solver::SizeOfDouble);
+    }
 }
 
 //==============================================================================

@@ -83,7 +83,8 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         bool runSimulation = pSimulation->results()->reset();
 
-        pSimulation->results()->createGradientsDataStore();
+        if (runSimulation)
+            pSimulation->results()->createGradientsDataStore();
 
         // Effectively run our simulation in case we were able to
         // allocate all the memory we need to run the simulation
@@ -93,7 +94,7 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
             connect(pSimulation, SIGNAL(stopped(const qint64 &)), this, SLOT(simulationFinished(const qint64 &)));
 
-            // A succesfull run will set elapsed time
+            // A succesful run will set elapsed time
 
             mElapsedTime = -1;
 

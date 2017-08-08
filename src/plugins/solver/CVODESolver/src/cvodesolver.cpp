@@ -429,7 +429,7 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
             // Specify which constants will have gradients calculated
 
-            CVodeSetSensParams(mSolver, pConstants, NULL, pGradientsIndices);
+            CVodeSetSensParams(mSolver, mUserData->constants(), NULL, pGradientsIndices);
         }
     } else {
         // Reinitialise the CVODE object
@@ -452,22 +452,22 @@ void CvodeSolver::solve(double &pVoi, const double &pVoiEnd) const
     if (!mInterpolateSolution)
         CVodeSetStopTime(mSolver, pVoiEnd);
 
-    CVode(mSolver, pVoiEnd, mStatesVector, &pVoi, CV_NORMAL);
+    if (CVode(mSolver, pVoiEnd, mStatesVector, &pVoi, CV_NORMAL) >= 0) {
+        // Get the sensitivity solution vectors if we are doing sensitivity analysis
 
-    // Get the sensitivity solution vectors if we are doing sensitivity analysis
+        if (mSensitivityVectors)
+            CVodeGetSens(mSolver, &pVoi, mSensitivityVectors);
 
-    if (mSensitivityVectors)
-        CVodeGetSens(mSolver, &pVoi, mSensitivityVectors);
+        // Compute the rates one more time to get up to date values for the rates
+        // Note: another way of doing this would be to copy the contents of the
+        //       calculated rates in rhsFunction, but that's bound to be more time
+        //       consuming since a call to CVode() is likely to generate at least a
+        //       few calls to rhsFunction(), so that would be quite a few memory
+        //       transfers while here we 'only' compute the rates one more time...
 
-    // Compute the rates one more time to get up to date values for the rates
-    // Note: another way of doing this would be to copy the contents of the
-    //       calculated rates in rhsFunction, but that's bound to be more time
-    //       consuming since a call to CVode() is likely to generate at least a
-    //       few calls to rhsFunction(), so that would be quite a few memory
-    //       transfers while here we 'only' compute the rates one more time...
-
-    mComputeRates(pVoiEnd, mConstants, mRates,
-                  N_VGetArrayPointer_Serial(mStatesVector), mAlgebraic);
+        mComputeRates(pVoiEnd, mConstants, mRates,
+                      N_VGetArrayPointer_Serial(mStatesVector), mAlgebraic);
+    }
 }
 
 //==============================================================================
