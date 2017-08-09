@@ -131,11 +131,11 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           19f7733bb892ff6b682d26a57b027d1236883705)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 180b82bdaffa8fc0add60d78c864ec8e61fa2ab5
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 8a35e1dc55bfd292577469735e7ff4c265e0d7b6
                               TARGET_PLATFORM ${TARGET_PLATFORM}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES f046a1481b7d3ae10f1095e5314005478cf354ac
-                                          eedde2c7a36dee20eb2c0636fcdcb713e38c18e9)
+                              SHA1_VALUES 674bb5e15e95f4982fe38bde2ece4cfb866bd1ca
+                                          b824f25f8b45eb6e2d8394d4d751d6c1a2cfb5e2)
     ENDIF()
 ELSE()
     # Set platform specific configuration options
