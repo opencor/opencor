@@ -97,10 +97,10 @@ IF(USE_PREBUILT_QWT_PACKAGE)
                                           d5787ce81a8958a4a7453cc9a95cf77222d08a49)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 494191814485a53d2b70619d575f1da23cb0ef73
+                              ${RELATIVE_PROJECT_SOURCE_DIR} efe1691349e6d797f5b9b3cacf111fe75a94a844
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 98c1869712832f83bff34774bc8c9d1dddec8fc7
-                                          eb652a5804420c45fe9ed843c0312f1eb1144ce5)
+                              SHA1_VALUES c08325652c065ae05d451c7e45e63befd0c39199
+                                          f46e2fa826ffdcc89cfea705b846263f9590f181)
     ENDIF()
 ELSE()
     # Set platform specific configuration options
