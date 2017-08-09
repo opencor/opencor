@@ -88,11 +88,11 @@ IF(USE_PREBUILT_SEDMLAPI_PACKAGE)
                               SHA1_VALUES f72926e4536000d4b673b207626d2fa1f022ebee)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 0b7110fd0f3deba6cbafd2b9ec0b6ec438a0e3ab
+                              ${RELATIVE_PROJECT_SOURCE_DIR} c5c7afb4178416e39d5ad3f5a001dcfaa154dda6
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES b4abe4f634f6a0b32b747a5c705284aaff6b4f47)
+                              SHA1_VALUES 9140979688e0aaf79e15ba05d083267c66aacafc)
     ENDIF()
 ELSE()
     # Build libSEDML as an external project
