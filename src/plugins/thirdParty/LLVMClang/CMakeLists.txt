@@ -77,9 +77,9 @@ IF(USE_PREBUILT_LLVMCLANG_PACKAGE)
                               SHA1_VALUES 8f4569fcd1b4d4b04150963bb07c8a828e70fc80)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} cb7c61ec33f552deced5d8ad2b7381dd1108bfe3
+                              ${RELATIVE_PROJECT_SOURCE_DIR} c50e60cd81b0118f9c180f64fde6dd181a98f6d1
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 300e2922feb89fdc179e175e8e69d44601673d3b)
+                              SHA1_VALUES 8b0cdd6790f0346a977fa15c8301e43aacff1201)
     ENDIF()
 ELSE()
     # Allow for big objects and ignore some warnings
