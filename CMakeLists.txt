@@ -10,7 +10,10 @@ OPTION(ENABLE_SAMPLE_PLUGINS "Enable the sample plugins to be built" OFF)
 OPTION(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
-OPTION(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
+IF(NOT WIN32 AND NOT APPLE)
+    OPTION(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
+ENDIF()
+
 OPTION(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
 
 OPTION(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE "Use the pre-built version of the BioSignalML API package" ON)
