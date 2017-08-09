@@ -101,7 +101,7 @@ int main(int pArgC, char *pArgV[])
 
     while (fgets(line, LINE_MAX, in)) {
         if (!strcmp(line, oldLine))
-            fprintf(out, newLine);
+            fprintf(out, "%s", newLine);
         else
             fprintf(out, "%s", line);
     }
