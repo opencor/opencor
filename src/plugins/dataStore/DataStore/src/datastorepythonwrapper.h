@@ -55,6 +55,8 @@ class DataStorePythonWrapper : public QObject
 public:
     explicit DataStorePythonWrapper(PyObject *pModule, QObject *pParent=0);
 
+    static PyTypeObject valuesdict_type;
+
     static PyObject * newNumPyArray(DataStoreArray *pDataStoreArray);
     static PyObject * newNumPyArray(DataStoreVariable *pDataStoreVariable);
 

@@ -32,6 +32,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+
+typedef struct {
+    PyDictObject dict;
+    char *mDataVariable;
+} ValuesDictObject;
+
+
 namespace OpenCOR {
 namespace DataStore {
 
@@ -63,9 +70,11 @@ static DataStoreVariable *getVariable(PyDictObject *valuesDict, PyObject *key)
 
 //==============================================================================
 
-static PyObject *valuesdict_subscript(PyDictObject *valuesDict, PyObject *key)
+// Get a subscripted item from a values dictionary
+
+static PyObject *valuesdict_subscript(ValuesDictObject *valuesDict, PyObject *key)
 {
-    DataStoreVariable *variable = getVariable(valuesDict, key);
+    DataStoreVariable *variable = getVariable((PyDictObject *)valuesDict, key);
 
     if (variable) {
         return PyFloat_FromDouble(variable->nextValue());
@@ -77,16 +86,20 @@ static PyObject *valuesdict_subscript(PyDictObject *valuesDict, PyObject *key)
 
 //==============================================================================
 
-static int valuesdict_ass_subscript(PyDictObject *valuesDict, PyObject *key, PyObject *value)
+// Assign to a subscripted item in a values dictionary
+
+static int valuesdict_ass_subscript(ValuesDictObject *valuesDict, PyObject *key, PyObject *value)
 {
     if (value == 0) {
         return PyDict_DelItem((PyObject *)valuesDict, key);
     }
 
     else if (PyNumber_Check(value)) {
-        DataStoreVariable *variable = getVariable(valuesDict, key);
+        DataStoreVariable *variable = getVariable((PyDictObject *)valuesDict, key);
 
         if (variable) {
+// This is where we set the new value
+// Can valuesDict have user data that maps back to a function (which could emit a signal...)
             variable->setNextValue(PyFloat_AS_DOUBLE(PyNumber_Float(value)));
             return 0;
         }
@@ -106,11 +119,13 @@ static PyMappingMethods valuesdict_as_mapping = {
 
 //==============================================================================
 
-static PyObject* valuesdict_repr(PyDictObject *valuesDict)
+// A string representation of a values dictionary
+
+static PyObject *valuesdict_repr(ValuesDictObject *valuesDict)
 {
     // A modified version of `dict_repr()` from `dictobject.c` in Python's C source
 
-    PyDictObject *mp = valuesDict;
+    PyDictObject *mp = (PyDictObject *)valuesDict;
 
     Py_ssize_t i;
     PyObject *key = NULL, *value = NULL;
@@ -201,16 +216,30 @@ error:
 
 //==============================================================================
 
+static char *STRING = (char *)"123...";
+
+static int valuesdict_init(ValuesDictObject *self, PyObject *args, PyObject *kwds)
+{
+    if (PyDict_Type.tp_init((PyObject *)self, args, kwds) < 0)
+       return -1;
+
+    self->mDataVariable = STRING;
+
+    return 0;
+}
+
+//==============================================================================
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 // A `valuesdict` is a dictionary sub-class for mapping between the next values
 // of a DataStoreVariables list and Python.
 
-static PyTypeObject valuesdict_type = {
+PyTypeObject DataStorePythonWrapper::valuesdict_type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
     "OpenCOR.valuesdict",
-    sizeof(PyDictObject),
+    sizeof(ValuesDictObject),
     0,
     0,                                          /* tp_dealloc */
     0,                                          /* tp_print */
@@ -239,11 +268,11 @@ static PyTypeObject valuesdict_type = {
     0,                                          /* tp_members */
     0,                                          /* tp_getset */
     &PyDict_Type,                               /* tp_base */
-//    0,                                          /* tp_dict */
-//    0,                                          /* tp_descr_get */
-//    0,                                          /* tp_descr_set */
-//    0,                                          /* tp_dictoffset */
-//    PyDict_Type.tp_init,                        /* tp_init */
+    0,                                          /* tp_dict */
+    0,                                          /* tp_descr_get */
+    0,                                          /* tp_descr_set */
+    0,                                          /* tp_dictoffset */
+    (initproc)valuesdict_init,                  /* tp_init */
 //    PyType_GenericAlloc,                        /* tp_alloc */
 //    PyDict_Type.tp_new,                         /* tp_new */
 //    PyObject_GC_Del,                            /* tp_free */
@@ -309,8 +338,11 @@ PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable)
 PyObject * DataStorePythonWrapper::dataStoreValuesDict(
     const DataStoreVariables &pDataStoreVariables)
 {
-    PyObject *valuesDict = PyDict_New();
+    PyObject *valuesDict = (PyObject *)PyObject_New(ValuesDictObject, &valuesdict_type);
+
     valuesDict->ob_type = &valuesdict_type;
+
+//    PyDict_New(); // Not big enough??
 
     foreach (DataStoreVariable *variable, pDataStoreVariables)
         PythonSupport::addObject(valuesDict, variable->uri(), variable);
