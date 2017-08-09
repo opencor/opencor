@@ -145,13 +145,13 @@ IF(USE_PREBUILT_SUNDIALS_PACKAGE)
                                           642e874feb5f36cca092ea7554b45facaccdc458)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 1c53165d1d16f9cffd4c117e6c5b35d670f43fcf
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 1641db3d02f6bca94919f9d20a8c3bc12cdc08c3
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 8285005ceb95212af91f51cee8d4be53849a4ee7
-                                          d02a46720eb935cd6342f5e0289551c77b139ddf
-                                          b2a7ea41b5796582b536113f156bcee99bf73204
-                                          b9b009f5513764cd0af2ecab8c9fce31d63cc334
-                                          e4916654986ea7efc63cbd1cb510cc68582fc144)
+                              SHA1_VALUES 6e89d956c5518b3aee96e5b65184295a4d024e5a
+                                          d21db4de550d0dd10f452d106b986160c84feab9
+                                          9d0c2006046e015ddbb170be0eb4ad0e88e13260
+                                          02af75b88418e8b91b67801e748d1121e31d320e
+                                          848ebf6200a1b8c6cfc4c3581dc60530b023971c)
     ENDIF()
 ELSE()
     # Ignore some warnings
