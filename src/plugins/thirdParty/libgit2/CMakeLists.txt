@@ -81,9 +81,9 @@ IF(USE_PREBUILT_LIBGIT2_PACKAGE)
                               SHA1_VALUES 8f9a5c5049fb86f68aafa455f4521dc111d7cb10)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 44fc17745a59b5459751b48ef599bfc95b5dfd4b
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 243f4b0cd3b061c9bf17ec3dd39ec7f62d4ce6c1
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES c8d3d6bdc856d36ea338bc5fd37ec21d36b7b1bb)
+                              SHA1_VALUES fa5fe06566197222dc11f158c47fc185ad9813fb)
     ENDIF()
 ELSE()
     # Ignore some warnings
