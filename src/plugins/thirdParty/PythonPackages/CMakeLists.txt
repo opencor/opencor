@@ -84,14 +84,15 @@ IF(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         )
     ENDIF()
 ELSE()
+    # Install Python packages using pip
 
     SET(PACKAGE_BUILD PythonPackagesBuild)
 
     ADD_CUSTOM_TARGET(${PACKAGE_BUILD})
 
-    # Installing Python packages requires the Python library
+    # Python package installation requires Python
 
-    SET(BUILD_DEPENDENCIES PythonPlugin_EXTERNAL_SOURCES)
+    SET(BUILD_DEPENDENCIES PythonPlugin)
 
     # Ensure local site packages directory exists
 
