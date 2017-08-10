@@ -411,7 +411,7 @@ MESSAGE(">>> ${PROJECT_NAME}: ${LINK_FLAGS_PROPERTIES}")
                 # RPATH link values to use by the test, if on Linux
 
                 IF(NOT WIN32 AND NOT APPLE)
-                    STRING(REPLACE "${PLUGIN_LINK_RPATH_FLAG}" "${LINK_RPATH_FLAG} -Wl,-rpath,'$ORIGIN/../plugins/${CMAKE_PROJECT_NAME}'"
+                    STRING(REPLACE "${PLUGIN_LINK_RPATH_FLAG}" "-Wl,-rpath-link,${PROJECT_BUILD_DIR}/lib ${LINK_RPATH_FLAG} -Wl,-rpath,'$ORIGIN/../plugins/${CMAKE_PROJECT_NAME}'"
                            LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES}")
                 ENDIF()
 
