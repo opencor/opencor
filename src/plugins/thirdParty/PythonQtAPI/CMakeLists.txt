@@ -122,7 +122,7 @@ ELSE()
 
     # Build PythonQt as an external project
 
-    SET(PACKAGE_BUILD PythonQtBuild)
+    SET(PACKAGE_BUILD PythonQtAPIBuild)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         DEPENDS
