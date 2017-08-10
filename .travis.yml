@@ -29,6 +29,8 @@ install:
       && sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 50
       && sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 50
       && find /usr/lib -name libstdc++*
+      && ldd /usr/bin/gcc
+      && ldd /usr/bin/g++
       && strings /usr/lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBCXX
       ;
     else
