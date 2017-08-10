@@ -200,7 +200,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # Qt modules
 
-    FOREACH(ARG_QT_MODULE ${ARG_QT_MODULES})
+    FOREACH(ARG_QT_MODULE ${REQUIRED_QT_MODULES})
         FIND_PACKAGE(Qt5${ARG_QT_MODULE} REQUIRED)
 
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
@@ -460,7 +460,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # Qt modules
 
-                FOREACH(ARG_QT_MODULE ${ARG_QT_MODULES} Test)
+                FOREACH(ARG_QT_MODULE ${REQUIRED_QT_MODULES})
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
                         Qt5::${ARG_QT_MODULE}
                     )
