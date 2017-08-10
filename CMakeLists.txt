@@ -785,12 +785,12 @@ SET(PLUGINS
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
 
-    api/BioSignalMLAPI
+#    api/BioSignalMLAPI
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
 
-    dataStore/BioSignalMLDataStore
+#    dataStore/BioSignalMLDataStore
     dataStore/CSVDataStore
     dataStore/DataStore
 
