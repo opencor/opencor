@@ -786,13 +786,13 @@ SET(PLUGINS
     ${TEST_PLUGINS}
 
 #---ISSUE1391--- RE-ENABLE ONCE THE BioSignalML API PACKAGE HAS BEEN REBUILT...
-#    api/BioSignalMLAPI
+    api/BioSignalMLAPI
     api/CellMLAPI
     api/SBMLAPI
     api/SEDMLAPI
 
 #---ISSUE1391--- RE-ENABLE ONCE THE BioSignalML API PACKAGE HAS BEEN REBUILT...
-#    dataStore/BioSignalMLDataStore
+    dataStore/BioSignalMLDataStore
     dataStore/CSVDataStore
     dataStore/DataStore
 
