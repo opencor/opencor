@@ -84,10 +84,10 @@ IF(USE_PREBUILT_SBMLAPI_PACKAGE)
                               SHA1_VALUES 2dc2138e7eccfc1750bf8815e76205a15d7e8f07)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 1d8f1de6074e433549467ce429d0d30d4e1c79ff
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 96ab11786e1ffab3fbd94e3274407ca05c5169a9
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 440d1ad2e847feb304922f60490a753fb026b3cb)
+                              SHA1_VALUES 5ec46cbaee57ee9e805917943d6c116805448364)
     ENDIF()
 ELSE()
     # Download some dependencies for Windows, if needed

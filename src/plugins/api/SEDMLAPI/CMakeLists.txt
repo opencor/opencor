@@ -88,7 +88,7 @@ IF(USE_PREBUILT_SEDMLAPI_PACKAGE)
                               SHA1_VALUES f72926e4536000d4b673b207626d2fa1f022ebee)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} c5c7afb4178416e39d5ad3f5a001dcfaa154dda6
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 2913a56c08fbeec36f7aab700b083e22e1002f94
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
