@@ -144,7 +144,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # On Linux, set the RPATH value to use by the plugin
 
     IF(NOT WIN32 AND NOT APPLE)
-        STRING(REPLACE "${LINK_RPATH_FLAG}" "-Wl,-rpath,'$ORIGIN' -Wl,-rpath,'$ORIGIN/../../lib'"
+        SET(PLUGIN_LINK_RPATH_FLAG "-Wl,-rpath,'$ORIGIN' -Wl,-rpath,'$ORIGIN/../../lib'")
+
+        STRING(REPLACE "${LINK_RPATH_FLAG}" "${PLUGIN_LINK_RPATH_FLAG}"
                LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES}")
     ENDIF()
 
@@ -409,7 +411,7 @@ MESSAGE(">>> ${PROJECT_NAME}: ${LINK_FLAGS_PROPERTIES}")
                 # RPATH link values to use by the test, if on Linux
 
                 IF(NOT WIN32 AND NOT APPLE)
-                    STRING(REPLACE "${LINK_RPATH_FLAG}" "${LINK_RPATH_FLAG} -Wl,-rpath,'$ORIGIN/../plugins/${CMAKE_PROJECT_NAME}'"
+                    STRING(REPLACE "${PLUGIN_LINK_RPATH_FLAG}" "${LINK_RPATH_FLAG} -Wl,-rpath,'$ORIGIN/../plugins/${CMAKE_PROJECT_NAME}'"
                            LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES}")
                 ENDIF()
 
