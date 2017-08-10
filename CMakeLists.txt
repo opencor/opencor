@@ -48,10 +48,10 @@ ELSEIF(APPLE)
         MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using (Apple) Clang on macOS...")
     ENDIF()
 ELSE()
-    IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"
-       OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5")
-        MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC/G++ 5.x on Linux...")
-    ENDIF()
+#    IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"
+#       OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5")
+#        MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC/G++ 5.x on Linux...")
+#    ENDIF()
 ENDIF()
 
 # Make sure that we are building on a supported architecture
