@@ -423,6 +423,15 @@ ELSE()
     ADD_DEFINITIONS(-DQT_DEBUG)
 ENDIF()
 
+# Make sure that we can build fine on Travis CI
+# Note: this is because, in the case of Linux, we build everything on Ubuntu
+#       16.04 LTS while on Travis CI we have no choice but to build on Ubuntu
+#       14.04 LTS...
+
+IF(NOT WIN32 AND NOT APPLE AND ENABLE_TRAVIS_CI)
+    ADD_DEFINITIONS(-D_GLIBCXX_USE_CXX11_ABI=0)
+ENDIF()
+
 # Ask for Qt deprecated uses to be reported
 
 ADD_DEFINITIONS(-DQT_DEPRECATED_WARNINGS)
