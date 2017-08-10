@@ -470,16 +470,22 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 IF(NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
                     FOREACH(ARG_EXTERNAL_BINARY ${ARG_EXTERNAL_BINARIES})
+                        SET(FULL_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}")
+
                         IF(WIN32)
                             STRING(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
-                                   IMPORT_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARY}")
+                                   IMPORT_EXTERNAL_BINARY "${FULL_EXTERNAL_BINARY}")
 
                             TARGET_LINK_LIBRARIES(${TEST_NAME}
-                                ${ARG_EXTERNAL_BINARIES_DIR}/${IMPORT_EXTERNAL_BINARY}
+                                ${IMPORT_EXTERNAL_BINARY}
+                            )
+                        ELSEIF(APPLE)
+                            TARGET_LINK_LIBRARIES(${TEST_NAME}
+                                ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                             )
                         ELSE()
                             TARGET_LINK_LIBRARIES(${TEST_NAME}
-                                ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
+                                ${FULL_EXTERNAL_BINARY}
                             )
                         ENDIF()
                     ENDFOREACH()
