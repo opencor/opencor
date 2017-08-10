@@ -83,5 +83,5 @@ ADD_PLUGIN(Core
         generaltests
         mathmltests
     DEPENDS_ON
-        ${PYTHON_HEADERS_DEPENDENCIES}
+        ${PYTHON_DEPENDENCIES}
 )
