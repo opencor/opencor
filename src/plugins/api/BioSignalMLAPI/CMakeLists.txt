@@ -106,12 +106,12 @@ IF(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE)
                                           8e6ca96135ae670a53422a44827579740108d559)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 7e7879d462e34253d53f99a5fa7cca022349a7b7
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 4c428b6d9490df7b1b6dffe62703b176e0db9109
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES ecb1f7171e724140b57114c5de6af8b0f36871de
-                                          47f5d2e0769863d9038c35879e7febcd308e6e30)
+                              SHA1_VALUES 2d0c90cb20bb3d87b5415357754b60574af7337a
+                                          1dc0432aecacc3e07fb34374bf807b8e14ffbea6)
     ENDIF()
 ELSE()
     # Build typedobject as an external project
