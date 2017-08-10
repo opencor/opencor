@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // CSV data store exporter
 //==============================================================================
 
+#include "corecliutils.h"
 #include "csvdatastoreexporter.h"
 
 //==============================================================================
@@ -45,6 +46,8 @@ CsvDataStoreExporter::CsvDataStoreExporter(const QString &pFileName,
 
 void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 {
+    Q_UNUSED(pErrorMessage);
+
     // Determine what should be exported
 
     DataStore::DataStoreVariable *voi = mDataStoreData->selectedVariables().contains(mDataStore->voi())?mDataStore->voi():0;
@@ -52,17 +55,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
     selectedVariables.removeOne(voi);
 
-    // Do the export itself
-    // Note: we would normally rely on a string to which we would append our
-    //       header and then data themselves, and then make a call to
-    //       Core::writeFileContentsToFile(). However, although this works fine
-    //       with 'small' amounts of data to export, this can crash if we have
-    //       gigabytes of data to write. So, instead, we do what
-    //       Core::writeFileContentsToFile() does, but rather than writing one
-    //       potentially humongous string, we first write our header and then
-    //       our data, one row at a time...
-
-    // Output our header
+    // Header
 
     static const QString Header = "%1 (%2)";
 
