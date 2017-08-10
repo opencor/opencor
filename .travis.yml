@@ -28,6 +28,7 @@ install:
       && sudo apt-get -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel
       && sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 50
       && sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 50
+      && find /usr/lib -name libstdc++*
       && strings /usr/lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBCXX
       ;
     else
