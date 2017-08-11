@@ -59,8 +59,16 @@ script:
       && echo "TRAVIS_SUDO -- ${TRAVIS_SUDO}"
       && echo "TRAVIS_TEST_RESULT -- ${TRAVIS_TEST_RESULT}"
       && echo "TRAVIS_TAG -- ${TRAVIS_TAG}"
+      && if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
+              echo "MASTER BRANCH..."
+              ;
+         else
+              echo "PULL REQUEST #${TRAVIS_PULL_REQUEST}..."
+              ;
+         fi
       && docker exec -ti travis-ci bash -c "git clone --depth=50 --branch=master https://github.com/opencor/opencor.git opencor"
-      && docker exec -ti travis-ci bash -c "cd opencor/build \
+      && docker exec -ti travis-ci bash -c "ls -al opencor \
+                                         && cd opencor/build \
                                          && cmake -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON .. \
                                          && ninja \
                                          && cd .. \
