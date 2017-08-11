@@ -11,8 +11,8 @@ if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
                                        apt -y --force-yes -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel; \
                                        echo "PATH:"; \
                                        echo $PATH; \
-                                       echo "Symbolic link..."; \
-                                       ln -s /usr/bin/g++-5 g++; \
+                                       echo "Symbolic link:"; \
+                                       ln -s /usr/bin/g++-5 /usr/bin/g++; \
                                        echo "/usr/bin:"; \
                                        ls -al /usr/bin; \
                                        /usr/bin/g++-5 --version; \
