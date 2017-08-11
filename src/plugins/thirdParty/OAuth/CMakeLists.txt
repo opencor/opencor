@@ -84,10 +84,10 @@ IF(USE_PREBUILT_OAUTH_PACKAGE)
                               SHA1_VALUES 922108ebdaf0411e18aa4c388e68ec52439b2ee4)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} c9a61ddc9cfc56417f92d0d294b9610028e83258
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 306865920c09701db8b6d6ba68d5506c85d27588
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 08836084bbd30cef8086c306f502c945bb2c30a8)
+                              SHA1_VALUES da4be265eb87ee21f2164c03cf79e834d11f5350)
     ENDIF()
 ELSE()
     # Ignore some warnings
@@ -148,6 +148,7 @@ ELSE()
 
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})

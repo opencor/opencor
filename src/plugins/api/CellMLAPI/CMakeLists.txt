@@ -224,19 +224,19 @@ IF(USE_PREBUILT_CELLMLAPI_PACKAGE)
                                           c5c3c5a6f5add63976c681fcd8ef4faea6c49bed)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 192f9ec884bfb1bc33ea2460994dbbd1e4cde03d
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 7797e06864ae9947f3f158fc97a1b991d8d3de18
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 49224745c95cd278958881d8d572c85171364dda
-                                          b9aa16ec5fe313d1e2b9e541108caff8cbec1cc7
-                                          026cbe3e1c2e5ae854656754f9ace487ebe3ada1
-                                          8d78cb1e721007132b482f7e383cca53ca702a22
-                                          a1b532baf66825ec61a1467bd8611bedb693d1ce
-                                          511578c9799f11bb70d3a78aaacf141b6605376b
-                                          3681647085696a2e139b048b698647abc19ba497
-                                          6084a26b5c09831daf6d39e018a8c5025e9e98d8
-                                          193184a48fa5ec1d061dcdd19406d91ae18247e1)
+                              SHA1_VALUES bce3acf0b225fee83f08e90cf8b02d1c28560ba1
+                                          b127afa93192f19bbd47b56f2ae0c76b2b6b3e8b
+                                          5522283cde7d9380ba55a1d19e3f45674c617e74
+                                          b67d722db9c78edaf8a99495c8ec1844560375fb
+                                          4397f044a53dfdd9f291f83f39f0b1caa2d5e378
+                                          2f5c19c6d5e8b72991dfd9860e1c0a540eed2e9e
+                                          726e543d44d860898ea07629f5c5953cc63073b9
+                                          10df4355abcde1085390f034eefe3df7bad448f7
+                                          0529f4f0c73e88d0e43964b465d9737e15cc0b0b)
     ENDIF()
 ELSE()
     # Set some compilation flags and/or ignore some warnings

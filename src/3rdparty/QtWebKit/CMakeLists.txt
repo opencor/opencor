@@ -131,11 +131,11 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           19f7733bb892ff6b682d26a57b027d1236883705)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 180b82bdaffa8fc0add60d78c864ec8e61fa2ab5
+                              ${RELATIVE_PROJECT_SOURCE_DIR} d417b2eb330c41f871f0b63ca1eff8dd1681396c
                               TARGET_PLATFORM ${TARGET_PLATFORM}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES f046a1481b7d3ae10f1095e5314005478cf354ac
-                                          eedde2c7a36dee20eb2c0636fcdcb713e38c18e9)
+                              SHA1_VALUES 02d948004a55054ee432faaa85860963315ad0d9
+                                          b824f25f8b45eb6e2d8394d4d751d6c1a2cfb5e2)
     ENDIF()
 ELSE()
     # Set platform specific configuration options
@@ -287,8 +287,8 @@ ELSE()
     # Patch our CMake files
 
     ExternalProject_Add_Step(${PACKAGE_BUILD} PatchCMakeFiles
-                             COMMAND ${PATCH} Qt5WebKit/Qt5WebKitConfig.cmake WebKit
-                             COMMAND ${PATCH} Qt5WebKitWidgets/Qt5WebKitWidgetsConfig.cmake WebKitWidgets
+                             COMMAND ${PATCH} Qt5WebKit/Qt5WebKitConfig.cmake WebKit WebKit
+                             COMMAND ${PATCH} Qt5WebKitWidgets/Qt5WebKitWidgetsConfig.cmake WebKitWidgets WebKit
                              WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/cmake
                              DEPENDEES install)
 

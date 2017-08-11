@@ -83,9 +83,9 @@ IF(USE_PREBUILT_ZINC_PACKAGE)
                               SHA1_VALUES c84deed9557ac34cbb4a14f307f3e64dbb112ec6)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 696d2df0e7369175db42a00e665cd3b014ec6cff
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 407046f94c3efa2c1c51aeb0342b753489372fbf
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 454eba67fbd1eb42e22c2cfdd18b7dfb5ed4f64e)
+                              SHA1_VALUES 98d915862c22b946495d97b10567140c983c6dcf)
     ENDIF()
 ELSE()
     # Set platform specific configuration options

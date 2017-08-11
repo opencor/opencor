@@ -77,9 +77,9 @@ IF(USE_PREBUILT_LIBXDIFF_PACKAGE)
                               SHA1_VALUES d74f9864f2a173f076740486482f753e5604ab90)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 4f408e6db26b59de32bf187308eb526f15c0a9a1
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 5ddc9aebee50d09abfb1f5b1f486050cce6abcfe
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 0ebbddd08ef1c2eecd3551b6154153a1ecdf2ffd)
+                              SHA1_VALUES 0f402c516a226632106cceeda8f0c7fbf8cccd8d)
     ENDIF()
 ELSE()
     # Ignore some warnings

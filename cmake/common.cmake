@@ -339,7 +339,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         )
     ENDFOREACH()
 
-    # What must be built before the plugin is built
+    # Add some dependencies, if any
 
     IF(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
         ADD_DEPENDENCIES(${PROJECT_NAME} ${ARG_DEPENDS_ON})
@@ -382,7 +382,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     ENDIF()
 
     # Package the plugin, but only if we are not on macOS since it will have
-    # already been copied
+    # already been packaged (copied)
 
     IF(NOT APPLE)
         INSTALL(FILES ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
@@ -417,10 +417,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 SET(TEST_SOURCES_MOC)
                 # Note: we need to initialise TEST_SOURCES_MOC in case there is
-                #       more than just one test. Indeed, if we were not to do
-                #       that initialisation, then TEST_SOURCES_MOC would include
-                #       the information of all the tests up to the one we want
-                #       build...
+                #       more than just one test. Indeed, if we were not to
+                #       initialise it, then it would include the information of
+                #       all the tests up to the one we want to build...
 
                 QT5_WRAP_CPP(TEST_SOURCES_MOC ${TEST_HEADER_MOC})
                 QT5_ADD_RESOURCES(TEST_SOURCES_RCS ${TESTS_QRC_FILENAME})
@@ -443,7 +442,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
                 )
 
-                # Plugins
+                # OpenCOR plugins
 
                 FOREACH(ARG_PLUGIN ${ARG_PLUGINS})
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
@@ -471,16 +470,22 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 IF(NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
                     FOREACH(ARG_EXTERNAL_BINARY ${ARG_EXTERNAL_BINARIES})
+                        SET(FULL_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}")
+
                         IF(WIN32)
                             STRING(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
-                                   IMPORT_EXTERNAL_BINARY "${ARG_EXTERNAL_BINARY}")
+                                   IMPORT_EXTERNAL_BINARY "${FULL_EXTERNAL_BINARY}")
 
                             TARGET_LINK_LIBRARIES(${TEST_NAME}
-                                ${ARG_EXTERNAL_BINARIES_DIR}/${IMPORT_EXTERNAL_BINARY}
+                                ${IMPORT_EXTERNAL_BINARY}
+                            )
+                        ELSEIF(APPLE)
+                            TARGET_LINK_LIBRARIES(${TEST_NAME}
+                                ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                             )
                         ELSE()
                             TARGET_LINK_LIBRARIES(${TEST_NAME}
-                                ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
+                                ${FULL_EXTERNAL_BINARY}
                             )
                         ENDIF()
                     ENDFOREACH()
@@ -494,7 +499,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     )
                 ENDFOREACH()
 
-                # Add the dependency, if any
+                # Add some dependencies, if any
 
                 IF(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
                     ADD_DEPENDENCIES(${TEST_NAME} ${ARG_DEPENDS_ON})

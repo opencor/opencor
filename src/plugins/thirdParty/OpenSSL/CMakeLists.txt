@@ -97,11 +97,11 @@ IF(USE_PREBUILT_OPENSSL_PACKAGE)
                                           b4b0d19ed8ac439cc02eabcc0445b282e34689be)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} e6b2850c874a5fa600182756b3dd5c90252009d1
+                              ${RELATIVE_PROJECT_SOURCE_DIR} d30e30bcee1622a92890b6a6ec209b3c5d3fc019
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES fd8a94f92f5cbdb9fdd09b47abcc022f84dde95c
-                                          2d5d2a42e6bf83a14c30390a895ca351f70b6b19)
+                              SHA1_VALUES 1c51e4134ecf33824d7268d28bce6661285e5118
+                                          e8807912e7e9b0cc181a267ad22769a759e80663)
     ENDIF()
 ELSE()
     # We require perl to build OpenSSL

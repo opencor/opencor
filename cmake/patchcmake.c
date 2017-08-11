@@ -71,8 +71,8 @@ int main(int pArgC, char *pArgV[])
 
     // Make sure that a file name has been provided
 
-    if (pArgC != 3) {
-        printf("Usage: %s <filename> <qtpackagename>\n", pArgV[0]);
+    if (pArgC != 4) {
+        printf("Usage: %s <filename> <packagename> <packagenamereference>\n", pArgV[0]);
 
         return 1;
     }
@@ -97,11 +97,11 @@ int main(int pArgC, char *pArgV[])
     // Process each line of the file and output it to our temporary file
 
     sprintf(oldLine, "get_filename_component(_qt5%s_install_prefix \"${CMAKE_CURRENT_LIST_DIR}/../../../\" ABSOLUTE)\n", pArgV[2]);
-    sprintf(newLine, "set(_qt5%s_install_prefix ${CMAKE_SOURCE_DIR}/src/3rdparty/Qt%s/ext)\n", pArgV[2], pArgV[2]);
+    sprintf(newLine, "set(_qt5%s_install_prefix ${CMAKE_SOURCE_DIR}/src/3rdparty/Qt%s/ext)\n", pArgV[2], pArgV[3]);
 
     while (fgets(line, LINE_MAX, in)) {
         if (!strcmp(line, oldLine))
-            fprintf(out, newLine);
+            fprintf(out, "%s", newLine);
         else
             fprintf(out, "%s", line);
     }
