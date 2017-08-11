@@ -78,14 +78,14 @@ IF(USE_PREBUILT_ZINC_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} a38b5d939ab8df77d21366fa7d68f1a44c9b19cc
+                              ${RELATIVE_PROJECT_SOURCE_DIR} fe7eec086dab717648db9de40aba27c884391ba6
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES c84deed9557ac34cbb4a14f307f3e64dbb112ec6)
+                              SHA1_VALUES 92e2830c0aca29686c32485e168e8ce79e12b81e)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 407046f94c3efa2c1c51aeb0342b753489372fbf
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 5823b182beffc0f62d6847685f8d2a0643adf692
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 98d915862c22b946495d97b10567140c983c6dcf)
+                              SHA1_VALUES c2fce021cdecd03e24b43d0ae2a1c8ead65e1a3a)
     ENDIF()
 ELSE()
     # Set platform specific configuration options
