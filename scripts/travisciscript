@@ -36,7 +36,8 @@ if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
                                        export CXX=g++; \
                                        export CC=gcc; \
                                        cd opencor; \
-                                       ls -al opencor; \
+                                       ls -al; \
+                                       ls -al scripts; \
                                        cd build; \
                                        cmake -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..; \
                                        ninja; \
