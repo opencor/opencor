@@ -22,27 +22,29 @@ if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
     echo "TRAVIS_TAG -- ${TRAVIS_TAG}"
 
     if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
-        docker exec -ti travis-ci bash -c "git clone --depth=50 --branch=master https://github.com/opencor/opencor.git opencor; \
-                                           cd opencor; \
-                                           git checkout -qf ${TRAVIS_COMMIT}"
+        docker exec -ti travis-ci bash -c "   git clone --depth=50 --branch=master https://github.com/opencor/opencor.git opencor \
+                                           && cd opencor \
+                                           && git checkout -qf ${TRAVIS_COMMIT}"
     else
-        docker exec -ti travis-ci bash -c "git clone --depth=50 https://github.com/opencor/opencor.git opencor; \
-                                           cd opencor; \
-                                           git fetch origin +refs/pull/${TRAVIS_PULL_REQUEST}/merge; \
-                                           git checkout -qf FETCH_HEAD"
+        docker exec -ti travis-ci bash -c "   git clone --depth=50 https://github.com/opencor/opencor.git opencor \
+                                           && cd opencor \
+                                           && git fetch origin +refs/pull/${TRAVIS_PULL_REQUEST}/merge \
+                                           && git checkout -qf FETCH_HEAD"
     fi
-    
-    docker exec -ti travis-ci bash -c "export CONFIG=${CONFIG}; \
-                                       export CC=gcc; \
-                                       export CXX=g++; \
-                                       g++ --version; \
-                                       cd opencor/build; \
-                                       cmake -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..; \
-                                       ninja; \
-                                       bin/runtests"
+
+    if [ $? = 0 ]; then
+        docker exec -ti travis-ci bash -c "   export CONFIG=${CONFIG} \
+                                           && export CC=gcc \
+                                           && export CXX=g++ \
+                                           && g++ --version \
+                                           && cd opencor/build \
+                                           && cmake -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON .. \
+                                           && ninja \
+                                           && bin/runtests"
+    fi
 else
-    cd build
-    cmake -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
-    ninja
-    OpenCOR.app/Contents/MacOS/runtests
+       cd build
+    && cmake -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON ..
+    && ninja
+    && OpenCOR.app/Contents/MacOS/runtests
 fi
