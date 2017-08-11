@@ -40,7 +40,25 @@ install:
 
 script:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         docker exec -ti travis-ci bash -c "echo \"TRAVIS_PULL_REQUEST ${TRAVIS_PULL_REQUEST}\""
+         echo "TRAVIS_BUILD_DIR -- ${TRAVIS_BUILD_DIR}"
+      && echo "TRAVIS_BUILD_ID -- ${TRAVIS_BUILD_ID}"
+      && echo "TRAVIS_BUILD_NUMBER -- ${TRAVIS_BUILD_NUMBER}"
+      && echo "TRAVIS_COMMIT -- ${TRAVIS_COMMIT}"
+      && echo "TRAVIS_COMMIT_MESSAGE -- ${TRAVIS_COMMIT_MESSAGE}"
+      && echo "TRAVIS_COMMIT_RANGE -- ${TRAVIS_COMMIT_RANGE}"
+      && echo "TRAVIS_EVENT_TYPE -- ${TRAVIS_EVENT_TYPE}"
+      && echo "TRAVIS_JOB_ID -- ${TRAVIS_JOB_ID}"
+      && echo "TRAVIS_JOB_NUMBER -- ${TRAVIS_JOB_NUMBER}"
+      && echo "TRAVIS_OS_NAME -- ${TRAVIS_OS_NAME}"
+      && echo "TRAVIS_PULL_REQUEST -- ${TRAVIS_PULL_REQUEST}"
+      && echo "TRAVIS_PULL_REQUEST_BRANCH -- ${TRAVIS_PULL_REQUEST_BRANCH}"
+      && echo "TRAVIS_PULL_REQUEST_SHA -- ${TRAVIS_PULL_REQUEST_SHA}"
+      && echo "TRAVIS_PULL_REQUEST_SLUG -- ${TRAVIS_PULL_REQUEST_SLUG}"
+      && echo "TRAVIS_REPO_SLUG -- ${TRAVIS_REPO_SLUG}"
+      && echo "TRAVIS_SECURE_ENV_VARS -- ${TRAVIS_SECURE_ENV_VARS}"
+      && echo "TRAVIS_SUDO -- ${TRAVIS_SUDO}"
+      && echo "TRAVIS_TEST_RESULT -- ${TRAVIS_TEST_RESULT}"
+      && echo "TRAVIS_TAG -- ${TRAVIS_TAG}"
       && docker exec -ti travis-ci bash -c "git clone --depth=50 --branch=master https://github.com/opencor/opencor.git opencor"
       && docker exec -ti travis-ci bash -c "cd opencor/build \
                                          && cmake -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON .. \
