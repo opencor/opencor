@@ -22,12 +22,12 @@ install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          sudo docker pull ubuntu:16.04
       && sudo docker run -it ubuntu cat /etc/*-release
-      && apt install software-properties-common
-      && apt-apt-repository -y ppa:ubuntu-toolchain-r/test
-      && apt-add-repository -y ppa:beineri/opt-qt562-xenial
-      && apt -qq update
-      && apt -qq install g++-5 libgl1-mesa-dev libglu1-mesa-dev ninja-build
-      && apt -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel
+      && sudo docker run -it ubuntu apt install software-properties-common
+      && sudo docker run -it ubuntu apt-apt-repository -y ppa:ubuntu-toolchain-r/test
+      && sudo docker run -it ubuntu apt-add-repository -y ppa:beineri/opt-qt562-xenial
+      && sudo docker run -it ubuntu apt -qq update
+      && sudo docker run -it ubuntu apt -qq install g++-5 libgl1-mesa-dev libglu1-mesa-dev ninja-build
+      && sudo docker run -it ubuntu apt -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel
       ;
     else
          brew update
