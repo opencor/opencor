@@ -39,7 +39,8 @@ var jsonData = { "versions": [
                      "changes": [
                        { "change": "<strong>General:</strong> make sure that we can find the plugin 'xcb' on some Linux machines (see issue <a href=\"https://github.com/opencor/opencor/issues/1383\">#1383</a>)." },
                        { "change": "<strong>CSV data store:</strong> make sure that we can export to a (really) big CSV file (see issue <a href=\"https://github.com/opencor/opencor/issues/1394\">#1394</a>)." },
-                       { "change": "<strong>Simulation Experiment view:</strong> make sure that the runtime gets updated after having edited a CellML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1385\">#1385</a>). Don't check whether the memory associated with a simulation can be allocated (see issue <a href=\"https://github.com/opencor/opencor/issues/1389\">#1389</a>)." }
+                       { "change": "<strong>Simulation Experiment view:</strong> make sure that the runtime gets updated after having edited a CellML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1385\">#1385</a>). Don't check whether the memory associated with a simulation can be allocated (see issue <a href=\"https://github.com/opencor/opencor/issues/1389\">#1389</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a> to version 3.1.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/1393\">#1393</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
