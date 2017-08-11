@@ -20,9 +20,9 @@ branches:
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         sudo docker pull buildpack-deps:xenial-scm
-      && sudo docker run -it buildpack-deps:xenial-scm uname -v
-      && sudo docker run -it buildpack-deps:xenial-scm bash
+         sudo docker pull ubuntu:16.04
+      && sudo docker run -it ubuntu uname -v
+      && sudo docker run -it ubuntu bash
       && apt install software-properties-common
       && apt-apt-repository -y ppa:ubuntu-toolchain-r/test
       && apt-add-repository -y ppa:beineri/opt-qt562-xenial
