@@ -56,11 +56,9 @@ void Tests::basicTests()
     QCOMPARE(context.getVersion(&version[0]), int(OpenCMISS::Zinc::Result::RESULT_OK));
     QCOMPARE(version[0], 3);
     QCOMPARE(version[1], 1);
-//---ISSUE1393--- THE BELOW IS TO BE UNCOMMENTED ONCE WE HAVE UPGRADED TO Zinc
-//                3.1.2...
-//    QCOMPARE(version[2], 1);
+    QCOMPARE(version[2], 2);
 
-//    QVERIFY(QString(context.getVersionString()).startsWith("3.1.2"));
+    QVERIFY(QString(context.getVersionString()).startsWith("3.1.2"));
 }
 
 //==============================================================================
