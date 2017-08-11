@@ -13,6 +13,7 @@ ADD_PLUGIN(CSVDataStore
     HEADERS_MOC
         ../../datastoreinterface.h
 
+        src/csvdatastoreexporter.h
         src/csvdatastoreplugin.h
     PLUGINS
         DataStore
