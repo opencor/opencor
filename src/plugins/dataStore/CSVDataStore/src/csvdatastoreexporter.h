@@ -36,6 +36,8 @@ namespace CSVDataStore {
 
 class CsvDataStoreExporter : public DataStore::DataStoreExporter
 {
+    Q_OBJECT
+
 public:
     explicit CsvDataStoreExporter(const QString &pFileName,
                                   DataStore::DataStore *pDataStore,
