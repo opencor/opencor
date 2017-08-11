@@ -203,21 +203,26 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         )
     ENDFOREACH()
 
-    # External binaries
-
-    IF(NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
-        # Create a custom target for copying binaries
+    IF((NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
+    OR (    NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL ""
+        AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL ""))
+        # Create a custom target for installing files
         # Note: this is to prevent Ninja from getting confused with circular
         #       references...
 
-        SET(COPY_EXTERNAL_BINARIES_TARGET "COPY_${PROJECT_NAME}_EXTERNAL_BINARIES")
+        SET(INSTALL_EXTERNAL_FILES_TARGET "${PROJECT_NAME}_INSTALL_EXTERNAL_FILES")
 
-        ADD_CUSTOM_TARGET(${COPY_EXTERNAL_BINARIES_TARGET})
-        ADD_DEPENDENCIES(${PROJECT_NAME} ${COPY_EXTERNAL_BINARIES_TARGET})
+        ADD_CUSTOM_TARGET(${INSTALL_EXTERNAL_FILES_TARGET})
+        ADD_DEPENDENCIES(${PROJECT_NAME} ${INSTALL_EXTERNAL_FILES_TARGET})
 
         IF(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
-            ADD_DEPENDENCIES(${COPY_EXTERNAL_BINARIES_TARGET} ${ARG_DEPENDS_ON})
+            ADD_DEPENDENCIES(${INSTALL_EXTERNAL_FILES_TARGET} ${ARG_DEPENDS_ON})
         ENDIF()
+    ENDIF()
+
+    # External binaries
+
+    IF(NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
 
         FOREACH(ARG_EXTERNAL_BINARY ${ARG_EXTERNAL_BINARIES})
             # Make sure that the external binary exists
@@ -231,7 +236,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                AND "${ARG_DEPENDS_ON}" STREQUAL "")
                 SET(COPY_TARGET DIRECT)
             ELSE()
-                SET(COPY_TARGET ${COPY_EXTERNAL_BINARIES_TARGET})
+                SET(COPY_TARGET ${INSTALL_EXTERNAL_FILES_TARGET})
             ENDIF()
 
             # Copy the external binary to its destination directory, so we can
@@ -251,7 +256,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 IF(${COPY_TARGET} STREQUAL "DIRECT")
                     EXECUTE_PROCESS(COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 ELSE()
-                    ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
+                    ADD_CUSTOM_COMMAND(TARGET ${INSTALL_EXTERNAL_FILES_TARGET}
                                        COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 ENDIF()
             ENDIF()
@@ -283,7 +288,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 IF(${COPY_TARGET} STREQUAL "DIRECT")
                     EXECUTE_PROCESS(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 ELSE()
-                    ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
+                    ADD_CUSTOM_COMMAND(TARGET ${INSTALL_EXTERNAL_FILES_TARGET}
                                        COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 ENDIF()
 
@@ -293,7 +298,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                                                           @rpath/${EXTERNAL_BINARIES_DEPENDENCY}
                                                                           ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                     ELSE()
-                        ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
+                        ADD_CUSTOM_COMMAND(TARGET ${INSTALL_EXTERNAL_FILES_TARGET}
                                            COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DEPENDENCY}
                                                                              @rpath/${EXTERNAL_BINARIES_DEPENDENCY}
                                                                              ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
@@ -319,15 +324,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     IF(    NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL ""
        AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL "")
-
-        SET(COPY_EXTERNAL_SOURCES_TARGET "${PROJECT_NAME}_EXTERNAL_SOURCES")
-
-        ADD_CUSTOM_TARGET(${COPY_EXTERNAL_SOURCES_TARGET})
-        ADD_DEPENDENCIES(${PROJECT_NAME} ${COPY_EXTERNAL_SOURCES_TARGET})
-
         # Copy the entire source directory to the destination
 
-        ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_SOURCES_TARGET}
+        ADD_CUSTOM_COMMAND(TARGET ${INSTALL_EXTERNAL_FILES_TARGET}
                            COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
                                                                       ${ARG_EXTERNAL_DESTINATION_DIR})
     ENDIF()

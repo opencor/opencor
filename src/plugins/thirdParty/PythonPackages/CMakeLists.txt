@@ -79,19 +79,22 @@ IF(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 404333b7075ec857401b22c5de977ad5869dd6fc)
     ELSE()
-        RETRIEVE_PACKAGE_FILE(PythonPackages ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} 0c8b8b07d6af7cdc8e6746cb472d9be5f45f20f0
-        )
+        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 2414fa95a98f96078be2ab76fe8dd9860576f036
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES 87041b5f0c84bca528d15de443cb9f0e35fa53e0)
     ENDIF()
 ELSE()
+    # Install Python packages using pip
 
     SET(PACKAGE_BUILD PythonPackagesBuild)
 
     ADD_CUSTOM_TARGET(${PACKAGE_BUILD})
 
-    # Installing Python packages requires the Python library
+    # Python package installation requires Python
 
-    SET(BUILD_DEPENDENCIES PythonPlugin_EXTERNAL_SOURCES)
+    SET(BUILD_DEPENDENCIES PythonPlugin)
 
     # Ensure local site packages directory exists
 
