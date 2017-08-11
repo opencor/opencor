@@ -8,7 +8,9 @@ if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
                                        apt-add-repository -y ppa:beineri/opt-qt562-xenial; \
                                        apt -y --force-yes -qq update; \
                                        apt -y --force-yes -qq install cmake g++-5 git libgl1-mesa-dev libglu1-mesa-dev ninja-build; \
-                                       apt -y --force-yes -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel"
+                                       apt -y --force-yes -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel; \
+                                       which g++; \
+                                       g++ --version"
 else
     brew update
     curl -O https://raw.githubusercontent.com/Homebrew/homebrew-core/106d0878ee812cb8f5c403f717bdebe836445aee/Formula/qt5.rb
