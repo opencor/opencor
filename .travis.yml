@@ -21,7 +21,7 @@ branches:
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          sudo docker pull ubuntu:16.04
-      && sudo docker run ubuntu apt-apt-repository -y ppa:ubuntu-toolchain-r/test
+      && sudo docker run ubuntu apt-add-repository -y ppa:ubuntu-toolchain-r/test
       && sudo docker run ubuntu apt-add-repository -y ppa:beineri/opt-qt562-xenial
       && sudo docker run ubuntu apt -qq update
       && sudo docker run ubuntu apt -qq install g++-5 libgl1-mesa-dev libglu1-mesa-dev ninja-build
