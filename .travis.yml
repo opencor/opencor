@@ -22,7 +22,8 @@ install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          docker pull ubuntu:16.04
       && docker run --name travis-ci -v $TRAVIS_BUILD_DIR:/iqrfsdk -td ubuntu:16.04 /bin/bash
-      && docker exec -ti travis-ci bash -c "apt-add-repository -y ppa:beineri/opt-qt562-xenial"
+      && docker exec -ti travis-ci bash -c "apt-get install -y software-properties-common"
+      && docker exec -ti travis-ci bash -c "add-apt-repository -y ppa:beineri/opt-qt562-xenial"
       && docker exec -ti travis-ci bash -c "apt -qq update"
       && docker exec -ti travis-ci bash -c "apt -qq install g++-5 libgl1-mesa-dev libglu1-mesa-dev ninja-build"
       && docker exec -ti travis-ci bash -c "apt -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel"
