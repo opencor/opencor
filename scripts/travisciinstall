@@ -11,12 +11,11 @@ if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
                                        apt -y --force-yes -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel; \
                                        echo "PATH:"; \
                                        echo $PATH; \
+                                       echo "Symbolic link..."; \
+                                       ln -s /usr/bin/g++-5 g++; \
                                        echo "/usr/bin:"; \
                                        ls -al /usr/bin; \
-                                       echo "/usr/local:"; \
-                                       ls -al /usr/local; \
-                                       echo "/usr/local/bin:"; \
-                                       ls -al /usr/local/bin; \
+                                       /usr/bin/g++-5 --version; \
                                        /usr/bin/g++ --version"
 else
     brew update
