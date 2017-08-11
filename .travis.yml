@@ -50,7 +50,7 @@ script:
     && ninja
     && cd ..
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         build/bin/run -a
+         build/bin/OpenCOR -a
          ;
        else
          build/OpenCOR.app/Contents/MacOS/runtests
