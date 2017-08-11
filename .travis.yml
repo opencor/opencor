@@ -21,7 +21,7 @@ branches:
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          sudo docker pull ubuntu:16.04
-      && sudo docker run -it ubuntu lsb_release -a
+      && sudo docker run -it ubuntu cat /etc/*-release
       && sudo docker run -it ubuntu bash
       && apt install software-properties-common
       && apt-apt-repository -y ppa:ubuntu-toolchain-r/test
