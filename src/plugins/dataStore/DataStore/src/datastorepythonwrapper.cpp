@@ -310,12 +310,25 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreArray *pDataStoreArray
 
 PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVariable)
 {
-    if (pDataStoreVariable) {
+    if (pDataStoreVariable && pDataStoreVariable->array()) {
         auto numpyArray = new NumPyPythonWrapper(pDataStoreVariable->array(), pDataStoreVariable->size());
         return numpyArray->numpyArray();
     } else {
         Py_INCREF(Py_None);
         return Py_None;
+    }
+}
+
+
+//==============================================================================
+
+double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable, const qulonglong &pPosition) const
+{
+    if (pDataStoreVariable && pDataStoreVariable->array()) {
+        return pDataStoreVariable->value(pPosition);
+    } else {
+        throw std::runtime_error("'NoneType' object is not subscriptable");
+        return 0.0;
     }
 }
 

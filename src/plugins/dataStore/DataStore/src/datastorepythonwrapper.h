@@ -79,6 +79,8 @@ public:
     static PyObject *dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
 
 public slots:
+    double value(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable, const qulonglong &pPosition) const;
+
     PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable) const;
 
     PyObject * variables(OpenCOR::DataStore::DataStore *pDataStore);
