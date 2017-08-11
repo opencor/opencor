@@ -1,8 +1,8 @@
 #!/bin/sh
 
 if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-       docker pull ubuntu:16.04
-    && docker run --name travis-ci -v $TRAVIS_BUILD_DIR:/iqrfsdk -td ubuntu:16.04 /bin/bash
+       docker pull ubuntu:16.04 \
+    && docker run --name travis-ci -v $TRAVIS_BUILD_DIR:/iqrfsdk -td ubuntu:16.04 /bin/bash \
     && docker exec -ti travis-ci bash -c "   apt -y --force-yes -qq update \
                                           && apt -y --force-yes install software-properties-common \
                                           && apt-add-repository -y ppa:beineri/opt-qt562-xenial \
@@ -18,9 +18,9 @@ if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
                                           && /usr/bin/g++-5 --version \
                                           && /usr/bin/g++ --version"
 else
-       brew update
-    && curl -O https://raw.githubusercontent.com/Homebrew/homebrew-core/106d0878ee812cb8f5c403f717bdebe836445aee/Formula/qt5.rb
-    && brew install ./qt5.rb ninja
-    && export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
+       brew update \
+    && curl -O https://raw.githubusercontent.com/Homebrew/homebrew-core/106d0878ee812cb8f5c403f717bdebe836445aee/Formula/qt5.rb \
+    && brew install ./qt5.rb ninja \
+    && export OPENSSL_ROOT_DIR=/usr/local/opt/openssl \
     && chmod -R 755 /usr/local/opt/qt5/*
 fi
