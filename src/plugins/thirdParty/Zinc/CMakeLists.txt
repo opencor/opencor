@@ -3,16 +3,16 @@ PROJECT(ZincPlugin)
 # Name and version of our package
 
 SET(PACKAGE_NAME Zinc)
-SET(PACKAGE_VERSION 3.1.1)
+SET(PACKAGE_VERSION 3.1.2)
 
 # Version of our library
 
 SET(MAJOR_LIBRARY_VERSION 3)
-SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.1)
+SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.2)
 
 # Git tag for our library
 
-SET(GIT_TAG v3.1.1)
+SET(GIT_TAG v3.1.2)
 
 # Specify where our local package will be installed
 
