@@ -40,7 +40,9 @@ install:
 
 script:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         docker exec -ti travis-ci bash -c "cd build"
+         docker exec -ti travis-ci bash -c "pwd"
+      && docker exec -ti travis-ci bash -c "ls -al"
+      && docker exec -ti travis-ci bash -c "cd build"
       && docker exec -ti travis-ci bash -c "cmake -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON .."
       && docker exec -ti travis-ci bash -c "ninja"
       && docker exec -ti travis-ci bash -c "cd .."
