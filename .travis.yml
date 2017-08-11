@@ -20,8 +20,8 @@ branches:
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         docker pull ubuntu:16.04
-      && docker run -it ubuntu bash
+         sudo docker pull ubuntu:16.04
+      && sudo docker run -it ubuntu bash
       && apt install software-properties-common
       && apt-apt-repository -y ppa:ubuntu-toolchain-r/test
       && apt-add-repository -y ppa:beineri/opt-qt562-xenial
