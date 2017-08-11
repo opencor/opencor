@@ -69,6 +69,16 @@ private:
 public slots:
     bool run(OpenCOR::SimulationSupport::Simulation *pSimulationSupportSimulation);
 
+    // Set a simulation's point data
+
+    void setStartingPoint(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                          const double &pStartingPoint,
+                          const bool &pRecompute = true);
+    void setEndingPoint(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                        const double &pEndingPoint);
+    void setPointInterval(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
+                          const double &pPointInterval);
+
     // Access a simulation's parameter data
 
     PyObject * algebraic(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;

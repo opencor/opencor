@@ -52,7 +52,8 @@ SimulationData::SimulationData(Simulation *pSimulation) :
     mDaeSolverProperties(Solver::Solver::Properties()),
     mNlaSolverName(QString()),
     mNlaSolverProperties(Solver::Solver::Properties()),
-    mResultsDataStore(0)
+    mResultsDataStore(0),
+    mSimulationDataUpdatedFunction(std::bind(&SimulationData::updateParameters, this))
 {
     // Create our various arrays
 
@@ -520,7 +521,7 @@ void SimulationData::recomputeComputedConstantsAndVariables(const double &pCurre
 
         // Let people know that our data has been updated
 
-        emit updated(pCurrentPoint);
+        emit updatedParameters(pCurrentPoint);
     }
 }
 
@@ -573,6 +574,13 @@ void SimulationData::checkForModifications()
     // Let people know whether any of our constants or states has been modified
 
     emit modified(isModified());
+}
+
+//==============================================================================
+
+void SimulationData::updateParameters(SimulationData *pSimulationData)
+{
+    emit pSimulationData->updatedParameters(pSimulationData->mStartingPoint);
 }
 
 //==============================================================================

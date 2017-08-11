@@ -31,6 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <functional>
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -63,13 +67,24 @@ class SimulationSupportPythonWrapper;
 //==============================================================================
 
 class Simulation;
+class SimulationData;
 class SimulationWorker;
+
+//==============================================================================
+
+// We bind the SimulationData object to the the first parameter of `updateParameters()`
+// to create a function object that is then called when simulation parameters are updated
+// by the Python wrapper
+
+typedef std::__bind<void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
 
 //==============================================================================
 
 class SIMULATIONSUPPORT_EXPORT SimulationData : public QObject
 {
     Q_OBJECT
+
+    friend class SimulationSupportPythonWrapper;
 
 public:
     explicit SimulationData(Simulation *pSimulation);
@@ -80,6 +95,11 @@ public:
     double * states() const;
     double * algebraic() const;
     double * condVar() const;
+
+    void setStartingPoint(const double &pStartingPoint,
+                          const bool &pRecompute = true);
+    void setEndingPoint(const double &pEndingPoint);
+    void setPointInterval(const double &pPointInterval);
 
     SolverInterface * odeSolverInterface() const;
 
@@ -106,8 +126,9 @@ public:
     DataStore::DataStoreVariables stateVariables() const;
     DataStore::DataStoreVariables algebraicVariables() const;
 
-public slots:
+    static void updateParameters(SimulationData *pSimulationData);
 
+public slots:
     void reload();
 
     OpenCOR::SimulationSupport::Simulation * simulation() const;
@@ -116,14 +137,8 @@ public slots:
     void setDelay(const int &pDelay);
 
     double startingPoint() const;
-    void setStartingPoint(const double &pStartingPoint,
-                          const bool &pRecompute = true);
-
     double endingPoint() const;
-    void setEndingPoint(const double &pEndingPoint);
-
     double pointInterval() const;
-    void setPointInterval(const double &pPointInterval);
 
     QString odeSolverName() const;
     void setOdeSolverName(const QString &pOdeSolverName);
@@ -183,6 +198,8 @@ private:
     double *mInitialConstants;
     double *mInitialStates;
 
+    SimulationDataUpdatedFunction mSimulationDataUpdatedFunction;
+
     void createArrays();
     void deleteArrays();
 
@@ -193,7 +210,9 @@ private:
     SolverInterface * solverInterface(const QString &pSolverName) const;
 
 signals:
-    void updated(const double &pCurrentPoint);
+    void updatedSimulation();
+
+    void updatedParameters(const double &pCurrentPoint);
     void modified(const bool &pIsModified);
 
     void error(const QString &pMessage);

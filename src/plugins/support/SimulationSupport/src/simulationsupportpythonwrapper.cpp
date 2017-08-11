@@ -95,30 +95,62 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
 //==============================================================================
 
+void SimulationSupportPythonWrapper::setStartingPoint(SimulationData *pSimulationData,
+    const double &pStartingPoint, const bool &pRecompute)
+{
+    pSimulationData->setStartingPoint(pStartingPoint, pRecompute);
+
+    emit pSimulationData->updatedSimulation();
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::setEndingPoint(SimulationData *pSimulationData, const double &pEndingPoint)
+{
+    pSimulationData->setEndingPoint(pEndingPoint);
+
+    emit pSimulationData->updatedSimulation();
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulationData, const double &pPointInterval)
+{
+    pSimulationData->setPointInterval(pPointInterval);
+
+    emit pSimulationData->updatedSimulation();
+}
+
+//==============================================================================
+
 PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->algebraicVariables());
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->algebraicVariables(),
+        &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->constantVariables());
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->constantVariables(),
+        &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->rateVariables());
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->rateVariables(),
+        &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->stateVariables());
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->stateVariables(),
+        &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
 //==============================================================================
