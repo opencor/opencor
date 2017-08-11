@@ -41,11 +41,10 @@ if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
 
         if [ $? = 0 ]; then
             if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
-echo "TRAVIS_COMMIT: ${TRAVIS_COMMIT}"
             
                 docker exec -ti travis-ci bash -c "   git clone --depth=50 --branch=master https://github.com/opencor/opencor.git opencor \
                                                    && cd opencor \
-                                                   && git checkout -qf ${TRAVIS_COMMIT}"
+                                                   && git checkout -qf e7811d440cae62ebceffd398830ab2d223a036cb"
             else
                 docker exec -ti travis-ci bash -c "   git clone --depth=50 https://github.com/opencor/opencor.git opencor \
                                                    && cd opencor \
