@@ -26,6 +26,15 @@ var jsonData = { "versions": [
                            }
                          ]
                        },
+                       { "name": "Data store",
+                         "entries": [
+                           { "type": "subCategory", "name": "<a href=\"https://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a> data store",
+                             "entries": [
+                               { "type": "Improved", "description": "Export of data." }
+                             ]
+                           }
+                         ]
+                       },
                        { "name": "Editing",
                          "entries": [
                            { "type": "subCategory", "name": "CellML Annotation view",
