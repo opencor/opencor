@@ -4,10 +4,10 @@ sudo: required
 
 os:
   - linux
-#  - osx
+  - osx
 
 env:
-#  - CONFIG=Release
+  - CONFIG=Release
   - CONFIG=Debug
 
 branches:
