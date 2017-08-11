@@ -9,17 +9,29 @@ if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
                                           && apt -y --force-yes -qq update \
                                           && apt -y --force-yes -qq install cmake g++-5 git libgl1-mesa-dev libglu1-mesa-dev ninja-build \
                                           && apt -y --force-yes -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel \
-                                          && echo "PATH:" \
-                                          && echo $PATH \
-                                          && echo "Symlink:" \
                                           && cd /usr/bin \
-                                          && ln -s g++-5 g++ \
-                                          && echo "/usr/bin:" \
-                                          && ls -al /usr/bin \
-                                          && /usr/bin/g++-5 --version \
-                                          && /usr/bin/g++ --version \
-                                          && echo "GCCVersion:" \
-                                          && g++ --version"
+                                          && ln -s g++-5 g++"
+
+    if [ $? = 0 ]; then
+        # Do a few things that are done by Travis CI when not using Docker
+    
+        docker exec -ti travis-ci bash -c "   export CONFIG=${CONFIG} \
+                                           && export CC=gcc \
+                                           && export CXX=g++"
+
+        if [ $? = 0 ]; then
+            if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
+                docker exec -ti travis-ci bash -c "   git clone --depth=50 --branch=master https://github.com/opencor/opencor.git opencor \
+                                                   && cd opencor \
+                                                   && git checkout -qf ${TRAVIS_COMMIT}"
+            else
+                docker exec -ti travis-ci bash -c "   git clone --depth=50 https://github.com/opencor/opencor.git opencor \
+                                                   && cd opencor \
+                                                   && git fetch origin +refs/pull/${TRAVIS_PULL_REQUEST}/merge \
+                                                   && git checkout -qf FETCH_HEAD"
+            fi
+        fi
+    fi
 else
        brew update \
     && curl -O https://raw.githubusercontent.com/Homebrew/homebrew-core/106d0878ee812cb8f5c403f717bdebe836445aee/Formula/qt5.rb \
