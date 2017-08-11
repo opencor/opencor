@@ -9,8 +9,8 @@ if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
                                        apt -y --force-yes -qq update; \
                                        apt -y --force-yes -qq install cmake g++-5 git libgl1-mesa-dev libglu1-mesa-dev ninja-build; \
                                        apt -y --force-yes -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel; \
-                                       echo "ln -s /usr/g++-5 /usr/g++:"; \
-                                       ln -s /usr/g++-5 /usr/g++; \
+#                                       echo "ln -s /usr/g++-5 /usr/g++:"; \
+#                                       ln -s /usr/g++-5 /usr/g++; \
                                        echo "which g++:"; \
                                        which g++; \
                                        echo "PATH:"; \
