@@ -65,16 +65,16 @@ IF(USE_PREBUILT_ZINC_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} b2937c2f64355969b15d463b3ade6234cc964e17
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} d7e08929a968a661bf8e9f00132929a4f3e244fb
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 54924312f20456a943cfd912919252c2ed5674d0
-                                              61e5ca43308c59f210e166f0d4098dc0e4b0020e)
+                                  SHA1_VALUES 351e90a846ad08149c8799dc0888f4083a6f7ccc
+                                              7a8d19846bbc3fd281ec7f98581ea34174ce278a)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} fd91af3483e32c5d7271b8e48187635fd590c907
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} dfe1440281818d30e0c38893b3824a5493f00222
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 5ab5426ed541a7db2d8940deabcdb4a40b22a470
-                                              03397dfe00eed08972790dc7f7684d5436dd524d)
+                                  SHA1_VALUES 56c8d7c66b402561310b67e3e84f0efdac4b2bdf
+                                              04691b8f3b0f1fdb89d12e29ceb75bd23e7d60f3)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
