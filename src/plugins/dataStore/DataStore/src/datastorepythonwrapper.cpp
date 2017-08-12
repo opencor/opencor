@@ -69,7 +69,7 @@ static DataStoreVariable *getVariable(PyObject *valuesDict, PyObject *key)
 
 // Get a subscripted item from a values dictionary
 
-static PyObject *valuesdict_subscript(PyObject *valuesDict, PyObject *key)
+static PyObject *DataStoreValuesDict_subscript(PyObject *valuesDict, PyObject *key)
 {
     DataStoreVariable *variable = getVariable(valuesDict, key);
 
@@ -85,7 +85,7 @@ static PyObject *valuesdict_subscript(PyObject *valuesDict, PyObject *key)
 
 // Assign to a subscripted item in a values dictionary
 
-static int valuesdict_ass_subscript(PyObject *valuesDict, PyObject *key, PyObject *value)
+static int DataStoreValuesDict_ass_subscript(PyObject *valuesDict, PyObject *key, PyObject *value)
 {
     if (value == 0) {
         return PyDict_DelItem(valuesDict, key);
@@ -118,17 +118,17 @@ static int valuesdict_ass_subscript(PyObject *valuesDict, PyObject *key, PyObjec
 
 //==============================================================================
 
-static PyMappingMethods valuesdict_as_mapping = {
-    0,                                          /*mp_length*/
-    (binaryfunc)valuesdict_subscript,           /*mp_subscript*/
-    (objobjargproc)valuesdict_ass_subscript,    /*mp_ass_subscript*/
+static PyMappingMethods DataStoreValuesDict_as_mapping = {
+    0,                                                 /*mp_length*/
+    (binaryfunc)DataStoreValuesDict_subscript,         /*mp_subscript*/
+    (objobjargproc)DataStoreValuesDict_ass_subscript,  /*mp_ass_subscript*/
 };
 
 //==============================================================================
 
 // A string representation of a values dictionary
 
-static PyObject *valuesdict_repr(DataStoreValuesDictObject *valuesDict)
+static PyObject *DataStoreValuesDict_repr(DataStoreValuesDictObject *valuesDict)
 {
     // A modified version of `dict_repr()` from `dictobject.c` in Python's C source
 
@@ -226,7 +226,7 @@ error:
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
-// A `valuesdict` is a dictionary sub-class for mapping between the next values
+// A `DataStoreValuesDict` is a dictionary sub-class for mapping between the next values
 // of a DataStoreVariables list and Python.
 
 PyTypeObject DataStorePythonWrapper::DataStoreValuesDict_Type = {
@@ -239,10 +239,10 @@ PyTypeObject DataStorePythonWrapper::DataStoreValuesDict_Type = {
     0,                                          /* tp_getattr */
     0,                                          /* tp_setattr */
     0,                                          /* tp_compare */
-    (reprfunc)valuesdict_repr,                  /* tp_repr */
+    (reprfunc)DataStoreValuesDict_repr,         /* tp_repr */
     0,                                          /* tp_as_number */
     0,                                          /* tp_as_sequence */
-    &valuesdict_as_mapping,                     /* tp_as_mapping */
+    &DataStoreValuesDict_as_mapping,            /* tp_as_mapping */
     0,                                          /* tp_hash */
     0,                                          /* tp_call */
     0,                                          /* tp_str */
@@ -261,14 +261,6 @@ PyTypeObject DataStorePythonWrapper::DataStoreValuesDict_Type = {
     0,                                          /* tp_members */
     0,                                          /* tp_getset */
     &PyDict_Type,                               /* tp_base */
-//    0,                                          /* tp_dict */
-//    0,                                          /* tp_descr_get */
-//    0,                                          /* tp_descr_set */
-//    0,                                          /* tp_dictoffset */
-//    0,                                          /* tp_init */
-//    PyType_GenericAlloc,                        /* tp_alloc */
-//    PyDict_Type.tp_new,                         /* tp_new */
-//    PyObject_GC_Del,                            /* tp_free */
 };
 
 #pragma GCC diagnostic pop
