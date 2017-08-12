@@ -271,6 +271,7 @@ void DataStoreVariable::addValue()
 
     Q_ASSERT(mSize < mCapacity);
     Q_ASSERT(mNextValuePtr);
+    Q_ASSERT(mValues);
 
     mValues[mSize] = *mNextValuePtr;
 
@@ -284,6 +285,7 @@ void DataStoreVariable::addValue(const double &pValue)
     // Set the value of the variable at the given position using the given value
 
     Q_ASSERT(mSize < mCapacity);
+    Q_ASSERT(mValues);
 
     mValues[mSize] = pValue;
 
@@ -337,6 +339,7 @@ double DataStoreVariable::value(const qulonglong &pPosition) const
     // Return our value at the given position
 
     Q_ASSERT(pPosition < mSize);
+    Q_ASSERT(mValues);
 
     return mValues[pPosition];
 }
