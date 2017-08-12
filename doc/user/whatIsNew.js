@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 23, "month": 7, "year": 2017,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 11, "month": 8, "year": 2017,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -22,6 +22,15 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "CellML API",
                              "entries": [
                                { "type": "Fixed", "description": "Memory access in the CUSES service." }
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Data store",
+                         "entries": [
+                           { "type": "subCategory", "name": "<a href=\"https://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a> data store",
+                             "entries": [
+                               { "type": "Improved", "description": "Export of data." }
                              ]
                            }
                          ]
@@ -53,6 +62,15 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "PMR window",
                              "entries": [
                                { "type": "Improved", "description": "Cloning of a workspace." }
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Simulation",
+                         "entries": [
+                           { "type": "subCategory", "name": "Simulation Experiment view (formerly known as the Single Cell view)",
+                             "entries": [
+                               { "type": "Improved", "description": "Running of long simulations." }
                              ]
                            }
                          ]

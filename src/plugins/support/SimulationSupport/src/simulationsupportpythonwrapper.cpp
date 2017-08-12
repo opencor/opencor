@@ -67,78 +67,100 @@ void SimulationSupportPythonWrapper::simulationFinished(const qint64 &pElapsedTi
 
 bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 {
-    // Check that we have enough memory to run our simulation
+    // Try to allocate all the memory we need for the simulation by
+    // resetting its settings
 
-    double freeMemory = Core::freeMemory();
-    double requiredMemory = pSimulation->requiredMemory();
+    bool runSimulation = pSimulation->results()->reset();
 
-    if (requiredMemory > freeMemory) {
-        throw std::runtime_error(
-            tr("The simulation requires %1 of memory and you have only %2 left.")
-                .arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)).toStdString());
+    // Allocate additional memory for sensitivity analysis
+
+    if (runSimulation)
+        runSimulation = pSimulation->results()->createGradientsDataStore();
+
+    // Run our simulation in case we were able to allocate all the
+    // memory we need to run the simulation
+
+    if (runSimulation) {
+        // Signal our event loop when the simulation has finished
+
+        connect(pSimulation, SIGNAL(stopped(const qint64 &)), this, SLOT(simulationFinished(const qint64 &)));
+
+        // A succesfull run will set elapsed time
+
+        mElapsedTime = -1;
+
+        // Start the simulation and wait for it to complete
+
+        if (pSimulation->run())
+            mSimulationRunEventLoop->exec();
+
+        return mElapsedTime >= 0;
     } else {
-        // Theoretically speaking, we have enough memory to run the
-        // simulation, so try to allocate all the memory we need for the
-        // simulation by resetting its settings
-
-        bool runSimulation = pSimulation->results()->reset();
-
-        if (runSimulation)
-            pSimulation->results()->createGradientsDataStore();
-
-        // Effectively run our simulation in case we were able to
-        // allocate all the memory we need to run the simulation
-
-        if (runSimulation) {
-            // Signal our event loop when the simulation has finished
-
-            connect(pSimulation, SIGNAL(stopped(const qint64 &)), this, SLOT(simulationFinished(const qint64 &)));
-
-            // A succesful run will set elapsed time
-
-            mElapsedTime = -1;
-
-            // Start the simulation and wait for it to complete
-
-            if (pSimulation->run())
-                mSimulationRunEventLoop->exec();
-
-            return mElapsedTime >= 0;
-        } else {
-            throw std::runtime_error(
-                tr("We could not allocate the %1 of memory required for the simulation.")
-                    .arg(Core::sizeAsString(requiredMemory)).toStdString());
-        }
+        throw std::runtime_error(
+            tr("We could not allocate the memory required for the simulation.").toStdString());
     }
+
     return false;
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::setStartingPoint(SimulationData *pSimulationData,
+    const double &pStartingPoint, const bool &pRecompute)
+{
+    pSimulationData->setStartingPoint(pStartingPoint, pRecompute);
+
+    emit pSimulationData->updatedSimulation();
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::setEndingPoint(SimulationData *pSimulationData, const double &pEndingPoint)
+{
+    pSimulationData->setEndingPoint(pEndingPoint);
+
+    emit pSimulationData->updatedSimulation();
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulationData, const double &pPointInterval)
+{
+    pSimulationData->setPointInterval(pPointInterval);
+
+    emit pSimulationData->updatedSimulation();
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->algebraicVariables());
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->algebraicVariables(),
+        &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->constantVariables());
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->constantVariables(),
+        &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->rateVariables());
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->rateVariables(),
+        &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->stateVariables());
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->stateVariables(),
+        &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
 //==============================================================================

@@ -140,11 +140,10 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
                               SHA1_VALUES d87312719ed58dddbb4e16a3ad9db28776b2a4b5)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-            ${RELATIVE_PROJECT_SOURCE_DIR} 0c8b8b07d6af7cdc8e6746cb472d9be5f45f20f0
-            SHA1_FILES ${SHA1_FILES}
-            SHA1_VALUES d755a6bc25f4864a57ade7fa9666f628fd6b24b9
-                        d17857a22bd55fe4146169a1f64a9a696b5265ab
-        )
+                              ${RELATIVE_PROJECT_SOURCE_DIR} d8a57ee388d1b25cd3c937f6d7a00d23c86f3348
+                              SHA1_FILES ${SHA1_FILES}
+                              SHA1_VALUES cc91186729aee93876495836da0af1b82d2858ea
+                                          81aa5a7f1370dab5bd5c5f4e7d94c71c9c57f834)
     ENDIF()
 ELSE()
     # Set platform specific configuration options
@@ -450,12 +449,16 @@ ADD_PLUGIN(Python
         zlib
     EXTERNAL_BINARIES_DIR
         ${EXTERNAL_BINARIES_DIR}
+    EXTERNAL_BINARIES
+        ${EXTERNAL_BINARIES}
     EXTERNAL_DESTINATION_DIR
         ${ROOT_DIR}
     EXTERNAL_SOURCE_DIR
         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-    EXTERNAL_BINARIES
-        ${EXTERNAL_BINARIES}
     DEPENDS_ON
         ${PLUGIN_DEPENDS_ON}
 )
+
+# Update our list of Python dependencies for other plugins
+
+SET(PYTHON_DEPENDENCIES ${PYTHON_DEPENDENCIES} ${INSTALL_EXTERNAL_FILES_TARGET} PARENT_SCOPE)

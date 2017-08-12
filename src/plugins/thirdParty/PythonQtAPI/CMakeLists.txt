@@ -75,9 +75,9 @@ IF(USE_PREBUILT_PYTHONQT_PACKAGE)
                               SHA1_VALUES 841689afb345946efa422ee787c97e672e6ffdcb)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 47870c345ae46a1e28e86edd585300de2fba927d
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 57bcc2f58e9d141535554bafd429418155b50b74
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e2ddd1bc147a0bb8f6c56e000f6a53695d45b403)
+                              SHA1_VALUES f43df980cbe0315066a631a0ac64be1ed7b0b3fe)
     ENDIF()
 ELSE()
     # Set platform specific configuration options and tool names
@@ -122,11 +122,11 @@ ELSE()
 
     # Build PythonQt as an external project
 
-    SET(PACKAGE_BUILD PythonQtBuild)
+    SET(PACKAGE_BUILD PythonQtAPIBuild)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         DEPENDS
-            PythonPlugin
+            ${PYTHON_DEPENDENCIES}
         DOWNLOAD_DIR
             ${PYTHONQT_SOURCE_DIR}
         SOURCE_DIR
@@ -204,7 +204,6 @@ ELSE()
     SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
-
 # Allow other external projects to find our PythonQt package
 
 SET(PYTHONQT_ROOT_DIR ${LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
@@ -220,7 +219,6 @@ ADD_PLUGIN(PythonQtAPI
         src/pythonqtapiplugin.h
     PLUGINS
         Core
-        Python
     EXTERNAL_BINARIES_DIR
         ${EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES
@@ -228,3 +226,7 @@ ADD_PLUGIN(PythonQtAPI
     DEPENDS_ON
         ${PLUGIN_DEPENDS_ON}
 )
+
+# Update our list of Python dependencies for other plugins
+
+SET(PYTHON_DEPENDENCIES ${PYTHON_DEPENDENCIES} ${INSTALL_EXTERNAL_FILES_TARGET} PARENT_SCOPE)

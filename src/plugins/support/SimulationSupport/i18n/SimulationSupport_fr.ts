@@ -39,11 +39,7 @@
 <context>
     <name>OpenCOR::SimulationSupport::SimulationSupportPythonWrapper</name>
     <message>
-        <source>The simulation requires %1 of memory and you have only %2 left.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>We could not allocate the %1 of memory required for the simulation.</source>
+        <source>We could not allocate the memory required for the simulation.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

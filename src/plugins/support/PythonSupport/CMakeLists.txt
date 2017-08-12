@@ -15,5 +15,6 @@ ADD_PLUGIN(PythonSupport
         src/CTK/ctkAbstractPythonManager.h
         src/pythonsupportplugin.h
     PLUGINS
+        Python
         PythonQtAPI
 )

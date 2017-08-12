@@ -160,7 +160,7 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
 
     // Keep track of when some of the model's data has changed
 
-    connect(pSimulation->data(), SIGNAL(updated(const double &)),
+    connect(pSimulation->data(), SIGNAL(updatedParameters(const double &)),
             this, SLOT(updateParameters(const double &)));
 }
 

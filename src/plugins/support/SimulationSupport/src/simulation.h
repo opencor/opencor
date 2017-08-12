@@ -31,6 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <functional>
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -64,7 +68,16 @@ class SimulationSupportPythonWrapper;
 //==============================================================================
 
 class Simulation;
+class SimulationData;
 class SimulationWorker;
+
+//==============================================================================
+
+// We bind the SimulationData object to the the first parameter of `updateParameters()`
+// to create a function object that is then called when simulation parameters are updated
+// by the Python wrapper
+
+typedef std::__bind<void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
 
 //==============================================================================
 
@@ -83,6 +96,11 @@ public:
     double * states() const;
     double * algebraic() const;
     double * condVar() const;
+
+    void setStartingPoint(const double &pStartingPoint,
+                          const bool &pRecompute = true);
+    void setEndingPoint(const double &pEndingPoint);
+    void setPointInterval(const double &pPointInterval);
 
     SolverInterface * odeSolverInterface() const;
 
@@ -119,8 +137,9 @@ public:
 
     DataStore::DataStoreVariables gradientVariables() const;
 
-public slots:
+    static void updateParameters(SimulationData *pSimulationData);
 
+public slots:
     void reload();
 
     OpenCOR::SimulationSupport::Simulation * simulation() const;
@@ -129,14 +148,8 @@ public slots:
     void setDelay(const int &pDelay);
 
     double startingPoint() const;
-    void setStartingPoint(const double &pStartingPoint,
-                          const bool &pRecompute = true);
-
     double endingPoint() const;
-    void setEndingPoint(const double &pEndingPoint);
-
     double pointInterval() const;
-    void setPointInterval(const double &pPointInterval);
 
     QString odeSolverName() const;
     void setOdeSolverName(const QString &pOdeSolverName);
@@ -206,6 +219,8 @@ private:
     double *mInitialConstants;
     double *mInitialStates;
 
+    SimulationDataUpdatedFunction mSimulationDataUpdatedFunction;
+
     void createArrays();
     void deleteArrays();
 
@@ -216,7 +231,9 @@ private:
     SolverInterface * solverInterface(const QString &pSolverName) const;
 
 signals:
-    void updated(const double &pCurrentPoint);
+    void updatedSimulation();
+
+    void updatedParameters(const double &pCurrentPoint);
     void modified(const bool &pIsModified);
 
     void gradientCalculation(CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate=true);
@@ -313,6 +330,8 @@ public slots:
     void reload();
     void rename(const QString &pFileName);
 
+    void setDevelopmentMode(const bool &pDevelopmentMode);
+
     bool isRunning() const;
     bool isPaused() const;
 
@@ -320,8 +339,6 @@ public slots:
 
     int delay() const;
     void setDelay(const int &pDelay);
-
-    double requiredMemory();
 
     double size();
 
@@ -342,6 +359,8 @@ private:
 
     SimulationData *mData;
     SimulationResults *mResults;
+
+    bool mDevelopmentMode;
 
     void retrieveFileDetails();
 

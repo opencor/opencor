@@ -83,9 +83,9 @@ IF(USE_PREBUILT_ZLIB_PACKAGE)
                               SHA1_VALUES 9c23f1d64dfa64a120e77521c896ac8e645156b1)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 26edcea05d4bac33346d80df88144d9f53d0565c
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 31a17a86ec78a19bae8df80a1a1a69dae990a710
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES c1d95d3e676d5e070b803f68efe46618d983deaa)
+                              SHA1_VALUES 112f25f4f4b2a9c4e223970851e3392182d06ef8)
     ENDIF()
 ELSE()
     # Ignore some warnings

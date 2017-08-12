@@ -83,5 +83,5 @@ ADD_PLUGIN(Core
         generaltests
         mathmltests
     DEPENDS_ON
-        PythonPlugin_EXTERNAL_SOURCES
+        ${PYTHON_DEPENDENCIES}
 )

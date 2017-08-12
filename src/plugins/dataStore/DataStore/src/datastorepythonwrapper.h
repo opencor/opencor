@@ -37,7 +37,21 @@ namespace OpenCOR {
 
 //==============================================================================
 
+namespace SimulationSupport {
+    class SimulationData;
+    typedef std::__bind<void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
+}   // namespace SimulationSupport
+
+//==============================================================================
+
 namespace DataStore {
+
+//==============================================================================
+
+typedef struct {
+    PyDictObject dict;
+    SimulationSupport::SimulationDataUpdatedFunction *mSimulationDataUpdatedFunction;
+} DataStoreValuesDictObject;
 
 //==============================================================================
 
@@ -55,13 +69,18 @@ class DataStorePythonWrapper : public QObject
 public:
     explicit DataStorePythonWrapper(PyObject *pModule, QObject *pParent=0);
 
+    static PyTypeObject DataStoreValuesDict_Type;
+
     static PyObject * newNumPyArray(DataStoreArray *pDataStoreArray);
     static PyObject * newNumPyArray(DataStoreVariable *pDataStoreVariable);
 
-    static PyObject *dataStoreValuesDict(const DataStoreVariables &pDataStoreVariables);
+    static PyObject *dataStoreValuesDict(const DataStoreVariables &pDataStoreVariables,
+                                         SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction=NULL);
     static PyObject *dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
 
 public slots:
+    double value(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable, const qulonglong &pPosition) const;
+
     PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable) const;
 
     PyObject * variables(OpenCOR::DataStore::DataStore *pDataStore);

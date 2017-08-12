@@ -10,7 +10,10 @@ OPTION(ENABLE_SAMPLE_PLUGINS "Enable the sample plugins to be built" OFF)
 OPTION(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
-OPTION(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
+IF(NOT WIN32 AND NOT APPLE)
+    OPTION(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
+ENDIF()
+
 OPTION(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
 
 OPTION(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE "Use the pre-built version of the BioSignalML API package" ON)
@@ -915,10 +918,14 @@ ADD_EXECUTABLE(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${SOURCES_RCS}
 )
 
+ADD_DEFINITIONS(-D${CMAKE_PROJECT_NAME}_MAIN)
+
 # We can't compile Python interface code until after the Python headers are in
 # place
 
-ADD_DEPENDENCIES(${CMAKE_PROJECT_NAME} PythonPlugin_EXTERNAL_SOURCES)
+IF(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
+    ADD_DEPENDENCIES(${CMAKE_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
+ENDIF()
 
 SET_TARGET_PROPERTIES(${CMAKE_PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${CMAKE_PROJECT_NAME}
@@ -967,7 +974,9 @@ IF(WIN32)
     # We can't compile Python interface code until after the Python headers are
     # in place
 
-    ADD_DEPENDENCIES(${WINDOWS_CLI_PROJECT_NAME} PythonPlugin_EXTERNAL_SOURCES)
+    IF(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
+        ADD_DEPENDENCIES(${WINDOWS_CLI_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
+    ENDIF()
 
     TARGET_COMPILE_DEFINITIONS(${WINDOWS_CLI_PROJECT_NAME}
                                PRIVATE CLI_VERSION)
@@ -979,20 +988,6 @@ IF(WIN32)
     TARGET_LINK_LIBRARIES(${WINDOWS_CLI_PROJECT_NAME}
         Qt5::Core
         Qt5::Network
-    )
-ENDIF()
-
-# Additional compiler and linker settings
-
-ADD_DEFINITIONS(-D${CMAKE_PROJECT_NAME}_MAIN)
-
-SET_TARGET_PROPERTIES(${CMAKE_PROJECT_NAME} PROPERTIES
-    LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
-)
-
-IF(WIN32)
-    SET_TARGET_PROPERTIES(${WINDOWS_CLI_PROJECT_NAME} PROPERTIES
-        LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
 ENDIF()
 

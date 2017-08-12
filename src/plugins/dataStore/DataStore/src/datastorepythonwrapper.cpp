@@ -32,6 +32,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <stdexcept>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace DataStore {
 
@@ -47,11 +51,11 @@ static bool init_numpy()
 
 //==============================================================================
 
-static DataStoreVariable *getVariable(PyDictObject *valuesDict, PyObject *key)
+static DataStoreVariable *getVariable(PyObject *valuesDict, PyObject *key)
 {
     DataStoreVariable *variable = 0;
 
-    PyObject *obj = PyDict_GetItem((PyObject *)valuesDict, key);
+    PyObject *obj = PyDict_GetItem(valuesDict, key);
 
     if (obj && PyObject_TypeCheck(obj, &PythonQtInstanceWrapper_Type)) {
         PythonQtInstanceWrapper* wrap = (PythonQtInstanceWrapper*)obj;
@@ -63,7 +67,9 @@ static DataStoreVariable *getVariable(PyDictObject *valuesDict, PyObject *key)
 
 //==============================================================================
 
-static PyObject *valuesdict_subscript(PyDictObject *valuesDict, PyObject *key)
+// Get a subscripted item from a values dictionary
+
+static PyObject *DataStoreValuesDict_subscript(PyObject *valuesDict, PyObject *key)
 {
     DataStoreVariable *variable = getVariable(valuesDict, key);
 
@@ -77,17 +83,31 @@ static PyObject *valuesdict_subscript(PyDictObject *valuesDict, PyObject *key)
 
 //==============================================================================
 
-static int valuesdict_ass_subscript(PyDictObject *valuesDict, PyObject *key, PyObject *value)
+// Assign to a subscripted item in a values dictionary
+
+static int DataStoreValuesDict_ass_subscript(PyObject *valuesDict, PyObject *key, PyObject *value)
 {
     if (value == 0) {
-        return PyDict_DelItem((PyObject *)valuesDict, key);
+        return PyDict_DelItem(valuesDict, key);
     }
 
     else if (PyNumber_Check(value)) {
         DataStoreVariable *variable = getVariable(valuesDict, key);
 
         if (variable) {
-            variable->setNextValue(PyFloat_AS_DOUBLE(PyNumber_Float(value)));
+            double newValue = PyFloat_AS_DOUBLE(PyNumber_Float(value));
+
+            if (variable->nextValue() != newValue) {
+                variable->setNextValue(newValue);
+
+                // Let our SimulationData object know that data values have changed
+
+                SimulationSupport::SimulationDataUpdatedFunction *simulationDataUpdatedFunction =
+                    ((DataStoreValuesDictObject *)valuesDict)->mSimulationDataUpdatedFunction;
+                if (simulationDataUpdatedFunction)
+                    (*simulationDataUpdatedFunction)();
+            }
+
             return 0;
         }
     }
@@ -98,19 +118,21 @@ static int valuesdict_ass_subscript(PyDictObject *valuesDict, PyObject *key, PyO
 
 //==============================================================================
 
-static PyMappingMethods valuesdict_as_mapping = {
-    0,                                          /*mp_length*/
-    (binaryfunc)valuesdict_subscript,           /*mp_subscript*/
-    (objobjargproc)valuesdict_ass_subscript,    /*mp_ass_subscript*/
+static PyMappingMethods DataStoreValuesDict_as_mapping = {
+    0,                                                 /*mp_length*/
+    (binaryfunc)DataStoreValuesDict_subscript,         /*mp_subscript*/
+    (objobjargproc)DataStoreValuesDict_ass_subscript,  /*mp_ass_subscript*/
 };
 
 //==============================================================================
 
-static PyObject* valuesdict_repr(PyDictObject *valuesDict)
+// A string representation of a values dictionary
+
+static PyObject *DataStoreValuesDict_repr(DataStoreValuesDictObject *valuesDict)
 {
     // A modified version of `dict_repr()` from `dictobject.c` in Python's C source
 
-    PyDictObject *mp = valuesDict;
+    PyDictObject *mp = (PyDictObject *)valuesDict;
 
     Py_ssize_t i;
     PyObject *key = NULL, *value = NULL;
@@ -204,23 +226,23 @@ error:
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
-// A `valuesdict` is a dictionary sub-class for mapping between the next values
+// A `DataStoreValuesDict` is a dictionary sub-class for mapping between the next values
 // of a DataStoreVariables list and Python.
 
-static PyTypeObject valuesdict_type = {
+PyTypeObject DataStorePythonWrapper::DataStoreValuesDict_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
-    "OpenCOR.valuesdict",
-    sizeof(PyDictObject),
+    "OpenCOR.DataStoreValuesDict",
+    sizeof(DataStoreValuesDictObject),
     0,
     0,                                          /* tp_dealloc */
     0,                                          /* tp_print */
     0,                                          /* tp_getattr */
     0,                                          /* tp_setattr */
     0,                                          /* tp_compare */
-    (reprfunc)valuesdict_repr,                  /* tp_repr */
+    (reprfunc)DataStoreValuesDict_repr,         /* tp_repr */
     0,                                          /* tp_as_number */
     0,                                          /* tp_as_sequence */
-    &valuesdict_as_mapping,                     /* tp_as_mapping */
+    &DataStoreValuesDict_as_mapping,            /* tp_as_mapping */
     0,                                          /* tp_hash */
     0,                                          /* tp_call */
     0,                                          /* tp_str */
@@ -239,14 +261,6 @@ static PyTypeObject valuesdict_type = {
     0,                                          /* tp_members */
     0,                                          /* tp_getset */
     &PyDict_Type,                               /* tp_base */
-//    0,                                          /* tp_dict */
-//    0,                                          /* tp_descr_get */
-//    0,                                          /* tp_descr_set */
-//    0,                                          /* tp_dictoffset */
-//    PyDict_Type.tp_init,                        /* tp_init */
-//    PyType_GenericAlloc,                        /* tp_alloc */
-//    PyDict_Type.tp_new,                         /* tp_new */
-//    PyObject_GC_Del,                            /* tp_free */
 };
 
 #pragma GCC diagnostic pop
@@ -263,7 +277,7 @@ DataStorePythonWrapper::DataStorePythonWrapper(PyObject *pModule, QObject *pPare
         if (!init_numpy()) qFatal("Unable to initialise NumPy API...");
     }
 
-    PyType_Ready(&valuesdict_type);
+    PyType_Ready(&DataStoreValuesDict_Type);
 
     PythonSupport::registerClass(&OpenCOR::DataStore::DataStore::staticMetaObject);
     PythonSupport::registerClass(&OpenCOR::DataStore::DataStoreVariable::staticMetaObject);
@@ -288,12 +302,25 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreArray *pDataStoreArray
 
 PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVariable)
 {
-    if (pDataStoreVariable) {
+    if (pDataStoreVariable && pDataStoreVariable->array()) {
         auto numpyArray = new NumPyPythonWrapper(pDataStoreVariable->array(), pDataStoreVariable->size());
         return numpyArray->numpyArray();
     } else {
         Py_INCREF(Py_None);
         return Py_None;
+    }
+}
+
+
+//==============================================================================
+
+double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable, const qulonglong &pPosition) const
+{
+    if (pDataStoreVariable && pDataStoreVariable->array()) {
+        return pDataStoreVariable->value(pPosition);
+    } else {
+        throw std::runtime_error("'NoneType' object is not subscriptable");
+        return 0.0;
     }
 }
 
@@ -307,10 +334,13 @@ PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable)
 //==============================================================================
 
 PyObject * DataStorePythonWrapper::dataStoreValuesDict(
-    const DataStoreVariables &pDataStoreVariables)
+    const DataStoreVariables &pDataStoreVariables,
+    SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction)
 {
-    PyObject *valuesDict = PyDict_New();
-    valuesDict->ob_type = &valuesdict_type;
+    PyObject *valuesDict = PyDict_Type.tp_new(&DataStoreValuesDict_Type, NULL, NULL);
+    valuesDict->ob_type = &DataStoreValuesDict_Type;
+
+    ((DataStoreValuesDictObject *)valuesDict)->mSimulationDataUpdatedFunction = pSimulationDataUpdatedFunction;
 
     foreach (DataStoreVariable *variable, pDataStoreVariables)
         PythonSupport::addObject(valuesDict, variable->uri(), variable);

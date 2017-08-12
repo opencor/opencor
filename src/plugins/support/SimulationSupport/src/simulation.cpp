@@ -57,7 +57,8 @@ SimulationData::SimulationData(Simulation *pSimulation) :
     mResultsDataStore(0),
     mGradientsDataStore(0),
     mGradientIndices(QVector<int>()),
-    mGradients(0)
+    mGradients(0),
+    mSimulationDataUpdatedFunction(std::bind(&SimulationData::updateParameters, this))
 {
     // Create our various arrays
 
@@ -527,7 +528,7 @@ void SimulationData::recomputeComputedConstantsAndVariables(const double &pCurre
 
         // Let people know that our data has been updated
 
-        emit updated(pCurrentPoint);
+        emit updatedParameters(pCurrentPoint);
     }
 }
 
@@ -580,6 +581,13 @@ void SimulationData::checkForModifications()
     // Let people know whether any of our constants or states has been modified
 
     emit modified(isModified());
+}
+
+//==============================================================================
+
+void SimulationData::updateParameters(SimulationData *pSimulationData)
+{
+    emit pSimulationData->updatedParameters(pSimulationData->mStartingPoint);
 }
 
 //==============================================================================
@@ -1108,7 +1116,8 @@ double * SimulationResults::algebraic(const int &pIndex) const
 
 Simulation::Simulation(const QString &pFileName) :
     mFileName(pFileName),
-    mWorker(0)
+    mWorker(0),
+    mDevelopmentMode(false)
 {
     // Retrieve our file details
 
@@ -1183,6 +1192,16 @@ void Simulation::retrieveFileDetails()
 
 void Simulation::reload()
 {
+    // Make sure that we are not in development mode
+    // Note: indeed, if we are (as might be the case using the Simulation
+    //       Experiment view), then to save a CellML file will result in its
+    //       corresponding simulation to be reloaded, which we don't want since
+    //       this will reset everything and this is not what we want when in
+    //       development mode...
+
+    if (mDevelopmentMode)
+        return;
+
     // Stop our worker
     // Note: we don't need to delete mWorker since it will be done as part of
     //       its thread being stopped...
@@ -1273,6 +1292,15 @@ SimulationResults * Simulation::results() const
 
 //==============================================================================
 
+void Simulation::setDevelopmentMode(const bool &pDevelopmentMode)
+{
+    // Set our development mode
+
+    mDevelopmentMode = pDevelopmentMode;
+}
+
+//==============================================================================
+
 bool Simulation::isRunning() const
 {
     // Return whether we are running
@@ -1314,30 +1342,6 @@ void Simulation::setDelay(const int &pDelay)
     // Set our delay
 
     mData->setDelay(pDelay);
-}
-
-//==============================================================================
-
-double Simulation::requiredMemory()
-{
-    // Determine and return the amount of required memory to run our simulation
-    // Note #1: we return the amount as a double rather than a qulonglong (as we
-    //          do when retrieving the total/free amount of memory available;
-    //          see [OpenCOR]/src/plugins/miscellaneous/Core/src/guiutils.cpp)
-    //          in case a simulation requires an insane amount of memory...
-    // Note #2: the 1.0 is for mPoints in SimulationResults...
-
-    if (mRuntime) {
-        return  size()
-               *( 1.0
-                 +mRuntime->constantsCount()
-                 +mRuntime->ratesCount()
-                 +mRuntime->statesCount()
-                 +mRuntime->algebraicCount())
-               *Solver::SizeOfDouble;
-    } else {
-        return 0.0;
-    }
 }
 
 //==============================================================================

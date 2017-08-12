@@ -94,6 +94,8 @@ public:
     void addValue();
     void addValue(const double &pValue);
 
+    double value(const qulonglong &pPosition) const;
+
     double * values() const;
 
     DataStoreArray * array() const;
@@ -109,8 +111,6 @@ public slots:
 
     double nextValue() const;
     void setNextValue(const double &pValue);
-
-    double value(const qulonglong &pPosition) const;
 
 private:
 #ifndef CLI_VERSION
