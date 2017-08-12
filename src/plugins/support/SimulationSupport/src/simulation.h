@@ -304,6 +304,8 @@ public slots:
     void reload();
     void rename(const QString &pFileName);
 
+    void setDevelopmentMode(const bool &pDevelopmentMode);
+
     bool isRunning() const;
     bool isPaused() const;
 
@@ -311,8 +313,6 @@ public slots:
 
     int delay() const;
     void setDelay(const int &pDelay);
-
-    double requiredMemory();
 
     double size();
 
@@ -333,6 +333,8 @@ private:
 
     SimulationData *mData;
     SimulationResults *mResults;
+
+    bool mDevelopmentMode;
 
     void retrieveFileDetails();
 

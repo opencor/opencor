@@ -83,9 +83,9 @@ IF(USE_PREBUILT_QSCINTILLA_PACKAGE)
                               SHA1_VALUES dfa9be0bffd76e9f9876710370edc0f80d9ad7fe)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 2c0df98bf948cb539edcaafeb066c8c1974ee532
+                              ${RELATIVE_PROJECT_SOURCE_DIR} d05888429e3f16c5ecc8f8952c9cfdbcbce08290
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 4406b0343534f0bc53a57f4f0f843f8c5c1bab46)
+                              SHA1_VALUES 7c43b3d317f27f303c967855fa42428089d13bb6)
     ENDIF()
 ELSE()
     # Set platform specific configuration options

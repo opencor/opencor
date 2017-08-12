@@ -1144,11 +1144,6 @@ void SimulationExperimentViewSimulationWidget::reloadView()
 {
     // Reload ourselves, i.e. finalise and (re)initialise ourselves, meaning
     // that we have effectively been closed and (re)opened
-    // Note: we don't want to call fileClosed() between finalize() and
-    //       initialize() since it will trigger the description of existing
-    //       graphs to be updated, which will result in them being temporarily
-    //       shown as invalid even though they may actually be valid (since we
-    //       have finalised the simulation)...
 
     finalize();
     initialize(true);
@@ -1277,35 +1272,21 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
         if (mSimulation->isPaused()) {
             mSimulation->resume();
         } else {
-            // Check that we have enough memory to run our simulation
+            // Try to allocate all the memory we need for the simulation by
+            // resetting its settings
 
-            bool runSimulation = true;
+            bool runSimulation = mSimulation->results()->reset();
 
-            double freeMemory = Core::freeMemory();
-            double requiredMemory = mSimulation->requiredMemory();
+            // Run our simulation (after having cleared our plots), in case we
+            // were able to allocate all the memory we need
 
-            if (requiredMemory > freeMemory) {
-                Core::warningMessageBox(tr("Run Simulation"),
-                                        tr("The simulation requires %1 of memory and you have only %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
-            } else {
-                // Theoretically speaking, we have enough memory to run the
-                // simulation, so try to allocate all the memory we need for the
-                // simulation by resetting its settings
-
-                runSimulation = mSimulation->results()->reset();
-
+            if (runSimulation) {
                 mViewWidget->checkSimulationResults(mFileName, true);
-                // Note: this will, among other things, clear our plots...
 
-                // Effectively run our simulation in case we were able to
-                // allocate all the memory we need to run the simulation
-
-                if (runSimulation) {
-                    mSimulation->run();
-                } else {
-                    Core::warningMessageBox(tr("Run Simulation"),
-                                            tr("We could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
-                }
+                mSimulation->run();
+            } else {
+                Core::warningMessageBox(tr("Run Simulation"),
+                                        tr("We could not allocate the memory required for the simulation."));
             }
 
             handlingAction = false;
@@ -1353,15 +1334,21 @@ void SimulationExperimentViewSimulationWidget::clearSimulationData()
 void SimulationExperimentViewSimulationWidget::developmentMode()
 {
     // The development mode has just been enabled/disabled, so update the
-    // modified state of our current file accordingly
+    // modified state of our current file accordingly, if needed
 
     if (!mDevelopmentModeAction->isChecked())
         Core::FileManager::instance()->setModified(mFileName, false);
 
+    // Let our simulation know that we are now in development mode
+    // Note: this will ensure that our simulation doesn't get reloaded if we
+    //       were to save our CellML file...
+
+    mSimulation->setDevelopmentMode(mDevelopmentModeAction->isChecked());
+
+    // Make sure that our reset button is properly enabled/disabled
+    // Note: this is needed if the development mode has just been disabled...
+
     checkSimulationDataModified(mSimulation->data()->isModified());
-    // Note: to call checkSimulationDataModified() will, in the case the
-    //       development mode has just been disabled, ensure that the reset
-    //       button is properly enabled/disabled...
 }
 
 //==============================================================================

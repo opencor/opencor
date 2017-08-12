@@ -2037,7 +2037,7 @@ void CentralWidget::fileReloaded(const QString &pFileName,
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
         if (   !pFileJustSaved
             ||  (pFileJustSaved && (plugin != fileViewPlugin))) {
-            qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName, pFileChanged, pFileJustSaved);
+            qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName, pFileChanged);
         }
     }
 
