@@ -76,8 +76,7 @@ static PyObject *DataStoreValuesDict_subscript(PyObject *valuesDict, PyObject *k
     if (variable) {
         return PyFloat_FromDouble(variable->nextValue());
     } else {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_RETURN_NONE;
     }
 }
 
@@ -293,8 +292,7 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreArray *pDataStoreArray
         auto numpyArray = new NumPyPythonWrapper(pDataStoreArray);
         return numpyArray->numpyArray();
     } else {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_RETURN_NONE;
     }
 }
 
@@ -306,8 +304,7 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVa
         auto numpyArray = new NumPyPythonWrapper(pDataStoreVariable->array(), pDataStoreVariable->size());
         return numpyArray->numpyArray();
     } else {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_RETURN_NONE;
     }
 }
 
