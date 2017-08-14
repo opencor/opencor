@@ -32,6 +32,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <stdexcept>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SimulationExperimentView {
 
@@ -65,7 +69,13 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
     QString fileName = QString::fromUtf8(name, len);
     Py_DECREF(bytes);
 
-    Core::centralWidget()->openFile(fileName);
+    QString ioError = Core::centralWidget()->openFile(fileName, false);
+
+    if (!ioError.isEmpty()) {
+        PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
+        return NULL;
+    }
+
     return initializeSimulation(fileName);
 }
 
@@ -85,7 +95,13 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
     QString url = QString::fromUtf8(name, len);
     Py_DECREF(bytes);
 
-    Core::centralWidget()->openRemoteFile(url);
+    QString ioError = Core::centralWidget()->openRemoteFile(url, false); // No warning...
+
+    if (!ioError.isEmpty()) {
+        PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
+        return NULL;
+    }
+
     return initializeSimulation(Core::centralWidget()->localFileName(url));
 }
 

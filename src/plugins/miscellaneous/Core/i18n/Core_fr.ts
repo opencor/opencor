@@ -155,6 +155,18 @@
         <source>The file is being edited, so switching views is not possible for now</source>
         <translation>Le fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
     </message>
+    <message>
+        <source>&apos;%1&apos; could not be opened.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FATAL ERROR | %s:%d: the remote file was not created.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&apos;%1&apos; could not be opened (%2).</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>
