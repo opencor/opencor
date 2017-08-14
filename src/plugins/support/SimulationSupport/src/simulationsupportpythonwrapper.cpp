@@ -31,6 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <stdexcept>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SimulationSupport {
 
@@ -62,6 +66,10 @@ void SimulationSupportPythonWrapper::simulationFinished(const qint64 &pElapsedTi
 
 bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 {
+    // A successful run will set elapsed time
+
+    mElapsedTime = -1;
+
     // Try to allocate all the memory we need for the simulation by
     // resetting its settings
 
@@ -75,22 +83,20 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         connect(pSimulation, SIGNAL(stopped(const qint64 &)), this, SLOT(simulationFinished(const qint64 &)));
 
-        // A succesfull run will set elapsed time
-
-        mElapsedTime = -1;
-
         // Start the simulation and wait for it to complete
 
         if (pSimulation->run())
             mSimulationRunEventLoop->exec();
 
-        return mElapsedTime >= 0;
+        if (mElapsedTime < 0)
+            throw std::runtime_error(
+                tr("Simulation run failed -- check log.").toStdString());
     } else {
         throw std::runtime_error(
             tr("We could not allocate the memory required for the simulation.").toStdString());
     }
 
-    return false;
+    return mElapsedTime >= 0;
 }
 
 //==============================================================================
