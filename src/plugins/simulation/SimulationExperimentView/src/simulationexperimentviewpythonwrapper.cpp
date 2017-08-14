@@ -137,8 +137,7 @@ static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
         auto simulation = simulationExperimentViewWidget->simulation(Core::centralWidget()->currentFileName());
         return PythonSupport::wrapQObject(simulation);
     } else {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_RETURN_NONE;
     }
 }
 
