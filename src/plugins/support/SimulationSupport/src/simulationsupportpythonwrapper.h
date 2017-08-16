@@ -64,6 +64,7 @@ public:
 
 private:
     qint64 mElapsedTime;
+    QString mErrorMessage;
     QEventLoop *mSimulationRunEventLoop;
 
 public slots:
@@ -96,6 +97,7 @@ public slots:
     PyObject * rates(OpenCOR::SimulationSupport::SimulationResults *pSimulationResults) const;
 
 private slots:
+    void error(const QString &pErrorMessage);
     void simulationFinished(const qint64 &pElapsedTime);
 };
 
