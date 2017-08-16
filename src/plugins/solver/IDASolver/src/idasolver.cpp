@@ -459,7 +459,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
             // Initialise sensitivity code
 
-            IDASensInit(mSolver, mSensitivityVectorsSize, IDA_SIMULTANEOUS, NULL,
+            IDASensInit(mSolver, mSensitivityVectorsSize, IDA_STAGGERED, NULL,
                 mStatesSensitivityVectors, mRatesSensitivityVectors);
 
             IDASensEEtolerances(mSolver);
