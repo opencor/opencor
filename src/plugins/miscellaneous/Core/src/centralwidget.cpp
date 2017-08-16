@@ -880,11 +880,7 @@ QString CentralWidget::openRemoteFile(const QString &pUrl,
             // our file manager to create a new remote file
 
             FileManager *fileManagerInstance = FileManager::instance();
-
-#ifdef QT_DEBUG
-            FileManager::Status createStatus =
-#endif
-            fileManagerInstance->create(fileNameOrUrl, fileContents);
+            FileManager::Status createStatus = fileManagerInstance->create(fileNameOrUrl, fileContents);
 
             // Make sure that the file has indeed been created
 
