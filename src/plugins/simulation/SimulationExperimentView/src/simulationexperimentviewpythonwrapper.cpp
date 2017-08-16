@@ -74,9 +74,9 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
     if (!ioError.isEmpty()) {
         PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
         return NULL;
+    } else {
+        return initializeSimulation(QFileInfo(fileName).canonicalFilePath());
     }
-
-    return initializeSimulation(fileName);
 }
 
 //==============================================================================
