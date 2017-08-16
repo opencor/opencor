@@ -42,9 +42,5 @@
         <source>We could not allocate the memory required for the simulation.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Simulation run failed -- check log.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 </TS>
