@@ -48,6 +48,7 @@ namespace SimulationSupport {
 SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule, QObject *pParent) :
     QObject(pParent),
     mElapsedTime(-1),
+    mErrorMessage(QString()),
     mSimulationRunEventLoop(new QEventLoop())
 {
     Q_UNUSED(pModule);
@@ -56,6 +57,13 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
     PythonSupport::registerClass(&OpenCOR::SimulationSupport::SimulationData::staticMetaObject);
     PythonSupport::registerClass(&OpenCOR::SimulationSupport::SimulationResults::staticMetaObject);
     PythonSupport::addInstanceDecorators(this);
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::error(const QString &pErrorMessage)
+{
+    mErrorMessage = pErrorMessage;
 }
 
 //==============================================================================
@@ -75,6 +83,10 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
     mElapsedTime = -1;
 
+    // Clear error message
+
+    mErrorMessage = QString();
+
     // Try to allocate all the memory we need for the simulation by
     // resetting its settings
 
@@ -93,14 +105,17 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         connect(pSimulation, SIGNAL(stopped(const qint64 &)), this, SLOT(simulationFinished(const qint64 &)));
 
+        // Get error messages from the simulation
+
+        connect(pSimulation, SIGNAL(error(const QString &)), this, SLOT(error(const QString &)));
+
         // Start the simulation and wait for it to complete
 
         if (pSimulation->run())
             mSimulationRunEventLoop->exec();
 
-        if (mElapsedTime < 0)
-            throw std::runtime_error(
-                tr("Simulation run failed -- check log.").toStdString());
+        if (!mErrorMessage.isEmpty())
+            throw std::runtime_error(mErrorMessage.toStdString());
     } else {
         throw std::runtime_error(
             tr("We could not allocate the memory required for the simulation.").toStdString());
