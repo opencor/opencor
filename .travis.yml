@@ -4,11 +4,11 @@ sudo: required
 
 os:
   - linux
-#  - osx
+  - osx
 
 env:
   - CONFIG=Release
-#  - CONFIG=Debug
+  - CONFIG=Debug
 
 services:
   - docker
