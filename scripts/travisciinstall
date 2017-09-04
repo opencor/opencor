@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-    docker build -f traviscidocker -t travis-ci .
+    docker build -f scripts/traviscidocker -t travis-ci .
 else
        brew update \
     && curl -O https://raw.githubusercontent.com/Homebrew/homebrew-core/106d0878ee812cb8f5c403f717bdebe836445aee/Formula/qt5.rb \
