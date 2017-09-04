@@ -179,7 +179,22 @@ void QtLocalPeer::receiveConnection()
     if (!socket)
         return;
 
+    while (true) {
+/*---OPENCOR---
+        if (socket->state() == QAbstractSocket::UnconnectedState) {
+*/
+//---OPENCOR--- BEGIN
+        if (int(socket->state()) == QAbstractSocket::UnconnectedState) {
+//---OPENCOR--- END
+            qWarning("QtLocalPeer: Peer disconnected");
+            delete socket;
+            return;
+        }
+        if (socket->bytesAvailable() >= qint64(sizeof(quint32)))
+            break;
         socket->waitForReadyRead();
+    }
+
     QDataStream ds(socket);
     QByteArray uMsg;
     quint32 remaining;
