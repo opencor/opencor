@@ -14,14 +14,13 @@ if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
 
     if [ $? = 0 ]; then
         # Do a few things that are done by Travis CI when not using Docker
-    
+
         docker exec -ti travis-ci bash -c "   export CONFIG=${CONFIG} \
                                            && export CC=gcc \
                                            && export CXX=g++"
 
         if [ $? = 0 ]; then
             if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
-            
                 docker exec -ti travis-ci bash -c "   git clone --depth=50 --branch=master https://github.com/opencor/opencor.git opencor \
                                                    && cd opencor \
                                                    && git checkout -qf ${TRAVIS_COMMIT}"
