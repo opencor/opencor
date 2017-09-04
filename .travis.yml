@@ -20,7 +20,7 @@ branches:
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      docker build -f scripts/travisinstall -t travis-ci .
+      docker build -f scripts/travisciinstall -t travis-ci .
       ;
     else
          brew update
@@ -33,7 +33,7 @@ install:
 
 script:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      docker run -ti travis-ci scripts/travisciscript
+      docker run -it travis-ci -e CONFIG=$CONFIG scripts/travisciscript
       ;
     else
          cd build \

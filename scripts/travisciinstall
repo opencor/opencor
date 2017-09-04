@@ -13,8 +13,8 @@ RUN apt -y --force-yes -qq install qt56location qt56multimedia qt56sensors qt56s
 RUN cd /usr/bin
 RUN ln -s g++-5 g++
 
-RUN export CC=gcc
-RUN export CXX=g++
+ENV CC=gcc
+ENV CXX=g++
 
 RUN mkdir -p /opencor
 
