@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> use <a href=\"https://www.docker.com/\">Docker</a> with <a href=\"https://en.wikipedia.org/wiki/Ubuntu_(operating_system)\">Ubuntu</a> 16.04 LTS on <a href=\"https://travis-ci.org/\">Travis CI</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/1395\">#1395</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://khan.github.io/KaTeX/\">KaTeX</a> to version 0.8.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1401\">#1401</a>)." }
                      ]
                    },
