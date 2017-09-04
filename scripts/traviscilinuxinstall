@@ -19,6 +19,4 @@ RUN mkdir -p /opencor
 
 WORKDIR /opencor
 
-RUN pwd
-
 COPY . /opencor
