@@ -1,4 +1,29 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 12, "month": 8, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> make sure that we can find the plugin 'xcb' on some Linux machines (see issue <a href=\"https://github.com/opencor/opencor/issues/1383\">#1383</a>)." },
+                       { "change": "<strong>CSV data store:</strong> make sure that we can export to a (really) big CSV file (see issue <a href=\"https://github.com/opencor/opencor/issues/1394\">#1394</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> make sure that the runtime gets updated after having edited a CellML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1385\">#1385</a>). Don't check whether the memory associated with a simulation can be allocated (see issue <a href=\"https://github.com/opencor/opencor/issues/1389\">#1389</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a> to version 3.1.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/1393\">#1393</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 7, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
