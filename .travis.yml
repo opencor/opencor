@@ -33,7 +33,7 @@ install:
 
 script:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      docker run -ti travis-ci scripts/travisscript
+      docker run -ti travis-ci scripts/travisciscript
       ;
     else
          cd build \
