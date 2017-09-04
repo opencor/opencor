@@ -10,11 +10,10 @@ RUN apt -y --force-yes -qq update
 RUN apt -y --force-yes -qq install cmake g++-5 git libgl1-mesa-dev libglu1-mesa-dev ninja-build
 RUN apt -y --force-yes -qq install qt56location qt56multimedia qt56sensors qt56svg qt56tools qt56webchannel
 
-RUN cd /usr/bin
-RUN ln -s g++-5 g++
+RUN ln -s /usr/bin/g++-5 /usr/bin/g++
 
-ENV CC=/usr/bin/gcc
-ENV CXX=/usr/bin/g++
+ENV CC=gcc
+ENV CXX=g++
 
 RUN mkdir -p /opencor
 
