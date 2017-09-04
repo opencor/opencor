@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 RUN apt -y --force-yes -qq update
 
-RUN apt -y --force-yes install software-properties-common
+RUN apt -y --force-yes install apt-utils
 
 RUN apt-add-repository -y ppa:beineri/opt-qt562-xenial
 

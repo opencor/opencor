@@ -19,10 +19,28 @@ branches:
     - /^\d+\.\d+(\.\d+)?$/
 
 install:
-  - ./scripts/travisciinstall
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+      docker build -f scripts/travisinstall -t travis-ci .
+      ;
+    else
+         brew update
+      && curl -O https://raw.githubusercontent.com/Homebrew/homebrew-core/106d0878ee812cb8f5c403f717bdebe836445aee/Formula/qt5.rb
+      && brew install ./qt5.rb ninja
+      && export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
+      && chmod -R 755 /usr/local/opt/qt5/*
+      ;
+    fi
 
 script:
-  - ./scripts/travisciscript
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+      docker run -ti travis-ci scripts/travisscript
+      ;
+    else
+         cd build \
+      && cmake -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON .. \
+      && ninja \
+      && OpenCOR.app/Contents/MacOS/runtests
+    fi
 
 notifications:
   email: team@opencor.ws
