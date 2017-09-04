@@ -7,8 +7,9 @@
 #       GCC/G++ 5.x. However, a simple workaround is to build QScintilla, so
 #       this is what we are doing here...
 
+ls -al /opencor/scripts
+
    cd /opencor/build \
-&& ls -al
 && cmake -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt56/lib/cmake -DUSE_PREBUILT_QSCINTILLA_PACKAGE=OFF -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON .. \
 && ninja \
 && /opencor/bin/runtests
