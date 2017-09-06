@@ -538,6 +538,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     mCopyToClipboardAction = Core::newAction(this);
     mCustomAxesAction = Core::newAction(this);
+    mLogarithmicXAxisAction = Core::newAction(true, this);
+    mLogarithmicYAxisAction = Core::newAction(true, this);
     mZoomInAction = Core::newAction(this);
     mZoomOutAction = Core::newAction(this);
     mResetZoomAction = Core::newAction(this);
@@ -546,6 +548,10 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
             this, SLOT(copyToClipboard()));
     connect(mCustomAxesAction, SIGNAL(triggered(bool)),
             this, SLOT(customAxes()));
+    connect(mLogarithmicXAxisAction, SIGNAL(triggered(bool)),
+            this, SLOT(logarithmicXAxis()));
+    connect(mLogarithmicYAxisAction, SIGNAL(triggered(bool)),
+            this, SLOT(logarithmicYAxis()));
     connect(mZoomInAction, SIGNAL(triggered(bool)),
             this, SLOT(zoomIn()));
     connect(mZoomOutAction, SIGNAL(triggered(bool)),
@@ -563,6 +569,9 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCustomAxesAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mLogarithmicXAxisAction);
+    mContextMenu->addAction(mLogarithmicYAxisAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mZoomInAction);
     mContextMenu->addAction(mZoomOutAction);
@@ -603,6 +612,10 @@ void GraphPanelPlotWidget::retranslateUi()
                                      tr("Copy the contents of the graph panel to the clipboard"));
     I18nInterface::retranslateAction(mCustomAxesAction, tr("Custom Axes..."),
                                      tr("Specify custom axes for the graph panel"));
+    I18nInterface::retranslateAction(mLogarithmicXAxisAction, tr("Logarithmic X Axis"),
+                                     tr("Enable/disable logarithmic scaling on the X axis"));
+    I18nInterface::retranslateAction(mLogarithmicYAxisAction, tr("Logarithmic Y Axis"),
+                                     tr("Enable/disable logarithmic scaling on the Y axis"));
     I18nInterface::retranslateAction(mZoomInAction, tr("Zoom In"),
                                      tr("Zoom in the graph panel"));
     I18nInterface::retranslateAction(mZoomOutAction, tr("Zoom Out"),
@@ -1579,6 +1592,24 @@ void GraphPanelPlotWidget::customAxes()
             setAxes(newMinX, newMaxX, newMinY, newMaxY);
         }
     }
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::logarithmicXAxis()
+{
+    // Enable/disable logarithmic scaling on the X axis
+
+//---ISSUE1299--- TO BE DONE...
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::logarithmicYAxis()
+{
+    // Enable/disable logarithmic scaling on the Y axis
+
+//---ISSUE1299--- TO BE DONE...
 }
 
 //==============================================================================

@@ -242,6 +242,8 @@ private:
     QAction *mSynchronizeXAxisAction;
     QAction *mSynchronizeYAxisAction;
     QAction *mCustomAxesAction;
+    QAction *mLogarithmicXAxisAction;
+    QAction *mLogarithmicYAxisAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
     QAction *mResetZoomAction;
@@ -295,6 +297,8 @@ private slots:
 
     void copyToClipboard();
     void customAxes();
+    void logarithmicXAxis();
+    void logarithmicYAxis();
     void zoomIn();
     void zoomOut();
     void resetZoom();
