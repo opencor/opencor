@@ -57,7 +57,7 @@ static const auto TfqmrLinearSolver    = QStringLiteral("TFQMR");
 
 //==============================================================================
 
-// Default CVODE parameter values
+// Default IDA parameter values
 // Note #1: a maximum step of 0 means that there is no maximum step as such and
 //          that IDA can use whatever step it sees fit...
 // Note #2: IDA's default maximum number of steps is 500 which ought to be big

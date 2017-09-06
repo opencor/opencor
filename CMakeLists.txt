@@ -815,11 +815,11 @@ SET(PLUGINS
 
     simulation/SimulationExperimentView
 
-    solver/CVODESolver
+    solver/CVODESSolver
     solver/ForwardEulerSolver
     solver/FourthOrderRungeKuttaSolver
     solver/HeunSolver
-    solver/IDASolver
+    solver/IDASSolver
     solver/KINSOLSolver
     solver/SecondOrderRungeKuttaSolver
 
