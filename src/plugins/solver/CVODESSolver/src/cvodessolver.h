@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CVODE solver
+// CVODES solver
 //==============================================================================
 
 #pragma once
@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CVODESolver {
+namespace CVODESSolver {
 
 //==============================================================================
 
@@ -76,10 +76,10 @@ static const auto BandedPreconditioner = QStringLiteral("Banded");
 
 //==============================================================================
 
-// Default CVODE parameter values
+// Default CVODES parameter values
 // Note #1: a maximum step of 0 means that there is no maximum step as such and
-//          that CVODE can use whatever step it sees fit...
-// Note #2: CVODE's default maximum number of steps is 500 which ought to be big
+//          that CVODES can use whatever step it sees fit...
+// Note #2: CVODES' default maximum number of steps is 500 which ought to be big
 //          enough in most cases...
 
 static const double MaximumStepDefaultValue = 0.0;
@@ -105,11 +105,11 @@ static const bool InterpolateSolutionDefaultValue = true;
 
 //==============================================================================
 
-class CvodeSolverUserData
+class CvodesSolverUserData
 {
 public:
-    explicit CvodeSolverUserData(double *pConstants, double *pAlgebraic,
-                                 Solver::OdeSolver::ComputeRatesFunction pComputeRates);
+    explicit CvodesSolverUserData(double *pConstants, double *pAlgebraic,
+                                  Solver::OdeSolver::ComputeRatesFunction pComputeRates);
 
     double * constants() const;
     double * algebraic() const;
@@ -125,13 +125,13 @@ private:
 
 //==============================================================================
 
-class CvodeSolver : public OpenCOR::Solver::OdeSolver
+class CvodesSolver : public OpenCOR::Solver::OdeSolver
 {
     Q_OBJECT
 
 public:
-    explicit CvodeSolver();
-    ~CvodeSolver();
+    explicit CvodesSolver();
+    ~CvodesSolver();
 
     virtual void initialize(const double &pVoiStart,
                             const int &pRatesStatesCount, double *pConstants,
@@ -143,14 +143,14 @@ public:
 private:
     void *mSolver;
     N_Vector mStatesVector;
-    CvodeSolverUserData *mUserData;
+    CvodesSolverUserData *mUserData;
 
     bool mInterpolateSolution;
 };
 
 //==============================================================================
 
-}   // namespace CVODESolver
+}   // namespace CVODESSolver
 }   // namespace OpenCOR
 
 //==============================================================================

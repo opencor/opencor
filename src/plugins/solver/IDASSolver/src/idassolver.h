@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// IDA solver
+// IDAS solver
 //==============================================================================
 
 #pragma once
@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace IDASolver {
+namespace IDASSolver {
 
 //==============================================================================
 
@@ -57,10 +57,10 @@ static const auto TfqmrLinearSolver    = QStringLiteral("TFQMR");
 
 //==============================================================================
 
-// Default CVODE parameter values
+// Default IDAS parameter values
 // Note #1: a maximum step of 0 means that there is no maximum step as such and
-//          that IDA can use whatever step it sees fit...
-// Note #2: IDA's default maximum number of steps is 500 which ought to be big
+//          that IDAS can use whatever step it sees fit...
+// Note #2: IDAS' default maximum number of steps is 500 which ought to be big
 //          enough in most cases...
 
 static const double MaximumStepDefaultValue = 0.0;
@@ -83,15 +83,15 @@ static const bool InterpolateSolutionDefaultValue = true;
 
 //==============================================================================
 
-class IdaSolverUserData
+class IdasSolverUserData
 {
 public:
-    explicit IdaSolverUserData(double *pConstants, double *pOldRates,
-                               double *pOldStates, double *pAlgebraic,
-                               double *pCondVar,
-                               Solver::DaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                               Solver::DaeSolver::ComputeResidualsFunction pComputeResiduals,
-                               Solver::DaeSolver::ComputeRootInformationFunction pComputeRootInformation);
+    explicit IdasSolverUserData(double *pConstants, double *pOldRates,
+                                double *pOldStates, double *pAlgebraic,
+                                double *pCondVar,
+                                Solver::DaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                                Solver::DaeSolver::ComputeResidualsFunction pComputeResiduals,
+                                Solver::DaeSolver::ComputeRootInformationFunction pComputeRootInformation);
 
     double * constants() const;
     double * oldRates() const;
@@ -117,13 +117,13 @@ private:
 
 //==============================================================================
 
-class IdaSolver : public OpenCOR::Solver::DaeSolver
+class IdasSolver : public OpenCOR::Solver::DaeSolver
 {
     Q_OBJECT
 
 public:
-    explicit IdaSolver();
-    ~IdaSolver();
+    explicit IdasSolver();
+    ~IdasSolver();
 
     virtual void initialize(const double &pVoiStart, const double &pVoiEnd,
                             const int &pRatesStatesCount,
@@ -141,14 +141,14 @@ private:
     void *mSolver;
     N_Vector mRatesVector;
     N_Vector mStatesVector;
-    IdaSolverUserData *mUserData;
+    IdasSolverUserData *mUserData;
 
     bool mInterpolateSolution;
 };
 
 //==============================================================================
 
-}   // namespace IDASolver
+}   // namespace IDASSolver
 }   // namespace OpenCOR
 
 //==============================================================================

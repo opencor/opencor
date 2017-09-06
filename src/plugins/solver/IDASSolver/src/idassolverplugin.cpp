@@ -18,25 +18,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CVODE solver plugin
+// IDAS solver plugin
 //==============================================================================
 
-#include "cvodesolver.h"
-#include "cvodesolverplugin.h"
+#include "idassolver.h"
+#include "idassolverplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CVODESolver {
+namespace IDASSolver {
 
 //==============================================================================
 
-PLUGININFO_FUNC CVODESolverPluginInfo()
+PLUGININFO_FUNC IDASSolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin that uses <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> to solve ODEs."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui utilise <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> pour résoudre des EDOs."));
+    descriptions.insert("en", QString::fromUtf8("a plugin that uses <a href=\"http://computation.llnl.gov/projects/sundials/idas\">IDAS</a> to solve DAEs."));
+    descriptions.insert("fr", QString::fromUtf8("une extension qui utilise <a href=\"http://computation.llnl.gov/projects/sundials/idas\">IDAS</a> pour résoudre des EADs."));
 
     return new PluginInfo(PluginInfo::Solver, true, false,
                           QStringList() << "SUNDIALS",
@@ -47,7 +47,8 @@ PLUGININFO_FUNC CVODESolverPluginInfo()
 // I18n interface
 //==============================================================================
 
-void CVODESolverPlugin::retranslateUi()
+
+void IDASSolverPlugin::retranslateUi()
 {
     // We don't handle this interface...
     // Note: even though we don't handle this interface, we still want to
@@ -59,33 +60,28 @@ void CVODESolverPlugin::retranslateUi()
 // Solver interface
 //==============================================================================
 
-Solver::Solver * CVODESolverPlugin::solverInstance() const
+
+Solver::Solver * IDASSolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 
-    return new CvodeSolver();
+    return new IdasSolver();
 }
 
 //==============================================================================
 
-QString CVODESolverPlugin::id(const QString &pKisaoId) const
+QString IDASSolverPlugin::id(const QString &pKisaoId) const
 {
     // Return the id for the given KiSAO id
 
-    if (!pKisaoId.compare("KISAO:0000019"))
+    if (!pKisaoId.compare("KISAO:0000283"))
         return solverName();
     else if (!pKisaoId.compare("KISAO:0000467"))
         return MaximumStepId;
     else if (!pKisaoId.compare("KISAO:0000415"))
         return MaximumNumberOfStepsId;
-    else if (!pKisaoId.compare("KISAO:0000475"))
-        return IntegrationMethodId;
-    else if (!pKisaoId.compare("KISAO:0000476"))
-        return IterationTypeId;
     else if (!pKisaoId.compare("KISAO:0000477"))
         return LinearSolverId;
-    else if (!pKisaoId.compare("KISAO:0000478"))
-        return PreconditionerId;
     else if (!pKisaoId.compare("KISAO:0000479"))
         return UpperHalfBandwidthId;
     else if (!pKisaoId.compare("KISAO:0000480"))
@@ -102,24 +98,18 @@ QString CVODESolverPlugin::id(const QString &pKisaoId) const
 
 //==============================================================================
 
-QString CVODESolverPlugin::kisaoId(const QString &pId) const
+QString IDASSolverPlugin::kisaoId(const QString &pId) const
 {
     // Return the KiSAO id for the given id
 
     if (!pId.compare(solverName()))
-        return "KISAO:0000019";
+        return "KISAO:0000283";
     else if (!pId.compare(MaximumStepId))
         return "KISAO:0000467";
     else if (!pId.compare(MaximumNumberOfStepsId))
         return "KISAO:0000415";
-    else if (!pId.compare(IntegrationMethodId))
-        return "KISAO:0000475";
-    else if (!pId.compare(IterationTypeId))
-        return "KISAO:0000476";
     else if (!pId.compare(LinearSolverId))
         return "KISAO:0000477";
-    else if (!pId.compare(PreconditionerId))
-        return "KISAO:0000478";
     else if (!pId.compare(UpperHalfBandwidthId))
         return "KISAO:0000479";
     else if (!pId.compare(LowerHalfBandwidthId))
@@ -136,34 +126,31 @@ QString CVODESolverPlugin::kisaoId(const QString &pId) const
 
 //==============================================================================
 
-Solver::Type CVODESolverPlugin::solverType() const
+Solver::Type IDASSolverPlugin::solverType() const
 {
     // Return the type of the solver
 
-    return Solver::Ode;
+    return Solver::Dae;
 }
 
 //==============================================================================
 
-QString CVODESolverPlugin::solverName() const
+QString IDASSolverPlugin::solverName() const
 {
     // Return the name of the solver
 
-    return "CVODE";
+    return "IDAS";
 }
 
 //==============================================================================
 
-Solver::Properties CVODESolverPlugin::solverProperties() const
+Solver::Properties IDASSolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 
     Descriptions MaximumStepDescriptions;
     Descriptions MaximumNumberOfStepsDescriptions;
-    Descriptions IntegrationMethodDescriptions;
-    Descriptions IterationTypeDescriptions;
     Descriptions LinearSolverDescriptions;
-    Descriptions PreconditionerDescriptions;
     Descriptions UpperHalfBandwidthDescriptions;
     Descriptions LowerHalfBandwidthDescriptions;
     Descriptions RelativeToleranceDescriptions;
@@ -176,17 +163,8 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     MaximumNumberOfStepsDescriptions.insert("en", QString::fromUtf8("Maximum number of steps"));
     MaximumNumberOfStepsDescriptions.insert("fr", QString::fromUtf8("Nombre maximum de pas"));
 
-    IntegrationMethodDescriptions.insert("en", QString::fromUtf8("Integration method"));
-    IntegrationMethodDescriptions.insert("fr", QString::fromUtf8("Méthode d'intégration"));
-
-    IterationTypeDescriptions.insert("en", QString::fromUtf8("Iteration type"));
-    IterationTypeDescriptions.insert("fr", QString::fromUtf8("Type d'itération"));
-
     LinearSolverDescriptions.insert("en", QString::fromUtf8("Linear solver"));
     LinearSolverDescriptions.insert("fr", QString::fromUtf8("Solveur linéaire"));
-
-    PreconditionerDescriptions.insert("en", QString::fromUtf8("Preconditioner"));
-    PreconditionerDescriptions.insert("fr", QString::fromUtf8("Préconditionneur"));
 
     UpperHalfBandwidthDescriptions.insert("en", QString::fromUtf8("Upper half-bandwidth"));
     UpperHalfBandwidthDescriptions.insert("fr", QString::fromUtf8("Demi largeur de bande supérieure"));
@@ -203,28 +181,15 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     InterpolateSolutionDescriptions.insert("en", QString::fromUtf8("Interpolate solution"));
     InterpolateSolutionDescriptions.insert("fr", QString::fromUtf8("Interpoler solution"));
 
-    QStringList IntegrationMethodListValues = QStringList() << AdamsMoultonMethod
-                                                            << BdfMethod;
-
-    QStringList IterationTypeListValues = QStringList() << FunctionalIteration
-                                                        << NewtonIteration;
-
     QStringList LinearSolverListValues = QStringList() << DenseLinearSolver
                                                        << BandedLinearSolver
-                                                       << DiagonalLinearSolver
                                                        << GmresLinearSolver
                                                        << BiCgStabLinearSolver
                                                        << TfqmrLinearSolver;
 
-    QStringList PreconditionerListValues = QStringList() << NoPreconditioner
-                                                         << BandedPreconditioner;
-
     return Solver::Properties() << Solver::Property(Solver::Property::Double, MaximumStepId, MaximumStepDescriptions, QStringList(), MaximumStepDefaultValue, true)
                                 << Solver::Property(Solver::Property::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, QStringList(), MaximumNumberOfStepsDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, IntegrationMethodId, IntegrationMethodDescriptions, IntegrationMethodListValues, IntegrationMethodDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, IterationTypeId, IterationTypeDescriptions, IterationTypeListValues, IterationTypeDefaultValue, false)
                                 << Solver::Property(Solver::Property::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, PreconditionerId, PreconditionerDescriptions, PreconditionerListValues, PreconditionerDefaultValue, false)
                                 << Solver::Property(Solver::Property::Integer, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
                                 << Solver::Property(Solver::Property::Integer, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, QStringList(), LowerHalfBandwidthDefaultValue, false)
                                 << Solver::Property(Solver::Property::Double, RelativeToleranceId, RelativeToleranceDescriptions, QStringList(), RelativeToleranceDefaultValue, false)
@@ -234,55 +199,23 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
 
 //==============================================================================
 
-QMap<QString, bool> CVODESolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
+QMap<QString, bool> IDASSolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
 {
     // Return the visibility of our properties based on the given properties
     // values
 
     QMap<QString, bool> res = QMap<QString, bool>();
 
-    if (!pSolverPropertiesValues.value(IterationTypeId).compare(NewtonIteration)) {
-        // Newton iteration
+    QString linearSolver = pSolverPropertiesValues.value(LinearSolverId);
 
-        res.insert(LinearSolverId, true);
+    if (!linearSolver.compare(BandedLinearSolver)) {
+        // Banded linear solver
 
-        QString linearSolver = pSolverPropertiesValues.value(LinearSolverId);
-
-        if (   !linearSolver.compare(DenseLinearSolver)
-            || !linearSolver.compare(DiagonalLinearSolver)) {
-            // Dense/diagonal linear solver
-
-            res.insert(PreconditionerId, false);
-            res.insert(UpperHalfBandwidthId, false);
-            res.insert(LowerHalfBandwidthId, false);
-        } else if (!linearSolver.compare(BandedLinearSolver)) {
-            // Banded linear solver
-
-            res.insert(PreconditionerId, false);
-            res.insert(UpperHalfBandwidthId, true);
-            res.insert(LowerHalfBandwidthId, true);
-        } else {
-            // GMRES/Bi-CGStab/TFQMR linear solver
-
-            res.insert(PreconditionerId, true);
-
-            if (!pSolverPropertiesValues.value(PreconditionerId).compare(BandedPreconditioner)) {
-                // Banded preconditioner
-
-                res.insert(UpperHalfBandwidthId, true);
-                res.insert(LowerHalfBandwidthId, true);
-            } else {
-                // No preconditioner
-
-                res.insert(UpperHalfBandwidthId, false);
-                res.insert(LowerHalfBandwidthId, false);
-            }
-        }
+        res.insert(UpperHalfBandwidthId, true);
+        res.insert(LowerHalfBandwidthId, true);
     } else {
-        // Functional iteration
+        // Dense/GMRES/Bi-CGStab/TFQMR linear solver
 
-        res.insert(LinearSolverId, false);
-        res.insert(PreconditionerId, false);
         res.insert(UpperHalfBandwidthId, false);
         res.insert(LowerHalfBandwidthId, false);
     }
@@ -292,7 +225,7 @@ QMap<QString, bool> CVODESolverPlugin::solverPropertiesVisibility(const QMap<QSt
 
 //==============================================================================
 
-}   // namespace CVODESolver
+}   // namespace IDASSolver
 }   // namespace OpenCOR
 
 //==============================================================================
