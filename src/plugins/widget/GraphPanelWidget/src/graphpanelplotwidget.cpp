@@ -1601,6 +1601,10 @@ void GraphPanelPlotWidget::logarithmicXAxis()
     // Enable/disable logarithmic scaling on the X axis
 
 //---ISSUE1299--- TO BE DONE...
+    setAxisScaleEngine(QwtPlot::xBottom,
+                       mLogarithmicXAxisAction->isChecked()?
+                           static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
+                           static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
 }
 
 //==============================================================================
@@ -1610,6 +1614,10 @@ void GraphPanelPlotWidget::logarithmicYAxis()
     // Enable/disable logarithmic scaling on the Y axis
 
 //---ISSUE1299--- TO BE DONE...
+    setAxisScaleEngine(QwtPlot::yLeft,
+                       mLogarithmicYAxisAction->isChecked()?
+                           static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
+                           static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
 }
 
 //==============================================================================
