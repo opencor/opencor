@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // CVODE solver
 //==============================================================================
 
-#include "cvodesolver.h"
+#include "cvodessolver.h"
 
 //==============================================================================
 

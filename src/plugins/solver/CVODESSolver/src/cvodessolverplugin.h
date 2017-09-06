@@ -36,7 +36,7 @@ namespace CVODESolver {
 
 //==============================================================================
 
-PLUGININFO_FUNC CVODESolverPluginInfo();
+PLUGININFO_FUNC CVODESSolverPluginInfo();
 
 //==============================================================================
 
@@ -45,7 +45,7 @@ class CVODESolverPlugin : public QObject, public I18nInterface,
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CVODESolverPlugin" FILE "cvodesolverplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.CVODESolverPlugin" FILE "cvodessolverplugin.json")
 
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::SolverInterface)

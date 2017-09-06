@@ -36,7 +36,7 @@ namespace IDASolver {
 
 //==============================================================================
 
-PLUGININFO_FUNC IDASolverPluginInfo();
+PLUGININFO_FUNC IDASSolverPluginInfo();
 
 //==============================================================================
 
@@ -45,7 +45,7 @@ class IDASolverPlugin : public QObject, public I18nInterface,
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.IDASolverPlugin" FILE "idasolverplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.IDASolverPlugin" FILE "idassolverplugin.json")
 
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::SolverInterface)
