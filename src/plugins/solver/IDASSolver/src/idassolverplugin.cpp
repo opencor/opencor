@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// IDA solver plugin
+// IDAS solver plugin
 //==============================================================================
 
 #include "idassolver.h"
@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace IDASolver {
+namespace IDASSolver {
 
 //==============================================================================
 
@@ -35,8 +35,8 @@ PLUGININFO_FUNC IDASSolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin that uses <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> to solve DAEs."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui utilise <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> pour résoudre des EADs."));
+    descriptions.insert("en", QString::fromUtf8("a plugin that uses <a href=\"http://computation.llnl.gov/projects/sundials/idas\">IDAS</a> to solve DAEs."));
+    descriptions.insert("fr", QString::fromUtf8("une extension qui utilise <a href=\"http://computation.llnl.gov/projects/sundials/idas\">IDAS</a> pour résoudre des EADs."));
 
     return new PluginInfo(PluginInfo::Solver, true, false,
                           QStringList() << "SUNDIALS",
@@ -48,7 +48,7 @@ PLUGININFO_FUNC IDASSolverPluginInfo()
 //==============================================================================
 
 
-void IDASolverPlugin::retranslateUi()
+void IDASSolverPlugin::retranslateUi()
 {
     // We don't handle this interface...
     // Note: even though we don't handle this interface, we still want to
@@ -61,16 +61,16 @@ void IDASolverPlugin::retranslateUi()
 //==============================================================================
 
 
-Solver::Solver * IDASolverPlugin::solverInstance() const
+Solver::Solver * IDASSolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 
-    return new IdaSolver();
+    return new IdasSolver();
 }
 
 //==============================================================================
 
-QString IDASolverPlugin::id(const QString &pKisaoId) const
+QString IDASSolverPlugin::id(const QString &pKisaoId) const
 {
     // Return the id for the given KiSAO id
 
@@ -98,7 +98,7 @@ QString IDASolverPlugin::id(const QString &pKisaoId) const
 
 //==============================================================================
 
-QString IDASolverPlugin::kisaoId(const QString &pId) const
+QString IDASSolverPlugin::kisaoId(const QString &pId) const
 {
     // Return the KiSAO id for the given id
 
@@ -126,7 +126,7 @@ QString IDASolverPlugin::kisaoId(const QString &pId) const
 
 //==============================================================================
 
-Solver::Type IDASolverPlugin::solverType() const
+Solver::Type IDASSolverPlugin::solverType() const
 {
     // Return the type of the solver
 
@@ -135,16 +135,16 @@ Solver::Type IDASolverPlugin::solverType() const
 
 //==============================================================================
 
-QString IDASolverPlugin::solverName() const
+QString IDASSolverPlugin::solverName() const
 {
     // Return the name of the solver
 
-    return "IDA";
+    return "IDAS";
 }
 
 //==============================================================================
 
-Solver::Properties IDASolverPlugin::solverProperties() const
+Solver::Properties IDASSolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 
@@ -199,7 +199,7 @@ Solver::Properties IDASolverPlugin::solverProperties() const
 
 //==============================================================================
 
-QMap<QString, bool> IDASolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
+QMap<QString, bool> IDASSolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
 {
     // Return the visibility of our properties based on the given properties
     // values
@@ -225,7 +225,7 @@ QMap<QString, bool> IDASolverPlugin::solverPropertiesVisibility(const QMap<QStri
 
 //==============================================================================
 
-}   // namespace IDASolver
+}   // namespace IDASSolver
 }   // namespace OpenCOR
 
 //==============================================================================

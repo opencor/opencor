@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// IDA solver
+// IDAS solver
 //==============================================================================
 
 #include "idassolver.h"
@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace IDASolver {
+namespace IDASSolver {
 
 //==============================================================================
 
@@ -44,7 +44,7 @@ int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 {
     // Compute the residual function
 
-    IdaSolverUserData *userData = static_cast<IdaSolverUserData *>(pUserData);
+    IdasSolverUserData *userData = static_cast<IdasSolverUserData *>(pUserData);
 
     double *rates = N_VGetArrayPointer(pRates);
     double *states = N_VGetArrayPointer(pStates);
@@ -77,7 +77,7 @@ int rootFindingFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 {
     // Compute the root finding function
 
-    IdaSolverUserData *userData = static_cast<IdaSolverUserData *>(pUserData);
+    IdasSolverUserData *userData = static_cast<IdasSolverUserData *>(pUserData);
 
     userData->computeRootInformation()(pVoi, userData->constants(),
                                        N_VGetArrayPointer(pRates),
@@ -98,20 +98,20 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     Q_UNUSED(pFunction);
 
     if (pErrorCode != IDA_WARNING) {
-        // IDA generated an error, so forward it to the IdaSolver object
+        // IDAS generated an error, so forward it to the IdasSolver object
 
-        static_cast<IdaSolver *>(pUserData)->emitError(pErrorMessage);
+        static_cast<IdasSolver *>(pUserData)->emitError(pErrorMessage);
     }
 }
 
 //==============================================================================
 
-IdaSolverUserData::IdaSolverUserData(double *pConstants, double *pOldRates,
-                                     double *pOldStates, double *pAlgebraic,
-                                     double *pCondVar,
-                                     Solver::DaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                                     Solver::DaeSolver::ComputeResidualsFunction pComputeResiduals,
-                                     Solver::DaeSolver::ComputeRootInformationFunction pComputeRootInformation) :
+IdasSolverUserData::IdasSolverUserData(double *pConstants, double *pOldRates,
+                                       double *pOldStates, double *pAlgebraic,
+                                       double *pCondVar,
+                                       Solver::DaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                                       Solver::DaeSolver::ComputeResidualsFunction pComputeResiduals,
+                                       Solver::DaeSolver::ComputeRootInformationFunction pComputeRootInformation) :
     mConstants(pConstants),
     mOldRates(pOldRates),
     mOldStates(pOldStates),
@@ -125,7 +125,7 @@ IdaSolverUserData::IdaSolverUserData(double *pConstants, double *pOldRates,
 
 //==============================================================================
 
-double * IdaSolverUserData::constants() const
+double * IdasSolverUserData::constants() const
 {
     // Return our constants array
 
@@ -134,7 +134,7 @@ double * IdaSolverUserData::constants() const
 
 //==============================================================================
 
-double * IdaSolverUserData::oldRates() const
+double * IdasSolverUserData::oldRates() const
 {
     // Return our old rates array
 
@@ -143,7 +143,7 @@ double * IdaSolverUserData::oldRates() const
 
 //==============================================================================
 
-double * IdaSolverUserData::oldStates() const
+double * IdasSolverUserData::oldStates() const
 {
     // Return our old states array
 
@@ -152,7 +152,7 @@ double * IdaSolverUserData::oldStates() const
 
 //==============================================================================
 
-double * IdaSolverUserData::algebraic() const
+double * IdasSolverUserData::algebraic() const
 {
     // Return our algebraic array
 
@@ -161,7 +161,7 @@ double * IdaSolverUserData::algebraic() const
 
 //==============================================================================
 
-double * IdaSolverUserData::condVar() const
+double * IdasSolverUserData::condVar() const
 {
     // Return our condVar array
 
@@ -170,7 +170,7 @@ double * IdaSolverUserData::condVar() const
 
 //==============================================================================
 
-Solver::DaeSolver::ComputeEssentialVariablesFunction IdaSolverUserData::computeEssentialVariables() const
+Solver::DaeSolver::ComputeEssentialVariablesFunction IdasSolverUserData::computeEssentialVariables() const
 {
     // Return our compute essential variables function
 
@@ -179,7 +179,7 @@ Solver::DaeSolver::ComputeEssentialVariablesFunction IdaSolverUserData::computeE
 
 //==============================================================================
 
-Solver::DaeSolver::ComputeResidualsFunction IdaSolverUserData::computeResiduals() const
+Solver::DaeSolver::ComputeResidualsFunction IdasSolverUserData::computeResiduals() const
 {
     // Return our compute residuals function
 
@@ -188,7 +188,7 @@ Solver::DaeSolver::ComputeResidualsFunction IdaSolverUserData::computeResiduals(
 
 //==============================================================================
 
-Solver::DaeSolver::ComputeRootInformationFunction IdaSolverUserData::computeRootInformation() const
+Solver::DaeSolver::ComputeRootInformationFunction IdasSolverUserData::computeRootInformation() const
 {
     // Return our compute root information function
 
@@ -197,7 +197,7 @@ Solver::DaeSolver::ComputeRootInformationFunction IdaSolverUserData::computeRoot
 
 //==============================================================================
 
-IdaSolver::IdaSolver() :
+IdasSolver::IdasSolver() :
     mSolver(0),
     mRatesVector(0),
     mStatesVector(0),
@@ -208,7 +208,7 @@ IdaSolver::IdaSolver() :
 
 //==============================================================================
 
-IdaSolver::~IdaSolver()
+IdasSolver::~IdasSolver()
 {
     // Make sure that the solver has been initialised
 
@@ -227,7 +227,7 @@ IdaSolver::~IdaSolver()
 
 //==============================================================================
 
-void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
+void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                            const int &pRatesStatesCount,
                            const int &pCondVarCount, double *pConstants,
                            double *pRates, double *pStates, double *pAlgebraic,
@@ -238,7 +238,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                            ComputeStateInformationFunction pComputeStateInformation)
 {
     if (!mSolver) {
-        // Retrieve some of the IDA properties
+        // Retrieve some of the IDAS properties
 
         double maximumStep = MaximumStepDefaultValue;
         int maximumNumberOfSteps = MaximumNumberOfStepsDefaultValue;
@@ -356,7 +356,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
         mRatesVector = N_VMake_Serial(pRatesStatesCount, pRates);
         mStatesVector = N_VMake_Serial(pRatesStatesCount, pStates);
 
-        // Create the IDA solver
+        // Create the IDAS solver
 
         mSolver = IDACreate();
 
@@ -364,7 +364,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         IDASetErrHandlerFn(mSolver, errorHandler, this);
 
-        // Initialise the IDA solver
+        // Initialise the IDAS solver
 
         IDAInit(mSolver, residualFunction, pVoiStart,
                 mStatesVector, mRatesVector);
@@ -376,11 +376,11 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         // Set some user data
 
-        mUserData = new IdaSolverUserData(pConstants, mOldRates, mOldStates,
-                                          pAlgebraic, pCondVar,
-                                          pComputeEssentialVariables,
-                                          pComputeResiduals,
-                                          pComputeRootInformation);
+        mUserData = new IdasSolverUserData(pConstants, mOldRates, mOldStates,
+                                           pAlgebraic, pCondVar,
+                                           pComputeEssentialVariables,
+                                           pComputeResiduals,
+                                           pComputeRootInformation);
 
         IDASetUserData(mSolver, mUserData);
 
@@ -409,7 +409,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         IDASStolerances(mSolver, relativeTolerance, absoluteTolerance);
     } else {
-        // Reinitialise the IDA object
+        // Reinitialise the IDAS object
 
         IDAReInit(mSolver, pVoiStart, mStatesVector, mRatesVector);
     }
@@ -434,7 +434,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
 //==============================================================================
 
-void IdaSolver::solve(double &pVoi, const double &pVoiEnd) const
+void IdasSolver::solve(double &pVoi, const double &pVoiEnd) const
 {
     // Solve the model
 
@@ -449,7 +449,7 @@ void IdaSolver::solve(double &pVoi, const double &pVoiEnd) const
 
 //==============================================================================
 
-}   // namespace IDASolver
+}   // namespace IDASSolver
 }   // namespace OpenCOR
 
 //==============================================================================

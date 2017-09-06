@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// IDA solver plugin
+// IDAS solver plugin
 //==============================================================================
 
 #pragma once
@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace IDASolver {
+namespace IDASSolver {
 
 //==============================================================================
 
@@ -40,12 +40,12 @@ PLUGININFO_FUNC IDASSolverPluginInfo();
 
 //==============================================================================
 
-class IDASolverPlugin : public QObject, public I18nInterface,
-                        public SolverInterface
+class IDASSolverPlugin : public QObject, public I18nInterface,
+                         public SolverInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.IDASolverPlugin" FILE "idassolverplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.IDASSolverPlugin" FILE "idassolverplugin.json")
 
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::SolverInterface)
@@ -57,7 +57,7 @@ public:
 
 //==============================================================================
 
-}   // namespace IDASolver
+}   // namespace IDASSolver
 }   // namespace OpenCOR
 
 //==============================================================================
