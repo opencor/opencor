@@ -506,6 +506,10 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     if (QwtPainter::isX11GraphicsSystem())
         canvas()->setAttribute(Qt::WA_PaintOnScreen, true);
 
+    // We don't want a frame around ourselves
+
+    qobject_cast<QwtPlotCanvas *>(canvas())->setFrameShape(QFrame::NoFrame);
+
     // Customise ourselves a bit
 
     setCanvasBackground(Qt::white);
@@ -515,10 +519,6 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     setAxisScaleDraw(QwtPlot::xBottom, mAxisX);
     setAxisScaleDraw(QwtPlot::yLeft, mAxisY);
-
-    // We don't want a frame around ourselves
-
-    qobject_cast<QwtPlotCanvas *>(canvas())->setFrameShape(QFrame::NoFrame);
 
     // Attach a grid to ourselves
 
