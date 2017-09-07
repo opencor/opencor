@@ -431,7 +431,6 @@ void GraphPanelPlotScaleDraw::retranslateUi()
 QwtText GraphPanelPlotScaleDraw::label(double pValue) const
 {
     // Return pValue as a string, keeping in mind the current locale
-    return QLocale().toString(pValue, 'g', 15);
 
     QString label = QLocale().toString(pValue);
     QString fullLabel = QLocale().toString(pValue, 'g', 15);
