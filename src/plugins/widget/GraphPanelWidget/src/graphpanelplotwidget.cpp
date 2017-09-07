@@ -754,17 +754,6 @@ void GraphPanelPlotWidget::checkAxisValues(double &pMin, double &pMax)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::checkAxesValues(double &pMinX, double &pMaxX,
-                                           double &pMinY, double &pMaxY)
-{
-    // Make sure that our axes' values are fine
-
-    checkAxisValues(pMinX, pMaxX);
-    checkAxisValues(pMinY, pMaxY);
-}
-
-//==============================================================================
-
 GraphPanelPlotWidget::Action GraphPanelPlotWidget::action() const
 {
     // Return our action
@@ -992,7 +981,8 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
 
     // Make sure that the given axes' values are fine
 
-    checkAxesValues(pMinX, pMaxX, pMinY, pMaxY);
+    checkAxisValues(pMinX, pMaxX);
+    checkAxisValues(pMinY, pMaxY);
 
     // Update our axes' values, if needed
 

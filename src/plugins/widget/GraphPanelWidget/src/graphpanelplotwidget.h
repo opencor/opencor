@@ -261,8 +261,6 @@ private:
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
     void checkAxisValues(double &pMin, double &pMax);
-    void checkAxesValues(double &pMinX, double &pMaxX,
-                         double &pMinY, double &pMaxY);
 
     void updateActions();
 
