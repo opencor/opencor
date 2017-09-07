@@ -999,13 +999,13 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
     bool xAxisValuesChanged = false;
     bool yAxisValuesChanged = false;
 
-    if ((pMinX != oldMinX) || (pMaxX != oldMaxX)) {
+    if (pForceXAxisSetting || (pMinX != oldMinX) || (pMaxX != oldMaxX)) {
         setAxis(QwtPlot::xBottom, pMinX, pMaxX);
 
         xAxisValuesChanged = true;
     }
 
-    if ((pMinY != oldMinY) || (pMaxY != oldMaxY)) {
+    if (pForceYAxisSetting || (pMinY != oldMinY) || (pMaxY != oldMaxY)) {
         setAxis(QwtPlot::yLeft, pMinY, pMaxY);
 
         yAxisValuesChanged = true;
@@ -1015,8 +1015,7 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
     // result in ourselves, and maybe its neighbours, bein replotted, if
     // allowed), in case the axes' values have changed
 
-    if (   pForceXAxisSetting || pForceYAxisSetting
-        || xAxisValuesChanged || yAxisValuesChanged) {
+    if (xAxisValuesChanged || yAxisValuesChanged) {
         mCanDirectPaint = false;
 
         if (xAxisValuesChanged || yAxisValuesChanged)
@@ -1027,12 +1026,10 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                 && mSynchronizeYAxisAction->isChecked()) {
                 foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
                     neighbor->setAxes(pMinX, pMaxX, pMinY, pMaxY, false, false, false);
-            } else if (   (pForceXAxisSetting || xAxisValuesChanged)
-                       && mSynchronizeXAxisAction->isChecked()) {
+            } else if (xAxisValuesChanged && mSynchronizeXAxisAction->isChecked()) {
                 foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
                     neighbor->setAxes(pMinX, pMaxX, neighbor->minY(), neighbor->maxY(), false, false, false);
-            } else if (   (pForceYAxisSetting || yAxisValuesChanged)
-                       && mSynchronizeYAxisAction->isChecked()) {
+            } else if (yAxisValuesChanged && mSynchronizeYAxisAction->isChecked()) {
                 foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
                     neighbor->setAxes(neighbor->minX(), neighbor->maxX(), pMinY, pMaxY, false, false, false);
             }
