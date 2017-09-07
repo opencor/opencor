@@ -1616,7 +1616,7 @@ void GraphPanelPlotWidget::logarithmicXAxis()
                            static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
                            static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
 
-    optimiseAxis(QwtPlot::yLeft, mMinY, mMaxY);
+    optimiseAxis(QwtPlot::xBottom, mMinX, mMaxX);
 
     replot();
 }
@@ -1633,7 +1633,7 @@ void GraphPanelPlotWidget::logarithmicYAxis()
                            static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
                            static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
 
-    optimiseAxis(QwtPlot::xBottom, mMinX, mMaxX);
+    optimiseAxis(QwtPlot::yLeft, mMinY, mMaxY);
 
     replot();
 }
