@@ -430,10 +430,7 @@ void GraphPanelPlotScaleDraw::retranslateUi()
 
 QwtText GraphPanelPlotScaleDraw::label(double pValue) const
 {
-    // Make sure that pValue is equal to zero when it ought to be
-
-    if (qFuzzyIsNull(pValue))
-        pValue = 0.0;
+    // Return pValue as a string, keeping in mind the current locale
 
     return QLocale().toString(pValue, 'g', 15);
 }
