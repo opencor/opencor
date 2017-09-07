@@ -430,9 +430,7 @@ void GraphPanelPlotScaleDraw::retranslateUi()
 
 QwtText GraphPanelPlotScaleDraw::label(double pValue) const
 {
-    // Due to the limited precision of floating point numbers, pValue may not be
-    // exactly equal to zero while it really ought to be, so set it properly, if
-    // needed
+    // Make sure that pValue is equal to zero when it ought to be
 
     if (qFuzzyIsNull(pValue))
         pValue = 0.0;
