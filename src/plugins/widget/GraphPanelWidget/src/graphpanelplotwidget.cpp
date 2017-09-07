@@ -903,9 +903,6 @@ void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax)
 {
     // Optimise our X axis' values
 
-    mMinX = pMin;
-    mMaxX = pMax;
-
     optimiseAxis(QwtPlot::xBottom, pMin, pMax);
 }
 
@@ -914,9 +911,6 @@ void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax)
 void GraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax)
 {
     // Optimise our Y axis' values
-
-    mMinY = pMin;
-    mMaxY = pMax;
 
     optimiseAxis(QwtPlot::yLeft, pMin, pMax);
 }
@@ -988,6 +982,13 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
     double oldMaxX = maxX();
     double oldMinY = minY();
     double oldMaxY = maxY();
+
+    // Keep track of the given axes values
+
+    mMinX = pMinX;
+    mMaxX = pMaxX;
+    mMinY = pMinY;
+    mMaxY = pMaxY;
 
     // Make sure that the given axes' values are fine
 
@@ -1613,7 +1614,7 @@ void GraphPanelPlotWidget::logarithmicXAxis()
                            static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
                            static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
 
-    optimiseAxis(QwtPlot::xBottom, mMinX, mMaxX);
+    setAxes(mMinX, mMaxX, mMinY, mMaxY, true, true, true, true, false);
 
     replot();
 }
@@ -1630,7 +1631,7 @@ void GraphPanelPlotWidget::logarithmicYAxis()
                            static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
                            static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
 
-    optimiseAxis(QwtPlot::yLeft, mMinY, mMaxY);
+    setAxes(mMinX, mMaxX, mMinY, mMaxY, true, true, true, false, true);
 
     replot();
 }
