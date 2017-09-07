@@ -551,12 +551,18 @@ bool SimulationData::isModified() const
     //       than our constants...
 
     for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i) {
-        if (!qIsFinite(mStates[i]) || !qFuzzyCompare(mStates[i], mInitialStates[i]))
+        if (   !qIsFinite(mStates[i])
+            ||  (    (    qFuzzyIsNull(mInitialStates[i])
+                      && !qFuzzyIsNull(mStates[i]))
+                 || !qFuzzyCompare(mStates[i], mInitialStates[i])))
             return true;
     }
 
     for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i) {
-        if (!qIsFinite(mConstants[i]) || !qFuzzyCompare(mConstants[i], mInitialConstants[i]))
+        if (   !qIsFinite(mConstants[i])
+            ||  (    (    qFuzzyIsNull(mInitialConstants[i])
+                      && !qFuzzyIsNull(mConstants[i]))
+                 || !qFuzzyCompare(mConstants[i], mInitialConstants[i])))
             return true;
     }
 
