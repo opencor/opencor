@@ -904,7 +904,7 @@ void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax)
     // Optimise our X axis' values
 
     mMinX = pMin;
-    mMinX = pMax;
+    mMaxX = pMax;
 
     optimiseAxis(QwtPlot::xBottom, pMin, pMax);
 }
@@ -916,7 +916,7 @@ void GraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax)
     // Optimise our Y axis' values
 
     mMinY = pMin;
-    mMinY = pMax;
+    mMaxY = pMax;
 
     optimiseAxis(QwtPlot::yLeft, pMin, pMax);
 }
