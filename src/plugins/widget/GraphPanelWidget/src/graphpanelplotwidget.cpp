@@ -569,10 +569,10 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     }
 
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mCustomAxesAction);
-    mContextMenu->addSeparator();
     mContextMenu->addAction(mLogarithmicXAxisAction);
     mContextMenu->addAction(mLogarithmicYAxisAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mCustomAxesAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mZoomInAction);
     mContextMenu->addAction(mZoomOutAction);
