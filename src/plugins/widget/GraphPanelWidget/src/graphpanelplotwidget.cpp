@@ -432,7 +432,7 @@ QwtText GraphPanelPlotScaleDraw::label(double pValue) const
 {
     if (qFuzzyCompare(pValue, 0.0)) {
         // Due to the limited precision of floating point numbers, pValue isn't
-        // exactly equal to zero while it really oughht to be, so set it
+        // exactly equal to zero while it really ought to be, so set it
         // properly
 
         pValue = 0.0;
