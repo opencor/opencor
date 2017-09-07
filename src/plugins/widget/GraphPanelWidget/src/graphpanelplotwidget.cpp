@@ -465,10 +465,6 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     Core::CommonWidget(this),
     mGraphs(GraphPanelPlotGraphs()),
     mAction(None),
-    mMinX(0.0),
-    mMaxX(0.0),
-    mMinY(0.0),
-    mMaxY(0.0),
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
     mCanDirectPaint(true),
@@ -871,19 +867,25 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
         pMax = pMax+pow(10.0, powerValue);
     }
 
-    // Optimise the axis' values so that they fall onto a factor of the axis'
-    // minor step
+    // Optimise the axis' values by making sure that they fall onto a factor of
+    // the axis' minor step, this based on whether we are dealing with a linear
+    // or a logarithmic scale
 
-    uint base = axisScaleEngine(pAxisId)->base();
-    double majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin,
-                                                          axisMaxMajor(pAxisId),
-                                                          base);
-    double minorStep = QwtScaleArithmetic::divideInterval(majorStep,
-                                                          axisMaxMinor(pAxisId),
-                                                          base);
+    if (   ((pAxisId == QwtPlot::xBottom) && mLogarithmicXAxisAction->isChecked())
+        || ((pAxisId == QwtPlot::yLeft) && mLogarithmicYAxisAction->isChecked())) {
+//---ISSUE1299--- TO BE DONE...
+    } else {
+        uint base = axisScaleEngine(pAxisId)->base();
+        double majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin,
+                                                              axisMaxMajor(pAxisId),
+                                                              base);
+        double minorStep = QwtScaleArithmetic::divideInterval(majorStep,
+                                                              axisMaxMinor(pAxisId),
+                                                              base);
 
-    pMin = std::floor(pMin/minorStep)*minorStep;
-    pMax = std::ceil(pMax/minorStep)*minorStep;
+        pMin = std::floor(pMin/minorStep)*minorStep;
+        pMax = std::ceil(pMax/minorStep)*minorStep;
+    }
 }
 
 //==============================================================================
@@ -971,13 +973,6 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
     double oldMaxX = maxX();
     double oldMinY = minY();
     double oldMaxY = maxY();
-
-    // Keep track of the given axes values
-
-    mMinX = pMinX;
-    mMaxX = pMaxX;
-    mMinY = pMinY;
-    mMaxY = pMaxY;
 
     // Make sure that the given axes' values are fine
 
@@ -1595,13 +1590,12 @@ void GraphPanelPlotWidget::logarithmicXAxis()
 {
     // Enable/disable logarithmic scaling on the X axis
 
-//---ISSUE1299--- TO BE DONE...
     setAxisScaleEngine(QwtPlot::xBottom,
                        mLogarithmicXAxisAction->isChecked()?
                            static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
                            static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
 
-    setAxes(mMinX, mMaxX, mMinY, mMaxY, true, true, true, true, false);
+    resetAxes();
 
     replot();
 }
@@ -1612,13 +1606,12 @@ void GraphPanelPlotWidget::logarithmicYAxis()
 {
     // Enable/disable logarithmic scaling on the Y axis
 
-//---ISSUE1299--- TO BE DONE...
     setAxisScaleEngine(QwtPlot::yLeft,
                        mLogarithmicYAxisAction->isChecked()?
                            static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
                            static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
 
-    setAxes(mMinX, mMaxX, mMinY, mMaxY, true, true, true, false, true);
+    resetAxes();
 
     replot();
 }

@@ -220,11 +220,6 @@ private:
 
     Action mAction;
 
-    double mMinX;
-    double mMaxX;
-    double mMinY;
-    double mMaxY;
-
     QPoint mOriginPoint;
     QPoint mPoint;
 
@@ -246,9 +241,9 @@ private:
     QAction *mCopyToClipboardAction;
     QAction *mSynchronizeXAxisAction;
     QAction *mSynchronizeYAxisAction;
-    QAction *mCustomAxesAction;
     QAction *mLogarithmicXAxisAction;
     QAction *mLogarithmicYAxisAction;
+    QAction *mCustomAxesAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
     QAction *mResetZoomAction;
