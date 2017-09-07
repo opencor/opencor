@@ -274,7 +274,7 @@ private:
 
     QRectF optimisedRect(const QRectF &pAxes) const;
 
-    void setAxis(const int &pAxis, double pMin, double pMax);
+    void setAxis(const int &pAxisId, double pMin, double pMax);
 
     bool resetAxes();
 
