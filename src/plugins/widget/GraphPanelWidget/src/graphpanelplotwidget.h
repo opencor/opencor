@@ -222,7 +222,6 @@ private:
 
     double mMinX;
     double mMaxX;
-
     double mMinY;
     double mMaxY;
 
