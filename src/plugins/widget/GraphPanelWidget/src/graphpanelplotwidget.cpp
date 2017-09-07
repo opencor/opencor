@@ -1605,6 +1605,8 @@ void GraphPanelPlotWidget::logarithmicXAxis()
                        mLogarithmicXAxisAction->isChecked()?
                            static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
                            static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
+
+    replot();
 }
 
 //==============================================================================
@@ -1618,6 +1620,8 @@ void GraphPanelPlotWidget::logarithmicYAxis()
                        mLogarithmicYAxisAction->isChecked()?
                            static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
                            static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
+
+    replot();
 }
 
 //==============================================================================
