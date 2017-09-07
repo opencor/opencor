@@ -950,7 +950,7 @@ QRectF GraphPanelPlotWidget::dataRect() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setAxis(const int &pAxis, double pMin, double pMax)
+void GraphPanelPlotWidget::setAxis(const int &pAxisId, double pMin, double pMax)
 {
     // Set our axis
     // Note: to use setAxisScale() on its own is not sufficient unless we were
@@ -962,8 +962,8 @@ void GraphPanelPlotWidget::setAxis(const int &pAxis, double pMin, double pMax)
     //       data is not considered as valid, which is important when it comes
     //       to plotting ourselves...
 
-    setAxisScaleDiv(pAxis, QwtScaleDiv(pMin, pMax));
-    setAxisScale(pAxis, pMin, pMax);
+    setAxisScaleDiv(pAxisId, QwtScaleDiv(pMin, pMax));
+    setAxisScale(pAxisId, pMin, pMax);
 }
 
 //==============================================================================
