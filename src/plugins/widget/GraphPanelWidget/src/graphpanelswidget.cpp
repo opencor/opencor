@@ -117,6 +117,11 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
 
     QIntList origSizes = sizes();
 
+    // Retrieve the active graph panel's plot, if any, which will be used to
+    // synchronise axes, if needed
+
+    GraphPanelPlotWidget *activeGraphPanelPlot = mActiveGraphPanel?mActiveGraphPanel->plot():0;
+
     // Create a new graph panel, add it to ourselves and keep track of it
 
     GraphPanelWidget *res = new GraphPanelWidget(mGraphPanels,
@@ -163,12 +168,14 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
 
     emit removeGraphPanelsEnabled(mGraphPanels.count() > 1);
 
-    // Ask our first graph panel's plot to align itself against its neighbours
     // Synchronise the axes of our graph panels, if needed, and ensure that they
     // are all aligned with one another by forcing the setting of the axes of
     // our active graph panel
+    // Note: at startup, activeGraphPanelPlot is (obviously) null, hence we use
+    //       our newly created graph panel's plot instead...
 
-    GraphPanelPlotWidget *activeGraphPanelPlot = mActiveGraphPanel->plot();
+    if (!activeGraphPanelPlot)
+        activeGraphPanelPlot = mActiveGraphPanel->plot();
 
     activeGraphPanelPlot->setAxes(activeGraphPanelPlot->minX(),
                                   activeGraphPanelPlot->maxX(),
