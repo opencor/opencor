@@ -170,8 +170,8 @@ public:
 
     QRectF dataRect() const;
 
-    void optimiseAxisX(double &pMin, double &pMax) const;
-    void optimiseAxisY(double &pMin, double &pMax) const;
+    void optimiseAxisX(double &pMin, double &pMax);
+    void optimiseAxisY(double &pMin, double &pMax);
 
     double minX() const;
     double maxX() const;
@@ -219,6 +219,12 @@ private:
     GraphPanelPlotGraphs mGraphs;
 
     Action mAction;
+
+    double mMinX;
+    double mMaxX;
+
+    double mMinY;
+    double mMaxY;
 
     QPoint mOriginPoint;
     QPoint mPoint;
@@ -272,7 +278,7 @@ private:
 
     void optimiseAxis(const int &pAxisId, double &pMin, double &pMax) const;
 
-    QRectF optimisedRect(const QRectF &pAxes) const;
+    QRectF optimisedRect(const QRectF &pAxes);
 
     void setAxis(const int &pAxisId, double pMin, double pMax);
 

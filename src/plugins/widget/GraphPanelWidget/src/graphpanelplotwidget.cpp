@@ -468,6 +468,10 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     Core::CommonWidget(this),
     mGraphs(GraphPanelPlotGraphs()),
     mAction(None),
+    mMinX(0.0),
+    mMaxX(0.0),
+    mMinY(0.0),
+    mMaxY(0.0),
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
     mCanDirectPaint(true),
@@ -898,25 +902,31 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax) const
+void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax)
 {
     // Optimise our X axis' values
+
+    mMinX = pMin;
+    mMinX = pMax;
 
     optimiseAxis(QwtPlot::xBottom, pMin, pMax);
 }
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax) const
+void GraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax)
 {
     // Optimise our Y axis' values
+
+    mMinY = pMin;
+    mMinY = pMax;
 
     optimiseAxis(QwtPlot::yLeft, pMin, pMax);
 }
 
 //==============================================================================
 
-QRectF GraphPanelPlotWidget::optimisedRect(const QRectF &pAxes) const
+QRectF GraphPanelPlotWidget::optimisedRect(const QRectF &pAxes)
 {
     // Optimise our axes' values
 
@@ -1606,6 +1616,8 @@ void GraphPanelPlotWidget::logarithmicXAxis()
                            static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
                            static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
 
+    optimiseAxis(QwtPlot::yLeft, mMinY, mMaxY);
+
     replot();
 }
 
@@ -1620,6 +1632,8 @@ void GraphPanelPlotWidget::logarithmicYAxis()
                        mLogarithmicYAxisAction->isChecked()?
                            static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
                            static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
+
+    optimiseAxis(QwtPlot::xBottom, mMinX, mMaxX);
 
     replot();
 }
