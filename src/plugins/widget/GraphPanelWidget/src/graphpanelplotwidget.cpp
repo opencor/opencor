@@ -965,7 +965,7 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax)
+void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax) const
 {
     // Optimise our X axis' values
 
@@ -974,7 +974,7 @@ void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax)
+void GraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax) const
 {
     // Optimise our Y axis' values
 
@@ -983,7 +983,7 @@ void GraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax)
 
 //==============================================================================
 
-QRectF GraphPanelPlotWidget::optimisedRect(const QRectF &pAxes)
+QRectF GraphPanelPlotWidget::optimisedRect(const QRectF &pAxes) const
 {
     // Optimise our axes' values
 

@@ -170,8 +170,8 @@ public:
 
     QRectF dataRect() const;
 
-    void optimiseAxisX(double &pMin, double &pMax);
-    void optimiseAxisY(double &pMin, double &pMax);
+    void optimiseAxisX(double &pMin, double &pMax) const;
+    void optimiseAxisY(double &pMin, double &pMax) const;
 
     double minX() const;
     double maxX() const;
@@ -276,7 +276,7 @@ private:
 
     void optimiseAxis(const int &pAxisId, double &pMin, double &pMax) const;
 
-    QRectF optimisedRect(const QRectF &pAxes);
+    QRectF optimisedRect(const QRectF &pAxes) const;
 
     void setAxis(const int &pAxisId, double pMin, double pMax);
 
