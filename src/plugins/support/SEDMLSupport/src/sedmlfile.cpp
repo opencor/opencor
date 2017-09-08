@@ -760,13 +760,23 @@ bool SedmlFile::isSupported()
         // use logarithmic axes
 
         libsedml::SedPlot2D *plot = static_cast<libsedml::SedPlot2D *>(output);
+        bool initialiseLogs = true;
+        bool logX;
+        bool logY;
 
         for (uint j = 0, jMax = plot->getNumCurves(); j < jMax; ++j) {
             libsedml::SedCurve *curve = plot->getCurve(j);
 
-            if (curve->getLogX() || curve->getLogY()) {
+            if (initialiseLogs) {
+                initialiseLogs = false;
+
+                logX = curve->getLogX();
+                logY = curve->getLogY();
+            }
+
+            if ((curve->getLogX() != logX) || (curve->getLogY() != logY)) {
                 mIssues << SedmlFileIssue(SedmlFileIssue::Information,
-                                          tr("only SED-ML files with linear 2D outputs are supported"));
+                                          tr("only SED-ML files with curves of the same type (with regards to linear/logarithmic scaling) are supported"));
 
                 return false;
             }
