@@ -783,7 +783,10 @@ void GraphPanelPlotWidget::setLogarithmicXAxis(const bool &pLogarithmicXAxis)
 {
     // Specify whether our X axis should use a logarithmic scale
 
-    mLogarithmicXAxisAction->setChecked(pLogarithmicXAxis);
+    if (   ( pLogarithmicXAxis && !mLogarithmicXAxisAction->isChecked())
+        || (!pLogarithmicXAxis &&  mLogarithmicXAxisAction->isChecked())) {
+        mLogarithmicXAxisAction->trigger();
+    }
 }
 
 //==============================================================================
@@ -801,7 +804,10 @@ void GraphPanelPlotWidget::setLogarithmicYAxis(const bool &pLogarithmicYAxis)
 {
     // Specify whether our Y axis should use a logarithmic scale
 
-    mLogarithmicYAxisAction->setChecked(pLogarithmicYAxis);
+    if (   ( pLogarithmicYAxis && !mLogarithmicYAxisAction->isChecked())
+        || (!pLogarithmicYAxis &&  mLogarithmicYAxisAction->isChecked())) {
+        mLogarithmicYAxisAction->trigger();
+    }
 }
 
 //==============================================================================

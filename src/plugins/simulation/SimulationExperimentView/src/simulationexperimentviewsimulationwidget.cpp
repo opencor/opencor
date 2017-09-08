@@ -2317,6 +2317,12 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
 
         for (uint j = 0, jMax = plot->getNumCurves(); j < jMax; ++j) {
             libsedml::SedCurve *curve = plot->getCurve(j);
+
+            if (!j) {
+                graphPanel->plot()->setLogarithmicXAxis(curve->getLogX());
+                graphPanel->plot()->setLogarithmicYAxis(curve->getLogY());
+            }
+
             CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(curve->getXDataReference())->getVariable(0));
             CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(sedmlDocument->getDataGenerator(curve->getYDataReference())->getVariable(0));
 
