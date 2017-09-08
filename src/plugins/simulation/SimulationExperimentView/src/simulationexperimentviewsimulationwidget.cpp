@@ -2287,10 +2287,10 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
         }
     }
 
-    // Add/remove some graph panels, so that the end number of them corresponds
-    // to the number of 2D outputs mentioned in the SED-ML file, this after
-    // having made sure that the current graph panels are all of the same size
-    // and that the first one of them is selected
+    // Add/remove some graph panels, so that their number corresponds to the
+    // number of 2D outputs mentioned in the SED-ML file, this after having made
+    // sure that the current graph panels are all of the same size and that the
+    // first one is selected
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     int oldNbOfGraphPanels = graphPanelsWidget->graphPanels().count();
