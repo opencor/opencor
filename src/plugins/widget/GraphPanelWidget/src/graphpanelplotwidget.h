@@ -301,8 +301,8 @@ private slots:
 
     void copyToClipboard();
     void customAxes();
-    void logarithmicXAxis();
-    void logarithmicYAxis();
+    void toggleLogarithmicXAxis();
+    void toggleLogarithmicYAxis();
     void zoomIn();
     void zoomOut();
     void resetZoom();

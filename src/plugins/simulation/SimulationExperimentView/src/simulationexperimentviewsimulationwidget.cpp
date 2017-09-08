@@ -1599,6 +1599,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
     // Retrieve all the graphs that are to be plotted, if any
 
     QList<Core::Properties> graphsList = QList<Core::Properties>();
+    QList<Core::Properties> logarithmicXAxis = QList<Core::Properties>();
+    QList<Core::Properties> logarithmicYAxis = QList<Core::Properties>();
     SimulationExperimentViewInformationGraphsWidget *graphsWidget = mContentsWidget->informationWidget()->graphsWidget();
 
     foreach (GraphPanelWidget::GraphPanelWidget *graphPanel,
@@ -1607,6 +1609,12 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         if (!graphs.isEmpty())
             graphsList << graphs;
+
+        if (graphPanel->plot()->logarithmicXAxis())
+            logarithmicXAxis << graphs;
+
+        if (graphPanel->plot()->logarithmicYAxis())
+            logarithmicYAxis << graphs;
     }
 
     // Create and customise 2D plot outputs and data generators for all the
@@ -1622,6 +1630,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
             libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
 
             sedmlPlot2d->setId(QString("plot%1").arg(graphPlotCounter).toStdString());
+
+            bool logX = logarithmicXAxis.contains(graphs);
+            bool logY = logarithmicYAxis.contains(graphs);
 
             foreach (Core::Property *property, graphs) {
                 ++graphCounter;
@@ -1665,10 +1676,10 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                             QString::number(graphCounter)).toStdString());
 
                 sedmlCurve->setXDataReference(sedmlDataGeneratorIdX);
-                sedmlCurve->setLogX(false);
+                sedmlCurve->setLogX(logX);
 
                 sedmlCurve->setYDataReference(sedmlDataGeneratorIdY);
-                sedmlCurve->setLogY(false);
+                sedmlCurve->setLogY(logY);
             }
         }
     }
