@@ -178,6 +178,12 @@ public:
     double minY() const;
     double maxY() const;
 
+    bool logarithmicXAxis() const;
+    void setLogarithmicXAxis(const bool &pLogarithmicXAxis);
+
+    bool logarithmicYAxis() const;
+    void setLogarithmicYAxis(const bool &pLogarithmicYAxis);
+
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  const bool &pSynchronizeAxes = true,
                  const bool &pCanReplot = true, const bool &pEmitSignal = true,

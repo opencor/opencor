@@ -770,6 +770,42 @@ void GraphPanelPlotWidget::resetAction()
 
 //==============================================================================
 
+bool GraphPanelPlotWidget::logarithmicXAxis() const
+{
+    // Return whether our X axis uses a logarithmic scale
+
+    return mLogarithmicXAxisAction->isChecked();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setLogarithmicXAxis(const bool &pLogarithmicXAxis)
+{
+    // Specify whether our X axis should use a logarithmic scale
+
+    mLogarithmicXAxisAction->setChecked(pLogarithmicXAxis);
+}
+
+//==============================================================================
+
+bool GraphPanelPlotWidget::logarithmicYAxis() const
+{
+    // Return whether our Y axis uses a logarithmic scale
+
+    return mLogarithmicYAxisAction->isChecked();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setLogarithmicYAxis(const bool &pLogarithmicYAxis)
+{
+    // Specify whether our Y axis should use a logarithmic scale
+
+    mLogarithmicYAxisAction->setChecked(pLogarithmicYAxis);
+}
+
+//==============================================================================
+
 double GraphPanelPlotWidget::minX() const
 {
     // Return our minimum X value
