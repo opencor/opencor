@@ -873,7 +873,40 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
 
     if (   ((pAxisId == QwtPlot::xBottom) && mLogarithmicXAxisAction->isChecked())
         || ((pAxisId == QwtPlot::yLeft) && mLogarithmicYAxisAction->isChecked())) {
-//---ISSUE1299--- TO BE DONE...
+        uint base = axisScaleEngine(pAxisId)->base();
+        QwtScaleDiv scaleDiv = static_cast<const QwtLogScaleEngine *>(axisScaleEngine(pAxisId))->divideScale(pMin/base,
+                                                                                                             base*pMax,
+                                                                                                             axisMaxMajor(pAxisId),
+                                                                                                             axisMaxMinor(pAxisId));
+        QList<double> ticks =  scaleDiv.ticks(QwtScaleDiv::MajorTick)
+                              +scaleDiv.ticks(QwtScaleDiv::MediumTick)
+                              +scaleDiv.ticks(QwtScaleDiv::MinorTick);
+
+        std::sort(ticks.begin(), ticks.end());
+
+        double newMin = ticks.first();
+
+        foreach (const double &tick, ticks) {
+            if (tick <= pMin)
+                newMin = tick;
+            else
+                break;
+        }
+
+        pMin = newMin;
+
+        std::reverse(ticks.begin(), ticks.end());
+
+        double newMax = ticks.first();
+
+        foreach (const double &tick, ticks) {
+            if (tick >= pMax)
+                newMax = tick;
+            else
+                break;
+        }
+
+        pMax = newMax;
     } else {
         uint base = axisScaleEngine(pAxisId)->base();
         double majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin,
