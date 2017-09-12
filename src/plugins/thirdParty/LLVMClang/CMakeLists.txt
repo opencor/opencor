@@ -59,10 +59,10 @@ IF(USE_PREBUILT_LLVMCLANG_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 1eee742a00a29d128c9ca53828737347be0b18e0
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} e0581ca70c2674f6ddc04990e2f9cfe8e8e564a7
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 6fff4a5ce1b911e1600e5e242548b7cd43a86e00
-                                              1c8e4b02d728ce1f195374064caef2af15f5bc54)
+                                  SHA1_VALUES 8a6566baf821b420d074547e5012f6e87580d0a7
+                                              964fc9f296dab0e07f780d2040cbbe64180ccdf9)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 67a93b88b013ce4d04d8fb6c759dababf7b1bfb9
@@ -72,14 +72,14 @@ IF(USE_PREBUILT_LLVMCLANG_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 7afc1f57275425757b70f04c50803c570d4b0e97
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 262e27880a2d4882ce5a853427b08866461ce098
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 8f4569fcd1b4d4b04150963bb07c8a828e70fc80)
+                              SHA1_VALUES cee73fa8c20257022161e904452361238f221fb4)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} c50e60cd81b0118f9c180f64fde6dd181a98f6d1
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 951da1b8a8299dae853af1e9d4082a3d3dc6c155
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 8b0cdd6790f0346a977fa15c8301e43aacff1201)
+                              SHA1_VALUES 568edcce171da8015e2cfec8f1425f99b9950642)
     ENDIF()
 ELSE()
     # Allow for big objects and ignore some warnings
