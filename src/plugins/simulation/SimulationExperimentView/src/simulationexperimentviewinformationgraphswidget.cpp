@@ -860,8 +860,8 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
 
 void SimulationExperimentViewInformationGraphsWidget::graphChanged(Core::Property *pProperty)
 {
-    // The graph has changed, which means that either it has been un/selected or
-    // that the value of its model, X or Y parameter property has changed
+    // Our graph has changed, which means that either it has been un/selected or
+    // that the value of one of its properties has changed
 
     if (pProperty->type() == Core::Property::Section) {
         // The property associated with the graph is a section, which means that
@@ -877,12 +877,16 @@ void SimulationExperimentViewInformationGraphsWidget::graphChanged(Core::Propert
                                GraphPanelWidget::GraphPanelPlotGraphs() << graph);
         }
     } else {
-        // Either the model, X or Y parameter property of the graph has changed,
-        // so update its information
+        // One of our graph properties has changed, so update its information
         // Note: updateGraphInfo() will emit the graphsUpdated() signal, if
         //       needed...
 
-        updateGraphInfo(pProperty->parentProperty());
+        Core::Property *graphProperty = pProperty->parentProperty();
+
+        while (graphProperty->parentProperty())
+            graphProperty = graphProperty->parentProperty();
+
+        updateGraphInfo(graphProperty);
     }
 }
 
