@@ -761,16 +761,12 @@ QString SimulationExperimentViewInformationGraphsWidget::modelListValue(const QS
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty,
-                                                                      const QString &pFileName)
+void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty)
 {
     // Make sure that we have a property
 
     if (!pProperty)
         return;
-
-    // Update the graph information by checking the new value of the given
-    // section property
 
     // Update the model property's icon and graph colour, based on the value of
     // the model property, and determine the file name from which we will have
@@ -780,11 +776,12 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     static const QIcon UnlockedIcon = QIcon(":/oxygen/status/object-unlocked.png");
 
     GraphPanelWidget::GraphPanelPlotGraph *graph = mGraphs.value(pProperty);
+    QString propertyFileName = pProperty->properties()[0]->value();
     QString fileName = mSimulationWidget->fileName();
     QPen oldPen = graph->pen();
     QPen newPen = oldPen;
 
-    if (!pFileName.compare(tr("Current"))) {
+    if (!propertyFileName.compare(tr("Current"))) {
         pProperty->properties()[0]->setIcon(UnlockedIcon);
 
         newPen.setColor(Qt::darkBlue);
@@ -793,7 +790,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
 
         newPen.setColor(Qt::darkRed);
 
-        fileName = pFileName.split(PropertySeparator).last();
+        fileName = propertyFileName.split(PropertySeparator).last();
     }
 
     graph->setPen(newPen);
@@ -868,8 +865,7 @@ void SimulationExperimentViewInformationGraphsWidget::graphChanged(Core::Propert
         // Note: updateGraphInfo() will emit the graphsUpdated() signal, if
         //       needed...
 
-        updateGraphInfo(pProperty->parentProperty(),
-                        pProperty->parentProperty()->properties()[0]->value());
+        updateGraphInfo(pProperty->parentProperty());
     }
 }
 

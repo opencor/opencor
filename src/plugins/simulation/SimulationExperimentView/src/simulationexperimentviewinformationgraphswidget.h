@@ -134,7 +134,7 @@ private:
 
     QString modelListValue(const QString &pFileName) const;
 
-    void updateGraphInfo(Core::Property *pProperty, const QString &pFileName);
+    void updateGraphInfo(Core::Property *pProperty);
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);
     void updateAllGraphsInfo();
 
