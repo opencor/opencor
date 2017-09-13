@@ -785,9 +785,9 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     if (!pProperty)
         return;
 
-    // Update the model property's icon and graph colour, based on the value of
-    // the model property, and determine the file name from which we will have
-    // to check our X and Y properties
+    // Update the model property's icon, based on the value of the model
+    // property, and determine the file name against which we have to check our
+    // X and Y properties
 
     static const QIcon LockedIcon   = QIcon(":/oxygen/status/object-locked.png");
     static const QIcon UnlockedIcon = QIcon(":/oxygen/status/object-unlocked.png");
@@ -795,28 +795,20 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     GraphPanelWidget::GraphPanelPlotGraph *graph = mGraphs.value(pProperty);
     QString propertyFileName = pProperty->properties()[0]->value();
     QString fileName = mSimulationWidget->fileName();
-    QPen oldPen = graph->pen();
-    QPen newPen = oldPen;
 
     if (!propertyFileName.compare(tr("Current"))) {
         pProperty->properties()[0]->setIcon(UnlockedIcon);
-
-        newPen.setColor(Qt::darkBlue);
     } else {
         pProperty->properties()[0]->setIcon(LockedIcon);
 
-        newPen.setColor(Qt::darkRed);
-
         fileName = propertyFileName.split(PropertySeparator).last();
     }
-
-    graph->setPen(newPen);
 
     // Check that the parameters represented by the value of the X and Y
     // properties exist for the current/selected model
     // Note: we absolutely want to check the parameter (so that an icon can be
     //       assigned to its corresponding property) , hence the order of our &&
-    //       assignment...
+    //       tests when setting graphOk...
 
     bool graphOk = true;
     CellMLSupport::CellmlFileRuntime *runtime = mViewWidget->runtime(fileName);
@@ -849,8 +841,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     // Let people know if we consider that the graph has been updated
 
     if (   (oldParameterX != graph->parameterX())
-        || (oldParameterY != graph->parameterY())
-        || (oldPen != newPen)) {
+        || (oldParameterY != graph->parameterY())) {
         emit graphsUpdated(qobject_cast<GraphPanelWidget::GraphPanelPlotWidget *>(graph->plot()),
                            GraphPanelWidget::GraphPanelPlotGraphs() << graph);
     }
