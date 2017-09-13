@@ -260,7 +260,7 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
     mGraphs.insert(graphProperty, pGraph);
     mGraphProperties.insert(pGraph, graphProperty);
 
-    // Create some properties for our graph
+    // Create some graph properties
     // Note: to add properties will result in the propertyChanged() signal being
     //       emitted, but we don't want to handle that signal (at least, not
     //       when creating a graph since not everyting may be set yet so this
@@ -280,6 +280,23 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
                                           static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())->fullyFormattedName():
                                           Core::UnknownValue,
                                       graphProperty);
+
+    // Create some line properties for our graph
+
+    Core::Property *lineProperty = propertyEditor->addSectionProperty(graphProperty);
+
+    propertyEditor->addListProperty(lineProperty);
+    propertyEditor->addStringProperty(Core::UnknownValue, lineProperty);
+    propertyEditor->addDoubleProperty(1.0, lineProperty);
+
+    // Create some symbol properties for our graph
+
+    Core::Property *symbolProperty = propertyEditor->addSectionProperty(graphProperty);
+
+    propertyEditor->addListProperty(symbolProperty);
+    propertyEditor->addBooleanProperty(symbolProperty);
+    propertyEditor->addStringProperty(Core::UnknownValue, symbolProperty);
+    propertyEditor->addStringProperty(Core::UnknownValue, symbolProperty);
 
     connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
@@ -916,9 +933,44 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
     // information
 
     foreach (Core::Property *graphProperty, graphProperties) {
+        // Set the label of our graph properties
+
         graphProperty->properties()[0]->setName(tr("Model"));
         graphProperty->properties()[1]->setName(tr("X"));
         graphProperty->properties()[2]->setName(tr("Y"));
+
+        // Set the label of our graph line properties
+
+        graphProperty->properties()[3]->setName(tr("Line"));
+        graphProperty->properties()[3]->properties()[0]->setName(tr("Style"));
+        graphProperty->properties()[3]->properties()[0]->setListValues(QStringList() << tr("Solid")
+                                                                                     << tr("Dash")
+                                                                                     << tr("Dot")
+                                                                                     << tr("DashDot")
+                                                                                     << tr("DashDotDot")
+                                                                                     << tr("None"),
+                                                                       false);
+        graphProperty->properties()[3]->properties()[1]->setName(tr("Colour"));
+        graphProperty->properties()[3]->properties()[2]->setName(tr("Thickness"));
+
+        // Set the label of our graph symbol properties
+
+        graphProperty->properties()[4]->setName(tr("Symbol"));
+        graphProperty->properties()[4]->properties()[0]->setName(tr("Style"));
+        graphProperty->properties()[4]->properties()[0]->setListValues(QStringList() << tr("Square")
+                                                                                     << tr("Diamond")
+                                                                                     << tr("Triangle")
+                                                                                     << tr("Circle")
+                                                                                     << tr("XCross")
+                                                                                     << tr("Plus")
+                                                                                     << tr("Star")
+                                                                                     << tr("TriangleDown")
+                                                                                     << tr("VDash")
+                                                                                     << tr("None"),
+                                                                       false);
+        graphProperty->properties()[4]->properties()[1]->setName(tr("Filled"));
+        graphProperty->properties()[4]->properties()[2]->setName(tr("Colour"));
+        graphProperty->properties()[4]->properties()[3]->setName(tr("Fill colour"));
 
         // Keep track of the current model value, so that we can safely update
         // its list values and then select the correct model value back
