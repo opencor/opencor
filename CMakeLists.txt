@@ -98,6 +98,14 @@ IF(NOT WIN32 AND NOT APPLE)
     ENDIF()
 ENDIF()
 
+# Make sure that ccache gets used, if available
+
+FIND_PROGRAM(CCACHE ccache)
+
+IF(CCACHE)
+    SET(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+ENDIF()
+
 # Keep track of some basic information about Qt
 
 FIND_PACKAGE(Qt5Core REQUIRED)
