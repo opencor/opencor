@@ -43,6 +43,22 @@
         <translation>Spécifier des axes personnalisés pour le panneau graphique</translation>
     </message>
     <message>
+        <source>Logarithmic X Axis</source>
+        <translation>Logarithmique Axe des X</translation>
+    </message>
+    <message>
+        <source>Enable/disable logarithmic scaling on the X axis</source>
+        <translation>Activer/désactiver l&apos;échelle logarithmique sur l&apos;axe des X</translation>
+    </message>
+    <message>
+        <source>Logarithmic Y Axis</source>
+        <translation>Logarithmique Axe des Y</translation>
+    </message>
+    <message>
+        <source>Enable/disable logarithmic scaling on the Y axis</source>
+        <translation>Activer/désactiver l&apos;échelle logarithmique sur l&apos;axe des Y</translation>
+    </message>
+    <message>
         <source>Zoom In</source>
         <translation>Aggrandir</translation>
     </message>

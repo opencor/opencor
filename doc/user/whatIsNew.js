@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 11, "month": 8, "year": 2017,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 13, "month": 9, "year": 2017,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -70,7 +70,24 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Simulation Experiment view (formerly known as the Single Cell view)",
                              "entries": [
-                               { "type": "Improved", "description": "Running of long simulations." }
+                               { "type": "Added", "description": "Support for log scales." },
+                               { "type": "Improved", "description": "Running of long simulations." },
+                               { "type": "Improved", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
+                               { "type": "Fixed", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Solver",
+                         "entries": [
+                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> solver (formerly known as the <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> solver)",
+                             "entries": [
+                               { "type": "Improved", "description": "Ready for sensitivity analysis." }
+                             ]
+                           },
+                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/idas\">IDAS</a> solver (formerly known as the <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> solver)",
+                             "entries": [
+                               { "type": "Improved", "description": "Ready for sensitivity analysis." }
                              ]
                            }
                          ]
