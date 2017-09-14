@@ -87,12 +87,12 @@ public:
 
 //==============================================================================
 
-class StringListEditorWidget : public QComboBox
+class ListEditorWidget : public QComboBox
 {
     Q_OBJECT
 
 public:
-    explicit StringListEditorWidget(QWidget *pParent);
+    explicit ListEditorWidget(QWidget *pParent);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -102,6 +102,16 @@ protected:
 signals:
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
+};
+
+//==============================================================================
+
+class StringListEditorWidget : public ListEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit StringListEditorWidget(QWidget *pParent);
 };
 
 //==============================================================================

@@ -120,14 +120,14 @@ DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
 
 //==============================================================================
 
-StringListEditorWidget::StringListEditorWidget(QWidget *pParent) :
+ListEditorWidget::ListEditorWidget(QWidget *pParent) :
     QComboBox(pParent)
 {
 }
 
 //==============================================================================
 
-void StringListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
+void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check some key combinations
 
@@ -161,16 +161,15 @@ void StringListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void StringListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
+void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 {
     // Make sure that we have at least one item
 
     if (!count())
         return;
 
-    // We want to go to the next item in our string list (and go back to the
-    // first one if we are at the end of the list), so determine the new current
-    // index
+    // We want to go to the next item in our list (and go back to the first one
+    // if we are at the end of the list), so determine the new current index
 
     int newCurrentIndex = currentIndex();
 
@@ -192,7 +191,7 @@ void StringListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-void StringListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
+void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Check whether the user clicked on the arrow and, if so, allow the default
     // handling of the event (so that the list of items gets displayed) while do
@@ -246,6 +245,13 @@ void StringListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
         QComboBox::mousePressEvent(pEvent);
     else
         pEvent->accept();
+}
+
+//==============================================================================
+
+StringListEditorWidget::StringListEditorWidget(QWidget *pParent) :
+    ListEditorWidget(pParent)
+{
 }
 
 //==============================================================================
