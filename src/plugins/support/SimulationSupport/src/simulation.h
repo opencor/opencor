@@ -290,7 +290,9 @@ public:
     SEDMLSupport::SedmlFile * sedmlFile() const;
     COMBINESupport::CombineArchive * combineArchive() const;
 
+    bool reset();
     bool run();
+
     bool pause();
     bool resume();
     bool stop();
@@ -315,8 +317,6 @@ public slots:
     void setDelay(const int &pDelay);
 
     double size();
-
-    bool reset();
 
 private:
     QString mFileName;

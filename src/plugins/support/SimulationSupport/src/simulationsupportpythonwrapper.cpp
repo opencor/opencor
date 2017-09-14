@@ -72,6 +72,19 @@ void SimulationSupportPythonWrapper::simulationFinished(const qint64 &pElapsedTi
 
 //==============================================================================
 
+bool SimulationSupportPythonWrapper::reset(Simulation *pSimulation)
+{
+    // Clear our simulation data
+
+    pSimulation->results()->reset(false);
+
+    // Reset our model parameters
+
+    return pSimulation->reset();
+}
+
+//==============================================================================
+
 bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 {
     // A successful run will set elapsed time
