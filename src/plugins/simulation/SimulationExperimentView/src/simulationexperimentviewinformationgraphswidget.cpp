@@ -838,10 +838,20 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
 
     graph->setFileName(fileName);
 
+    // Update the graph itself
+
+    QPen oldGraphPen = graph->pen();
+    QPen graphPen = oldGraphPen;
+
+    graphPen.setWidthF(pProperty->properties()[3]->properties()[2]->doubleValue());
+
+    graph->setPen(graphPen);
+
     // Let people know if we consider that the graph has been updated
 
     if (   (oldParameterX != graph->parameterX())
-        || (oldParameterY != graph->parameterY())) {
+        || (oldParameterY != graph->parameterY())
+        || (oldGraphPen != graphPen)) {
         emit graphsUpdated(qobject_cast<GraphPanelWidget::GraphPanelPlotWidget *>(graph->plot()),
                            GraphPanelWidget::GraphPanelPlotGraphs() << graph);
     }
