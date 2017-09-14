@@ -68,6 +68,8 @@ private:
     QEventLoop *mSimulationRunEventLoop;
 
 public slots:
+    bool reset(OpenCOR::SimulationSupport::Simulation *pSimulationSupportSimulation);
+
     bool run(OpenCOR::SimulationSupport::Simulation *pSimulationSupportSimulation);
 
     // Set a simulation's point data
