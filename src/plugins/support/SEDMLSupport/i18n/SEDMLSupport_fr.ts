@@ -111,8 +111,8 @@
         <translation>seulement les fichiers SED-ML avec des sorties 2D sont supportés</translation>
     </message>
     <message>
-        <source>only SED-ML files with linear 2D outputs are supported</source>
-        <translation>seulement les fichiers SED-ML avec des sorties 2D linéaires sont supportés</translation>
+        <source>only SED-ML files with curves of the same type (with regards to linear/logarithmic scaling) are supported</source>
+        <translation>seulement les fichiers SED-ML avec des courbes de même type (en ce qui concerne l&apos;échelle linéaire/logarithmique) sont supportés</translation>
     </message>
     <message>
         <source>a curve must reference existing data generators</source>

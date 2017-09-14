@@ -178,6 +178,12 @@ public:
     double minY() const;
     double maxY() const;
 
+    bool logarithmicXAxis() const;
+    void setLogarithmicXAxis(const bool &pLogarithmicXAxis);
+
+    bool logarithmicYAxis() const;
+    void setLogarithmicYAxis(const bool &pLogarithmicYAxis);
+
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  const bool &pSynchronizeAxes = true,
                  const bool &pCanReplot = true, const bool &pEmitSignal = true,
@@ -241,6 +247,8 @@ private:
     QAction *mCopyToClipboardAction;
     QAction *mSynchronizeXAxisAction;
     QAction *mSynchronizeYAxisAction;
+    QAction *mLogarithmicXAxisAction;
+    QAction *mLogarithmicYAxisAction;
     QAction *mCustomAxesAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
@@ -254,8 +262,6 @@ private:
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
     void checkAxisValues(double &pMin, double &pMax);
-    void checkAxesValues(double &pMinX, double &pMaxX,
-                         double &pMinY, double &pMaxY);
 
     void updateActions();
 
@@ -272,7 +278,7 @@ private:
 
     QRectF optimisedRect(const QRectF &pAxes) const;
 
-    void setAxis(const int &pAxis, double pMin, double pMax);
+    void setAxis(const int &pAxisId, double pMin, double pMax);
 
     bool resetAxes();
 
@@ -295,6 +301,8 @@ private slots:
 
     void copyToClipboard();
     void customAxes();
+    void toggleLogarithmicXAxis();
+    void toggleLogarithmicYAxis();
     void zoomIn();
     void zoomOut();
     void resetZoom();

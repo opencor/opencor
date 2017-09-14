@@ -1,4 +1,29 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 12, "month": 8, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> make sure that we can find the plugin 'xcb' on some Linux machines (see issue <a href=\"https://github.com/opencor/opencor/issues/1383\">#1383</a>)." },
+                       { "change": "<strong>CSV data store:</strong> make sure that we can export to a (really) big CSV file (see issue <a href=\"https://github.com/opencor/opencor/issues/1394\">#1394</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> make sure that the runtime gets updated after having edited a CellML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1385\">#1385</a>). Don't check whether the memory associated with a simulation can be allocated (see issue <a href=\"https://github.com/opencor/opencor/issues/1389\">#1389</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a> to version 3.1.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/1393\">#1393</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 7, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
@@ -21,7 +46,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>General:</strong> added a simulation support plugin (to separate out running of a simulation from its widget) (see issue <a href=\"https://github.com/opencor/opencor/issues/1266\">#1266</a>). Provide an error message when a plugin is considered to be invalid (see issue <a href=\"https://github.com/opencor/opencor/issues/1347\">#1347</a>). Make certain interfaces available to other plugins (see issue <a href=\"https://github.com/opencor/opencor/issues/1371\">#1371</a>)." },
                        { "change": "<strong>Text-based editors:</strong> don't reset the font size anymore when reloading a file (see issue <a href=\"https://github.com/opencor/opencor/issues/1369\">#1369</a>)." },
                        { "change": "<strong>Property Editor widget:</strong> disallow navigation using the (Shift+)Tab key(s) (see issue <a href=\"https://github.com/opencor/opencor/issues/1354\">#1354</a>)." },
-                       { "change": "<strong>SUNDIALS package:</strong> don't package <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> and <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> (to avoid conflicts with <a href=\"http://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> and <a href=\"http://computation.llnl.gov/projects/sundials/idas\">IDAS</a>; see issue <a href=\"https://github.com/opencor/opencor/issues/1367\">#1367</a>)." },
+                       { "change": "<strong>SUNDIALS package:</strong> don't package <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> and <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> anymore (to avoid conflicts with <a href=\"http://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> and <a href=\"http://computation.llnl.gov/projects/sundials/idas\">IDAS</a>; see issue <a href=\"https://github.com/opencor/opencor/issues/1367\">#1367</a>)." },
                        { "change": "<strong>Simulation Experiment view:</strong> prevent the renaming of a file from messing up a locked graph (see issue <a href=\"https://github.com/opencor/opencor/issues/1365\">#1365</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26 (see issue <a href=\"https://github.com/opencor/opencor/issues/1340\">#1340</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 4.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1352\">#1352</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1358\">#1358</a>)." }
                      ]

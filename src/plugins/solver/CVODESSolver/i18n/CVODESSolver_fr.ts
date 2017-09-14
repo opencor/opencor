@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::IDASolver::IdaSolver</name>
+    <name>OpenCOR::CVODESSolver::CvodesSolver</name>
     <message>
         <source>the &apos;maximum step&apos; property value could not be retrieved</source>
         <translation>la valeur de la propriété &apos;pas maximum&apos; n&apos;a pas pu être retrouvée</translation>
@@ -10,6 +10,14 @@
     <message>
         <source>the &apos;maximum number of steps&apos; property value could not be retrieved</source>
         <translation>la valeur de la propriété &apos;nombre maximum de pas&apos; n&apos;a pas pu être retrouvée</translation>
+    </message>
+    <message>
+        <source>the &apos;integration method&apos; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &apos;méthode d&apos;intégration&apos; n&apos;a pas pu être retrouvée</translation>
+    </message>
+    <message>
+        <source>the &apos;preconditioner&apos; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &apos;préconditionneur&apos; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
         <source>the &apos;upper half-bandwidth&apos; property must have a value between 0 and %1</source>
@@ -30,6 +38,10 @@
     <message>
         <source>the &apos;linear solver&apos; property value could not be retrieved</source>
         <translation>la valeur de la propriété &apos;solveur linéaire&apos; n&apos;a pas pu être retrouvée</translation>
+    </message>
+    <message>
+        <source>the &apos;iteration type&apos; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &apos;type d&apos;itération&apos; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
         <source>the &apos;relative tolerance&apos; property must have a value greater than or equal to 0</source>

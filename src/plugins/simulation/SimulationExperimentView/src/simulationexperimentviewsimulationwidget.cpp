@@ -1611,6 +1611,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
     // Retrieve all the graphs that are to be plotted, if any
 
     QList<Core::Properties> graphsList = QList<Core::Properties>();
+    QList<Core::Properties> logarithmicXAxis = QList<Core::Properties>();
+    QList<Core::Properties> logarithmicYAxis = QList<Core::Properties>();
     SimulationExperimentViewInformationGraphsWidget *graphsWidget = mContentsWidget->informationWidget()->graphsWidget();
 
     foreach (GraphPanelWidget::GraphPanelWidget *graphPanel,
@@ -1619,6 +1621,12 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         if (!graphs.isEmpty())
             graphsList << graphs;
+
+        if (graphPanel->plot()->logarithmicXAxis())
+            logarithmicXAxis << graphs;
+
+        if (graphPanel->plot()->logarithmicYAxis())
+            logarithmicYAxis << graphs;
     }
 
     // Create and customise 2D plot outputs and data generators for all the
@@ -1634,6 +1642,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
             libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
 
             sedmlPlot2d->setId(QString("plot%1").arg(graphPlotCounter).toStdString());
+
+            bool logX = logarithmicXAxis.contains(graphs);
+            bool logY = logarithmicYAxis.contains(graphs);
 
             foreach (Core::Property *property, graphs) {
                 ++graphCounter;
@@ -1677,10 +1688,10 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                             QString::number(graphCounter)).toStdString());
 
                 sedmlCurve->setXDataReference(sedmlDataGeneratorIdX);
-                sedmlCurve->setLogX(false);
+                sedmlCurve->setLogX(logX);
 
                 sedmlCurve->setYDataReference(sedmlDataGeneratorIdY);
-                sedmlCurve->setLogY(false);
+                sedmlCurve->setLogY(logY);
             }
         }
     }
@@ -2288,10 +2299,10 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
         }
     }
 
-    // Add/remove some graph panels, so that the end number of them corresponds
-    // to the number of 2D outputs mentioned in the SED-ML file, this after
-    // having made sure that the current graph panels are all of the same size
-    // and that the first one of them is selected
+    // Add/remove some graph panels, so that their number corresponds to the
+    // number of 2D outputs mentioned in the SED-ML file, this after having made
+    // sure that the current graph panels are all of the same size and that the
+    // first one is selected
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     int oldNbOfGraphPanels = graphPanelsWidget->graphPanels().count();
@@ -2318,6 +2329,12 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
 
         for (uint j = 0, jMax = plot->getNumCurves(); j < jMax; ++j) {
             libsedml::SedCurve *curve = plot->getCurve(j);
+
+            if (!j) {
+                graphPanel->plot()->setLogarithmicXAxis(curve->getLogX());
+                graphPanel->plot()->setLogarithmicYAxis(curve->getLogY());
+            }
+
             CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(curve->getXDataReference())->getVariable(0));
             CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(sedmlDocument->getDataGenerator(curve->getYDataReference())->getVariable(0));
 

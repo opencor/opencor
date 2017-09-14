@@ -101,6 +101,14 @@ IF(NOT WIN32 AND NOT APPLE)
     ENDIF()
 ENDIF()
 
+# Make sure that ccache gets used, if available
+
+FIND_PROGRAM(CCACHE ccache)
+
+IF(CCACHE)
+    SET(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+ENDIF()
+
 # Keep track of some basic information about Qt
 
 FIND_PACKAGE(Qt5Core REQUIRED)
@@ -475,6 +483,7 @@ ENDIF()
 
 IF(APPLE)
     SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+    SET(CMAKE_BUILD_WITH_INSTALL_NAME_DIR TRUE)
     SET(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks;@executable_path/../PlugIns/${CMAKE_PROJECT_NAME}")
 ELSEIF(NOT WIN32)
     SET(CMAKE_SKIP_RPATH TRUE)
@@ -838,11 +847,11 @@ SET(PLUGINS
 
     simulation/SimulationExperimentView
 
-    solver/CVODESolver
+    solver/CVODESSolver
     solver/ForwardEulerSolver
     solver/FourthOrderRungeKuttaSolver
     solver/HeunSolver
-    solver/IDASolver
+    solver/IDASSolver
     solver/KINSOLSolver
     solver/SecondOrderRungeKuttaSolver
 

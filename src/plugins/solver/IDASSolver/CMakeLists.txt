@@ -1,20 +1,20 @@
-PROJECT(IDASolverPlugin)
+PROJECT(IDASSolverPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(IDASolver
+ADD_PLUGIN(IDASSolver
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
         ../../solverinterface.cpp
 
-        src/idasolver.cpp
-        src/idasolverplugin.cpp
+        src/idassolver.cpp
+        src/idassolverplugin.cpp
     HEADERS_MOC
         ../../solverinterface.h
 
-        src/idasolver.h
-        src/idasolverplugin.h
+        src/idassolver.h
+        src/idassolverplugin.h
     PLUGINS
         SUNDIALS
     QT_MODULES
