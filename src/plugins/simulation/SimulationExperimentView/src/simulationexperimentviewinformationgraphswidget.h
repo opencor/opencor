@@ -140,6 +140,8 @@ private:
 
     void selectAllGraphs(const bool &pSelect);
 
+    bool rootProperty(Core::Property *pProperty) const;
+
 signals:
     void headerSectionResized(const int &pIndex, const int &pOldSize,
                               const int &pNewSize);

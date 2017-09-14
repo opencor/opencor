@@ -405,6 +405,16 @@ void SimulationExperimentViewInformationGraphsWidget::selectAllGraphs()
 
 //==============================================================================
 
+bool SimulationExperimentViewInformationGraphsWidget::rootProperty(Core::Property *pProperty) const
+{
+    // Return whether the given property is a root property
+
+    return    (pProperty->type() == Core::Property::Section)
+           && !pProperty->parentProperty() && pProperty->isCheckable();
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphsWidget::unselectAllGraphs()
 {
     // Unselect all the graphs
@@ -495,13 +505,12 @@ Core::Properties SimulationExperimentViewInformationGraphsWidget::graphPropertie
 
     if (propertyEditor) {
         foreach (Core::Property *property, propertyEditor->properties()) {
-            // The property should be returned if it is a section (i.e. a graph
-            // property), is checked (i.e. a selected graph) and have its first
-            // sub-property (i.e. to which model the graph applies) has either a
-            // value of "Current" or that of the given file name
+            // The property should be returned if it is checked (i.e. a selected
+            // graph) and have its first sub-property (i.e. to which model the
+            // graph applies) has either a value of "Current" or that of the
+            // given file name
 
-            if (   (property->type() == Core::Property::Section)
-                && property->isChecked()) {
+            if (property->isChecked()) {
                 QString modelPropertyValue = property->properties().first()->value();
 
                 if (   !modelPropertyValue.compare(tr("Current"))
@@ -584,12 +593,12 @@ void SimulationExperimentViewInformationGraphsWidget::propertyEditorContextMenu(
     // Show the context menu, or not, depending on the type of property we are
     // dealing with, if any
 
-    if (   !crtProperty
-        || (crtProperty->type() == Core::Property::Section)
-        || (!crtProperty->name().compare(tr("Model")))) {
-        mContextMenu->exec(QCursor::pos());
-    } else {
+    if (   crtProperty
+        && (   !crtProperty->name().compare(tr("X"))
+            || !crtProperty->name().compare(tr("Y")))) {
         mParametersContextMenu->exec(QCursor::pos());
+    } else {
+        mContextMenu->exec(QCursor::pos());
     }
 }
 
@@ -864,10 +873,10 @@ void SimulationExperimentViewInformationGraphsWidget::graphChanged(Core::Propert
     // Our graph has changed, which means that either it has been un/selected or
     // that the value of one of its properties has changed
 
-    if (pProperty->type() == Core::Property::Section) {
-        // The property associated with the graph is a section, which means that
-        // the graph has been un/selected, so update its selected state and let
-        // people know that our graph has been updated
+    if (rootProperty(pProperty)) {
+        // The property associated with the graph is our root property, which
+        // means that the graph has been un/selected, so update its selected
+        // state and let people know that our graph has been updated
 
         GraphPanelWidget::GraphPanelPlotGraph *graph = mGraphs.value(pProperty);
 
@@ -913,7 +922,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
         graphProperties << pSectionProperty;
     } else {
         foreach (Core::Property *property, mPropertyEditor->properties()) {
-            if (property->type() == Core::Property::Section)
+            if (rootProperty(property))
                 graphProperties << property;
         }
     }
