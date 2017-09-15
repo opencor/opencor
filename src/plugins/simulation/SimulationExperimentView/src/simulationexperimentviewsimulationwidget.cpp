@@ -1039,8 +1039,8 @@ QIcon SimulationExperimentViewSimulationWidget::fileTabIcon() const
                                        mProgressBarWidget->height()+2);
         QPainter tabBarPixmapPainter(&tabBarPixmap);
 
-        tabBarPixmapPainter.setBrush(QBrush(Core::windowColor()));
-        tabBarPixmapPainter.setPen(QPen(Core::borderColor()));
+        tabBarPixmapPainter.setBrush(Core::windowColor());
+        tabBarPixmapPainter.setPen(Core::borderColor());
 
         tabBarPixmapPainter.drawRect(0, 0, tabBarPixmap.width()-1, tabBarPixmap.height()-1);
         tabBarPixmapPainter.fillRect(1, 1, mProgress, tabBarPixmap.height()-2,
