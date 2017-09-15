@@ -76,6 +76,10 @@
         <translation></translation>
     </message>
     <message>
+        <source>None</source>
+        <translation>Aucun</translation>
+    </message>
+    <message>
         <source>Solid</source>
         <translation>Solide</translation>
     </message>
@@ -96,10 +100,6 @@
         <translation>TiretPointPoint</translation>
     </message>
     <message>
-        <source>None</source>
-        <translation>Aucun</translation>
-    </message>
-    <message>
         <source>Colour</source>
         <translation>Couleur</translation>
     </message>
@@ -110,6 +110,10 @@
     <message>
         <source>Symbol</source>
         <translation>Symbole</translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation>Cercle</translation>
     </message>
     <message>
         <source>Square</source>
@@ -124,28 +128,28 @@
         <translation></translation>
     </message>
     <message>
-        <source>Circle</source>
-        <translation>Cercle</translation>
+        <source>Down Triangle</source>
+        <translation>Triangle Bas</translation>
     </message>
     <message>
         <source>Cross</source>
         <translation>Croix</translation>
     </message>
     <message>
-        <source>Plus</source>
-        <translation></translation>
+        <source>X Cross</source>
+        <translation>Croix en X</translation>
     </message>
     <message>
         <source>Star</source>
         <translation>Étoile</translation>
     </message>
     <message>
-        <source>Inverted Triangle</source>
-        <translation>Triangle Inversé</translation>
+        <source>Vertical Line</source>
+        <translation>Ligne Verticale</translation>
     </message>
     <message>
-        <source>Vertical Dash</source>
-        <translation>Tiret Vertical</translation>
+        <source>Horizontal Line</source>
+        <translation>Ligne Horizontale</translation>
     </message>
     <message>
         <source>Filled</source>

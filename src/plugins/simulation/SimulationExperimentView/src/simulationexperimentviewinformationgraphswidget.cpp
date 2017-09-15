@@ -849,11 +849,9 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
 
     QPen oldGraphPen = graph->pen();
     QPen graphPen = oldGraphPen;
-    int graphPenStyle = pProperty->properties()[3]->properties()[0]->listValues().indexOf(pProperty->properties()[3]->properties()[0]->listValue());
+    Core::Property *styleProperty = pProperty->properties()[3]->properties()[0];
 
-    graphPen.setStyle((graphPenStyle == 5)?
-                          Qt::NoPen:
-                          Qt::PenStyle(Qt::SolidLine+graphPenStyle));
+    graphPen.setStyle(Qt::PenStyle(styleProperty->listValues().indexOf(styleProperty->listValue())));
     graphPen.setWidthF(pProperty->properties()[3]->properties()[2]->doubleValue());
 
     graph->setPen(graphPen);
@@ -958,12 +956,13 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
 
         graphProperty->properties()[3]->setName(tr("Line"));
         graphProperty->properties()[3]->properties()[0]->setName(tr("Style"));
-        graphProperty->properties()[3]->properties()[0]->setListValues(QStringList() << tr("Solid")
+        graphProperty->properties()[3]->properties()[0]->setListValues(QStringList() << tr("None")
+                                                                                     << tr("Solid")
                                                                                      << tr("Dash")
                                                                                      << tr("Dot")
                                                                                      << tr("DashDot")
-                                                                                     << tr("DashDotDot")
-                                                                                     << tr("None"),
+                                                                                     << tr("DashDotDot"),
+                                                                       tr("Solid"),
                                                                        false);
         graphProperty->properties()[3]->properties()[1]->setName(tr("Colour"));
         graphProperty->properties()[3]->properties()[2]->setName(tr("Thickness"));
@@ -972,16 +971,17 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
 
         graphProperty->properties()[4]->setName(tr("Symbol"));
         graphProperty->properties()[4]->properties()[0]->setName(tr("Style"));
-        graphProperty->properties()[4]->properties()[0]->setListValues(QStringList() << tr("Square")
+        graphProperty->properties()[4]->properties()[0]->setListValues(QStringList() << tr("None")
+                                                                                     << tr("Circle")
+                                                                                     << tr("Square")
                                                                                      << tr("Diamond")
                                                                                      << tr("Triangle")
-                                                                                     << tr("Circle")
+                                                                                     << tr("Down Triangle")
                                                                                      << tr("Cross")
-                                                                                     << tr("Plus")
+                                                                                     << tr("X Cross")
                                                                                      << tr("Star")
-                                                                                     << tr("Inverted Triangle")
-                                                                                     << tr("Vertical Dash")
-                                                                                     << tr("None"),
+                                                                                     << tr("Vertical Line")
+                                                                                     << tr("Horizontal Line"),
                                                                        false);
         graphProperty->properties()[4]->properties()[1]->setName(tr("Filled"));
         graphProperty->properties()[4]->properties()[2]->setName(tr("Colour"));
