@@ -152,8 +152,8 @@
         <translation>Ligne Horizontale</translation>
     </message>
     <message>
-        <source>Filled</source>
-        <translation>Rempli</translation>
+        <source>Size</source>
+        <translation>Taille</translation>
     </message>
     <message>
         <source>Fill colour</source>

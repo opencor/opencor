@@ -294,7 +294,7 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
     Core::Property *symbolProperty = propertyEditor->addSectionProperty(graphProperty);
 
     propertyEditor->addListProperty(symbolProperty);
-    propertyEditor->addBooleanProperty(true, symbolProperty);
+    propertyEditor->addIntegerProperty(8, symbolProperty);
     propertyEditor->addStringProperty(Core::UnknownValue, symbolProperty);
     propertyEditor->addStringProperty(Core::UnknownValue, symbolProperty);
 
@@ -983,7 +983,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
                                                                                      << tr("Vertical Line")
                                                                                      << tr("Horizontal Line"),
                                                                        false);
-        graphProperty->properties()[4]->properties()[1]->setName(tr("Filled"));
+        graphProperty->properties()[4]->properties()[1]->setName(tr("Size"));
         graphProperty->properties()[4]->properties()[2]->setName(tr("Colour"));
         graphProperty->properties()[4]->properties()[3]->setName(tr("Fill colour"));
 
