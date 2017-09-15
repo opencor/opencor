@@ -144,12 +144,12 @@
         <translation>Étoile</translation>
     </message>
     <message>
-        <source>Vertical Line</source>
-        <translation>Ligne Verticale</translation>
-    </message>
-    <message>
         <source>Horizontal Line</source>
         <translation>Ligne Horizontale</translation>
+    </message>
+    <message>
+        <source>Vertical Line</source>
+        <translation>Ligne Verticale</translation>
     </message>
     <message>
         <source>Size</source>

@@ -41,6 +41,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "qwt_symbol.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SimulationExperimentView {
 
@@ -856,12 +860,28 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
 
     graph->setPen(graphPen);
 
+    const QwtSymbol *oldGraphSymbol = graph->symbol();
+    bool graphSymbolUpdated = !oldGraphSymbol;
+    Core::Property *symbolProperty = pProperty->properties()[4];
+    Core::Property *symbolStyleProperty = symbolProperty->properties()[0];
+    int symbolStyleValue = symbolStyleProperty->listValues().indexOf(symbolStyleProperty->listValue());
+    QwtSymbol::Style symbolStyle = QwtSymbol::Style((symbolStyleValue > 5)?symbolStyleValue+2:symbolStyleValue-1);
+    int symbolSize = symbolProperty->properties()[1]->integerValue();
+
+    if (oldGraphSymbol) {
+        graphSymbolUpdated =    (oldGraphSymbol->style() != symbolStyle)
+                             || (oldGraphSymbol->size().width() != symbolSize);
+    }
+
+    graph->setSymbol(new QwtSymbol(symbolStyle, QBrush(), QPen(Qt::darkRed),
+                                   QSize(symbolSize, symbolSize)));
+
     // Let people know if the graph has been updated in some way or another
 
     if (   (oldParameterX != graph->parameterX())
         || (oldParameterY != graph->parameterY())) {
         emit graphUpdated(graph);
-    } else if (oldGraphPen != graphPen) {
+    } else if ((oldGraphPen != graphPen) || graphSymbolUpdated) {
         emit graphVisualUpdated(graph);
     }
 }
@@ -979,9 +999,9 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
                                                                                      << tr("Down Triangle")
                                                                                      << tr("Cross")
                                                                                      << tr("X Cross")
-                                                                                     << tr("Star")
+                                                                                     << tr("Horizontal Line")
                                                                                      << tr("Vertical Line")
-                                                                                     << tr("Horizontal Line"),
+                                                                                     << tr("Star"),
                                                                        false);
         graphProperty->properties()[4]->properties()[1]->setName(tr("Size"));
         graphProperty->properties()[4]->properties()[2]->setName(tr("Colour"));
