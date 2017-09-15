@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QEvent>
 #include <QKeyEvent>
 #include <QModelIndex>
+#include <QPainter>
 #include <QRegularExpressionValidator>
 #include <QScrollBar>
 #include <QSettings>
@@ -729,12 +730,24 @@ QString Property::value() const
 void Property::setValue(const QString &pValue, const bool &pForce,
                         const bool &pEmitSignal)
 {
-    // Set our value
+    // Set our value (and value icon, if we are a colour property)
 
     if (pValue.compare(mValue->text()) || pForce) {
         QString oldValue = mValue->text();
 
         mValue->setText(pValue);
+
+        if (mType == Color) {
+            QPixmap colorPixmap = QPixmap(48, 48);
+            QPainter colorPixmapPainter(&colorPixmap);
+            QColor color;
+
+            color.setNamedColor(pValue);
+
+            colorPixmapPainter.fillRect(0, 0, colorPixmap.width()-1, colorPixmap.height()-1, color);
+
+            mValue->setIcon(colorPixmap);
+        }
 
         updateToolTip();
 
