@@ -67,6 +67,94 @@
         <source>Model</source>
         <translation>Modèle</translation>
     </message>
+    <message>
+        <source>Line</source>
+        <translation>Ligne</translation>
+    </message>
+    <message>
+        <source>Style</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Solid</source>
+        <translation>Solide</translation>
+    </message>
+    <message>
+        <source>Dash</source>
+        <translation>Tiret</translation>
+    </message>
+    <message>
+        <source>Dot</source>
+        <translation>Point</translation>
+    </message>
+    <message>
+        <source>DashDot</source>
+        <translation>TiretPoint</translation>
+    </message>
+    <message>
+        <source>DashDotDot</source>
+        <translation>TiretPointPoint</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Aucune</translation>
+    </message>
+    <message>
+        <source>Colour</source>
+        <translation>Couleur</translation>
+    </message>
+    <message>
+        <source>Thickness</source>
+        <translation>Épaisseur</translation>
+    </message>
+    <message>
+        <source>Symbol</source>
+        <translation>Symbole</translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation>Carré</translation>
+    </message>
+    <message>
+        <source>Diamond</source>
+        <translation>Diamant</translation>
+    </message>
+    <message>
+        <source>Triangle</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation>Cercle</translation>
+    </message>
+    <message>
+        <source>Plus</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Star</source>
+        <translation>Étoile</translation>
+    </message>
+    <message>
+        <source>Inverted Triangle</source>
+        <translation>Triangle Inversé</translation>
+    </message>
+    <message>
+        <source>Vertical Dash</source>
+        <translation>Tiret Vertical</translation>
+    </message>
+    <message>
+        <source>Filled</source>
+        <translation>Rempli</translation>
+    </message>
+    <message>
+        <source>Fill colour</source>
+        <translation>Couleur de remplissage</translation>
+    </message>
+    <message>
+        <source>XCross</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationParametersWidget</name>

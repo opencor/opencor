@@ -851,7 +851,11 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
 
     QPen oldGraphPen = graph->pen();
     QPen graphPen = oldGraphPen;
+    int graphPenStyle = pProperty->properties()[3]->properties()[0]->listValues().indexOf(pProperty->properties()[3]->properties()[0]->listValue());
 
+    graphPen.setStyle((graphPenStyle == 5)?
+                          Qt::NoPen:
+                          Qt::PenStyle(Qt::SolidLine+graphPenStyle));
     graphPen.setWidthF(pProperty->properties()[3]->properties()[2]->doubleValue());
 
     graph->setPen(graphPen);
@@ -963,7 +967,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
                                                                                      << tr("DashDot")
                                                                                      << tr("DashDotDot")
                                                                                      << tr("None"),
-                                                                             false);
+                                                                       false);
         graphProperty->properties()[3]->properties()[1]->setName(tr("Colour"));
         graphProperty->properties()[3]->properties()[2]->setName(tr("Thickness"));
 
@@ -978,10 +982,10 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
                                                                                      << tr("XCross")
                                                                                      << tr("Plus")
                                                                                      << tr("Star")
-                                                                                     << tr("TriangleDown")
-                                                                                     << tr("VDash")
+                                                                                     << tr("Inverted Triangle")
+                                                                                     << tr("Vertical Dash")
                                                                                      << tr("None"),
-                                                                             false);
+                                                                       false);
         graphProperty->properties()[4]->properties()[1]->setName(tr("Filled"));
         graphProperty->properties()[4]->properties()[2]->setName(tr("Colour"));
         graphProperty->properties()[4]->properties()[3]->setName(tr("Fill colour"));
