@@ -394,8 +394,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(graphsWidget, SIGNAL(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
             this, SLOT(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
-    connect(graphsWidget, SIGNAL(graphPenUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            this, SLOT(graphPenUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(graphsWidget, SIGNAL(graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+            this, SLOT(graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
 
     // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
@@ -2809,9 +2809,9 @@ void SimulationExperimentViewSimulationWidget::graphUpdated(OpenCOR::GraphPanelW
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphPenUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+void SimulationExperimentViewSimulationWidget::graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
 {
-    // The pen of the given graph has changed, so refresh the graph
+    // The visual aspect of the given graph has changed, so replot it
 
     pGraph->plot()->replot();
 
