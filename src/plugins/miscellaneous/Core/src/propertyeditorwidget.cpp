@@ -169,7 +169,7 @@ void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
         return;
 
     // We want to go to the next item in our list (and go back to the first one
-    // if we are at the end of the list), so determine the new current index
+    // if we are at the end of our list), so determine the new current index
 
     int newCurrentIndex = currentIndex();
 
@@ -194,13 +194,13 @@ void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Check whether the user clicked on the arrow and, if so, allow the default
-    // handling of the event (so that the list of items gets displayed) while do
-    // nothing if the user clicked somewhere else (this to so that if the user
+    // handling of the event (so that our list of items gets displayed) while do
+    // nothing if the user clicked somewhere else (this so that if the user
     // double clicks on the widget, then we can select the next item)
     // Note: we would normally call style()->hitTestComplexControl() and, if it
     //       returns QStyle::SC_ComboBoxArrow, then allow the default handling
-    //       of the event, but if this works fine on Windows and Linux, it just
-    //       doesn't work on macOS. Indeed, no matter where we are over the
+    //       of the event, but although this works fine on Windows and Linux, it
+    //       just doesn't work on macOS. Indeed, no matter where we are over the
     //       widget, style()->hitTestComplexControl() will always (and as
     //       expected; [QtSources]/qtbase/src/widgets/styles/qmacstyle_mac.mm)
     //       return QStyle::SC_ComboBoxArrow. So, to get the behaviour we are
@@ -249,20 +249,13 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-StringListEditorWidget::StringListEditorWidget(QWidget *pParent) :
-    ListEditorWidget(pParent)
-{
-}
-
-//==============================================================================
-
 static const auto TrueValue  = QStringLiteral("True");
 static const auto FalseValue = QStringLiteral("False");
 
 //==============================================================================
 
 BooleanEditorWidget::BooleanEditorWidget(QWidget *pParent) :
-    StringListEditorWidget(pParent)
+    ListEditorWidget(pParent)
 {
     // Add "True" and "False" to ourselves
 
@@ -308,25 +301,25 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
         editor = new DoubleEditorWidget(pParent);
 
         break;
-    case Property::StringList: {
-        StringListEditorWidget *stringListEditor = new StringListEditorWidget(pParent);
+    case Property::List: {
+        ListEditorWidget *listEditor = new ListEditorWidget(pParent);
 
-        editor = stringListEditor;
+        editor = listEditor;
 
-        // Add the value items to the list, keeping in mind separators
+        // Add the value items to our list, keeping in mind separators
 
-        foreach (const QString &valueItem, property->stringListValues()) {
+        foreach (const QString &valueItem, property->listValues()) {
             if (valueItem.isEmpty())
-                stringListEditor->insertSeparator(stringListEditor->count());
+                listEditor->insertSeparator(listEditor->count());
             else
-                stringListEditor->addItem(valueItem);
+                listEditor->addItem(valueItem);
         }
 
-        // Propagate the signal telling us about the list property value having
+        // Propagate the signal telling us about our list property value having
         // changed
 
-        connect(stringListEditor, SIGNAL(currentIndexChanged(const QString &)),
-                this, SLOT(stringListPropertyChanged(const QString &)));
+        connect(listEditor, SIGNAL(currentIndexChanged(const QString &)),
+                this, SLOT(listPropertyChanged(const QString &)));
 
         break;
     }
@@ -335,7 +328,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         editor = booleanEditor;
 
-        // Propagate the signal telling us about the list property value having
+        // Propagate the signal telling us about our boolean value having
         // changed
 
         connect(booleanEditor, SIGNAL(currentIndexChanged(const QString &)),
@@ -397,11 +390,11 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-void PropertyItemDelegate::stringListPropertyChanged(const QString &pStringListValue)
+void PropertyItemDelegate::listPropertyChanged(const QString &pValue)
 {
-    // Force the updating of our string list property value
+    // Force the updating of our list property value
 
-    mPropertyEditorWidget->currentProperty()->setValue(pStringListValue);
+    mPropertyEditorWidget->currentProperty()->setValue(pValue);
 }
 
 //==============================================================================
@@ -439,8 +432,8 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
     mName(new PropertyItem(this)),
     mValue(new PropertyItem(this)),
     mUnit(pParent->showUnits()?new PropertyItem(this):0),
-    mStringListValues(QStringList()),
-    mEmptyStringListValue(UnknownValue),
+    mListValues(QStringList()),
+    mEmptyListValue(UnknownValue),
     mExtraInfo(QString()),
     mParentProperty(0),
     mProperties(QList<Property *>())
@@ -520,7 +513,7 @@ void Property::add(Property *pProperty)
 
     mName->appendRow(pProperty->items());
 
-    // Let the property that we are its parent
+    // Let the property know that we are its parent
 
     pProperty->setParentProperty(this);
 }
@@ -758,108 +751,108 @@ void Property::setValue(const QString &pValue, const bool &pForce,
 
 //==============================================================================
 
-QStringList Property::stringListValues() const
+QStringList Property::listValues() const
 {
-    // Return our string list values, if any
+    // Return our list values, if any
 
-    return (mType == StringList)?mStringListValues:QStringList();
+    return (mType == List)?mListValues:QStringList();
 }
 
 //==============================================================================
 
-void Property::setStringListValues(const QStringList &pStringListValues,
-                                   const QString &pDefaultStringListValue,
-                                   const bool &pEmitSignal)
+void Property::setListValues(const QStringList &pListValues,
+                             const QString &pDefaultListValue,
+                             const bool &pEmitSignal)
 {
-    // Make sure that there would be a point in setting the string list values
+    // Make sure that there would be a point in setting the list values
 
-    if (mType != StringList)
+    if (mType != List)
         return;
 
-    // Clean up the string list values we were given:
+    // Clean up the list values we were given:
     //  - Remove leading empty items
     //  - Add items, making sure that only one empty item (i.e. separator) can
     //    be used at once
     //  - Remove the trailing empty item, if any
 
-    QStringList stringListValues = QStringList();
+    QStringList listValues = QStringList();
     int i = 0;
-    int iMax = pStringListValues.count();
+    int iMax = pListValues.count();
 
     for (; i < iMax; ++i) {
-        if (!pStringListValues[i].isEmpty())
+        if (!pListValues[i].isEmpty())
             break;
     }
 
     bool prevItemIsSeparator = false;
 
     for (; i < iMax; ++i) {
-        QString stringListValue = pStringListValues[i];
+        QString listValue = pListValues[i];
 
-        if (!stringListValue.isEmpty()) {
-            stringListValues << stringListValue;
+        if (!listValue.isEmpty()) {
+            listValues << listValue;
 
             prevItemIsSeparator = false;
         } else if (!prevItemIsSeparator) {
-            stringListValues << stringListValue;
+            listValues << listValue;
 
             prevItemIsSeparator = true;
         }
     }
 
-    if (!stringListValues.isEmpty() && stringListValues.last().isEmpty())
-        stringListValues.removeLast();
+    if (!listValues.isEmpty() && listValues.last().isEmpty())
+        listValues.removeLast();
 
-    // Set our string list values, if appropriate
+    // Set our list values, if appropriate
 
-    if (stringListValues != mStringListValues) {
-        mStringListValues = stringListValues;
+    if (listValues != mListValues) {
+        mListValues = listValues;
 
-        // Update our value using the requested item from our new string list,
-        // if it isn't empty, otherwise use our empty string list value
+        // Update our value using the requested item from our new list, if it
+        // isn't empty, otherwise use our empty list value
 
-        int listValueIndex = mStringListValues.indexOf(pDefaultStringListValue);
+        int listValueIndex = mListValues.indexOf(pDefaultListValue);
 
-        setValue(mStringListValues.isEmpty()?
-                     mEmptyStringListValue:
-                     (pDefaultStringListValue.isEmpty() || (listValueIndex == -1))?
-                         mStringListValues.first():
-                         mStringListValues[listValueIndex],
+        setValue(mListValues.isEmpty()?
+                     mEmptyListValue:
+                     (pDefaultListValue.isEmpty() || (listValueIndex == -1))?
+                         mListValues.first():
+                         mListValues[listValueIndex],
                  false, pEmitSignal);
     }
 }
 
 //==============================================================================
 
-void Property::setStringListValues(const QStringList &pListValues,
-                                   const bool &pEmitSignal)
+void Property::setListValues(const QStringList &pListValues,
+                             const bool &pEmitSignal)
 {
-    // Set our string list values with no default string list value
+    // Set our list values with no default value
 
-    setStringListValues(pListValues, QString(), pEmitSignal);
+    setListValues(pListValues, QString(), pEmitSignal);
 }
 
 //==============================================================================
 
-QString Property::stringListValue() const
+QString Property::listValue() const
 {
-    // Return our string list value
+    // Return our list value
 
     return mValue->text();
 }
 
 //==============================================================================
 
-void Property::setStringListValue(const QString &pStringListValue)
+void Property::setListValue(const QString &pListValue)
 {
-    // Set our string list value, if appropriate
+    // Set our list value, if appropriate
 
-    if (    (mType == StringList)
-        && !mStringListValues.isEmpty() && mValue->text().compare(pStringListValue)) {
-        int listValueIndex = mStringListValues.indexOf(pStringListValue);
+    if (    (mType == List)
+        && !mListValues.isEmpty() && mValue->text().compare(pListValue)) {
+        int listValueIndex = mListValues.indexOf(pListValue);
 
         if (listValueIndex != -1)
-            setValue(mStringListValues[listValueIndex]);
+            setValue(mListValues[listValueIndex]);
     }
 }
 
@@ -867,24 +860,24 @@ void Property::setStringListValue(const QString &pStringListValue)
 
 QString Property::emptyListValue() const
 {
-    // Return our empty string list value
+    // Return our empty list value
 
-    return mEmptyStringListValue;
+    return mEmptyListValue;
 }
 
 //==============================================================================
 
 void Property::setEmptyListValue(const QString &pEmptyListValue)
 {
-    // Set our empty string list value, if appropriate
+    // Set our empty list value, if appropriate
 
-    if ((mType == StringList) && pEmptyListValue.compare(mEmptyStringListValue)) {
-        mEmptyStringListValue = pEmptyListValue;
+    if ((mType == List) && pEmptyListValue.compare(mEmptyListValue)) {
+        mEmptyListValue = pEmptyListValue;
 
-        // Keep our current value, if the string list is not empty, otherwise
-        // update it with our new empty string list value
+        // Keep our current value, if the list is not empty, otherwise update it
+        // with our new empty list value
 
-        setValue(mStringListValues.isEmpty()?mEmptyStringListValue:mValue->text());
+        setValue(mListValues.isEmpty()?mEmptyListValue:mValue->text());
     }
 }
 
@@ -1139,8 +1132,8 @@ void PropertyEditorWidget::retranslateEmptyListProperties(QStandardItem *pItem)
     Property *currentProperty = property(pItem->index());
 
     if (    currentProperty
-        && (currentProperty->type() == Property::StringList)
-        &&  currentProperty->stringListValues().isEmpty()) {
+        && (currentProperty->type() == Property::List)
+        &&  currentProperty->listValues().isEmpty()) {
         currentProperty->setValue(currentProperty->emptyListValue());
     }
 
@@ -1379,37 +1372,37 @@ Property * PropertyEditorWidget::addDoubleProperty(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addStringListProperty(const QStringList &pValues,
-                                                       const QString &pDefaultValue,
-                                                       Property *pParent)
+Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
+                                                 const QString &pDefaultValue,
+                                                 Property *pParent)
 {
-    // Add a string list property and return its information
-    // Note: a string list property is necessarily editable...
+    // Add a list property and return its information
+    // Note: a list property is necessarily editable...
 
-    Property *res = addProperty(Property::StringList, pParent);
+    Property *res = addProperty(Property::List, pParent);
 
-    res->setStringListValues(pValues, pDefaultValue);
+    res->setListValues(pValues, pDefaultValue);
 
     return res;
 }
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addStringListProperty(const QStringList &pValues,
-                                                       Property *pParent)
+Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
+                                                 Property *pParent)
 {
-    // Add a string list property and return its information
+    // Add a list property and return its information
 
-    return addStringListProperty(pValues, 0, pParent);
+    return addListProperty(pValues, 0, pParent);
 }
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addStringListProperty(Property *pParent)
+Property * PropertyEditorWidget::addListProperty(Property *pParent)
 {
-    // Add a string list property and return its information
+    // Add a list property and return its information
 
-    return addStringListProperty(QStringList(), 0, pParent);
+    return addListProperty(QStringList(), 0, pParent);
 }
 
 //==============================================================================
@@ -1672,10 +1665,10 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
     // edit a list item, then its original value gets properly set
     // Note: indeed, by default the first list item will be selected...
 
-    if (mProperty->type() == Property::StringList) {
+    if (mProperty->type() == Property::List) {
         QString propertyValue = mProperty->value();
-        QStringList propertyListValues = mProperty->stringListValues();
-        StringListEditorWidget *propertyEditor = static_cast<StringListEditorWidget *>(mPropertyEditor);
+        QStringList propertyListValues = mProperty->listValues();
+        ListEditorWidget *propertyEditor = static_cast<ListEditorWidget *>(mPropertyEditor);
 
         for (int i = 0, iMax = propertyListValues.count(); i < iMax; ++i) {
             if (!propertyValue.compare(propertyListValues[i])) {
@@ -1718,7 +1711,7 @@ void PropertyEditorWidget::editorClosed()
     //          (through QTreeView) while Property::setValue() will do a few
     //          more things (e.g. update the tool tip)...
 
-    if (   (mProperty->type() != Property::StringList)
+    if (   (mProperty->type() != Property::List)
         && (mProperty->type() != Property::Boolean)) {
         // Not a list or boolean item, so set its value
 

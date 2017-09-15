@@ -218,7 +218,7 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
             if (!solversProperty) {
                 solversProperty = addSectionProperty();
 
-                solversListProperty = addStringListProperty(solversProperty);
+                solversListProperty = addListProperty(solversProperty);
             }
 
             // Add the solver's properties
@@ -247,7 +247,7 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
 
                     break;
                 case Solver::Property::List:
-                    property = addStringListProperty(solverInterfaceProperty.listValues(),
+                    property = addListProperty(solverInterfaceProperty.listValues(),
                                                solverInterfaceProperty.defaultValue().toString(),
                                                solversProperty);
 
@@ -290,7 +290,7 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
 
         // Assign the list of solvers to our list property
 
-        solversListProperty->setStringListValues(solversNames);
+        solversListProperty->setListValues(solversNames);
 
         // Create and return our solver data
 
@@ -372,7 +372,7 @@ QStringList SimulationExperimentViewInformationSolversWidget::odeSolvers() const
 {
     // Return the available ODE solvers, if any
 
-    return mOdeSolverData?mOdeSolverData->solversListProperty()->stringListValues():QStringList();
+    return mOdeSolverData?mOdeSolverData->solversListProperty()->listValues():QStringList();
 }
 
 //==============================================================================
@@ -381,7 +381,7 @@ QStringList SimulationExperimentViewInformationSolversWidget::daeSolvers() const
 {
     // Return the available DAE solvers, if any
 
-    return mDaeSolverData?mDaeSolverData->solversListProperty()->stringListValues():QStringList();
+    return mDaeSolverData?mDaeSolverData->solversListProperty()->listValues():QStringList();
 }
 
 //==============================================================================
@@ -390,7 +390,7 @@ QStringList SimulationExperimentViewInformationSolversWidget::nlaSolvers() const
 {
     // Return the available NLA solvers, if any
 
-    return mNlaSolverData?mNlaSolverData->solversListProperty()->stringListValues():QStringList();
+    return mNlaSolverData?mNlaSolverData->solversListProperty()->listValues():QStringList();
 }
 
 //==============================================================================

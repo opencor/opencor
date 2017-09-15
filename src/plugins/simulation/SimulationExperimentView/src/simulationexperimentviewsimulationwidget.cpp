@@ -1226,8 +1226,8 @@ QVariant SimulationExperimentViewSimulationWidget::value(Core::Property *pProper
         return pProperty->integerValue();
     case Core::Property::Double:
         return pProperty->doubleValue();
-    case Core::Property::StringList:
-        return pProperty->stringListValue();
+    case Core::Property::List:
+        return pProperty->listValue();
     case Core::Property::Boolean:
         return pProperty->booleanValue();
     default:
@@ -2180,8 +2180,8 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                     solverProperty->setDoubleValue(solverPropertyValue.toDouble());
 
                     break;
-                case Core::Property::StringList:
-                    solverProperty->setStringListValue(solverPropertyValue.toString());
+                case Core::Property::List:
+                    solverProperty->setListValue(solverPropertyValue.toString());
 
                     break;
                 case Core::Property::Boolean:

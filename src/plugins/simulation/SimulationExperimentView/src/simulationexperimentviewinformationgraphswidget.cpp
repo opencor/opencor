@@ -271,7 +271,7 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
     disconnect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(graphChanged(Core::Property *)));
 
-    propertyEditor->addStringListProperty(graphProperty);
+    propertyEditor->addListProperty(graphProperty);
     propertyEditor->addStringProperty(pGraph->parameterX()?
                                           static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())->fullyFormattedName():
                                           Core::UnknownValue,
@@ -285,7 +285,7 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
 
     Core::Property *lineProperty = propertyEditor->addSectionProperty(graphProperty);
 
-    propertyEditor->addStringListProperty(lineProperty);
+    propertyEditor->addListProperty(lineProperty);
     propertyEditor->addStringProperty(Core::UnknownValue, lineProperty);
     propertyEditor->addDoubleProperty(1.0, lineProperty);
 
@@ -293,7 +293,7 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
 
     Core::Property *symbolProperty = propertyEditor->addSectionProperty(graphProperty);
 
-    propertyEditor->addStringListProperty(symbolProperty);
+    propertyEditor->addListProperty(symbolProperty);
     propertyEditor->addBooleanProperty(symbolProperty);
     propertyEditor->addStringProperty(Core::UnknownValue, symbolProperty);
     propertyEditor->addStringProperty(Core::UnknownValue, symbolProperty);
@@ -957,12 +957,12 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
 
         graphProperty->properties()[3]->setName(tr("Line"));
         graphProperty->properties()[3]->properties()[0]->setName(tr("Style"));
-        graphProperty->properties()[3]->properties()[0]->setStringListValues(QStringList() << tr("Solid")
-                                                                                           << tr("Dash")
-                                                                                           << tr("Dot")
-                                                                                           << tr("DashDot")
-                                                                                           << tr("DashDotDot")
-                                                                                           << tr("None"),
+        graphProperty->properties()[3]->properties()[0]->setListValues(QStringList() << tr("Solid")
+                                                                                     << tr("Dash")
+                                                                                     << tr("Dot")
+                                                                                     << tr("DashDot")
+                                                                                     << tr("DashDotDot")
+                                                                                     << tr("None"),
                                                                              false);
         graphProperty->properties()[3]->properties()[1]->setName(tr("Colour"));
         graphProperty->properties()[3]->properties()[2]->setName(tr("Thickness"));
@@ -971,16 +971,16 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
 
         graphProperty->properties()[4]->setName(tr("Symbol"));
         graphProperty->properties()[4]->properties()[0]->setName(tr("Style"));
-        graphProperty->properties()[4]->properties()[0]->setStringListValues(QStringList() << tr("Square")
-                                                                                           << tr("Diamond")
-                                                                                           << tr("Triangle")
-                                                                                           << tr("Circle")
-                                                                                           << tr("XCross")
-                                                                                           << tr("Plus")
-                                                                                           << tr("Star")
-                                                                                           << tr("TriangleDown")
-                                                                                           << tr("VDash")
-                                                                                           << tr("None"),
+        graphProperty->properties()[4]->properties()[0]->setListValues(QStringList() << tr("Square")
+                                                                                     << tr("Diamond")
+                                                                                     << tr("Triangle")
+                                                                                     << tr("Circle")
+                                                                                     << tr("XCross")
+                                                                                     << tr("Plus")
+                                                                                     << tr("Star")
+                                                                                     << tr("TriangleDown")
+                                                                                     << tr("VDash")
+                                                                                     << tr("None"),
                                                                              false);
         graphProperty->properties()[4]->properties()[1]->setName(tr("Filled"));
         graphProperty->properties()[4]->properties()[2]->setName(tr("Colour"));
@@ -992,9 +992,9 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
         QString oldModelValue = graphProperty->properties()[0]->value();
         QString newModelValue = oldModelValue;
 
-        graphProperty->properties()[0]->setStringListValues(modelListValues, false);
-        // Note: we don't want setStringListValues() to emit a signal since one
-        //       will be emitted as a result of our call to setValue() below...
+        graphProperty->properties()[0]->setListValues(modelListValues, false);
+        // Note: we don't want setListValues() to emit a signal since one will
+        //       be emitted as a result of our call to setValue() below...
 
         if (newModelValue.isEmpty()) {
             // newModelValue is empty, which means that this is the first time

@@ -106,17 +106,7 @@ signals:
 
 //==============================================================================
 
-class StringListEditorWidget : public ListEditorWidget
-{
-    Q_OBJECT
-
-public:
-    explicit StringListEditorWidget(QWidget *pParent);
-};
-
-//==============================================================================
-
-class BooleanEditorWidget : public StringListEditorWidget
+class BooleanEditorWidget : public ListEditorWidget
 {
     Q_OBJECT
 
@@ -156,7 +146,7 @@ signals:
     void goToNextPropertyRequested();
 
 private slots:
-    void stringListPropertyChanged(const QString &pStringListValue);
+    void listPropertyChanged(const QString &pValue);
     void booleanPropertyChanged(const QString &pValue);
 };
 
@@ -185,12 +175,12 @@ class CORE_EXPORT Property : public QObject
 
 public:
     enum Type {
-        Section    = QStandardItem::UserType,
-        String     = QStandardItem::UserType+1,
-        Integer    = QStandardItem::UserType+2,
-        Double     = QStandardItem::UserType+3,
-        StringList = QStandardItem::UserType+4,
-        Boolean    = QStandardItem::UserType+5
+        Section = QStandardItem::UserType,
+        String  = QStandardItem::UserType+1,
+        Integer = QStandardItem::UserType+2,
+        Double  = QStandardItem::UserType+3,
+        List    = QStandardItem::UserType+4,
+        Boolean = QStandardItem::UserType+5
     };
 
     explicit Property(const Type &pType, PropertyEditorWidget *pParent);
@@ -241,15 +231,15 @@ public:
     void setValue(const QString &pValue, const bool &pForce = false,
                   const bool &pEmitSignal = true);
 
-    QStringList stringListValues() const;
-    void setStringListValues(const QStringList &pStringListValues,
-                             const QString &pDefaultStringListValue,
-                             const bool &pEmitSignal = true);
-    void setStringListValues(const QStringList &pListValues,
+    QStringList listValues() const;
+    void setListValues(const QStringList &pListValues,
+                       const QString &pDefaultListValue,
+                       const bool &pEmitSignal = true);
+    void setListValues(const QStringList &pListValues,
                        const bool &pEmitSignal = true);
 
-    QString stringListValue() const;
-    void setStringListValue(const QString &pStringListValue);
+    QString listValue() const;
+    void setListValue(const QString &pListValue);
 
     QString emptyListValue() const;
     void setEmptyListValue(const QString &pEmptyListValue);
@@ -283,8 +273,8 @@ private:
     PropertyItem *mValue;
     PropertyItem *mUnit;
 
-    QStringList mStringListValues;
-    QString mEmptyStringListValue;
+    QStringList mListValues;
+    QString mEmptyListValue;
 
     QString mExtraInfo;
 
@@ -332,12 +322,12 @@ public:
     Property * addDoubleProperty(const double &pValue, Property *pParent = 0);
     Property * addDoubleProperty(Property *pParent = 0);
 
-    Property * addStringListProperty(const QStringList &pValues,
-                                     const QString &pDefaultValue,
-                                     Property *pParent = 0);
-    Property * addStringListProperty(const QStringList &pValues,
-                                     Property *pParent = 0);
-    Property * addStringListProperty(Property *pParent = 0);
+    Property * addListProperty(const QStringList &pValues,
+                               const QString &pDefaultValue,
+                               Property *pParent = 0);
+    Property * addListProperty(const QStringList &pValues,
+                               Property *pParent = 0);
+    Property * addListProperty(Property *pParent = 0);
 
     Property * addBooleanProperty(const bool &pValue, Property *pParent = 0);
     Property * addBooleanProperty(Property *pParent = 0);
