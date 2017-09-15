@@ -286,8 +286,8 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
     Core::Property *lineProperty = propertyEditor->addSectionProperty(graphProperty);
 
     propertyEditor->addListProperty(lineProperty);
-    propertyEditor->addStringProperty(Core::UnknownValue, lineProperty);
     propertyEditor->addDoubleProperty(1.0, lineProperty);
+    propertyEditor->addStringProperty(Core::UnknownValue, lineProperty);
 
     // Create some symbol properties for our graph
 
@@ -852,7 +852,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     Core::Property *styleProperty = pProperty->properties()[3]->properties()[0];
 
     graphPen.setStyle(Qt::PenStyle(styleProperty->listValues().indexOf(styleProperty->listValue())));
-    graphPen.setWidthF(pProperty->properties()[3]->properties()[2]->doubleValue());
+    graphPen.setWidthF(pProperty->properties()[3]->properties()[1]->doubleValue());
 
     graph->setPen(graphPen);
 
@@ -964,8 +964,8 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
                                                                                      << tr("DashDotDot"),
                                                                        tr("Solid"),
                                                                        false);
-        graphProperty->properties()[3]->properties()[1]->setName(tr("Colour"));
-        graphProperty->properties()[3]->properties()[2]->setName(tr("Thickness"));
+        graphProperty->properties()[3]->properties()[1]->setName(tr("Width"));
+        graphProperty->properties()[3]->properties()[2]->setName(tr("Colour"));
 
         // Set the label of our graph symbol properties
 

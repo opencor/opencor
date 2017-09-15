@@ -100,12 +100,12 @@
         <translation>TiretPointPoint</translation>
     </message>
     <message>
-        <source>Colour</source>
-        <translation>Couleur</translation>
+        <source>Width</source>
+        <translation>Largeur</translation>
     </message>
     <message>
-        <source>Thickness</source>
-        <translation>Épaisseur</translation>
+        <source>Colour</source>
+        <translation>Couleur</translation>
     </message>
     <message>
         <source>Symbol</source>
