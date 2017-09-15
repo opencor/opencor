@@ -385,10 +385,8 @@ void SimulationExperimentViewInformationGraphsWidget::selectAllGraphs(const bool
     foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, mGraphs)
         graph->setSelected(pSelect);
 
-    if (mGraphs.count()) {
-        emit graphsUpdated(qobject_cast<GraphPanelWidget::GraphPanelPlotWidget *>(mGraphs.values().first()->plot()),
-                           mGraphs.values());
-    }
+    if (mGraphs.count())
+        emit graphsUpdated(mGraphs.values());
 
     connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
@@ -865,8 +863,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     if (   (oldParameterX != graph->parameterX())
         || (oldParameterY != graph->parameterY())
         || (oldGraphPen != graphPen)) {
-        emit graphsUpdated(qobject_cast<GraphPanelWidget::GraphPanelPlotWidget *>(graph->plot()),
-                           GraphPanelWidget::GraphPanelPlotGraphs() << graph);
+        emit graphUpdated(graph);
     }
 }
 
@@ -887,12 +884,11 @@ void SimulationExperimentViewInformationGraphsWidget::graphChanged(Core::Propert
         if (graph) {
             graph->setSelected(pProperty->isChecked());
 
-            emit graphsUpdated(qobject_cast<GraphPanelWidget::GraphPanelPlotWidget *>(graph->plot()),
-                               GraphPanelWidget::GraphPanelPlotGraphs() << graph);
+            emit graphUpdated(graph);
         }
     } else {
         // One of our graph properties has changed, so update its information
-        // Note: updateGraphInfo() will emit the graphsUpdated() signal, if
+        // Note: updateGraphInfo() will emit the graphUpdated() signal, if
         //       needed...
 
         Core::Property *graphProperty = pProperty->parentProperty();

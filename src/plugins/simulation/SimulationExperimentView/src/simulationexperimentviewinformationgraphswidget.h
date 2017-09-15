@@ -146,8 +146,8 @@ signals:
     void headerSectionResized(const int &pIndex, const int &pOldSize,
                               const int &pNewSize);
 
-    void graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+    void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
 public slots:
     void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
