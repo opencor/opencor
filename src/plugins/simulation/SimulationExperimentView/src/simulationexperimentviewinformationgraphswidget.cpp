@@ -294,7 +294,7 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
     Core::Property *symbolProperty = propertyEditor->addSectionProperty(graphProperty);
 
     propertyEditor->addListProperty(symbolProperty);
-    propertyEditor->addBooleanProperty(symbolProperty);
+    propertyEditor->addBooleanProperty(true, symbolProperty);
     propertyEditor->addStringProperty(Core::UnknownValue, symbolProperty);
     propertyEditor->addStringProperty(Core::UnknownValue, symbolProperty);
 
