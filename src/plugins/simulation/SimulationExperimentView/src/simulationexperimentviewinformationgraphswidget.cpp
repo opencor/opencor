@@ -849,9 +849,9 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
 
     QPen oldGraphPen = graph->pen();
     QPen graphPen = oldGraphPen;
-    Core::Property *styleProperty = pProperty->properties()[3]->properties()[0];
+    Core::Property *graphStyleProperty = pProperty->properties()[3]->properties()[0];
 
-    graphPen.setStyle(Qt::PenStyle(styleProperty->listValues().indexOf(styleProperty->listValue())));
+    graphPen.setStyle(Qt::PenStyle(graphStyleProperty->listValues().indexOf(graphStyleProperty->listValue())));
     graphPen.setWidthF(pProperty->properties()[3]->properties()[1]->doubleValue());
 
     graph->setPen(graphPen);
