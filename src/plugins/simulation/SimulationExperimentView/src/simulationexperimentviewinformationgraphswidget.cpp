@@ -861,9 +861,10 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     // Let people know if we consider that the graph has been updated
 
     if (   (oldParameterX != graph->parameterX())
-        || (oldParameterY != graph->parameterY())
-        || (oldGraphPen != graphPen)) {
+        || (oldParameterY != graph->parameterY())) {
         emit graphUpdated(graph);
+    } else if (oldGraphPen != graphPen) {
+        emit graphPenUpdated(graph);
     }
 }
 
