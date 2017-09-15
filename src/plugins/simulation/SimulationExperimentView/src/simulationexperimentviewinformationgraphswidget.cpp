@@ -290,15 +290,15 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
     Core::Property *lineProperty = propertyEditor->addSectionProperty(graphProperty);
 
     propertyEditor->addListProperty(lineProperty);
-    propertyEditor->addDoubleProperty(1.0, lineProperty);
     propertyEditor->addStringProperty(Core::UnknownValue, lineProperty);
+    propertyEditor->addDoubleGt0Property(1.0, lineProperty);
 
     // Create some symbol properties for our graph
 
     Core::Property *symbolProperty = propertyEditor->addSectionProperty(graphProperty);
 
     propertyEditor->addListProperty(symbolProperty);
-    propertyEditor->addIntegerProperty(8, symbolProperty);
+    propertyEditor->addIntegerGt0Property(8, symbolProperty);
     propertyEditor->addStringProperty(Core::UnknownValue, symbolProperty);
     propertyEditor->addStringProperty(Core::UnknownValue, symbolProperty);
 

@@ -77,12 +77,32 @@ public:
 
 //==============================================================================
 
+class IntegerGt0EditorWidget : public TextEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit IntegerGt0EditorWidget(QWidget *pParent);
+};
+
+//==============================================================================
+
 class DoubleEditorWidget : public TextEditorWidget
 {
     Q_OBJECT
 
 public:
     explicit DoubleEditorWidget(QWidget *pParent);
+};
+
+//==============================================================================
+
+class DoubleGt0EditorWidget : public TextEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit DoubleGt0EditorWidget(QWidget *pParent);
 };
 
 //==============================================================================
@@ -175,12 +195,14 @@ class CORE_EXPORT Property : public QObject
 
 public:
     enum Type {
-        Section = QStandardItem::UserType,
-        String  = QStandardItem::UserType+1,
-        Integer = QStandardItem::UserType+2,
-        Double  = QStandardItem::UserType+3,
-        List    = QStandardItem::UserType+4,
-        Boolean = QStandardItem::UserType+5
+        Section    = QStandardItem::UserType,
+        String     = QStandardItem::UserType+1,
+        Integer    = QStandardItem::UserType+2,
+        IntegerGt0 = QStandardItem::UserType+3,
+        Double     = QStandardItem::UserType+4,
+        DoubleGt0  = QStandardItem::UserType+5,
+        List       = QStandardItem::UserType+6,
+        Boolean    = QStandardItem::UserType+7
     };
 
     explicit Property(const Type &pType, PropertyEditorWidget *pParent);
@@ -320,8 +342,14 @@ public:
     Property * addIntegerProperty(const int &pValue, Property *pParent = 0);
     Property * addIntegerProperty(Property *pParent = 0);
 
+    Property * addIntegerGt0Property(const int &pValue, Property *pParent = 0);
+    Property * addIntegerGt0Property(Property *pParent = 0);
+
     Property * addDoubleProperty(const double &pValue, Property *pParent = 0);
     Property * addDoubleProperty(Property *pParent = 0);
+
+    Property * addDoubleGt0Property(const double &pValue, Property *pParent = 0);
+    Property * addDoubleGt0Property(Property *pParent = 0);
 
     Property * addListProperty(const QStringList &pValues,
                                const QString &pDefaultValue,

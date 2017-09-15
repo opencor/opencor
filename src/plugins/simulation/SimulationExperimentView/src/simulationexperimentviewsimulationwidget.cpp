@@ -2178,10 +2178,12 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
 
                     break;
                 case Core::Property::Integer:
+                case Core::Property::IntegerGt0:
                     solverProperty->setIntegerValue(solverPropertyValue.toInt());
 
                     break;
                 case Core::Property::Double:
+                case Core::Property::DoubleGt0:
                     solverProperty->setDoubleValue(solverPropertyValue.toDouble());
 
                     break;

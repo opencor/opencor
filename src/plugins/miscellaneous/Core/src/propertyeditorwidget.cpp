@@ -104,6 +104,18 @@ IntegerEditorWidget::IntegerEditorWidget(QWidget *pParent) :
 
 //==============================================================================
 
+IntegerGt0EditorWidget::IntegerGt0EditorWidget(QWidget *pParent) :
+    TextEditorWidget(pParent)
+{
+    // Set a validator that accepts any strictly positif integer
+
+    static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
+
+    setValidator(new QRegularExpressionValidator(IntegerGt0RegEx, this));
+}
+
+//==============================================================================
+
 DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
     TextEditorWidget(pParent)
 {
@@ -112,6 +124,18 @@ DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
     static const QRegularExpression DoubleRegEx = QRegularExpression("^[+-]?(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d+)?$");
 
     setValidator(new QRegularExpressionValidator(DoubleRegEx, this));
+}
+
+//==============================================================================
+
+DoubleGt0EditorWidget::DoubleGt0EditorWidget(QWidget *pParent) :
+    TextEditorWidget(pParent)
+{
+    // Set a validator that accepts any strictly positif double
+
+    static const QRegularExpression DoubleGt0RegEx = QRegularExpression("^[+]?(([1-9]\\d*)?(\\.\\d*)?|[0]?\\.\\d+)([eE][+-]?\\d+)?$");
+
+    setValidator(new QRegularExpressionValidator(DoubleGt0RegEx, this));
 }
 
 //==============================================================================
@@ -287,8 +311,16 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
         editor = new IntegerEditorWidget(pParent);
 
         break;
+    case Property::IntegerGt0:
+        editor = new IntegerGt0EditorWidget(pParent);
+
+        break;
     case Property::Double:
         editor = new DoubleEditorWidget(pParent);
+
+        break;
+    case Property::DoubleGt0:
+        editor = new DoubleGt0EditorWidget(pParent);
 
         break;
     case Property::List: {
@@ -685,6 +717,8 @@ void Property::setIntegerValue(const int &pIntegerValue,
 
     if (mType == Integer)
         setValue(QString::number(pIntegerValue), false, pEmitSignal);
+    else if (mType == IntegerGt0)
+        setValue(QString::number((pIntegerValue > 0)?pIntegerValue:1), false, pEmitSignal);
 }
 
 //==============================================================================
@@ -707,6 +741,8 @@ void Property::setDoubleValue(const double &pDoubleValue,
 
     if (mType == Double)
         setValue(QString::number(pDoubleValue, 'g', 15), false, pEmitSignal);
+    else if (mType == DoubleGt0)
+        setValue(QString::number((pDoubleValue > 0.0)?pDoubleValue:1.0, 'g', 15), false, pEmitSignal);
 }
 
 //==============================================================================
@@ -1339,6 +1375,29 @@ Property * PropertyEditorWidget::addIntegerProperty(Property *pParent)
 
 //==============================================================================
 
+Property * PropertyEditorWidget::addIntegerGt0Property(const int &pValue,
+                                                       Property *pParent)
+{
+    // Add a strictly positif integer property and return its information
+
+    Property *res = addProperty(Property::IntegerGt0, pParent);
+
+    res->setIntegerValue(pValue);
+
+    return res;
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addIntegerGt0Property(Property *pParent)
+{
+    // Add a strictly positif integer property and return its information
+
+    return addIntegerGt0Property(1, pParent);
+}
+
+//==============================================================================
+
 Property * PropertyEditorWidget::addDoubleProperty(const double &pValue,
                                                    Property *pParent)
 {
@@ -1358,6 +1417,29 @@ Property * PropertyEditorWidget::addDoubleProperty(Property *pParent)
     // Add a double property and return its information
 
     return addDoubleProperty(0.0, pParent);
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addDoubleGt0Property(const double &pValue,
+                                                      Property *pParent)
+{
+    // Add a strictly positif double property and return its information
+
+    Property *res = addProperty(Property::DoubleGt0, pParent);
+
+    res->setDoubleValue(pValue);
+
+    return res;
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addDoubleGt0Property(Property *pParent)
+{
+    // Add a strictly positif double property and return its information
+
+    return addDoubleProperty(1.0, pParent);
 }
 
 //==============================================================================
@@ -1747,11 +1829,29 @@ void PropertyEditorWidget::editProperty(Property *pProperty,
         // A property is currently being edited, so commit its data and then
         // close its corresponding editor
 
-        if (pCommitData)
-            commitData(mPropertyEditor);
+        bool canCommitData = pCommitData;
+
+        if (canCommitData) {
+            // Make sure that the value of a strictly positive double property
+            // is valid
+            // Note: indeed, we allow "0.3", but the user might enter "0." and
+            //       then decide to move to the next property, in which case we
+            //       should ignore the 'new' value...
+
+            if (mProperty->type() == Property::DoubleGt0) {
+                DoubleGt0EditorWidget *propertyEditor = static_cast<DoubleGt0EditorWidget *>(mPropertyEditor);
+                QString propertyValue = propertyEditor->text();
+                int dummy;
+
+                canCommitData = propertyEditor->validator()->validate(propertyValue, dummy) == QValidator::Acceptable;
+            }
+
+            if (canCommitData)
+                commitData(mPropertyEditor);
+        }
 
         closeEditor(mPropertyEditor,
-                    pCommitData?
+                    canCommitData?
                         QAbstractItemDelegate::SubmitModelCache:
                         QAbstractItemDelegate::RevertModelCache);
 
