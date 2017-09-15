@@ -97,7 +97,7 @@
     </message>
     <message>
         <source>None</source>
-        <translation>Aucune</translation>
+        <translation>Aucun</translation>
     </message>
     <message>
         <source>Colour</source>
