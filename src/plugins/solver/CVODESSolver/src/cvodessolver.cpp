@@ -157,14 +157,14 @@ void CvodesSolver::initialize(const double &pVoiStart,
 
 //==============================================================================
 
-void CvodeSolver::initialize(const double &pVoiStart,
-                             const int &pRatesStatesCount, double *pConstants,
-                             double *pRates, double *pStates,
-                             double *pAlgebraic,
-                             ComputeRatesFunction pComputeRates,
-                             const int &pGradientsCount,
-                             int *pGradientsIndices,
-                             double *pGradients)
+void CvodesSolver::initialize(const double &pVoiStart,
+                              const int &pRatesStatesCount, double *pConstants,
+                              double *pRates, double *pStates,
+                              double *pAlgebraic,
+                              ComputeRatesFunction pComputeRates,
+                              const int &pGradientsCount,
+                              int *pGradientsIndices,
+                              double *pGradients)
 {
     if (!mSolver) {
         // Retrieve some of the CVODES properties

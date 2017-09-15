@@ -253,18 +253,18 @@ void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
 //==============================================================================
 
-void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
-                           const int &pRatesStatesCount,
-                           const int &pCondVarCount, double *pConstants,
-                           double *pRates, double *pStates, double *pAlgebraic,
-                           double *pCondVar,
-                           ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                           ComputeResidualsFunction pComputeResiduals,
-                           ComputeRootInformationFunction pComputeRootInformation,
-                           ComputeStateInformationFunction pComputeStateInformation,
-                           const int &pGradientsCount,
-                           int *pGradientsIndices,
-                           double *pGradients)
+void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
+                            const int &pRatesStatesCount,
+                            const int &pCondVarCount, double *pConstants,
+                            double *pRates, double *pStates, double *pAlgebraic,
+                            double *pCondVar,
+                            ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                            ComputeResidualsFunction pComputeResiduals,
+                            ComputeRootInformationFunction pComputeRootInformation,
+                            ComputeStateInformationFunction pComputeStateInformation,
+                            const int &pGradientsCount,
+                            int *pGradientsIndices,
+                            double *pGradients)
 {
     if (!mSolver) {
         // Retrieve some of the IDAS properties
