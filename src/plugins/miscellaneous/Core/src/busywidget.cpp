@@ -409,7 +409,7 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
 
     painter.fillPath(painterPath, mBackgroundColor);
 
-    // Draw ourselves
+    // Draw ourselves and accept the event
 
     if (mProgress == -1.0) {
         double lineCornerRadius = mRoundness*(mThickness >> 1);
@@ -448,8 +448,6 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
                             90*16, -mProgress*360*16);
         }
     }
-
-    // Accept the event
 
     pEvent->accept();
 }

@@ -585,8 +585,6 @@ void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
     // Carry on as normal, if the event wasn't handled
 
     if (handled) {
-        // Accept the event
-
         pEvent->accept();
     } else {
         // Reset the font size, if needed
@@ -598,13 +596,9 @@ void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
             if (pEvent->key() == Qt::Key_0) {
                 zoomTo(0);
 
-                // Accept the event
-
                 pEvent->accept();
             } else if (pEvent->key() == Qt::Key_Equal) {
                 zoomIn();
-
-                // Accept the event
 
                 pEvent->accept();
             } else {
