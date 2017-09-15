@@ -979,7 +979,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
                                                                                      << tr("Diamond")
                                                                                      << tr("Triangle")
                                                                                      << tr("Circle")
-                                                                                     << tr("XCross")
+                                                                                     << tr("Cross")
                                                                                      << tr("Plus")
                                                                                      << tr("Star")
                                                                                      << tr("Inverted Triangle")

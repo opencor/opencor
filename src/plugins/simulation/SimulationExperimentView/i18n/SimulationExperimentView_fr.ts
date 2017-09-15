@@ -128,6 +128,10 @@
         <translation>Cercle</translation>
     </message>
     <message>
+        <source>Cross</source>
+        <translation>Croix</translation>
+    </message>
+    <message>
         <source>Plus</source>
         <translation></translation>
     </message>
@@ -150,10 +154,6 @@
     <message>
         <source>Fill colour</source>
         <translation>Couleur de remplissage</translation>
-    </message>
-    <message>
-        <source>XCross</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
