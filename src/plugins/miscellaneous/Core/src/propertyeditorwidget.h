@@ -253,6 +253,10 @@ public:
     QIcon icon() const;
     void setIcon(const QIcon &pIcon);
 
+    QString value() const;
+    void setValue(const QString &pValue, const bool &pForce = false,
+                  const bool &pEmitSignal = true);
+
     int integerValue() const;
     void setIntegerValue(const int &pIntegerValue,
                          const bool &pEmitSignal = true);
@@ -260,10 +264,6 @@ public:
     double doubleValue() const;
     void setDoubleValue(const double &pDoubleValue,
                         const bool &pEmitSignal = true);
-
-    QString value() const;
-    void setValue(const QString &pValue, const bool &pForce = false,
-                  const bool &pEmitSignal = true);
 
     QStringList listValues() const;
     void setListValues(const QStringList &pListValues,

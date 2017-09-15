@@ -717,6 +717,36 @@ void Property::setIcon(const QIcon &pIcon)
 
 //==============================================================================
 
+QString Property::value() const
+{
+    // Return our value
+
+    return mValue->text();
+}
+
+//==============================================================================
+
+void Property::setValue(const QString &pValue, const bool &pForce,
+                        const bool &pEmitSignal)
+{
+    // Set our value
+
+    if (pValue.compare(mValue->text()) || pForce) {
+        QString oldValue = mValue->text();
+
+        mValue->setText(pValue);
+
+        updateToolTip();
+
+        // Let people know if we have a new value
+
+        if (pEmitSignal)
+            emit valueChanged(oldValue, pValue);
+    }
+}
+
+//==============================================================================
+
 int Property::integerValue() const
 {
     // Return our value as an integer, if it is of that type
@@ -759,36 +789,6 @@ void Property::setDoubleValue(const double &pDoubleValue,
         setValue(QString::number(pDoubleValue, 'g', 15), false, pEmitSignal);
     else if (mType == DoubleGt0)
         setValue(QString::number((pDoubleValue > 0.0)?pDoubleValue:1.0, 'g', 15), false, pEmitSignal);
-}
-
-//==============================================================================
-
-QString Property::value() const
-{
-    // Return our value
-
-    return mValue->text();
-}
-
-//==============================================================================
-
-void Property::setValue(const QString &pValue, const bool &pForce,
-                        const bool &pEmitSignal)
-{
-    // Set our value
-
-    if (pValue.compare(mValue->text()) || pForce) {
-        QString oldValue = mValue->text();
-
-        mValue->setText(pValue);
-
-        updateToolTip();
-
-        // Let people know if we have a new value
-
-        if (pEmitSignal)
-            emit valueChanged(oldValue, pValue);
-    }
 }
 
 //==============================================================================
