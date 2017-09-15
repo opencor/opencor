@@ -2195,6 +2195,10 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                     solverProperty->setBooleanValue(solverPropertyValue.toBool());
 
                     break;
+                case Core::Property::Color:
+                    solverProperty->setColorValue(solverPropertyValue.toString());
+
+                    break;
                 }
 
                 propertySet = solverProperty->type() != Core::Property::Section;

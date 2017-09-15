@@ -279,6 +279,18 @@ BooleanEditorWidget::BooleanEditorWidget(QWidget *pParent) :
 
 //==============================================================================
 
+ColorEditorWidget::ColorEditorWidget(QWidget *pParent) :
+    TextEditorWidget(pParent)
+{
+    // Set a validator that accepts any colour
+
+    static const QRegularExpression ColorRegEx = QRegularExpression("^#[[:xdigit:]]{6}$");
+
+    setValidator(new QRegularExpressionValidator(ColorRegEx, this));
+}
+
+//==============================================================================
+
 PropertyItemDelegate::PropertyItemDelegate(OpenCOR::Core::PropertyEditorWidget *pParent) :
     QStyledItemDelegate(pParent),
     mPropertyEditorWidget(pParent)
@@ -358,6 +370,10 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         break;
     }
+    case Property::Color:
+        editor = new ColorEditorWidget(pParent);
+
+        break;
     }
 
     // Propagate a few signals
@@ -924,6 +940,29 @@ void Property::setBooleanValue(const bool &pBooleanValue)
 
     if (mType == Boolean)
         setValue(pBooleanValue?TrueValue:FalseValue);
+}
+
+//==============================================================================
+
+QColor Property::colorValue() const
+{
+    // Return our value as a color, if it is of that type
+
+    QColor res;
+
+    res.setNamedColor(mValue->text());
+
+    return res;
+}
+
+//==============================================================================
+
+void Property::setColorValue(const QColor &pColorValue)
+{
+    // Set our value, should it be of color type
+
+    if (mType == Color)
+        setValue(pColorValue.name());
 }
 
 //==============================================================================
@@ -1521,6 +1560,29 @@ Property * PropertyEditorWidget::addBooleanProperty(Property *pParent)
     // Add a boolean property and return its information
 
     return addBooleanProperty(false, pParent);
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addColorProperty(const QColor &pValue,
+                                                    Property *pParent)
+{
+    // Add a colour property and return its information
+
+    Property *res = addProperty(Property::Color, pParent);
+
+    res->setColorValue(pValue);
+
+    return res;
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addColorProperty(Property *pParent)
+{
+    // Add a colour property and return its information
+
+    return addColorProperty(QColor(), pParent);
 }
 
 //==============================================================================

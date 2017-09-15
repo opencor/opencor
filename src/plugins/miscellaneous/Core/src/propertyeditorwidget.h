@@ -136,6 +136,16 @@ public:
 
 //==============================================================================
 
+class ColorEditorWidget : public TextEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit ColorEditorWidget(QWidget *pParent);
+};
+
+//==============================================================================
+
 class PropertyEditorWidget;
 
 //==============================================================================
@@ -202,7 +212,8 @@ public:
         Double     = QStandardItem::UserType+4,
         DoubleGt0  = QStandardItem::UserType+5,
         List       = QStandardItem::UserType+6,
-        Boolean    = QStandardItem::UserType+7
+        Boolean    = QStandardItem::UserType+7,
+        Color      = QStandardItem::UserType+8
     };
 
     explicit Property(const Type &pType, PropertyEditorWidget *pParent);
@@ -269,6 +280,9 @@ public:
 
     bool booleanValue() const;
     void setBooleanValue(const bool &pBooleanValue);
+
+    QColor colorValue() const;
+    void setColorValue(const QColor &pColorValue);
 
     QString unit() const;
     void setUnit(const QString &pUnit, const bool &pUpdateToolTip = true);
@@ -363,6 +377,9 @@ public:
 
     Property * addBooleanProperty(const bool &pValue, Property *pParent = 0);
     Property * addBooleanProperty(Property *pParent = 0);
+
+    Property * addColorProperty(const QColor &pValue, Property *pParent = 0);
+    Property * addColorProperty(Property *pParent = 0);
 
     bool removeProperty(Property *pProperty);
 

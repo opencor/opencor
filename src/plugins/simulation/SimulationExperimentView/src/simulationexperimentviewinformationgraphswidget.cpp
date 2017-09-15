@@ -290,8 +290,8 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
     Core::Property *lineProperty = propertyEditor->addSectionProperty(graphProperty);
 
     propertyEditor->addListProperty(lineProperty);
-    propertyEditor->addStringProperty(Core::UnknownValue, lineProperty);
     propertyEditor->addDoubleGt0Property(1.0, lineProperty);
+    propertyEditor->addColorProperty(Qt::darkBlue, lineProperty);
 
     // Create some symbol properties for our graph
 
@@ -299,8 +299,8 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
 
     propertyEditor->addListProperty(symbolProperty);
     propertyEditor->addIntegerGt0Property(8, symbolProperty);
-    propertyEditor->addStringProperty(Core::UnknownValue, symbolProperty);
-    propertyEditor->addStringProperty(Core::UnknownValue, symbolProperty);
+    propertyEditor->addColorProperty(Qt::darkBlue, symbolProperty);
+    propertyEditor->addColorProperty(Qt::darkBlue, symbolProperty);
 
     connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
@@ -851,14 +851,16 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
 
     // Update the graph line settings
 
-    QPen oldGraphPen = graph->pen();
-    QPen graphPen = oldGraphPen;
-    Core::Property *graphStyleProperty = pProperty->properties()[3]->properties()[0];
+    QPen oldLinePen = graph->pen();
+    QPen linePen = oldLinePen;
+    Core::Property *lineProperty = pProperty->properties()[3];
+    Core::Property *lineStyleProperty = lineProperty->properties()[0];
 
-    graphPen.setStyle(Qt::PenStyle(graphStyleProperty->listValues().indexOf(graphStyleProperty->listValue())));
-    graphPen.setWidthF(pProperty->properties()[3]->properties()[1]->doubleValue());
+    linePen.setStyle(Qt::PenStyle(lineStyleProperty->listValues().indexOf(lineStyleProperty->listValue())));
+    linePen.setWidthF(lineProperty->properties()[1]->doubleValue());
+    linePen.setColor(lineProperty->properties()[2]->colorValue());
 
-    graph->setPen(graphPen);
+    graph->setPen(linePen);
 
     // Update the graph symbol settings
 
@@ -869,13 +871,17 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     int symbolStyleValue = symbolStyleProperty->listValues().indexOf(symbolStyleProperty->listValue());
     QwtSymbol::Style symbolStyle = QwtSymbol::Style((symbolStyleValue > 5)?symbolStyleValue+2:symbolStyleValue-1);
     int symbolSize = symbolProperty->properties()[1]->integerValue();
+    QColor symbolColor = symbolProperty->properties()[2]->colorValue();
+    QColor symbolFilledColor = symbolProperty->properties()[3]->colorValue();
 
     if (oldGraphSymbol) {
         graphSymbolUpdated =    (oldGraphSymbol->style() != symbolStyle)
-                             || (oldGraphSymbol->size().width() != symbolSize);
+                             || (oldGraphSymbol->size().width() != symbolSize)
+                             || (oldGraphSymbol->pen().color() != symbolColor)
+                             || (oldGraphSymbol->brush().color() != symbolFilledColor);
     }
 
-    graph->setSymbol(new QwtSymbol(symbolStyle, QBrush(), QPen(Qt::darkRed),
+    graph->setSymbol(new QwtSymbol(symbolStyle, QBrush(symbolFilledColor), QPen(symbolColor),
                                    QSize(symbolSize, symbolSize)));
 
     // Let people know if the graph has been updated in some way or another
@@ -883,7 +889,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     if (   (oldParameterX != graph->parameterX())
         || (oldParameterY != graph->parameterY())) {
         emit graphUpdated(graph);
-    } else if ((oldGraphPen != graphPen) || graphSymbolUpdated) {
+    } else if ((oldLinePen != linePen) || graphSymbolUpdated) {
         emit graphVisualUpdated(graph);
     }
 }
