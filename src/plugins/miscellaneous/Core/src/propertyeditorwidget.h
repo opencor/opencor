@@ -339,6 +339,9 @@ public:
     Property * addSectionProperty(const QString &pName, Property *pParent = 0);
     Property * addSectionProperty(Property *pParent = 0);
 
+    Property * addStringProperty(const QString &pString, Property *pParent = 0);
+    Property * addStringProperty(Property *pParent = 0);
+
     Property * addIntegerProperty(const int &pValue, Property *pParent = 0);
     Property * addIntegerProperty(Property *pParent = 0);
 
@@ -360,9 +363,6 @@ public:
 
     Property * addBooleanProperty(const bool &pValue, Property *pParent = 0);
     Property * addBooleanProperty(Property *pParent = 0);
-
-    Property * addStringProperty(const QString &pString, Property *pParent = 0);
-    Property * addStringProperty(Property *pParent = 0);
 
     bool removeProperty(Property *pProperty);
 

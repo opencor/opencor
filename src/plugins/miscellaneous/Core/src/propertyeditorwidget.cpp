@@ -1352,6 +1352,29 @@ Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 
 //==============================================================================
 
+Property * PropertyEditorWidget::addStringProperty(const QString &pString,
+                                                   Property *pParent)
+{
+    // Add a string property and return its information
+
+    Property *res = addProperty(Property::String, pParent);
+
+    res->setValue(pString);
+
+    return res;
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addStringProperty(Property *pParent)
+{
+    // Add a string property and return its information
+
+    return addStringProperty(QString(), pParent);
+}
+
+//==============================================================================
+
 Property * PropertyEditorWidget::addIntegerProperty(const int &pValue,
                                                     Property *pParent)
 {
@@ -1498,29 +1521,6 @@ Property * PropertyEditorWidget::addBooleanProperty(Property *pParent)
     // Add a boolean property and return its information
 
     return addBooleanProperty(false, pParent);
-}
-
-//==============================================================================
-
-Property * PropertyEditorWidget::addStringProperty(const QString &pString,
-                                                   Property *pParent)
-{
-    // Add a string property and return its information
-
-    Property *res = addProperty(Property::String, pParent);
-
-    res->setValue(pString);
-
-    return res;
-}
-
-//==============================================================================
-
-Property * PropertyEditorWidget::addStringProperty(Property *pParent)
-{
-    // Add a string property and return its information
-
-    return addStringProperty(QString(), pParent);
 }
 
 //==============================================================================
