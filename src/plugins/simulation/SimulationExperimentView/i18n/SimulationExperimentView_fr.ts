@@ -48,8 +48,12 @@
         <translation>Actuel</translation>
     </message>
     <message>
-        <source>Model</source>
-        <translation>Modèle</translation>
+        <source>X</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation></translation>
     </message>
     <message>
         <source>does not exist</source>
@@ -60,12 +64,8 @@
         <translation>pas de modèle d&apos;exécution</translation>
     </message>
     <message>
-        <source>X</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Y</source>
-        <translation></translation>
+        <source>Model</source>
+        <translation>Modèle</translation>
     </message>
 </context>
 <context>
@@ -438,6 +438,10 @@
         <translation>La simulation n&apos;a pas pu être exportée vers &lt;strong&gt;%1&lt;/strong&gt;.</translation>
     </message>
     <message>
+        <source>Export To COMBINE Archive</source>
+        <translation>Exporter Vers Archive COMBINE</translation>
+    </message>
+    <message>
         <source>The simulation could not be exported to &lt;strong&gt;%1&lt;/strong&gt;%2.</source>
         <translation>La simulation n&apos;a pas pu être exportée vers &lt;strong&gt;%1&lt;/strong&gt;%2.</translation>
     </message>
@@ -448,10 +452,6 @@
     <message>
         <source>the master SED-ML file could not be added</source>
         <translation>le fichier SED-ML principal n&apos;a pas pu être ajouté</translation>
-    </message>
-    <message>
-        <source>Export To COMBINE Archive</source>
-        <translation>Exporter Vers Archive COMBINE</translation>
     </message>
     <message>
         <source>the requested solver (%1) could not be found</source>
