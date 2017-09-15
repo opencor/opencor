@@ -849,7 +849,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
 
     graph->setFileName(fileName);
 
-    // Update the graph itself
+    // Update the graph line settings
 
     QPen oldGraphPen = graph->pen();
     QPen graphPen = oldGraphPen;
@@ -859,6 +859,8 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     graphPen.setWidthF(pProperty->properties()[3]->properties()[1]->doubleValue());
 
     graph->setPen(graphPen);
+
+    // Update the graph symbol settings
 
     const QwtSymbol *oldGraphSymbol = graph->symbol();
     bool graphSymbolUpdated = !oldGraphSymbol;
