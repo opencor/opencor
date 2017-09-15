@@ -673,17 +673,18 @@ int Property::integerValue() const
 {
     // Return our value as an integer, if it is of that type
 
-    return (mType == Integer)?mValue->text().toInt():0;
+    return mValue->text().toInt();
 }
 
 //==============================================================================
 
-void Property::setIntegerValue(const int &pIntegerValue)
+void Property::setIntegerValue(const int &pIntegerValue,
+                               const bool &pEmitSignal)
 {
     // Set our value, should it be of integer type
 
     if (mType == Integer)
-        setValue(QString::number(pIntegerValue));
+        setValue(QString::number(pIntegerValue), false, pEmitSignal);
 }
 
 //==============================================================================
@@ -692,7 +693,7 @@ double Property::doubleValue() const
 {
     // Return our value as a double, if it is of that type
 
-    return (mType == Double)?mValue->text().toDouble():0.0;
+    return mValue->text().toDouble();
 }
 
 //==============================================================================
@@ -701,12 +702,11 @@ void Property::setDoubleValue(const double &pDoubleValue,
                               const bool &pEmitSignal)
 {
     // Set our value, should it be of double type
+    // Note: we want as much precision as possible, hence we use a precision of
+    //       15 decimals (see http://en.wikipedia.org/wiki/Double_precision)...
 
-    if (mType == Double) {
+    if (mType == Double)
         setValue(QString::number(pDoubleValue, 'g', 15), false, pEmitSignal);
-        // Note: we want as much precision as possible, hence we use 15 (see
-        //       http://en.wikipedia.org/wiki/Double_precision)...
-    }
 }
 
 //==============================================================================
@@ -877,7 +877,7 @@ bool Property::booleanValue() const
 {
     // Return our value as a boolean, if it is of that type
 
-    return (mType == Boolean)?!mValue->text().compare(TrueValue):false;
+    return !mValue->text().compare(TrueValue);
 }
 
 //==============================================================================

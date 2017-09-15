@@ -221,7 +221,8 @@ public:
     void setIcon(const QIcon &pIcon);
 
     int integerValue() const;
-    void setIntegerValue(const int &pIntegerValue);
+    void setIntegerValue(const int &pIntegerValue,
+                         const bool &pEmitSignal = true);
 
     double doubleValue() const;
     void setDoubleValue(const double &pDoubleValue,
