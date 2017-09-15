@@ -300,6 +300,7 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
     propertyEditor->addListProperty(symbolProperty);
     propertyEditor->addIntegerGt0Property(8, symbolProperty);
     propertyEditor->addColorProperty(Qt::darkBlue, symbolProperty);
+    propertyEditor->addBooleanProperty(symbolProperty);
     propertyEditor->addColorProperty(Qt::darkBlue, symbolProperty);
 
     connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
@@ -871,17 +872,18 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     int symbolStyleValue = symbolStyleProperty->listValues().indexOf(symbolStyleProperty->listValue());
     QwtSymbol::Style symbolStyle = QwtSymbol::Style((symbolStyleValue > 5)?symbolStyleValue+2:symbolStyleValue-1);
     int symbolSize = symbolProperty->properties()[1]->integerValue();
-    QColor symbolColor = symbolProperty->properties()[2]->colorValue();
-    QColor symbolFilledColor = symbolProperty->properties()[3]->colorValue();
+    QPen symbolColor = QPen(symbolProperty->properties()[2]->colorValue());
+    bool symbolFill = symbolProperty->properties()[3]->booleanValue();
+    QBrush symbolFillColor = symbolFill?QBrush(symbolProperty->properties()[4]->colorValue()):QBrush();
 
     if (oldGraphSymbol) {
         graphSymbolUpdated =    (oldGraphSymbol->style() != symbolStyle)
                              || (oldGraphSymbol->size().width() != symbolSize)
-                             || (oldGraphSymbol->pen().color() != symbolColor)
-                             || (oldGraphSymbol->brush().color() != symbolFilledColor);
+                             || (oldGraphSymbol->pen() != symbolColor)
+                             || (oldGraphSymbol->brush() != symbolFillColor);
     }
 
-    graph->setSymbol(new QwtSymbol(symbolStyle, QBrush(symbolFilledColor), QPen(symbolColor),
+    graph->setSymbol(new QwtSymbol(symbolStyle, symbolFillColor, symbolColor,
                                    QSize(symbolSize, symbolSize)));
 
     // Let people know if the graph has been updated in some way or another
@@ -1013,7 +1015,8 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
                                                                        false);
         graphProperty->properties()[4]->properties()[1]->setName(tr("Size"));
         graphProperty->properties()[4]->properties()[2]->setName(tr("Colour"));
-        graphProperty->properties()[4]->properties()[3]->setName(tr("Fill colour"));
+        graphProperty->properties()[4]->properties()[3]->setName(tr("Filled"));
+        graphProperty->properties()[4]->properties()[4]->setName(tr("Fill colour"));
 
         // Keep track of the current model value, so that we can safely update
         // its list values and then select the correct model value back
