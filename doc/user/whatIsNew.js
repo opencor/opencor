@@ -37,6 +37,11 @@ var jsonData = { "versions": [
                        },
                        { "name": "Editing",
                          "entries": [
+                           { "type": "subCategory", "name": "Text-based view",
+                             "entries": [
+                               { "type": "Added", "description": "Line numbers." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
                                { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." }
