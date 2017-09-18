@@ -608,8 +608,15 @@ void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
                 // Accept the event
 
                 pEvent->accept();
-            } else if (pEvent->key() == Qt::Key_Equal) {
+            } else if (   (pEvent->key() == Qt::Key_Plus)
+                       || (pEvent->key() == Qt::Key_Equal)) {
                 zoomIn();
+
+                // Accept the event
+
+                pEvent->accept();
+            } else if (pEvent->key() == Qt::Key_Minus) {
+                zoomOut();
 
                 // Accept the event
 
@@ -649,6 +656,39 @@ void QScintillaWidget::wheelEvent(QWheelEvent *pEvent)
 
 //==============================================================================
 
+void QScintillaWidget::zoomIn()
+{
+    // Zoom in the default way and then update our margin line numbers width
+
+    QsciScintilla::zoomIn();
+
+    updateMarginLineNumbersWidth();
+}
+
+//==============================================================================
+
+void QScintillaWidget::zoomOut()
+{
+    // Zoom out the default way and then update our margin line numbers width
+
+    QsciScintilla::zoomOut();
+
+    updateMarginLineNumbersWidth();
+}
+
+//==============================================================================
+
+void QScintillaWidget::zoomTo(int pSize)
+{
+    // Zoom to the default way and then update our margin line numbers width
+
+    QsciScintilla::zoomTo(pSize);
+
+    updateMarginLineNumbersWidth();
+}
+
+//==============================================================================
+
 void QScintillaWidget::updateUi()
 {
     // Update our editing mode, if needed
@@ -668,8 +708,13 @@ void QScintillaWidget::updateUi()
 void QScintillaWidget::updateMarginLineNumbersWidth()
 {
     // Resize the margin line numbers width
+    // Note: the +6 is to ensure that the margin line numbers width is indeed
+    //       wide enough (there is clearly a 'problem' with the width computed
+    //       by Scintilla)...
 
-    setMarginWidth(SC_MARGIN_NUMBER, fontMetrics().width(QString::number(lines()))+6);
+    setMarginWidth(SC_MARGIN_NUMBER,
+                   SendScintilla(SCI_TEXTWIDTH, STYLE_LINENUMBER,
+                                 ScintillaBytesConstData(textAsBytes(QString::number(lines()))))+6);
 }
 
 //==============================================================================
