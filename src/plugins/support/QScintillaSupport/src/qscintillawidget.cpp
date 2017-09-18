@@ -56,7 +56,7 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     setFolding(QsciScintilla::BoxedTreeFoldStyle);
     setFrameShape(QFrame::NoFrame);
     setIndentationsUseTabs(false);
-    setMarginWidth(SC_MARGIN_NUMBER, 0);
+    setMarginLineNumbers(SC_MARGIN_NUMBER, true);
     setMatchedBraceBackgroundColor(Qt::white);
     setMatchedBraceForegroundColor(Qt::red);
     setTabWidth(4);
@@ -75,6 +75,7 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 #endif
 
     setFont(mFont);
+    setMarginsFont(mFont);
 
     // Use the given lexer
 
@@ -132,6 +133,12 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
     connect(this, SIGNAL(SCN_UPDATEUI(int)),
             this, SLOT(updateUi()));
+
+    // Keep track of changes to our editor and resize the margin line numbers
+    // accordingly
+
+    connect(this, SIGNAL(textChanged()),
+            this, SLOT(updateMarginLineNumbersWidth()));
 
     // Keep track of changes to our editor that may affect our ability to select
     // all of its text
@@ -654,6 +661,15 @@ void QScintillaWidget::updateUi()
 
         mEditingModeWidget->setText(mInsertMode?"INS":"OVR");
     }
+}
+
+//==============================================================================
+
+void QScintillaWidget::updateMarginLineNumbersWidth()
+{
+    // Resize the margin line numbers width
+
+    setMarginWidth(SC_MARGIN_NUMBER, fontMetrics().width(QString::number(lines()))+6);
 }
 
 //==============================================================================

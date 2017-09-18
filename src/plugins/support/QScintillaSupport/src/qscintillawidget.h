@@ -139,6 +139,8 @@ signals:
 private slots:
     void updateUi();
 
+    void updateMarginLineNumbersWidth();
+
     void checkCanSelectAll();
 
     void cursorPositionChanged(const int &pLine, const int &pColumn);
