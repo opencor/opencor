@@ -696,13 +696,6 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
     mProgress = -1;
 
-    // Retrieve our variable of integration, if possible
-
-    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-    bool validRuntime = runtime && runtime->isValid();
-
-    CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validRuntime?runtime->variableOfIntegration():0;
-
     // Clean up our output, if needed
 
     if (pReloadingView)
@@ -792,6 +785,11 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(sedmlFileIssue.message()));
         }
     }
+
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+    bool validRuntime = runtime && runtime->isValid();
+
+    CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validRuntime?runtime->variableOfIntegration():0;
 
     if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
         information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
