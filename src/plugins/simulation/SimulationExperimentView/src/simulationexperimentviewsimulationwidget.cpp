@@ -758,7 +758,9 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
             information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(combineArchiveIssue.message()));
         }
-    } else if (!sedmlFileIssues.isEmpty()) {
+    }
+
+    if (!sedmlFileIssues.isEmpty()) {
         // There is one or several issues with our SED-ML file, so list it/them
 
         foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, sedmlFileIssues) {
@@ -789,7 +791,9 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
             information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(sedmlFileIssue.message()));
         }
-    } else {
+    }
+
+    if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
         information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
         if (variableOfIntegration) {
@@ -838,7 +842,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
     output(information);
 
-    // Do further checks if we don't have any important SED-ML or COMBINE issues
+    // Check whether we have a valid simulation environment, but only if we
+    // don't have any blocking SED-ML or COMBINE issues
 
     SimulationExperimentViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
     bool validSimulationEnvironment = false;
