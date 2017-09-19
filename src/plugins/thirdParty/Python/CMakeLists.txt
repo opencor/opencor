@@ -126,12 +126,12 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f4d857d42e585223c71bc542653372353767b1fb
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 64d44c4da3bc594cd7e9768c1218bbea1999e462
-                                          811688579aeec4bcc9a8b52ee9d60ce72d6e7288
-                                          3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17)
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 40f6992a94c3354323909786867cc5ca2e2effd4
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 205e56193cf4d229ff89a8d352ddd560d5008c5c
+                                              60d22899a89eb0001b443d94f566fb87029f7759
+                                              3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
