@@ -827,12 +827,19 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                 information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
             } else {
                 // We don't have a valid runtime, so either there are some
-                // problems with the CellML file or its runtime
+                // problems with the CellML file, its runtime, or even the
+                // parent SED-ML file and/or COMBINE archive
+                // Note: in the case of problems with the SED-ML file and/or
+                //       COMBINE archive, we will already have listed the
+                //       problems, so no need to do anything more in those
+                //       cases...
 
-                foreach (const CellMLSupport::CellmlFileIssue &issue,
-                         runtime?runtime->issues():mSimulation->cellmlFile()->issues()) {
-                    information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
-                                                                                                                         issue.message());
+                if (sedmlFileIssues.isEmpty() && combineArchiveIssues.isEmpty()) {
+                    foreach (const CellMLSupport::CellmlFileIssue &issue,
+                             runtime?runtime->issues():mSimulation->cellmlFile()->issues()) {
+                        information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
+                                                                                                                             issue.message());
+                    }
                 }
             }
         }
