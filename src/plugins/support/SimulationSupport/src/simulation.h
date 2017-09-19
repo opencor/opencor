@@ -73,10 +73,13 @@ class SimulationWorker;
 //==============================================================================
 
 // We bind the SimulationData object to the the first parameter of `updateParameters()`
-// to create a function object that is then called when simulation parameters are updated
-// by the Python wrapper
+// to create a function object to be called when simulation parameters are updated
 
-typedef std::__bind<void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
+#if defined(_MSC_VER)
+    typedef std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData * const> SimulationDataUpdatedFunction;
+#else
+    typedef std::__bind<void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
+#endif
 
 //==============================================================================
 

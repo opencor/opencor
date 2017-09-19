@@ -222,8 +222,10 @@ error:
 
 //==============================================================================
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#if defined(__GNUC__)
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#endif
 
 // A `DataStoreValuesDict` is a dictionary sub-class for mapping between the next values
 // of a DataStoreVariables list and Python.
@@ -262,7 +264,9 @@ PyTypeObject DataStorePythonWrapper::DataStoreValuesDict_Type = {
     &PyDict_Type,                               /* tp_base */
 };
 
-#pragma GCC diagnostic pop
+#if defined(__GNUC__)
+#   pragma GCC diagnostic pop
+#endif
 
 //==============================================================================
 

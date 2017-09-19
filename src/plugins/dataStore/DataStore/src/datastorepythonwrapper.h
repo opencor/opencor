@@ -25,11 +25,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "datastoreglobal.h"
+
+//==============================================================================
+
 #include <PythonQt/PythonQtPythonInclude.h>
 
 //==============================================================================
 
 #include <QObject>
+
+//==============================================================================
+
+#include <functional>
 
 //==============================================================================
 
@@ -39,7 +47,12 @@ namespace OpenCOR {
 
 namespace SimulationSupport {
     class SimulationData;
+
+#if defined(_MSC_VER)
+    typedef std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData * const> SimulationDataUpdatedFunction;
+#else
     typedef std::__bind<void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
+#endif
 }   // namespace SimulationSupport
 
 //==============================================================================
@@ -71,12 +84,12 @@ public:
 
     static PyTypeObject DataStoreValuesDict_Type;
 
-    static PyObject * newNumPyArray(DataStoreArray *pDataStoreArray);
-    static PyObject * newNumPyArray(DataStoreVariable *pDataStoreVariable);
+    static DATASTORE_EXPORT PyObject * newNumPyArray(DataStoreArray *pDataStoreArray);
+    static DATASTORE_EXPORT PyObject * newNumPyArray(DataStoreVariable *pDataStoreVariable);
 
-    static PyObject *dataStoreValuesDict(const DataStoreVariables &pDataStoreVariables,
-                                         SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction=NULL);
-    static PyObject *dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
+    static DATASTORE_EXPORT PyObject *dataStoreValuesDict(const DataStoreVariables &pDataStoreVariables,
+                                                          SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction=NULL);
+    static DATASTORE_EXPORT PyObject *dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
 
 public slots:
     double value(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable, const qulonglong &pPosition) const;
