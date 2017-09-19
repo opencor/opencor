@@ -1453,7 +1453,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     foreach (const QString &solverProperty, solverProperties.keys()) {
         QString kisaoId = solverInterface->kisaoId(solverProperty);
 
-        if (!kisaoId.isEmpty()) {
+        if (kisaoId.isEmpty()) {
             voiSolverProperties += QString("<solverProperty %1=\"%2\" %3=\"%4\"/>").arg(SEDMLSupport::SolverPropertyId,
                                                                                         solverProperty,
                                                                                         SEDMLSupport::SolverPropertyValue,
