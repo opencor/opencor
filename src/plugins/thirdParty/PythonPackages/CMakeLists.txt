@@ -67,7 +67,7 @@ IF(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} cc2e641040bb118b2707c82e1cd1bcb4e9dc1834
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} b998b299c5940fc877f0b8b9b0a4e4564b20de8d
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 97949f3f839adab391fc785d8f7459f569f63a4f)

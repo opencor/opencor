@@ -63,10 +63,10 @@ IF(USE_PREBUILT_PYTHONQT_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} b113f8faccd45529684960c489a239ae5d900e5a
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 71ca3a9e26fcb7e5fa3f252958486a5b5fbb813b
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 79e213a4133960ad40c2016f3f0fb3ff5f3038c7
-                                              24da18bba076d5718f7676f2c066b96cd487bae3)
+                                  SHA1_VALUES 72eb94c7803909824ccf8811e405a60611eb73f0
+                                              a2cdf2e272d9680e5643457cbe7a89e7d7ed8384)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}

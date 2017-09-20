@@ -126,12 +126,12 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
 
     IF(WIN32)
         IF(RELEASE_MODE)
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f4d857d42e585223c71bc542653372353767b1fb
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 64d44c4da3bc594cd7e9768c1218bbea1999e462
-                                          811688579aeec4bcc9a8b52ee9d60ce72d6e7288
-                                          3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17)
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 40f6992a94c3354323909786867cc5ca2e2effd4
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 205e56193cf4d229ff89a8d352ddd560d5008c5c
+                                              60d22899a89eb0001b443d94f566fb87029f7759
+                                              3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -382,11 +382,11 @@ ELSE()
     # Use our newly installed python
 
     IF(WIN32)
-        SET(PYTHON_EXECUTABLE  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python.exe)
+        SET(PYTHON_EXECUTABLE  python.exe)
     ELSEIF(NOT APPLE)
-        SET(PYTHON_EXECUTABLE "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}"  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
+        SET(PYTHON_EXECUTABLE "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" python)
     ELSE()
-        SET(PYTHON_EXECUTABLE  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
+        SET(PYTHON_EXECUTABLE  python)
     ENDIF()
 
     # Clean our site-packages directory
@@ -402,6 +402,7 @@ ELSE()
 
     ExternalProject_Add_Step(${PACKAGE_BUILD} install_pip
         COMMAND ${PYTHON_EXECUTABLE} -s ${PROJECT_SOURCE_DIR}/scripts/get-pip.py
+        WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
         DEPENDEES clean_site
         )
 
@@ -419,6 +420,10 @@ ENDIF()
 
 # Allow other external projects to find our Python
 
+SET(PYTHON_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
+
+SET(PYTHON_ROOT_DIR ${ROOT_DIR} PARENT_SCOPE)
+
 IF(WIN32)
     SET(PYTHON_EXECUTABLE ${ROOT_DIR}/bin/python.exe PARENT_SCOPE)
 ELSE()
@@ -426,9 +431,8 @@ ELSE()
 ENDIF()
 
 SET(PYTHON_INCLUDE_DIR ${ROOT_DIR}/include PARENT_SCOPE)
-SET(PYTHON_LIBRARY ${ROOT_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
-SET(PYTHON_ROOT_DIR ${ROOT_DIR} PARENT_SCOPE)
 SET(PYTHON_SITE_PACKAGES_DIR ${ROOT_DIR}/${RUNTIME_DIR}/site-packages PARENT_SCOPE)
+
 SET(PYTHON_VERSION ${LIBRARY_VERSION} PARENT_SCOPE)
 SET(PYTHON_FULL_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS} PARENT_SCOPE)
 

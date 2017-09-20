@@ -25,6 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "pythonsupportglobal.h"
+
+//==============================================================================
+
 #include <PythonQt/PythonQt.h>
 
 //==============================================================================
@@ -41,14 +45,19 @@ namespace PythonSupport {
 
 //==============================================================================
 
+PYTHONSUPPORT_EXPORT
 void addInstanceDecorators(QObject *pQObject);
 
+PYTHONSUPPORT_EXPORT
 void addObject(PyObject *pObject, const QString &pName, QObject *pQObject);
 
+PYTHONSUPPORT_EXPORT
 QVariant evalScript(const QString &pScript);
 
+PYTHONSUPPORT_EXPORT
 void registerClass(const QMetaObject *pMetaObject);
 
+PYTHONSUPPORT_EXPORT
 PyObject *wrapQObject(QObject *pQObject);
 
 //==============================================================================

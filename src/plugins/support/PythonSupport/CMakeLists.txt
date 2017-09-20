@@ -4,6 +4,8 @@ PROJECT(PythonSupportPlugin)
 
 ADD_PLUGIN(PythonSupport
     SOURCES
+        ../../plugin.cpp
+        ../../pluginmanager.cpp
         ../../plugininfo.cpp
         ../../plugininterface.cpp
 
@@ -12,6 +14,9 @@ ADD_PLUGIN(PythonSupport
         src/pythonsupportplugin.cpp
 
     HEADERS_MOC
+        ../../plugin.h
+        ../../pluginmanager.h
+
         src/CTK/ctkAbstractPythonManager.h
         src/pythonsupportplugin.h
     PLUGINS

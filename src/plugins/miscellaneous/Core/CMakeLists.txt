@@ -78,6 +78,8 @@ ADD_PLUGIN(Core
         Widgets
         Xml
         XmlPatterns
+    SYSTEM_BINARIES
+        ${PYTHON_LIBRARY}
     TESTS
         clitests
         generaltests
