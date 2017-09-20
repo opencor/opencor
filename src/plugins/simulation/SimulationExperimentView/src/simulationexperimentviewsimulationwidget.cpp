@@ -1270,6 +1270,10 @@ QVariant SimulationExperimentViewSimulationWidget::value(Core::Property *pProper
     case Core::Property::Boolean:
         return pProperty->booleanValue();
     }
+
+    return QVariant();
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
 }
 
 //==============================================================================
@@ -1296,6 +1300,10 @@ QString SimulationExperimentViewSimulationWidget::stringValue(Core::Property *pP
     case Core::Property::Boolean:
         return QVariant(pProperty->booleanValue()).toString();
     }
+
+    return QString();
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
 }
 
 //==============================================================================
