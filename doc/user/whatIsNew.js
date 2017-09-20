@@ -103,6 +103,11 @@ var jsonData = { "versions": [
                              "entries": [
                                { "type": "Improved", "description": "Generation of error messages." }
                              ]
+                           },
+                           { "type": "subCategory", "name": "ZIP support",
+                             "entries": [
+                               { "type": "Improved", "description": "decompression." }
+                             ]
                            }
                          ]
                        }
