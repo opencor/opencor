@@ -275,6 +275,9 @@ public:
     QString listValue() const;
     void setListValue(const QString &pListValue);
 
+    int listValueIndex() const;
+    void setListValueIndex(const int &pListValueIndex);
+
     QString emptyListValue() const;
     void setEmptyListValue(const QString &pEmptyListValue);
 

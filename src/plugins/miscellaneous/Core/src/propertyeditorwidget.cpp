@@ -903,11 +903,35 @@ void Property::setListValue(const QString &pListValue)
     // Set our list value, if appropriate
 
     if (    (mType == List)
-        && !mListValues.isEmpty() && mValue->text().compare(pListValue)) {
+        && !mListValues.isEmpty() && listValue().compare(pListValue)) {
         int listValueIndex = mListValues.indexOf(pListValue);
 
         if (listValueIndex != -1)
             setValue(mListValues[listValueIndex]);
+    }
+}
+
+//==============================================================================
+
+int Property::listValueIndex() const
+{
+    // Return our list value index
+
+    return listValues().indexOf(listValue());
+}
+
+//==============================================================================
+
+void Property::setListValueIndex(const int &pListValueIndex)
+{
+    // Set our list value, if appropriate
+
+    if (    (mType == List)
+        && !mListValues.isEmpty()
+        && (pListValueIndex >= 0)
+        && (pListValueIndex < mListValues.count())
+        && (pListValueIndex != listValueIndex())) {
+        setValue(mListValues[pListValueIndex]);
     }
 }
 

@@ -1772,13 +1772,13 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                                                      SEDMLSupport::SymbolProperties,
                                                                                      SEDMLSupport::OpencorNamespace,
                                                                                      LineProperty.arg(SEDMLSupport::LineStyle,
-                                                                                                      lineProperties[0]->value())
+                                                                                                      sedmlFile.lineStyleValue(lineProperties[0]->listValueIndex()))
                                                                                     +LineProperty.arg(SEDMLSupport::LineWidth,
                                                                                                       lineProperties[1]->value())
                                                                                     +LineProperty.arg(SEDMLSupport::LineColor,
                                                                                                       lineProperties[2]->value()),
                                                                                      SymbolProperty.arg(SEDMLSupport::SymbolStyle,
-                                                                                                        stringValue(symbolProperties[0]))
+                                                                                                        sedmlFile.symbolStyleValue(symbolProperties[0]->listValueIndex()))
                                                                                     +SymbolProperty.arg(SEDMLSupport::SymbolSize,
                                                                                                         stringValue(symbolProperties[1]))
                                                                                     +SymbolProperty.arg(SEDMLSupport::SymbolColor,

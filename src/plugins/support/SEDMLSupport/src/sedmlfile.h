@@ -110,6 +110,12 @@ public:
     bool isValid();
     bool isSupported();
 
+    int lineStyleValueIndex(const QString &pLineStyleValue) const;
+    QString lineStyleValue(const int &pLineStyleValueIndex) const;
+
+    int symbolStyleValueIndex(const QString &pSymbolStyleValue) const;
+    QString symbolStyleValue(const int &pSymbolStyleValueIndex) const;
+
     CellMLSupport::CellmlFile * cellmlFile();
 
     SedmlFileIssues issues() const;
@@ -121,6 +127,9 @@ private:
 
     bool mNew;
     bool mLoadingNeeded;
+
+    QStringList mLineStyles;
+    QStringList mSymbolStyles;
 
     CellMLSupport::CellmlFile *mCellmlFile;
 

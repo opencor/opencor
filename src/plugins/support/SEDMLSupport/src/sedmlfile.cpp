@@ -68,6 +68,12 @@ SedmlFile::SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
     mOwnerFileName(pOwnerFileName),
     mSedmlDocument(0),
     mNew(pNew),
+    mLineStyles(QStringList() << "none" << "solid" << "dash" << "dot"
+                              << "dashdot" << "dashdotdot"),
+    mSymbolStyles(QStringList() << "none" << "circle" << "square" << "diamond"
+                                << "triangle" << "downTriangle" << "cross"
+                                << "xCross" << "horizontalLine"
+                                << "verticalLine" << "star"),
     mCellmlFile(0)
 {
     // Reset ourselves
@@ -799,6 +805,52 @@ bool SedmlFile::isSupported()
     }
 
     return true;
+}
+
+//==============================================================================
+
+int SedmlFile::lineStyleValueIndex(const QString &pLineStyleValue) const
+{
+    // Return the index of the given line style value
+
+    return mLineStyles.indexOf(pLineStyleValue);
+}
+
+//==============================================================================
+
+QString SedmlFile::lineStyleValue(const int &pLineStyleValueIndex) const
+{
+    // Return the line style value for the given index
+
+    if (   (pLineStyleValueIndex >= 0)
+        && (pLineStyleValueIndex < mLineStyles.count())) {
+        return mLineStyles[pLineStyleValueIndex];
+    } else {
+        return QString();
+    }
+}
+
+//==============================================================================
+
+int SedmlFile::symbolStyleValueIndex(const QString &pSymbolStyleValue) const
+{
+    // Return the index of the given symbol style value
+
+    return mSymbolStyles.indexOf(pSymbolStyleValue);
+}
+
+//==============================================================================
+
+QString SedmlFile::symbolStyleValue(const int &pSymbolStyleValueIndex) const
+{
+    // Return the symbol style value for the given index
+
+    if (   (pSymbolStyleValueIndex >= 0)
+        && (pSymbolStyleValueIndex < mSymbolStyles.count())) {
+        return mSymbolStyles[pSymbolStyleValueIndex];
+    } else {
+        return QString();
+    }
 }
 
 //==============================================================================
