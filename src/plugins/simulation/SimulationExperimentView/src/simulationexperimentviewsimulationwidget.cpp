@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "interfaces.h"
 #include "progressbarwidget.h"
 #include "sedmlinterface.h"
+#include "sedmlsupport.h"
 #include "sedmlsupportplugin.h"
 #include "simulation.h"
 #include "simulationexperimentviewcontentswidget.h"
@@ -1772,13 +1773,13 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                                                      SEDMLSupport::SymbolProperties,
                                                                                      SEDMLSupport::OpencorNamespace,
                                                                                      LineProperty.arg(SEDMLSupport::LineStyle,
-                                                                                                      sedmlFile.lineStyleValue(lineProperties[0]->listValueIndex()))
+                                                                                                      SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
                                                                                     +LineProperty.arg(SEDMLSupport::LineWidth,
                                                                                                       lineProperties[1]->value())
                                                                                     +LineProperty.arg(SEDMLSupport::LineColor,
                                                                                                       lineProperties[2]->value()),
                                                                                      SymbolProperty.arg(SEDMLSupport::SymbolStyle,
-                                                                                                        sedmlFile.symbolStyleValue(symbolProperties[0]->listValueIndex()))
+                                                                                                        SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
                                                                                     +SymbolProperty.arg(SEDMLSupport::SymbolSize,
                                                                                                         stringValue(symbolProperties[1]))
                                                                                     +SymbolProperty.arg(SEDMLSupport::SymbolColor,
