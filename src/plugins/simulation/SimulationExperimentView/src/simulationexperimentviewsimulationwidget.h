@@ -239,6 +239,7 @@ private:
                          const qulonglong &pSize);
 
     QVariant value(Core::Property *pProperty) const;
+    QString stringValue(Core::Property *pProperty) const;
 
     void updateSimulationProperties(Core::Property *pProperty = 0);
     void updateSolversProperties(Core::Property *pProperty = 0);

@@ -64,6 +64,22 @@ static const auto SolverPropertyId    = QStringLiteral("id");
 static const auto SolverPropertyValue = QStringLiteral("value");
 static const auto NlaSolver           = QStringLiteral("nlaSolver");
 static const auto NlaSolverName       = QStringLiteral("name");
+static const auto LineProperties      = QStringLiteral("lineProperties");
+static const auto LineProperty        = QStringLiteral("lineProperty");
+static const auto LinePropertyId      = QStringLiteral("id");
+static const auto LinePropertyValue   = QStringLiteral("value");
+static const auto LineStyle           = QStringLiteral("style");
+static const auto LineWidth           = QStringLiteral("width");
+static const auto LineColor           = QStringLiteral("color");
+static const auto SymbolProperties    = QStringLiteral("symbolProperties");
+static const auto SymbolProperty      = QStringLiteral("symbolProperty");
+static const auto SymbolPropertyId    = QStringLiteral("id");
+static const auto SymbolPropertyValue = QStringLiteral("value");
+static const auto SymbolStyle         = QStringLiteral("style");
+static const auto SymbolSize          = QStringLiteral("size");
+static const auto SymbolColor         = QStringLiteral("color");
+static const auto SymbolFilled        = QStringLiteral("filled");
+static const auto SymbolFillColor     = QStringLiteral("fillColor");
 
 //==============================================================================
 

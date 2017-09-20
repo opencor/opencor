@@ -1269,9 +1269,32 @@ QVariant SimulationExperimentViewSimulationWidget::value(Core::Property *pProper
         return pProperty->listValue();
     case Core::Property::Boolean:
         return pProperty->booleanValue();
+    }
+}
+
+//==============================================================================
+
+QString SimulationExperimentViewSimulationWidget::stringValue(Core::Property *pProperty) const
+{
+    switch (pProperty->type()) {
+    case Core::Property::Section:
+        // Not a relevant property, so return an empty string
         // Note: we should never reach this point...
 
-        return QVariant();
+        return QString();
+    case Core::Property::String:
+    case Core::Property::Color:
+        return pProperty->value();
+    case Core::Property::Integer:
+    case Core::Property::IntegerGt0:
+        return QString::number(pProperty->integerValue());
+    case Core::Property::Double:
+    case Core::Property::DoubleGt0:
+        return QString::number(pProperty->doubleValue(), 'g', 15);
+    case Core::Property::List:
+        return pProperty->listValue();
+    case Core::Property::Boolean:
+        return QVariant(pProperty->booleanValue()).toString();
     }
 }
 
@@ -1719,6 +1742,43 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
                 sedmlCurve->setYDataReference(sedmlDataGeneratorIdY);
                 sedmlCurve->setLogY(logY);
+
+                // Customise our curve using an annotation
+
+                static const QString LineProperty = QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::LineProperty,
+                                                                                             SEDMLSupport::LinePropertyId,
+                                                                                             "%1",
+                                                                                             SEDMLSupport::LinePropertyValue,
+                                                                                             "%2");
+                static const QString SymbolProperty = QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SymbolProperty,
+                                                                                               SEDMLSupport::SymbolPropertyId,
+                                                                                               "%1",
+                                                                                               SEDMLSupport::SymbolPropertyValue,
+                                                                                               "%2");
+
+                Core::Properties lineProperties = property->properties()[3]->properties();
+                Core::Properties symbolProperties = property->properties()[4]->properties();
+
+                sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%3\">%4</%1>"
+                                                     "<%2 xmlns=\"%3\">%5</%2>").arg(SEDMLSupport::LineProperties,
+                                                                                     SEDMLSupport::SymbolProperties,
+                                                                                     SEDMLSupport::OpencorNamespace,
+                                                                                     LineProperty.arg(SEDMLSupport::LineStyle,
+                                                                                                      lineProperties[0]->value())
+                                                                                    +LineProperty.arg(SEDMLSupport::LineWidth,
+                                                                                                      lineProperties[1]->value())
+                                                                                    +LineProperty.arg(SEDMLSupport::LineColor,
+                                                                                                      lineProperties[2]->value()),
+                                                                                     SymbolProperty.arg(SEDMLSupport::SymbolStyle,
+                                                                                                        stringValue(symbolProperties[0]))
+                                                                                    +SymbolProperty.arg(SEDMLSupport::SymbolSize,
+                                                                                                        stringValue(symbolProperties[1]))
+                                                                                    +SymbolProperty.arg(SEDMLSupport::SymbolColor,
+                                                                                                        stringValue(symbolProperties[2]))
+                                                                                    +SymbolProperty.arg(SEDMLSupport::SymbolFilled,
+                                                                                                        stringValue(symbolProperties[3]))
+                                                                                    +SymbolProperty.arg(SEDMLSupport::SymbolFillColor,
+                                                                                                        stringValue(symbolProperties[4]))).toStdString());
             }
         }
     }
