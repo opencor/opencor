@@ -1251,16 +1251,24 @@ SimulationSupport::Simulation * SimulationExperimentViewSimulationWidget::simula
 QVariant SimulationExperimentViewSimulationWidget::value(Core::Property *pProperty) const
 {
     switch (pProperty->type()) {
+    case Core::Property::Section:
+        // Not a relevant property, so return an empty variant
+        // Note: we should never reach this point...
+
+        return QVariant();
+    case Core::Property::String:
+    case Core::Property::Color:
+        return pProperty->value();
     case Core::Property::Integer:
+    case Core::Property::IntegerGt0:
         return pProperty->integerValue();
     case Core::Property::Double:
+    case Core::Property::DoubleGt0:
         return pProperty->doubleValue();
     case Core::Property::List:
         return pProperty->listValue();
     case Core::Property::Boolean:
         return pProperty->booleanValue();
-    default:
-        // Not a relevant property, so return nothing
         // Note: we should never reach this point...
 
         return QVariant();
@@ -2222,7 +2230,11 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
 
                     break;
                 case Core::Property::Color:
-                    solverProperty->setColorValue(solverPropertyValue.toString());
+#ifdef QT_DEBUG
+                    // We should never come here...
+
+                    qFatal("FATAL ERROR | %s:%d: the solver property cannot be of colour type.", __FILE__, __LINE__);
+#endif
 
                     break;
                 }
