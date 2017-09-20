@@ -1143,8 +1143,21 @@ bool QZipReader::extractAll(const QString &destinationDir) const
         if (fi.isDir) {
             if (!baseDir.mkpath(fi.filePath))
                 return false;
+/*---OPENCOR---
             if (!QFile::setPermissions(absPath, fi.permissions))
                 return false;
+*/
+//---OPENCOR--- BEGIN
+            QFile::Permissions fiPermissions = fi.permissions;
+            if (fiPermissions == QFile::Permissions()) {
+                fiPermissions =  QFileDevice::ReadOwner|QFileDevice::WriteOwner|QFileDevice::ExeOwner
+                                |QFileDevice::ReadUser|QFileDevice::WriteUser|QFileDevice::ExeUser
+                                |QFileDevice::ReadGroup|QFileDevice::ExeGroup
+                                |QFileDevice::ReadOther|QFileDevice::ExeOther;
+            }
+            if (!QFile::setPermissions(absPath, fiPermissions))
+                return false;
+//---OPENCOR--- END
         }
     }
 
@@ -1190,7 +1203,19 @@ bool QZipReader::extractAll(const QString &destinationDir) const
             if (!f.open(QIODevice::WriteOnly))
                 return false;
             f.write(fileData(fi.filePath));
+/*---OPENCOR---
             f.setPermissions(fi.permissions);
+*/
+//---OPENCOR--- BEGIN
+            QFile::Permissions fiPermissions = fi.permissions;
+            if (fiPermissions == QFile::Permissions()) {
+                fiPermissions =  QFileDevice::ReadOwner|QFileDevice::WriteOwner
+                                |QFileDevice::ReadUser|QFileDevice::WriteUser
+                                |QFileDevice::ReadGroup
+                                |QFileDevice::ReadOther;
+            }
+            f.setPermissions(fiPermissions);
+//---OPENCOR--- END
             f.close();
         }
     }
