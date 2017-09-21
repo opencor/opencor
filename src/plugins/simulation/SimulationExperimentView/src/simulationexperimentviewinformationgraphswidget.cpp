@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QColorDialog>
 #include <QFileInfo>
 #include <QHeaderView>
 #include <QMenu>
@@ -76,6 +77,7 @@ SimulationExperimentViewInformationGraphsWidget::SimulationExperimentViewInforma
     mRemoveAllGraphsAction = Core::newAction(this);
     mSelectAllGraphsAction = Core::newAction(this);
     mUnselectAllGraphsAction = Core::newAction(this);
+    mSelectColorAction = Core::newAction(this);
 
     connect(mAddGraphAction, SIGNAL(triggered(bool)),
             this, SLOT(addGraph()));
@@ -87,6 +89,8 @@ SimulationExperimentViewInformationGraphsWidget::SimulationExperimentViewInforma
             this, SLOT(selectAllGraphs()));
     connect(mUnselectAllGraphsAction, SIGNAL(triggered(bool)),
             this, SLOT(unselectAllGraphs()));
+    connect(mSelectColorAction, SIGNAL(triggered(bool)),
+            this, SLOT(selectColor()));
 
     mContextMenu->addAction(mAddGraphAction);
     mContextMenu->addSeparator();
@@ -95,6 +99,8 @@ SimulationExperimentViewInformationGraphsWidget::SimulationExperimentViewInforma
     mContextMenu->addSeparator();
     mContextMenu->addAction(mSelectAllGraphsAction);
     mContextMenu->addAction(mUnselectAllGraphsAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mSelectColorAction);
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -118,6 +124,8 @@ void SimulationExperimentViewInformationGraphsWidget::retranslateUi()
                                      tr("Select all the graphs"));
     I18nInterface::retranslateAction(mUnselectAllGraphsAction, tr("Unselect All Graphs"),
                                      tr("Unselect all the graphs"));
+    I18nInterface::retranslateAction(mSelectColorAction, tr("Select Colour..."),
+                                     tr("Select a colour"));
 
     // Retranslate all our property editors
 
@@ -427,6 +435,21 @@ void SimulationExperimentViewInformationGraphsWidget::unselectAllGraphs()
 
 //==============================================================================
 
+void SimulationExperimentViewInformationGraphsWidget::selectColor()
+{
+    // Select a colour and assign it to the current property
+
+    QColorDialog colorDialog(this);
+
+    if (colorDialog.exec()) {
+        Core::Property *crtProperty = mPropertyEditor->currentProperty();
+
+        crtProperty->setColorValue(colorDialog.currentColor());
+    }
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphsWidget::fileRenamed(const QString &pOldFileName,
                                                                   const QString &pNewFileName)
 {
@@ -592,6 +615,9 @@ void SimulationExperimentViewInformationGraphsWidget::propertyEditorContextMenu(
 
     mSelectAllGraphsAction->setEnabled(canSelectAllGraphs);
     mUnselectAllGraphsAction->setEnabled(canUnselectAllGraphs);
+
+    mSelectColorAction->setVisible(    crtProperty
+                                   && (crtProperty->type() == Core::Property::Color));
 
     // Show the context menu, or not, depending on the type of property we are
     // dealing with, if any

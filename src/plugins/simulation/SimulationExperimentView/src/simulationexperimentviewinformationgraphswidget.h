@@ -116,6 +116,7 @@ private:
     QAction *mRemoveAllGraphsAction;
     QAction *mSelectAllGraphsAction;
     QAction *mUnselectAllGraphsAction;
+    QAction *mSelectColorAction;
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
@@ -167,6 +168,7 @@ private slots:
     void removeAllGraphs();
     void selectAllGraphs();
     void unselectAllGraphs();
+    void selectColor();
 
     void propertyEditorContextMenu(const QPoint &pPosition) const;
 
