@@ -140,16 +140,16 @@
         <translation>Croix en X</translation>
     </message>
     <message>
-        <source>Star</source>
-        <translation>Étoile</translation>
-    </message>
-    <message>
         <source>Horizontal Line</source>
         <translation>Ligne Horizontale</translation>
     </message>
     <message>
         <source>Vertical Line</source>
         <translation>Ligne Verticale</translation>
+    </message>
+    <message>
+        <source>Star</source>
+        <translation>Étoile</translation>
     </message>
     <message>
         <source>Size</source>
