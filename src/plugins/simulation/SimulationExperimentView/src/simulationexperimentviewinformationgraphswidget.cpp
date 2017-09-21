@@ -483,8 +483,7 @@ Core::Properties SimulationExperimentViewInformationGraphsWidget::graphPropertie
             // graph applies) has either a value of "Current" or that of the
             // given file name
 
-            if (   (property->type() == Core::Property::Section)
-                && property->isChecked()) {
+            if (property->isChecked()) {
                 QString modelPropertyValue = property->properties().first()->value();
 
                 if (   !modelPropertyValue.compare(tr("Current"))
@@ -567,12 +566,12 @@ void SimulationExperimentViewInformationGraphsWidget::propertyEditorContextMenu(
     // Show the context menu, or not, depending on the type of property we are
     // dealing with, if any
 
-    if (   !crtProperty
-        || (crtProperty->type() == Core::Property::Section)
-        || (!crtProperty->name().compare(tr("Model")))) {
-        mContextMenu->exec(QCursor::pos());
-    } else {
+    if (   crtProperty
+        && (   !crtProperty->name().compare(tr("X"))
+            || !crtProperty->name().compare(tr("Y")))) {
         mParametersContextMenu->exec(QCursor::pos());
+    } else {
+        mContextMenu->exec(QCursor::pos());
     }
 }
 

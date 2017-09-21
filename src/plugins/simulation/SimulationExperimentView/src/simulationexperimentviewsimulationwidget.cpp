@@ -1058,8 +1058,8 @@ QIcon SimulationExperimentViewSimulationWidget::fileTabIcon() const
                                        mProgressBarWidget->height()+2);
         QPainter tabBarPixmapPainter(&tabBarPixmap);
 
-        tabBarPixmapPainter.setBrush(QBrush(Core::windowColor()));
-        tabBarPixmapPainter.setPen(QPen(Core::borderColor()));
+        tabBarPixmapPainter.setBrush(Core::windowColor());
+        tabBarPixmapPainter.setPen(Core::borderColor());
 
         tabBarPixmapPainter.drawRect(0, 0, tabBarPixmap.width()-1, tabBarPixmap.height()-1);
         tabBarPixmapPainter.fillRect(1, 1, mProgress, tabBarPixmap.height()-2,
@@ -1246,6 +1246,10 @@ SimulationSupport::Simulation * SimulationExperimentViewSimulationWidget::simula
 QVariant SimulationExperimentViewSimulationWidget::value(Core::Property *pProperty) const
 {
     switch (pProperty->type()) {
+    case Core::Property::Section:
+        return QVariant();
+    case Core::Property::String:
+        return pProperty->value();
     case Core::Property::Integer:
         return pProperty->integerValue();
     case Core::Property::Double:
@@ -1254,12 +1258,11 @@ QVariant SimulationExperimentViewSimulationWidget::value(Core::Property *pProper
         return pProperty->listValue();
     case Core::Property::Boolean:
         return pProperty->booleanValue();
-    default:
-        // Not a relevant property, so return nothing
-        // Note: we should never reach this point...
-
-        return QVariant();
     }
+
+    return QVariant();
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
 }
 
 //==============================================================================
@@ -1480,10 +1483,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
                                                                             solverProperties.value(solverProperty).toString());
         }
 
-        pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" name=\"%3\">%4</%1>").arg(SEDMLSupport::NlaSolver,
-                                                                                               SEDMLSupport::OpencorNamespace,
-                                                                                               mSimulation->data()->nlaSolverName(),
-                                                                                               nlaSolverProperties).toStdString());
+        pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" %3=\"%4\">%5</%1>").arg(SEDMLSupport::NlaSolver,
+                                                                                             SEDMLSupport::OpencorNamespace,
+                                                                                             SEDMLSupport::NlaSolverName,
+                                                                                             mSimulation->data()->nlaSolverName(),
+                                                                                             nlaSolverProperties).toStdString());
     }
 
     // Create and customise a task for our given SED-ML simulation
@@ -2125,15 +2129,15 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
     SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
 
     libsedml::SedDocument *sedmlDocument = mSimulation->sedmlFile()->sedmlDocument();
-    libsedml::SedUniformTimeCourse *uniformTimeCourseSimulation = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
-    libsedml::SedOneStep *oneStepSimulation = static_cast<libsedml::SedOneStep *>(sedmlDocument->getSimulation(1));
+    libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
+    libsedml::SedOneStep *sedmlOneStep = static_cast<libsedml::SedOneStep *>(sedmlDocument->getSimulation(1));
 
-    double startingPoint = uniformTimeCourseSimulation->getOutputStartTime();
-    double endingPoint = uniformTimeCourseSimulation->getOutputEndTime();
-    double pointInterval = (endingPoint-startingPoint)/uniformTimeCourseSimulation->getNumberOfPoints();
+    double startingPoint = sedmlUniformTimeCourse->getOutputStartTime();
+    double endingPoint = sedmlUniformTimeCourse->getOutputEndTime();
+    double pointInterval = (endingPoint-startingPoint)/sedmlUniformTimeCourse->getNumberOfPoints();
 
-    if (oneStepSimulation)
-        endingPoint += oneStepSimulation->getStep();
+    if (sedmlOneStep)
+        endingPoint += sedmlOneStep->getStep();
 
     simulationWidget->startingPointProperty()->setDoubleValue(startingPoint);
     simulationWidget->endingPointProperty()->setDoubleValue(endingPoint);
@@ -2149,11 +2153,11 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
     SimulationExperimentViewInformationSolversWidgetData *solverData = (mSimulation->cellmlFile()->runtime()->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?
                                                                            informationWidget->solversWidget()->odeSolverData():
                                                                            informationWidget->solversWidget()->daeSolverData();
-    const libsedml::SedAlgorithm *algorithm = uniformTimeCourseSimulation->getAlgorithm();
+    const libsedml::SedAlgorithm *sedmlAlgorithm = sedmlUniformTimeCourse->getAlgorithm();
     SolverInterface *usedSolverInterface = 0;
     SolverInterfaces solverInterfaces = Core::solverInterfaces();
     Core::Properties solverProperties = Core::Properties();
-    QString kisaoId = QString::fromStdString(algorithm->getKisaoID());
+    QString kisaoId = QString::fromStdString(sedmlAlgorithm->getKisaoID());
 
     foreach (SolverInterface *solverInterface, solverInterfaces) {
         if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
@@ -2173,15 +2177,15 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
         return false;
     }
 
-    for (int i = 0, iMax = algorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
-        const libsedml::SedAlgorithmParameter *algorithmParameter = algorithm->getAlgorithmParameter(i);
-        QString kisaoId = QString::fromStdString(algorithmParameter->getKisaoID());
+    for (int i = 0, iMax = sedmlAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
+        const libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->getAlgorithmParameter(i);
+        QString kisaoId = QString::fromStdString(sedmlAlgorithmParameter->getKisaoID());
         QString id = usedSolverInterface->id(kisaoId);
         bool propertySet = false;
 
         foreach (Core::Property *solverProperty, solverProperties) {
             if (!solverProperty->id().compare(id)) {
-                QVariant solverPropertyValue = QString::fromStdString(algorithmParameter->getValue());
+                QVariant solverPropertyValue = QString::fromStdString(sedmlAlgorithmParameter->getValue());
 
                 switch (solverProperty->type()) {
                 case Core::Property::Section:
@@ -2228,19 +2232,19 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
         }
     }
 
-    libsbml::XMLNode *annotation = algorithm->getAnnotation();
+    libsbml::XMLNode *annotation = sedmlAlgorithm->getAnnotation();
 
     if (annotation) {
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const XMLNode &node = annotation->getChild(i);
+            const XMLNode &solverPropertiesNode = annotation->getChild(i);
 
-            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                || QString::fromStdString(node.getName()).compare(SEDMLSupport::SolverProperties)) {
+            if (   QString::fromStdString(solverPropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(solverPropertiesNode.getName()).compare(SEDMLSupport::SolverProperties)) {
                 continue;
             }
 
-            for (uint j = 0, jMax = node.getNumChildren(); j < jMax; ++j) {
-                const XMLNode &solverPropertyNode = node.getChild(j);
+            for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
+                const XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
 
                 if (   QString::fromStdString(solverPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                     || QString::fromStdString(solverPropertyNode.getName()).compare(SEDMLSupport::SolverProperty)) {
@@ -2271,7 +2275,7 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
         }
     }
 
-    annotation = uniformTimeCourseSimulation->getAnnotation();
+    annotation = sedmlUniformTimeCourse->getAnnotation();
 
     if (annotation) {
         bool mustHaveNlaSolver = false;
@@ -2334,24 +2338,24 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
     // Customise our graphs widget
 
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
-        libsedml::SedPlot2D *plot = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
+        libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
         GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
 
         graphPanel->removeAllGraphs();
 
-        for (uint j = 0, jMax = plot->getNumCurves(); j < jMax; ++j) {
-            libsedml::SedCurve *curve = plot->getCurve(j);
+        for (uint j = 0, jMax = sedmlPlot2d->getNumCurves(); j < jMax; ++j) {
+            libsedml::SedCurve *sedmlCurve = sedmlPlot2d->getCurve(j);
 
             if (!j) {
-                graphPanel->plot()->setLogarithmicXAxis(curve->getLogX());
-                graphPanel->plot()->setLogarithmicYAxis(curve->getLogY());
+                graphPanel->plot()->setLogarithmicXAxis(sedmlCurve->getLogX());
+                graphPanel->plot()->setLogarithmicYAxis(sedmlCurve->getLogY());
             }
 
-            CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(curve->getXDataReference())->getVariable(0));
-            CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(sedmlDocument->getDataGenerator(curve->getYDataReference())->getVariable(0));
+            CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getXDataReference())->getVariable(0));
+            CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getYDataReference())->getVariable(0));
 
             if (!xParameter || !yParameter) {
-                simulationError(tr("the requested curve (%1) could not be set").arg(QString::fromStdString(curve->getId())),
+                simulationError(tr("the requested curve (%1) could not be set").arg(QString::fromStdString(sedmlCurve->getId())),
                                 InvalidSimulationEnvironment);
 
                 return false;
