@@ -333,17 +333,17 @@ bool SedmlFile::algorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm
 
     if (annotation) {
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const XMLNode &node = annotation->getChild(i);
+            const XMLNode &solverPropertiesNode = annotation->getChild(i);
 
-            if (   QString::fromStdString(node.getURI()).compare(OpencorNamespace)
-                || QString::fromStdString(node.getName()).compare(SolverProperties)) {
+            if (   QString::fromStdString(solverPropertiesNode.getURI()).compare(OpencorNamespace)
+                || QString::fromStdString(solverPropertiesNode.getName()).compare(SolverProperties)) {
                 continue;
             }
 
             bool validSolverProperties = true;
 
-            for (uint j = 0, jMax = node.getNumChildren(); j < jMax; ++j) {
-                const XMLNode &solverPropertyNode = node.getChild(j);
+            for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
+                const XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
 
                 if (   QString::fromStdString(solverPropertyNode.getURI()).compare(OpencorNamespace)
                     || QString::fromStdString(solverPropertyNode.getName()).compare(SolverProperty)) {
