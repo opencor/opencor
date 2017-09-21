@@ -1754,16 +1754,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
                 // Customise our curve using an annotation
 
-                static const QString LineProperty = QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::LineProperty,
-                                                                                             SEDMLSupport::LinePropertyId,
-                                                                                             "%1",
-                                                                                             SEDMLSupport::LinePropertyValue,
-                                                                                             "%2");
-                static const QString SymbolProperty = QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SymbolProperty,
-                                                                                               SEDMLSupport::SymbolPropertyId,
-                                                                                               "%1",
-                                                                                               SEDMLSupport::SymbolPropertyValue,
-                                                                                               "%2");
+                static const QString CurveProperty = QString("<%1>%2</%1>");
 
                 Core::Properties lineProperties = property->properties()[3]->properties();
                 Core::Properties symbolProperties = property->properties()[4]->properties();
@@ -1775,22 +1766,22 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                                    SEDMLSupport::OpencorNamespace,
                                                                    SEDMLSupport::LineProperties,
                                                                    SEDMLSupport::SymbolProperties,
-                                                                   LineProperty.arg(SEDMLSupport::LineStyle,
-                                                                                    SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
-                                                                  +LineProperty.arg(SEDMLSupport::LineWidth,
-                                                                                    lineProperties[1]->value())
-                                                                  +LineProperty.arg(SEDMLSupport::LineColor,
-                                                                                    lineProperties[2]->value()),
-                                                                   SymbolProperty.arg(SEDMLSupport::SymbolStyle,
-                                                                                      SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
-                                                                  +SymbolProperty.arg(SEDMLSupport::SymbolSize,
-                                                                                      stringValue(symbolProperties[1]))
-                                                                  +SymbolProperty.arg(SEDMLSupport::SymbolColor,
-                                                                                      stringValue(symbolProperties[2]))
-                                                                  +SymbolProperty.arg(SEDMLSupport::SymbolFilled,
-                                                                                      stringValue(symbolProperties[3]))
-                                                                  +SymbolProperty.arg(SEDMLSupport::SymbolFillColor,
-                                                                                      stringValue(symbolProperties[4]))).toStdString());
+                                                                   CurveProperty.arg(SEDMLSupport::LineStyle,
+                                                                                     SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
+                                                                  +CurveProperty.arg(SEDMLSupport::LineWidth,
+                                                                                     stringValue(lineProperties[1]))
+                                                                  +CurveProperty.arg(SEDMLSupport::LineColor,
+                                                                                     stringValue(lineProperties[2])),
+                                                                   CurveProperty.arg(SEDMLSupport::SymbolStyle,
+                                                                                     SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
+                                                                  +CurveProperty.arg(SEDMLSupport::SymbolSize,
+                                                                                     stringValue(symbolProperties[1]))
+                                                                  +CurveProperty.arg(SEDMLSupport::SymbolColor,
+                                                                                     stringValue(symbolProperties[2]))
+                                                                  +CurveProperty.arg(SEDMLSupport::SymbolFilled,
+                                                                                     stringValue(symbolProperties[3]))
+                                                                  +CurveProperty.arg(SEDMLSupport::SymbolFillColor,
+                                                                                     stringValue(symbolProperties[4]))).toStdString());
             }
         }
     }
