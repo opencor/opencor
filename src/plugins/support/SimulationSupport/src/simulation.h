@@ -77,8 +77,10 @@ class SimulationWorker;
 
 #if defined(_MSC_VER)
     typedef std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData * const> SimulationDataUpdatedFunction;
-#else
+#elif defined(__APPLE__)
     typedef std::__bind<void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
+#else
+    typedef std::_Bind_helper<false, void (*)(SimulationData *), SimulationData *>::type SimulationDataUpdatedFunction;
 #endif
 
 //==============================================================================
