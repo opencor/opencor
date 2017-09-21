@@ -802,6 +802,92 @@ bool SedmlFile::isSupported()
 
                 return false;
             }
+
+            libsbml::XMLNode *curveAnnotation = curve->getAnnotation();
+
+            if (curveAnnotation) {
+                for (uint i = 0, iMax = curveAnnotation->getNumChildren(); i < iMax; ++i) {
+                    const XMLNode &curvePropertiesNode = curveAnnotation->getChild(i);
+
+                    if (   QString::fromStdString(curvePropertiesNode.getURI()).compare(OpencorNamespace)
+                        || QString::fromStdString(curvePropertiesNode.getName()).compare(CurveProperties)) {
+                        continue;
+                    }
+
+                    for (uint j = 0, jMax = curvePropertiesNode.getNumChildren(); j < jMax; ++j) {
+                        static const QRegularExpression ColorRegEx = QRegularExpression("^#[[:xdigit:]]{6}$");
+
+                        const XMLNode &lineOrSymbolPropertiesNode = curvePropertiesNode.getChild(j);
+                        QString lineOrSymbolPropertiesNodeName = QString::fromStdString(lineOrSymbolPropertiesNode.getName());
+                        bool isLinePropertiesNode = !lineOrSymbolPropertiesNodeName.compare(LineProperties);
+                        bool isSymbolPropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SymbolProperties);
+
+                        if (!isLinePropertiesNode && !isSymbolPropertiesNode)
+                            continue;
+
+                        if (isLinePropertiesNode) {
+                            for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
+                                const XMLNode &linePropertyNode = lineOrSymbolPropertiesNode.getChild(k);
+                                QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
+                                bool linePropertyNodeHasOneChild = linePropertyNode.getNumChildren() == 1;
+                                QString linePropertyNodeValue = linePropertyNodeHasOneChild?QString::fromStdString(linePropertyNode.getChild(0).getCharacters()):QString();
+
+                                if (!linePropertyNodeName.compare(LineStyle)) {
+//---ISSUE591--- TO BE DONE...
+                                } else if (!linePropertyNodeName.compare(LineWidth)) {
+//---ISSUE591--- TO BE DONE...
+                                } else if (   !linePropertyNodeName.compare(LineColor)
+                                           && !ColorRegEx.match(linePropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                              linePropertyNode.getLine(),
+                                                              linePropertyNode.getColumn(),
+                                                              tr("the 'lineColor' property must have a value of '#RRGGBB'"));
+
+                                    return false;
+                                }
+                            }
+                        } else {
+                            for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
+                                const XMLNode &symbolPropertyNode = lineOrSymbolPropertiesNode.getChild(k);
+                                QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
+                                bool symbolPropertyNodeHasOneChild = symbolPropertyNode.getNumChildren() == 1;
+                                QString symbolPropertyNodeValue = symbolPropertyNodeHasOneChild?QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters()):QString();
+
+                                if (!symbolPropertyNodeName.compare(SymbolStyle)) {
+//---ISSUE591--- TO BE DONE...
+                                } else if (!symbolPropertyNodeName.compare(SymbolSize)) {
+//---ISSUE591--- TO BE DONE...
+                                } else if (   !symbolPropertyNodeName.compare(SymbolColor)
+                                           && !ColorRegEx.match(symbolPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                              symbolPropertyNode.getLine(),
+                                                              symbolPropertyNode.getColumn(),
+                                                              tr("the 'symbolColor' property must have a value of '#RRGGBB'"));
+
+                                    return false;
+                                } else if (   !symbolPropertyNodeName.compare(SymbolFilled)
+                                           &&  symbolPropertyNodeValue.compare("true")
+                                           && symbolPropertyNodeValue.compare("false")) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                              symbolPropertyNode.getLine(),
+                                                              symbolPropertyNode.getColumn(),
+                                                              tr("the 'symbolFilled' property must have a value of 'true' or 'false'"));
+
+                                    return false;
+                                } else if (   !symbolPropertyNodeName.compare(SymbolFillColor)
+                                           && !ColorRegEx.match(symbolPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                              symbolPropertyNode.getLine(),
+                                                              symbolPropertyNode.getColumn(),
+                                                              tr("the 'symbolFillColor' property must have a value of '#RRGGBB'"));
+
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
