@@ -122,8 +122,6 @@ private:
     SedmlFileIssues mIssues;
 
     virtual void reset();
-
-    bool algorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm);
 };
 
 //==============================================================================
