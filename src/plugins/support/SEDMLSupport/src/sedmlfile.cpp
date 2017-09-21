@@ -457,16 +457,16 @@ bool SedmlFile::isSupported()
             bool hasNlaSolver = false;
 
             for (uint i = 0, iMax = firstSimulationAnnotation->getNumChildren(); i < iMax; ++i) {
-                const libsbml::XMLNode &node = firstSimulationAnnotation->getChild(i);
+                const libsbml::XMLNode &nlaSolverNode = firstSimulationAnnotation->getChild(i);
 
-                if (   QString::fromStdString(node.getURI()).compare(OpencorNamespace)
-                    || QString::fromStdString(node.getName()).compare(NlaSolver)) {
+                if (   QString::fromStdString(nlaSolverNode.getURI()).compare(OpencorNamespace)
+                    || QString::fromStdString(nlaSolverNode.getName()).compare(NlaSolver)) {
                     continue;
                 }
 
-                int nameIndex = node.getAttrIndex(NlaSolverName.toStdString());
+                int nameIndex = nlaSolverNode.getAttrIndex(NlaSolverName.toStdString());
 
-                if ((nameIndex != -1) && !node.getAttrValue(nameIndex).empty()) {
+                if ((nameIndex != -1) && !nlaSolverNode.getAttrValue(nameIndex).empty()) {
                     if (hasNlaSolver) {
                         mIssues << SedmlFileIssue(SedmlFileIssue::Information,
                                                   tr("only one NLA solver is allowed"));
@@ -716,18 +716,18 @@ bool SedmlFile::isSupported()
 
         if (variableAnnotation) {
             for (uint i = 0, iMax = variableAnnotation->getNumChildren(); i < iMax; ++i) {
-                const XMLNode &node = variableAnnotation->getChild(i);
+                const XMLNode &variableDegreeNode = variableAnnotation->getChild(i);
 
-                if (   QString::fromStdString(node.getURI()).compare(OpencorNamespace)
-                    || QString::fromStdString(node.getName()).compare(VariableDegree)) {
+                if (   QString::fromStdString(variableDegreeNode.getURI()).compare(OpencorNamespace)
+                    || QString::fromStdString(variableDegreeNode.getName()).compare(VariableDegree)) {
                     continue;
                 }
 
                 bool validVariableDegree = false;
 
-                if (node.getNumChildren() == 1) {
+                if (variableDegreeNode.getNumChildren() == 1) {
                     bool conversionOk;
-                    int variableDegree = QString::fromStdString(node.getChild(0).getCharacters()).toInt(&conversionOk);
+                    int variableDegree = QString::fromStdString(variableDegreeNode.getChild(0).getCharacters()).toInt(&conversionOk);
 
                     validVariableDegree = conversionOk && (variableDegree >= 0);
                 }
