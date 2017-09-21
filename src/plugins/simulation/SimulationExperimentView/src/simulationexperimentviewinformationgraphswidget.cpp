@@ -368,10 +368,8 @@ void SimulationExperimentViewInformationGraphsWidget::selectAllGraphs(const bool
     foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, mGraphs)
         graph->setSelected(pSelect);
 
-    if (mGraphs.count()) {
-        emit graphsUpdated(qobject_cast<GraphPanelWidget::GraphPanelPlotWidget *>(mGraphs.values().first()->plot()),
-                           mGraphs.values());
-    }
+    if (mGraphs.count())
+        emit graphsUpdated(mGraphs.values());
 
     connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
@@ -770,8 +768,7 @@ QString SimulationExperimentViewInformationGraphsWidget::modelListValue(const QS
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty,
-                                                                      const QString &pFileName)
+void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty)
 {
     // Make sure that we have a property
 
@@ -786,11 +783,12 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     static const QIcon UnlockedIcon = QIcon(":/oxygen/status/object-unlocked.png");
 
     GraphPanelWidget::GraphPanelPlotGraph *graph = mGraphs.value(pProperty);
+    QString propertyFileName = pProperty->properties()[0]->value();
     QString fileName = mSimulationWidget->fileName();
     QPen oldPen = graph->pen();
     QPen newPen = oldPen;
 
-    if (!pFileName.compare(tr("Current"))) {
+    if (!propertyFileName.compare(tr("Current"))) {
         pProperty->properties()[0]->setIcon(UnlockedIcon);
 
         newPen.setColor(Qt::darkBlue);
@@ -799,7 +797,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
 
         newPen.setColor(Qt::darkRed);
 
-        fileName = pFileName.split(PropertySeparator).last();
+        fileName = propertyFileName.split(PropertySeparator).last();
     }
 
     graph->setPen(newPen);
@@ -843,8 +841,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     if (   (oldParameterX != graph->parameterX())
         || (oldParameterY != graph->parameterY())
         || (oldPen != newPen)) {
-        emit graphsUpdated(qobject_cast<GraphPanelWidget::GraphPanelPlotWidget *>(graph->plot()),
-                           GraphPanelWidget::GraphPanelPlotGraphs() << graph);
+        emit graphUpdated(graph);
     }
 }
 
@@ -865,16 +862,14 @@ void SimulationExperimentViewInformationGraphsWidget::graphChanged(Core::Propert
         if (graph) {
             graph->setSelected(pProperty->isChecked());
 
-            emit graphsUpdated(qobject_cast<GraphPanelWidget::GraphPanelPlotWidget *>(graph->plot()),
-                               GraphPanelWidget::GraphPanelPlotGraphs() << graph);
+            emit graphUpdated(graph);
         }
     } else {
-        // Note: updateGraphInfo() will emit the graphsUpdated() signal, if
         // One of our graph properties has changed, so update its information
+        // Note: updateGraphInfo() will emit the graphUpdated() signal, if
         //       needed...
 
-        updateGraphInfo(pProperty->parentProperty(),
-                        pProperty->parentProperty()->properties()[0]->value());
+        updateGraphInfo(pProperty->parentProperty());
     }
 }
 

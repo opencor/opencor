@@ -377,10 +377,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     //       (see above), be done through graphPanelsWidget (i.e. a graph would
     //       let people know that it has been updated and the graph panel with
     //       which it is associated would forward the signal to
-    //       graphPanelsWidget), but this may result in too many graphsUpdated()
+    //       graphPanelsWidget), but this may result in too many graphUpdated()
     //       signals being emitted. For example, say that you change the model
     //       with which a graph is associated, then both the X and Y parameters
-    //       will get updated, and for each of those updates a graphsUpdated()
+    //       will get updated, and for each of those updates a graphUpdated()
     //       signal would be emitted by the graph, hence we would end up with
     //       two signals when only one would have sufficed. Even worse is that
     //       after having updated the X parameter, the graph would have its X
@@ -389,8 +389,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     //       plotting viewpoint. So, instead, the updating is done through our
     //       graphs property editor...
 
-    connect(graphsWidget, SIGNAL(graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
-            this, SLOT(graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
+    connect(graphsWidget, SIGNAL(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+            this, SLOT(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(graphsWidget, SIGNAL(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
+            this, SLOT(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
     // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
@@ -941,8 +943,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
         //          solver's properties), which is needed since we want to be
         //          able to reset our simulation below...
         // Note #2: to initialise our graphs widget will result in some graphs
-        //          being shown/hidden and, therefore, in graphsUpdated() being
-        //          called. Yet, we don't want graphsUpdated() to update our
+        //          being shown/hidden and, therefore, in graphUpdated() being
+        //          called. Yet, we don't want graphUpdated() to update our
         //          plots. Indeed, if it did, then all of our plots' axes'
         //          values would be reset while we want to keep the ones we just
         //          retrieved (thus making it possible for the user to have
@@ -952,7 +954,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
         //          shown/hidden. We could do the initialisation before the
         //          setting of the plots' axes' values, but then we could see
         //          the graphs being plotted twice. Once after the plots' axes'
-        //          values have been reset following the call to graphsUpdated()
+        //          values have been reset following the call to graphUpdated()
         //          and another after we update our plots' axes' values. This is
         //          clearly not neat, hence the current solution...
         // Note #3: to initialise our parameters widget now would result in some
@@ -2786,11 +2788,8 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanel
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                                                             const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
+void SimulationExperimentViewSimulationWidget::graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
-    Q_UNUSED(pPlot);
-
     // One or several graphs have been updated, so make sure that their
     // corresponding plots are up to date
 
@@ -2828,6 +2827,16 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(OpenCOR::GraphPanel
         QCoreApplication::processEvents();
         // Note: this ensures that our plots are all updated at once...
     }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+{
+    // The given graph has been updated, so make sure that its corresponding
+    // plots are up to date
+
+    graphsUpdated(GraphPanelWidget::GraphPanelPlotGraphs() << pGraph);
 }
 
 //==============================================================================

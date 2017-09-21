@@ -134,7 +134,7 @@ private:
 
     QString modelListValue(const QString &pFileName) const;
 
-    void updateGraphInfo(Core::Property *pProperty, const QString &pFileName);
+    void updateGraphInfo(Core::Property *pProperty);
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);
     void updateAllGraphsInfo();
 
@@ -146,8 +146,8 @@ signals:
     void headerSectionResized(const int &pIndex, const int &pOldSize,
                               const int &pNewSize);
 
-    void graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+    void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
 public slots:
     void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
