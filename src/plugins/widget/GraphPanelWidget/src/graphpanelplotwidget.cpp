@@ -66,7 +66,7 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
 {
     // Customise ourselves a bit
 
-    setPen(QPen(Qt::darkBlue));
+    setPen(QPen(Qt::darkBlue, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     setRenderHint(QwtPlotItem::RenderAntialiased);
 }
 
