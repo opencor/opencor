@@ -669,48 +669,6 @@ void Property::setIcon(const QIcon &pIcon)
 
 //==============================================================================
 
-int Property::integerValue() const
-{
-    // Return our value as an integer, if it is of that type
-
-    return (mType == Integer)?mValue->text().toInt():0;
-}
-
-//==============================================================================
-
-void Property::setIntegerValue(const int &pIntegerValue)
-{
-    // Set our value, should it be of integer type
-
-    if (mType == Integer)
-        setValue(QString::number(pIntegerValue));
-}
-
-//==============================================================================
-
-double Property::doubleValue() const
-{
-    // Return our value as a double, if it is of that type
-
-    return (mType == Double)?mValue->text().toDouble():0.0;
-}
-
-//==============================================================================
-
-void Property::setDoubleValue(const double &pDoubleValue,
-                              const bool &pEmitSignal)
-{
-    // Set our value, should it be of double type
-
-    if (mType == Double) {
-        setValue(QString::number(pDoubleValue, 'g', 15), false, pEmitSignal);
-        // Note: we want as much precision as possible, hence we use 15 (see
-        //       http://en.wikipedia.org/wiki/Double_precision)...
-    }
-}
-
-//==============================================================================
-
 QString Property::value() const
 {
     // Return our value
@@ -741,6 +699,48 @@ void Property::setValue(const QString &pValue, const bool &pForce,
 
 //==============================================================================
 
+int Property::integerValue() const
+{
+    // Return our value as an integer, if it is of that type
+
+    return mValue->text().toInt();
+}
+
+//==============================================================================
+
+void Property::setIntegerValue(const int &pIntegerValue,
+                               const bool &pEmitSignal)
+{
+    // Set our value, should it be of integer type
+
+    if (mType == Integer)
+        setValue(QString::number(pIntegerValue), false, pEmitSignal);
+}
+
+//==============================================================================
+
+double Property::doubleValue() const
+{
+    // Return our value as a double, if it is of that type
+
+    return mValue->text().toDouble();
+}
+
+//==============================================================================
+
+void Property::setDoubleValue(const double &pDoubleValue,
+                              const bool &pEmitSignal)
+{
+    // Set our value, should it be of double type
+    // Note: we want as much precision as possible, hence we use a precision of
+    //       15 decimals (see http://en.wikipedia.org/wiki/Double_precision)...
+
+    if (mType == Double)
+        setValue(QString::number(pDoubleValue, 'g', 15), false, pEmitSignal);
+}
+
+//==============================================================================
+
 QStringList Property::listValues() const
 {
     // Return our list values, if any
@@ -751,7 +751,8 @@ QStringList Property::listValues() const
 //==============================================================================
 
 void Property::setListValues(const QStringList &pListValues,
-                             const QString &pListValue, const bool &pEmitSignal)
+                             const QString &pDefaultListValue,
+                             const bool &pEmitSignal)
 {
     // Make sure that there would be a point in setting the list values
 
@@ -800,11 +801,11 @@ void Property::setListValues(const QStringList &pListValues,
         // Update our value using the requested item from our new list, if it
         // isn't empty, otherwise use our empty list value
 
-        int listValueIndex = mListValues.indexOf(pListValue);
+        int listValueIndex = mListValues.indexOf(pDefaultListValue);
 
         setValue(mListValues.isEmpty()?
                      mEmptyListValue:
-                     (pListValue.isEmpty() || (listValueIndex == -1))?
+                     (pDefaultListValue.isEmpty() || (listValueIndex == -1))?
                          mListValues.first():
                          mListValues[listValueIndex],
                  false, pEmitSignal);
@@ -837,7 +838,7 @@ void Property::setListValue(const QString &pListValue)
     // Set our list value, if appropriate
 
     if (    (mType == List)
-        && !mListValues.isEmpty() && mValue->text().compare(pListValue)) {
+        && !mListValues.isEmpty() && listValue().compare(pListValue)) {
         int listValueIndex = mListValues.indexOf(pListValue);
 
         if (listValueIndex != -1)
@@ -876,7 +877,7 @@ bool Property::booleanValue() const
 {
     // Return our value as a boolean, if it is of that type
 
-    return (mType == Boolean)?!mValue->text().compare(TrueValue):false;
+    return !mValue->text().compare(TrueValue);
 }
 
 //==============================================================================
@@ -1315,6 +1316,29 @@ Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 
 //==============================================================================
 
+Property * PropertyEditorWidget::addStringProperty(const QString &pString,
+                                                   Property *pParent)
+{
+    // Add a string property and return its information
+
+    Property *res = addProperty(Property::String, pParent);
+
+    res->setValue(pString);
+
+    return res;
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addStringProperty(Property *pParent)
+{
+    // Add a string property and return its information
+
+    return addStringProperty(QString(), pParent);
+}
+
+//==============================================================================
+
 Property * PropertyEditorWidget::addIntegerProperty(const int &pValue,
                                                     Property *pParent)
 {
@@ -1362,7 +1386,7 @@ Property * PropertyEditorWidget::addDoubleProperty(Property *pParent)
 //==============================================================================
 
 Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
-                                                 const QString &pValue,
+                                                 const QString &pDefaultValue,
                                                  Property *pParent)
 {
     // Add a list property and return its information
@@ -1370,7 +1394,7 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
 
     Property *res = addProperty(Property::List, pParent);
 
-    res->setListValues(pValues, pValue);
+    res->setListValues(pValues, pDefaultValue);
 
     return res;
 }
@@ -1415,29 +1439,6 @@ Property * PropertyEditorWidget::addBooleanProperty(Property *pParent)
     // Add a boolean property and return its information
 
     return addBooleanProperty(false, pParent);
-}
-
-//==============================================================================
-
-Property * PropertyEditorWidget::addStringProperty(const QString &pString,
-                                                   Property *pParent)
-{
-    // Add a string property and return its information
-
-    Property *res = addProperty(Property::String, pParent);
-
-    res->setValue(pString);
-
-    return res;
-}
-
-//==============================================================================
-
-Property * PropertyEditorWidget::addStringProperty(Property *pParent)
-{
-    // Add a string property and return its information
-
-    return addStringProperty(QString(), pParent);
 }
 
 //==============================================================================
