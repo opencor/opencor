@@ -1494,10 +1494,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
         QString kisaoId = solverInterface->kisaoId(solverProperty);
 
         if (kisaoId.isEmpty()) {
-            voiSolverProperties += QString("<solverProperty %1=\"%2\" %3=\"%4\"/>").arg(SEDMLSupport::SolverPropertyId,
-                                                                                        solverProperty,
-                                                                                        SEDMLSupport::SolverPropertyValue,
-                                                                                        solverProperties.value(solverProperty).toString());
+            voiSolverProperties += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
+                                                                            SEDMLSupport::SolverPropertyId,
+                                                                            solverProperty,
+                                                                            SEDMLSupport::SolverPropertyValue,
+                                                                            solverProperties.value(solverProperty).toString());
         } else {
             libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
 
@@ -1527,10 +1528,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
                                                                             solverProperties.value(solverProperty).toString());
         }
 
-        pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" name=\"%3\">%4</%1>").arg(SEDMLSupport::NlaSolver,
-                                                                                               SEDMLSupport::OpencorNamespace,
-                                                                                               mSimulation->data()->nlaSolverName(),
-                                                                                               nlaSolverProperties).toStdString());
+        pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" %3=\"%4\">%5</%1>").arg(SEDMLSupport::NlaSolver,
+                                                                                             SEDMLSupport::OpencorNamespace,
+                                                                                             SEDMLSupport::NlaSolverName,
+                                                                                             mSimulation->data()->nlaSolverName(),
+                                                                                             nlaSolverProperties).toStdString());
     }
 
     // Create and customise a task for our given SED-ML simulation
