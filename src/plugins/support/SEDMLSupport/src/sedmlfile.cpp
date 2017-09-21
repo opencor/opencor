@@ -441,6 +441,8 @@ bool SedmlFile::isSupported()
 
                 if (!validSolverProperties) {
                     mIssues << SedmlFileIssue(SedmlFileIssue::Information,
+                                              solverPropertiesNode.getLine(),
+                                              solverPropertiesNode.getColumn(),
                                               tr("incomplete algorithm annotation (missing algorithm property information)"));
 
                     return false;
@@ -477,6 +479,8 @@ bool SedmlFile::isSupported()
                     }
                 } else {
                     mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                              nlaSolverNode.getLine(),
+                                              nlaSolverNode.getColumn(),
                                               tr("incomplete simulation annotation (missing NLA solver name)"));
 
                     return false;
@@ -734,6 +738,8 @@ bool SedmlFile::isSupported()
 
                 if (!validVariableDegree) {
                     mIssues << SedmlFileIssue(SedmlFileIssue::Information,
+                                              variableDegreeNode.getLine(),
+                                              variableDegreeNode.getColumn(),
                                               tr("only SED-ML files with data generators for one variable that is derived or not are supported"));
 
                     return false;
