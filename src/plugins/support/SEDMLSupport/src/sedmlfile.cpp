@@ -345,21 +345,21 @@ bool SedmlFile::isSupported()
 
     if (initialTime != outputStartTime) {
         mIssues << SedmlFileIssue(SedmlFileIssue::Information,
-                                  tr("only SED-ML files with the same values for initialTime and outputStartTime are supported"));
+                                  tr("only SED-ML files with the same values for 'initialTime' and 'outputStartTime' are supported"));
 
         return false;
     }
 
     if (outputStartTime == outputEndTime) {
         mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                  tr("the values for outputStartTime and outputEndTime must be different"));
+                                  tr("the values for 'outputStartTime' and 'outputEndTime' must be different"));
 
         return false;
     }
 
     if (nbOfPoints <= 0) {
         mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                  tr("the value for numberOfPoints must be greater than zero"));
+                                  tr("the value for 'numberOfPoints' must be greater than zero"));
 
         return false;
     }

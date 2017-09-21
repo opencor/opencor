@@ -47,16 +47,16 @@
         <translation>seulement les fichiers SED-ML avec un cours de temps uniforme pour (première) simulation sont supportés</translation>
     </message>
     <message>
-        <source>only SED-ML files with the same values for initialTime and outputStartTime are supported</source>
-        <translation>seulement les fichiers SED-ML avec les mêmes valeurs pour initialTime et outputStartTime sont supportés</translation>
+        <source>only SED-ML files with the same values for &apos;initialTime&apos; and &apos;outputStartTime&apos; are supported</source>
+        <translation>seulement les fichiers SED-ML avec les mêmes valeurs pour &apos;initialTime&apos; et &apos;outputStartTime&apos; sont supportés</translation>
     </message>
     <message>
-        <source>the values for outputStartTime and outputEndTime must be different</source>
-        <translation>les valeurs pour outputStartTime et outputEndTime doivent être différentes</translation>
+        <source>the values for &apos;outputStartTime&apos; and &apos;outputEndTime&apos; must be different</source>
+        <translation>les valeurs pour &apos;outputStartTime&apos; et &apos;outputEndTime&apos; doivent être différentes</translation>
     </message>
     <message>
-        <source>the value for numberOfPoints must be greater than zero</source>
-        <translation>la valeur pour numberOfPoints doit être plus grande que zéro</translation>
+        <source>the value for &apos;numberOfPoints&apos; must be greater than zero</source>
+        <translation>la valeur pour &apos;numberOfPoints&apos; doit être plus grande que zéro</translation>
     </message>
     <message>
         <source>only one NLA solver is allowed</source>
