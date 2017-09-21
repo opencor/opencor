@@ -691,13 +691,6 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
     mProgress = -1;
 
-    // Retrieve our variable of integration, if possible
-
-    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-    bool validRuntime = runtime && runtime->isValid();
-
-    CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validRuntime?runtime->variableOfIntegration():0;
-
     // Clean up our output, if needed
 
     if (pReloadingView)
@@ -718,6 +711,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     COMBINESupport::CombineArchiveIssues combineArchiveIssues = mSimulation->combineArchive()?
                                                                     mSimulation->combineArchive()->issues():
                                                                     COMBINESupport::CombineArchiveIssues();
+    bool atLeastOneBlockingSedmlIssue = false;
+    bool atLeastOneBlockingCombineIssue = false;
 
     if (!combineArchiveIssues.isEmpty()) {
         // There is one or several issues with our COMBINE archive, so list
@@ -734,6 +729,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             case COMBINESupport::CombineArchiveIssue::Error:
                 issueType = tr("Error:");
 
+                atLeastOneBlockingCombineIssue = true;
+
                 break;
             case COMBINESupport::CombineArchiveIssue::Warning:
                 issueType = tr("Warning:");
@@ -742,12 +739,16 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             case COMBINESupport::CombineArchiveIssue::Fatal:
                 issueType = tr("Fatal:");
 
+                atLeastOneBlockingCombineIssue = true;
+
                 break;
             }
 
             information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(combineArchiveIssue.message()));
         }
-    } else if (!sedmlFileIssues.isEmpty()) {
+    }
+
+    if (!sedmlFileIssues.isEmpty()) {
         // There is one or several issues with our SED-ML file, so list it/them
 
         foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, sedmlFileIssues) {
@@ -761,6 +762,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             case SEDMLSupport::SedmlFileIssue::Error:
                 issueType = tr("Error:");
 
+                atLeastOneBlockingSedmlIssue = true;
+
                 break;
             case SEDMLSupport::SedmlFileIssue::Warning:
                 issueType = tr("Warning:");
@@ -769,12 +772,21 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             case SEDMLSupport::SedmlFileIssue::Fatal:
                 issueType = tr("Fatal:");
 
+                atLeastOneBlockingSedmlIssue = true;
+
                 break;
             }
 
             information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(sedmlFileIssue.message()));
         }
-    } else {
+    }
+
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+    bool validRuntime = runtime && runtime->isValid();
+
+    CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validRuntime?runtime->variableOfIntegration():0;
+
+    if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
         information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
         if (variableOfIntegration) {
@@ -810,12 +822,19 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                 information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
             } else {
                 // We don't have a valid runtime, so either there are some
-                // problems with the CellML file or its runtime
+                // problems with the CellML file, its runtime, or even the
+                // parent SED-ML file and/or COMBINE archive
+                // Note: in the case of problems with the SED-ML file and/or
+                //       COMBINE archive, we will already have listed the
+                //       problems, so no need to do anything more in those
+                //       cases...
 
-                foreach (const CellMLSupport::CellmlFileIssue &issue,
-                         runtime?runtime->issues():mSimulation->cellmlFile()->issues()) {
-                    information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
-                                                                                                                         issue.message());
+                if (sedmlFileIssues.isEmpty() && combineArchiveIssues.isEmpty()) {
+                    foreach (const CellMLSupport::CellmlFileIssue &issue,
+                             runtime?runtime->issues():mSimulation->cellmlFile()->issues()) {
+                        information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
+                                                                                                                             issue.message());
+                    }
                 }
             }
         }
@@ -823,81 +842,86 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
     output(information);
 
-    // Enable/disable our run/pause action depending on whether we have a
-    // variable of integration
+    // Check whether we have a valid simulation environment, but only if we
+    // don't have any blocking SED-ML or COMBINE issues
 
-    mRunPauseResumeSimulationAction->setEnabled(variableOfIntegration);
-
-    // Update our simulation mode or clear our simulation data (should there be
-    // some) in case we are reloading ourselves
-    // Note: to clear our simualtion data will also update our simulation
-    //       mode, so we are fine...
-
-    if (pReloadingView)
-        clearSimulationData();
-    else
-        updateSimulationMode();
-
-    // Initialise our contents widget and make sure that we have the required
-    // type(s) of solvers
-
-    bool validSimulationEnvironment = false;
     SimulationExperimentViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
+    bool validSimulationEnvironment = false;
 
-    if (variableOfIntegration) {
-        // Show our contents widget in case it got previously hidden
-        // Note: indeed, if it was to remain hidden then some initialisations
-        //       wouldn't work (e.g. the solvers widget has a property editor,
-        //       which all properties need to be removed and if the contents
-        //       widget is not visible, then upon repopulating the property
-        //       editor, scrollbars will be shown even though they are not
-        //       needed)...
+    if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
+        // Enable/disable our run/pause action depending on whether we have a
+        // variable of integration
 
-        mContentsWidget->setVisible(true);
+        mRunPauseResumeSimulationAction->setEnabled(variableOfIntegration);
 
-        // Check whether we have at least one ODE or DAE solver and, if needed,
-        // at least one NLA solver
+        // Update our simulation mode or clear our simulation data (should there
+        // be some) in case we are reloading ourselves
+        // Note: to clear our simualtion data will also update our simulation
+        //       mode, so we are fine...
 
-        if (runtime->needNlaSolver()) {
-            if (solversWidget->nlaSolvers().isEmpty()) {
-                if (runtime->needOdeSolver()) {
-                    if (solversWidget->odeSolvers().isEmpty()) {
-                        simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
-                                        InvalidSimulationEnvironment);
+        if (pReloadingView)
+            clearSimulationData();
+        else
+            updateSimulationMode();
+
+        // Initialise our contents widget and make sure that we have the
+        // required type(s) of solvers
+
+        if (variableOfIntegration) {
+            // Show our contents widget in case it got previously hidden
+            // Note: indeed, if it was to remain hidden then some
+            //       initialisations wouldn't work (e.g. the solvers widget has
+            //       a property editor, which all properties need to be removed
+            //       and if the contents widget is not visible, then upon
+            //       repopulating the property editor, scrollbars will be shown
+            //       even though they are not needed)...
+
+            mContentsWidget->setVisible(true);
+
+            // Check whether we have at least one ODE or DAE solver and, if
+            // needed, at least one NLA solver
+
+            if (runtime->needNlaSolver()) {
+                if (solversWidget->nlaSolvers().isEmpty()) {
+                    if (runtime->needOdeSolver()) {
+                        if (solversWidget->odeSolvers().isEmpty()) {
+                            simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
+                                            InvalidSimulationEnvironment);
+                        } else {
+                            simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
+                                            InvalidSimulationEnvironment);
+                        }
                     } else {
-                        simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
-                                        InvalidSimulationEnvironment);
+                        if (solversWidget->daeSolvers().isEmpty()) {
+                            simulationError(tr("the model needs both a DAE and an NLA solver, but none are available"),
+                                            InvalidSimulationEnvironment);
+                        } else {
+                            simulationError(tr("the model needs both a DAE and an NLA solver, but no NLA solver is available"),
+                                            InvalidSimulationEnvironment);
+                        }
                     }
+                } else if (   runtime->needOdeSolver()
+                           && solversWidget->odeSolvers().isEmpty()) {
+                    simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
+                                    InvalidSimulationEnvironment);
+                } else if (   runtime->needDaeSolver()
+                           && solversWidget->daeSolvers().isEmpty()) {
+                        simulationError(tr("the model needs both a DAE and an NLA solver, but no DAE solver is available"),
+                                        InvalidSimulationEnvironment);
                 } else {
-                    if (solversWidget->daeSolvers().isEmpty()) {
-                        simulationError(tr("the model needs both a DAE and an NLA solver, but none are available"),
-                                        InvalidSimulationEnvironment);
-                    } else {
-                        simulationError(tr("the model needs both a DAE and an NLA solver, but no NLA solver is available"),
-                                        InvalidSimulationEnvironment);
-                    }
+                    validSimulationEnvironment = true;
                 }
             } else if (   runtime->needOdeSolver()
                        && solversWidget->odeSolvers().isEmpty()) {
-                simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
+                simulationError(tr("the model needs an ODE solver, but none is available"),
                                 InvalidSimulationEnvironment);
             } else if (   runtime->needDaeSolver()
                        && solversWidget->daeSolvers().isEmpty()) {
-                    simulationError(tr("the model needs both a DAE and an NLA solver, but no DAE solver is available"),
-                                    InvalidSimulationEnvironment);
+                simulationError(tr("the model needs a DAE solver, but none is available"),
+                                InvalidSimulationEnvironment);
             } else {
                 validSimulationEnvironment = true;
             }
-        } else if (   runtime->needOdeSolver()
-                   && solversWidget->odeSolvers().isEmpty()) {
-            simulationError(tr("the model needs an ODE solver, but none is available"),
-                            InvalidSimulationEnvironment);
-        } else if (   runtime->needDaeSolver()
-                   && solversWidget->daeSolvers().isEmpty()) {
-            simulationError(tr("the model needs a DAE solver, but none is available"),
-                            InvalidSimulationEnvironment);
-        } else {
-            validSimulationEnvironment = true;
         }
     }
 
