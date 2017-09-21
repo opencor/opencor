@@ -499,11 +499,9 @@ void MathmlViewerWidget::paintEvent(QPaintEvent *pEvent)
                                                 0.5*(rect.height()-mathmlDocumentSize.height())));
     }
 
-    // Enable/disable our copy to clipboard action
+    // Enable/disable our copy to clipboard action and accept the event
 
     mCopyToClipboardAction->setEnabled(!mContents.isEmpty() && !mError);
-
-    // Accept the event
 
     pEvent->accept();
 }

@@ -76,15 +76,11 @@ void TextEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
         emit goToPreviousPropertyRequested();
 
-        // Accept the event
-
         pEvent->accept();
     } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
         // The user wants to go to the next property
 
         emit goToNextPropertyRequested();
-
-        // Accept the event
 
         pEvent->accept();
     } else {
@@ -141,15 +137,11 @@ void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
         emit goToPreviousPropertyRequested();
 
-        // Accept the event
-
         pEvent->accept();
     } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
         // The user wants to go to the next property
 
         emit goToNextPropertyRequested();
-
-        // Accept the event
 
         pEvent->accept();
     } else {
@@ -180,11 +172,9 @@ void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
             newCurrentIndex = 0;
     } while (itemText(newCurrentIndex).isEmpty());
 
-    // Set the new current index
+    // Set the new current index and accept the event
 
     setCurrentIndex(newCurrentIndex);
-
-    // Accept the event
 
     pEvent->accept();
 }
@@ -1479,15 +1469,11 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         else
             editProperty(currentProperty());
 
-        // Accept the event
-
         pEvent->accept();
     } else if (noModifiers && (pEvent->key() == Qt::Key_Escape)) {
         // The user wants to cancel the editing
 
         finishEditing(false);
-
-        // Accept the event
 
         pEvent->accept();
     } else if (noModifiers && (pEvent->key() == Qt::Key_Up)) {
@@ -1495,15 +1481,11 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
         goToPreviousProperty();
 
-        // Accept the event
-
         pEvent->accept();
     } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
         // The user wants to go to the next property
 
         goToNextProperty();
-
-        // Accept the event
 
         pEvent->accept();
     } else {
