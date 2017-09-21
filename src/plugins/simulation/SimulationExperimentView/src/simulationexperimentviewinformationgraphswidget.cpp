@@ -260,7 +260,7 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
     mGraphs.insert(graphProperty, pGraph);
     mGraphProperties.insert(pGraph, graphProperty);
 
-    // Create some properties for our graph
+    // Create some graph properties
     // Note: to add properties will result in the propertyChanged() signal being
     //       emitted, but we don't want to handle that signal (at least, not
     //       when creating a graph since not everyting may be set yet so this
@@ -478,10 +478,10 @@ Core::Properties SimulationExperimentViewInformationGraphsWidget::graphPropertie
 
     if (propertyEditor) {
         foreach (Core::Property *property, propertyEditor->properties()) {
-            // The property should be returned if it is a section (i.e. a graph
-            // property), is checked (i.e. a selected graph) and have its first
-            // sub-property (i.e. to which model the graph applies) has either a
-            // value of "Current" or that of the given file name
+            // The property should be returned if it is checked (i.e. a selected
+            // graph) and have its first sub-property (i.e. to which model the
+            // graph applies) has either a value of "Current" or that of the
+            // given file name
 
             if (   (property->type() == Core::Property::Section)
                 && property->isChecked()) {
@@ -769,12 +769,9 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     if (!pProperty)
         return;
 
-    // Update the graph information by checking the new value of the given
-    // section property
-
-    // Update the model property's icon and graph colour, based on the value of
-    // the model property, and determine the file name from which we will have
-    // to check our X and Y properties
+    // Update the model property's icon, based on the value of the model
+    // property, and determine the file name against which we have to check our
+    // X and Y properties
 
     static const QIcon LockedIcon   = QIcon(":/oxygen/status/object-locked.png");
     static const QIcon UnlockedIcon = QIcon(":/oxygen/status/object-unlocked.png");
@@ -802,7 +799,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     // properties exist for the current/selected model
     // Note: we absolutely want to check the parameter (so that an icon can be
     //       assigned to its corresponding property) , hence the order of our &&
-    //       assignment...
+    //       tests when setting graphOk...
 
     bool graphOk = true;
     CellMLSupport::CellmlFileRuntime *runtime = mViewWidget->runtime(fileName);
@@ -832,7 +829,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
 
     graph->setFileName(fileName);
 
-    // Let people know if we consider that the graph has been updated
+    // Let people know if the graph has been updated in some way or another
 
     if (   (oldParameterX != graph->parameterX())
         || (oldParameterY != graph->parameterY())
@@ -846,8 +843,8 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
 
 void SimulationExperimentViewInformationGraphsWidget::graphChanged(Core::Property *pProperty)
 {
-    // The graph has changed, which means that either it has been un/selected or
-    // that the value of its model, X or Y parameter property has changed
+    // Our graph has changed, which means that either it has been un/selected or
+    // that the value of one of its properties has changed
 
     if (pProperty->type() == Core::Property::Section) {
         // The property associated with the graph is a section, which means that
@@ -863,9 +860,8 @@ void SimulationExperimentViewInformationGraphsWidget::graphChanged(Core::Propert
                                GraphPanelWidget::GraphPanelPlotGraphs() << graph);
         }
     } else {
-        // Either the model, X or Y parameter property of the graph has changed,
-        // so update its information
         // Note: updateGraphInfo() will emit the graphsUpdated() signal, if
+        // One of our graph properties has changed, so update its information
         //       needed...
 
         updateGraphInfo(pProperty->parentProperty(),
@@ -920,6 +916,8 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
     // information
 
     foreach (Core::Property *graphProperty, graphProperties) {
+        // Set the label of our graph properties
+
         graphProperty->properties()[0]->setName(tr("Model"));
         graphProperty->properties()[1]->setName(tr("X"));
         graphProperty->properties()[2]->setName(tr("Y"));

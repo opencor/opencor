@@ -1442,7 +1442,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     }
 
     // Check whether the simulation required an NLA solver and, if so, let our
-    // SED-ML simulation known about it through an annotation (since we cannot
+    // SED-ML simulation know about it through an annotation (since we cannot
     // have more than one SED-ML algorithm per SED-ML simulation)
 
     if (runtime->needNlaSolver()) {

@@ -160,8 +160,8 @@ void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
     if (!count())
         return;
 
-    // We want to go to the next item in the list (and go back to the first one
-    // if we are at the end of the list), so determine the new current index
+    // We want to go to the next item in our list (and go back to the first one
+    // if we are at the end of our list), so determine the new current index
 
     int newCurrentIndex = currentIndex();
 
@@ -184,13 +184,13 @@ void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Check whether the user clicked on the arrow and, if so, allow the default
-    // handling of the event (so that the list of items gets displayed) while do
-    // nothing if the user clicked somewhere else (this to so that if the user
+    // handling of the event (so that our list of items gets displayed) while do
+    // nothing if the user clicked somewhere else (this so that if the user
     // double clicks on the widget, then we can select the next item)
     // Note: we would normally call style()->hitTestComplexControl() and, if it
     //       returns QStyle::SC_ComboBoxArrow, then allow the default handling
-    //       of the event, but if this works fine on Windows and Linux, it just
-    //       doesn't work on macOS. Indeed, no matter where we are over the
+    //       of the event, but although this works fine on Windows and Linux, it
+    //       just doesn't work on macOS. Indeed, no matter where we are over the
     //       widget, style()->hitTestComplexControl() will always (and as
     //       expected; [QtSources]/qtbase/src/widgets/styles/qmacstyle_mac.mm)
     //       return QStyle::SC_ComboBoxArrow. So, to get the behaviour we are
@@ -296,7 +296,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         editor = listEditor;
 
-        // Add the value items to the list, keeping in mind separators
+        // Add the value items to our list, keeping in mind separators
 
         foreach (const QString &valueItem, property->listValues()) {
             if (valueItem.isEmpty())
@@ -305,7 +305,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
                 listEditor->addItem(valueItem);
         }
 
-        // Propagate the signal telling us about the list property value having
+        // Propagate the signal telling us about our list property value having
         // changed
 
         connect(listEditor, SIGNAL(currentIndexChanged(const QString &)),
@@ -318,7 +318,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         editor = booleanEditor;
 
-        // Propagate the signal telling us about the list property value having
+        // Propagate the signal telling us about our boolean value having
         // changed
 
         connect(booleanEditor, SIGNAL(currentIndexChanged(const QString &)),
@@ -503,7 +503,7 @@ void Property::add(Property *pProperty)
 
     mName->appendRow(pProperty->items());
 
-    // Let the property that we are its parent
+    // Let the property know that we are its parent
 
     pProperty->setParentProperty(this);
 }
@@ -863,7 +863,7 @@ void Property::setEmptyListValue(const QString &pEmptyListValue)
     if ((mType == List) && pEmptyListValue.compare(mEmptyListValue)) {
         mEmptyListValue = pEmptyListValue;
 
-        // Keep our current value, if the list is not empty, otherwise update it
+        // Keep our current value, if our list is not empty, otherwise update it
         // with our new empty list value
 
         setValue(mListValues.isEmpty()?mEmptyListValue:mValue->text());
@@ -1456,7 +1456,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
                            && !(pEvent->modifiers() & Qt::MetaModifier);
 
     if (controlModifier && (pEvent->key() == Qt::Key_A)) {
-        // The user wants to select everything which we don't want to allow,
+        // The user wants to select everything, which we don't want to allow,
         // so just accept the event...
 
         pEvent->accept();
