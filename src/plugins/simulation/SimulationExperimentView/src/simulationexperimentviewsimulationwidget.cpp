@@ -1253,9 +1253,6 @@ QVariant SimulationExperimentViewSimulationWidget::value(Core::Property *pProper
 {
     switch (pProperty->type()) {
     case Core::Property::Section:
-        // Not a relevant property, so return an empty variant
-        // Note: we should never reach this point...
-
         return QVariant();
     case Core::Property::String:
     case Core::Property::Color:
@@ -1283,9 +1280,6 @@ QString SimulationExperimentViewSimulationWidget::stringValue(Core::Property *pP
 {
     switch (pProperty->type()) {
     case Core::Property::Section:
-        // Not a relevant property, so return an empty string
-        // Note: we should never reach this point...
-
         return QString();
     case Core::Property::String:
     case Core::Property::Color:
