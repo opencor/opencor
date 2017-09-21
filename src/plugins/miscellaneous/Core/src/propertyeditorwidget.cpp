@@ -1937,7 +1937,8 @@ void PropertyEditorWidget::editProperty(Property *pProperty,
             //       then decide to move to the next property, in which case we
             //       should ignore the 'new' value...
 
-            if (mProperty->type() == Property::DoubleGt0) {
+            if (   (mProperty->type() == Property::DoubleGt0)
+                || (mProperty->type() == Property::Color)) {
                 DoubleGt0EditorWidget *propertyEditor = static_cast<DoubleGt0EditorWidget *>(mPropertyEditor);
                 QString propertyValue = propertyEditor->text();
                 int dummy;
