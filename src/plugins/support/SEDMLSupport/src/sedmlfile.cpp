@@ -468,7 +468,7 @@ bool SedmlFile::isSupported()
 
                 if ((nameIndex != -1) && !nlaSolverNode.getAttrValue(nameIndex).empty()) {
                     if (hasNlaSolver) {
-                        mIssues << SedmlFileIssue(SedmlFileIssue::Information,
+                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                   tr("only one NLA solver is allowed"));
 
                         return false;
@@ -476,7 +476,7 @@ bool SedmlFile::isSupported()
                         hasNlaSolver = true;
                     }
                 } else {
-                    mIssues << SedmlFileIssue(SedmlFileIssue::Information,
+                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                               tr("incomplete simulation annotation (missing NLA solver name)"));
 
                     return false;
