@@ -64,6 +64,7 @@ static const auto SolverPropertyId    = QStringLiteral("id");
 static const auto SolverPropertyValue = QStringLiteral("value");
 static const auto NlaSolver           = QStringLiteral("nlaSolver");
 static const auto NlaSolverName       = QStringLiteral("name");
+static const auto CurveProperties     = QStringLiteral("curveProperties");
 static const auto LineProperties      = QStringLiteral("lineProperties");
 static const auto LineProperty        = QStringLiteral("lineProperty");
 static const auto LinePropertyId      = QStringLiteral("id");

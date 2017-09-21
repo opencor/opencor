@@ -1768,26 +1768,29 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                 Core::Properties lineProperties = property->properties()[3]->properties();
                 Core::Properties symbolProperties = property->properties()[4]->properties();
 
-                sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%3\">%4</%1>"
-                                                     "<%2 xmlns=\"%3\">%5</%2>").arg(SEDMLSupport::LineProperties,
-                                                                                     SEDMLSupport::SymbolProperties,
-                                                                                     SEDMLSupport::OpencorNamespace,
-                                                                                     LineProperty.arg(SEDMLSupport::LineStyle,
-                                                                                                      SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
-                                                                                    +LineProperty.arg(SEDMLSupport::LineWidth,
-                                                                                                      lineProperties[1]->value())
-                                                                                    +LineProperty.arg(SEDMLSupport::LineColor,
-                                                                                                      lineProperties[2]->value()),
-                                                                                     SymbolProperty.arg(SEDMLSupport::SymbolStyle,
-                                                                                                        SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
-                                                                                    +SymbolProperty.arg(SEDMLSupport::SymbolSize,
-                                                                                                        stringValue(symbolProperties[1]))
-                                                                                    +SymbolProperty.arg(SEDMLSupport::SymbolColor,
-                                                                                                        stringValue(symbolProperties[2]))
-                                                                                    +SymbolProperty.arg(SEDMLSupport::SymbolFilled,
-                                                                                                        stringValue(symbolProperties[3]))
-                                                                                    +SymbolProperty.arg(SEDMLSupport::SymbolFillColor,
-                                                                                                        stringValue(symbolProperties[4]))).toStdString());
+                sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%2\">"
+                                                     "    <%3>%5</%3>"
+                                                     "    <%4>%6</%4>"
+                                                     "</%1>").arg( SEDMLSupport::CurveProperties,
+                                                                   SEDMLSupport::OpencorNamespace,
+                                                                   SEDMLSupport::LineProperties,
+                                                                   SEDMLSupport::SymbolProperties,
+                                                                   LineProperty.arg(SEDMLSupport::LineStyle,
+                                                                                    SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
+                                                                  +LineProperty.arg(SEDMLSupport::LineWidth,
+                                                                                    lineProperties[1]->value())
+                                                                  +LineProperty.arg(SEDMLSupport::LineColor,
+                                                                                    lineProperties[2]->value()),
+                                                                   SymbolProperty.arg(SEDMLSupport::SymbolStyle,
+                                                                                      SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
+                                                                  +SymbolProperty.arg(SEDMLSupport::SymbolSize,
+                                                                                      stringValue(symbolProperties[1]))
+                                                                  +SymbolProperty.arg(SEDMLSupport::SymbolColor,
+                                                                                      stringValue(symbolProperties[2]))
+                                                                  +SymbolProperty.arg(SEDMLSupport::SymbolFilled,
+                                                                                      stringValue(symbolProperties[3]))
+                                                                  +SymbolProperty.arg(SEDMLSupport::SymbolFillColor,
+                                                                                      stringValue(symbolProperties[4]))).toStdString());
             }
         }
     }
