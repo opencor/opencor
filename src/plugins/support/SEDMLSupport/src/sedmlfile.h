@@ -35,6 +35,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "sbmlapibegin.h"
+    #include "sbml/math/ASTNode.h"
+#include "sbmlapiend.h"
+
+//==============================================================================
+
 namespace libsedml {
     class SedAlgorithm;
     class SedDocument;
@@ -122,6 +128,10 @@ private:
     SedmlFileIssues mIssues;
 
     virtual void reset();
+
+    bool validColorPropertyValue(const libsbml::XMLNode &pPropertyNode,
+                                 const QString &pPropertyNodeValue,
+                                 const QString &pPropertyName);
 };
 
 //==============================================================================

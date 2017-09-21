@@ -37,12 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "sbmlapibegin.h"
-    #include "sbml/math/ASTNode.h"
-#include "sbmlapiend.h"
-
-//==============================================================================
-
 #include "sedmlapibegin.h"
     #include "sedml/SedAlgorithm.h"
     #include "sedml/SedDocument.h"
@@ -277,6 +271,28 @@ bool SedmlFile::isValid()
     // Return whether we are valid
 
     return isValid(QString(), mIssues);
+}
+
+//==============================================================================
+
+bool SedmlFile::validColorPropertyValue(const libsbml::XMLNode &pPropertyNode,
+                                        const QString &pPropertyNodeValue,
+                                        const QString &pPropertyName)
+{
+    // Check whether the given color property is valid
+
+    static const QRegularExpression ColorRegEx = QRegularExpression("^#[[:xdigit:]]{6}$");
+
+    if (!ColorRegEx.match(pPropertyNodeValue).hasMatch()) {
+        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                  pPropertyNode.getLine(),
+                                  pPropertyNode.getColumn(),
+                                  tr("the '%1' property must have a value of '#RRGGBB'").arg(pPropertyName));
+
+        return false;
+    } else {
+        return true;
+    }
 }
 
 //==============================================================================
@@ -815,8 +831,6 @@ bool SedmlFile::isSupported()
                     }
 
                     for (uint j = 0, jMax = curvePropertiesNode.getNumChildren(); j < jMax; ++j) {
-                        static const QRegularExpression ColorRegEx = QRegularExpression("^#[[:xdigit:]]{6}$");
-
                         const libsbml::XMLNode &lineOrSymbolPropertiesNode = curvePropertiesNode.getChild(j);
                         QString lineOrSymbolPropertiesNodeName = QString::fromStdString(lineOrSymbolPropertiesNode.getName());
                         bool isLinePropertiesNode = !lineOrSymbolPropertiesNodeName.compare(LineProperties);
@@ -837,12 +851,7 @@ bool SedmlFile::isSupported()
                                 } else if (!linePropertyNodeName.compare(LineWidth)) {
 //---ISSUE591--- TO BE DONE...
                                 } else if (   !linePropertyNodeName.compare(LineColor)
-                                           && !ColorRegEx.match(linePropertyNodeValue).hasMatch()) {
-                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                                              linePropertyNode.getLine(),
-                                                              linePropertyNode.getColumn(),
-                                                              tr("the 'lineColor' property must have a value of '#RRGGBB'"));
-
+                                           && !validColorPropertyValue(linePropertyNode, linePropertyNodeValue, LineColor)) {
                                     return false;
                                 }
                             }
@@ -858,12 +867,7 @@ bool SedmlFile::isSupported()
                                 } else if (!symbolPropertyNodeName.compare(SymbolSize)) {
 //---ISSUE591--- TO BE DONE...
                                 } else if (   !symbolPropertyNodeName.compare(SymbolColor)
-                                           && !ColorRegEx.match(symbolPropertyNodeValue).hasMatch()) {
-                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                                              symbolPropertyNode.getLine(),
-                                                              symbolPropertyNode.getColumn(),
-                                                              tr("the 'symbolColor' property must have a value of '#RRGGBB'"));
-
+                                           && !validColorPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, SymbolColor)) {
                                     return false;
                                 } else if (   !symbolPropertyNodeName.compare(SymbolFilled)
                                            &&  symbolPropertyNodeValue.compare("true")
@@ -875,12 +879,7 @@ bool SedmlFile::isSupported()
 
                                     return false;
                                 } else if (   !symbolPropertyNodeName.compare(SymbolFillColor)
-                                           && !ColorRegEx.match(symbolPropertyNodeValue).hasMatch()) {
-                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                                              symbolPropertyNode.getLine(),
-                                                              symbolPropertyNode.getColumn(),
-                                                              tr("the 'symbolFillColor' property must have a value of '#RRGGBB'"));
-
+                                           && !validColorPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, SymbolFillColor)) {
                                     return false;
                                 }
                             }
