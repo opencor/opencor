@@ -388,6 +388,16 @@ void SimulationExperimentViewInformationGraphsWidget::selectAllGraphs()
 
 //==============================================================================
 
+bool SimulationExperimentViewInformationGraphsWidget::rootProperty(Core::Property *pProperty) const
+{
+    // Return whether the given property is a root property
+
+    return    (pProperty->type() == Core::Property::Section)
+           && !pProperty->parentProperty() && pProperty->isCheckable();
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphsWidget::unselectAllGraphs()
 {
     // Unselect all the graphs
@@ -845,10 +855,10 @@ void SimulationExperimentViewInformationGraphsWidget::graphChanged(Core::Propert
     // Our graph has changed, which means that either it has been un/selected or
     // that the value of one of its properties has changed
 
-    if (pProperty->type() == Core::Property::Section) {
-        // The property associated with the graph is a section, which means that
-        // the graph has been un/selected, so update its selected state and let
-        // people know that our graph has been updated
+    if (rootProperty(pProperty)) {
+        // The property associated with the graph is our root property, which
+        // means that the graph has been un/selected, so update its selected
+        // state and let people know that our graph has been updated
 
         GraphPanelWidget::GraphPanelPlotGraph *graph = mGraphs.value(pProperty);
 
@@ -890,7 +900,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
         graphProperties << pSectionProperty;
     } else {
         foreach (Core::Property *property, mPropertyEditor->properties()) {
-            if (property->type() == Core::Property::Section)
+            if (rootProperty(property))
                 graphProperties << property;
         }
     }
