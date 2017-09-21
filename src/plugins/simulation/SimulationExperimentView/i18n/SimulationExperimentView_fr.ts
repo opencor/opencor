@@ -52,6 +52,10 @@
         <translation>Sélectionner une couleur</translation>
     </message>
     <message>
+        <source>Select Colour</source>
+        <translation>Sélectionner Couleur</translation>
+    </message>
+    <message>
         <source>Current</source>
         <translation>Actuel</translation>
     </message>

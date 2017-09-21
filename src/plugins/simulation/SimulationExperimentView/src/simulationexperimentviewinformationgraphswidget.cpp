@@ -439,7 +439,9 @@ void SimulationExperimentViewInformationGraphsWidget::selectColor()
 {
     // Select a colour and assign it to the current property
 
-    QColorDialog colorDialog(this);
+    QColorDialog colorDialog(mPropertyEditor->currentProperty()->colorValue(), this);
+
+    colorDialog.setWindowTitle(tr("Select Colour"));
 
     if (colorDialog.exec()) {
         Core::Property *crtProperty = mPropertyEditor->currentProperty();
