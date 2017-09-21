@@ -66,7 +66,7 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
 {
     // Customise ourselves a bit
 
-    setPen(QPen(Qt::darkBlue));
+    setPen(QPen(Qt::darkBlue, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     setRenderHint(QwtPlotItem::RenderAntialiased);
 }
 
@@ -924,31 +924,33 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
                               +scaleDiv.ticks(QwtScaleDiv::MediumTick)
                               +scaleDiv.ticks(QwtScaleDiv::MinorTick);
 
-        std::sort(ticks.begin(), ticks.end());
+        if (!ticks.isEmpty()) {
+            std::sort(ticks.begin(), ticks.end());
 
-        double newMin = ticks.first();
+            double newMin = ticks.first();
 
-        foreach (const double &tick, ticks) {
-            if (tick <= pMin)
-                newMin = tick;
-            else
-                break;
+            foreach (const double &tick, ticks) {
+                if (tick <= pMin)
+                    newMin = tick;
+                else
+                    break;
+            }
+
+            pMin = newMin;
+
+            std::reverse(ticks.begin(), ticks.end());
+
+            double newMax = ticks.first();
+
+            foreach (const double &tick, ticks) {
+                if (tick >= pMax)
+                    newMax = tick;
+                else
+                    break;
+            }
+
+            pMax = newMax;
         }
-
-        pMin = newMin;
-
-        std::reverse(ticks.begin(), ticks.end());
-
-        double newMax = ticks.first();
-
-        foreach (const double &tick, ticks) {
-            if (tick >= pMax)
-                newMax = tick;
-            else
-                break;
-        }
-
-        pMax = newMax;
     } else {
         uint base = axisScaleEngine(pAxisId)->base();
         double majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin,

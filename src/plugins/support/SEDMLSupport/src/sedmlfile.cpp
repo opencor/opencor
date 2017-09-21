@@ -139,10 +139,12 @@ libsedml::SedDocument * SedmlFile::sedmlDocument()
 
 bool SedmlFile::load()
 {
-    // Check whether the file is already loaded and without any issues
+    // Check whether the file is already loaded and without any (fatal) errors
 
-    if (!mLoadingNeeded)
-        return !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
+    if (!mLoadingNeeded) {
+        return    !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR)
+               && !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_FATAL);
+    }
 
     mLoadingNeeded = false;
 
@@ -153,17 +155,21 @@ bool SedmlFile::load()
     else
         mSedmlDocument = libsedml::readSedML(mFileName.toUtf8().constData());
 
-    return !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
+    return    !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR)
+           && !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_FATAL);
 }
 
 //==============================================================================
 
 bool SedmlFile::save(const QString &pFileName)
 {
-    // Make sure that we are properly loaded and have no issue
+    // Make sure that we are properly loaded and have no (fatal) errors
 
-    if (mLoadingNeeded || mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR))
+    if (   mLoadingNeeded
+        || mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR)
+        || mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_FATAL)) {
         return false;
+    }
 
     // Save ourselves, after having reformatted ourselves, and stop considering
     // ourselves as new anymore (in case we were), if the saving went fine
@@ -253,9 +259,10 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
         pIssues << SedmlFileIssue(issueType, error->getLine(), error->getColumn(), errorMessage);
     }
 
-    // Only consider our SED-ML document valid if it has no errors
+    // Only consider our SED-ML document valid if it has no (fatal) errors
 
-    bool res = !sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR);
+    bool res =    !sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR)
+               && !sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_FATAL);
 
     if (!pFileContents.isEmpty())
         delete sedmlDocument;
@@ -326,17 +333,17 @@ bool SedmlFile::algorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm
 
     if (annotation) {
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const XMLNode &node = annotation->getChild(i);
+            const XMLNode &solverPropertiesNode = annotation->getChild(i);
 
-            if (   QString::fromStdString(node.getURI()).compare(OpencorNamespace)
-                || QString::fromStdString(node.getName()).compare(SolverProperties)) {
+            if (   QString::fromStdString(solverPropertiesNode.getURI()).compare(OpencorNamespace)
+                || QString::fromStdString(solverPropertiesNode.getName()).compare(SolverProperties)) {
                 continue;
             }
 
             bool validSolverProperties = true;
 
-            for (uint j = 0, jMax = node.getNumChildren(); j < jMax; ++j) {
-                const XMLNode &solverPropertyNode = node.getChild(j);
+            for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
+                const XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
 
                 if (   QString::fromStdString(solverPropertyNode.getURI()).compare(OpencorNamespace)
                     || QString::fromStdString(solverPropertyNode.getName()).compare(SolverProperty)) {
