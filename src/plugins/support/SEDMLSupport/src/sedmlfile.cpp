@@ -403,8 +403,8 @@ bool SedmlFile::isSupported()
             }
         }
 
-        // Make sure that the annotation, if any, for the algorithm contains at
-        // least the kind of information we would expect
+        // Make sure that the first simulation algorithm annotation, if any,
+        // contains at least the kind of information we would expect
 
         libsbml::XMLNode *firstSimulationAlgorithmAnnotation = firstSimulationAlgorithm->getAnnotation();
 
@@ -448,7 +448,7 @@ bool SedmlFile::isSupported()
             }
         }
 
-        // Make sure that the annotation, if any, for the simulation contains at
+        // Make sure that the first simulation annotation, if any, contains at
         // least the kind of information we would expect
 
         libsbml::XMLNode *firstSimulationAnnotation = firstSimulation->getAnnotation();
