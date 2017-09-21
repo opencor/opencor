@@ -612,8 +612,6 @@ void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
             } else if (pEvent->key() == Qt::Key_Minus) {
                 zoomOut();
 
-                // Accept the event
-
                 pEvent->accept();
             } else {
                 // Default handling of the event
