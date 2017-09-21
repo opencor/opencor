@@ -1486,18 +1486,22 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
 
     foreach (const QString &solverProperty, solverProperties.keys()) {
         QString kisaoId = solverInterface->kisaoId(solverProperty);
+        QVariant solverPropertyValue = solverProperties.value(solverProperty);
+        QString value = (solverPropertyValue.type() == QVariant::Double)?
+                            QString::number(solverPropertyValue.toDouble(), 'g', 15):
+                            solverPropertyValue.toString();
 
         if (kisaoId.isEmpty()) {
             voiSolverProperties += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
                                                                             SEDMLSupport::SolverPropertyId,
                                                                             solverProperty,
                                                                             SEDMLSupport::SolverPropertyValue,
-                                                                            solverProperties.value(solverProperty).toString());
+                                                                            value);
         } else {
             libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
 
             sedmlAlgorithmParameter->setKisaoID(kisaoId.toStdString());
-            sedmlAlgorithmParameter->setValue(solverProperties.value(solverProperty).toString().toStdString());
+            sedmlAlgorithmParameter->setValue(value.toStdString());
         }
     }
 
