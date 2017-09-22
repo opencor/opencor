@@ -2174,14 +2174,14 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
 
     if (annotation) {
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const libsbml::XMLNode &node = annotation->getChild(i);
+            const libsbml::XMLNode &variableDegreeNode = annotation->getChild(i);
 
-            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                || QString::fromStdString(node.getName()).compare(SEDMLSupport::VariableDegree)) {
+            if (   QString::fromStdString(variableDegreeNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(variableDegreeNode.getName()).compare(SEDMLSupport::VariableDegree)) {
                 continue;
             }
 
-            variableDegree = QString::fromStdString(node.getChild(0).getCharacters()).toInt();
+            variableDegree = QString::fromStdString(variableDegreeNode.getChild(0).getCharacters()).toInt();
         }
     }
 
@@ -2373,15 +2373,15 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
         QString nlaSolverName = QString();
 
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const libsbml::XMLNode &node = annotation->getChild(i);
+            const libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
 
-            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                || QString::fromStdString(node.getName()).compare(SEDMLSupport::NlaSolver)) {
+            if (   QString::fromStdString(nlaSolverNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(nlaSolverNode.getName()).compare(SEDMLSupport::NlaSolver)) {
                 continue;
             }
 
             mustHaveNlaSolver = true;
-            nlaSolverName = QString::fromStdString(node.getAttrValue(node.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
+            nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
 
             foreach (SolverInterface *solverInterface, solverInterfaces) {
                 if (!nlaSolverName.compare(solverInterface->solverName())) {
