@@ -57,6 +57,12 @@ static const double DefMaxAxis = 1000.0;
 
 //==============================================================================
 
+class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraphProperties
+{
+};
+
+//==============================================================================
+
 class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraph : public QwtPlotCurve
 {
 public:

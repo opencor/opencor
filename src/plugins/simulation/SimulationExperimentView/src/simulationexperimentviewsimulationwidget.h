@@ -309,7 +309,8 @@ private slots:
                   CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
     void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                    const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
     void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                        const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 

@@ -158,7 +158,8 @@ public slots:
     void finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                  OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+                  OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                  const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
     void removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 

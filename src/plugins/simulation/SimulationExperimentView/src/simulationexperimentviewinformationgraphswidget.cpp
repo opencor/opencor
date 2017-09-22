@@ -251,7 +251,8 @@ void SimulationExperimentViewInformationGraphsWidget::finalize(OpenCOR::GraphPan
 //==============================================================================
 
 void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                               OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+                                                               OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                               const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties)
 {
     // Make sure that we have a property editor
 
@@ -294,6 +295,8 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
                                       graphProperty);
 
     // Create some line properties for our graph
+Q_UNUSED(pGraphProperties);
+//---ISSUE591--- THE ABOVE IS TO BE REMOVED...
 
     Core::Property *lineProperty = propertyEditor->addSectionProperty(graphProperty);
 
