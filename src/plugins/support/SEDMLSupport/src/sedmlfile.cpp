@@ -876,8 +876,7 @@ bool SedmlFile::isSupported()
                             for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
                                 const libsbml::XMLNode &linePropertyNode = lineOrSymbolPropertiesNode.getChild(k);
                                 QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
-                                bool linePropertyNodeHasOneChild = linePropertyNode.getNumChildren() == 1;
-                                QString linePropertyNodeValue = linePropertyNodeHasOneChild?QString::fromStdString(linePropertyNode.getChild(0).getCharacters()):QString();
+                                QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
 
                                 if (   !linePropertyNodeName.compare(LineStyle)
                                     && !validListPropertyValue(linePropertyNode, linePropertyNodeValue, LineStyle, lineStyles())) {
@@ -902,8 +901,7 @@ bool SedmlFile::isSupported()
                             for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
                                 const libsbml::XMLNode &symbolPropertyNode = lineOrSymbolPropertiesNode.getChild(k);
                                 QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
-                                bool symbolPropertyNodeHasOneChild = symbolPropertyNode.getNumChildren() == 1;
-                                QString symbolPropertyNodeValue = symbolPropertyNodeHasOneChild?QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters()):QString();
+                                QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
                                 if (   !symbolPropertyNodeName.compare(SymbolStyle)
                                     && !validListPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, SymbolStyle, symbolStyles())) {
