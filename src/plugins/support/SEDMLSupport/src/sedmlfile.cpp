@@ -926,7 +926,7 @@ bool SedmlFile::isSupported()
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                               symbolPropertyNode.getLine(),
                                                               symbolPropertyNode.getColumn(),
-                                                              tr("the 'symbolFilled' property must have a value of 'true' or 'false'"));
+                                                              tr("the '%1' property must have a value of 'true' or 'false'").arg(SymbolFilled));
 
                                     return false;
                                 } else if (   !symbolPropertyNodeName.compare(SymbolFillColor)

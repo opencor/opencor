@@ -130,5 +130,29 @@
         <source>%1 could not be retrieved (%2)</source>
         <translation>%1 n&apos;a pas pu être retrouvé (%2)</translation>
     </message>
+    <message>
+        <source>or</source>
+        <translation>ou</translation>
+    </message>
+    <message>
+        <source>the &apos;%1&apos; property must have a value of %2</source>
+        <translation>la propriété &apos;%1&apos; doit avoir une valeur de %2</translation>
+    </message>
+    <message>
+        <source>the &apos;%1&apos; property must have a value of &apos;#RRGGBB&apos;</source>
+        <translation>la propriété &apos;%1&apos; doit avoir une valeur de &apos;#RRGGBB&apos;</translation>
+    </message>
+    <message>
+        <source>the &apos;%1&apos; property value must be a number greater than zero</source>
+        <translation>la valeur de la propriété &apos;%1&apos; doit être un nombre plus grand que zéro</translation>
+    </message>
+    <message>
+        <source>the &apos;%1&apos; property value must be an integer greater than zero</source>
+        <translation>la valeur de la propriété &apos;%1&apos; doit être un entier plus grand que zéro</translation>
+    </message>
+    <message>
+        <source>the &apos;%1&apos; property must have a value of &apos;true&apos; or &apos;false&apos;</source>
+        <translation>la propriété &apos;%1&apos; doit avoir une valeur de &apos;true&apos; ou &apos;false&apos;</translation>
+    </message>
 </context>
 </TS>
