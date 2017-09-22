@@ -281,101 +281,6 @@ bool SedmlFile::isValid()
 
 //==============================================================================
 
-bool SedmlFile::algorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm)
-{
-    // Make sure that we have an algorithm
-
-    if (!pSedmlAlgorithm) {
-        mIssues << SedmlFileIssue(SedmlFileIssue::Information,
-                                  tr("only SED-ML files with one or two simulations with an algorithm are supported"));
-
-        return false;
-    }
-
-    // Make sure that the given algorithm relies on an algorithm that we support
-
-    SolverInterface *usedSolverInterface = 0;
-    QString kisaoId = QString::fromStdString(pSedmlAlgorithm->getKisaoID());
-
-    foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
-        if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
-            usedSolverInterface = solverInterface;
-
-            break;
-        }
-    }
-
-    if (!usedSolverInterface) {
-        mIssues << SedmlFileIssue(SedmlFileIssue::Information,
-                                  tr("unsupported algorithm (%1)").arg(kisaoId));
-
-        return false;
-    }
-
-    // Make sure that the algorithm parameters are also supported
-
-    for (int i = 0, iMax = pSedmlAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
-        QString kisaoId = QString::fromStdString(pSedmlAlgorithm->getAlgorithmParameter(i)->getKisaoID());
-        QString id = usedSolverInterface->id(kisaoId);
-
-        if (id.isEmpty() || !id.compare(usedSolverInterface->solverName())) {
-            mIssues << SedmlFileIssue(SedmlFileIssue::Information,
-                                      tr("unsupported algorithm parameter (%1)").arg(kisaoId));
-
-            return false;
-        }
-    }
-
-    // Make sure that the annotation, if any, contains at least the kind of
-    // information we would expect
-
-    libsbml::XMLNode *annotation = pSedmlAlgorithm->getAnnotation();
-
-    if (annotation) {
-        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const XMLNode &solverPropertiesNode = annotation->getChild(i);
-
-            if (   QString::fromStdString(solverPropertiesNode.getURI()).compare(OpencorNamespace)
-                || QString::fromStdString(solverPropertiesNode.getName()).compare(SolverProperties)) {
-                continue;
-            }
-
-            bool validSolverProperties = true;
-
-            for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
-                const XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
-
-                if (   QString::fromStdString(solverPropertyNode.getURI()).compare(OpencorNamespace)
-                    || QString::fromStdString(solverPropertyNode.getName()).compare(SolverProperty)) {
-                    continue;
-                }
-
-                int idIndex = solverPropertyNode.getAttrIndex(SolverPropertyId.toStdString());
-                int valueIndex = solverPropertyNode.getAttrIndex(SolverPropertyValue.toStdString());
-
-                if (   (idIndex == -1) || (valueIndex == -1)
-                    || solverPropertyNode.getAttrValue(idIndex).empty()
-                    || solverPropertyNode.getAttrValue(valueIndex).empty()) {
-                    validSolverProperties = false;
-
-                    break;
-                }
-            }
-
-            if (!validSolverProperties) {
-                mIssues << SedmlFileIssue(SedmlFileIssue::Information,
-                                          tr("incomplete algorithm annotation (missing algorithm property information)"));
-
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
-//==============================================================================
-
 bool SedmlFile::isSupported()
 {
     // Make sure that we are valid
@@ -440,64 +345,153 @@ bool SedmlFile::isSupported()
 
     if (initialTime != outputStartTime) {
         mIssues << SedmlFileIssue(SedmlFileIssue::Information,
-                                  tr("only SED-ML files with the same values for initialTime and outputStartTime are supported"));
+                                  tr("only SED-ML files with the same values for 'initialTime' and 'outputStartTime' are supported"));
 
         return false;
     }
 
     if (outputStartTime == outputEndTime) {
         mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                  tr("the values for outputStartTime and outputEndTime must be different"));
+                                  tr("the values for 'outputStartTime' and 'outputEndTime' must be different"));
 
         return false;
     }
 
     if (nbOfPoints <= 0) {
         mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                  tr("the value for numberOfPoints must be greater than zero"));
+                                  tr("the value for 'numberOfPoints' must be greater than zero"));
 
         return false;
     }
 
-    // Make sure that the algorithm used for the first simulation is supported
+    // Make sure that we have an algorithm for the first simulation
 
-    if (!algorithmSupported(firstSimulation->getAlgorithm()))
-        return false;
+    const libsedml::SedAlgorithm *firstSimulationAlgorithm = firstSimulation->getAlgorithm();
 
-    // Make sure that the annotation, if any, contains at least the kind of
-    // information we would expect
+    if (firstSimulationAlgorithm) {
+        // Make sure that the algorithm relies on an algorithm that we support
 
-    libsbml::XMLNode *firstSimulationAnnotation = firstSimulation->getAnnotation();
+        SolverInterface *usedSolverInterface = 0;
+        QString kisaoId = QString::fromStdString(firstSimulationAlgorithm->getKisaoID());
 
-    if (firstSimulationAnnotation) {
-        bool hasNlaSolver = false;
+        foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
+            if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
+                usedSolverInterface = solverInterface;
 
-        for (uint i = 0, iMax = firstSimulationAnnotation->getNumChildren(); i < iMax; ++i) {
-            const libsbml::XMLNode &node = firstSimulationAnnotation->getChild(i);
-
-            if (   QString::fromStdString(node.getURI()).compare(OpencorNamespace)
-                || QString::fromStdString(node.getName()).compare(NlaSolver)) {
-                continue;
+                break;
             }
+        }
 
-            int nameIndex = node.getAttrIndex(NlaSolverName.toStdString());
+        if (!usedSolverInterface) {
+            mIssues << SedmlFileIssue(SedmlFileIssue::Information,
+                                      tr("unsupported algorithm (%1)").arg(kisaoId));
 
-            if ((nameIndex != -1) && !node.getAttrValue(nameIndex).empty()) {
-                if (hasNlaSolver) {
-                    mIssues << SedmlFileIssue(SedmlFileIssue::Information,
-                                              tr("only one NLA solver is allowed"));
+            return false;
+        }
 
-                    return false;
-                } else {
-                    hasNlaSolver = true;
-                }
-            } else {
+        // Make sure that the algorithm parameters are also supported
+
+        for (int i = 0, iMax = firstSimulationAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
+            QString kisaoId = QString::fromStdString(firstSimulationAlgorithm->getAlgorithmParameter(i)->getKisaoID());
+            QString id = usedSolverInterface->id(kisaoId);
+
+            if (id.isEmpty() || !id.compare(usedSolverInterface->solverName())) {
                 mIssues << SedmlFileIssue(SedmlFileIssue::Information,
-                                          tr("incomplete simulation annotation (missing NLA solver name)"));
+                                          tr("unsupported algorithm parameter (%1)").arg(kisaoId));
 
                 return false;
             }
         }
+
+        // Make sure that the first simulation algorithm annotation, if any,
+        // contains at least the kind of information we would expect
+
+        libsbml::XMLNode *firstSimulationAlgorithmAnnotation = firstSimulationAlgorithm->getAnnotation();
+
+        if (firstSimulationAlgorithmAnnotation) {
+            for (uint i = 0, iMax = firstSimulationAlgorithmAnnotation->getNumChildren(); i < iMax; ++i) {
+                const libsbml::XMLNode &solverPropertiesNode = firstSimulationAlgorithmAnnotation->getChild(i);
+
+                if (   QString::fromStdString(solverPropertiesNode.getURI()).compare(OpencorNamespace)
+                    || QString::fromStdString(solverPropertiesNode.getName()).compare(SolverProperties)) {
+                    continue;
+                }
+
+                bool validSolverProperties = true;
+
+                for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
+                    const libsbml::XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
+
+                    if (   QString::fromStdString(solverPropertyNode.getURI()).compare(OpencorNamespace)
+                        || QString::fromStdString(solverPropertyNode.getName()).compare(SolverProperty)) {
+                        continue;
+                    }
+
+                    int idIndex = solverPropertyNode.getAttrIndex(SolverPropertyId.toStdString());
+                    int valueIndex = solverPropertyNode.getAttrIndex(SolverPropertyValue.toStdString());
+
+                    if (   (idIndex == -1) || (valueIndex == -1)
+                        || solverPropertyNode.getAttrValue(idIndex).empty()
+                        || solverPropertyNode.getAttrValue(valueIndex).empty()) {
+                        validSolverProperties = false;
+
+                        break;
+                    }
+                }
+
+                if (!validSolverProperties) {
+                    mIssues << SedmlFileIssue(SedmlFileIssue::Information,
+                                              solverPropertiesNode.getLine(),
+                                              solverPropertiesNode.getColumn(),
+                                              tr("incomplete algorithm annotation (missing algorithm property information)"));
+
+                    return false;
+                }
+            }
+        }
+
+        // Make sure that the first simulation annotation, if any, contains at
+        // least the kind of information we would expect
+
+        libsbml::XMLNode *firstSimulationAnnotation = firstSimulation->getAnnotation();
+
+        if (firstSimulationAnnotation) {
+            bool hasNlaSolver = false;
+
+            for (uint i = 0, iMax = firstSimulationAnnotation->getNumChildren(); i < iMax; ++i) {
+                const libsbml::XMLNode &nlaSolverNode = firstSimulationAnnotation->getChild(i);
+
+                if (   QString::fromStdString(nlaSolverNode.getURI()).compare(OpencorNamespace)
+                    || QString::fromStdString(nlaSolverNode.getName()).compare(NlaSolver)) {
+                    continue;
+                }
+
+                int nameIndex = nlaSolverNode.getAttrIndex(NlaSolverName.toStdString());
+
+                if ((nameIndex != -1) && !nlaSolverNode.getAttrValue(nameIndex).empty()) {
+                    if (hasNlaSolver) {
+                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                  tr("only one NLA solver is allowed"));
+
+                        return false;
+                    } else {
+                        hasNlaSolver = true;
+                    }
+                } else {
+                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                              nlaSolverNode.getLine(),
+                                              nlaSolverNode.getColumn(),
+                                              tr("incomplete simulation annotation (missing NLA solver name)"));
+
+                    return false;
+                }
+            }
+        }
+    } else {
+        mIssues << SedmlFileIssue(SedmlFileIssue::Information,
+                                  tr("only SED-ML files with one or two simulations with an algorithm are supported"));
+
+        return false;
     }
 
     // Check whether there is a second simulation
@@ -523,19 +517,30 @@ bool SedmlFile::isSupported()
             return false;
         }
 
-        // Make sure that its algorithm and annotation, if any, is the same as
-        // for the first simulation
+        // Make sure that its algorithm and annotation(s), if any, are the same
+        // as for the first simulation
 
         std::stringstream firstStream;
         std::stringstream secondStream;
         libsbml::XMLOutputStream firstXmlStream(firstStream);
         libsbml::XMLOutputStream secondXmlStream(secondStream);
+        const libsedml::SedAlgorithm *secondSimulationAlgorithm = secondSimulation->getAlgorithm();
 
-        firstSimulation->getAlgorithm()->write(firstXmlStream);
+        firstSimulationAlgorithm->write(firstXmlStream);
 
-        if (secondSimulation->getAlgorithm())
-            secondSimulation->getAlgorithm()->write(secondXmlStream);
+        if (secondSimulationAlgorithm)
+            secondSimulationAlgorithm->write(secondXmlStream);
 
+        libsbml::XMLNode *firstSimulationAlgorithmAnnotation = firstSimulationAlgorithm->getAnnotation();
+        libsbml::XMLNode *secondSimulationAlgorithmAnnotation = secondSimulationAlgorithm->getAnnotation();
+
+        if (firstSimulationAlgorithmAnnotation)
+            firstSimulationAlgorithmAnnotation->write(firstXmlStream);
+
+        if (secondSimulationAlgorithmAnnotation)
+            secondSimulationAlgorithmAnnotation->write(secondXmlStream);
+
+        libsbml::XMLNode *firstSimulationAnnotation = firstSimulation->getAnnotation();
         libsbml::XMLNode *secondSimulationAnnotation = secondSimulation->getAnnotation();
 
         if (firstSimulationAnnotation)
@@ -711,28 +716,30 @@ bool SedmlFile::isSupported()
             return false;
         }
 
-        libsbml::XMLNode *annotation = variable->getAnnotation();
+        libsbml::XMLNode *variableAnnotation = variable->getAnnotation();
 
-        if (annotation) {
-            for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-                const XMLNode &node = annotation->getChild(i);
+        if (variableAnnotation) {
+            for (uint i = 0, iMax = variableAnnotation->getNumChildren(); i < iMax; ++i) {
+                const libsbml::XMLNode &variableDegreeNode = variableAnnotation->getChild(i);
 
-                if (   QString::fromStdString(node.getURI()).compare(OpencorNamespace)
-                    || QString::fromStdString(node.getName()).compare(VariableDegree)) {
+                if (   QString::fromStdString(variableDegreeNode.getURI()).compare(OpencorNamespace)
+                    || QString::fromStdString(variableDegreeNode.getName()).compare(VariableDegree)) {
                     continue;
                 }
 
                 bool validVariableDegree = false;
 
-                if (node.getNumChildren() == 1) {
+                if (variableDegreeNode.getNumChildren() == 1) {
                     bool conversionOk;
-                    int variableDegree = QString::fromStdString(node.getChild(0).getCharacters()).toInt(&conversionOk);
+                    int variableDegree = QString::fromStdString(variableDegreeNode.getChild(0).getCharacters()).toInt(&conversionOk);
 
                     validVariableDegree = conversionOk && (variableDegree >= 0);
                 }
 
                 if (!validVariableDegree) {
                     mIssues << SedmlFileIssue(SedmlFileIssue::Information,
+                                              variableDegreeNode.getLine(),
+                                              variableDegreeNode.getColumn(),
                                               tr("only SED-ML files with data generators for one variable that is derived or not are supported"));
 
                     return false;

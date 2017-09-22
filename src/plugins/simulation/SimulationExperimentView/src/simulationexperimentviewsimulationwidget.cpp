@@ -779,7 +779,13 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                 break;
             }
 
-            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(sedmlFileIssue.message()));
+            if (sedmlFileIssue.line() && sedmlFileIssue.column()) {
+                information += QString(OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(QString::number(sedmlFileIssue.line()),
+                                                                                                                             QString::number(sedmlFileIssue.column()),
+                                                                                                                             issueType, Core::formatMessage(sedmlFileIssue.message()));
+            } else {
+                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(sedmlFileIssue.message()));
+            }
         }
     }
 
@@ -2103,7 +2109,7 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
 
     if (annotation) {
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const XMLNode &node = annotation->getChild(i);
+            const libsbml::XMLNode &node = annotation->getChild(i);
 
             if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
                 || QString::fromStdString(node.getName()).compare(SEDMLSupport::VariableDegree)) {
@@ -2245,7 +2251,7 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
 
     if (annotation) {
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const XMLNode &solverPropertiesNode = annotation->getChild(i);
+            const libsbml::XMLNode &solverPropertiesNode = annotation->getChild(i);
 
             if (   QString::fromStdString(solverPropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                 || QString::fromStdString(solverPropertiesNode.getName()).compare(SEDMLSupport::SolverProperties)) {
@@ -2253,7 +2259,7 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
             }
 
             for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
-                const XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
+                const libsbml::XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
 
                 if (   QString::fromStdString(solverPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                     || QString::fromStdString(solverPropertyNode.getName()).compare(SEDMLSupport::SolverProperty)) {
