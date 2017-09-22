@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "filemanager.h"
 #include "graphpanelwidget.h"
 #include "i18ninterface.h"
+#include "sedmlsupport.h"
 #include "simulation.h"
 #include "simulationexperimentviewinformationgraphswidget.h"
 #include "simulationexperimentviewsimulationwidget.h"
@@ -295,24 +296,32 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
                                       graphProperty);
 
     // Create some line properties for our graph
-Q_UNUSED(pGraphProperties);
-//---ISSUE591--- THE ABOVE IS TO BE REMOVED...
 
     Core::Property *lineProperty = propertyEditor->addSectionProperty(graphProperty);
 
-    propertyEditor->addListProperty(lineProperty);
-    propertyEditor->addDoubleGt0Property(1.0, lineProperty);
-    propertyEditor->addColorProperty(Qt::darkBlue, lineProperty);
+    propertyEditor->addListProperty(SEDMLSupport::lineStyles(),
+                                    SEDMLSupport::lineStyleValue((pGraphProperties.lineStyle() > Qt::DashDotDotLine)?
+                                                                     Qt::SolidLine:
+                                                                     pGraphProperties.lineStyle()),
+                                    lineProperty);
+    propertyEditor->addDoubleGt0Property(pGraphProperties.lineWidth(), lineProperty);
+    propertyEditor->addColorProperty(pGraphProperties.lineColor(), lineProperty);
 
     // Create some symbol properties for our graph
 
     Core::Property *symbolProperty = propertyEditor->addSectionProperty(graphProperty);
 
-    propertyEditor->addListProperty(symbolProperty);
-    propertyEditor->addIntegerGt0Property(8, symbolProperty);
-    propertyEditor->addColorProperty(Qt::darkBlue, symbolProperty);
-    propertyEditor->addBooleanProperty(symbolProperty);
-    propertyEditor->addColorProperty(Qt::darkBlue, symbolProperty);
+    propertyEditor->addListProperty(SEDMLSupport::symbolStyles(),
+                                    SEDMLSupport::symbolStyleValue((pGraphProperties.symbolStyle() <= QwtSymbol::DTriangle)?
+                                                                       pGraphProperties.symbolStyle()+1:
+                                                                       ((pGraphProperties.symbolStyle() >= QwtSymbol::Cross) && (pGraphProperties.symbolStyle() <= QwtSymbol::Star1))?
+                                                                           pGraphProperties.symbolStyle()-2:
+                                                                           QwtSymbol::NoSymbol),
+                                    symbolProperty);
+    propertyEditor->addIntegerGt0Property(pGraphProperties.symbolSize(), symbolProperty);
+    propertyEditor->addColorProperty(pGraphProperties.symbolColor(), symbolProperty);
+    propertyEditor->addBooleanProperty(pGraphProperties.symbolFilled(), symbolProperty);
+    propertyEditor->addColorProperty(pGraphProperties.symbolFillColor(), symbolProperty);
 
     connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
@@ -901,7 +910,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     Core::Property *symbolProperty = pProperty->properties()[4];
     Core::Property *symbolStyleProperty = symbolProperty->properties()[0];
     int symbolStyleValue = symbolStyleProperty->listValues().indexOf(symbolStyleProperty->listValue());
-    QwtSymbol::Style symbolStyle = QwtSymbol::Style((symbolStyleValue > 5)?symbolStyleValue+2:symbolStyleValue-1);
+    QwtSymbol::Style symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
     int symbolSize = symbolProperty->properties()[1]->integerValue();
     QPen symbolColor = QPen(symbolProperty->properties()[2]->colorValue());
     bool symbolFill = symbolProperty->properties()[3]->booleanValue();
@@ -1023,7 +1032,6 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
                                                                                      << tr("Dot")
                                                                                      << tr("DashDot")
                                                                                      << tr("DashDotDot"),
-                                                                       tr("Solid"),
                                                                        false);
         graphProperty->properties()[3]->properties()[1]->setName(tr("Width"));
         graphProperty->properties()[3]->properties()[2]->setName(tr("Colour"));

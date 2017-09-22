@@ -65,7 +65,7 @@ GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties() :
     mSymbolSize(8),
     mSymbolColor(Qt::darkBlue),
     mSymbolFilled(true),
-    mSymbolFillColor(Qt::darkBlue)
+    mSymbolFillColor(Qt::white)
 {
 }
 
