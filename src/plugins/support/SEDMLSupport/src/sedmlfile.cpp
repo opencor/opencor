@@ -705,22 +705,22 @@ bool SedmlFile::isSupported()
             return false;
         }
 
-        libsbml::XMLNode *annotation = variable->getAnnotation();
+        libsbml::XMLNode *variableAnnotation = variable->getAnnotation();
 
-        if (annotation) {
-            for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-                const XMLNode &node = annotation->getChild(i);
+        if (variableAnnotation) {
+            for (uint i = 0, iMax = variableAnnotation->getNumChildren(); i < iMax; ++i) {
+                const libsbml::XMLNode &variableDegreeNode = variableAnnotation->getChild(i);
 
-                if (   QString::fromStdString(node.getURI()).compare(OpencorNamespace)
-                    || QString::fromStdString(node.getName()).compare(VariableDegree)) {
+                if (   QString::fromStdString(variableDegreeNode.getURI()).compare(OpencorNamespace)
+                    || QString::fromStdString(variableDegreeNode.getName()).compare(VariableDegree)) {
                     continue;
                 }
 
                 bool validVariableDegree = false;
 
-                if (node.getNumChildren() == 1) {
+                if (variableDegreeNode.getNumChildren() == 1) {
                     bool conversionOk;
-                    int variableDegree = QString::fromStdString(node.getChild(0).getCharacters()).toInt(&conversionOk);
+                    int variableDegree = QString::fromStdString(variableDegreeNode.getChild(0).getCharacters()).toInt(&conversionOk);
 
                     validVariableDegree = conversionOk && (variableDegree >= 0);
                 }
