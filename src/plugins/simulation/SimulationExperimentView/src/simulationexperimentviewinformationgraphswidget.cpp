@@ -996,21 +996,24 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
         }
     }
 
-    // Determine the model list values
+    // Determine the model list values, but only if needed, i.e. if we have some
+    // graph properties
 
     QStringList modelListValues = QStringList();
 
-    foreach (const QString &fileName, mViewWidget->fileNames()) {
-        Core::File *file = Core::FileManager::instance()->file(fileName);
-        QString fileNameOrUrl = file->isLocal()?fileName:file->url();
+    if (!graphProperties.isEmpty()) {
+        foreach (const QString &fileName, mViewWidget->fileNames()) {
+            Core::File *file = Core::FileManager::instance()->file(fileName);
+            QString fileNameOrUrl = file->isLocal()?fileName:file->url();
 
-        modelListValues << modelListValue(fileNameOrUrl);
+            modelListValues << modelListValue(fileNameOrUrl);
+        }
+
+        modelListValues.sort();
+
+        modelListValues.prepend(QString());
+        modelListValues.prepend(tr("Current"));
     }
-
-    modelListValues.sort();
-
-    modelListValues.prepend(QString());
-    modelListValues.prepend(tr("Current"));
 
     // Go through our graph properties and update (incl. retranslate) their
     // information
