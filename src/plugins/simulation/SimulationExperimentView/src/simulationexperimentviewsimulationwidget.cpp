@@ -2485,13 +2485,14 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                             for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
                                 const libsbml::XMLNode &linePropertyNode = lineOrSymbolPropertiesNode.getChild(k);
                                 QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
+                                QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
 
                                 if (!linePropertyNodeName.compare(SEDMLSupport::LineStyle)) {
-//---ISSUE591--- TO BE DONE...
+                                    lineStyle = Qt::PenStyle(SEDMLSupport::lineStyleValueIndex(linePropertyNodeValue));
                                 } else if (!linePropertyNodeName.compare(SEDMLSupport::LineWidth)) {
-//---ISSUE591--- TO BE DONE...
+                                    lineWidth = linePropertyNodeValue.toDouble();
                                 } else if (!linePropertyNodeName.compare(SEDMLSupport::LineColor)) {
-//---ISSUE591--- TO BE DONE...
+                                    lineColor.setNamedColor(linePropertyNodeValue);
                                 }
                             }
                         } else {
