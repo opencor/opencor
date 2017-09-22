@@ -15,20 +15,16 @@
 <context>
     <name>OpenCOR::SEDMLSupport::SedmlFile</name>
     <message>
-        <source>only SED-ML files with one or two simulations with an algorithm are supported</source>
-        <translation>seulement les fichiers SED-ML avec une ou deux simulations avec un algorithme sont supportés</translation>
+        <source>or</source>
+        <translation>ou</translation>
     </message>
     <message>
-        <source>unsupported algorithm (%1)</source>
-        <translation>algorithme non supporté (%1)</translation>
+        <source>the &apos;%1&apos; property must have a value of %2</source>
+        <translation>la propriété &apos;%1&apos; doit avoir une valeur de %2</translation>
     </message>
     <message>
-        <source>unsupported algorithm parameter (%1)</source>
-        <translation>paramètre d&apos;algorithme non supporté (%1)</translation>
-    </message>
-    <message>
-        <source>incomplete algorithm annotation (missing algorithm property information)</source>
-        <translation>annotation d&apos;algorithme incomplète (information sur propriété d&apos;algorithme manquante)</translation>
+        <source>the &apos;%1&apos; property must have a value of &apos;#RRGGBB&apos;</source>
+        <translation>la propriété &apos;%1&apos; doit avoir une valeur de &apos;#RRGGBB&apos;</translation>
     </message>
     <message>
         <source>only SED-ML files with one model are supported</source>
@@ -59,12 +55,28 @@
         <translation>la valeur pour &apos;numberOfPoints&apos; doit être plus grande que zéro</translation>
     </message>
     <message>
+        <source>unsupported algorithm (%1)</source>
+        <translation>algorithme non supporté (%1)</translation>
+    </message>
+    <message>
+        <source>unsupported algorithm parameter (%1)</source>
+        <translation>paramètre d&apos;algorithme non supporté (%1)</translation>
+    </message>
+    <message>
+        <source>incomplete algorithm annotation (missing algorithm property information)</source>
+        <translation>annotation d&apos;algorithme incomplète (information sur propriété d&apos;algorithme manquante)</translation>
+    </message>
+    <message>
         <source>only one NLA solver is allowed</source>
         <translation>seulement un solveur ANL est autorisé</translation>
     </message>
     <message>
         <source>incomplete simulation annotation (missing NLA solver name)</source>
         <translation>annotation de simulation incomplète (nom de solveur ANL manquant)</translation>
+    </message>
+    <message>
+        <source>only SED-ML files with one or two simulations with an algorithm are supported</source>
+        <translation>seulement les fichiers SED-ML avec une ou deux simulations avec un algorithme sont supportés</translation>
     </message>
     <message>
         <source>only SED-ML files with a one-step as a second simulation are supported</source>
@@ -117,6 +129,18 @@
     <message>
         <source>a curve must reference existing data generators</source>
         <translation>une courbe doit référencer des générateurs de donnée qui existent</translation>
+    </message>
+    <message>
+        <source>the &apos;%1&apos; property value must be a number greater than zero</source>
+        <translation>la valeur de la propriété &apos;%1&apos; doit être un nombre plus grand que zéro</translation>
+    </message>
+    <message>
+        <source>the &apos;%1&apos; property value must be an integer greater than zero</source>
+        <translation>la valeur de la propriété &apos;%1&apos; doit être un entier plus grand que zéro</translation>
+    </message>
+    <message>
+        <source>the &apos;%1&apos; property must have a value of &apos;true&apos; or &apos;false&apos;</source>
+        <translation>la propriété &apos;%1&apos; doit avoir une valeur de &apos;true&apos; ou &apos;false&apos;</translation>
     </message>
     <message>
         <source>%1 could not be found</source>

@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "interfaces.h"
 #include "progressbarwidget.h"
 #include "sedmlinterface.h"
+#include "sedmlsupport.h"
 #include "sedmlsupportplugin.h"
 #include "simulation.h"
 #include "simulationexperimentviewcontentswidget.h"
@@ -362,13 +363,13 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Keep track of the addition and removal of a graph
 
-    connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            graphsWidget, SLOT(addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)),
+            graphsWidget, SLOT(addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
     connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
             graphsWidget, SLOT(removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
-    connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            this, SLOT(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)),
+            this, SLOT(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
     connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
             this, SLOT(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
@@ -393,6 +394,9 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
             this, SLOT(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
     connect(graphsWidget, SIGNAL(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
             this, SLOT(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
+
+    connect(graphsWidget, SIGNAL(graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+            this, SLOT(graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
 
     // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
@@ -1257,10 +1261,13 @@ QVariant SimulationExperimentViewSimulationWidget::value(Core::Property *pProper
     case Core::Property::Section:
         return QVariant();
     case Core::Property::String:
+    case Core::Property::Color:
         return pProperty->value();
     case Core::Property::Integer:
+    case Core::Property::IntegerGt0:
         return pProperty->integerValue();
     case Core::Property::Double:
+    case Core::Property::DoubleGt0:
         return pProperty->doubleValue();
     case Core::Property::List:
         return pProperty->listValue();
@@ -1269,6 +1276,33 @@ QVariant SimulationExperimentViewSimulationWidget::value(Core::Property *pProper
     }
 
     return QVariant();
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
+}
+
+//==============================================================================
+
+QString SimulationExperimentViewSimulationWidget::stringValue(Core::Property *pProperty) const
+{
+    switch (pProperty->type()) {
+    case Core::Property::Section:
+        return QString();
+    case Core::Property::String:
+    case Core::Property::Color:
+        return pProperty->value();
+    case Core::Property::Integer:
+    case Core::Property::IntegerGt0:
+        return QString::number(pProperty->integerValue());
+    case Core::Property::Double:
+    case Core::Property::DoubleGt0:
+        return QString::number(pProperty->doubleValue(), 'g', 15);
+    case Core::Property::List:
+        return pProperty->listValue();
+    case Core::Property::Boolean:
+        return QVariant(pProperty->booleanValue()).toString();
+    }
+
+    return QString();
     // Note: we can't reach this point, but without it we may be told that not
     //       all control paths return a value...
 }
@@ -1723,6 +1757,37 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
                 sedmlCurve->setYDataReference(sedmlDataGeneratorIdY);
                 sedmlCurve->setLogY(logY);
+
+                // Customise our curve using an annotation
+
+                static const QString CurveProperty = QString("<%1>%2</%1>");
+
+                Core::Properties lineProperties = property->properties()[3]->properties();
+                Core::Properties symbolProperties = property->properties()[4]->properties();
+
+                sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%2\">"
+                                                     "    <%3>%5</%3>"
+                                                     "    <%4>%6</%4>"
+                                                     "</%1>").arg( SEDMLSupport::CurveProperties,
+                                                                   SEDMLSupport::OpencorNamespace,
+                                                                   SEDMLSupport::LineProperties,
+                                                                   SEDMLSupport::SymbolProperties,
+                                                                   CurveProperty.arg(SEDMLSupport::LineStyle,
+                                                                                     SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
+                                                                  +CurveProperty.arg(SEDMLSupport::LineWidth,
+                                                                                     stringValue(lineProperties[1]))
+                                                                  +CurveProperty.arg(SEDMLSupport::LineColor,
+                                                                                     stringValue(lineProperties[2])),
+                                                                   CurveProperty.arg(SEDMLSupport::SymbolStyle,
+                                                                                     SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
+                                                                  +CurveProperty.arg(SEDMLSupport::SymbolSize,
+                                                                                     stringValue(symbolProperties[1]))
+                                                                  +CurveProperty.arg(SEDMLSupport::SymbolColor,
+                                                                                     stringValue(symbolProperties[2]))
+                                                                  +CurveProperty.arg(SEDMLSupport::SymbolFilled,
+                                                                                     stringValue(symbolProperties[3]))
+                                                                  +CurveProperty.arg(SEDMLSupport::SymbolFillColor,
+                                                                                     stringValue(symbolProperties[4]))).toStdString());
             }
         }
     }
@@ -2109,14 +2174,14 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
 
     if (annotation) {
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const libsbml::XMLNode &node = annotation->getChild(i);
+            const libsbml::XMLNode &variableDegreeNode = annotation->getChild(i);
 
-            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                || QString::fromStdString(node.getName()).compare(SEDMLSupport::VariableDegree)) {
+            if (   QString::fromStdString(variableDegreeNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(variableDegreeNode.getName()).compare(SEDMLSupport::VariableDegree)) {
                 continue;
             }
 
-            variableDegree = QString::fromStdString(node.getChild(0).getCharacters()).toInt();
+            variableDegree = QString::fromStdString(variableDegreeNode.getChild(0).getCharacters()).toInt();
         }
     }
 
@@ -2216,10 +2281,12 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
 
                     break;
                 case Core::Property::Integer:
+                case Core::Property::IntegerGt0:
                     solverProperty->setIntegerValue(solverPropertyValue.toInt());
 
                     break;
                 case Core::Property::Double:
+                case Core::Property::DoubleGt0:
                     solverProperty->setDoubleValue(solverPropertyValue.toDouble());
 
                     break;
@@ -2229,6 +2296,14 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                     break;
                 case Core::Property::Boolean:
                     solverProperty->setBooleanValue(solverPropertyValue.toBool());
+
+                    break;
+                case Core::Property::Color:
+#ifdef QT_DEBUG
+                    // We should never come here...
+
+                    qFatal("FATAL ERROR | %s:%d: the solver property cannot be of colour type.", __FILE__, __LINE__);
+#endif
 
                     break;
                 }
@@ -2298,15 +2373,15 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
         QString nlaSolverName = QString();
 
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const libsbml::XMLNode &node = annotation->getChild(i);
+            const libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
 
-            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                || QString::fromStdString(node.getName()).compare(SEDMLSupport::NlaSolver)) {
+            if (   QString::fromStdString(nlaSolverNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(nlaSolverNode.getName()).compare(SEDMLSupport::NlaSolver)) {
                 continue;
             }
 
             mustHaveNlaSolver = true;
-            nlaSolverName = QString::fromStdString(node.getAttrValue(node.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
+            nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
 
             foreach (SolverInterface *solverInterface, solverInterfaces) {
                 if (!nlaSolverName.compare(solverInterface->solverName())) {
@@ -2376,7 +2451,77 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                 return false;
             }
 
-            graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter));
+            Qt::PenStyle lineStyle = Qt::SolidLine;
+            double lineWidth = 1.0;
+            QColor lineColor = Qt::darkBlue;
+            QwtSymbol::Style symbolStyle = QwtSymbol::NoSymbol;
+            int symbolSize = 8;
+            QColor symbolColor = Qt::darkBlue;
+            bool symbolFilled = true;
+            QColor symbolFillColor = Qt::white;
+
+            annotation = sedmlCurve->getAnnotation();
+
+            if (annotation) {
+                for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+                    const libsbml::XMLNode &curvePropertiesNode = annotation->getChild(i);
+
+                    if (   QString::fromStdString(curvePropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                        || QString::fromStdString(curvePropertiesNode.getName()).compare(SEDMLSupport::CurveProperties)) {
+                        continue;
+                    }
+
+                    for (uint j = 0, jMax = curvePropertiesNode.getNumChildren(); j < jMax; ++j) {
+                        const libsbml::XMLNode &lineOrSymbolPropertiesNode = curvePropertiesNode.getChild(j);
+                        QString lineOrSymbolPropertiesNodeName = QString::fromStdString(lineOrSymbolPropertiesNode.getName());
+
+                        bool isLinePropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SEDMLSupport::LineProperties);
+                        bool isSymbolPropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SEDMLSupport::SymbolProperties);
+
+                        if (!isLinePropertiesNode && !isSymbolPropertiesNode)
+                            continue;
+
+                        if (isLinePropertiesNode) {
+                            for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &linePropertyNode = lineOrSymbolPropertiesNode.getChild(k);
+                                QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
+                                QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
+
+                                if (!linePropertyNodeName.compare(SEDMLSupport::LineStyle)) {
+                                    lineStyle = Qt::PenStyle(SEDMLSupport::lineStyleValueIndex(linePropertyNodeValue));
+                                } else if (!linePropertyNodeName.compare(SEDMLSupport::LineWidth)) {
+                                    lineWidth = linePropertyNodeValue.toDouble();
+                                } else if (!linePropertyNodeName.compare(SEDMLSupport::LineColor)) {
+                                    lineColor.setNamedColor(linePropertyNodeValue);
+                                }
+                            }
+                        } else {
+                            for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &symbolPropertyNode = lineOrSymbolPropertiesNode.getChild(k);
+                                QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
+                                QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
+
+                                if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolStyle)) {
+                                    int symbolStyleValue = SEDMLSupport::symbolStyleValueIndex(symbolPropertyNodeValue);
+
+                                    symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolSize)) {
+                                    symbolSize = symbolPropertyNodeValue.toInt();
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolColor)) {
+                                    symbolColor.setNamedColor(symbolPropertyNodeValue);
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolFilled)) {
+                                    symbolFilled = !symbolPropertyNodeValue.compare("true");
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolFillColor)) {
+                                    symbolFillColor.setNamedColor(symbolPropertyNodeValue);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter),
+                                 GraphPanelWidget::GraphPanelPlotGraphProperties( lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
         }
     }
 
@@ -2744,8 +2889,11 @@ void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFil
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                          OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+                                                          OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                          const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties)
 {
+    Q_UNUSED(pGraphProperties);
+
     // A new graph has been added, so keep track of it and update its plot
     // Note: updating the plot will, if needed, update the plot's axes and, as
     //       a result, replot the graphs including our new one. On the other
@@ -2758,8 +2906,7 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
 
     if (updatePlot(plot) || plot->drawGraphFrom(pGraph, 0)) {
         QCoreApplication::processEvents();
-        // Note: needProcessingEvents is used to ensure that our plot is updated
-        //       at once...
+        // Note: this ensures that our plot is updated at once...
     }
 
     // Keep track of the plot itself, if needed
@@ -2843,6 +2990,18 @@ void SimulationExperimentViewSimulationWidget::graphUpdated(OpenCOR::GraphPanelW
     // plots are up to date
 
     graphsUpdated(GraphPanelWidget::GraphPanelPlotGraphs() << pGraph);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+{
+    // The visual aspect of the given graph has changed, so replot it
+
+    pGraph->plot()->replot();
+
+    QCoreApplication::processEvents();
+    // Note: this ensures that our plot is updated at once...
 }
 
 //==============================================================================

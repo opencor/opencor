@@ -35,6 +35,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "sbmlapibegin.h"
+    #include "sbml/math/ASTNode.h"
+#include "sbmlapiend.h"
+
+//==============================================================================
+
 namespace libsedml {
     class SedAlgorithm;
     class SedDocument;
@@ -64,6 +70,17 @@ static const auto SolverPropertyId    = QStringLiteral("id");
 static const auto SolverPropertyValue = QStringLiteral("value");
 static const auto NlaSolver           = QStringLiteral("nlaSolver");
 static const auto NlaSolverName       = QStringLiteral("name");
+static const auto CurveProperties     = QStringLiteral("curveProperties");
+static const auto LineProperties      = QStringLiteral("lineProperties");
+static const auto LineStyle           = QStringLiteral("lineStyle");
+static const auto LineWidth           = QStringLiteral("lineWidth");
+static const auto LineColor           = QStringLiteral("lineColor");
+static const auto SymbolProperties    = QStringLiteral("symbolProperties");
+static const auto SymbolStyle         = QStringLiteral("symbolStyle");
+static const auto SymbolSize          = QStringLiteral("symbolSize");
+static const auto SymbolColor         = QStringLiteral("symbolColor");
+static const auto SymbolFilled        = QStringLiteral("symbolFilled");
+static const auto SymbolFillColor     = QStringLiteral("symbolFillColor");
 
 //==============================================================================
 
@@ -111,6 +128,14 @@ private:
     SedmlFileIssues mIssues;
 
     virtual void reset();
+
+    bool validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
+                                const QString &pPropertyNodeValue,
+                                const QString &pPropertyName,
+                                const QStringList &pValuesList);
+    bool validColorPropertyValue(const libsbml::XMLNode &pPropertyNode,
+                                 const QString &pPropertyNodeValue,
+                                 const QString &pPropertyName);
 };
 
 //==============================================================================

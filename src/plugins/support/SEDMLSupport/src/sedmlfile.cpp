@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "filemanager.h"
 #include "interfaces.h"
 #include "sedmlfile.h"
+#include "sedmlsupport.h"
 #include "solverinterface.h"
 
 //==============================================================================
@@ -34,12 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDir>
 #include <QRegularExpression>
 #include <QTemporaryFile>
-
-//==============================================================================
-
-#include "sbmlapibegin.h"
-    #include "sbml/math/ASTNode.h"
-#include "sbmlapiend.h"
 
 //==============================================================================
 
@@ -277,6 +272,60 @@ bool SedmlFile::isValid()
     // Return whether we are valid
 
     return isValid(QString(), mIssues);
+}
+
+//==============================================================================
+
+bool SedmlFile::validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
+                                       const QString &pPropertyNodeValue,
+                                       const QString &pPropertyName,
+                                       const QStringList &pValuesList)
+{
+    // Check whether the given list property is valid
+
+    if (!pValuesList.contains(pPropertyNodeValue)) {
+        QString values = QString();
+        int i = -1;
+        int lastValueIndex = pValuesList.count()-1;
+
+        foreach (const QString &lineStyle, pValuesList) {
+            if (++i)
+                values += (i == lastValueIndex)?" "+tr("or")+" ":", ";
+
+            values += "'"+lineStyle+"'";
+        }
+
+        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                  pPropertyNode.getLine(),
+                                  pPropertyNode.getColumn(),
+                                  tr("the '%1' property must have a value of %2").arg(pPropertyName, values));
+
+        return false;
+    } else {
+        return true;
+    }
+}
+
+//==============================================================================
+
+bool SedmlFile::validColorPropertyValue(const libsbml::XMLNode &pPropertyNode,
+                                        const QString &pPropertyNodeValue,
+                                        const QString &pPropertyName)
+{
+    // Check whether the given color property is valid
+
+    static const QRegularExpression ColorRegEx = QRegularExpression("^#[[:xdigit:]]{6}$");
+
+    if (!ColorRegEx.match(pPropertyNodeValue).hasMatch()) {
+        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                  pPropertyNode.getLine(),
+                                  pPropertyNode.getColumn(),
+                                  tr("the '%1' property must have a value of '#RRGGBB'").arg(pPropertyName));
+
+        return false;
+    } else {
+        return true;
+    }
 }
 
 //==============================================================================
@@ -801,6 +850,93 @@ bool SedmlFile::isSupported()
                                           tr("a curve must reference existing data generators"));
 
                 return false;
+            }
+
+            libsbml::XMLNode *curveAnnotation = curve->getAnnotation();
+
+            if (curveAnnotation) {
+                for (uint i = 0, iMax = curveAnnotation->getNumChildren(); i < iMax; ++i) {
+                    const libsbml::XMLNode &curvePropertiesNode = curveAnnotation->getChild(i);
+
+                    if (   QString::fromStdString(curvePropertiesNode.getURI()).compare(OpencorNamespace)
+                        || QString::fromStdString(curvePropertiesNode.getName()).compare(CurveProperties)) {
+                        continue;
+                    }
+
+                    for (uint j = 0, jMax = curvePropertiesNode.getNumChildren(); j < jMax; ++j) {
+                        const libsbml::XMLNode &lineOrSymbolPropertiesNode = curvePropertiesNode.getChild(j);
+                        QString lineOrSymbolPropertiesNodeName = QString::fromStdString(lineOrSymbolPropertiesNode.getName());
+                        bool isLinePropertiesNode = !lineOrSymbolPropertiesNodeName.compare(LineProperties);
+                        bool isSymbolPropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SymbolProperties);
+
+                        if (!isLinePropertiesNode && !isSymbolPropertiesNode)
+                            continue;
+
+                        if (isLinePropertiesNode) {
+                            for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &linePropertyNode = lineOrSymbolPropertiesNode.getChild(k);
+                                QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
+                                QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
+
+                                if (   !linePropertyNodeName.compare(LineStyle)
+                                    && !validListPropertyValue(linePropertyNode, linePropertyNodeValue, LineStyle, lineStyles())) {
+                                    return false;
+                                } else if (!linePropertyNodeName.compare(LineWidth)) {
+                                    static const QRegularExpression DoubleGt0RegEx = QRegularExpression("^[+]?(([1-9]\\d*)?(\\.\\d*)?|[0]?\\.\\d+)([eE][+-]?\\d+)?$");
+
+                                    if (!DoubleGt0RegEx.match(linePropertyNodeValue).hasMatch()) {
+                                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                                  linePropertyNode.getLine(),
+                                                                  linePropertyNode.getColumn(),
+                                                                  tr("the '%1' property value must be a number greater than zero").arg(linePropertyNodeName));
+
+                                        return false;
+                                    }
+                                } else if (   !linePropertyNodeName.compare(LineColor)
+                                           && !validColorPropertyValue(linePropertyNode, linePropertyNodeValue, LineColor)) {
+                                    return false;
+                                }
+                            }
+                        } else {
+                            for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &symbolPropertyNode = lineOrSymbolPropertiesNode.getChild(k);
+                                QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
+                                QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
+
+                                if (   !symbolPropertyNodeName.compare(SymbolStyle)
+                                    && !validListPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, SymbolStyle, symbolStyles())) {
+                                    return false;
+                                } else if (!symbolPropertyNodeName.compare(SymbolSize)) {
+                                    static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
+
+                                    if (!IntegerGt0RegEx.match(symbolPropertyNodeValue).hasMatch()) {
+                                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                                  symbolPropertyNode.getLine(),
+                                                                  symbolPropertyNode.getColumn(),
+                                                                  tr("the '%1' property value must be an integer greater than zero").arg(symbolPropertyNodeName));
+
+                                        return false;
+                                    }
+                                } else if (   !symbolPropertyNodeName.compare(SymbolColor)
+                                           && !validColorPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, SymbolColor)) {
+                                    return false;
+                                } else if (   !symbolPropertyNodeName.compare(SymbolFilled)
+                                           &&  symbolPropertyNodeValue.compare("true")
+                                           && symbolPropertyNodeValue.compare("false")) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                              symbolPropertyNode.getLine(),
+                                                              symbolPropertyNode.getColumn(),
+                                                              tr("the '%1' property must have a value of 'true' or 'false'").arg(SymbolFilled));
+
+                                    return false;
+                                } else if (   !symbolPropertyNodeName.compare(SymbolFillColor)
+                                           && !validColorPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, SymbolFillColor)) {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

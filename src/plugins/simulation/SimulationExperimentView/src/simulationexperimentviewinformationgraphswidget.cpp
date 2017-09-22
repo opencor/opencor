@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "filemanager.h"
 #include "graphpanelwidget.h"
 #include "i18ninterface.h"
+#include "sedmlsupport.h"
 #include "simulation.h"
 #include "simulationexperimentviewinformationgraphswidget.h"
 #include "simulationexperimentviewsimulationwidget.h"
@@ -33,11 +34,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QColorDialog>
 #include <QFileInfo>
 #include <QHeaderView>
 #include <QMenu>
 #include <QScrollBar>
 #include <QSettings>
+
+//==============================================================================
+
+#include "qwt_symbol.h"
 
 //==============================================================================
 
@@ -72,6 +78,7 @@ SimulationExperimentViewInformationGraphsWidget::SimulationExperimentViewInforma
     mRemoveAllGraphsAction = Core::newAction(this);
     mSelectAllGraphsAction = Core::newAction(this);
     mUnselectAllGraphsAction = Core::newAction(this);
+    mSelectColorAction = Core::newAction(this);
 
     connect(mAddGraphAction, SIGNAL(triggered(bool)),
             this, SLOT(addGraph()));
@@ -83,6 +90,8 @@ SimulationExperimentViewInformationGraphsWidget::SimulationExperimentViewInforma
             this, SLOT(selectAllGraphs()));
     connect(mUnselectAllGraphsAction, SIGNAL(triggered(bool)),
             this, SLOT(unselectAllGraphs()));
+    connect(mSelectColorAction, SIGNAL(triggered(bool)),
+            this, SLOT(selectColor()));
 
     mContextMenu->addAction(mAddGraphAction);
     mContextMenu->addSeparator();
@@ -91,6 +100,8 @@ SimulationExperimentViewInformationGraphsWidget::SimulationExperimentViewInforma
     mContextMenu->addSeparator();
     mContextMenu->addAction(mSelectAllGraphsAction);
     mContextMenu->addAction(mUnselectAllGraphsAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mSelectColorAction);
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -114,6 +125,8 @@ void SimulationExperimentViewInformationGraphsWidget::retranslateUi()
                                      tr("Select all the graphs"));
     I18nInterface::retranslateAction(mUnselectAllGraphsAction, tr("Unselect All Graphs"),
                                      tr("Unselect all the graphs"));
+    I18nInterface::retranslateAction(mSelectColorAction, tr("Select Colour..."),
+                                     tr("Select a colour"));
 
     // Retranslate all our property editors
 
@@ -239,7 +252,8 @@ void SimulationExperimentViewInformationGraphsWidget::finalize(OpenCOR::GraphPan
 //==============================================================================
 
 void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                               OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+                                                               OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                               const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties)
 {
     // Make sure that we have a property editor
 
@@ -280,6 +294,34 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
                                           static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())->fullyFormattedName():
                                           Core::UnknownValue,
                                       graphProperty);
+
+    // Create some line properties for our graph
+
+    Core::Property *lineProperty = propertyEditor->addSectionProperty(graphProperty);
+
+    propertyEditor->addListProperty(SEDMLSupport::lineStyles(),
+                                    SEDMLSupport::lineStyleValue((pGraphProperties.lineStyle() > Qt::DashDotDotLine)?
+                                                                     Qt::SolidLine:
+                                                                     pGraphProperties.lineStyle()),
+                                    lineProperty);
+    propertyEditor->addDoubleGt0Property(pGraphProperties.lineWidth(), lineProperty);
+    propertyEditor->addColorProperty(pGraphProperties.lineColor(), lineProperty);
+
+    // Create some symbol properties for our graph
+
+    Core::Property *symbolProperty = propertyEditor->addSectionProperty(graphProperty);
+
+    propertyEditor->addListProperty(SEDMLSupport::symbolStyles(),
+                                    SEDMLSupport::symbolStyleValue((pGraphProperties.symbolStyle() <= QwtSymbol::DTriangle)?
+                                                                       pGraphProperties.symbolStyle()+1:
+                                                                       ((pGraphProperties.symbolStyle() >= QwtSymbol::Cross) && (pGraphProperties.symbolStyle() <= QwtSymbol::Star1))?
+                                                                           pGraphProperties.symbolStyle()-2:
+                                                                           QwtSymbol::NoSymbol),
+                                    symbolProperty);
+    propertyEditor->addIntegerGt0Property(pGraphProperties.symbolSize(), symbolProperty);
+    propertyEditor->addColorProperty(pGraphProperties.symbolColor(), symbolProperty);
+    propertyEditor->addBooleanProperty(pGraphProperties.symbolFilled(), symbolProperty);
+    propertyEditor->addColorProperty(pGraphProperties.symbolFillColor(), symbolProperty);
 
     connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
@@ -401,6 +443,23 @@ void SimulationExperimentViewInformationGraphsWidget::unselectAllGraphs()
     // Unselect all the graphs
 
     selectAllGraphs(false);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphsWidget::selectColor()
+{
+    // Select a colour and assign it to the current property
+
+    QColorDialog colorDialog(mPropertyEditor->currentProperty()->colorValue(), this);
+
+    colorDialog.setWindowTitle(tr("Select Colour"));
+
+    if (colorDialog.exec()) {
+        Core::Property *crtProperty = mPropertyEditor->currentProperty();
+
+        crtProperty->setColorValue(colorDialog.currentColor());
+    }
 }
 
 //==============================================================================
@@ -570,6 +629,9 @@ void SimulationExperimentViewInformationGraphsWidget::propertyEditorContextMenu(
 
     mSelectAllGraphsAction->setEnabled(canSelectAllGraphs);
     mUnselectAllGraphsAction->setEnabled(canUnselectAllGraphs);
+
+    mSelectColorAction->setVisible(    crtProperty
+                                   && (crtProperty->type() == Core::Property::Color));
 
     // Show the context menu, or not, depending on the type of property we are
     // dealing with, if any
@@ -785,22 +847,14 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
     GraphPanelWidget::GraphPanelPlotGraph *graph = mGraphs.value(pProperty);
     QString propertyFileName = pProperty->properties()[0]->value();
     QString fileName = mSimulationWidget->fileName();
-    QPen oldPen = graph->pen();
-    QPen newPen = oldPen;
 
     if (!propertyFileName.compare(tr("Current"))) {
         pProperty->properties()[0]->setIcon(UnlockedIcon);
-
-        newPen.setColor(Qt::darkBlue);
     } else {
         pProperty->properties()[0]->setIcon(LockedIcon);
 
-        newPen.setColor(Qt::darkRed);
-
         fileName = propertyFileName.split(PropertySeparator).last();
     }
-
-    graph->setPen(newPen);
 
     // Check that the parameters represented by the value of the X and Y
     // properties exist for the current/selected model
@@ -836,12 +890,49 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
 
     graph->setFileName(fileName);
 
+    // Update the graph line settings
+
+    QPen oldLinePen = graph->pen();
+    QPen linePen = oldLinePen;
+    Core::Property *lineProperty = pProperty->properties()[3];
+    Core::Property *lineStyleProperty = lineProperty->properties()[0];
+
+    linePen.setStyle(Qt::PenStyle(lineStyleProperty->listValues().indexOf(lineStyleProperty->listValue())));
+    linePen.setWidthF(lineProperty->properties()[1]->doubleValue());
+    linePen.setColor(lineProperty->properties()[2]->colorValue());
+
+    graph->setPen(linePen);
+
+    // Update the graph symbol settings
+
+    const QwtSymbol *oldGraphSymbol = graph->symbol();
+    bool graphSymbolUpdated = !oldGraphSymbol;
+    Core::Property *symbolProperty = pProperty->properties()[4];
+    Core::Property *symbolStyleProperty = symbolProperty->properties()[0];
+    int symbolStyleValue = symbolStyleProperty->listValues().indexOf(symbolStyleProperty->listValue());
+    QwtSymbol::Style symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
+    int symbolSize = symbolProperty->properties()[1]->integerValue();
+    QPen symbolColor = QPen(symbolProperty->properties()[2]->colorValue());
+    bool symbolFill = symbolProperty->properties()[3]->booleanValue();
+    QBrush symbolFillColor = symbolFill?QBrush(symbolProperty->properties()[4]->colorValue()):QBrush();
+
+    if (oldGraphSymbol) {
+        graphSymbolUpdated =    (oldGraphSymbol->style() != symbolStyle)
+                             || (oldGraphSymbol->size().width() != symbolSize)
+                             || (oldGraphSymbol->pen() != symbolColor)
+                             || (oldGraphSymbol->brush() != symbolFillColor);
+    }
+
+    graph->setSymbol(new QwtSymbol(symbolStyle, symbolFillColor, symbolColor,
+                                   QSize(symbolSize, symbolSize)));
+
     // Let people know if the graph has been updated in some way or another
 
     if (   (oldParameterX != graph->parameterX())
-        || (oldParameterY != graph->parameterY())
-        || (oldPen != newPen)) {
+        || (oldParameterY != graph->parameterY())) {
         emit graphUpdated(graph);
+    } else if ((oldLinePen != linePen) || graphSymbolUpdated) {
+        emit graphVisualUpdated(graph);
     }
 }
 
@@ -869,7 +960,12 @@ void SimulationExperimentViewInformationGraphsWidget::graphChanged(Core::Propert
         // Note: updateGraphInfo() will emit the graphUpdated() signal, if
         //       needed...
 
-        updateGraphInfo(pProperty->parentProperty());
+        Core::Property *graphProperty = pProperty->parentProperty();
+
+        while (graphProperty->parentProperty())
+            graphProperty = graphProperty->parentProperty();
+
+        updateGraphInfo(graphProperty);
     }
 }
 
@@ -900,21 +996,24 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
         }
     }
 
-    // Determine the model list values
+    // Determine the model list values, but only if needed, i.e. if we have some
+    // graph properties
 
     QStringList modelListValues = QStringList();
 
-    foreach (const QString &fileName, mViewWidget->fileNames()) {
-        Core::File *file = Core::FileManager::instance()->file(fileName);
-        QString fileNameOrUrl = file->isLocal()?fileName:file->url();
+    if (!graphProperties.isEmpty()) {
+        foreach (const QString &fileName, mViewWidget->fileNames()) {
+            Core::File *file = Core::FileManager::instance()->file(fileName);
+            QString fileNameOrUrl = file->isLocal()?fileName:file->url();
 
-        modelListValues << modelListValue(fileNameOrUrl);
+            modelListValues << modelListValue(fileNameOrUrl);
+        }
+
+        modelListValues.sort();
+
+        modelListValues.prepend(QString());
+        modelListValues.prepend(tr("Current"));
     }
-
-    modelListValues.sort();
-
-    modelListValues.prepend(QString());
-    modelListValues.prepend(tr("Current"));
 
     // Go through our graph properties and update (incl. retranslate) their
     // information
@@ -925,6 +1024,41 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
         graphProperty->properties()[0]->setName(tr("Model"));
         graphProperty->properties()[1]->setName(tr("X"));
         graphProperty->properties()[2]->setName(tr("Y"));
+
+        // Set the label of our graph line properties
+
+        graphProperty->properties()[3]->setName(tr("Line"));
+        graphProperty->properties()[3]->properties()[0]->setName(tr("Style"));
+        graphProperty->properties()[3]->properties()[0]->setListValues(QStringList() << tr("None")
+                                                                                     << tr("Solid")
+                                                                                     << tr("Dash")
+                                                                                     << tr("Dot")
+                                                                                     << tr("DashDot")
+                                                                                     << tr("DashDotDot"),
+                                                                       false);
+        graphProperty->properties()[3]->properties()[1]->setName(tr("Width"));
+        graphProperty->properties()[3]->properties()[2]->setName(tr("Colour"));
+
+        // Set the label of our graph symbol properties
+
+        graphProperty->properties()[4]->setName(tr("Symbol"));
+        graphProperty->properties()[4]->properties()[0]->setName(tr("Style"));
+        graphProperty->properties()[4]->properties()[0]->setListValues(QStringList() << tr("None")
+                                                                                     << tr("Circle")
+                                                                                     << tr("Square")
+                                                                                     << tr("Diamond")
+                                                                                     << tr("Triangle")
+                                                                                     << tr("Down Triangle")
+                                                                                     << tr("Cross")
+                                                                                     << tr("X Cross")
+                                                                                     << tr("Horizontal Line")
+                                                                                     << tr("Vertical Line")
+                                                                                     << tr("Star"),
+                                                                       false);
+        graphProperty->properties()[4]->properties()[1]->setName(tr("Size"));
+        graphProperty->properties()[4]->properties()[2]->setName(tr("Colour"));
+        graphProperty->properties()[4]->properties()[3]->setName(tr("Filled"));
+        graphProperty->properties()[4]->properties()[4]->setName(tr("Fill colour"));
 
         // Keep track of the current model value, so that we can safely update
         // its list values and then select the correct model value back

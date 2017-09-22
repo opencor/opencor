@@ -116,6 +116,7 @@ private:
     QAction *mRemoveAllGraphsAction;
     QAction *mSelectAllGraphsAction;
     QAction *mUnselectAllGraphsAction;
+    QAction *mSelectColorAction;
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
@@ -149,13 +150,16 @@ signals:
     void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
     void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
+    void graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+
 public slots:
     void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                     const bool &pActive = true);
     void finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                  OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+                  OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                  const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
     void removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
@@ -165,6 +169,7 @@ private slots:
     void removeAllGraphs();
     void selectAllGraphs();
     void unselectAllGraphs();
+    void selectColor();
 
     void propertyEditorContextMenu(const QPoint &pPosition) const;
 

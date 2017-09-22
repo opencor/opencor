@@ -239,6 +239,7 @@ private:
                          const qulonglong &pSize);
 
     QVariant value(Core::Property *pProperty) const;
+    QString stringValue(Core::Property *pProperty) const;
 
     void updateSimulationProperties(Core::Property *pProperty = 0);
     void updateSolversProperties(Core::Property *pProperty = 0);
@@ -308,12 +309,15 @@ private slots:
                   CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
     void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                    const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
     void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                        const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
     void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
     void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+
+    void graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
 
     void openCellmlFile();
 
