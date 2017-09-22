@@ -38,8 +38,12 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
+QStringList SEDMLSUPPORT_EXPORT lineStyles();
+
 int SEDMLSUPPORT_EXPORT lineStyleValueIndex(const QString &pLineStyleValue);
 QString SEDMLSUPPORT_EXPORT lineStyleValue(const int &pLineStyleValueIndex);
+
+QStringList SEDMLSUPPORT_EXPORT symbolStyles();
 
 int SEDMLSUPPORT_EXPORT symbolStyleValueIndex(const QString &pSymbolStyleValue);
 QString SEDMLSUPPORT_EXPORT symbolStyleValue(const int &pSymbolStyleValueIndex);

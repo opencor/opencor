@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "filemanager.h"
 #include "interfaces.h"
 #include "sedmlfile.h"
+#include "sedmlsupport.h"
 #include "solverinterface.h"
 
 //==============================================================================
@@ -847,7 +848,31 @@ bool SedmlFile::isSupported()
                                 QString linePropertyNodeValue = linePropertyNodeHasOneChild?QString::fromStdString(linePropertyNode.getChild(0).getCharacters()):QString();
 
                                 if (!linePropertyNodeName.compare(LineStyle)) {
-//---ISSUE591--- TO BE DONE...
+                                    static const QStringList LineStyles = lineStyles();
+                                    static const int LineStylesCountMinusOne = LineStyles.count()-1;
+
+                                    if (!LineStyles.contains(linePropertyNodeValue)) {
+                                        QString lineStyles = QString();
+                                        int i = -1;
+
+                                        foreach (const QString &lineStyle, LineStyles) {
+                                            if (++i) {
+                                                if (i == LineStylesCountMinusOne)
+                                                    lineStyles += " "+tr("or")+" ";
+                                                else
+                                                    lineStyles += ", ";
+                                            }
+
+                                            lineStyles += "'"+lineStyle+"'";
+                                        }
+
+                                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                                  linePropertyNode.getLine(),
+                                                                  linePropertyNode.getColumn(),
+                                                                  tr("the '%1' property must have a value of %2").arg(linePropertyNodeName, lineStyles));
+
+                                        return false;
+                                    }
                                 } else if (!linePropertyNodeName.compare(LineWidth)) {
                                     static const QRegularExpression DoubleGt0RegEx = QRegularExpression("^[+]?(([1-9]\\d*)?(\\.\\d*)?|[0]?\\.\\d+)([eE][+-]?\\d+)?$");
 
@@ -872,7 +897,31 @@ bool SedmlFile::isSupported()
                                 QString symbolPropertyNodeValue = symbolPropertyNodeHasOneChild?QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters()):QString();
 
                                 if (!symbolPropertyNodeName.compare(SymbolStyle)) {
-//---ISSUE591--- TO BE DONE...
+                                    static const QStringList SymbolStyles = symbolStyles();
+                                    static const int SymbolStylesCountMinusOne = SymbolStyles.count()-1;
+
+                                    if (!SymbolStyles.contains(symbolPropertyNodeValue)) {
+                                        QString symbolStyles = QString();
+                                        int i = -1;
+
+                                        foreach (const QString &symbolStyle, SymbolStyles) {
+                                            if (++i) {
+                                                if (i == SymbolStylesCountMinusOne)
+                                                    symbolStyles += " "+tr("or")+" ";
+                                                else
+                                                    symbolStyles += ", ";
+                                            }
+
+                                            symbolStyles += "'"+symbolStyle+"'";
+                                        }
+
+                                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                                  symbolPropertyNode.getLine(),
+                                                                  symbolPropertyNode.getColumn(),
+                                                                  tr("the '%1' property must have a value of %2").arg(symbolPropertyNodeName, symbolStyles));
+
+                                        return false;
+                                    }
                                 } else if (!symbolPropertyNodeName.compare(SymbolSize)) {
                                     static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
 
