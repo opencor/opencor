@@ -2833,8 +2833,7 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
 
     if (updatePlot(plot) || plot->drawGraphFrom(pGraph, 0)) {
         QCoreApplication::processEvents();
-        // Note: needProcessingEvents is used to ensure that our plot is updated
-        //       at once...
+        // Note: this ensures that our plot is updated at once...
     }
 
     // Keep track of the plot itself, if needed
