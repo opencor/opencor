@@ -57,15 +57,22 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties() :
-    mLineStyle(Qt::SolidLine),
-    mLineWidth(1.0),
-    mLineColor(Qt::darkBlue),
-    mSymbolStyle(QwtSymbol::NoSymbol),
-    mSymbolSize(8),
-    mSymbolColor(Qt::darkBlue),
-    mSymbolFilled(true),
-    mSymbolFillColor(Qt::white)
+GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const Qt::PenStyle &pLineStyle,
+                                                             const double &pLineWidth,
+                                                             const QColor &pLineColor,
+                                                             const QwtSymbol::Style &pSymbolStyle,
+                                                             const int &pSymbolSize,
+                                                             const QColor &pSymbolColor,
+                                                             const bool &pSymbolFilled,
+                                                             const QColor &pSymbolFillColor) :
+    mLineStyle(pLineStyle),
+    mLineWidth(pLineWidth),
+    mLineColor(pLineColor),
+    mSymbolStyle(pSymbolStyle),
+    mSymbolSize(pSymbolSize),
+    mSymbolColor(pSymbolColor),
+    mSymbolFilled(pSymbolFilled),
+    mSymbolFillColor(pSymbolFillColor)
 {
 }
 

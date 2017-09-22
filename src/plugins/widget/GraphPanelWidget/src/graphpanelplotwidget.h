@@ -61,7 +61,14 @@ static const double DefMaxAxis = 1000.0;
 class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraphProperties
 {
 public:
-    explicit GraphPanelPlotGraphProperties();
+    explicit GraphPanelPlotGraphProperties(const Qt::PenStyle &pLineStyle = Qt::SolidLine,
+                                           const double &pLineWidth = 1.0,
+                                           const QColor &pLineColor = Qt::darkBlue,
+                                           const QwtSymbol::Style &pSymbolStyle = QwtSymbol::NoSymbol,
+                                           const int &pSymbolSize = 8,
+                                           const QColor &pSymbolColor = Qt::darkBlue,
+                                           const bool &pSymbolFilled = true,
+                                           const QColor &pSymbolFillColor = Qt::white);
 
     Qt::PenStyle lineStyle() const;
     double lineWidth() const;
