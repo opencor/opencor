@@ -816,7 +816,6 @@ QStringList Property::listValues() const
 //==============================================================================
 
 void Property::setListValues(const QStringList &pListValues,
-                             const QString &pDefaultListValue,
                              const bool &pEmitSignal)
 {
     // Make sure that there would be a point in setting the list values
@@ -824,67 +823,23 @@ void Property::setListValues(const QStringList &pListValues,
     if (mType != List)
         return;
 
-    // Clean up the list values we were given:
-    //  - Remove leading empty items
-    //  - Add items, making sure that only one empty item (i.e. separator) can
-    //    be used at once
-    //  - Remove the trailing empty item, if any
-
-    QStringList listValues = QStringList();
-    int i = 0;
-    int iMax = pListValues.count();
-
-    for (; i < iMax; ++i) {
-        if (!pListValues[i].isEmpty())
-            break;
-    }
-
-    bool prevItemIsSeparator = false;
-
-    for (; i < iMax; ++i) {
-        QString listValue = pListValues[i];
-
-        if (!listValue.isEmpty()) {
-            listValues << listValue;
-
-            prevItemIsSeparator = false;
-        } else if (!prevItemIsSeparator) {
-            listValues << listValue;
-
-            prevItemIsSeparator = true;
-        }
-    }
-
-    if (!listValues.isEmpty() && listValues.last().isEmpty())
-        listValues.removeLast();
-
     // Set our list values, if appropriate
 
-    if (listValues != mListValues) {
-        mListValues = listValues;
+    if (pListValues != mListValues) {
+        int listValueIndex = mListValues.indexOf(value());
 
-        // Update our value using the requested item from our new list, if it
-        // isn't empty, otherwise use our empty list value
+        mListValues = pListValues;
 
-        int listValueIndex = mListValues.indexOf(pDefaultListValue);
+        // Update our value using the item at the same index as before, unless
+        // our new list of values is empty or the index is not valid anymore
 
         setValue(mListValues.isEmpty()?
                      mEmptyListValue:
-                     (pDefaultListValue.isEmpty() || (listValueIndex == -1))?
+                     ((listValueIndex == -1) || (listValueIndex >= mListValues.count()))?
                          mListValues.first():
                          mListValues[listValueIndex],
                  false, pEmitSignal);
     }
-}
-
-//==============================================================================
-
-void Property::setListValues(const QStringList &pListValues,
-                             const bool &pEmitSignal)
-{
-    // Set our list values with no default value
-
-    setListValues(pListValues, QString(), pEmitSignal);
 }
 
 //==============================================================================
@@ -1552,7 +1507,8 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
 
     Property *res = addProperty(Property::List, pParent);
 
-    res->setListValues(pValues, pDefaultValue);
+    res->setListValues(pValues);
+    res->setValue(pDefaultValue);
 
     return res;
 }
@@ -1564,7 +1520,7 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
 {
     // Add a list property and return its information
 
-    return addListProperty(pValues, 0, pParent);
+    return addListProperty(pValues, QString(), pParent);
 }
 
 //==============================================================================
@@ -1573,7 +1529,7 @@ Property * PropertyEditorWidget::addListProperty(Property *pParent)
 {
     // Add a list property and return its information
 
-    return addListProperty(QStringList(), 0, pParent);
+    return addListProperty(QStringList(), QString(), pParent);
 }
 
 //==============================================================================

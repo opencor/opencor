@@ -267,9 +267,6 @@ public:
 
     QStringList listValues() const;
     void setListValues(const QStringList &pListValues,
-                       const QString &pDefaultListValue,
-                       const bool &pEmitSignal = true);
-    void setListValues(const QStringList &pListValues,
                        const bool &pEmitSignal = true);
 
     QString listValue() const;
