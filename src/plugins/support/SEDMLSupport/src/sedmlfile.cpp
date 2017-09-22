@@ -276,6 +276,38 @@ bool SedmlFile::isValid()
 
 //==============================================================================
 
+bool SedmlFile::validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
+                                       const QString &pPropertyNodeValue,
+                                       const QString &pPropertyName,
+                                       const QStringList &pValuesList)
+{
+    // Check whether the given list property is valid
+
+    if (!pValuesList.contains(pPropertyNodeValue)) {
+        QString values = QString();
+        int i = -1;
+        int lastValueIndex = pValuesList.count()-1;
+
+        foreach (const QString &lineStyle, pValuesList) {
+            if (++i)
+                values += (i == lastValueIndex)?" "+tr("or")+" ":", ";
+
+            values += "'"+lineStyle+"'";
+        }
+
+        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                  pPropertyNode.getLine(),
+                                  pPropertyNode.getColumn(),
+                                  tr("the '%1' property must have a value of %2").arg(pPropertyName, values));
+
+        return false;
+    } else {
+        return true;
+    }
+}
+
+//==============================================================================
+
 bool SedmlFile::validColorPropertyValue(const libsbml::XMLNode &pPropertyNode,
                                         const QString &pPropertyNodeValue,
                                         const QString &pPropertyName)
@@ -847,32 +879,9 @@ bool SedmlFile::isSupported()
                                 bool linePropertyNodeHasOneChild = linePropertyNode.getNumChildren() == 1;
                                 QString linePropertyNodeValue = linePropertyNodeHasOneChild?QString::fromStdString(linePropertyNode.getChild(0).getCharacters()):QString();
 
-                                if (!linePropertyNodeName.compare(LineStyle)) {
-                                    static const QStringList LineStyles = lineStyles();
-                                    static const int LineStylesCountMinusOne = LineStyles.count()-1;
-
-                                    if (!LineStyles.contains(linePropertyNodeValue)) {
-                                        QString lineStyles = QString();
-                                        int i = -1;
-
-                                        foreach (const QString &lineStyle, LineStyles) {
-                                            if (++i) {
-                                                if (i == LineStylesCountMinusOne)
-                                                    lineStyles += " "+tr("or")+" ";
-                                                else
-                                                    lineStyles += ", ";
-                                            }
-
-                                            lineStyles += "'"+lineStyle+"'";
-                                        }
-
-                                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                                                  linePropertyNode.getLine(),
-                                                                  linePropertyNode.getColumn(),
-                                                                  tr("the '%1' property must have a value of %2").arg(linePropertyNodeName, lineStyles));
-
-                                        return false;
-                                    }
+                                if (   !linePropertyNodeName.compare(LineStyle)
+                                    && !validListPropertyValue(linePropertyNode, linePropertyNodeValue, LineStyle, lineStyles())) {
+                                    return false;
                                 } else if (!linePropertyNodeName.compare(LineWidth)) {
                                     static const QRegularExpression DoubleGt0RegEx = QRegularExpression("^[+]?(([1-9]\\d*)?(\\.\\d*)?|[0]?\\.\\d+)([eE][+-]?\\d+)?$");
 
@@ -896,32 +905,9 @@ bool SedmlFile::isSupported()
                                 bool symbolPropertyNodeHasOneChild = symbolPropertyNode.getNumChildren() == 1;
                                 QString symbolPropertyNodeValue = symbolPropertyNodeHasOneChild?QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters()):QString();
 
-                                if (!symbolPropertyNodeName.compare(SymbolStyle)) {
-                                    static const QStringList SymbolStyles = symbolStyles();
-                                    static const int SymbolStylesCountMinusOne = SymbolStyles.count()-1;
-
-                                    if (!SymbolStyles.contains(symbolPropertyNodeValue)) {
-                                        QString symbolStyles = QString();
-                                        int i = -1;
-
-                                        foreach (const QString &symbolStyle, SymbolStyles) {
-                                            if (++i) {
-                                                if (i == SymbolStylesCountMinusOne)
-                                                    symbolStyles += " "+tr("or")+" ";
-                                                else
-                                                    symbolStyles += ", ";
-                                            }
-
-                                            symbolStyles += "'"+symbolStyle+"'";
-                                        }
-
-                                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                                                  symbolPropertyNode.getLine(),
-                                                                  symbolPropertyNode.getColumn(),
-                                                                  tr("the '%1' property must have a value of %2").arg(symbolPropertyNodeName, symbolStyles));
-
-                                        return false;
-                                    }
+                                if (   !symbolPropertyNodeName.compare(SymbolStyle)
+                                    && !validListPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, SymbolStyle, symbolStyles())) {
+                                    return false;
                                 } else if (!symbolPropertyNodeName.compare(SymbolSize)) {
                                     static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
 

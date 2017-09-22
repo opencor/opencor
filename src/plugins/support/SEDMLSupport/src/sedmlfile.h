@@ -129,6 +129,10 @@ private:
 
     virtual void reset();
 
+    bool validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
+                                const QString &pPropertyNodeValue,
+                                const QString &pPropertyName,
+                                const QStringList &pValuesList);
     bool validColorPropertyValue(const libsbml::XMLNode &pPropertyNode,
                                  const QString &pPropertyNodeValue,
                                  const QString &pPropertyName);
