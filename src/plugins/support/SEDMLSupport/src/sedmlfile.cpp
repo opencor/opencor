@@ -849,7 +849,16 @@ bool SedmlFile::isSupported()
                                 if (!linePropertyNodeName.compare(LineStyle)) {
 //---ISSUE591--- TO BE DONE...
                                 } else if (!linePropertyNodeName.compare(LineWidth)) {
-//---ISSUE591--- TO BE DONE...
+                                    static const QRegularExpression DoubleGt0RegEx = QRegularExpression("^[+]?(([1-9]\\d*)?(\\.\\d*)?|[0]?\\.\\d+)([eE][+-]?\\d+)?$");
+
+                                    if (!DoubleGt0RegEx.match(linePropertyNodeValue).hasMatch()) {
+                                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                                  linePropertyNode.getLine(),
+                                                                  linePropertyNode.getColumn(),
+                                                                  tr("the '%1' property value must be a number greater than zero").arg(linePropertyNodeName));
+
+                                        return false;
+                                    }
                                 } else if (   !linePropertyNodeName.compare(LineColor)
                                            && !validColorPropertyValue(linePropertyNode, linePropertyNodeValue, LineColor)) {
                                     return false;
@@ -865,7 +874,16 @@ bool SedmlFile::isSupported()
                                 if (!symbolPropertyNodeName.compare(SymbolStyle)) {
 //---ISSUE591--- TO BE DONE...
                                 } else if (!symbolPropertyNodeName.compare(SymbolSize)) {
-//---ISSUE591--- TO BE DONE...
+                                    static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
+
+                                    if (!IntegerGt0RegEx.match(symbolPropertyNodeValue).hasMatch()) {
+                                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                                  symbolPropertyNode.getLine(),
+                                                                  symbolPropertyNode.getColumn(),
+                                                                  tr("the '%1' property value must be an integer greater than zero").arg(symbolPropertyNodeName));
+
+                                        return false;
+                                    }
                                 } else if (   !symbolPropertyNodeName.compare(SymbolColor)
                                            && !validColorPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, SymbolColor)) {
                                     return false;
