@@ -517,19 +517,30 @@ bool SedmlFile::isSupported()
             return false;
         }
 
-        // Make sure that its algorithm and annotation, if any, is the same as
-        // for the first simulation
+        // Make sure that its algorithm and annotation(s), if any, are the same
+        // as for the first simulation
 
         std::stringstream firstStream;
         std::stringstream secondStream;
         libsbml::XMLOutputStream firstXmlStream(firstStream);
         libsbml::XMLOutputStream secondXmlStream(secondStream);
+        const libsedml::SedAlgorithm *secondSimulationAlgorithm = secondSimulation->getAlgorithm();
 
-        firstSimulation->getAlgorithm()->write(firstXmlStream);
+        firstSimulationAlgorithm->write(firstXmlStream);
 
-        if (secondSimulation->getAlgorithm())
-            secondSimulation->getAlgorithm()->write(secondXmlStream);
+        if (secondSimulationAlgorithm)
+            secondSimulationAlgorithm->write(secondXmlStream);
 
+        libsbml::XMLNode *firstSimulationAlgorithmAnnotation = firstSimulationAlgorithm->getAnnotation();
+        libsbml::XMLNode *secondSimulationAlgorithmAnnotation = secondSimulationAlgorithm->getAnnotation();
+
+        if (firstSimulationAlgorithmAnnotation)
+            firstSimulationAlgorithmAnnotation->write(firstXmlStream);
+
+        if (secondSimulationAlgorithmAnnotation)
+            secondSimulationAlgorithmAnnotation->write(secondXmlStream);
+
+        libsbml::XMLNode *firstSimulationAnnotation = firstSimulation->getAnnotation();
         libsbml::XMLNode *secondSimulationAnnotation = secondSimulation->getAnnotation();
 
         if (firstSimulationAnnotation)
