@@ -2499,17 +2499,20 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                             for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
                                 const libsbml::XMLNode &symbolPropertyNode = lineOrSymbolPropertiesNode.getChild(k);
                                 QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
+                                QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
                                 if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolStyle)) {
-//---ISSUE591--- TO BE DONE...
+                                    int symbolStyleValue = SEDMLSupport::symbolStyleValueIndex(symbolPropertyNodeValue);
+
+                                    symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
                                 } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolSize)) {
-//---ISSUE591--- TO BE DONE...
+                                    symbolSize = symbolPropertyNodeValue.toInt();
                                 } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolColor)) {
-//---ISSUE591--- TO BE DONE...
+                                    symbolColor.setNamedColor(symbolPropertyNodeValue);
                                 } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolFilled)) {
-//---ISSUE591--- TO BE DONE...
+                                    symbolFilled = !symbolPropertyNodeValue.compare("true");
                                 } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolFillColor)) {
-//---ISSUE591--- TO BE DONE...
+                                    symbolFillColor.setNamedColor(symbolPropertyNodeValue);
                                 }
                             }
                         }
