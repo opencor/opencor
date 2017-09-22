@@ -727,6 +727,8 @@ bool SedmlFile::isSupported()
 
                 if (!validVariableDegree) {
                     mIssues << SedmlFileIssue(SedmlFileIssue::Information,
+                                              variableDegreeNode.getLine(),
+                                              variableDegreeNode.getColumn(),
                                               tr("only SED-ML files with data generators for one variable that is derived or not are supported"));
 
                     return false;

@@ -779,7 +779,13 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                 break;
             }
 
-            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(sedmlFileIssue.message()));
+            if (sedmlFileIssue.line() && sedmlFileIssue.column()) {
+                information += QString(OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(QString::number(sedmlFileIssue.line()),
+                                                                                                                             QString::number(sedmlFileIssue.column()),
+                                                                                                                             issueType, Core::formatMessage(sedmlFileIssue.message()));
+            } else {
+                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(sedmlFileIssue.message()));
+            }
         }
     }
 
