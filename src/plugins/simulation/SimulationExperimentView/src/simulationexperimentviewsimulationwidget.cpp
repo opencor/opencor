@@ -2451,16 +2451,73 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                 return false;
             }
 
-            GraphPanelWidget::GraphPanelPlotGraphProperties graphProperties = GraphPanelWidget::GraphPanelPlotGraphProperties();
+            Qt::PenStyle lineStyle = Qt::SolidLine;
+            double lineWidth = 1.0;
+            QColor lineColor = Qt::darkBlue;
+            QwtSymbol::Style symbolStyle = QwtSymbol::NoSymbol;
+            int symbolSize = 8;
+            QColor symbolColor = Qt::darkBlue;
+            bool symbolFilled = true;
+            QColor symbolFillColor = Qt::white;
 
             annotation = sedmlCurve->getAnnotation();
 
             if (annotation) {
+                for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+                    const libsbml::XMLNode &curvePropertiesNode = annotation->getChild(i);
+
+                    if (   QString::fromStdString(curvePropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                        || QString::fromStdString(curvePropertiesNode.getName()).compare(SEDMLSupport::CurveProperties)) {
+                        continue;
+                    }
+
+                    for (uint j = 0, jMax = curvePropertiesNode.getNumChildren(); j < jMax; ++j) {
+                        const libsbml::XMLNode &lineOrSymbolPropertiesNode = curvePropertiesNode.getChild(j);
+                        QString lineOrSymbolPropertiesNodeName = QString::fromStdString(lineOrSymbolPropertiesNode.getName());
+
+                        bool isLinePropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SEDMLSupport::LineProperties);
+                        bool isSymbolPropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SEDMLSupport::SymbolProperties);
+
+                        if (!isLinePropertiesNode && !isSymbolPropertiesNode)
+                            continue;
+
+                        if (isLinePropertiesNode) {
+                            for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &linePropertyNode = lineOrSymbolPropertiesNode.getChild(k);
+                                QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
+
+                                if (!linePropertyNodeName.compare(SEDMLSupport::LineStyle)) {
 //---ISSUE591--- TO BE DONE...
+                                } else if (!linePropertyNodeName.compare(SEDMLSupport::LineWidth)) {
+//---ISSUE591--- TO BE DONE...
+                                } else if (!linePropertyNodeName.compare(SEDMLSupport::LineColor)) {
+//---ISSUE591--- TO BE DONE...
+                                }
+                            }
+                        } else {
+                            for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &symbolPropertyNode = lineOrSymbolPropertiesNode.getChild(k);
+                                QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
+
+                                if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolStyle)) {
+//---ISSUE591--- TO BE DONE...
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolSize)) {
+//---ISSUE591--- TO BE DONE...
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolColor)) {
+//---ISSUE591--- TO BE DONE...
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolFilled)) {
+//---ISSUE591--- TO BE DONE...
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolFillColor)) {
+//---ISSUE591--- TO BE DONE...
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter),
-                                 graphProperties);
+                                 GraphPanelWidget::GraphPanelPlotGraphProperties( lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
         }
     }
 
