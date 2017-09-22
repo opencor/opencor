@@ -76,6 +76,7 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "Simulation Experiment view (formerly known as the Single Cell view)",
                              "entries": [
                                { "type": "Added", "description": "Support for log scales." },
+                               { "type": "Added", "description": "Ability to customise a graph." },
                                { "type": "Improved", "description": "Running of long simulations." },
                                { "type": "Improved", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
                                { "type": "Fixed", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
