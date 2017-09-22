@@ -57,6 +57,92 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
+GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties() :
+    mLineStyle(Qt::SolidLine),
+    mLineWidth(1.0),
+    mLineColor(Qt::darkBlue),
+    mSymbolStyle(QwtSymbol::NoSymbol),
+    mSymbolSize(8),
+    mSymbolColor(Qt::darkBlue),
+    mSymbolFilled(true),
+    mSymbolFillColor(Qt::darkBlue)
+{
+}
+
+//==============================================================================
+
+Qt::PenStyle GraphPanelPlotGraphProperties::lineStyle() const
+{
+    // Return our line style
+
+    return mLineStyle;
+}
+
+//==============================================================================
+
+double GraphPanelPlotGraphProperties::lineWidth() const
+{
+    // Return our line width
+
+    return mLineWidth;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotGraphProperties::lineColor() const
+{
+    // Return our line colour
+
+    return mLineColor;
+}
+
+//==============================================================================
+
+QwtSymbol::Style GraphPanelPlotGraphProperties::symbolStyle() const
+{
+    // Return our symbol style
+
+    return mSymbolStyle;
+}
+
+//==============================================================================
+
+int GraphPanelPlotGraphProperties::symbolSize() const
+{
+    // Return our symbol size
+
+    return mSymbolSize;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotGraphProperties::symbolColor() const
+{
+    // Return our symbol colour
+
+    return mSymbolColor;
+}
+
+//==============================================================================
+
+bool GraphPanelPlotGraphProperties::symbolFilled() const
+{
+    // Return our symbol filled status
+
+    return mSymbolFilled;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotGraphProperties::symbolFillColor() const
+{
+    // Return our symbol fill colour
+
+    return mSymbolFillColor;
+}
+
+//==============================================================================
+
 GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
     QwtPlotCurve(),
     mSelected(true),
