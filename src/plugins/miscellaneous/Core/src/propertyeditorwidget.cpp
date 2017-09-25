@@ -1558,7 +1558,7 @@ Property * PropertyEditorWidget::addBooleanProperty(Property *pParent)
 //==============================================================================
 
 Property * PropertyEditorWidget::addColorProperty(const QColor &pValue,
-                                                    Property *pParent)
+                                                  Property *pParent)
 {
     // Add a colour property and return its information
 
