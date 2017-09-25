@@ -314,13 +314,13 @@ bool SedmlFile::validColorPropertyValue(const libsbml::XMLNode &pPropertyNode,
 {
     // Check whether the given color property is valid
 
-    static const QRegularExpression ColorRegEx = QRegularExpression("^#[[:xdigit:]]{6}$");
+    static const QRegularExpression ColorRegEx = QRegularExpression("^#([[:xdigit:]]{6}|[[:xdigit:]]{8})$");
 
     if (!ColorRegEx.match(pPropertyNodeValue).hasMatch()) {
         mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                   pPropertyNode.getLine(),
                                   pPropertyNode.getColumn(),
-                                  tr("the '%1' property must have a value of '#RRGGBB'").arg(pPropertyName));
+                                  tr("the '%1' property must have a value of '#RRGGBB' or '#AARRGGBB'").arg(pPropertyName));
 
         return false;
     } else {

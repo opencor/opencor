@@ -285,7 +285,7 @@ ColorEditorWidget::ColorEditorWidget(QWidget *pParent) :
 {
     // Set a validator that accepts any colour
 
-    static const QRegularExpression ColorRegEx = QRegularExpression("^#[[:xdigit:]]{6}$");
+    static const QRegularExpression ColorRegEx = QRegularExpression("^#([[:xdigit:]]{6}|[[:xdigit:]]{8})$");
 
     setValidator(new QRegularExpressionValidator(ColorRegEx, this));
 }
@@ -744,6 +744,7 @@ void Property::setValue(const QString &pValue, const bool &pForce,
 
             color.setNamedColor(pValue);
 
+            colorPixmapPainter.fillRect(0, 0, colorPixmap.width()-1, colorPixmap.height()-1, Qt::white);
             colorPixmapPainter.fillRect(0, 0, colorPixmap.width()-1, colorPixmap.height()-1, color);
 
             mValue->setIcon(colorPixmap);
@@ -953,8 +954,14 @@ void Property::setColorValue(const QColor &pColorValue)
 {
     // Set our value, should it be of color type
 
-    if (mType == Color)
-        setValue(pColorValue.name());
+    if (mType == Color) {
+        QString colorValueName = pColorValue.name(QColor::HexArgb);
+
+        if (colorValueName.startsWith("#ff"))
+            setValue(pColorValue.name());
+        else
+            setValue(colorValueName);
+    }
 }
 
 //==============================================================================

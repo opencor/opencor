@@ -453,6 +453,7 @@ void SimulationExperimentViewInformationGraphsWidget::selectColor()
 
     QColorDialog colorDialog(mPropertyEditor->currentProperty()->colorValue(), this);
 
+    colorDialog.setOption(QColorDialog::ShowAlphaChannel);
     colorDialog.setWindowTitle(tr("Select Colour"));
 
     if (colorDialog.exec()) {

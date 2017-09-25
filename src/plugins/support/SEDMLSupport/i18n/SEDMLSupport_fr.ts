@@ -23,8 +23,8 @@
         <translation>la propriété &apos;%1&apos; doit avoir une valeur de %2</translation>
     </message>
     <message>
-        <source>the &apos;%1&apos; property must have a value of &apos;#RRGGBB&apos;</source>
-        <translation>la propriété &apos;%1&apos; doit avoir une valeur de &apos;#RRGGBB&apos;</translation>
+        <source>the &apos;%1&apos; property must have a value of &apos;#RRGGBB&apos; or &apos;#AARRGGBB&apos;</source>
+        <translation>la propriété &apos;%1&apos; doit avoir une valeur de &apos;#RRGGBB&apos; ou  &apos;#AARRGGBB&apos;</translation>
     </message>
     <message>
         <source>only SED-ML files with one model are supported</source>
