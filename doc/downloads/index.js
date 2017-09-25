@@ -37,9 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>ZIP support:</strong> use 755 for directories and 644 for files, if no file permissions are set (see issue <a href=\"https://github.com/opencor/opencor/issues/1417\">#1417</a>)." },
-                       { "change": "<strong>Text-based editors:</strong> added line numbers (see issue <a href=\"https://github.com/opencor/opencor/issues/1413\">#1413</a>)." },
-                       { "change": "<strong>SimulationExperiment view:</strong> added the ability to customise a graph (see issue <a href=\"https://github.com/opencor/opencor/issues/591\">#591</a>)." }
+                       { "change": "<strong>SimulationExperiment view:</strong> added support for the alpha channel in the colours used to customise a graph." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
