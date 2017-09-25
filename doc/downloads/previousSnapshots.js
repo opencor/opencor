@@ -1,4 +1,28 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 25, "month": 9, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>ZIP support:</strong> use 755 for directories and 644 for files, if no file permissions are set (see issue <a href=\"https://github.com/opencor/opencor/issues/1417\">#1417</a>)." },
+                       { "change": "<strong>Text-based editors:</strong> added line numbers (see issue <a href=\"https://github.com/opencor/opencor/issues/1413\">#1413</a>)." },
+                       { "change": "<strong>SimulationExperiment view:</strong> added the ability to customise a graph (see issue <a href=\"https://github.com/opencor/opencor/issues/591\">#591</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 13, "month": 9, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
