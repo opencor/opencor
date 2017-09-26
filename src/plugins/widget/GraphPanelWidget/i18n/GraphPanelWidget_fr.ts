@@ -27,12 +27,12 @@
 <context>
     <name>OpenCOR::GraphPanelWidget::GraphPanelPlotWidget</name>
     <message>
-        <source>Save As...</source>
-        <translation>Sauvegarder Sous...</translation>
+        <source>Export To...</source>
+        <translation>Exporter Vers...</translation>
     </message>
     <message>
-        <source>Save the contents of the graph panel as a PDF, Postcript, SVG, etc. file</source>
-        <translation>Sauvegarder le contenu du panneau graphique dans un fichier PDF, Postscript, SVG, etc.</translation>
+        <source>Export the contents of the graph panel to a PDF, PNG, SVG, etc. file</source>
+        <translation>Exporter le contenu du panneau graphique vers un fichier PDF, PNG, SVG, etc.</translation>
     </message>
     <message>
         <source>Copy To Clipboard</source>
@@ -131,8 +131,8 @@
         <translation>Fichier XPM - X11 Pixmap (*.xpm)</translation>
     </message>
     <message>
-        <source>Save As</source>
-        <translation>Sauvegarder Sous</translation>
+        <source>Export To</source>
+        <translation>Exporter Vers</translation>
     </message>
 </context>
 <context>

@@ -629,7 +629,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     mContextMenu = new QMenu(this);
 
-    mSaveAsAction = Core::newAction(this);
+    mExportToAction = Core::newAction(this);
     mCopyToClipboardAction = Core::newAction(this);
     mCustomAxesAction = Core::newAction(this);
     mLogarithmicXAxisAction = Core::newAction(true, this);
@@ -638,8 +638,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mZoomOutAction = Core::newAction(this);
     mResetZoomAction = Core::newAction(this);
 
-    connect(mSaveAsAction, SIGNAL(triggered(bool)),
-            this, SLOT(saveAs()));
+    connect(mExportToAction, SIGNAL(triggered(bool)),
+            this, SLOT(exportTo()));
     connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
             this, SLOT(copyToClipboard()));
     connect(mCustomAxesAction, SIGNAL(triggered(bool)),
@@ -655,7 +655,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     connect(mResetZoomAction, SIGNAL(triggered(bool)),
             this, SLOT(resetZoom()));
 
-    mContextMenu->addAction(mSaveAsAction);
+    mContextMenu->addAction(mExportToAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyToClipboardAction);
 
@@ -706,8 +706,8 @@ void GraphPanelPlotWidget::retranslateUi()
 {
     // Retranslate our actions
 
-    I18nInterface::retranslateAction(mSaveAsAction, tr("Save As..."),
-                                     tr("Save the contents of the graph panel as a PDF, Postcript, SVG, etc. file"));
+    I18nInterface::retranslateAction(mExportToAction, tr("Export To..."),
+                                     tr("Export the contents of the graph panel to a PDF, PNG, SVG, etc. file"));
     I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"),
                                      tr("Copy the contents of the graph panel to the clipboard"));
     I18nInterface::retranslateAction(mCustomAxesAction, tr("Custom Axes..."),
@@ -1726,10 +1726,10 @@ void GraphPanelPlotWidget::cannotUpdateActions()
 
 //==============================================================================
 
-void GraphPanelPlotWidget::saveAs()
+void GraphPanelPlotWidget::exportTo()
 {
-    // Save our contents as a PDF, SVG, etc. file
-    // Note: if no file extension is given, then we save our contents as a PDF
+    // Export our contents to a PDF, SVG, etc. file
+    // Note: if no file extension is given, then we export our contents to a PDF
     //       file...
 
     QString pdfFilter = tr("PDF File - Portable Document Format (*.pdf)");
@@ -1757,7 +1757,7 @@ void GraphPanelPlotWidget::saveAs()
 
     std::sort(filters.begin(), filters.end());
 
-    QString fileName = Core::getSaveFileName(tr("Save As"), filters, &pdfFilter);
+    QString fileName = Core::getSaveFileName(tr("Export To"), filters, &pdfFilter);
 
     if (!fileName.isEmpty()) {
         if (QFileInfo(fileName).completeSuffix().isEmpty())
