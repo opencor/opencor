@@ -288,7 +288,7 @@ void GraphPanelsWidget::setActiveGraphPanel(GraphPanelWidget *pGraphPanel)
 
     // Make the given graph panel the active one
 
-    pGraphPanel->setActive(true);
+    pGraphPanel->setActive(true, true);
 }
 
 //==============================================================================

@@ -2415,7 +2415,6 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
     int newNbOfGraphPanels = sedmlDocument->getNumOutputs();
 
     graphPanelsWidget->setSizes(QIntList());
-    graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
     if (newNbOfGraphPanels > oldNbOfGraphPanels) {
         for (uint i = 0, iMax = newNbOfGraphPanels-oldNbOfGraphPanels; i < iMax; ++i)
@@ -2424,6 +2423,8 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
         for (uint i = 0, iMax = oldNbOfGraphPanels-newNbOfGraphPanels; i < iMax; ++i)
             graphPanelsWidget->removeCurrentGraphPanel();
     }
+
+    graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
     // Customise our graphs widget
 

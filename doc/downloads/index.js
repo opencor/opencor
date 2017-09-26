@@ -38,7 +38,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>Graph Panel widget:</strong> can now export a graph panel to various formats (e.g. PDF, PNG, SVG)  (see issue <a href=\"https://github.com/opencor/opencor/issues/1123\">#1123</a>)." },
-                       { "change": "<strong>SimulationExperiment view:</strong> added support for the alpha channel in the colours used to customise a graph." }
+                       { "change": "<strong>SimulationExperiment view:</strong> added support for the alpha channel in the colours used to customise a graph. Made sure that the GUI is properly initialised when (re)loading a SED-ML file." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
