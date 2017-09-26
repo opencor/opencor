@@ -64,7 +64,7 @@ public:
     virtual void retranslateUi();
 
     bool isActive() const;
-    void setActive(const bool &pActive);
+    void setActive(const bool &pActive, const bool &pForce = false);
 
     GraphPanelPlotWidget * plot() const;
 

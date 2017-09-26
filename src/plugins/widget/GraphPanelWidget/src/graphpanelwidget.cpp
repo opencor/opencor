@@ -233,9 +233,9 @@ void GraphPanelWidget::updateMarkerColor()
 
 //==============================================================================
 
-void GraphPanelWidget::setActive(const bool &pActive)
+void GraphPanelWidget::setActive(const bool &pActive, const bool &pForce)
 {
-    if (pActive == mActive)
+    if ((pActive == mActive) && !pForce)
         return;
 
     // Set the graph panel's active state
