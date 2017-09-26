@@ -31,6 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QApplication>
 #include <QClipboard>
 #include <QDesktopWidget>
+#include <QFileDialog>
+#include <QImageWriter>
 #include <QMenu>
 #include <QPaintEvent>
 
@@ -46,6 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "qwt_plot_directpainter.h"
     #include "qwt_plot_grid.h"
     #include "qwt_plot_layout.h"
+    #include "qwt_plot_renderer.h"
     #include "qwt_scale_engine.h"
     #include "qwt_scale_widget.h"
 #include "qwtend.h"
@@ -1725,7 +1728,43 @@ void GraphPanelPlotWidget::cannotUpdateActions()
 
 void GraphPanelPlotWidget::saveAs()
 {
-//---ISSUE1123--- TO BE DONE...
+    // Save our contents as a PDF, SVG, etc. file
+    // Note: if no file extension is given, then we save our contents as a PDF
+    //       file...
+
+    QString pdfFilter = tr("PDF File - Portable Document Format (*.pdf)");
+    QStringList filters = QStringList() << pdfFilter
+                                        << tr("SVG File - Scalable Vector Graphics (*.svg)");
+
+    foreach (const QString &supportedMimeType, QImageWriter::supportedMimeTypes()) {
+        if (!supportedMimeType.compare("image/bmp"))
+            filters << tr("BMP File - Windows Bitmap (*.bmp)");
+        else if (!supportedMimeType.compare("image/jpeg"))
+            filters << tr("JPEG File - Joint Photographic Experts Group (*.jpg)");
+        else if (!supportedMimeType.compare("image/png"))
+            filters << tr("PNG File - Portable Network Graphics (*.png)");
+        else if (!supportedMimeType.compare("image/x-portable-bitmap"))
+            filters << tr("PBM File - Portable Bitmap (*.pbm)");
+        else if (!supportedMimeType.compare("image/x-portable-graymap"))
+            filters << tr("PGM File - Portable Graymap (*.pgm)");
+        else if (!supportedMimeType.compare("image/x-portable-pixmap"))
+            filters << tr("PPM File - Portable Pixmap (*.ppm)");
+        else if (!supportedMimeType.compare("image/x-xbitmap"))
+            filters << tr("XBM File - X11 Bitmap (*.xbm)");
+        else if (!supportedMimeType.compare("image/x-xpixmap"))
+            filters << tr("XPM File - X11 Pixmap (*.xpm)");
+    }
+
+    std::sort(filters.begin(), filters.end());
+
+    QString fileName = Core::getSaveFileName(tr("Save As"), filters, &pdfFilter);
+
+    if (!fileName.isEmpty()) {
+        if (QFileInfo(fileName).completeSuffix().isEmpty())
+            QwtPlotRenderer().renderDocument(this, fileName, "pdf", QSizeF(width(), height()));
+        else
+            QwtPlotRenderer().renderDocument(this, fileName, QSizeF(width(), height()));
+    }
 }
 
 //==============================================================================

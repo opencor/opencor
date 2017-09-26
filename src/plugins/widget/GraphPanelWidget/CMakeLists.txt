@@ -23,4 +23,6 @@ ADD_PLUGIN(GraphPanelWidget
     PLUGINS
         Core
         Qwt
+    QT_MODULES
+        PrintSupport
 )
