@@ -626,6 +626,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     mContextMenu = new QMenu(this);
 
+    mSaveAsAction = Core::newAction(this);
     mCopyToClipboardAction = Core::newAction(this);
     mCustomAxesAction = Core::newAction(this);
     mLogarithmicXAxisAction = Core::newAction(true, this);
@@ -634,6 +635,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mZoomOutAction = Core::newAction(this);
     mResetZoomAction = Core::newAction(this);
 
+    connect(mSaveAsAction, SIGNAL(triggered(bool)),
+            this, SLOT(saveAs()));
     connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
             this, SLOT(copyToClipboard()));
     connect(mCustomAxesAction, SIGNAL(triggered(bool)),
@@ -649,6 +652,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     connect(mResetZoomAction, SIGNAL(triggered(bool)),
             this, SLOT(resetZoom()));
 
+    mContextMenu->addAction(mSaveAsAction);
+    mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyToClipboardAction);
 
     if (pSynchronizeXAxisAction && pSynchronizeYAxisAction) {
@@ -698,6 +703,8 @@ void GraphPanelPlotWidget::retranslateUi()
 {
     // Retranslate our actions
 
+    I18nInterface::retranslateAction(mSaveAsAction, tr("Save As..."),
+                                     tr("Save the contents of the graph panel as a PDF, Postcript, SVG, etc. file"));
     I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"),
                                      tr("Copy the contents of the graph panel to the clipboard"));
     I18nInterface::retranslateAction(mCustomAxesAction, tr("Custom Axes..."),
@@ -1712,6 +1719,13 @@ void GraphPanelPlotWidget::cannotUpdateActions()
     // Keep track of the fact that we cannot update our actions anymore
 
     mCanUpdateActions = false;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::saveAs()
+{
+//---ISSUE1123--- TO BE DONE...
 }
 
 //==============================================================================

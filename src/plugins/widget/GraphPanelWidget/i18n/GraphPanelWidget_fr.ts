@@ -27,6 +27,14 @@
 <context>
     <name>OpenCOR::GraphPanelWidget::GraphPanelPlotWidget</name>
     <message>
+        <source>Save As...</source>
+        <translation>Sauvegarder Sous...</translation>
+    </message>
+    <message>
+        <source>Save the contents of the graph panel as a PDF, Postcript, SVG, etc. file</source>
+        <translation>Sauvegarder le contenu du panneau graphique dans un fichier PDF, Postscript, SVG, etc.</translation>
+    </message>
+    <message>
         <source>Copy To Clipboard</source>
         <translation>Copier Dans Presse-Papier</translation>
     </message>
