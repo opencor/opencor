@@ -12,11 +12,6 @@ var jsonData = { "versions": [
                            { "type": "Improved", "description": "Keyboard navigation in tree views." },
                          ]
                        },
-                       { "name": "Data store",
-                         "entries": [
-                           { "type": "Improved", "description": "Selection of data." }
-                         ]
-                       },
                        { "name": "API",
                          "entries": [
                            { "type": "subCategory", "name": "CellML API",
@@ -28,6 +23,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Data store",
                          "entries": [
+                           { "type": "Improved", "description": "Selection of data." },
                            { "type": "subCategory", "name": "<a href=\"https://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a> data store",
                              "entries": [
                                { "type": "Improved", "description": "Export of data." }
