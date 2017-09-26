@@ -289,6 +289,16 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 
 //==============================================================================
 
+QString getSaveFileName(const QString &pCaption, const QStringList &pFilters,
+                        QString *pSelectedFilter)
+{
+    // Retrieve and return a save file name
+
+    return getSaveFileName(pCaption, QString(), pFilters, pSelectedFilter);
+}
+
+//==============================================================================
+
 QString getDirectory(const QString &pCaption, const QString &pDirName,
                      const bool &pEmptyDir)
 {

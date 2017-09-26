@@ -31,6 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QApplication>
 #include <QClipboard>
 #include <QDesktopWidget>
+#include <QFileDialog>
+#include <QImageWriter>
 #include <QMenu>
 #include <QPaintEvent>
 
@@ -46,6 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "qwt_plot_directpainter.h"
     #include "qwt_plot_grid.h"
     #include "qwt_plot_layout.h"
+    #include "qwt_plot_renderer.h"
     #include "qwt_scale_engine.h"
     #include "qwt_scale_widget.h"
 #include "qwtend.h"
@@ -626,6 +629,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     mContextMenu = new QMenu(this);
 
+    mExportToAction = Core::newAction(this);
     mCopyToClipboardAction = Core::newAction(this);
     mCustomAxesAction = Core::newAction(this);
     mLogarithmicXAxisAction = Core::newAction(true, this);
@@ -634,6 +638,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mZoomOutAction = Core::newAction(this);
     mResetZoomAction = Core::newAction(this);
 
+    connect(mExportToAction, SIGNAL(triggered(bool)),
+            this, SLOT(exportTo()));
     connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
             this, SLOT(copyToClipboard()));
     connect(mCustomAxesAction, SIGNAL(triggered(bool)),
@@ -649,6 +655,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     connect(mResetZoomAction, SIGNAL(triggered(bool)),
             this, SLOT(resetZoom()));
 
+    mContextMenu->addAction(mExportToAction);
+    mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyToClipboardAction);
 
     if (pSynchronizeXAxisAction && pSynchronizeYAxisAction) {
@@ -698,7 +706,9 @@ void GraphPanelPlotWidget::retranslateUi()
 {
     // Retranslate our actions
 
-    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy to Clipboard"),
+    I18nInterface::retranslateAction(mExportToAction, tr("Export To..."),
+                                     tr("Export the contents of the graph panel to a PDF, PNG, SVG, etc. file"));
+    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"),
                                      tr("Copy the contents of the graph panel to the clipboard"));
     I18nInterface::retranslateAction(mCustomAxesAction, tr("Custom Axes..."),
                                      tr("Specify custom axes for the graph panel"));
@@ -1712,6 +1722,49 @@ void GraphPanelPlotWidget::cannotUpdateActions()
     // Keep track of the fact that we cannot update our actions anymore
 
     mCanUpdateActions = false;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::exportTo()
+{
+    // Export our contents to a PDF, SVG, etc. file
+    // Note: if no file extension is given, then we export our contents to a PDF
+    //       file...
+
+    QString pdfFilter = tr("PDF File - Portable Document Format (*.pdf)");
+    QStringList filters = QStringList() << pdfFilter
+                                        << tr("SVG File - Scalable Vector Graphics (*.svg)");
+
+    foreach (const QString &supportedMimeType, QImageWriter::supportedMimeTypes()) {
+        if (!supportedMimeType.compare("image/bmp"))
+            filters << tr("BMP File - Windows Bitmap (*.bmp)");
+        else if (!supportedMimeType.compare("image/jpeg"))
+            filters << tr("JPEG File - Joint Photographic Experts Group (*.jpg)");
+        else if (!supportedMimeType.compare("image/png"))
+            filters << tr("PNG File - Portable Network Graphics (*.png)");
+        else if (!supportedMimeType.compare("image/x-portable-bitmap"))
+            filters << tr("PBM File - Portable Bitmap (*.pbm)");
+        else if (!supportedMimeType.compare("image/x-portable-graymap"))
+            filters << tr("PGM File - Portable Graymap (*.pgm)");
+        else if (!supportedMimeType.compare("image/x-portable-pixmap"))
+            filters << tr("PPM File - Portable Pixmap (*.ppm)");
+        else if (!supportedMimeType.compare("image/x-xbitmap"))
+            filters << tr("XBM File - X11 Bitmap (*.xbm)");
+        else if (!supportedMimeType.compare("image/x-xpixmap"))
+            filters << tr("XPM File - X11 Pixmap (*.xpm)");
+    }
+
+    std::sort(filters.begin(), filters.end());
+
+    QString fileName = Core::getSaveFileName(tr("Export To"), filters, &pdfFilter);
+
+    if (!fileName.isEmpty()) {
+        if (QFileInfo(fileName).completeSuffix().isEmpty())
+            QwtPlotRenderer().renderDocument(this, fileName, "pdf", QSizeF(width(), height()));
+        else
+            QwtPlotRenderer().renderDocument(this, fileName, QSizeF(width(), height()));
+    }
 }
 
 //==============================================================================

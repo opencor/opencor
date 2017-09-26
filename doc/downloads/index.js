@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>Graph Panel widget:</strong> can now export a graph panel to various formats (e.g. PDF, PNG, SVG)  (see issue <a href=\"https://github.com/opencor/opencor/issues/1123\">#1123</a>)." },
                        { "change": "<strong>SimulationExperiment view:</strong> added support for the alpha channel in the colours used to customise a graph." }
                      ]
                    },

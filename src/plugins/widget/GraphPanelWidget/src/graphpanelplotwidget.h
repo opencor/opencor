@@ -281,6 +281,7 @@ private:
 
     bool mCanUpdateActions;
 
+    QAction *mExportToAction;
     QAction *mCopyToClipboardAction;
     QAction *mSynchronizeXAxisAction;
     QAction *mSynchronizeYAxisAction;
@@ -336,6 +337,7 @@ signals:
 private slots:
     void cannotUpdateActions();
 
+    void exportTo();
     void copyToClipboard();
     void customAxes();
     void toggleLogarithmicXAxis();

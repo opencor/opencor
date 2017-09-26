@@ -206,7 +206,7 @@ void MathmlViewerWidget::retranslateUi()
                                      tr("Replace 'alpha' with 'α', 'beta' with 'β', etc."));
     I18nInterface::retranslateAction(mDigitGroupingAction, tr("Digit Grouping"),
                                      tr("Group the digits of a number in groups of thousands"));
-    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy to Clipboard"),
+    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"),
                                      tr("Copy the contents of the MathML viewer to the clipboard"));
 
     // Retranslate our contents

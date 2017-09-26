@@ -106,6 +106,9 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QString &pFileName,
                                     const QStringList &pFilters = QStringList(),
                                     QString *pSelectedFilter = 0);
+QString CORE_EXPORT getSaveFileName(const QString &pCaption,
+                                    const QStringList &pFilters = QStringList(),
+                                    QString *pSelectedFilter = 0);
 
 QString CORE_EXPORT getDirectory(const QString &pCaption,
                                  const QString &pDirName = QString(),
