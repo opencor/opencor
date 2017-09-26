@@ -289,7 +289,7 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
         if (drag->exec(pSupportedActions, realDefaultDropAction) == Qt::MoveAction) {
             // We want to move the items
             // Note: the following code is based on
-            //       QAbstractItemViewPrivate::clearOrRemove...
+            //       QAbstractItemViewPrivate::clearOrRemove()...
 
             const QItemSelection selection = selectionModel()->selection();
 
