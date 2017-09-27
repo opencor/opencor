@@ -3033,9 +3033,9 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 
     bool hasAxesValues = false;
 
-    double minX = GraphPanelWidget::DefMinAxis;
+    double minX = pPlot->logAxisX()?GraphPanelWidget::DefMinLogAxis:GraphPanelWidget::DefMinAxis;
     double maxX = GraphPanelWidget::DefMaxAxis;
-    double minY = GraphPanelWidget::DefMinAxis;
+    double minY = pPlot->logAxisY()?GraphPanelWidget::DefMinLogAxis:GraphPanelWidget::DefMinAxis;
     double maxY = GraphPanelWidget::DefMaxAxis;
 
     QRectF dataRect = pPlot->dataRect();
