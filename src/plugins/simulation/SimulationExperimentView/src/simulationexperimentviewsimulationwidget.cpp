@@ -3007,24 +3007,6 @@ void SimulationExperimentViewSimulationWidget::graphVisualUpdated(OpenCOR::Graph
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::checkAxisValue(double &pValue,
-                                                              const double &pOrigValue,
-                                                              const QList<double> &pTestValues)
-{
-    // Check whether pOrigValue is equal to one of the values in pTestValues and
-    // if so then update pValue with pOrigValue
-
-    foreach (const double &testValue, pTestValues) {
-        if (pOrigValue == testValue) {
-            pValue = pOrigValue;
-
-            break;
-        }
-    }
-}
-
-//==============================================================================
-
 bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                                                           const bool &pForceReplot)
 {
@@ -3057,20 +3039,11 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     bool needInitialisationX = true;
     bool needInitialisationY = true;
 
-    bool canOptimiseAxisX = true;
-    bool canOptimiseAxisY = true;
-
-    QList<double> startingPoints = QList<double>();
-    QList<double> endingPoints = QList<double>();
-
     foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, pPlot->graphs()) {
         if (graph->isValid() && graph->isSelected()) {
             SimulationSupport::Simulation *simulation = mViewWidget->simulation(graph->fileName());
             double startingPoint = simulation->data()->startingPoint();
             double endingPoint = simulation->data()->endingPoint();
-
-            startingPoints << startingPoint;
-            endingPoints << endingPoint;
 
             if (startingPoint > endingPoint) {
                 // The starting point is greater than the ending point, so swap
@@ -3090,8 +3063,6 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
                     minX = qMin(minX, startingPoint);
                     maxX = qMax(maxX, endingPoint);
                 }
-
-                canOptimiseAxisX = false;
             }
 
             if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
@@ -3105,33 +3076,15 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
                     minY = qMin(minY, startingPoint);
                     maxY = qMax(maxY, endingPoint);
                 }
-
-                canOptimiseAxisY = false;
             }
         }
     }
 
-    // Optimise our axes' values, if possible
-
-    double origMinX = minX;
-    double origMaxX = maxX;
-    double origMinY = minY;
-    double origMaxY = maxY;
+    // Optimise our axes' values before setting them and replotting our plot, if
+    // needed
 
     pPlot->optimiseAxisX(minX, maxX);
     pPlot->optimiseAxisY(minY, maxY);
-
-    if (!canOptimiseAxisX) {
-        checkAxisValue(minX, origMinX, startingPoints);
-        checkAxisValue(maxX, origMaxX, endingPoints);
-    }
-
-    if (!canOptimiseAxisY) {
-        checkAxisValue(minY, origMinY, startingPoints);
-        checkAxisValue(maxY, origMaxY, endingPoints);
-    }
-
-    // Set our axes' values and replot our plot, if needed
 
     if (pPlot->setAxes(minX, maxX, minY, maxY, true, true, false)) {
         return true;

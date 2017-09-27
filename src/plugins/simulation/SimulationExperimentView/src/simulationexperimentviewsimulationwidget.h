@@ -226,9 +226,6 @@ private:
 
     void updateInvalidModelMessageWidget();
 
-    void checkAxisValue(double &pValue, const double &pOrigValue,
-                        const QList<double> &pTestValues);
-
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                     const bool &pForceReplot = false);
 
