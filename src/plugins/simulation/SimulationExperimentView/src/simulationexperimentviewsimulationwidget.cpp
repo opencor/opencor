@@ -1687,10 +1687,10 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
         if (!graphs.isEmpty())
             graphsList << graphs;
 
-        if (graphPanel->plot()->logarithmicXAxis())
+        if (graphPanel->plot()->logAxisX())
             logarithmicXAxis << graphs;
 
-        if (graphPanel->plot()->logarithmicYAxis())
+        if (graphPanel->plot()->logAxisY())
             logarithmicYAxis << graphs;
     }
 
@@ -2438,8 +2438,8 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
             libsedml::SedCurve *sedmlCurve = sedmlPlot2d->getCurve(j);
 
             if (!j) {
-                graphPanel->plot()->setLogarithmicXAxis(sedmlCurve->getLogX());
-                graphPanel->plot()->setLogarithmicYAxis(sedmlCurve->getLogY());
+                graphPanel->plot()->setLogAxisX(sedmlCurve->getLogX());
+                graphPanel->plot()->setLogAxisY(sedmlCurve->getLogY());
             }
 
             CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getXDataReference())->getVariable(0));

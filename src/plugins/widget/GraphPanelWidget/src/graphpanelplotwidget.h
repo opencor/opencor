@@ -215,11 +215,11 @@ public:
     double minY() const;
     double maxY() const;
 
-    bool logarithmicXAxis() const;
-    void setLogarithmicXAxis(const bool &pLogarithmicXAxis);
+    bool logAxisX() const;
+    void setLogAxisX(const bool &pLogAxisX);
 
-    bool logarithmicYAxis() const;
-    void setLogarithmicYAxis(const bool &pLogarithmicYAxis);
+    bool logAxisY() const;
+    void setLogAxisY(const bool &pLogAxisY);
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  const bool &pSynchronizeAxes = true,
