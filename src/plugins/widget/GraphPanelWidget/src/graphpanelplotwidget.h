@@ -312,6 +312,8 @@ private:
     bool canZoomInY() const;
     bool canZoomOutY() const;
 
+    QRectF realDataRect() const;
+
     void optimiseAxis(const int &pAxisId, double &pMin, double &pMax) const;
 
     QRectF optimisedRect(const QRectF &pAxes) const;
