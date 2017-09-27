@@ -3013,8 +3013,6 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     // Retrieve the current axes' values or use some default ones, if none are
     // available
 
-    bool hasAxesValues = false;
-
     double minX = pPlot->logAxisX()?GraphPanelWidget::DefMinLogAxis:GraphPanelWidget::DefMinAxis;
     double maxX = GraphPanelWidget::DefMaxAxis;
     double minY = pPlot->logAxisY()?GraphPanelWidget::DefMinLogAxis:GraphPanelWidget::DefMinAxis;
@@ -3027,57 +3025,6 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
         maxX = minX+dataRect.width();
         minY = dataRect.top();
         maxY = minY+dataRect.height();
-
-        hasAxesValues = true;
-    }
-
-    // Check all the graphs associated with the given plot and see whether any
-    // of them uses the variable of integration as parameter X and/or Y, and if
-    // so then asks the plot to use the starting/ending points as the
-    // minimum/maximum values for the X and/or Y axes
-
-    bool needInitialisationX = true;
-    bool needInitialisationY = true;
-
-    foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, pPlot->graphs()) {
-        if (graph->isValid() && graph->isSelected()) {
-            SimulationSupport::Simulation *simulation = mViewWidget->simulation(graph->fileName());
-            double startingPoint = simulation->data()->startingPoint();
-            double endingPoint = simulation->data()->endingPoint();
-
-            if (startingPoint > endingPoint) {
-                // The starting point is greater than the ending point, so swap
-                // the two of them
-
-                startingPoint = simulation->data()->endingPoint();
-                endingPoint = simulation->data()->startingPoint();
-            }
-
-            if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterX())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
-                if (!hasAxesValues && needInitialisationX) {
-                    minX = startingPoint;
-                    maxX = endingPoint;
-
-                    needInitialisationX = false;
-                } else {
-                    minX = qMin(minX, startingPoint);
-                    maxX = qMax(maxX, endingPoint);
-                }
-            }
-
-            if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
-            {
-                if (!hasAxesValues && needInitialisationY) {
-                    minY = startingPoint;
-                    maxY = endingPoint;
-
-                    needInitialisationY = false;
-                } else {
-                    minY = qMin(minY, startingPoint);
-                    maxY = qMax(maxY, endingPoint);
-                }
-            }
-        }
     }
 
     // Optimise our axes' values before setting them and replotting our plot, if
