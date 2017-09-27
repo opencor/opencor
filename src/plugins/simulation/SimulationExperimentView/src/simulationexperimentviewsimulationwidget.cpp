@@ -2809,26 +2809,9 @@ void SimulationExperimentViewSimulationWidget::simulationDataModified(const bool
 
 void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::Property *pProperty)
 {
-    // Update our simulation properties, as well as our plots, if it's not the
-    // point interval property that has been updated
+    // Update our simulation properties
 
     updateSimulationProperties(pProperty);
-
-    SimulationExperimentViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
-
-    if (pProperty != simulationWidget->pointIntervalProperty()) {
-        bool needProcessingEvents = false;
-        // Note: needProcessingEvents is used to ensure that our plots are all
-        //       updated at once...
-
-        foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots) {
-            if (updatePlot(plot))
-                needProcessingEvents = true;
-        }
-
-        if (needProcessingEvents)
-            QCoreApplication::processEvents();
-    }
 }
 
 //==============================================================================
