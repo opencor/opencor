@@ -1069,7 +1069,7 @@ QRectF GraphPanelPlotWidget::dataRect() const
     // Determine and return the rectangle within which all the graphs, which are
     // valid, selected and have some data, can fit
 
-    QRectF res = QRect();
+    QRectF res = QRectF();
 
     foreach (GraphPanelPlotGraph *graph, mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->dataSize())
