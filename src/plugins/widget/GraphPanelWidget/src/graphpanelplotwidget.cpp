@@ -1013,59 +1013,18 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
     }
 
     // Optimise the axis' values by making sure that they fall onto a factor of
-    // the axis' minor step, this based on whether we are dealing with a linear
-    // or a logarithmic scale
+    // the axis' minor step
 
-    if (   ((pAxisId == QwtPlot::xBottom) && mLogarithmicXAxisAction->isChecked())
-        || ((pAxisId == QwtPlot::yLeft) && mLogarithmicYAxisAction->isChecked())) {
-        uint base = axisScaleEngine(pAxisId)->base();
-        QwtScaleDiv scaleDiv = static_cast<const QwtLogScaleEngine *>(axisScaleEngine(pAxisId))->divideScale(pMin/base,
-                                                                                                             base*pMax,
-                                                                                                             axisMaxMajor(pAxisId),
-                                                                                                             axisMaxMinor(pAxisId));
-        QList<double> ticks =  scaleDiv.ticks(QwtScaleDiv::MajorTick)
-                              +scaleDiv.ticks(QwtScaleDiv::MediumTick)
-                              +scaleDiv.ticks(QwtScaleDiv::MinorTick);
+    uint base = axisScaleEngine(pAxisId)->base();
+    double majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin,
+                                                          axisMaxMajor(pAxisId),
+                                                          base);
+    double minorStep = QwtScaleArithmetic::divideInterval(majorStep,
+                                                          axisMaxMinor(pAxisId),
+                                                          base);
 
-        if (!ticks.isEmpty()) {
-            std::sort(ticks.begin(), ticks.end());
-
-            double newMin = ticks.first();
-
-            foreach (const double &tick, ticks) {
-                if (tick <= pMin)
-                    newMin = tick;
-                else
-                    break;
-            }
-
-            pMin = newMin;
-
-            std::reverse(ticks.begin(), ticks.end());
-
-            double newMax = ticks.first();
-
-            foreach (const double &tick, ticks) {
-                if (tick >= pMax)
-                    newMax = tick;
-                else
-                    break;
-            }
-
-            pMax = newMax;
-        }
-    } else {
-        uint base = axisScaleEngine(pAxisId)->base();
-        double majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin,
-                                                              axisMaxMajor(pAxisId),
-                                                              base);
-        double minorStep = QwtScaleArithmetic::divideInterval(majorStep,
-                                                              axisMaxMinor(pAxisId),
-                                                              base);
-
-        pMin = std::floor(pMin/minorStep)*minorStep;
-        pMax = std::ceil(pMax/minorStep)*minorStep;
-    }
+    pMin = std::floor(pMin/minorStep)*minorStep;
+    pMax = std::ceil(pMax/minorStep)*minorStep;
 }
 
 //==============================================================================
