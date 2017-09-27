@@ -796,7 +796,7 @@ void GraphPanelPlotWidget::updateActions()
 
     QRectF dRect = dataRect();
 
-    if (dRect == QRectF()) {
+    if (dRect.isNull()) {
         dRect = QRectF(DefMinAxis, DefMinAxis,
                        DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis);
     } else {
