@@ -222,6 +222,15 @@ public:
     bool logAxisY() const;
     void setLogAxisY(const bool &pLogAxisY);
 
+    void setDefaultAxesValues(const double &pDefaultMinX,
+                              const double &pDefaultMaxX,
+                              const double &pDefaultMinLogX,
+                              const double &pDefaultMaxLogX,
+                              const double &pDefaultMinY,
+                              const double &pDefaultMaxY,
+                              const double &pDefaultMinLogY,
+                              const double &pDefaultMaxLogY);
+
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  const bool &pSynchronizeAxes = true,
                  const bool &pCanReplot = true, const bool &pEmitSignal = true,

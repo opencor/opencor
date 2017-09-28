@@ -1121,6 +1121,30 @@ void GraphPanelPlotWidget::setAxis(const int &pAxisId, double pMin, double pMax)
 
 //==============================================================================
 
+void GraphPanelPlotWidget::setDefaultAxesValues(const double &pDefaultMinX,
+                                                const double &pDefaultMaxX,
+                                                const double &pDefaultMinLogX,
+                                                const double &pDefaultMaxLogX,
+                                                const double &pDefaultMinY,
+                                                const double &pDefaultMaxY,
+                                                const double &pDefaultMinLogY,
+                                                const double &pDefaultMaxLogY)
+{
+    // Set the default axes values
+
+    mDefaultMinX = pDefaultMinX;
+    mDefaultMaxX = pDefaultMaxX;
+    mDefaultMinLogX = pDefaultMinLogX;
+    mDefaultMaxLogX = pDefaultMaxLogX;
+
+    mDefaultMinY = pDefaultMinY;
+    mDefaultMaxY = pDefaultMaxY;
+    mDefaultMinLogY = pDefaultMinLogY;
+    mDefaultMaxLogY = pDefaultMaxLogY;
+}
+
+//==============================================================================
+
 bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                                    double pMaxY, const bool &pSynchronizeAxes,
                                    const bool &pCanReplot,
