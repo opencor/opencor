@@ -53,9 +53,9 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-static const double DefMinAxis    =    0.0;
-static const double DefMinLogAxis =    1.0;
-static const double DefMaxAxis    = 1000.0;
+static const double DefaultMinAxis    =    0.0;
+static const double DefaultMinLogAxis =    1.0;
+static const double DefaultMaxAxis    = 1000.0;
 
 //==============================================================================
 

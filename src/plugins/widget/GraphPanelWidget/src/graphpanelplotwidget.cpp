@@ -680,7 +680,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     // Note: we are not all initialised yet, so we don't want setAxes() to
     //       replot ourselves...
 
-    setAxes(DefMinAxis, DefMaxAxis, DefMinAxis, DefMaxAxis, false, false, false);
+    setAxes(DefaultMinAxis, DefaultMaxAxis, DefaultMinAxis, DefaultMaxAxis, false, false, false);
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -1082,8 +1082,8 @@ QRectF GraphPanelPlotWidget::realDataRect() const
     QRectF res = dataRect();
 
     if (res.isNull()) {
-        double minAxisX = logAxisX()?DefMinLogAxis:DefMinAxis;
-        double minAxisY = logAxisY()?DefMinLogAxis:DefMinAxis;
+        double minAxisX = logAxisX()?DefaultMinLogAxis:DefaultMinAxis;
+        double minAxisY = logAxisY()?DefaultMinLogAxis:DefaultMinAxis;
 
         return QRectF(minAxisX, minAxisY,
                       DefMaxAxis-minAxisX, DefMaxAxis-minAxisY);
