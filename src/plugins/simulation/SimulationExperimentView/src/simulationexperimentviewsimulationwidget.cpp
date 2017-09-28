@@ -3072,13 +3072,8 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
             startingPoints << startingPoint;
             endingPoints << endingPoint;
 
-            if (startingPoint > endingPoint) {
-                // The starting point is greater than the ending point, so swap
-                // the two of them
-
-                startingPoint = simulation->data()->endingPoint();
-                endingPoint = simulation->data()->startingPoint();
-            }
+            if (startingPoint > endingPoint)
+                std::swap(startingPoint, endingPoint);
 
             if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterX())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
                 if (!hasAxesValues && needInitialisationX) {
