@@ -873,7 +873,7 @@ void GraphPanelPlotWidget::resetAction()
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::logarithmicXAxis() const
+bool GraphPanelPlotWidget::logAxisX() const
 {
     // Return whether our X axis uses a logarithmic scale
 
@@ -882,19 +882,19 @@ bool GraphPanelPlotWidget::logarithmicXAxis() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLogarithmicXAxis(const bool &pLogarithmicXAxis)
+void GraphPanelPlotWidget::setLogAxisX(const bool &pLogAxisX)
 {
     // Specify whether our X axis should use a logarithmic scale
 
-    if (   ( pLogarithmicXAxis && !mLogarithmicXAxisAction->isChecked())
-        || (!pLogarithmicXAxis &&  mLogarithmicXAxisAction->isChecked())) {
+    if (   ( pLogAxisX && !mLogarithmicXAxisAction->isChecked())
+        || (!pLogAxisX &&  mLogarithmicXAxisAction->isChecked())) {
         mLogarithmicXAxisAction->trigger();
     }
 }
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::logarithmicYAxis() const
+bool GraphPanelPlotWidget::logAxisY() const
 {
     // Return whether our Y axis uses a logarithmic scale
 
@@ -903,12 +903,12 @@ bool GraphPanelPlotWidget::logarithmicYAxis() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLogarithmicYAxis(const bool &pLogarithmicYAxis)
+void GraphPanelPlotWidget::setLogAxisY(const bool &pLogAxisY)
 {
     // Specify whether our Y axis should use a logarithmic scale
 
-    if (   ( pLogarithmicYAxis && !mLogarithmicYAxisAction->isChecked())
-        || (!pLogarithmicYAxis &&  mLogarithmicYAxisAction->isChecked())) {
+    if (   ( pLogAxisY && !mLogarithmicYAxisAction->isChecked())
+        || (!pLogAxisY &&  mLogarithmicYAxisAction->isChecked())) {
         mLogarithmicYAxisAction->trigger();
     }
 }
