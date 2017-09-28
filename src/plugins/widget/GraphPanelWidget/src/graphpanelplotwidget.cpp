@@ -645,9 +645,9 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     connect(mCustomAxesAction, SIGNAL(triggered(bool)),
             this, SLOT(customAxes()));
     connect(mLogarithmicXAxisAction, SIGNAL(triggered(bool)),
-            this, SLOT(toggleLogarithmicXAxis()));
+            this, SLOT(toggleLogAxisX()));
     connect(mLogarithmicYAxisAction, SIGNAL(triggered(bool)),
-            this, SLOT(toggleLogarithmicYAxis()));
+            this, SLOT(toggleLogAxisY()));
     connect(mZoomInAction, SIGNAL(triggered(bool)),
             this, SLOT(zoomIn()));
     connect(mZoomOutAction, SIGNAL(triggered(bool)),
@@ -1819,7 +1819,7 @@ void GraphPanelPlotWidget::customAxes()
 
 //==============================================================================
 
-void GraphPanelPlotWidget::toggleLogarithmicXAxis()
+void GraphPanelPlotWidget::toggleLogAxisX()
 {
     // Enable/disable logarithmic scaling on the X axis
 
@@ -1835,7 +1835,7 @@ void GraphPanelPlotWidget::toggleLogarithmicXAxis()
 
 //==============================================================================
 
-void GraphPanelPlotWidget::toggleLogarithmicYAxis()
+void GraphPanelPlotWidget::toggleLogAxisY()
 {
     // Enable/disable logarithmic scaling on the Y axis
 
