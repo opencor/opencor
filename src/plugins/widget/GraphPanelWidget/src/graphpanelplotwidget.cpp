@@ -1110,7 +1110,7 @@ QRectF GraphPanelPlotWidget::dataRect() const
     // Determine and return the rectangle within which all the graphs, which are
     // valid, selected and have some data, can fit
 
-    QRectF res = QRect();
+    QRectF res = QRectF();
 
     foreach (GraphPanelPlotGraph *graph, mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->dataSize())
@@ -1218,7 +1218,7 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
 bool GraphPanelPlotWidget::resetAxes()
 {
     // Reset our axes by setting their values to either default ones or to some
-    // that allow to see all the graphs
+    // that allow us to see all the graphs
 
     QRectF axesRect = dataRect().isNull()?
                           QRectF(DefMinAxis, DefMinAxis,
