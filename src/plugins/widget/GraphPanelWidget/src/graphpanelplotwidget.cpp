@@ -1338,17 +1338,20 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
     case Pan: {
         // Determine the X/Y shifts for our panning
 
-        QPointF origPoint = canvasPoint(mPoint);
-        QPointF crtPoint = canvasPoint(pEvent->pos());
-
-        double shiftX = crtPoint.x()-origPoint.x();
-        double shiftY = crtPoint.y()-origPoint.y();
+        int shiftX = pEvent->pos().x()-mPoint.x();
+        int shiftY = pEvent->pos().y()-mPoint.y();
 
         mPoint = pEvent->pos();
 
         // Set our axes' new values
 
-        setAxes(minX()-shiftX, maxX()-shiftX, minY()-shiftY, maxY()-shiftY);
+        QwtScaleMap canvasMapX = canvasMap(QwtPlot::xBottom);
+        QwtScaleMap canvasMapY = canvasMap(QwtPlot::yLeft);
+
+        setAxes(canvasMapX.invTransform(canvasMapX.transform(minX())-shiftX),
+                canvasMapX.invTransform(canvasMapX.transform(maxX())-shiftX),
+                canvasMapY.invTransform(canvasMapY.transform(minY())-shiftY),
+                canvasMapY.invTransform(canvasMapY.transform(maxY())-shiftY));
 
         break;
     }
