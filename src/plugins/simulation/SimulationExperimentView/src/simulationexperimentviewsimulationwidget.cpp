@@ -3040,7 +3040,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 
     QRectF dataRect = pPlot->dataRect();
 
-    if (dataRect.isNull()) {
+    if (!dataRect.isNull()) {
         minX = dataRect.left();
         maxX = minX+dataRect.width();
         minY = dataRect.top();
