@@ -794,14 +794,7 @@ void GraphPanelPlotWidget::updateActions()
     mZoomInAction->setEnabled(mCanZoomInX || mCanZoomInY);
     mZoomOutAction->setEnabled(mCanZoomOutX || mCanZoomOutY);
 
-    QRectF dRect = dataRect();
-
-    if (dRect == QRectF()) {
-        dRect = QRectF(DefMinAxis, DefMinAxis,
-                       DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis);
-    } else {
-        dRect = optimisedRect(dRect);
-    }
+    QRectF dRect = realDataRect();
 
     mResetZoomAction->setEnabled(   (crtMinX != dRect.left())
                                  || (crtMaxX != dRect.left()+dRect.width())
@@ -1122,6 +1115,26 @@ QRectF GraphPanelPlotWidget::dataRect() const
 
 //==============================================================================
 
+QRectF GraphPanelPlotWidget::realDataRect() const
+{
+    // Return an optimised version of dataRect() or a default rectangle, if no
+    // dataRect() exists
+
+    QRectF res = dataRect();
+
+    if (res.isNull()) {
+        double minAxisX = logAxisX()?DefMinLogAxis:DefMinAxis;
+        double minAxisY = logAxisY()?DefMinLogAxis:DefMinAxis;
+
+        return QRectF(minAxisX, minAxisY,
+                      DefMaxAxis-minAxisX, DefMaxAxis-minAxisY);
+    } else {
+        return optimisedRect(res);
+    }
+}
+
+//==============================================================================
+
 void GraphPanelPlotWidget::setAxis(const int &pAxisId, double pMin, double pMax)
 {
     // Set our axis
@@ -1220,13 +1233,10 @@ bool GraphPanelPlotWidget::resetAxes()
     // Reset our axes by setting their values to either default ones or to some
     // that allow us to see all the graphs
 
-    QRectF axesRect = dataRect().isNull()?
-                          QRectF(DefMinAxis, DefMinAxis,
-                                 DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis):
-                          optimisedRect(dataRect());
+    QRectF dRect = realDataRect();
 
-    return setAxes(axesRect.left(), axesRect.left()+axesRect.width(),
-                   axesRect.top(), axesRect.top()+axesRect.height());
+    return setAxes(dRect.left(), dRect.left()+dRect.width(),
+                   dRect.top(), dRect.top()+dRect.height());
 }
 
 //==============================================================================
