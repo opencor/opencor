@@ -343,8 +343,8 @@ private slots:
     void exportTo();
     void copyToClipboard();
     void customAxes();
-    void toggleLogarithmicXAxis();
-    void toggleLogarithmicYAxis();
+    void toggleLogAxisX();
+    void toggleLogAxisY();
     void zoomIn();
     void zoomOut();
     void resetZoom();
