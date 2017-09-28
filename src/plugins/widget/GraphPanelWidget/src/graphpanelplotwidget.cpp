@@ -645,9 +645,9 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     connect(mCustomAxesAction, SIGNAL(triggered(bool)),
             this, SLOT(customAxes()));
     connect(mLogarithmicXAxisAction, SIGNAL(triggered(bool)),
-            this, SLOT(toggleLogarithmicXAxis()));
+            this, SLOT(toggleLogAxisX()));
     connect(mLogarithmicYAxisAction, SIGNAL(triggered(bool)),
-            this, SLOT(toggleLogarithmicYAxis()));
+            this, SLOT(toggleLogAxisY()));
     connect(mZoomInAction, SIGNAL(triggered(bool)),
             this, SLOT(zoomIn()));
     connect(mZoomOutAction, SIGNAL(triggered(bool)),
@@ -794,14 +794,7 @@ void GraphPanelPlotWidget::updateActions()
     mZoomInAction->setEnabled(mCanZoomInX || mCanZoomInY);
     mZoomOutAction->setEnabled(mCanZoomOutX || mCanZoomOutY);
 
-    QRectF dRect = dataRect();
-
-    if (dRect == QRectF()) {
-        dRect = QRectF(DefMinAxis, DefMinAxis,
-                       DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis);
-    } else {
-        dRect = optimisedRect(dRect);
-    }
+    QRectF dRect = realDataRect();
 
     mResetZoomAction->setEnabled(   (crtMinX != dRect.left())
                                  || (crtMaxX != dRect.left()+dRect.width())
@@ -873,7 +866,7 @@ void GraphPanelPlotWidget::resetAction()
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::logarithmicXAxis() const
+bool GraphPanelPlotWidget::logAxisX() const
 {
     // Return whether our X axis uses a logarithmic scale
 
@@ -882,19 +875,19 @@ bool GraphPanelPlotWidget::logarithmicXAxis() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLogarithmicXAxis(const bool &pLogarithmicXAxis)
+void GraphPanelPlotWidget::setLogAxisX(const bool &pLogAxisX)
 {
     // Specify whether our X axis should use a logarithmic scale
 
-    if (   ( pLogarithmicXAxis && !mLogarithmicXAxisAction->isChecked())
-        || (!pLogarithmicXAxis &&  mLogarithmicXAxisAction->isChecked())) {
+    if (   ( pLogAxisX && !mLogarithmicXAxisAction->isChecked())
+        || (!pLogAxisX &&  mLogarithmicXAxisAction->isChecked())) {
         mLogarithmicXAxisAction->trigger();
     }
 }
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::logarithmicYAxis() const
+bool GraphPanelPlotWidget::logAxisY() const
 {
     // Return whether our Y axis uses a logarithmic scale
 
@@ -903,12 +896,12 @@ bool GraphPanelPlotWidget::logarithmicYAxis() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLogarithmicYAxis(const bool &pLogarithmicYAxis)
+void GraphPanelPlotWidget::setLogAxisY(const bool &pLogAxisY)
 {
     // Specify whether our Y axis should use a logarithmic scale
 
-    if (   ( pLogarithmicYAxis && !mLogarithmicYAxisAction->isChecked())
-        || (!pLogarithmicYAxis &&  mLogarithmicYAxisAction->isChecked())) {
+    if (   ( pLogAxisY && !mLogarithmicYAxisAction->isChecked())
+        || (!pLogAxisY &&  mLogarithmicYAxisAction->isChecked())) {
         mLogarithmicYAxisAction->trigger();
     }
 }
@@ -1110,7 +1103,7 @@ QRectF GraphPanelPlotWidget::dataRect() const
     // Determine and return the rectangle within which all the graphs, which are
     // valid, selected and have some data, can fit
 
-    QRectF res = QRect();
+    QRectF res = QRectF();
 
     foreach (GraphPanelPlotGraph *graph, mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->dataSize())
@@ -1118,6 +1111,23 @@ QRectF GraphPanelPlotWidget::dataRect() const
     }
 
     return res;
+}
+
+//==============================================================================
+
+QRectF GraphPanelPlotWidget::realDataRect() const
+{
+    // Return an optimised version of dataRect() or a default rectangle, if no
+    // dataRect() exists
+
+    QRectF res = dataRect();
+
+    if (res.isNull()) {
+        return QRectF(DefMinAxis, DefMinAxis,
+                      DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis);
+    } else {
+        return optimisedRect(res);
+    }
 }
 
 //==============================================================================
@@ -1218,15 +1228,12 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
 bool GraphPanelPlotWidget::resetAxes()
 {
     // Reset our axes by setting their values to either default ones or to some
-    // that allow to see all the graphs
+    // that allow us to see all the graphs
 
-    QRectF axesRect = dataRect().isNull()?
-                          QRectF(DefMinAxis, DefMinAxis,
-                                 DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis):
-                          optimisedRect(dataRect());
+    QRectF dRect = realDataRect();
 
-    return setAxes(axesRect.left(), axesRect.left()+axesRect.width(),
-                   axesRect.top(), axesRect.top()+axesRect.height());
+    return setAxes(dRect.left(), dRect.left()+dRect.width(),
+                   dRect.top(), dRect.top()+dRect.height());
 }
 
 //==============================================================================
@@ -1809,7 +1816,7 @@ void GraphPanelPlotWidget::customAxes()
 
 //==============================================================================
 
-void GraphPanelPlotWidget::toggleLogarithmicXAxis()
+void GraphPanelPlotWidget::toggleLogAxisX()
 {
     // Enable/disable logarithmic scaling on the X axis
 
@@ -1825,7 +1832,7 @@ void GraphPanelPlotWidget::toggleLogarithmicXAxis()
 
 //==============================================================================
 
-void GraphPanelPlotWidget::toggleLogarithmicYAxis()
+void GraphPanelPlotWidget::toggleLogAxisY()
 {
     // Enable/disable logarithmic scaling on the Y axis
 

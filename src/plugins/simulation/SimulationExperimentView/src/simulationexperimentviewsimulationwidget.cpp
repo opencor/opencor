@@ -1687,10 +1687,10 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
         if (!graphs.isEmpty())
             graphsList << graphs;
 
-        if (graphPanel->plot()->logarithmicXAxis())
+        if (graphPanel->plot()->logAxisX())
             logarithmicXAxis << graphs;
 
-        if (graphPanel->plot()->logarithmicYAxis())
+        if (graphPanel->plot()->logAxisY())
             logarithmicYAxis << graphs;
     }
 
@@ -2438,8 +2438,8 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
             libsedml::SedCurve *sedmlCurve = sedmlPlot2d->getCurve(j);
 
             if (!j) {
-                graphPanel->plot()->setLogarithmicXAxis(sedmlCurve->getLogX());
-                graphPanel->plot()->setLogarithmicYAxis(sedmlCurve->getLogY());
+                graphPanel->plot()->setLogAxisX(sedmlCurve->getLogX());
+                graphPanel->plot()->setLogAxisY(sedmlCurve->getLogY());
             }
 
             CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getXDataReference())->getVariable(0));
@@ -3040,7 +3040,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 
     QRectF dataRect = pPlot->dataRect();
 
-    if (dataRect != QRectF()) {
+    if (dataRect.isNull()) {
         minX = dataRect.left();
         maxX = minX+dataRect.width();
         minY = dataRect.top();
@@ -3072,13 +3072,8 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
             startingPoints << startingPoint;
             endingPoints << endingPoint;
 
-            if (startingPoint > endingPoint) {
-                // The starting point is greater than the ending point, so swap
-                // the two of them
-
-                startingPoint = simulation->data()->endingPoint();
-                endingPoint = simulation->data()->startingPoint();
-            }
+            if (startingPoint > endingPoint)
+                std::swap(startingPoint, endingPoint);
 
             if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterX())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
                 if (!hasAxesValues && needInitialisationX) {
