@@ -1123,11 +1123,8 @@ QRectF GraphPanelPlotWidget::realDataRect() const
     QRectF res = dataRect();
 
     if (res.isNull()) {
-        double minAxisX = logAxisX()?DefMinLogAxis:DefMinAxis;
-        double minAxisY = logAxisY()?DefMinLogAxis:DefMinAxis;
-
-        return QRectF(minAxisX, minAxisY,
-                      DefMaxAxis-minAxisX, DefMaxAxis-minAxisY);
+        return QRectF(DefMinAxis, DefMinAxis,
+                      DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis);
     } else {
         return optimisedRect(res);
     }
