@@ -573,6 +573,14 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mCanUpdateActions(true),
     mSynchronizeXAxisAction(pSynchronizeXAxisAction),
     mSynchronizeYAxisAction(pSynchronizeYAxisAction),
+    mDefaultMinX(DefaultMinAxis),
+    mDefaultMaxX(DefaultMaxAxis),
+    mDefaultMinY(DefaultMinAxis),
+    mDefaultMaxY(DefaultMaxAxis),
+    mDefaultMinLogX(DefaultMinLogAxis),
+    mDefaultMaxLogX(DefaultMaxAxis),
+    mDefaultMinLogY(DefaultMinLogAxis),
+    mDefaultMaxLogY(DefaultMaxAxis),
     mNeighbors(pNeighbors)
 {
     // Keep track of when our grand parent (i.e. a GraphPanelsWidget object)
@@ -1082,11 +1090,12 @@ QRectF GraphPanelPlotWidget::realDataRect() const
     QRectF res = dataRect();
 
     if (res.isNull()) {
-        double minAxisX = logAxisX()?DefaultMinLogAxis:DefaultMinAxis;
-        double minAxisY = logAxisY()?DefaultMinLogAxis:DefaultMinAxis;
+        double minX = logAxisX()?mDefaultMinLogX:mDefaultMinX;
+        double maxX = logAxisX()?mDefaultMaxLogX:mDefaultMaxX;
+        double minY = logAxisY()?mDefaultMinLogY:mDefaultMinY;
+        double maxY = logAxisY()?mDefaultMaxLogY:mDefaultMaxY;
 
-        return QRectF(minAxisX, minAxisY,
-                      DefMaxAxis-minAxisX, DefMaxAxis-minAxisY);
+        return QRectF(minX, minY, maxX-minX, maxY-minY);
     } else {
         return optimisedRect(res);
     }

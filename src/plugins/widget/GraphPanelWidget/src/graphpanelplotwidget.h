@@ -296,6 +296,16 @@ private:
     GraphPanelPlotScaleDraw *mAxisX;
     GraphPanelPlotScaleDraw *mAxisY;
 
+    double mDefaultMinX;
+    double mDefaultMaxX;
+    double mDefaultMinY;
+    double mDefaultMaxY;
+
+    double mDefaultMinLogX;
+    double mDefaultMaxLogX;
+    double mDefaultMinLogY;
+    double mDefaultMaxLogY;
+
     GraphPanelPlotWidgets mNeighbors;
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
