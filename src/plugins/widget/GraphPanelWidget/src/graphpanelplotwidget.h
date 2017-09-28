@@ -319,7 +319,7 @@ private:
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
-    void checkAxisValues(double &pMin, double &pMax);
+    void checkAxisValues(const bool &pLogAxis, double &pMin, double &pMax);
 
     void updateActions();
 

@@ -536,20 +536,23 @@ QwtText GraphPanelPlotScaleDraw::label(double pValue) const
 
 //==============================================================================
 
+static const double DblMinAxis = 1000*DBL_MIN;
+// Note: normally, we would use DBL_MIN, but this would cause problems with
+//       QwtPlot (e.g. to create ticks), so instead we use a value that results
+//       in a range that we know works...
 static const double DblMaxAxis = 0.3*DBL_MAX;
 // Note: normally, we would use DBL_MAX, but this means that our maximum axis
 //       range would be 2*DBL_MAX, which would cause problems with QwtPlot (e.g.
 //       to create ticks), so instead we use a value that results in a range
 //       that we know works...
 
-static const double MinAxis = -DblMaxAxis;
-static const double MaxAxis =  DblMaxAxis;
+static const double MinAxis    = -DblMaxAxis;
+static const double MinLogAxis =  DblMinAxis ;
+static const double MaxAxis    =  DblMaxAxis;
 
-static const double MaxAxisRange = MaxAxis-MinAxis;
-static const double MinAxisRange = 1000*DBL_MIN;
-// Note: normally, we would use DBL_MIN, but this would cause problems with
-//       QwtPlot (e.g. to create ticks), so instead we use a value that results
-//       in a range that we know works...
+static const double MaxAxisRange    = MaxAxis-MinAxis;
+static const double MaxLogAxisRange = MaxAxis-MinLogAxis;
+static const double MinAxisRange    = DblMinAxis;
 
 //==============================================================================
 
@@ -789,10 +792,10 @@ void GraphPanelPlotWidget::updateActions()
     double crtRangeY = crtMaxY-crtMinY;
 
     mCanZoomInX = crtRangeX > MinAxisRange;
-    mCanZoomOutX = crtRangeX < MaxAxisRange;
+    mCanZoomOutX = crtRangeX < (logAxisX()?MaxLogAxisRange:MaxAxisRange);
 
     mCanZoomInY = crtRangeY > MinAxisRange;
-    mCanZoomOutY = crtRangeY < MaxAxisRange;
+    mCanZoomOutY = crtRangeY < (logAxisY()?MaxLogAxisRange:MaxAxisRange);
 
     // Update the enabled status of our actions
 
@@ -812,12 +815,15 @@ void GraphPanelPlotWidget::updateActions()
 
 //==============================================================================
 
-void GraphPanelPlotWidget::checkAxisValues(double &pMin, double &pMax)
+void GraphPanelPlotWidget::checkAxisValues(const bool &pLogAxis, double &pMin,
+                                           double &pMax)
 {
     // Make sure that our axis' values have finite values
 
+    double minAxis = pLogAxis?MinLogAxis:MinAxis;
+
     if (!qIsFinite(pMin))
-        pMin = MinAxis;
+        pMin = minAxis;
 
     if (!qIsFinite(pMax))
         pMax = MaxAxis;
@@ -826,23 +832,23 @@ void GraphPanelPlotWidget::checkAxisValues(double &pMin, double &pMax)
 
     double range = pMax-pMin;
 
-    if (range > MaxAxisRange) {
+    if (range > (pLogAxis?MaxLogAxisRange:MaxAxisRange)) {
         // The range is too big, so reset our values
 
-        pMin = MinAxis;
+        pMin = minAxis;
         pMax = MaxAxis;
     } else if (range < MinAxisRange) {
         // The range is too small, so reset our values
 
-        pMin = qMax(MinAxis, 0.5*(pMin+pMax-MinAxisRange));
+        pMin = qMax(minAxis, 0.5*(pMin+pMax-MinAxisRange));
         pMax = qMin(MaxAxis, pMin+MinAxisRange);
         pMin = pMax-MinAxisRange;
         // Note: the last statement is in case pMax was set to MaxAxis, in which
         //       case pMin has to be re-reset...
-    } else if (pMin < MinAxis) {
+    } else if (pMin < minAxis) {
         // The minimum value is too small, so reset it
 
-        pMin = MinAxis;
+        pMin = minAxis;
         pMax = pMin+range;
     } else if (pMax > MaxAxis) {
         // The maximum value is too big, so reset it
@@ -1161,8 +1167,8 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
 
     // Make sure that the given axes' values are fine
 
-    checkAxisValues(pMinX, pMaxX);
-    checkAxisValues(pMinY, pMaxY);
+    checkAxisValues(logAxisX(), pMinX, pMaxX);
+    checkAxisValues(logAxisY(), pMinY, pMaxY);
 
     // Update our axes' values, if needed
 
