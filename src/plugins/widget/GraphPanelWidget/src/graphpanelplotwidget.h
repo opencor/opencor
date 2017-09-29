@@ -267,6 +267,14 @@ private:
         ZoomRegion
     };
 
+    enum Scaling {
+        BigScalingIn,
+        ScalingIn,
+        NoScaling,
+        ScalingOut,
+        BigScalingOut
+    };
+
     QwtPlotDirectPainter *mDirectPainter;
 
     GraphPanelPlotGraphs mGraphs;
@@ -342,12 +350,11 @@ private:
 
     bool resetAxes();
 
-    bool scaleAxis(const double &pScalingFactor,
-                   const bool &pCanZoomIn, const bool &pCanZoomOut,
-                   const double pOriginPoint, double &pMin, double &pMax);
-    void scaleAxes(const QPoint &pPoint,
-                   const double &pScalingFactorX,
-                   const double &pScalingFactorY);
+    bool scaleAxis(const Scaling &pScaling, const bool &pCanZoomIn,
+                   const bool &pCanZoomOut, const double pOriginPoint,
+                   double &pMin, double &pMax);
+    void scaleAxes(const QPoint &pPoint, const Scaling &pScalingX,
+                   const Scaling &pScalingY);
 
     QPointF canvasPoint(const QPoint &pPoint,
                         const bool &pNeedOffset = true) const;

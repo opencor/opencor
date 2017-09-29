@@ -1239,7 +1239,7 @@ bool GraphPanelPlotWidget::resetAxes()
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::scaleAxis(const double &pScalingFactor,
+bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling,
                                      const bool &pCanZoomIn,
                                      const bool &pCanZoomOut,
                                      const double pOriginPoint, double &pMin,
@@ -1248,15 +1248,41 @@ bool GraphPanelPlotWidget::scaleAxis(const double &pScalingFactor,
     // Check whether we can scale the axis and, if so, determine what its new
     // values should be
 
-    if (   ((pScalingFactor < 1.0) && pCanZoomIn)
-        || ((pScalingFactor > 1.0) && pCanZoomOut)) {
+    if (   ((pScaling < NoScaling) && pCanZoomIn)
+        || ((pScaling > NoScaling) && pCanZoomOut)) {
+        static const double ScalingInFactor     = 0.9;
+        static const double ScalingOutFactor    = 1.0/ScalingInFactor;
+        static const double BigScalingInFactor  = 0.5*ScalingInFactor;
+        static const double BigScalingOutFactor = 1.0/BigScalingInFactor;
+
         double oldRange = pMax-pMin;
-        double newRange = pScalingFactor*oldRange;
+        double newRange = oldRange;
         double factor = qMin(1.0, qMax(0.0, (pOriginPoint-pMin)/oldRange));
         // Note: QwtPlot puts some extra space around the area we want to show,
         //       which means that we could end up with a factor which is either
         //       smaller than zero or bigger than one, hence we have to make
         //       sure that it is clamped within the [0; 1] range...
+
+        switch (pScaling) {
+        case BigScalingIn:
+            newRange *= BigScalingInFactor;
+
+            break;
+        case ScalingIn:
+            newRange *= ScalingInFactor;
+
+            break;
+        case NoScaling:
+            break;
+        case ScalingOut:
+            newRange *= ScalingOutFactor;
+
+            break;
+        case BigScalingOut:
+            newRange *= BigScalingOutFactor;
+
+            break;
+        }
 
         pMin = qMax(MinAxis, pOriginPoint-factor*newRange);
         pMax = qMin(MaxAxis, pMin+newRange);
@@ -1273,8 +1299,8 @@ bool GraphPanelPlotWidget::scaleAxis(const double &pScalingFactor,
 //==============================================================================
 
 void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
-                                     const double &pScalingFactorX,
-                                     const double &pScalingFactorY)
+                                     const Scaling &pScalingX,
+                                     const Scaling &pScalingY)
 {
     // Rescale our X axis, but only if zooming in/out is possible on that axis
 
@@ -1284,9 +1310,10 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
     double newMaxX = maxX();
     double newMinY = minY();
     double newMaxY = maxY();
-    bool scaledAxisX = scaleAxis(pScalingFactorX, mCanZoomInX, mCanZoomOutX,
+
+    bool scaledAxisX = scaleAxis(pScalingX, mCanZoomInX, mCanZoomOutX,
                                  originPoint.x(), newMinX, newMaxX);
-    bool scaledAxisY = scaleAxis(pScalingFactorY, mCanZoomInY, mCanZoomOutY,
+    bool scaledAxisY = scaleAxis(pScalingY, mCanZoomInY, mCanZoomOutY,
                                  originPoint.y(), newMinY, newMaxY);
     // Note: we want to make both calls to scaleAxis(), hence they are not part
     //       of the if() statement below...
@@ -1311,14 +1338,6 @@ QPointF GraphPanelPlotWidget::canvasPoint(const QPoint &pPoint,
     return QPointF(qMin(maxX(), qMax(minX(), canvasMap(QwtPlot::xBottom).invTransform(realPoint.x()))),
                    qMin(maxY(), qMax(minY(), canvasMap(QwtPlot::yLeft).invTransform(realPoint.y()))));
 }
-
-//==============================================================================
-
-static const double NoScalingFactor     = 1.0;
-static const double ScalingInFactor     = 0.9;
-static const double ScalingOutFactor    = 1.0/ScalingInFactor;
-static const double BigScalingInFactor  = 0.5*ScalingInFactor;
-static const double BigScalingOutFactor = 1.0/BigScalingInFactor;
 
 //==============================================================================
 
@@ -1373,16 +1392,8 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
         // Note: this will automatically replot ourselves...
 
         scaleAxes(mOriginPoint,
-                  deltaX?
-                      (deltaX > 0)?
-                          ScalingInFactor:
-                          ScalingOutFactor:
-                      NoScalingFactor,
-                  deltaY?
-                      (deltaY < 0)?
-                          ScalingInFactor:
-                          ScalingOutFactor:
-                      NoScalingFactor);
+                  deltaX?(deltaX > 0)?ScalingIn:ScalingOut:NoScaling,
+                  deltaY?(deltaY < 0)?ScalingIn:ScalingOut:NoScaling);
 
         break;
     }
@@ -1558,15 +1569,15 @@ void GraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
 
         if (mAction == None) {
             int delta = pEvent->delta();
-            double scalingFactor = 0.0;
+            Scaling scaling = NoScaling;
 
             if (delta > 0)
-                scalingFactor = ScalingInFactor;
+                scaling = ScalingIn;
             else if (delta < 0)
-                scalingFactor = ScalingOutFactor;
+                scaling = ScalingOut;
 
-            if (scalingFactor)
-                scaleAxes(pEvent->pos(), scalingFactor, scalingFactor);
+            if (scaling)
+                scaleAxes(pEvent->pos(), scaling, scaling);
         }
 
         pEvent->accept();
@@ -1854,7 +1865,7 @@ void GraphPanelPlotWidget::zoomIn()
     // Zoom in by scaling our two axes around the point where the context menu
     // was shown
 
-    scaleAxes(mOriginPoint, BigScalingInFactor, BigScalingInFactor);
+    scaleAxes(mOriginPoint, BigScalingIn, BigScalingIn);
 }
 
 //==============================================================================
@@ -1864,7 +1875,7 @@ void GraphPanelPlotWidget::zoomOut()
     // Zoom out by scaling our two axes around the point where the context menu
     // was shown
 
-    scaleAxes(mOriginPoint, BigScalingOutFactor, BigScalingOutFactor);
+    scaleAxes(mOriginPoint, BigScalingOut, BigScalingOut);
 }
 
 //==============================================================================
