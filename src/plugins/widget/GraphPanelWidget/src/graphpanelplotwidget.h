@@ -156,9 +156,6 @@ private:
 
     GraphPanelPlotWidget *mOwner;
 
-    QwtScaleMap mCanvasMapX;
-    QwtScaleMap mCanvasMapY;
-
     QPoint mOriginPoint;
     QPoint mPoint;
 
@@ -283,9 +280,6 @@ private:
 
     bool mCanDirectPaint;
     bool mCanReplot;
-
-    QwtScaleMap mCanvasMapX;
-    QwtScaleMap mCanvasMapY;
 
     bool mCanZoomInX;
     bool mCanZoomOutX;
