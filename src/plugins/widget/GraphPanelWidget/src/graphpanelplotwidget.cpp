@@ -1359,7 +1359,7 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
     case None:
         // No action, so do nothing
 
-        ;
+        break;
     case Pan: {
         // Determine the X/Y shifts for our panning
 
