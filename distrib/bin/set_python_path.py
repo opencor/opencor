@@ -1,14 +1,44 @@
 #!/usr/bin/env python
 """
-    move-virtualenv
-    ~~~~~~~~~~~~~~~
+    Based on `move-virtualenv`, updated for Python 3 and Windows with
+    activation script processing removed.
 
-    A helper script that moves virtualenvs to a new location.
+    =======================================================================
 
-    It only supports POSIX based virtualenvs and Python 2 at the moment.
+    move-virtualenv`, a helper script that moves virtualenvs to a new
+    location. https://github.com/fireteam/virtualenv-tools.
 
-    :copyright: (c) 2012 by Fireteam Ltd.
-    :license: BSD, see LICENSE for more details.
+    Copyright (c) 2012 by Fireteam Ltd., see AUTHORS for more details.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are
+    met:
+
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+
+        * Redistributions in binary form must reproduce the above
+          copyright notice, this list of conditions and the following
+          disclaimer in the documentation and/or other materials provided
+          with the distribution.
+
+        * The names of the contributors may not be used to endorse or
+          promote products derived from this software without specific
+          prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+    A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+    OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+    LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+    DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+    THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+    =======================================================================
 """
 import os
 import re
@@ -18,44 +48,21 @@ import optparse
 import subprocess
 from types import CodeType
 
+python_exe = 'python.exe' if (os.name == 'nt') else 'python'
+path_slash = '\\' if (os.name == 'nt') else '/'
 
-ACTIVATION_SCRIPTS = [
-    'activate',
-    'activate.csh',
-    'activate.fish'
-]
+bin_python = path_slash + 'bin' + path_slash + python_exe
+
 _pybin_match = re.compile(r'^python\d+\.\d+$')
-_activation_path_re = re.compile(r'^(?:set -gx |setenv |)VIRTUAL_ENV[ =]"(.*?)"\s*$')
-
-
-def update_activation_script(script_filename, new_path):
-    """Updates the paths for the activate shell scripts."""
-    with open(script_filename) as f:
-        lines = list(f)
-
-    def _handle_sub(match):
-        text = match.group()
-        start, end = match.span()
-        g_start, g_end = match.span(1)
-        return text[:(g_start - start)] + new_path + text[(g_end - end):]
-
-    changed = False
-    for idx, line in enumerate(lines):
-        new_line = _activation_path_re.sub(_handle_sub, line)
-        if line != new_line:
-            lines[idx] = new_line
-            changed = True
-
-    if changed:
-        print 'A %s' % script_filename
-        with open(script_filename, 'w') as f:
-            f.writelines(lines)
 
 
 def update_script(script_filename, new_path):
     """Updates shebang lines for actual scripts."""
-    with open(script_filename) as f:
-        lines = list(f)
+    try:
+        with open(script_filename, 'r') as f:
+            lines = list(f)
+    except UnicodeDecodeError:
+        return
     if not lines:
         return
 
@@ -65,17 +72,19 @@ def update_script(script_filename, new_path):
     if not args:
         return
 
-    if not args[0].endswith('/bin/python') or \
-       '/usr/bin/env python' in args[0]:
+    import pdb; pdb.set_trace()
+
+    if not args[0].endswith(bin_python) \
+    or '/usr/bin/env python' in args[0]:
         return
 
-    new_bin = os.path.join(new_path, 'bin', 'python')
+    new_bin = os.path.join(new_path, 'bin', python_exe)
     if new_bin == args[0]:
         return
 
     args[0] = new_bin
     lines[0] = '#!%s\n' % ' '.join(args)
-    print 'S %s' % script_filename
+    print('S %s' % script_filename)
     with open(script_filename, 'w') as f:
         f.writelines(lines)
 
@@ -83,22 +92,21 @@ def update_script(script_filename, new_path):
 def update_scripts(bin_dir, new_path):
     """Updates all scripts in the bin folder."""
     for fn in os.listdir(bin_dir):
-        if fn in ACTIVATION_SCRIPTS:
-            update_activation_script(os.path.join(bin_dir, fn), new_path)
-        else:
-            update_script(os.path.join(bin_dir, fn), new_path)
+        update_script(os.path.join(bin_dir, fn), new_path)
 
 
 def update_pyc(filename, new_path):
     """Updates the filenames stored in pyc files."""
+    print("PYCL %s" % filename)
     with open(filename, 'rb') as f:
-        magic = f.read(8)
-        code = marshal.load(f)
+        if sys.version_info < (3, 3): magic = f.read(8)
+        else:                         magic = f.read(12)
+        code = marshal.loads(f.read())
 
     def _make_code(code, filename, consts):
-        return CodeType(code.co_argcount, code.co_nlocals, code.co_stacksize,
-                        code.co_flags, code.co_code, tuple(consts),
-                        code.co_names, code.co_varnames, filename,
+        return CodeType(code.co_argcount, code.co_kwonlyargcount, code.co_nlocals,
+                        code.co_stacksize, code.co_flags, code.co_code,
+                        tuple(consts), code.co_names, code.co_varnames, filename,
                         code.co_name, code.co_firstlineno, code.co_lnotab,
                         code.co_freevars, code.co_cellvars)
 
@@ -116,7 +124,7 @@ def update_pyc(filename, new_path):
     new_code = _process(code)
 
     if new_code is not code:
-        print 'B %s' % filename
+        print('B %s' % filename)
         with open(filename, 'wb') as f:
             f.write(magic)
             marshal.dump(new_code, f)
@@ -155,7 +163,7 @@ def update_local(base, new_path):
         if os.path.islink(filename) and os.readlink(filename) != target:
             os.remove(filename)
             os.symlink('../%s' % folder, filename)
-            print 'L %s' % filename
+            print('L %s' % filename)
 
 
 def update_paths(base, new_path):
@@ -163,83 +171,45 @@ def update_paths(base, new_path):
     if new_path == 'auto':
         new_path = os.path.abspath(base)
     if not os.path.isabs(new_path):
-        print 'error: %s is not an absolute path' % new_path
+        print('error: %s is not an absolute path' % new_path)
         return False
 
     bin_dir = os.path.join(base, 'bin')
-    base_lib_dir = os.path.join(base, 'lib')
     lib_dir = None
     lib_name = None
 
-    if os.path.isdir(base_lib_dir):
-        for folder in os.listdir(base_lib_dir):
-            if _pybin_match.match(folder):
-                lib_name = folder
-                lib_dir = os.path.join(base_lib_dir, folder)
-                break
+    if os.name == 'nt':
+        scripts_dir = os.path.join(base, 'Scripts')
+        base_lib_dir = base
+        lib_name = 'Lib'
+    else:
+        scripts_dir = bin_dir
+        base_lib_dir = os.path.join(base, 'lib')
+        if os.path.isdir(base_lib_dir):
+            for folder in os.listdir(base_lib_dir):
+                if _pybin_match.match(folder):
+                    lib_name = folder
+                    break
 
-    if lib_dir is None or not os.path.isdir(bin_dir) \
-       or not os.path.isfile(os.path.join(bin_dir, 'python')):
-        print 'error: %s does not refer to a python installation' % base
+    if lib_name:
+        lib_dir = os.path.join(base_lib_dir, lib_name)
+
+    if (lib_dir is None
+     or not os.path.isdir(scripts_dir)
+     or not os.path.isdir(bin_dir)
+     or not os.path.isfile(os.path.join(bin_dir, python_exe))):
+        print('error: %s does not refer to a python installation' % base)
         return False
 
-    update_scripts(bin_dir, new_path)
+    update_scripts(scripts_dir, new_path)
     update_pycs(lib_dir, new_path, lib_name)
     update_local(base, new_path)
 
     return True
 
 
-def reinitialize_virtualenv(path):
-    """Re-initializes a virtualenv."""
-    lib_dir = os.path.join(path, 'lib')
-    if not os.path.isdir(lib_dir):
-        print 'error: %s is not a virtualenv bin folder' % path
-        return False
-
-    py_ver = None
-    for filename in os.listdir(lib_dir):
-        if _pybin_match.match(filename):
-            py_ver = filename
-            break
-
-    if py_ver is None:
-        print 'error: could not detect python version of virtualenv %s' % path
-        return False
-
-    sys_py_executable = subprocess.Popen(['which', py_ver],
-        stdout=subprocess.PIPE).communicate()[0].strip()
-
-    if not sys_py_executable:
-        print 'error: could not find system version for expected python ' \
-            'version %s' % py_ver
-        return False
-
-    lib_dir = os.path.join(path, 'lib', py_ver)
-
-    args = ['virtualenv', '-p', sys_py_executable]
-    if not os.path.isfile(os.path.join(lib_dir,
-            'no-global-site-packages.txt')):
-        args.append('--system-site-packages')
-
-    for filename in os.listdir(lib_dir):
-        if filename.startswith('distribute-') and \
-           filename.endswith('.egg'):
-            args.append('--distribute')
-
-    new_env = {}
-    for key, value in os.environ.items():
-        if not key.startswith('VIRTUALENV_'):
-            new_env[key] = value
-    args.append(path)
-    subprocess.Popen(args, env=new_env).wait()
-
-
 def main():
     parser = optparse.OptionParser()
-    parser.add_option('--reinitialize', action='store_true',
-                      help='Updates the python installation '
-                      'and reinitializes the virtualenv.')
     parser.add_option('--update-path', help='Update the path for all '
                       'required executables and helper files that are '
                       'supported to the new python prefix.  You can also set '
@@ -249,10 +219,7 @@ def main():
         paths = ['.']
 
     rv = 0
-
-    if options.reinitialize:
-        for path in paths:
-            reinitialize_virtualenv(path)
+# Usage if no args...
     if options.update_path:
         for path in paths:
             if not update_paths(path, options.update_path):
