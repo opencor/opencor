@@ -253,6 +253,8 @@ void GraphPanelPlotGraph::setParameterY(void *pParameterY)
 GraphPanelPlotOverlayWidget::GraphPanelPlotOverlayWidget(GraphPanelPlotWidget *pParent) :
     QWidget(pParent),
     mOwner(pParent),
+    mCanvasMapX(mOwner->canvasMap(QwtPlot::xBottom)),
+    mCanvasMapY(mOwner->canvasMap(QwtPlot::yLeft)),
     mOriginPoint(QPoint()),
     mPoint(QPoint())
 {
@@ -270,14 +272,11 @@ QPoint GraphPanelPlotOverlayWidget::optimisedPoint(const QPoint &pPoint) const
 
     QPoint realPoint = pPoint-mOwner->plotLayout()->canvasRect().topLeft().toPoint();
 
-    QwtScaleMap canvasMapX = mOwner->canvasMap(QwtPlot::xBottom);
-    QwtScaleMap canvasMapY = mOwner->canvasMap(QwtPlot::yLeft);
-
-    return QPoint(qMin(qRound(canvasMapX.transform(mOwner->maxX())),
-                       qMax(qRound(canvasMapX.transform(mOwner->minX())),
+    return QPoint(qMin(qRound(mCanvasMapX.transform(mOwner->maxX())),
+                       qMax(qRound(mCanvasMapX.transform(mOwner->minX())),
                             realPoint.x())),
-                  qMin(qRound(canvasMapY.transform(mOwner->minY())),
-                       qMax(qRound(canvasMapY.transform(mOwner->maxY())),
+                  qMin(qRound(mCanvasMapY.transform(mOwner->minY())),
+                       qMax(qRound(mCanvasMapY.transform(mOwner->maxY())),
                             realPoint.y())));
 }
 
@@ -395,13 +394,10 @@ QRect GraphPanelPlotOverlayWidget::zoomRegion() const
     // Note: by default, we assume that we are already fully zoomed in in both
     //       directions...
 
-    QwtScaleMap canvasMapX = mOwner->canvasMap(QwtPlot::xBottom);
-    QwtScaleMap canvasMapY = mOwner->canvasMap(QwtPlot::yLeft);
-
-    int minX = canvasMapX.transform(mOwner->minX());
-    int maxX = canvasMapX.transform(mOwner->maxX());
-    int minY = canvasMapY.transform(mOwner->maxY());
-    int maxY = canvasMapY.transform(mOwner->minY());
+    int minX = mCanvasMapX.transform(mOwner->minX());
+    int maxX = mCanvasMapX.transform(mOwner->maxX());
+    int minY = mCanvasMapY.transform(mOwner->maxY());
+    int maxY = mCanvasMapY.transform(mOwner->minY());
 
     if (mOwner->canZoomInX() || mOwner->canZoomInY()) {
         QPoint originPoint = optimisedPoint(mOriginPoint);
@@ -475,13 +471,10 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
     }
 
     if (pCanMoveLocation) {
-        QwtScaleMap canvasMapX = mOwner->canvasMap(QwtPlot::xBottom);
-        QwtScaleMap canvasMapY = mOwner->canvasMap(QwtPlot::yLeft);
-
-        QPoint topLeftPoint = QPoint(canvasMapX.transform(mOwner->minX()),
-                                     canvasMapY.transform(mOwner->maxY()));
-        QPoint bottomRightPoint = QPoint(canvasMapX.transform(mOwner->maxX()),
-                                         canvasMapY.transform(mOwner->minY()));
+        QPoint topLeftPoint = QPoint(mCanvasMapX.transform(mOwner->minX()),
+                                     mCanvasMapY.transform(mOwner->maxY()));
+        QPoint bottomRightPoint = QPoint(mCanvasMapX.transform(mOwner->maxX()),
+                                         mCanvasMapY.transform(mOwner->minY()));
 
         if (coordinatesRect.top() < topLeftPoint.y())
             coordinatesRect.moveTop(pPoint.y()+2);
@@ -568,6 +561,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mPoint(QPoint()),
     mCanDirectPaint(true),
     mCanReplot(true),
+    mCanvasMapX(canvasMap(QwtPlot::xBottom)),
+    mCanvasMapY(canvasMap(QwtPlot::yLeft)),
     mCanZoomInX(true),
     mCanZoomOutX(true),
     mCanZoomInY(true),
@@ -1308,8 +1303,8 @@ QPointF GraphPanelPlotWidget::canvasPoint(const QPoint &pPoint,
     if (pNeedOffset)
         realPoint -= plotLayout()->canvasRect().topLeft();
 
-    return QPointF(qMin(maxX(), qMax(minX(), canvasMap(QwtPlot::xBottom).invTransform(realPoint.x()))),
-                   qMin(maxY(), qMax(minY(), canvasMap(QwtPlot::yLeft).invTransform(realPoint.y()))));
+    return QPointF(qMin(maxX(), qMax(minX(), mCanvasMapX.invTransform(realPoint.x()))),
+                   qMin(maxY(), qMax(minY(), mCanvasMapY.invTransform(realPoint.y()))));
 }
 
 //==============================================================================
@@ -1345,13 +1340,10 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         // Set our axes' new values
 
-        QwtScaleMap canvasMapX = canvasMap(QwtPlot::xBottom);
-        QwtScaleMap canvasMapY = canvasMap(QwtPlot::yLeft);
-
-        setAxes(canvasMapX.invTransform(canvasMapX.transform(minX())-shiftX),
-                canvasMapX.invTransform(canvasMapX.transform(maxX())-shiftX),
-                canvasMapY.invTransform(canvasMapY.transform(minY())-shiftY),
-                canvasMapY.invTransform(canvasMapY.transform(maxY())-shiftY));
+        setAxes(mCanvasMapX.invTransform(mCanvasMapX.transform(minX())-shiftX),
+                mCanvasMapX.invTransform(mCanvasMapX.transform(maxX())-shiftX),
+                mCanvasMapY.invTransform(mCanvasMapY.transform(minY())-shiftY),
+                mCanvasMapY.invTransform(mCanvasMapY.transform(maxY())-shiftY));
 
         break;
     }
