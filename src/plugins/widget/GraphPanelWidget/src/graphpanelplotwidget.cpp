@@ -1242,7 +1242,8 @@ bool GraphPanelPlotWidget::resetAxes()
 bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling,
                                      const bool &pCanZoomIn,
                                      const bool &pCanZoomOut,
-                                     const double pOriginPoint, double &pMin,
+                                     const QwtScaleMap &pCanvasMap,
+                                     const double &pPoint, double &pMin,
                                      double &pMax)
 {
     // Check whether we can scale the axis and, if so, determine what its new
@@ -1255,9 +1256,9 @@ bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling,
         static const double BigScalingInFactor  = 0.5*ScalingInFactor;
         static const double BigScalingOutFactor = 1.0/BigScalingInFactor;
 
-        double oldRange = pMax-pMin;
-        double newRange = oldRange;
-        double factor = qMin(1.0, qMax(0.0, (pOriginPoint-pMin)/oldRange));
+        double min = pCanvasMap.transform(pMin);
+        double range = pCanvasMap.transform(pMax)-min;
+        double factor = qMin(1.0, qMax(0.0, (pPoint-min)/range));
         // Note: QwtPlot puts some extra space around the area we want to show,
         //       which means that we could end up with a factor which is either
         //       smaller than zero or bigger than one, hence we have to make
@@ -1265,30 +1266,30 @@ bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling,
 
         switch (pScaling) {
         case BigScalingIn:
-            newRange *= BigScalingInFactor;
+            range *= BigScalingInFactor;
 
             break;
         case ScalingIn:
-            newRange *= ScalingInFactor;
+            range *= ScalingInFactor;
 
             break;
         case NoScaling:
             break;
         case ScalingOut:
-            newRange *= ScalingOutFactor;
+            range *= ScalingOutFactor;
 
             break;
         case BigScalingOut:
-            newRange *= BigScalingOutFactor;
+            range *= BigScalingOutFactor;
 
             break;
         }
 
-        pMin = qMax(MinAxis, pOriginPoint-factor*newRange);
-        pMax = qMin(MaxAxis, pMin+newRange);
-        pMin = pMax-newRange;
-        // Note: the last statement is in case pNewMax has been set to MaxAxis,
-        //       in which case we need to re-update pNewMin...
+        pMin = qMax(MinAxis, pCanvasMap.invTransform(pPoint-factor*range));
+        pMax = qMin(MaxAxis, pCanvasMap.invTransform(pCanvasMap.transform(pMin)+range));
+        pMin = pCanvasMap.invTransform(pCanvasMap.transform(pMax)-range);
+        // Note: the last statement is in case pMax has been set to MaxAxis, in
+        //       which case we need to re-update pMin...
 
         return true;
     } else {
@@ -1304,7 +1305,7 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
 {
     // Rescale our X axis, but only if zooming in/out is possible on that axis
 
-    QPointF originPoint = canvasPoint(pPoint);
+    QPointF point = pPoint-plotLayout()->canvasRect().topLeft();
 
     double newMinX = minX();
     double newMaxX = maxX();
@@ -1312,9 +1313,11 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
     double newMaxY = maxY();
 
     bool scaledAxisX = scaleAxis(pScalingX, mCanZoomInX, mCanZoomOutX,
-                                 originPoint.x(), newMinX, newMaxX);
+                                 canvasMap(QwtPlot::xBottom), point.x(),
+                                 newMinX, newMaxX);
     bool scaledAxisY = scaleAxis(pScalingY, mCanZoomInY, mCanZoomOutY,
-                                 originPoint.y(), newMinY, newMaxY);
+                                 canvasMap(QwtPlot::yLeft), point.y(),
+                                 newMinY, newMaxY);
     // Note: we want to make both calls to scaleAxis(), hence they are not part
     //       of the if() statement below...
 

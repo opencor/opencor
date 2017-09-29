@@ -351,8 +351,8 @@ private:
     bool resetAxes();
 
     bool scaleAxis(const Scaling &pScaling, const bool &pCanZoomIn,
-                   const bool &pCanZoomOut, const double pOriginPoint,
-                   double &pMin, double &pMax);
+                   const bool &pCanZoomOut, const QwtScaleMap &pCanvasMap,
+                   const double &pPoint, double &pMin, double &pMax);
     void scaleAxes(const QPoint &pPoint, const Scaling &pScalingX,
                    const Scaling &pScalingY);
 
