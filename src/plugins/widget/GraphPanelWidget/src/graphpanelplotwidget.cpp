@@ -1364,11 +1364,8 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
     case Zoom: {
         // Determine our X/Y delta values
 
-        QPointF origPoint = canvasPoint(mPoint);
-        QPointF crtPoint = canvasPoint(pEvent->pos());
-
-        double deltaX = crtPoint.x()-origPoint.x();
-        double deltaY = crtPoint.y()-origPoint.y();
+        int deltaX = pEvent->pos().x()-mPoint.x();
+        int deltaY = pEvent->pos().y()-mPoint.y();
 
         mPoint = pEvent->pos();
 
