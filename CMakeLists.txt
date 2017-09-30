@@ -1268,8 +1268,8 @@ IF(WIN32)
 
         # Update Python scripts to refer to our installed Python
 
-        SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS ${CPACK_NSIS_EXTRA_INSTALL_COMMANDS}
-        "    Exec '\\\"\\\$INSTDIR\\\\Python\\\\bin\\\\python.exe\\\" \\\"\\\$INSTDIR\\\\Python\\\\Scripts\\\\set_python_path.py\\\" --update-path=auto \\\"\\\$INSTDIR\\\\Python\\\"'
+        SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS
+           "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS} Exec '\\\"\\\$INSTDIR\\\\Python\\\\bin\\\\python.exe\\\" \\\"\\\$INSTDIR\\\\Python\\\\Scripts\\\\set_python_path.py\\\" \\\"\\\$INSTDIR\\\\Python\\\"'
         ")
     ENDIF()
 ELSEIF(APPLE)
