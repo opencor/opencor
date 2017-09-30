@@ -1206,6 +1206,11 @@ IF(WIN32)
             DESTINATION bin
             RENAME ${DEST_MESA_FILENAME})
 
+    # Python runtime libraries and utilities
+
+    INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/Python
+            DESTINATION .)
+
     # Qt libraries required by OpenCOR
 
     FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
