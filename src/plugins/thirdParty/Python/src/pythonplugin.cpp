@@ -136,10 +136,10 @@ void PythonPlugin::initializePlugin()
     // the `Py_Initialize()` code first checks the environment and, if PYTHONHOME
     // isn't set, uses the installation path compiled in at Python build time...
 
-    auto applicationDirectories = QCoreApplication::applicationDirPath().split("/");
+    QStringList applicationDirectories = QCoreApplication::applicationDirPath().split("/");
     applicationDirectories.removeLast();
 
-    auto pythonHome = QString();
+    QString pythonHome = QString();
 #if __APPLE__
     pythonHome = (applicationDirectories << "Frameworks" << "Python").join("/");
 #elif _WIN32
@@ -148,6 +148,22 @@ void PythonPlugin::initializePlugin()
     pythonHome = applicationDirectories.join("/");
 #endif
     qputenv("PYTHONHOME", pythonHome.toUtf8());
+
+    // Put our Python script directories at the head of the system PATH
+
+#if _WIN32
+    const char pathSeparator = ';';
+#else
+    const char pathSeparator = ':';
+#endif
+    QByteArrayList systemPath = qgetenv("PATH").split(pathSeparator);
+
+    systemPath.prepend((pythonHome + "/bin").toUtf8());
+#if _WIN32
+    systemPath.prepend((pythonHome + "/Scripts").toUtf8());
+#endif
+
+    qputenv("PATH", systemPath.join(pathSeparator));
 
     // Ensure the user's Python site directory (in ~/.local etc) isn't used
 
