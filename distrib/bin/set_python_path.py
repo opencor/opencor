@@ -44,7 +44,7 @@ import os
 import re
 import sys
 import marshal
-import optparse
+import argparse
 import subprocess
 from types import CodeType
 
@@ -212,7 +212,7 @@ def update_paths(base, new_path):
      or not os.path.isdir(scripts_dir)
      or not os.path.isdir(bin_dir)
      or not os.path.isfile(os.path.join(bin_dir, python_exe))):
-        print('error: %s does not refer to a python installation' % base)
+        print('error: %s does not refer to a Python installation' % base)
         return False
 
     update_scripts(scripts_dir, new_path)
@@ -223,21 +223,20 @@ def update_paths(base, new_path):
 
 
 def main():
-    parser = optparse.OptionParser()
-    parser.add_option('--update-path', help='Update the path for all '
-                      'required executables and helper files that are '
-                      'supported to the new python prefix.  You can also set '
-                      'this to "auto" for autodetection.')
-    options, paths = parser.parse_args()
-    if not paths:
-        paths = ['.']
+    parser = argparse.ArgumentParser(description='Update the path of scripts '
+                                                 'to a new Python prefix')
+    parser.add_argument('--update-path', dest='update_path',
+                                         help='Path to scripts. Set to "auto" '
+                                              'for autodetection')
+    parser.add_argument('path', help='Path to new Python installation.')
+
+    args = parser.parse_args()
+    if not args.update_path:
+        args.update_path = 'auto'
 
     rv = 0
-# Usage if no args...
-    if options.update_path:
-        for path in paths:
-            if not update_paths(path, options.update_path):
-                rv = 1
+    if not update_paths(args.path, args.update_path):
+        rv = 1
     sys.exit(rv)
 
 
