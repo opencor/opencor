@@ -6,9 +6,15 @@ SET(MAJOR_MINOR_LIBRARY_VERSION "3.5")
 SET(LIBRARY_VERSION "${MAJOR_MINOR_LIBRARY_VERSION}.2")
 STRING(REPLACE "." "" NUMERIC_LIBRARY_VERSION ${MAJOR_MINOR_LIBRARY_VERSION})
 
-# Git tag for our library
+# Git tag of our Python sources
 
 SET(GIT_TAG "opencor")
+
+# Git tags of Python package installers
+
+SET(PIP_GIT_TAG "9.0.1")
+SET(SETUPTOOLS_GIT_TAG "v36.5.0")
+SET(WHEEL_GIT_TAG "0.30.0")
 
 # Name and version of our package
 
@@ -127,10 +133,10 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 40f6992a94c3354323909786867cc5ca2e2effd4
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} cfcc9b41074bf5b7686c0d79bc685dad88001dc1
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 205e56193cf4d229ff89a8d352ddd560d5008c5c
-                                              60d22899a89eb0001b443d94f566fb87029f7759
+                                  SHA1_VALUES 140c4f035e55aded63bf3cdd77778eaeb8a0a6fa
+                                              0482f9c70281a53a9b06ca41a0187b19b52c1d5f
                                               3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17)
         ENDIF()
     ELSEIF(APPLE)
@@ -379,17 +385,7 @@ ELSE()
         SET(INSTALL_STEP install)
     ENDIF()
 
-    # Use our newly installed python
-
-    IF(WIN32)
-        SET(PYTHON_EXECUTABLE  python.exe)
-    ELSEIF(NOT APPLE)
-        SET(PYTHON_EXECUTABLE "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" python)
-    ELSE()
-        SET(PYTHON_EXECUTABLE  python)
-    ENDIF()
-
-    # Clean our site-packages directory
+    # Clean our site-packages directory before installing any packages
 
     ExternalProject_Add_Step(${PACKAGE_BUILD} clean_site
         COMMAND ${CMAKE_COMMAND} -E remove_directory ${RUNTIME_DIR}/site-packages
@@ -398,13 +394,114 @@ ELSE()
         DEPENDEES ${INSTALL_STEP}
         )
 
-    # Install the Python package installer
+    # Use our newly built python
 
-    ExternalProject_Add_Step(${PACKAGE_BUILD} install_pip
-        COMMAND ${PYTHON_EXECUTABLE} -s ${PROJECT_SOURCE_DIR}/scripts/get-pip.py
-        WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
-        DEPENDEES clean_site
-        )
+    IF(WIN32)
+        SET(BUILT_PYTHON  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python.exe)
+    ELSEIF(NOT APPLE)
+        SET(BUILT_PYTHON "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
+    ELSE()
+        SET(BUILT_PYTHON  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
+    ENDIF()
+
+    IF(NOT WIN32)
+        # Install the Python package manager, wheel, and dependencies
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} install_pip
+            COMMAND ${BUILT_PYTHON} -s ${PROJECT_SOURCE_DIR}/scripts/get-pip.py
+            WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
+            DEPENDEES clean_site
+            )
+
+        SET(CREATE_PACKAGE_TARGET ${PACKAGE_BUILD})
+    ELSE()
+        # For Windows we need to explicitly install setuptools, pip and wheel in order to
+        # create `*-script-py` files that we can then modify at OpenCOR installation time
+        # to reference the newly installed Python executable.
+
+        # Install the Python setuptools package
+
+        SET(SETUPTOOLS_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/setuptools)
+
+        ExternalProject_Add(install_setuptools
+            DEPENDS
+                ${PACKAGE_BUILD}
+            DOWNLOAD_DIR
+                ${SETUPTOOLS_SOURCE_DIR}
+            SOURCE_DIR
+                ${SETUPTOOLS_SOURCE_DIR}
+            BINARY_DIR
+                ${SETUPTOOLS_SOURCE_DIR}
+            INSTALL_DIR
+                ${SETUPTOOLS_SOURCE_DIR}
+            GIT_REPOSITORY
+                https://github.com/opencor/setuptools.git
+            GIT_TAG
+                ${SETUPTOOLS_GIT_TAG}
+            CONFIGURE_COMMAND
+                ${BUILT_PYTHON} bootstrap.py
+            BUILD_COMMAND
+                ${BUILT_PYTHON} setup.py build
+            INSTALL_COMMAND
+                ${BUILT_PYTHON} setup.py install
+            )
+
+        # Install the Python package installer
+
+        SET(PIP_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/pip)
+
+        ExternalProject_Add(install_pip
+            DEPENDS
+                install_setuptools
+            DOWNLOAD_DIR
+                ${PIP_SOURCE_DIR}
+            SOURCE_DIR
+                ${PIP_SOURCE_DIR}
+            BINARY_DIR
+                ${PIP_SOURCE_DIR}
+            INSTALL_DIR
+                ${PIP_SOURCE_DIR}
+            GIT_REPOSITORY
+                https://github.com/opencor/pip.git
+            GIT_TAG
+                ${PIP_GIT_TAG}
+            CONFIGURE_COMMAND
+                ""
+            BUILD_COMMAND
+                ${BUILT_PYTHON} setup.py build
+            INSTALL_COMMAND
+                ${BUILT_PYTHON} setup.py install
+            )
+
+        # Install the wheel Python package
+
+        SET(WHEEL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/wheel)
+
+        ExternalProject_Add(install_wheel
+            DEPENDS
+                install_pip
+            DOWNLOAD_DIR
+                ${WHEEL_SOURCE_DIR}
+            SOURCE_DIR
+                ${WHEEL_SOURCE_DIR}
+            BINARY_DIR
+                ${WHEEL_SOURCE_DIR}
+            INSTALL_DIR
+                ${WHEEL_SOURCE_DIR}
+            GIT_REPOSITORY
+                https://github.com/opencor/wheel.git
+            GIT_TAG
+                ${WHEEL_GIT_TAG}
+            CONFIGURE_COMMAND
+                ""
+            BUILD_COMMAND
+                ${BUILT_PYTHON} setup.py build
+            INSTALL_COMMAND
+                ${BUILT_PYTHON} setup.py install
+            )
+
+        SET(CREATE_PACKAGE_TARGET install_wheel)
+    ENDIF()
 
     # Package Python's include files and libraries
 
@@ -412,10 +509,10 @@ ELSE()
         ${LOCAL_EXTERNAL_PACKAGE_DIR}
         PACKAGED_FILES ${PACKAGED_FILES}
         SHA1_FILES ${SHA1_FILES}
-        TARGET ${PACKAGE_BUILD}
+        TARGET ${CREATE_PACKAGE_TARGET}
         )
 
-    SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
+    SET(PLUGIN_DEPENDS_ON ${CREATE_PACKAGE_TARGET})
 ENDIF()
 
 # Allow other external projects to find our Python
