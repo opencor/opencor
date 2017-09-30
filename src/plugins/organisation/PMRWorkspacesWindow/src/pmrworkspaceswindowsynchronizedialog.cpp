@@ -395,8 +395,6 @@ void PmrWorkspacesWindowSynchronizeDialog::keyPressEvent(QKeyEvent *pEvent)
         if (mButtonBox->button(QDialogButtonBox::Ok)->isEnabled())
             acceptSynchronization();
 
-        // Accept the event
-
         pEvent->accept();
     } else {
         // Default handling of the event

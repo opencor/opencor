@@ -177,12 +177,13 @@ GraphPanelPlotGraphs GraphPanelWidget::graphs() const
 
 //==============================================================================
 
-void GraphPanelWidget::addGraph(GraphPanelPlotGraph *pGraph)
+void GraphPanelWidget::addGraph(GraphPanelPlotGraph *pGraph,
+                                const GraphPanelPlotGraphProperties &pGraphProperties)
 {
     // Add the graph to our plot
 
     if (mPlot->addGraph(pGraph))
-        emit graphAdded(this, pGraph);
+        emit graphAdded(this, pGraph, pGraphProperties);
 }
 
 //==============================================================================
@@ -232,9 +233,9 @@ void GraphPanelWidget::updateMarkerColor()
 
 //==============================================================================
 
-void GraphPanelWidget::setActive(const bool &pActive)
+void GraphPanelWidget::setActive(const bool &pActive, const bool &pForce)
 {
-    if (pActive == mActive)
+    if ((pActive == mActive) && !pForce)
         return;
 
     // Set the graph panel's active state

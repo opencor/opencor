@@ -64,13 +64,14 @@ public:
     virtual void retranslateUi();
 
     bool isActive() const;
-    void setActive(const bool &pActive);
+    void setActive(const bool &pActive, const bool &pForce = false);
 
     GraphPanelPlotWidget * plot() const;
 
     GraphPanelPlotGraphs graphs() const;
 
-    void addGraph(GraphPanelPlotGraph *pGraph);
+    void addGraph(GraphPanelPlotGraph *pGraph,
+                  const GraphPanelPlotGraphProperties &pGraphProperties = GraphPanelPlotGraphProperties());
     void removeGraphs(const GraphPanelPlotGraphs &pGraphs);
     void removeAllGraphs();
 
@@ -91,7 +92,8 @@ signals:
     void inactivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                    const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
     void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                        const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 };

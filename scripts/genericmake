@@ -42,7 +42,7 @@ if [ $exitCode -ne 0 ]; then
 fi
 
 if [ $ninjaFound = true ]; then
-    ninja
+    ninja $*
 else
     make $*
 fi

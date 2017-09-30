@@ -834,12 +834,12 @@ void CentralWidget::openFile()
 {
     // Ask for the file(s) to be opened
 
-    QStringList files = getOpenFileNames(tr("Open File"),
-                                         filters(fileTypeInterfaces()));
+    QStringList fileNames = getOpenFileNames(tr("Open File"),
+                                             filters(fileTypeInterfaces()));
 
     // Open the file(s)
 
-    openFiles(files);
+    openFiles(fileNames);
 }
 
 //==============================================================================

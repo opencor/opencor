@@ -132,8 +132,6 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 
                 setExpanded(crtIndex, false);
 
-                // Accept the event
-
                 pEvent->accept();
             } else {
                 // Either the current item has no children or it is collapsed,
@@ -141,8 +139,6 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 
                 if (crtIndex.parent() != QModelIndex()) {
                     setCurrentIndex(crtIndex.parent());
-
-                    // Accept the event
 
                     pEvent->accept();
                 } else {
@@ -169,15 +165,11 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 
                     setExpanded(crtIndex, true);
 
-                    // Accept the event
-
                     pEvent->accept();
                 } else {
                     // The current item is expanded, so select its first child
 
                     setCurrentIndex(crtIndex.model()->index(0, 0, crtIndex));
-
-                    // Accept the event
 
                     pEvent->accept();
                 }
@@ -297,7 +289,7 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
         if (drag->exec(pSupportedActions, realDefaultDropAction) == Qt::MoveAction) {
             // We want to move the items
             // Note: the following code is based on
-            //       QAbstractItemViewPrivate::clearOrRemove...
+            //       QAbstractItemViewPrivate::clearOrRemove()...
 
             const QItemSelection selection = selectionModel()->selection();
 

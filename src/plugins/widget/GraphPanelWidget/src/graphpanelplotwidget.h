@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "qwt_plot.h"
     #include "qwt_plot_curve.h"
     #include "qwt_scale_draw.h"
+    #include "qwt_symbol.h"
     #include "qwt_text.h"
 #include "qwtend.h"
 
@@ -54,6 +55,42 @@ namespace GraphPanelWidget {
 
 static const double DefMinAxis =    0.0;
 static const double DefMaxAxis = 1000.0;
+
+//==============================================================================
+
+class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraphProperties
+{
+public:
+    explicit GraphPanelPlotGraphProperties(const Qt::PenStyle &pLineStyle = Qt::SolidLine,
+                                           const double &pLineWidth = 1.0,
+                                           const QColor &pLineColor = Qt::darkBlue,
+                                           const QwtSymbol::Style &pSymbolStyle = QwtSymbol::NoSymbol,
+                                           const int &pSymbolSize = 8,
+                                           const QColor &pSymbolColor = Qt::darkBlue,
+                                           const bool &pSymbolFilled = true,
+                                           const QColor &pSymbolFillColor = Qt::white);
+
+    Qt::PenStyle lineStyle() const;
+    double lineWidth() const;
+    QColor lineColor() const;
+
+    QwtSymbol::Style symbolStyle() const;
+    int symbolSize() const;
+    QColor symbolColor() const;
+    bool symbolFilled() const;
+    QColor symbolFillColor() const;
+
+private:
+    Qt::PenStyle mLineStyle;
+    double mLineWidth;
+    QColor mLineColor;
+
+    QwtSymbol::Style mSymbolStyle;
+    int mSymbolSize;
+    QColor mSymbolColor;
+    bool mSymbolFilled;
+    QColor mSymbolFillColor;
+};
 
 //==============================================================================
 
@@ -178,11 +215,11 @@ public:
     double minY() const;
     double maxY() const;
 
-    bool logarithmicXAxis() const;
-    void setLogarithmicXAxis(const bool &pLogarithmicXAxis);
+    bool logAxisX() const;
+    void setLogAxisX(const bool &pLogAxisX);
 
-    bool logarithmicYAxis() const;
-    void setLogarithmicYAxis(const bool &pLogarithmicYAxis);
+    bool logAxisY() const;
+    void setLogAxisY(const bool &pLogAxisY);
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  const bool &pSynchronizeAxes = true,
@@ -244,6 +281,7 @@ private:
 
     bool mCanUpdateActions;
 
+    QAction *mExportToAction;
     QAction *mCopyToClipboardAction;
     QAction *mSynchronizeXAxisAction;
     QAction *mSynchronizeYAxisAction;
@@ -274,6 +312,8 @@ private:
     bool canZoomInY() const;
     bool canZoomOutY() const;
 
+    QRectF realDataRect() const;
+
     void optimiseAxis(const int &pAxisId, double &pMin, double &pMax) const;
 
     QRectF optimisedRect(const QRectF &pAxes) const;
@@ -299,10 +339,11 @@ signals:
 private slots:
     void cannotUpdateActions();
 
+    void exportTo();
     void copyToClipboard();
     void customAxes();
-    void toggleLogarithmicXAxis();
-    void toggleLogarithmicYAxis();
+    void toggleLogAxisX();
+    void toggleLogAxisY();
     void zoomIn();
     void zoomOut();
     void resetZoom();

@@ -31,6 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QApplication>
 #include <QClipboard>
 #include <QDesktopWidget>
+#include <QFileDialog>
+#include <QImageWriter>
 #include <QMenu>
 #include <QPaintEvent>
 
@@ -46,6 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "qwt_plot_directpainter.h"
     #include "qwt_plot_grid.h"
     #include "qwt_plot_layout.h"
+    #include "qwt_plot_renderer.h"
     #include "qwt_scale_engine.h"
     #include "qwt_scale_widget.h"
 #include "qwtend.h"
@@ -54,6 +57,99 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace OpenCOR {
 namespace GraphPanelWidget {
+
+//==============================================================================
+
+GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const Qt::PenStyle &pLineStyle,
+                                                             const double &pLineWidth,
+                                                             const QColor &pLineColor,
+                                                             const QwtSymbol::Style &pSymbolStyle,
+                                                             const int &pSymbolSize,
+                                                             const QColor &pSymbolColor,
+                                                             const bool &pSymbolFilled,
+                                                             const QColor &pSymbolFillColor) :
+    mLineStyle(pLineStyle),
+    mLineWidth(pLineWidth),
+    mLineColor(pLineColor),
+    mSymbolStyle(pSymbolStyle),
+    mSymbolSize(pSymbolSize),
+    mSymbolColor(pSymbolColor),
+    mSymbolFilled(pSymbolFilled),
+    mSymbolFillColor(pSymbolFillColor)
+{
+}
+
+//==============================================================================
+
+Qt::PenStyle GraphPanelPlotGraphProperties::lineStyle() const
+{
+    // Return our line style
+
+    return mLineStyle;
+}
+
+//==============================================================================
+
+double GraphPanelPlotGraphProperties::lineWidth() const
+{
+    // Return our line width
+
+    return mLineWidth;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotGraphProperties::lineColor() const
+{
+    // Return our line colour
+
+    return mLineColor;
+}
+
+//==============================================================================
+
+QwtSymbol::Style GraphPanelPlotGraphProperties::symbolStyle() const
+{
+    // Return our symbol style
+
+    return mSymbolStyle;
+}
+
+//==============================================================================
+
+int GraphPanelPlotGraphProperties::symbolSize() const
+{
+    // Return our symbol size
+
+    return mSymbolSize;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotGraphProperties::symbolColor() const
+{
+    // Return our symbol colour
+
+    return mSymbolColor;
+}
+
+//==============================================================================
+
+bool GraphPanelPlotGraphProperties::symbolFilled() const
+{
+    // Return our symbol filled status
+
+    return mSymbolFilled;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotGraphProperties::symbolFillColor() const
+{
+    // Return our symbol fill colour
+
+    return mSymbolFillColor;
+}
 
 //==============================================================================
 
@@ -66,7 +162,7 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
 {
     // Customise ourselves a bit
 
-    setPen(QPen(Qt::darkBlue));
+    setPen(QPen(Qt::darkBlue, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     setRenderHint(QwtPlotItem::RenderAntialiased);
 }
 
@@ -533,6 +629,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     mContextMenu = new QMenu(this);
 
+    mExportToAction = Core::newAction(this);
     mCopyToClipboardAction = Core::newAction(this);
     mCustomAxesAction = Core::newAction(this);
     mLogarithmicXAxisAction = Core::newAction(true, this);
@@ -541,14 +638,16 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mZoomOutAction = Core::newAction(this);
     mResetZoomAction = Core::newAction(this);
 
+    connect(mExportToAction, SIGNAL(triggered(bool)),
+            this, SLOT(exportTo()));
     connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
             this, SLOT(copyToClipboard()));
     connect(mCustomAxesAction, SIGNAL(triggered(bool)),
             this, SLOT(customAxes()));
     connect(mLogarithmicXAxisAction, SIGNAL(triggered(bool)),
-            this, SLOT(toggleLogarithmicXAxis()));
+            this, SLOT(toggleLogAxisX()));
     connect(mLogarithmicYAxisAction, SIGNAL(triggered(bool)),
-            this, SLOT(toggleLogarithmicYAxis()));
+            this, SLOT(toggleLogAxisY()));
     connect(mZoomInAction, SIGNAL(triggered(bool)),
             this, SLOT(zoomIn()));
     connect(mZoomOutAction, SIGNAL(triggered(bool)),
@@ -556,6 +655,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     connect(mResetZoomAction, SIGNAL(triggered(bool)),
             this, SLOT(resetZoom()));
 
+    mContextMenu->addAction(mExportToAction);
+    mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyToClipboardAction);
 
     if (pSynchronizeXAxisAction && pSynchronizeYAxisAction) {
@@ -605,7 +706,9 @@ void GraphPanelPlotWidget::retranslateUi()
 {
     // Retranslate our actions
 
-    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy to Clipboard"),
+    I18nInterface::retranslateAction(mExportToAction, tr("Export To..."),
+                                     tr("Export the contents of the graph panel to a PDF, PNG, SVG, etc. file"));
+    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"),
                                      tr("Copy the contents of the graph panel to the clipboard"));
     I18nInterface::retranslateAction(mCustomAxesAction, tr("Custom Axes..."),
                                      tr("Specify custom axes for the graph panel"));
@@ -691,14 +794,7 @@ void GraphPanelPlotWidget::updateActions()
     mZoomInAction->setEnabled(mCanZoomInX || mCanZoomInY);
     mZoomOutAction->setEnabled(mCanZoomOutX || mCanZoomOutY);
 
-    QRectF dRect = dataRect();
-
-    if (dRect == QRectF()) {
-        dRect = QRectF(DefMinAxis, DefMinAxis,
-                       DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis);
-    } else {
-        dRect = optimisedRect(dRect);
-    }
+    QRectF dRect = realDataRect();
 
     mResetZoomAction->setEnabled(   (crtMinX != dRect.left())
                                  || (crtMaxX != dRect.left()+dRect.width())
@@ -770,7 +866,7 @@ void GraphPanelPlotWidget::resetAction()
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::logarithmicXAxis() const
+bool GraphPanelPlotWidget::logAxisX() const
 {
     // Return whether our X axis uses a logarithmic scale
 
@@ -779,19 +875,19 @@ bool GraphPanelPlotWidget::logarithmicXAxis() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLogarithmicXAxis(const bool &pLogarithmicXAxis)
+void GraphPanelPlotWidget::setLogAxisX(const bool &pLogAxisX)
 {
     // Specify whether our X axis should use a logarithmic scale
 
-    if (   ( pLogarithmicXAxis && !mLogarithmicXAxisAction->isChecked())
-        || (!pLogarithmicXAxis &&  mLogarithmicXAxisAction->isChecked())) {
+    if (   ( pLogAxisX && !mLogarithmicXAxisAction->isChecked())
+        || (!pLogAxisX &&  mLogarithmicXAxisAction->isChecked())) {
         mLogarithmicXAxisAction->trigger();
     }
 }
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::logarithmicYAxis() const
+bool GraphPanelPlotWidget::logAxisY() const
 {
     // Return whether our Y axis uses a logarithmic scale
 
@@ -800,12 +896,12 @@ bool GraphPanelPlotWidget::logarithmicYAxis() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLogarithmicYAxis(const bool &pLogarithmicYAxis)
+void GraphPanelPlotWidget::setLogAxisY(const bool &pLogAxisY)
 {
     // Specify whether our Y axis should use a logarithmic scale
 
-    if (   ( pLogarithmicYAxis && !mLogarithmicYAxisAction->isChecked())
-        || (!pLogarithmicYAxis &&  mLogarithmicYAxisAction->isChecked())) {
+    if (   ( pLogAxisY && !mLogarithmicYAxisAction->isChecked())
+        || (!pLogAxisY &&  mLogarithmicYAxisAction->isChecked())) {
         mLogarithmicYAxisAction->trigger();
     }
 }
@@ -924,31 +1020,33 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
                               +scaleDiv.ticks(QwtScaleDiv::MediumTick)
                               +scaleDiv.ticks(QwtScaleDiv::MinorTick);
 
-        std::sort(ticks.begin(), ticks.end());
+        if (!ticks.isEmpty()) {
+            std::sort(ticks.begin(), ticks.end());
 
-        double newMin = ticks.first();
+            double newMin = ticks.first();
 
-        foreach (const double &tick, ticks) {
-            if (tick <= pMin)
-                newMin = tick;
-            else
-                break;
+            foreach (const double &tick, ticks) {
+                if (tick <= pMin)
+                    newMin = tick;
+                else
+                    break;
+            }
+
+            pMin = newMin;
+
+            std::reverse(ticks.begin(), ticks.end());
+
+            double newMax = ticks.first();
+
+            foreach (const double &tick, ticks) {
+                if (tick >= pMax)
+                    newMax = tick;
+                else
+                    break;
+            }
+
+            pMax = newMax;
         }
-
-        pMin = newMin;
-
-        std::reverse(ticks.begin(), ticks.end());
-
-        double newMax = ticks.first();
-
-        foreach (const double &tick, ticks) {
-            if (tick >= pMax)
-                newMax = tick;
-            else
-                break;
-        }
-
-        pMax = newMax;
     } else {
         uint base = axisScaleEngine(pAxisId)->base();
         double majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin,
@@ -1005,7 +1103,7 @@ QRectF GraphPanelPlotWidget::dataRect() const
     // Determine and return the rectangle within which all the graphs, which are
     // valid, selected and have some data, can fit
 
-    QRectF res = QRect();
+    QRectF res = QRectF();
 
     foreach (GraphPanelPlotGraph *graph, mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->dataSize())
@@ -1013,6 +1111,23 @@ QRectF GraphPanelPlotWidget::dataRect() const
     }
 
     return res;
+}
+
+//==============================================================================
+
+QRectF GraphPanelPlotWidget::realDataRect() const
+{
+    // Return an optimised version of dataRect() or a default rectangle, if no
+    // dataRect() exists
+
+    QRectF res = dataRect();
+
+    if (res.isNull()) {
+        return QRectF(DefMinAxis, DefMinAxis,
+                      DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis);
+    } else {
+        return optimisedRect(res);
+    }
 }
 
 //==============================================================================
@@ -1113,15 +1228,12 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
 bool GraphPanelPlotWidget::resetAxes()
 {
     // Reset our axes by setting their values to either default ones or to some
-    // that allow to see all the graphs
+    // that allow us to see all the graphs
 
-    QRectF axesRect = dataRect().isNull()?
-                          QRectF(DefMinAxis, DefMinAxis,
-                                 DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis):
-                          optimisedRect(dataRect());
+    QRectF dRect = realDataRect();
 
-    return setAxes(axesRect.left(), axesRect.left()+axesRect.width(),
-                   axesRect.top(), axesRect.top()+axesRect.height());
+    return setAxes(dRect.left(), dRect.left()+dRect.width(),
+                   dRect.top(), dRect.top()+dRect.height());
 }
 
 //==============================================================================
@@ -1621,6 +1733,49 @@ void GraphPanelPlotWidget::cannotUpdateActions()
 
 //==============================================================================
 
+void GraphPanelPlotWidget::exportTo()
+{
+    // Export our contents to a PDF, SVG, etc. file
+    // Note: if no file extension is given, then we export our contents to a PDF
+    //       file...
+
+    QString pdfFilter = tr("PDF File - Portable Document Format (*.pdf)");
+    QStringList filters = QStringList() << pdfFilter
+                                        << tr("SVG File - Scalable Vector Graphics (*.svg)");
+
+    foreach (const QString &supportedMimeType, QImageWriter::supportedMimeTypes()) {
+        if (!supportedMimeType.compare("image/bmp"))
+            filters << tr("BMP File - Windows Bitmap (*.bmp)");
+        else if (!supportedMimeType.compare("image/jpeg"))
+            filters << tr("JPEG File - Joint Photographic Experts Group (*.jpg)");
+        else if (!supportedMimeType.compare("image/png"))
+            filters << tr("PNG File - Portable Network Graphics (*.png)");
+        else if (!supportedMimeType.compare("image/x-portable-bitmap"))
+            filters << tr("PBM File - Portable Bitmap (*.pbm)");
+        else if (!supportedMimeType.compare("image/x-portable-graymap"))
+            filters << tr("PGM File - Portable Graymap (*.pgm)");
+        else if (!supportedMimeType.compare("image/x-portable-pixmap"))
+            filters << tr("PPM File - Portable Pixmap (*.ppm)");
+        else if (!supportedMimeType.compare("image/x-xbitmap"))
+            filters << tr("XBM File - X11 Bitmap (*.xbm)");
+        else if (!supportedMimeType.compare("image/x-xpixmap"))
+            filters << tr("XPM File - X11 Pixmap (*.xpm)");
+    }
+
+    std::sort(filters.begin(), filters.end());
+
+    QString fileName = Core::getSaveFileName(tr("Export To"), filters, &pdfFilter);
+
+    if (!fileName.isEmpty()) {
+        if (QFileInfo(fileName).completeSuffix().isEmpty())
+            QwtPlotRenderer().renderDocument(this, fileName, "pdf", QSizeF(width(), height()));
+        else
+            QwtPlotRenderer().renderDocument(this, fileName, QSizeF(width(), height()));
+    }
+}
+
+//==============================================================================
+
 void GraphPanelPlotWidget::copyToClipboard()
 {
     // Copy our contents to the clipboard
@@ -1661,7 +1816,7 @@ void GraphPanelPlotWidget::customAxes()
 
 //==============================================================================
 
-void GraphPanelPlotWidget::toggleLogarithmicXAxis()
+void GraphPanelPlotWidget::toggleLogAxisX()
 {
     // Enable/disable logarithmic scaling on the X axis
 
@@ -1677,7 +1832,7 @@ void GraphPanelPlotWidget::toggleLogarithmicXAxis()
 
 //==============================================================================
 
-void GraphPanelPlotWidget::toggleLogarithmicYAxis()
+void GraphPanelPlotWidget::toggleLogAxisY()
 {
     // Enable/disable logarithmic scaling on the Y axis
 

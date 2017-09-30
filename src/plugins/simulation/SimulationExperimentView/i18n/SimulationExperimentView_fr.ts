@@ -44,12 +44,28 @@
         <translation>Déselectionner toutes les courbes</translation>
     </message>
     <message>
+        <source>Select Colour...</source>
+        <translation>Sélectionner Couleur...</translation>
+    </message>
+    <message>
+        <source>Select a colour</source>
+        <translation>Sélectionner une couleur</translation>
+    </message>
+    <message>
+        <source>Select Colour</source>
+        <translation>Sélectionner Couleur</translation>
+    </message>
+    <message>
         <source>Current</source>
         <translation>Actuel</translation>
     </message>
     <message>
-        <source>Model</source>
-        <translation>Modèle</translation>
+        <source>X</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation></translation>
     </message>
     <message>
         <source>does not exist</source>
@@ -60,12 +76,104 @@
         <translation>pas de modèle d&apos;exécution</translation>
     </message>
     <message>
-        <source>X</source>
+        <source>Model</source>
+        <translation>Modèle</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation>Ligne</translation>
+    </message>
+    <message>
+        <source>Style</source>
         <translation></translation>
     </message>
     <message>
-        <source>Y</source>
+        <source>None</source>
+        <translation>Aucun</translation>
+    </message>
+    <message>
+        <source>Solid</source>
+        <translation>Solide</translation>
+    </message>
+    <message>
+        <source>Dash</source>
+        <translation>Tiret</translation>
+    </message>
+    <message>
+        <source>Dot</source>
+        <translation>Point</translation>
+    </message>
+    <message>
+        <source>DashDot</source>
+        <translation>TiretPoint</translation>
+    </message>
+    <message>
+        <source>DashDotDot</source>
+        <translation>TiretPointPoint</translation>
+    </message>
+    <message>
+        <source>Width</source>
+        <translation>Largeur</translation>
+    </message>
+    <message>
+        <source>Colour</source>
+        <translation>Couleur</translation>
+    </message>
+    <message>
+        <source>Symbol</source>
+        <translation>Symbole</translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation>Cercle</translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation>Carré</translation>
+    </message>
+    <message>
+        <source>Diamond</source>
+        <translation>Diamant</translation>
+    </message>
+    <message>
+        <source>Triangle</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>Down Triangle</source>
+        <translation>Triangle Bas</translation>
+    </message>
+    <message>
+        <source>Cross</source>
+        <translation>Croix</translation>
+    </message>
+    <message>
+        <source>X Cross</source>
+        <translation>Croix en X</translation>
+    </message>
+    <message>
+        <source>Horizontal Line</source>
+        <translation>Ligne Horizontale</translation>
+    </message>
+    <message>
+        <source>Vertical Line</source>
+        <translation>Ligne Verticale</translation>
+    </message>
+    <message>
+        <source>Star</source>
+        <translation>Étoile</translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation>Taille</translation>
+    </message>
+    <message>
+        <source>Filled</source>
+        <translation>Rempli</translation>
+    </message>
+    <message>
+        <source>Fill colour</source>
+        <translation>Couleur de remplissage</translation>
     </message>
 </context>
 <context>
@@ -442,6 +550,10 @@
         <translation>La simulation n&apos;a pas pu être exportée vers &lt;strong&gt;%1&lt;/strong&gt;.</translation>
     </message>
     <message>
+        <source>Export To COMBINE Archive</source>
+        <translation>Exporter Vers Archive COMBINE</translation>
+    </message>
+    <message>
         <source>The simulation could not be exported to &lt;strong&gt;%1&lt;/strong&gt;%2.</source>
         <translation>La simulation n&apos;a pas pu être exportée vers &lt;strong&gt;%1&lt;/strong&gt;%2.</translation>
     </message>
@@ -452,10 +564,6 @@
     <message>
         <source>the master SED-ML file could not be added</source>
         <translation>le fichier SED-ML principal n&apos;a pas pu être ajouté</translation>
-    </message>
-    <message>
-        <source>Export To COMBINE Archive</source>
-        <translation>Exporter Vers Archive COMBINE</translation>
     </message>
     <message>
         <source>the requested solver (%1) could not be found</source>

@@ -77,12 +77,32 @@ public:
 
 //==============================================================================
 
+class IntegerGt0EditorWidget : public TextEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit IntegerGt0EditorWidget(QWidget *pParent);
+};
+
+//==============================================================================
+
 class DoubleEditorWidget : public TextEditorWidget
 {
     Q_OBJECT
 
 public:
     explicit DoubleEditorWidget(QWidget *pParent);
+};
+
+//==============================================================================
+
+class DoubleGt0EditorWidget : public TextEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit DoubleGt0EditorWidget(QWidget *pParent);
 };
 
 //==============================================================================
@@ -116,7 +136,16 @@ public:
 
 //==============================================================================
 
-class Property;
+class ColorEditorWidget : public TextEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit ColorEditorWidget(QWidget *pParent);
+};
+
+//==============================================================================
+
 class PropertyEditorWidget;
 
 //==============================================================================
@@ -153,6 +182,10 @@ private slots:
 
 //==============================================================================
 
+class Property;
+
+//==============================================================================
+
 class PropertyItem : public QStandardItem
 {
 public:
@@ -172,12 +205,15 @@ class CORE_EXPORT Property : public QObject
 
 public:
     enum Type {
-        Section  = QStandardItem::UserType,
-        String   = QStandardItem::UserType+1,
-        Integer  = QStandardItem::UserType+2,
-        Double   = QStandardItem::UserType+3,
-        List     = QStandardItem::UserType+4,
-        Boolean  = QStandardItem::UserType+5
+        Section    = QStandardItem::UserType,
+        String     = QStandardItem::UserType+1,
+        Integer    = QStandardItem::UserType+2,
+        IntegerGt0 = QStandardItem::UserType+3,
+        Double     = QStandardItem::UserType+4,
+        DoubleGt0  = QStandardItem::UserType+5,
+        List       = QStandardItem::UserType+6,
+        Boolean    = QStandardItem::UserType+7,
+        Color      = QStandardItem::UserType+8
     };
 
     explicit Property(const Type &pType, PropertyEditorWidget *pParent);
@@ -217,32 +253,36 @@ public:
     QIcon icon() const;
     void setIcon(const QIcon &pIcon);
 
+    QString value() const;
+    void setValue(const QString &pValue, const bool &pForce = false,
+                  const bool &pEmitSignal = true);
+
     int integerValue() const;
-    void setIntegerValue(const int &pIntegerValue);
+    void setIntegerValue(const int &pIntegerValue,
+                         const bool &pEmitSignal = true);
 
     double doubleValue() const;
     void setDoubleValue(const double &pDoubleValue,
                         const bool &pEmitSignal = true);
 
-    QString value() const;
-    void setValue(const QString &pValue, const bool &pForce = false,
-                  const bool &pEmitSignal = true);
-
     QStringList listValues() const;
-    void setListValues(const QStringList &pListValues,
-                       const QString &pListValue,
-                       const bool &pEmitSignal = true);
     void setListValues(const QStringList &pListValues,
                        const bool &pEmitSignal = true);
 
     QString listValue() const;
     void setListValue(const QString &pListValue);
 
+    int listValueIndex() const;
+    void setListValueIndex(const int &pListValueIndex);
+
     QString emptyListValue() const;
     void setEmptyListValue(const QString &pEmptyListValue);
 
     bool booleanValue() const;
     void setBooleanValue(const bool &pBooleanValue);
+
+    QColor colorValue() const;
+    void setColorValue(const QColor &pColorValue);
 
     QString unit() const;
     void setUnit(const QString &pUnit, const bool &pUpdateToolTip = true);
@@ -313,14 +353,24 @@ public:
     Property * addSectionProperty(const QString &pName, Property *pParent = 0);
     Property * addSectionProperty(Property *pParent = 0);
 
+    Property * addStringProperty(const QString &pString, Property *pParent = 0);
+    Property * addStringProperty(Property *pParent = 0);
+
     Property * addIntegerProperty(const int &pValue, Property *pParent = 0);
     Property * addIntegerProperty(Property *pParent = 0);
+
+    Property * addIntegerGt0Property(const int &pValue, Property *pParent = 0);
+    Property * addIntegerGt0Property(Property *pParent = 0);
 
     Property * addDoubleProperty(const double &pValue, Property *pParent = 0);
     Property * addDoubleProperty(Property *pParent = 0);
 
+    Property * addDoubleGt0Property(const double &pValue, Property *pParent = 0);
+    Property * addDoubleGt0Property(Property *pParent = 0);
+
     Property * addListProperty(const QStringList &pValues,
-                               const QString &pValue, Property *pParent = 0);
+                               const QString &pDefaultValue,
+                               Property *pParent = 0);
     Property * addListProperty(const QStringList &pValues,
                                Property *pParent = 0);
     Property * addListProperty(Property *pParent = 0);
@@ -328,8 +378,8 @@ public:
     Property * addBooleanProperty(const bool &pValue, Property *pParent = 0);
     Property * addBooleanProperty(Property *pParent = 0);
 
-    Property * addStringProperty(const QString &pString, Property *pParent = 0);
-    Property * addStringProperty(Property *pParent = 0);
+    Property * addColorProperty(const QColor &pValue, Property *pParent = 0);
+    Property * addColorProperty(Property *pParent = 0);
 
     bool removeProperty(Property *pProperty);
 

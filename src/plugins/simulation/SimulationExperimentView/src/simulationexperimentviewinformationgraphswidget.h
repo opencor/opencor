@@ -116,6 +116,7 @@ private:
     QAction *mRemoveAllGraphsAction;
     QAction *mSelectAllGraphsAction;
     QAction *mUnselectAllGraphsAction;
+    QAction *mSelectColorAction;
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
@@ -134,18 +135,22 @@ private:
 
     QString modelListValue(const QString &pFileName) const;
 
-    void updateGraphInfo(Core::Property *pProperty, const QString &pFileName);
+    void updateGraphInfo(Core::Property *pProperty);
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);
     void updateAllGraphsInfo();
 
     void selectAllGraphs(const bool &pSelect);
 
+    bool rootProperty(Core::Property *pProperty) const;
+
 signals:
     void headerSectionResized(const int &pIndex, const int &pOldSize,
                               const int &pNewSize);
 
-    void graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+    void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+
+    void graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
 
 public slots:
     void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
@@ -153,7 +158,8 @@ public slots:
     void finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                  OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+                  OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                  const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
     void removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
@@ -163,6 +169,7 @@ private slots:
     void removeAllGraphs();
     void selectAllGraphs();
     void unselectAllGraphs();
+    void selectColor();
 
     void propertyEditorContextMenu(const QPoint &pPosition) const;
 

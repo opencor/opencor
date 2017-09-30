@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "interfaces.h"
 #include "progressbarwidget.h"
 #include "sedmlinterface.h"
+#include "sedmlsupport.h"
 #include "sedmlsupportplugin.h"
 #include "simulation.h"
 #include "simulationexperimentviewcontentswidget.h"
@@ -362,13 +363,13 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Keep track of the addition and removal of a graph
 
-    connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            graphsWidget, SLOT(addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)),
+            graphsWidget, SLOT(addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
     connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
             graphsWidget, SLOT(removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
-    connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            this, SLOT(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)),
+            this, SLOT(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
     connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
             this, SLOT(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
@@ -377,10 +378,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     //       (see above), be done through graphPanelsWidget (i.e. a graph would
     //       let people know that it has been updated and the graph panel with
     //       which it is associated would forward the signal to
-    //       graphPanelsWidget), but this may result in too many graphsUpdated()
+    //       graphPanelsWidget), but this may result in too many graphUpdated()
     //       signals being emitted. For example, say that you change the model
     //       with which a graph is associated, then both the X and Y parameters
-    //       will get updated, and for each of those updates a graphsUpdated()
+    //       will get updated, and for each of those updates a graphUpdated()
     //       signal would be emitted by the graph, hence we would end up with
     //       two signals when only one would have sufficed. Even worse is that
     //       after having updated the X parameter, the graph would have its X
@@ -389,8 +390,13 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     //       plotting viewpoint. So, instead, the updating is done through our
     //       graphs property editor...
 
-    connect(graphsWidget, SIGNAL(graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
-            this, SLOT(graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
+    connect(graphsWidget, SIGNAL(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+            this, SLOT(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(graphsWidget, SIGNAL(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
+            this, SLOT(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
+
+    connect(graphsWidget, SIGNAL(graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+            this, SLOT(graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
 
     // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
@@ -698,13 +704,6 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
     mProgress = -1;
 
-    // Retrieve our variable of integration, if possible
-
-    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-    bool validRuntime = runtime && runtime->isValid();
-
-    CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validRuntime?runtime->variableOfIntegration():0;
-
     // Clean up our output, if needed
 
     if (pReloadingView)
@@ -725,6 +724,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     COMBINESupport::CombineArchiveIssues combineArchiveIssues = mSimulation->combineArchive()?
                                                                     mSimulation->combineArchive()->issues():
                                                                     COMBINESupport::CombineArchiveIssues();
+    bool atLeastOneBlockingSedmlIssue = false;
+    bool atLeastOneBlockingCombineIssue = false;
 
     if (!combineArchiveIssues.isEmpty()) {
         // There is one or several issues with our COMBINE archive, so list
@@ -741,6 +742,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             case COMBINESupport::CombineArchiveIssue::Error:
                 issueType = tr("Error:");
 
+                atLeastOneBlockingCombineIssue = true;
+
                 break;
             case COMBINESupport::CombineArchiveIssue::Warning:
                 issueType = tr("Warning:");
@@ -749,12 +752,16 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             case COMBINESupport::CombineArchiveIssue::Fatal:
                 issueType = tr("Fatal:");
 
+                atLeastOneBlockingCombineIssue = true;
+
                 break;
             }
 
             information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(combineArchiveIssue.message()));
         }
-    } else if (!sedmlFileIssues.isEmpty()) {
+    }
+
+    if (!sedmlFileIssues.isEmpty()) {
         // There is one or several issues with our SED-ML file, so list it/them
 
         foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, sedmlFileIssues) {
@@ -768,6 +775,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             case SEDMLSupport::SedmlFileIssue::Error:
                 issueType = tr("Error:");
 
+                atLeastOneBlockingSedmlIssue = true;
+
                 break;
             case SEDMLSupport::SedmlFileIssue::Warning:
                 issueType = tr("Warning:");
@@ -776,12 +785,27 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             case SEDMLSupport::SedmlFileIssue::Fatal:
                 issueType = tr("Fatal:");
 
+                atLeastOneBlockingSedmlIssue = true;
+
                 break;
             }
 
-            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(sedmlFileIssue.message()));
+            if (sedmlFileIssue.line() && sedmlFileIssue.column()) {
+                information += QString(OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(QString::number(sedmlFileIssue.line()),
+                                                                                                                             QString::number(sedmlFileIssue.column()),
+                                                                                                                             issueType, Core::formatMessage(sedmlFileIssue.message()));
+            } else {
+                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(sedmlFileIssue.message()));
+            }
         }
-    } else {
+    }
+
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+    bool validRuntime = runtime && runtime->isValid();
+
+    CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validRuntime?runtime->variableOfIntegration():0;
+
+    if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
         information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
         if (variableOfIntegration) {
@@ -817,12 +841,19 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                 information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
             } else {
                 // We don't have a valid runtime, so either there are some
-                // problems with the CellML file or its runtime
+                // problems with the CellML file, its runtime, or even the
+                // parent SED-ML file and/or COMBINE archive
+                // Note: in the case of problems with the SED-ML file and/or
+                //       COMBINE archive, we will already have listed the
+                //       problems, so no need to do anything more in those
+                //       cases...
 
-                foreach (const CellMLSupport::CellmlFileIssue &issue,
-                         runtime?runtime->issues():mSimulation->cellmlFile()->issues()) {
-                    information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
-                                                                                                                         issue.message());
+                if (sedmlFileIssues.isEmpty() && combineArchiveIssues.isEmpty()) {
+                    foreach (const CellMLSupport::CellmlFileIssue &issue,
+                             runtime?runtime->issues():mSimulation->cellmlFile()->issues()) {
+                        information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
+                                                                                                                             issue.message());
+                    }
                 }
             }
         }
@@ -830,81 +861,86 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
     output(information);
 
-    // Enable/disable our run/pause action depending on whether we have a
-    // variable of integration
+    // Check whether we have a valid simulation environment, but only if we
+    // don't have any blocking SED-ML or COMBINE issues
 
-    mRunPauseResumeSimulationAction->setEnabled(variableOfIntegration);
-
-    // Update our simulation mode or clear our simulation data (should there be
-    // some) in case we are reloading ourselves
-    // Note: to clear our simualtion data will also update our simulation
-    //       mode, so we are fine...
-
-    if (pReloadingView)
-        clearSimulationData();
-    else
-        updateSimulationMode();
-
-    // Initialise our contents widget and make sure that we have the required
-    // type(s) of solvers
-
-    bool validSimulationEnvironment = false;
     SimulationExperimentViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
+    bool validSimulationEnvironment = false;
 
-    if (variableOfIntegration) {
-        // Show our contents widget in case it got previously hidden
-        // Note: indeed, if it was to remain hidden then some initialisations
-        //       wouldn't work (e.g. the solvers widget has a property editor,
-        //       which all properties need to be removed and if the contents
-        //       widget is not visible, then upon repopulating the property
-        //       editor, scrollbars will be shown even though they are not
-        //       needed)...
+    if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
+        // Enable/disable our run/pause action depending on whether we have a
+        // variable of integration
 
-        mContentsWidget->setVisible(true);
+        mRunPauseResumeSimulationAction->setEnabled(variableOfIntegration);
 
-        // Check whether we have at least one ODE or DAE solver and, if needed,
-        // at least one NLA solver
+        // Update our simulation mode or clear our simulation data (should there
+        // be some) in case we are reloading ourselves
+        // Note: to clear our simualtion data will also update our simulation
+        //       mode, so we are fine...
 
-        if (runtime->needNlaSolver()) {
-            if (solversWidget->nlaSolvers().isEmpty()) {
-                if (runtime->needOdeSolver()) {
-                    if (solversWidget->odeSolvers().isEmpty()) {
-                        simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
-                                        InvalidSimulationEnvironment);
+        if (pReloadingView)
+            clearSimulationData();
+        else
+            updateSimulationMode();
+
+        // Initialise our contents widget and make sure that we have the
+        // required type(s) of solvers
+
+        if (variableOfIntegration) {
+            // Show our contents widget in case it got previously hidden
+            // Note: indeed, if it was to remain hidden then some
+            //       initialisations wouldn't work (e.g. the solvers widget has
+            //       a property editor, which all properties need to be removed
+            //       and if the contents widget is not visible, then upon
+            //       repopulating the property editor, scrollbars will be shown
+            //       even though they are not needed)...
+
+            mContentsWidget->setVisible(true);
+
+            // Check whether we have at least one ODE or DAE solver and, if
+            // needed, at least one NLA solver
+
+            if (runtime->needNlaSolver()) {
+                if (solversWidget->nlaSolvers().isEmpty()) {
+                    if (runtime->needOdeSolver()) {
+                        if (solversWidget->odeSolvers().isEmpty()) {
+                            simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
+                                            InvalidSimulationEnvironment);
+                        } else {
+                            simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
+                                            InvalidSimulationEnvironment);
+                        }
                     } else {
-                        simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
-                                        InvalidSimulationEnvironment);
+                        if (solversWidget->daeSolvers().isEmpty()) {
+                            simulationError(tr("the model needs both a DAE and an NLA solver, but none are available"),
+                                            InvalidSimulationEnvironment);
+                        } else {
+                            simulationError(tr("the model needs both a DAE and an NLA solver, but no NLA solver is available"),
+                                            InvalidSimulationEnvironment);
+                        }
                     }
+                } else if (   runtime->needOdeSolver()
+                           && solversWidget->odeSolvers().isEmpty()) {
+                    simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
+                                    InvalidSimulationEnvironment);
+                } else if (   runtime->needDaeSolver()
+                           && solversWidget->daeSolvers().isEmpty()) {
+                        simulationError(tr("the model needs both a DAE and an NLA solver, but no DAE solver is available"),
+                                        InvalidSimulationEnvironment);
                 } else {
-                    if (solversWidget->daeSolvers().isEmpty()) {
-                        simulationError(tr("the model needs both a DAE and an NLA solver, but none are available"),
-                                        InvalidSimulationEnvironment);
-                    } else {
-                        simulationError(tr("the model needs both a DAE and an NLA solver, but no NLA solver is available"),
-                                        InvalidSimulationEnvironment);
-                    }
+                    validSimulationEnvironment = true;
                 }
             } else if (   runtime->needOdeSolver()
                        && solversWidget->odeSolvers().isEmpty()) {
-                simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
+                simulationError(tr("the model needs an ODE solver, but none is available"),
                                 InvalidSimulationEnvironment);
             } else if (   runtime->needDaeSolver()
                        && solversWidget->daeSolvers().isEmpty()) {
-                    simulationError(tr("the model needs both a DAE and an NLA solver, but no DAE solver is available"),
-                                    InvalidSimulationEnvironment);
+                simulationError(tr("the model needs a DAE solver, but none is available"),
+                                InvalidSimulationEnvironment);
             } else {
                 validSimulationEnvironment = true;
             }
-        } else if (   runtime->needOdeSolver()
-                   && solversWidget->odeSolvers().isEmpty()) {
-            simulationError(tr("the model needs an ODE solver, but none is available"),
-                            InvalidSimulationEnvironment);
-        } else if (   runtime->needDaeSolver()
-                   && solversWidget->daeSolvers().isEmpty()) {
-            simulationError(tr("the model needs a DAE solver, but none is available"),
-                            InvalidSimulationEnvironment);
-        } else {
-            validSimulationEnvironment = true;
         }
     }
 
@@ -924,8 +960,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
         //          solver's properties), which is needed since we want to be
         //          able to reset our simulation below...
         // Note #2: to initialise our graphs widget will result in some graphs
-        //          being shown/hidden and, therefore, in graphsUpdated() being
-        //          called. Yet, we don't want graphsUpdated() to update our
+        //          being shown/hidden and, therefore, in graphUpdated() being
+        //          called. Yet, we don't want graphUpdated() to update our
         //          plots. Indeed, if it did, then all of our plots' axes'
         //          values would be reset while we want to keep the ones we just
         //          retrieved (thus making it possible for the user to have
@@ -935,7 +971,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
         //          shown/hidden. We could do the initialisation before the
         //          setting of the plots' axes' values, but then we could see
         //          the graphs being plotted twice. Once after the plots' axes'
-        //          values have been reset following the call to graphsUpdated()
+        //          values have been reset following the call to graphUpdated()
         //          and another after we update our plots' axes' values. This is
         //          clearly not neat, hence the current solution...
         // Note #3: to initialise our parameters widget now would result in some
@@ -1041,8 +1077,8 @@ QIcon SimulationExperimentViewSimulationWidget::fileTabIcon() const
                                        mProgressBarWidget->height()+2);
         QPainter tabBarPixmapPainter(&tabBarPixmap);
 
-        tabBarPixmapPainter.setBrush(QBrush(Core::windowColor()));
-        tabBarPixmapPainter.setPen(QPen(Core::borderColor()));
+        tabBarPixmapPainter.setBrush(Core::windowColor());
+        tabBarPixmapPainter.setPen(Core::borderColor());
 
         tabBarPixmapPainter.drawRect(0, 0, tabBarPixmap.width()-1, tabBarPixmap.height()-1);
         tabBarPixmapPainter.fillRect(1, 1, mProgress, tabBarPixmap.height()-2,
@@ -1229,20 +1265,53 @@ SimulationSupport::Simulation * SimulationExperimentViewSimulationWidget::simula
 QVariant SimulationExperimentViewSimulationWidget::value(Core::Property *pProperty) const
 {
     switch (pProperty->type()) {
+    case Core::Property::Section:
+        return QVariant();
+    case Core::Property::String:
+    case Core::Property::Color:
+        return pProperty->value();
     case Core::Property::Integer:
+    case Core::Property::IntegerGt0:
         return pProperty->integerValue();
     case Core::Property::Double:
+    case Core::Property::DoubleGt0:
         return pProperty->doubleValue();
     case Core::Property::List:
         return pProperty->listValue();
     case Core::Property::Boolean:
         return pProperty->booleanValue();
-    default:
-        // Not a relevant property, so return nothing
-        // Note: we should never reach this point...
-
-        return QVariant();
     }
+
+    return QVariant();
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
+}
+
+//==============================================================================
+
+QString SimulationExperimentViewSimulationWidget::stringValue(Core::Property *pProperty) const
+{
+    switch (pProperty->type()) {
+    case Core::Property::Section:
+        return QString();
+    case Core::Property::String:
+    case Core::Property::Color:
+        return pProperty->value();
+    case Core::Property::Integer:
+    case Core::Property::IntegerGt0:
+        return QString::number(pProperty->integerValue());
+    case Core::Property::Double:
+    case Core::Property::DoubleGt0:
+        return QString::number(pProperty->doubleValue(), 'g', 15);
+    case Core::Property::List:
+        return pProperty->listValue();
+    case Core::Property::Boolean:
+        return QVariant(pProperty->booleanValue()).toString();
+    }
+
+    return QString();
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
 }
 
 //==============================================================================
@@ -1435,15 +1504,22 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
 
     foreach (const QString &solverProperty, solverProperties.keys()) {
         QString kisaoId = solverInterface->kisaoId(solverProperty);
+        QVariant solverPropertyValue = solverProperties.value(solverProperty);
+        QString value = (solverPropertyValue.type() == QVariant::Double)?
+                            QString::number(solverPropertyValue.toDouble(), 'g', 15):
+                            solverPropertyValue.toString();
 
         if (kisaoId.isEmpty()) {
-            voiSolverProperties += QString("<solverProperty id=\"%1\" value=\"%2\"/>").arg(solverProperty,
-                                                                                           solverProperties.value(solverProperty).toString());
+            voiSolverProperties += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
+                                                                            SEDMLSupport::SolverPropertyId,
+                                                                            solverProperty,
+                                                                            SEDMLSupport::SolverPropertyValue,
+                                                                            value);
         } else {
             libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
 
             sedmlAlgorithmParameter->setKisaoID(kisaoId.toStdString());
-            sedmlAlgorithmParameter->setValue(solverProperties.value(solverProperty).toString().toStdString());
+            sedmlAlgorithmParameter->setValue(value.toStdString());
         }
     }
 
@@ -1454,7 +1530,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     }
 
     // Check whether the simulation required an NLA solver and, if so, let our
-    // SED-ML simulation known about it through an annotation (since we cannot
+    // SED-ML simulation know about it through an annotation (since we cannot
     // have more than one SED-ML algorithm per SED-ML simulation)
 
     if (runtime->needNlaSolver()) {
@@ -1468,10 +1544,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
                                                                             solverProperties.value(solverProperty).toString());
         }
 
-        pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" name=\"%3\">%4</%1>").arg(SEDMLSupport::NlaSolver,
-                                                                                               SEDMLSupport::OpencorNamespace,
-                                                                                               mSimulation->data()->nlaSolverName(),
-                                                                                               nlaSolverProperties).toStdString());
+        pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" %3=\"%4\">%5</%1>").arg(SEDMLSupport::NlaSolver,
+                                                                                             SEDMLSupport::OpencorNamespace,
+                                                                                             SEDMLSupport::NlaSolverName,
+                                                                                             mSimulation->data()->nlaSolverName(),
+                                                                                             nlaSolverProperties).toStdString());
     }
 
     // Create and customise a task for our given SED-ML simulation
@@ -1622,10 +1699,10 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
         if (!graphs.isEmpty())
             graphsList << graphs;
 
-        if (graphPanel->plot()->logarithmicXAxis())
+        if (graphPanel->plot()->logAxisX())
             logarithmicXAxis << graphs;
 
-        if (graphPanel->plot()->logarithmicYAxis())
+        if (graphPanel->plot()->logAxisY())
             logarithmicYAxis << graphs;
     }
 
@@ -1692,6 +1769,37 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
                 sedmlCurve->setYDataReference(sedmlDataGeneratorIdY);
                 sedmlCurve->setLogY(logY);
+
+                // Customise our curve using an annotation
+
+                static const QString CurveProperty = QString("<%1>%2</%1>");
+
+                Core::Properties lineProperties = property->properties()[3]->properties();
+                Core::Properties symbolProperties = property->properties()[4]->properties();
+
+                sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%2\">"
+                                                     "    <%3>%5</%3>"
+                                                     "    <%4>%6</%4>"
+                                                     "</%1>").arg( SEDMLSupport::CurveProperties,
+                                                                   SEDMLSupport::OpencorNamespace,
+                                                                   SEDMLSupport::LineProperties,
+                                                                   SEDMLSupport::SymbolProperties,
+                                                                   CurveProperty.arg(SEDMLSupport::LineStyle,
+                                                                                     SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
+                                                                  +CurveProperty.arg(SEDMLSupport::LineWidth,
+                                                                                     stringValue(lineProperties[1]))
+                                                                  +CurveProperty.arg(SEDMLSupport::LineColor,
+                                                                                     stringValue(lineProperties[2])),
+                                                                   CurveProperty.arg(SEDMLSupport::SymbolStyle,
+                                                                                     SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
+                                                                  +CurveProperty.arg(SEDMLSupport::SymbolSize,
+                                                                                     stringValue(symbolProperties[1]))
+                                                                  +CurveProperty.arg(SEDMLSupport::SymbolColor,
+                                                                                     stringValue(symbolProperties[2]))
+                                                                  +CurveProperty.arg(SEDMLSupport::SymbolFilled,
+                                                                                     stringValue(symbolProperties[3]))
+                                                                  +CurveProperty.arg(SEDMLSupport::SymbolFillColor,
+                                                                                     stringValue(symbolProperties[4]))).toStdString());
             }
         }
     }
@@ -2078,14 +2186,14 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
 
     if (annotation) {
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const XMLNode &node = annotation->getChild(i);
+            const libsbml::XMLNode &variableDegreeNode = annotation->getChild(i);
 
-            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                || QString::fromStdString(node.getName()).compare(SEDMLSupport::VariableDegree)) {
+            if (   QString::fromStdString(variableDegreeNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(variableDegreeNode.getName()).compare(SEDMLSupport::VariableDegree)) {
                 continue;
             }
 
-            variableDegree = QString::fromStdString(node.getChild(0).getCharacters()).toInt();
+            variableDegree = QString::fromStdString(variableDegreeNode.getChild(0).getCharacters()).toInt();
         }
     }
 
@@ -2113,15 +2221,15 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
     SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
 
     libsedml::SedDocument *sedmlDocument = mSimulation->sedmlFile()->sedmlDocument();
-    libsedml::SedUniformTimeCourse *uniformTimeCourseSimulation = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
-    libsedml::SedOneStep *oneStepSimulation = static_cast<libsedml::SedOneStep *>(sedmlDocument->getSimulation(1));
+    libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
+    libsedml::SedOneStep *sedmlOneStep = static_cast<libsedml::SedOneStep *>(sedmlDocument->getSimulation(1));
 
-    double startingPoint = uniformTimeCourseSimulation->getOutputStartTime();
-    double endingPoint = uniformTimeCourseSimulation->getOutputEndTime();
-    double pointInterval = (endingPoint-startingPoint)/uniformTimeCourseSimulation->getNumberOfPoints();
+    double startingPoint = sedmlUniformTimeCourse->getOutputStartTime();
+    double endingPoint = sedmlUniformTimeCourse->getOutputEndTime();
+    double pointInterval = (endingPoint-startingPoint)/sedmlUniformTimeCourse->getNumberOfPoints();
 
-    if (oneStepSimulation)
-        endingPoint += oneStepSimulation->getStep();
+    if (sedmlOneStep)
+        endingPoint += sedmlOneStep->getStep();
 
     simulationWidget->startingPointProperty()->setDoubleValue(startingPoint);
     simulationWidget->endingPointProperty()->setDoubleValue(endingPoint);
@@ -2137,11 +2245,11 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
     SimulationExperimentViewInformationSolversWidgetData *solverData = (mSimulation->cellmlFile()->runtime()->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?
                                                                            informationWidget->solversWidget()->odeSolverData():
                                                                            informationWidget->solversWidget()->daeSolverData();
-    const libsedml::SedAlgorithm *algorithm = uniformTimeCourseSimulation->getAlgorithm();
+    const libsedml::SedAlgorithm *sedmlAlgorithm = sedmlUniformTimeCourse->getAlgorithm();
     SolverInterface *usedSolverInterface = 0;
     SolverInterfaces solverInterfaces = Core::solverInterfaces();
     Core::Properties solverProperties = Core::Properties();
-    QString kisaoId = QString::fromStdString(algorithm->getKisaoID());
+    QString kisaoId = QString::fromStdString(sedmlAlgorithm->getKisaoID());
 
     foreach (SolverInterface *solverInterface, solverInterfaces) {
         if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
@@ -2161,15 +2269,15 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
         return false;
     }
 
-    for (int i = 0, iMax = algorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
-        const libsedml::SedAlgorithmParameter *algorithmParameter = algorithm->getAlgorithmParameter(i);
-        QString kisaoId = QString::fromStdString(algorithmParameter->getKisaoID());
+    for (int i = 0, iMax = sedmlAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
+        const libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->getAlgorithmParameter(i);
+        QString kisaoId = QString::fromStdString(sedmlAlgorithmParameter->getKisaoID());
         QString id = usedSolverInterface->id(kisaoId);
         bool propertySet = false;
 
         foreach (Core::Property *solverProperty, solverProperties) {
             if (!solverProperty->id().compare(id)) {
-                QVariant solverPropertyValue = QString::fromStdString(algorithmParameter->getValue());
+                QVariant solverPropertyValue = QString::fromStdString(sedmlAlgorithmParameter->getValue());
 
                 switch (solverProperty->type()) {
                 case Core::Property::Section:
@@ -2185,10 +2293,12 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
 
                     break;
                 case Core::Property::Integer:
+                case Core::Property::IntegerGt0:
                     solverProperty->setIntegerValue(solverPropertyValue.toInt());
 
                     break;
                 case Core::Property::Double:
+                case Core::Property::DoubleGt0:
                     solverProperty->setDoubleValue(solverPropertyValue.toDouble());
 
                     break;
@@ -2198,6 +2308,14 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                     break;
                 case Core::Property::Boolean:
                     solverProperty->setBooleanValue(solverPropertyValue.toBool());
+
+                    break;
+                case Core::Property::Color:
+#ifdef QT_DEBUG
+                    // We should never come here...
+
+                    qFatal("FATAL ERROR | %s:%d: the solver property cannot be of colour type.", __FILE__, __LINE__);
+#endif
 
                     break;
                 }
@@ -2216,19 +2334,19 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
         }
     }
 
-    libsbml::XMLNode *annotation = algorithm->getAnnotation();
+    libsbml::XMLNode *annotation = sedmlAlgorithm->getAnnotation();
 
     if (annotation) {
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const XMLNode &node = annotation->getChild(i);
+            const libsbml::XMLNode &solverPropertiesNode = annotation->getChild(i);
 
-            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                || QString::fromStdString(node.getName()).compare(SEDMLSupport::SolverProperties)) {
+            if (   QString::fromStdString(solverPropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(solverPropertiesNode.getName()).compare(SEDMLSupport::SolverProperties)) {
                 continue;
             }
 
-            for (uint j = 0, jMax = node.getNumChildren(); j < jMax; ++j) {
-                const XMLNode &solverPropertyNode = node.getChild(j);
+            for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
+                const libsbml::XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
 
                 if (   QString::fromStdString(solverPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                     || QString::fromStdString(solverPropertyNode.getName()).compare(SEDMLSupport::SolverProperty)) {
@@ -2259,7 +2377,7 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
         }
     }
 
-    annotation = uniformTimeCourseSimulation->getAnnotation();
+    annotation = sedmlUniformTimeCourse->getAnnotation();
 
     if (annotation) {
         bool mustHaveNlaSolver = false;
@@ -2267,15 +2385,15 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
         QString nlaSolverName = QString();
 
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-            const libsbml::XMLNode &node = annotation->getChild(i);
+            const libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
 
-            if (   QString::fromStdString(node.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                || QString::fromStdString(node.getName()).compare(SEDMLSupport::NlaSolver)) {
+            if (   QString::fromStdString(nlaSolverNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                || QString::fromStdString(nlaSolverNode.getName()).compare(SEDMLSupport::NlaSolver)) {
                 continue;
             }
 
             mustHaveNlaSolver = true;
-            nlaSolverName = QString::fromStdString(node.getAttrValue(node.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
+            nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
 
             foreach (SolverInterface *solverInterface, solverInterfaces) {
                 if (!nlaSolverName.compare(solverInterface->solverName())) {
@@ -2309,7 +2427,6 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
     int newNbOfGraphPanels = sedmlDocument->getNumOutputs();
 
     graphPanelsWidget->setSizes(QIntList());
-    graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
     if (newNbOfGraphPanels > oldNbOfGraphPanels) {
         for (uint i = 0, iMax = newNbOfGraphPanels-oldNbOfGraphPanels; i < iMax; ++i)
@@ -2319,33 +2436,105 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
             graphPanelsWidget->removeCurrentGraphPanel();
     }
 
+    graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
+
     // Customise our graphs widget
 
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
-        libsedml::SedPlot2D *plot = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
+        libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
         GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
 
         graphPanel->removeAllGraphs();
 
-        for (uint j = 0, jMax = plot->getNumCurves(); j < jMax; ++j) {
-            libsedml::SedCurve *curve = plot->getCurve(j);
+        for (uint j = 0, jMax = sedmlPlot2d->getNumCurves(); j < jMax; ++j) {
+            libsedml::SedCurve *sedmlCurve = sedmlPlot2d->getCurve(j);
 
             if (!j) {
-                graphPanel->plot()->setLogarithmicXAxis(curve->getLogX());
-                graphPanel->plot()->setLogarithmicYAxis(curve->getLogY());
+                graphPanel->plot()->setLogAxisX(sedmlCurve->getLogX());
+                graphPanel->plot()->setLogAxisY(sedmlCurve->getLogY());
             }
 
-            CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(curve->getXDataReference())->getVariable(0));
-            CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(sedmlDocument->getDataGenerator(curve->getYDataReference())->getVariable(0));
+            CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getXDataReference())->getVariable(0));
+            CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getYDataReference())->getVariable(0));
 
             if (!xParameter || !yParameter) {
-                simulationError(tr("the requested curve (%1) could not be set").arg(QString::fromStdString(curve->getId())),
+                simulationError(tr("the requested curve (%1) could not be set").arg(QString::fromStdString(sedmlCurve->getId())),
                                 InvalidSimulationEnvironment);
 
                 return false;
             }
 
-            graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter));
+            Qt::PenStyle lineStyle = Qt::SolidLine;
+            double lineWidth = 1.0;
+            QColor lineColor = Qt::darkBlue;
+            QwtSymbol::Style symbolStyle = QwtSymbol::NoSymbol;
+            int symbolSize = 8;
+            QColor symbolColor = Qt::darkBlue;
+            bool symbolFilled = true;
+            QColor symbolFillColor = Qt::white;
+
+            annotation = sedmlCurve->getAnnotation();
+
+            if (annotation) {
+                for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+                    const libsbml::XMLNode &curvePropertiesNode = annotation->getChild(i);
+
+                    if (   QString::fromStdString(curvePropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                        || QString::fromStdString(curvePropertiesNode.getName()).compare(SEDMLSupport::CurveProperties)) {
+                        continue;
+                    }
+
+                    for (uint j = 0, jMax = curvePropertiesNode.getNumChildren(); j < jMax; ++j) {
+                        const libsbml::XMLNode &lineOrSymbolPropertiesNode = curvePropertiesNode.getChild(j);
+                        QString lineOrSymbolPropertiesNodeName = QString::fromStdString(lineOrSymbolPropertiesNode.getName());
+
+                        bool isLinePropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SEDMLSupport::LineProperties);
+                        bool isSymbolPropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SEDMLSupport::SymbolProperties);
+
+                        if (!isLinePropertiesNode && !isSymbolPropertiesNode)
+                            continue;
+
+                        if (isLinePropertiesNode) {
+                            for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &linePropertyNode = lineOrSymbolPropertiesNode.getChild(k);
+                                QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
+                                QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
+
+                                if (!linePropertyNodeName.compare(SEDMLSupport::LineStyle)) {
+                                    lineStyle = Qt::PenStyle(SEDMLSupport::lineStyleValueIndex(linePropertyNodeValue));
+                                } else if (!linePropertyNodeName.compare(SEDMLSupport::LineWidth)) {
+                                    lineWidth = linePropertyNodeValue.toDouble();
+                                } else if (!linePropertyNodeName.compare(SEDMLSupport::LineColor)) {
+                                    lineColor.setNamedColor(linePropertyNodeValue);
+                                }
+                            }
+                        } else {
+                            for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &symbolPropertyNode = lineOrSymbolPropertiesNode.getChild(k);
+                                QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
+                                QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
+
+                                if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolStyle)) {
+                                    int symbolStyleValue = SEDMLSupport::symbolStyleValueIndex(symbolPropertyNodeValue);
+
+                                    symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolSize)) {
+                                    symbolSize = symbolPropertyNodeValue.toInt();
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolColor)) {
+                                    symbolColor.setNamedColor(symbolPropertyNodeValue);
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolFilled)) {
+                                    symbolFilled = !symbolPropertyNodeValue.compare("true");
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolFillColor)) {
+                                    symbolFillColor.setNamedColor(symbolPropertyNodeValue);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter),
+                                 GraphPanelWidget::GraphPanelPlotGraphProperties( lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
         }
     }
 
@@ -2713,8 +2902,11 @@ void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFil
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                          OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+                                                          OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                          const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties)
 {
+    Q_UNUSED(pGraphProperties);
+
     // A new graph has been added, so keep track of it and update its plot
     // Note: updating the plot will, if needed, update the plot's axes and, as
     //       a result, replot the graphs including our new one. On the other
@@ -2727,8 +2919,7 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
 
     if (updatePlot(plot) || plot->drawGraphFrom(pGraph, 0)) {
         QCoreApplication::processEvents();
-        // Note: needProcessingEvents is used to ensure that our plot is updated
-        //       at once...
+        // Note: this ensures that our plot is updated at once...
     }
 
     // Keep track of the plot itself, if needed
@@ -2763,11 +2954,8 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanel
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                                                             const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
+void SimulationExperimentViewSimulationWidget::graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
-    Q_UNUSED(pPlot);
-
     // One or several graphs have been updated, so make sure that their
     // corresponding plots are up to date
 
@@ -2809,6 +2997,28 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(OpenCOR::GraphPanel
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+{
+    // The given graph has been updated, so make sure that its corresponding
+    // plots are up to date
+
+    graphsUpdated(GraphPanelWidget::GraphPanelPlotGraphs() << pGraph);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+{
+    // The visual aspect of the given graph has changed, so replot it
+
+    pGraph->plot()->replot();
+
+    QCoreApplication::processEvents();
+    // Note: this ensures that our plot is updated at once...
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::checkAxisValue(double &pValue,
                                                               const double &pOrigValue,
                                                               const QList<double> &pTestValues)
@@ -2842,7 +3052,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 
     QRectF dataRect = pPlot->dataRect();
 
-    if (dataRect != QRectF()) {
+    if (!dataRect.isNull()) {
         minX = dataRect.left();
         maxX = minX+dataRect.width();
         minY = dataRect.top();
@@ -2874,13 +3084,8 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
             startingPoints << startingPoint;
             endingPoints << endingPoint;
 
-            if (startingPoint > endingPoint) {
-                // The starting point is greater than the ending point, so swap
-                // the two of them
-
-                startingPoint = simulation->data()->endingPoint();
-                endingPoint = simulation->data()->startingPoint();
-            }
+            if (startingPoint > endingPoint)
+                std::swap(startingPoint, endingPoint);
 
             if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterX())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
                 if (!hasAxesValues && needInitialisationX) {

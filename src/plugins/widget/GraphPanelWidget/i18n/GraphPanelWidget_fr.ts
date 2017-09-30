@@ -27,8 +27,16 @@
 <context>
     <name>OpenCOR::GraphPanelWidget::GraphPanelPlotWidget</name>
     <message>
-        <source>Copy to Clipboard</source>
-        <translation>Copier dans Presse-Papier</translation>
+        <source>Export To...</source>
+        <translation>Exporter Vers...</translation>
+    </message>
+    <message>
+        <source>Export the contents of the graph panel to a PDF, PNG, SVG, etc. file</source>
+        <translation>Exporter le contenu du panneau graphique vers un fichier PDF, PNG, SVG, etc.</translation>
+    </message>
+    <message>
+        <source>Copy To Clipboard</source>
+        <translation>Copier Dans Presse-Papier</translation>
     </message>
     <message>
         <source>Copy the contents of the graph panel to the clipboard</source>
@@ -81,6 +89,50 @@
     <message>
         <source>Reset the zoom level of the graph panel</source>
         <translation>Réinitialiser la taille du panneau graphique</translation>
+    </message>
+    <message>
+        <source>PDF File - Portable Document Format (*.pdf)</source>
+        <translation>Fichier PDF - Portable Document Format (*.pdf)</translation>
+    </message>
+    <message>
+        <source>SVG File - Scalable Vector Graphics (*.svg)</source>
+        <translation>Fichier SVG - Scalable Vector Graphics (*.svg)</translation>
+    </message>
+    <message>
+        <source>BMP File - Windows Bitmap (*.bmp)</source>
+        <translation>Fichier BMP - Windows Bitmap (*.bmp)</translation>
+    </message>
+    <message>
+        <source>JPEG File - Joint Photographic Experts Group (*.jpg)</source>
+        <translation>Fichier JPEG - Joint Photographic Experts Group (*.jpg)</translation>
+    </message>
+    <message>
+        <source>PNG File - Portable Network Graphics (*.png)</source>
+        <translation>Fichier PNG - Portable Network Graphics (*.png)</translation>
+    </message>
+    <message>
+        <source>PBM File - Portable Bitmap (*.pbm)</source>
+        <translation>Fichier PBM - Portable Bitmap (*.pbm)</translation>
+    </message>
+    <message>
+        <source>PGM File - Portable Graymap (*.pgm)</source>
+        <translation>Fichier PGM - Portable Graymap (*.pgm)</translation>
+    </message>
+    <message>
+        <source>PPM File - Portable Pixmap (*.ppm)</source>
+        <translation>Fichier PPM - Portable Pixmap (*.ppm)</translation>
+    </message>
+    <message>
+        <source>XBM File - X11 Bitmap (*.xbm)</source>
+        <translation>Fichier XBM - X11 Bitmap (*.xbm)</translation>
+    </message>
+    <message>
+        <source>XPM File - X11 Pixmap (*.xpm)</source>
+        <translation>Fichier XPM - X11 Pixmap (*.xpm)</translation>
+    </message>
+    <message>
+        <source>Export To</source>
+        <translation>Exporter Vers</translation>
     </message>
 </context>
 <context>

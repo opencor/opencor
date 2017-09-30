@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QEvent>
 #include <QKeyEvent>
 #include <QModelIndex>
+#include <QPainter>
 #include <QRegularExpressionValidator>
 #include <QScrollBar>
 #include <QSettings>
@@ -76,15 +77,11 @@ void TextEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
         emit goToPreviousPropertyRequested();
 
-        // Accept the event
-
         pEvent->accept();
     } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
         // The user wants to go to the next property
 
         emit goToNextPropertyRequested();
-
-        // Accept the event
 
         pEvent->accept();
     } else {
@@ -108,6 +105,18 @@ IntegerEditorWidget::IntegerEditorWidget(QWidget *pParent) :
 
 //==============================================================================
 
+IntegerGt0EditorWidget::IntegerGt0EditorWidget(QWidget *pParent) :
+    TextEditorWidget(pParent)
+{
+    // Set a validator that accepts any strictly positif integer
+
+    static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
+
+    setValidator(new QRegularExpressionValidator(IntegerGt0RegEx, this));
+}
+
+//==============================================================================
+
 DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
     TextEditorWidget(pParent)
 {
@@ -116,6 +125,18 @@ DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
     static const QRegularExpression DoubleRegEx = QRegularExpression("^[+-]?(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d+)?$");
 
     setValidator(new QRegularExpressionValidator(DoubleRegEx, this));
+}
+
+//==============================================================================
+
+DoubleGt0EditorWidget::DoubleGt0EditorWidget(QWidget *pParent) :
+    TextEditorWidget(pParent)
+{
+    // Set a validator that accepts any strictly positif double
+
+    static const QRegularExpression DoubleGt0RegEx = QRegularExpression("^[+]?(([1-9]\\d*)?(\\.\\d*)?|[0]?\\.\\d+)([eE][+-]?\\d+)?$");
+
+    setValidator(new QRegularExpressionValidator(DoubleGt0RegEx, this));
 }
 
 //==============================================================================
@@ -141,15 +162,11 @@ void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
         emit goToPreviousPropertyRequested();
 
-        // Accept the event
-
         pEvent->accept();
     } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
         // The user wants to go to the next property
 
         emit goToNextPropertyRequested();
-
-        // Accept the event
 
         pEvent->accept();
     } else {
@@ -168,8 +185,8 @@ void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
     if (!count())
         return;
 
-    // We want to go to the next item in the list (and go back to the first one
-    // if we are at the end of the list), so determine the new current index
+    // We want to go to the next item in our list (and go back to the first one
+    // if we are at the end of our list), so determine the new current index
 
     int newCurrentIndex = currentIndex();
 
@@ -180,11 +197,9 @@ void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
             newCurrentIndex = 0;
     } while (itemText(newCurrentIndex).isEmpty());
 
-    // Set the new current index
+    // Set the new current index and accept the event
 
     setCurrentIndex(newCurrentIndex);
-
-    // Accept the event
 
     pEvent->accept();
 }
@@ -194,13 +209,13 @@ void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Check whether the user clicked on the arrow and, if so, allow the default
-    // handling of the event (so that the list of items gets displayed) while do
-    // nothing if the user clicked somewhere else (this to so that if the user
+    // handling of the event (so that our list of items gets displayed) while do
+    // nothing if the user clicked somewhere else (this so that if the user
     // double clicks on the widget, then we can select the next item)
     // Note: we would normally call style()->hitTestComplexControl() and, if it
     //       returns QStyle::SC_ComboBoxArrow, then allow the default handling
-    //       of the event, but if this works fine on Windows and Linux, it just
-    //       doesn't work on macOS. Indeed, no matter where we are over the
+    //       of the event, but although this works fine on Windows and Linux, it
+    //       just doesn't work on macOS. Indeed, no matter where we are over the
     //       widget, style()->hitTestComplexControl() will always (and as
     //       expected; [QtSources]/qtbase/src/widgets/styles/qmacstyle_mac.mm)
     //       return QStyle::SC_ComboBoxArrow. So, to get the behaviour we are
@@ -265,6 +280,18 @@ BooleanEditorWidget::BooleanEditorWidget(QWidget *pParent) :
 
 //==============================================================================
 
+ColorEditorWidget::ColorEditorWidget(QWidget *pParent) :
+    TextEditorWidget(pParent)
+{
+    // Set a validator that accepts any colour
+
+    static const QRegularExpression ColorRegEx = QRegularExpression("^#([[:xdigit:]]{6}|[[:xdigit:]]{8})$");
+
+    setValidator(new QRegularExpressionValidator(ColorRegEx, this));
+}
+
+//==============================================================================
+
 PropertyItemDelegate::PropertyItemDelegate(OpenCOR::Core::PropertyEditorWidget *pParent) :
     QStyledItemDelegate(pParent),
     mPropertyEditorWidget(pParent)
@@ -297,8 +324,16 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
         editor = new IntegerEditorWidget(pParent);
 
         break;
+    case Property::IntegerGt0:
+        editor = new IntegerGt0EditorWidget(pParent);
+
+        break;
     case Property::Double:
         editor = new DoubleEditorWidget(pParent);
+
+        break;
+    case Property::DoubleGt0:
+        editor = new DoubleGt0EditorWidget(pParent);
 
         break;
     case Property::List: {
@@ -306,7 +341,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         editor = listEditor;
 
-        // Add the value items to the list, keeping in mind separators
+        // Add the value items to our list, keeping in mind separators
 
         foreach (const QString &valueItem, property->listValues()) {
             if (valueItem.isEmpty())
@@ -315,7 +350,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
                 listEditor->addItem(valueItem);
         }
 
-        // Propagate the signal telling us about the list property value having
+        // Propagate the signal telling us about our list property value having
         // changed
 
         connect(listEditor, SIGNAL(currentIndexChanged(const QString &)),
@@ -328,7 +363,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         editor = booleanEditor;
 
-        // Propagate the signal telling us about the list property value having
+        // Propagate the signal telling us about our boolean value having
         // changed
 
         connect(booleanEditor, SIGNAL(currentIndexChanged(const QString &)),
@@ -336,6 +371,10 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         break;
     }
+    case Property::Color:
+        editor = new ColorEditorWidget(pParent);
+
+        break;
     }
 
     // Propagate a few signals
@@ -513,7 +552,7 @@ void Property::add(Property *pProperty)
 
     mName->appendRow(pProperty->items());
 
-    // Let the property that we are its parent
+    // Let the property know that we are its parent
 
     pProperty->setParentProperty(this);
 }
@@ -679,48 +718,6 @@ void Property::setIcon(const QIcon &pIcon)
 
 //==============================================================================
 
-int Property::integerValue() const
-{
-    // Return our value as an integer, if it is of that type
-
-    return (mType == Integer)?mValue->text().toInt():0;
-}
-
-//==============================================================================
-
-void Property::setIntegerValue(const int &pIntegerValue)
-{
-    // Set our value, should it be of integer type
-
-    if (mType == Integer)
-        setValue(QString::number(pIntegerValue));
-}
-
-//==============================================================================
-
-double Property::doubleValue() const
-{
-    // Return our value as a double, if it is of that type
-
-    return (mType == Double)?mValue->text().toDouble():0.0;
-}
-
-//==============================================================================
-
-void Property::setDoubleValue(const double &pDoubleValue,
-                              const bool &pEmitSignal)
-{
-    // Set our value, should it be of double type
-
-    if (mType == Double) {
-        setValue(QString::number(pDoubleValue, 'g', 15), false, pEmitSignal);
-        // Note: we want as much precision as possible, hence we use 15 (see
-        //       http://en.wikipedia.org/wiki/Double_precision)...
-    }
-}
-
-//==============================================================================
-
 QString Property::value() const
 {
     // Return our value
@@ -733,12 +730,25 @@ QString Property::value() const
 void Property::setValue(const QString &pValue, const bool &pForce,
                         const bool &pEmitSignal)
 {
-    // Set our value
+    // Set our value (and value icon, if we are a colour property)
 
     if (pValue.compare(mValue->text()) || pForce) {
         QString oldValue = mValue->text();
 
         mValue->setText(pValue);
+
+        if (mType == Color) {
+            QPixmap colorPixmap = QPixmap(48, 48);
+            QPainter colorPixmapPainter(&colorPixmap);
+            QColor color;
+
+            color.setNamedColor(pValue);
+
+            colorPixmapPainter.fillRect(0, 0, colorPixmap.width()-1, colorPixmap.height()-1, Qt::white);
+            colorPixmapPainter.fillRect(0, 0, colorPixmap.width()-1, colorPixmap.height()-1, color);
+
+            mValue->setIcon(colorPixmap);
+        }
 
         updateToolTip();
 
@@ -747,6 +757,52 @@ void Property::setValue(const QString &pValue, const bool &pForce,
         if (pEmitSignal)
             emit valueChanged(oldValue, pValue);
     }
+}
+
+//==============================================================================
+
+int Property::integerValue() const
+{
+    // Return our value as an integer, if it is of that type
+
+    return mValue->text().toInt();
+}
+
+//==============================================================================
+
+void Property::setIntegerValue(const int &pIntegerValue,
+                               const bool &pEmitSignal)
+{
+    // Set our value, should it be of integer type
+
+    if (mType == Integer)
+        setValue(QString::number(pIntegerValue), false, pEmitSignal);
+    else if (mType == IntegerGt0)
+        setValue(QString::number((pIntegerValue > 0)?pIntegerValue:1), false, pEmitSignal);
+}
+
+//==============================================================================
+
+double Property::doubleValue() const
+{
+    // Return our value as a double, if it is of that type
+
+    return mValue->text().toDouble();
+}
+
+//==============================================================================
+
+void Property::setDoubleValue(const double &pDoubleValue,
+                              const bool &pEmitSignal)
+{
+    // Set our value, should it be of double type
+    // Note: we want as much precision as possible, hence we use a precision of
+    //       15 decimals (see http://en.wikipedia.org/wiki/Double_precision)...
+
+    if (mType == Double)
+        setValue(QString::number(pDoubleValue, 'g', 15), false, pEmitSignal);
+    else if (mType == DoubleGt0)
+        setValue(QString::number((pDoubleValue > 0.0)?pDoubleValue:1.0, 'g', 15), false, pEmitSignal);
 }
 
 //==============================================================================
@@ -761,74 +817,30 @@ QStringList Property::listValues() const
 //==============================================================================
 
 void Property::setListValues(const QStringList &pListValues,
-                             const QString &pListValue, const bool &pEmitSignal)
+                             const bool &pEmitSignal)
 {
     // Make sure that there would be a point in setting the list values
 
     if (mType != List)
         return;
 
-    // Clean up the list values we were given:
-    //  - Remove leading empty items
-    //  - Add items, making sure that only one empty item (i.e. separator) can
-    //    be used at once
-    //  - Remove the trailing empty item, if any
-
-    QStringList listValues = QStringList();
-    int i = 0;
-    int iMax = pListValues.count();
-
-    for (; i < iMax; ++i) {
-        if (!pListValues[i].isEmpty())
-            break;
-    }
-
-    bool prevItemIsSeparator = false;
-
-    for (; i < iMax; ++i) {
-        QString listValue = pListValues[i];
-
-        if (!listValue.isEmpty()) {
-            listValues << listValue;
-
-            prevItemIsSeparator = false;
-        } else if (!prevItemIsSeparator) {
-            listValues << listValue;
-
-            prevItemIsSeparator = true;
-        }
-    }
-
-    if (!listValues.isEmpty() && listValues.last().isEmpty())
-        listValues.removeLast();
-
     // Set our list values, if appropriate
 
-    if (listValues != mListValues) {
-        mListValues = listValues;
+    if (pListValues != mListValues) {
+        int listValueIndex = mListValues.indexOf(value());
 
-        // Update our value using the requested item from our new list, if it
-        // isn't empty, otherwise use our empty list value
+        mListValues = pListValues;
 
-        int listValueIndex = mListValues.indexOf(pListValue);
+        // Update our value using the item at the same index as before, unless
+        // our new list of values is empty or the index is not valid anymore
 
         setValue(mListValues.isEmpty()?
                      mEmptyListValue:
-                     (pListValue.isEmpty() || (listValueIndex == -1))?
+                     ((listValueIndex == -1) || (listValueIndex >= mListValues.count()))?
                          mListValues.first():
                          mListValues[listValueIndex],
                  false, pEmitSignal);
     }
-}
-
-//==============================================================================
-
-void Property::setListValues(const QStringList &pListValues,
-                             const bool &pEmitSignal)
-{
-    // Set our list values with no default value
-
-    setListValues(pListValues, QString(), pEmitSignal);
 }
 
 //==============================================================================
@@ -847,11 +859,35 @@ void Property::setListValue(const QString &pListValue)
     // Set our list value, if appropriate
 
     if (    (mType == List)
-        && !mListValues.isEmpty() && mValue->text().compare(pListValue)) {
+        && !mListValues.isEmpty() && listValue().compare(pListValue)) {
         int listValueIndex = mListValues.indexOf(pListValue);
 
         if (listValueIndex != -1)
             setValue(mListValues[listValueIndex]);
+    }
+}
+
+//==============================================================================
+
+int Property::listValueIndex() const
+{
+    // Return our list value index
+
+    return listValues().indexOf(listValue());
+}
+
+//==============================================================================
+
+void Property::setListValueIndex(const int &pListValueIndex)
+{
+    // Set our list value, if appropriate
+
+    if (    (mType == List)
+        && !mListValues.isEmpty()
+        && (pListValueIndex >= 0)
+        && (pListValueIndex < mListValues.count())
+        && (pListValueIndex != listValueIndex())) {
+        setValue(mListValues[pListValueIndex]);
     }
 }
 
@@ -873,7 +909,7 @@ void Property::setEmptyListValue(const QString &pEmptyListValue)
     if ((mType == List) && pEmptyListValue.compare(mEmptyListValue)) {
         mEmptyListValue = pEmptyListValue;
 
-        // Keep our current value, if the list is not empty, otherwise update it
+        // Keep our current value, if our list is not empty, otherwise update it
         // with our new empty list value
 
         setValue(mListValues.isEmpty()?mEmptyListValue:mValue->text());
@@ -886,7 +922,7 @@ bool Property::booleanValue() const
 {
     // Return our value as a boolean, if it is of that type
 
-    return (mType == Boolean)?!mValue->text().compare(TrueValue):false;
+    return !mValue->text().compare(TrueValue);
 }
 
 //==============================================================================
@@ -897,6 +933,35 @@ void Property::setBooleanValue(const bool &pBooleanValue)
 
     if (mType == Boolean)
         setValue(pBooleanValue?TrueValue:FalseValue);
+}
+
+//==============================================================================
+
+QColor Property::colorValue() const
+{
+    // Return our value as a color, if it is of that type
+
+    QColor res;
+
+    res.setNamedColor(mValue->text());
+
+    return res;
+}
+
+//==============================================================================
+
+void Property::setColorValue(const QColor &pColorValue)
+{
+    // Set our value, should it be of color type
+
+    if (mType == Color) {
+        QString colorValueName = pColorValue.name(QColor::HexArgb);
+
+        if (colorValueName.startsWith("#ff"))
+            setValue(pColorValue.name());
+        else
+            setValue(colorValueName);
+    }
 }
 
 //==============================================================================
@@ -1325,6 +1390,29 @@ Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 
 //==============================================================================
 
+Property * PropertyEditorWidget::addStringProperty(const QString &pString,
+                                                   Property *pParent)
+{
+    // Add a string property and return its information
+
+    Property *res = addProperty(Property::String, pParent);
+
+    res->setValue(pString);
+
+    return res;
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addStringProperty(Property *pParent)
+{
+    // Add a string property and return its information
+
+    return addStringProperty(QString(), pParent);
+}
+
+//==============================================================================
+
 Property * PropertyEditorWidget::addIntegerProperty(const int &pValue,
                                                     Property *pParent)
 {
@@ -1344,6 +1432,29 @@ Property * PropertyEditorWidget::addIntegerProperty(Property *pParent)
     // Add an integer property and return its information
 
     return addIntegerProperty(0, pParent);
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addIntegerGt0Property(const int &pValue,
+                                                       Property *pParent)
+{
+    // Add a strictly positif integer property and return its information
+
+    Property *res = addProperty(Property::IntegerGt0, pParent);
+
+    res->setIntegerValue(pValue);
+
+    return res;
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addIntegerGt0Property(Property *pParent)
+{
+    // Add a strictly positif integer property and return its information
+
+    return addIntegerGt0Property(1, pParent);
 }
 
 //==============================================================================
@@ -1371,8 +1482,31 @@ Property * PropertyEditorWidget::addDoubleProperty(Property *pParent)
 
 //==============================================================================
 
+Property * PropertyEditorWidget::addDoubleGt0Property(const double &pValue,
+                                                      Property *pParent)
+{
+    // Add a strictly positif double property and return its information
+
+    Property *res = addProperty(Property::DoubleGt0, pParent);
+
+    res->setDoubleValue(pValue);
+
+    return res;
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addDoubleGt0Property(Property *pParent)
+{
+    // Add a strictly positif double property and return its information
+
+    return addDoubleProperty(1.0, pParent);
+}
+
+//==============================================================================
+
 Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
-                                                 const QString &pValue,
+                                                 const QString &pDefaultValue,
                                                  Property *pParent)
 {
     // Add a list property and return its information
@@ -1380,7 +1514,8 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
 
     Property *res = addProperty(Property::List, pParent);
 
-    res->setListValues(pValues, pValue);
+    res->setListValues(pValues);
+    res->setValue(pDefaultValue);
 
     return res;
 }
@@ -1392,7 +1527,7 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
 {
     // Add a list property and return its information
 
-    return addListProperty(pValues, 0, pParent);
+    return addListProperty(pValues, QString(), pParent);
 }
 
 //==============================================================================
@@ -1401,7 +1536,7 @@ Property * PropertyEditorWidget::addListProperty(Property *pParent)
 {
     // Add a list property and return its information
 
-    return addListProperty(QStringList(), 0, pParent);
+    return addListProperty(QStringList(), QString(), pParent);
 }
 
 //==============================================================================
@@ -1429,25 +1564,25 @@ Property * PropertyEditorWidget::addBooleanProperty(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addStringProperty(const QString &pString,
-                                                   Property *pParent)
+Property * PropertyEditorWidget::addColorProperty(const QColor &pValue,
+                                                  Property *pParent)
 {
-    // Add a string property and return its information
+    // Add a colour property and return its information
 
-    Property *res = addProperty(Property::String, pParent);
+    Property *res = addProperty(Property::Color, pParent);
 
-    res->setValue(pString);
+    res->setColorValue(pValue);
 
     return res;
 }
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addStringProperty(Property *pParent)
+Property * PropertyEditorWidget::addColorProperty(Property *pParent)
 {
-    // Add a string property and return its information
+    // Add a colour property and return its information
 
-    return addStringProperty(QString(), pParent);
+    return addColorProperty(QColor(), pParent);
 }
 
 //==============================================================================
@@ -1466,7 +1601,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
                            && !(pEvent->modifiers() & Qt::MetaModifier);
 
     if (controlModifier && (pEvent->key() == Qt::Key_A)) {
-        // The user wants to select everything which we don't want to allow,
+        // The user wants to select everything, which we don't want to allow,
         // so just accept the event...
 
         pEvent->accept();
@@ -1479,15 +1614,11 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         else
             editProperty(currentProperty());
 
-        // Accept the event
-
         pEvent->accept();
     } else if (noModifiers && (pEvent->key() == Qt::Key_Escape)) {
         // The user wants to cancel the editing
 
         finishEditing(false);
-
-        // Accept the event
 
         pEvent->accept();
     } else if (noModifiers && (pEvent->key() == Qt::Key_Up)) {
@@ -1495,15 +1626,11 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
         goToPreviousProperty();
 
-        // Accept the event
-
         pEvent->accept();
     } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
         // The user wants to go to the next property
 
         goToNextProperty();
-
-        // Accept the event
 
         pEvent->accept();
     } else {
@@ -1764,11 +1891,30 @@ void PropertyEditorWidget::editProperty(Property *pProperty,
         // A property is currently being edited, so commit its data and then
         // close its corresponding editor
 
-        if (pCommitData)
-            commitData(mPropertyEditor);
+        bool canCommitData = pCommitData;
+
+        if (canCommitData) {
+            // Make sure that the value of a strictly positive double property
+            // is valid
+            // Note: indeed, we allow "0.3", but the user might enter "0." and
+            //       then decide to move to the next property, in which case we
+            //       should ignore the 'new' value...
+
+            if (   (mProperty->type() == Property::DoubleGt0)
+                || (mProperty->type() == Property::Color)) {
+                DoubleGt0EditorWidget *propertyEditor = static_cast<DoubleGt0EditorWidget *>(mPropertyEditor);
+                QString propertyValue = propertyEditor->text();
+                int dummy;
+
+                canCommitData = propertyEditor->validator()->validate(propertyValue, dummy) == QValidator::Acceptable;
+            }
+
+            if (canCommitData)
+                commitData(mPropertyEditor);
+        }
 
         closeEditor(mPropertyEditor,
-                    pCommitData?
+                    canCommitData?
                         QAbstractItemDelegate::SubmitModelCache:
                         QAbstractItemDelegate::RevertModelCache);
 

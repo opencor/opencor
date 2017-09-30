@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 13, "month": 9, "year": 2017,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 25, "month": 9, "year": 2017,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -10,11 +10,6 @@ var jsonData = { "versions": [
                            { "type": "Improved", "description": "Plugin framework." },
                            { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                            { "type": "Improved", "description": "Keyboard navigation in tree views." },
-                         ]
-                       },
-                       { "name": "Data store",
-                         "entries": [
-                           { "type": "Improved", "description": "Selection of data." }
                          ]
                        },
                        { "name": "API",
@@ -28,6 +23,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Data store",
                          "entries": [
+                           { "type": "Improved", "description": "Selection of data." },
                            { "type": "subCategory", "name": "<a href=\"https://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a> data store",
                              "entries": [
                                { "type": "Improved", "description": "Export of data." }
@@ -76,6 +72,8 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "Simulation Experiment view (formerly known as the Single Cell view)",
                              "entries": [
                                { "type": "Added", "description": "Support for log scales." },
+                               { "type": "Added", "description": "Ability to customise a graph." },
+                               { "type": "Added", "description": "Export a graph panel to various formats (e.g. PDF, PNG, SVG)." },
                                { "type": "Improved", "description": "Running of long simulations." },
                                { "type": "Improved", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
                                { "type": "Fixed", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
@@ -102,6 +100,11 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "CellML support",
                              "entries": [
                                { "type": "Improved", "description": "Generation of error messages." }
+                             ]
+                           },
+                           { "type": "subCategory", "name": "ZIP support",
+                             "entries": [
+                               { "type": "Improved", "description": "decompression." }
                              ]
                            }
                          ]
