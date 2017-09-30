@@ -48,13 +48,13 @@ import optparse
 import subprocess
 from types import CodeType
 
-python_exe = 'python.exe' if (os.name == 'nt') else 'python'
-path_slash = '\\' if (os.name == 'nt') else '/'
+windows = (os.name == 'nt')
 
+python_exe = 'python.exe' if windows else 'python'
+path_slash = '\\' if windows else '/'
 bin_python = path_slash + 'bin' + path_slash + python_exe
 
 _pybin_match = re.compile(r'^python\d+\.\d+$')
-
 
 def update_script(script_filename, new_path):
     """Updates shebang lines for actual scripts."""
@@ -68,21 +68,35 @@ def update_script(script_filename, new_path):
 
     if not lines[0].startswith('#!'):
         return
-    args = lines[0][2:].strip().split()
+
+    line = lines[0][2:]
+    if line[0] in ['"', "'"]:
+        has_quote = True
+        quote = line[0]
+        end = line[1:].index(quote) + 1
+        args = [line[1:end]] + line[end+1:].split()
+    else:
+        has_quote = False
+        quote = '"'
+        args = line.strip().split()
+
     if not args:
         return
-
-    import pdb; pdb.set_trace()
 
     if not args[0].endswith(bin_python) \
     or '/usr/bin/env python' in args[0]:
         return
 
+    add_quote = (' ' in new_path)
     new_bin = os.path.join(new_path, 'bin', python_exe)
-    if new_bin == args[0]:
+    if new_bin == args[0] and has_quote == add_quote:
         return
 
-    args[0] = new_bin
+    if add_quote:
+        args[0] = '%s%s%s' % (quote, new_bin, quote)
+    else:
+        args[0] = new_bin
+
     lines[0] = '#!%s\n' % ' '.join(args)
     print('S %s' % script_filename)
     with open(script_filename, 'w') as f:
@@ -178,7 +192,7 @@ def update_paths(base, new_path):
     lib_dir = None
     lib_name = None
 
-    if os.name == 'nt':
+    if windows:
         scripts_dir = os.path.join(base, 'Scripts')
         base_lib_dir = base
         lib_name = 'Lib'
