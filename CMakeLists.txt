@@ -1211,6 +1211,9 @@ IF(WIN32)
     INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/Python
             DESTINATION .)
 
+    INSTALL(FILES ${PROJECT_SOURCE_DIR}/distrib/bin/set_python_path.py
+            DESTINATION Python/Scripts)
+
     # Qt libraries required by OpenCOR
 
     FOREACH(QT_LIBRARY CLucene Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
@@ -1246,12 +1249,12 @@ IF(WIN32)
     INSTALL(FILES ${VBS_FILENAME}
             DESTINATION .)
 
-    # File type association
-    # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
-    #       file icons (so that it is clear to the user that an extension has
-    #       been (un)registered...
-
     IF(NSIS_FOUND)
+        # File type association
+        # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
+        #       file icons (so that it is clear to the user that an extension has
+        #       been (un)registered...
+
         SET(CPACK_NSIS_DEFINES "!include ${CMAKE_SOURCE_DIR}\\\\distrib\\\\windows\\\\FileAssociation.nsh")
 
         SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
@@ -1261,6 +1264,12 @@ IF(WIN32)
         SET(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
             \\\${UnregisterExtension} \\\".cellml\\\" \\\"CellML File\\\"
             System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
+        ")
+
+        # Update Python scripts to refer to our installed Python
+
+        SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS ${CPACK_NSIS_EXTRA_INSTALL_COMMANDS}
+        "    Exec '\\\"\\\$INSTDIR\\\\Python\\\\bin\\\\python.exe\\\" \\\"\\\$INSTDIR\\\\Python\\\\Scripts\\\\set_python_path.py\\\" --update-path=auto \\\"\\\$INSTDIR\\\\Python\\\"'
         ")
     ENDIF()
 ELSEIF(APPLE)
