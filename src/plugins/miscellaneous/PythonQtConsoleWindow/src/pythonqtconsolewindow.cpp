@@ -76,7 +76,7 @@ def create_ipython_widget():
     # Create a Jupyter widget and connect it with our kernel and
     # its client
 
-    ipython_widget = QtInProcessRichJupyterWidget(font_size=12)
+    ipython_widget = QtInProcessRichJupyterWidget(font_size=10)
     ipython_widget.kernel_manager = kernel_manager
     ipython_widget.kernel_client = kernel_client
 
