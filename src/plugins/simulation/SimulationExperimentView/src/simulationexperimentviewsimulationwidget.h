@@ -229,8 +229,8 @@ private:
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                     const bool &pForceReplot = false);
 
-    double * dataPoints(SimulationSupport::Simulation *pSimulation,
-                        CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
+    double * data(SimulationSupport::Simulation *pSimulation,
+                  CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                          const qulonglong &pSize);

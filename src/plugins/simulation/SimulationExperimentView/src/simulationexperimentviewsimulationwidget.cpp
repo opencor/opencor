@@ -3117,8 +3117,8 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 
 //==============================================================================
 
-double * SimulationExperimentViewSimulationWidget::dataPoints(SimulationSupport::Simulation *pSimulation,
-                                                              CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
+double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simulation *pSimulation,
+                                                        CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
 {
     // Return the array of data points associated with the given parameter
 
@@ -3152,8 +3152,8 @@ void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget:
     if (pGraph->isValid()) {
         SimulationSupport::Simulation *simulation = mViewWidget->simulation(pGraph->fileName());
 
-        pGraph->setRawSamples(dataPoints(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
-                              dataPoints(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
+        pGraph->setRawSamples(data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
+                              data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
                               pSize);
     }
 }
