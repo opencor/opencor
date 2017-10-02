@@ -211,8 +211,7 @@ public:
     QRectF dataRect() const;
     QRectF dataLogRect() const;
 
-    void optimiseAxisX(double &pMin, double &pMax) const;
-    void optimiseAxisY(double &pMin, double &pMax) const;
+    void optimiseAxis(double &pMin, double &pMax) const;
 
     double minX() const;
     double maxX() const;
@@ -344,10 +343,6 @@ private:
     bool canZoomOutY() const;
 
     QRectF realDataRect() const;
-
-    void optimiseAxis(const int &pAxisId, double &pMin, double &pMax) const;
-
-    QRectF optimisedRect(const QRectF &pAxes) const;
 
     void setAxis(const int &pAxisId, double pMin, double pMax);
 

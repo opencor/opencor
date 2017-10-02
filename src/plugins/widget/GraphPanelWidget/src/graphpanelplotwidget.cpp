@@ -1007,8 +1007,7 @@ GraphPanelPlotGraphs GraphPanelPlotWidget::graphs() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
-                                        double &pMax) const
+void GraphPanelPlotWidget::optimiseAxis(double &pMin, double &pMax) const
 {
     // Make sure that the given values are different
 
@@ -1021,55 +1020,6 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
         pMin = pMin-pow(10.0, powerValue);
         pMax = pMax+pow(10.0, powerValue);
     }
-
-    // Optimise the axis' values by making sure that they fall onto a factor of
-    // the axis' minor step
-
-    uint base = axisScaleEngine(pAxisId)->base();
-    double majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin,
-                                                          axisMaxMajor(pAxisId),
-                                                          base);
-    double minorStep = QwtScaleArithmetic::divideInterval(majorStep,
-                                                          axisMaxMinor(pAxisId),
-                                                          base);
-
-    pMin = std::floor(pMin/minorStep)*minorStep;
-    pMax = std::ceil(pMax/minorStep)*minorStep;
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax) const
-{
-    // Optimise our X axis' values
-
-    optimiseAxis(QwtPlot::xBottom, pMin, pMax);
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax) const
-{
-    // Optimise our Y axis' values
-
-    optimiseAxis(QwtPlot::yLeft, pMin, pMax);
-}
-
-//==============================================================================
-
-QRectF GraphPanelPlotWidget::optimisedRect(const QRectF &pAxes) const
-{
-    // Optimise our axes' values
-
-    double minX = pAxes.left();
-    double maxX = minX+pAxes.width();
-    double minY = pAxes.top();
-    double maxY = minY+pAxes.height();
-
-    optimiseAxisX(minX, maxX);
-    optimiseAxisY(minY, maxY);
-
-    return QRectF(minX, minY, maxX-minX, maxY-minY);
 }
 
 //==============================================================================
@@ -1141,7 +1091,17 @@ QRectF GraphPanelPlotWidget::realDataRect() const
 
         return QRectF(minX, minY, maxX-minX, maxY-minY);
     } else {
-        return optimisedRect(res);
+        // Optimise our axes' values
+
+        double minX = res.left();
+        double maxX = minX+res.width();
+        double minY = res.top();
+        double maxY = minY+res.height();
+
+        optimiseAxis(minX, maxX);
+        optimiseAxis(minY, maxY);
+
+        return QRectF(minX, minY, maxX-minX, maxY-minY);
     }
 }
 
