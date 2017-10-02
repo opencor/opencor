@@ -1074,6 +1074,21 @@ QRectF GraphPanelPlotWidget::optimisedRect(const QRectF &pAxes) const
 
 //==============================================================================
 
+bool GraphPanelPlotWidget::hasData() const
+{
+    // Determine and return whether at least one of the graphs, which are valid
+    // and selected, has some data
+
+    foreach (GraphPanelPlotGraph *graph, mGraphs) {
+        if (graph->isValid() && graph->isSelected() && graph->dataSize())
+            return true;
+    }
+
+    return false;
+}
+
+//==============================================================================
+
 QRectF GraphPanelPlotWidget::dataRect() const
 {
     // Determine and return the rectangle within which all the graphs, which are

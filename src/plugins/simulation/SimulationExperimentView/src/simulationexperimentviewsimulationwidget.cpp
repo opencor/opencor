@@ -3013,8 +3013,6 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     // Retrieve the current axes' values or use some default ones, if none are
     // available
 
-    bool hasAxesValues = false;
-
     double minX = pPlot->logAxisX()?GraphPanelWidget::DefaultMinLogAxis:GraphPanelWidget::DefaultMinAxis;
     double maxX = GraphPanelWidget::DefaultMaxAxis;
     double minY = pPlot->logAxisY()?GraphPanelWidget::DefaultMinLogAxis:GraphPanelWidget::DefaultMinAxis;
@@ -3028,13 +3026,14 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
         minY = dataRect.top();
         maxY = minY+dataRect.height();
 
-        hasAxesValues = true;
     }
 
     // Check all the graphs associated with the given plot and see whether any
     // of them uses the variable of integration as parameter X and/or Y, and if
     // so then asks the plot to use the starting/ending points as the
     // minimum/maximum values for the X and/or Y axes
+
+    bool hasData = pPlot->hasData();
 
     bool needInitialisationX = true;
     bool needInitialisationY = true;
@@ -3049,7 +3048,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
                 std::swap(startingPoint, endingPoint);
 
             if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterX())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
-                if (!hasAxesValues && needInitialisationX) {
+                if (!hasData && needInitialisationX) {
                     minX = startingPoint;
                     maxX = endingPoint;
 
@@ -3062,7 +3061,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 
             if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
             {
-                if (!hasAxesValues && needInitialisationY) {
+                if (!hasData && needInitialisationY) {
                     minY = startingPoint;
                     maxY = endingPoint;
 

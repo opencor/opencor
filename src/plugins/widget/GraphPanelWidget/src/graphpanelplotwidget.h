@@ -206,6 +206,8 @@ public:
     bool addGraph(GraphPanelPlotGraph *pGraph);
     bool removeGraph(GraphPanelPlotGraph *pGraph);
 
+    bool hasData() const;
+
     QRectF dataRect() const;
 
     void optimiseAxisX(double &pMin, double &pMax) const;
