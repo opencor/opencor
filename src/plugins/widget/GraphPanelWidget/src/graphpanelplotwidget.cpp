@@ -1106,6 +1106,26 @@ QRectF GraphPanelPlotWidget::dataRect() const
 
 //==============================================================================
 
+QRectF GraphPanelPlotWidget::dataLogRect() const
+{
+//---ISSUE1412--- TO BE DONE...
+//                CORRESPONDS TO dataRect() MINUS ALL THE POINTS THAT HAVE ONE
+//                OR TWO OF THEIR COORDINATES THAT IS LOWER OR EQUAL TO ZERO...
+    // Determine and return the log rectangle within which all the graphs, which
+    // are valid, selected and have some data, can fit
+
+    QRectF res = QRectF();
+
+    foreach (GraphPanelPlotGraph *graph, mGraphs) {
+        if (graph->isValid() && graph->isSelected() && graph->dataSize())
+            res |= graph->boundingRect();
+    }
+
+    return res;
+}
+
+//==============================================================================
+
 QRectF GraphPanelPlotWidget::realDataRect() const
 {
     // Return an optimised version of dataRect() or a default rectangle, if no

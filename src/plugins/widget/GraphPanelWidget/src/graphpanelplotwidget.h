@@ -209,6 +209,7 @@ public:
     bool hasData() const;
 
     QRectF dataRect() const;
+    QRectF dataLogRect() const;
 
     void optimiseAxisX(double &pMin, double &pMax) const;
     void optimiseAxisY(double &pMin, double &pMax) const;

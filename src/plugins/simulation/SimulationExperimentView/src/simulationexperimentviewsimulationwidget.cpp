@@ -3010,12 +3010,12 @@ void SimulationExperimentViewSimulationWidget::graphVisualUpdated(OpenCOR::Graph
 bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                                                           const bool &pForceReplot)
 {
-    // Retrieve the current axes' values or use some default ones, if none are
-    // available
+    // Retrieve the current axes' linear and log values or use some default
+    // ones, if none are available
 
-    double minX = pPlot->logAxisX()?GraphPanelWidget::DefaultMinLogAxis:GraphPanelWidget::DefaultMinAxis;
+    double minX = GraphPanelWidget::DefaultMinAxis;
     double maxX = GraphPanelWidget::DefaultMaxAxis;
-    double minY = pPlot->logAxisY()?GraphPanelWidget::DefaultMinLogAxis:GraphPanelWidget::DefaultMinAxis;
+    double minY = GraphPanelWidget::DefaultMinAxis;
     double maxY = GraphPanelWidget::DefaultMaxAxis;
 
     QRectF dataRect = pPlot->dataRect();
@@ -3025,7 +3025,20 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
         maxX = minX+dataRect.width();
         minY = dataRect.top();
         maxY = minY+dataRect.height();
+    }
 
+    double minLogX = GraphPanelWidget::DefaultMinLogAxis;
+    double maxLogX = GraphPanelWidget::DefaultMaxAxis;
+    double minLogY = GraphPanelWidget::DefaultMinLogAxis;
+    double maxLogY = GraphPanelWidget::DefaultMaxAxis;
+
+    QRectF dataLogRect = pPlot->dataLogRect();
+
+    if (!dataLogRect.isNull()) {
+        minLogX = dataLogRect.left();
+        maxLogX = minLogX+dataLogRect.width();
+        minLogY = dataLogRect.top();
+        maxLogY = minLogY+dataLogRect.height();
     }
 
     // Check all the graphs associated with the given plot and see whether any
@@ -3080,7 +3093,18 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     pPlot->optimiseAxisX(minX, maxX);
     pPlot->optimiseAxisY(minY, maxY);
 
-    if (pPlot->setAxes(minX, maxX, minY, maxY, true, true, false)) {
+    pPlot->optimiseAxisX(minLogX, maxLogX);
+    pPlot->optimiseAxisY(minLogY, maxLogY);
+
+    pPlot->setDefaultAxesValues(minX, maxX, minLogX, maxLogX,
+                                minY, maxY, minLogY, maxLogY);
+
+    bool logAxisX = pPlot->logAxisX();
+    bool logAxisY = pPlot->logAxisY();
+
+    if (pPlot->setAxes(logAxisX?minLogX:minX, logAxisX?maxLogX:maxX,
+                       logAxisY?minLogY:minY, logAxisY?maxLogY:maxY,
+                       true, true, false)) {
         return true;
     } else if (pForceReplot) {
         pPlot->replot();
