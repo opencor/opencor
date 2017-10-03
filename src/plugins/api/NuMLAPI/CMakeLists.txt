@@ -63,18 +63,18 @@ IF(USE_PREBUILT_NUMLAPI_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 9c21e4bca56f79238ff78cca6ccdc79fcb68a398
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} a39db4db954fa9d7dc4ebe30d9bf3483d210cdc5
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES c5c105285c1e66bf9e608cd61066fdbc08251c89
-                                              92557132c182d4b67082f2c4fe9459df705b6f2f)
+                                  SHA1_VALUES d7fca96349c39fce1db4f0a87780d1b75014a624
+                                              119099b65ce3d3dfa7ad3cc419bf7a963d508420)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 13536ef155122712166921cce4aa4023acb3f1be
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 987483fe81c3f16b6b05914a6a488c3e8d85e9a1
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 7fb192dbed976723781772efefff9f339597c8ba
-                                              48b0835141df4f025980d7cc80326fb54aa9af37)
+                                  SHA1_VALUES 60783f45ecb6eac9938351d4793fba79ceb3283f
+                                              ce4925551c1759fa812b9441d37e4b331e2caf81)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}

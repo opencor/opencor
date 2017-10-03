@@ -63,18 +63,18 @@ IF(USE_PREBUILT_SEDMLAPI_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} cdf5ab09da7afb606619060ef4d7dab9f85b2457
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 48929203f6cf3d58c02110f82a61200d03d37f66
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES eaf124b2fa50e20cf3061b67e276e38b406d8aeb
-                                              a9bf680bfb395b585bbafe0d07c820a5fcc08ec4)
+                                  SHA1_VALUES a285b5e6532ff2ae8b68c6a47b94d911d5496b8f
+                                              6fae4b4587fd0769b4d7885fdf1f59dcd753bd6a)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} ca91e11a290ffb6b528c4adea148e1fa28da8be4
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} db406bb2105c73742c759612dc663496d3868838
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES f706f903db3e535ad69bf751f179d08ddba6327c
-                                              cb7cde1a5a649cb2b0bf5dd773c8a10be7108e68)
+                                  SHA1_VALUES 0e01aa3d70dc38389cf1497759bfa65d4e5d7358
+                                              329e30cfc5e8e2f493e6aadf2dbd89c347867ff0)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
