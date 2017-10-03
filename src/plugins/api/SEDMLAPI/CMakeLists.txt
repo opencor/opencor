@@ -63,31 +63,31 @@ IF(USE_PREBUILT_SEDMLAPI_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 0919909160f94fb2b3a1b4d62b977d0188728f6d
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} cdf5ab09da7afb606619060ef4d7dab9f85b2457
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 3a2466f08693ee3c839315bbff1e5cdf7f3a25c5
-                                              4bbab20a45b41f3ff3e76d3cd94ee3df9e3c7123)
+                                  SHA1_VALUES eaf124b2fa50e20cf3061b67e276e38b406d8aeb
+                                              a9bf680bfb395b585bbafe0d07c820a5fcc08ec4)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} a61037baabb635f06446eb958a31a46a0ede28b7
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} ca91e11a290ffb6b528c4adea148e1fa28da8be4
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 030444176e8e0a1682fbdf43db5eefa457eb7863
-                                              91778645fe10f388ea4eaedab34fe5bd7f85a9df)
+                                  SHA1_VALUES f706f903db3e535ad69bf751f179d08ddba6327c
+                                              cb7cde1a5a649cb2b0bf5dd773c8a10be7108e68)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f9c0689d452c54d5749e99dabcd858de0f391c6a
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 0f340ff85453d8b456d09d9730280ada382ba3fb
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES f72926e4536000d4b673b207626d2fa1f022ebee)
+                              SHA1_VALUES b2615294a9cfa5c0561fa4090251721e80f0ff81)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 2913a56c08fbeec36f7aab700b083e22e1002f94
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 17a5e6c4eb2ff9a2c983fd78786e7e62ef6b3845
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 9140979688e0aaf79e15ba05d083267c66aacafc)
+                              SHA1_VALUES ff9c82d6fa2d266156a6a3ccc636427ffbc51e2f)
     ENDIF()
 ELSE()
     # Build libSEDML as an external project
