@@ -78,16 +78,16 @@ IF(USE_PREBUILT_SBMLAPI_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 60be280d64800ff2b81f8165d0e91fb5ed80960e
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 6c05e1508414b19c130955a6d412a9b63daae517
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 48098a0321f24655185c349b781eb5b39cce08b2)
+                              SHA1_VALUES e2e48544e34de89a89dc9081879564634b2477c6)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} edc06059e8d791b90c7f5cb51bee94115314a58d
+                              ${RELATIVE_PROJECT_SOURCE_DIR} a30e26c67f54e0c3ecc55a394582647d763f228a
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 1ce7f57a5e75061b4561f0c7e09e752d4bd316cf)
+                              SHA1_VALUES 5ec46cbaee57ee9e805917943d6c116805448364)
     ENDIF()
 ELSE()
     # Download some dependencies for Windows, if needed

@@ -78,16 +78,16 @@ IF(USE_PREBUILT_SEDMLAPI_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 0f340ff85453d8b456d09d9730280ada382ba3fb
+                              ${RELATIVE_PROJECT_SOURCE_DIR} e94f678c588380730103eba4067e880340ddf24f
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES b2615294a9cfa5c0561fa4090251721e80f0ff81)
+                              SHA1_VALUES 308705d24ebece8decf05bd014c8fe2247dc8206)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 17a5e6c4eb2ff9a2c983fd78786e7e62ef6b3845
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 89509c8698588a23d52c0963a181d68aeae3218f
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES ff9c82d6fa2d266156a6a3ccc636427ffbc51e2f)
+                              SHA1_VALUES e20078453dd48df4be117c4efca7e6b1627a29d4)
     ENDIF()
 ELSE()
     # Build libSEDML as an external project

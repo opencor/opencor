@@ -78,16 +78,16 @@ IF(USE_PREBUILT_NUMLAPI_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 47ca699ee680aaf5cc2671a56f530a9e5befffaa
+                              ${RELATIVE_PROJECT_SOURCE_DIR} ee9401bf34b1ce8dcdf95beca1a88dee3ab34a65
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES f6ebd5d2efdb6af3368dba37a79ea3047523507a)
+                              SHA1_VALUES e915e99c817217be7a2562c6bc3656cc42558d6c)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 041cdb7cebf09e3cd3099417c035da92268e4485
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 5cdf38db5546509d211bcb964224c7490c9ff97a
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 89304facc2e39026dd04dd09a0576993db7c99c3)
+                              SHA1_VALUES 3b179071772ed7820eb0bf4346ba3e75fe82ef27)
     ENDIF()
 ELSE()
     # Build libNuML as an external project
