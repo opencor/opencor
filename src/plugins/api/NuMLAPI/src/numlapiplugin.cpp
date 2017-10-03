@@ -18,33 +18,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML API plugin
+// NuML API plugin
 //==============================================================================
 
-#include "sedmlapiplugin.h"
+#include "numlapiplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SEDMLAPI {
+namespace NuMLAPI {
 
 //==============================================================================
 
-PLUGININFO_FUNC SEDMLAPIPluginInfo()
+PLUGININFO_FUNC NuMLAPIPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://github.com/NuML/NuML/\">libNuML</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://github.com/NuML/NuML/\">libNuML</a>."));
 
     return new PluginInfo(PluginInfo::Api, false, false,
-                          QStringList() << "NuMLAPI" << "SBMLAPI",
+                          QStringList() << "SBMLAPI",
                           descriptions);
 }
 
 //==============================================================================
 
-}   // namespace SEDMLAPI
+}   // namespace NuMLAPI
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -14,6 +14,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "API",
                          "entries": [
+                           { "type": "Added", "description": "<a href=\"https://github.com/NuML/NuML/\">NuML</a> API (via <a href=\"https://github.com/NuML/NuML/\">libNuML</a>)." },
                            { "type": "subCategory", "name": "CellML API",
                              "entries": [
                                { "type": "Fixed", "description": "Memory access in the CUSES service." }

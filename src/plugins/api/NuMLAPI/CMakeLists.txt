@@ -1,22 +1,22 @@
-PROJECT(SEDMLAPIPlugin)
+PROJECT(NuMLAPIPlugin)
 
 # Name and version of our package
 
-SET(PACKAGE_NAME libSEDML)
-SET(PACKAGE_VERSION 0.4.3)
+SET(PACKAGE_NAME libNuML)
+SET(PACKAGE_VERSION 1.1.1)
 
 # Version of our package's libraries
 
-SET(MAJOR_LIBRARY_VERSION 0)
-SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.4.3)
+SET(MAJOR_LIBRARY_VERSION 1)
+SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.1)
 
 # Git tag for our library
 
-SET(GIT_TAG v0.4.3)
+SET(GIT_TAG v1.1.1)
 
 # Package repository
 
-SET(PACKAGE_REPOSITORY libSEDML)
+SET(PACKAGE_REPOSITORY NuML)
 
 # Specify where our local package will be installed
 
@@ -25,10 +25,10 @@ SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 # Name of our package's shared library (and of its import library, if any)
 
 IF(WIN32)
-    SET(SHARED_LIBRARY libsedml${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(IMPORT_LIBRARY libsedml${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    SET(SHARED_LIBRARY libnuml${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(IMPORT_LIBRARY libnuml${CMAKE_IMPORT_LIBRARY_SUFFIX})
 ELSE()
-    SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sedml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}numl${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     SET(IMPORT_LIBRARY ${SHARED_LIBRARY})
 ENDIF()
 
@@ -54,7 +54,7 @@ ENDIF()
 
 # Use the pre-built version of our package unless instructed otherwise
 
-IF(USE_PREBUILT_SEDMLAPI_PACKAGE)
+IF(USE_PREBUILT_NUMLAPI_PACKAGE)
     # Retrieve the plugin's package
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
@@ -63,36 +63,39 @@ IF(USE_PREBUILT_SEDMLAPI_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 48929203f6cf3d58c02110f82a61200d03d37f66
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} a39db4db954fa9d7dc4ebe30d9bf3483d210cdc5
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES a285b5e6532ff2ae8b68c6a47b94d911d5496b8f
-                                              6fae4b4587fd0769b4d7885fdf1f59dcd753bd6a)
+                                  SHA1_VALUES d7fca96349c39fce1db4f0a87780d1b75014a624
+                                              119099b65ce3d3dfa7ad3cc419bf7a963d508420)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} db406bb2105c73742c759612dc663496d3868838
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 987483fe81c3f16b6b05914a6a488c3e8d85e9a1
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 0e01aa3d70dc38389cf1497759bfa65d4e5d7358
-                                              329e30cfc5e8e2f493e6aadf2dbd89c347867ff0)
+                                  SHA1_VALUES 60783f45ecb6eac9938351d4793fba79ceb3283f
+                                              ce4925551c1759fa812b9441d37e4b331e2caf81)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} e94f678c588380730103eba4067e880340ddf24f
+                              ${RELATIVE_PROJECT_SOURCE_DIR} ee9401bf34b1ce8dcdf95beca1a88dee3ab34a65
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 308705d24ebece8decf05bd014c8fe2247dc8206)
+                              SHA1_VALUES e915e99c817217be7a2562c6bc3656cc42558d6c)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 89509c8698588a23d52c0963a181d68aeae3218f
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 5cdf38db5546509d211bcb964224c7490c9ff97a
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e20078453dd48df4be117c4efca7e6b1627a29d4)
+                              SHA1_VALUES 3b179071772ed7820eb0bf4346ba3e75fe82ef27)
     ENDIF()
 ELSE()
-    # Build libSEDML as an external project
-    # Note: we need both libSBML and libNuML to be built, so we can access them,
-    #       as well as some of libSBML's dependencies...
+    # Build libNuML as an external project
+    # Note #1: we need libSBML to be built, so we can access it, as well as some
+    #          of its dependencies...
+    # Note #2: we rely on CONFIGURE_COMMAND rather than CMAKE_GENERATOR and
+    #          CMAKE_ARGS in our call to ExternalProject_Add() since the actual
+    #          code is not under SOURCE_DIR, but under SOURCE_DIR/libnuml...
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
@@ -104,20 +107,12 @@ ELSE()
         ENDIF()
     ENDIF()
 
-    SET(NUMLAPI_EXT_DIR ${CMAKE_SOURCE_DIR}/src/plugins/api/NuMLAPI/ext)
     SET(SBMLAPI_EXT_DIR ${CMAKE_SOURCE_DIR}/src/plugins/api/SBMLAPI/ext)
 
     IF(WIN32)
-        SET(LIBNUML_INCLUDE_DIR ${NUMLAPI_EXT_DIR}/${MODE}/include)
-        SET(LIBNUML_LIBRARY ${NUMLAPI_EXT_DIR}/${MODE}/lib/libnuml${CMAKE_IMPORT_LIBRARY_SUFFIX})
         SET(LIBSBML_INCLUDE_DIR ${SBMLAPI_EXT_DIR}/${MODE}/include)
         SET(LIBSBML_LIBRARY ${SBMLAPI_EXT_DIR}/${MODE}/lib/libsbml${CMAKE_IMPORT_LIBRARY_SUFFIX})
-
-        SET(DEFINE_LIBZ_INCLUDE_DIR -DLIBZ_INCLUDE_DIR=${SBMLAPI_EXT_DIR}/dependencies/${MODE}/include)
-        SET(DEFINE_LIBZ_LIBRARY -DLIBZ_LIBRARY=${SBMLAPI_EXT_DIR}/dependencies/${MODE}/lib/zdll${CMAKE_IMPORT_LIBRARY_SUFFIX})
     ELSE()
-        SET(LIBNUML_INCLUDE_DIR ${NUMLAPI_EXT_DIR}/include)
-        SET(LIBNUML_LIBRARY ${NUMLAPI_EXT_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}numl${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.1${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
         SET(LIBSBML_INCLUDE_DIR ${SBMLAPI_EXT_DIR}/include)
         SET(LIBSBML_LIBRARY ${SBMLAPI_EXT_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sbml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.5${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     ENDIF()
@@ -128,28 +123,22 @@ ELSE()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/libSEDML
+            https://github.com/opencor/NuML
         GIT_TAG
             ${GIT_TAG}
-        CMAKE_GENERATOR
-            ${CMAKE_GENERATOR}
-        CMAKE_ARGS
-            ${DEFINE_CMAKE_APPLE_OPTIONS}
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-            -DLIBNUML_INCLUDE_DIR=${LIBNUML_INCLUDE_DIR}
-            -DLIBNUML_LIBRARY=${LIBNUML_LIBRARY}
-            -DLIBSBML_INCLUDE_DIR=${LIBSBML_INCLUDE_DIR}
-            -DLIBSBML_LIBRARY=${LIBSBML_LIBRARY}
-            ${DEFINE_LIBZ_INCLUDE_DIR}
-            ${DEFINE_LIBZ_LIBRARY}
-            -DWITH_CPP_NAMESPACE=ON
-            -DWITH_SWIG=OFF
-            -DWITH_ZLIB=ON
+        CONFIGURE_COMMAND
+            ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR}
+                             ${DEFINE_CMAKE_APPLE_OPTIONS}
+                             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+                             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+                             -DLIBSBML_INCLUDE_DIR=${LIBSBML_INCLUDE_DIR}
+                             -DLIBSBML_LIBRARY=${LIBSBML_LIBRARY}
+                             -DWITH_CPP_NAMESPACE=ON
+                             -DWITH_SWIG=OFF
+                             <SOURCE_DIR>/libnuml
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
         DEPENDS
-            NuMLAPIPlugin
             SBMLAPIPlugin
     )
 
@@ -168,7 +157,7 @@ ELSE()
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sedml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}numl${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
@@ -186,24 +175,24 @@ ELSE()
     SET(DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
-# Allow other external projects to find our libSEDML package
+# Allow other external projects to find our libNuML package
 
-SET(SEDMLAPI_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
-SET(SEDMLAPI_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
-SET(SEDMLAPI_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IMPORT_LIBRARY} PARENT_SCOPE)
+SET(NUMLAPI_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+SET(NUMLAPI_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+SET(NUMLAPI_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${IMPORT_LIBRARY} PARENT_SCOPE)
 
 # Add the plugin
-# Note: we would normally use '${PACKAGE_NAME}' rather than 'SEDMLAPI', but it
+# Note: we would normally use '${PACKAGE_NAME}' rather than 'NuMLAPI', but it
 #       can't be done here since the name of our package is different from that
 #       of our plugin...
 
-ADD_PLUGIN(SEDMLAPI
+ADD_PLUGIN(NuMLAPI
     SOURCES
         ../../plugininfo.cpp
 
-        src/sedmlapiplugin.cpp
+        src/numlapiplugin.cpp
     HEADERS_MOC
-        src/sedmlapiplugin.h
+        src/numlapiplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

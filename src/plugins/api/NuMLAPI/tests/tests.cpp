@@ -18,34 +18,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML API plugin
+// NuML API tests
 //==============================================================================
 
-#include "sedmlapiplugin.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace SEDMLAPI {
+#include "tests.h"
 
 //==============================================================================
 
-PLUGININFO_FUNC SEDMLAPIPluginInfo()
+#include <QtTest/QtTest>
+
+//==============================================================================
+
+#include "numl/common/libnuml-version.h"
+#include "numl/NUMLDocument.h"
+
+//==============================================================================
+
+void Tests::basicTests()
 {
-    Descriptions descriptions;
+    // Some very basic tests to make sure that we have access to libNuML
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>."));
+    // Check the version of libNuML
 
-    return new PluginInfo(PluginInfo::Api, false, false,
-                          QStringList() << "NuMLAPI" << "SBMLAPI",
-                          descriptions);
+    QCOMPARE(libnuml::getLibNUMLDottedVersion(), "1.1.1");
+
+    // Create a NuML document with a model inside it, then set the name of the
+    // model and check that it has been properly set
+
+    libnuml::NUMLDocument *numlDocument = new libnuml::NUMLDocument();
+
+    static const std::string ElementName = "numl";
+
+    QCOMPARE(numlDocument->getElementName(), ElementName       );
+
+    delete numlDocument;
 }
 
 //==============================================================================
 
-}   // namespace SEDMLAPI
-}   // namespace OpenCOR
+QTEST_GUILESS_MAIN(Tests)
 
 //==============================================================================
 // End of file
