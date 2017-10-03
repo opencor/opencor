@@ -18,24 +18,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML API tests
+// NuML API plugin
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include <QObject>
+#include "numlapiplugin.h"
 
 //==============================================================================
 
-class Tests : public QObject
+namespace OpenCOR {
+namespace NuMLAPI {
+
+//==============================================================================
+
+PLUGININFO_FUNC NuMLAPIPluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-private slots:
-    void basicTests();
-};
+    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://github.com/NuML/NuML/\">libNuML</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://github.com/NuML/NuML/\">libNuML</a>."));
+
+    return new PluginInfo(PluginInfo::Api, false, false,
+                          QStringList(),
+                          descriptions);
+}
+
+//==============================================================================
+
+}   // namespace NuMLAPI
+}   // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -18,24 +18,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML API tests
+// NuML API end
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include <QObject>
-
-//==============================================================================
-
-class Tests : public QObject
-{
-    Q_OBJECT
-
-private slots:
-    void basicTests();
-};
+//#if defined(Q_OS_WIN)
+//    #pragma warning(pop)
+//#elif defined(Q_OS_LINUX)
+//    #pragma GCC diagnostic pop
+//#elif defined(Q_OS_MAC)
+//    #pragma clang diagnostic pop
+//#else
+//    #error Unsupported platform
+//#endif
 
 //==============================================================================
 // End of file
