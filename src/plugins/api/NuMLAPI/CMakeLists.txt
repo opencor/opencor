@@ -14,7 +14,7 @@ SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.1)
 
 SET(GIT_TAG v1.1.1)
 
-# Package repository and release tag
+# Package repository
 
 SET(PACKAGE_REPOSITORY libNuML)
 

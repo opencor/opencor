@@ -14,7 +14,7 @@ SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.15.0)
 
 SET(GIT_TAG v5.15.0)
 
-# Package repository and release tag
+# Package repository
 
 SET(PACKAGE_REPOSITORY libsbml)
 
