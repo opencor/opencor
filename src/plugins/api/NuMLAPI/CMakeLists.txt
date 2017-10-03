@@ -91,8 +91,11 @@ IF(USE_PREBUILT_NUMLAPI_PACKAGE)
     ENDIF()
 ELSE()
     # Build libNuML as an external project
-    # Note: we need libSBML to be built, so we can access it, as well as to some
-    #       of its dependencies...
+    # Note #1: we need libSBML to be built, so we can access it, as well as some
+    #          of its dependencies...
+    # Note #2: we rely on CONFIGURE_COMMAND rather than CMAKE_GENERATOR and
+    #          CMAKE_ARGS in our call to ExternalProject_Add() since the actual
+    #          code is not under SOURCE_DIR, but under SOURCE_DIR/libnuml...
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
@@ -116,23 +119,23 @@ ELSE()
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}/libnuml
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
             https://github.com/opencor/NuML
         GIT_TAG
             ${GIT_TAG}
-        CMAKE_GENERATOR
-            ${CMAKE_GENERATOR}
-        CMAKE_ARGS
-            ${DEFINE_CMAKE_APPLE_OPTIONS}
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-            -DLIBSBML_INCLUDE_DIR=${LIBSBML_INCLUDE_DIR}
-            -DLIBSBML_LIBRARY=${LIBSBML_LIBRARY}
-            -DWITH_CPP_NAMESPACE=ON
-            -DWITH_SWIG=OFF
+        CONFIGURE_COMMAND
+            ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR}
+                             ${DEFINE_CMAKE_APPLE_OPTIONS}
+                             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+                             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+                             -DLIBSBML_INCLUDE_DIR=${LIBSBML_INCLUDE_DIR}
+                             -DLIBSBML_LIBRARY=${LIBSBML_LIBRARY}
+                             -DWITH_CPP_NAMESPACE=ON
+                             -DWITH_SWIG=OFF
+                             <SOURCE_DIR>/libnuml
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
         DEPENDS

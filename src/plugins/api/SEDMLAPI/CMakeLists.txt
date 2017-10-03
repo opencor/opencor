@@ -92,7 +92,7 @@ IF(USE_PREBUILT_SEDMLAPI_PACKAGE)
 ELSE()
     # Build libSEDML as an external project
     # Note: we need both libSBML and libNuML to be built, so we can access them,
-    #       as well as to some of libSBML's dependencies...
+    #       as well as some of libSBML's dependencies...
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
