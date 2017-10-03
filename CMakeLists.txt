@@ -21,9 +21,6 @@ OPTION(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML A
 OPTION(USE_PREBUILT_NUMLAPI_PACKAGE "Use the pre-built version of the NuML API package" ON)
 OPTION(USE_PREBUILT_SBMLAPI_PACKAGE "Use the pre-built version of the SBML API package" ON)
 OPTION(USE_PREBUILT_SEDMLAPI_PACKAGE "Use the pre-built version of the SED-ML API package" ON)
-SET(USE_PREBUILT_NUMLAPI_PACKAGE OFF)
-SET(USE_PREBUILT_SBMLAPI_PACKAGE OFF)
-SET(USE_PREBUILT_SEDMLAPI_PACKAGE OFF)
 
 OPTION(USE_PREBUILT_LIBGIT2_PACKAGE "Use the pre-built version of the libgit2 package" ON)
 OPTION(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff package" ON)
@@ -864,11 +861,6 @@ SET(PLUGINS
     widget/MathMLViewerWidget
     widget/WebViewerWidget
     widget/ZincWidget
-)
-SET(PLUGINS
-    api/SBMLAPI
-    api/NuMLAPI
-    api/SEDMLAPI
 )
 
 IF(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
