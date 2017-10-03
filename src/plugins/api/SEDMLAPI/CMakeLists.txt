@@ -96,8 +96,8 @@ IF(USE_PREBUILT_SEDMLAPI_PACKAGE)
     ENDIF()
 ELSE()
     # Build libSEDML as an external project
-    # Note: we need libSBML to be built, so we can get access to it, as well as
-    #       to some of its dependencies...
+    # Note: we need libSBML to be built, so we can access it, as well as to some
+    #       of its dependencies...
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
