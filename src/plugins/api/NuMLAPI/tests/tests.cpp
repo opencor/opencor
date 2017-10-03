@@ -29,10 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "numlapibegin.h"
-    #include "numl/common/libnuml-version.h"
-    #include "numl/NUMLDocument.h"
-#include "numlapiend.h"
+#include "numl/common/libnuml-version.h"
+#include "numl/NUMLDocument.h"
 
 //==============================================================================
 
