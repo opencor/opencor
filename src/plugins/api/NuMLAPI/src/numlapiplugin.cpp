@@ -38,7 +38,7 @@ PLUGININFO_FUNC NuMLAPIPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://github.com/NuML/NuML/\">libNuML</a>."));
 
     return new PluginInfo(PluginInfo::Api, false, false,
-                          QStringList(),
+                          QStringList() << "SBMLAPI",
                           descriptions);
 }
 
