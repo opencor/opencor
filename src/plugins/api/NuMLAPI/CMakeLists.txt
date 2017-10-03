@@ -16,7 +16,7 @@ SET(GIT_TAG v1.1.1)
 
 # Package repository
 
-SET(PACKAGE_REPOSITORY libNuML)
+SET(PACKAGE_REPOSITORY NuML)
 
 # Specify where our local package will be installed
 
