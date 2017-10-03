@@ -105,6 +105,20 @@ IF(NOT APPLE)
     LIST(APPEND SHA1_FILES
         ${LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
     )
+
+    IF(WIN32)
+        # Windows also needs the import library
+
+        SET(SQLITE3_IMPORT_LIBRARY ${CMAKE_IMPORT_LIBRARY_PREFIX}sqlite3${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+        LIST(APPEND EXTERNAL_BINARIES
+            ${SQLITE3_IMPORT_LIBRARY}
+        )
+
+        LIST(APPEND SHA1_FILES
+            ${LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
+        )
+    ENDIF()
 ENDIF()
 
 # Add headers, scripts and libraries to the package archive
@@ -133,11 +147,12 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} cfcc9b41074bf5b7686c0d79bc685dad88001dc1
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 6b15a0ef0ec6fe0abc2605c56ed131af5dc2bd86
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 140c4f035e55aded63bf3cdd77778eaeb8a0a6fa
-                                              0482f9c70281a53a9b06ca41a0187b19b52c1d5f
-                                              3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17)
+                                  SHA1_VALUES ed38584233dcb07a1dcbf53d94308b97a114ab8f
+                                              b21827a348a8bf32d0127d1a91611ed6d24fc488
+                                              3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
+                                              f6a8d78478101d906647651d562e9d7668b217f5)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -168,70 +183,70 @@ ELSE()
     # This could/should be in its own plugin...
 
     IF(WIN32)
-        SET(SQLITE3_DIR ${PROJECT_BINARY_DIR}/sqlite3)
+        SET(SQLITE3_LIBRARY_DIR ${PROJECT_BINARY_DIR}/sqlite3)
 
-        IF(NOT EXISTS ${SQLITE3_DIR}/sqlite-amalgamation-${SQLITE3_VERSION}/sqlite3.h)
+        IF(NOT EXISTS ${SQLITE3_LIBRARY_DIR}/sqlite-amalgamation-${SQLITE3_VERSION}/sqlite3.h)
             SET(SQLITE3_SOURCES_ZIP sqlite-amalgamation-${SQLITE3_VERSION}.zip)
             MESSAGE(STATUS "Downloading ${SQLITE3_SOURCES_ZIP}")
             FILE(DOWNLOAD https://sqlite.org/2017/${SQLITE3_SOURCES_ZIP}
-                ${SQLITE3_DIR}/zips/${SQLITE3_SOURCES_ZIP}
+                ${SQLITE3_LIBRARY_DIR}/zips/${SQLITE3_SOURCES_ZIP}
                 SHOW_PROGRESS
                 )
             EXECUTE_PROCESS(
                 COMMAND ${CMAKE_COMMAND} -E tar xf zips/${SQLITE3_SOURCES_ZIP}
                                                    sqlite-amalgamation-${SQLITE3_VERSION}/sqlite3.h
-                WORKING_DIRECTORY ${SQLITE3_DIR}
+                WORKING_DIRECTORY ${SQLITE3_LIBRARY_DIR}
                 )
         ENDIF()
 
-        IF(NOT EXISTS ${SQLITE3_DIR}/sqlite3.lib)
+        IF(NOT EXISTS ${SQLITE3_LIBRARY_DIR}/sqlite3.lib)
             SET(SQLITE3_DLL_ZIP sqlite-dll-win64-x64-${SQLITE3_VERSION}.zip)
             MESSAGE(STATUS "Downloading ${SQLITE3_DLL_ZIP}")
             FILE(DOWNLOAD https://sqlite.org/2017/${SQLITE3_DLL_ZIP}
-                ${SQLITE3_DIR}/zips/${SQLITE3_DLL_ZIP}
+                ${SQLITE3_LIBRARY_DIR}/zips/${SQLITE3_DLL_ZIP}
                 SHOW_PROGRESS
                 )
             EXECUTE_PROCESS(
                 COMMAND ${CMAKE_COMMAND} -E tar xf zips/${SQLITE3_DLL_ZIP} --format=zip
-                WORKING_DIRECTORY ${SQLITE3_DIR}
+                WORKING_DIRECTORY ${SQLITE3_LIBRARY_DIR}
                 )
             EXECUTE_PROCESS(
                 COMMAND lib /verbose /def:sqlite3.def /out:sqlite3.lib /machine:x64
-                WORKING_DIRECTORY ${SQLITE3_DIR}
+                WORKING_DIRECTORY ${SQLITE3_LIBRARY_DIR}
                 )
         ENDIF()
 
-        SET(SQLITE3_INCLUDE_DIR ${SQLITE3_DIR}/sqlite-amalgamation-${SQLITE3_VERSION})
-        SET(SQLITE3_IMPORT_LIBRARY ${SQLITE3_DIR}/sqlite3${CMAKE_IMPORT_LIBRARY_SUFFIX})
+        SET(SQLITE3_INCLUDE_DIR ${SQLITE3_LIBRARY_DIR}/sqlite-amalgamation-${SQLITE3_VERSION})
     ELSEIF(APPLE)
         # Use Homebrew's SQLite
 
         SET(SQLITE3_INCLUDE_DIR /usr/local/opt/sqlite/include)
+        SET(SQLITE3_LIBRARY_DIR /usr/local/opt/sqlite/lib)
 
         # Link to static library so there is no need to bundle it
 
-        SET(SQLITE3_IMPORT_LIBRARY /usr/local/opt/sqlite/lib/libsqlite3.a)
+        SET(SQLITE3_IMPORT_LIBRARY libsqlite3.a)
     ELSE()
         SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
         FIND_PACKAGE(SQLite3 REQUIRED)
 
-        SET(SQLITE3_IMPORT_LIBRARY ${SQLITE3_LIBRARY})
+        GET_FILENAME_COMPONENT(SQLITE3_LIBRARY_DIR ${SQLITE3_LIBRARY} DIRECTORY)
+
+        GET_FILENAME_COMPONENT(SQLITE3_IMPORT_LIBRARY ${SQLITE3_LIBRARY} NAME)
     ENDIF()
 
     IF(NOT APPLE)
         # Copy the SQLite3 library to the plugin's external binaries directory
 
-        GET_FILENAME_COMPONENT(SQLITE3_LIBRARY_PATH ${SQLITE3_IMPORT_LIBRARY} DIRECTORY)
-
         # First make sure the destination directory exists
 
         FILE(MAKE_DIRECTORY ${EXTERNAL_BINARIES_DIR})
 
-        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_PATH}/${SQLITE3_SHARED_LIBRARY}
+        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY}
                                                          ${EXTERNAL_BINARIES_DIR})
         IF(WIN32)
-            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_IMPORT_LIBRARY}
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
                                                              ${EXTERNAL_BINARIES_DIR})
         ENDIF()
     ENDIF()
@@ -283,7 +298,7 @@ ELSE()
             # IPython and Jupyter need SQLite
             -DENABLE_SQLITE3=ON
             -DSQLITE3_INCLUDE_PATH=${SQLITE3_INCLUDE_DIR}
-            -DSQLITE3_LIBRARY=${SQLITE3_IMPORT_LIBRARY}
+            -DSQLITE3_LIBRARY=${SQLITE3_LIBRARY_DIR}/${SQLITE3_IMPORT_LIBRARY}
 
             # Turn off things we don't want
             -DINSTALL_MANUAL=OFF
