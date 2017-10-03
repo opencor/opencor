@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// SEDML API tests
+// SED-ML API tests
 //==============================================================================
 
 #include "tests.h"
@@ -42,7 +42,7 @@ void Tests::basicTests()
 
     // Check the version of libSEDML
 
-    QCOMPARE(libsedml::getLibSEDMLDottedVersion(), "0.3.1");
+    QCOMPARE(libsedml::getLibSEDMLDottedVersion(), "0.4.3");
 
     // Create a SED-ML document with a model inside it, then set the name of the
     // model and check that it has been properly set

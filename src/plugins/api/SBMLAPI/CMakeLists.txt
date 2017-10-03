@@ -14,7 +14,7 @@ SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.15.0)
 
 SET(GIT_TAG v5.15.0)
 
-# Package repository and release tag
+# Package repository
 
 SET(PACKAGE_REPOSITORY libsbml)
 
@@ -63,28 +63,28 @@ IF(USE_PREBUILT_SBMLAPI_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 6cbb5a68c917a1a2d9dfcb2b6cbb0257046565f0
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} ac6ce8d236d62c90a3e46e662b099648674de64a
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES b3c8451b899bf46bfc207d1f64c8edddd6a6c9a8
-                                              17c1bde40c640ba944ab32d4cccf00c77de8bd12)
+                                  SHA1_VALUES 9a00e0a296fbbcc601a3f9783122f9e5afcc3072
+                                              702ba1df7e460696e742744a746c76b17d55fe40)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 4236a08135c221cfb42bb268fe440a16b165122a
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} e266d52aab8de54cb568e4c53dae830ae4030b50
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES b30f42855059678ae2f0e3c085b3ce6fb95d6e6c
-                                              bef49ff254f04225c57bf621e62254549e445b07)
+                                  SHA1_VALUES 24a823d3072c94352c022f90bc47abafe391d2c2
+                                              d46f7ae80b9857fc6f388374aa4323bf025db7c8)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} fd9b682bc8ff97b2f411f0efd5ba2b92b6167635
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 6c05e1508414b19c130955a6d412a9b63daae517
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 2dc2138e7eccfc1750bf8815e76205a15d7e8f07)
+                              SHA1_VALUES e2e48544e34de89a89dc9081879564634b2477c6)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 96ab11786e1ffab3fbd94e3274407ca05c5169a9
+                              ${RELATIVE_PROJECT_SOURCE_DIR} a30e26c67f54e0c3ecc55a394582647d763f228a
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 5ec46cbaee57ee9e805917943d6c116805448364)
