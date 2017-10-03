@@ -37,7 +37,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Graph Panel widget:</strong> can now export a graph panel to various formats (e.g. PDF, PNG, SVG)  (see issue <a href=\"https://github.com/opencor/opencor/issues/1123\">#1123</a>)." },
+                       { "change": "<strong>APIs:</strong> have HAVE_IEEEFP_H properly set in the libSBML, libNuML and libSEDML packages under Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/1432\">#1432</a>). Upgraded the libSEDML package to version 0.4.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1433\">#1433</a>)." },
+                       { "change": "<strong>Graph Panel widget:</strong> can now export a graph panel to various formats (e.g. PDF, PNG, SVG) (see issue <a href=\"https://github.com/opencor/opencor/issues/1123\">#1123</a>)." },
                        { "change": "<strong>SimulationExperiment view:</strong> added support for the alpha channel in the colours used to customise a graph. Made sure that the GUI is properly initialised when (re)loading a SED-ML file." }
                      ]
                    },
