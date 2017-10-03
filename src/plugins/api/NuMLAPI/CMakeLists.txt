@@ -17,7 +17,6 @@ SET(GIT_TAG v1.1.1)
 # Package repository and release tag
 
 SET(PACKAGE_REPOSITORY libNuML)
-SET(RELEASE_TAG v1.1.1)
 
 # Specify where our local package will be installed
 
@@ -66,7 +65,6 @@ IF(USE_PREBUILT_NUMLAPI_PACKAGE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 0919909160f94fb2b3a1b4d62b977d0188728f6d
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 3a2466f08693ee3c839315bbff1e5cdf7f3a25c5
                                               4bbab20a45b41f3ff3e76d3cd94ee3df9e3c7123)
@@ -74,7 +72,6 @@ IF(USE_PREBUILT_NUMLAPI_PACKAGE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} a61037baabb635f06446eb958a31a46a0ede28b7
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 030444176e8e0a1682fbdf43db5eefa457eb7863
                                               91778645fe10f388ea4eaedab34fe5bd7f85a9df)
@@ -83,14 +80,12 @@ IF(USE_PREBUILT_NUMLAPI_PACKAGE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} f9c0689d452c54d5749e99dabcd858de0f391c6a
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES f72926e4536000d4b673b207626d2fa1f022ebee)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 2913a56c08fbeec36f7aab700b083e22e1002f94
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 9140979688e0aaf79e15ba05d083267c66aacafc)
     ENDIF()
@@ -114,9 +109,6 @@ ELSE()
     IF(WIN32)
         SET(LIBSBML_INCLUDE_DIR ${SBMLAPI_EXT_DIR}/${MODE}/include)
         SET(LIBSBML_LIBRARY ${SBMLAPI_EXT_DIR}/${MODE}/lib/libsbml${CMAKE_IMPORT_LIBRARY_SUFFIX})
-
-        SET(DEFINE_LIBZ_INCLUDE_DIR -DLIBZ_INCLUDE_DIR=${SBMLAPI_EXT_DIR}/dependencies/${MODE}/include)
-        SET(DEFINE_LIBZ_LIBRARY -DLIBZ_LIBRARY=${SBMLAPI_EXT_DIR}/dependencies/${MODE}/lib/zdll${CMAKE_IMPORT_LIBRARY_SUFFIX})
     ELSE()
         SET(LIBSBML_INCLUDE_DIR ${SBMLAPI_EXT_DIR}/include)
         SET(LIBSBML_LIBRARY ${SBMLAPI_EXT_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sbml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.5${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
@@ -124,7 +116,7 @@ ELSE()
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}/libnuml
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
@@ -139,11 +131,8 @@ ELSE()
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DLIBSBML_INCLUDE_DIR=${LIBSBML_INCLUDE_DIR}
             -DLIBSBML_LIBRARY=${LIBSBML_LIBRARY}
-            ${DEFINE_LIBZ_INCLUDE_DIR}
-            ${DEFINE_LIBZ_LIBRARY}
             -DWITH_CPP_NAMESPACE=ON
             -DWITH_SWIG=OFF
-            -DWITH_ZLIB=ON
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
         DEPENDS
@@ -176,7 +165,6 @@ ELSE()
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                        RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})

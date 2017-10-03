@@ -800,8 +800,8 @@ SET(PLUGINS
 
     api/BioSignalMLAPI
     api/CellMLAPI
-    api/NuMLAPI
     api/SBMLAPI
+    api/NuMLAPI
     api/SEDMLAPI
 
     dataStore/BioSignalMLDataStore
@@ -866,8 +866,8 @@ SET(PLUGINS
     widget/ZincWidget
 )
 SET(PLUGINS
-    api/NuMLAPI
     api/SBMLAPI
+    api/NuMLAPI
     api/SEDMLAPI
 )
 

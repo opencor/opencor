@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "numlapibegin.h"
     #include "numl/common/libnuml-version.h"
-    #include "numl/NuMLDocument.h"
+    #include "numl/NUMLDocument.h"
 #include "numlapiend.h"
 
 //==============================================================================
@@ -42,21 +42,18 @@ void Tests::basicTests()
 
     // Check the version of libNuML
 
-    QCOMPARE(libsedml::getLibSEDMLDottedVersion(), "1.1.1");
+    QCOMPARE(libnudml::getLibNUMLDottedVersion(), "1.1.1");
 
-    // Create a SED-ML document with a model inside it, then set the name of the
+    // Create a NuML document with a model inside it, then set the name of the
     // model and check that it has been properly set
 
-    libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
-    libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
+    libnuml::NUMLDocument *numlDocument = new libnuml::NUMLDocument();
 
-    static const std::string ModelName = "myModel";
+    static const std::string ElementName = "numl";
 
-    sedmlModel->setName(ModelName);
+    QCOMPARE(numlDocument->getElementName(), ElementName       );
 
-    QCOMPARE(sedmlModel->getName(), ModelName);
-
-    delete sedmlDocument;
+    delete numlDocument;
 }
 
 //==============================================================================
