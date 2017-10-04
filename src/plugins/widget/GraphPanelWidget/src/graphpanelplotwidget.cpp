@@ -306,19 +306,19 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
                 }
 
                 if (needInitMinY) {
-                    minY = sample.x();
+                    minY = sample.y();
 
                     needInitMinY = false;
-                } else if (sample.x() < minY) {
-                    minY = sample.x();
+                } else if (sample.y() < minY) {
+                    minY = sample.y();
                 }
 
                 if (needInitMaxY) {
-                    maxY = sample.x();
+                    maxY = sample.y();
 
                     needInitMaxY = false;
-                } else if (sample.x() > maxY) {
-                    maxY = sample.x();
+                } else if (sample.y() > maxY) {
+                    maxY = sample.y();
                 }
             }
         }
