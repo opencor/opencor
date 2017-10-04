@@ -1155,9 +1155,10 @@ QRectF GraphPanelPlotWidget::realDataRect() const
     // Return an optimised version of dataRect() or a default rectangle, if no
     // dataRect() exists
 
-    QRectF res = dataRect();
+    QRectF dRect = dataRect();
+    QRectF dLogRect = dataLogRect();
 
-    if (res.isNull()) {
+    if (dRect.isNull()) {
         double minX = logAxisX()?mDefaultMinLogX:mDefaultMinX;
         double maxX = logAxisX()?mDefaultMaxLogX:mDefaultMaxX;
         double minY = logAxisY()?mDefaultMinLogY:mDefaultMinY;
@@ -1167,10 +1168,10 @@ QRectF GraphPanelPlotWidget::realDataRect() const
     } else {
         // Optimise our axes' values
 
-        double minX = res.left();
-        double maxX = minX+res.width();
-        double minY = res.top();
-        double maxY = minY+res.height();
+        double minX = logAxisX()?dLogRect.left():dRect.left();
+        double maxX = minX+(logAxisX()?dLogRect.width():dRect.width());
+        double minY = logAxisX()?dLogRect.top():dRect.top();
+        double maxY = minY+(logAxisX()?dLogRect.height():dRect.height());
 
         optimiseAxis(minX, maxX);
         optimiseAxis(minY, maxY);
