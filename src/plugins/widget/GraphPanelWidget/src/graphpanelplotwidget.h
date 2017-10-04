@@ -333,8 +333,6 @@ private:
 
     GraphPanelPlotWidgets mNeighbors;
 
-    void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
-
     void checkAxisValues(const bool &pLogAxis, double &pMin, double &pMax);
 
     void updateActions();
