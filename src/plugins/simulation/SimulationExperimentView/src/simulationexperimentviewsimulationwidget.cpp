@@ -3152,9 +3152,9 @@ void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget:
     if (pGraph->isValid()) {
         SimulationSupport::Simulation *simulation = mViewWidget->simulation(pGraph->fileName());
 
-        pGraph->setRawSamples(data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
-                              data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
-                              pSize);
+        pGraph->setData(data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
+                        data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
+                        pSize);
     }
 }
 
