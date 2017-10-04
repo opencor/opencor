@@ -43,6 +43,7 @@
 import os
 import re
 import sys
+import logging
 import marshal
 import argparse
 import subprocess
@@ -97,8 +98,8 @@ def update_script(script_filename, new_path):
     else:
         args[0] = new_bin
 
+    logging.info('S: %s', script_filename)
     lines[0] = '#!%s\n' % ' '.join(args)
-    print('S %s' % script_filename)
     with open(script_filename, 'w') as f:
         f.writelines(lines)
 
@@ -111,7 +112,6 @@ def update_scripts(bin_dir, new_path):
 
 def update_pyc(filename, new_path):
     """Updates the filenames stored in pyc files."""
-    print("PYCL %s" % filename)
     with open(filename, 'rb') as f:
         if sys.version_info < (3, 3): magic = f.read(8)
         else:                         magic = f.read(12)
@@ -138,7 +138,7 @@ def update_pyc(filename, new_path):
     new_code = _process(code)
 
     if new_code is not code:
-        print('B %s' % filename)
+        logging.info('B: %s', filename)
         with open(filename, 'wb') as f:
             f.write(magic)
             marshal.dump(new_code, f)
@@ -209,11 +209,17 @@ def main():
     parser.add_argument('--update-path', dest='update_path',
                                          help='Path to scripts. Set to "auto" '
                                               'for autodetection')
+    parser.add_argument('--verbose', dest='verbose',
+                                     help='Show names of updated scripts')
+
     parser.add_argument('path', help='Path to new Python installation.')
 
     args = parser.parse_args()
     if not args.update_path:
         args.update_path = 'auto'
+
+    if not args.verbose:
+        logging.disable(logging.INFO)
 
     rv = 0
     if not update_paths(args.path, args.update_path):
