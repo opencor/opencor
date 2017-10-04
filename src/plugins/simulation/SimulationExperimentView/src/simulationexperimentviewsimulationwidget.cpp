@@ -3082,10 +3082,16 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
                     minX = startingPoint;
                     maxX = endingPoint;
 
+                    minLogX = startingLogPoint;
+                    maxLogX = endingLogPoint;
+
                     needInitialisationX = false;
                 } else {
                     minX = qMin(minX, startingPoint);
                     maxX = qMax(maxX, endingPoint);
+
+                    minLogX = qMin(minLogX, startingLogPoint);
+                    maxLogX = qMax(maxLogX, endingLogPoint);
                 }
             }
 
@@ -3095,10 +3101,16 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
                     minY = startingPoint;
                     maxY = endingPoint;
 
+                    minLogY = startingLogPoint;
+                    maxLogY = endingLogPoint;
+
                     needInitialisationY = false;
                 } else {
                     minY = qMin(minY, startingPoint);
                     maxY = qMax(maxY, endingPoint);
+
+                    minLogY = qMin(minLogY, startingLogPoint);
+                    maxLogY = qMax(maxLogY, endingLogPoint);
                 }
             }
         }
