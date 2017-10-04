@@ -444,7 +444,7 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
 
     pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
 
-    QPointF point = mOwner->canvasPoint(pPoint, false);
+    QPointF point = mOwner->canvasPoint(pPoint);
     QString coordinates = QString("X: %1\nY: %2").arg(QLocale().toString(point.x(), 'g', 15),
                                                       QLocale().toString(point.y(), 'g', 15));
     QRect coordinatesRect = pPainter->boundingRect(qApp->desktop()->availableGeometry(), 0, coordinates);
@@ -1325,19 +1325,13 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
 
 //==============================================================================
 
-QPointF GraphPanelPlotWidget::canvasPoint(const QPoint &pPoint,
-                                          const bool &pNeedOffset) const
+QPointF GraphPanelPlotWidget::canvasPoint(const QPoint &pPoint) const
 {
     // Return the mouse position using canvas coordinates, making sure that they
     // are within our ranges
 
-    QPointF realPoint = pPoint;
-
-    if (pNeedOffset)
-        realPoint -= plotLayout()->canvasRect().topLeft();
-
-    return QPointF(qMin(maxX(), qMax(minX(), canvasMap(QwtPlot::xBottom).invTransform(realPoint.x()))),
-                   qMin(maxY(), qMax(minY(), canvasMap(QwtPlot::yLeft).invTransform(realPoint.y()))));
+    return QPointF(qMin(maxX(), qMax(minX(), canvasMap(QwtPlot::xBottom).invTransform(pPoint.x()))),
+                   qMin(maxY(), qMax(minY(), canvasMap(QwtPlot::yLeft).invTransform(pPoint.y()))));
 }
 
 //==============================================================================
@@ -1514,8 +1508,8 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
         // Effectively zoom our region, if possible, by updating our axes
 
-        QRectF zoomRegion = QRectF(canvasPoint(zoomRegionRect.topLeft(), false),
-                                   canvasPoint(zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height()), false));
+        QRectF zoomRegion = QRectF(canvasPoint(zoomRegionRect.topLeft()),
+                                   canvasPoint(zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height())));
 
         if (zoomRegion.width() && zoomRegion.height()) {
             setAxes(zoomRegion.left(), zoomRegion.left()+zoomRegion.width(),

@@ -354,8 +354,7 @@ private:
     void scaleAxes(const QPoint &pPoint, const Scaling &pScalingX,
                    const Scaling &pScalingY);
 
-    QPointF canvasPoint(const QPoint &pPoint,
-                        const bool &pNeedOffset = true) const;
+    QPointF canvasPoint(const QPoint &pPoint) const;
 
 signals:
     void axesChanged(const double &pMinX, const double &pMaxX,
