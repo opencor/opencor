@@ -1169,13 +1169,6 @@ QRectF GraphPanelPlotWidget::realDataRect() const
     QRectF dLogRect = QRectF();
 
     if (dataRect(dRect) && dataLogRect(dLogRect)) {
-        double minX = logAxisX()?mDefaultMinLogX:mDefaultMinX;
-        double maxX = logAxisX()?mDefaultMaxLogX:mDefaultMaxX;
-        double minY = logAxisY()?mDefaultMinLogY:mDefaultMinY;
-        double maxY = logAxisY()?mDefaultMaxLogY:mDefaultMaxY;
-
-        return QRectF(minX, minY, maxX-minX, maxY-minY);
-    } else {
         // Optimise our axes' values
 
         double minX = logAxisX()?dLogRect.left():dRect.left();
@@ -1185,6 +1178,13 @@ QRectF GraphPanelPlotWidget::realDataRect() const
 
         optimiseAxis(minX, maxX);
         optimiseAxis(minY, maxY);
+
+        return QRectF(minX, minY, maxX-minX, maxY-minY);
+    } else {
+        double minX = logAxisX()?mDefaultMinLogX:mDefaultMinX;
+        double maxX = logAxisX()?mDefaultMaxLogX:mDefaultMaxX;
+        double minY = logAxisY()?mDefaultMinLogY:mDefaultMinY;
+        double maxY = logAxisY()?mDefaultMaxLogY:mDefaultMaxY;
 
         return QRectF(minX, minY, maxX-minX, maxY-minY);
     }
