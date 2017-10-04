@@ -2926,7 +2926,7 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanel
 
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
-    updatePlot(plot, true);
+    updatePlot(plot, true, true);
 
     QCoreApplication::processEvents();
     // Note: this ensures that our plot is updated at once...
@@ -2967,7 +2967,7 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const OpenCOR::Grap
 
     if (mCanUpdatePlotsForUpdatedGraphs) {
         foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, plots) {
-            updatePlot(plot, true);
+            updatePlot(plot, true, true);
             // Note: even if the axes' values of the plot haven't changed, we
             //       still want to replot the plot since at least one of its
             //       graphs has been updated...
@@ -3003,6 +3003,7 @@ void SimulationExperimentViewSimulationWidget::graphVisualUpdated(OpenCOR::Graph
 //==============================================================================
 
 bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
+                                                          const bool &pCanSetAxes,
                                                           const bool &pForceReplot)
 {
     // Retrieve the current axes' linear and log values or use some default
@@ -3131,9 +3132,10 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     bool logAxisX = pPlot->logAxisX();
     bool logAxisY = pPlot->logAxisY();
 
-    if (pPlot->setAxes(logAxisX?minLogX:minX, logAxisX?maxLogX:maxX,
-                       logAxisY?minLogY:minY, logAxisY?maxLogY:maxY,
-                       true, true, false)) {
+    if (   pCanSetAxes
+        && pPlot->setAxes(logAxisX?minLogX:minX, logAxisX?maxLogX:maxX,
+                          logAxisY?minLogY:minY, logAxisY?maxLogY:maxY,
+                          true, true, false)) {
         return true;
     } else if (pForceReplot) {
         pPlot->replot();
@@ -3212,7 +3214,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisib
         mNeedUpdatePlots = false;
 
         foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots)
-            updatePlot(plot, true);
+            updatePlot(plot, true, true);
 
         QCoreApplication::processEvents();
         // Note: this ensures that our plots are all updated at once...
@@ -3262,7 +3264,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
         // Now we are ready to actually update all the graphs of all our plots
 
-        bool needUpdatePlot = false;
+        bool needFullUpdatePlot = false;
 
         double plotMinX = plot->minX();
         double plotMaxX = plot->maxX();
@@ -3293,15 +3295,15 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
                 qulonglong realOldDataSize = mOldDataSizes.value(graph);
 
-                needUpdatePlot =    needUpdatePlot || !realOldDataSize
-                                 || (oldDataSize != realOldDataSize);
+                needFullUpdatePlot =    needFullUpdatePlot || !realOldDataSize
+                                     || (oldDataSize != realOldDataSize);
 
                 // Draw the graph's new segment, but only if we and our graph
                 // are visible, and that there is no need to update the plot and
                 // that there is some data to plot
 
                 if (    visible && graph->isVisible()
-                    && !needUpdatePlot && pSimulationResultsSize) {
+                    && !needFullUpdatePlot && pSimulationResultsSize) {
                     // Check that our graph segment can fit within our plot's
                     // current viewport, but only if the user hasn't changed the
                     // plot's viewport since we last came here (e.g. by panning
@@ -3327,11 +3329,11 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                         // Update our plot, if our graph segment cannot fit
                         // within our plot's current viewport
 
-                        needUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
-                                         || (minY < plotMinY) || (maxY > plotMaxY);
+                        needFullUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
+                                             || (minY < plotMinY) || (maxY > plotMaxY);
                     }
 
-                    if (!needUpdatePlot) {
+                    if (!needFullUpdatePlot) {
                         if (plot->drawGraphFrom(graph, realOldDataSize-1))
                             needProcessingEvents = true;
                     }
@@ -3343,27 +3345,24 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         // visible
 
         if (visible) {
-            if (needUpdatePlot) {
-                // We are either drawing a graph's first segment or its new
-                // segment doesn't fit within the plot's current viewport, in
-                // which case we need to update our plot
+            if (needFullUpdatePlot || !pSimulationResultsSize) {
+                // Either we need a full update of our plot (because we are
+                // drawing a graph's first segment or a graph's new segment
+                // doesn't fit within the plot's current viewport) or the size
+                // of our simulation results is zero (because we are starting a
+                // simulation or clearing our plot), so update our plot
+                // Note: in case we are starting a simulation or clearing our
+                //       plot, we don't want a full update of our plot since
+                //       this is going to reset its axes' values and therefore
+                //       result in some (expected) flickering, if some data is
+                //       to be drawn straightaway (e.g. when we start a
+                //       simulation)...
 
-                updatePlot(plot, true);
-
-                needProcessingEvents = true;
-            } else if (!pSimulationResultsSize) {
-                // We came here as a result of starting a simulation or clearing
-                // our plot, so simply replot it (rather than update it)
-                // Note: we don't want to update our plot since this is going to
-                //       reset its axes' values and therefore result in some
-                //       (expected) flickering, if some data is to be drawn
-                //       straightaway (e.g. when we start a simulation)...
-
-                plot->replot();
+                updatePlot(plot, needFullUpdatePlot, true);
 
                 needProcessingEvents = true;
             }
-        } else if (needUpdatePlot || !pSimulationResultsSize) {
+        } else if (needFullUpdatePlot || !pSimulationResultsSize) {
             // We would normally update our plot, but we are not visible, so no
             // point in doing it, so instead we keep track of the fact that we
             // will need to update our plots the next time we become visible

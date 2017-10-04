@@ -227,6 +227,7 @@ private:
     void updateInvalidModelMessageWidget();
 
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
+                    const bool &pCanSetAxes = true,
                     const bool &pForceReplot = false);
 
     double * data(SimulationSupport::Simulation *pSimulation,
