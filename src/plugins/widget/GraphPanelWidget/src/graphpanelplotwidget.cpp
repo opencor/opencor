@@ -153,12 +153,17 @@ QColor GraphPanelPlotGraphProperties::symbolFillColor() const
 
 //==============================================================================
 
+static const QRectF NoBoundingLogRect = QRectF(0.0, 0.0, -1.0, -1.0);
+
+//==============================================================================
+
 GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
     QwtPlotCurve(),
     mSelected(true),
     mFileName(QString()),
     mParameterX(pParameterX),
-    mParameterY(pParameterY)
+    mParameterY(pParameterY),
+    mBoundingLogRect(NoBoundingLogRect)
 {
     // Customise ourselves a bit
 
@@ -246,6 +251,82 @@ void GraphPanelPlotGraph::setParameterY(void *pParameterY)
     // Set our parameter Y
 
     mParameterY = pParameterY;
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY,
+                                  const int &pSize)
+{
+    // Set our data, i.e. raw samples
+
+    setRawSamples(pDataX, pDataY, pSize);
+
+    // Reset our cache version of our log data rectangle
+
+    mBoundingLogRect = NoBoundingLogRect;
+}
+
+//==============================================================================
+
+QRectF GraphPanelPlotGraph::boundingLogRect()
+{
+    // Return the cached version of our bounding log rectangle, if we have one,
+    // or compute it and return it
+
+    if (mBoundingLogRect == NoBoundingLogRect) {
+        const QwtSeriesData<QPointF> *crtData = data();
+        bool needInitMinX = true;
+        bool needInitMaxX = true;
+        bool needInitMinY = true;
+        bool needInitMaxY = true;
+        double minX = 1.0;
+        double maxX = 1.0;
+        double minY = 1.0;
+        double maxY = 1.0;
+
+        for (size_t i = 0, iMax = crtData->size(); i < iMax; ++i) {
+            QPointF sample = crtData->sample(i);
+
+            if ((sample.x() > 0.0) && (sample.y() > 0.0)) {
+                if (needInitMinX) {
+                    minX = sample.x();
+
+                    needInitMinX = false;
+                } else if (sample.x() < minX) {
+                    minX = sample.x();
+                }
+
+                if (needInitMaxX) {
+                    maxX = sample.x();
+
+                    needInitMaxX = false;
+                } else if (sample.x() > maxX) {
+                    maxX = sample.x();
+                }
+
+                if (needInitMinY) {
+                    minY = sample.x();
+
+                    needInitMinY = false;
+                } else if (sample.x() < minY) {
+                    minY = sample.x();
+                }
+
+                if (needInitMaxY) {
+                    maxY = sample.x();
+
+                    needInitMaxY = false;
+                } else if (sample.x() > maxY) {
+                    maxY = sample.x();
+                }
+            }
+        }
+
+        mBoundingLogRect = QRectF(minX, minY, maxX-minX, maxY-minY);
+    }
+
+    return mBoundingLogRect;
 }
 
 //==============================================================================
@@ -1058,9 +1139,6 @@ QRectF GraphPanelPlotWidget::dataRect() const
 
 QRectF GraphPanelPlotWidget::dataLogRect() const
 {
-//---ISSUE1412--- TO BE DONE...
-//                CORRESPONDS TO dataRect() MINUS ALL THE POINTS THAT HAVE ONE
-//                OR TWO OF THEIR COORDINATES THAT IS LOWER OR EQUAL TO ZERO...
     // Determine and return the log rectangle within which all the graphs, which
     // are valid, selected and have some data, can fit
 
@@ -1068,7 +1146,7 @@ QRectF GraphPanelPlotWidget::dataLogRect() const
 
     foreach (GraphPanelPlotGraph *graph, mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->dataSize())
-            res |= graph->boundingRect();
+            res |= graph->boundingLogRect();
     }
 
     return res;

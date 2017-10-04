@@ -114,6 +114,10 @@ public:
     void * parameterY() const;
     void setParameterY(void *pParameterY);
 
+    void setData(double *pDataX, double *pDataY, const int &pSize);
+
+    QRectF boundingLogRect();
+
 private:
     bool mSelected;
 
@@ -121,6 +125,8 @@ private:
 
     void *mParameterX;
     void *mParameterY;
+
+    QRectF mBoundingLogRect;
 };
 
 //==============================================================================
