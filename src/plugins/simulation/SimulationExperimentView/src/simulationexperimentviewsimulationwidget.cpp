@@ -3051,6 +3051,28 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
             SimulationSupport::Simulation *simulation = mViewWidget->simulation(graph->fileName());
             double startingPoint = simulation->data()->startingPoint();
             double endingPoint = simulation->data()->endingPoint();
+            double pointInterval = simulation->data()->pointInterval();
+            double startingLogPoint = startingPoint;
+            double endingLogPoint = endingPoint;
+            int nbOfPointIntervals = 0;
+
+            if (pointInterval > 0.0) {
+                while (startingLogPoint <= 0.0)
+                    startingLogPoint = startingPoint+(++nbOfPointIntervals)*pointInterval;
+
+                nbOfPointIntervals = 0;
+
+                while (endingLogPoint <= 0.0)
+                    endingLogPoint = endingPoint+(++nbOfPointIntervals)*pointInterval;
+            } else if (pointInterval < 0.0) {
+                while (startingLogPoint <= 0.0)
+                    startingLogPoint = startingPoint-(++nbOfPointIntervals)*pointInterval;
+
+                nbOfPointIntervals = 0;
+
+                while (endingLogPoint <= 0.0)
+                    endingLogPoint = endingPoint-(++nbOfPointIntervals)*pointInterval;
+            }
 
             if (startingPoint > endingPoint)
                 std::swap(startingPoint, endingPoint);
