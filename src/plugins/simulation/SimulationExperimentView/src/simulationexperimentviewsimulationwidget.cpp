@@ -3014,9 +3014,9 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     double minY = GraphPanelWidget::DefaultMinAxis;
     double maxY = GraphPanelWidget::DefaultMaxAxis;
 
-    QRectF dataRect = pPlot->dataRect();
+    QRectF dataRect = QRectF();
 
-    if (!dataRect.isNull()) {
+    if (pPlot->dataRect(dataRect)) {
         minX = dataRect.left();
         maxX = minX+dataRect.width();
         minY = dataRect.top();
@@ -3028,9 +3028,9 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     double minLogY = GraphPanelWidget::DefaultMinLogAxis;
     double maxLogY = GraphPanelWidget::DefaultMaxAxis;
 
-    QRectF dataLogRect = pPlot->dataLogRect();
+    QRectF dataLogRect = QRectF();
 
-    if (!dataLogRect.isNull()) {
+    if (pPlot->dataLogRect(dataLogRect)) {
         minLogX = dataLogRect.left();
         maxLogX = minLogX+dataLogRect.width();
         minLogY = dataLogRect.top();

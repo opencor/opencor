@@ -214,8 +214,8 @@ public:
 
     bool hasData() const;
 
-    QRectF dataRect() const;
-    QRectF dataLogRect() const;
+    bool dataRect(QRectF &pDataRect) const;
+    bool dataLogRect(QRectF &pDataLogRect) const;
 
     void optimiseAxis(double &pMin, double &pMax) const;
 

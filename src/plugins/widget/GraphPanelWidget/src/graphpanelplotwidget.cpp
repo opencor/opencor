@@ -1116,16 +1116,21 @@ bool GraphPanelPlotWidget::hasData() const
 
 //==============================================================================
 
-QRectF GraphPanelPlotWidget::dataRect() const
+bool GraphPanelPlotWidget::dataRect(QRectF &pDataRect) const
 {
     // Determine and return the rectangle within which all the graphs, which are
     // valid, selected and have some data, can fit
 
-    QRectF res = QRectF();
+    bool res = false;
+
+    pDataRect = QRectF();
 
     foreach (GraphPanelPlotGraph *graph, mGraphs) {
-        if (graph->isValid() && graph->isSelected() && graph->dataSize())
-            res |= graph->boundingRect();
+        if (graph->isValid() && graph->isSelected() && graph->dataSize()) {
+            pDataRect |= graph->boundingRect();
+
+            res = true;
+        }
     }
 
     return res;
@@ -1133,16 +1138,21 @@ QRectF GraphPanelPlotWidget::dataRect() const
 
 //==============================================================================
 
-QRectF GraphPanelPlotWidget::dataLogRect() const
+bool GraphPanelPlotWidget::dataLogRect(QRectF &pDataLogRect) const
 {
     // Determine and return the log rectangle within which all the graphs, which
     // are valid, selected and have some data, can fit
 
-    QRectF res = QRectF();
+    bool res = false;
+
+    pDataLogRect = QRectF();
 
     foreach (GraphPanelPlotGraph *graph, mGraphs) {
-        if (graph->isValid() && graph->isSelected() && graph->dataSize())
-            res |= graph->boundingLogRect();
+        if (graph->isValid() && graph->isSelected() && graph->dataSize()) {
+            pDataLogRect |= graph->boundingLogRect();
+
+            res = true;
+        }
     }
 
     return res;
@@ -1155,10 +1165,10 @@ QRectF GraphPanelPlotWidget::realDataRect() const
     // Return an optimised version of dataRect() or a default rectangle, if no
     // dataRect() exists
 
-    QRectF dRect = dataRect();
-    QRectF dLogRect = dataLogRect();
+    QRectF dRect = QRectF();
+    QRectF dLogRect = QRectF();
 
-    if (dRect.isNull()) {
+    if (dataRect(dRect) && dataLogRect(dLogRect)) {
         double minX = logAxisX()?mDefaultMinLogX:mDefaultMinX;
         double maxX = logAxisX()?mDefaultMaxLogX:mDefaultMaxX;
         double minY = logAxisY()?mDefaultMinLogY:mDefaultMinY;
