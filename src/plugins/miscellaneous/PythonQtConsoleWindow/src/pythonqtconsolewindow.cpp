@@ -47,6 +47,12 @@ static QString PythonQtConsole = R"PYTHON(
 import logging
 import sys
 
+# Add the current working directory to IPython's search path
+
+sys.path.insert(0, '.')
+
+# Create an in-process kernel manager and Jupyter widget
+
 from qtconsole.inprocess import QtInProcessKernelManager
 from qtconsole.inprocess import QtInProcessRichJupyterWidget
 
