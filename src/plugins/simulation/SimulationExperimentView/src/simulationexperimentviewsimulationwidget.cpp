@@ -2821,26 +2821,21 @@ void SimulationExperimentViewSimulationWidget::simulationDataModified(const bool
 
 void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::Property *pProperty)
 {
-    // Update our simulation properties, as well as our plots, if it's not the
-    // point interval property that has been updated
+    // Update our simulation properties, as well as our plots
 
     updateSimulationProperties(pProperty);
 
-    SimulationExperimentViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
+    bool needProcessingEvents = false;
+    // Note: needProcessingEvents is used to ensure that our plots are all
+    //       updated at once...
 
-    if (pProperty != simulationWidget->pointIntervalProperty()) {
-        bool needProcessingEvents = false;
-        // Note: needProcessingEvents is used to ensure that our plots are all
-        //       updated at once...
-
-        foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots) {
-            if (updatePlot(plot))
-                needProcessingEvents = true;
-        }
-
-        if (needProcessingEvents)
-            QCoreApplication::processEvents();
+    foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots) {
+        if (updatePlot(plot))
+            needProcessingEvents = true;
     }
+
+    if (needProcessingEvents)
+        QCoreApplication::processEvents();
 }
 
 //==============================================================================
@@ -2943,7 +2938,7 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanel
 
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
-    updatePlot(plot, true);
+    updatePlot(plot, true, true);
 
     QCoreApplication::processEvents();
     // Note: this ensures that our plot is updated at once...
@@ -2984,7 +2979,7 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const OpenCOR::Grap
 
     if (mCanUpdatePlotsForUpdatedGraphs) {
         foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, plots) {
-            updatePlot(plot, true);
+            updatePlot(plot, true, true);
             // Note: even if the axes' values of the plot haven't changed, we
             //       still want to replot the plot since at least one of its
             //       graphs has been updated...
@@ -3019,46 +3014,39 @@ void SimulationExperimentViewSimulationWidget::graphVisualUpdated(OpenCOR::Graph
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::checkAxisValue(double &pValue,
-                                                              const double &pOrigValue,
-                                                              const QList<double> &pTestValues)
-{
-    // Check whether pOrigValue is equal to one of the values in pTestValues and
-    // if so then update pValue with pOrigValue
-
-    foreach (const double &testValue, pTestValues) {
-        if (pOrigValue == testValue) {
-            pValue = pOrigValue;
-
-            break;
-        }
-    }
-}
-
-//==============================================================================
-
 bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
+                                                          const bool &pCanSetAxes,
                                                           const bool &pForceReplot)
 {
-    // Retrieve the current axes' values or use some default ones, if none are
-    // available
+    // Retrieve the current axes' linear and log values or use some default
+    // ones, if none are available
 
-    bool hasAxesValues = false;
+    double minX = GraphPanelWidget::DefaultMinAxis;
+    double maxX = GraphPanelWidget::DefaultMaxAxis;
+    double minY = GraphPanelWidget::DefaultMinAxis;
+    double maxY = GraphPanelWidget::DefaultMaxAxis;
 
-    double minX = GraphPanelWidget::DefMinAxis;
-    double maxX = GraphPanelWidget::DefMaxAxis;
-    double minY = GraphPanelWidget::DefMinAxis;
-    double maxY = GraphPanelWidget::DefMaxAxis;
+    QRectF dataRect = QRectF();
 
-    QRectF dataRect = pPlot->dataRect();
-
-    if (!dataRect.isNull()) {
+    if (pPlot->dataRect(dataRect)) {
         minX = dataRect.left();
         maxX = minX+dataRect.width();
         minY = dataRect.top();
         maxY = minY+dataRect.height();
+    }
 
-        hasAxesValues = true;
+    double minLogX = GraphPanelWidget::DefaultMinLogAxis;
+    double maxLogX = GraphPanelWidget::DefaultMaxAxis;
+    double minLogY = GraphPanelWidget::DefaultMinLogAxis;
+    double maxLogY = GraphPanelWidget::DefaultMaxAxis;
+
+    QRectF dataLogRect = QRectF();
+
+    if (pPlot->dataLogRect(dataLogRect)) {
+        minLogX = dataLogRect.left();
+        maxLogX = minLogX+dataLogRect.width();
+        minLogY = dataLogRect.top();
+        maxLogY = minLogY+dataLogRect.height();
     }
 
     // Check all the graphs associated with the given plot and see whether any
@@ -3066,81 +3054,100 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     // so then asks the plot to use the starting/ending points as the
     // minimum/maximum values for the X and/or Y axes
 
+    bool hasData = pPlot->hasData();
+
     bool needInitialisationX = true;
     bool needInitialisationY = true;
-
-    bool canOptimiseAxisX = true;
-    bool canOptimiseAxisY = true;
-
-    QList<double> startingPoints = QList<double>();
-    QList<double> endingPoints = QList<double>();
 
     foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, pPlot->graphs()) {
         if (graph->isValid() && graph->isSelected()) {
             SimulationSupport::Simulation *simulation = mViewWidget->simulation(graph->fileName());
             double startingPoint = simulation->data()->startingPoint();
             double endingPoint = simulation->data()->endingPoint();
+            double pointInterval = simulation->data()->pointInterval();
+            double startingLogPoint = startingPoint;
+            double endingLogPoint = endingPoint;
+            int nbOfPointIntervals = 0;
 
-            startingPoints << startingPoint;
-            endingPoints << endingPoint;
+            if (pointInterval > 0.0) {
+                while (startingLogPoint <= 0.0)
+                    startingLogPoint = startingPoint+(++nbOfPointIntervals)*pointInterval;
+
+                nbOfPointIntervals = 0;
+
+                while (endingLogPoint <= 0.0)
+                    endingLogPoint = endingPoint+(++nbOfPointIntervals)*pointInterval;
+            } else if (pointInterval < 0.0) {
+                while (startingLogPoint <= 0.0)
+                    startingLogPoint = startingPoint-(++nbOfPointIntervals)*pointInterval;
+
+                nbOfPointIntervals = 0;
+
+                while (endingLogPoint <= 0.0)
+                    endingLogPoint = endingPoint-(++nbOfPointIntervals)*pointInterval;
+            }
 
             if (startingPoint > endingPoint)
                 std::swap(startingPoint, endingPoint);
 
             if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterX())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
-                if (!hasAxesValues && needInitialisationX) {
+                if (!hasData && needInitialisationX) {
                     minX = startingPoint;
                     maxX = endingPoint;
+
+                    minLogX = startingLogPoint;
+                    maxLogX = endingLogPoint;
 
                     needInitialisationX = false;
                 } else {
                     minX = qMin(minX, startingPoint);
                     maxX = qMax(maxX, endingPoint);
-                }
 
-                canOptimiseAxisX = false;
+                    minLogX = qMin(minLogX, startingLogPoint);
+                    maxLogX = qMax(maxLogX, endingLogPoint);
+                }
             }
 
             if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
             {
-                if (!hasAxesValues && needInitialisationY) {
+                if (!hasData && needInitialisationY) {
                     minY = startingPoint;
                     maxY = endingPoint;
+
+                    minLogY = startingLogPoint;
+                    maxLogY = endingLogPoint;
 
                     needInitialisationY = false;
                 } else {
                     minY = qMin(minY, startingPoint);
                     maxY = qMax(maxY, endingPoint);
-                }
 
-                canOptimiseAxisY = false;
+                    minLogY = qMin(minLogY, startingLogPoint);
+                    maxLogY = qMax(maxLogY, endingLogPoint);
+                }
             }
         }
     }
 
-    // Optimise our axes' values, if possible
+    // Optimise our axes' values before setting them and replotting our plot, if
+    // needed
 
-    double origMinX = minX;
-    double origMaxX = maxX;
-    double origMinY = minY;
-    double origMaxY = maxY;
+    pPlot->optimiseAxis(minX, maxX);
+    pPlot->optimiseAxis(minY, maxY);
 
-    pPlot->optimiseAxisX(minX, maxX);
-    pPlot->optimiseAxisY(minY, maxY);
+    pPlot->optimiseAxis(minLogX, maxLogX);
+    pPlot->optimiseAxis(minLogY, maxLogY);
 
-    if (!canOptimiseAxisX) {
-        checkAxisValue(minX, origMinX, startingPoints);
-        checkAxisValue(maxX, origMaxX, endingPoints);
-    }
+    pPlot->setDefaultAxesValues(minX, maxX, minLogX, maxLogX,
+                                minY, maxY, minLogY, maxLogY);
 
-    if (!canOptimiseAxisY) {
-        checkAxisValue(minY, origMinY, startingPoints);
-        checkAxisValue(maxY, origMaxY, endingPoints);
-    }
+    bool logAxisX = pPlot->logAxisX();
+    bool logAxisY = pPlot->logAxisY();
 
-    // Set our axes' values and replot our plot, if needed
-
-    if (pPlot->setAxes(minX, maxX, minY, maxY, true, true, false)) {
+    if (   pCanSetAxes
+        && pPlot->setAxes(logAxisX?minLogX:minX, logAxisX?maxLogX:maxX,
+                          logAxisY?minLogY:minY, logAxisY?maxLogY:maxY,
+                          true, true, false)) {
         return true;
     } else if (pForceReplot) {
         pPlot->replot();
@@ -3153,8 +3160,8 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 
 //==============================================================================
 
-double * SimulationExperimentViewSimulationWidget::dataPoints(SimulationSupport::Simulation *pSimulation,
-                                                              CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
+double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simulation *pSimulation,
+                                                        CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
 {
     // Return the array of data points associated with the given parameter
 
@@ -3188,9 +3195,9 @@ void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget:
     if (pGraph->isValid()) {
         SimulationSupport::Simulation *simulation = mViewWidget->simulation(pGraph->fileName());
 
-        pGraph->setRawSamples(dataPoints(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
-                              dataPoints(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
-                              pSize);
+        pGraph->setData(data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
+                        data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
+                        pSize);
     }
 }
 
@@ -3219,7 +3226,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisib
         mNeedUpdatePlots = false;
 
         foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots)
-            updatePlot(plot, true);
+            updatePlot(plot, true, true);
 
         QCoreApplication::processEvents();
         // Note: this ensures that our plots are all updated at once...
@@ -3269,7 +3276,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
         // Now we are ready to actually update all the graphs of all our plots
 
-        bool needUpdatePlot = false;
+        bool needFullUpdatePlot = false;
 
         double plotMinX = plot->minX();
         double plotMaxX = plot->maxX();
@@ -3300,15 +3307,15 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
                 qulonglong realOldDataSize = mOldDataSizes.value(graph);
 
-                needUpdatePlot =    needUpdatePlot || !realOldDataSize
-                                 || (oldDataSize != realOldDataSize);
+                needFullUpdatePlot =    needFullUpdatePlot || !realOldDataSize
+                                     || (oldDataSize != realOldDataSize);
 
                 // Draw the graph's new segment, but only if we and our graph
                 // are visible, and that there is no need to update the plot and
                 // that there is some data to plot
 
                 if (    visible && graph->isVisible()
-                    && !needUpdatePlot && pSimulationResultsSize) {
+                    && !needFullUpdatePlot && pSimulationResultsSize) {
                     // Check that our graph segment can fit within our plot's
                     // current viewport, but only if the user hasn't changed the
                     // plot's viewport since we last came here (e.g. by panning
@@ -3334,11 +3341,11 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                         // Update our plot, if our graph segment cannot fit
                         // within our plot's current viewport
 
-                        needUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
-                                         || (minY < plotMinY) || (maxY > plotMaxY);
+                        needFullUpdatePlot =    (minX < plotMinX) || (maxX > plotMaxX)
+                                             || (minY < plotMinY) || (maxY > plotMaxY);
                     }
 
-                    if (!needUpdatePlot) {
+                    if (!needFullUpdatePlot) {
                         if (plot->drawGraphFrom(graph, realOldDataSize-1))
                             needProcessingEvents = true;
                     }
@@ -3350,27 +3357,24 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         // visible
 
         if (visible) {
-            if (needUpdatePlot) {
-                // We are either drawing a graph's first segment or its new
-                // segment doesn't fit within the plot's current viewport, in
-                // which case we need to update our plot
+            if (needFullUpdatePlot || !pSimulationResultsSize) {
+                // Either we need a full update of our plot (because we are
+                // drawing a graph's first segment or a graph's new segment
+                // doesn't fit within the plot's current viewport) or the size
+                // of our simulation results is zero (because we are starting a
+                // simulation or clearing our plot), so update our plot
+                // Note: in case we are starting a simulation or clearing our
+                //       plot, we don't want a full update of our plot since
+                //       this is going to reset its axes' values and therefore
+                //       result in some (expected) flickering, if some data is
+                //       to be drawn straightaway (e.g. when we start a
+                //       simulation)...
 
-                updatePlot(plot, true);
-
-                needProcessingEvents = true;
-            } else if (!pSimulationResultsSize) {
-                // We came here as a result of starting a simulation or clearing
-                // our plot, so simply replot it (rather than update it)
-                // Note: we don't want to update our plot since this is going to
-                //       reset its axes' values and therefore result in some
-                //       (expected) flickering, if some data is to be drawn
-                //       straightaway (e.g. when we start a simulation)...
-
-                plot->replot();
+                updatePlot(plot, needFullUpdatePlot, true);
 
                 needProcessingEvents = true;
             }
-        } else if (needUpdatePlot || !pSimulationResultsSize) {
+        } else if (needFullUpdatePlot || !pSimulationResultsSize) {
             // We would normally update our plot, but we are not visible, so no
             // point in doing it, so instead we keep track of the fact that we
             // will need to update our plots the next time we become visible

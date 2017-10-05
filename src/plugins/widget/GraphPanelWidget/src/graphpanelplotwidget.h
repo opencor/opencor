@@ -53,8 +53,9 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-static const double DefMinAxis =    0.0;
-static const double DefMaxAxis = 1000.0;
+static const double DefaultMinAxis    =    0.0;
+static const double DefaultMinLogAxis =    1.0;
+static const double DefaultMaxAxis    = 1000.0;
 
 //==============================================================================
 
@@ -113,6 +114,10 @@ public:
     void * parameterY() const;
     void setParameterY(void *pParameterY);
 
+    void setData(double *pDataX, double *pDataY, const int &pSize);
+
+    QRectF boundingLogRect();
+
 private:
     bool mSelected;
 
@@ -120,6 +125,8 @@ private:
 
     void *mParameterX;
     void *mParameterY;
+
+    QRectF mBoundingLogRect;
 };
 
 //==============================================================================
@@ -205,10 +212,12 @@ public:
     bool addGraph(GraphPanelPlotGraph *pGraph);
     bool removeGraph(GraphPanelPlotGraph *pGraph);
 
-    QRectF dataRect() const;
+    bool hasData() const;
 
-    void optimiseAxisX(double &pMin, double &pMax) const;
-    void optimiseAxisY(double &pMin, double &pMax) const;
+    bool dataRect(QRectF &pDataRect) const;
+    bool dataLogRect(QRectF &pDataLogRect) const;
+
+    void optimiseAxis(double &pMin, double &pMax) const;
 
     double minX() const;
     double maxX() const;
@@ -220,6 +229,15 @@ public:
 
     bool logAxisY() const;
     void setLogAxisY(const bool &pLogAxisY);
+
+    void setDefaultAxesValues(const double &pDefaultMinX,
+                              const double &pDefaultMaxX,
+                              const double &pDefaultMinLogX,
+                              const double &pDefaultMaxLogX,
+                              const double &pDefaultMinY,
+                              const double &pDefaultMaxY,
+                              const double &pDefaultMinLogY,
+                              const double &pDefaultMaxLogY);
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  const bool &pSynchronizeAxes = true,
@@ -255,6 +273,14 @@ private:
         ShowCoordinates,
         Zoom,
         ZoomRegion
+    };
+
+    enum Scaling {
+        BigScalingIn,
+        ScalingIn,
+        NoScaling,
+        ScalingOut,
+        BigScalingOut
     };
 
     QwtPlotDirectPainter *mDirectPainter;
@@ -295,11 +321,19 @@ private:
     GraphPanelPlotScaleDraw *mAxisX;
     GraphPanelPlotScaleDraw *mAxisY;
 
+    double mDefaultMinX;
+    double mDefaultMaxX;
+    double mDefaultMinY;
+    double mDefaultMaxY;
+
+    double mDefaultMinLogX;
+    double mDefaultMaxLogX;
+    double mDefaultMinLogY;
+    double mDefaultMaxLogY;
+
     GraphPanelPlotWidgets mNeighbors;
 
-    void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
-
-    void checkAxisValues(double &pMin, double &pMax);
+    void checkAxisValues(const bool &pLogAxis, double &pMin, double &pMax);
 
     void updateActions();
 
@@ -314,23 +348,17 @@ private:
 
     QRectF realDataRect() const;
 
-    void optimiseAxis(const int &pAxisId, double &pMin, double &pMax) const;
-
-    QRectF optimisedRect(const QRectF &pAxes) const;
-
     void setAxis(const int &pAxisId, double pMin, double pMax);
 
     bool resetAxes();
 
-    bool scaleAxis(const double &pScalingFactor,
-                   const bool &pCanZoomIn, const bool &pCanZoomOut,
-                   const double pOriginPoint, double &pMin, double &pMax);
-    void scaleAxes(const QPoint &pPoint,
-                   const double &pScalingFactorX,
-                   const double &pScalingFactorY);
+    bool scaleAxis(const Scaling &pScaling, const bool &pCanZoomIn,
+                   const bool &pCanZoomOut, const QwtScaleMap &pCanvasMap,
+                   const double &pPoint, double &pMin, double &pMax);
+    void scaleAxes(const QPoint &pPoint, const Scaling &pScalingX,
+                   const Scaling &pScalingY);
 
-    QPointF canvasPoint(const QPoint &pPoint,
-                        const bool &pNeedOffset = true) const;
+    QPointF canvasPoint(const QPoint &pPoint) const;
 
 signals:
     void axesChanged(const double &pMinX, const double &pMaxX,

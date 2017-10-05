@@ -388,7 +388,10 @@ void PmrWorkspacesWindowSynchronizeDialog::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check whether we are trying to quick synchronise
 
-    if (   (pEvent->modifiers() & Qt::ControlModifier)
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        &&  (pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)
         && (pEvent->key() == Qt::Key_Return)) {
         // Pretend that we clicked on the Ok button, if possible
 
