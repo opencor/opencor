@@ -838,8 +838,8 @@ bool GraphPanelPlotWidget::eventFilter(QObject *pObject, QEvent *pEvent)
     // mouseDoubleClickEvent() doesn't work, so we do it ourselves
 
     if (pEvent->type() == QEvent::MouseButtonDblClick) {
-        // Reset the zoom level (i.e. our axes), in case we double-clicked using the
-        // left mouse button with no modifiers
+        // Reset the zoom level (i.e. our axes), in case we double-clicked using
+        // the left mouse button with no modifiers
 
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(pEvent);
 
