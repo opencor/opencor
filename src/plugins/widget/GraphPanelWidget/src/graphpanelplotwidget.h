@@ -297,8 +297,6 @@ private:
 
     GraphPanelPlotWidgets mNeighbors;
 
-    void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
-
     void checkAxisValues(double &pMin, double &pMax);
 
     void updateActions();
