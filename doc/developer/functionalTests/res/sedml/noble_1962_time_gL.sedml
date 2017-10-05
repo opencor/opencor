@@ -52,11 +52,125 @@
                 <ci> yVariable1_1 </ci>
             </math>
         </dataGenerator>
+        <dataGenerator id="xDataGenerator2_1">
+            <listOfVariables>
+                <variable id="xVariable2_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
+            </listOfVariables>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <ci> xVariable2_1 </ci>
+            </math>
+        </dataGenerator>
+        <dataGenerator id="yDataGenerator2_1">
+            <listOfVariables>
+                <variable id="yVariable2_1" target="/cellml:model/cellml:component[@name='leakage_current']/cellml:variable[@name='g_L']" taskReference="repeatedTask"/>
+            </listOfVariables>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <ci> yVariable2_1 </ci>
+            </math>
+        </dataGenerator>
+        <dataGenerator id="xDataGenerator3_1">
+            <listOfVariables>
+                <variable id="xVariable3_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
+            </listOfVariables>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <ci> xVariable3_1 </ci>
+            </math>
+        </dataGenerator>
+        <dataGenerator id="yDataGenerator3_1">
+            <listOfVariables>
+                <variable id="yVariable3_1" target="/cellml:model/cellml:component[@name='leakage_current']/cellml:variable[@name='g_L']" taskReference="repeatedTask"/>
+            </listOfVariables>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <ci> yVariable3_1 </ci>
+            </math>
+        </dataGenerator>
+        <dataGenerator id="xDataGenerator4_1">
+            <listOfVariables>
+                <variable id="xVariable4_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
+            </listOfVariables>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <ci> xVariable4_1 </ci>
+            </math>
+        </dataGenerator>
+        <dataGenerator id="yDataGenerator4_1">
+            <listOfVariables>
+                <variable id="yVariable4_1" target="/cellml:model/cellml:component[@name='leakage_current']/cellml:variable[@name='g_L']" taskReference="repeatedTask"/>
+            </listOfVariables>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <ci> yVariable4_1 </ci>
+            </math>
+        </dataGenerator>
     </listOfDataGenerators>
     <listOfOutputs>
         <plot2D id="plot1">
             <listOfCurves>
                 <curve id="curve1_1" logX="false" logY="false" xDataReference="xDataGenerator1_1" yDataReference="yDataGenerator1_1">
+                    <annotation>
+                        <curveProperties xmlns="http://www.opencor.ws/">
+                            <lineProperties>
+                                <lineStyle>solid</lineStyle>
+                                <lineWidth>1</lineWidth>
+                                <lineColor>#000080</lineColor>
+                            </lineProperties>
+                            <symbolProperties>
+                                <symbolStyle>none</symbolStyle>
+                                <symbolSize>8</symbolSize>
+                                <symbolColor>#000080</symbolColor>
+                                <symbolFilled>true</symbolFilled>
+                                <symbolFillColor>#ffffff</symbolFillColor>
+                            </symbolProperties>
+                        </curveProperties>
+                    </annotation>
+                </curve>
+            </listOfCurves>
+        </plot2D>
+        <plot2D id="plot2">
+            <listOfCurves>
+                <curve id="curve2_1" logX="true" logY="false" xDataReference="xDataGenerator2_1" yDataReference="yDataGenerator2_1">
+                    <annotation>
+                        <curveProperties xmlns="http://www.opencor.ws/">
+                            <lineProperties>
+                                <lineStyle>solid</lineStyle>
+                                <lineWidth>1</lineWidth>
+                                <lineColor>#000080</lineColor>
+                            </lineProperties>
+                            <symbolProperties>
+                                <symbolStyle>none</symbolStyle>
+                                <symbolSize>8</symbolSize>
+                                <symbolColor>#000080</symbolColor>
+                                <symbolFilled>true</symbolFilled>
+                                <symbolFillColor>#ffffff</symbolFillColor>
+                            </symbolProperties>
+                        </curveProperties>
+                    </annotation>
+                </curve>
+            </listOfCurves>
+        </plot2D>
+        <plot2D id="plot3">
+            <listOfCurves>
+                <curve id="curve3_1" logX="false" logY="true" xDataReference="xDataGenerator3_1" yDataReference="yDataGenerator3_1">
+                    <annotation>
+                        <curveProperties xmlns="http://www.opencor.ws/">
+                            <lineProperties>
+                                <lineStyle>solid</lineStyle>
+                                <lineWidth>1</lineWidth>
+                                <lineColor>#000080</lineColor>
+                            </lineProperties>
+                            <symbolProperties>
+                                <symbolStyle>none</symbolStyle>
+                                <symbolSize>8</symbolSize>
+                                <symbolColor>#000080</symbolColor>
+                                <symbolFilled>true</symbolFilled>
+                                <symbolFillColor>#ffffff</symbolFillColor>
+                            </symbolProperties>
+                        </curveProperties>
+                    </annotation>
+                </curve>
+            </listOfCurves>
+        </plot2D>
+        <plot2D id="plot4">
+            <listOfCurves>
+                <curve id="curve4_1" logX="true" logY="true" xDataReference="xDataGenerator4_1" yDataReference="yDataGenerator4_1">
                     <annotation>
                         <curveProperties xmlns="http://www.opencor.ws/">
                             <lineProperties>

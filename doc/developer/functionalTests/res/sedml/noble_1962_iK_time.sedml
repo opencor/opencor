@@ -38,7 +38,7 @@
     <listOfDataGenerators>
         <dataGenerator id="xDataGenerator1_1">
             <listOfVariables>
-                <variable id="xVariable1_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
+                <variable id="xVariable1_1" target="/cellml:model/cellml:component[@name='potassium_channel']/cellml:variable[@name='i_K']" taskReference="repeatedTask"/>
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> xVariable1_1 </ci>
@@ -46,7 +46,7 @@
         </dataGenerator>
         <dataGenerator id="yDataGenerator1_1">
             <listOfVariables>
-                <variable id="yVariable1_1" target="/cellml:model/cellml:component[@name='potassium_channel']/cellml:variable[@name='i_K']" taskReference="repeatedTask"/>
+                <variable id="yVariable1_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> yVariable1_1 </ci>
@@ -54,7 +54,7 @@
         </dataGenerator>
         <dataGenerator id="xDataGenerator2_1">
             <listOfVariables>
-                <variable id="xVariable2_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
+                <variable id="xVariable2_1" target="/cellml:model/cellml:component[@name='potassium_channel']/cellml:variable[@name='i_K']" taskReference="repeatedTask"/>
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> xVariable2_1 </ci>
@@ -62,7 +62,7 @@
         </dataGenerator>
         <dataGenerator id="yDataGenerator2_1">
             <listOfVariables>
-                <variable id="yVariable2_1" target="/cellml:model/cellml:component[@name='potassium_channel']/cellml:variable[@name='i_K']" taskReference="repeatedTask"/>
+                <variable id="yVariable2_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> yVariable2_1 </ci>
@@ -70,7 +70,7 @@
         </dataGenerator>
         <dataGenerator id="xDataGenerator3_1">
             <listOfVariables>
-                <variable id="xVariable3_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
+                <variable id="xVariable3_1" target="/cellml:model/cellml:component[@name='potassium_channel']/cellml:variable[@name='i_K']" taskReference="repeatedTask"/>
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> xVariable3_1 </ci>
@@ -78,7 +78,7 @@
         </dataGenerator>
         <dataGenerator id="yDataGenerator3_1">
             <listOfVariables>
-                <variable id="yVariable3_1" target="/cellml:model/cellml:component[@name='potassium_channel']/cellml:variable[@name='i_K']" taskReference="repeatedTask"/>
+                <variable id="yVariable3_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> yVariable3_1 </ci>
@@ -86,7 +86,7 @@
         </dataGenerator>
         <dataGenerator id="xDataGenerator4_1">
             <listOfVariables>
-                <variable id="xVariable4_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
+                <variable id="xVariable4_1" target="/cellml:model/cellml:component[@name='potassium_channel']/cellml:variable[@name='i_K']" taskReference="repeatedTask"/>
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> xVariable4_1 </ci>
@@ -94,7 +94,7 @@
         </dataGenerator>
         <dataGenerator id="yDataGenerator4_1">
             <listOfVariables>
-                <variable id="yVariable4_1" target="/cellml:model/cellml:component[@name='potassium_channel']/cellml:variable[@name='i_K']" taskReference="repeatedTask"/>
+                <variable id="yVariable4_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> yVariable4_1 </ci>
