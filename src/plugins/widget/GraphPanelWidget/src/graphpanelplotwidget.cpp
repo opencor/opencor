@@ -288,7 +288,7 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
         for (size_t i = 0, iMax = crtData->size(); i < iMax; ++i) {
             QPointF sample = crtData->sample(i);
 
-            if ((sample.x() > 0.0) && (sample.y() > 0.0)) {
+            if (sample.x() > 0.0) {
                 if (needInitMinX) {
                     minX = sample.x();
 
@@ -304,7 +304,9 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
                 } else if (sample.x() > maxX) {
                     maxX = sample.x();
                 }
+            }
 
+            if (sample.y() > 0.0) {
                 if (needInitMinY) {
                     minY = sample.y();
 
@@ -323,7 +325,8 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
             }
         }
 
-        mBoundingLogRect = QRectF(minX, minY, maxX-minX, maxY-minY);
+        if (!needInitMinX && !needInitMaxX && !needInitMinY && !needInitMaxY)
+            mBoundingLogRect = QRectF(minX, minY, maxX-minX, maxY-minY);
     }
 
     return mBoundingLogRect;
@@ -1149,9 +1152,13 @@ bool GraphPanelPlotWidget::dataLogRect(QRectF &pDataLogRect) const
 
     foreach (GraphPanelPlotGraph *graph, mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->dataSize()) {
-            pDataLogRect |= graph->boundingLogRect();
+            QRectF boundingLogRect = graph->boundingLogRect();
 
-            res = true;
+            if (boundingLogRect != NoBoundingLogRect) {
+                pDataLogRect |= boundingLogRect;
+
+                res = true;
+            }
         }
     }
 
