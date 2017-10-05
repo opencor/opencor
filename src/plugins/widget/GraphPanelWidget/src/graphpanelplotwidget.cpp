@@ -1180,8 +1180,8 @@ QRectF GraphPanelPlotWidget::realDataRect() const
 
         double minX = logAxisX()?dLogRect.left():dRect.left();
         double maxX = minX+(logAxisX()?dLogRect.width():dRect.width());
-        double minY = logAxisX()?dLogRect.top():dRect.top();
-        double maxY = minY+(logAxisX()?dLogRect.height():dRect.height());
+        double minY = logAxisY()?dLogRect.top():dRect.top();
+        double maxY = minY+(logAxisY()?dLogRect.height():dRect.height());
 
         optimiseAxis(minX, maxX);
         optimiseAxis(minY, maxY);
