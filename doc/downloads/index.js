@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 5, "month": 10, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 25, "month": 9, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -30,7 +30,7 @@ var jsonData = { "versions": [
                            { "extension": ".tar.gz" }
                          ]
                        },
-                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
                          "files": [
                            { "extension": ".dmg" }, { "extension": ".zip" }
                          ]
