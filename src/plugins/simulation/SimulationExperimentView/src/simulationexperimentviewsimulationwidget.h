@@ -226,14 +226,12 @@ private:
 
     void updateInvalidModelMessageWidget();
 
-    void checkAxisValue(double &pValue, const double &pOrigValue,
-                        const QList<double> &pTestValues);
-
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
+                    const bool &pCanSetAxes = true,
                     const bool &pForceReplot = false);
 
-    double * dataPoints(SimulationSupport::Simulation *pSimulation,
-                        CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
+    double * data(SimulationSupport::Simulation *pSimulation,
+                  CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                          const qulonglong &pSize);
