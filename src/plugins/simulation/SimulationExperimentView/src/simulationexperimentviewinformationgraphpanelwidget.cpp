@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Simulation Experiment view information graphs widget
+// Simulation Experiment view information graph panel widget
 //==============================================================================
 
 #include "cellmlfileruntime.h"
@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "i18ninterface.h"
 #include "sedmlsupport.h"
 #include "simulation.h"
-#include "simulationexperimentviewinformationgraphswidget.h"
+#include "simulationexperimentviewinformationgraphpanelwidget.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 
@@ -52,9 +52,9 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
-SimulationExperimentViewInformationGraphsWidget::SimulationExperimentViewInformationGraphsWidget(SimulationExperimentViewWidget *pViewWidget,
-                                                                                                 SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                                                                 QWidget *pParent) :
+SimulationExperimentViewInformationGraphPanelWidget::SimulationExperimentViewInformationGraphPanelWidget(SimulationExperimentViewWidget *pViewWidget,
+                                                                                                         SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                                                                                         QWidget *pParent) :
     QStackedWidget(pParent),
     Core::CommonWidget(this),
     mViewWidget(pViewWidget),
@@ -111,7 +111,7 @@ SimulationExperimentViewInformationGraphsWidget::SimulationExperimentViewInforma
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::retranslateUi()
+void SimulationExperimentViewInformationGraphPanelWidget::retranslateUi()
 {
     // Retranslate our actions
 
@@ -144,7 +144,7 @@ void SimulationExperimentViewInformationGraphsWidget::retranslateUi()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::initialize(SimulationSupport::Simulation *pSimulation)
+void SimulationExperimentViewInformationGraphPanelWidget::initialize(SimulationSupport::Simulation *pSimulation)
 {
     // Populate our parameters context menu
 
@@ -157,7 +157,7 @@ void SimulationExperimentViewInformationGraphsWidget::initialize(SimulationSuppo
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::finalize()
+void SimulationExperimentViewInformationGraphPanelWidget::finalize()
 {
     // Clear our parameters context menu
 
@@ -166,8 +166,8 @@ void SimulationExperimentViewInformationGraphsWidget::finalize()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                                 const bool &pActive)
+void SimulationExperimentViewInformationGraphPanelWidget::initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                                     const bool &pActive)
 {
     // Retrieve the property editor for the given file name or create one, if
     // none exists
@@ -241,7 +241,7 @@ void SimulationExperimentViewInformationGraphsWidget::initialize(OpenCOR::GraphP
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
+void SimulationExperimentViewInformationGraphPanelWidget::finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
     // Remove track of the link betwen our graph panel and our property editor
 
@@ -251,9 +251,9 @@ void SimulationExperimentViewInformationGraphsWidget::finalize(OpenCOR::GraphPan
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                               OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                               const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties)
+void SimulationExperimentViewInformationGraphPanelWidget::addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                                   OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                                   const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties)
 {
     // Make sure that we have a property editor
 
@@ -333,8 +333,8 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph(OpenCOR::GraphPan
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                                   const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
+void SimulationExperimentViewInformationGraphPanelWidget::removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
     // Make sure that we have a property editor
 
@@ -358,7 +358,7 @@ void SimulationExperimentViewInformationGraphsWidget::removeGraphs(OpenCOR::Grap
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::addGraph()
+void SimulationExperimentViewInformationGraphPanelWidget::addGraph()
 {
     // Ask the graph panel associated with our current property editor to add an
     // 'empty' graph
@@ -368,7 +368,7 @@ void SimulationExperimentViewInformationGraphsWidget::addGraph()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::removeCurrentGraph()
+void SimulationExperimentViewInformationGraphPanelWidget::removeCurrentGraph()
 {
     // Ask the graph panel associated with our current property editor to remove
     // the current graph
@@ -378,7 +378,7 @@ void SimulationExperimentViewInformationGraphsWidget::removeCurrentGraph()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::removeAllGraphs()
+void SimulationExperimentViewInformationGraphPanelWidget::removeAllGraphs()
 {
     // Ask the graph panel associated with our current property editor to remove
     // all the graphs
@@ -388,7 +388,7 @@ void SimulationExperimentViewInformationGraphsWidget::removeAllGraphs()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::selectAllGraphs(const bool &pSelect)
+void SimulationExperimentViewInformationGraphPanelWidget::selectAllGraphs(const bool &pSelect)
 {
     // (Un)select all the graphs
     // Note: normally, we would only update the checked state of our graph
@@ -419,7 +419,7 @@ void SimulationExperimentViewInformationGraphsWidget::selectAllGraphs(const bool
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::selectAllGraphs()
+void SimulationExperimentViewInformationGraphPanelWidget::selectAllGraphs()
 {
     // Select all the graphs
 
@@ -428,7 +428,7 @@ void SimulationExperimentViewInformationGraphsWidget::selectAllGraphs()
 
 //==============================================================================
 
-bool SimulationExperimentViewInformationGraphsWidget::rootProperty(Core::Property *pProperty) const
+bool SimulationExperimentViewInformationGraphPanelWidget::rootProperty(Core::Property *pProperty) const
 {
     // Return whether the given property is a root property
 
@@ -438,7 +438,7 @@ bool SimulationExperimentViewInformationGraphsWidget::rootProperty(Core::Propert
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::unselectAllGraphs()
+void SimulationExperimentViewInformationGraphPanelWidget::unselectAllGraphs()
 {
     // Unselect all the graphs
 
@@ -447,7 +447,7 @@ void SimulationExperimentViewInformationGraphsWidget::unselectAllGraphs()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::selectColor()
+void SimulationExperimentViewInformationGraphPanelWidget::selectColor()
 {
     // Select a colour and assign it to the current property
 
@@ -465,8 +465,8 @@ void SimulationExperimentViewInformationGraphsWidget::selectColor()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::fileRenamed(const QString &pOldFileName,
-                                                                  const QString &pNewFileName)
+void SimulationExperimentViewInformationGraphPanelWidget::fileRenamed(const QString &pOldFileName,
+                                                                      const QString &pNewFileName)
 {
     // Keep track of the renamed model list value (so that we can take advantage
     // of it in our calls to updateGraphsInfo() in updateAllGraphsInfo())
@@ -504,7 +504,7 @@ void SimulationExperimentViewInformationGraphsWidget::fileRenamed(const QString 
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::updateGui()
+void SimulationExperimentViewInformationGraphPanelWidget::updateGui()
 {
     // Update our graphs information
     // Note: this is useful, for example, if we created a graph for a file that
@@ -517,7 +517,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGui()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::finishEditing()
+void SimulationExperimentViewInformationGraphPanelWidget::finishEditing()
 {
     // Make sure that we have a property editor
 
@@ -535,8 +535,8 @@ static const auto PropertySeparator = QStringLiteral(" | ");
 
 //==============================================================================
 
-Core::Properties SimulationExperimentViewInformationGraphsWidget::graphProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                                                  const QString &pFileName) const
+Core::Properties SimulationExperimentViewInformationGraphPanelWidget::graphProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                                                      const QString &pFileName) const
 {
     // Retrieve and return all the graph properties associated with the given
     // graph and file name, if any
@@ -567,7 +567,7 @@ Core::Properties SimulationExperimentViewInformationGraphsWidget::graphPropertie
 
 //==============================================================================
 
-int SimulationExperimentViewInformationGraphsWidget::headerCount() const
+int SimulationExperimentViewInformationGraphPanelWidget::headerCount() const
 {
     // Return the number of headers in our property editors
 
@@ -576,7 +576,7 @@ int SimulationExperimentViewInformationGraphsWidget::headerCount() const
 
 //==============================================================================
 
-int SimulationExperimentViewInformationGraphsWidget::columnWidth(const int &pIndex) const
+int SimulationExperimentViewInformationGraphPanelWidget::columnWidth(const int &pIndex) const
 {
     // Return the width of the given column
 
@@ -585,8 +585,8 @@ int SimulationExperimentViewInformationGraphsWidget::columnWidth(const int &pInd
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::setColumnWidth(const int &pIndex,
-                                                                     const int &pColumnWidth)
+void SimulationExperimentViewInformationGraphPanelWidget::setColumnWidth(const int &pIndex,
+                                                                         const int &pColumnWidth)
 {
     // Make sure that we have a property editor
 
@@ -600,7 +600,7 @@ void SimulationExperimentViewInformationGraphsWidget::setColumnWidth(const int &
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::propertyEditorContextMenu(const QPoint &pPosition) const
+void SimulationExperimentViewInformationGraphPanelWidget::propertyEditorContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
 
@@ -648,7 +648,7 @@ void SimulationExperimentViewInformationGraphsWidget::propertyEditorContextMenu(
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::propertyEditorHorizontalScrollBarValueChanged(const int &pValue)
+void SimulationExperimentViewInformationGraphPanelWidget::propertyEditorHorizontalScrollBarValueChanged(const int &pValue)
 {
     // Keep track of the property editor's horizontal scroll bar value
 
@@ -657,9 +657,9 @@ void SimulationExperimentViewInformationGraphsWidget::propertyEditorHorizontalSc
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::propertyEditorSectionResized(const int &pIndex,
-                                                                                   const int &pOldSize,
-                                                                                   const int &pNewSize)
+void SimulationExperimentViewInformationGraphPanelWidget::propertyEditorSectionResized(const int &pIndex,
+                                                                                       const int &pOldSize,
+                                                                                       const int &pNewSize)
 {
     Q_UNUSED(pOldSize);
 
@@ -670,7 +670,7 @@ void SimulationExperimentViewInformationGraphsWidget::propertyEditorSectionResiz
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::populateParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime)
+void SimulationExperimentViewInformationGraphPanelWidget::populateParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime)
 {
     // Populate our parameters context menu with the contents of our main
     // context menu
@@ -756,10 +756,10 @@ void SimulationExperimentViewInformationGraphsWidget::populateParametersContextM
 
 //==============================================================================
 
-bool SimulationExperimentViewInformationGraphsWidget::checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                                     GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                                     Core::Property *pParameterProperty,
-                                                                     const bool &pParameterX) const
+bool SimulationExperimentViewInformationGraphPanelWidget::checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
+                                                                         GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                                         Core::Property *pParameterProperty,
+                                                                         const bool &pParameterX) const
 {
     // Check that the information held by the given property corresponds to
     // an existing parameter in our runtime
@@ -822,7 +822,7 @@ bool SimulationExperimentViewInformationGraphsWidget::checkParameter(CellMLSuppo
 
 //==============================================================================
 
-QString SimulationExperimentViewInformationGraphsWidget::modelListValue(const QString &pFileName) const
+QString SimulationExperimentViewInformationGraphPanelWidget::modelListValue(const QString &pFileName) const
 {
     // Return the model list value for the given file name
 
@@ -831,7 +831,7 @@ QString SimulationExperimentViewInformationGraphsWidget::modelListValue(const QS
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty)
+void SimulationExperimentViewInformationGraphPanelWidget::updateGraphInfo(Core::Property *pProperty)
 {
     // Make sure that we have a property
 
@@ -939,7 +939,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphInfo(Core::Prop
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::graphChanged(Core::Property *pProperty)
+void SimulationExperimentViewInformationGraphPanelWidget::graphChanged(Core::Property *pProperty)
 {
     // Our graph has changed, which means that either it has been un/selected or
     // that the value of one of its properties has changed
@@ -972,7 +972,7 @@ void SimulationExperimentViewInformationGraphsWidget::graphChanged(Core::Propert
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSectionProperty)
+void SimulationExperimentViewInformationGraphPanelWidget::updateGraphsInfo(Core::Property *pSectionProperty)
 {
     // Make sure that we have a property editor
 
@@ -1108,7 +1108,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateGraphsInfo(Core::Pro
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::updateAllGraphsInfo()
+void SimulationExperimentViewInformationGraphPanelWidget::updateAllGraphsInfo()
 {
     // Update the information about our graphs properties and this for all our
     // property editors, so first keep track of our active property editor
@@ -1136,7 +1136,7 @@ void SimulationExperimentViewInformationGraphsWidget::updateAllGraphsInfo()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphsWidget::updateParameterValue()
+void SimulationExperimentViewInformationGraphPanelWidget::updateParameterValue()
 {
     // Update the current property's value
 

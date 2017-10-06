@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "collapsiblewidget.h"
-#include "simulationexperimentviewinformationgraphswidget.h"
+#include "simulationexperimentviewinformationgraphpanelwidget.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
 #include "simulationexperimentviewinformationsimulationwidget.h"
 #include "simulationexperimentviewinformationsolverswidget.h"
@@ -77,11 +77,11 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
 
     mSolversWidget->setObjectName("Solvers");
 
-    // Create our graphs widget
+    // Create our graph panel widget
 
-    mGraphsWidget = new SimulationExperimentViewInformationGraphsWidget(pViewWidget, pSimulationWidget, mCollapsibleWidget);
+    mGraphPanelWidget = new SimulationExperimentViewInformationGraphPanelWidget(pViewWidget, pSimulationWidget, mCollapsibleWidget);
 
-    mGraphsWidget->setObjectName("Graphs");
+    mGraphPanelWidget->setObjectName("GraphPanel");
 
     // Create our parameters widget
 
@@ -94,7 +94,7 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
 
     mCollapsibleWidget->addWidget(mSimulationWidget);
     mCollapsibleWidget->addWidget(mSolversWidget);
-    mCollapsibleWidget->addWidget(mGraphsWidget);
+    mCollapsibleWidget->addWidget(mGraphPanelWidget);
     mCollapsibleWidget->addWidget(mParametersWidget, false);
 
     // Add our collapsible widget to our layout
@@ -110,14 +110,14 @@ void SimulationExperimentViewInformationWidget::retranslateUi()
 
     mCollapsibleWidget->setHeaderTitle(0, tr("Simulation"));
     mCollapsibleWidget->setHeaderTitle(1, tr("Solvers"));
-    mCollapsibleWidget->setHeaderTitle(2, tr("Graphs"));
+    mCollapsibleWidget->setHeaderTitle(2, tr("Graph Panel"));
     mCollapsibleWidget->setHeaderTitle(3, tr("Parameters"));
 
     // Retranslate our simulation, solvers, graphs and parameters widgets
 
     mSimulationWidget->retranslateUi();
     mSolversWidget->retranslateUi();
-    mGraphsWidget->retranslateUi();
+    mGraphPanelWidget->retranslateUi();
     mParametersWidget->retranslateUi();
 }
 
@@ -150,11 +150,11 @@ SimulationExperimentViewInformationSolversWidget * SimulationExperimentViewInfor
 
 //==============================================================================
 
-SimulationExperimentViewInformationGraphsWidget * SimulationExperimentViewInformationWidget::graphsWidget() const
+SimulationExperimentViewInformationGraphPanelWidget * SimulationExperimentViewInformationWidget::graphPanelWidget() const
 {
-    // Return our graphs widget
+    // Return our graph panel widget
 
-    return mGraphsWidget;
+    return mGraphPanelWidget;
 }
 
 //==============================================================================
@@ -179,7 +179,7 @@ void SimulationExperimentViewInformationWidget::finishEditing(const bool &pPause
         mSolversWidget->finishEditing();
     }
 
-    mGraphsWidget->finishEditing();
+    mGraphPanelWidget->finishEditing();
     mParametersWidget->finishEditing();
 }
 

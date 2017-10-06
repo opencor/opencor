@@ -47,7 +47,7 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SimulationExperimentViewInformationGraphsWidget;
+class SimulationExperimentViewInformationGraphPanelWidget;
 class SimulationExperimentViewInformationParametersWidget;
 class SimulationExperimentViewInformationSimulationWidget;
 class SimulationExperimentViewInformationSolversWidget;
@@ -72,7 +72,7 @@ public:
 
     SimulationExperimentViewInformationSimulationWidget * simulationWidget() const;
     SimulationExperimentViewInformationSolversWidget * solversWidget() const;
-    SimulationExperimentViewInformationGraphsWidget * graphsWidget() const;
+    SimulationExperimentViewInformationGraphPanelWidget * graphPanelWidget() const;
     SimulationExperimentViewInformationParametersWidget * parametersWidget() const;
 
     void finishEditing(const bool &pPausedSimulation);
@@ -82,7 +82,7 @@ private:
 
     SimulationExperimentViewInformationSimulationWidget *mSimulationWidget;
     SimulationExperimentViewInformationSolversWidget *mSolversWidget;
-    SimulationExperimentViewInformationGraphsWidget *mGraphsWidget;
+    SimulationExperimentViewInformationGraphPanelWidget *mGraphPanelWidget;
     SimulationExperimentViewInformationParametersWidget *mParametersWidget;
 };
 

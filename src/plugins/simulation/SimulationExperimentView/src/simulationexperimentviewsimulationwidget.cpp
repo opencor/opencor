@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sedmlsupportplugin.h"
 #include "simulation.h"
 #include "simulationexperimentviewcontentswidget.h"
-#include "simulationexperimentviewinformationgraphswidget.h"
+#include "simulationexperimentviewinformationgraphpanelwidget.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
 #include "simulationexperimentviewinformationsimulationwidget.h"
 #include "simulationexperimentviewinformationsolverswidget.h"
@@ -339,12 +339,12 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Keep track of the addition and removal of a graph panel
 
-    SimulationExperimentViewInformationGraphsWidget *graphsWidget = informationWidget->graphsWidget();
+    SimulationExperimentViewInformationGraphPanelWidget *graphPanelWidget = informationWidget->graphPanelWidget();
 
     connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
-            graphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)));
+            graphPanelWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)));
     connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
-            graphsWidget, SLOT(finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
+            graphPanelWidget, SLOT(finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
 
     connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
             this, SLOT(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)));
@@ -354,7 +354,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     // Keep track of whether a graph panel has been activated
 
     connect(graphPanelsWidget, SIGNAL(graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
-            graphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
+            graphPanelWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
 
     // Keep track of a graph being required
 
@@ -364,9 +364,9 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     // Keep track of the addition and removal of a graph
 
     connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)),
-            graphsWidget, SLOT(addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
+            graphPanelWidget, SLOT(addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
     connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
-            graphsWidget, SLOT(removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
+            graphPanelWidget, SLOT(removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
     connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)),
             this, SLOT(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
@@ -390,12 +390,12 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     //       plotting viewpoint. So, instead, the updating is done through our
     //       graphs property editor...
 
-    connect(graphsWidget, SIGNAL(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+    connect(graphPanelWidget, SIGNAL(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
             this, SLOT(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
-    connect(graphsWidget, SIGNAL(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
+    connect(graphPanelWidget, SIGNAL(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
             this, SLOT(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
-    connect(graphsWidget, SIGNAL(graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+    connect(graphPanelWidget, SIGNAL(graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
             this, SLOT(graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
 
     // Create our simulation output widget with a layout on which we put a
@@ -952,10 +952,10 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
         //          our simulation's starting point and simulation's NLA
         //          solver's properties), which is needed since we want to be
         //          able to reset our simulation below...
-        // Note #2: to initialise our graphs widget will result in some graphs
-        //          being shown/hidden and, therefore, in graphUpdated() being
-        //          called. Yet, we don't want graphUpdated() to update our
-        //          plots. Indeed, if it did, then all of our plots' axes'
+        // Note #2: to initialise our graph panel widget will result in some
+        //          graphs being shown/hidden and, therefore, in graphUpdated()
+        //          being called. Yet, we don't want graphUpdated() to update
+        //          our plots. Indeed, if it did, then all of our plots' axes'
         //          values would be reset while we want to keep the ones we just
         //          retrieved (thus making it possible for the user to have
         //          different views for different files). So, for this to work
@@ -978,7 +978,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
         solversWidget->initialize(mSimulation);
 
         mCanUpdatePlotsForUpdatedGraphs = false;
-            informationWidget->graphsWidget()->initialize(mSimulation);
+            informationWidget->graphPanelWidget()->initialize(mSimulation);
         mCanUpdatePlotsForUpdatedGraphs = true;
 
         mContentsWidget->graphPanelsWidget()->initialize();
@@ -1024,7 +1024,7 @@ void SimulationExperimentViewSimulationWidget::finalize()
 
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
-    informationWidget->graphsWidget()->finalize();
+    informationWidget->graphPanelWidget()->finalize();
     informationWidget->parametersWidget()->finalize();
 }
 
@@ -1235,9 +1235,9 @@ void SimulationExperimentViewSimulationWidget::setFileName(const QString &pFileN
 void SimulationExperimentViewSimulationWidget::fileRenamed(const QString &pOldFileName,
                                                            const QString &pNewFileName)
 {
-    // Let our graphs widget know that a file has been renamed
+    // Let our graph panel widget know that a file has been renamed
 
-    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
+    mContentsWidget->informationWidget()->graphPanelWidget()->fileRenamed(pOldFileName, pNewFileName);
 
     // Make sure that our GUI is up to date
 
@@ -1678,11 +1678,11 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
     QList<Core::Properties> graphsList = QList<Core::Properties>();
     QList<Core::Properties> logarithmicXAxis = QList<Core::Properties>();
     QList<Core::Properties> logarithmicYAxis = QList<Core::Properties>();
-    SimulationExperimentViewInformationGraphsWidget *graphsWidget = mContentsWidget->informationWidget()->graphsWidget();
+    SimulationExperimentViewInformationGraphPanelWidget *graphPanelWidget = mContentsWidget->informationWidget()->graphPanelWidget();
 
     foreach (GraphPanelWidget::GraphPanelWidget *graphPanel,
              mContentsWidget->graphPanelsWidget()->graphPanels()) {
-        Core::Properties graphs = graphsWidget->graphProperties(graphPanel, mFileName);
+        Core::Properties graphs = graphPanelWidget->graphProperties(graphPanel, mFileName);
 
         if (!graphs.isEmpty())
             graphsList << graphs;
@@ -2426,7 +2426,7 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
 
     graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
-    // Customise our graphs widget
+    // Customise our graph panel widget
 
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
         libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
@@ -3198,9 +3198,9 @@ void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisib
     if (pCheckVisibility && !isVisible())
         return;
 
-    // Make sure that our graphs widget's GUI is up to date
+    // Make sure that our graph panel widget's GUI is up to date
 
-    mContentsWidget->informationWidget()->graphsWidget()->updateGui();
+    mContentsWidget->informationWidget()->graphPanelWidget()->updateGui();
 
     // Make sure that our plots are up to date
     // Note: indeed, say that we start a simulation with some graphs and switch

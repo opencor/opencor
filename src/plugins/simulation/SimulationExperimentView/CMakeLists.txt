@@ -15,7 +15,7 @@ ADD_PLUGIN(SimulationExperimentView
         ../../viewinterface.cpp
 
         src/simulationexperimentviewcontentswidget.cpp
-        src/simulationexperimentviewinformationgraphswidget.cpp
+        src/simulationexperimentviewinformationgraphpanelwidget.cpp
         src/simulationexperimentviewinformationparameterswidget.cpp
         src/simulationexperimentviewinformationsimulationwidget.cpp
         src/simulationexperimentviewinformationsolverswidget.cpp
@@ -30,7 +30,7 @@ ADD_PLUGIN(SimulationExperimentView
         ../../solverinterface.h
 
         src/simulationexperimentviewcontentswidget.h
-        src/simulationexperimentviewinformationgraphswidget.h
+        src/simulationexperimentviewinformationgraphpanelwidget.h
         src/simulationexperimentviewinformationparameterswidget.h
         src/simulationexperimentviewinformationsimulationwidget.h
         src/simulationexperimentviewinformationsolverswidget.h

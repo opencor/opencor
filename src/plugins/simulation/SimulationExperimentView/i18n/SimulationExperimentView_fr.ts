@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphsWidget</name>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelWidget</name>
     <message>
         <source>Add Graph</source>
         <translation>Ajouter Courbe</translation>
@@ -260,8 +260,8 @@
         <translation>Solveurs</translation>
     </message>
     <message>
-        <source>Graphs</source>
-        <translation>Courbes</translation>
+        <source>Graph Panel</source>
+        <translation>Panneau Graphique</translation>
     </message>
     <message>
         <source>Parameters</source>
