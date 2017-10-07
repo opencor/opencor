@@ -3,17 +3,17 @@ PROJECT(QtWebKit)
 # Name and version of our package
 
 SET(PACKAGE_NAME QtWebKit)
-SET(PACKAGE_VERSION 5.6.2)
+SET(PACKAGE_VERSION 5.9.2)
 
 # Version of our library
 
 SET(MAJOR_LIBRARY_VERSION 5)
-SET(MINOR_LIBRARY_VERSION 6)
+SET(MINOR_LIBRARY_VERSION 9)
 SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.2)
 
 # Git tag for our library
 
-SET(GIT_TAG v5.6.2)
+SET(GIT_TAG v5.9.2)
 
 # Platform target for our library
 
