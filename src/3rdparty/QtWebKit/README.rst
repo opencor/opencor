@@ -15,6 +15,6 @@ In order to build `QtWebKit <https://wiki.qt.io/QtWebKit>`__, we need to:
 
   ::
 
-    sudo apt install bison flex gperf libicu-dev libsqlite3-dev libxrender-dev ruby
+    sudo apt install bison flex gperf libicu-dev libpulse-dev libsqlite3-dev libxrender-dev ruby
 
   **Note:** ICU also gets built from `source <http://site.icu-project.org/download/>`__ (after having made sure that we got the version used by `Qt <https://www.qt.io/>`__; ``find /opt/Qt -name *icu*``).
