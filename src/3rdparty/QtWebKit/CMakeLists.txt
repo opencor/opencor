@@ -108,34 +108,34 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
 
     IF(WIN32)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 62daa90e877a2c7bb3b86d33a76a41a4f6c1d950
+                              ${RELATIVE_PROJECT_SOURCE_DIR} f9e3017e7a9f56002bdb8b43a88f9f985b4402ed
                               TARGET_PLATFORM ${TARGET_PLATFORM}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 3eee6f4718a9633c00d93e32b2da5239703db1fc
-                                          f5f1cf1f82d74aea897580c79989188237544cce
-                                          3ba496da078342ad819e10da623b7bb53599f36a
-                                          49a7ea73e4a6772ae9daec5465a6da71b144ef35
-                                          cd1ef8bf50bbcd545f1a8aba7aad4c31f6864c69
-                                          ae578907765b02a362af3ec6a0321ea7caeaebb7
-                                          a99852a7ac11af22665d4382aae4318c7aef32e1
-                                          f4296d5ab6ebfe840e5e19eb3d037604b852dcbd
+                              SHA1_VALUES 39fee715f57c30b1a34a95314d700ea6acc9460b
+                                          946a9bfb8096336cea41680ba8244d42981a767a
+                                          3de7e04327e5d1fbaa26dfccd862d12ca06cb95e
+                                          f57e4f94b81e984feeb75c0996af33537678b7b5
+                                          d4378a542155c16204de9dd114542a9e55910264
+                                          985af9b0d529216157ba3a29b7291fdc3b6dc75a
+                                          468c8cc1bee6e34231e87337dc44cef038f9047b
+                                          68cf645d8430093437539bb771ab6f0ab827918c
                                           874175a6db51afe0902882f0b00f7855ab498c79
                                           47cb72ba7c899ca218be75dd89a0c0f900b968b8
                                           a386658900a742f31f1f08d55c0915d577af2d7e)
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 681f0dda37f169a7ac851f7911cd841e35fbadf4
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 4481753a60fdf3b4dc6f7f318664b96a1722f022
                               TARGET_PLATFORM ${TARGET_PLATFORM}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES c1b47e709390b0f0b8cfc4d7dcbf714c144e91f2
-                                          19f7733bb892ff6b682d26a57b027d1236883705)
+                              SHA1_VALUES 9c12914e449d44d71a6c56688f0f984df7fc5939
+                                          ffb1456fd920fc4525016a2a11739cffa4cae769)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} d417b2eb330c41f871f0b63ca1eff8dd1681396c
+                              ${RELATIVE_PROJECT_SOURCE_DIR} c53a39af55116f583ab7b660e905e22c3901065f
                               TARGET_PLATFORM ${TARGET_PLATFORM}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 02d948004a55054ee432faaa85860963315ad0d9
-                                          b824f25f8b45eb6e2d8394d4d751d6c1a2cfb5e2)
+                              SHA1_VALUES b4d6013232034006ccb7a6afee014af50815db97
+                                          4f7eeeecca9323bae310f2bcb4a078e217723279)
     ENDIF()
 ELSE()
     # Set platform specific configuration options
