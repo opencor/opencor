@@ -889,6 +889,8 @@ QString CentralWidget::openRemoteFile(const QString &pUrl,
                 qFatal("FATAL ERROR | %s:%d: the remote file was not created.", __FILE__, __LINE__);
 #endif
                 return tr("FATAL ERROR | %s:%d: the remote file was not created.").arg(__FILE__, __LINE__);
+            } else {
+                return QString("");
             }
         } else {
             // We were not able to retrieve the contents of the remote file, so
@@ -901,9 +903,9 @@ QString CentralWidget::openRemoteFile(const QString &pUrl,
 
             return tr("'%1' could not be opened (%2).").arg(fileNameOrUrl, formatMessage(errorMessage));
         }
+    } else {
+        return openFile(fileName, File::Remote, fileNameOrUrl, pShowWarning);
     }
-
-    return openFile(fileName, File::Remote, fileNameOrUrl, pShowWarning);
 }
 
 //==============================================================================
