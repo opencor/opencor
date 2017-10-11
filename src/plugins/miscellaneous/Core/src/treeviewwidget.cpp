@@ -39,6 +39,25 @@ namespace Core {
 
 //==============================================================================
 
+TreeViewItemDelegate::TreeViewItemDelegate(QObject *pParent) :
+    QStyledItemDelegate(pParent)
+{
+}
+
+//==============================================================================
+
+QSize TreeViewItemDelegate::sizeHint(const QStyleOptionViewItem &pOption,
+                                     const QModelIndex &pIndex) const
+{
+    // Slightly reduce our height if we have an icon
+
+    QStandardItem *item = qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex);
+
+    return QStyledItemDelegate::sizeHint(pOption, pIndex)-((item && !item->icon().isNull())?QSize(0, 2):QSize(0, 0));
+}
+
+//==============================================================================
+
 TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     QTreeView(pParent),
     CommonWidget(this)
@@ -50,6 +69,7 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
     setFrameShape(QFrame::NoFrame);
+    setItemDelegate(new TreeViewItemDelegate(this));
 }
 
 //==============================================================================

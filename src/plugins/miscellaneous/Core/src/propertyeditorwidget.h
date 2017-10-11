@@ -150,7 +150,7 @@ class PropertyEditorWidget;
 
 //==============================================================================
 
-class PropertyItemDelegate : public QStyledItemDelegate
+class PropertyItemDelegate : public TreeViewItemDelegate
 {
     Q_OBJECT
 

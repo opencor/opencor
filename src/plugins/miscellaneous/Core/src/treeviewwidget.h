@@ -30,12 +30,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QStyledItemDelegate>
 #include <QTreeView>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
+
+class TreeViewItemDelegate : public QStyledItemDelegate
+{
+    Q_OBJECT
+
+public:
+    explicit TreeViewItemDelegate(QObject *pParent);
+
+    virtual QSize sizeHint(const QStyleOptionViewItem &pOption,
+                           const QModelIndex &pIndex) const;
+};
 
 //==============================================================================
 
