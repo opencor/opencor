@@ -51,9 +51,16 @@ QSize TreeViewItemDelegate::sizeHint(const QStyleOptionViewItem &pOption,
 {
     // Slightly reduce our height if we have an icon
 
-    QStandardItem *item = qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex);
+    QSize res = QStyledItemDelegate::sizeHint(pOption, pIndex);
+    const QStandardItemModel *model = qobject_cast<const QStandardItemModel *>(pIndex.model());
 
-    return QStyledItemDelegate::sizeHint(pOption, pIndex)-((item && !item->icon().isNull())?QSize(0, 2):QSize(0, 0));
+    if (model) {
+        QStandardItem *item = model->itemFromIndex(pIndex);
+
+        res -= (item && !item->icon().isNull())?QSize(0, 2):QSize(0, 0);
+    }
+
+    return res;
 }
 
 //==============================================================================
