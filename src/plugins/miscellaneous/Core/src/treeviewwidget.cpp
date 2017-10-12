@@ -62,7 +62,7 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     QTreeView(pParent),
     CommonWidget(this)
 {
-    // Set some properties
+    // Customise ourselves
 
     setAllColumnsShowFocus(true);
 #ifdef Q_OS_MAC
@@ -91,16 +91,10 @@ void TreeViewWidget::selectItem(const int &pRow, const int &pColumn)
     QStandardItemModel *treeViewModel = qobject_cast<QStandardItemModel *>(model());
 
     if (treeViewModel) {
-        // The tree view has a model associated with it, so we can retrieve the
-        // requested item
-
         QStandardItem *treeViewItem = treeViewModel->invisibleRootItem()->child(pRow, pColumn);
 
-        if (treeViewItem) {
-            // The requested item exists, so select it...
-
+        if (treeViewItem)
             setCurrentIndex(treeViewItem->index());
-        }
     }
 }
 
