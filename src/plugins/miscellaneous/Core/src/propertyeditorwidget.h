@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreglobal.h"
+#include "coreguiutils.h"
 #include "treeviewwidget.h"
 
 //==============================================================================
@@ -149,7 +150,7 @@ class PropertyEditorWidget;
 
 //==============================================================================
 
-class PropertyItemDelegate : public TreeViewItemDelegate
+class PropertyItemDelegate : public StyledItemDelegate
 {
     Q_OBJECT
 

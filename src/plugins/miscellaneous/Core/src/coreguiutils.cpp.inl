@@ -110,6 +110,40 @@ bool Dialog::hasPositionAndSize()
 
 //==============================================================================
 
+StyledItemDelegate::StyledItemDelegate(QObject *pParent) :
+    QStyledItemDelegate(pParent)
+{
+}
+
+//==============================================================================
+
+QSize StyledItemDelegate::sizeHint(const QStyleOptionViewItem &pOption,
+                                   const QModelIndex &pIndex) const
+{
+    // Slightly reduce our height, if possible and if we have an icon
+
+    static const QSize ZeroSize = QSize(0, 0);
+    static const QSize SmallSize = QSize(0, 2);
+
+    QSize res = QStyledItemDelegate::sizeHint(pOption, pIndex);
+    const QStandardItemModel *standardItemModel = qobject_cast<const QStandardItemModel *>(pIndex.model());
+
+    if (standardItemModel) {
+        QStandardItem *item = standardItemModel->itemFromIndex(pIndex);
+
+        res -= (item && !item->icon().isNull())?SmallSize:ZeroSize;
+    }
+
+    const QFileSystemModel *fileSystemModel = qobject_cast<const QFileSystemModel *>(pIndex.model());
+
+    if (fileSystemModel)
+        res -= SmallSize;
+
+    return res;
+}
+
+//==============================================================================
+
 QMainWindow * mainWindow()
 {
     // Retrieve and return our main window

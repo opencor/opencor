@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QFileDialog>
+#include <QFileSystemModel>
 #include <QFrame>
 #include <QGraphicsColorizeEffect>
 #include <QGraphicsPixmapItem>
@@ -46,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPushButton>
 #include <QSettings>
 #include <QSizePolicy>
+#include <QStandardItemModel>
 
 //==============================================================================
 

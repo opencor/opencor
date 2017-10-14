@@ -293,7 +293,7 @@ ColorEditorWidget::ColorEditorWidget(QWidget *pParent) :
 //==============================================================================
 
 PropertyItemDelegate::PropertyItemDelegate(OpenCOR::Core::PropertyEditorWidget *pParent) :
-    TreeViewItemDelegate(pParent),
+    StyledItemDelegate(pParent),
     mPropertyEditorWidget(pParent)
 {
 }

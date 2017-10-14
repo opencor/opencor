@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Tree view widget
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "treeviewwidget.h"
 
 //==============================================================================
@@ -39,32 +40,6 @@ namespace Core {
 
 //==============================================================================
 
-TreeViewItemDelegate::TreeViewItemDelegate(QObject *pParent) :
-    QStyledItemDelegate(pParent)
-{
-}
-
-//==============================================================================
-
-QSize TreeViewItemDelegate::sizeHint(const QStyleOptionViewItem &pOption,
-                                     const QModelIndex &pIndex) const
-{
-    // Slightly reduce our height, if possible and if we have an icon
-
-    QSize res = QStyledItemDelegate::sizeHint(pOption, pIndex);
-    const QStandardItemModel *model = qobject_cast<const QStandardItemModel *>(pIndex.model());
-
-    if (model) {
-        QStandardItem *item = model->itemFromIndex(pIndex);
-
-        res -= (item && !item->icon().isNull())?QSize(0, 2):QSize(0, 0);
-    }
-
-    return res;
-}
-
-//==============================================================================
-
 TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     QTreeView(pParent),
     CommonWidget(this)
@@ -76,7 +51,7 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
     setFrameShape(QFrame::NoFrame);
-    setItemDelegate(new TreeViewItemDelegate(this));
+    setItemDelegate(new StyledItemDelegate(this));
 }
 
 //==============================================================================
