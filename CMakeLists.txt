@@ -51,7 +51,7 @@ ELSEIF(APPLE)
 ELSE()
     IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"
        OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5")
-        MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC/G++ 5.x on Linux...")
+        MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC/G++ 5.x and later on Linux...")
     ENDIF()
 ENDIF()
 
@@ -107,12 +107,17 @@ IF(CCACHE)
     SET(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
 ENDIF()
 
-# Keep track of some basic information about Qt
+# Keep track of some basic information about Qt, after making sure that we have
+# the version of Qt that we need
 
 FIND_PACKAGE(Qt5Core REQUIRED)
 
 SET(QT_VERSION ${Qt5Core_VERSION})
 SET(QT_VERSION_MAJOR ${Qt5Core_VERSION_MAJOR})
+
+IF(QT_VERSION VERSION_LESS "5.9")
+    MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using Qt 5.9.x LTS and later...")
+ENDIF()
 
 SET(QT_DIR ${_qt5Core_install_prefix})
 SET(QT_BINARY_DIR ${QT_DIR}/bin)
