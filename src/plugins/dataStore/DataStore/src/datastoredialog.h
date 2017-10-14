@@ -31,10 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QStyledItemDelegate>
-
-//==============================================================================
-
 namespace Ui {
     class DataStoreDialog;
 }
@@ -51,7 +47,7 @@ namespace DataStore {
 
 //==============================================================================
 
-class DataItemDelegate : public QStyledItemDelegate
+class DataItemDelegate : public Core::StyledItemDelegate
 {
 public:
     explicit DataItemDelegate(QObject *pParent);

@@ -42,7 +42,7 @@ namespace DataStore {
 //==============================================================================
 
 DataItemDelegate::DataItemDelegate(QObject *pParent) :
-    QStyledItemDelegate(pParent)
+    Core::StyledItemDelegate(pParent)
 {
 }
 
