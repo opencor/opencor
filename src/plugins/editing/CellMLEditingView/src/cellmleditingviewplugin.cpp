@@ -154,7 +154,8 @@ void CellMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
     Core::showEnableAction(mEditReformatAction, mCellmlEditingViewInterface,
                            !pFileName.isEmpty() && Core::FileManager::instance()->isReadableAndWritable(pFileName));
 
-    Core::showEnableAction(mToolsCellmlValidationAction, mCellmlEditingViewInterface, !pFileName.isEmpty());
+    Core::showEnableAction(mToolsCellmlValidationAction, mCellmlEditingViewInterface,
+                           !pFileName.isEmpty());
 
     // Update our editor's context menu
     // Note: our editor's original context menu is set in
@@ -251,6 +252,7 @@ void CellMLEditingViewPlugin::initializePlugin()
 
     mEditReformatAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_R),
                                           Core::mainWindow());
+
     mToolsCellmlValidationAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_T),
                                                    Core::mainWindow());
 
