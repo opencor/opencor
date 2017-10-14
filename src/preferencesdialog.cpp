@@ -104,7 +104,7 @@ QLabel * PreferencesPluginCategoryWidget::label(const QString &pLabel)
 //==============================================================================
 
 PreferencesItemDelegate::PreferencesItemDelegate(QObject *pParent) :
-    QStyledItemDelegate(pParent)
+    StyledItemDelegate(pParent)
 {
 }
 

@@ -49,7 +49,7 @@ namespace OpenCOR {
 //==============================================================================
 
 PluginItemDelegate::PluginItemDelegate(QObject *pParent) :
-    QStyledItemDelegate(pParent)
+    StyledItemDelegate(pParent)
 {
 }
 
