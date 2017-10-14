@@ -166,23 +166,10 @@ void SEDMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
         EditorWidget::EditorWidget *editorWidget = editingViewInterface->editorWidget(pFileName);
 
         if (editorWidget) {
-            QList<QAction *> contextMenuActions = editorWidget->contextMenu()->actions();
-
-            QAction *separatorAction = Core::newAction(Core::mainWindow());
-
-            separatorAction->setSeparator(true);
-
-            contextMenuActions << separatorAction;
-            contextMenuActions << mEditReformatAction;
-
-            separatorAction = Core::newAction(Core::mainWindow());
-
-            separatorAction->setSeparator(true);
-
-            contextMenuActions << separatorAction;
-            contextMenuActions << mToolsSedmlValidationAction;
-
-            editorWidget->setContextMenu(contextMenuActions);
+            editorWidget->setContextMenu(editorWidget->contextMenu()->actions() << Core::newSeparator(Core::mainWindow())
+                                                                                << mEditReformatAction
+                                                                                << Core::newSeparator(Core::mainWindow())
+                                                                                << mToolsSedmlValidationAction);
         }
     }
 

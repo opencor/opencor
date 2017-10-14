@@ -160,6 +160,8 @@ QAction CORE_EXPORT * newAction(const QKeySequence::StandardKey &pStandardKey,
                                 QWidget *pParent);
 QAction CORE_EXPORT * newAction(QWidget *pParent);
 
+QAction CORE_EXPORT * newSeparator(QWidget *pParent);
+
 QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal,
                                    const QColor &pColor, QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal, QWidget *pParent);

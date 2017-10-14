@@ -542,6 +542,19 @@ QAction * newAction(QWidget *pParent)
 
 //==============================================================================
 
+QAction * newSeparator(QWidget *pParent)
+{
+    // Create and return a separator
+
+    QAction *res = new QAction(pParent);
+
+    res->setSeparator(true);
+
+    return res;
+}
+
+//==============================================================================
+
 QFrame * newLineWidget(const bool &pHorizontal, const QColor &pColor,
                        QWidget *pParent)
 {
