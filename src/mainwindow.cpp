@@ -518,19 +518,17 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                 menu = mGui->menuTools;
 
             if (menu) {
+                QAction *beforeAction = (menu == mGui->menuTools)?
+                                            menu->actions()[2]:
+                                            menu->actions().first();
                 QAction *action = guiMenuActions[i].action();
 
                 if (action)
-                    menu->insertAction(menu->actions().first(), action);
+                    menu->insertAction(beforeAction, action);
                 else
-                    menu->insertSeparator(menu->actions().first());
+                    menu->insertSeparator(beforeAction);
             }
         }
-
-        // Make sure that our language menu item is first in our tools menu
-
-        mGui->menuTools->insertSeparator(mGui->menuTools->actions().first());
-        mGui->menuTools->insertAction(mGui->menuTools->actions().first(), mGui->menuLanguage->menuAction());
 
         // Add some sub-menus before some menu items
 
