@@ -51,10 +51,6 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class PluginManager;
-
-//==============================================================================
-
 class PluginItemDelegate : public QStyledItemDelegate
 {
 public:
@@ -63,6 +59,10 @@ public:
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
                        const QModelIndex &pIndex) const;
 };
+
+//==============================================================================
+
+class PluginManager;
 
 //==============================================================================
 

@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QModelIndex>
 #include <QStandardItem>
-#include <QStyledItemDelegate>
 #include <QStyleOptionViewItem>
 
 //==============================================================================
@@ -52,10 +51,6 @@ namespace Core {
 //==============================================================================
 
 namespace CellMLAnnotationView {
-
-//==============================================================================
-
-class CellmlAnnotationViewEditingWidget;
 
 //==============================================================================
 
@@ -123,6 +118,10 @@ private:
                                                    iface::cellml_api::CellMLElement *pElement,
                                                    const int &pNumber);
 };
+
+//==============================================================================
+
+class CellmlAnnotationViewEditingWidget;
 
 //==============================================================================
 
