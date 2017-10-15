@@ -16,14 +16,6 @@
         <translation>Exporter le fichier CellML vers CellML 1.0</translation>
     </message>
     <message>
-        <source>CellML 1.1...</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Export the CellML file to CellML 1.1</source>
-        <translation>Exporter le fichier CellML vers CellML 1.1</translation>
-    </message>
-    <message>
         <source>User-Defined Format...</source>
         <translation>Format Défini Par Utilisateur...</translation>
     </message>
@@ -32,16 +24,8 @@
         <translation>Exporter le fichier CellML vers un format défini par l&apos;utilisateur</translation>
     </message>
     <message>
-        <source>Export CellML File To %1</source>
-        <translation>Exporter Fichier CellML Vers %1</translation>
-    </message>
-    <message>
         <source>Exported</source>
         <translation>Exporté</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be exported to &lt;strong&gt;%2&lt;/strong&gt;%3.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être exporté vers &lt;strong&gt;%2&lt;/strong&gt;%3.</translation>
     </message>
     <message>
         <source>User-Defined Format File</source>
@@ -58,6 +42,14 @@
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be exported to the user-defined format described in &lt;strong&gt;%2&lt;/strong&gt;%3.</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être exporté vers le format défini par l&apos;utilisateur décrit dans &lt;strong&gt;%2&lt;/strong&gt;%3.</translation>
+    </message>
+    <message>
+        <source>Export CellML File To CellML 1.0</source>
+        <translation>Exporter Fichier CellML Vers CellML 1.0</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be exported to &lt;strong&gt;CellML 1.0&lt;/strong&gt;%2.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être exporté vers &lt;strong&gt;CellML 1.0&lt;/strong&gt;%2.</translation>
     </message>
 </context>
 </TS>
