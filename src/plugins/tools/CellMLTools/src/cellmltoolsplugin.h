@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "cliinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
@@ -69,14 +70,18 @@ private:
     QMenu *mCellmlFileExportToMenu;
 
     QAction *mExportToCellml10Action;
+    QAction *mExportToCellml11Action;
 
     QAction *mExportToUserDefinedFormatAction;
+
+    void exportTo(const CellMLSupport::CellmlFile::Version &pVersion);
 
     void runHelpCommand();
     int runExportCommand(const QStringList &pArguments);
 
 private slots:
     void exportToCellml10();
+    void exportToCellml11();
 
     void exportToUserDefinedFormat();
 };
