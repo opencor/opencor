@@ -94,8 +94,10 @@ void CellMLEditingViewPlugin::filePermissionsChanged(const QString &pFileName)
     // reformat action, if needed
 
     if (!pFileName.compare(mFileName)) {
-        Core::showEnableAction(mEditReformatAction, mCellmlEditingViewInterface,
-                               !pFileName.isEmpty() && Core::FileManager::instance()->isReadableAndWritable(pFileName));
+        bool hasFileNameAndIsReadableAndWritable = !pFileName.isEmpty() && Core::FileManager::instance()->isReadableAndWritable(pFileName);
+
+        Core::showEnableAction(mEditReformatAction, mCellmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
+        Core::showEnableAction(mEditReformatSeparator, mCellmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
     }
 }
 
@@ -151,11 +153,14 @@ void CellMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
 
     mCellmlEditingViewInterface = pViewPlugin?qobject_cast<CellmlEditingViewInterface *>(pViewPlugin->instance()):0;
 
-    Core::showEnableAction(mEditReformatAction, mCellmlEditingViewInterface,
-                           !pFileName.isEmpty() && Core::FileManager::instance()->isReadableAndWritable(pFileName));
+    bool hasFileName = !pFileName.isEmpty();
+    bool hasFileNameAndIsReadableAndWritable = hasFileName && Core::FileManager::instance()->isReadableAndWritable(pFileName);
 
-    Core::showEnableAction(mToolsCellmlValidationAction, mCellmlEditingViewInterface,
-                           !pFileName.isEmpty());
+    Core::showEnableAction(mEditReformatAction, mCellmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
+    Core::showEnableAction(mEditReformatSeparator, mCellmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
+
+    Core::showEnableAction(mToolsCellmlValidationAction, mCellmlEditingViewInterface, hasFileName);
+    Core::showEnableAction(mToolsCellmlValidationSeparator, mCellmlEditingViewInterface, hasFileName);
 
     // Update our editor's context menu
     // Note: our editor's original context menu is set in
@@ -167,9 +172,9 @@ void CellMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
         EditorWidget::EditorWidget *editorWidget = editingViewInterface->editorWidget(pFileName);
 
         if (editorWidget) {
-            editorWidget->setContextMenu(editorWidget->contextMenu()->actions() << Core::newSeparator(Core::mainWindow())
+            editorWidget->setContextMenu(editorWidget->contextMenu()->actions() << mEditReformatSeparator
                                                                                 << mEditReformatAction
-                                                                                << Core::newSeparator(Core::mainWindow())
+                                                                                << mToolsCellmlValidationSeparator
                                                                                 << mToolsCellmlValidationAction);
         }
     }
@@ -195,9 +200,9 @@ Gui::MenuActions CellMLEditingViewPlugin::guiMenuActions() const
     // Return our menu actions
 
     return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools)
+                              << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatSeparator)
                               << Gui::MenuAction(Gui::MenuAction::Tools, mToolsCellmlValidationAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools);
+                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsCellmlValidationSeparator);
 }
 
 //==============================================================================
@@ -252,9 +257,11 @@ void CellMLEditingViewPlugin::initializePlugin()
 
     mEditReformatAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_R),
                                           Core::mainWindow());
+    mEditReformatSeparator = Core::newSeparator(Core::mainWindow());
 
     mToolsCellmlValidationAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_T),
                                                    Core::mainWindow());
+    mToolsCellmlValidationSeparator = Core::newSeparator(Core::mainWindow());
 
     // Some connections to handle our different actions
 
