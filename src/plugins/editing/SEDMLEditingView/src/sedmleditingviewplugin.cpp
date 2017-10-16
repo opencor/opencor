@@ -94,8 +94,10 @@ void SEDMLEditingViewPlugin::filePermissionsChanged(const QString &pFileName)
     // reformat action, if needed
 
     if (!pFileName.compare(mFileName)) {
-        Core::showEnableAction(mEditReformatAction, mSedmlEditingViewInterface,
-                               !pFileName.isEmpty() && Core::FileManager::instance()->isReadableAndWritable(pFileName));
+        bool hasFileNameAndIsReadableAndWritable = !pFileName.isEmpty() && Core::FileManager::instance()->isReadableAndWritable(pFileName);
+
+        Core::showEnableAction(mEditReformatAction, mSedmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
+        Core::showEnableAction(mEditReformatSeparator, mSedmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
     }
 }
 
@@ -151,10 +153,14 @@ void SEDMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
 
     mSedmlEditingViewInterface = pViewPlugin?qobject_cast<SedmlEditingViewInterface *>(pViewPlugin->instance()):0;
 
-    Core::showEnableAction(mEditReformatAction, mSedmlEditingViewInterface,
-                           !pFileName.isEmpty() && Core::FileManager::instance()->isReadableAndWritable(pFileName));
+    bool hasFileName = !pFileName.isEmpty();
+    bool hasFileNameAndIsReadableAndWritable = hasFileName && Core::FileManager::instance()->isReadableAndWritable(pFileName);
 
-    Core::showEnableAction(mToolsSedmlValidationAction, mSedmlEditingViewInterface, !pFileName.isEmpty());
+    Core::showEnableAction(mEditReformatAction, mSedmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
+    Core::showEnableAction(mEditReformatSeparator, mSedmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
+
+    Core::showEnableAction(mToolsSedmlValidationAction, mSedmlEditingViewInterface, hasFileName);
+    Core::showEnableAction(mToolsSedmlValidationSeparator, mSedmlEditingViewInterface, hasFileName);
 
     // Update our editor's context menu
     // Note: our editor's original context menu is set in
@@ -166,9 +172,9 @@ void SEDMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
         EditorWidget::EditorWidget *editorWidget = editingViewInterface->editorWidget(pFileName);
 
         if (editorWidget) {
-            editorWidget->setContextMenu(editorWidget->contextMenu()->actions() << Core::newSeparator(Core::mainWindow())
+            editorWidget->setContextMenu(editorWidget->contextMenu()->actions() << mEditReformatSeparator
                                                                                 << mEditReformatAction
-                                                                                << Core::newSeparator(Core::mainWindow())
+                                                                                << mToolsSedmlValidationSeparator
                                                                                 << mToolsSedmlValidationAction);
         }
     }
@@ -194,9 +200,9 @@ Gui::MenuActions SEDMLEditingViewPlugin::guiMenuActions() const
     // Return our menu actions
 
     return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools)
+                              << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatSeparator)
                               << Gui::MenuAction(Gui::MenuAction::Tools, mToolsSedmlValidationAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools);
+                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsSedmlValidationSeparator);
 }
 
 //==============================================================================
@@ -245,8 +251,11 @@ void SEDMLEditingViewPlugin::initializePlugin()
 
     mEditReformatAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_R),
                                           Core::mainWindow());
+    mEditReformatSeparator = Core::newSeparator(Core::mainWindow());
+
     mToolsSedmlValidationAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_T),
                                                   Core::mainWindow());
+    mToolsSedmlValidationSeparator = Core::newSeparator(Core::mainWindow());
 
     // Some connections to handle our different actions
 
