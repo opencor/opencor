@@ -730,8 +730,12 @@ void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
     // Enable/disable our reopen sub-menu actions depending on whether we have
     // recent file names
 
-    mFileReopenMostRecentFileAction->setEnabled(!mRecentFileNamesOrUrls.isEmpty());
-    mFileClearReopenSubMenuAction->setEnabled(!mRecentFileNamesOrUrls.isEmpty());
+    bool hasRecentFileNamesOrUrls = !mRecentFileNamesOrUrls.isEmpty();
+
+    mFileReopenMostRecentFileAction->setEnabled(hasRecentFileNamesOrUrls);
+    mFileClearReopenSubMenuAction->setEnabled(hasRecentFileNamesOrUrls);
+
+    Core::showEnableAction(mFileReopenSubMenuSeparator2, hasRecentFileNamesOrUrls);
 }
 
 //==============================================================================
