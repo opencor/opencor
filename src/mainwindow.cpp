@@ -509,15 +509,10 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                 menu = mGui->menuTools;
 
             if (menu) {
-                QAction *beforeAction = (menu == mGui->menuTools)?
-                                            menu->actions()[2]:
-                                            menu->actions().first();
-                QAction *action = guiMenuActions[i].action();
-
-                if (action)
-                    menu->insertAction(beforeAction, action);
-                else
-                    menu->insertSeparator(beforeAction);
+                menu->insertAction((menu == mGui->menuTools)?
+                                       menu->actions()[2]:
+                                       menu->actions().first(),
+                                   guiMenuActions[i].action());
             }
         }
 

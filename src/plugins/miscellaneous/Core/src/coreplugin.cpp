@@ -256,21 +256,21 @@ Gui::MenuActions CorePlugin::guiMenuActions() const
                               << Gui::MenuAction(Gui::MenuAction::File, mFileOpenRemoteAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileOpenReloadSeparator)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileReloadAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileDuplicateAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileLockedAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAsAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAllAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFilePreviousAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileNextAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileCloseAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileCloseAllAction)
-                              << Gui::MenuAction(Gui::MenuAction::File);
+                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()));
 }
 
 //==============================================================================
