@@ -24,7 +24,7 @@ install:
       ;
     else
          brew update
-      && curl -O https://raw.githubusercontent.com/Homebrew/homebrew-core/5d2e2fdebc5c5a04787a01cf0197b179dbf7a994/Formula/qt.rb
+      && curl -O https://raw.githubusercontent.com/Homebrew/homebrew-core/2b121c9a96e58a5da14228630cb71d5bead7137e/Formula/qt.rb
       && brew install ./qt.rb ninja
       && export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
       && chmod -R 755 /usr/local/opt/qt5/*
