@@ -144,7 +144,7 @@ QRect TabBarStyle::subElementRect(SubElement pElement,
 
             return res;
         } else {
-            return QProxyStyle::subElementRect(pElement, pOption, pWidget);
+            return QRect();
         }
     } else {
         return QProxyStyle::subElementRect(pElement, pOption, pWidget);
