@@ -175,9 +175,9 @@ void TabBarStyle::tabLayout(const QStyleOptionTab *pOption,
         textRect.setRect(0, 0, textRect.height(), textRect.width());
 
     int horizontalShift = pixelMetric(QStyle::PM_TabBarTabShiftHorizontal, pOption, pWidget);
+    int verticalShift = pixelMetric(QStyle::PM_TabBarTabShiftVertical, pOption, pWidget);
     int horizontalPadding = 0.5*pixelMetric(QStyle::PM_TabBarTabHSpace, pOption, pWidget);
     int verticalPadding = 0.5*pixelMetric(QStyle::PM_TabBarTabVSpace, pOption, pWidget);
-    int verticalShift = pixelMetric(QStyle::PM_TabBarTabShiftVertical, pOption, pWidget);
 
     if (   (pOption->shape == QTabBar::RoundedSouth)
         || (pOption->shape == QTabBar::TriangularSouth)) {
