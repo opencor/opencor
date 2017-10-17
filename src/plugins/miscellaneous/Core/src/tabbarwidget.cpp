@@ -84,8 +84,6 @@ void TabBarStyle::drawControl(ControlElement pElement,
 
             tabLayout(tab, pWidget, &tabRect, &iconRect);
 
-            tabRect = proxy()->subElementRect(SE_TabBarTabText, pOption, pWidget);
-
             if (!tab->icon.isNull()) {
                 pPainter->drawPixmap(iconRect.x(), iconRect.y(),
                                      tab->icon.pixmap(pWidget?
