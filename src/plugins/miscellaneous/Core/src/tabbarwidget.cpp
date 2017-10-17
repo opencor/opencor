@@ -193,14 +193,14 @@ void TabBarStyle::tabLayout(const QStyleOptionTab *pOption,
     }
 
     if (!pOption->leftButtonSize.isEmpty()) {
-        textRect.setLeft( textRect.left()+4
+        textRect.setLeft( textRect.left()
                          +(verticalTab?
                                pOption->leftButtonSize.height():
                                pOption->leftButtonSize.width()));
     }
 
     if (!pOption->rightButtonSize.isEmpty()) {
-        textRect.setRight( textRect.right()-4
+        textRect.setRight( textRect.right()
                           -(verticalTab?
                                 pOption->rightButtonSize.height():
                                 pOption->rightButtonSize.width()));
@@ -280,9 +280,21 @@ void TabBarWidget::wheelEvent(QWheelEvent *pEvent)
 
 QSize TabBarWidget::tabSizeHint(int pIndex) const
 {
-    // Determine and return our tab size hint
+    // Determine and return our tab size hint, keeping in mind our style when on
+    // macOS
 
+#ifdef Q_OS_MAC
+    int shift = tabsClosable()?8:0;
+
+    if (   (shape() == RoundedNorth) || (shape() == RoundedSouth)
+        || (shape() == TriangularNorth) || (shape() == TriangularSouth)) {
+        return QTabBar::tabSizeHint(pIndex)-QSize(shift, 0);
+    } else {
+        return QTabBar::tabSizeHint(pIndex)-QSize(0, shift);
+    }
+#else
     return QTabBar::tabSizeHint(pIndex);
+#endif
 }
 
 //==============================================================================
