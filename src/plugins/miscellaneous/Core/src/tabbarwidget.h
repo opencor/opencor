@@ -68,6 +68,8 @@ public:
 
 protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
+
+    virtual QSize tabSizeHint(int pIndex) const;
 };
 
 //==============================================================================

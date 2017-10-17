@@ -278,6 +278,15 @@ void TabBarWidget::wheelEvent(QWheelEvent *pEvent)
 
 //==============================================================================
 
+QSize TabBarWidget::tabSizeHint(int pIndex) const
+{
+    // Determine and return our tab size hint
+
+    return QTabBar::tabSizeHint(pIndex);
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 
