@@ -111,14 +111,14 @@ void TabBarStyle::drawControl(ControlElement pElement,
                 int x1 = tab->rect.left();
                 int x2 = tab->rect.right()-1;
 
-                QStyleOptionFocusRect fropt;
+                QStyleOptionFocusRect option;
 
-                fropt.QStyleOption::operator=(*tab);
+                option.QStyleOption::operator=(*tab);
 
-                fropt.rect.setRect(x1+1+Offset, tab->rect.y()+Offset,
-                                   x2-x1-2*Offset, tab->rect.height()-2*Offset);
+                option.rect.setRect(x1+1+Offset, tab->rect.y()+Offset,
+                                    x2-x1-2*Offset, tab->rect.height()-2*Offset);
 
-                drawPrimitive(PE_FrameFocusRect, &fropt, pPainter, pWidget);
+                drawPrimitive(PE_FrameFocusRect, &option, pPainter, pWidget);
             }
         }
     } else {
