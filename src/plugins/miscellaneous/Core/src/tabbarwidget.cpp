@@ -172,6 +172,9 @@ void TabBarStyle::tabLayout(const QStyleOptionTab *pOption,
     if (verticalTab)
         textRect.setRect(0, 0, textRect.height(), textRect.width());
 
+    if (!pOption->leftButtonSize.isEmpty())
+        textRect.adjust(-4, 0, 0, 0);
+
     int horizontalShift = pixelMetric(QStyle::PM_TabBarTabShiftHorizontal, pOption, pWidget);
     int verticalShift = pixelMetric(QStyle::PM_TabBarTabShiftVertical, pOption, pWidget);
     int horizontalPadding = 0.5*pixelMetric(QStyle::PM_TabBarTabHSpace, pOption, pWidget);
@@ -282,7 +285,7 @@ QSize TabBarWidget::tabSizeHint(int pIndex) const
     // macOS
 
 #ifdef Q_OS_MAC
-    int shift = tabsClosable()?8:0;
+    int shift = tabsClosable()?12:0;
 
     if (   (shape() == RoundedNorth) || (shape() == RoundedSouth)
         || (shape() == TriangularNorth) || (shape() == TriangularSouth)) {
