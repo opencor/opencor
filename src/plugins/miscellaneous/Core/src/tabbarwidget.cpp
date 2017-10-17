@@ -52,7 +52,7 @@ void TabBarStyle::drawControl(ControlElement pElement,
                                 || (tab->shape == QTabBar::TriangularEast);
             int alignment = Qt::AlignCenter | Qt::TextShowMnemonic;
 
-            if (!proxy()->styleHint(SH_UnderlineShortcut, pOption, pWidget))
+            if (!styleHint(SH_UnderlineShortcut, pOption, pWidget))
                 alignment |= Qt::TextHideMnemonic;
 
             if (verticalTab) {
@@ -98,9 +98,9 @@ void TabBarStyle::drawControl(ControlElement pElement,
                                                           QIcon::Off));
             }
 
-            proxy()->drawItemText(pPainter, tabRect, alignment, tab->palette,
-                                  tab->state & State_Enabled, tab->text,
-                                  QPalette::WindowText);
+            drawItemText(pPainter, tabRect, alignment, tab->palette,
+                         tab->state & State_Enabled, tab->text,
+                         QPalette::WindowText);
 
             if (verticalTab)
                 pPainter->restore();
