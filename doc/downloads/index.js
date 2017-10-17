@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>PMR window:</strong> retrieve the exposures only when really needed. ." }
+                       { "change": "<strong>PMR window:</strong> retrieve the exposures only when really needed." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
