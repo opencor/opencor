@@ -286,6 +286,13 @@ QSize TabBarWidget::tabSizeHint(int pIndex) const
 
 #ifdef Q_OS_MAC
     int shift = tabsClosable()?12:0;
+    QIcon icon = tabIcon(pIndex);
+
+    if (!icon.isNull()) {
+        int iconExtent = style()->pixelMetric(QStyle::PM_SmallIconSize);
+
+        shift += icon.actualSize(QSize(iconExtent, iconExtent)).width()+4;
+    }
 
     if (   (shape() == RoundedNorth) || (shape() == RoundedSouth)
         || (shape() == TriangularNorth) || (shape() == TriangularSouth)) {
