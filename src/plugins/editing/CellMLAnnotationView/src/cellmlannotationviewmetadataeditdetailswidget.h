@@ -30,12 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QMap>
-#include <QModelIndex>
 #include <QSslError>
-#include <QStandardItem>
-#include <QStyledItemDelegate>
-#include <QStyleOptionViewItem>
 
 //==============================================================================
 

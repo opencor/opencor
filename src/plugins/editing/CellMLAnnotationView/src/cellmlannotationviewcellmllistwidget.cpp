@@ -49,7 +49,7 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 CellmlAnnotationViewCellmlElementItemDelegate::CellmlAnnotationViewCellmlElementItemDelegate(QObject *pParent) :
-    QStyledItemDelegate(pParent)
+    Core::StyledItemDelegate(pParent)
 {
 }
 

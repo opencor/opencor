@@ -31,10 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QStyledItemDelegate>
-
-//==============================================================================
-
 class QSettings;
 class QStandardItem;
 class QStandardItemModel;
@@ -51,11 +47,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class PluginManager;
-
-//==============================================================================
-
-class PluginItemDelegate : public QStyledItemDelegate
+class PluginItemDelegate : public StyledItemDelegate
 {
 public:
     explicit PluginItemDelegate(QObject *pParent);
@@ -63,6 +55,10 @@ public:
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
                        const QModelIndex &pIndex) const;
 };
+
+//==============================================================================
+
+class PluginManager;
 
 //==============================================================================
 

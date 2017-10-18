@@ -26,14 +26,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cellmlfile.h"
+#include "coreguiutils.h"
 #include "widget.h"
 
 //==============================================================================
 
 #include <QModelIndex>
 #include <QStandardItem>
-#include <QStyledItemDelegate>
-#include <QStyleOptionViewItem>
 
 //==============================================================================
 
@@ -55,11 +54,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewEditingWidget;
-
-//==============================================================================
-
-class CellmlAnnotationViewCellmlElementItemDelegate : public QStyledItemDelegate
+class CellmlAnnotationViewCellmlElementItemDelegate : public Core::StyledItemDelegate
 {
 public:
     explicit CellmlAnnotationViewCellmlElementItemDelegate(QObject *pParent);
@@ -123,6 +118,10 @@ private:
                                                    iface::cellml_api::CellMLElement *pElement,
                                                    const int &pNumber);
 };
+
+//==============================================================================
+
+class CellmlAnnotationViewEditingWidget;
 
 //==============================================================================
 

@@ -50,11 +50,9 @@ FileBrowserWindowWidget::FileBrowserWindowWidget(QWidget *pParent) :
     mPreviousItems(QStringList()),
     mNextItems(QStringList())
 {
-    // Create an instance of the file system model that we want to view
+    // Customise ourselves
 
     mModel = new FileBrowserWindowModel(this);
-
-    // Set some properties
 
     setDragDropMode(QAbstractItemView::DragOnly);
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)

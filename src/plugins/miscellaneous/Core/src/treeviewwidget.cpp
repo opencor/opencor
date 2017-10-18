@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Tree view widget
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "treeviewwidget.h"
 
 //==============================================================================
@@ -43,13 +44,14 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     QTreeView(pParent),
     CommonWidget(this)
 {
-    // Set some properties
+    // Customise ourselves
 
     setAllColumnsShowFocus(true);
 #ifdef Q_OS_MAC
     setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
     setFrameShape(QFrame::NoFrame);
+    setItemDelegate(new StyledItemDelegate(this));
 }
 
 //==============================================================================
@@ -71,16 +73,10 @@ void TreeViewWidget::selectItem(const int &pRow, const int &pColumn)
     QStandardItemModel *treeViewModel = qobject_cast<QStandardItemModel *>(model());
 
     if (treeViewModel) {
-        // The tree view has a model associated with it, so we can retrieve the
-        // requested item
-
         QStandardItem *treeViewItem = treeViewModel->invisibleRootItem()->child(pRow, pColumn);
 
-        if (treeViewItem) {
-            // The requested item exists, so select it...
-
+        if (treeViewItem)
             setCurrentIndex(treeViewItem->index());
-        }
     }
 }
 
@@ -239,11 +235,11 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
             // column
             // Note: regarding the test on the column number, it is because we
             //       may have a model data that requires several columns (e.g.
-            //       QFileSystemModel) in which case selectedIndexes will return
-            //       a number of indexes equal to the number of rows times the
-            //       number of columns while we only want a number of indexes to
-            //       be equal to the number of rows (since we have a selection
-            //       mode of QAbstractItemView::ExtendedSelection)...
+            //       QFileSystemModel), in which case selectedIndexes will
+            //       return a number of indexes equal to the number of rows
+            //       times the number of columns while we only want a number of
+            //       indexes to be equal to the number of rows (since we have a
+            //       selection mode of QAbstractItemView::ExtendedSelection)...
 
             selectedDraggableIndexes.removeAt(i);
         }

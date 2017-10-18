@@ -242,7 +242,7 @@ Gui::Menus CorePlugin::guiMenus() const
 {
     // Return our menus
 
-    return Gui::Menus() << Gui::Menu(Gui::Menu::File, mOpenReloadSeparator, mFileReopenSubMenu);
+    return Gui::Menus() << Gui::Menu(Gui::Menu::File, mFileOpenReloadSeparator, mFileReopenSubMenu);
 }
 
 //==============================================================================
@@ -254,23 +254,23 @@ Gui::MenuActions CorePlugin::guiMenuActions() const
     return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewFileAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileOpenAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileOpenRemoteAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, mOpenReloadSeparator)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFileOpenReloadSeparator)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileReloadAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileDuplicateAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileLockedAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAsAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAllAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFilePreviousAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileNextAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileCloseAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileCloseAllAction)
-                              << Gui::MenuAction(Gui::MenuAction::File);
+                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()));
 }
 
 //==============================================================================
@@ -441,9 +441,7 @@ void CorePlugin::initializePlugin()
 
     // Create the separator before which we will insert our Reopen sub-menu
 
-    mOpenReloadSeparator = newAction(mainWindow());
-
-    mOpenReloadSeparator->setSeparator(true);
+    mFileOpenReloadSeparator = newSeparator(mainWindow());
 
     // Create our Reopen sub-menu
 
@@ -452,12 +450,9 @@ void CorePlugin::initializePlugin()
 
     mFileReopenMostRecentFileAction = newAction(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_T),
                                                 mainWindow());
-    mFileReopenSubMenuSeparator1 = newAction(mainWindow());
-    mFileReopenSubMenuSeparator2 = newAction(mainWindow());
+    mFileReopenSubMenuSeparator1 = newSeparator(mainWindow());
+    mFileReopenSubMenuSeparator2 = newSeparator(mainWindow());
     mFileClearReopenSubMenuAction = newAction(mainWindow());
-
-    mFileReopenSubMenuSeparator1->setSeparator(true);
-    mFileReopenSubMenuSeparator2->setSeparator(true);
 
     mFileReopenSubMenu->addAction(mFileReopenMostRecentFileAction);
     mFileReopenSubMenu->addAction(mFileReopenSubMenuSeparator1);
@@ -735,8 +730,12 @@ void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
     // Enable/disable our reopen sub-menu actions depending on whether we have
     // recent file names
 
-    mFileReopenMostRecentFileAction->setEnabled(!mRecentFileNamesOrUrls.isEmpty());
-    mFileClearReopenSubMenuAction->setEnabled(!mRecentFileNamesOrUrls.isEmpty());
+    bool hasRecentFileNamesOrUrls = !mRecentFileNamesOrUrls.isEmpty();
+
+    mFileReopenMostRecentFileAction->setEnabled(hasRecentFileNamesOrUrls);
+    mFileClearReopenSubMenuAction->setEnabled(hasRecentFileNamesOrUrls);
+
+    Core::showEnableAction(mFileReopenSubMenuSeparator2, hasRecentFileNamesOrUrls);
 }
 
 //==============================================================================

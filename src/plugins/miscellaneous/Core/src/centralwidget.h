@@ -106,8 +106,7 @@ public:
     void addView(Plugin *pPlugin);
 
     TabBarWidget * newTabBarWidget(const QTabBar::Shape &pShape,
-                                   const bool &pMovable = false,
-                                   const bool &pTabsClosable = false);
+                                   const bool &pFileTabs = false);
 
     QString currentFileName() const;
 

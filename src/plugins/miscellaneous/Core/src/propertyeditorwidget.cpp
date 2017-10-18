@@ -293,7 +293,7 @@ ColorEditorWidget::ColorEditorWidget(QWidget *pParent) :
 //==============================================================================
 
 PropertyItemDelegate::PropertyItemDelegate(OpenCOR::Core::PropertyEditorWidget *pParent) :
-    QStyledItemDelegate(pParent),
+    StyledItemDelegate(pParent),
     mPropertyEditorWidget(pParent)
 {
 }
@@ -1110,13 +1110,10 @@ PropertyEditorWidget::PropertyEditorWidget(const bool &pShowUnits,
 {
     // Customise ourselves
 
-    setRootIsDecorated(false);
-
-    // Create and set our data model
-
     mModel = new QStandardItemModel(this);
 
     setModel(mModel);
+    setRootIsDecorated(false);
 
     // Create our item delegate and set it, after making sure that we handle a
     // few of its signals
