@@ -17,7 +17,7 @@ In order to build `QtWebKit <https://wiki.qt.io/QtWebKit>`__, we need to:
 
   ::
 
-    sudo apt install bison gperf libicu-dev libjpeg-dev libpng12-dev libsqlite3-dev libxml2-dev libxslt1-dev mesa-common-dev ruby zlib1g-dev
+    sudo apt install bison gperf libicu-dev libjpeg-dev libpng12-dev libsqlite3-dev libxml2-dev libxslt1-dev ruby zlib1g-dev
 
   **Note:** ICU also gets built from `source <http://site.icu-project.org/download/>`__ (after having made sure that we got the version used by `Qt <https://www.qt.io/>`__; ``find /opt/Qt -name *icu*``).
 
