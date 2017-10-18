@@ -101,9 +101,6 @@ private:
 
     void updateGui(const QString &pFileName);
 
-    void unpopulateEditMenu();
-    void populateEditMenu(QAction *pBeforeAction = 0);
-
 private slots:
     void clipboardDataChanged();
 

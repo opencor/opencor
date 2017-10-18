@@ -467,55 +467,46 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
     GuiInterface *guiInterface = qobject_cast<GuiInterface *>(pPlugin->instance());
 
     if (guiInterface) {
-        // Add the menus to our menu bar or merge them to existing menus, if
-        // needed
+        // Add the menus before the View menu or merge them to an existing menu,
+        // if needed
         // Note: we must do that in reverse order since we are inserting menus,
         //       as opposed to appending some...
 
         Gui::Menus guiMenus = guiInterface->guiMenus();
 
         for (int i = guiMenus.count()-1; i >= 0; --i) {
-            // Insert the menu in the right place
+            if (guiMenus[i].type() == Gui::Menu::View) {
+                QMenu *newMenu = guiMenus[i].menu();
+                QString newMenuName = newMenu->objectName();
 
-            QMenu *newMenu = guiMenus[i].menu();
-            QString newMenuName = newMenu->objectName();
+                QMenu *oldMenu = mMenus.value(newMenuName);
 
-            QMenu *oldMenu = mMenus.value(newMenuName);
+                if (oldMenu && !guiMenus[i].action()) {
+                    // A menu with the same name already exists, so add the
+                    // contents of our new menu to the existing one
 
-            if (oldMenu && !guiMenus[i].action()) {
-                // A menu with the same name already exists, so add the contents
-                // of the new menu to the existing one
+                    oldMenu->addSeparator();
+                    oldMenu->addActions(newMenu->actions());
 
-                oldMenu->addSeparator();
-                oldMenu->addActions(newMenu->actions());
+                    // Delete our new menu since we don't need it anymore
 
-                // Delete the new menu since we don't need it anymore
+                    delete newMenu;
+                } else {
+                    // No menu with the same name already exists (or our menu
+                    // doesn't have a name), so add our new menu to our menu bar
 
-                delete newMenu;
-            } else {
-                // No menu with the same name already exists (or the menu
-                // doesn't have a name), so add the new menu to our menu bar
-
-                switch (guiMenus[i].type()) {
-                case Gui::Menu::File:
-                    // Not a relevant type, so do nothing
-
-                    break;
-                case Gui::Menu::View:
                     mGui->menuBar->insertAction(mGui->menuView->menuAction(),
                                                 newMenu->menuAction());
 
-                    break;
+                    // Keep track of our new menu, but only if it has a name
+
+                    if (!newMenuName.isEmpty())
+                        mMenus.insert(newMenuName, newMenu);
                 }
-
-                // Keep track of the new menu, but only if it has a name
-
-                if (!newMenuName.isEmpty())
-                    mMenus.insert(newMenuName, newMenu);
             }
         }
 
-        // Add the actions/separators to our different menus
+        // Add the actions/separators to our File or Tools menu
         // Note: as for the menus above, we must do it in reverse order since we
         //       are inserting actions, as opposed to appending some...
 
@@ -532,52 +523,26 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                 menu = mGui->menuTools;
 
             if (menu) {
-                QAction *action = guiMenuActions[i].action();
-
-                if (action)
-                    menu->insertAction(menu->actions().first(), action);
-                else
-                    menu->insertSeparator(menu->actions().first());
+                menu->insertAction((menu == mGui->menuTools)?
+                                       menu->actions()[2]:
+                                       menu->actions().first(),
+                                   guiMenuActions[i].action());
             }
         }
 
-        // Make sure that our language menu item is first in our tools menu
-
-        mGui->menuTools->insertSeparator(mGui->menuTools->actions().first());
-        mGui->menuTools->insertAction(mGui->menuTools->actions().first(), mGui->menuLanguage->menuAction());
-
-        // Add some sub-menus before some menu items
+        // Add some sub-menus before some menu item/separator in our File menu
 
         foreach (const Gui::Menu &guiMenu, guiMenus) {
-            // Insert the menu before a menu item / separator
-
-            if (guiMenu.action()) {
-                switch (guiMenu.type()) {
-                case Gui::Menu::File:
-                    mGui->menuFile->insertMenu(guiMenu.action(), guiMenu.menu());
-
-                    break;
-                case Gui::Menu::View:
-                    // Not a relevant type, so do nothing
-
-                    break;
-                }
-            }
+            if (guiMenu.action() && (guiMenu.type() == Gui::Menu::File))
+                mGui->menuFile->insertMenu(guiMenu.action(), guiMenu.menu());
         }
 
-        // Add some actions to some sub-menus and keep track of them
+        // Add some actions to our File|New menu and keep track of them
 
         static QString pluginForFileNewMenu = QString();
 
-        foreach (const Gui::MenuAction &menuAction, guiInterface->guiMenuActions()) {
-            // Insert the action to the right menu
-
-            switch (menuAction.type()) {
-            case Gui::MenuAction::File:
-                // Not a relevant type, so do nothing
-
-                break;
-            case Gui::MenuAction::FileNew:
+        foreach (const Gui::MenuAction &guiMenuAction, guiMenuActions) {
+            if (guiMenuAction.type() == Gui::MenuAction::FileNew) {
                 // Check whether the File|New menu has been created and if not,
                 // then create it
 
@@ -606,13 +571,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                     pluginForFileNewMenu = pPlugin->name();
                 }
 
-                mFileNewMenu->addAction(menuAction.action());
-
-                break;
-            case Gui::MenuAction::Tools:
-                // Not a relevant type, so do nothing
-
-                break;
+                mFileNewMenu->addAction(guiMenuAction.action());
             }
         }
     }

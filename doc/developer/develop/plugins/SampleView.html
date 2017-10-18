@@ -88,14 +88,12 @@ ADD_PLUGIN(SampleView
         <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.h"><code>src/sampleviewwidget.h</code></a>
     UIS
         <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.ui"><code>src/sampleviewwidget.ui</code></a>
-    INCLUDE_DIRS
-        src
     PLUGINS
         Core
 )</pre>
 
         <p>
-            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7-8 and 10-11). Then, our plugin needs the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin, so it is referenced (line 23) using the <code>PLUGINS</code> keyword (line 22). Our plugin provides OpenCOR with a test view, which is implemented using various files (lines 14, 17 and 19). One of those files is a <code>.ui</code> file, which is referenced using the <code>UIS</code> keyword (line 18).
+            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7, 8, 10 and 11). Then, our plugin needs the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin, so it is referenced (line 21) using the <code>PLUGINS</code> keyword (line 20). Our plugin provides OpenCOR with a test view, which is implemented using various files (lines 14, 17 and 19). One of those files is a <code>.ui</code> file, which is referenced using the <code>UIS</code> keyword (line 18).
         </p>
 
         <div class="section">
@@ -106,7 +104,7 @@ ADD_PLUGIN(SampleView
             Our <a href="index.html#Plugin information">plugin information</a> can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.cpp"><code>sampleviewplugin.cpp</code></a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.h"><code>sampleviewplugin.h</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.json"><code>sampleviewplugin.json</code></a>. Starting with <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.h"><code>sampleviewplugin.h</code></a>, its contents is:
         </p>
 
-        <pre class="prettyprint linenums:27">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.h"><code>filehandlinginterface.h</code></a>"
+        <pre class="prettyprint linenums:28">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.h"><code>filehandlinginterface.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h"><code>i18ninterface.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.h"><code>plugininterface.h</code></a>"
@@ -160,14 +158,14 @@ private:
 }   // namespace OpenCOR</pre>
 
         <p>
-            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 27, 28, 30 and 31). It also means that our plugin class inherits from those interfaces (lines 48-50), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href="https://www.qt.io/">Qt</a> know which interfaces it implements (lines 56-59). Finally, we include the inline files (lines 64-67) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin specific">below</a>.)
+            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 28, 29, 31 and 32). It also means that our plugin class inherits from those interfaces (lines 49-51), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href="https://www.qt.io/">Qt</a> know which interfaces it implements (lines 57-60). Finally, we include the inline files (lines 65-68) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin specific">below</a>.)
         </p>
 
         <p>
             The C function that is used by OpenCOR to retrieve some <a href="index.html#Basic information">basic information</a> about our plugin can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.cpp"><code>sampleviewplugin.cpp</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:39">PLUGININFO_FUNC SampleViewPluginInfo()
+        <pre class="prettyprint linenums:40">PLUGININFO_FUNC SampleViewPluginInfo()
 {
     Descriptions descriptions;
 
@@ -180,7 +178,7 @@ private:
 }</pre>
 
         <p>
-            As can be seen, our plugin is selectable by the user, but it does not offer direct <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 46). It also has a direct dependency on the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin (line 47).
+            As can be seen, our plugin is selectable by the user, but it does not offer direct <a href="https://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 47). It also has a direct dependency on the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin (line 48).
         </p>
 
         <span class="anchor" id="Interfaces implementation"></span>
@@ -197,7 +195,7 @@ private:
             We start with the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">File handling</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:58">//==============================================================================
+        <pre class="prettyprint linenums:59">//==============================================================================
 // File handling interface
 //==============================================================================
 
@@ -283,14 +281,14 @@ void SampleViewPlugin::fileClosed(const QString &pFileName)
 //==============================================================================</pre>
 
         <p>
-            Our plugin provides a view and, as such, should at least handle some of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">File handling</a> interface's methods. Here, we want our plugin to provide some information about the current file, so we do not need to implement <code>saveFile()</code> (lines 62-73), <code>fileOpened()</code> (lines 77-82) and <code>fileModified()</code> (lines 97-102). On the other hand, should the current file have its permissions changed or be renamed, then we want to update the information presented in our view. We do this by implementing the <code>filePermissionsChanged()</code> (lines 86-93) and <code>fileReloaded()</code> (lines 106-113) methods. The same holds true if the current file gets renamed, in which case we also want to update <code>mFileName</code> (see <code>fileRenamed()</code>; lines 117-129). Finally, we want to reset <code>mFileName</code> if the current file gets closed (see <code>fileClosed()</code>; lines 133-139).
+            Our plugin provides a view and, as such, should at least handle some of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">File handling</a> interface's methods. Here, we want our plugin to provide some information about the current file, so we do not need to implement <code>saveFile()</code> (lines 63-74), <code>fileOpened()</code> (lines 78-83) and <code>fileModified()</code> (lines 98-103). On the other hand, should the current file have its permissions changed or be renamed, then we want to update the information presented in our view. We do this by implementing the <code>filePermissionsChanged()</code> (lines 87-94) and <code>fileReloaded()</code> (lines 107-114) methods. The same holds true if the current file gets renamed, in which case we also want to update <code>mFileName</code> (see <code>fileRenamed()</code>; lines 118-130). Finally, we want to reset <code>mFileName</code> if the current file gets closed (see <code>fileClosed()</code>; lines 134-140).
         </p>
 
         <p>
             Next, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:141">//==============================================================================
+        <pre class="prettyprint linenums:142">//==============================================================================
 // I18n interface
 //==============================================================================
 
@@ -312,7 +310,7 @@ void SampleViewPlugin::retranslateUi()
             After the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a> interface, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:153">//==============================================================================
+        <pre class="prettyprint linenums:154">//==============================================================================
 // Plugin interface
 //==============================================================================
 
@@ -396,14 +394,14 @@ void SampleViewPlugin::handleUrl(const QUrl &pUrl)
 //==============================================================================</pre>
 
         <p>
-            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 179-189), which is where we initialise <code>mViewWidget</code>, our view. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleUrl()</code>) are left empty.
+            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 180-190), which is where we initialise <code>mViewWidget</code>, our view. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleUrl()</code>) are left empty.
         </p>
 
         <p>
             Finally, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/viewinterface.inl">View</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:234">//==============================================================================
+        <pre class="prettyprint linenums:235">//==============================================================================
 // View interface
 //==============================================================================
 
@@ -481,7 +479,7 @@ QIcon SampleViewPlugin::fileTabIcon(const QString &pFileName) const
 //==============================================================================</pre>
 
         <p>
-            Our plugin provides a view, so OpenCOR needs to know about its name (see <code>viewName()</code>; lines 291-296), its type (see <code>viewMode()</code>; lines 238-243), the MIME types it supports (see <code>viewMimeTypes()</code>; lines 247-254), the default file extension it supports (see <code>viewDefaultFileExtension()</code>; lines 258-263) and whether it needs a special tab icon (see <code>fileTabIcon()</code>; lines 300-307). OpenCOR also needs to know the widget that is used for the view and this for a given file (see <code>viewWidget()</code>; lines 267-276). Note that our plugin uses only one view widget (and updates its contents based on the file that is currently active), but it might perfectly use one per file. Finally, our plugin needs to handle the case where a view widget is to be removed (see <code>removeViewWidget()</code>; lines 280-287), which happens whenever a file gets closed.
+            Our plugin provides a view, so OpenCOR needs to know about its name (see <code>viewName()</code>; lines 292-297), its type (see <code>viewMode()</code>; lines 239-244), the MIME types it supports (see <code>viewMimeTypes()</code>; lines 248-255), the default file extension it supports (see <code>viewDefaultFileExtension()</code>; lines 259-264) and whether it needs a special tab icon (see <code>fileTabIcon()</code>; lines 301-308). OpenCOR also needs to know the widget that is used for the view and this for a given file (see <code>viewWidget()</code>; lines 268-277). Note that our plugin uses only one view widget (and updates its contents based on the file that is currently active), but it might perfectly use one per file. Finally, our plugin needs to handle the case where a view widget is to be removed (see <code>removeViewWidget()</code>; lines 281-288), which happens whenever a file gets closed.
         </p>
 
         <span class="anchor" id="Plugin specific"></span>
@@ -494,7 +492,7 @@ QIcon SampleViewPlugin::fileTabIcon(const QString &pFileName) const
             Some extra work is needed to get our plugin to do what it is supposed to be doing, and this is done via the <code>SampleViewWidget</code> class in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.h"><code>sampleviewwidget.h</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:27">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/viewwidget.h"><code>viewwidget.h</code></a>"
+        <pre class="prettyprint linenums:28">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/viewwidget.h"><code>viewwidget.h</code></a>"
 
 //==============================================================================
 
@@ -535,14 +533,14 @@ private:
 }   // namespace OpenCOR</pre>
 
         <p>
-            <code>SampleViewWidget</code> inherits from <code>Core::ViewWidget</code>, which is defined in the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin and is an extended version of <a href="https://www.qt.io/">Qt</a>'s <code>QWidget</code> (line 42). It requires implementing the <code>widget()</code> method, which purpose is to return the exact widget that is to be shown in the view (line 52). In the present case, it is <code>SampleViewWidget</code> itself. Otherwise, <code>SampleViewWidget</code> also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.ui"><code>sampleviewwidget.ui</code></a>). The <code>update()</code> method is used by our plugin to update the contents of our view using information about the given file (line 54).
+            <code>SampleViewWidget</code> inherits from <code>Core::ViewWidget</code>, which is defined in the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/miscellaneous/Core/">Core</a> plugin and is an extended version of <a href="https://www.qt.io/">Qt</a>'s <code>QWidget</code> (line 43). It requires implementing the <code>widget()</code> method, which purpose is to return the exact widget that is to be shown in the view (line 53). In the present case, it is <code>SampleViewWidget</code> itself. Otherwise, <code>SampleViewWidget</code> also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.ui"><code>sampleviewwidget.ui</code></a>). The <code>update()</code> method is used by our plugin to update the contents of our view using information about the given file (line 55).
         </p>
 
         <p>
             The implementation of <code>SampleViewWidget</code> can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.cpp"><code>sampleviewwidget.cpp</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:23">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/corecliutils.h"><code>corecliutils.h</code></a>"
+        <pre class="prettyprint linenums:24">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/corecliutils.h"><code>corecliutils.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/filemanager.h"><code>filemanager.h</code></a>"
 #include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.h"><code>sampleviewwidget.h</code></a>"
 
@@ -637,7 +635,7 @@ void SampleViewWidget::update(const QString &pFileName)
 }   // namespace OpenCOR</pre>
 
         <p>
-            <code>retranslateUi()</code> (lines 67-77) retranslates our view, as well as return its exact widget (lines 81-88) and update its contents using <code>update()</code> (lines 92-110).
+            <code>retranslateUi()</code> (lines 68-78) retranslates our view, as well as return its exact widget (lines 82-89) and update its contents using <code>update()</code> (lines 93-111).
         </p>
 
         <script type="text/javascript">

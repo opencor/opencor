@@ -231,7 +231,7 @@ void PmrWindowWindow::update(const QString &pPmrUrl)
 
         mPmrInstanceLabel->setText(mPmrWebService->siteName());
 
-        on_actionReload_triggered();
+        retrieveExposures(isVisible());
     }
 }
 

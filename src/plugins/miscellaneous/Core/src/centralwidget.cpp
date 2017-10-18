@@ -178,7 +178,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our files tab bar widget
 
-    mFileTabs = newTabBarWidget(QTabBar::RoundedNorth, true, true);
+    mFileTabs = newTabBarWidget(QTabBar::RoundedNorth, true);
 
     // Create our contents widget
 
@@ -1819,8 +1819,7 @@ void CentralWidget::updateGui()
 //==============================================================================
 
 TabBarWidget *CentralWidget::newTabBarWidget(const QTabBar::Shape &pShape,
-                                             const bool &pMovable,
-                                             const bool &pTabsClosable)
+                                             const bool &pFileTabs)
 {
     // Create and return a tab bar
 
@@ -1831,9 +1830,9 @@ TabBarWidget *CentralWidget::newTabBarWidget(const QTabBar::Shape &pShape,
     //       then the central widget will widen, reducing the width of any
     //       docked window, which is clearly not what we want...
     res->setFocusPolicy(Qt::NoFocus);
-    res->setMovable(pMovable);
+    res->setMovable(pFileTabs);
     res->setShape(pShape);
-    res->setTabsClosable(pTabsClosable);
+    res->setTabsClosable(pFileTabs);
     res->setUsesScrollButtons(true);
     // Note: the above property is style dependent and it happens that it's not
     //       enabled on macOS, so set it in all cases, even though it's already

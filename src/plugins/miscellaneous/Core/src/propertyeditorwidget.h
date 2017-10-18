@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreglobal.h"
+#include "coreguiutils.h"
 #include "treeviewwidget.h"
 
 //==============================================================================
@@ -33,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QComboBox>
 #include <QLineEdit>
 #include <QStandardItem>
-#include <QStyledItemDelegate>
 
 //==============================================================================
 
@@ -150,7 +150,7 @@ class PropertyEditorWidget;
 
 //==============================================================================
 
-class PropertyItemDelegate : public QStyledItemDelegate
+class PropertyItemDelegate : public StyledItemDelegate
 {
     Q_OBJECT
 
