@@ -72,8 +72,10 @@ public:
 
 private:
     QAction *mEditReformatAction;
+    QAction *mEditReformatSeparator;
 
     QAction *mToolsSedmlValidationAction;
+    QAction *mToolsSedmlValidationSeparator;
 
     QString mFileName;
     SedmlEditingViewInterface *mSedmlEditingViewInterface;

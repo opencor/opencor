@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QIcon>
 #include <QKeySequence>
 #include <QMessageBox>
+#include <QStyledItemDelegate>
 #include <QString>
 
 //==============================================================================
@@ -83,6 +84,22 @@ protected:
 
 public slots:
     virtual int exec();
+};
+
+//==============================================================================
+// Note: both guiutils.h and coreguiutils.h must specifically define
+//       StyledItemDelegate. To have it in guiutils.h.inl is NOT good enough
+//       since the MOC won't pick it up...
+
+class CORE_EXPORT StyledItemDelegate : public QStyledItemDelegate
+{
+    Q_OBJECT
+
+public:
+    explicit StyledItemDelegate(QObject *pParent);
+
+    virtual QSize sizeHint(const QStyleOptionViewItem &pOption,
+                           const QModelIndex &pIndex) const;
 };
 
 //==============================================================================
@@ -142,6 +159,8 @@ QAction CORE_EXPORT * newAction(const QKeySequence &pKeySequence,
 QAction CORE_EXPORT * newAction(const QKeySequence::StandardKey &pStandardKey,
                                 QWidget *pParent);
 QAction CORE_EXPORT * newAction(QWidget *pParent);
+
+QAction CORE_EXPORT * newSeparator(QWidget *pParent);
 
 QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal,
                                    const QColor &pColor, QWidget *pParent);

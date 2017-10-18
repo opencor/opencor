@@ -299,11 +299,9 @@ FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
 
     mFileManager = new Core::FileManager();
 
-    // Create an instance of the data model that we want to view
+    // Customise ourselves
 
     mModel = new FileOrganiserWindowModel(this);
-
-    // Set some properties
 
     setDragDropMode(QAbstractItemView::DragDrop);
     setEditTriggers(QAbstractItemView::EditKeyPressed);

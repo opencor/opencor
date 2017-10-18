@@ -37,7 +37,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>PMR window:</strong> retrieve the exposures only when really needed. ." }
+                       { "change": "<strong>General:</strong> upgraded to Qt 5.9.2 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1311\">#1311</a>)." },
+                       { "change": "<strong>PMR window:</strong> retrieve the exposures only when really needed." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,

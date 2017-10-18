@@ -208,8 +208,8 @@ private:
 
     Core::UserMessageWidget *mUserMessageWidget;
 
-    QStandardItemModel *mTreeViewModel;
-    PmrWorkspacesWindowProxyModel *mTreeViewProxyModel;
+    QStandardItemModel *mModel;
+    PmrWorkspacesWindowProxyModel *mProxyModel;
 
     QIcon mCollapsedWorkspaceIcon;
     QIcon mExpandedWorkspaceIcon;
