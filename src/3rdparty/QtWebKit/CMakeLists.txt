@@ -204,6 +204,25 @@ ELSE()
             <INSTALL_DIR>/${SHARED_LIBRARIES_DIR}/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
     )
 
+    # Do some post-processing that is specific to each platform
+
+    IF(NOT WIN32 AND NOT APPLE)
+        # Set the R(UN)PATH value for the libraries and then convert it to an
+        # RPATH value
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} SetAndConvertQtWebKitRPath
+                                 COMMAND ${CMAKE_COMMAND} -E patchelf --set-rpath '$ORIGIN' ${QTWEBKIT_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E ${RUNPATH2RPATH} ${QTWEBKIT_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}
+                                 DEPENDEES install)
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} SetAndConvertQtWebKitWidgetsRPath
+                                 COMMAND ${CMAKE_COMMAND} -E patchelf --set-rpath '$ORIGIN' ${QTWEBKITWIDGETS_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E ${RUNPATH2RPATH} ${QTWEBKITWIDGETS_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}
+                                 DEPENDEES install)
+    ENDIF()
+
     # Package our external project
 
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
