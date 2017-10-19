@@ -140,7 +140,7 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           fb40bf07a6cde27fc57122b5c47a02a8023ffd60)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 638db7bf86d4b42f79e7c7c910935ecbf696b1a6
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 44079db543583417f7ca49cdc616d328edfc9d2c
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
