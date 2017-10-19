@@ -75,30 +75,20 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(OPTIONS)
     SET(ONE_VALUE_KEYWORDS
         EXTERNAL_BINARIES_DIR
-        EXTERNAL_DEST_DIR
-        EXTERNAL_SOURCE_DIR
     )
     SET(MULTI_VALUE_KEYWORDS
         SOURCES
         HEADERS_MOC
         UIS
-        INCLUDE_DIRS
         DEFINITIONS
         PLUGINS
-        PLUGIN_BINARIES
         QT_MODULES
         EXTERNAL_BINARIES
-        EXTERNAL_BINARIES_DEPENDENCIES
-        SYSTEM_BINARIES
         DEPENDS_ON
         TESTS
     )
 
     CMAKE_PARSE_ARGUMENTS(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
-
-    # Additional include directories
-
-    INCLUDE_DIRECTORIES(${ARG_INCLUDE_DIRS})
 
     # Resource files, if any
     # Note: ideally, we would have our resource files named i18n.qrc.in and
@@ -190,14 +180,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         )
     ENDFOREACH()
 
-    # OpenCOR binaries
-
-    FOREACH(ARG_PLUGIN_BINARY ${ARG_PLUGIN_BINARIES})
-        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            ${ARG_PLUGIN_BINARY}
-        )
-    ENDFOREACH()
-
     # Qt modules
 
     FOREACH(ARG_QT_MODULE ${ARG_QT_MODULES})
@@ -280,8 +262,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 )
             ENDIF()
 
-            # On macOS, ensure that @rpath is set in the external library's id,
-            # that it is used to reference the external library's dependencies,
+            # On macOS, ensure that @rpath is set in the external library's id
             # and that it references the correct Qt libraries, if any at all
 
             IF(APPLE)
@@ -291,19 +272,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
                                        COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 ENDIF()
-
-                FOREACH(EXTERNAL_BINARIES_DEPENDENCY ${EXTERNAL_BINARIES_DEPENDENCIES})
-                    IF(${COPY_TARGET} STREQUAL "DIRECT")
-                        EXECUTE_PROCESS(COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DEPENDENCY}
-                                                                          @rpath/${EXTERNAL_BINARIES_DEPENDENCY}
-                                                                          ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
-                    ELSE()
-                        ADD_CUSTOM_COMMAND(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
-                                           COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DEPENDENCY}
-                                                                             @rpath/${EXTERNAL_BINARIES_DEPENDENCY}
-                                                                             ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
-                    ENDIF()
-                ENDFOREACH()
 
                 MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
             ENDIF()
@@ -319,25 +287,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ENDIF()
         ENDFOREACH()
     ENDIF()
-
-    # Check whether an external package has files to install
-
-    IF(    NOT "${ARG_EXTERNAL_DEST_DIR}" STREQUAL ""
-       AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL "")
-        # Copy the entire source directory to the destination
-
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
-                                                                      ${FULL_DEST_EXTERNAL_BASE_DIR}/${ARG_EXTERNAL_DEST_DIR})
-    ENDIF()
-
-    # System binaries
-
-    FOREACH(ARG_SYSTEM_BINARY ${ARG_SYSTEM_BINARIES})
-        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            ${ARG_SYSTEM_BINARY}
-        )
-    ENDFOREACH()
 
     # Add some dependencies, if any
 
@@ -450,14 +399,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     )
                 ENDFOREACH()
 
-                # OpenCOR binaries
-
-                FOREACH(ARG_PLUGIN_BINARY ${ARG_PLUGIN_BINARIES})
-                    TARGET_LINK_LIBRARIES(${TEST_NAME}
-                        ${ARG_PLUGIN_BINARY}
-                    )
-                ENDFOREACH()
-
                 # Qt modules
 
                 FOREACH(ARG_QT_MODULE ${ARG_QT_MODULES} Test)
@@ -490,14 +431,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                         ENDIF()
                     ENDFOREACH()
                 ENDIF()
-
-                # System binaries
-
-                FOREACH(ARG_SYSTEM_BINARY ${ARG_SYSTEM_BINARIES})
-                    TARGET_LINK_LIBRARIES(${TEST_NAME}
-                        ${ARG_SYSTEM_BINARY}
-                    )
-                ENDFOREACH()
 
                 # Add some dependencies, if any
 
