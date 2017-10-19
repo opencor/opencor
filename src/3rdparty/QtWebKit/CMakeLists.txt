@@ -132,12 +132,12 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           fb40bf07a6cde27fc57122b5c47a02a8023ffd60)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 74c6d4a1f3dbc5fb85af25e30e1e9d0076b55e03
+                              ${RELATIVE_PROJECT_SOURCE_DIR} eb2b9ce2d33b1377910ac9b9b01742bf3273aec0
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 881a4172ebca4dac1646d2bc793ca609abc5fcc6
-                                          1ca7ba8178d833a09f78ef0df2e452ab43b0b9d7)
+                              SHA1_VALUES c509cb85f642d2aff25516d18ba3d96c8dfcbb42
+                                          23692cfa1fa903ef86c799cfe208ae987b16f0d5)
     ENDIF()
 ELSE()
     # Build QtWebKit as an external project
@@ -208,17 +208,24 @@ ELSE()
 
     IF(NOT WIN32 AND NOT APPLE)
         # Set the R(UN)PATH value for the libraries and then convert it to an
-        # RPATH value
+        # RPATH value, this after having stripped the libraries of all their
+        # local symbols
+        # Note: indeed, stripping afterwards having set the R(UN)PATH value and
+        #       having converted it to an RPATH value doesn't seem to work.
+        #       Probably something to do with what patchelf does under the
+        #       hood...
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} SetAndConvertQtWebKitRPath
-                                 COMMAND ${CMAKE_COMMAND} -E patchelf --set-rpath '$ORIGIN' ${QTWEBKIT_SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E ${RUNPATH2RPATH} ${QTWEBKIT_SHARED_LIBRARY}
+                                 COMMAND strip -x ${QTWEBKIT_SHARED_LIBRARY}
+                                 COMMAND patchelf --set-rpath '$ORIGIN' ${QTWEBKIT_SHARED_LIBRARY}
+                                 COMMAND ${RUNPATH2RPATH} ${QTWEBKIT_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}
                                  DEPENDEES install)
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} SetAndConvertQtWebKitWidgetsRPath
-                                 COMMAND ${CMAKE_COMMAND} -E patchelf --set-rpath '$ORIGIN' ${QTWEBKITWIDGETS_SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E ${RUNPATH2RPATH} ${QTWEBKITWIDGETS_SHARED_LIBRARY}
+                                 COMMAND strip -x ${QTWEBKITWIDGETS_SHARED_LIBRARY}
+                                 COMMAND patchelf --set-rpath '$ORIGIN' ${QTWEBKITWIDGETS_SHARED_LIBRARY}
+                                 COMMAND ${RUNPATH2RPATH} ${QTWEBKITWIDGETS_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}
                                  DEPENDEES install)
     ENDIF()
