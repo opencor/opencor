@@ -583,7 +583,7 @@ MACRO(RUNPATH2RPATH FILENAME)
                     RESULT_VARIABLE RESULT)
 
     IF(NOT RESULT EQUAL 0)
-        MESSAGE(FATAL_ERROR "The RUNPATH value of '${FILENAME}' could not be converted to a RPATH value...")
+        MESSAGE(FATAL_ERROR "The RUNPATH value of '${FILENAME}' could not be converted to an RPATH value...")
     ENDIF()
 ENDMACRO()
 
