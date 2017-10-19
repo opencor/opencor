@@ -790,7 +790,7 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
     # The actual packaging code goes into a separate CMake script file that is
     # run as a POST_BUILD step
 
-    SET(CMAKE_CODE "CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+    SET(CMAKE_CODE "CMAKE_MINIMUM_REQUIRED(VERSION 3.3)
 
 # Files and directories to package
 
