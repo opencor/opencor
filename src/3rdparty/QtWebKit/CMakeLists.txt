@@ -132,12 +132,12 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           fb40bf07a6cde27fc57122b5c47a02a8023ffd60)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} eb2b9ce2d33b1377910ac9b9b01742bf3273aec0
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 9368fe4d5dd114195b36cca336c3adab2617739f
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES c509cb85f642d2aff25516d18ba3d96c8dfcbb42
-                                          23692cfa1fa903ef86c799cfe208ae987b16f0d5)
+                              SHA1_VALUES 14ee3611a2828df60fa22f7389dff78f95ac341b
+                                          7a9b7858a4f096b04915cc068ecbb4e3671b4578)
     ENDIF()
 ELSE()
     # Build QtWebKit as an external project
