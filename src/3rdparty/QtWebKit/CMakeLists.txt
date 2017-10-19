@@ -217,14 +217,14 @@ ELSE()
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} SetAndConvertQtWebKitRPath
                                  COMMAND strip -x ${QTWEBKIT_SHARED_LIBRARY}
-                                 COMMAND patchelf --set-rpath '$ORIGIN' ${QTWEBKIT_SHARED_LIBRARY}
+                                 COMMAND patchelf --set-rpath $ORIGIN ${QTWEBKIT_SHARED_LIBRARY}
                                  COMMAND ${RUNPATH2RPATH} ${QTWEBKIT_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}
                                  DEPENDEES install)
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} SetAndConvertQtWebKitWidgetsRPath
                                  COMMAND strip -x ${QTWEBKITWIDGETS_SHARED_LIBRARY}
-                                 COMMAND patchelf --set-rpath '$ORIGIN' ${QTWEBKITWIDGETS_SHARED_LIBRARY}
+                                 COMMAND patchelf --set-rpath $ORIGIN ${QTWEBKITWIDGETS_SHARED_LIBRARY}
                                  COMMAND ${RUNPATH2RPATH} ${QTWEBKITWIDGETS_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}
                                  DEPENDEES install)
