@@ -129,8 +129,6 @@ GET_TARGET_PROPERTY(QMAKE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
 
 SET(QMAKE_COMMAND ${QMAKE} -Wnone)
 
-STRING(REPLACE ";" " " QMAKE_COMMAND_AS_STRING "${QMAKE_COMMAND}")
-
 # Determine our platform directory
 
 IF(WIN32)
@@ -268,9 +266,6 @@ ELSE()
         SET(MAKE_JOM_COMMAND ${MAKE_JOM_COMMAND} -j ${PROCESSOR_COUNT})
     ENDIF()
 ENDIF()
-
-STRING(REPLACE ";" " " MAKE_NMAKE_COMMAND_AS_STRING "${MAKE_NMAKE_COMMAND}")
-STRING(REPLACE ";" " " MAKE_JOM_COMMAND_AS_STRING "${MAKE_JOM_COMMAND}")
 
 # A couple of variables that make it easier to specify library file names with a
 # version (e.g. to be able to reference libz.so.1 and libz.1.dylib, we could
@@ -442,6 +437,8 @@ ENDIF()
 ADD_DEFINITIONS(-DQT_DEPRECATED_WARNINGS)
 
 # Let OpenCOR know about some of the options with which it was built
+#---ISSUE1149--- DO WE STILL NEED TO LET OpenCOR KNOW ABOUT QtWebKit?
+#                LOOK FOR USE_PREBUILT_QTWEBKIT_PACKAGE IN src/main.cpp...
 
 IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
     ADD_DEFINITIONS(-DUSE_PREBUILT_QTWEBKIT_PACKAGE)

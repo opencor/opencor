@@ -3,17 +3,22 @@ PROJECT(QtWebKit)
 # Name and version of our package
 
 SET(PACKAGE_NAME QtWebKit)
-SET(PACKAGE_VERSION 5.9.2)
+SET(PACKAGE_VERSION 5.212.0)
 
 # Version of our library
 
 SET(MAJOR_LIBRARY_VERSION 5)
-SET(MINOR_LIBRARY_VERSION 9)
-SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.2)
+SET(MINOR_LIBRARY_VERSION 212)
+SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
 # Git tag for our library
 
-SET(GIT_TAG v5.9.2)
+SET(GIT_TAG v5.212.0-alpha2)
+
+# Package repository and release tag
+
+SET(PACKAGE_REPOSITORY qtwebkitreloaded)
+SET(RELEASE_TAG v5.212.0-alpha2)
 
 # Platform target for our library
 
@@ -109,7 +114,8 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
     IF(WIN32)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 8dbe5333fd85bb3d02b3ee34ebcf116bf5005792
-                              TARGET_PLATFORM ${TARGET_PLATFORM}
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES dd553394bc30b2abd837684a0cc8fcd8e8290735
                                           6cd9bc498817366f0158b54ec1df4501e5a84edb
@@ -124,208 +130,105 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           a386658900a742f31f1f08d55c0915d577af2d7e)
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} baa9208a7bdce049a4b689ee0119701c866b7f46
-                              TARGET_PLATFORM ${TARGET_PLATFORM}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 58b9b74bfb4b849b577b639405e7ee5f934bd504
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 2947b118b4328463378928fe3a0a0ec6aa7cc5db
-                                          ffb1456fd920fc4525016a2a11739cffa4cae769)
+                              SHA1_VALUES 888d5d4800fe8ff884151edc9c4b68c3fc651f83
+                                          fb40bf07a6cde27fc57122b5c47a02a8023ffd60)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 6334220e0054dbb0303146808cdca35834007780
-                              TARGET_PLATFORM ${TARGET_PLATFORM}
+                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES f4177885615db27f8d34439dae7a88a9faa8d13c
                                           4f7eeeecca9323bae310f2bcb4a078e217723279)
     ENDIF()
 ELSE()
-    # Set platform specific configuration options
-    # Note #1: we would normally rely on [QtWebKit]/Tools/Scripts/build-webkit
-    #          to build and install QtWebKit, but this will not only build
-    #          QtWebKit in a folder under [QtWebKit] (!!), but it will also (try
-    #          to) install QtWebKit under [Qt] (!!) while we want to build
-    #          QtWebKit out of source and to install it under this directory.
-    #          So, instead, we build and install QtWebKit 'manually'...
-    # Note #2: on Windows, we need to set some environment variables, something
-    #          that cannot be done using ExternalProject_Add, hence we don't
-    #          have a configure command as such and we call a batch file as part
-    #          of our build command...
-
-    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
-    SET(QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD})
-
-    SET(BUILD_BYPRODUCTS
-        <INSTALL_DIR>/lib/${QTWEBKIT_IMPORT_LIBRARY}
-        <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
-    )
-
-    IF(WIN32)
-        SET(CONFIGURE_COMMAND ECHO:)
-        SET(BUILD_COMMAND ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/buildCommand.bat)
-        SET(INSTALL_COMMAND
-               ${CMAKE_COMMAND} -E copy_directory ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/cmake <INSTALL_DIR>/cmake
-            && ${CMAKE_COMMAND} -E copy_directory ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/include <INSTALL_DIR>/include
-            && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKIT_SHARED_LIBRARY} <INSTALL_DIR>/bin/${QTWEBKIT_SHARED_LIBRARY}
-            && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKIT_IMPORT_LIBRARY} <INSTALL_DIR>/lib/${QTWEBKIT_IMPORT_LIBRARY}
-            && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKITD_SHARED_LIBRARY} <INSTALL_DIR>/bin/${QTWEBKITD_SHARED_LIBRARY}
-            && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKITD_IMPORT_LIBRARY} <INSTALL_DIR>/lib/${QTWEBKITD_IMPORT_LIBRARY}
-            && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKITWIDGETS_SHARED_LIBRARY} <INSTALL_DIR>/bin/${QTWEBKITWIDGETS_SHARED_LIBRARY}
-            && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKITWIDGETS_IMPORT_LIBRARY} <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
-            && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKITWIDGETSD_SHARED_LIBRARY} <INSTALL_DIR>/bin/${QTWEBKITWIDGETSD_SHARED_LIBRARY}
-            && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKITWIDGETSD_IMPORT_LIBRARY} <INSTALL_DIR>/lib/${QTWEBKITWIDGETSD_IMPORT_LIBRARY}
-            && ${CMAKE_COMMAND} -E copy C:/icu/bin64/${ICUDT_SHARED_LIBRARY} <INSTALL_DIR>/bin/${ICUDT_SHARED_LIBRARY}
-            && ${CMAKE_COMMAND} -E copy C:/icu/bin64/${ICUIN_SHARED_LIBRARY} <INSTALL_DIR>/bin/${ICUIN_SHARED_LIBRARY}
-            && ${CMAKE_COMMAND} -E copy C:/icu/bin64/${ICUUC_SHARED_LIBRARY} <INSTALL_DIR>/bin/${ICUUC_SHARED_LIBRARY}
-        )
-
-        LIST(APPEND BUILD_BYPRODUCTS
-            <INSTALL_DIR>/lib/${QTWEBKITD_IMPORT_LIBRARY}
-            <INSTALL_DIR>/lib/${QTWEBKITWIDGETSD_IMPORT_LIBRARY}
-        )
-
-        CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/buildCommand.bat.in
-                       ${BUILD_COMMAND})
-    ELSEIF(APPLE)
-        SET(CONFIGURE_COMMAND ${QMAKE_COMMAND} <SOURCE_DIR>)
-
-        IF(RELEASE_MODE)
-            SET(BUILD_COMMAND ${MAKE_JOM_COMMAND} release)
-        ELSE()
-            SET(BUILD_COMMAND ${MAKE_JOM_COMMAND} debug)
-        ENDIF()
-
-        SET(INSTALL_COMMAND
-               ${CMAKE_COMMAND} -E copy_directory ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/cmake <INSTALL_DIR>/cmake
-            && ${CMAKE_COMMAND} -E copy_directory ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKIT_SHARED_LIBRARY_DIR}/Headers <INSTALL_DIR>/lib/${QTWEBKIT_SHARED_LIBRARY_DIR}/Headers
-            && ${CMAKE_COMMAND} -E copy_directory ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKITWIDGETS_SHARED_LIBRARY_DIR}/Headers <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_SHARED_LIBRARY_DIR}/Headers
-            && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKIT_SHARED_LIBRARY} <INSTALL_DIR>/lib/${QTWEBKIT_SHARED_LIBRARY}
-            && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${QTWEBKITWIDGETS_SHARED_LIBRARY} <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_SHARED_LIBRARY}
-            && ${CMAKE_COMMAND} -E create_symlink 5 <INSTALL_DIR>/lib/${QTWEBKIT_DIR}/Versions/Current
-            && ${CMAKE_COMMAND} -E create_symlink Versions/Current/Headers <INSTALL_DIR>/lib/${QTWEBKIT_DIR}/Headers
-            && ${CMAKE_COMMAND} -E create_symlink Versions/Current/QtWebKit <INSTALL_DIR>/lib/${QTWEBKIT_DIR}/QtWebKit
-            && ${CMAKE_COMMAND} -E create_symlink 5 <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_DIR}/Versions/Current
-            && ${CMAKE_COMMAND} -E create_symlink Versions/Current/Headers <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_DIR}/Headers
-            && ${CMAKE_COMMAND} -E create_symlink Versions/Current/QtWebKitWidgets <INSTALL_DIR>/lib/${QTWEBKITWIDGETS_DIR}/QtWebKitWidgets
-        )
-    ELSE()
-        # Build ICU as an external package
-
-        SET(ICU_INSTALL_DIR ${EXTERNAL_PROJECT_BUILD_DIR}/Build/icuBuild/install)
-
-        ExternalProject_Add(icuBuild
-            SOURCE_DIR
-                ${CMAKE_SOURCE_DIR}/ext/icu
-            INSTALL_DIR
-                ${ICU_INSTALL_DIR}
-            GIT_REPOSITORY
-                https://github.com/opencor/icu
-            GIT_TAG
-                v56.1
-            CONFIGURE_COMMAND
-                <SOURCE_DIR>/source/runConfigureICU Linux --prefix=<INSTALL_DIR>
-            BUILD_COMMAND
-                ${MAKE_JOM_COMMAND}
-            INSTALL_COMMAND
-                ${MAKE_JOM_COMMAND} install
-        )
-
-        SET(CONFIGURE_COMMAND echo)
-        SET(BUILD_COMMAND ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/buildCommand)
-        SET(INSTALL_COMMAND
-               ${CMAKE_COMMAND} -E copy_directory ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/cmake <INSTALL_DIR>/cmake
-            && ${CMAKE_COMMAND} -E copy_directory ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/include <INSTALL_DIR>/include
-            && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${REAL_QTWEBKIT_SHARED_LIBRARY} <INSTALL_DIR>/lib/${REAL_QTWEBKIT_SHARED_LIBRARY}
-            && ${CMAKE_COMMAND} -E copy ${QTWEBKIT_EXTERNAL_PROJECT_BUILD_DIR}/lib/${REAL_QTWEBKITWIDGETS_SHARED_LIBRARY} <INSTALL_DIR>/lib/${REAL_QTWEBKITWIDGETS_SHARED_LIBRARY}
-            && ${CMAKE_COMMAND} -E create_symlink ${REAL_QTWEBKIT_SHARED_LIBRARY} <INSTALL_DIR>/lib/${BASE_QTWEBKIT_SHARED_LIBRARY}
-            && ${CMAKE_COMMAND} -E create_symlink ${REAL_QTWEBKIT_SHARED_LIBRARY} <INSTALL_DIR>/lib/${BASE_QTWEBKIT_SHARED_LIBRARY}.${MAJOR_LIBRARY_VERSION}
-            && ${CMAKE_COMMAND} -E create_symlink ${REAL_QTWEBKIT_SHARED_LIBRARY} <INSTALL_DIR>/lib/${BASE_QTWEBKIT_SHARED_LIBRARY}.${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}
-            && ${CMAKE_COMMAND} -E create_symlink ${REAL_QTWEBKITWIDGETS_SHARED_LIBRARY} <INSTALL_DIR>/lib/${BASE_QTWEBKITWIDGETS_SHARED_LIBRARY}
-            && ${CMAKE_COMMAND} -E create_symlink ${REAL_QTWEBKITWIDGETS_SHARED_LIBRARY} <INSTALL_DIR>/lib/${BASE_QTWEBKITWIDGETS_SHARED_LIBRARY}.${MAJOR_LIBRARY_VERSION}
-            && ${CMAKE_COMMAND} -E create_symlink ${REAL_QTWEBKITWIDGETS_SHARED_LIBRARY} <INSTALL_DIR>/lib/${BASE_QTWEBKITWIDGETS_SHARED_LIBRARY}.${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}
-        )
-
-        CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/buildCommand.in
-                       ${BUILD_COMMAND})
-    ENDIF()
-
     # Build QtWebKit as an external project
 
-    SET(SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
-
-    IF(NOT WIN32 AND NOT APPLE)
-        SET(DEFINE_DEPENDS
-            DEPENDS
-                icuBuild
-        )
-    ELSE()
-        SET(DEFINE_DEPENDS)
-    ENDIF()
+    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
-            ${SOURCE_DIR}
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/qtwebkit
+            https://github.com/opencor/qtwebkitreloaded
         GIT_TAG
             ${GIT_TAG}
-        CONFIGURE_COMMAND
-            ${CONFIGURE_COMMAND}
-        BUILD_COMMAND
-            ${BUILD_COMMAND}
-        INSTALL_COMMAND
-            ${INSTALL_COMMAND}
+        CMAKE_CACHE_ARGS
+            -DCMAKE_CXX_FLAGS:STRING=${PACKAGE_CXX_FLAGS}
+        CMAKE_GENERATOR
+            ${CMAKE_GENERATOR}
+        CMAKE_ARGS
+            ${DEFINE_CMAKE_APPLE_OPTIONS}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+            -DENABLE_ACCELERATED_2D_CANVAS=ON
+            -DENABLE_ALLINONE_BUILD=ON
+            -DENABLE_API_TESTS=ON
+            -DENABLE_CSS_GRID_LAYOUT=ON
+            -DENABLE_DATABASE_PROCESS=ON
+            -DENABLE_DATALIST_ELEMENT=ON
+            -DENABLE_DEVICE_ORIENTATION=ON
+            -DENABLE_DRAG_SUPPORT=ON
+            -DENABLE_FULLSCREEN_API=ON
+            -DENABLE_GAMEPAD_DEPRECATED=OFF
+            -DENABLE_GEOLOCATION=ON
+            -DENABLE_ICONDATABASE=ON
+            -DENABLE_INDEXED_DATABASE=ON
+            -DENABLE_INSPECTOR_UI=ON
+            -DENABLE_JIT=ON
+            -DENABLE_LEGACY_WEB_AUDIO=OFF
+            -DENABLE_LINK_PREFETCH=ON
+            -DENABLE_MEDIA_SOURCE=OFF
+            -DENABLE_NETSCAPE_PLUGIN_API=OFF
+            -DENABLE_OPENGL=ON
+            -DENABLE_PRINT_SUPPORT=ON
+            -DENABLE_QT_GESTURE_EVENTS=ON
+            -DENABLE_QT_WEBCHANNEL=ON
+            -DENABLE_SAMPLING_PROFILER=ON
+            -DENABLE_SPELLCHECK=ON
+            -DENABLE_TOUCH_EVENTS=ON
+            -DENABLE_VIDEO=ON
+            -DENABLE_WEBKIT2=ON
+            -DENABLE_WEB_AUDIO=OFF
+            -DENABLE_X11_TARGET=OFF
+            -DENABLE_XSLT=ON
+            -DPORT=Qt
+            -DUSE_GSTREAMER=OFF
+            -DUSE_LIBHYPHEN=OFF
+            -DUSE_MEDIA_FOUNDATION=OFF
+            -DUSE_QT_MULTIMEDIA=ON
+            -DUSE_SYSTEM_MALLOC=OFF
+            -DUSE_WOFF2=ON
         BUILD_BYPRODUCTS
-            ${BUILD_BYPRODUCTS}
-        ${DEFINE_DEPENDS}
+            <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
-
-    # (Try to) build our patch CMake program
-
-	BUILD_PATCHCMAKE()
-
-    # Patch our CMake files
-
-    ExternalProject_Add_Step(${PACKAGE_BUILD} PatchCMakeFiles
-                             COMMAND ${PATCH} Qt5WebKit/Qt5WebKitConfig.cmake WebKit WebKit
-                             COMMAND ${PATCH} Qt5WebKitWidgets/Qt5WebKitWidgetsConfig.cmake WebKitWidgets WebKit
-                             WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/cmake
-                             DEPENDEES install)
-
-    # Make sure that we have the actual contents of our header files
-    # Note: this is only for Windows and Linux since, on those platforms, some
-    #       of our 'installed' header files are indeed #including our copy of
-    #       the QtWebKit header files rather than having their actual
-    #       contents...
-
-    IF(WIN32 OR NOT APPLE)
-        ExternalProject_Add_Step(${PACKAGE_BUILD} PatchHeaderFiles
-                                 COMMAND ${CMAKE_COMMAND} -D SOURCE_DIR=${SOURCE_DIR}
-                                                          -D INCLUDE_DIR=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include
-                                                          -P ${CMAKE_SOURCE_DIR}/cmake/patchheaderfiles.cmake
-                                 DEPENDEES install)
-    ENDIF()
 
     # Package our external project
 
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                        ${REAL_LOCAL_EXTERNAL_PACKAGE_DIR}
-                        TARGET_PLATFORM ${TARGET_PLATFORM}
-                        PACKAGED_FILES .
+                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                        RELEASE_TAG ${RELEASE_TAG}
+                        PACKAGED_FILES include lib/cmake ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 ENDIF()
 
-# Make sure that QtWebKit and its CMake files can be found
-
-SET(QTWEBKIT_DIR ${CMAKE_SOURCE_DIR}/src/3rdparty/QtWebKit)
+# Allow other external projects to find our QtWebKit package
 
 SET(CMAKE_PREFIX_PATH
     ${CMAKE_PREFIX_PATH}
-    ${QTWEBKIT_DIR}/ext/cmake/Qt5WebKit
-    ${QTWEBKIT_DIR}/ext/cmake/Qt5WebKitWidgets
+    ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/cmake
     PARENT_SCOPE
 )
 
-SET(QTWEBKIT_BINARIES_DIR ${QTWEBKIT_DIR}/ext/bin PARENT_SCOPE)
-SET(QTWEBKIT_LIBRARIES_DIR ${QTWEBKIT_DIR}/ext/lib PARENT_SCOPE)
+SET(QTWEBKIT_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+SET(QTWEBKIT_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+SET(QTWEBKIT_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin PARENT_SCOPE)
+SET(QTWEBKIT_LIBRARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib PARENT_SCOPE)
