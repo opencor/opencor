@@ -729,6 +729,16 @@ MACRO(MACOS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
     MACOS_DEPLOY_QT_FILE(${REAL_QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
                          ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
                          ${LIBRARY_NAME})
+
+    # Special case for the QtWebKit library, which also needs its JPEG and PNG
+    # libraries to be deployed
+
+    IF("${LIBRARY_NAME}" STREQUAL "${QTWEBKIT}")
+        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${REAL_QT_LIBRARY_DIR}/${QTWEBKIT_JPEG_LIBRARY}
+                                                         ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QTWEBKIT_JPEG_LIBRARY})
+        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${REAL_QT_LIBRARY_DIR}/${QTWEBKIT_PNG_LIBRARY}
+                                                         ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QTWEBKIT_PNG_LIBRARY})
+    ENDIF()
 ENDMACRO()
 
 #===============================================================================
