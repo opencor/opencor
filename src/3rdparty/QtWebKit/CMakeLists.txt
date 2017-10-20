@@ -153,8 +153,6 @@ ELSE()
             https://github.com/opencor/qtwebkitreloaded
         GIT_TAG
             ${GIT_TAG}
-        CMAKE_CACHE_ARGS
-            -DCMAKE_CXX_FLAGS:STRING=${PACKAGE_CXX_FLAGS}
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
