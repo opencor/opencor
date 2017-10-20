@@ -124,11 +124,11 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           a386658900a742f31f1f08d55c0915d577af2d7e)
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 58b9b74bfb4b849b577b639405e7ee5f934bd504
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 218665d7cf4d6cb3ddc386a537fac58b84394f9d
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 888d5d4800fe8ff884151edc9c4b68c3fc651f83
+                              SHA1_VALUES df485b50ab8e9000920bc661d88b5527e480cd7d
                                           fb40bf07a6cde27fc57122b5c47a02a8023ffd60)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
