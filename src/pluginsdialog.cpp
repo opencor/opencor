@@ -116,6 +116,13 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
 
     mGui->noteLabel->setText(mGui->noteLabel->text().arg(qAppName()));
 
+    // Make the value of all our fields selectable
+
+    mGui->fieldOneValue->setTextInteractionFlags(Qt::TextSelectableByMouse|Qt::LinksAccessibleByMouse);
+    mGui->fieldTwoValue->setTextInteractionFlags(Qt::TextSelectableByMouse|Qt::LinksAccessibleByMouse);
+    mGui->fieldThreeValue->setTextInteractionFlags(Qt::TextSelectableByMouse|Qt::LinksAccessibleByMouse);
+    mGui->fieldFourValue->setTextInteractionFlags(Qt::TextSelectableByMouse|Qt::LinksAccessibleByMouse);
+
     // Set up the tree view widget with a delegate, so that we can select
     // plugins that are shown as 'disabled' (to reflect the fact that users
     // cannot decide whether they should be loaded)
