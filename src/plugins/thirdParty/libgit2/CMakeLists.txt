@@ -119,7 +119,7 @@ ELSE()
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
             -DBUILD_CLAR=OFF
-            ${DEFINE_CMAKE_ARGS}
+            ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             ${DEFINE_STATIC_CRT_ARG}
