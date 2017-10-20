@@ -202,32 +202,6 @@ ELSE()
             <INSTALL_DIR>/${SHARED_LIBRARIES_DIR}/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
     )
 
-    # Do some post-processing that is specific to each platform
-
-    IF(NOT WIN32 AND NOT APPLE)
-        # Set the R(UN)PATH value for the libraries and then convert it to an
-        # RPATH value, this after having stripped the libraries of all their
-        # local symbols
-        # Note: indeed, stripping afterwards having set the R(UN)PATH value and
-        #       having converted it to an RPATH value doesn't seem to work.
-        #       Probably something to do with what patchelf does under the
-        #       hood...
-
-        ExternalProject_Add_Step(${PACKAGE_BUILD} SetAndConvertQtWebKitRPath
-                                 COMMAND strip -x ${QTWEBKIT_SHARED_LIBRARY}
-                                 COMMAND patchelf --set-rpath $ORIGIN ${QTWEBKIT_SHARED_LIBRARY}
-                                 COMMAND ${RUNPATH2RPATH} ${QTWEBKIT_SHARED_LIBRARY}
-                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}
-                                 DEPENDEES install)
-
-        ExternalProject_Add_Step(${PACKAGE_BUILD} SetAndConvertQtWebKitWidgetsRPath
-                                 COMMAND strip -x ${QTWEBKITWIDGETS_SHARED_LIBRARY}
-                                 COMMAND patchelf --set-rpath $ORIGIN ${QTWEBKITWIDGETS_SHARED_LIBRARY}
-                                 COMMAND ${RUNPATH2RPATH} ${QTWEBKITWIDGETS_SHARED_LIBRARY}
-                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}
-                                 DEPENDEES install)
-    ENDIF()
-
     # Package our external project
 
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -251,4 +225,3 @@ SET(QTWEBKIT_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
 SET(QTWEBKIT_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
 SET(QTWEBKIT_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin PARENT_SCOPE)
 SET(QTWEBKIT_LIBRARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR} PARENT_SCOPE)
-SET(QTWEBKIT_VERSION ${LIBRARY_VERSION} PARENT_SCOPE)
