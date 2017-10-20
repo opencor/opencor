@@ -128,7 +128,7 @@ ELSE()
             ${GIT_TAG}
         CONFIGURE_COMMAND
             ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR}
-                             ${DEFINE_CMAKE_APPLE_OPTIONS}
+                             ${DEFINE_CMAKE_ARGS}
                              -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
                              -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
                              -DLIBSBML_INCLUDE_DIR=${LIBSBML_INCLUDE_DIR}
