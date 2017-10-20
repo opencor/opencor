@@ -53,7 +53,8 @@ IF(WIN32)
     SET(ICUIN_SHARED_LIBRARY icuin${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(ICUUC_SHARED_LIBRARY icuuc${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
 ELSEIF(APPLE)
-    SET(QTWEBKIT_SHARED_LIBRARY QtWebKit.framework/Versions/${QT_VERSION_MAJOR}/QtWebKit)
+    SET(QTWEBKIT_SHARED_LIBRARY_DIR QtWebKit.framework/Versions/${QT_VERSION_MAJOR})
+    SET(QTWEBKIT_SHARED_LIBRARY ${QTWEBKIT_SHARED_LIBRARY_DIR}/QtWebKit)
     SET(QTWEBKIT_IMPORT_LIBRARY ${QTWEBKIT_SHARED_LIBRARY})
 
     SET(QTWEBKITWIDGETS_SHARED_LIBRARY QtWebKitWidgets.framework/Versions/${QT_VERSION_MAJOR}/QtWebKitWidgets)
@@ -205,14 +206,38 @@ ELSE()
     # Do some post-processing that is specific to each platform
 
     IF(APPLE)
+        # Copy over some libraries needed by QtWebKit package
+
+        FIND_PACKAGE(JPEG REQUIRED)
+        FIND_PACKAGE(PNG REQUIRED)
+
+        SET(JPEG_FILENAME libjpeg.9.dylib)
+        SET(PNG_FILENAME libpng16.16.dylib)
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibraries
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${JPEG_LIBRARY} ${JPEG_FILENAME}
+                                 COMMAND chmod 755 ${JPEG_FILENAME}
+                                 COMMAND strip -x ${JPEG_FILENAME}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${PNG_LIBRARY} ${PNG_FILENAME}
+                                 COMMAND chmod 755 ${PNG_FILENAME}
+                                 COMMAND strip -x ${PNG_FILENAME}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}/${QTWEBKIT_SHARED_LIBRARY_DIR}
+                                 DEPENDEES install)
+
+        # Keep track of the libraries that also need to be packaged along with
+        # our QtWebKit package
+
+        SET(JPEG_FILE ${SHARED_LIBRARIES_DIR}/${QTWEBKIT_SHARED_LIBRARY_DIR}/${JPEG_FILENAME})
+        SET(PNG_FILE ${SHARED_LIBRARIES_DIR}/${QTWEBKIT_SHARED_LIBRARY_DIR}/${PNG_FILENAME})
+
         # Fix the RPATH information
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
-                                 COMMAND install_name_tool -change /usr/local/opt/jpeg/lib/libjpeg.9.dylib
-                                                                   @rpath/libjpeg.9.dylib
+                                 COMMAND install_name_tool -change /usr/local/opt/jpeg/lib/${JPEG_FILENAME}
+                                                                   ${JPEG_FILENAME}
                                                                    ${QTWEBKIT_SHARED_LIBRARY}
-                                 COMMAND install_name_tool -change /usr/local/opt/libpng/lib/libpng16.16.dylib
-                                                                   @rpath/libpng16.16.dylib
+                                 COMMAND install_name_tool -change /usr/local/opt/libpng/lib/${PNG_FILENAME}
+                                                                   ${PNG_FILENAME}
                                                                    ${QTWEBKIT_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}
                                  DEPENDEES install)
@@ -224,7 +249,7 @@ ELSE()
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         RELEASE_TAG ${RELEASE_TAG}
-                        PACKAGED_FILES include ${SHARED_LIBRARIES_DIR}/cmake ${SHA1_FILES}
+                        PACKAGED_FILES include ${SHARED_LIBRARIES_DIR}/cmake ${JPEG_FILE} ${PNG_FILE} ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 ENDIF()
