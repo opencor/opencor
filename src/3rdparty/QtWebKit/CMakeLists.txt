@@ -202,6 +202,22 @@ ELSE()
             <INSTALL_DIR>/${SHARED_LIBRARIES_DIR}/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
     )
 
+    # Do some post-processing that is specific to each platform
+
+    IF(APPLE)
+        # Fix the RPATH information
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
+                                 COMMAND install_name_tool -change /usr/local/opt/jpeg/lib/libjpeg.9.dylib
+                                                                   @rpath/libjpeg.9.dylib
+                                                                   ${QTWEBKIT_SHARED_LIBRARY}
+                                 COMMAND install_name_tool -change /usr/local/opt/libpng/lib/libpng16.16.dylib
+                                                                   @rpath/libpng16.16.dylib
+                                                                   ${QTWEBKIT_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}
+                                 DEPENDEES install)
+    ENDIF()
+
     # Package our external project
 
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
