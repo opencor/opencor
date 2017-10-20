@@ -141,12 +141,12 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           fb40bf07a6cde27fc57122b5c47a02a8023ffd60)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 9368fe4d5dd114195b36cca336c3adab2617739f
+                              ${RELATIVE_PROJECT_SOURCE_DIR} f09bf98f84971b84e980d751a05a408efa7eaf47
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 14ee3611a2828df60fa22f7389dff78f95ac341b
-                                          7a9b7858a4f096b04915cc068ecbb4e3671b4578)
+                              SHA1_VALUES f274a45c84639284601cb838b0bf4b7a84e47ca4
+                                          1ca7ba8178d833a09f78ef0df2e452ab43b0b9d7)
     ENDIF()
 ELSE()
     # Build QtWebKit as an external project
@@ -244,6 +244,14 @@ ELSE()
 
     # Package our external project
 
+    IF(APPLE)
+        SET(JPEG_FILE ${SHARED_LIBRARIES_DIR}/${JPEG_FILENAME})
+        SET(PNG_FILE ${SHARED_LIBRARIES_DIR}/${PNG_FILENAME})
+    ELSE()
+        SET(JPEG_FILE)
+        SET(PNG_FILE)
+    ENDIF()
+
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
@@ -251,8 +259,8 @@ ELSE()
                         PACKAGED_FILES
                             include
                             ${SHARED_LIBRARIES_DIR}/cmake
-                            ${SHARED_LIBRARIES_DIR}/${JPEG_FILENAME}
-                            ${SHARED_LIBRARIES_DIR}/${PNG_FILENAME}
+                            ${JPEG_FILE}
+                            ${PNG_FILE}
                             ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
