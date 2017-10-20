@@ -990,7 +990,7 @@ IF(APPLE)
 
     MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
 
-    # Deploy our Qt libraries
+    # Qt libraries required by OpenCOR
     # Note: the Qt Brew formula that we use on Travis CI somehow results in some
     #       of our tests generating messages about two frameworks being
     #       available and that one of them will be used, but that we don't know
@@ -1003,7 +1003,7 @@ IF(APPLE)
         ENDFOREACH()
     ENDIF()
 
-    # Deploy some plugins
+    # Qt plugins required by OpenCOR
 
     MACOS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     MACOS_DEPLOY_QT_PLUGIN(platforms qcocoa)
