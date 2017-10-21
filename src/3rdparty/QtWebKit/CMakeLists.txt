@@ -96,46 +96,6 @@ ELSEIF(APPLE)
     )
 ENDIF()
 
-# On Windows, retrieve our additional dependencies and 'install' some ICU files
-
-SET(SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
-
-IF(WIN32)
-    SET(ADDITIONAL_DEPENDENCIES_FILENAME WebKitLibraries.tar.gz)
-    SET(FULL_ADDITIONAL_DEPENDENCIES_FILE ${SOURCE_DIR}/${ADDITIONAL_DEPENDENCIES_FILENAME})
-
-    MESSAGE("Retrieving additional dependencies for QtWebKit...")
-
-    FILE(DOWNLOAD "https://github.com/opencor/${PACKAGE_REPOSITORY}/releases/download/${GIT_TAG}/${ADDITIONAL_DEPENDENCIES_FILENAME}" ${FULL_ADDITIONAL_DEPENDENCIES_FILE}
-         SHOW_PROGRESS STATUS STATUS)
-
-    LIST(GET STATUS 0 STATUS_CODE)
-
-    IF(${STATUS_CODE} EQUAL 0)
-        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${FULL_ADDITIONAL_DEPENDENCIES_FILE}
-                        WORKING_DIRECTORY ${SOURCE_DIR}
-                        OUTPUT_QUIET)
-
-        FILE(REMOVE ${FULL_ADDITIONAL_DEPENDENCIES_FILE})
-
-        SET(ORIG_DIRNAME ${SOURCE_DIR}/WebKitLibraries/win/bin64)
-        SET(DEST_DIRNAME ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin)
-
-        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${ICUDT_SHARED_LIBRARY}
-                                                         ${DEST_DIRNAME}/${ICUDT_SHARED_LIBRARY})
-        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${ICUIN_SHARED_LIBRARY}
-                                                         ${DEST_DIRNAME}/${ICUIN_SHARED_LIBRARY})
-        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${ICUUC_SHARED_LIBRARY}
-                                                         ${DEST_DIRNAME}/${ICUUC_SHARED_LIBRARY})
-    ELSE()
-        FILE(REMOVE ${FULL_ADDITIONAL_DEPENDENCIES_FILE})
-        # Note: this is in case we had an HTTP error of sorts, in which case we
-        #       would end up with an empty file...
-
-        MESSAGE(FATAL_ERROR "The additional dependencies could not be retrieved...")
-    ENDIF()
-ENDIF()
-
 # Use the pre-built version of our package unless instructed otherwise
 
 IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
@@ -192,6 +152,47 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           1ca7ba8178d833a09f78ef0df2e452ab43b0b9d7)
     ENDIF()
 ELSE()
+    # On Windows, retrieve our additional dependencies and 'install' some ICU
+    # files
+
+    SET(SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
+
+    IF(WIN32)
+        SET(ADDITIONAL_DEPENDENCIES_FILENAME WebKitLibraries.tar.gz)
+        SET(FULL_ADDITIONAL_DEPENDENCIES_FILE ${SOURCE_DIR}/${ADDITIONAL_DEPENDENCIES_FILENAME})
+
+        MESSAGE("Retrieving additional dependencies for QtWebKit...")
+
+        FILE(DOWNLOAD "https://github.com/opencor/${PACKAGE_REPOSITORY}/releases/download/${GIT_TAG}/${ADDITIONAL_DEPENDENCIES_FILENAME}" ${FULL_ADDITIONAL_DEPENDENCIES_FILE}
+             SHOW_PROGRESS STATUS STATUS)
+
+        LIST(GET STATUS 0 STATUS_CODE)
+
+        IF(${STATUS_CODE} EQUAL 0)
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${FULL_ADDITIONAL_DEPENDENCIES_FILE}
+                            WORKING_DIRECTORY ${SOURCE_DIR}
+                            OUTPUT_QUIET)
+
+            FILE(REMOVE ${FULL_ADDITIONAL_DEPENDENCIES_FILE})
+
+            SET(ORIG_DIRNAME ${SOURCE_DIR}/WebKitLibraries/win/bin64)
+            SET(DEST_DIRNAME ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin)
+
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${ICUDT_SHARED_LIBRARY}
+                                                             ${DEST_DIRNAME}/${ICUDT_SHARED_LIBRARY})
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${ICUIN_SHARED_LIBRARY}
+                                                             ${DEST_DIRNAME}/${ICUIN_SHARED_LIBRARY})
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${ICUUC_SHARED_LIBRARY}
+                                                             ${DEST_DIRNAME}/${ICUUC_SHARED_LIBRARY})
+        ELSE()
+            FILE(REMOVE ${FULL_ADDITIONAL_DEPENDENCIES_FILE})
+            # Note: this is in case we had an HTTP error of sorts, in which case we
+            #       would end up with an empty file...
+
+            MESSAGE(FATAL_ERROR "The additional dependencies could not be retrieved...")
+        ENDIF()
+    ENDIF()
+
     # Build QtWebKit as an external project
 
     SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
