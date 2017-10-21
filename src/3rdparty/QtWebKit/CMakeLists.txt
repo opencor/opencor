@@ -43,6 +43,9 @@ IF(WIN32)
     SET(ICUIN_SHARED_LIBRARY icuin${DEBUG_TAG}${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(ICUUC_SHARED_LIBRARY icuuc${DEBUG_TAG}${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
 ELSEIF(APPLE)
+    SET(JPEG_FILENAME libjpeg.9.dylib)
+    SET(PNG_FILENAME libpng16.16.dylib)
+
     SET(QTWEBKIT_SHARED_LIBRARY_DIR QtWebKit.framework/Versions/${QT_VERSION_MAJOR})
     SET(QTWEBKIT_SHARED_LIBRARY ${QTWEBKIT_SHARED_LIBRARY_DIR}/QtWebKit)
     SET(QTWEBKIT_IMPORT_LIBRARY ${QTWEBKIT_SHARED_LIBRARY})
@@ -86,6 +89,11 @@ IF(WIN32)
         ${IMPORT_LIBRARIES_DIR}/${QTWEBKIT_IMPORT_LIBRARY}
         ${IMPORT_LIBRARIES_DIR}/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
     )
+ELSEIF(APPLE)
+    LIST(APPEND SHA1_FILES
+        ${SHARED_LIBRARIES_DIR}/${JPEG_FILENAME}
+        ${SHARED_LIBRARIES_DIR}/${PNG_FILENAME}
+    )
 ENDIF()
 
 # On Windows, retrieve our additional dependencies and 'install' some ICU files
@@ -128,14 +136,6 @@ IF(WIN32)
     ENDIF()
 ENDIF()
 
-# Libraries, if any, that also need to be deployed along with our QtWebKit
-# package
-
-IF(APPLE)
-    SET(JPEG_FILENAME libjpeg.9.dylib)
-    SET(PNG_FILENAME libpng16.16.dylib)
-ENDIF()
-
 # Use the pre-built version of our package unless instructed otherwise
 
 IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
@@ -174,12 +174,14 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} b289e92b3e121e834d03ed712bdbd6dc7b593e82
+                              ${RELATIVE_PROJECT_SOURCE_DIR} aaad1003da0e55e5d7f5ad043be047a84f81bca2
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES a5502fa1b4da8e20daea6f3459a82565377adb39
-                                          fb40bf07a6cde27fc57122b5c47a02a8023ffd60)
+                              SHA1_VALUES 6ed6047d40e08fd149a41d91c56a14b2fe77d5d5
+                                          fb40bf07a6cde27fc57122b5c47a02a8023ffd60
+                                          b45f5b149930f86ee6009e06569e4b339d45808a
+                                          3d2fd6309859eb5ba306b9c6a5be578784562a48)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} f09bf98f84971b84e980d751a05a408efa7eaf47
@@ -285,14 +287,6 @@ ELSE()
 
     # Package our external project
 
-    IF(APPLE)
-        SET(JPEG_FILE ${SHARED_LIBRARIES_DIR}/${JPEG_FILENAME})
-        SET(PNG_FILE ${SHARED_LIBRARIES_DIR}/${PNG_FILENAME})
-    ELSE()
-        SET(JPEG_FILE)
-        SET(PNG_FILE)
-    ENDIF()
-
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
@@ -300,8 +294,6 @@ ELSE()
                         PACKAGED_FILES
                             include
                             ${SHARED_LIBRARIES_DIR}/cmake
-                            ${JPEG_FILE}
-                            ${PNG_FILE}
                             ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
