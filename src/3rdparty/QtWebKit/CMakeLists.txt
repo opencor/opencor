@@ -21,33 +21,27 @@ SET(PACKAGE_REPOSITORY qtwebkitreloaded)
 SET(RELEASE_TAG v5.212.0-alpha2)
 
 # Specify where our local package will be installed
-# Note: on Windows, we would normally distinguish between release and debug
-#       modes, but QtWebKit's build system doesn't, hence we go one folder up...
 
-IF(WIN32)
-    STRING(REGEX REPLACE "/[^/]+$" "" REAL_LOCAL_EXTERNAL_PACKAGE_DIR ${LOCAL_EXTERNAL_PACKAGE_DIR})
-ELSE()
-    SET(REAL_LOCAL_EXTERNAL_PACKAGE_DIR ${LOCAL_EXTERNAL_PACKAGE_DIR})
-ENDIF()
-
-SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${REAL_LOCAL_EXTERNAL_PACKAGE_DIR})
+SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
 
 # Name of our package's shared library (and of its import library, if any)
 
 IF(WIN32)
-    SET(QTWEBKIT_SHARED_LIBRARY Qt${QT_VERSION_MAJOR}WebKit${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(QTWEBKIT_IMPORT_LIBRARY Qt${QT_VERSION_MAJOR}WebKit${CMAKE_IMPORT_LIBRARY_SUFFIX})
-    SET(QTWEBKITD_SHARED_LIBRARY Qt${QT_VERSION_MAJOR}WebKitd${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(QTWEBKITD_IMPORT_LIBRARY Qt${QT_VERSION_MAJOR}WebKitd${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    IF(RELEASE_MODE)
+        SET(DEBUG_TAG)
+    ELSE()
+        SET(DEBUG_TAG d)
+    ENDIF()
 
-    SET(QTWEBKITWIDGETS_SHARED_LIBRARY Qt${QT_VERSION_MAJOR}WebKitWidgets${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(QTWEBKITWIDGETS_IMPORT_LIBRARY Qt${QT_VERSION_MAJOR}WebKitWidgets${CMAKE_IMPORT_LIBRARY_SUFFIX})
-    SET(QTWEBKITWIDGETSD_SHARED_LIBRARY Qt${QT_VERSION_MAJOR}WebKitWidgetsd${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(QTWEBKITWIDGETSD_IMPORT_LIBRARY Qt${QT_VERSION_MAJOR}WebKitWidgetsd${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    SET(QTWEBKIT_SHARED_LIBRARY Qt${QT_VERSION_MAJOR}WebKit${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(QTWEBKIT_IMPORT_LIBRARY Qt${QT_VERSION_MAJOR}WebKit${DEBUG_TAG}${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
-    SET(ICUDT_SHARED_LIBRARY icudt${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(ICUIN_SHARED_LIBRARY icuin${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(ICUUC_SHARED_LIBRARY icuuc${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(QTWEBKITWIDGETS_SHARED_LIBRARY Qt${QT_VERSION_MAJOR}WebKitWidgets${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(QTWEBKITWIDGETS_IMPORT_LIBRARY Qt${QT_VERSION_MAJOR}WebKitWidgets${DEBUG_TAG}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    SET(ICUDT_SHARED_LIBRARY icudt${DEBUG_TAG}${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(ICUIN_SHARED_LIBRARY icuin${DEBUG_TAG}${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(ICUUC_SHARED_LIBRARY icuuc${DEBUG_TAG}${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
 ELSEIF(APPLE)
     SET(QTWEBKIT_SHARED_LIBRARY_DIR QtWebKit.framework/Versions/${QT_VERSION_MAJOR})
     SET(QTWEBKIT_SHARED_LIBRARY ${QTWEBKIT_SHARED_LIBRARY_DIR}/QtWebKit)
@@ -67,10 +61,15 @@ ENDIF()
 
 IF(WIN32)
     SET(SHARED_LIBRARIES_DIR bin)
-ELSEIF(APPLE)
-    SET(SHARED_LIBRARIES_DIR lib)
+    SET(IMPORT_LIBRARIES_DIR lib)
 ELSE()
-    SET(SHARED_LIBRARIES_DIR lib/x86_64-linux-gnu)
+    IF(APPLE)
+        SET(SHARED_LIBRARIES_DIR lib)
+    ELSE()
+        SET(SHARED_LIBRARIES_DIR lib/x86_64-linux-gnu)
+    ENDIF()
+
+    SET(IMPORT_LIBRARIES_DIR ${SHARED_LIBRARIES_DIR})
 ENDIF()
 
 SET(SHA1_FILES
@@ -80,18 +79,53 @@ SET(SHA1_FILES
 
 IF(WIN32)
     LIST(APPEND SHA1_FILES
-        ${SHARED_LIBRARIES_DIR}/${QTWEBKITD_SHARED_LIBRARY}
-        ${SHARED_LIBRARIES_DIR}/${QTWEBKITWIDGETSD_SHARED_LIBRARY}
+        ${SHARED_LIBRARIES_DIR}/${ICUDT_SHARED_LIBRARY}
+        ${SHARED_LIBRARIES_DIR}/${ICUIN_SHARED_LIBRARY}
+        ${SHARED_LIBRARIES_DIR}/${ICUUC_SHARED_LIBRARY}
 
-        lib/${QTWEBKIT_IMPORT_LIBRARY}
-        lib/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
-        lib/${QTWEBKITD_IMPORT_LIBRARY}
-        lib/${QTWEBKITWIDGETSD_IMPORT_LIBRARY}
-
-        bin/${ICUDT_SHARED_LIBRARY}
-        bin/${ICUIN_SHARED_LIBRARY}
-        bin/${ICUUC_SHARED_LIBRARY}
+        ${IMPORT_LIBRARIES_DIR}/${QTWEBKIT_IMPORT_LIBRARY}
+        ${IMPORT_LIBRARIES_DIR}/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
     )
+ENDIF()
+
+# On Windows, retrieve our additional dependencies and 'install' some ICU files
+
+SET(SOURCE_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
+
+IF(WIN32)
+    SET(ADDITIONAL_DEPENDENCIES_FILENAME WebKitLibraries.tar.gz)
+    SET(FULL_ADDITIONAL_DEPENDENCIES_FILE ${SOURCE_DIR}/${ADDITIONAL_DEPENDENCIES_FILENAME})
+
+    MESSAGE("Retrieving additional dependencies for QtWebKit...")
+
+    FILE(DOWNLOAD "http://www.opencor.ws/${ADDITIONAL_DEPENDENCIES_FILENAME}" ${FULL_ADDITIONAL_DEPENDENCIES_FILE}
+         SHOW_PROGRESS STATUS STATUS)
+
+    LIST(GET STATUS 0 STATUS_CODE)
+
+    IF(${STATUS_CODE} EQUAL 0)
+        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${FULL_ADDITIONAL_DEPENDENCIES_FILE}
+                        WORKING_DIRECTORY ${SOURCE_DIR}
+                        OUTPUT_QUIET)
+
+        FILE(REMOVE ${FULL_ADDITIONAL_DEPENDENCIES_FILE})
+
+        SET(ORIG_DIRNAME ${SOURCE_DIR}/WebKitLibraries/win/bin64)
+        SET(DEST_DIRNAME ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin)
+
+        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${ICUDT_SHARED_LIBRARY}
+                                                         ${DEST_DIRNAME}/${ICUDT_SHARED_LIBRARY})
+        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${ICUIN_SHARED_LIBRARY}
+                                                         ${DEST_DIRNAME}/${ICUIN_SHARED_LIBRARY})
+        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${ICUUC_SHARED_LIBRARY}
+                                                         ${DEST_DIRNAME}/${ICUUC_SHARED_LIBRARY})
+    ELSE()
+        FILE(REMOVE ${FULL_ADDITIONAL_DEPENDENCIES_FILE})
+        # Note: this is in case we had an HTTP error of sorts, in which case we
+        #       would end up with an empty file...
+
+        MESSAGE(FATAL_ERROR "The additional dependencies could not be retrieved...")
+    ENDIF()
 ENDIF()
 
 # Libraries, if any, that also need to be deployed along with our QtWebKit
@@ -111,22 +145,33 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
            RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${PLATFORM_DIR}")
 
     IF(WIN32)
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 8dbe5333fd85bb3d02b3ee34ebcf116bf5005792
-                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-                              RELEASE_TAG ${RELEASE_TAG}
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES dd553394bc30b2abd837684a0cc8fcd8e8290735
-                                          6cd9bc498817366f0158b54ec1df4501e5a84edb
-                                          eb12d7fecced18da57590421265c5dbb79a314d9
-                                          87d68e4885b35de0f3118068f16fd2960cc9e667
-                                          f6db0a70c3f5405fa6526587de775562327ed83a
-                                          773ea29754a4d252267555c4bbaca7cfe2bcf569
-                                          dfd1812b3e43af731fca6bbb02c6f1a0b38639f1
-                                          3aa536cca6c1ce5e8ce0d1bc6a8be34ddd64ae5a
-                                          874175a6db51afe0902882f0b00f7855ab498c79
-                                          47cb72ba7c899ca218be75dd89a0c0f900b968b8
-                                          a386658900a742f31f1f08d55c0915d577af2d7e)
+        IF(RELEASE_MODE)
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 5928b602d9df205a87d125fbe7a79044b54723ef
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 28d1cdb58863f084355864e7ce99646bc59db6fc
+                                              84f7a27c2dfa03c239b07533262387f2473b2bd1
+                                              874175a6db51afe0902882f0b00f7855ab498c79
+                                              47cb72ba7c899ca218be75dd89a0c0f900b968b8
+                                              a386658900a742f31f1f08d55c0915d577af2d7e
+                                              76bf04efaa836ef76eed2b6ed22c9b2e29bb31ad
+                                              44f6e6f1106ebb1ebb3029ae0636d377ff254b8f)
+        ELSE()
+            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 0c78cc962829fc0bbd26153255edf6f9ea729949
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES aa46f4c753aab3b514802a1404ca1d98c0260795
+                                              1c4779d99c6379a1361d22718a65b6f74e0f5ca2
+                                              43497bf1a89173badccc0b945b43473cf5d5f12a
+                                              2ef114df767c6fe4184ef458545ff8d71f4f4917
+                                              5eeaf7c066cca05413a35bba5efc71526c46f478
+                                              13e16b8509579a170eab540d93050adde0d2f760
+                                              995567217f17abd65322dd4dcb108dedc89c1bfa)
+        ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} b289e92b3e121e834d03ed712bdbd6dc7b593e82
@@ -151,7 +196,7 @@ ELSE()
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
+            ${SOURCE_DIR}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
@@ -203,8 +248,8 @@ ELSE()
             -DUSE_SYSTEM_MALLOC=OFF
             -DUSE_WOFF2=ON
         BUILD_BYPRODUCTS
-            <INSTALL_DIR>/${SHARED_LIBRARIES_DIR}/${QTWEBKIT_IMPORT_LIBRARY}
-            <INSTALL_DIR>/${SHARED_LIBRARIES_DIR}/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
+            <INSTALL_DIR>/${IMPORT_LIBRARIES_DIR}/${QTWEBKIT_IMPORT_LIBRARY}
+            <INSTALL_DIR>/${IMPORT_LIBRARIES_DIR}/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
     )
 
     # Do some post-processing that is specific to each platform
