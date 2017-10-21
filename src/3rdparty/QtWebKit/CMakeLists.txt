@@ -301,10 +301,18 @@ ELSE()
 ENDIF()
 
 # Allow other external projects to find our QtWebKit package
+# Note: on Windows, we distinguish between release and debug modes, so remove
+#       that piece of information...
+
+IF(WIN32)
+    STRING(REGEX REPLACE "/[^/]+$" "" REAL_FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
+ELSE()
+    SET(REAL_FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
+ENDIF()
 
 SET(CMAKE_PREFIX_PATH
     ${CMAKE_PREFIX_PATH}
-    ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${IMPORT_LIBRARIES_DIR}/cmake
+    ${REAL_FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${IMPORT_LIBRARIES_DIR}/cmake
     PARENT_SCOPE
 )
 
