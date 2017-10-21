@@ -5,7 +5,7 @@ PROJECT(QtWebKit)
 SET(PACKAGE_NAME QtWebKit)
 SET(PACKAGE_VERSION 5.212.0)
 
-# Version of our package's library
+# Version of our library
 
 SET(MAJOR_LIBRARY_VERSION 5)
 SET(MINOR_LIBRARY_VERSION 212)
@@ -19,10 +19,6 @@ SET(GIT_TAG v5.212.0-alpha2)
 
 SET(PACKAGE_REPOSITORY qtwebkitreloaded)
 SET(RELEASE_TAG v5.212.0-alpha2)
-
-# Platform target for our library
-
-SET(TARGET_PLATFORM ${PLATFORM})
 
 # Specify where our local package will be installed
 # Note: on Windows, we would normally distinguish between release and debug
