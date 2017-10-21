@@ -106,7 +106,7 @@ IF(WIN32)
 
     MESSAGE("Retrieving additional dependencies for QtWebKit...")
 
-    FILE(DOWNLOAD "http://www.opencor.ws/${ADDITIONAL_DEPENDENCIES_FILENAME}" ${FULL_ADDITIONAL_DEPENDENCIES_FILE}
+    FILE(DOWNLOAD "https://github.com/opencor/${PACKAGE_REPOSITORY}/releases/download/${GIT_TAG}/${ADDITIONAL_DEPENDENCIES_FILENAME}" ${FULL_ADDITIONAL_DEPENDENCIES_FILE}
          SHOW_PROGRESS STATUS STATUS)
 
     LIST(GET STATUS 0 STATUS_CODE)
@@ -293,7 +293,7 @@ ELSE()
                         RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES
                             include
-                            ${SHARED_LIBRARIES_DIR}/cmake
+                            ${IMPORT_LIBRARIES_DIR}/cmake
                             ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
@@ -303,7 +303,7 @@ ENDIF()
 
 SET(CMAKE_PREFIX_PATH
     ${CMAKE_PREFIX_PATH}
-    ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}/cmake
+    ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${IMPORT_LIBRARIES_DIR}/cmake
     PARENT_SCOPE
 )
 
