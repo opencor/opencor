@@ -147,7 +147,7 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 5928b602d9df205a87d125fbe7a79044b54723ef
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 4e12a551320fbc9ab6b967cb96f7e4451fd8efc2
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
@@ -160,7 +160,7 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                               44f6e6f1106ebb1ebb3029ae0636d377ff254b8f)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 0c78cc962829fc0bbd26153255edf6f9ea729949
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 7270bbc47a668e383def1513a23cde7bc341b1e9
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
@@ -174,21 +174,21 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} aaad1003da0e55e5d7f5ad043be047a84f81bca2
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 6e1c99acef94f66adcff77f6f68d51c3c37b38e0
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 6ed6047d40e08fd149a41d91c56a14b2fe77d5d5
+                              SHA1_VALUES 869f0640969325793ee1620d4c941f20050b27bd
                                           fb40bf07a6cde27fc57122b5c47a02a8023ffd60
                                           b45f5b149930f86ee6009e06569e4b339d45808a
                                           3d2fd6309859eb5ba306b9c6a5be578784562a48)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f09bf98f84971b84e980d751a05a408efa7eaf47
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 8e8a00500851c670deaf1f416e5884e9f779a183
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES f274a45c84639284601cb838b0bf4b7a84e47ca4
+                              SHA1_VALUES 296385f1f0c9c71f7396cc434ab3e0649d1ba510
                                           1ca7ba8178d833a09f78ef0df2e452ab43b0b9d7)
     ENDIF()
 ELSE()
