@@ -10,6 +10,8 @@ In order to build `QtWebKit <https://wiki.qt.io/QtWebKit>`__, we need to:
 
     **Note:** the `GnuWin32 <http://gnuwin32.sourceforge.net/>`__ version of `Flex <http://gnuwin32.sourceforge.net/packages/flex.htm>`__ is not suitable, hence we must use `Win flex-bison <https://sourceforge.net/projects/winflexbison/>`__ instead.
 
+ There are additional dependencies (``ICU``, ``libjpeg``, ``libpng``, ``libxml2``, ``libxslt``, ``SQLite`` and ``zlib``) that are automatically downloaded upon building QtWebKit. (The prebuilt version of those binaries originally comes from `https://github.com/Vitallium/qtwebkit-libs-win/releases <https://github.com/Vitallium/qtwebkit-libs-win/releases>`__, to which we removed unneeded files.)
+
 - **Linux:** run the following command from the terminal:
 
   ::
