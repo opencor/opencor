@@ -37,9 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> upgraded to Qt 5.9.2 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1311\">#1311</a>). Switched to QtWebKit Reloaded (see issue <a href=\"https://github.com/opencor/opencor/issues/1149\">#1149</a>)." },
-                       { "change": "<strong>Plugins dialog:</strong> make the value of the different fields selectable (see issue <a href=\"https://github.com/opencor/opencor/issues/1444\">#1444</a>)." },
-                       { "change": "<strong>PMR window:</strong> retrieve public exposures only when really needed." }
+                       { "change": "<strong>GraphPanel widget:</strong> axis labels are now rendered fine when exporting a graph panel to various formats (see issue <a href=\"https://github.com/opencor/opencor/issues/1448\">#1448</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
