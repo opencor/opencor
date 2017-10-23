@@ -18,41 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python interface
+// Python headers for PythonQt
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "plugin.h"
-#include "pythoninclude.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-
-//==============================================================================
-
-extern "C" Q_DECL_EXPORT int pythonInterfaceVersion();
-
-//==============================================================================
-
-class PythonInterface
-{
-public:
-#define INTERFACE_DEFINITION
-    #include "pythoninterface.inl"
-#undef INTERFACE_DEFINITION
-};
-
-//==============================================================================
-
-}   // namespace OpenCOR
-
-//==============================================================================
-
-Q_DECLARE_INTERFACE(OpenCOR::PythonInterface, "OpenCOR::PythonInterface")
+#include <PythonQt/PythonQtPythonInclude.h>
 
 //==============================================================================
 // End of file

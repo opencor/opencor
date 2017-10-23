@@ -26,10 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "datastoreglobal.h"
-
-//==============================================================================
-
-#include <PythonQt/PythonQtPythonInclude.h>
+#include "pythoninclude.h"
 
 //==============================================================================
 
