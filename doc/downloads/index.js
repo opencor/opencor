@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 5, "month": 10, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 10, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -37,8 +37,9 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> upgraded to Qt 5.9.2 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1311\">#1311</a>)." },
-                       { "change": "<strong>PMR window:</strong> retrieve the exposures only when really needed." }
+                       { "change": "<strong>General:</strong> upgraded to Qt 5.9.2 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1311\">#1311</a>). Switched to QtWebKit Reloaded (see issue <a href=\"https://github.com/opencor/opencor/issues/1149\">#1149</a>)." },
+                       { "change": "<strong>Plugins dialog:</strong> make the value of the different fields selectable (see issue <a href=\"https://github.com/opencor/opencor/issues/1444\">#1444</a>)." },
+                       { "change": "<strong>PMR window:</strong> retrieve public exposures only when really needed." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
