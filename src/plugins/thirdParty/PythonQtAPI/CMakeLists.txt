@@ -105,6 +105,10 @@ ELSE()
         SET(QMAKE_DEBUG_OPTION)
     ENDIF()
 
+    # Wrap our WebKit
+
+    SET(QMAKE_INCLUDE_PATH "INCLUDEPATH+=${QTWEBKIT_INCLUDE_DIR}")
+
     # Configure qmake project files with our settings
 
     SET(PYTHONQT_INSTALL_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
@@ -140,7 +144,7 @@ ELSE()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${QMAKE_COMMAND} ${QMAKE_DEBUG_OPTION} ${QMAKE_LFLAGS_OPTION} -r PythonQtOpenCOR.pro
+            ${QMAKE_COMMAND} ${QMAKE_DEBUG_OPTION} ${QMAKE_INCLUDE_PATH} ${QMAKE_LFLAGS_OPTION} -r PythonQtOpenCOR.pro
         BUILD_COMMAND
             ${MAKE_COMMAND}
         INSTALL_COMMAND
