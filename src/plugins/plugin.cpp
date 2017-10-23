@@ -37,7 +37,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CLI_VERSION
     #include "preferencesinterface.h"
 #endif
-#include "pythoninterface.h"
+#ifndef EXCLUDE_PYTHON
+    #include "pythoninterface.h"
+#endif
 #include "solverinterface.h"
 #ifndef CLI_VERSION
     #include "viewinterface.h"
@@ -155,10 +157,12 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                         || (   qobject_cast<PreferencesInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "preferencesInterfaceVersion") != preferencesInterfaceVersion()))
 #endif
+#ifndef EXCLUDE_PYTHON
                         || (   qobject_cast<PythonInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "pythonInterfaceVersion") != pythonInterfaceVersion()))
                         || (   qobject_cast<SolverInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "solverInterfaceVersion") != solverInterfaceVersion()))
+#endif
 #ifndef CLI_VERSION
                         || (   qobject_cast<ViewInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "viewInterfaceVersion") != viewInterfaceVersion()))

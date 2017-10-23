@@ -578,7 +578,6 @@ SET(SOURCES
     src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
-    src/plugins/pythoninterface.cpp
     src/plugins/solverinterface.cpp
     src/plugins/viewinterface.cpp
     src/plugins/windowinterface.cpp
@@ -634,7 +633,6 @@ IF(WIN32)
         src/plugins/plugininfo.cpp
         src/plugins/plugininterface.cpp
         src/plugins/pluginmanager.cpp
-        src/plugins/pythoninterface.cpp
         src/plugins/solverinterface.cpp
 
         src/windows/main.cpp
@@ -893,11 +891,20 @@ SET(PLUGINS
 #    widget/ZincWidget
 )
 
+# Python interface depends on Python headers so we cannot include it when plugins
+# aren't being built (e.g. when building QtWebKit)
+
+SET(PYTHON_INTERFACE
+    src/plugins/pythoninterface.cpp
+)
+
 IF(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
     # We want to build our copy of the QtWebKit package, so don't build any
     # plugins since some of them may require access to QtWebKit
 
     SET(PLUGINS)
+    SET(PYTHON_INTERFACE)
+    ADD_DEFINITIONS(-DEXCLUDE_PYTHON)
 ENDIF()
 
 FOREACH(PLUGIN ${PLUGINS})
@@ -931,6 +938,7 @@ IF(APPLE)
 ENDIF()
 
 ADD_EXECUTABLE(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
+    ${PYTHON_INTERFACE}
     ${SOURCES}
     ${SOURCES_MOC}
     ${SOURCES_UIS}
@@ -986,6 +994,7 @@ IF(WIN32)
     SET(WINDOWS_CLI_PROJECT_NAME ${CMAKE_PROJECT_NAME}_com)
 
     ADD_EXECUTABLE(${WINDOWS_CLI_PROJECT_NAME}
+        ${PYTHON_INTERFACE}
         ${WINDOWS_CLI_SOURCES}
         ${WINDOWS_CLI_SOURCES_MOC}
         ${WINDOWS_CLI_SOURCES_RCS}
