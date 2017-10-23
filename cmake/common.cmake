@@ -43,30 +43,6 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(BUILD_PATCHCMAKE)
-    # Try to build our patch CMake program
-
-    SET(PATCH ${CMAKE_BINARY_DIR}/patchcmake${CMAKE_EXECUTABLE_SUFFIX})
-
-    IF(NOT EXISTS ${PATH})
-        SET(PATCH_SOURCE ${CMAKE_SOURCE_DIR}/cmake/patchcmake.c)
-
-        IF(WIN32)
-            EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} ${PATCH_SOURCE} /link /out:${PATCH}
-                            RESULT_VARIABLE RESULT)
-        ELSE()
-            EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -o ${PATCH} ${PATCH_SOURCE}
-                            RESULT_VARIABLE RESULT)
-        ENDIF()
-
-        IF(NOT RESULT EQUAL 0)
-            MESSAGE(FATAL_ERROR "patchcmake could not be built...")
-        ENDIF()
-    ENDIF()
-ENDMACRO()
-
-#===============================================================================
-
 MACRO(ADD_PLUGIN PLUGIN_NAME)
     # Various initialisations
 
@@ -548,7 +524,16 @@ MACRO(WINDOWS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
     ENDIF()
 
     SET(LIBRARY_RELEASE_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(LIBRARY_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}d${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+    IF("${LIBRARY_NAME}" STREQUAL "icudt${ICU_VERSION}")
+        SET(LIBRARY_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}icudtd${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ELSEIF("${LIBRARY_NAME}" STREQUAL "icuin${ICU_VERSION}")
+        SET(LIBRARY_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}icuind${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ELSEIF("${LIBRARY_NAME}" STREQUAL "icuuc${ICU_VERSION}")
+        SET(LIBRARY_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}icuucd${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ELSE()
+        SET(LIBRARY_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}d${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ENDIF()
 
     IF(NOT EXISTS ${REAL_QT_BINARY_DIR}/${LIBRARY_DEBUG_FILENAME})
         # No debug version of the Qt library exists, so use its release version
@@ -607,7 +592,7 @@ MACRO(RUNPATH2RPATH FILENAME)
                     RESULT_VARIABLE RESULT)
 
     IF(NOT RESULT EQUAL 0)
-        MESSAGE(FATAL_ERROR "The RUNPATH value of '${FILENAME}' could not be converted to a RPATH value...")
+        MESSAGE(FATAL_ERROR "The RUNPATH value of '${FILENAME}' could not be converted to an RPATH value...")
     ENDIF()
 ENDMACRO()
 
@@ -753,6 +738,16 @@ MACRO(MACOS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
     MACOS_DEPLOY_QT_FILE(${REAL_QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
                          ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
                          ${LIBRARY_NAME})
+
+    # Special case for the QtWebKit library, which also needs its JPEG and PNG
+    # libraries to be deployed
+
+    IF("${LIBRARY_NAME}" STREQUAL "${QTWEBKIT}")
+        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${REAL_QT_LIBRARY_DIR}/${QTWEBKIT_JPEG_LIBRARY}
+                                                         ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QTWEBKIT_JPEG_LIBRARY})
+        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${REAL_QT_LIBRARY_DIR}/${QTWEBKIT_PNG_LIBRARY}
+                                                         ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QTWEBKIT_PNG_LIBRARY})
+    ENDIF()
 ENDMACRO()
 
 #===============================================================================
@@ -814,7 +809,7 @@ MACRO(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
     # The actual packaging code goes into a separate CMake script file that is
     # run as a POST_BUILD step
 
-    SET(CMAKE_CODE "CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+    SET(CMAKE_CODE "CMAKE_MINIMUM_REQUIRED(VERSION 3.3)
 
 # Files and directories to package
 
