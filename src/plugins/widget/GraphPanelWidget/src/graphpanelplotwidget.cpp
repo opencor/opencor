@@ -1886,6 +1886,13 @@ void GraphPanelPlotWidget::exportTo()
         else
             QwtPlotRenderer().renderDocument(this, fileName, QSizeF(width()*InToMm/Dpi, height()*InToMm/Dpi), Dpi);
     }
+
+    // QwtPlotRenderer::renderDocument() changes and then invalidates our
+    // layout, so we need to update it
+    // Note: indeed, the plot layout's canvas rectangle is, among other things,
+    //       used to determine whether we can interact with our plot...
+
+    updateLayout();
 }
 
 //==============================================================================
