@@ -144,11 +144,11 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           3d2fd6309859eb5ba306b9c6a5be578784562a48)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 8e8a00500851c670deaf1f416e5884e9f779a183
+                              ${RELATIVE_PROJECT_SOURCE_DIR} d37d37c8d537add58870b967795968bae57ddea4
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 296385f1f0c9c71f7396cc434ab3e0649d1ba510
+                              SHA1_VALUES a045297a97db11c3940d29b04dbc6db29931d82b
                                           1ca7ba8178d833a09f78ef0df2e452ab43b0b9d7)
     ENDIF()
 ELSE()
@@ -253,6 +253,16 @@ ELSE()
 
     # Package our external project
 
+    IF(NOT WIN AND NOT APPLE)
+        SET(SYMBOLIC_LINKS
+            ${SHARED_LIBRARIES_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}WebKit${CMAKE_SHARED_LIBRARY_SUFFIX}
+            ${SHARED_LIBRARIES_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}WebKit${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_LIBRARY_VERSION}
+
+            ${SHARED_LIBRARIES_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}WebKitWidgets${CMAKE_SHARED_LIBRARY_SUFFIX}
+            ${SHARED_LIBRARIES_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}WebKitWidgets${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_LIBRARY_VERSION}
+        )
+    ENDIF()
+
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
@@ -261,6 +271,7 @@ ELSE()
                             include
                             ${IMPORT_LIBRARIES_DIR}/cmake
                             ${SHA1_FILES}
+                            ${SYMBOLIC_LINKS}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 ENDIF()
