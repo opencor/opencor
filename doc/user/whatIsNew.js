@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 5, "month": 10, "year": 2017,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 23, "month": 10, "year": 2017,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -7,9 +7,10 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "include/exclude plugins from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Linux\">Linux</a>." },
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a>." },
+                           { "type": "Improved", "description": "Plugins dialog." },
                            { "type": "Improved", "description": "Plugin framework." },
                            { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
-                           { "type": "Improved", "description": "Keyboard navigation in tree views." },
+                           { "type": "Improved", "description": "Keyboard navigation in tree views." }
                          ]
                        },
                        { "name": "API",
@@ -398,7 +399,7 @@ var jsonData = { "versions": [
                            { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a> on <a href=\"https://en.wikipedia.org/wiki/Linux\">Linux</a> and <a href=\"https://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
                            { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                            { "type": "Improved", "description": "Plugin framework." },
-                           { "type": "Improved", "description": "Plugins window." },
+                           { "type": "Improved", "description": "Plugins dialog." },
                            { "type": "Improved", "description": "Handling of files." },
                            { "type": "Improved", "description": "Mode/view philosophy." },
                            { "type": "Improved", "description": "Keyboard navigation in tree views." },
@@ -504,7 +505,7 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Reloading of a file." },
                            { "type": "Improved", "description": "Keyboard navigation in tree views." },
                            { "type": "Improved", "description": "Handling of files." },
-                           { "type": "Improved", "description": "Plugins window." }
+                           { "type": "Improved", "description": "Plugins dialog." }
                          ]
                        },
                        { "name": "Editing",

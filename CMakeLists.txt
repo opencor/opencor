@@ -132,8 +132,6 @@ GET_TARGET_PROPERTY(QMAKE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
 
 SET(QMAKE_COMMAND ${QMAKE} -Wnone)
 
-STRING(REPLACE ";" " " QMAKE_COMMAND_AS_STRING "${QMAKE_COMMAND}")
-
 # Determine our platform directory
 
 IF(WIN32)
@@ -247,12 +245,16 @@ SET(EXTERNAL_PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR}/ext)
 
 SET_PROPERTY(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
 
-# A few constants to help with building an external project
+# A few constants to help us with building an external project
+
+IF(CCACHE)
+    SET(CMAKE_ARGS -DCMAKE_CXX_COMPILER_LAUNCHER=${CCACHE})
+ELSE()
+    SET(CMAKE_ARGS)
+ENDIF()
 
 IF(APPLE)
-    SET(DEFINE_CMAKE_APPLE_OPTIONS "-DCMAKE_MACOSX_RPATH=ON")
-ELSE()
-    SET(DEFINE_CMAKE_APPLE_OPTIONS)
+    SET(CMAKE_ARGS ${CMAKE_ARGS} -DCMAKE_MACOSX_RPATH=ON)
 ENDIF()
 
 IF(WIN32)
@@ -271,9 +273,6 @@ ELSE()
         SET(MAKE_JOM_COMMAND ${MAKE_JOM_COMMAND} -j ${PROCESSOR_COUNT})
     ENDIF()
 ENDIF()
-
-STRING(REPLACE ";" " " MAKE_NMAKE_COMMAND_AS_STRING "${MAKE_NMAKE_COMMAND}")
-STRING(REPLACE ";" " " MAKE_JOM_COMMAND_AS_STRING "${MAKE_JOM_COMMAND}")
 
 # A couple of variables that make it easier to specify library file names with a
 # version (e.g. to be able to reference libz.so.1 and libz.1.dylib, we could
@@ -1049,7 +1048,7 @@ IF(APPLE)
 
     MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
 
-    # Deploy our Qt libraries
+    # Qt libraries required by OpenCOR
     # Note: the Qt Brew formula that we use on Travis CI somehow results in some
     #       of our tests generating messages about two frameworks being
     #       available and that one of them will be used, but that we don't know
@@ -1062,7 +1061,7 @@ IF(APPLE)
         ENDFOREACH()
     ENDIF()
 
-    # Deploy some plugins
+    # Qt plugins required by OpenCOR
 
     MACOS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     MACOS_DEPLOY_QT_PLUGIN(platforms qcocoa)
