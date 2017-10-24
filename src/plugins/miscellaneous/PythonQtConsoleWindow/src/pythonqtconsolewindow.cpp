@@ -56,43 +56,48 @@ sys.path.insert(0, '.')
 from qtconsole.inprocess import QtInProcessKernelManager
 from qtconsole.inprocess import QtInProcessRichJupyterWidget
 
-# The widget we are creating -- it's a global so it doesn't get
+class QtConsole(object):
+    def __init__(self):
+        # Create and start an in-process kernel manager
+
+        self._kernel_manager = QtInProcessKernelManager()
+        self._kernel_manager.start_kernel(show_banner=False)
+
+        # Set the kernel's GUI to PythonQt
+
+        self._kernel = self._kernel_manager.kernel
+        self._kernel.gui = 'pythonqt'
+
+        # Start the kernel's client
+
+        self._kernel_client = self._kernel_manager.client()
+        self._kernel_client.start_channels()
+
+        # Create a Jupyter widget and connect it with our kernel and
+        # its client
+
+        self._widget = QtInProcessRichJupyterWidget(font_size=10)
+        self._widget.kernel_manager = self._kernel_manager
+        self._widget.kernel_client = self._kernel_client
+
+        # `sys.stderr` will now be redirected to the console, however
+        # logging is still going to PythonQt (and the terminal shell)
+        # so we redirect logging output to the console.
+
+        logging.getLogger().handlers[0].stream = sys.stderr
+
+    def widget(self):
+        return self._widget
+
+# The console we are creating -- it's a global so it doesn't get
 # garbage collected.
 
-ipython_widget = None
+qt_console = None
 
 def create_ipython_widget():
-    global ipython_widget
-
-    # Create and start an in-process kernel manager
-
-    kernel_manager = QtInProcessKernelManager()
-    kernel_manager.start_kernel(show_banner=False)
-
-    # Set the kernel's GUI to PythonQt
-
-    kernel = kernel_manager.kernel
-    kernel.gui = 'pythonqt'
-
-    # Start the kernel's client
-
-    kernel_client = kernel_manager.client()
-    kernel_client.start_channels()
-
-    # Create a Jupyter widget and connect it with our kernel and
-    # its client
-
-    ipython_widget = QtInProcessRichJupyterWidget(font_size=10)
-    ipython_widget.kernel_manager = kernel_manager
-    ipython_widget.kernel_client = kernel_client
-
-    # `sys.stderr` will now be redirected to the console, however
-    # logging is still going to PythonQt (and the terminal shell)
-    # so we redirect logging output to the console.
-
-    logging.getLogger().handlers[0].stream = sys.stderr
-
-    return ipython_widget
+    global qt_console
+    qt_console = QtConsole()
+    return qt_console.widget()
 )PYTHON";
 
 
