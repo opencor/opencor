@@ -155,8 +155,6 @@ static PyMethodDef pythonSimulationExperimentViewMethods[] = {
 
 SimulationExperimentViewPythonWrapper::SimulationExperimentViewPythonWrapper(PyObject *pModule, QObject *pParent) : QObject(pParent)
 {
-    PythonSupport::addInstanceDecorators(this);
-
     PyModule_AddFunctions(pModule, pythonSimulationExperimentViewMethods);
 }
 
