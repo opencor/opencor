@@ -3,7 +3,11 @@ PROJECT(PythonQtAPIPlugin)
 # Name and version of our package
 
 SET(PACKAGE_NAME PythonQt)
-SET(PACKAGE_VERSION "3.2.0")
+SET(PACKAGE_VERSION "3.2.1")
+
+# Release tag of our packaged library
+
+SET(RELEASE_TAG opencor-v3.2.1)
 
 # Version of our library
 
@@ -12,7 +16,7 @@ SET(LIBRARY_VERSION "${MAJOR_LIBRARY_VERSION}.2.0")
 
 # Git tag for our library
 
-SET(GIT_TAG "opencor")
+SET(GIT_TAG opencor-v3.2.1)
 
 # Specify where our local package will be installed
 
@@ -70,9 +74,10 @@ IF(USE_PREBUILT_PYTHONQT_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f775ed78016d1037eebd42c90be77a99b36535eb
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 18bc8c67135bb0c1ea0d302ed68f9dc89383e38d
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 841689afb345946efa422ee787c97e672e6ffdcb)
+                              SHA1_VALUES 3b511fb9ed6fc1c78db5591cec53b7c0ea45c896)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 57bcc2f58e9d141535554bafd429418155b50b74
@@ -201,6 +206,7 @@ ELSE()
 
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
