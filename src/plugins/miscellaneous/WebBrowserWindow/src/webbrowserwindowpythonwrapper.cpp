@@ -18,18 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Web Browser window plugin
+// Python wrapper for web browser window
 //==============================================================================
 
-#pragma once
+#include "pythonsupport.h"
+#include "webbrowserwindowplugin.h"
+#include "webbrowserwindowpythonwrapper.h"
+#include "webbrowserwindowwidget.h"
 
 //==============================================================================
 
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
-#include "pythoninterface.h"
-#include "windowinterface.h"
+#include <QWebView>
 
 //==============================================================================
 
@@ -38,51 +37,29 @@ namespace WebBrowserWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC WebBrowserWindowPluginInfo();
-
-//==============================================================================
-
-class WebBrowserWindowPythonWrapper;
-class WebBrowserWindowWidget;
-class WebBrowserWindowWindow;
-
-
-//==============================================================================
-
-class WebBrowserWindowPlugin : public QObject, public I18nInterface,
-                               public PluginInterface, public PythonInterface,
-                               public WindowInterface
+static PyObject *browserWebView(PyObject *self, PyObject *args)
 {
-    Q_OBJECT
+    Q_UNUSED(self);
+    Q_UNUSED(args);
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.WebBrowserWindowPlugin" FILE "webbrowserwindowplugin.json")
+    return PythonSupport::wrapQObject(WebBrowserWindowPlugin::instance()->browserWidget()->webView());
+}
 
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::PythonInterface)
-    Q_INTERFACES(OpenCOR::WindowInterface)
+//==============================================================================
 
-public:
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "pythoninterface.inl"
-#include "windowinterface.inl"
-
-    static WebBrowserWindowPlugin * instance();
-
-    WebBrowserWindowWidget * browserWidget() const;
-
-private:
-    QAction *mWebBrowserWindowAction;
-
-    WebBrowserWindowWidget *mWebBrowserWindowWidget;
-    WebBrowserWindowWindow *mWebBrowserWindowWindow;
-
-    WebBrowserWindowPythonWrapper *mWebBrowserWindowPythonWrapper;
+static PyMethodDef pythonWebBrowserWindowMethods[] = {
+    {"browserWebView",  browserWebView, METH_VARARGS, "browserWebView()\n\nReturn a QWebView of OpenCOR's web browser."},
+    {NULL, NULL, 0, NULL}
 };
 
 //==============================================================================
 
+WebBrowserWindowPythonWrapper::WebBrowserWindowPythonWrapper(PyObject *pModule, QObject *pParent) : QObject(pParent)
+{
+    PyModule_AddFunctions(pModule, pythonWebBrowserWindowMethods);
+}
+
+//==============================================================================
 }   // namespace WebBrowserWindow
 }   // namespace OpenCOR
 

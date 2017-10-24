@@ -62,6 +62,8 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    WebBrowserWindowWidget * widget() const;
+
 private:
     Ui::WebBrowserWindowWindow *mGui;
 

@@ -242,6 +242,13 @@ void WebBrowserWindowWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
+WebBrowserWindowWidget *WebBrowserWindowWindow::widget() const
+{
+    return mWebBrowserWindowWidget;
+}
+
+//==============================================================================
+
 void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
 {
     // The URL has changed, so update our URL value
