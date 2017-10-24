@@ -49,11 +49,34 @@ namespace OpenCOR {
 
 //==============================================================================
 
+QtMessageHandler defaultMessageHandler;
+
+//==============================================================================
+
+void messageHandler(QtMsgType pType, const QMessageLogContext &pContext,
+                     const QString &pMessage)
+{
+    // Handle all messages, except a specific warning from libpng
+    // Note: https://wiki.archlinux.org/index.php/Libpng_errors explains the
+    //       warning we want to filter out. It also provides a fix and although
+    //       it worked for us in the past, it doesn't seem to work anymore,
+    //       hence our filtering it out...
+
+    if (pMessage.compare("libpng warning: iCCP: known incorrect sRGB profile"))
+        defaultMessageHandler(pType, pContext, pMessage);
+}
+
+//==============================================================================
+
 void initQtMessagePattern()
 {
-    // We don't want to see debug/warning messages when not in debug mode
+    // We don't want to see debug/warning messages when not in debug mode while
+    // we want to see everything when in debug mode, except some messages that
+    // we want to filter out
 
-#ifndef QT_DEBUG
+#ifdef QT_DEBUG
+    defaultMessageHandler = qInstallMessageHandler(messageHandler);
+#else
     qSetMessagePattern("%{if-debug}%{endif}"
                        "%{if-warning}%{endif}"
                        "%{if-critical}%{message}%{endif}"
