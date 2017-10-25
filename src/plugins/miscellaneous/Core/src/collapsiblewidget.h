@@ -62,7 +62,7 @@ signals:
 
 //==============================================================================
 
-class CollapsibleHeaderWidget : public QWidget
+class CORE_EXPORT CollapsibleHeaderWidget : public QWidget
 {
     Q_OBJECT
 
