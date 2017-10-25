@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file alias="app_splashscreen">splashscreen.png</file>
         <file alias="app_icon">OpenCOR.png</file>
+        <file>menu.png</file>
         <file>flags/ad.png</file>
         <file>flags/ae.png</file>
         <file>flags/af.png</file>
