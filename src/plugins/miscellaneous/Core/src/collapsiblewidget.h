@@ -67,8 +67,7 @@ class CollapsibleHeaderWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit CollapsibleHeaderWidget(const QColor &pSeparatorColor,
-                                     const bool &pCollapsible,
+    explicit CollapsibleHeaderWidget(const bool &pCollapsible,
                                      QWidget *pParent);
 
     void setFirstHeader(const bool &pFirstHeader);
@@ -109,7 +108,6 @@ class CORE_EXPORT CollapsibleWidget : public Widget
     Q_OBJECT
 
 public:
-    explicit CollapsibleWidget(const QColor &pSeparatorColor, QWidget *pParent);
     explicit CollapsibleWidget(QWidget *pParent);
 
     int count() const;
@@ -124,8 +122,6 @@ public:
 
 private:
     QVBoxLayout *mLayout;
-
-    QColor mSeparatorColor;
 
     QList<CollapsibleHeaderWidget *> mHeaders;
 

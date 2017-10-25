@@ -58,8 +58,7 @@ void CollapsibleHeaderTitleWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
-                                                 const bool &pCollapsible,
+CollapsibleHeaderWidget::CollapsibleHeaderWidget(const bool &pCollapsible,
                                                  QWidget *pParent) :
     QWidget(pParent),
     mCollapsed(false),
@@ -124,8 +123,8 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
     // Note: we keep track of our top and bottom separators since we may need
     //       to hide them in some cases/circumstances...
 
-    mTopSeparator = newLineWidget(pSeparatorColor, this);
-    mBottomSeparator = newLineWidget(pSeparatorColor, this);
+    mTopSeparator = newLineWidget(borderColor(), this);
+    mBottomSeparator = newLineWidget(borderColor(), this);
 
     layout->addWidget(mTopSeparator);
     layout->addWidget(subWidget);
@@ -246,10 +245,8 @@ void CollapsibleHeaderWidget::toggleCollapsedState()
 
 //==============================================================================
 
-CollapsibleWidget::CollapsibleWidget(const QColor &pSeparatorColor,
-                                     QWidget *pParent) :
+CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
     Widget(QSize(), pParent),
-    mSeparatorColor(pSeparatorColor),
     mHeaders(QList<CollapsibleHeaderWidget *>())
 {
     // Create a vertical layout that will contain our headers and widgets
@@ -260,13 +257,6 @@ CollapsibleWidget::CollapsibleWidget(const QColor &pSeparatorColor,
     mLayout->setSpacing(0);
 
     setLayout(mLayout);
-}
-
-//==============================================================================
-
-CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
-    CollapsibleWidget(borderColor(), pParent)
-{
 }
 
 //==============================================================================
@@ -327,7 +317,7 @@ void CollapsibleWidget::addWidget(QWidget *pWidget, const bool &pCollapsible)
 
     // We want to add a widget, so we first need to add a header to our layout
 
-    CollapsibleHeaderWidget *header = new CollapsibleHeaderWidget(mSeparatorColor, pCollapsible, this);
+    CollapsibleHeaderWidget *header = new CollapsibleHeaderWidget(pCollapsible, this);
 
     // Let our header know whether it is the first header
 
