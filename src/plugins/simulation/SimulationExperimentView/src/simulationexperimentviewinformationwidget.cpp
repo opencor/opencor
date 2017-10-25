@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "collapsiblewidget.h"
+#include "i18ninterface.h"
 #include "simulationexperimentviewinformationgraphpanelwidget.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
 #include "simulationexperimentviewinformationsimulationwidget.h"
@@ -30,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QMenu>
 #include <QSettings>
 #include <QVBoxLayout>
 
@@ -92,10 +94,33 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
     // Add our simulation, solvers, graphs and parameters widgets to our
     // collapsible widget
 
-    mCollapsibleWidget->addWidget(mSimulationWidget);
-    mCollapsibleWidget->addWidget(mSolversWidget);
-    mCollapsibleWidget->addWidget(mGraphPanelWidget);
-    mCollapsibleWidget->addWidget(mParametersWidget, false);
+                                                      mCollapsibleWidget->addWidget(mSimulationWidget);
+                                                      mCollapsibleWidget->addWidget(mSolversWidget);
+    Core::CollapsibleHeaderWidget *graphPanelHeader = mCollapsibleWidget->addWidget(mGraphPanelWidget);
+                                                      mCollapsibleWidget->addWidget(mParametersWidget, false);
+
+    // Create and set a menu for our graph panel header
+
+    QMenu *menu = new QMenu(this);
+
+    mGraphPanelAction = Core::newAction(true, graphPanelHeader);
+    mGraphsAction = Core::newAction(true, graphPanelHeader);
+
+    mGraphsAction->setChecked(true);
+
+    QActionGroup *settingsActionGroup = new QActionGroup(this);
+
+    settingsActionGroup->addAction(mGraphPanelAction);
+    settingsActionGroup->addAction(mGraphsAction);
+
+    menu->addActions(settingsActionGroup->actions());
+
+    graphPanelHeader->setMenu(menu);
+
+    connect(mGraphPanelAction, SIGNAL(triggered(bool)),
+            this, SLOT(grapPanelPropertyEditor()));
+    connect(mGraphsAction, SIGNAL(triggered(bool)),
+            this, SLOT(graphsPropertyEditor()));
 
     // Add our collapsible widget to our layout
 
@@ -119,6 +144,13 @@ void SimulationExperimentViewInformationWidget::retranslateUi()
     mSolversWidget->retranslateUi();
     mGraphPanelWidget->retranslateUi();
     mParametersWidget->retranslateUi();
+
+    // Retranslate our graph panel actions
+
+    I18nInterface::retranslateAction(mGraphPanelAction, tr("Graph Panel"),
+                                     tr("Graph panel settings"));
+    I18nInterface::retranslateAction(mGraphsAction, tr("Graphs"),
+                                     tr("Graphs settings"));
 }
 
 //==============================================================================
@@ -181,6 +213,22 @@ void SimulationExperimentViewInformationWidget::finishEditing(const bool &pPause
 
     mGraphPanelWidget->finishEditing();
     mParametersWidget->finishEditing();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationWidget::grapPanelPropertyEditor()
+{
+//---ISSUE1426--- TO BE DONE...
+    qDebug(">>> SimulationExperimentViewInformationWidget::grapPanelPropertyEditor()...");
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationWidget::graphsPropertyEditor()
+{
+//---ISSUE1426--- TO BE DONE...
+    qDebug(">>> SimulationExperimentViewInformationWidget::graphsPropertyEditor()...");
 }
 
 //==============================================================================

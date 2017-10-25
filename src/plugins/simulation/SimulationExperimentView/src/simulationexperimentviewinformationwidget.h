@@ -84,6 +84,13 @@ private:
     SimulationExperimentViewInformationSolversWidget *mSolversWidget;
     SimulationExperimentViewInformationGraphPanelWidget *mGraphPanelWidget;
     SimulationExperimentViewInformationParametersWidget *mParametersWidget;
+
+    QAction *mGraphPanelAction;
+    QAction *mGraphsAction;
+
+private slots:
+    void grapPanelPropertyEditor();
+    void graphsPropertyEditor();
 };
 
 //==============================================================================
