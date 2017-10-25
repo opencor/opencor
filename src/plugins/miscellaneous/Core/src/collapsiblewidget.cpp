@@ -96,27 +96,35 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const bool &pCollapsible,
     static const QIcon NoIcon   = QIcon();
     static const QIcon DownIcon = QIcon(":/oxygen/actions/arrow-down.png");
 
+    static const QString IconStyleSheet = "QToolButton {"
+                                          "    border: none;"
+                                          "}"
+                                          ""
+                                          "QToolButton:pressed {"
+                                          "    margin: 0px;"
+                                          "}";
+
     mButton = new QToolButton(subWidget);
     mTitle = new CollapsibleHeaderTitleWidget(subWidget);
+    mMenu = new QToolButton(subWidget);
 
     int iconSize = 0.4*mTitle->height();
 
     mButton->setIcon(pCollapsible?DownIcon:NoIcon);
     mButton->setIconSize(QSize(iconSize, iconSize));
-    mButton->setStyleSheet("QToolButton {"
-                           "    border: none;"
-                           "}"
-                           ""
-                           "QToolButton:pressed {"
-                           "    margin: 0px;"
-                           "}");
+    mButton->setStyleSheet(IconStyleSheet);
 
     mTitle->setAlignment(Qt::AlignCenter);
+
+    mMenu->setIcon(NoIcon);
+    mMenu->setIconSize(QSize(iconSize, iconSize));
+    mMenu->setStyleSheet(IconStyleSheet);
 
     // Add our button and title to our sub-layout
 
     subLayout->addWidget(mButton);
     subLayout->addWidget(mTitle);
+    subLayout->addWidget(mMenu);
 
     // Add a top separator, our sub-widget and a bottom separator to our main
     // layout

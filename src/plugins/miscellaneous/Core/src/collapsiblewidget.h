@@ -91,6 +91,7 @@ private:
 
     QToolButton *mButton;
     CollapsibleHeaderTitleWidget *mTitle;
+    QToolButton *mMenu;
 
     void updateBottomSeparatorVisibleStatus();
 
