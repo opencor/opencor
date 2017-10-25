@@ -135,7 +135,9 @@ void SimulationExperimentViewInformationWidget::retranslateUi()
 
     mCollapsibleWidget->setHeaderTitle(0, tr("Simulation"));
     mCollapsibleWidget->setHeaderTitle(1, tr("Solvers"));
-    mCollapsibleWidget->setHeaderTitle(2, tr("Graph Panel"));
+    mCollapsibleWidget->setHeaderTitle(2, mGraphPanelAction->isChecked()?
+                                              tr("Graph Panel"):
+                                              tr("Graphs"));
     mCollapsibleWidget->setHeaderTitle(3, tr("Parameters"));
 
     // Retranslate our simulation, solvers, graphs and parameters widgets
@@ -221,6 +223,11 @@ void SimulationExperimentViewInformationWidget::grapPanelPropertyEditor()
 {
 //---ISSUE1426--- TO BE DONE...
     qDebug(">>> SimulationExperimentViewInformationWidget::grapPanelPropertyEditor()...");
+
+    // Update the title of our collapsible widget's third header's title by
+    // retranslating ourselves
+
+    retranslateUi();
 }
 
 //==============================================================================
@@ -229,6 +236,11 @@ void SimulationExperimentViewInformationWidget::graphsPropertyEditor()
 {
 //---ISSUE1426--- TO BE DONE...
     qDebug(">>> SimulationExperimentViewInformationWidget::graphsPropertyEditor()...");
+
+    // Update the title of our collapsible widget's third header's title by
+    // retranslating ourselves
+
+    retranslateUi();
 }
 
 //==============================================================================
