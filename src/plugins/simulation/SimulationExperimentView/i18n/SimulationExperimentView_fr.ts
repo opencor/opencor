@@ -267,6 +267,18 @@
         <source>Parameters</source>
         <translation>Paramètres</translation>
     </message>
+    <message>
+        <source>Graph panel settings</source>
+        <translation>Propriétés du panneau graphique</translation>
+    </message>
+    <message>
+        <source>Graphs</source>
+        <translation>Graphes</translation>
+    </message>
+    <message>
+        <source>Graphs settings</source>
+        <translation>Propriétés des graphes</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewPlugin</name>
