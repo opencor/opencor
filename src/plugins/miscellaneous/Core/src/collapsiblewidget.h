@@ -81,6 +81,9 @@ public:
     QString title() const;
     void setTitle(const QString &pTitle);
 
+    QMenu * menu() const;
+    void setMenu(QMenu *pMenu);
+
 private:
     bool mCollapsed;
 
@@ -93,6 +96,8 @@ private:
     CollapsibleHeaderTitleWidget *mTitle;
     QToolButton *mMenu;
 
+    QMenu *mMenuMenu;
+
     void updateBottomSeparatorVisibleStatus();
 
 signals:
@@ -100,6 +105,7 @@ signals:
 
 private slots:
     void toggleCollapsedState();
+    void showMenu();
 };
 
 //==============================================================================
@@ -119,7 +125,8 @@ public:
     QString headerTitle(const int &pIndex) const;
     void setHeaderTitle(const int &pIndex, const QString &pTitle);
 
-    void addWidget(QWidget *pWidget, const bool &pCollapsible = true);
+    CollapsibleHeaderWidget * addWidget(QWidget *pWidget,
+                                        const bool &pCollapsible = true);
 
 private:
     QVBoxLayout *mLayout;
