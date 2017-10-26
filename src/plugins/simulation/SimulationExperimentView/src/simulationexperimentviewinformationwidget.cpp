@@ -221,9 +221,6 @@ void SimulationExperimentViewInformationWidget::finishEditing(const bool &pPause
 
 void SimulationExperimentViewInformationWidget::grapPanelPropertyEditor()
 {
-//---ISSUE1426--- TO BE DONE...
-    qDebug(">>> SimulationExperimentViewInformationWidget::grapPanelPropertyEditor()...");
-
     // Update the title of our collapsible widget's third header's title by
     // retranslating ourselves
 
@@ -234,9 +231,6 @@ void SimulationExperimentViewInformationWidget::grapPanelPropertyEditor()
 
 void SimulationExperimentViewInformationWidget::graphsPropertyEditor()
 {
-//---ISSUE1426--- TO BE DONE...
-    qDebug(">>> SimulationExperimentViewInformationWidget::graphsPropertyEditor()...");
-
     // Update the title of our collapsible widget's third header's title by
     // retranslating ourselves
 
