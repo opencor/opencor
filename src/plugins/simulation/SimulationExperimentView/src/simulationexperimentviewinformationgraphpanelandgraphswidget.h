@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Simulation Experiment view information graph panel widget
+// Simulation Experiment view information graph panel and graphs widget
 //==============================================================================
 
 #pragma once
@@ -68,15 +68,15 @@ class SimulationExperimentViewWidget;
 
 //==============================================================================
 
-class SimulationExperimentViewInformationGraphPanelWidget : public QStackedWidget,
-                                                            public Core::CommonWidget
+class SimulationExperimentViewInformationGraphPanelAndGraphsWidget : public QStackedWidget,
+                                                                     public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit SimulationExperimentViewInformationGraphPanelWidget(SimulationExperimentViewWidget *pViewWidget,
-                                                                 SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                                 QWidget *pParent);
+    explicit SimulationExperimentViewInformationGraphPanelAndGraphsWidget(SimulationExperimentViewWidget *pViewWidget,
+                                                                          SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                                                          QWidget *pParent);
 
     virtual void retranslateUi();
 

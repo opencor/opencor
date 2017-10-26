@@ -165,7 +165,7 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
                    this, SLOT(simulationWidgetHeaderSectionResized(const int &, const int &, const int &)));
         disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
                    this, SLOT(solversWidgetHeaderSectionResized(const int &, const int &, const int &)));
-        disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->graphPanelWidget(), SIGNAL(headerSectionResized(int, int, int)),
+        disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget(), SIGNAL(headerSectionResized(int, int, int)),
                    this, SLOT(graphsWidgetHeaderSectionResized(const int &, const int &, const int &)));
         disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
                    this, SLOT(parametersWidgetHeaderSectionResized(const int &, const int &, const int &)));
@@ -222,7 +222,7 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
             this, SLOT(simulationWidgetHeaderSectionResized(const int &, const int &, const int &)));
     connect(mSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
             this, SLOT(solversWidgetHeaderSectionResized(const int &, const int &, const int &)));
-    connect(mSimulationWidget->contentsWidget()->informationWidget()->graphPanelWidget(), SIGNAL(headerSectionResized(int, int, int)),
+    connect(mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget(), SIGNAL(headerSectionResized(int, int, int)),
             this, SLOT(graphsWidgetHeaderSectionResized(const int &, const int &, const int &)));
     connect(mSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
             this, SLOT(parametersWidgetHeaderSectionResized(const int &, const int &, const int &)));
@@ -620,7 +620,7 @@ void SimulationExperimentViewWidget::graphsWidgetHeaderSectionResized(const int 
 
     // Keep track of the new column width
 
-    if (qobject_cast<SimulationExperimentViewInformationGraphPanelWidget *>(sender())->isVisible())
+    if (qobject_cast<SimulationExperimentViewInformationGraphPanelAndGraphsWidget *>(sender())->isVisible())
         mGraphsWidgetColumnWidths[pIndex] = pNewSize;
 }
 
@@ -654,7 +654,7 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
         pSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->setColumnWidth(i, mSolversWidgetColumnWidths[i]);
 
     for (int i = 0, iMax = mGraphsWidgetColumnWidths.count(); i < iMax; ++i)
-        pSimulationWidget->contentsWidget()->informationWidget()->graphPanelWidget()->setColumnWidth(i, mGraphsWidgetColumnWidths[i]);
+        pSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setColumnWidth(i, mGraphsWidgetColumnWidths[i]);
 
     for (int i = 0, iMax = mParametersWidgetColumnWidths.count(); i < iMax; ++i)
         pSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->setColumnWidth(i, mParametersWidgetColumnWidths[i]);

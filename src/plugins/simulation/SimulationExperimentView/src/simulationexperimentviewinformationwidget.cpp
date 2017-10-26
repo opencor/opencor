@@ -79,11 +79,11 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
 
     mSolversWidget->setObjectName("Solvers");
 
-    // Create our graph panel widget
+    // Create our graph panel and graphs widget
 
-    mGraphPanelWidget = new SimulationExperimentViewInformationGraphPanelWidget(pViewWidget, pSimulationWidget, mCollapsibleWidget);
+    mGraphPanelAndGraphsWidget = new SimulationExperimentViewInformationGraphPanelAndGraphsWidget(pViewWidget, pSimulationWidget, mCollapsibleWidget);
 
-    mGraphPanelWidget->setObjectName("GraphPanel");
+    mGraphPanelAndGraphsWidget->setObjectName("GraphPanelAndGraphs");
 
     // Create our parameters widget
 
@@ -96,7 +96,7 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
 
                                                       mCollapsibleWidget->addWidget(mSimulationWidget);
                                                       mCollapsibleWidget->addWidget(mSolversWidget);
-    Core::CollapsibleHeaderWidget *graphPanelHeader = mCollapsibleWidget->addWidget(mGraphPanelWidget);
+    Core::CollapsibleHeaderWidget *graphPanelHeader = mCollapsibleWidget->addWidget(mGraphPanelAndGraphsWidget);
                                                       mCollapsibleWidget->addWidget(mParametersWidget, false);
 
     // Create and set a menu for our graph panel header
@@ -144,7 +144,7 @@ void SimulationExperimentViewInformationWidget::retranslateUi()
 
     mSimulationWidget->retranslateUi();
     mSolversWidget->retranslateUi();
-    mGraphPanelWidget->retranslateUi();
+    mGraphPanelAndGraphsWidget->retranslateUi();
     mParametersWidget->retranslateUi();
 
     // Retranslate our graph panel actions
@@ -184,11 +184,11 @@ SimulationExperimentViewInformationSolversWidget * SimulationExperimentViewInfor
 
 //==============================================================================
 
-SimulationExperimentViewInformationGraphPanelWidget * SimulationExperimentViewInformationWidget::graphPanelWidget() const
+SimulationExperimentViewInformationGraphPanelAndGraphsWidget * SimulationExperimentViewInformationWidget::graphPanelAndGraphsWidget() const
 {
-    // Return our graph panel widget
+    // Return our graph panel and graphs widget
 
-    return mGraphPanelWidget;
+    return mGraphPanelAndGraphsWidget;
 }
 
 //==============================================================================
@@ -213,7 +213,7 @@ void SimulationExperimentViewInformationWidget::finishEditing(const bool &pPause
         mSolversWidget->finishEditing();
     }
 
-    mGraphPanelWidget->finishEditing();
+    mGraphPanelAndGraphsWidget->finishEditing();
     mParametersWidget->finishEditing();
 }
 
