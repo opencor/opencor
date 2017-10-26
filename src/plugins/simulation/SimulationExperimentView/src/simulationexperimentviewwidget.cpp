@@ -75,12 +75,14 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
 
 //==============================================================================
 
-static const auto SettingsSizes = QStringLiteral("Sizes");
-static const auto SettingsContentsSizes = QStringLiteral("ContentsSizes");
-static const auto SettingsCollapsed = QStringLiteral("Collapsed");
+static const auto SettingsSizes                  = QStringLiteral("Sizes");
+static const auto SettingsContentsSizes          = QStringLiteral("ContentsSizes");
+static const auto SettingsCollapsed              = QStringLiteral("Collapsed");
 static const auto SettingsSimulationColumnWidths = QStringLiteral("SimulationColumnWidths");
 static const auto SettingsSolversColumnWidths = QStringLiteral("SolversColumnWidths");
 static const auto SettingsGraphsColumnWidths = QStringLiteral("GraphsColumnWidths");
+static const auto SettingsSolversColumnWidths    = QStringLiteral("SolversColumnWidths");
+static const auto SettingsGraphsColumnWidths     = QStringLiteral("GraphsColumnWidths");
 static const auto SettingsParametersColumnWidths = QStringLiteral("ParametersColumnWidths");
 
 //==============================================================================
