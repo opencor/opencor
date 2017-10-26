@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "collapsiblewidget.h"
 #include "i18ninterface.h"
-#include "simulationexperimentviewinformationgraphpanelwidget.h"
+#include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
 #include "simulationexperimentviewinformationsimulationwidget.h"
 #include "simulationexperimentviewinformationsolverswidget.h"

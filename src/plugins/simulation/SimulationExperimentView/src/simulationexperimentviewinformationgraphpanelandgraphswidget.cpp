@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "i18ninterface.h"
 #include "sedmlsupport.h"
 #include "simulation.h"
-#include "simulationexperimentviewinformationgraphpanelwidget.h"
+#include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 

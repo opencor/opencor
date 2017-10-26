@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sedmlsupportplugin.h"
 #include "simulation.h"
 #include "simulationexperimentviewcontentswidget.h"
-#include "simulationexperimentviewinformationgraphpanelwidget.h"
+#include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
 #include "simulationexperimentviewinformationsimulationwidget.h"
 #include "simulationexperimentviewinformationsolverswidget.h"
