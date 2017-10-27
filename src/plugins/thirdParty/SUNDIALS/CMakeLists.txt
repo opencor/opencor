@@ -275,13 +275,23 @@ IF(USE_PREBUILT_SUNDIALS_PACKAGE)
                                           01a7500b184273b781f0d46fe13aacee712c9e8a)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 1641db3d02f6bca94919f9d20a8c3bc12cdc08c3
+                              ${RELATIVE_PROJECT_SOURCE_DIR} be02e4aeac901dfb59749ac2c2e0613a6642fb22
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 6e89d956c5518b3aee96e5b65184295a4d024e5a
-                                          d21db4de550d0dd10f452d106b986160c84feab9
-                                          9d0c2006046e015ddbb170be0eb4ad0e88e13260
-                                          02af75b88418e8b91b67801e748d1121e31d320e
-                                          848ebf6200a1b8c6cfc4c3581dc60530b023971c)
+                              SHA1_VALUES c55c9d4e87e72b33ae243c0daa6d755fd954226d
+                                          141b7f61d36fb388a7cc8457658d3dddc1a59089
+                                          d7b6ce0f2fe0ea1903b12ec1c0aee8b63ac68a7e
+                                          f12d8ee3b8d0b153ade30e975db650ee7dde0b0e
+                                          1a7a9d1d3028d1d250ba184d8b8a602d9030c8a5
+                                          64b540ec2e1a2da4040d08a88bb12d7b77033630
+                                          4ab9e3861b449b8eccc61d45ca6e6279399e98c9
+                                          f77cf33187bf0e1ec40ae01401d66752f8f052c9
+                                          9f1fded25d840a095a8bf287ecb168d5bb9bad2f
+                                          6a29c9670c065ae14c06ec962d67e0e75ec055a4
+                                          3ba2e15819196103ef57faa73ca701f8106e551d
+                                          88792b4d789aa5c9b7923a9bfa00b3af02c0e307
+                                          0fff38db8619cde80490d48621be1268c7a95c93
+                                          4ed6cbcc50d9283d268ca6813539bea70332726a
+                                          56c1f6ab185466d04f1c72323e59e30e0c73feb1)
     ENDIF()
 ELSE()
     # Ignore some warnings
