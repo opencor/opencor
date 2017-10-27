@@ -36,7 +36,7 @@ namespace CellMLAnnotationView {
 CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellMLSupport::CellmlFile *pCellmlFile,
                                                                                              QWidget *pParent) :
     QStackedWidget(pParent),
-    Core::CommonWidget(this),
+    Core::CommonWidget(pParent),
     mCellmlFile(pCellmlFile)
 {
     // Create our different metadata views

@@ -60,7 +60,7 @@ void ZincWidgetSceneViewerCallback::operator()(const OpenCMISS::Zinc::Sceneviewe
 
 ZincWidget::ZincWidget(QWidget *pParent) :
     QOpenGLWidget(pParent),
-    Core::CommonWidget(this),
+    Core::CommonWidget(pParent),
     mGraphicsInitialized(false),
     mDevicePixelRatio(-1),
     mContext(0),

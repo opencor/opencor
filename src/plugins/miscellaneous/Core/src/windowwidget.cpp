@@ -32,7 +32,7 @@ namespace Core {
 
 WindowWidget::WindowWidget(QWidget *pParent) :
     QDockWidget(pParent),
-    CommonWidget(this)
+    CommonWidget(pParent)
 {
 }
 

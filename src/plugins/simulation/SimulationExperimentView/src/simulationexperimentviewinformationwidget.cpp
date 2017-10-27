@@ -46,7 +46,7 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
                                                                                      SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                                      QWidget *pParent) :
     QScrollArea(pParent),
-    Core::CommonWidget(this)
+    Core::CommonWidget(pParent)
 {
     // Create and set our vertical layout
 
