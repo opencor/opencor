@@ -33,6 +33,7 @@ OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS 
 #---OPENCOR--- ENABLE WHEN WE ACTUALLY MAKE USE OF Zinc...
 #OPTION(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
+SET(USE_PREBUILT_SUNDIALS_PACKAGE OFF)
 
 # Make sure that we are using the compiler we support
 
@@ -868,6 +869,9 @@ SET(PLUGINS
     widget/WebViewerWidget
 #---OPENCOR--- ENABLE WHEN WE ACTUALLY MAKE USE OF Zinc...
 #    widget/ZincWidget
+)
+SET(PLUGINS
+    thirdParty/SUNDIALS
 )
 
 IF(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
