@@ -227,32 +227,72 @@ IF(USE_PREBUILT_SUNDIALS_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 65d6cfa2bd3a0b80d9a6fb0178cbd1b7a80ee618
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 1ad5297595d3eda6065aebfcd0d1d756dc36afb5
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 981a74f64f8b3957cc862b370c03a6d67f87e917
-                                              312e944cc07c6d821b7064e82dfcfd920cafd946
-                                              1f7719286684786637e38f8a2b694c9dd35c23b7
-                                              c1ad870853bf2e8339e830f526c7ec1a13b3d1bd
-                                              05f2d80718b504b9768aa94bcdac4398fb84ae9a
-                                              31c4f1dd3e792126b24603ab9ee2e82a88a9437f
-                                              6fb7bfa1820b8a11faecc1505a99deb266cbb8c3
-                                              6c800b44ec8613446c23466b9ccc694119220d1d
-                                              2b56025cd7e4b9d02287835fc9759e79b15f34f4
-                                              2c72755f32a0d910d9f48e7f33fe99ae0016d676)
+                                  SHA1_VALUES 7f90fee9693e2a97589a15fb7517fa21e37a89da
+                                              a63ce6da0f3288f3ad6256b31bae88553ffbd714
+                                              4dfb12f2c73336c6e84b8964fcaf664804a8998e
+                                              d10d96cf82152586e5fc3962c134ac9e24c6fec9
+                                              a2badf71e8290f0ceabd53fa2d72e5128161f549
+                                              a67839fe0625b4bf0d0c9ab22b1152a1b296bf3c
+                                              c44955b747c834988bd94ca9ff719dbae34747ac
+                                              56394648040d5028f5062c1a013172c0319fa4e6
+                                              1581a6421849e09e96e3c6d21a0dcd8c7fa5c3d4
+                                              5f7697b35a18e4872067d29bae7a78338bac62a8
+                                              48aa30198d48583441c0d8873fdc5c9209cc54a9
+                                              caccc703913a48973f5327adcefd0cba3b451316
+                                              f4cbd286d1685c2933e78166efa0a4e7f2d2fcf5
+                                              e8dead15a5239635739d45d5aaf22cf70962211c
+                                              46832df0b88b2caf41c2e3b62efa99c79d70b84e
+                                              5e697b576bfe111832d609c43c2808c614ead24e
+                                              eff35d955068d544ca06c2875f8694d8e687fecd
+                                              9d60460563258b9d991344ddcb55adb6aceed01e
+                                              dd8f275833faf9ce58885fa18d5f3190a23123b6
+                                              410fa466f0c593e49c346bc09ce931c229462d76
+                                              cb0d2eb362717fbbb226941db5e13a6249bcae5b
+                                              eebd1a628b7f6bc0289bcd9a4f4c6e83c649bd19
+                                              e7fb004751d9e5f060942ab6956ac73470374eaf
+                                              ba332b75395389d0b9fd4dea15f434ae0fff4f9d
+                                              85ba4be69ef2254e7b70d430edcd9bbf964f6636
+                                              d988032114affcbf785ad0d3a80757d5790a887f
+                                              51c9f36631f8d63e7eb661210ecd72115b6dca6f
+                                              151775a97471f30eff033199a201a16af818a57f
+                                              1f738af5ecaffc54d04140481f30b36973af916b
+                                              a95baa9fd3a1a3bc1e04479c8bfbdd458a9a4d90)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 8c9009c727e1b8f19758275f91d34f5c34686a84
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 49b80945e9133fea7d8cda4d1aca1b820150b992
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 561ea165db15174a74935d3ae4b0c4c5bffce816
-                                              89e863398b63a06643692832666e21544730675b
-                                              b59a082bb323e3dba116e5f78c98c02d061f0b81
-                                              9343663072e6c62781238e1fbea5fb4b55b1c3c2
-                                              e109e10e48e6d6c03fa137420a2fa02b08b6d700
-                                              cde7347ae68095b0c7269feeb27702574917fc99
-                                              66eb18f42754f6a7a7b17fd6803e79382f4975cf
-                                              ef54253fdd622418b453e27b4209ad68cefc9900
-                                              4c525ac83068dfa00da13c76782a6b861aa1bf60
-                                              6527a14051c9509ee66d20e891ea4900c683f7bb)
+                                  SHA1_VALUES dbfa626be7c6ebf444331a973b577905928255e9
+                                              f541cd2f96685f5ee3be90912c6e5dc49784e53e
+                                              2ab930861960b3193e858047f669ccc32f544170
+                                              1f5ba8b65d6c3f5bebb1a45f4ed482a752b39bc7
+                                              81b9dc197e4420bf6e7dc4aa18cc0aab726764db
+                                              588026b87f922197be53d207b5e286d8fb11fc82
+                                              8c992b71e1470856492b7233dcc8db2ad96ef028
+                                              847bdb9278f5a942482cadeda384293106b9421b
+                                              c97de379243dc64848ca5d24c3f351ac82eafa33
+                                              81372325ed4761a09c722b1abab198bd68401327
+                                              ae0407b8461b2c2df11b1eaebe9b292ca69bf4dc
+                                              7bb8171a8abae063904e1b5bc3c8b28bd642ace8
+                                              e40e10a9615d85faafde12a4049303b0940fdf3e
+                                              d8cde8f9a371a6df08b5e070a7b71e2b28f6b334
+                                              17963c0a341224ec46add04d34c50e84670baa66
+                                              35c568b0569ca1f8fc58db0e85a14a09716ab0f0
+                                              0e363c62346790ff9637a118dd7412ac891a992e
+                                              e8d5919c09b632e6279c3a76fa3d9aa3c120051f
+                                              2b12c0462b91486a2ce838254dd22e4581e5a4ef
+                                              d5f0926a69c67a05389057a1155ccdbe4e28becc
+                                              68fb09f22452306ee551db305b77c9479b07c258
+                                              2b468d827465f16772c1bce9e5b4e0014d760245
+                                              5de1cf9f7c8f1a9097103ce8a311ffda07937664
+                                              9f40407856849b24e79369735817262a8fd5959e
+                                              f9aff17ac74af6714337f9136445eefaf68d7c04
+                                              9bd99a6edf9ecb193b6e24f1fca6a29511dbe347
+                                              99346803b15a30ec338649fe929a140581648c33
+                                              ac44802b4559807b730efcd89bef7bed35d866f5
+                                              54f5936e1a251fa315a0762623943e8864bf0f33
+                                              7820f32668ea2338bc66b3bef15d987b3d302e65)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
