@@ -74,6 +74,11 @@ class SimulationExperimentViewInformationGraphPanelAndGraphsWidget : public QSta
     Q_OBJECT
 
 public:
+    enum Mode {
+        GraphPanel,
+        Graphs
+    };
+
     explicit SimulationExperimentViewInformationGraphPanelAndGraphsWidget(SimulationExperimentViewWidget *pViewWidget,
                                                                           SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                           QWidget *pParent);
@@ -97,7 +102,11 @@ public:
     int columnWidth(const int &pIndex) const;
     void setColumnWidth(const int &pIndex, const int &pColumnWidth);
 
+    void setMode(const Mode &pMode);
+
 private:
+    Mode mMode;
+
     SimulationExperimentViewWidget *mViewWidget;
     SimulationExperimentViewSimulationWidget *mSimulationWidget;
 

@@ -225,6 +225,10 @@ void SimulationExperimentViewInformationWidget::grapPanelPropertyEditor()
     // retranslating ourselves
 
     retranslateUi();
+
+    // Switch to Graph Panel mode
+
+    mGraphPanelAndGraphsWidget->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel);
 }
 
 //==============================================================================
@@ -235,6 +239,10 @@ void SimulationExperimentViewInformationWidget::graphsPropertyEditor()
     // retranslating ourselves
 
     retranslateUi();
+
+    // Switch to Graphs mode
+
+    mGraphPanelAndGraphsWidget->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
 }
 
 //==============================================================================
