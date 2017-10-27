@@ -37,7 +37,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>GraphPanel widget:</strong> axis labels are now rendered fine when exporting a graph panel to various formats (see issue <a href=\"https://github.com/opencor/opencor/issues/1448\">#1448</a>). Can now interact with a graph panel after it has been exported to a given format (see issue <a href=\"https://github.com/opencor/opencor/issues/1450\">#1450</a>)." }
+                       { "change": "<strong>GraphPanel widget:</strong> axis labels are now rendered fine when exporting a graph panel to various formats (see issue <a href=\"https://github.com/opencor/opencor/issues/1448\">#1448</a>). Can now interact with a graph panel after it has been exported to a given format (see issue <a href=\"https://github.com/opencor/opencor/issues/1450\">#1450</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1453\">#1453</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,

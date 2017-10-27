@@ -26,7 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "kinsol/kinsol.h"
-#include "kinsol/kinsol_dense.h"
+#include "kinsol/kinsol_direct.h"
+#include "sunlinsol/sunlinsol_dense.h"
 
 //==============================================================================
 
@@ -96,6 +97,8 @@ KinsolSolver::KinsolSolver() :
     mSolver(0),
     mParametersVector(0),
     mOnesVector(0),
+    mMatrix(0),
+    mLinearSolver(0),
     mUserData(0)
 {
 }
@@ -120,6 +123,8 @@ void KinsolSolver::reset()
 
     N_VDestroy_Serial(mParametersVector);
     N_VDestroy_Serial(mOnesVector);
+    SUNLinSolFree(mLinearSolver);
+    SUNMatDestroy(mMatrix);
 
     KINFree(&mSolver);
 
@@ -167,7 +172,10 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
 
     // Set the linear solver
 
-    KINDense(mSolver, pSize);
+    mMatrix = SUNDenseMatrix(pSize, pSize);
+    mLinearSolver = SUNDenseLinearSolver(mParametersVector, mMatrix);
+
+    KINDlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
 }
 
 //==============================================================================
