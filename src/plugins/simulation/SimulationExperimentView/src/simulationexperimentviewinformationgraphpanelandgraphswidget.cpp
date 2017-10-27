@@ -428,21 +428,21 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
 
 //==============================================================================
 
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::unselectAllGraphs()
+{
+    // Unselect all the graphs
+
+    selectAllGraphs(false);
+}
+
+//==============================================================================
+
 bool SimulationExperimentViewInformationGraphPanelAndGraphsWidget::rootProperty(Core::Property *pProperty) const
 {
     // Return whether the given property is a root property
 
     return    (pProperty->type() == Core::Property::Section)
            && !pProperty->parentProperty() && pProperty->isCheckable();
-}
-
-//==============================================================================
-
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::unselectAllGraphs()
-{
-    // Unselect all the graphs
-
-    selectAllGraphs(false);
 }
 
 //==============================================================================
