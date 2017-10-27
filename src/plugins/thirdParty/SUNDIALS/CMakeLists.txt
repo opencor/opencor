@@ -256,13 +256,23 @@ IF(USE_PREBUILT_SUNDIALS_PACKAGE)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} da45377e8456b5419d85a545e6b48d0e4f0abb64
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 55d9c44fd294bf77da480ed83088a2df7718b874
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 4caa69790860135deea7ea3c4f91aae0dfc400fa
-                                          7005fcb4eb20ed1d0afee0e6273e2243ec91ede3
-                                          8f82bf373800c0b8382d7d4ad8150a1e5e644a8a
-                                          ea3e07230d3960d2fdf4bdc47b83a8f71da48877
-                                          642e874feb5f36cca092ea7554b45facaccdc458)
+                              SHA1_VALUES 0afd057203a0939f6973f6fb937fe74b32963edc
+                                          55bf721c67cf554509fc6ca507deafebd605d999
+                                          f0b57b136c51e13128d5e4f739426597e5799d36
+                                          50cbd7478e0716d39fb1ec6436be3ab51f9b8444
+                                          fd05bac703f56e93df554c0a1a0567d30505c61f
+                                          4e1a7d944fd5b886ac0813f593624eaeabddafab
+                                          b0e531e4099fc5041fc5056e77089c0a686f037d
+                                          b16ec6457390f99a12c4eb7c30a9a45f6775f62e
+                                          ef697092b6bb89198c05ba03d05b7321331e690e
+                                          877f6f88707d5d8ae204b50030224a7b2b68fce8
+                                          8599935abab65d9802f6fd30144e6eb30c1a69a5
+                                          479b369c577008e66a4377d3b0b9489b3582ddf6
+                                          c77e83b89be0ec8dfe80b93caf665a2e81ca26fe
+                                          0066d4174ef4993a57d52e8728bbbae10ddf5110
+                                          01a7500b184273b781f0d46fe13aacee712c9e8a)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 1641db3d02f6bca94919f9d20a8c3bc12cdc08c3
