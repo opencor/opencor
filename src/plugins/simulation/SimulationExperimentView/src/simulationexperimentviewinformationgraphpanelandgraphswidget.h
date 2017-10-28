@@ -97,9 +97,6 @@ public:
     Core::Properties graphProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                                      const QString &pFileName = QString()) const;
 
-    int headerCount() const;
-
-    int columnWidth(const int &pIndex) const;
     void setColumnWidth(const int &pIndex, const int &pColumnWidth);
 
     void setMode(const Mode &pMode);
@@ -111,8 +108,8 @@ private:
     SimulationExperimentViewSimulationWidget *mSimulationWidget;
 
     QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *> mGraphPanels;
-    QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
-    Core::PropertyEditorWidget *mPropertyEditor;
+    QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphsPropertyEditors;
+    Core::PropertyEditorWidget *mGraphsPropertyEditor;
 
     QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *> mGraphs;
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *> mGraphProperties;
@@ -180,7 +177,7 @@ private slots:
     void unselectAllGraphs();
     void selectColor();
 
-    void propertyEditorContextMenu(const QPoint &pPosition) const;
+    void showGraphsContextMenu(const QPoint &pPosition) const;
 
     void propertyEditorHorizontalScrollBarValueChanged(const int &pValue);
 
