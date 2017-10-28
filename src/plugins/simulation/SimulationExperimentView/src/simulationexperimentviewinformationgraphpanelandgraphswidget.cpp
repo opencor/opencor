@@ -29,8 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sedmlsupport.h"
 #include "simulation.h"
 #include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
-#include "simulationexperimentviewinformationgraphpanelpropertyeditor.h"
-#include "simulationexperimentviewinformationgraphspropertyeditor.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 
@@ -182,10 +180,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
     if (!mPropertyEditor) {
         // No property editor exists for the given graph panel, so create one
 
-        if (mMode == GraphPanel)
-            mPropertyEditor = new SimulationExperimentViewInformationGraphPanelPropertyEditor(this);
-        else
-            mPropertyEditor = new SimulationExperimentViewInformationGraphsPropertyEditor(this);
+        mPropertyEditor = new Core::PropertyEditorWidget(false, false, this);
 
         // We want our own context menu for our property editor
 
