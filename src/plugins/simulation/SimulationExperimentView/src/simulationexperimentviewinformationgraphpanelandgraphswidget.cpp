@@ -61,13 +61,16 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
     mViewWidget(pViewWidget),
     mSimulationWidget(pSimulationWidget),
     mGraphPanels(QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *>()),
+    mGraphPanelPropertyEditors(QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *>()),
     mGraphsPropertyEditors(QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *>()),
+    mGraphPanelPropertyEditor(0),
     mGraphsPropertyEditor(0),
     mGraphs(QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *>()),
     mGraphProperties(QMap<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mRenamedModelListValues(QMap<QString, QString>()),
-    mHorizontalScrollBarValue(0)
+    mGraphPanelHorizontalScrollBarValue(0),
+    mGraphsHorizontalScrollBarValue(0)
 {
     // Create our context menus and populate our main context menu
 
@@ -129,7 +132,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateUi
     I18nInterface::retranslateAction(mSelectColorAction, tr("Select Colour..."),
                                      tr("Select a colour"));
 
-    // Retranslate all our graphs property editors
+    // Retranslate all our property editors
+
+    foreach (Core::PropertyEditorWidget *graphPanelPropertyEditor, mGraphPanelPropertyEditors)
+        graphPanelPropertyEditor->retranslateUi();
 
     foreach (Core::PropertyEditorWidget *graphsPropertyEditor, mGraphsPropertyEditors)
         graphsPropertyEditor->retranslateUi();
@@ -170,17 +176,20 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                                                                               const bool &pActive)
 {
-    // Retrieve the graphs property editor for the given file name or create
-    // one, if none exists
+    // Retrieve the graph panel and graphs property editors for the given file
+    // name or create some, if none exists
 
+    Core::PropertyEditorWidget *oldGraphPanelPropertyEditor = mGraphPanelPropertyEditor;
     Core::PropertyEditorWidget *oldGraphsPropertyEditor = mGraphsPropertyEditor;
 
+    mGraphPanelPropertyEditor = mGraphPanelPropertyEditors.value(pGraphPanel);
     mGraphsPropertyEditor = mGraphsPropertyEditors.value(pGraphPanel);
 
-    if (!mGraphsPropertyEditor) {
-        // No graphs property editor exists for the given graph panel, so create
-        // one
+    if (!mGraphPanelPropertyEditor && !mGraphsPropertyEditor) {
+        // No graph panel and graphs property editors exist for the given graph
+        // panel, so create some
 
+        mGraphPanelPropertyEditor = new Core::PropertyEditorWidget(false, false, this);
         mGraphsPropertyEditor = new Core::PropertyEditorWidget(false, false, this);
 
         // We want our own context menu for our graphs property editor
@@ -190,49 +199,63 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
         connect(mGraphsPropertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
                 this, SLOT(showGraphsContextMenu(const QPoint &)));
 
-        // Keep track of changes to the horizontal bar's value
+        // Keep track of changes to our property editors' horizontal bar's value
 
+        connect(mGraphPanelPropertyEditor->horizontalScrollBar(), SIGNAL(valueChanged(int)),
+                this, SLOT(graphPanelPropertyEditorHorizontalScrollBarValueChanged(const int &)));
         connect(mGraphsPropertyEditor->horizontalScrollBar(), SIGNAL(valueChanged(int)),
-                this, SLOT(propertyEditorHorizontalScrollBarValueChanged(const int &)));
+                this, SLOT(graphsPropertyEditorHorizontalScrollBarValueChanged(const int &)));
 
         // Keep track of changes to columns' width
 
+        connect(mGraphPanelPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
+                this, SIGNAL(graphPanelHeaderSectionResized(const int &, const int &, const int &)));
         connect(mGraphsPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
+                this, SIGNAL(graphsHeaderSectionResized(const int &, const int &, const int &)));
 
         // Keep track of when the user changes a property value
 
+//---ISSUE1426--- CHECK WHETHER WE NEED TO HANDLE THAT SIGNAL FOR
+//                mGraphPanelPropertyEditor...
         connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(graphChanged(Core::Property *)));
+                this, SLOT(graphsPropertyChanged(Core::Property *)));
 
         // Add our new graphs property editor to ourselves
 
+        addWidget(mGraphPanelPropertyEditor);
         addWidget(mGraphsPropertyEditor);
 
         // Keep track of the link between our existing graph panel and our new
         // graphs property editor
 
         mGraphPanels.insert(mGraphsPropertyEditor, pGraphPanel);
+
+        mGraphPanelPropertyEditors.insert(pGraphPanel, mGraphPanelPropertyEditor);
         mGraphsPropertyEditors.insert(pGraphPanel, mGraphsPropertyEditor);
     }
 
-    // Set the value of the graphs property editor's horizontal scroll bar
+    // Set the value of our property editors' horizontal scroll bar
 
-    mGraphsPropertyEditor->horizontalScrollBar()->setValue(mHorizontalScrollBarValue);
+    mGraphPanelPropertyEditor->horizontalScrollBar()->setValue(mGraphPanelHorizontalScrollBarValue);
+    mGraphsPropertyEditor->horizontalScrollBar()->setValue(mGraphsHorizontalScrollBarValue);
 
-    // Make sure that our 'new' graphs property editor's columns' width is the
-    // same as that of our 'old' graphs property editor
+    // Make sure that our 'new' property editors' columns' width is the same as
+    // that of our 'old' property editors
 
-    if (oldGraphsPropertyEditor) {
+    if (oldGraphPanelPropertyEditor && oldGraphsPropertyEditor) {
+        for (int i = 0, iMax = oldGraphPanelPropertyEditor->header()->count(); i < iMax; ++i)
+            mGraphPanelPropertyEditor->setColumnWidth(i, oldGraphPanelPropertyEditor->columnWidth(i));
+
         for (int i = 0, iMax = oldGraphsPropertyEditor->header()->count(); i < iMax; ++i)
             mGraphsPropertyEditor->setColumnWidth(i, oldGraphsPropertyEditor->columnWidth(i));
     }
 
-    // Set our retrieved graphs property editor as our current widget, but only
-    // if the corresponding graph panel has been been made active
+    // Set our retrieved graph panel or graphs property editor as our current
+    // widget, but only if the corresponding graph panel has been been made
+    // active
 
     if (pActive)
-        setCurrentWidget(mGraphsPropertyEditor);
+        setCurrentWidget((mMode == GraphPanel)?mGraphPanelPropertyEditor:mGraphsPropertyEditor);
 
     // Update our graphs information
     // Note: this is in case the user changed the locale and then switched to a
@@ -249,6 +272,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize(Open
     // editor
 
     mGraphPanels.remove(mGraphsPropertyEditors.value(pGraphPanel));
+
+    mGraphPanelPropertyEditors.remove(pGraphPanel);
     mGraphsPropertyEditors.remove(pGraphPanel);
 }
 
@@ -286,7 +311,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
     //       ourselves to it once we are done)...
 
     disconnect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-               this, SLOT(graphChanged(Core::Property *)));
+               this, SLOT(graphsPropertyChanged(Core::Property *)));
 
     graphsPropertyEditor->addListProperty(graphProperty);
     graphsPropertyEditor->addStringProperty(pGraph->parameterX()?
@@ -327,7 +352,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
     graphsPropertyEditor->addColorProperty(pGraphProperties.symbolFillColor(), symbolProperty);
 
     connect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(graphChanged(Core::Property *)));
+            this, SLOT(graphsPropertyChanged(Core::Property *)));
 
     // Update the information about our new graph
 
@@ -405,7 +430,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
     //       let people know that all the graphs have been updated...
 
     disconnect(mGraphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-               this, SLOT(graphChanged(Core::Property *)));
+               this, SLOT(graphsPropertyChanged(Core::Property *)));
 
     foreach (Core::Property *property, mGraphProperties)
         property->setChecked(pSelect);
@@ -417,7 +442,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
         emit graphsUpdated(mGraphs.values());
 
     connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(graphChanged(Core::Property *)));
+            this, SLOT(graphsPropertyChanged(Core::Property *)));
 }
 
 //==============================================================================
@@ -589,10 +614,14 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(const
 {
     // Switch modes, if needed
 
-    if (pMode != mMode)
+    if (pMode != mMode) {
         mMode = pMode;
 
-//---ISSUE1426--- NEED TO UPDATE OUR GUI AS A RESULT OF MODIFYING OUR MODE...
+        // Set our graph panel or graphs property editor as our current
+        // widget
+
+        setCurrentWidget((pMode == GraphPanel)?mGraphPanelPropertyEditor:mGraphsPropertyEditor);
+    }
 }
 
 //==============================================================================
@@ -645,24 +674,21 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphsCon
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::propertyEditorHorizontalScrollBarValueChanged(const int &pValue)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPropertyEditorHorizontalScrollBarValueChanged(const int &pValue)
 {
-    // Keep track of the graphs property editor's horizontal scroll bar value
+    // Keep track of the graph panel property editor's horizontal scroll bar
+    // value
 
-    mHorizontalScrollBarValue = pValue;
+    mGraphPanelHorizontalScrollBarValue = pValue;
 }
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::propertyEditorSectionResized(const int &pIndex,
-                                                                                                const int &pOldSize,
-                                                                                                const int &pNewSize)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyEditorHorizontalScrollBarValueChanged(const int &pValue)
 {
-    Q_UNUSED(pOldSize);
+    // Keep track of the graphs property editor's horizontal scroll bar value
 
-    // Let people know that a header section has been resized
-
-    emit headerSectionResized(pIndex, pOldSize, pNewSize);
+    mGraphsHorizontalScrollBarValue = pValue;
 }
 
 //==============================================================================
@@ -870,8 +896,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
 
     // Update our section's name, if possible
     // Note: indeed, when populating ourselves, updateGraphInfo() gets called
-    //       (through graphChanged()), yet we don't want to (and can't) do what
-    //       follows if not all the properties are available...
+    //       (through graphsPropertyChanged()), yet we don't want to (and can't)
+    //       do what follows if not all the properties are available...
 
     pProperty->setName( pProperty->properties()[1]->value()
                        +PropertySeparator
@@ -936,7 +962,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphChanged(Core::Property *pProperty)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged(Core::Property *pProperty)
 {
     // Our graph has changed, which means that either it has been un/selected or
     // that the value of one of its properties has changed

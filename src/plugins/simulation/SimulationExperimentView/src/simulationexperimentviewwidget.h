@@ -108,10 +108,11 @@ private:
 
     QBoolList mCollapsibleWidgetCollapsed;
 
-    QIntList mSimulationWidgetColumnWidths;
-    QIntList mSolversWidgetColumnWidths;
-    QIntList mGraphsWidgetColumnWidths;
-    QIntList mParametersWidgetColumnWidths;
+    QIntList mSimulationColumnWidths;
+    QIntList mSolversColumnWidths;
+    QIntList mGraphPanelColumnWidths;
+    QIntList mGraphsColumnWidths;
+    QIntList mParametersColumnWidths;
 
     SimulationExperimentViewSimulationWidget *mSimulationWidget;
     QMap<QString, SimulationExperimentViewSimulationWidget *> mSimulationWidgets;
@@ -129,18 +130,16 @@ private slots:
 
     void collapsibleWidgetCollapsed(const int &pIndex, const bool &pCollapsed);
 
-    void simulationWidgetHeaderSectionResized(const int &pIndex,
-                                              const int &pOldSize,
-                                              const int &pNewSize);
-    void solversWidgetHeaderSectionResized(const int &pIndex,
-                                           const int &pOldSize,
-                                           const int &pNewSize);
-    void graphsWidgetHeaderSectionResized(const int &pIndex,
-                                          const int &pOldSize,
-                                          const int &pNewSize);
-    void parametersWidgetHeaderSectionResized(const int &pIndex,
-                                              const int &pOldSize,
-                                              const int &pNewSize);
+    void simulationHeaderSectionResized(const int &pIndex, const int &pOldSize,
+                                        const int &pNewSize);
+    void solversHeaderSectionResized(const int &pIndex, const int &pOldSize,
+                                     const int &pNewSize);
+    void graphPanelHeaderSectionResized(const int &pIndex, const int &pOldSize,
+                                        const int &pNewSize);
+    void graphsHeaderSectionResized(const int &pIndex, const int &pOldSize,
+                                    const int &pNewSize);
+    void parametersHeaderSectionResized(const int &pIndex, const int &pOldSize,
+                                        const int &pNewSize);
 
     void callCheckSimulationResults();
 };

@@ -108,7 +108,9 @@ private:
     SimulationExperimentViewSimulationWidget *mSimulationWidget;
 
     QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *> mGraphPanels;
+    QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphPanelPropertyEditors;
     QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphsPropertyEditors;
+    Core::PropertyEditorWidget *mGraphPanelPropertyEditor;
     Core::PropertyEditorWidget *mGraphsPropertyEditor;
 
     QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *> mGraphs;
@@ -130,7 +132,8 @@ private:
 
     bool mCanEmitGraphsUpdatedSignal;
 
-    int mHorizontalScrollBarValue;
+    int mGraphPanelHorizontalScrollBarValue;
+    int mGraphsHorizontalScrollBarValue;
 
     void populateParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
 
@@ -150,8 +153,10 @@ private:
     bool rootProperty(Core::Property *pProperty) const;
 
 signals:
-    void headerSectionResized(const int &pIndex, const int &pOldSize,
-                              const int &pNewSize);
+    void graphPanelHeaderSectionResized(const int &pIndex, const int &pOldSize,
+                                        const int &pNewSize);
+    void graphsHeaderSectionResized(const int &pIndex, const int &pOldSize,
+                                    const int &pNewSize);
 
     void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
     void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
@@ -179,12 +184,10 @@ private slots:
 
     void showGraphsContextMenu(const QPoint &pPosition) const;
 
-    void propertyEditorHorizontalScrollBarValueChanged(const int &pValue);
+    void graphPanelPropertyEditorHorizontalScrollBarValueChanged(const int &pValue);
+    void graphsPropertyEditorHorizontalScrollBarValueChanged(const int &pValue);
 
-    void propertyEditorSectionResized(const int &pIndex, const int &pOldSize,
-                                      const int &pNewSize);
-
-    void graphChanged(Core::Property *pProperty);
+    void graphsPropertyChanged(Core::Property *pProperty);
 
     void updateParameterValue();
 };
