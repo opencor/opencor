@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "collapsiblewidget.h"
 #include "i18ninterface.h"
-#include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
 #include "simulationexperimentviewinformationsimulationwidget.h"
 #include "simulationexperimentviewinformationsolverswidget.h"
@@ -122,6 +121,11 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
     connect(mGraphsAction, SIGNAL(triggered(bool)),
             this, SLOT(graphsPropertyEditor()));
 
+    // A connection to know when our graph panel / graphs panel changes modes
+
+    connect(mGraphPanelAndGraphsWidget, SIGNAL(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)),
+            this, SLOT(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)));
+
     // Add our collapsible widget to our layout
 
     layout->addWidget(mCollapsibleWidget);
@@ -135,17 +139,10 @@ void SimulationExperimentViewInformationWidget::retranslateUi()
 
     mCollapsibleWidget->setHeaderTitle(0, tr("Simulation"));
     mCollapsibleWidget->setHeaderTitle(1, tr("Solvers"));
-    mCollapsibleWidget->setHeaderTitle(2, mGraphPanelAction->isChecked()?
+    mCollapsibleWidget->setHeaderTitle(2, (mGraphPanelAndGraphsWidget->mode() == SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel)?
                                               tr("Graph Panel"):
                                               tr("Graphs"));
     mCollapsibleWidget->setHeaderTitle(3, tr("Parameters"));
-
-    // Retranslate our simulation, solvers, graphs and parameters widgets
-
-    mSimulationWidget->retranslateUi();
-    mSolversWidget->retranslateUi();
-    mGraphPanelAndGraphsWidget->retranslateUi();
-    mParametersWidget->retranslateUi();
 
     // Retranslate our graph panel actions
 
@@ -153,6 +150,13 @@ void SimulationExperimentViewInformationWidget::retranslateUi()
                                      tr("Graph panel settings"));
     I18nInterface::retranslateAction(mGraphsAction, tr("Graphs"),
                                      tr("Graphs settings"));
+
+    // Retranslate our simulation, solvers, graphs and parameters widgets
+
+    mSimulationWidget->retranslateUi();
+    mSolversWidget->retranslateUi();
+    mGraphPanelAndGraphsWidget->retranslateUi();
+    mParametersWidget->retranslateUi();
 }
 
 //==============================================================================
@@ -221,11 +225,6 @@ void SimulationExperimentViewInformationWidget::finishEditing(const bool &pPause
 
 void SimulationExperimentViewInformationWidget::grapPanelPropertyEditor()
 {
-    // Update the title of our collapsible widget's third header's title by
-    // retranslating ourselves
-
-    retranslateUi();
-
     // Switch to Graph Panel mode
 
     mGraphPanelAndGraphsWidget->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel);
@@ -235,14 +234,23 @@ void SimulationExperimentViewInformationWidget::grapPanelPropertyEditor()
 
 void SimulationExperimentViewInformationWidget::graphsPropertyEditor()
 {
-    // Update the title of our collapsible widget's third header's title by
-    // retranslating ourselves
-
-    retranslateUi();
-
     // Switch to Graphs mode
 
     mGraphPanelAndGraphsWidget->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationWidget::graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode)
+{
+    // Our graph panel / graphs mode has changed, so update our corresponding
+    // actions and update the title of our collapsible widget's third header's
+    // title by retranslating ourselves
+
+    mGraphPanelAction->setChecked(pMode == SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel);
+    mGraphsAction->setChecked(pMode == SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
+
+    retranslateUi();
 }
 
 //==============================================================================

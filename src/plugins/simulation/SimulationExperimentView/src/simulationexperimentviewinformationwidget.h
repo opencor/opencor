@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "commonwidget.h"
+#include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
 
 //==============================================================================
 
@@ -91,6 +92,8 @@ private:
 private slots:
     void grapPanelPropertyEditor();
     void graphsPropertyEditor();
+
+    void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
 };
 
 //==============================================================================

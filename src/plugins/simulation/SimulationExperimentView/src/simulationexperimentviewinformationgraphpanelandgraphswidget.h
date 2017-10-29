@@ -97,9 +97,11 @@ public:
     Core::Properties graphProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                                      const QString &pFileName = QString()) const;
 
-    void setColumnWidth(const int &pIndex, const int &pColumnWidth);
-
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode mode() const;
     void setMode(const Mode &pMode);
+
+    void setGraphPanelColumnWidth(const int &pIndex, const int &pColumnWidth);
+    void setGraphsColumnWidth(const int &pIndex, const int &pColumnWidth);
 
 private:
     Mode mMode;
@@ -153,6 +155,8 @@ private:
     bool rootProperty(Core::Property *pProperty) const;
 
 signals:
+    void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
+
     void graphPanelHeaderSectionResized(const int &pIndex, const int &pOldSize,
                                         const int &pNewSize);
     void graphsHeaderSectionResized(const int &pIndex, const int &pOldSize,

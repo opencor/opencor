@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "combinearchive.h"
 #include "corecliutils.h"
 #include "sedmlfile.h"
+#include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -108,6 +109,8 @@ private:
 
     QBoolList mCollapsibleWidgetCollapsed;
 
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode mGraphPanelGraphsMode;
+
     QIntList mSimulationColumnWidths;
     QIntList mSolversColumnWidths;
     QIntList mGraphPanelColumnWidths;
@@ -129,6 +132,8 @@ private slots:
     void contentsWidgetSplitterMoved(const QIntList &pSizes);
 
     void collapsibleWidgetCollapsed(const int &pIndex, const bool &pCollapsed);
+
+    void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
 
     void simulationHeaderSectionResized(const int &pIndex, const int &pOldSize,
                                         const int &pNewSize);

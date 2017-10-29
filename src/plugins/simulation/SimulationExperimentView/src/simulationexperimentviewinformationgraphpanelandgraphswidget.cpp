@@ -215,8 +215,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
 
         // Keep track of when the user changes a property value
 
-//---ISSUE1426--- CHECK WHETHER WE NEED TO HANDLE THAT SIGNAL FOR
-//                mGraphPanelPropertyEditor...
+//---ISSUE1426--- CHECK WHETHER WE NEED TO HANDLE THAT SIGNAL FOR OUR GRAPH
+//                PANEL EDITOR...
         connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                 this, SLOT(graphsPropertyChanged(Core::Property *)));
 
@@ -595,24 +595,18 @@ Core::Properties SimulationExperimentViewInformationGraphPanelAndGraphsWidget::g
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setColumnWidth(const int &pIndex,
-                                                                                  const int &pColumnWidth)
+SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode SimulationExperimentViewInformationGraphPanelAndGraphsWidget::mode() const
 {
-    // Make sure that we have a graphs property editor
+    // Return our mode
 
-    if (!mGraphsPropertyEditor)
-        return;
-
-    // Return the width of the given column
-
-    mGraphsPropertyEditor->setColumnWidth(pIndex, pColumnWidth);
+    return mMode;
 }
 
 //==============================================================================
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(const Mode &pMode)
 {
-    // Switch modes, if needed
+    // Set our mode
 
     if (pMode != mMode) {
         mMode = pMode;
@@ -621,7 +615,41 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(const
         // widget
 
         setCurrentWidget((pMode == GraphPanel)?mGraphPanelPropertyEditor:mGraphsPropertyEditor);
+
+        // Let people know about our change of modes
+
+        emit graphPanelGraphsModeChanged(pMode);
     }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphPanelColumnWidth(const int &pIndex,
+                                                                                            const int &pColumnWidth)
+{
+    // Make sure that we have a graph panel property editor
+
+    if (!mGraphPanelPropertyEditor)
+        return;
+
+    // Set the width of the given column
+
+    mGraphPanelPropertyEditor->setColumnWidth(pIndex, pColumnWidth);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphsColumnWidth(const int &pIndex,
+                                                                                        const int &pColumnWidth)
+{
+    // Make sure that we have a graphs property editor
+
+    if (!mGraphsPropertyEditor)
+        return;
+
+    // Set the width of the given column
+
+    mGraphsPropertyEditor->setColumnWidth(pIndex, pColumnWidth);
 }
 
 //==============================================================================

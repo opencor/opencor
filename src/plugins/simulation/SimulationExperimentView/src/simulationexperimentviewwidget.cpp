@@ -61,6 +61,7 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     mSimulationWidgetSizes(QIntList()),
     mContentsWidgetSizes(QIntList()),
     mCollapsibleWidgetCollapsed(QBoolList()),
+    mGraphPanelGraphsMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs),
     mSimulationColumnWidths(QIntList()),
     mSolversColumnWidths(QIntList()),
     mGraphPanelColumnWidths(QIntList()),
@@ -79,6 +80,7 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
 static const auto SettingsSizes                  = QStringLiteral("Sizes");
 static const auto SettingsContentsSizes          = QStringLiteral("ContentsSizes");
 static const auto SettingsCollapsed              = QStringLiteral("Collapsed");
+static const auto SettingsGraphPanelGraphsMode   = QStringLiteral("GraphPanelGraphsMode");
 static const auto SettingsSimulationColumnWidths = QStringLiteral("SimulationColumnWidths");
 static const auto SettingsSolversColumnWidths    = QStringLiteral("SolversColumnWidths");
 static const auto SettingsGraphPanelColumnWidths = QStringLiteral("GraphPanelColumnWidths");
@@ -102,6 +104,10 @@ void SimulationExperimentViewWidget::loadSettings(QSettings *pSettings)
     QVariantList defaultCollapsed = QVariantList() << false << false << false;
 
     mCollapsibleWidgetCollapsed = qVariantListToBoolList(pSettings->value(SettingsCollapsed, defaultCollapsed).toList());
+
+    // Retrieve our graph panel /graphs mode
+
+    mGraphPanelGraphsMode = SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode(pSettings->value(SettingsGraphPanelGraphsMode, SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel).toInt());
 
     // Retrieve the columns' width of our various property editors
 
@@ -128,6 +134,10 @@ void SimulationExperimentViewWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsCollapsed, qBoolListToVariantList(mCollapsibleWidgetCollapsed));
 
+    // Keep track of our graph panel /graphs mode
+
+    pSettings->setValue(SettingsGraphPanelGraphsMode, mGraphPanelGraphsMode);
+
     // Keep track of the columns' width of our various property editors
 
     pSettings->setValue(SettingsSimulationColumnWidths, qIntListToVariantList(mSimulationColumnWidths));
@@ -151,8 +161,8 @@ void SimulationExperimentViewWidget::retranslateUi()
 
 void SimulationExperimentViewWidget::initialize(const QString &pFileName)
 {
-    // Stop tracking changes in our 'old' simulation widget's property editors'
-    // columns' width
+    // Stop tracking changes in our 'old' simulation widget's graph panel /
+    // graphs mode and property editors' columns' width
     // Note: if we didn't do this then to set our 'new' simulation widget's
     //       property editors' columns' width would result in the sectionResized
     //       event being handled, which in turn would mess up our units column's
@@ -165,6 +175,9 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
     SimulationExperimentViewSimulationWidget *oldSimulationWidget = mSimulationWidget;
 
     if (oldSimulationWidget) {
+        disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget(), SIGNAL(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)),
+                   this, SLOT(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)));
+
         disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
                    this, SLOT(simulationHeaderSectionResized(const int &, const int &, const int &)));
         disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
@@ -221,8 +234,11 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
 
     updateContentsInformationGui(mSimulationWidget);
 
-    // Keep track of changes in our 'new' simulation widget's property editors'
-    // columns' width
+    // Keep track of changes in our 'old' simulation widget's graph panel /
+    // graphs mode and property editors' columns' width
+
+    connect(mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget(), SIGNAL(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)),
+            this, SLOT(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)));
 
     connect(mSimulationWidget->contentsWidget()->informationWidget()->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
             this, SLOT(simulationHeaderSectionResized(const int &, const int &, const int &)));
@@ -620,6 +636,16 @@ void SimulationExperimentViewWidget::solversHeaderSectionResized(const int &pInd
 
 //==============================================================================
 
+void SimulationExperimentViewWidget::graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode)
+{
+    // Keep track of the new graph panel / graphs mode
+
+    if (qobject_cast<SimulationExperimentViewInformationGraphPanelAndGraphsWidget *>(sender())->isVisible())
+        mGraphPanelGraphsMode = pMode;
+}
+
+//==============================================================================
+
 void SimulationExperimentViewWidget::graphPanelHeaderSectionResized(const int &pIndex,
                                                                     const int &pOldSize,
                                                                     const int &pNewSize)
@@ -666,6 +692,8 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
 {
     // Update some of our simulation's contents' information GUI
 
+    pSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(mGraphPanelGraphsMode);
+
     for (int i = 0, iMax = mCollapsibleWidgetCollapsed.count(); i < iMax; ++i)
         pSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
 
@@ -676,10 +704,10 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
         pSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->setColumnWidth(i, mSolversColumnWidths[i]);
 
     for (int i = 0, iMax = mGraphPanelColumnWidths.count(); i < iMax; ++i)
-        pSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setColumnWidth(i, mGraphPanelColumnWidths[i]);
+        pSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setGraphPanelColumnWidth(i, mGraphPanelColumnWidths[i]);
 
     for (int i = 0, iMax = mGraphsColumnWidths.count(); i < iMax; ++i)
-        pSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setColumnWidth(i, mGraphsColumnWidths[i]);
+        pSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setGraphsColumnWidth(i, mGraphsColumnWidths[i]);
 
     for (int i = 0, iMax = mParametersColumnWidths.count(); i < iMax; ++i)
         pSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->setColumnWidth(i, mParametersColumnWidths[i]);
