@@ -51,6 +51,22 @@
         <translation>Spécifier des axes personnalisés pour le panneau graphique</translation>
     </message>
     <message>
+        <source>Graph Panel Settings...</source>
+        <translation>Paramètres Panneau Graphique...</translation>
+    </message>
+    <message>
+        <source>Customise the graph panel</source>
+        <translation>Paramètrer le panneau graphique</translation>
+    </message>
+    <message>
+        <source>Graphs Settings...</source>
+        <translation>Paramètres Graphes...</translation>
+    </message>
+    <message>
+        <source>Customise the graphs</source>
+        <translation>Paramètrer les graphes</translation>
+    </message>
+    <message>
         <source>Logarithmic X Axis</source>
         <translation>Logarithmique Axe des X</translation>
     </message>

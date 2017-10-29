@@ -311,6 +311,8 @@ private:
     QAction *mCopyToClipboardAction;
     QAction *mSynchronizeXAxisAction;
     QAction *mSynchronizeYAxisAction;
+    QAction *mGraphPanelSettingsAction;
+    QAction *mGraphsSettingsAction;
     QAction *mLogarithmicXAxisAction;
     QAction *mLogarithmicYAxisAction;
     QAction *mCustomAxesAction;
@@ -370,6 +372,8 @@ private slots:
     void exportTo();
     void copyToClipboard();
     void customAxes();
+    void graphPanelSettings();
+    void graphsSettings();
     void toggleLogAxisX();
     void toggleLogAxisY();
     void zoomIn();
