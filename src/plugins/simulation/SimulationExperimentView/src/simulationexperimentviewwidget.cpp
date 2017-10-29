@@ -640,8 +640,7 @@ void SimulationExperimentViewWidget::graphPanelGraphsModeChanged(const OpenCOR::
 {
     // Keep track of the new graph panel / graphs mode
 
-    if (qobject_cast<SimulationExperimentViewInformationGraphPanelAndGraphsWidget *>(sender())->isVisible())
-        mGraphPanelGraphsMode = pMode;
+    mGraphPanelGraphsMode = pMode;
 }
 
 //==============================================================================
