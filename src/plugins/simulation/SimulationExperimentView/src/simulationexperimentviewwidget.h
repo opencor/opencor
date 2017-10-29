@@ -133,6 +133,9 @@ private slots:
 
     void collapsibleWidgetCollapsed(const int &pIndex, const bool &pCollapsed);
 
+    void graphPanelSettingsRequested();
+    void graphsSettingsRequested();
+
     void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
 
     void simulationHeaderSectionResized(const int &pIndex, const int &pOldSize,

@@ -2855,6 +2855,14 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
 
     connect(plot, SIGNAL(axesChanged(const double &, const double &, const double &, const double &)),
             this, SLOT(plotAxesChanged()));
+
+    // Let people know when some graph panel settings or graphs settings have
+    // been requested
+
+    connect(plot, SIGNAL(graphPanelSettingsRequested()),
+            this, SIGNAL(graphPanelSettingsRequested()));
+    connect(plot, SIGNAL(graphsSettingsRequested()),
+            this, SIGNAL(graphsSettingsRequested()));
 }
 
 //==============================================================================
@@ -2862,12 +2870,19 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
 void SimulationExperimentViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
     // A graph panel has been removed, so stop tracking its plot and the fact
-    // that we wanted to know if its axes had been changed
+    // that we wanted to know if its axes had been changed, and stop letting
+    // people know when some graph panel settings or graphs settings have been
+    // requested
 
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
     disconnect(plot, SIGNAL(axesChanged(const double &, const double &, const double &, const double &)),
                this, SLOT(plotAxesChanged()));
+
+    disconnect(plot, SIGNAL(graphPanelSettingsRequested()),
+               this, SIGNAL(graphPanelSettingsRequested()));
+    disconnect(plot, SIGNAL(graphsSettingsRequested()),
+               this, SIGNAL(graphsSettingsRequested()));
 
     mPlots.removeOne(plot);
     mUpdatablePlotViewports.remove(plot);

@@ -207,7 +207,7 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
 
         mSimulationWidget->initialize();
 
-        // Keep track of various things related our simulation widget and its
+        // Keep track of various things related to our simulation widget and its
         // children
 
         connect(mSimulationWidget, SIGNAL(splitterMoved(const QIntList &)),
@@ -218,6 +218,14 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
 
         connect(mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget(), SIGNAL(collapsed(const int &, const bool &)),
                 this, SLOT(collapsibleWidgetCollapsed(const int &, const bool &)));
+
+        // Check when some graph plot settings or graphs settings have been
+        // requested
+
+        connect(mSimulationWidget, SIGNAL(graphPanelSettingsRequested()),
+                this, SLOT(graphPanelSettingsRequested()));
+        connect(mSimulationWidget, SIGNAL(graphsSettingsRequested()),
+                this, SLOT(graphsSettingsRequested()));
     } else {
         // We already have a simulation widget, so just make sure that its GUI
         // is up to date
@@ -604,6 +612,26 @@ void SimulationExperimentViewWidget::collapsibleWidgetCollapsed(const int &pInde
     // expanded, so keep track of that fact
 
     mCollapsibleWidgetCollapsed[pIndex] = pCollapsed;
+}
+
+//==============================================================================
+
+void SimulationExperimentViewWidget::graphPanelSettingsRequested()
+{
+    // Make sure that our graph panel settings are active and visible
+
+    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel);
+    mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(2, false);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewWidget::graphsSettingsRequested()
+{
+    // Make sure that our graphs settings are active and visible
+
+    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
+    mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(2, false);
 }
 
 //==============================================================================

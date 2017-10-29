@@ -263,6 +263,9 @@ private:
 signals:
     void splitterMoved(const QIntList &pSizes);
 
+    void graphPanelSettingsRequested();
+    void graphsSettingsRequested();
+
 private slots:
     void runPauseResumeSimulation();
     void stopSimulation();
