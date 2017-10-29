@@ -625,8 +625,7 @@ void SimulationExperimentViewWidget::simulationHeaderSectionResized(const int &p
 
     // Keep track of the new column width
 
-    if (qobject_cast<QHeaderView *>(sender())->isVisible())
-        mSimulationColumnWidths[pIndex] = pNewSize;
+    mSimulationColumnWidths[pIndex] = pNewSize;
 }
 
 //==============================================================================
@@ -639,8 +638,7 @@ void SimulationExperimentViewWidget::solversHeaderSectionResized(const int &pInd
 
     // Keep track of the new column width
 
-    if (qobject_cast<QHeaderView *>(sender())->isVisible())
-        mSolversColumnWidths[pIndex] = pNewSize;
+    mSolversColumnWidths[pIndex] = pNewSize;
 }
 
 //==============================================================================
@@ -653,8 +651,7 @@ void SimulationExperimentViewWidget::graphPanelHeaderSectionResized(const int &p
 
     // Keep track of the new column width
 
-    if (qobject_cast<SimulationExperimentViewInformationGraphPanelAndGraphsWidget *>(sender())->isVisible())
-        mGraphPanelColumnWidths[pIndex] = pNewSize;
+    mGraphPanelColumnWidths[pIndex] = pNewSize;
 }
 
 //==============================================================================
@@ -667,8 +664,7 @@ void SimulationExperimentViewWidget::graphsHeaderSectionResized(const int &pInde
 
     // Keep track of the new column width
 
-    if (qobject_cast<SimulationExperimentViewInformationGraphPanelAndGraphsWidget *>(sender())->isVisible())
-        mGraphsColumnWidths[pIndex] = pNewSize;
+    mGraphsColumnWidths[pIndex] = pNewSize;
 }
 
 //==============================================================================
@@ -681,8 +677,7 @@ void SimulationExperimentViewWidget::parametersHeaderSectionResized(const int &p
 
     // Keep track of the new column width
 
-    if (qobject_cast<QHeaderView *>(sender())->isVisible())
-        mParametersColumnWidths[pIndex] = pNewSize;
+    mParametersColumnWidths[pIndex] = pNewSize;
 }
 
 //==============================================================================
