@@ -196,9 +196,15 @@ class GRAPHPANELWIDGET_EXPORT GraphPanelPlotWidget : public QwtPlot,
 {
     Q_OBJECT
 
-    friend class GraphPanelPlotOverlayWidget;
-
 public:
+    enum Action {
+        None,
+        Pan,
+        ShowCoordinates,
+        Zoom,
+        ZoomRegion
+    };
+
     explicit GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbors,
                                   QAction *pSynchronizeXAxisAction,
                                   QAction *pSynchronizeYAxisAction,
@@ -257,6 +263,15 @@ public:
                             const bool &pForceAlignment = false);
     void forceAlignWithNeighbors();
 
+    Action action() const;
+
+    bool canZoomInX() const;
+    bool canZoomOutX() const;
+    bool canZoomInY() const;
+    bool canZoomOutY() const;
+
+    QPointF canvasPoint(const QPoint &pPoint) const;
+
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
@@ -267,14 +282,6 @@ protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
-    enum Action {
-        None,
-        Pan,
-        ShowCoordinates,
-        Zoom,
-        ZoomRegion
-    };
-
     enum Scaling {
         BigScalingIn,
         ScalingIn,
@@ -339,14 +346,7 @@ private:
 
     void updateActions();
 
-    Action action() const;
-
     void resetAction();
-
-    bool canZoomInX() const;
-    bool canZoomOutX() const;
-    bool canZoomInY() const;
-    bool canZoomOutY() const;
 
     QRectF realDataRect() const;
 
@@ -359,8 +359,6 @@ private:
                    const double &pPoint, double &pMin, double &pMax);
     void scaleAxes(const QPoint &pPoint, const Scaling &pScalingX,
                    const Scaling &pScalingY);
-
-    QPointF canvasPoint(const QPoint &pPoint) const;
 
 signals:
     void axesChanged(const double &pMinX, const double &pMaxX,
