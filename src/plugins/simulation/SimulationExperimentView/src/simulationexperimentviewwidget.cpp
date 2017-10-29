@@ -608,6 +608,15 @@ void SimulationExperimentViewWidget::collapsibleWidgetCollapsed(const int &pInde
 
 //==============================================================================
 
+void SimulationExperimentViewWidget::graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode)
+{
+    // Keep track of the new graph panel / graphs mode
+
+    mGraphPanelGraphsMode = pMode;
+}
+
+//==============================================================================
+
 void SimulationExperimentViewWidget::simulationHeaderSectionResized(const int &pIndex,
                                                                     const int &pOldSize,
                                                                     const int &pNewSize)
@@ -632,15 +641,6 @@ void SimulationExperimentViewWidget::solversHeaderSectionResized(const int &pInd
 
     if (qobject_cast<QHeaderView *>(sender())->isVisible())
         mSolversColumnWidths[pIndex] = pNewSize;
-}
-
-//==============================================================================
-
-void SimulationExperimentViewWidget::graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode)
-{
-    // Keep track of the new graph panel / graphs mode
-
-    mGraphPanelGraphsMode = pMode;
 }
 
 //==============================================================================
