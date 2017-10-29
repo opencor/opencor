@@ -660,6 +660,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mCanUpdateActions(true),
     mSynchronizeXAxisAction(pSynchronizeXAxisAction),
     mSynchronizeYAxisAction(pSynchronizeYAxisAction),
+    mLogAxisX(false),
+    mLogAxisY(false),
     mDefaultMinX(DefaultMinAxis),
     mDefaultMaxX(DefaultMaxAxis),
     mDefaultMinY(DefaultMinAxis),
@@ -729,8 +731,6 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mCustomAxesAction = Core::newAction(this);
     mGraphPanelSettingsAction = Core::newAction(this);
     mGraphsSettingsAction = Core::newAction(this);
-    mLogarithmicXAxisAction = Core::newAction(true, this);
-    mLogarithmicYAxisAction = Core::newAction(true, this);
     mZoomInAction = Core::newAction(this);
     mZoomOutAction = Core::newAction(this);
     mResetZoomAction = Core::newAction(this);
@@ -745,10 +745,6 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
             this, SIGNAL(graphPanelSettingsRequested()));
     connect(mGraphsSettingsAction, SIGNAL(triggered(bool)),
             this, SIGNAL(graphsSettingsRequested()));
-    connect(mLogarithmicXAxisAction, SIGNAL(triggered(bool)),
-            this, SLOT(toggleLogAxisX()));
-    connect(mLogarithmicYAxisAction, SIGNAL(triggered(bool)),
-            this, SLOT(toggleLogAxisY()));
     connect(mZoomInAction, SIGNAL(triggered(bool)),
             this, SLOT(zoomIn()));
     connect(mZoomOutAction, SIGNAL(triggered(bool)),
@@ -769,9 +765,6 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mContextMenu->addSeparator();
     mContextMenu->addAction(mGraphPanelSettingsAction);
     mContextMenu->addAction(mGraphsSettingsAction);
-    mContextMenu->addSeparator();
-    mContextMenu->addAction(mLogarithmicXAxisAction);
-    mContextMenu->addAction(mLogarithmicYAxisAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCustomAxesAction);
     mContextMenu->addSeparator();
@@ -820,10 +813,6 @@ void GraphPanelPlotWidget::retranslateUi()
                                      tr("Customise the graph panel"));
     I18nInterface::retranslateAction(mGraphsSettingsAction, tr("Graphs Settings..."),
                                      tr("Customise the graphs"));
-    I18nInterface::retranslateAction(mLogarithmicXAxisAction, tr("Logarithmic X Axis"),
-                                     tr("Enable/disable logarithmic scaling on the X axis"));
-    I18nInterface::retranslateAction(mLogarithmicYAxisAction, tr("Logarithmic Y Axis"),
-                                     tr("Enable/disable logarithmic scaling on the Y axis"));
     I18nInterface::retranslateAction(mZoomInAction, tr("Zoom In"),
                                      tr("Zoom in the graph panel"));
     I18nInterface::retranslateAction(mZoomOutAction, tr("Zoom Out"),
@@ -980,7 +969,7 @@ bool GraphPanelPlotWidget::logAxisX() const
 {
     // Return whether our X axis uses a logarithmic scale
 
-    return mLogarithmicXAxisAction->isChecked();
+    return mLogAxisX;
 }
 
 //==============================================================================
@@ -989,9 +978,17 @@ void GraphPanelPlotWidget::setLogAxisX(const bool &pLogAxisX)
 {
     // Specify whether our X axis should use a logarithmic scale
 
-    if (   ( pLogAxisX && !mLogarithmicXAxisAction->isChecked())
-        || (!pLogAxisX &&  mLogarithmicXAxisAction->isChecked())) {
-        mLogarithmicXAxisAction->trigger();
+    if (pLogAxisX != mLogAxisX) {
+        mLogAxisX = pLogAxisX;
+
+        setAxisScaleEngine(QwtPlot::xBottom,
+                           pLogAxisX?
+                               static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
+                               static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
+
+        resetAxes();
+
+        replot();
     }
 }
 
@@ -1001,7 +998,7 @@ bool GraphPanelPlotWidget::logAxisY() const
 {
     // Return whether our Y axis uses a logarithmic scale
 
-    return mLogarithmicYAxisAction->isChecked();
+    return mLogAxisY;
 }
 
 //==============================================================================
@@ -1010,9 +1007,17 @@ void GraphPanelPlotWidget::setLogAxisY(const bool &pLogAxisY)
 {
     // Specify whether our Y axis should use a logarithmic scale
 
-    if (   ( pLogAxisY && !mLogarithmicYAxisAction->isChecked())
-        || (!pLogAxisY &&  mLogarithmicYAxisAction->isChecked())) {
-        mLogarithmicYAxisAction->trigger();
+    if (pLogAxisY != mLogAxisY) {
+        mLogAxisY = pLogAxisY;
+
+        setAxisScaleEngine(QwtPlot::yLeft,
+                           pLogAxisY?
+                               static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
+                               static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
+
+        resetAxes();
+
+        replot();
     }
 }
 
@@ -1946,38 +1951,6 @@ void GraphPanelPlotWidget::customAxes()
             setAxes(newMinX, newMaxX, newMinY, newMaxY);
         }
     }
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::toggleLogAxisX()
-{
-    // Enable/disable logarithmic scaling on the X axis
-
-    setAxisScaleEngine(QwtPlot::xBottom,
-                       mLogarithmicXAxisAction->isChecked()?
-                           static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
-                           static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
-
-    resetAxes();
-
-    replot();
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::toggleLogAxisY()
-{
-    // Enable/disable logarithmic scaling on the Y axis
-
-    setAxisScaleEngine(QwtPlot::yLeft,
-                       mLogarithmicYAxisAction->isChecked()?
-                           static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
-                           static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
-
-    resetAxes();
-
-    replot();
 }
 
 //==============================================================================

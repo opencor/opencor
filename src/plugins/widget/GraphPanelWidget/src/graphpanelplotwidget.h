@@ -320,8 +320,6 @@ private:
     QAction *mSynchronizeYAxisAction;
     QAction *mGraphPanelSettingsAction;
     QAction *mGraphsSettingsAction;
-    QAction *mLogarithmicXAxisAction;
-    QAction *mLogarithmicYAxisAction;
     QAction *mCustomAxesAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
@@ -329,6 +327,9 @@ private:
 
     GraphPanelPlotScaleDraw *mAxisX;
     GraphPanelPlotScaleDraw *mAxisY;
+
+    bool mLogAxisX;
+    bool mLogAxisY;
 
     double mDefaultMinX;
     double mDefaultMaxX;
@@ -373,8 +374,6 @@ private slots:
     void exportTo();
     void copyToClipboard();
     void customAxes();
-    void toggleLogAxisX();
-    void toggleLogAxisY();
     void zoomIn();
     void zoomOut();
     void resetZoom();
