@@ -366,14 +366,15 @@ signals:
     void axesChanged(const double &pMinX, const double &pMaxX,
                      const double &pMinY, const double &pMaxY);
 
+    void graphPanelSettingsRequested();
+    void graphsSettingsRequested();
+
 private slots:
     void cannotUpdateActions();
 
     void exportTo();
     void copyToClipboard();
     void customAxes();
-    void graphPanelSettings();
-    void graphsSettings();
     void toggleLogAxisX();
     void toggleLogAxisY();
     void zoomIn();

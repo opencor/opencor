@@ -742,9 +742,9 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     connect(mCustomAxesAction, SIGNAL(triggered(bool)),
             this, SLOT(customAxes()));
     connect(mGraphPanelSettingsAction, SIGNAL(triggered(bool)),
-            this, SLOT(graphPanelSettings()));
+            this, SIGNAL(graphPanelSettingsRequested()));
     connect(mGraphsSettingsAction, SIGNAL(triggered(bool)),
-            this, SLOT(graphsSettings()));
+            this, SIGNAL(graphsSettingsRequested()));
     connect(mLogarithmicXAxisAction, SIGNAL(triggered(bool)),
             this, SLOT(toggleLogAxisX()));
     connect(mLogarithmicYAxisAction, SIGNAL(triggered(bool)),
@@ -1946,22 +1946,6 @@ void GraphPanelPlotWidget::customAxes()
             setAxes(newMinX, newMaxX, newMinY, newMaxY);
         }
     }
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::graphPanelSettings()
-{
-//---ISSUE1426--- TO BE DONE...
-qDebug(">>> GraphPanelPlotWidget::graphPanelSettings()...");
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::graphsSettings()
-{
-//---ISSUE1426--- TO BE DONE...
-qDebug(">>> GraphPanelPlotWidget::graphsSettings()...");
 }
 
 //==============================================================================
