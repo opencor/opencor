@@ -140,6 +140,34 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateUi
     foreach (Core::PropertyEditorWidget *graphsPropertyEditor, mGraphsPropertyEditors)
         graphsPropertyEditor->retranslateUi();
 
+    // Retranslate the contents of our graph panel property editors
+
+    foreach (Core::PropertyEditorWidget *graphPanelPropertyEditor, mGraphPanelPropertyEditors) {
+        graphPanelPropertyEditor->properties()[0]->setName(tr("Colour"));
+        graphPanelPropertyEditor->properties()[1]->setName(tr("Font size"));
+
+        graphPanelPropertyEditor->properties()[2]->setName(tr("Grid lines"));
+        graphPanelPropertyEditor->properties()[2]->properties()[0]->setName(tr("Style"));
+        graphPanelPropertyEditor->properties()[2]->properties()[1]->setName(tr("Width"));
+        graphPanelPropertyEditor->properties()[2]->properties()[2]->setName(tr("Colour"));
+
+        graphPanelPropertyEditor->properties()[3]->setName(tr("Logarithmic X axis"));
+        graphPanelPropertyEditor->properties()[4]->setName(tr("Logarithmic Y axis"));
+
+        graphPanelPropertyEditor->properties()[5]->setName(tr("Point coordinates"));
+        graphPanelPropertyEditor->properties()[5]->properties()[0]->setName(tr("Style"));
+        graphPanelPropertyEditor->properties()[5]->properties()[1]->setName(tr("Width"));
+        graphPanelPropertyEditor->properties()[5]->properties()[2]->setName(tr("Colour"));
+        graphPanelPropertyEditor->properties()[5]->properties()[3]->setName(tr("Font colour"));
+
+        graphPanelPropertyEditor->properties()[6]->setName(tr("Zoom region"));
+        graphPanelPropertyEditor->properties()[6]->properties()[0]->setName(tr("Style"));
+        graphPanelPropertyEditor->properties()[6]->properties()[1]->setName(tr("Width"));
+        graphPanelPropertyEditor->properties()[6]->properties()[2]->setName(tr("Colour"));
+        graphPanelPropertyEditor->properties()[6]->properties()[3]->setName(tr("Filled"));
+        graphPanelPropertyEditor->properties()[6]->properties()[4]->setName(tr("Fill colour"));
+    }
+
     // Retranslate the information about our graphs properties
     // Note: no need to do this for all our property editors (i.e. call
     //       updateAllGraphsInfo()) since this will automatically be done when
@@ -191,6 +219,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
 
         mGraphPanelPropertyEditor = new Core::PropertyEditorWidget(false, false, this);
         mGraphsPropertyEditor = new Core::PropertyEditorWidget(false, false, this);
+
+        // Populate our graph panel property editor
+
+        populateGraphPanelPropertyEditor();
 
         // We want our own context menu for our graphs property editor
 
@@ -717,6 +749,41 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropert
     // Keep track of the graphs property editor's horizontal scroll bar value
 
     mGraphsHorizontalScrollBarValue = pValue;
+}
+
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraphPanelPropertyEditor()
+{
+    // Populate our graph panel property editor
+
+    mGraphPanelPropertyEditor->addColorProperty();
+    mGraphPanelPropertyEditor->addDoubleGt0Property();
+
+    Core::Property *gridLinesProperty = mGraphPanelPropertyEditor->addSectionProperty();
+
+    mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(), gridLinesProperty);
+    mGraphPanelPropertyEditor->addDoubleGt0Property(gridLinesProperty);
+    mGraphPanelPropertyEditor->addColorProperty(gridLinesProperty);
+
+    mGraphPanelPropertyEditor->addBooleanProperty();
+    mGraphPanelPropertyEditor->addBooleanProperty();
+
+    Core::Property *pointCoordinatesProperty = mGraphPanelPropertyEditor->addSectionProperty();
+
+    mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(), pointCoordinatesProperty);
+    mGraphPanelPropertyEditor->addDoubleGt0Property(pointCoordinatesProperty);
+    mGraphPanelPropertyEditor->addColorProperty(pointCoordinatesProperty);
+    mGraphPanelPropertyEditor->addColorProperty(pointCoordinatesProperty);
+
+    Core::Property *zoomRegionProperty = mGraphPanelPropertyEditor->addSectionProperty();
+
+    mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(), zoomRegionProperty);
+    mGraphPanelPropertyEditor->addDoubleGt0Property(zoomRegionProperty);
+    mGraphPanelPropertyEditor->addColorProperty(zoomRegionProperty);
+    mGraphPanelPropertyEditor->addBooleanProperty(zoomRegionProperty);
+    mGraphPanelPropertyEditor->addColorProperty(zoomRegionProperty);
 }
 
 //==============================================================================

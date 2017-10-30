@@ -137,6 +137,8 @@ private:
     int mGraphPanelHorizontalScrollBarValue;
     int mGraphsHorizontalScrollBarValue;
 
+    void populateGraphPanelPropertyEditor();
+
     void populateParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
 
     bool checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,

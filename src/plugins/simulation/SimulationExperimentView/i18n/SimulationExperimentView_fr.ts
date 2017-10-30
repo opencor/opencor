@@ -175,6 +175,34 @@
         <source>Fill colour</source>
         <translation>Couleur de remplissage</translation>
     </message>
+    <message>
+        <source>Font size</source>
+        <translation>Taille de la police</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>Lignes de quadrillage</translation>
+    </message>
+    <message>
+        <source>Point coordinates</source>
+        <translation>Coordonnées de point</translation>
+    </message>
+    <message>
+        <source>Font colour</source>
+        <translation>Couleur de la police</translation>
+    </message>
+    <message>
+        <source>Zoom region</source>
+        <translation>Région de zoom</translation>
+    </message>
+    <message>
+        <source>Logarithmic X axis</source>
+        <translation>Axe logarithmique des X</translation>
+    </message>
+    <message>
+        <source>Logarithmic Y axis</source>
+        <translation>Axe logarithmique des Y</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationParametersWidget</name>
