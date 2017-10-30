@@ -409,7 +409,8 @@ private:
 
     QStandardItemModel *mModel;
 
-    Properties mProperties;
+    Properties mRootProperties;
+    Properties mAllProperties;
 
     Property *mProperty;
     QWidget *mPropertyEditor;

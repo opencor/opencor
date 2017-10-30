@@ -1102,7 +1102,8 @@ PropertyEditorWidget::PropertyEditorWidget(const bool &pShowUnits,
     TreeViewWidget(pParent),
     mShowUnits(pShowUnits),
     mAutoUpdateHeight(pAutoUpdateHeight),
-    mProperties(Properties()),
+    mRootProperties(Properties()),
+    mAllProperties(Properties()),
     mProperty(0),
     mPropertyEditor(0),
     mRightClicking(false),
@@ -1293,10 +1294,11 @@ void PropertyEditorWidget::clear()
 
     // Delete some internal objects
 
-    foreach (Property *property, mProperties)
+    foreach (Property *property, mAllProperties)
         delete property;
 
-    mProperties.clear();
+    mRootProperties.clear();
+    mAllProperties.clear();
 }
 
 //==============================================================================
@@ -1331,6 +1333,10 @@ Property * PropertyEditorWidget::addProperty(const Property::Type &pType,
         // We want to add a root property
 
         res->addTo(mModel->invisibleRootItem());
+
+        // Keep track of our root property
+
+        mRootProperties << res;
     }
 
     // Span ourselves if we are of section type
@@ -1357,7 +1363,7 @@ Property * PropertyEditorWidget::addProperty(const Property::Type &pType,
 
     // Keep track of our property and return it
 
-    mProperties << res;
+    mAllProperties << res;
 
     return res;
 }
@@ -1949,12 +1955,13 @@ bool PropertyEditorWidget::removeProperty(Property *pProperty)
     // Remove the given property and any of its children, but first make sure
     // that we know about the given property
 
-    if (!mProperties.contains(pProperty))
+    if (!mAllProperties.contains(pProperty))
         return false;
 
-    // Stop tracking the property
+    // Stop tracking the property, if it is a root one
 
-    mProperties.removeOne(pProperty);
+    if (!pProperty->parent())
+        mRootProperties.removeOne(pProperty);
 
     // Remove the property from our model
     // Note: the below will remove the given property and any of its children
@@ -1981,7 +1988,7 @@ void PropertyEditorWidget::deleteProperty(Property *pProperty)
     foreach (Property *property, pProperty->properties())
         deleteProperty(property);
 
-    mProperties.removeOne(pProperty);
+    mAllProperties.removeOne(pProperty);
 
     delete pProperty;
 }
@@ -1990,9 +1997,9 @@ void PropertyEditorWidget::deleteProperty(Property *pProperty)
 
 Properties PropertyEditorWidget::properties() const
 {
-    // Return our properties
+    // Return our (root) properties
 
-    return mProperties;
+    return mRootProperties;
 }
 
 //==============================================================================
@@ -2074,7 +2081,7 @@ Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
 
     // Return our information about the property at the given index
 
-    foreach (Property *property, mProperties) {
+    foreach (Property *property, mAllProperties) {
         if (property->hasIndex(pIndex))
             return property;
     }
