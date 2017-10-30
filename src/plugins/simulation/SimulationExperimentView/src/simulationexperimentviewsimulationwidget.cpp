@@ -395,9 +395,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(graphPanelAndGraphsWidget, SIGNAL(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
             this, SLOT(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
-    connect(graphPanelAndGraphsWidget, SIGNAL(graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            this, SLOT(graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
-
     // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
     // Note: the separating line is because we remove, for aesthetical reasons,
@@ -3002,18 +2999,6 @@ void SimulationExperimentViewSimulationWidget::graphUpdated(OpenCOR::GraphPanelW
     // plots are up to date
 
     graphsUpdated(GraphPanelWidget::GraphPanelPlotGraphs() << pGraph);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
-{
-    // The visual aspect of the given graph has changed, so replot it
-
-    pGraph->plot()->replot();
-
-    QCoreApplication::processEvents();
-    // Note: this ensures that our plot is updated at once...
 }
 
 //==============================================================================

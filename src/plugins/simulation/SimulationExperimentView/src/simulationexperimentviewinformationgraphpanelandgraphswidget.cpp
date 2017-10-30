@@ -1049,13 +1049,17 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     graph->setSymbol(new QwtSymbol(symbolStyle, symbolFillColor, symbolColor,
                                    QSize(symbolSize, symbolSize)));
 
-    // Let people know if the graph has been updated in some way or another
+    // Let people know if the X and/or Y parameters of our graph have changed or
+    // replot it if its settings have changed
 
     if (   (oldParameterX != graph->parameterX())
         || (oldParameterY != graph->parameterY())) {
         emit graphUpdated(graph);
     } else if ((oldLinePen != linePen) || graphSymbolUpdated) {
-        emit graphVisualUpdated(graph);
+        graph->plot()->replot();
+
+        QCoreApplication::processEvents();
+        // Note: this ensures that our plot is updated at once...
     }
 }
 

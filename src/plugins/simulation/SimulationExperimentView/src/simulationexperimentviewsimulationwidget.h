@@ -318,8 +318,6 @@ private slots:
     void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
     void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
 
-    void graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
-
     void openCellmlFile();
 
     void plotAxesChanged();
