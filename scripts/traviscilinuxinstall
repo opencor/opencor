@@ -4,7 +4,7 @@ RUN apt -y -qq update
 
 RUN apt -y install software-properties-common
 
-RUN apt-add-repository -y ppa:beineri/opt-qt591-xenial
+RUN apt-add-repository -y ppa:beineri/opt-qt592-xenial
 
 RUN apt -y -qq update
 RUN apt -y -qq install cmake g++-5 git libgl1-mesa-dev libglu1-mesa-dev ninja-build
