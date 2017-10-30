@@ -193,6 +193,7 @@ private slots:
     void graphPanelPropertyEditorHorizontalScrollBarValueChanged(const int &pValue);
     void graphsPropertyEditorHorizontalScrollBarValueChanged(const int &pValue);
 
+    void graphPanelPropertyChanged();
     void graphsPropertyChanged(Core::Property *pProperty);
 
     void updateParameterValue();

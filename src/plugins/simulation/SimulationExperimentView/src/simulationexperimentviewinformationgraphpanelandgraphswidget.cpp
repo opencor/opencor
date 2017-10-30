@@ -220,6 +220,15 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
         mGraphPanelPropertyEditor = new Core::PropertyEditorWidget(false, false, this);
         mGraphsPropertyEditor = new Core::PropertyEditorWidget(false, false, this);
 
+        // Keep track of the link between our existing graph panel and our new
+        // graph panel and graphs property editors
+
+        mGraphPanels.insert(mGraphPanelPropertyEditor, pGraphPanel);
+        mGraphPanels.insert(mGraphsPropertyEditor, pGraphPanel);
+
+        mGraphPanelPropertyEditors.insert(pGraphPanel, mGraphPanelPropertyEditor);
+        mGraphsPropertyEditors.insert(pGraphPanel, mGraphsPropertyEditor);
+
         // Populate our graph panel property editor
 
         populateGraphPanelPropertyEditor();
@@ -247,8 +256,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
 
         // Keep track of when the user changes a property value
 
-//---ISSUE1426--- CHECK WHETHER WE NEED TO HANDLE THAT SIGNAL FOR OUR GRAPH
-//                PANEL EDITOR...
+        connect(mGraphPanelPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+                this, SLOT(graphPanelPropertyChanged()));
         connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                 this, SLOT(graphsPropertyChanged(Core::Property *)));
 
@@ -256,14 +265,6 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
 
         addWidget(mGraphPanelPropertyEditor);
         addWidget(mGraphsPropertyEditor);
-
-        // Keep track of the link between our existing graph panel and our new
-        // graphs property editor
-
-        mGraphPanels.insert(mGraphsPropertyEditor, pGraphPanel);
-
-        mGraphPanelPropertyEditors.insert(pGraphPanel, mGraphPanelPropertyEditor);
-        mGraphsPropertyEditors.insert(pGraphPanel, mGraphsPropertyEditor);
     }
 
     // Set the value of our property editors' horizontal scroll bar
@@ -300,9 +301,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
-    // Remove track of the link betwen our graph panel and our graphs property
-    // editor
+    // Remove track of the link betwen our graph panel and our graph panel and
+    // graphs property editors
 
+    mGraphPanels.remove(mGraphPanelPropertyEditors.value(pGraphPanel));
     mGraphPanels.remove(mGraphsPropertyEditors.value(pGraphPanel));
 
     mGraphPanelPropertyEditors.remove(pGraphPanel);
@@ -758,8 +760,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 {
     // Populate our graph panel property editor
 
-    mGraphPanelPropertyEditor->addColorProperty();
-    mGraphPanelPropertyEditor->addDoubleGt0Property();
+    GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = mGraphPanels.value(mGraphPanelPropertyEditor)->plot();
+
+    mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->color());
+    mGraphPanelPropertyEditor->addDoubleGt0Property(graphPanelPlot->fontSize());
 
     Core::Property *gridLinesProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
@@ -767,8 +771,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     mGraphPanelPropertyEditor->addDoubleGt0Property(gridLinesProperty);
     mGraphPanelPropertyEditor->addColorProperty(gridLinesProperty);
 
-    mGraphPanelPropertyEditor->addBooleanProperty();
-    mGraphPanelPropertyEditor->addBooleanProperty();
+    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->logAxisX());
+    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->logAxisY());
 
     Core::Property *pointCoordinatesProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
@@ -1053,6 +1057,25 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     } else if ((oldLinePen != linePen) || graphSymbolUpdated) {
         emit graphVisualUpdated(graph);
     }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPropertyChanged()
+{
+    // Update our graph panel settings
+
+    GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = mGraphPanels.value(mGraphPanelPropertyEditor)->plot();
+
+    graphPanelPlot->setUpdatesEnabled(false);
+
+    graphPanelPlot->setColor(mGraphPanelPropertyEditor->properties()[0]->colorValue());
+    graphPanelPlot->setFontSize(mGraphPanelPropertyEditor->properties()[1]->integerValue());
+
+    graphPanelPlot->setLogAxisX(mGraphPanelPropertyEditor->properties()[3]->booleanValue());
+    graphPanelPlot->setLogAxisY(mGraphPanelPropertyEditor->properties()[4]->booleanValue());
+
+    graphPanelPlot->setUpdatesEnabled(true);
 }
 
 //==============================================================================

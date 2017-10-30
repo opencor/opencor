@@ -965,6 +965,59 @@ void GraphPanelPlotWidget::resetAction()
 
 //==============================================================================
 
+QColor GraphPanelPlotWidget::color() const
+{
+    // Return our (background) colour
+
+    return canvasBackground().color();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setColor(const QColor &pColor)
+{
+    // Set our (background) colour
+
+    if (pColor != color()) {
+        QBrush brush = canvasBackground();
+
+        brush.setColor(pColor);
+
+        setCanvasBackground(brush);
+
+        replot();
+    }
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::fontSize() const
+{
+    // Return our font size
+
+    return axisFont(QwtPlot::xBottom).pointSize();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setFontSize(const int &pFontSize)
+{
+    // Set our font size
+
+    if (pFontSize != fontSize()) {
+        QFont font = axisFont(QwtPlot::xBottom);
+
+        font.setPointSize(pFontSize);
+
+        setAxisFont(QwtPlot::xBottom, font);
+        setAxisFont(QwtPlot::yLeft, font);
+
+        replot();
+    }
+}
+
+//==============================================================================
+
 bool GraphPanelPlotWidget::logAxisX() const
 {
     // Return whether our X axis uses a logarithmic scale

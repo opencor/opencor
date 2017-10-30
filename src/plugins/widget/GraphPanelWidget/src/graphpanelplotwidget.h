@@ -230,6 +230,12 @@ public:
     double minY() const;
     double maxY() const;
 
+    QColor color() const;
+    void setColor(const QColor &pColor);
+
+    int fontSize() const;
+    void setFontSize(const int &pFontSize);
+
     bool logAxisX() const;
     void setLogAxisX(const bool &pLogAxisX);
 
