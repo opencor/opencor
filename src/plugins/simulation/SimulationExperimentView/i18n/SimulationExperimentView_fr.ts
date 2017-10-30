@@ -52,6 +52,54 @@
         <translation>Sélectionner une couleur</translation>
     </message>
     <message>
+        <source>Colour</source>
+        <translation>Couleur</translation>
+    </message>
+    <message>
+        <source>Font size</source>
+        <translation>Taille de la police</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>Lignes de quadrillage</translation>
+    </message>
+    <message>
+        <source>Style</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Width</source>
+        <translation>Largeur</translation>
+    </message>
+    <message>
+        <source>Logarithmic X axis</source>
+        <translation>Axe logarithmique des X</translation>
+    </message>
+    <message>
+        <source>Logarithmic Y axis</source>
+        <translation>Axe logarithmique des Y</translation>
+    </message>
+    <message>
+        <source>Point coordinates</source>
+        <translation>Coordonnées de point</translation>
+    </message>
+    <message>
+        <source>Font colour</source>
+        <translation>Couleur de la police</translation>
+    </message>
+    <message>
+        <source>Zoom region</source>
+        <translation>Région de zoom</translation>
+    </message>
+    <message>
+        <source>Filled</source>
+        <translation>Rempli</translation>
+    </message>
+    <message>
+        <source>Fill colour</source>
+        <translation>Couleur de remplissage</translation>
+    </message>
+    <message>
         <source>Select Colour</source>
         <translation>Sélectionner Couleur</translation>
     </message>
@@ -84,10 +132,6 @@
         <translation>Ligne</translation>
     </message>
     <message>
-        <source>Style</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>None</source>
         <translation>Aucun</translation>
     </message>
@@ -110,14 +154,6 @@
     <message>
         <source>DashDotDot</source>
         <translation>TiretPointPoint</translation>
-    </message>
-    <message>
-        <source>Width</source>
-        <translation>Largeur</translation>
-    </message>
-    <message>
-        <source>Colour</source>
-        <translation>Couleur</translation>
     </message>
     <message>
         <source>Symbol</source>
@@ -166,42 +202,6 @@
     <message>
         <source>Size</source>
         <translation>Taille</translation>
-    </message>
-    <message>
-        <source>Filled</source>
-        <translation>Rempli</translation>
-    </message>
-    <message>
-        <source>Fill colour</source>
-        <translation>Couleur de remplissage</translation>
-    </message>
-    <message>
-        <source>Font size</source>
-        <translation>Taille de la police</translation>
-    </message>
-    <message>
-        <source>Grid lines</source>
-        <translation>Lignes de quadrillage</translation>
-    </message>
-    <message>
-        <source>Point coordinates</source>
-        <translation>Coordonnées de point</translation>
-    </message>
-    <message>
-        <source>Font colour</source>
-        <translation>Couleur de la police</translation>
-    </message>
-    <message>
-        <source>Zoom region</source>
-        <translation>Région de zoom</translation>
-    </message>
-    <message>
-        <source>Logarithmic X axis</source>
-        <translation>Axe logarithmique des X</translation>
-    </message>
-    <message>
-        <source>Logarithmic Y axis</source>
-        <translation>Axe logarithmique des Y</translation>
     </message>
 </context>
 <context>
