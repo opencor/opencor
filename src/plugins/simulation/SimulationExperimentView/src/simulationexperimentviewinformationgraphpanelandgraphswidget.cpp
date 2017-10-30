@@ -315,23 +315,23 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
 
     graphsPropertyEditor->addListProperty(graphProperty);
     graphsPropertyEditor->addStringProperty(pGraph->parameterX()?
-                                          static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())->fullyFormattedName():
-                                          Core::UnknownValue,
-                                      graphProperty);
+                                                static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())->fullyFormattedName():
+                                                Core::UnknownValue,
+                                            graphProperty);
     graphsPropertyEditor->addStringProperty(pGraph->parameterY()?
-                                          static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())->fullyFormattedName():
-                                          Core::UnknownValue,
-                                      graphProperty);
+                                                static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())->fullyFormattedName():
+                                                Core::UnknownValue,
+                                            graphProperty);
 
     // Create some line properties for our graph
 
     Core::Property *lineProperty = graphsPropertyEditor->addSectionProperty(graphProperty);
 
     graphsPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
-                                    SEDMLSupport::lineStyleValue((pGraphProperties.lineStyle() > Qt::DashDotDotLine)?
-                                                                     Qt::SolidLine:
-                                                                     pGraphProperties.lineStyle()),
-                                    lineProperty);
+                                          SEDMLSupport::lineStyleValue((pGraphProperties.lineStyle() > Qt::DashDotDotLine)?
+                                                                           Qt::SolidLine:
+                                                                           pGraphProperties.lineStyle()),
+                                          lineProperty);
     graphsPropertyEditor->addDoubleGt0Property(pGraphProperties.lineWidth(), lineProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.lineColor(), lineProperty);
 
@@ -340,12 +340,12 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
     Core::Property *symbolProperty = graphsPropertyEditor->addSectionProperty(graphProperty);
 
     graphsPropertyEditor->addListProperty(SEDMLSupport::symbolStyles(),
-                                    SEDMLSupport::symbolStyleValue((pGraphProperties.symbolStyle() <= QwtSymbol::DTriangle)?
-                                                                       pGraphProperties.symbolStyle()+1:
-                                                                       ((pGraphProperties.symbolStyle() >= QwtSymbol::Cross) && (pGraphProperties.symbolStyle() <= QwtSymbol::Star1))?
-                                                                           pGraphProperties.symbolStyle()-2:
-                                                                           QwtSymbol::NoSymbol),
-                                    symbolProperty);
+                                          SEDMLSupport::symbolStyleValue((pGraphProperties.symbolStyle() <= QwtSymbol::DTriangle)?
+                                                                             pGraphProperties.symbolStyle()+1:
+                                                                             ((pGraphProperties.symbolStyle() >= QwtSymbol::Cross) && (pGraphProperties.symbolStyle() <= QwtSymbol::Star1))?
+                                                                                 pGraphProperties.symbolStyle()-2:
+                                                                                 QwtSymbol::NoSymbol),
+                                          symbolProperty);
     graphsPropertyEditor->addIntegerGt0Property(pGraphProperties.symbolSize(), symbolProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.symbolColor(), symbolProperty);
     graphsPropertyEditor->addBooleanProperty(pGraphProperties.symbolFilled(), symbolProperty);
