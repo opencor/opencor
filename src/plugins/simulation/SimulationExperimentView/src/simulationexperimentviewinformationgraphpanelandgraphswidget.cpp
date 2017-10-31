@@ -72,17 +72,17 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
     mGraphPanelHorizontalScrollBarValue(0),
     mGraphsHorizontalScrollBarValue(0)
 {
-    // Create our context menus and populate our main context menu
+    // Create our graph context menus and populate our main graph context menu
 
-    mContextMenu = new QMenu(this);
-    mParametersContextMenu = new QMenu(this);
+    mGraphContextMenu = new QMenu(this);
+    mGraphParametersContextMenu = new QMenu(this);
 
     mAddGraphAction = Core::newAction(this);
     mRemoveCurrentGraphAction = Core::newAction(this);
     mRemoveAllGraphsAction = Core::newAction(this);
     mSelectAllGraphsAction = Core::newAction(this);
     mUnselectAllGraphsAction = Core::newAction(this);
-    mSelectColorAction = Core::newAction(this);
+    mSelectGraphColorAction = Core::newAction(this);
 
     connect(mAddGraphAction, SIGNAL(triggered(bool)),
             this, SLOT(addGraph()));
@@ -94,18 +94,18 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
             this, SLOT(selectAllGraphs()));
     connect(mUnselectAllGraphsAction, SIGNAL(triggered(bool)),
             this, SLOT(unselectAllGraphs()));
-    connect(mSelectColorAction, SIGNAL(triggered(bool)),
-            this, SLOT(selectColor()));
+    connect(mSelectGraphColorAction, SIGNAL(triggered(bool)),
+            this, SLOT(selectGraphColor()));
 
-    mContextMenu->addAction(mAddGraphAction);
-    mContextMenu->addSeparator();
-    mContextMenu->addAction(mRemoveCurrentGraphAction);
-    mContextMenu->addAction(mRemoveAllGraphsAction);
-    mContextMenu->addSeparator();
-    mContextMenu->addAction(mSelectAllGraphsAction);
-    mContextMenu->addAction(mUnselectAllGraphsAction);
-    mContextMenu->addSeparator();
-    mContextMenu->addAction(mSelectColorAction);
+    mGraphContextMenu->addAction(mAddGraphAction);
+    mGraphContextMenu->addSeparator();
+    mGraphContextMenu->addAction(mRemoveCurrentGraphAction);
+    mGraphContextMenu->addAction(mRemoveAllGraphsAction);
+    mGraphContextMenu->addSeparator();
+    mGraphContextMenu->addAction(mSelectAllGraphsAction);
+    mGraphContextMenu->addAction(mUnselectAllGraphsAction);
+    mGraphContextMenu->addSeparator();
+    mGraphContextMenu->addAction(mSelectGraphColorAction);
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -129,7 +129,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateUi
                                      tr("Select all the graphs"));
     I18nInterface::retranslateAction(mUnselectAllGraphsAction, tr("Unselect All Graphs"),
                                      tr("Unselect all the graphs"));
-    I18nInterface::retranslateAction(mSelectColorAction, tr("Select Colour..."),
+    I18nInterface::retranslateAction(mSelectGraphColorAction, tr("Select Colour..."),
                                      tr("Select a colour"));
 
     // Retranslate all our property editors
@@ -181,9 +181,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateUi
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(SimulationSupport::Simulation *pSimulation)
 {
-    // Populate our parameters context menu
+    // Populate our graph parameters context menu
 
-    populateParametersContextMenu(pSimulation->runtime());
+    populateGraphParametersContextMenu(pSimulation->runtime());
 
     // Update our graphs information
 
@@ -194,9 +194,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Si
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
 {
-    // Clear our parameters context menu
+    // Clear our graph parameters context menu
 
-    mParametersContextMenu->clear();
+    mGraphParametersContextMenu->clear();
 }
 
 //==============================================================================
@@ -238,7 +238,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
         mGraphsPropertyEditor->setContextMenuPolicy(Qt::CustomContextMenu);
 
         connect(mGraphsPropertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
-                this, SLOT(showGraphsContextMenu(const QPoint &)));
+                this, SLOT(showGraphContextMenu(const QPoint &)));
 
         // Keep track of changes to our property editors' horizontal bar's value
 
@@ -509,7 +509,7 @@ bool SimulationExperimentViewInformationGraphPanelAndGraphsWidget::rootProperty(
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectColor()
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectGraphColor()
 {
     // Select a colour and assign it to the current property
 
@@ -688,7 +688,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphsColu
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphsContextMenu(const QPoint &pPosition) const
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
 
@@ -719,18 +719,18 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphsCon
     mSelectAllGraphsAction->setEnabled(canSelectAllGraphs);
     mUnselectAllGraphsAction->setEnabled(canUnselectAllGraphs);
 
-    mSelectColorAction->setVisible(    crtProperty
-                                   && (crtProperty->type() == Core::Property::Color));
+    mSelectGraphColorAction->setVisible(    crtProperty
+                                        && (crtProperty->type() == Core::Property::Color));
 
-    // Show the context menu, or not, depending on the type of property we are
-    // dealing with, if any
+    // Show the graph context menu, or not, depending on the type of property we
+    // are dealing with, if any
 
     if (   crtProperty
         && (   !crtProperty->name().compare(tr("X"))
             || !crtProperty->name().compare(tr("Y")))) {
-        mParametersContextMenu->exec(QCursor::pos());
+        mGraphParametersContextMenu->exec(QCursor::pos());
     } else {
-        mContextMenu->exec(QCursor::pos());
+        mGraphContextMenu->exec(QCursor::pos());
     }
 }
 
@@ -792,13 +792,13 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraphParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime)
 {
-    // Populate our parameters context menu with the contents of our main
-    // context menu
+    // Populate our graph parameters context menu with the contents of our main
+    // graph context menu
 
-    mParametersContextMenu->addActions(mContextMenu->actions());
-    mParametersContextMenu->addSeparator();
+    mGraphParametersContextMenu->addActions(mGraphContextMenu->actions());
+    mGraphParametersContextMenu->addSeparator();
 
     // Now, add our model parameters to it
 
@@ -816,7 +816,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateParam
             // create a new menu hierarchy for our 'new' component, reusing
             // existing menus, whenever possible
 
-            QMenu *parentComponentMenu = mParametersContextMenu;
+            QMenu *parentComponentMenu = mGraphParametersContextMenu;
 
             foreach (const QString &component, parameter->componentHierarchy()) {
                 // Check whether we already have a menu for our current

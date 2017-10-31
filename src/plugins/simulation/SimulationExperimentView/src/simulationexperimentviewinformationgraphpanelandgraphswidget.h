@@ -118,15 +118,15 @@ private:
     QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *> mGraphs;
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *> mGraphProperties;
 
-    QMenu *mContextMenu;
-    QMenu *mParametersContextMenu;
+    QMenu *mGraphContextMenu;
+    QMenu *mGraphParametersContextMenu;
 
     QAction *mAddGraphAction;
     QAction *mRemoveCurrentGraphAction;
     QAction *mRemoveAllGraphsAction;
     QAction *mSelectAllGraphsAction;
     QAction *mUnselectAllGraphsAction;
-    QAction *mSelectColorAction;
+    QAction *mSelectGraphColorAction;
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
@@ -139,7 +139,7 @@ private:
 
     void populateGraphPanelPropertyEditor();
 
-    void populateParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
+    void populateGraphParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
 
     bool checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
                         GraphPanelWidget::GraphPanelPlotGraph *pGraph,
@@ -184,9 +184,9 @@ private slots:
     void removeAllGraphs();
     void selectAllGraphs();
     void unselectAllGraphs();
-    void selectColor();
+    void selectGraphColor();
 
-    void showGraphsContextMenu(const QPoint &pPosition) const;
+    void showGraphContextMenu(const QPoint &pPosition) const;
 
     void graphPanelPropertyEditorHorizontalScrollBarValueChanged(const int &pValue);
     void graphsPropertyEditorHorizontalScrollBarValueChanged(const int &pValue);
