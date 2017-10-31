@@ -4,6 +4,14 @@
 <context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget</name>
     <message>
+        <source>Select Colour...</source>
+        <translation>Sélectionner Couleur...</translation>
+    </message>
+    <message>
+        <source>Select a colour</source>
+        <translation>Sélectionner une couleur</translation>
+    </message>
+    <message>
         <source>Add Graph</source>
         <translation>Ajouter Courbe</translation>
     </message>
@@ -42,14 +50,6 @@
     <message>
         <source>Unselect all the graphs</source>
         <translation>Déselectionner toutes les courbes</translation>
-    </message>
-    <message>
-        <source>Select Colour...</source>
-        <translation>Sélectionner Couleur...</translation>
-    </message>
-    <message>
-        <source>Select a colour</source>
-        <translation>Sélectionner une couleur</translation>
     </message>
     <message>
         <source>Colour</source>
