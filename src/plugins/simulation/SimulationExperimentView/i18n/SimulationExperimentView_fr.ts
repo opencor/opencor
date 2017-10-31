@@ -72,6 +72,10 @@
         <translation>Largeur</translation>
     </message>
     <message>
+        <source>Visible</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Logarithmic X axis</source>
         <translation>Axe logarithmique des X</translation>
     </message>
