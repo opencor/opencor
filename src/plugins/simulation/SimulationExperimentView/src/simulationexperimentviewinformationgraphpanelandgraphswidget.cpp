@@ -438,6 +438,16 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeGraphs(
 
 //==============================================================================
 
+bool SimulationExperimentViewInformationGraphPanelAndGraphsWidget::rootProperty(Core::Property *pProperty) const
+{
+    // Return whether the given property is a root property
+
+    return    (pProperty->type() == Core::Property::Section)
+           && !pProperty->parentProperty() && pProperty->isCheckable();
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectColor(Core::Property *pProperty)
 {
     // Select a colour and assign it to the given property
@@ -537,16 +547,6 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::unselectAllGr
     // Unselect all the graphs
 
     selectAllGraphs(false);
-}
-
-//==============================================================================
-
-bool SimulationExperimentViewInformationGraphPanelAndGraphsWidget::rootProperty(Core::Property *pProperty) const
-{
-    // Return whether the given property is a root property
-
-    return    (pProperty->type() == Core::Property::Section)
-           && !pProperty->parentProperty() && pProperty->isCheckable();
 }
 
 //==============================================================================
