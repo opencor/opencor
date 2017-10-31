@@ -739,13 +739,15 @@ void Property::setValue(const QString &pValue, const bool &pForce,
 
         if (mType == Color) {
             QPixmap colorPixmap = QPixmap(48, 48);
+
+            colorPixmap.fill(Qt::transparent);
+
             QPainter colorPixmapPainter(&colorPixmap);
             QColor color;
 
             color.setNamedColor(pValue);
 
-            colorPixmapPainter.fillRect(0, 0, colorPixmap.width()-1, colorPixmap.height()-1, Qt::white);
-            colorPixmapPainter.fillRect(0, 0, colorPixmap.width()-1, colorPixmap.height()-1, color);
+            colorPixmapPainter.fillRect(0, 0, colorPixmap.width(), colorPixmap.height(), color);
 
             mValue->setIcon(colorPixmap);
         }
