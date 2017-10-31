@@ -72,6 +72,17 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
     mGraphPanelHorizontalScrollBarValue(0),
     mGraphsHorizontalScrollBarValue(0)
 {
+    // Create our graph panel context menu and populate it
+
+    mGraphPanelContextMenu = new QMenu(this);
+
+    mSelectGraphPanelColorAction = Core::newAction(this);
+
+    connect(mSelectGraphPanelColorAction, SIGNAL(triggered(bool)),
+            this, SLOT(selectGraphPanelColor()));
+
+    mGraphPanelContextMenu->addAction(mSelectGraphPanelColorAction);
+
     // Create our graph context menus and populate our main graph context menu
 
     mGraphContextMenu = new QMenu(this);
@@ -118,6 +129,9 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateUi()
 {
     // Retranslate our actions
+
+    I18nInterface::retranslateAction(mSelectGraphPanelColorAction, tr("Select Colour..."),
+                                     tr("Select a colour"));
 
     I18nInterface::retranslateAction(mAddGraphAction, tr("Add Graph"),
                                      tr("Add a graph"));
@@ -233,12 +247,16 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
 
         populateGraphPanelPropertyEditor();
 
-        // We want our own context menu for our graphs property editor
+        // We want our own context menu for our graph panel and graphs property
+        // editors
 
+        mGraphPanelPropertyEditor->setContextMenuPolicy(Qt::CustomContextMenu);
         mGraphsPropertyEditor->setContextMenuPolicy(Qt::CustomContextMenu);
 
+        connect(mGraphPanelPropertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
+                this, SLOT(showGraphPanelContextMenu(const QPoint &)));
         connect(mGraphsPropertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
-                this, SLOT(showGraphContextMenu(const QPoint &)));
+                this, SLOT(showGraphsContextMenu(const QPoint &)));
 
         // Keep track of changes to our property editors' horizontal bar's value
 
@@ -420,6 +438,30 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeGraphs(
 
 //==============================================================================
 
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectColor(Core::Property *pProperty)
+{
+    // Select a colour and assign it to the given property
+
+    QColorDialog colorDialog(pProperty->colorValue(), this);
+
+    colorDialog.setOption(QColorDialog::ShowAlphaChannel);
+    colorDialog.setWindowTitle(tr("Select Colour"));
+
+    if (colorDialog.exec())
+        pProperty->setColorValue(colorDialog.currentColor());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectGraphPanelColor()
+{
+    // Select a colour for the current property
+
+    selectColor(mGraphPanelPropertyEditor->currentProperty());
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph()
 {
     // Ask the graph panel associated with our current graphs property editor to
@@ -511,18 +553,9 @@ bool SimulationExperimentViewInformationGraphPanelAndGraphsWidget::rootProperty(
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectGraphColor()
 {
-    // Select a colour and assign it to the current property
+    // Select a colour for the current property
 
-    QColorDialog colorDialog(mGraphsPropertyEditor->currentProperty()->colorValue(), this);
-
-    colorDialog.setOption(QColorDialog::ShowAlphaChannel);
-    colorDialog.setWindowTitle(tr("Select Colour"));
-
-    if (colorDialog.exec()) {
-        Core::Property *crtProperty = mGraphsPropertyEditor->currentProperty();
-
-        crtProperty->setColorValue(colorDialog.currentColor());
-    }
+    selectColor(mGraphsPropertyEditor->currentProperty());
 }
 
 //==============================================================================
@@ -688,7 +721,29 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphsColu
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphContextMenu(const QPoint &pPosition) const
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphPanelContextMenu(const QPoint &pPosition) const
+{
+    Q_UNUSED(pPosition);
+
+    // Make sure that we have a graph panel property editor
+
+    if (!mGraphPanelPropertyEditor)
+        return;
+
+    // Show the graph panel context menu, or not, depending on the type of
+    // property we are dealing with, if any
+
+    Core::Property *crtProperty = mGraphPanelPropertyEditor->currentProperty();
+
+    if (    crtProperty
+            && (crtProperty->type() == Core::Property::Color)) {
+        mGraphPanelContextMenu->exec(QCursor::pos());
+    }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphsContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
 
@@ -697,11 +752,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphCont
     if (!mGraphsPropertyEditor)
         return;
 
-    // Retrieve our current property, if any
+    // Update the enabled state of some of our actions
 
     Core::Property *crtProperty = mGraphsPropertyEditor->currentProperty();
-
-    // Update the enabled state of some of our actions
 
     mRemoveCurrentGraphAction->setEnabled(crtProperty);
     mRemoveAllGraphsAction->setEnabled(!mGraphsPropertyEditor->properties().isEmpty());

@@ -118,6 +118,10 @@ private:
     QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *> mGraphs;
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *> mGraphProperties;
 
+    QMenu *mGraphPanelContextMenu;
+
+    QAction *mSelectGraphPanelColorAction;
+
     QMenu *mGraphContextMenu;
     QMenu *mGraphParametersContextMenu;
 
@@ -156,6 +160,8 @@ private:
 
     bool rootProperty(Core::Property *pProperty) const;
 
+    void selectColor(Core::Property *pProperty);
+
 signals:
     void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
 
@@ -179,6 +185,8 @@ public slots:
                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
 private slots:
+    void selectGraphPanelColor();
+
     void addGraph();
     void removeCurrentGraph();
     void removeAllGraphs();
@@ -186,7 +194,8 @@ private slots:
     void unselectAllGraphs();
     void selectGraphColor();
 
-    void showGraphContextMenu(const QPoint &pPosition) const;
+    void showGraphPanelContextMenu(const QPoint &pPosition) const;
+    void showGraphsContextMenu(const QPoint &pPosition) const;
 
     void graphPanelPropertyEditorHorizontalScrollBarValueChanged(const int &pValue);
     void graphsPropertyEditorHorizontalScrollBarValueChanged(const int &pValue);
