@@ -396,10 +396,6 @@ public:
     void removeAllProperties();
 
 protected:
-    virtual void drawRow(QPainter *painter,
-                         const QStyleOptionViewItem &options,
-                         const QModelIndex &index) const;
-
     virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
