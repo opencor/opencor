@@ -283,7 +283,7 @@ BooleanEditorWidget::BooleanEditorWidget(QWidget *pParent) :
 ColorEditorWidget::ColorEditorWidget(QWidget *pParent) :
     TextEditorWidget(pParent)
 {
-    // Set a validator that accepts any colour
+    // Set a validator that accepts any colour of the form #aarrggbb or #rrggbb
 
     static const QRegularExpression ColorRegEx = QRegularExpression("^#([[:xdigit:]]{6}|[[:xdigit:]]{8})$");
 
@@ -677,6 +677,24 @@ void Property::setEditable(const bool &pEditable)
 
 //==============================================================================
 
+QIcon Property::icon() const
+{
+    // Return our icon
+
+    return mName->icon();
+}
+
+//==============================================================================
+
+void Property::setIcon(const QIcon &pIcon)
+{
+    // Set our icon
+
+    mName->setIcon(pIcon);
+}
+
+//==============================================================================
+
 QString Property::name() const
 {
     // Return our name
@@ -696,24 +714,6 @@ void Property::setName(const QString &pName, const bool &pUpdateToolTip)
         if (pUpdateToolTip)
             updateToolTip();
     }
-}
-
-//==============================================================================
-
-QIcon Property::icon() const
-{
-    // Return our icon
-
-    return mName->icon();
-}
-
-//==============================================================================
-
-void Property::setIcon(const QIcon &pIcon)
-{
-    // Set our icon
-
-    mName->setIcon(pIcon);
 }
 
 //==============================================================================

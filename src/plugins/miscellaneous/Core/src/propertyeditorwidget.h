@@ -247,11 +247,11 @@ public:
     bool isEditable() const;
     void setEditable(const bool &pEditable);
 
-    QString name() const;
-    void setName(const QString &pName, const bool &pUpdateToolTip = true);
-
     QIcon icon() const;
     void setIcon(const QIcon &pIcon);
+
+    QString name() const;
+    void setName(const QString &pName, const bool &pUpdateToolTip = true);
 
     QString value() const;
     void setValue(const QString &pValue, const bool &pForce = false,
