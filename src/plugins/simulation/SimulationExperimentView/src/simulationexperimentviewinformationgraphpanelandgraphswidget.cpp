@@ -34,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QColorDialog>
 #include <QFileInfo>
 #include <QHeaderView>
 #include <QMenu>
@@ -449,26 +448,11 @@ bool SimulationExperimentViewInformationGraphPanelAndGraphsWidget::rootProperty(
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectColor(Core::Property *pProperty)
-{
-    // Select a colour and assign it to the given property
-
-    QColorDialog colorDialog(pProperty->colorValue(), this);
-
-    colorDialog.setOption(QColorDialog::ShowAlphaChannel);
-    colorDialog.setWindowTitle(tr("Select Colour"));
-
-    if (colorDialog.exec())
-        pProperty->setColorValue(colorDialog.currentColor());
-}
-
-//==============================================================================
-
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectGraphPanelColor()
 {
     // Select a colour for the current property
 
-    selectColor(mGraphPanelPropertyEditor->currentProperty());
+    mGraphPanelPropertyEditor->currentProperty()->setColorValue();
 }
 
 //==============================================================================
@@ -556,7 +540,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectGraphCo
 {
     // Select a colour for the current property
 
-    selectColor(mGraphsPropertyEditor->currentProperty());
+    mGraphsPropertyEditor->currentProperty()->setColorValue();
 }
 
 //==============================================================================

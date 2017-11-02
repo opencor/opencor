@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QAbstractItemDelegate>
 #include <QAbstractItemView>
+#include <QColorDialog>
 #include <QHeaderView>
 #include <QEvent>
 #include <QKeyEvent>
@@ -968,6 +969,28 @@ void Property::setColorValue(const QColor &pColorValue)
 
 //==============================================================================
 
+void Property::setColorValue(const QPoint &pPoint)
+{
+    // Make sure that we are of colour type and that the given point is over our
+    // colour value icon
+
+    if (   (mType == Color)
+        && (    pPoint.isNull()
+            || (mOwner->visualRect(mValue->index()).contains(pPoint)))) {
+        // Select a colour and assign it to ourselves
+
+        QColorDialog colorDialog(colorValue());
+
+        colorDialog.setOption(QColorDialog::ShowAlphaChannel);
+        colorDialog.setWindowTitle(tr("Select Colour"));
+
+        if (colorDialog.exec())
+            setColorValue(colorDialog.currentColor());
+    }
+}
+
+//==============================================================================
+
 QString Property::unit() const
 {
     // Return our unit
@@ -1643,6 +1666,23 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
         TreeViewWidget::keyPressEvent(pEvent);
     }
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
+{
+    // Default handling of the event
+
+    TreeViewWidget::mouseDoubleClickEvent(pEvent);
+
+    // We want to select a colour when double clicking on the icon of a colour
+    // value, so do just that
+    // Note: it's fine to do it even if the property is not of colour type since
+    //       our call to setColorValue() will only work if the property is of
+    //       colour type and if we are over the property's colour value icon...
+
+    property(indexAt(pEvent->pos()))->setColorValue(pEvent->pos());
 }
 
 //==============================================================================

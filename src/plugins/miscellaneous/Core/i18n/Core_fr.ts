@@ -297,6 +297,10 @@
         <source>: </source>
         <translation> : </translation>
     </message>
+    <message>
+        <source>Select Colour</source>
+        <translation>Sélectionner Couleur</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::PropertyEditorWidget</name>

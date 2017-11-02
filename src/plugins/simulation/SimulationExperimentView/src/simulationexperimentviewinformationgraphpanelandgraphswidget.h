@@ -160,8 +160,6 @@ private:
 
     bool rootProperty(Core::Property *pProperty) const;
 
-    void selectColor(Core::Property *pProperty);
-
 signals:
     void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
 

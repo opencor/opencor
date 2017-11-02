@@ -283,6 +283,7 @@ public:
 
     QColor colorValue() const;
     void setColorValue(const QColor &pColorValue);
+    void setColorValue(const QPoint &pPoint = QPoint());
 
     QString unit() const;
     void setUnit(const QString &pUnit, const bool &pUpdateToolTip = true);
@@ -396,6 +397,7 @@ public:
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
+    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual void mouseReleaseEvent(QMouseEvent *pEvent);
