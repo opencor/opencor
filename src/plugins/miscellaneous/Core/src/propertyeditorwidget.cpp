@@ -1615,6 +1615,26 @@ Property * PropertyEditorWidget::addColorProperty(Property *pParent)
 
 //==============================================================================
 
+void PropertyEditorWidget::drawRow(QPainter *painter, const QStyleOptionViewItem &options, const QModelIndex &index) const
+{
+//---ISSUE1426--- THIS IS JUST FOR TESTING...
+    QTreeView::drawRow(painter, options, index);
+
+    foreach (Property *property, mAllProperties) {
+        if ((property->type() == Property::Color) && property->hasIndex(index)) {
+            QRect valueRect = visualRect(index.sibling(index.row(), 1));
+
+            painter->fillRect(QRectF(valueRect.left(), valueRect.top(),
+                                     options.decorationSize.width(),
+                                     options.decorationSize.height()), Qt::red);
+
+            break;
+        }
+    }
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check some key combinations
