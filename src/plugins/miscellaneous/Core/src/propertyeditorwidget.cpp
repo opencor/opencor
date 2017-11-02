@@ -967,12 +967,33 @@ void Property::setColorValue(const QColor &pColorValue)
 
 void Property::setColorValue(const QPoint &pPoint)
 {
-    // Make sure that we are of colour type and that the given point is over our
-    // colour value icon
+    // Make sure that we are of colour type and that the given point is either
+    // null or over our colour value icon
 
-    if (   (mType == Color)
-        && (    pPoint.isNull()
-            || (mOwner->visualRect(mValue->index()).contains(pPoint)))) {
+    if (mType == Color) {
+        if (!pPoint.isNull()) {
+            // The given point is not null, so determine the position and size
+            // of our colour value icon
+            // Note: this very much relies on an empirical approach...
+
+            QRect iconRect = mOwner->visualRect(mValue->index());
+
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+            iconRect.translate(3, 1);
+#elif defined(Q_OS_MAC)
+            iconRect.translate(5, 1);
+#else
+            #error Unsupported platform
+#endif
+
+            iconRect.setSize(QSize(16, 16));
+
+            // Check whether the given point is over our colour value icon
+
+            if (!iconRect.contains(pPoint))
+                return;
+        }
+
         // Select a colour and assign it to ourselves
 
         QColorDialog colorDialog(colorValue());
