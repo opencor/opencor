@@ -205,15 +205,15 @@ class CORE_EXPORT Property : public QObject
 
 public:
     enum Type {
-        Section    = QStandardItem::UserType,
-        String     = QStandardItem::UserType+1,
-        Integer    = QStandardItem::UserType+2,
-        IntegerGt0 = QStandardItem::UserType+3,
-        Double     = QStandardItem::UserType+4,
-        DoubleGt0  = QStandardItem::UserType+5,
-        List       = QStandardItem::UserType+6,
-        Boolean    = QStandardItem::UserType+7,
-        Color      = QStandardItem::UserType+8
+        Section,
+        String,
+        Integer,
+        IntegerGt0,
+        Double,
+        DoubleGt0,
+        List,
+        Boolean,
+        Color
     };
 
     explicit Property(const Type &pType, PropertyEditorWidget *pParent);
