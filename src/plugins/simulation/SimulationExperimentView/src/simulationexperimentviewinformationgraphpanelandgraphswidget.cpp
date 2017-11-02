@@ -663,10 +663,13 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(const
     if (pMode != mMode) {
         mMode = pMode;
 
-        // Set our graph panel or graphs property editor as our current
-        // widget
+        // Set our graph panel or graphs property editor as our current widget,
+        // if we have one (i.e. the model could be compiled)
 
-        setCurrentWidget((pMode == GraphPanel)?mGraphPanelPropertyEditor:mGraphsPropertyEditor);
+        Core::PropertyEditorWidget *propertyEditor = (pMode == GraphPanel)?mGraphPanelPropertyEditor:mGraphsPropertyEditor;
+
+        if (propertyEditor)
+            setCurrentWidget(propertyEditor);
 
         // Let people know about our change of modes
 
