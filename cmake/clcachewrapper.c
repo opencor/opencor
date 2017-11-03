@@ -30,10 +30,30 @@ int main(int pArgC, char *pArgV[])
     // Call clcache with the given arguments, except the first one, which is the
     // full path to the MSVC compiler
 
-    char clcacheCommand[32768] = "clcache";
+    #define STRING_SIZE 32768
 
-    for (int i = 2; i < pArgC; ++i)
-        sprintf(clcacheCommand, "%s %s", clcacheCommand, pArgV[i]);
+    char clcacheCommand[STRING_SIZE] = "clcache";
+    char clcacheArgument[STRING_SIZE];
+
+    for (int i = 2; i < pArgC; ++i) {
+        int k = -1;
+
+        for (int j = 0, jMax = strlen(pArgV[i]); j < jMax; ++j) {
+            if (pArgV[i][j] == '\\') {
+                clcacheArgument[++k] = '\\';
+                clcacheArgument[++k] = '\\';
+            } else if (pArgV[i][j] == '"') {
+                clcacheArgument[++k] = '\\';
+                clcacheArgument[++k] = '"';
+            } else {
+                clcacheArgument[++k] = pArgV[i][j];
+            }
+        }
+
+        clcacheArgument[++k] = '\0';
+
+        sprintf(clcacheCommand, "%s %s", clcacheCommand, clcacheArgument);
+    }
 
     return system(clcacheCommand);
 }
