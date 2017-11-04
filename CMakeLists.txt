@@ -388,8 +388,15 @@ IF(APPLE)
 ENDIF()
 
 # Some general build settings
-# Note: MSVC enables C++11 support by default, so we just need to enable it on
-#       Linux and macOS...
+# Note #1: we force the overriding of CMAKE_CXX_FLAGS_RELEASE and
+#          CMAKE_CXX_FLAGS_DEBUG, so that we can really use the compilation
+#          flags we want, as opposed to CMake forcing us to use the ones it
+#          wants...
+# Note #2: MSVC enables C++11 support by default, so we just need to enable it
+#          on Linux and macOS...
+
+SET(CMAKE_CXX_FLAGS_RELEASE "" CACHE STRING "" FORCE)
+SET(CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "" FORCE)
 
 IF(WIN32)
     SET(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /W3 /WX /GR /EHsc")
