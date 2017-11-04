@@ -101,15 +101,11 @@ IF(NOT WIN32 AND NOT APPLE)
 ENDIF()
 
 # Make sure that clcache/ccache gets used, if available
-# Note: clcache doesn't currently support the /Zi compiler option, which means
-#       that it will only slow things down if it is used for a debug build. In
-#       other words, we should only use clcache for release builds. For now, at
-#       least (see https://github.com/frerich/clcache/issues/30)...
 
 FIND_PROGRAM(CLCACHE clcache)
 FIND_PROGRAM(CCACHE ccache)
 
-IF(CLCACHE AND RELEASE_MODE)
+IF(CLCACHE)
     SET(CLCACHEWRAPPER ${CMAKE_BINARY_DIR}/clcachewrapper)
 
     EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
@@ -448,7 +444,7 @@ ELSE()
     # Default debug compiler and linker settings
 
     IF(WIN32)
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_DEBUG /MDd /Zi /Ob0 /Od /RTC1")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1")
         SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /DEBUG")
     ELSE()
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
