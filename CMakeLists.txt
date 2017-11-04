@@ -444,6 +444,11 @@ ENDIF()
 
 ADD_DEFINITIONS(-DQT_DEPRECATED_WARNINGS)
 
+# Make sure that Unicode is defined
+# Note: at least needed for QtSingleApplication on Windows...
+
+ADD_DEFINITIONS(-DUNICODE)
+
 # Let OpenCOR know about some of the options with which it was built
 
 IF(USE_PREBUILT_QTWEBKIT_PACKAGE)

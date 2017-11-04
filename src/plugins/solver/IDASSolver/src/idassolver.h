@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "nvector/nvector_serial.h"
+#include "sundials/sundials_linearsolver.h"
+#include "sundials/sundials_matrix.h"
 
 //==============================================================================
 
@@ -154,6 +156,8 @@ private:
     void *mSolver;
     N_Vector mRatesVector;
     N_Vector mStatesVector;
+    SUNMatrix mMatrix;
+    SUNLinearSolver mLinearSolver;
     IdasSolverUserData *mUserData;
 
     N_Vector *mRatesSensitivityVectors;

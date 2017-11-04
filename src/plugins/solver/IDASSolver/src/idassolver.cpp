@@ -26,11 +26,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "idas/idas.h"
-#include "idas/idas_band.h"
-#include "idas/idas_dense.h"
-#include "idas/idas_spbcgs.h"
-#include "idas/idas_spgmr.h"
-#include "idas/idas_sptfqmr.h"
+#include "idas/idas_direct.h"
+#include "idas/idas_spils.h"
+#include "sunlinsol/sunlinsol_band.h"
+#include "sunlinsol/sunlinsol_dense.h"
+#include "sunlinsol/sunlinsol_spbcgs.h"
+#include "sunlinsol/sunlinsol_spgmr.h"
+#include "sunlinsol/sunlinsol_sptfqmr.h"
 
 //==============================================================================
 
@@ -201,6 +203,8 @@ IdasSolver::IdasSolver() :
     mSolver(0),
     mRatesVector(0),
     mStatesVector(0),
+    mMatrix(0),
+    mLinearSolver(0),
     mUserData(0),
     mRatesSensitivityVectors(0),
     mStatesSensitivityVectors(0),
@@ -222,6 +226,8 @@ IdasSolver::~IdasSolver()
 
     N_VDestroy_Serial(mRatesVector);
     N_VDestroy_Serial(mStatesVector);
+    SUNLinSolFree(mLinearSolver);
+    SUNMatDestroy(mMatrix);
 
     if (mStatesSensitivityVectors) {
         N_VDestroyVectorArray_Serial(mRatesSensitivityVectors, mSensitivityVectorsSize);
@@ -415,16 +421,31 @@ void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         // Set the linear solver
 
-        if (!linearSolver.compare(DenseLinearSolver))
-            IDADense(mSolver, pRatesStatesCount);
-        else if (!linearSolver.compare(BandedLinearSolver))
-            IDABand(mSolver, pRatesStatesCount, upperHalfBandwidth, lowerHalfBandwidth);
-        else if (!linearSolver.compare(GmresLinearSolver))
-            IDASpgmr(mSolver, 0);
-        else if (!linearSolver.compare(BiCgStabLinearSolver))
-            IDASpbcg(mSolver, 0);
-        else
-            IDASptfqmr(mSolver, 0);
+        if (!linearSolver.compare(DenseLinearSolver)) {
+            mMatrix = SUNDenseMatrix(pRatesStatesCount, pRatesStatesCount);
+            mLinearSolver = SUNDenseLinearSolver(mStatesVector, mMatrix);
+
+            IDADlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
+        } else if (!linearSolver.compare(BandedLinearSolver)) {
+            mMatrix = SUNBandMatrix(pRatesStatesCount,
+                                    upperHalfBandwidth, lowerHalfBandwidth,
+                                    upperHalfBandwidth+lowerHalfBandwidth);
+            mLinearSolver = SUNBandLinearSolver(mStatesVector, mMatrix);
+
+            IDADlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
+        } else if (!linearSolver.compare(GmresLinearSolver)) {
+            mLinearSolver = SUNSPGMR(mStatesVector, PREC_LEFT, 0);
+
+            IDASpilsSetLinearSolver(mSolver, mLinearSolver);
+        } else if (!linearSolver.compare(BiCgStabLinearSolver)) {
+            mLinearSolver = SUNSPBCGS(mStatesVector, PREC_LEFT, 0);
+
+            IDASpilsSetLinearSolver(mSolver, mLinearSolver);
+        } else {
+            mLinearSolver = SUNSPTFQMR(mStatesVector, PREC_LEFT, 0);
+
+            IDASpilsSetLinearSolver(mSolver, mLinearSolver);
+        }
 
         // Set the maximum step
 
