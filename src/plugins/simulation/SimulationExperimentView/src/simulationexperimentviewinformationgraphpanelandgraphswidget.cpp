@@ -1122,6 +1122,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     graphPanelPlot->setLogAxisY(mGraphPanelPropertyEditor->properties()[4]->booleanValue());
 
     graphPanelPlot->setUpdatesEnabled(true);
+
+    graphPanelPlot->replot();
 }
 
 //==============================================================================
