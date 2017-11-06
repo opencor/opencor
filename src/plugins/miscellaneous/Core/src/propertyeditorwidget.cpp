@@ -1004,6 +1004,15 @@ void Property::setColorValue(const QPoint &pPoint)
 
         if (colorDialog.exec())
             setColorValue(colorDialog.currentColor());
+
+        // Make sure that the widget that owns this property gets the focus back
+        // straightaway
+        // Note: indeed, if we come here as a result of a double click (see
+        //       PropertyEditorWidget::mouseDoubleClickEvent()), then the first
+        //       time round, we will have to click anywhere in OpenCOR for
+        //       OpenCOR to get the focus back...
+
+        QCoreApplication::processEvents();
     }
 }
 
