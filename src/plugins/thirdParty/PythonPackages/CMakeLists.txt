@@ -20,6 +20,8 @@ SET(IPYTHON_VERSION 6.2.1)
 SET(QTCONSOLE_VERSION 4.3.1)
 SET(TRAITLETS_VERSION 4.3.2)
 
+SET(LXML_VERSION 4.1.1)
+
 # Our GitHub archive
 
 SET(GITHUB_OPENCOR https://github.com/opencor)
@@ -107,13 +109,17 @@ ELSE()
         ${PYTHON_EXECUTABLE} -s -m
         pip install -t ${LOCAL_SITE_PACKAGES_DIR} --upgrade --upgrade-strategy only-if-needed)
 
-    # Install numpy, scipy, and matplotlib
+    # Install from pre-built wheels under Windows
 
     IF(WIN32)
         STRING(REPLACE "." "" VERSION_ABIFLAGS ${PYTHON_FULL_VERSION})
         STRING(SUBSTRING ${VERSION_ABIFLAGS} 0 2 NUMERIC_VERSION)
         SET(WHEEL_SUFFIX "cp${NUMERIC_VERSION}-cp${VERSION_ABIFLAGS}-win_amd64.whl")
+    ENDIF()
 
+    # Install numpy, scipy, and matplotlib
+
+    IF(WIN32)
         # The numpy version we use is linked to the Intel Math Kernel Library
 
         SET(NUMPY_WHEEL "numpy-${NUMPY_VERSION}.mkl-${WHEEL_SUFFIX}")
@@ -185,6 +191,31 @@ ELSE()
     ADD_DEPENDENCIES(${PACKAGE_BUILD} ipython_packages)
     ADD_DEPENDENCIES(ipython_packages patch_matplotlib)
     ADD_DEPENDENCIES(ipython_packages ${BUILD_DEPENDENCIES})
+
+    # Install other packages we use
+
+    IF(WIN32)
+        SET(LXML_WHEEL "numpy-${LXML_VERSION}.mkl-${WHEEL_SUFFIX}")
+        ADD_CUSTOM_TARGET(science_packages
+            COMMAND ${PIP_INSTALL_COMMAND}
+                ${WHEEL_REPOSITORY}/${LXML_WHEEL}
+            WORKING_DIRECTORY
+                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            VERBATIM
+        )
+    ELSE()
+        ADD_CUSTOM_TARGET(other_packages
+            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+                lxml==${LXML_VERSION}
+            WORKING_DIRECTORY
+                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            VERBATIM
+        )
+    ENDIF()
+
+    ADD_DEPENDENCIES(${PACKAGE_BUILD} other_packages)
+    ADD_DEPENDENCIES(other_packages ipython_packages)
+    ADD_DEPENDENCIES(other_packages ${BUILD_DEPENDENCIES})
 
     # Upgrade to our versions of packages which have been patched to work with PythonQt
 
