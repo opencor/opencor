@@ -979,11 +979,9 @@ void GraphPanelPlotWidget::setColor(const QColor &pColor)
     // Set our (background) colour
 
     if (pColor != color()) {
-        QBrush brush = canvasBackground();
-
-        brush.setColor(pColor);
-
-        setCanvasBackground(brush);
+        setStyleSheet(QString("QwtPlotCanvas {"
+                              "    background: %1;"
+                              "}").arg(pColor.name(QColor::HexArgb)));
 
         replot();
     }
