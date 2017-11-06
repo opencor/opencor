@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QHeaderView>
 #include <QEvent>
 #include <QKeyEvent>
+#include <QMainWindow>
 #include <QModelIndex>
 #include <QPainter>
 #include <QRegularExpressionValidator>
@@ -996,7 +997,7 @@ void Property::setColorValue(const QPoint &pPoint)
 
         // Select a colour and assign it to ourselves
 
-        QColorDialog colorDialog(colorValue());
+        QColorDialog colorDialog(colorValue(), mainWindow());
 
         colorDialog.setOption(QColorDialog::ShowAlphaChannel);
         colorDialog.setWindowTitle(tr("Select Colour"));
