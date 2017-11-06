@@ -298,6 +298,8 @@ private:
 
     QwtPlotDirectPainter *mDirectPainter;
 
+    QColor mColor;
+
     GraphPanelPlotGraphs mGraphs;
 
     Action mAction;

@@ -646,6 +646,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
                                            QWidget *pParent) :
     QwtPlot(pParent),
     Core::CommonWidget(pParent),
+    mColor(QColor()),
     mGraphs(GraphPanelPlotGraphs()),
     mAction(None),
     mOriginPoint(QPoint()),
@@ -969,7 +970,7 @@ QColor GraphPanelPlotWidget::color() const
 {
     // Return our (background) colour
 
-    return canvasBackground().color();
+    return mColor;
 }
 
 //==============================================================================
@@ -977,14 +978,26 @@ QColor GraphPanelPlotWidget::color() const
 void GraphPanelPlotWidget::setColor(const QColor &pColor)
 {
     // Set our (background) colour
-    // Note: for some reasons, to retrieve our current canvas background, update
-    //       its colour and then update our canvas background doesn't work with
-    //       semi-transparent colours while it does using a style sheet...
+    // Note: setCanvasBackground() doesn't handle semi-transparent colours and,
+    //       even if it did, it might take into account the grey background that
+    //       is used by the rest of our object while we want a semi-transparent
+    //       colour to rely on a white background, which we do here by computing
+    //       an opaque colour from an opaque white colour and the given
+    //       (potentially semi-transparent) colour...
 
-    if (pColor != color()) {
-        setStyleSheet(QString("QwtPlotCanvas {"
-                              "    background: %1;"
-                              "}").arg(pColor.name(QColor::HexArgb)));
+    if (pColor != mColor) {
+        static const QColor White = Qt::white;
+
+        mColor = pColor;
+
+        QBrush brush = canvasBackground();
+        double ratio = pColor.alpha()/256.0;
+
+        brush.setColor(QColor((1.0-ratio)*White.red()+ratio*pColor.red(),
+                              (1.0-ratio)*White.green()+ratio*pColor.green(),
+                              (1.0-ratio)*White.blue()+ratio*pColor.blue()));
+
+        setCanvasBackground(brush);
 
         replot();
     }
