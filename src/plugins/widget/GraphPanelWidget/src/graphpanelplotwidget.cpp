@@ -702,7 +702,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     // Customise ourselves a bit
 
-    setCanvasBackground(Qt::white);
+    setColor(Qt::white);
 
     mAxisX = new GraphPanelPlotScaleDraw();
     mAxisY = new GraphPanelPlotScaleDraw();
@@ -714,7 +714,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     QwtPlotGrid *grid = new QwtPlotGrid();
 
-    grid->setMajorPen(Qt::gray, 0, Qt::DotLine);
+    grid->setMajorPen(Qt::gray, 1, Qt::DotLine);
 
     grid->attach(this);
 
