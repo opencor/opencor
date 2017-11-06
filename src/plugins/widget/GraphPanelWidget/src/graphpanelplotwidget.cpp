@@ -977,6 +977,9 @@ QColor GraphPanelPlotWidget::color() const
 void GraphPanelPlotWidget::setColor(const QColor &pColor)
 {
     // Set our (background) colour
+    // Note: for some reasons, to retrieve our current canvas background, update
+    //       its colour and then update our canvas background doesn't work with
+    //       semi-transparent colours while it does using a style sheet...
 
     if (pColor != color()) {
         setStyleSheet(QString("QwtPlotCanvas {"
