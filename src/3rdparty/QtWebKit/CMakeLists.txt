@@ -15,9 +15,8 @@ SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
 SET(GIT_TAG v5.212.0-alpha2)
 
-# Package repository and release tag
+# Release tag
 
-SET(PACKAGE_REPOSITORY qtwebkitreloaded)
 SET(RELEASE_TAG v5.212.0-alpha2)
 
 # Specify where our local package will be installed
@@ -108,7 +107,6 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 4e12a551320fbc9ab6b967cb96f7e4451fd8efc2
-                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 28d1cdb58863f084355864e7ce99646bc59db6fc
@@ -121,7 +119,6 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 7270bbc47a668e383def1513a23cde7bc341b1e9
-                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES aa46f4c753aab3b514802a1404ca1d98c0260795
@@ -135,7 +132,6 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 6e1c99acef94f66adcff77f6f68d51c3c37b38e0
-                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 869f0640969325793ee1620d4c941f20050b27bd
@@ -145,7 +141,6 @@ IF(USE_PREBUILT_QTWEBKIT_PACKAGE)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} d37d37c8d537add58870b967795968bae57ddea4
-                              PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES a045297a97db11c3940d29b04dbc6db29931d82b
@@ -162,7 +157,7 @@ ELSE()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/${PACKAGE_REPOSITORY}
+            https://github.com/opencor/qtwebkit
         GIT_TAG
             ${GIT_TAG}
         CMAKE_GENERATOR
@@ -207,7 +202,6 @@ ELSE()
             -DICUDT_SHARED_LIBRARY=${ICUDT_SHARED_LIBRARY}
             -DICUIN_SHARED_LIBRARY=${ICUIN_SHARED_LIBRARY}
             -DICUUC_SHARED_LIBRARY=${ICUUC_SHARED_LIBRARY}
-            -DPACKAGE_REPOSITORY=${PACKAGE_REPOSITORY}
             -DPORT=Qt
             -DUSE_GSTREAMER=OFF
             -DUSE_LIBHYPHEN=OFF
@@ -265,7 +259,6 @@ ELSE()
 
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
-                        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES
                             include

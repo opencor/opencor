@@ -59,7 +59,7 @@ ELSE()
     ENDIF()
 ENDIF()
 
-# Make sure that we are building on a supported architecture
+# Make sure that we are building OpenCOR on a supported architecture
 # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in some
 #       cases it may not be set (e.g. when generating an Xcode project file), so
 #       we determine and retrieve that value ourselves...
@@ -95,19 +95,31 @@ ENDIF()
 IF(NOT WIN32 AND NOT APPLE)
     SET(RUNPATH2RPATH ${CMAKE_BINARY_DIR}/runpath2rpath)
 
-    EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -o ${RUNPATH2RPATH} ${PROJECT_SOURCE_DIR}/cmake/runpath2rpath.c
-                    RESULT_VARIABLE RESULT)
+    EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} -O3 -o ${RUNPATH2RPATH} ${PROJECT_SOURCE_DIR}/cmake/runpath2rpath.c
+                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 
     IF(NOT RESULT EQUAL 0)
         MESSAGE(FATAL_ERROR "runpath2rpath could not be built...")
     ENDIF()
 ENDIF()
 
-# Make sure that ccache gets used, if available
+# Make sure that clcache/ccache gets used, if available
 
+FIND_PROGRAM(CLCACHE clcache)
 FIND_PROGRAM(CCACHE ccache)
 
-IF(CCACHE)
+IF(CLCACHE)
+    SET(CLCACHEWRAPPER ${CMAKE_BINARY_DIR}/clcachewrapper)
+
+    EXECUTE_PROCESS(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
+                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
+
+    IF(RESULT EQUAL 0)
+        SET(CMAKE_C_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
+        SET(CMAKE_CXX_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
+    ENDIF()
+ELSEIF(CCACHE)
+    SET(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
     SET(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
 ENDIF()
 
@@ -119,8 +131,8 @@ FIND_PACKAGE(Qt5Core REQUIRED)
 SET(QT_VERSION ${Qt5Core_VERSION})
 SET(QT_VERSION_MAJOR ${Qt5Core_VERSION_MAJOR})
 
-IF(QT_VERSION VERSION_LESS "5.9")
-    MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using Qt 5.9.x LTS and later...")
+IF(NOT QT_VERSION VERSION_EQUAL "5.9.2")
+    MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using Qt 5.9.2...")
 ENDIF()
 
 SET(QT_DIR ${_qt5Core_install_prefix})
@@ -376,8 +388,15 @@ IF(APPLE)
 ENDIF()
 
 # Some general build settings
-# Note: MSVC enables C++11 support by default, so we just need to enable it on
-#       Linux and macOS...
+# Note #1: we force the overriding of CMAKE_CXX_FLAGS_RELEASE and
+#          CMAKE_CXX_FLAGS_DEBUG, so that we can really use the compilation
+#          flags we want, as opposed to CMake forcing us to use the ones it
+#          wants...
+# Note #2: MSVC enables C++11 support by default, so we just need to enable it
+#          on Linux and macOS...
+
+SET(CMAKE_CXX_FLAGS_RELEASE "" CACHE STRING "" FORCE)
+SET(CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "" FORCE)
 
 IF(WIN32)
     SET(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /W3 /WX /GR /EHsc")
@@ -429,7 +448,7 @@ ELSE()
     # Default debug compiler and linker settings
 
     IF(WIN32)
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_DEBUG /MDd /Zi /Ob0 /Od /RTC1")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_DEBUG /MDd /Z7 /Ob0 /Od /RTC1")
         SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /DEBUG")
     ELSE()
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
