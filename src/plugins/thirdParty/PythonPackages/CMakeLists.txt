@@ -11,8 +11,8 @@ SET(PACKAGE_REPOSITORY python)
 
 # The versions of the Python packages we bundle.
 
-SET(NUMPY_VERSION 1.13.0)
 SET(MATPLOTLIB_VERSION 2.0.2)
+SET(NUMPY_VERSION 1.13.3)
 SET(SCIPY_VERSION 0.19.0)
 
 SET(IPYKERNEL_VERSION 4.6.1)
@@ -114,7 +114,7 @@ ELSE()
         STRING(SUBSTRING ${VERSION_ABIFLAGS} 0 2 NUMERIC_VERSION)
         SET(WHEEL_SUFFIX "cp${NUMERIC_VERSION}-cp${VERSION_ABIFLAGS}-win_amd64.whl")
 
-        # We use binary versions that are linked with the Intel Math Kernel Library
+        # The numpy version we use is linked to the Intel Math Kernel Library
 
         SET(NUMPY_WHEEL "numpy-${NUMPY_VERSION}.mkl-${WHEEL_SUFFIX}")
         SET(SCIPY_WHEEL "scipy-${SCIPY_VERSION}-${WHEEL_SUFFIX}")
@@ -148,7 +148,6 @@ ELSE()
         COMMAND ${CMAKE_COMMAND} -E copy_directory
             ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/include include
         WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-
     )
 
     ADD_DEPENDENCIES(${PACKAGE_BUILD} copy_numpy_headers)
