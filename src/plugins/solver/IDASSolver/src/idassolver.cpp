@@ -485,7 +485,7 @@ void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
             IDASensEEtolerances(mSolver);
 
-            IDASetSensErrCon(mSolver, TRUE);
+            IDASetSensErrCon(mSolver, SUNTRUE);
 
             IDASetSensDQMethod(mSolver, IDA_CENTERED, 0.0);
 

@@ -451,7 +451,7 @@ void CvodesSolver::initialize(const double &pVoiStart,
 
             CVodeSensEEtolerances(mSolver);
 
-            CVodeSetSensErrCon(mSolver, TRUE);
+            CVodeSetSensErrCon(mSolver, SUNTRUE);
 
             CVodeSetSensDQMethod(mSolver, CV_CENTERED, 0.0);
 
