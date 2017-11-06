@@ -1026,7 +1026,7 @@ void GraphPanelPlotWidget::setFontSize(const int &pFontSize)
         setAxisFont(QwtPlot::xBottom, font);
         setAxisFont(QwtPlot::yLeft, font);
 
-        replot();
+        forceAlignWithNeighbors();
     }
 }
 

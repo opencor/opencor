@@ -1123,7 +1123,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
     graphPanelPlot->setUpdatesEnabled(true);
 
-    graphPanelPlot->replot();
+    graphPanelPlot->forceAlignWithNeighbors();
 }
 
 //==============================================================================
