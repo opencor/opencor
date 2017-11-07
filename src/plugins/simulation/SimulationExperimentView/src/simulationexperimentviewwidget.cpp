@@ -685,6 +685,8 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
                this, SLOT(parametersHeaderSectionResized(const int &, const int &, const int &)));
 
     // Update some of our simulation's contents' information GUI
+    // Note: for column widths, we set the last column width to zero to avoid
+    //       potential issues, should the vertical scrollbar be visible...
 
     for (int i = 0, iMax = mCollapsibleWidgetCollapsed.count(); i < iMax; ++i)
         informationWidget->collapsibleWidget()->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
@@ -692,19 +694,19 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
     informationWidget->graphPanelAndGraphsWidget()->setMode(mGraphPanelGraphsMode);
 
     for (int i = 0, iMax = mSimulationColumnWidths.count(); i < iMax; ++i)
-        informationWidget->simulationWidget()->setColumnWidth(i, mSimulationColumnWidths[i]);
+        informationWidget->simulationWidget()->setColumnWidth(i, (i == iMax-1)?0:mSimulationColumnWidths[i]);
 
     for (int i = 0, iMax = mSolversColumnWidths.count(); i < iMax; ++i)
-        informationWidget->solversWidget()->setColumnWidth(i, mSolversColumnWidths[i]);
+        informationWidget->solversWidget()->setColumnWidth(i, (i == iMax-1)?0:mSolversColumnWidths[i]);
 
     for (int i = 0, iMax = mGraphPanelColumnWidths.count(); i < iMax; ++i)
-        informationWidget->graphPanelAndGraphsWidget()->setGraphPanelColumnWidth(i, mGraphPanelColumnWidths[i]);
+        informationWidget->graphPanelAndGraphsWidget()->setGraphPanelColumnWidth(i, (i == iMax-1)?0:mGraphPanelColumnWidths[i]);
 
     for (int i = 0, iMax = mGraphsColumnWidths.count(); i < iMax; ++i)
-        informationWidget->graphPanelAndGraphsWidget()->setGraphsColumnWidth(i, mGraphsColumnWidths[i]);
+        informationWidget->graphPanelAndGraphsWidget()->setGraphsColumnWidth(i, (i == iMax-1)?0:mGraphsColumnWidths[i]);
 
     for (int i = 0, iMax = mParametersColumnWidths.count(); i < iMax; ++i)
-        informationWidget->parametersWidget()->setColumnWidth(i, mParametersColumnWidths[i]);
+        informationWidget->parametersWidget()->setColumnWidth(i, (i == iMax-1)?0:mParametersColumnWidths[i]);
 
     // Keep track of changes to our simulation's contents' information GUI
 
