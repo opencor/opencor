@@ -703,6 +703,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     // Customise ourselves a bit
 
+    setAutoFillBackground(true);
     setColor(Qt::white);
 
     mAxisX = new GraphPanelPlotScaleDraw();
@@ -968,7 +969,7 @@ void GraphPanelPlotWidget::resetAction()
 
 QColor GraphPanelPlotWidget::color() const
 {
-    // Return our (background) colour
+    // Return our colour
 
     return mColor;
 }
@@ -977,7 +978,7 @@ QColor GraphPanelPlotWidget::color() const
 
 void GraphPanelPlotWidget::setColor(const QColor &pColor)
 {
-    // Set our (background) colour
+    // Set our colour
     // Note: setCanvasBackground() doesn't handle semi-transparent colours and,
     //       even if it did, it might take into account the grey background that
     //       is used by the rest of our object while we want a semi-transparent
@@ -986,18 +987,30 @@ void GraphPanelPlotWidget::setColor(const QColor &pColor)
     //       (potentially semi-transparent) colour...
 
     if (pColor != mColor) {
-        static const QColor White = Qt::white;
-
         mColor = pColor;
+
+        // Set our canvas background colour
+
+        static const QColor White = Qt::white;
 
         QBrush brush = canvasBackground();
         double ratio = pColor.alpha()/256.0;
-
-        brush.setColor(QColor((1.0-ratio)*White.red()+ratio*pColor.red(),
+        QColor color = QColor((1.0-ratio)*White.red()+ratio*pColor.red(),
                               (1.0-ratio)*White.green()+ratio*pColor.green(),
-                              (1.0-ratio)*White.blue()+ratio*pColor.blue()));
+                              (1.0-ratio)*White.blue()+ratio*pColor.blue());
+
+        brush.setColor(color);
 
         setCanvasBackground(brush);
+
+        // Set the colour of the background surrounding our canvas, which we
+        // make slightly darker than that of our canvas background colour
+
+        QPalette pal = palette();
+
+        pal.setColor(QPalette::Window, color.darker(107));
+
+        setPalette(pal);
 
         replot();
     }
