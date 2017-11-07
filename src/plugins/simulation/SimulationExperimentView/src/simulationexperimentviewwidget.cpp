@@ -111,13 +111,14 @@ void SimulationExperimentViewWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve the columns' width of our various property editors
 
-    static const QVariantList defaultColumnWidths = QVariantList() << 100 << 100 << 100;
+    static const QVariantList defaultThreeColumnWidths = QVariantList() << 100 << 100 << 100;
+    static const QVariantList defaultTwoColumnWidths = QVariantList() << 100 << 100;
 
-    mSimulationColumnWidths = qVariantListToIntList(pSettings->value(SettingsSimulationColumnWidths, defaultColumnWidths).toList());
-    mSolversColumnWidths = qVariantListToIntList(pSettings->value(SettingsSolversColumnWidths, defaultColumnWidths).toList());
-    mGraphPanelColumnWidths = qVariantListToIntList(pSettings->value(SettingsGraphPanelColumnWidths, defaultColumnWidths).toList());
-    mGraphsColumnWidths = qVariantListToIntList(pSettings->value(SettingsGraphsColumnWidths, defaultColumnWidths).toList());
-    mParametersColumnWidths = qVariantListToIntList(pSettings->value(SettingsParametersColumnWidths, defaultColumnWidths).toList());
+    mSimulationColumnWidths = qVariantListToIntList(pSettings->value(SettingsSimulationColumnWidths, defaultThreeColumnWidths).toList());
+    mSolversColumnWidths = qVariantListToIntList(pSettings->value(SettingsSolversColumnWidths, defaultThreeColumnWidths).toList());
+    mGraphPanelColumnWidths = qVariantListToIntList(pSettings->value(SettingsGraphPanelColumnWidths, defaultTwoColumnWidths).toList());
+    mGraphsColumnWidths = qVariantListToIntList(pSettings->value(SettingsGraphsColumnWidths, defaultTwoColumnWidths).toList());
+    mParametersColumnWidths = qVariantListToIntList(pSettings->value(SettingsParametersColumnWidths, defaultThreeColumnWidths).toList());
 }
 
 //==============================================================================
