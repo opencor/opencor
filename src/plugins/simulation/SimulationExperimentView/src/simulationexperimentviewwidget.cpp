@@ -714,25 +714,27 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
 {
     // Update some of our simulation's contents' information GUI
 
-    pSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(mGraphPanelGraphsMode);
+    SimulationExperimentViewInformationWidget *informationWidget = pSimulationWidget->contentsWidget()->informationWidget();
+
+    informationWidget->graphPanelAndGraphsWidget()->setMode(mGraphPanelGraphsMode);
 
     for (int i = 0, iMax = mCollapsibleWidgetCollapsed.count(); i < iMax; ++i)
-        pSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
+        informationWidget->collapsibleWidget()->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
 
     for (int i = 0, iMax = mSimulationColumnWidths.count(); i < iMax; ++i)
-        pSimulationWidget->contentsWidget()->informationWidget()->simulationWidget()->setColumnWidth(i, mSimulationColumnWidths[i]);
+        informationWidget->simulationWidget()->setColumnWidth(i, mSimulationColumnWidths[i]);
 
     for (int i = 0, iMax = mSolversColumnWidths.count(); i < iMax; ++i)
-        pSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->setColumnWidth(i, mSolversColumnWidths[i]);
+        informationWidget->solversWidget()->setColumnWidth(i, mSolversColumnWidths[i]);
 
     for (int i = 0, iMax = mGraphPanelColumnWidths.count(); i < iMax; ++i)
-        pSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setGraphPanelColumnWidth(i, mGraphPanelColumnWidths[i]);
+        informationWidget->graphPanelAndGraphsWidget()->setGraphPanelColumnWidth(i, mGraphPanelColumnWidths[i]);
 
     for (int i = 0, iMax = mGraphsColumnWidths.count(); i < iMax; ++i)
-        pSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setGraphsColumnWidth(i, mGraphsColumnWidths[i]);
+        informationWidget->graphPanelAndGraphsWidget()->setGraphsColumnWidth(i, mGraphsColumnWidths[i]);
 
     for (int i = 0, iMax = mParametersColumnWidths.count(); i < iMax; ++i)
-        pSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->setColumnWidth(i, mParametersColumnWidths[i]);
+        informationWidget->parametersWidget()->setColumnWidth(i, mParametersColumnWidths[i]);
 }
 
 //==============================================================================
