@@ -1755,14 +1755,16 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     // there is a 'new' property and it is different from our 'old' property,
     // otherwise cancel any editing if we are right-clicking
 
-    Property *newProperty = property(indexAt(pEvent->pos()));
-
     mRightClicking = pEvent->button() == Qt::RightButton;
 
-    if (mRightClicking)
+    if (mRightClicking) {
         finishEditing(false);
-    else if (newProperty && (newProperty != oldProperty))
-        editProperty(newProperty);
+    } else {
+        Property *crtProperty = property(indexAt(pEvent->pos()));
+
+        if (crtProperty && (crtProperty != oldProperty))
+            editProperty(crtProperty);
+    }
 }
 
 //==============================================================================
