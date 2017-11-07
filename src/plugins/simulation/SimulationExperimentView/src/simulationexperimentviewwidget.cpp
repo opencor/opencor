@@ -716,10 +716,10 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
 
     SimulationExperimentViewInformationWidget *informationWidget = pSimulationWidget->contentsWidget()->informationWidget();
 
-    informationWidget->graphPanelAndGraphsWidget()->setMode(mGraphPanelGraphsMode);
-
     for (int i = 0, iMax = mCollapsibleWidgetCollapsed.count(); i < iMax; ++i)
         informationWidget->collapsibleWidget()->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
+
+    informationWidget->graphPanelAndGraphsWidget()->setMode(mGraphPanelGraphsMode);
 
     for (int i = 0, iMax = mSimulationColumnWidths.count(); i < iMax; ++i)
         informationWidget->simulationWidget()->setColumnWidth(i, mSimulationColumnWidths[i]);
