@@ -52,8 +52,8 @@ public:
         StackedLayout
     };
 
-    explicit Widget(QWidget *pParent);
     explicit Widget(const QSize &pSizeHint, QWidget *pParent);
+    explicit Widget(QWidget *pParent);
 
     QLayout * createLayout(const LayoutType &pLayoutType = VerticalLayout);
 
