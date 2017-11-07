@@ -94,7 +94,7 @@ void SimulationExperimentViewWidget::loadSettings(QSettings *pSettings)
     // Retrieve the sizes of our simulation widget and of its contents widget
 
     static const QVariantList defaultContentsSizes = QVariantList() << 0.25*qApp->desktop()->screenGeometry().width()
-                                                                       << 0.75*qApp->desktop()->screenGeometry().width();
+                                                                    << 0.75*qApp->desktop()->screenGeometry().width();
 
     mSimulationWidgetSizes = qVariantListToIntList(pSettings->value(SettingsSizes).toList());
     mContentsWidgetSizes = qVariantListToIntList(pSettings->value(SettingsContentsSizes, defaultContentsSizes).toList());
