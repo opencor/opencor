@@ -1004,11 +1004,15 @@ void GraphPanelPlotWidget::setColor(const QColor &pColor)
         setCanvasBackground(brush);
 
         // Set the colour of the background surrounding our canvas, which we
-        // make slightly darker than that of our canvas background colour
+        // make slightly darker than that of our canvas background colour, based
+        // on the typical colour used for a widget's background
 
+        QColor winColor = Core::windowColor();
         QPalette pal = palette();
 
-        pal.setColor(QPalette::Window, color.darker(107));
+        pal.setColor(QPalette::Window, QColor(winColor.redF()*color.red(),
+                                              winColor.greenF()*color.green(),
+                                              winColor.blueF()*color.blue()));
 
         setPalette(pal);
 
