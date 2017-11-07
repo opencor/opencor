@@ -184,8 +184,29 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
         connect(mSimulationWidget, SIGNAL(splitterMoved(const QIntList &)),
                 this, SLOT(simulationWidgetSplitterMoved(const QIntList &)));
 
-        connect(mSimulationWidget->contentsWidget(), SIGNAL(splitterMoved(const QIntList &)),
+        SimulationExperimentViewContentsWidget *contentsWidget = mSimulationWidget->contentsWidget();
+
+        connect(contentsWidget, SIGNAL(splitterMoved(const QIntList &)),
                 this, SLOT(contentsWidgetSplitterMoved(const QIntList &)));
+
+        SimulationExperimentViewInformationWidget *informationWidget = contentsWidget->informationWidget();
+
+        connect(informationWidget->collapsibleWidget(), SIGNAL(collapsed(const int &, const bool &)),
+                this, SLOT(collapsibleWidgetCollapsed(const int &, const bool &)));
+
+        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)),
+                this, SLOT(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)));
+
+        connect(informationWidget->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
+                this, SLOT(simulationHeaderSectionResized(const int &, const int &, const int &)));
+        connect(informationWidget->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
+                this, SLOT(solversHeaderSectionResized(const int &, const int &, const int &)));
+        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelHeaderSectionResized(int, int, int)),
+                this, SLOT(graphPanelHeaderSectionResized(const int &, const int &, const int &)));
+        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphsHeaderSectionResized(int, int, int)),
+                this, SLOT(graphsHeaderSectionResized(const int &, const int &, const int &)));
+        connect(informationWidget->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
+                this, SLOT(parametersHeaderSectionResized(const int &, const int &, const int &)));
 
         // Check when some graph plot settings or graphs settings have been
         // requested
@@ -663,30 +684,11 @@ void SimulationExperimentViewWidget::parametersHeaderSectionResized(const int &p
 
 void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget)
 {
-    // Stop tracking changes to our simulation's contents' information GUI
-
-    SimulationExperimentViewInformationWidget *informationWidget = pSimulationWidget->contentsWidget()->informationWidget();
-
-    disconnect(informationWidget->collapsibleWidget(), SIGNAL(collapsed(const int &, const bool &)),
-               this, SLOT(collapsibleWidgetCollapsed(const int &, const bool &)));
-
-    disconnect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)),
-               this, SLOT(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)));
-
-    disconnect(informationWidget->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-               this, SLOT(simulationHeaderSectionResized(const int &, const int &, const int &)));
-    disconnect(informationWidget->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-               this, SLOT(solversHeaderSectionResized(const int &, const int &, const int &)));
-    disconnect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelHeaderSectionResized(int, int, int)),
-               this, SLOT(graphPanelHeaderSectionResized(const int &, const int &, const int &)));
-    disconnect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphsHeaderSectionResized(int, int, int)),
-               this, SLOT(graphsHeaderSectionResized(const int &, const int &, const int &)));
-    disconnect(informationWidget->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-               this, SLOT(parametersHeaderSectionResized(const int &, const int &, const int &)));
-
     // Update some of our simulation's contents' information GUI
     // Note: for column widths, we set the last column width to zero to avoid
     //       potential issues, should the vertical scrollbar be visible...
+
+    SimulationExperimentViewInformationWidget *informationWidget = pSimulationWidget->contentsWidget()->informationWidget();
 
     for (int i = 0, iMax = mCollapsibleWidgetCollapsed.count(); i < iMax; ++i)
         informationWidget->collapsibleWidget()->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
@@ -707,25 +709,6 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
 
     for (int i = 0, iMax = mParametersColumnWidths.count(); i < iMax; ++i)
         informationWidget->parametersWidget()->setColumnWidth(i, (i == iMax-1)?0:mParametersColumnWidths[i]);
-
-    // Keep track of changes to our simulation's contents' information GUI
-
-    connect(informationWidget->collapsibleWidget(), SIGNAL(collapsed(const int &, const bool &)),
-            this, SLOT(collapsibleWidgetCollapsed(const int &, const bool &)));
-
-    connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)),
-            this, SLOT(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)));
-
-    connect(informationWidget->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-            this, SLOT(simulationHeaderSectionResized(const int &, const int &, const int &)));
-    connect(informationWidget->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-            this, SLOT(solversHeaderSectionResized(const int &, const int &, const int &)));
-    connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelHeaderSectionResized(int, int, int)),
-            this, SLOT(graphPanelHeaderSectionResized(const int &, const int &, const int &)));
-    connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphsHeaderSectionResized(int, int, int)),
-            this, SLOT(graphsHeaderSectionResized(const int &, const int &, const int &)));
-    connect(informationWidget->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-            this, SLOT(parametersHeaderSectionResized(const int &, const int &, const int &)));
 }
 
 //==============================================================================
