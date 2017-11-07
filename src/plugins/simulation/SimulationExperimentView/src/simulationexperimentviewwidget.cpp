@@ -93,15 +93,15 @@ void SimulationExperimentViewWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve the sizes of our simulation widget and of its contents widget
 
-    QVariantList defaultContentsSizes = QVariantList() << 0.25*qApp->desktop()->screenGeometry().width()
-                                                       << 0.75*qApp->desktop()->screenGeometry().width();
+    static const QVariantList defaultContentsSizes = QVariantList() << 0.25*qApp->desktop()->screenGeometry().width()
+                                                                       << 0.75*qApp->desktop()->screenGeometry().width();
 
     mSimulationWidgetSizes = qVariantListToIntList(pSettings->value(SettingsSizes).toList());
     mContentsWidgetSizes = qVariantListToIntList(pSettings->value(SettingsContentsSizes, defaultContentsSizes).toList());
 
     // Retrieve the collapsed states of our collapsible widget
 
-    QVariantList defaultCollapsed = QVariantList() << false << false << false;
+    static const QVariantList defaultCollapsed = QVariantList() << false << false << false;
 
     mCollapsibleWidgetCollapsed = qVariantListToBoolList(pSettings->value(SettingsCollapsed, defaultCollapsed).toList());
 
@@ -111,7 +111,7 @@ void SimulationExperimentViewWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve the columns' width of our various property editors
 
-    QVariantList defaultColumnWidths = QVariantList() << 100 << 100 << 100;
+    static const QVariantList defaultColumnWidths = QVariantList() << 100 << 100 << 100;
 
     mSimulationColumnWidths = qVariantListToIntList(pSettings->value(SettingsSimulationColumnWidths, defaultColumnWidths).toList());
     mSolversColumnWidths = qVariantListToIntList(pSettings->value(SettingsSolversColumnWidths, defaultColumnWidths).toList());
