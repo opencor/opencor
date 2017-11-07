@@ -55,7 +55,7 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
                                                                                                                            SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                                                                            QWidget *pParent) :
     QStackedWidget(pParent),
-    Core::CommonWidget(pParent),
+    Core::CommonWidget(this),
     mMode(Graphs),
     mViewWidget(pViewWidget),
     mSimulationWidget(pSimulationWidget),

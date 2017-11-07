@@ -645,7 +645,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
                                            QAction *pSynchronizeYAxisAction,
                                            QWidget *pParent) :
     QwtPlot(pParent),
-    Core::CommonWidget(pParent),
+    Core::CommonWidget(this),
     mColor(QColor()),
     mGraphs(GraphPanelPlotGraphs()),
     mAction(None),

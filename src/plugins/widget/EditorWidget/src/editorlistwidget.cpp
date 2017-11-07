@@ -130,7 +130,7 @@ QString EditorListItem::message() const
 
 EditorListWidget::EditorListWidget(QWidget *pParent) :
     QListView(pParent),
-    Core::CommonWidget(pParent),
+    Core::CommonWidget(this),
     mModel(new QStandardItemModel(this))
 {
     // Customise ourselves

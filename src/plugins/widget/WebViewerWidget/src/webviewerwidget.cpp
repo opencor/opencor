@@ -128,7 +128,7 @@ enum {
 
 WebViewerWidget::WebViewerWidget(QWidget *pParent) :
     QWidget(pParent),
-    Core::CommonWidget(pParent),
+    Core::CommonWidget(this),
     mToolTip(QString()),
     mHomePage("about:blank"),
     mZoomingEnabled(true),

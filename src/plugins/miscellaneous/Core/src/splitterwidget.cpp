@@ -33,7 +33,7 @@ namespace Core {
 SplitterWidget::SplitterWidget(const Qt::Orientation &pOrientation,
                                QWidget *pParent) :
     QSplitter(pParent),
-    CommonWidget(pParent)
+    CommonWidget(this)
 {
     // Customise ourselves so that we are as thin as possible and without an
     // image for our handle
