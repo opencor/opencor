@@ -1705,11 +1705,11 @@ void PropertyEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
     // We want to select a colour when double clicking on the icon of a colour
     // value, so do just that
-    // Note: it's fine to do it even if the property is not of colour type since
-    //       our call to setColorValue() will only work if the property is of
-    //       colour type and if we are over the property's colour value icon...
 
-    property(indexAt(pEvent->pos()))->setColorValue(pEvent->pos());
+    Property *crtProperty = property(indexAt(pEvent->pos()));
+
+    if (crtProperty && (crtProperty->type() == Property::Color))
+        crtProperty->setColorValue(pEvent->pos());
 }
 
 //==============================================================================
