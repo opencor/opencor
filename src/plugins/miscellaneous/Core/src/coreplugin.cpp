@@ -702,9 +702,6 @@ void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
         if (   (action != mFileReopenMostRecentFileAction)
             && (action != mFileReopenSubMenuSeparator1)
             && (action != mFileReopenSubMenuSeparator2)) {
-            disconnect(action, SIGNAL(triggered(bool)),
-                       this, SLOT(reopenRecentFile()));
-
             mFileReopenSubMenu->removeAction(action);
 
             delete action;
