@@ -136,7 +136,6 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
     pGraphPanelPropertyEditor->properties()[2]->properties()[0]->setName(tr("Style"));
     pGraphPanelPropertyEditor->properties()[2]->properties()[1]->setName(tr("Width"));
     pGraphPanelPropertyEditor->properties()[2]->properties()[2]->setName(tr("Colour"));
-    pGraphPanelPropertyEditor->properties()[2]->properties()[3]->setName(tr("Visible"));
 
     pGraphPanelPropertyEditor->properties()[3]->setName(tr("Logarithmic X axis"));
     pGraphPanelPropertyEditor->properties()[4]->setName(tr("Logarithmic Y axis"));
@@ -819,7 +818,6 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(), gridLinesProperty);
     mGraphPanelPropertyEditor->addDoubleGt0Property(gridLinesProperty);
     mGraphPanelPropertyEditor->addColorProperty(gridLinesProperty);
-    mGraphPanelPropertyEditor->addBooleanProperty(gridLinesProperty);
 
     mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->logAxisX());
     mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->logAxisY());
