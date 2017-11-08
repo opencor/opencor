@@ -146,12 +146,14 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
     pGraphPanelPropertyEditor->properties()[5]->properties()[2]->setName(tr("Colour"));
     pGraphPanelPropertyEditor->properties()[5]->properties()[3]->setName(tr("Font colour"));
 
-    pGraphPanelPropertyEditor->properties()[6]->setName(tr("Zoom region"));
-    pGraphPanelPropertyEditor->properties()[6]->properties()[0]->setName(tr("Style"));
-    pGraphPanelPropertyEditor->properties()[6]->properties()[1]->setName(tr("Width"));
-    pGraphPanelPropertyEditor->properties()[6]->properties()[2]->setName(tr("Colour"));
-    pGraphPanelPropertyEditor->properties()[6]->properties()[3]->setName(tr("Filled"));
-    pGraphPanelPropertyEditor->properties()[6]->properties()[4]->setName(tr("Fill colour"));
+    pGraphPanelPropertyEditor->properties()[6]->setName(tr("Title"));
+
+    pGraphPanelPropertyEditor->properties()[7]->setName(tr("Zoom region"));
+    pGraphPanelPropertyEditor->properties()[7]->properties()[0]->setName(tr("Style"));
+    pGraphPanelPropertyEditor->properties()[7]->properties()[1]->setName(tr("Width"));
+    pGraphPanelPropertyEditor->properties()[7]->properties()[2]->setName(tr("Colour"));
+    pGraphPanelPropertyEditor->properties()[7]->properties()[3]->setName(tr("Filled"));
+    pGraphPanelPropertyEditor->properties()[7]->properties()[4]->setName(tr("Fill colour"));
 }
 
 //==============================================================================
@@ -829,6 +831,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     mGraphPanelPropertyEditor->addColorProperty(pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addColorProperty(pointCoordinatesProperty);
 
+    mGraphPanelPropertyEditor->addStringProperty();
+
     Core::Property *zoomRegionProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
     mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(), zoomRegionProperty);
@@ -1130,6 +1134,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
     graphPanelPlot->setLogAxisX(mGraphPanelPropertyEditor->properties()[3]->booleanValue());
     graphPanelPlot->setLogAxisY(mGraphPanelPropertyEditor->properties()[4]->booleanValue());
+
+    graphPanelPlot->setTitle(mGraphPanelPropertyEditor->properties()[6]->value());
 
     graphPanelPlot->setUpdatesEnabled(true);
 

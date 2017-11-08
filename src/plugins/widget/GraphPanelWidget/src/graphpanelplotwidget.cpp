@@ -51,6 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "qwt_plot_renderer.h"
     #include "qwt_scale_engine.h"
     #include "qwt_scale_widget.h"
+    #include "qwt_text_label.h"
 #include "qwtend.h"
 
 //==============================================================================
@@ -705,6 +706,14 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     setAutoFillBackground(true);
     setColor(Qt::white);
+
+    QFont titleFont = titleLabel()->font();
+
+    titleFont.setPointSizeF(1.75*titleFont.pointSizeF());
+
+    titleLabel()->setFont(titleFont);
+
+    // Add some axes to ourselves
 
     mAxisX = new GraphPanelPlotScaleDraw();
     mAxisY = new GraphPanelPlotScaleDraw();
