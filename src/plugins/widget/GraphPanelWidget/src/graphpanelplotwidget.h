@@ -230,11 +230,16 @@ public:
     double minY() const;
     double maxY() const;
 
-    QColor color() const;
-    void setColor(const QColor &pColor);
+    QColor backgroundColor() const;
+    void setBackgroundColor(const QColor &pBackgroundColor);
 
     int fontSize() const;
     void setFontSize(const int &pFontSize, const bool &pForceSetting = false);
+
+    QColor foregroundColor() const;
+    void setForegroundColor(const QColor &pForegroundColor);
+
+    void setTitle(const QString &pTitle);
 
     bool logAxisX() const;
     void setLogAxisX(const bool &pLogAxisX);
@@ -304,7 +309,8 @@ private:
 
     QwtPlotDirectPainter *mDirectPainter;
 
-    QColor mColor;
+    QColor mBackgroundColor;
+    QColor mForegroundColor;
 
     GraphPanelPlotGraphs mGraphs;
 

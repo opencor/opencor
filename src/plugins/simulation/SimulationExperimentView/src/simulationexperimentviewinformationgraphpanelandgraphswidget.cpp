@@ -131,34 +131,35 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
 
     pGraphPanelPropertyEditor->properties()[0]->setName(tr("Background colour"));
     pGraphPanelPropertyEditor->properties()[1]->setName(tr("Font size"));
+    pGraphPanelPropertyEditor->properties()[2]->setName(tr("Foreground colour"));
 
-    pGraphPanelPropertyEditor->properties()[2]->setName(tr("Grid lines"));
-    pGraphPanelPropertyEditor->properties()[2]->properties()[0]->setName(tr("Style"));
-    pGraphPanelPropertyEditor->properties()[2]->properties()[1]->setName(tr("Width"));
-    pGraphPanelPropertyEditor->properties()[2]->properties()[2]->setName(tr("Colour"));
-
-    pGraphPanelPropertyEditor->properties()[3]->setName(tr("Point coordinates"));
+    pGraphPanelPropertyEditor->properties()[3]->setName(tr("Grid lines"));
     pGraphPanelPropertyEditor->properties()[3]->properties()[0]->setName(tr("Style"));
     pGraphPanelPropertyEditor->properties()[3]->properties()[1]->setName(tr("Width"));
     pGraphPanelPropertyEditor->properties()[3]->properties()[2]->setName(tr("Colour"));
-    pGraphPanelPropertyEditor->properties()[3]->properties()[3]->setName(tr("Font colour"));
 
-    pGraphPanelPropertyEditor->properties()[4]->setName(tr("Title"));
+    pGraphPanelPropertyEditor->properties()[4]->setName(tr("Point coordinates"));
+    pGraphPanelPropertyEditor->properties()[4]->properties()[0]->setName(tr("Style"));
+    pGraphPanelPropertyEditor->properties()[4]->properties()[1]->setName(tr("Width"));
+    pGraphPanelPropertyEditor->properties()[4]->properties()[2]->setName(tr("Colour"));
+    pGraphPanelPropertyEditor->properties()[4]->properties()[3]->setName(tr("Font colour"));
 
-    pGraphPanelPropertyEditor->properties()[5]->setName(tr("X axis"));
-    pGraphPanelPropertyEditor->properties()[5]->properties()[0]->setName(tr("Logarithmic scale"));
-    pGraphPanelPropertyEditor->properties()[5]->properties()[1]->setName(tr("Title"));
+    pGraphPanelPropertyEditor->properties()[5]->setName(tr("Title"));
 
-    pGraphPanelPropertyEditor->properties()[6]->setName(tr("Y axis"));
+    pGraphPanelPropertyEditor->properties()[6]->setName(tr("X axis"));
     pGraphPanelPropertyEditor->properties()[6]->properties()[0]->setName(tr("Logarithmic scale"));
     pGraphPanelPropertyEditor->properties()[6]->properties()[1]->setName(tr("Title"));
 
-    pGraphPanelPropertyEditor->properties()[7]->setName(tr("Zoom region"));
-    pGraphPanelPropertyEditor->properties()[7]->properties()[0]->setName(tr("Style"));
-    pGraphPanelPropertyEditor->properties()[7]->properties()[1]->setName(tr("Width"));
-    pGraphPanelPropertyEditor->properties()[7]->properties()[2]->setName(tr("Colour"));
-    pGraphPanelPropertyEditor->properties()[7]->properties()[3]->setName(tr("Filled"));
-    pGraphPanelPropertyEditor->properties()[7]->properties()[4]->setName(tr("Fill colour"));
+    pGraphPanelPropertyEditor->properties()[7]->setName(tr("Y axis"));
+    pGraphPanelPropertyEditor->properties()[7]->properties()[0]->setName(tr("Logarithmic scale"));
+    pGraphPanelPropertyEditor->properties()[7]->properties()[1]->setName(tr("Title"));
+
+    pGraphPanelPropertyEditor->properties()[8]->setName(tr("Zoom region"));
+    pGraphPanelPropertyEditor->properties()[8]->properties()[0]->setName(tr("Style"));
+    pGraphPanelPropertyEditor->properties()[8]->properties()[1]->setName(tr("Width"));
+    pGraphPanelPropertyEditor->properties()[8]->properties()[2]->setName(tr("Colour"));
+    pGraphPanelPropertyEditor->properties()[8]->properties()[3]->setName(tr("Filled"));
+    pGraphPanelPropertyEditor->properties()[8]->properties()[4]->setName(tr("Fill colour"));
 }
 
 //==============================================================================
@@ -817,8 +818,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = mGraphPanels.value(mGraphPanelPropertyEditor)->plot();
 
-    mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->color());
+    mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->backgroundColor());
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->fontSize());
+    mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->foregroundColor());
 
     // Grid lines
 
@@ -1153,22 +1155,23 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
     graphPanelPlot->setUpdatesEnabled(false);
 
-    graphPanelPlot->setColor(mGraphPanelPropertyEditor->properties()[0]->colorValue());
+    graphPanelPlot->setBackgroundColor(mGraphPanelPropertyEditor->properties()[0]->colorValue());
     graphPanelPlot->setFontSize(mGraphPanelPropertyEditor->properties()[1]->integerValue());
+    graphPanelPlot->setForegroundColor(mGraphPanelPropertyEditor->properties()[2]->colorValue());
 
     // Title
 
-    graphPanelPlot->setTitle(mGraphPanelPropertyEditor->properties()[4]->value());
+    graphPanelPlot->setTitle(mGraphPanelPropertyEditor->properties()[5]->value());
 
     // X axis
 
-    graphPanelPlot->setLogAxisX(mGraphPanelPropertyEditor->properties()[5]->properties()[0]->booleanValue());
-    graphPanelPlot->setTitleAxisX(mGraphPanelPropertyEditor->properties()[5]->properties()[1]->value());
+    graphPanelPlot->setLogAxisX(mGraphPanelPropertyEditor->properties()[6]->properties()[0]->booleanValue());
+    graphPanelPlot->setTitleAxisX(mGraphPanelPropertyEditor->properties()[6]->properties()[1]->value());
 
     // Y axis
 
-    graphPanelPlot->setLogAxisY(mGraphPanelPropertyEditor->properties()[6]->properties()[0]->booleanValue());
-    graphPanelPlot->setTitleAxisY(mGraphPanelPropertyEditor->properties()[6]->properties()[1]->value());
+    graphPanelPlot->setLogAxisY(mGraphPanelPropertyEditor->properties()[7]->properties()[0]->booleanValue());
+    graphPanelPlot->setTitleAxisY(mGraphPanelPropertyEditor->properties()[7]->properties()[1]->value());
 
     graphPanelPlot->setUpdatesEnabled(true);
 

@@ -647,7 +647,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
                                            QWidget *pParent) :
     QwtPlot(pParent),
     Core::CommonWidget(this),
-    mColor(QColor()),
+    mBackgroundColor(QColor()),
+    mForegroundColor(QColor()),
     mGraphs(GraphPanelPlotGraphs()),
     mAction(None),
     mOriginPoint(QPoint()),
@@ -705,8 +706,9 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     // Customise ourselves a bit
 
     setAutoFillBackground(true);
-    setColor(Qt::white);
+    setBackgroundColor(Qt::white);
     setFontSize(10, true);
+    setForegroundColor(Qt::black);
 
     // Add some axes to ourselves
 
@@ -971,18 +973,18 @@ void GraphPanelPlotWidget::resetAction()
 
 //==============================================================================
 
-QColor GraphPanelPlotWidget::color() const
+QColor GraphPanelPlotWidget::backgroundColor() const
 {
-    // Return our colour
+    // Return our background colour
 
-    return mColor;
+    return mBackgroundColor;
 }
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setColor(const QColor &pColor)
+void GraphPanelPlotWidget::setBackgroundColor(const QColor &pBackgroundColor)
 {
-    // Set our colour
+    // Set our background colour
     // Note: setCanvasBackground() doesn't handle semi-transparent colours and,
     //       even if it did, it might take into account the grey background that
     //       is used by the rest of our object while we want a semi-transparent
@@ -990,18 +992,18 @@ void GraphPanelPlotWidget::setColor(const QColor &pColor)
     //       an opaque colour from an opaque white colour and the given
     //       (potentially semi-transparent) colour...
 
-    if (pColor != mColor) {
-        mColor = pColor;
+    if (pBackgroundColor != mBackgroundColor) {
+        mBackgroundColor = pBackgroundColor;
 
         // Set our canvas background colour
 
         static const QColor White = Qt::white;
 
         QBrush brush = canvasBackground();
-        double ratio = pColor.alpha()/256.0;
-        QColor color = QColor((1.0-ratio)*White.red()+ratio*pColor.red(),
-                              (1.0-ratio)*White.green()+ratio*pColor.green(),
-                              (1.0-ratio)*White.blue()+ratio*pColor.blue());
+        double ratio = pBackgroundColor.alpha()/256.0;
+        QColor color = QColor((1.0-ratio)*White.red()+ratio*pBackgroundColor.red(),
+                              (1.0-ratio)*White.green()+ratio*pBackgroundColor.green(),
+                              (1.0-ratio)*White.blue()+ratio*pBackgroundColor.blue());
 
         brush.setColor(color);
 
@@ -1041,23 +1043,17 @@ void GraphPanelPlotWidget::setFontSize(const int &pFontSize,
     // Set our font size
 
     if (pForceSetting || (pFontSize != fontSize())) {
-        // Main font
-
         QFont newFont = font();
 
         newFont.setPointSize(pFontSize);
 
         setFont(newFont);
 
-        // Title's font
+        // Title
 
-        newFont = titleLabel()->font();
+        setTitle(title().text());
 
-        newFont.setPointSizeF(2.0*pFontSize);
-
-        titleLabel()->setFont(newFont);
-
-        // X axis' font
+        // X axis
 
         newFont = axisFont(QwtPlot::xBottom);
 
@@ -1066,7 +1062,7 @@ void GraphPanelPlotWidget::setFontSize(const int &pFontSize,
         setAxisFont(QwtPlot::xBottom, newFont);
         setTitleAxisX(titleAxisX());
 
-        // Y axis' font
+        // Y axis
 
         newFont = axisFont(QwtPlot::yLeft);
 
@@ -1077,6 +1073,69 @@ void GraphPanelPlotWidget::setFontSize(const int &pFontSize,
 
         forceAlignWithNeighbors();
     }
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::foregroundColor() const
+{
+    // Return our foreground colour
+
+    return mForegroundColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setForegroundColor(const QColor &pForegroundColor)
+{
+    // Set our foreground colour
+
+    if (pForegroundColor != mForegroundColor) {
+        mForegroundColor = pForegroundColor;
+
+        // Title
+
+        setTitle(title().text());
+
+        // X axis
+
+        QPalette newPalette = axisWidget(QwtPlot::xBottom)->palette();
+
+        newPalette.setColor(QPalette::Text, mForegroundColor);
+        newPalette.setColor(QPalette::WindowText, mForegroundColor);
+
+        axisWidget(QwtPlot::xBottom)->setPalette(newPalette);
+        setTitleAxisX(titleAxisX());
+
+        // Y axis
+
+        newPalette = axisWidget(QwtPlot::yLeft)->palette();
+
+        newPalette.setColor(QPalette::Text, mForegroundColor);
+        newPalette.setColor(QPalette::WindowText, mForegroundColor);
+
+        axisWidget(QwtPlot::yLeft)->setPalette(newPalette);
+        setTitleAxisY(titleAxisY());
+
+        replot();
+    }
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setTitle(const QString &pTitle)
+{
+    // Set our title
+
+    QwtText title = QwtText(pTitle);
+    QFont newFont = title.font();
+
+    newFont.setPointSizeF(2.0*fontSize());
+
+    title.setColor(mForegroundColor);
+    title.setFont(newFont);
+
+    QwtPlot::setTitle(title);
 }
 
 //==============================================================================
@@ -1129,6 +1188,7 @@ void GraphPanelPlotWidget::setTitleAxisX(const QString &pTitleAxisX)
 
     axisTitleFont.setPointSizeF(1.25*fontSize());
 
+    axisTitle.setColor(mForegroundColor);
     axisTitle.setFont(axisTitleFont);
 
     setAxisTitle(QwtPlot::xBottom, axisTitle);
@@ -1184,6 +1244,7 @@ void GraphPanelPlotWidget::setTitleAxisY(const QString &pTitleAxisY)
 
     axisTitleFont.setPointSizeF(1.25*fontSize());
 
+    axisTitle.setColor(mForegroundColor);
     axisTitle.setFont(axisTitleFont);
 
     setAxisTitle(QwtPlot::yLeft, axisTitle);
