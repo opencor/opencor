@@ -129,7 +129,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
 {
     // Retranslate the contents of the given graph panel property editor
 
-    pGraphPanelPropertyEditor->properties()[0]->setName(tr("Colour"));
+    pGraphPanelPropertyEditor->properties()[0]->setName(tr("Background colour"));
     pGraphPanelPropertyEditor->properties()[1]->setName(tr("Font size"));
 
     pGraphPanelPropertyEditor->properties()[2]->setName(tr("Grid lines"));

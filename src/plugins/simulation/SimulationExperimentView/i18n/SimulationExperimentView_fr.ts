@@ -52,8 +52,8 @@
         <translation>Déselectionner toutes les courbes</translation>
     </message>
     <message>
-        <source>Colour</source>
-        <translation>Couleur</translation>
+        <source>Background colour</source>
+        <translation>Couleur d&apos;arrière-plan</translation>
     </message>
     <message>
         <source>Font size</source>
@@ -70,6 +70,10 @@
     <message>
         <source>Width</source>
         <translation>Largeur</translation>
+    </message>
+    <message>
+        <source>Colour</source>
+        <translation>Couleur</translation>
     </message>
     <message>
         <source>Visible</source>
