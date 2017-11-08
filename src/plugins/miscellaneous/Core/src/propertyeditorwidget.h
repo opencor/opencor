@@ -385,6 +385,7 @@ public:
     bool removeProperty(Property *pProperty);
 
     Properties properties() const;
+    Properties allProperties() const;
 
     Property * property(const QModelIndex &pIndex) const;
     Property * currentProperty() const;

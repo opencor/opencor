@@ -2075,6 +2075,15 @@ Properties PropertyEditorWidget::properties() const
 
 //==============================================================================
 
+Properties PropertyEditorWidget::allProperties() const
+{
+    // Return all of our properties
+
+    return mAllProperties;
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::finishEditing(const bool &pCommitData)
 {
     // The user wants to finish the editing

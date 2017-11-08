@@ -173,7 +173,7 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(const
 {
     // Update our data
 
-    foreach (Core::Property *property, properties()) {
+    foreach (Core::Property *property, allProperties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter) {
@@ -501,7 +501,7 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
 {
     // Update the extra info of all our properties
 
-    foreach (Core::Property *property, properties()) {
+    foreach (Core::Property *property, allProperties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter) {
