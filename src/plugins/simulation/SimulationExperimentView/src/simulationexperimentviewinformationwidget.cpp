@@ -104,8 +104,10 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
     //       much space as they want. Yet, we want our parameters widget to take
     //       more space since it's more 'important'...
 
-    static_cast<QVBoxLayout *>(mCollapsibleWidget->layout())->setStretchFactor(mGraphPanelAndGraphsWidget, 1);
-    static_cast<QVBoxLayout *>(mCollapsibleWidget->layout())->setStretchFactor(mParametersWidget, 2);
+    QVBoxLayout *collapsibleWidgetLayout = static_cast<QVBoxLayout *>(mCollapsibleWidget->layout());
+
+    collapsibleWidgetLayout->setStretchFactor(mGraphPanelAndGraphsWidget, 1);
+    collapsibleWidgetLayout->setStretchFactor(mParametersWidget, 2);
 
     // Create and set a menu for our graph panel header
 
