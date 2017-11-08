@@ -412,7 +412,7 @@ private:
 
     QStandardItemModel *mModel;
 
-    Properties mRootProperties;
+    Properties mProperties;
     Properties mAllProperties;
 
     Property *mProperty;
