@@ -1301,7 +1301,7 @@ int PropertyEditorWidget::childrenRowHeight(const QStandardItem *pItem) const
 
 QSize PropertyEditorWidget::sizeHint() const
 {
-    // Return either our default/ideal size, depending on the case
+    // Return our default/ideal size, depending on the case
 
     if (mAutoUpdateHeight) {
         // We automatically resize our height, so determine our ideal size which
