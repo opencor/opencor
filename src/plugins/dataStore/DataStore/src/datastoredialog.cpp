@@ -84,7 +84,7 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
     mGui->treeView->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
-    mGui->dataLabel->setVisible(false);
+    mGui->dataLabel->hide();
 
     connect(mGui->allDataCheckBox, SIGNAL(toggled(bool)),
             mGui->buttonBox->button(QDialogButtonBox::Ok), SLOT(setEnabled(bool)));
@@ -201,7 +201,7 @@ void DataStoreDialog::addWidget(QWidget *pWidget)
     setFocusProxy(pWidget);
     setFocus();
 
-    mGui->dataLabel->setVisible(true);
+    mGui->dataLabel->show();
 
     // Resize ourselves to make sure that the new widget doesn't squash our
     // original contents

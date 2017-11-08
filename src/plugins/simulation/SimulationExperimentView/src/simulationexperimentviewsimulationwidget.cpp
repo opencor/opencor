@@ -885,7 +885,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             //       repopulating the property editor, scrollbars will be shown
             //       even though they are not needed)...
 
-            mContentsWidget->setVisible(true);
+            mContentsWidget->show();
 
             // Check whether we have at least one ODE or DAE solver and, if
             // needed, at least one NLA solver
