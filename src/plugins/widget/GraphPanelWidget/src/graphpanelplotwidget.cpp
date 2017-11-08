@@ -706,12 +706,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     setAutoFillBackground(true);
     setColor(Qt::white);
-
-    QFont titleFont = titleLabel()->font();
-
-    titleFont.setPointSizeF(1.75*titleFont.pointSizeF());
-
-    titleLabel()->setFont(titleFont);
+    setFontSize(10, true);
 
     // Add some axes to ourselves
 
@@ -1035,22 +1030,50 @@ int GraphPanelPlotWidget::fontSize() const
 {
     // Return our font size
 
-    return axisFont(QwtPlot::xBottom).pointSize();
+    return font().pointSize();
 }
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setFontSize(const int &pFontSize)
+void GraphPanelPlotWidget::setFontSize(const int &pFontSize,
+                                       const bool &pForceSetting)
 {
     // Set our font size
 
-    if (pFontSize != fontSize()) {
-        QFont font = axisFont(QwtPlot::xBottom);
+    if (pForceSetting || (pFontSize != fontSize())) {
+        // Main font
 
-        font.setPointSize(pFontSize);
+        QFont newFont = font();
 
-        setAxisFont(QwtPlot::xBottom, font);
-        setAxisFont(QwtPlot::yLeft, font);
+        newFont.setPointSize(pFontSize);
+
+        setFont(newFont);
+
+        // Title's font
+
+        newFont = titleLabel()->font();
+
+        newFont.setPointSizeF(2.0*pFontSize);
+
+        titleLabel()->setFont(newFont);
+
+        // X axis' font
+
+        newFont = axisFont(QwtPlot::xBottom);
+
+        newFont.setPointSize(pFontSize);
+
+        setAxisFont(QwtPlot::xBottom, newFont);
+        setTitleAxisX(titleAxisX());
+
+        // Y axis' font
+
+        newFont = axisFont(QwtPlot::yLeft);
+
+        newFont.setPointSize(pFontSize);
+
+        setAxisFont(QwtPlot::yLeft, newFont);
+        setTitleAxisY(titleAxisY());
 
         forceAlignWithNeighbors();
     }
@@ -1087,6 +1110,32 @@ void GraphPanelPlotWidget::setLogAxisX(const bool &pLogAxisX)
 
 //==============================================================================
 
+QString GraphPanelPlotWidget::titleAxisX() const
+{
+    // Return the title for our X axis
+
+    return axisTitle(QwtPlot::xBottom).text();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setTitleAxisX(const QString &pTitleAxisX)
+{
+    // Set the title for our X axis
+
+    QwtText axisTitle = QwtText(pTitleAxisX);
+
+    QFont axisTitleFont = axisTitle.font();
+
+    axisTitleFont.setPointSizeF(1.25*fontSize());
+
+    axisTitle.setFont(axisTitleFont);
+
+    setAxisTitle(QwtPlot::xBottom, axisTitle);
+}
+
+//==============================================================================
+
 bool GraphPanelPlotWidget::logAxisY() const
 {
     // Return whether our Y axis uses a logarithmic scale
@@ -1112,6 +1161,32 @@ void GraphPanelPlotWidget::setLogAxisY(const bool &pLogAxisY)
 
         replot();
     }
+}
+
+//==============================================================================
+
+QString GraphPanelPlotWidget::titleAxisY() const
+{
+    // Return the title for our Y axis
+
+    return axisTitle(QwtPlot::yLeft).text();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setTitleAxisY(const QString &pTitleAxisY)
+{
+    // Set the title for our Y axis
+
+    QwtText axisTitle = QwtText(pTitleAxisY);
+
+    QFont axisTitleFont = axisTitle.font();
+
+    axisTitleFont.setPointSizeF(1.25*fontSize());
+
+    axisTitle.setFont(axisTitleFont);
+
+    setAxisTitle(QwtPlot::yLeft, axisTitle);
 }
 
 //==============================================================================

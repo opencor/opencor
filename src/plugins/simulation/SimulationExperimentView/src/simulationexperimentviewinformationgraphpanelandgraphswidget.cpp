@@ -137,16 +137,21 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
     pGraphPanelPropertyEditor->properties()[2]->properties()[1]->setName(tr("Width"));
     pGraphPanelPropertyEditor->properties()[2]->properties()[2]->setName(tr("Colour"));
 
-    pGraphPanelPropertyEditor->properties()[3]->setName(tr("Logarithmic X axis"));
-    pGraphPanelPropertyEditor->properties()[4]->setName(tr("Logarithmic Y axis"));
+    pGraphPanelPropertyEditor->properties()[3]->setName(tr("Point coordinates"));
+    pGraphPanelPropertyEditor->properties()[3]->properties()[0]->setName(tr("Style"));
+    pGraphPanelPropertyEditor->properties()[3]->properties()[1]->setName(tr("Width"));
+    pGraphPanelPropertyEditor->properties()[3]->properties()[2]->setName(tr("Colour"));
+    pGraphPanelPropertyEditor->properties()[3]->properties()[3]->setName(tr("Font colour"));
 
-    pGraphPanelPropertyEditor->properties()[5]->setName(tr("Point coordinates"));
-    pGraphPanelPropertyEditor->properties()[5]->properties()[0]->setName(tr("Style"));
-    pGraphPanelPropertyEditor->properties()[5]->properties()[1]->setName(tr("Width"));
-    pGraphPanelPropertyEditor->properties()[5]->properties()[2]->setName(tr("Colour"));
-    pGraphPanelPropertyEditor->properties()[5]->properties()[3]->setName(tr("Font colour"));
+    pGraphPanelPropertyEditor->properties()[4]->setName(tr("Title"));
 
-    pGraphPanelPropertyEditor->properties()[6]->setName(tr("Title"));
+    pGraphPanelPropertyEditor->properties()[5]->setName(tr("X axis"));
+    pGraphPanelPropertyEditor->properties()[5]->properties()[0]->setName(tr("Logarithmic scale"));
+    pGraphPanelPropertyEditor->properties()[5]->properties()[1]->setName(tr("Title"));
+
+    pGraphPanelPropertyEditor->properties()[6]->setName(tr("Y axis"));
+    pGraphPanelPropertyEditor->properties()[6]->properties()[0]->setName(tr("Logarithmic scale"));
+    pGraphPanelPropertyEditor->properties()[6]->properties()[1]->setName(tr("Title"));
 
     pGraphPanelPropertyEditor->properties()[7]->setName(tr("Zoom region"));
     pGraphPanelPropertyEditor->properties()[7]->properties()[0]->setName(tr("Style"));
@@ -813,7 +818,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = mGraphPanels.value(mGraphPanelPropertyEditor)->plot();
 
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->color());
-    mGraphPanelPropertyEditor->addDoubleGt0Property(graphPanelPlot->fontSize());
+    mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->fontSize());
+
+    // Grid lines
 
     Core::Property *gridLinesProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
@@ -821,8 +828,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     mGraphPanelPropertyEditor->addDoubleGt0Property(gridLinesProperty);
     mGraphPanelPropertyEditor->addColorProperty(gridLinesProperty);
 
-    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->logAxisX());
-    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->logAxisY());
+    // Point coordinates
 
     Core::Property *pointCoordinatesProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
@@ -831,7 +837,25 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     mGraphPanelPropertyEditor->addColorProperty(pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addColorProperty(pointCoordinatesProperty);
 
+    // Title
+
     mGraphPanelPropertyEditor->addStringProperty();
+
+    // X axis
+
+    Core::Property *xAxisProperty = mGraphPanelPropertyEditor->addSectionProperty();
+
+    mGraphPanelPropertyEditor->addBooleanProperty(xAxisProperty);
+    mGraphPanelPropertyEditor->addStringProperty(xAxisProperty);
+
+    // Y axis
+
+    Core::Property *yAxisProperty = mGraphPanelPropertyEditor->addSectionProperty();
+
+    mGraphPanelPropertyEditor->addBooleanProperty(yAxisProperty);
+    mGraphPanelPropertyEditor->addStringProperty(yAxisProperty);
+
+    // Zoom region
 
     Core::Property *zoomRegionProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
@@ -1132,10 +1156,19 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     graphPanelPlot->setColor(mGraphPanelPropertyEditor->properties()[0]->colorValue());
     graphPanelPlot->setFontSize(mGraphPanelPropertyEditor->properties()[1]->integerValue());
 
-    graphPanelPlot->setLogAxisX(mGraphPanelPropertyEditor->properties()[3]->booleanValue());
-    graphPanelPlot->setLogAxisY(mGraphPanelPropertyEditor->properties()[4]->booleanValue());
+    // Title
 
-    graphPanelPlot->setTitle(mGraphPanelPropertyEditor->properties()[6]->value());
+    graphPanelPlot->setTitle(mGraphPanelPropertyEditor->properties()[4]->value());
+
+    // X axis
+
+    graphPanelPlot->setLogAxisX(mGraphPanelPropertyEditor->properties()[5]->properties()[0]->booleanValue());
+    graphPanelPlot->setTitleAxisX(mGraphPanelPropertyEditor->properties()[5]->properties()[1]->value());
+
+    // Y axis
+
+    graphPanelPlot->setLogAxisY(mGraphPanelPropertyEditor->properties()[6]->properties()[0]->booleanValue());
+    graphPanelPlot->setTitleAxisY(mGraphPanelPropertyEditor->properties()[6]->properties()[1]->value());
 
     graphPanelPlot->setUpdatesEnabled(true);
 

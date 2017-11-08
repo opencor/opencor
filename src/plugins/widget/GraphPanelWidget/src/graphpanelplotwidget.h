@@ -234,13 +234,19 @@ public:
     void setColor(const QColor &pColor);
 
     int fontSize() const;
-    void setFontSize(const int &pFontSize);
+    void setFontSize(const int &pFontSize, const bool &pForceSetting = false);
 
     bool logAxisX() const;
     void setLogAxisX(const bool &pLogAxisX);
 
+    QString titleAxisX() const;
+    void setTitleAxisX(const QString &pTitleAxisX);
+
     bool logAxisY() const;
     void setLogAxisY(const bool &pLogAxisY);
+
+    QString titleAxisY() const;
+    void setTitleAxisY(const QString &pTitleAxisY);
 
     void setDefaultAxesValues(const double &pDefaultMinX,
                               const double &pDefaultMaxX,
