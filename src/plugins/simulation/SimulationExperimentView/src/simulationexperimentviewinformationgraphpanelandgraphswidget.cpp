@@ -125,6 +125,38 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
 
 //==============================================================================
 
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGraphPanelPropertyEditor(Core::PropertyEditorWidget *pGraphPanelPropertyEditor)
+{
+    // Retranslate the contents of the given graph panel property editor
+
+    pGraphPanelPropertyEditor->properties()[0]->setName(tr("Colour"));
+    pGraphPanelPropertyEditor->properties()[1]->setName(tr("Font size"));
+
+    pGraphPanelPropertyEditor->properties()[2]->setName(tr("Grid lines"));
+    pGraphPanelPropertyEditor->properties()[2]->properties()[0]->setName(tr("Style"));
+    pGraphPanelPropertyEditor->properties()[2]->properties()[1]->setName(tr("Width"));
+    pGraphPanelPropertyEditor->properties()[2]->properties()[2]->setName(tr("Colour"));
+    pGraphPanelPropertyEditor->properties()[2]->properties()[3]->setName(tr("Visible"));
+
+    pGraphPanelPropertyEditor->properties()[3]->setName(tr("Logarithmic X axis"));
+    pGraphPanelPropertyEditor->properties()[4]->setName(tr("Logarithmic Y axis"));
+
+    pGraphPanelPropertyEditor->properties()[5]->setName(tr("Point coordinates"));
+    pGraphPanelPropertyEditor->properties()[5]->properties()[0]->setName(tr("Style"));
+    pGraphPanelPropertyEditor->properties()[5]->properties()[1]->setName(tr("Width"));
+    pGraphPanelPropertyEditor->properties()[5]->properties()[2]->setName(tr("Colour"));
+    pGraphPanelPropertyEditor->properties()[5]->properties()[3]->setName(tr("Font colour"));
+
+    pGraphPanelPropertyEditor->properties()[6]->setName(tr("Zoom region"));
+    pGraphPanelPropertyEditor->properties()[6]->properties()[0]->setName(tr("Style"));
+    pGraphPanelPropertyEditor->properties()[6]->properties()[1]->setName(tr("Width"));
+    pGraphPanelPropertyEditor->properties()[6]->properties()[2]->setName(tr("Colour"));
+    pGraphPanelPropertyEditor->properties()[6]->properties()[3]->setName(tr("Filled"));
+    pGraphPanelPropertyEditor->properties()[6]->properties()[4]->setName(tr("Fill colour"));
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateUi()
 {
     // Retranslate our actions
@@ -155,32 +187,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateUi
 
     // Retranslate the contents of our graph panel property editors
 
-    foreach (Core::PropertyEditorWidget *graphPanelPropertyEditor, mGraphPanelPropertyEditors) {
-        graphPanelPropertyEditor->properties()[0]->setName(tr("Colour"));
-        graphPanelPropertyEditor->properties()[1]->setName(tr("Font size"));
-
-        graphPanelPropertyEditor->properties()[2]->setName(tr("Grid lines"));
-        graphPanelPropertyEditor->properties()[2]->properties()[0]->setName(tr("Style"));
-        graphPanelPropertyEditor->properties()[2]->properties()[1]->setName(tr("Width"));
-        graphPanelPropertyEditor->properties()[2]->properties()[2]->setName(tr("Colour"));
-        graphPanelPropertyEditor->properties()[2]->properties()[3]->setName(tr("Visible"));
-
-        graphPanelPropertyEditor->properties()[3]->setName(tr("Logarithmic X axis"));
-        graphPanelPropertyEditor->properties()[4]->setName(tr("Logarithmic Y axis"));
-
-        graphPanelPropertyEditor->properties()[5]->setName(tr("Point coordinates"));
-        graphPanelPropertyEditor->properties()[5]->properties()[0]->setName(tr("Style"));
-        graphPanelPropertyEditor->properties()[5]->properties()[1]->setName(tr("Width"));
-        graphPanelPropertyEditor->properties()[5]->properties()[2]->setName(tr("Colour"));
-        graphPanelPropertyEditor->properties()[5]->properties()[3]->setName(tr("Font colour"));
-
-        graphPanelPropertyEditor->properties()[6]->setName(tr("Zoom region"));
-        graphPanelPropertyEditor->properties()[6]->properties()[0]->setName(tr("Style"));
-        graphPanelPropertyEditor->properties()[6]->properties()[1]->setName(tr("Width"));
-        graphPanelPropertyEditor->properties()[6]->properties()[2]->setName(tr("Colour"));
-        graphPanelPropertyEditor->properties()[6]->properties()[3]->setName(tr("Filled"));
-        graphPanelPropertyEditor->properties()[6]->properties()[4]->setName(tr("Fill colour"));
-    }
+    foreach (Core::PropertyEditorWidget *graphPanelPropertyEditor, mGraphPanelPropertyEditors)
+        retranslateGraphPanelPropertyEditor(graphPanelPropertyEditor);
 
     // Retranslate the information about our graphs properties
     // Note: no need to do this for all our property editors (i.e. call
@@ -830,6 +838,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     mGraphPanelPropertyEditor->addColorProperty(zoomRegionProperty);
     mGraphPanelPropertyEditor->addBooleanProperty(zoomRegionProperty);
     mGraphPanelPropertyEditor->addColorProperty(zoomRegionProperty);
+
+    // Retranslate the contents of our graph panel property editor
+
+    retranslateGraphPanelPropertyEditor(mGraphPanelPropertyEditor);
 }
 
 //==============================================================================

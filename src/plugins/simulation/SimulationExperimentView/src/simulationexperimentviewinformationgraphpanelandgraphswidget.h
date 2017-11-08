@@ -141,6 +141,8 @@ private:
     int mGraphPanelHorizontalScrollBarValue;
     int mGraphsHorizontalScrollBarValue;
 
+    void retranslateGraphPanelPropertyEditor(Core::PropertyEditorWidget *pGraphPanelPropertyEditor);
+
     void populateGraphPanelPropertyEditor();
 
     void populateGraphParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
