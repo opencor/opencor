@@ -90,13 +90,22 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
 
     mParametersWidget->setObjectName("Parameters");
 
-    // Add our simulation, solvers, graphs and parameters widgets to our
-    // collapsible widget
+    // Add our different widgets to our collapsible widget
 
                                                       mCollapsibleWidget->addWidget(mSimulationWidget);
                                                       mCollapsibleWidget->addWidget(mSolversWidget);
     Core::CollapsibleHeaderWidget *graphPanelHeader = mCollapsibleWidget->addWidget(mGraphPanelAndGraphsWidget);
                                                       mCollapsibleWidget->addWidget(mParametersWidget, false);
+
+    // Give more importance to our parameters widget than to our graph panel /
+    // graphs widget
+    // Note: indeed, our simulation and solvers widgets have a fixed size while
+    //       both our parameters and graph panel / graphs widgets can take as
+    //       much space as they want. Yet, we want our parameters widget to take
+    //       more space since it's more 'important'...
+
+    static_cast<QVBoxLayout *>(mCollapsibleWidget->layout())->setStretchFactor(mGraphPanelAndGraphsWidget, 1);
+    static_cast<QVBoxLayout *>(mCollapsibleWidget->layout())->setStretchFactor(mParametersWidget, 2);
 
     // Create and set a menu for our graph panel header
 
