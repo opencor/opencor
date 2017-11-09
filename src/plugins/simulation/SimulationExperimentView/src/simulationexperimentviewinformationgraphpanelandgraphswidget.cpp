@@ -158,8 +158,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
     pGraphPanelPropertyEditor->properties()[8]->properties()[0]->setName(tr("Style"));
     pGraphPanelPropertyEditor->properties()[8]->properties()[1]->setName(tr("Width"));
     pGraphPanelPropertyEditor->properties()[8]->properties()[2]->setName(tr("Colour"));
-    pGraphPanelPropertyEditor->properties()[8]->properties()[3]->setName(tr("Filled"));
-    pGraphPanelPropertyEditor->properties()[8]->properties()[4]->setName(tr("Fill colour"));
+    pGraphPanelPropertyEditor->properties()[8]->properties()[3]->setName(tr("Font colour"));
+    pGraphPanelPropertyEditor->properties()[8]->properties()[4]->setName(tr("Filled"));
+    pGraphPanelPropertyEditor->properties()[8]->properties()[5]->setName(tr("Fill colour"));
 }
 
 //==============================================================================
@@ -869,11 +870,16 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     Core::Property *zoomRegionProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
-    mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(), zoomRegionProperty);
-    mGraphPanelPropertyEditor->addIntegerGt0Property(zoomRegionProperty);
-    mGraphPanelPropertyEditor->addColorProperty(zoomRegionProperty);
-    mGraphPanelPropertyEditor->addBooleanProperty(zoomRegionProperty);
-    mGraphPanelPropertyEditor->addColorProperty(zoomRegionProperty);
+    mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
+                                               SEDMLSupport::lineStyleValue((graphPanelPlot->zoomRegionStyle() > Qt::DashDotDotLine)?
+                                                                                 Qt::SolidLine:
+                                                                                 graphPanelPlot->zoomRegionStyle()),
+                                               zoomRegionProperty);
+    mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->zoomRegionWidth(), zoomRegionProperty);
+    mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->zoomRegionColor(), zoomRegionProperty);
+    mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->zoomRegionFontColor(), zoomRegionProperty);
+    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->zoomRegionFilled(), zoomRegionProperty);
+    mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->zoomRegionFillColor(), zoomRegionProperty);
 
     // Retranslate the contents of our graph panel property editor
 
@@ -1197,6 +1203,17 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
     graphPanelPlot->setLogAxisY(mGraphPanelPropertyEditor->properties()[7]->properties()[0]->booleanValue());
     graphPanelPlot->setTitleAxisY(mGraphPanelPropertyEditor->properties()[7]->properties()[1]->value());
+
+    // Zoom region
+
+    Core::Property *zoomRegionStyleProperty = mGraphPanelPropertyEditor->properties()[8]->properties()[0];
+
+    graphPanelPlot->setZoomRegionStyle(Qt::PenStyle(zoomRegionStyleProperty->listValues().indexOf(zoomRegionStyleProperty->listValue())));
+    graphPanelPlot->setZoomRegionWidth(mGraphPanelPropertyEditor->properties()[8]->properties()[1]->integerValue());
+    graphPanelPlot->setZoomRegionColor(mGraphPanelPropertyEditor->properties()[8]->properties()[2]->colorValue());
+    graphPanelPlot->setZoomRegionFontColor(mGraphPanelPropertyEditor->properties()[8]->properties()[3]->colorValue());
+    graphPanelPlot->setZoomRegionFilled(mGraphPanelPropertyEditor->properties()[8]->properties()[4]->booleanValue());
+    graphPanelPlot->setZoomRegionFillColor(mGraphPanelPropertyEditor->properties()[8]->properties()[5]->colorValue());
 
     graphPanelPlot->setUpdatesEnabled(true);
 

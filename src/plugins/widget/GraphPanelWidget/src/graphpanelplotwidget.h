@@ -275,6 +275,24 @@ public:
     QString titleAxisY() const;
     void setTitleAxisY(const QString &pTitleAxisY);
 
+    Qt::PenStyle zoomRegionStyle() const;
+    void setZoomRegionStyle(const Qt::PenStyle &pZoomRegionStyle);
+
+    int zoomRegionWidth() const;
+    void setZoomRegionWidth(const int &pZoomRegionWidth);
+
+    QColor zoomRegionColor() const;
+    void setZoomRegionColor(const QColor &pZoomRegionColor);
+
+    QColor zoomRegionFontColor() const;
+    void setZoomRegionFontColor(const QColor &pZoomRegionFontColor);
+
+    bool zoomRegionFilled() const;
+    void setZoomRegionFilled(const bool &pZoomRegionFilled);
+
+    QColor zoomRegionFillColor() const;
+    void setZoomRegionFillColor(const QColor &pZoomRegionFillColor);
+
     void setDefaultAxesValues(const double &pDefaultMinX,
                               const double &pDefaultMaxX,
                               const double &pDefaultMinLogX,
@@ -338,6 +356,13 @@ private:
     int mPointCoordinatesWidth;
     QColor mPointCoordinatesColor;
     QColor mPointCoordinatesFontColor;
+
+    Qt::PenStyle mZoomRegionStyle;
+    int mZoomRegionWidth;
+    QColor mZoomRegionColor;
+    QColor mZoomRegionFontColor;
+    bool mZoomRegionFilled;
+    QColor mZoomRegionFillColor;
 
     GraphPanelPlotGraphs mGraphs;
 

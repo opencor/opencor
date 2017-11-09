@@ -410,33 +410,49 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
         drawCoordinates(&painter, point, mOwner->pointCoordinatesColor(),
                         mOwner->pointCoordinatesFontColor(),
-                        mOwner->pointCoordinatesWidth(), BottomRight);
+                        (mOwner->pointCoordinatesStyle() == Qt::NoPen)?
+                            0:
+                            mOwner->pointCoordinatesWidth(),
+                        BottomRight);
 
         break;
     }
     case GraphPanelPlotWidget::ZoomRegion: {
-        // Draw the region to be zoomed
-
-        QColor penColor = Qt::darkRed;
-        QColor brushColor = Qt::yellow;
-
-        penColor.setAlphaF(0.69);
-        brushColor.setAlphaF(0.19);
-
-        painter.setPen(penColor);
+        // Draw the region to be zoomed in
 
         QRect zoomRegionRect = zoomRegion();
         // Note: see drawCoordinates() as why we use QRect rather than QRectF...
 
-        painter.fillRect(zoomRegionRect, brushColor);
+        if (mOwner->zoomRegionFilled())
+            painter.fillRect(zoomRegionRect, mOwner->zoomRegionFillColor());
+
+        QPen pen = painter.pen();
+
+        pen.setJoinStyle(Qt::RoundJoin);
+        pen.setColor(mOwner->zoomRegionColor());
+        pen.setStyle(mOwner->zoomRegionStyle());
+        pen.setWidth(mOwner->zoomRegionWidth());
+
+        painter.setPen(pen);
+
         painter.drawRect(zoomRegionRect);
 
         // Draw the two sets of coordinates
 
         drawCoordinates(&painter, zoomRegionRect.topLeft(),
-                        penColor, Qt::white, 1, BottomRight, false);
+                        mOwner->zoomRegionColor(),
+                        mOwner->zoomRegionFontColor(),
+                        (mOwner->zoomRegionStyle() == Qt::NoPen)?
+                            0:
+                            mOwner->zoomRegionWidth(),
+                        BottomRight, false);
         drawCoordinates(&painter, zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height()),
-                        penColor, Qt::white, 1, TopLeft, false);
+                        mOwner->zoomRegionColor(),
+                        mOwner->zoomRegionFontColor(),
+                        (mOwner->zoomRegionStyle() == Qt::NoPen)?
+                            0:
+                            mOwner->zoomRegionWidth(),
+                        TopLeft, false);
 
         break;
     }
@@ -528,7 +544,8 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
     //          coordinates and pPoint, but it could happen that we have either
     //          no gap, or one or two pixels...
     // Note #2: we set the painter's pen's style to a solid line otherwise
-    //          coordinatesRect will be empty...
+    //          coordinatesRect will be empty if there is no style for showing
+    //          the coordinates of a point or zooming in a region...
 
     pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
 
@@ -664,6 +681,12 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mPointCoordinatesWidth(0),
     mPointCoordinatesColor(QColor()),
     mPointCoordinatesFontColor(QColor()),
+    mZoomRegionStyle(Qt::PenStyle()),
+    mZoomRegionWidth(0),
+    mZoomRegionColor(QColor()),
+    mZoomRegionFontColor(QColor()),
+    mZoomRegionFilled(false),
+    mZoomRegionFillColor(QColor()),
     mGraphs(GraphPanelPlotGraphs()),
     mAction(None),
     mOriginPoint(QPoint()),
@@ -734,6 +757,19 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     setPointCoordinatesWidth(1);
     setPointCoordinatesColor(pointCoordinatesColor);
     setPointCoordinatesFontColor(Qt::white);
+
+    QColor zoomRegionColor = Qt::darkRed;
+    QColor zoomRegionFillColor = Qt::yellow;
+
+    zoomRegionColor.setAlphaF(0.69);
+    zoomRegionFillColor.setAlphaF(0.19);
+
+    setZoomRegionStyle(Qt::SolidLine);
+    setZoomRegionWidth(30);
+    setZoomRegionColor(zoomRegionColor);
+    setZoomRegionFontColor(Qt::white);
+    setZoomRegionFilled(true);
+    setZoomRegionFillColor(zoomRegionFillColor);
 
     // Add some axes to ourselves
 
@@ -1413,6 +1449,120 @@ void GraphPanelPlotWidget::setTitleAxisY(const QString &pTitleAxisY)
     // Set the title for our Y axis
 
     setTitleAxis(QwtPlot::yLeft, pTitleAxisY);
+}
+
+//==============================================================================
+
+Qt::PenStyle GraphPanelPlotWidget::zoomRegionStyle() const
+{
+    // Return our zoom region style
+
+    return mZoomRegionStyle;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setZoomRegionStyle(const Qt::PenStyle &pZoomRegionStyle)
+{
+    // Set our zoom region style
+
+    if (pZoomRegionStyle != mZoomRegionStyle)
+        mZoomRegionStyle = pZoomRegionStyle;
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::zoomRegionWidth() const
+{
+    // Return our zoom region width
+
+    return mZoomRegionWidth;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setZoomRegionWidth(const int &pZoomRegionWidth)
+{
+    // Set our zoom region width
+
+    if (pZoomRegionWidth != mZoomRegionWidth)
+        mZoomRegionWidth = pZoomRegionWidth;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::zoomRegionColor() const
+{
+    // Return our zoom region colour
+
+    return mZoomRegionColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setZoomRegionColor(const QColor &pZoomRegionColor)
+{
+    // Set our zoom region colour
+
+    if (pZoomRegionColor != mZoomRegionColor)
+        mZoomRegionColor = pZoomRegionColor;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::zoomRegionFontColor() const
+{
+    // Return our zoom region font colour
+
+    return mZoomRegionFontColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setZoomRegionFontColor(const QColor &pZoomRegionFontColor)
+{
+    // Set our zoom region font colour
+
+    if (pZoomRegionFontColor != mZoomRegionFontColor)
+        mZoomRegionFontColor = pZoomRegionFontColor;
+}
+
+//==============================================================================
+
+bool GraphPanelPlotWidget::zoomRegionFilled() const
+{
+    // Return our zoom region filled status
+
+    return mZoomRegionFilled;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setZoomRegionFilled(const bool &pZoomRegionFilled)
+{
+    // Set our zoom region filled status
+
+    if (pZoomRegionFilled != mZoomRegionFilled)
+        mZoomRegionFilled = pZoomRegionFilled;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::zoomRegionFillColor() const
+{
+    // Return our zoom region fill colour
+
+    return mZoomRegionFillColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setZoomRegionFillColor(const QColor &pZoomRegionFillColor)
+{
+    // Set our zoom region fill colour
+
+    if (pZoomRegionFillColor != mZoomRegionFillColor)
+        mZoomRegionFillColor = pZoomRegionFillColor;
 }
 
 //==============================================================================
