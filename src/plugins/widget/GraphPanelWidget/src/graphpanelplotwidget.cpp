@@ -1001,9 +1001,11 @@ void GraphPanelPlotWidget::setBackgroundColor(const QColor &pBackgroundColor)
 
         QBrush brush = canvasBackground();
         double ratio = pBackgroundColor.alpha()/256.0;
-        QColor color = QColor((1.0-ratio)*White.red()+ratio*pBackgroundColor.red(),
-                              (1.0-ratio)*White.green()+ratio*pBackgroundColor.green(),
-                              (1.0-ratio)*White.blue()+ratio*pBackgroundColor.blue());
+        QColor color;
+
+        color.setRedF((1.0-ratio)*White.redF()+ratio*pBackgroundColor.redF());
+        color.setGreenF((1.0-ratio)*White.greenF()+ratio*pBackgroundColor.greenF());
+        color.setBlueF((1.0-ratio)*White.blueF()+ratio*pBackgroundColor.blueF());
 
         brush.setColor(color);
 
@@ -1013,12 +1015,14 @@ void GraphPanelPlotWidget::setBackgroundColor(const QColor &pBackgroundColor)
         // make slightly darker than that of our canvas background colour, based
         // on the typical colour used for a widget's background
 
-        QColor winColor = Core::windowColor();
         QPalette pal = palette();
+        QColor backgroundColor = Core::windowColor();
 
-        pal.setColor(QPalette::Window, QColor(winColor.redF()*color.red(),
-                                              winColor.greenF()*color.green(),
-                                              winColor.blueF()*color.blue()));
+        backgroundColor.setRedF(backgroundColor.redF()*color.redF());
+        backgroundColor.setGreenF(backgroundColor.greenF()*color.greenF());
+        backgroundColor.setBlueF(backgroundColor.blueF()*color.blueF());
+
+        pal.setColor(QPalette::Window, backgroundColor);
 
         setPalette(pal);
 
