@@ -409,7 +409,7 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
         // Draw the coordinates of our point
 
         drawCoordinates(&painter, point, mOwner->pointCoordinatesColor(),
-                        mOwner->pointCoordinatesFontColor(), BottomLeft);
+                        mOwner->pointCoordinatesFontColor(), BottomRight);
 
         break;
     }
