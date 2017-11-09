@@ -1307,7 +1307,7 @@ void GraphPanelPlotWidget::setTitle(const QString &pTitle)
     QwtText title = QwtText(pTitle);
     QFont newFont = title.font();
 
-    newFont.setPointSizeF(2.0*fontSize());
+    newFont.setPointSize(2*fontSize());
 
     title.setColor(mForegroundColor);
     title.setFont(newFont);
@@ -1359,16 +1359,7 @@ void GraphPanelPlotWidget::setTitleAxisX(const QString &pTitleAxisX)
 {
     // Set the title for our X axis
 
-    QwtText axisTitle = QwtText(pTitleAxisX);
-
-    QFont axisTitleFont = axisTitle.font();
-
-    axisTitleFont.setPointSizeF(1.25*fontSize());
-
-    axisTitle.setColor(mForegroundColor);
-    axisTitle.setFont(axisTitleFont);
-
-    setAxisTitle(QwtPlot::xBottom, axisTitle);
+    setTitleAxis(QwtPlot::xBottom, pTitleAxisX);
 }
 
 //==============================================================================
@@ -1415,16 +1406,7 @@ void GraphPanelPlotWidget::setTitleAxisY(const QString &pTitleAxisY)
 {
     // Set the title for our Y axis
 
-    QwtText axisTitle = QwtText(pTitleAxisY);
-
-    QFont axisTitleFont = axisTitle.font();
-
-    axisTitleFont.setPointSizeF(1.25*fontSize());
-
-    axisTitle.setColor(mForegroundColor);
-    axisTitle.setFont(axisTitleFont);
-
-    setAxisTitle(QwtPlot::yLeft, axisTitle);
+    setTitleAxis(QwtPlot::yLeft, pTitleAxisY);
 }
 
 //==============================================================================
@@ -1837,6 +1819,24 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
 
     if (scaledAxisX || scaledAxisY)
         setAxes(newMinX, newMaxX, newMinY, newMaxY);
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setTitleAxis(const int &pAxisId,
+                                        const QString &pTitleAxis)
+{
+    // Set the title for our axis
+
+    QwtText axisTitle = QwtText(pTitleAxis);
+    QFont axisTitleFont = axisTitle.font();
+
+    axisTitleFont.setPointSizeF(1.25*fontSize());
+
+    axisTitle.setColor(mForegroundColor);
+    axisTitle.setFont(axisTitleFont);
+
+    setAxisTitle(pAxisId, axisTitle);
 }
 
 //==============================================================================

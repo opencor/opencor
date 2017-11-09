@@ -410,6 +410,8 @@ private:
     void scaleAxes(const QPoint &pPoint, const Scaling &pScalingX,
                    const Scaling &pScalingY);
 
+    void setTitleAxis(const int &pAxisId, const QString &pTitleAxis);
+
 signals:
     void axesChanged(const double &pMinX, const double &pMaxX,
                      const double &pMinY, const double &pMaxY);
