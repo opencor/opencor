@@ -62,7 +62,7 @@ namespace GraphPanelWidget {
 //==============================================================================
 
 GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const Qt::PenStyle &pLineStyle,
-                                                             const double &pLineWidth,
+                                                             const int &pLineWidth,
                                                              const QColor &pLineColor,
                                                              const QwtSymbol::Style &pSymbolStyle,
                                                              const int &pSymbolSize,
@@ -91,7 +91,7 @@ Qt::PenStyle GraphPanelPlotGraphProperties::lineStyle() const
 
 //==============================================================================
 
-double GraphPanelPlotGraphProperties::lineWidth() const
+int GraphPanelPlotGraphProperties::lineWidth() const
 {
     // Return our line width
 
@@ -1153,23 +1153,23 @@ void GraphPanelPlotWidget::setGridLinesStyle(const Qt::PenStyle &pGridLinesStyle
 
 //==============================================================================
 
-double GraphPanelPlotWidget::gridLinesWidth() const
+int GraphPanelPlotWidget::gridLinesWidth() const
 {
     // Return our grid lines width
 
-    return mGrid->majorPen().widthF();
+    return mGrid->majorPen().width();
 }
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setGridLinesWidth(const double &pGridLinesWidth)
+void GraphPanelPlotWidget::setGridLinesWidth(const int &pGridLinesWidth)
 {
     // Set our grid lines width
 
     if (pGridLinesWidth != gridLinesWidth()) {
         QPen newPen = mGrid->majorPen();
 
-        newPen.setWidthF(pGridLinesWidth);
+        newPen.setWidth(pGridLinesWidth);
 
         mGrid->setMajorPen(newPen);
 

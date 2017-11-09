@@ -64,7 +64,7 @@ class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraphProperties
 {
 public:
     explicit GraphPanelPlotGraphProperties(const Qt::PenStyle &pLineStyle = Qt::SolidLine,
-                                           const double &pLineWidth = 1.0,
+                                           const int &pLineWidth = 1,
                                            const QColor &pLineColor = Qt::darkBlue,
                                            const QwtSymbol::Style &pSymbolStyle = QwtSymbol::NoSymbol,
                                            const int &pSymbolSize = 8,
@@ -73,7 +73,7 @@ public:
                                            const QColor &pSymbolFillColor = Qt::white);
 
     Qt::PenStyle lineStyle() const;
-    double lineWidth() const;
+    int lineWidth() const;
     QColor lineColor() const;
 
     QwtSymbol::Style symbolStyle() const;
@@ -84,7 +84,7 @@ public:
 
 private:
     Qt::PenStyle mLineStyle;
-    double mLineWidth;
+    int mLineWidth;
     QColor mLineColor;
 
     QwtSymbol::Style mSymbolStyle;
@@ -243,8 +243,8 @@ public:
     Qt::PenStyle gridLinesStyle() const;
     void setGridLinesStyle(const Qt::PenStyle &pGridLinesStyle);
 
-    double gridLinesWidth() const;
-    void setGridLinesWidth(const double &pGridLinesWidth);
+    int gridLinesWidth() const;
+    void setGridLinesWidth(const int &pGridLinesWidth);
 
     QColor gridLinesColor() const;
     void setGridLinesColor(const QColor &pGridLinesColor);

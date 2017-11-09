@@ -399,7 +399,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
                                                                            Qt::SolidLine:
                                                                            pGraphProperties.lineStyle()),
                                           lineProperty);
-    graphsPropertyEditor->addDoubleGt0Property(pGraphProperties.lineWidth(), lineProperty);
+    graphsPropertyEditor->addIntegerGt0Property(pGraphProperties.lineWidth(), lineProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.lineColor(), lineProperty);
 
     // Create some symbol properties for our graph
@@ -831,7 +831,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
                                                                                  Qt::SolidLine:
                                                                                  graphPanelPlot->gridLinesStyle()),
                                                gridLinesProperty);
-    mGraphPanelPropertyEditor->addDoubleGt0Property(graphPanelPlot->gridLinesWidth(), gridLinesProperty);
+    mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->gridLinesWidth(), gridLinesProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->gridLinesColor(), gridLinesProperty);
 
     // Point coordinates
@@ -839,7 +839,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     Core::Property *pointCoordinatesProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
     mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(), pointCoordinatesProperty);
-    mGraphPanelPropertyEditor->addDoubleGt0Property(pointCoordinatesProperty);
+    mGraphPanelPropertyEditor->addIntegerGt0Property(pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addColorProperty(pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addColorProperty(pointCoordinatesProperty);
 
@@ -866,7 +866,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     Core::Property *zoomRegionProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
     mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(), zoomRegionProperty);
-    mGraphPanelPropertyEditor->addDoubleGt0Property(zoomRegionProperty);
+    mGraphPanelPropertyEditor->addIntegerGt0Property(zoomRegionProperty);
     mGraphPanelPropertyEditor->addColorProperty(zoomRegionProperty);
     mGraphPanelPropertyEditor->addBooleanProperty(zoomRegionProperty);
     mGraphPanelPropertyEditor->addColorProperty(zoomRegionProperty);
@@ -1107,7 +1107,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     Core::Property *lineStyleProperty = lineProperty->properties()[0];
 
     linePen.setStyle(Qt::PenStyle(lineStyleProperty->listValues().indexOf(lineStyleProperty->listValue())));
-    linePen.setWidthF(lineProperty->properties()[1]->doubleValue());
+    linePen.setWidth(lineProperty->properties()[1]->integerValue());
     linePen.setColor(lineProperty->properties()[2]->colorValue());
 
     graph->setPen(linePen);
@@ -1165,10 +1165,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
     // Grid lines
 
-    Core::Property *lineStyleProperty = mGraphPanelPropertyEditor->properties()[3]->properties()[0];
+    Core::Property *gridLinesStyleProperty = mGraphPanelPropertyEditor->properties()[3]->properties()[0];
 
-    graphPanelPlot->setGridLinesStyle(Qt::PenStyle(lineStyleProperty->listValues().indexOf(lineStyleProperty->listValue())));
-    graphPanelPlot->setGridLinesWidth(mGraphPanelPropertyEditor->properties()[3]->properties()[1]->doubleValue());
+    graphPanelPlot->setGridLinesStyle(Qt::PenStyle(gridLinesStyleProperty->listValues().indexOf(gridLinesStyleProperty->listValue())));
+    graphPanelPlot->setGridLinesWidth(mGraphPanelPropertyEditor->properties()[3]->properties()[1]->integerValue());
     graphPanelPlot->setGridLinesColor(mGraphPanelPropertyEditor->properties()[3]->properties()[2]->colorValue());
 
     // Title
