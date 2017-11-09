@@ -720,11 +720,11 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     // Attach a grid to ourselves
 
-    QwtPlotGrid *grid = new QwtPlotGrid();
+    mGrid = new QwtPlotGrid();
 
-    grid->setMajorPen(Qt::gray, 1, Qt::DotLine);
+    mGrid->setMajorPen(Qt::gray, 1, Qt::DotLine);
 
-    grid->attach(this);
+    mGrid->attach(this);
 
     // Create our overlay widget
 
@@ -1120,6 +1120,84 @@ void GraphPanelPlotWidget::setForegroundColor(const QColor &pForegroundColor)
 
         axisWidget(QwtPlot::yLeft)->setPalette(newPalette);
         setTitleAxisY(titleAxisY());
+
+        replot();
+    }
+}
+
+//==============================================================================
+
+Qt::PenStyle GraphPanelPlotWidget::gridLinesStyle() const
+{
+    // Return our grid lines style
+
+    return mGrid->majorPen().style();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setGridLinesStyle(const Qt::PenStyle &pGridLinesStyle)
+{
+    // Set our grid lines style
+
+    if (pGridLinesStyle != gridLinesStyle()) {
+        QPen newPen = mGrid->majorPen();
+
+        newPen.setStyle(pGridLinesStyle);
+
+        mGrid->setMajorPen(newPen);
+
+        replot();
+    }
+}
+
+//==============================================================================
+
+double GraphPanelPlotWidget::gridLinesWidth() const
+{
+    // Return our grid lines width
+
+    return mGrid->majorPen().widthF();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setGridLinesWidth(const double &pGridLinesWidth)
+{
+    // Set our grid lines width
+
+    if (pGridLinesWidth != gridLinesWidth()) {
+        QPen newPen = mGrid->majorPen();
+
+        newPen.setWidthF(pGridLinesWidth);
+
+        mGrid->setMajorPen(newPen);
+
+        replot();
+    }
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::gridLinesColor() const
+{
+    // Return our grid lines colour
+
+    return mGrid->majorPen().color();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setGridLinesColor(const QColor &pGridLinesColor)
+{
+    // Set our grid lines colour
+
+    if (pGridLinesColor != gridLinesColor()) {
+        QPen newPen = mGrid->majorPen();
+
+        newPen.setColor(pGridLinesColor);
+
+        mGrid->setMajorPen(newPen);
 
         replot();
     }

@@ -45,6 +45,7 @@ class QMenu;
 //==============================================================================
 
 class QwtPlotDirectPainter;
+class QwtPlotGrid;
 
 //==============================================================================
 
@@ -239,6 +240,15 @@ public:
     QColor foregroundColor() const;
     void setForegroundColor(const QColor &pForegroundColor);
 
+    Qt::PenStyle gridLinesStyle() const;
+    void setGridLinesStyle(const Qt::PenStyle &pGridLinesStyle);
+
+    double gridLinesWidth() const;
+    void setGridLinesWidth(const double &pGridLinesWidth);
+
+    QColor gridLinesColor() const;
+    void setGridLinesColor(const QColor &pGridLinesColor);
+
     void setTitle(const QString &pTitle);
 
     bool logAxisX() const;
@@ -347,6 +357,8 @@ private:
 
     GraphPanelPlotScaleDraw *mAxisX;
     GraphPanelPlotScaleDraw *mAxisY;
+
+    QwtPlotGrid *mGrid;
 
     bool mLogAxisX;
     bool mLogAxisY;

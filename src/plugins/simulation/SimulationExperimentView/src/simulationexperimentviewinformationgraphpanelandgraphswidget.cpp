@@ -826,9 +826,13 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     Core::Property *gridLinesProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
-    mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(), gridLinesProperty);
-    mGraphPanelPropertyEditor->addDoubleGt0Property(gridLinesProperty);
-    mGraphPanelPropertyEditor->addColorProperty(gridLinesProperty);
+    mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
+                                               SEDMLSupport::lineStyleValue((graphPanelPlot->gridLinesStyle() > Qt::DashDotDotLine)?
+                                                                                 Qt::SolidLine:
+                                                                                 graphPanelPlot->gridLinesStyle()),
+                                               gridLinesProperty);
+    mGraphPanelPropertyEditor->addDoubleGt0Property(graphPanelPlot->gridLinesWidth(), gridLinesProperty);
+    mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->gridLinesColor(), gridLinesProperty);
 
     // Point coordinates
 
@@ -1158,6 +1162,14 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     graphPanelPlot->setBackgroundColor(mGraphPanelPropertyEditor->properties()[0]->colorValue());
     graphPanelPlot->setFontSize(mGraphPanelPropertyEditor->properties()[1]->integerValue());
     graphPanelPlot->setForegroundColor(mGraphPanelPropertyEditor->properties()[2]->colorValue());
+
+    // Grid lines
+
+    Core::Property *lineStyleProperty = mGraphPanelPropertyEditor->properties()[3]->properties()[0];
+
+    graphPanelPlot->setGridLinesStyle(Qt::PenStyle(lineStyleProperty->listValues().indexOf(lineStyleProperty->listValue())));
+    graphPanelPlot->setGridLinesWidth(mGraphPanelPropertyEditor->properties()[3]->properties()[1]->doubleValue());
+    graphPanelPlot->setGridLinesColor(mGraphPanelPropertyEditor->properties()[3]->properties()[2]->colorValue());
 
     // Title
 
