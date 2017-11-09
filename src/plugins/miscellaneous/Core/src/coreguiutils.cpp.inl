@@ -287,12 +287,12 @@ QColor borderColor()
     // Return the mid colour, which we consider as the colour to be used for a
     // 'normal' border
     // Note: this is not quite the correct colour, but nonetheless the one that
-    //       is closest to it. Indeed, to use a hidden widget of sorts to
-    //       retrieve the colour of a border works fine on all our supported
-    //       operating systems except Windows 10 (while it works fine on
-    //       previous versions of Windows) where it has a side effect that
-    //       prevents OpenCOR from retrieving the size of its main window. Not
-    //       only that, but we can still see the 'hidden' widget...
+    //       is closest to it. Indeed, to use a hidden widget to retrieve the
+    //       colour of a border works fine on all our supported operating
+    //       systems except Windows 10 (while it works fine on previous versions
+    //       of Windows) where it has a side effect that prevents OpenCOR from
+    //       retrieving the size of its main window. Not only that, but we can
+    //       still see the 'hidden' widget...
 
     return qApp->palette().color(QPalette::Mid);
 }
