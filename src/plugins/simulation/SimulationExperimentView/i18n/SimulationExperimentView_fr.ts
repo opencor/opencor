@@ -4,12 +4,76 @@
 <context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget</name>
     <message>
+        <source>Background colour</source>
+        <translation>Couleur d&apos;arrière-plan</translation>
+    </message>
+    <message>
+        <source>Font size</source>
+        <translation>Taille de la police</translation>
+    </message>
+    <message>
+        <source>Foreground colour</source>
+        <translation>Couleur de premier plan</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>Lignes de quadrillage</translation>
+    </message>
+    <message>
+        <source>Style</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Width</source>
+        <translation>Largeur</translation>
+    </message>
+    <message>
+        <source>Colour</source>
+        <translation>Couleur</translation>
+    </message>
+    <message>
+        <source>Point coordinates</source>
+        <translation>Coordonnées de point</translation>
+    </message>
+    <message>
+        <source>Font colour</source>
+        <translation>Couleur de la police</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>Titre</translation>
+    </message>
+    <message>
+        <source>X axis</source>
+        <translation>Axe des X</translation>
+    </message>
+    <message>
+        <source>Logarithmic scale</source>
+        <translation>Échelle logarithmique</translation>
+    </message>
+    <message>
+        <source>Y axis</source>
+        <translation>Axe des Y</translation>
+    </message>
+    <message>
+        <source>Zoom region</source>
+        <translation>Région de zoom</translation>
+    </message>
+    <message>
+        <source>Filled</source>
+        <translation>Rempli</translation>
+    </message>
+    <message>
+        <source>Fill colour</source>
+        <translation>Couleur de remplissage</translation>
+    </message>
+    <message>
         <source>Select Colour...</source>
-        <translation>SÃ©lectionner Couleur...</translation>
+        <translation>Sélectionner Couleur...</translation>
     </message>
     <message>
         <source>Select a colour</source>
-        <translation>SÃ©lectionner une couleur</translation>
+        <translation>Sélectionner une couleur</translation>
     </message>
     <message>
         <source>Add Graph</source>
@@ -37,63 +101,19 @@
     </message>
     <message>
         <source>Select All Graphs</source>
-        <translation>SÃ©lectionner Toutes Courbes</translation>
+        <translation>Sélectionner Toutes Courbes</translation>
     </message>
     <message>
         <source>Select all the graphs</source>
-        <translation>SÃ©lectionner toutes les courbes</translation>
+        <translation>Sélectionner toutes les courbes</translation>
     </message>
     <message>
         <source>Unselect All Graphs</source>
-        <translation>DÃ©selectionner Toutes Courbes</translation>
+        <translation>Déselectionner Toutes Courbes</translation>
     </message>
     <message>
         <source>Unselect all the graphs</source>
-        <translation>DÃ©selectionner toutes les courbes</translation>
-    </message>
-    <message>
-        <source>Background colour</source>
-        <translation>Couleur d&apos;arriÃ¨re-plan</translation>
-    </message>
-    <message>
-        <source>Font size</source>
-        <translation>Taille de la police</translation>
-    </message>
-    <message>
-        <source>Grid lines</source>
-        <translation>Lignes de quadrillage</translation>
-    </message>
-    <message>
-        <source>Style</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Width</source>
-        <translation>Largeur</translation>
-    </message>
-    <message>
-        <source>Colour</source>
-        <translation>Couleur</translation>
-    </message>
-    <message>
-        <source>Point coordinates</source>
-        <translation>CoordonnÃ©es de point</translation>
-    </message>
-    <message>
-        <source>Font colour</source>
-        <translation>Couleur de la police</translation>
-    </message>
-    <message>
-        <source>Zoom region</source>
-        <translation>RÃ©gion de zoom</translation>
-    </message>
-    <message>
-        <source>Filled</source>
-        <translation>Rempli</translation>
-    </message>
-    <message>
-        <source>Fill colour</source>
-        <translation>Couleur de remplissage</translation>
+        <translation>Déselectionner toutes les courbes</translation>
     </message>
     <message>
         <source>Current</source>
@@ -113,11 +133,11 @@
     </message>
     <message>
         <source>no runtime</source>
-        <translation>pas de modÃ¨le d&apos;exÃ©cution</translation>
+        <translation>pas de modèle d&apos;exécution</translation>
     </message>
     <message>
         <source>Model</source>
-        <translation>ModÃ¨le</translation>
+        <translation>Modèle</translation>
     </message>
     <message>
         <source>Line</source>
@@ -157,7 +177,7 @@
     </message>
     <message>
         <source>Square</source>
-        <translation>CarrÃ©</translation>
+        <translation>Carré</translation>
     </message>
     <message>
         <source>Diamond</source>
@@ -189,38 +209,18 @@
     </message>
     <message>
         <source>Star</source>
-        <translation>Ã‰toile</translation>
+        <translation>Étoile</translation>
     </message>
     <message>
         <source>Size</source>
         <translation>Taille</translation>
-    </message>
-    <message>
-        <source>Foreground colour</source>
-        <translation>Couleur de premier plan</translation>
-    </message>
-    <message>
-        <source>Title</source>
-        <translation>Titre</translation>
-    </message>
-    <message>
-        <source>X axis</source>
-        <translation>Axe des X</translation>
-    </message>
-    <message>
-        <source>Logarithmic scale</source>
-        <translation>Ã‰chelle logarithmique</translation>
-    </message>
-    <message>
-        <source>Y axis</source>
-        <translation>Axe des Y</translation>
     </message>
 </context>
 <context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationParametersWidget</name>
     <message>
         <source>Plot Against Variable Of Integration</source>
-        <translation>Tracer En Fonction De Variable D&apos;IntÃ©gration</translation>
+        <translation>Tracer En Fonction De Variable D&apos;Intégration</translation>
     </message>
     <message>
         <source>Plot Against</source>
@@ -228,7 +228,7 @@
     </message>
     <message>
         <source>variable of integration</source>
-        <translation>variable d&apos;intÃ©gration</translation>
+        <translation>variable d&apos;intégration</translation>
     </message>
     <message>
         <source>constant</source>
@@ -236,7 +236,7 @@
     </message>
     <message>
         <source>computed constant</source>
-        <translation>constante calculÃ©e</translation>
+        <translation>constante calculée</translation>
     </message>
     <message>
         <source>rate</source>
@@ -244,22 +244,22 @@
     </message>
     <message>
         <source>state</source>
-        <translation>Ã©tat</translation>
+        <translation>état</translation>
     </message>
     <message>
         <source>algebraic</source>
-        <translation>algÃ©brique</translation>
+        <translation>algébrique</translation>
     </message>
 </context>
 <context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationSimulationWidget</name>
     <message>
         <source>Starting point</source>
-        <translation>Point de dÃ©part</translation>
+        <translation>Point de départ</translation>
     </message>
     <message>
         <source>Ending point</source>
-        <translation>Point d&apos;arrivÃ©e</translation>
+        <translation>Point d&apos;arrivée</translation>
     </message>
     <message>
         <source>Point interval</source>
@@ -309,22 +309,22 @@
     </message>
     <message>
         <source>Parameters</source>
-        <translation>ParamÃ¨tres</translation>
+        <translation>Paramètres</translation>
     </message>
     <message>
         <source>Graph panel settings</source>
-        <translation>PropriÃ©tÃ©s du panneau graphique</translation>
+        <translation>Propriétés du panneau graphique</translation>
     </message>
     <message>
         <source>Graphs settings</source>
-        <translation>PropriÃ©tÃ©s des graphes</translation>
+        <translation>Propriétés des graphes</translation>
     </message>
 </context>
 <context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewPlugin</name>
     <message>
         <source>Simulation Experiment</source>
-        <translation>ExpÃ©rience De Simulation</translation>
+        <translation>Expérience De Simulation</translation>
     </message>
 </context>
 <context>
@@ -339,35 +339,35 @@
     </message>
     <message>
         <source>Stop Simulation</source>
-        <translation>ArrÃªter Simulation</translation>
+        <translation>Arrêter Simulation</translation>
     </message>
     <message>
         <source>Stop the simulation</source>
-        <translation>ArrÃªter la simulation</translation>
+        <translation>Arrêter la simulation</translation>
     </message>
     <message>
         <source>Reset Model Parameters</source>
-        <translation>RÃ©initialiser ParamÃ¨tres ModÃ¨le</translation>
+        <translation>Réinitialiser Paramètres Modèle</translation>
     </message>
     <message>
         <source>Reset all the model parameters</source>
-        <translation>RÃ©initialiser tous les paramÃ¨tres du modÃ¨le</translation>
+        <translation>Réinitialiser tous les paramètres du modèle</translation>
     </message>
     <message>
         <source>Clear Simulation Data</source>
-        <translation>Supprimer DonnÃ©es Simulation</translation>
+        <translation>Supprimer Données Simulation</translation>
     </message>
     <message>
         <source>Clear the simulation data</source>
-        <translation>Supprimer les donnÃ©es de la simulation</translation>
+        <translation>Supprimer les données de la simulation</translation>
     </message>
     <message>
         <source>Development Mode</source>
-        <translation>Mode DÃ©veloppement</translation>
+        <translation>Mode Développement</translation>
     </message>
     <message>
         <source>Enable/disable the development mode</source>
-        <translation>Activer/dÃ©sactiver le mode dÃ©veloppement</translation>
+        <translation>Activer/désactiver le mode développement</translation>
     </message>
     <message>
         <source>Add Graph Panel</source>
@@ -403,11 +403,11 @@
     </message>
     <message>
         <source>Referenced CellML File</source>
-        <translation>Fichier CellML RÃ©fÃ©rencÃ©</translation>
+        <translation>Fichier CellML Référencé</translation>
     </message>
     <message>
         <source>Open the referenced CellML file</source>
-        <translation>Ouvrir le fichier CellML rÃ©fÃ©rencÃ©</translation>
+        <translation>Ouvrir le fichier CellML référencé</translation>
     </message>
     <message>
         <source>SED-ML Export</source>
@@ -435,19 +435,19 @@
     </message>
     <message>
         <source>Simulation Data Export</source>
-        <translation>Exporter DonnÃ©es Simulation</translation>
+        <translation>Exporter Données Simulation</translation>
     </message>
     <message>
         <source>Export the simulation data</source>
-        <translation>Exporter les donnÃ©es de la simulation</translation>
+        <translation>Exporter les données de la simulation</translation>
     </message>
     <message>
         <source>Simulation Delay</source>
-        <translation>DÃ©lai Simulation</translation>
+        <translation>Délai Simulation</translation>
     </message>
     <message>
         <source>Delay between two data points</source>
-        <translation>DÃ©lai entre deux points de donnÃ©es</translation>
+        <translation>Délai entre deux points de données</translation>
     </message>
     <message>
         <source>%1 View</source>
@@ -455,15 +455,15 @@
     </message>
     <message>
         <source>Open the referenced CellML file using the %1 view</source>
-        <translation>Ouvrir le fichier CellML rÃ©fÃ©rencÃ© Ã  l&apos;aide de la vue %1</translation>
+        <translation>Ouvrir le fichier CellML référencé à l&apos;aide de la vue %1</translation>
     </message>
     <message>
         <source>Export the simulation data to %1</source>
-        <translation>Exporter les donnÃ©es de la simulation vers %1</translation>
+        <translation>Exporter les données de la simulation vers %1</translation>
     </message>
     <message>
         <source>Resume Simulation</source>
-        <translation>RÃ©sumer Simulation</translation>
+        <translation>Résumer Simulation</translation>
     </message>
     <message>
         <source>Pause Simulation</source>
@@ -471,7 +471,7 @@
     </message>
     <message>
         <source>Resume the simulation</source>
-        <translation>RÃ©sumer la simulation</translation>
+        <translation>Résumer la simulation</translation>
     </message>
     <message>
         <source>Pause the simulation</source>
@@ -479,11 +479,11 @@
     </message>
     <message>
         <source>The &lt;strong&gt;%1&lt;/strong&gt; view requires a valid CellML file to work...</source>
-        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; nÃ©cessite un fichier CellML valide pour fonctionner...</translation>
+        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; nécessite un fichier CellML valide pour fonctionner...</translation>
     </message>
     <message>
         <source>The &lt;strong&gt;%1&lt;/strong&gt; view requires a valid simulation environment to work...</source>
-        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; nÃ©cessite un environnement de simulation valide pour fonctionner...</translation>
+        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; nécessite un environnement de simulation valide pour fonctionner...</translation>
     </message>
     <message>
         <source>See below for more information.</source>
@@ -511,11 +511,11 @@
     </message>
     <message>
         <source>Runtime:</source>
-        <translation>ModÃ¨le d&apos;exÃ©cution :</translation>
+        <translation>Modèle d&apos;exécution :</translation>
     </message>
     <message>
         <source>NLA system(s)</source>
-        <translation>SystÃ¨me(s) ANL</translation>
+        <translation>Système(s) ANL</translation>
     </message>
     <message>
         <source>valid</source>
@@ -523,7 +523,7 @@
     </message>
     <message>
         <source>Model type:</source>
-        <translation>Type de modÃ¨le :</translation>
+        <translation>Type de modèle :</translation>
     </message>
     <message>
         <source>ODE</source>
@@ -543,39 +543,39 @@
     </message>
     <message>
         <source>the model must have at least one ODE or DAE</source>
-        <translation>le modÃ¨le doit avoir au moins une EDO ou EAD</translation>
+        <translation>le modèle doit avoir au moins une EDO ou EAD</translation>
     </message>
     <message>
         <source>the model needs both an ODE and an NLA solver, but none are available</source>
-        <translation>le modÃ¨le a besoin Ã  la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun n&apos;est disponible</translation>
+        <translation>le modèle a besoin à la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun n&apos;est disponible</translation>
     </message>
     <message>
         <source>the model needs both an ODE and an NLA solver, but no NLA solver is available</source>
-        <translation>le modÃ¨le a besoin Ã  la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun solveur ALN n&apos;est disponible</translation>
+        <translation>le modèle a besoin à la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun solveur ALN n&apos;est disponible</translation>
     </message>
     <message>
         <source>the model needs both a DAE and an NLA solver, but none are available</source>
-        <translation>le modÃ¨le a besoin Ã  la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun n&apos;est disponible</translation>
+        <translation>le modèle a besoin à la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun n&apos;est disponible</translation>
     </message>
     <message>
         <source>the model needs both a DAE and an NLA solver, but no NLA solver is available</source>
-        <translation>le modÃ¨le a besoin Ã  la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun solveur ALN n&apos;est disponible</translation>
+        <translation>le modèle a besoin à la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun solveur ALN n&apos;est disponible</translation>
     </message>
     <message>
         <source>the model needs both an ODE and an NLA solver, but no ODE solver is available</source>
-        <translation>le modÃ¨le a besoin Ã  la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun solveur EDO n&apos;est disponible</translation>
+        <translation>le modèle a besoin à la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun solveur EDO n&apos;est disponible</translation>
     </message>
     <message>
         <source>the model needs both a DAE and an NLA solver, but no DAE solver is available</source>
-        <translation>le modÃ¨le a besoin Ã  la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun solveur EAD n&apos;est disponible</translation>
+        <translation>le modèle a besoin à la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun solveur EAD n&apos;est disponible</translation>
     </message>
     <message>
         <source>the model needs an ODE solver, but none is available</source>
-        <translation>le modÃ¨le a besoin d&apos;un solveur EDO, mais aucun n&apos;est disponible</translation>
+        <translation>le modèle a besoin d&apos;un solveur EDO, mais aucun n&apos;est disponible</translation>
     </message>
     <message>
         <source>the model needs a DAE solver, but none is available</source>
-        <translation>le modÃ¨le a besoin d&apos;un solveur EAD, mais aucun n&apos;est disponible</translation>
+        <translation>le modèle a besoin d&apos;un solveur EAD, mais aucun n&apos;est disponible</translation>
     </message>
     <message>
         <source>Save File</source>
@@ -583,11 +583,11 @@
     </message>
     <message>
         <source>The following parameters are imported and cannot therefore be saved:</source>
-        <translation>Les paramÃ¨tres suivants sont importÃ©s et ne peuvent donc pas Ãªtre sauvegardÃ©s :</translation>
+        <translation>Les paramètres suivants sont importés et ne peuvent donc pas être sauvegardés :</translation>
     </message>
     <message>
         <source>We could not allocate the memory required for the simulation.</source>
-        <translation>Nous n&apos;avons pas pu allouer la mÃ©moire nÃ©cessaire pour la simulation.</translation>
+        <translation>Nous n&apos;avons pas pu allouer la mémoire nécessaire pour la simulation.</translation>
     </message>
     <message>
         <source>Export To SED-ML File</source>
@@ -595,7 +595,7 @@
     </message>
     <message>
         <source>The simulation could not be exported to &lt;strong&gt;%1&lt;/strong&gt;.</source>
-        <translation>La simulation n&apos;a pas pu Ãªtre exportÃ©e vers &lt;strong&gt;%1&lt;/strong&gt;.</translation>
+        <translation>La simulation n&apos;a pas pu être exportée vers &lt;strong&gt;%1&lt;/strong&gt;.</translation>
     </message>
     <message>
         <source>Export To COMBINE Archive</source>
@@ -603,31 +603,31 @@
     </message>
     <message>
         <source>The simulation could not be exported to &lt;strong&gt;%1&lt;/strong&gt;%2.</source>
-        <translation>La simulation n&apos;a pas pu Ãªtre exportÃ©e vers &lt;strong&gt;%1&lt;/strong&gt;%2.</translation>
+        <translation>La simulation n&apos;a pas pu être exportée vers &lt;strong&gt;%1&lt;/strong&gt;%2.</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be added</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu Ãªtre ajoutÃ©</translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ajouté</translation>
     </message>
     <message>
         <source>the master SED-ML file could not be added</source>
-        <translation>le fichier SED-ML principal n&apos;a pas pu Ãªtre ajoutÃ©</translation>
+        <translation>le fichier SED-ML principal n&apos;a pas pu être ajouté</translation>
     </message>
     <message>
         <source>the requested solver (%1) could not be found</source>
-        <translation>le solveur demandÃ© (%1) n&apos;a pas pu Ãªtre trouvÃ©</translation>
+        <translation>le solveur demandé (%1) n&apos;a pas pu être trouvé</translation>
     </message>
     <message>
         <source>the requested property (%1) could not be set</source>
-        <translation>la propriÃ©tÃ© demandÃ©e (%1) n&apos;a pas pu Ãªtre spÃ©cifiÃ©e</translation>
+        <translation>la propriété demandée (%1) n&apos;a pas pu être spécifiée</translation>
     </message>
     <message>
         <source>the requested NLA solver (%1) could not be set</source>
-        <translation>le solveur ANL demandÃ© (%1) n&apos;a pas pu Ãªtre spÃ©cifiÃ©</translation>
+        <translation>le solveur ANL demandé (%1) n&apos;a pas pu être spécifié</translation>
     </message>
     <message>
         <source>the requested curve (%1) could not be set</source>
-        <translation>la courbe demandÃ©e (%1) n&apos;a pas pu Ãªtre spÃ©cifiÃ©e</translation>
+        <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée</translation>
     </message>
     <message>
         <source>Simulation time:</source>
