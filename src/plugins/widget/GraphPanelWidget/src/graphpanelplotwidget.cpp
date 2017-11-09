@@ -389,16 +389,13 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
     switch (mOwner->action()) {
     case GraphPanelPlotWidget::ShowCoordinates: {
-        // Draw the two dashed lines that show the coordinates, using a dark
-        // cyan pen
+        // Draw the lines that show the coordinates
 
         QPen pen = painter.pen();
-        QColor penColor = Qt::darkCyan;
 
-        penColor.setAlphaF(0.69);
-
-        pen.setColor(penColor);
-        pen.setStyle(Qt::DashLine);
+        pen.setColor(mOwner->pointCoordinatesColor());
+        pen.setStyle(mOwner->pointCoordinatesStyle());
+        pen.setWidth(mOwner->pointCoordinatesWidth());
 
         painter.setPen(pen);
 
@@ -411,7 +408,8 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
         // Draw the coordinates of our point
 
-        drawCoordinates(&painter, point, penColor, Qt::white, BottomRight);
+        drawCoordinates(&painter, point, mOwner->pointCoordinatesColor(),
+                        mOwner->pointCoordinatesFontColor(), BottomLeft);
 
         break;
     }
@@ -517,21 +515,30 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
 {
     // Retrieve the size of coordinates as they will appear on the screen,
     // which means using the same font as the one used for the axes
-    // Note: normally, pPoint would be a QPointF, but we want the coordinates to
-    //       be drawn relative to something (see paintEvent()) and the only way
-    //       to guarantee that everything will be painted as expected is to use
-    //       QPoint. Indeed, if we were to use QPointF, then QPainter would have
-    //       to do some rounding and though everything should be fine (since we
-    //       always add/subtract a rounded number), it happens that it's not
-    //       always the case. Indeed, we should always have a gap of one pixel
-    //       between the coordinates and pPoint, but it could happen that we
-    //       have either no gap, or one or two pixels...
+    // Note #1: normally, pPoint would be a QPointF, but we want the coordinates
+    //          to be drawn relative to something (see paintEvent()) and the
+    //          only way to guarantee that everything will be painted as
+    //          expected is to use QPoint. Indeed, if we were to use QPointF,
+    //          then QPainter would have to do some rounding and though
+    //          everything should be fine (since we always add/subtract a
+    //          rounded number), it happens that it's not always the case.
+    //          Indeed, we should always have a gap of one pixel between the
+    //          coordinates and pPoint, but it could happen that we have either
+    //          no gap, or one or two pixels...
+    // Note #2: we set the painter's pen's style to a solid line otherwise
+    //          coordinatesRect will be empty...
 
     pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
 
     QPointF point = mOwner->canvasPoint(pPoint);
     QString coordinates = QString("X: %1\nY: %2").arg(QLocale().toString(point.x(), 'g', 15),
                                                       QLocale().toString(point.y(), 'g', 15));
+    QPen pen = pPainter->pen();
+
+    pen.setStyle(Qt::SolidLine);
+
+    pPainter->setPen(pen);
+
     QRect coordinatesRect = pPainter->boundingRect(qApp->desktop()->availableGeometry(), 0, coordinates);
 
     // Determine where the coordinates and its background should be drawn
@@ -588,8 +595,6 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
     pPainter->fillRect(coordinatesRect, pBackgroundColor);
 
     // Draw the text for the coordinates, using a white pen
-
-    QPen pen = pPainter->pen();
 
     pen.setColor(pForegroundColor);
 
@@ -649,6 +654,10 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     Core::CommonWidget(this),
     mBackgroundColor(QColor()),
     mForegroundColor(QColor()),
+    mPointCoordinatesStyle(Qt::PenStyle()),
+    mPointCoordinatesWidth(0),
+    mPointCoordinatesColor(QColor()),
+    mPointCoordinatesFontColor(QColor()),
     mGraphs(GraphPanelPlotGraphs()),
     mAction(None),
     mOriginPoint(QPoint()),
@@ -706,9 +715,19 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     // Customise ourselves a bit
 
     setAutoFillBackground(true);
+
     setBackgroundColor(Qt::white);
     setFontSize(10, true);
     setForegroundColor(Qt::black);
+
+    QColor pointCoordinatesColor = Qt::darkCyan;
+
+    pointCoordinatesColor.setAlphaF(0.69);
+
+    setPointCoordinatesStyle(Qt::DashLine);
+    setPointCoordinatesWidth(1);
+    setPointCoordinatesColor(pointCoordinatesColor);
+    setPointCoordinatesFontColor(Qt::white);
 
     // Add some axes to ourselves
 
@@ -1201,6 +1220,82 @@ void GraphPanelPlotWidget::setGridLinesColor(const QColor &pGridLinesColor)
 
         replot();
     }
+}
+
+//==============================================================================
+
+Qt::PenStyle GraphPanelPlotWidget::pointCoordinatesStyle() const
+{
+    // Return our point coordinates style
+
+    return mPointCoordinatesStyle;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setPointCoordinatesStyle(const Qt::PenStyle &pPointCoordinatesStyle)
+{
+    // Set our point coordinates style
+
+    if (pPointCoordinatesStyle != mPointCoordinatesStyle)
+        mPointCoordinatesStyle = pPointCoordinatesStyle;
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::pointCoordinatesWidth() const
+{
+    // Return our point coordinates width
+
+    return mPointCoordinatesWidth;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setPointCoordinatesWidth(const int &pPointCoordinatesWidth)
+{
+    // Set our point coordinates width
+
+    if (pPointCoordinatesWidth != mPointCoordinatesWidth)
+        mPointCoordinatesWidth = pPointCoordinatesWidth;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::pointCoordinatesColor() const
+{
+    // Return our point coordinates colour
+
+    return mPointCoordinatesColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setPointCoordinatesColor(const QColor &pPointCoordinatesColor)
+{
+    // Set our point coordinates colour
+
+    if (pPointCoordinatesColor != mPointCoordinatesColor)
+        mPointCoordinatesColor = pPointCoordinatesColor;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::pointCoordinatesFontColor() const
+{
+    // Return our point coordinates font colour
+
+    return mPointCoordinatesFontColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setPointCoordinatesFontColor(const QColor &pPointCoordinatesFontColor)
+{
+    // Set our point coordinates font colour
+
+    if (pPointCoordinatesFontColor != mPointCoordinatesFontColor)
+        mPointCoordinatesFontColor = pPointCoordinatesFontColor;
 }
 
 //==============================================================================

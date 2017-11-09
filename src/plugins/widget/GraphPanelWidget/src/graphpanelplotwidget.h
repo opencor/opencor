@@ -249,6 +249,18 @@ public:
     QColor gridLinesColor() const;
     void setGridLinesColor(const QColor &pGridLinesColor);
 
+    Qt::PenStyle pointCoordinatesStyle() const;
+    void setPointCoordinatesStyle(const Qt::PenStyle &pPointCoordinatesStyle);
+
+    int pointCoordinatesWidth() const;
+    void setPointCoordinatesWidth(const int &pPointCoordinatesWidth);
+
+    QColor pointCoordinatesColor() const;
+    void setPointCoordinatesColor(const QColor &pPointCoordinatesColor);
+
+    QColor pointCoordinatesFontColor() const;
+    void setPointCoordinatesFontColor(const QColor &pPointCoordinatesFontColor);
+
     void setTitle(const QString &pTitle);
 
     bool logAxisX() const;
@@ -321,6 +333,11 @@ private:
 
     QColor mBackgroundColor;
     QColor mForegroundColor;
+
+    Qt::PenStyle mPointCoordinatesStyle;
+    int mPointCoordinatesWidth;
+    QColor mPointCoordinatesColor;
+    QColor mPointCoordinatesFontColor;
 
     GraphPanelPlotGraphs mGraphs;
 

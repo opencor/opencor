@@ -838,10 +838,14 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     Core::Property *pointCoordinatesProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
-    mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(), pointCoordinatesProperty);
-    mGraphPanelPropertyEditor->addIntegerGt0Property(pointCoordinatesProperty);
-    mGraphPanelPropertyEditor->addColorProperty(pointCoordinatesProperty);
-    mGraphPanelPropertyEditor->addColorProperty(pointCoordinatesProperty);
+    mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
+                                               SEDMLSupport::lineStyleValue((graphPanelPlot->pointCoordinatesStyle() > Qt::DashDotDotLine)?
+                                                                                 Qt::SolidLine:
+                                                                                 graphPanelPlot->pointCoordinatesStyle()),
+                                               pointCoordinatesProperty);
+    mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->pointCoordinatesWidth(), pointCoordinatesProperty);
+    mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->pointCoordinatesColor(), pointCoordinatesProperty);
+    mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->pointCoordinatesFontColor(), pointCoordinatesProperty);
 
     // Title
 
@@ -1170,6 +1174,15 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     graphPanelPlot->setGridLinesStyle(Qt::PenStyle(gridLinesStyleProperty->listValues().indexOf(gridLinesStyleProperty->listValue())));
     graphPanelPlot->setGridLinesWidth(mGraphPanelPropertyEditor->properties()[3]->properties()[1]->integerValue());
     graphPanelPlot->setGridLinesColor(mGraphPanelPropertyEditor->properties()[3]->properties()[2]->colorValue());
+
+    // Point coordinates
+
+    Core::Property *pointCoordinatesStyleProperty = mGraphPanelPropertyEditor->properties()[4]->properties()[0];
+
+    graphPanelPlot->setPointCoordinatesStyle(Qt::PenStyle(pointCoordinatesStyleProperty->listValues().indexOf(pointCoordinatesStyleProperty->listValue())));
+    graphPanelPlot->setPointCoordinatesWidth(mGraphPanelPropertyEditor->properties()[4]->properties()[1]->integerValue());
+    graphPanelPlot->setPointCoordinatesColor(mGraphPanelPropertyEditor->properties()[4]->properties()[2]->colorValue());
+    graphPanelPlot->setPointCoordinatesFontColor(mGraphPanelPropertyEditor->properties()[4]->properties()[3]->colorValue());
 
     // Title
 
