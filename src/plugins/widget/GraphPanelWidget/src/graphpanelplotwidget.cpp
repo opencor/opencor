@@ -2035,7 +2035,9 @@ void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
 void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
                                               const bool &pForceAlignment)
 {
-    // Align ourselves with our neighbours
+    // Align ourselves with our neighbours by taking into account the size it
+    // takes to draw the Y axis and, if any, its corresponding title (including
+    // the gap between the Y axis and its corresponding title)
 
     GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
     double oldMaxExtent = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
@@ -2051,14 +2053,22 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
         // Note: this ensures that our major ticks (which are used to compute
         //       the extent) are up to date...
 
-        double extent = scaleDraw->extent(scaleWidget->font());
+        double extent =  scaleDraw->extent(scaleWidget->font())
+                        +(plot->titleAxisY().isEmpty()?
+                              0:
+                              scaleWidget->spacing()+scaleWidget->title().textSize().height());
 
         if (extent > newMaxExtent)
             newMaxExtent = extent;
     }
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-        plot->axisWidget(QwtPlot::yLeft)->scaleDraw()->setMinimumExtent(newMaxExtent);
+        QwtScaleWidget *scaleWidget = plot->axisWidget(QwtPlot::yLeft);
+
+        scaleWidget->scaleDraw()->setMinimumExtent( newMaxExtent
+                                                   -(plot->titleAxisY().isEmpty()?
+                                                         0:
+                                                         scaleWidget->spacing()+scaleWidget->title().textSize().height()));
 
         if (pCanReplot) {
             if (pForceAlignment || (newMaxExtent != oldMaxExtent)) {
