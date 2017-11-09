@@ -76,14 +76,6 @@
         <translation>Couleur</translation>
     </message>
     <message>
-        <source>Logarithmic X axis</source>
-        <translation>Axe logarithmique des X</translation>
-    </message>
-    <message>
-        <source>Logarithmic Y axis</source>
-        <translation>Axe logarithmique des Y</translation>
-    </message>
-    <message>
         <source>Point coordinates</source>
         <translation>Coordonnées de point</translation>
     </message>
@@ -202,6 +194,26 @@
     <message>
         <source>Size</source>
         <translation>Taille</translation>
+    </message>
+    <message>
+        <source>Foreground colour</source>
+        <translation>Couleur de premier plan</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>Titre</translation>
+    </message>
+    <message>
+        <source>X axis</source>
+        <translation>Axe des X</translation>
+    </message>
+    <message>
+        <source>Logarithmic scale</source>
+        <translation>Échelle logarithmique</translation>
+    </message>
+    <message>
+        <source>Y axis</source>
+        <translation>Axe des Y</translation>
     </message>
 </context>
 <context>
