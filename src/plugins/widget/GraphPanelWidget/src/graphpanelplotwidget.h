@@ -154,7 +154,7 @@ protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
-    enum Location {
+    enum Position {
         TopLeft,
         TopRight,
         BottomLeft,
@@ -171,8 +171,8 @@ private:
     void drawCoordinates(QPainter *pPainter, const QPoint &pPoint,
                          const QColor &pBackgroundColor,
                          const QColor &pForegroundColor,
-                         const Location &pLocation,
-                         const bool &pCanMoveLocation = true);
+                         const Position &pPosition,
+                         const bool &pCanMovePosition = true);
 };
 
 //==============================================================================

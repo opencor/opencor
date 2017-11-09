@@ -512,8 +512,8 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
                                                   const QPoint &pPoint,
                                                   const QColor &pBackgroundColor,
                                                   const QColor &pForegroundColor,
-                                                  const Location &pLocation,
-                                                  const bool &pCanMoveLocation)
+                                                  const Position &pPosition,
+                                                  const bool &pCanMovePosition)
 {
     // Retrieve the size of coordinates as they will appear on the screen,
     // which means using the same font as the one used for the axes
@@ -521,11 +521,11 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
     //       be drawn relative to something (see paintEvent()) and the only way
     //       to guarantee that everything will be painted as expected is to use
     //       QPoint. Indeed, if we were to use QPointF, then QPainter would have
-    //       to do some rouding and though everything should be fine (since we
+    //       to do some rounding and though everything should be fine (since we
     //       always add/subtract a rounded number), it happens that it's not
     //       always the case. Indeed, we should always have a gap of one pixel
     //       between the coordinates and pPoint, but it could happen that we
-    //       have either no gap or one of two pixels...
+    //       have either no gap, or one or two pixels...
 
     pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
 
@@ -536,7 +536,7 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
 
     // Determine where the coordinates and its background should be drawn
 
-    switch (pLocation) {
+    switch (pPosition) {
     case TopLeft:
         coordinatesRect.moveTo(pPoint.x()-coordinatesRect.width()-1,
                                pPoint.y()-coordinatesRect.height()-1);
@@ -559,7 +559,7 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
         break;
     }
 
-    if (pCanMoveLocation) {
+    if (pCanMovePosition) {
         QwtScaleMap canvasMapX = mOwner->canvasMap(QwtPlot::xBottom);
         QwtScaleMap canvasMapY = mOwner->canvasMap(QwtPlot::yLeft);
 
