@@ -677,16 +677,18 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     Core::CommonWidget(this),
     mBackgroundColor(QColor()),
     mForegroundColor(QColor()),
-    mPointCoordinatesStyle(Qt::PenStyle()),
-    mPointCoordinatesWidth(0),
+    mPointCoordinatesStyle(Qt::DashLine),
+    mPointCoordinatesWidth(1),
     mPointCoordinatesColor(QColor()),
-    mPointCoordinatesFontColor(QColor()),
-    mZoomRegionStyle(Qt::PenStyle()),
-    mZoomRegionWidth(0),
+    mPointCoordinatesFontColor(Qt::white),
+    mZoomRegionStyle(Qt::SolidLine),
+    mZoomRegionWidth(1),
     mZoomRegionColor(QColor()),
-    mZoomRegionFontColor(QColor()),
-    mZoomRegionFilled(false),
+    mZoomRegionFontColor(Qt::white),
+    mZoomRegionFilled(true),
     mZoomRegionFillColor(QColor()),
+    mLogAxisX(false),
+    mLogAxisY(false),
     mGraphs(GraphPanelPlotGraphs()),
     mAction(None),
     mOriginPoint(QPoint()),
@@ -701,8 +703,6 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mCanUpdateActions(true),
     mSynchronizeXAxisAction(pSynchronizeXAxisAction),
     mSynchronizeYAxisAction(pSynchronizeYAxisAction),
-    mLogAxisX(false),
-    mLogAxisY(false),
     mDefaultMinX(DefaultMinAxis),
     mDefaultMaxX(DefaultMaxAxis),
     mDefaultMinY(DefaultMinAxis),
@@ -753,10 +753,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     pointCoordinatesColor.setAlphaF(0.69);
 
-    setPointCoordinatesStyle(Qt::DashLine);
-    setPointCoordinatesWidth(1);
     setPointCoordinatesColor(pointCoordinatesColor);
-    setPointCoordinatesFontColor(Qt::white);
 
     QColor zoomRegionColor = Qt::darkRed;
     QColor zoomRegionFillColor = Qt::yellow;
@@ -764,11 +761,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     zoomRegionColor.setAlphaF(0.69);
     zoomRegionFillColor.setAlphaF(0.19);
 
-    setZoomRegionStyle(Qt::SolidLine);
-    setZoomRegionWidth(30);
     setZoomRegionColor(zoomRegionColor);
-    setZoomRegionFontColor(Qt::white);
-    setZoomRegionFilled(true);
     setZoomRegionFillColor(zoomRegionFillColor);
 
     // Add some axes to ourselves

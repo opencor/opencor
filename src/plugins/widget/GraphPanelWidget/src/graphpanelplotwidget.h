@@ -364,6 +364,9 @@ private:
     bool mZoomRegionFilled;
     QColor mZoomRegionFillColor;
 
+    bool mLogAxisX;
+    bool mLogAxisY;
+
     GraphPanelPlotGraphs mGraphs;
 
     Action mAction;
@@ -401,9 +404,6 @@ private:
     GraphPanelPlotScaleDraw *mAxisY;
 
     QwtPlotGrid *mGrid;
-
-    bool mLogAxisX;
-    bool mLogAxisY;
 
     double mDefaultMinX;
     double mDefaultMaxX;
