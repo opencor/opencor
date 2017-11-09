@@ -409,7 +409,8 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
         // Draw the coordinates of our point
 
         drawCoordinates(&painter, point, mOwner->pointCoordinatesColor(),
-                        mOwner->pointCoordinatesFontColor(), BottomRight);
+                        mOwner->pointCoordinatesFontColor(),
+                        mOwner->pointCoordinatesWidth(), BottomRight);
 
         break;
     }
@@ -433,9 +434,9 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
         // Draw the two sets of coordinates
 
         drawCoordinates(&painter, zoomRegionRect.topLeft(),
-                        penColor, Qt::white, BottomRight, false);
+                        penColor, Qt::white, 1, BottomRight, false);
         drawCoordinates(&painter, zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height()),
-                        penColor, Qt::white, TopLeft, false);
+                        penColor, Qt::white, 1, TopLeft, false);
 
         break;
     }
@@ -510,6 +511,7 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
                                                   const QPoint &pPoint,
                                                   const QColor &pBackgroundColor,
                                                   const QColor &pForegroundColor,
+                                                  const int &pLineWidth,
                                                   const Position &pPosition,
                                                   const bool &pCanMovePosition)
 {
@@ -543,25 +545,29 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
 
     // Determine where the coordinates and its background should be drawn
 
+    int shift = (pLineWidth >> 1)+pLineWidth%2;
+    int plusShift = shift+1;
+    int minusShift = shift+!(pLineWidth%2);
+
     switch (pPosition) {
     case TopLeft:
-        coordinatesRect.moveTo(pPoint.x()-coordinatesRect.width()-1,
-                               pPoint.y()-coordinatesRect.height()-1);
+        coordinatesRect.moveTo(pPoint.x()-coordinatesRect.width()-minusShift,
+                               pPoint.y()-coordinatesRect.height()-minusShift);
 
         break;
     case TopRight:
-        coordinatesRect.moveTo(pPoint.x()+2,
-                               pPoint.y()-coordinatesRect.height()-1);
+        coordinatesRect.moveTo(pPoint.x()+plusShift,
+                               pPoint.y()-coordinatesRect.height()-minusShift);
 
         break;
     case BottomLeft:
-        coordinatesRect.moveTo(pPoint.x()-coordinatesRect.width()-1,
-                               pPoint.y()+2);
+        coordinatesRect.moveTo(pPoint.x()-coordinatesRect.width()-minusShift,
+                               pPoint.y()+plusShift);
 
         break;
     case BottomRight:
-        coordinatesRect.moveTo(pPoint.x()+2,
-                               pPoint.y()+2);
+        coordinatesRect.moveTo(pPoint.x()+plusShift,
+                               pPoint.y()+plusShift);
 
         break;
     }
@@ -576,14 +582,14 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
                                          canvasMapY.transform(mOwner->minY()));
 
         if (coordinatesRect.top() < topLeftPoint.y())
-            coordinatesRect.moveTop(pPoint.y()+2);
+            coordinatesRect.moveTop(pPoint.y()+plusShift);
         else if (coordinatesRect.top()+coordinatesRect.height()-1 > bottomRightPoint.y())
-            coordinatesRect.moveTop(pPoint.y()-coordinatesRect.height()-1);
+            coordinatesRect.moveTop(pPoint.y()-coordinatesRect.height()-minusShift);
 
         if (coordinatesRect.left() < topLeftPoint.x())
-            coordinatesRect.moveLeft(pPoint.x()+2);
+            coordinatesRect.moveLeft(pPoint.x()+plusShift);
         else if (coordinatesRect.left()+coordinatesRect.width()-1 > bottomRightPoint.x())
-            coordinatesRect.moveLeft(pPoint.x()-coordinatesRect.width()-1);
+            coordinatesRect.moveLeft(pPoint.x()-coordinatesRect.width()-minusShift);
 
         // Note: the -1 for the else-if tests is because fillRect() below works
         //       on (0, 0; width-1, height-1)...

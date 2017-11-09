@@ -170,7 +170,7 @@ private:
 
     void drawCoordinates(QPainter *pPainter, const QPoint &pPoint,
                          const QColor &pBackgroundColor,
-                         const QColor &pForegroundColor,
+                         const QColor &pForegroundColor, const int &pLineWidth,
                          const Position &pPosition,
                          const bool &pCanMovePosition = true);
 };
