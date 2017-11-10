@@ -1674,10 +1674,15 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
     // Create a 2D plot output for each graph panel that we have, and retrieve
     // all the graphs, if any, that are to be plotted on them
 
-    QList<Core::Properties> graphsList = QList<Core::Properties>();
-    QMap<Core::Properties, libsedml::SedPlot2D *> graphsSedmlPlot2ds = QMap<Core::Properties, libsedml::SedPlot2D *>();
-    QMap<Core::Properties, int> graphsGraphPanelCounters = QMap<Core::Properties, int>();
+    typedef struct {
+        libsedml::SedPlot2D *sedmlPlot2d;
+        int graphPlotCounter;
+        bool logAxisX;
+        bool logAxisY;
+    } GraphsData;
+
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
+    QMap<Core::Properties, GraphsData> graphsData = QMap<Core::Properties, GraphsData>();
     int graphPlotCounter = 0;
 
     foreach (GraphPanelWidget::GraphPanelWidget *graphPanel,
@@ -1693,21 +1698,24 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
         Core::Properties graphs = graphPanelAndGraphsWidget->graphProperties(graphPanel, mFileName);
 
         if (!graphs.isEmpty()) {
-            graphsList << graphs;
+            GraphsData data;
 
-            graphsSedmlPlot2ds.insert(graphs, sedmlPlot2d);
-            graphsGraphPanelCounters.insert(graphs, graphPlotCounter);
+            data.sedmlPlot2d = sedmlPlot2d;
+            data.graphPlotCounter = graphPlotCounter;
+            data.logAxisX = graphPanel->plot()->logAxisX();
+            data.logAxisY = graphPanel->plot()->logAxisY();
+
+            graphsData.insert(graphs, data);
         }
     }
 
     // Create and customise 2D plot outputs and data generators for all the
     // graphs that are to be plotted, if any
 
-    foreach (const Core::Properties &graphs, graphsList) {
+    foreach (const Core::Properties &graphs, graphsData.keys()) {
         // Create some graphs
 
-        libsedml::SedPlot2D *sedmlPlot2d = graphsSedmlPlot2ds.value(graphs);
-        int graphPlotCounter = graphsGraphPanelCounters.value(graphs);
+        GraphsData data = graphsData.value(graphs);
         int graphCounter = 0;
 
         foreach (Core::Property *property, graphs) {
@@ -1718,9 +1726,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
             libsedml::SedDataGenerator *sedmlDataGeneratorX = sedmlDocument->createDataGenerator();
             libsedml::SedDataGenerator *sedmlDataGeneratorY = sedmlDocument->createDataGenerator();
-            std::string sedmlDataGeneratorIdX = QString("xDataGenerator%1_%2").arg(QString::number(graphPlotCounter),
+            std::string sedmlDataGeneratorIdX = QString("xDataGenerator%1_%2").arg(QString::number(data.graphPlotCounter),
                                                                                    QString::number(graphCounter)).toStdString();
-            std::string sedmlDataGeneratorIdY = QString("yDataGenerator%1_%2").arg(QString::number(graphPlotCounter),
+            std::string sedmlDataGeneratorIdY = QString("yDataGenerator%1_%2").arg(QString::number(data.graphPlotCounter),
                                                                                    QString::number(graphCounter)).toStdString();
 
             sedmlDataGeneratorX->setId(sedmlDataGeneratorIdX);
@@ -1731,12 +1739,12 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
             QStringList propertyX = property->properties()[1]->value().split('.');
             QStringList propertyY = property->properties()[2]->value().split('.');
 
-            sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(graphPlotCounter),
+            sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(data.graphPlotCounter),
                                                                 QString::number(graphCounter)).toStdString());
             sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
             addSedmlVariableTarget(sedmlVariableX, propertyX[propertyX.count()-2], propertyX.last());
 
-            sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(graphPlotCounter),
+            sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(data.graphPlotCounter),
                                                                 QString::number(graphCounter)).toStdString());
             sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
             addSedmlVariableTarget(sedmlVariableY, propertyY[propertyY.count()-2], propertyY.last());
@@ -1746,13 +1754,16 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
             // Create a curve for our current graph
 
-            libsedml::SedCurve *sedmlCurve = sedmlPlot2d->createCurve();
+            libsedml::SedCurve *sedmlCurve = data.sedmlPlot2d->createCurve();
 
-            sedmlCurve->setId(QString("curve%1_%2").arg(QString::number(graphPlotCounter),
+            sedmlCurve->setId(QString("curve%1_%2").arg(QString::number(data.graphPlotCounter),
                                                         QString::number(graphCounter)).toStdString());
 
             sedmlCurve->setXDataReference(sedmlDataGeneratorIdX);
+            sedmlCurve->setLogX(data.logAxisX);
+
             sedmlCurve->setYDataReference(sedmlDataGeneratorIdY);
+            sedmlCurve->setLogY(data.logAxisY);
 
             // Customise our curve using an annotation
 
@@ -2431,6 +2442,12 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
 
         for (uint j = 0, jMax = sedmlPlot2d->getNumCurves(); j < jMax; ++j) {
             libsedml::SedCurve *sedmlCurve = sedmlPlot2d->getCurve(j);
+
+            if (!j) {
+                graphPanel->plot()->setLogAxisX(sedmlCurve->getLogX());
+                graphPanel->plot()->setLogAxisY(sedmlCurve->getLogY());
+            }
+
             CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getXDataReference())->getVariable(0));
             CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getYDataReference())->getVariable(0));
 
