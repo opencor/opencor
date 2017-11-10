@@ -1695,9 +1695,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         // Keep track of the graph panel's graphs, if any
 
-        Core::Properties graphs = graphPanelAndGraphsWidget->graphProperties(graphPanel, mFileName);
+        Core::Properties graphProperties = graphPanelAndGraphsWidget->graphProperties(graphPanel, mFileName);
 
-        if (!graphs.isEmpty()) {
+        if (!graphProperties.isEmpty()) {
             GraphsData data;
 
             data.sedmlPlot2d = sedmlPlot2d;
@@ -1705,20 +1705,20 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
             data.logAxisX = graphPanel->plot()->logAxisX();
             data.logAxisY = graphPanel->plot()->logAxisY();
 
-            graphsData.insert(graphs, data);
+            graphsData.insert(graphProperties, data);
         }
     }
 
     // Create and customise 2D plot outputs and data generators for all the
     // graphs that are to be plotted, if any
 
-    foreach (const Core::Properties &graphs, graphsData.keys()) {
+    foreach (const Core::Properties &graphsProperties, graphsData.keys()) {
         // Create some graphs
 
-        GraphsData data = graphsData.value(graphs);
+        GraphsData data = graphsData.value(graphsProperties);
         int graphCounter = 0;
 
-        foreach (Core::Property *property, graphs) {
+        foreach (Core::Property *property, graphsProperties) {
             ++graphCounter;
 
             // Create two data generators for the X and Y parameters of our
