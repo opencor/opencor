@@ -820,6 +820,30 @@ bool SedmlFile::isSupported()
             return false;
         }
 
+        annotation = output->getAnnotation();
+
+        if (annotation) {
+            for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+                const libsbml::XMLNode &plot2dPropertiesNode = annotation->getChild(i);
+
+                if (   QString::fromStdString(plot2dPropertiesNode.getURI()).compare(OpencorNamespace)
+                    || QString::fromStdString(plot2dPropertiesNode.getName()).compare(Plot2dProperties)) {
+                    continue;
+                }
+
+                for (uint j = 0, jMax = plot2dPropertiesNode.getNumChildren(); j < jMax; ++j) {
+                    const libsbml::XMLNode &plot2dPropertyNode = plot2dPropertiesNode.getChild(j);
+                    QString plot2dPropertyNodeName = QString::fromStdString(plot2dPropertyNode.getName());
+                    QString plot2dPropertyNodeValue = QString::fromStdString(plot2dPropertyNode.getChild(0).getCharacters());
+
+                    if (   !plot2dPropertyNodeName.compare(BackgroundColor)
+                        && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, BackgroundColor)) {
+                        return false;
+                    }
+                }
+            }
+        }
+
         // Make sure that the curves reference listed data generators and don't
         // use logarithmic axes
 

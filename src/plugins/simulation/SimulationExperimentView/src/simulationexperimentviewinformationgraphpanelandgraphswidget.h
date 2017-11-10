@@ -94,6 +94,7 @@ public:
 
     void finishEditing();
 
+    Core::Properties graphPanelProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel) const;
     Core::Properties graphProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                                      const QString &pFileName = QString()) const;
 

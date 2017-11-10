@@ -1674,6 +1674,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
     // Create a 2D plot output for each graph panel that we have, and retrieve
     // all the graphs, if any, that are to be plotted on them
 
+    static const QString SedmlProperty = QString("<%1>%2</%1>");
+
     typedef struct {
         libsedml::SedPlot2D *sedmlPlot2d;
         int graphPlotCounter;
@@ -1689,9 +1691,17 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
              mContentsWidget->graphPanelsWidget()->graphPanels()) {
         // Create and customise the look and feel of our 2D plot
 
+        Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelProperties(graphPanel);
         libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
 
         sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
+
+        sedmlPlot2d->appendAnnotation(QString("<%1 xmlns=\"%2\">"
+                                              "    %3"
+                                              "</%1>").arg( SEDMLSupport::Plot2dProperties,
+                                                            SEDMLSupport::OpencorNamespace,
+                                                            SedmlProperty.arg(SEDMLSupport::BackgroundColor,
+                                                                              stringValue(graphPanelProperties[0]))).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
@@ -1767,8 +1777,6 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
             // Customise our curve using an annotation
 
-            static const QString CurveProperty = QString("<%1>%2</%1>");
-
             Core::Properties lineProperties = property->properties()[3]->properties();
             Core::Properties symbolProperties = property->properties()[4]->properties();
 
@@ -1778,22 +1786,22 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                  "</%1>").arg( SEDMLSupport::CurveProperties,
                                                                SEDMLSupport::OpencorNamespace,
                                                                SEDMLSupport::LineProperties,
-                                                               CurveProperty.arg(SEDMLSupport::LineStyle,
+                                                               SedmlProperty.arg(SEDMLSupport::LineStyle,
                                                                                  SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
-                                                              +CurveProperty.arg(SEDMLSupport::LineWidth,
+                                                              +SedmlProperty.arg(SEDMLSupport::LineWidth,
                                                                                  stringValue(lineProperties[1]))
-                                                              +CurveProperty.arg(SEDMLSupport::LineColor,
+                                                              +SedmlProperty.arg(SEDMLSupport::LineColor,
                                                                                  stringValue(lineProperties[2])),
                                                                SEDMLSupport::SymbolProperties,
-                                                               CurveProperty.arg(SEDMLSupport::SymbolStyle,
+                                                               SedmlProperty.arg(SEDMLSupport::SymbolStyle,
                                                                                  SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
-                                                              +CurveProperty.arg(SEDMLSupport::SymbolSize,
+                                                              +SedmlProperty.arg(SEDMLSupport::SymbolSize,
                                                                                  stringValue(symbolProperties[1]))
-                                                              +CurveProperty.arg(SEDMLSupport::SymbolColor,
+                                                              +SedmlProperty.arg(SEDMLSupport::SymbolColor,
                                                                                  stringValue(symbolProperties[2]))
-                                                              +CurveProperty.arg(SEDMLSupport::SymbolFilled,
+                                                              +SedmlProperty.arg(SEDMLSupport::SymbolFilled,
                                                                                  stringValue(symbolProperties[3]))
-                                                              +CurveProperty.arg(SEDMLSupport::SymbolFillColor,
+                                                              +SedmlProperty.arg(SEDMLSupport::SymbolFillColor,
                                                                                  stringValue(symbolProperties[4]))).toStdString());
         }
     }
@@ -2432,21 +2440,50 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
 
     graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
-    // Customise our graph panel and graphs widget
+    // Customise our graph panel and graphs
 
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
+        // Customise our graph panel
+
         libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
         GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
+        GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = graphPanel->plot();
+
+        annotation = sedmlPlot2d->getAnnotation();
+
+        if (annotation) {
+            SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
+            Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelProperties(graphPanel);
+
+            for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+                const libsbml::XMLNode &sedmlPlot2dPropertiesNode = annotation->getChild(i);
+
+                if (   QString::fromStdString(sedmlPlot2dPropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                    || QString::fromStdString(sedmlPlot2dPropertiesNode.getName()).compare(SEDMLSupport::Plot2dProperties)) {
+                    continue;
+                }
+
+                graphPanelPlot->setUpdatesEnabled(false);
+
+                for (uint j = 0, jMax = sedmlPlot2dPropertiesNode.getNumChildren(); j < jMax; ++j) {
+                    const libsbml::XMLNode &sedmlPlot2dPropertyNode = sedmlPlot2dPropertiesNode.getChild(j);
+                    QString sedmlPlot2dPropertyNodeName = QString::fromStdString(sedmlPlot2dPropertyNode.getName());
+                    QString sedmlPlot2dPropertyNodeValue = QString::fromStdString(sedmlPlot2dPropertyNode.getChild(0).getCharacters());
+
+                    if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::BackgroundColor))
+                        graphPanelProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
+                }
+
+                graphPanelPlot->setUpdatesEnabled(true);
+            }
+        }
+
+        // Customise our graphs
 
         graphPanel->removeAllGraphs();
 
         for (uint j = 0, jMax = sedmlPlot2d->getNumCurves(); j < jMax; ++j) {
             libsedml::SedCurve *sedmlCurve = sedmlPlot2d->getCurve(j);
-
-            if (!j) {
-                graphPanel->plot()->setLogAxisX(sedmlCurve->getLogX());
-                graphPanel->plot()->setLogAxisY(sedmlCurve->getLogY());
-            }
 
             CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getXDataReference())->getVariable(0));
             CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getYDataReference())->getVariable(0));

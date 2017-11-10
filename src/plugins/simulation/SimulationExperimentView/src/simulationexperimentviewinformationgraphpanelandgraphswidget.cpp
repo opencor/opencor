@@ -628,6 +628,15 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finishEditing
 
 //==============================================================================
 
+Core::Properties SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel) const
+{
+    // Retrieve and return all the graph panel properties
+
+    return mGraphPanelPropertyEditors.value(pGraphPanel)->properties();
+}
+
+//==============================================================================
+
 static const auto PropertySeparator = QStringLiteral(" | ");
 
 //==============================================================================
