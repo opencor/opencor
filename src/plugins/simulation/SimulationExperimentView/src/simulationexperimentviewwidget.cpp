@@ -303,7 +303,7 @@ void SimulationExperimentViewWidget::fileOpened(const QString &pFileName)
 
     // Make sure that the GUI of our simulation widgets is up to date
 
-    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets)
         simulationWidget->updateGui(true);
 }
 
@@ -354,7 +354,7 @@ void SimulationExperimentViewWidget::fileReloaded(const QString &pFileName)
 
         // Make sure that the GUI of our simulation widgets is up to date
 
-        foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+        foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets)
             simulationWidget->updateGui(true);
     }
 }
@@ -383,7 +383,7 @@ void SimulationExperimentViewWidget::fileRenamed(const QString &pOldFileName,
 
     // Let our simulation widgets know that a file has been renamed
 
-    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets)
         simulationWidget->fileRenamed(pOldFileName, pNewFileName);
 }
 
@@ -397,7 +397,7 @@ void SimulationExperimentViewWidget::fileClosed(const QString &pFileName)
 
     // Make sure that the GUI of our simulation widgets is up to date
 
-    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets)
         simulationWidget->updateGui(true);
 }
 

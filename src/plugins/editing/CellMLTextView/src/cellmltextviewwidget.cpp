@@ -1193,7 +1193,7 @@ void CellmlTextViewWidget::selectFirstItemInEditorList(EditorWidget::EditorListW
 
         mEditorLists.removeFirst();
 
-        foreach (CellmlTextViewWidgetData *data, mData.values()) {
+        foreach (CellmlTextViewWidgetData *data, mData) {
             if (data->editingWidget()->editorListWidget() == editorList) {
                 editorList->selectFirstItem();
 
