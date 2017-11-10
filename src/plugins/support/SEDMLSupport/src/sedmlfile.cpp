@@ -416,6 +416,7 @@ bool SedmlFile::isSupported()
     // Make sure that we have an algorithm for the first simulation
 
     const libsedml::SedAlgorithm *firstSimulationAlgorithm = firstSimulation->getAlgorithm();
+    libsbml::XMLNode *annotation;
 
     if (firstSimulationAlgorithm) {
         // Make sure that the algorithm relies on an algorithm that we support
@@ -455,11 +456,11 @@ bool SedmlFile::isSupported()
         // Make sure that the first simulation algorithm annotation, if any,
         // contains at least the kind of information we would expect
 
-        libsbml::XMLNode *firstSimulationAlgorithmAnnotation = firstSimulationAlgorithm->getAnnotation();
+        annotation = firstSimulationAlgorithm->getAnnotation();
 
-        if (firstSimulationAlgorithmAnnotation) {
-            for (uint i = 0, iMax = firstSimulationAlgorithmAnnotation->getNumChildren(); i < iMax; ++i) {
-                const libsbml::XMLNode &solverPropertiesNode = firstSimulationAlgorithmAnnotation->getChild(i);
+        if (annotation) {
+            for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+                const libsbml::XMLNode &solverPropertiesNode = annotation->getChild(i);
 
                 if (   QString::fromStdString(solverPropertiesNode.getURI()).compare(OpencorNamespace)
                     || QString::fromStdString(solverPropertiesNode.getName()).compare(SolverProperties)) {
@@ -502,13 +503,13 @@ bool SedmlFile::isSupported()
         // Make sure that the first simulation annotation, if any, contains at
         // least the kind of information we would expect
 
-        libsbml::XMLNode *firstSimulationAnnotation = firstSimulation->getAnnotation();
+        annotation = firstSimulation->getAnnotation();
 
-        if (firstSimulationAnnotation) {
+        if (annotation) {
             bool hasNlaSolver = false;
 
-            for (uint i = 0, iMax = firstSimulationAnnotation->getNumChildren(); i < iMax; ++i) {
-                const libsbml::XMLNode &nlaSolverNode = firstSimulationAnnotation->getChild(i);
+            for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+                const libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
 
                 if (   QString::fromStdString(nlaSolverNode.getURI()).compare(OpencorNamespace)
                     || QString::fromStdString(nlaSolverNode.getName()).compare(NlaSolver)) {
@@ -580,23 +581,23 @@ bool SedmlFile::isSupported()
         if (secondSimulationAlgorithm)
             secondSimulationAlgorithm->write(secondXmlStream);
 
-        libsbml::XMLNode *firstSimulationAlgorithmAnnotation = firstSimulationAlgorithm->getAnnotation();
-        libsbml::XMLNode *secondSimulationAlgorithmAnnotation = secondSimulationAlgorithm->getAnnotation();
+        libsbml::XMLNode *firstAnnotation = firstSimulationAlgorithm->getAnnotation();
+        libsbml::XMLNode *secondAnnotation = secondSimulationAlgorithm->getAnnotation();
 
-        if (firstSimulationAlgorithmAnnotation)
-            firstSimulationAlgorithmAnnotation->write(firstXmlStream);
+        if (firstAnnotation)
+            firstAnnotation->write(firstXmlStream);
 
-        if (secondSimulationAlgorithmAnnotation)
-            secondSimulationAlgorithmAnnotation->write(secondXmlStream);
+        if (secondAnnotation)
+            secondAnnotation->write(secondXmlStream);
 
-        libsbml::XMLNode *firstSimulationAnnotation = firstSimulation->getAnnotation();
-        libsbml::XMLNode *secondSimulationAnnotation = secondSimulation->getAnnotation();
+        firstAnnotation = firstSimulation->getAnnotation();
+        secondAnnotation = secondSimulation->getAnnotation();
 
-        if (firstSimulationAnnotation)
-            firstSimulationAnnotation->write(firstXmlStream);
+        if (firstAnnotation)
+            firstAnnotation->write(firstXmlStream);
 
-        if (secondSimulationAnnotation)
-            secondSimulationAnnotation->write(secondXmlStream);
+        if (secondAnnotation)
+            secondAnnotation->write(secondXmlStream);
 
         if (firstStream.str().compare(secondStream.str())) {
             mIssues << SedmlFileIssue(SedmlFileIssue::Information,
@@ -765,11 +766,11 @@ bool SedmlFile::isSupported()
             return false;
         }
 
-        libsbml::XMLNode *variableAnnotation = variable->getAnnotation();
+        annotation = variable->getAnnotation();
 
-        if (variableAnnotation) {
-            for (uint i = 0, iMax = variableAnnotation->getNumChildren(); i < iMax; ++i) {
-                const libsbml::XMLNode &variableDegreeNode = variableAnnotation->getChild(i);
+        if (annotation) {
+            for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+                const libsbml::XMLNode &variableDegreeNode = annotation->getChild(i);
 
                 if (   QString::fromStdString(variableDegreeNode.getURI()).compare(OpencorNamespace)
                     || QString::fromStdString(variableDegreeNode.getName()).compare(VariableDegree)) {
@@ -852,11 +853,11 @@ bool SedmlFile::isSupported()
                 return false;
             }
 
-            libsbml::XMLNode *curveAnnotation = curve->getAnnotation();
+            annotation = curve->getAnnotation();
 
-            if (curveAnnotation) {
-                for (uint i = 0, iMax = curveAnnotation->getNumChildren(); i < iMax; ++i) {
-                    const libsbml::XMLNode &curvePropertiesNode = curveAnnotation->getChild(i);
+            if (annotation) {
+                for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+                    const libsbml::XMLNode &curvePropertiesNode = annotation->getChild(i);
 
                     if (   QString::fromStdString(curvePropertiesNode.getURI()).compare(OpencorNamespace)
                         || QString::fromStdString(curvePropertiesNode.getName()).compare(CurveProperties)) {
