@@ -103,6 +103,8 @@ public:
     void setGraphPanelColumnWidth(const int &pIndex, const int &pColumnWidth);
     void setGraphsColumnWidth(const int &pIndex, const int &pColumnWidth);
 
+    void setGraphPanelSectionExpanded(const int &pSection, const bool &pExpanded);
+
 private:
     Mode mMode;
 
@@ -167,6 +169,8 @@ signals:
     void graphsHeaderSectionResized(const int &pIndex, const int &pOldSize,
                                     const int &pNewSize);
 
+    void graphPanelSectionExpanded(const int &pSection, const bool &pExpanded);
+
     void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
     void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
@@ -194,6 +198,8 @@ private slots:
     void showGraphPanelContextMenu(const QPoint &pPosition) const;
     void showGraphsContextMenu(const QPoint &pPosition) const;
 
+    void graphPanelSectionExpanded(const QModelIndex &pIndex);
+    void graphPanelSectionCollapsed(const QModelIndex &pIndex);
 
     void graphPanelPropertyChanged();
     void graphsPropertyChanged(Core::Property *pProperty);

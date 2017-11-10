@@ -117,6 +117,8 @@ private:
     QIntList mGraphsColumnWidths;
     QIntList mParametersColumnWidths;
 
+    QMap<int, bool> mGraphPanelSectionsExpanded;
+
     SimulationExperimentViewSimulationWidget *mSimulationWidget;
     QMap<QString, SimulationExperimentViewSimulationWidget *> mSimulationWidgets;
 
@@ -148,6 +150,8 @@ private slots:
                                     const int &pNewSize);
     void parametersHeaderSectionResized(const int &pIndex, const int &pOldSize,
                                         const int &pNewSize);
+
+    void graphPanelSectionExpanded(const int &pSection, const bool &pExpanded);
 
     void callCheckSimulationResults();
 };

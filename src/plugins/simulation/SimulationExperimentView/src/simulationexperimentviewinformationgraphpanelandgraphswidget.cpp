@@ -279,6 +279,15 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
         connect(mGraphsPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
                 this, SIGNAL(graphsHeaderSectionResized(const int &, const int &, const int &)));
 
+        // Keep track of changes to the expanded/collapsed state of a property
+        // Note: we only need to do this for our graph panel property editor
+        //       since graphs are really unique to a graph panel...
+
+        connect(mGraphPanelPropertyEditor, SIGNAL(expanded(QModelIndex)),
+                this, SLOT(graphPanelSectionExpanded(const QModelIndex &)));
+        connect(mGraphPanelPropertyEditor, SIGNAL(collapsed(QModelIndex)),
+                this, SLOT(graphPanelSectionCollapsed(const QModelIndex &)));
+
         // Keep track of when the user changes a property value
 
         connect(mGraphPanelPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
@@ -293,7 +302,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
     }
 
     // Make sure that our 'new' property editors' columns' width is the same as
-    // that of our 'old' property editors
+    // that of our 'old' property editors, and that the expanded state of our
+    // graph panel editor's sections is properly set
 
     if (oldGraphPanelPropertyEditor && oldGraphsPropertyEditor) {
         for (int i = 0, iMax = oldGraphPanelPropertyEditor->header()->count(); i < iMax; ++i)
@@ -301,6 +311,11 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
 
         for (int i = 0, iMax = oldGraphsPropertyEditor->header()->count(); i < iMax; ++i)
             mGraphsPropertyEditor->setColumnWidth(i, oldGraphsPropertyEditor->columnWidth(i));
+
+        for (int i = 0, iMax = oldGraphPanelPropertyEditor->model()->rowCount(); i < iMax; ++i) {
+            mGraphPanelPropertyEditor->setExpanded(mGraphPanelPropertyEditor->model()->index(i, 0),
+                                                   oldGraphPanelPropertyEditor->isExpanded(oldGraphPanelPropertyEditor->model()->index(i, 0)));
+        }
     }
 
     // Set our retrieved graph panel or graphs property editor as our current
@@ -707,6 +722,21 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphsColu
     // Set the width of the given column
 
     mGraphsPropertyEditor->setColumnWidth(pIndex, pColumnWidth);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphPanelSectionExpanded(const int &pSection,
+                                                                                                const bool &pExpanded)
+{
+    // Make sure that we have a graph panel property editor
+
+    if (!mGraphPanelPropertyEditor)
+        return;
+
+    // Expand/collapse the given section
+
+    mGraphPanelPropertyEditor->setExpanded(mGraphPanelPropertyEditor->model()->index(pSection, 0), pExpanded);
 }
 
 //==============================================================================
@@ -1123,6 +1153,24 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
         QCoreApplication::processEvents();
         // Note: this ensures that our plot is updated at once...
     }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelSectionExpanded(const QModelIndex &pIndex)
+{
+    // Let people know that the given section has been expanded
+
+    emit graphPanelSectionExpanded(pIndex.row(), true);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelSectionCollapsed(const QModelIndex &pIndex)
+{
+    // Let people know that the given section has been collapsed
+
+    emit graphPanelSectionExpanded(pIndex.row(), false);
 }
 
 //==============================================================================

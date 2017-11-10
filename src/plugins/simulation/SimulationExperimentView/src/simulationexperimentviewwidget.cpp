@@ -67,6 +67,7 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     mGraphPanelColumnWidths(QIntList()),
     mGraphsColumnWidths(QIntList()),
     mParametersColumnWidths(QIntList()),
+    mGraphPanelSectionsExpanded(QMap<int, bool>()),
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SimulationExperimentViewSimulationWidget *>()),
     mFileNames(QStringList()),
@@ -208,6 +209,9 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
                 this, SLOT(graphsHeaderSectionResized(const int &, const int &, const int &)));
         connect(informationWidget->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
                 this, SLOT(parametersHeaderSectionResized(const int &, const int &, const int &)));
+
+        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelSectionExpanded(const int &, const bool &)),
+                this, SLOT(graphPanelSectionExpanded(const int &, const bool &)));
 
         // Check when some graph plot settings or graphs settings have been
         // requested
@@ -678,6 +682,16 @@ void SimulationExperimentViewWidget::parametersHeaderSectionResized(const int &p
 
 //==============================================================================
 
+void SimulationExperimentViewWidget::graphPanelSectionExpanded(const int &pSection,
+                                                               const bool &pExpanded)
+{
+    // Keep track of the section's expanded state
+
+    mGraphPanelSectionsExpanded.insert(pSection, pExpanded);
+}
+
+//==============================================================================
+
 void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget)
 {
     // Update our simualtion widget's GUI and that of its children
@@ -711,6 +725,9 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
 
     for (int i = 0, iMax = mParametersColumnWidths.count(); i < iMax; ++i)
         informationWidget->parametersWidget()->setColumnWidth(i, (i == iMax-1)?0:mParametersColumnWidths[i]);
+
+    foreach (const int &section, mGraphPanelSectionsExpanded.keys())
+        informationWidget->graphPanelAndGraphsWidget()->setGraphPanelSectionExpanded(section, mGraphPanelSectionsExpanded.value(section));
 }
 
 //==============================================================================
