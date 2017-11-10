@@ -223,11 +223,6 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
         mSimulationWidget->updateGui();
     }
 
-    // Update our new simualtion widget and its children, if needed
-
-    mSimulationWidget->setSizes(mSimulationWidgetSizes);
-    mSimulationWidget->contentsWidget()->setSizes(mContentsWidgetSizes);
-
     // Update some of our simulation's contents' information GUI
 
     updateContentsInformationGui(mSimulationWidget);
@@ -685,11 +680,17 @@ void SimulationExperimentViewWidget::parametersHeaderSectionResized(const int &p
 
 void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget)
 {
-    // Update some of our simulation's contents' information GUI
+    // Update our simualtion widget's GUI and that of its children
     // Note: for column widths, we set the last column width to zero to avoid
     //       potential issues, should the vertical scrollbar be visible...
 
-    SimulationExperimentViewInformationWidget *informationWidget = pSimulationWidget->contentsWidget()->informationWidget();
+    mSimulationWidget->setSizes(mSimulationWidgetSizes);
+
+    SimulationExperimentViewContentsWidget *contentsWidget = pSimulationWidget->contentsWidget();
+
+    contentsWidget->setSizes(mContentsWidgetSizes);
+
+    SimulationExperimentViewInformationWidget *informationWidget = contentsWidget->informationWidget();
 
     for (int i = 0, iMax = mCollapsibleWidgetCollapsed.count(); i < iMax; ++i)
         informationWidget->collapsibleWidget()->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
