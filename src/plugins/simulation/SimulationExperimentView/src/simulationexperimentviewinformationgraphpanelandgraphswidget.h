@@ -202,7 +202,7 @@ private slots:
     void graphPanelSectionExpanded(const QModelIndex &pIndex);
     void graphPanelSectionCollapsed(const QModelIndex &pIndex);
 
-    void graphPanelPropertyChanged();
+    void graphPanelPropertyChanged(Core::Property *pProperty);
     void graphsPropertyChanged(Core::Property *pProperty);
 
     void updateParameterValue();

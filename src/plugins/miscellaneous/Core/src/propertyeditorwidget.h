@@ -218,6 +218,8 @@ public:
 
     explicit Property(const Type &pType, PropertyEditorWidget *pParent);
 
+    PropertyEditorWidget * owner() const;
+
     Type type() const;
 
     QStandardItem * parent() const;

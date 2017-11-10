@@ -291,7 +291,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
         // Keep track of when the user changes a property value
 
         connect(mGraphPanelPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(graphPanelPropertyChanged()));
+                this, SLOT(graphPanelPropertyChanged(Core::Property *)));
         connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                 this, SLOT(graphsPropertyChanged(Core::Property *)));
 
@@ -1184,59 +1184,60 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelSec
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPropertyChanged()
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPropertyChanged(Core::Property *pProperty)
 {
     // Update our graph panel settings
 
-    GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = mGraphPanels.value(mGraphPanelPropertyEditor)->plot();
+    Core::PropertyEditorWidget *propertyEditor = pProperty->owner();
+    GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = mGraphPanels.value(propertyEditor)->plot();
 
     graphPanelPlot->setUpdatesEnabled(false);
 
-    graphPanelPlot->setBackgroundColor(mGraphPanelPropertyEditor->properties()[0]->colorValue());
-    graphPanelPlot->setFontSize(mGraphPanelPropertyEditor->properties()[1]->integerValue());
-    graphPanelPlot->setForegroundColor(mGraphPanelPropertyEditor->properties()[2]->colorValue());
+    graphPanelPlot->setBackgroundColor(propertyEditor->properties()[0]->colorValue());
+    graphPanelPlot->setFontSize(propertyEditor->properties()[1]->integerValue());
+    graphPanelPlot->setForegroundColor(propertyEditor->properties()[2]->colorValue());
 
     // Grid lines
 
-    Core::Property *gridLinesStyleProperty = mGraphPanelPropertyEditor->properties()[3]->properties()[0];
+    Core::Property *gridLinesStyleProperty = propertyEditor->properties()[3]->properties()[0];
 
     graphPanelPlot->setGridLinesStyle(Qt::PenStyle(gridLinesStyleProperty->listValues().indexOf(gridLinesStyleProperty->listValue())));
-    graphPanelPlot->setGridLinesWidth(mGraphPanelPropertyEditor->properties()[3]->properties()[1]->integerValue());
-    graphPanelPlot->setGridLinesColor(mGraphPanelPropertyEditor->properties()[3]->properties()[2]->colorValue());
+    graphPanelPlot->setGridLinesWidth(propertyEditor->properties()[3]->properties()[1]->integerValue());
+    graphPanelPlot->setGridLinesColor(propertyEditor->properties()[3]->properties()[2]->colorValue());
 
     // Point coordinates
 
-    Core::Property *pointCoordinatesStyleProperty = mGraphPanelPropertyEditor->properties()[4]->properties()[0];
+    Core::Property *pointCoordinatesStyleProperty = propertyEditor->properties()[4]->properties()[0];
 
     graphPanelPlot->setPointCoordinatesStyle(Qt::PenStyle(pointCoordinatesStyleProperty->listValues().indexOf(pointCoordinatesStyleProperty->listValue())));
-    graphPanelPlot->setPointCoordinatesWidth(mGraphPanelPropertyEditor->properties()[4]->properties()[1]->integerValue());
-    graphPanelPlot->setPointCoordinatesColor(mGraphPanelPropertyEditor->properties()[4]->properties()[2]->colorValue());
-    graphPanelPlot->setPointCoordinatesFontColor(mGraphPanelPropertyEditor->properties()[4]->properties()[3]->colorValue());
+    graphPanelPlot->setPointCoordinatesWidth(propertyEditor->properties()[4]->properties()[1]->integerValue());
+    graphPanelPlot->setPointCoordinatesColor(propertyEditor->properties()[4]->properties()[2]->colorValue());
+    graphPanelPlot->setPointCoordinatesFontColor(propertyEditor->properties()[4]->properties()[3]->colorValue());
 
     // Title
 
-    graphPanelPlot->setTitle(mGraphPanelPropertyEditor->properties()[5]->value());
+    graphPanelPlot->setTitle(propertyEditor->properties()[5]->value());
 
     // X axis
 
-    graphPanelPlot->setLogAxisX(mGraphPanelPropertyEditor->properties()[6]->properties()[0]->booleanValue());
-    graphPanelPlot->setTitleAxisX(mGraphPanelPropertyEditor->properties()[6]->properties()[1]->value());
+    graphPanelPlot->setLogAxisX(propertyEditor->properties()[6]->properties()[0]->booleanValue());
+    graphPanelPlot->setTitleAxisX(propertyEditor->properties()[6]->properties()[1]->value());
 
     // Y axis
 
-    graphPanelPlot->setLogAxisY(mGraphPanelPropertyEditor->properties()[7]->properties()[0]->booleanValue());
-    graphPanelPlot->setTitleAxisY(mGraphPanelPropertyEditor->properties()[7]->properties()[1]->value());
+    graphPanelPlot->setLogAxisY(propertyEditor->properties()[7]->properties()[0]->booleanValue());
+    graphPanelPlot->setTitleAxisY(propertyEditor->properties()[7]->properties()[1]->value());
 
     // Zoom region
 
-    Core::Property *zoomRegionStyleProperty = mGraphPanelPropertyEditor->properties()[8]->properties()[0];
+    Core::Property *zoomRegionStyleProperty = propertyEditor->properties()[8]->properties()[0];
 
     graphPanelPlot->setZoomRegionStyle(Qt::PenStyle(zoomRegionStyleProperty->listValues().indexOf(zoomRegionStyleProperty->listValue())));
-    graphPanelPlot->setZoomRegionWidth(mGraphPanelPropertyEditor->properties()[8]->properties()[1]->integerValue());
-    graphPanelPlot->setZoomRegionColor(mGraphPanelPropertyEditor->properties()[8]->properties()[2]->colorValue());
-    graphPanelPlot->setZoomRegionFontColor(mGraphPanelPropertyEditor->properties()[8]->properties()[3]->colorValue());
-    graphPanelPlot->setZoomRegionFilled(mGraphPanelPropertyEditor->properties()[8]->properties()[4]->booleanValue());
-    graphPanelPlot->setZoomRegionFillColor(mGraphPanelPropertyEditor->properties()[8]->properties()[5]->colorValue());
+    graphPanelPlot->setZoomRegionWidth(propertyEditor->properties()[8]->properties()[1]->integerValue());
+    graphPanelPlot->setZoomRegionColor(propertyEditor->properties()[8]->properties()[2]->colorValue());
+    graphPanelPlot->setZoomRegionFontColor(propertyEditor->properties()[8]->properties()[3]->colorValue());
+    graphPanelPlot->setZoomRegionFilled(propertyEditor->properties()[8]->properties()[4]->booleanValue());
+    graphPanelPlot->setZoomRegionFillColor(propertyEditor->properties()[8]->properties()[5]->colorValue());
 
     graphPanelPlot->setUpdatesEnabled(true);
 

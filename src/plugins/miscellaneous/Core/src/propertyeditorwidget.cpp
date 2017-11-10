@@ -492,6 +492,15 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
 
 //==============================================================================
 
+PropertyEditorWidget * Property::owner() const
+{
+    // Return our owner
+
+    return mOwner;
+}
+
+//==============================================================================
+
 Property::Type Property::type() const
 {
     // Return our type
