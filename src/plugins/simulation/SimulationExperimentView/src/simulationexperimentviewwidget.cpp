@@ -698,7 +698,7 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
     // Note: for column widths, we set the last column width to zero to avoid
     //       potential issues, should the vertical scrollbar be visible...
 
-    mSimulationWidget->setSizes(mSimulationWidgetSizes);
+    pSimulationWidget->setSizes(mSimulationWidgetSizes);
 
     SimulationExperimentViewContentsWidget *contentsWidget = pSimulationWidget->contentsWidget();
 
