@@ -1674,8 +1674,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
     // Retrieve all the graphs that are to be plotted, if any
 
     QList<Core::Properties> graphsList = QList<Core::Properties>();
-    QList<Core::Properties> logarithmicXAxis = QList<Core::Properties>();
-    QList<Core::Properties> logarithmicYAxis = QList<Core::Properties>();
+    QList<Core::Properties> logAxisXGraphs = QList<Core::Properties>();
+    QList<Core::Properties> logAxisYGraphs = QList<Core::Properties>();
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
 
     foreach (GraphPanelWidget::GraphPanelWidget *graphPanel,
@@ -1686,10 +1686,10 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
             graphsList << graphs;
 
         if (graphPanel->plot()->logAxisX())
-            logarithmicXAxis << graphs;
+            logAxisXGraphs << graphs;
 
         if (graphPanel->plot()->logAxisY())
-            logarithmicYAxis << graphs;
+            logAxisYGraphs << graphs;
     }
 
     // Create and customise 2D plot outputs and data generators for all the
@@ -1706,8 +1706,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
             sedmlPlot2d->setId(QString("plot%1").arg(graphPlotCounter).toStdString());
 
-            bool logX = logarithmicXAxis.contains(graphs);
-            bool logY = logarithmicYAxis.contains(graphs);
+            bool logX = logAxisXGraphs.contains(graphs);
+            bool logY = logAxisYGraphs.contains(graphs);
 
             foreach (Core::Property *property, graphs) {
                 ++graphCounter;
