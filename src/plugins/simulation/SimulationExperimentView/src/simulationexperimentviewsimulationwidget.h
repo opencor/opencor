@@ -244,7 +244,7 @@ private:
 
     CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable);
 
-    bool doFurtherInitialize();
+    bool furtherInitialize();
     void initializeGui(const bool &pValidSimulationEnvironment);
     void initializeSimulation();
 
@@ -278,8 +278,6 @@ private slots:
     void clearSimulationData();
     void sedmlExportSedmlFile();
     void sedmlExportCombineArchive();
-
-    void furtherInitialize();
 
     void emitSplitterMoved();
 

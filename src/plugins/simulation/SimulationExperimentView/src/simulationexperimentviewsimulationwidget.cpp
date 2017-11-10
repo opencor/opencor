@@ -680,6 +680,8 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloadingView)
 {
+    setUpdatesEnabled(false);
+
     // Stop keeping track of certain things (so that updatePlot() doesn't get
     // called unnecessarily)
     // Note: see the corresponding code towards the end of this method...
@@ -999,18 +1001,22 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
     // Further initialise ourselves, if we have a valid environment and we are
     // not dealing with a CellML file
-    // Note: to further initialise ourselves involves, among other things,
-    //       removing/adding graph panels. However, to do those things directly
-    //       will result in the GUI flashing because of various events still
-    //       having to be handled (e.g. see the above call to
-    //       mContentsWidget->graphPanelsWidget()->initialize()). So, instead,
-    //       we do the further initialisation through a single shot, ensuring
-    //       that all the other events have been properly handled...
 
     if (    validSimulationEnvironment
         && (mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile)) {
-        QTimer::singleShot(0, this, SLOT(furtherInitialize()));
+        // Further initialise ourselves, update our GUI (by reinitialising it)
+        // and initialise our simulation, if we still have a valid simulation
+        // environment
+
+        bool validSimulationEnvironment = furtherInitialize();
+
+        initializeGui(validSimulationEnvironment);
+
+        if (validSimulationEnvironment)
+            initializeSimulation();
     }
+
+    setUpdatesEnabled(true);
 }
 
 //==============================================================================
@@ -2217,7 +2223,7 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
 
 //==============================================================================
 
-bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
+bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 {
     // Customise our simulation widget
 
@@ -2430,8 +2436,6 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
     int oldNbOfGraphPanels = graphPanelsWidget->graphPanels().count();
     int newNbOfGraphPanels = sedmlDocument->getNumOutputs();
 
-    graphPanelsWidget->setSizes(QIntList());
-
     if (newNbOfGraphPanels > oldNbOfGraphPanels) {
         for (uint i = 0, iMax = newNbOfGraphPanels-oldNbOfGraphPanels; i < iMax; ++i)
             graphPanelsWidget->addGraphPanel(false);
@@ -2440,7 +2444,13 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
             graphPanelsWidget->removeCurrentGraphPanel();
     }
 
+    QIntList sizes = QIntList();
+
+    for (int i = 0; i < newNbOfGraphPanels; ++i)
+        sizes << 1;
+
     graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
+    graphPanelsWidget->setSizes(sizes);
 
     // Customise our graph panel and graphs
 
@@ -2449,7 +2459,6 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
 
         libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
         GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
-        GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = graphPanel->plot();
 
         annotation = sedmlPlot2d->getAnnotation();
 
@@ -2465,8 +2474,6 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                     continue;
                 }
 
-                graphPanelPlot->setUpdatesEnabled(false);
-
                 for (uint j = 0, jMax = sedmlPlot2dPropertiesNode.getNumChildren(); j < jMax; ++j) {
                     const libsbml::XMLNode &sedmlPlot2dPropertyNode = sedmlPlot2dPropertiesNode.getChild(j);
                     QString sedmlPlot2dPropertyNodeName = QString::fromStdString(sedmlPlot2dPropertyNode.getName());
@@ -2477,8 +2484,6 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                     else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::ForegroundColor))
                         graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
                 }
-
-                graphPanelPlot->setUpdatesEnabled(true);
             }
         }
 
@@ -2591,22 +2596,6 @@ void SimulationExperimentViewSimulationWidget::initializeGui(const bool &pValidS
 
     mBottomSeparator->setVisible(pValidSimulationEnvironment);
     mProgressBarWidget->setVisible(pValidSimulationEnvironment);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::furtherInitialize()
-{
-    // Further initialise ourselves, update our GUI (by reinitialising it) and
-    // initialise our simulation, if we still have a valid simulation
-    // environment
-
-    bool validSimulationEnvironment = doFurtherInitialize();
-
-    initializeGui(validSimulationEnvironment);
-
-    if (validSimulationEnvironment)
-        initializeSimulation();
 }
 
 //==============================================================================
