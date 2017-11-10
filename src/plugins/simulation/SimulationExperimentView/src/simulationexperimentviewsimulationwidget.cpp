@@ -1701,7 +1701,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                               "</%1>").arg( SEDMLSupport::Plot2dProperties,
                                                             SEDMLSupport::OpencorNamespace,
                                                             SedmlProperty.arg(SEDMLSupport::BackgroundColor,
-                                                                              stringValue(graphPanelProperties[0]))).toStdString());
+                                                                              stringValue(graphPanelProperties[0]))
+                                                           +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
+                                                                              stringValue(graphPanelProperties[2]))).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
@@ -2472,6 +2474,8 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
 
                     if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::BackgroundColor))
                         graphPanelProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
+                    else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::ForegroundColor))
+                        graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
                 }
 
                 graphPanelPlot->setUpdatesEnabled(true);

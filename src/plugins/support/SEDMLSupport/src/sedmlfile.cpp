@@ -839,6 +839,9 @@ bool SedmlFile::isSupported()
                     if (   !plot2dPropertyNodeName.compare(BackgroundColor)
                         && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, BackgroundColor)) {
                         return false;
+                    } else if (   !plot2dPropertyNodeName.compare(ForegroundColor)
+                               && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, ForegroundColor)) {
+                        return false;
                     }
                 }
             }
