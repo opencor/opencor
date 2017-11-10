@@ -1671,122 +1671,119 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                            sedmlOneStep, simulationNumber);
     }
 
-    // Retrieve all the graphs that are to be plotted, if any
+    // Create a 2D plot output for each graph panel that we have, and retrieve
+    // all the graphs, if any, that are to be plotted on them
 
     QList<Core::Properties> graphsList = QList<Core::Properties>();
-    QList<Core::Properties> logAxisXGraphs = QList<Core::Properties>();
-    QList<Core::Properties> logAxisYGraphs = QList<Core::Properties>();
+    QMap<Core::Properties, libsedml::SedPlot2D *> graphsSedmlPlot2ds = QMap<Core::Properties, libsedml::SedPlot2D *>();
+    QMap<Core::Properties, int> graphsGraphPanelCounters = QMap<Core::Properties, int>();
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
+    int graphPlotCounter = 0;
 
     foreach (GraphPanelWidget::GraphPanelWidget *graphPanel,
              mContentsWidget->graphPanelsWidget()->graphPanels()) {
+        // Create and customise the look and feel of our 2D plot
+
+        libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
+
+        sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
+
+        // Keep track of the graph panel's graphs, if any
+
         Core::Properties graphs = graphPanelAndGraphsWidget->graphProperties(graphPanel, mFileName);
 
-        if (!graphs.isEmpty())
+        if (!graphs.isEmpty()) {
             graphsList << graphs;
 
-        if (graphPanel->plot()->logAxisX())
-            logAxisXGraphs << graphs;
-
-        if (graphPanel->plot()->logAxisY())
-            logAxisYGraphs << graphs;
+            graphsSedmlPlot2ds.insert(graphs, sedmlPlot2d);
+            graphsGraphPanelCounters.insert(graphs, graphPlotCounter);
+        }
     }
 
     // Create and customise 2D plot outputs and data generators for all the
     // graphs that are to be plotted, if any
 
-    if (!graphsList.isEmpty()) {
-        int graphPlotCounter = 0;
+    foreach (const Core::Properties &graphs, graphsList) {
+        // Create some graphs
 
-        foreach (Core::Properties graphs, graphsList) {
-            ++graphPlotCounter;
+        libsedml::SedPlot2D *sedmlPlot2d = graphsSedmlPlot2ds.value(graphs);
+        int graphPlotCounter = graphsGraphPanelCounters.value(graphs);
+        int graphCounter = 0;
 
-            int graphCounter = 0;
-            libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
+        foreach (Core::Property *property, graphs) {
+            ++graphCounter;
 
-            sedmlPlot2d->setId(QString("plot%1").arg(graphPlotCounter).toStdString());
+            // Create two data generators for the X and Y parameters of our
+            // current graph
 
-            bool logX = logAxisXGraphs.contains(graphs);
-            bool logY = logAxisYGraphs.contains(graphs);
+            libsedml::SedDataGenerator *sedmlDataGeneratorX = sedmlDocument->createDataGenerator();
+            libsedml::SedDataGenerator *sedmlDataGeneratorY = sedmlDocument->createDataGenerator();
+            std::string sedmlDataGeneratorIdX = QString("xDataGenerator%1_%2").arg(QString::number(graphPlotCounter),
+                                                                                   QString::number(graphCounter)).toStdString();
+            std::string sedmlDataGeneratorIdY = QString("yDataGenerator%1_%2").arg(QString::number(graphPlotCounter),
+                                                                                   QString::number(graphCounter)).toStdString();
 
-            foreach (Core::Property *property, graphs) {
-                ++graphCounter;
+            sedmlDataGeneratorX->setId(sedmlDataGeneratorIdX);
+            sedmlDataGeneratorY->setId(sedmlDataGeneratorIdY);
 
-                // Create two data generators for the X and Y parameters of
-                // our current graph
+            libsedml::SedVariable *sedmlVariableX = sedmlDataGeneratorX->createVariable();
+            libsedml::SedVariable *sedmlVariableY = sedmlDataGeneratorY->createVariable();
+            QStringList propertyX = property->properties()[1]->value().split('.');
+            QStringList propertyY = property->properties()[2]->value().split('.');
 
-                libsedml::SedDataGenerator *sedmlDataGeneratorX = sedmlDocument->createDataGenerator();
-                libsedml::SedDataGenerator *sedmlDataGeneratorY = sedmlDocument->createDataGenerator();
-                std::string sedmlDataGeneratorIdX = QString("xDataGenerator%1_%2").arg(QString::number(graphPlotCounter),
-                                                                                       QString::number(graphCounter)).toStdString();
-                std::string sedmlDataGeneratorIdY = QString("yDataGenerator%1_%2").arg(QString::number(graphPlotCounter),
-                                                                                       QString::number(graphCounter)).toStdString();
+            sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(graphPlotCounter),
+                                                                QString::number(graphCounter)).toStdString());
+            sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
+            addSedmlVariableTarget(sedmlVariableX, propertyX[propertyX.count()-2], propertyX.last());
 
-                sedmlDataGeneratorX->setId(sedmlDataGeneratorIdX);
-                sedmlDataGeneratorY->setId(sedmlDataGeneratorIdY);
+            sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(graphPlotCounter),
+                                                                QString::number(graphCounter)).toStdString());
+            sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
+            addSedmlVariableTarget(sedmlVariableY, propertyY[propertyY.count()-2], propertyY.last());
 
-                libsedml::SedVariable *sedmlVariableX = sedmlDataGeneratorX->createVariable();
-                libsedml::SedVariable *sedmlVariableY = sedmlDataGeneratorY->createVariable();
-                QStringList propertyX = property->properties()[1]->value().split('.');
-                QStringList propertyY = property->properties()[2]->value().split('.');
+            sedmlDataGeneratorX->setMath(SBML_parseFormula(sedmlVariableX->getId().c_str()));
+            sedmlDataGeneratorY->setMath(SBML_parseFormula(sedmlVariableY->getId().c_str()));
 
-                sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(graphPlotCounter),
-                                                                    QString::number(graphCounter)).toStdString());
-                sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
-                addSedmlVariableTarget(sedmlVariableX, propertyX[propertyX.count()-2], propertyX.last());
+            // Create a curve for our current graph
 
-                sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(graphPlotCounter),
-                                                                    QString::number(graphCounter)).toStdString());
-                sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
-                addSedmlVariableTarget(sedmlVariableY, propertyY[propertyY.count()-2], propertyY.last());
+            libsedml::SedCurve *sedmlCurve = sedmlPlot2d->createCurve();
 
-                sedmlDataGeneratorX->setMath(SBML_parseFormula(sedmlVariableX->getId().c_str()));
-                sedmlDataGeneratorY->setMath(SBML_parseFormula(sedmlVariableY->getId().c_str()));
+            sedmlCurve->setId(QString("curve%1_%2").arg(QString::number(graphPlotCounter),
+                                                        QString::number(graphCounter)).toStdString());
 
-                // Create a curve for our current graph
+            sedmlCurve->setXDataReference(sedmlDataGeneratorIdX);
+            sedmlCurve->setYDataReference(sedmlDataGeneratorIdY);
 
-                libsedml::SedCurve *sedmlCurve = sedmlPlot2d->createCurve();
+            // Customise our curve using an annotation
 
-                sedmlCurve->setId(QString("curve%1_%2").arg(QString::number(graphPlotCounter),
-                                                            QString::number(graphCounter)).toStdString());
+            static const QString CurveProperty = QString("<%1>%2</%1>");
 
-                sedmlCurve->setXDataReference(sedmlDataGeneratorIdX);
-                sedmlCurve->setLogX(logX);
+            Core::Properties lineProperties = property->properties()[3]->properties();
+            Core::Properties symbolProperties = property->properties()[4]->properties();
 
-                sedmlCurve->setYDataReference(sedmlDataGeneratorIdY);
-                sedmlCurve->setLogY(logY);
-
-                // Customise our curve using an annotation
-
-                static const QString CurveProperty = QString("<%1>%2</%1>");
-
-                Core::Properties lineProperties = property->properties()[3]->properties();
-                Core::Properties symbolProperties = property->properties()[4]->properties();
-
-                sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%2\">"
-                                                     "    <%3>%5</%3>"
-                                                     "    <%4>%6</%4>"
-                                                     "</%1>").arg( SEDMLSupport::CurveProperties,
-                                                                   SEDMLSupport::OpencorNamespace,
-                                                                   SEDMLSupport::LineProperties,
-                                                                   SEDMLSupport::SymbolProperties,
-                                                                   CurveProperty.arg(SEDMLSupport::LineStyle,
-                                                                                     SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
-                                                                  +CurveProperty.arg(SEDMLSupport::LineWidth,
-                                                                                     stringValue(lineProperties[1]))
-                                                                  +CurveProperty.arg(SEDMLSupport::LineColor,
-                                                                                     stringValue(lineProperties[2])),
-                                                                   CurveProperty.arg(SEDMLSupport::SymbolStyle,
-                                                                                     SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
-                                                                  +CurveProperty.arg(SEDMLSupport::SymbolSize,
-                                                                                     stringValue(symbolProperties[1]))
-                                                                  +CurveProperty.arg(SEDMLSupport::SymbolColor,
-                                                                                     stringValue(symbolProperties[2]))
-                                                                  +CurveProperty.arg(SEDMLSupport::SymbolFilled,
-                                                                                     stringValue(symbolProperties[3]))
-                                                                  +CurveProperty.arg(SEDMLSupport::SymbolFillColor,
-                                                                                     stringValue(symbolProperties[4]))).toStdString());
-            }
+            sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%2\">"
+                                                 "    <%3>%5</%3>"
+                                                 "    <%4>%6</%4>"
+                                                 "</%1>").arg( SEDMLSupport::CurveProperties,
+                                                               SEDMLSupport::OpencorNamespace,
+                                                               SEDMLSupport::LineProperties,
+                                                               SEDMLSupport::SymbolProperties,
+                                                               CurveProperty.arg(SEDMLSupport::LineStyle,
+                                                                                 SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
+                                                              +CurveProperty.arg(SEDMLSupport::LineWidth,
+                                                                                 stringValue(lineProperties[1]))
+                                                              +CurveProperty.arg(SEDMLSupport::LineColor,
+                                                                                 stringValue(lineProperties[2])),
+                                                               CurveProperty.arg(SEDMLSupport::SymbolStyle,
+                                                                                 SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
+                                                              +CurveProperty.arg(SEDMLSupport::SymbolSize,
+                                                                                 stringValue(symbolProperties[1]))
+                                                              +CurveProperty.arg(SEDMLSupport::SymbolColor,
+                                                                                 stringValue(symbolProperties[2]))
+                                                              +CurveProperty.arg(SEDMLSupport::SymbolFilled,
+                                                                                 stringValue(symbolProperties[3]))
+                                                              +CurveProperty.arg(SEDMLSupport::SymbolFillColor,
+                                                                                 stringValue(symbolProperties[4]))).toStdString());
         }
     }
 
