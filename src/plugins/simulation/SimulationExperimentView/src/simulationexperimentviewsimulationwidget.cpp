@@ -1762,12 +1762,11 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
             Core::Properties symbolProperties = property->properties()[4]->properties();
 
             sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%2\">"
-                                                 "    <%3>%5</%3>"
-                                                 "    <%4>%6</%4>"
+                                                 "    <%3>%4</%3>"
+                                                 "    <%5>%6</%5>"
                                                  "</%1>").arg( SEDMLSupport::CurveProperties,
                                                                SEDMLSupport::OpencorNamespace,
                                                                SEDMLSupport::LineProperties,
-                                                               SEDMLSupport::SymbolProperties,
                                                                CurveProperty.arg(SEDMLSupport::LineStyle,
                                                                                  SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
                                                               +CurveProperty.arg(SEDMLSupport::LineWidth,
