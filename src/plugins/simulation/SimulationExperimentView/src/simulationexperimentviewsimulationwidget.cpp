@@ -1773,6 +1773,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                                                  stringValue(lineProperties[1]))
                                                               +CurveProperty.arg(SEDMLSupport::LineColor,
                                                                                  stringValue(lineProperties[2])),
+                                                               SEDMLSupport::SymbolProperties,
                                                                CurveProperty.arg(SEDMLSupport::SymbolStyle,
                                                                                  SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
                                                               +CurveProperty.arg(SEDMLSupport::SymbolSize,
