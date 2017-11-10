@@ -138,9 +138,6 @@ private:
 
     bool mCanEmitGraphsUpdatedSignal;
 
-    int mGraphPanelHorizontalScrollBarValue;
-    int mGraphsHorizontalScrollBarValue;
-
     void retranslateGraphPanelPropertyEditor(Core::PropertyEditorWidget *pGraphPanelPropertyEditor);
 
     void populateGraphPanelPropertyEditor();
@@ -197,8 +194,6 @@ private slots:
     void showGraphPanelContextMenu(const QPoint &pPosition) const;
     void showGraphsContextMenu(const QPoint &pPosition) const;
 
-    void graphPanelPropertyEditorHorizontalScrollBarValueChanged(const int &pValue);
-    void graphsPropertyEditorHorizontalScrollBarValueChanged(const int &pValue);
 
     void graphPanelPropertyChanged();
     void graphsPropertyChanged(Core::Property *pProperty);

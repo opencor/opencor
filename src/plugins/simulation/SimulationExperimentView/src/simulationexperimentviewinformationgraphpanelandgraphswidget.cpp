@@ -67,9 +67,7 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
     mGraphs(QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *>()),
     mGraphProperties(QMap<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mRenamedModelListValues(QMap<QString, QString>()),
-    mGraphPanelHorizontalScrollBarValue(0),
-    mGraphsHorizontalScrollBarValue(0)
+    mRenamedModelListValues(QMap<QString, QString>())
 {
     // Create our graph panel context menu and populate it
 
@@ -274,13 +272,6 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
         connect(mGraphsPropertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
                 this, SLOT(showGraphsContextMenu(const QPoint &)));
 
-        // Keep track of changes to our property editors' horizontal bar's value
-
-        connect(mGraphPanelPropertyEditor->horizontalScrollBar(), SIGNAL(valueChanged(int)),
-                this, SLOT(graphPanelPropertyEditorHorizontalScrollBarValueChanged(const int &)));
-        connect(mGraphsPropertyEditor->horizontalScrollBar(), SIGNAL(valueChanged(int)),
-                this, SLOT(graphsPropertyEditorHorizontalScrollBarValueChanged(const int &)));
-
         // Keep track of changes to columns' width
 
         connect(mGraphPanelPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
@@ -300,11 +291,6 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
         addWidget(mGraphPanelPropertyEditor);
         addWidget(mGraphsPropertyEditor);
     }
-
-    // Set the value of our property editors' horizontal scroll bar
-
-    mGraphPanelPropertyEditor->horizontalScrollBar()->setValue(mGraphPanelHorizontalScrollBarValue);
-    mGraphsPropertyEditor->horizontalScrollBar()->setValue(mGraphsHorizontalScrollBarValue);
 
     // Make sure that our 'new' property editors' columns' width is the same as
     // that of our 'old' property editors
@@ -790,26 +776,6 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphsCon
         mGraphContextMenu->exec(QCursor::pos());
     }
 }
-
-//==============================================================================
-
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPropertyEditorHorizontalScrollBarValueChanged(const int &pValue)
-{
-    // Keep track of the graph panel property editor's horizontal scroll bar
-    // value
-
-    mGraphPanelHorizontalScrollBarValue = pValue;
-}
-
-//==============================================================================
-
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyEditorHorizontalScrollBarValueChanged(const int &pValue)
-{
-    // Keep track of the graphs property editor's horizontal scroll bar value
-
-    mGraphsHorizontalScrollBarValue = pValue;
-}
-
 
 //==============================================================================
 
