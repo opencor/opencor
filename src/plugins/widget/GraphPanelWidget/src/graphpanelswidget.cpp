@@ -131,15 +131,38 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
 
     mGraphPanels << res;
 
-    // Resize the graph panels, thus making sure that their size is what it
-    // should be
+    // Resize the graph panels, if needed, making sure that their size is what
+    // it should be
+    // Note: we normalise the sizes to 1000 to ensure that the resizing doesn't
+    //       vary depending on the original height of a graph panel. Indeed, say
+    //       that you open a CellML file and create two graph panels. The height
+    //       of those two graph panels will be based on a realistic height of
+    //       the other graph panel(s) since everything is visible. On the other
+    //       hand, if you open a SED-ML file with three graph panels, then their
+    //       height will be based on the 'hidden' height of the other graph
+    //       panel(s) since nothing is visible. The end result is that the two
+    //       sets of graph panels may end up with slightly different heights,
+    //       something that we prevent with our normalisation to 1000...
 
-    double scalingFactor = double(mGraphPanels.count()-1)/mGraphPanels.count();
+    if (mGraphPanels.count() > 1) {
+        int minSize = INT_MAX;
 
-    for (int i = 0, iMax = origSizes.count(); i < iMax; ++i)
-        origSizes[i] *= scalingFactor;
+        for (int i = 0, iMax = origSizes.count(); i < iMax; ++i)
+            minSize = qMin(minSize, origSizes[i]);
 
-    setSizes(origSizes << height()/mGraphPanels.count());
+        double scalingFactor = 1000.0/minSize;
+        double finalSize = 0.0;
+
+        for (int i = 0, iMax = origSizes.count(); i < iMax; ++i) {
+            double scaledSize = scalingFactor*origSizes[i];
+
+            origSizes[i] = scaledSize;
+
+            finalSize += scaledSize;
+        }
+
+        setSizes(origSizes << finalSize/(mGraphPanels.count()-1));
+    }
 
     // Keep track of whenever a graph panel gets activated
 

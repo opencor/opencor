@@ -2427,30 +2427,22 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         }
     }
 
-    // Add/remove some graph panels, so that their number corresponds to the
-    // number of 2D outputs mentioned in the SED-ML file, this after having made
-    // sure that the current graph panels are all of the same size and that the
-    // first one is selected
+    // Start afresh by removing all the graph panels, but the last one
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
-    int oldNbOfGraphPanels = graphPanelsWidget->graphPanels().count();
+
+    while (graphPanelsWidget->graphPanels().count() != 1)
+        graphPanelsWidget->removeCurrentGraphPanel();
+
+    // Add some graph panels, so that their number corresponds to the number of
+    // 2D outputs mentioned in the SED-ML file, and select the first one
+
     int newNbOfGraphPanels = sedmlDocument->getNumOutputs();
 
-    if (newNbOfGraphPanels > oldNbOfGraphPanels) {
-        for (uint i = 0, iMax = newNbOfGraphPanels-oldNbOfGraphPanels; i < iMax; ++i)
-            graphPanelsWidget->addGraphPanel(false);
-    } else if (newNbOfGraphPanels < oldNbOfGraphPanels) {
-        for (uint i = 0, iMax = oldNbOfGraphPanels-newNbOfGraphPanels; i < iMax; ++i)
-            graphPanelsWidget->removeCurrentGraphPanel();
-    }
-
-    QIntList sizes = QIntList();
-
-    for (int i = 0; i < newNbOfGraphPanels; ++i)
-        sizes << 1;
+    while (graphPanelsWidget->graphPanels().count() != newNbOfGraphPanels)
+        graphPanelsWidget->addGraphPanel(false);
 
     graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
-    graphPanelsWidget->setSizes(sizes);
 
     // Customise our graph panel and graphs
 
