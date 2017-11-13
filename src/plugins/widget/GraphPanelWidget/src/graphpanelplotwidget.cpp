@@ -2375,13 +2375,13 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
         // Note: this ensures that our major ticks (which are used to compute
         //       the extent) are up to date...
 
-        double extent =  scaleDraw->extent(scaleWidget->font())
-                        +(plot->titleAxisY().isEmpty()?
-                              0:
-                              scaleWidget->spacing()+scaleWidget->title().textSize().height());
+        double minExtent =  scaleDraw->extent(scaleWidget->font())
+                           +(plot->titleAxisY().isEmpty()?
+                                 0:
+                                 scaleWidget->spacing()+scaleWidget->title().textSize().height());
 
-        if (extent > newMinExtent)
-            newMinExtent = extent;
+        if (minExtent > newMinExtent)
+            newMinExtent = minExtent;
     }
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
