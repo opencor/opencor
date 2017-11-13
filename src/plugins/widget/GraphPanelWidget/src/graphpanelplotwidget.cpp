@@ -1851,9 +1851,7 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                     neighbor->setAxes(neighbor->minX(), neighbor->maxX(), pMinY, pMaxY, false, false, false);
             }
 
-            alignWithNeighbors(pCanReplot,
-                                  mSynchronizeXAxisAction->isChecked()
-                               || mSynchronizeYAxisAction->isChecked());
+            alignWithNeighbors(pCanReplot, true);
         }
 
         if (pEmitSignal)
