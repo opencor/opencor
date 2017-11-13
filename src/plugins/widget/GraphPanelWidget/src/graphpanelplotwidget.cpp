@@ -1128,8 +1128,6 @@ void GraphPanelPlotWidget::setFontSize(const int &pFontSize,
 
         setAxisFont(QwtPlot::yLeft, newFont);
         setTitleAxisY(titleAxisY());
-
-        forceAlignWithNeighbors();
     }
 }
 
@@ -1174,8 +1172,6 @@ void GraphPanelPlotWidget::setForegroundColor(const QColor &pForegroundColor)
 
         axisWidget(QwtPlot::yLeft)->setPalette(newPalette);
         setTitleAxisY(titleAxisY());
-
-        replot();
     }
 }
 
@@ -1986,6 +1982,8 @@ void GraphPanelPlotWidget::setTitleAxis(const int &pAxisId,
     axisTitle.setFont(axisTitleFont);
 
     setAxisTitle(pAxisId, axisTitle);
+
+    forceAlignWithNeighbors();
 }
 
 //==============================================================================
