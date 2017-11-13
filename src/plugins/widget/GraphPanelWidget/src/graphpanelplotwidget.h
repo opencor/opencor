@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "qwt_plot.h"
     #include "qwt_plot_curve.h"
     #include "qwt_scale_draw.h"
+    #include "qwt_scale_widget.h"
     #include "qwt_symbol.h"
     #include "qwt_text.h"
 #include "qwtend.h"
@@ -184,6 +185,14 @@ public:
 
 protected:
     virtual QwtText label(double pValue) const;
+};
+
+//==============================================================================
+
+class GraphPanelScaleWidget : public QwtScaleWidget
+{
+public:
+    void updateLayout();
 };
 
 //==============================================================================

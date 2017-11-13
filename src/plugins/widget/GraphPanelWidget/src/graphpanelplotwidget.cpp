@@ -50,7 +50,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "qwt_plot_layout.h"
     #include "qwt_plot_renderer.h"
     #include "qwt_scale_engine.h"
-    #include "qwt_scale_widget.h"
     #include "qwt_text_label.h"
 #include "qwtend.h"
 
@@ -645,6 +644,15 @@ QwtText GraphPanelPlotScaleDraw::label(double pValue) const
     QString fullLabel = QLocale().toString(pValue, 'g', 15);
 
     return fullLabel.startsWith(label)?fullLabel:label;
+}
+
+//==============================================================================
+
+void GraphPanelScaleWidget::updateLayout()
+{
+    // Our layout has changed, so update our internals
+
+    layoutScale();
 }
 
 //==============================================================================
@@ -2385,7 +2393,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
     }
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-        QwtScaleWidget *scaleWidget = plot->axisWidget(QwtPlot::yLeft);
+        GraphPanelScaleWidget *scaleWidget = static_cast<GraphPanelScaleWidget *>(plot->axisWidget(QwtPlot::yLeft));
 
         scaleWidget->scaleDraw()->setMinimumExtent( newMinExtent
                                                    -(plot->titleAxisY().isEmpty()?
@@ -2394,7 +2402,8 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
 
         if (pCanReplot) {
             if (pForceAlignment || (newMinExtent != oldMinExtent)) {
-                plot->updateLayout();
+                scaleWidget->updateLayout();
+
                 plot->replot();
             } else if (plot == this) {
                 replot();
