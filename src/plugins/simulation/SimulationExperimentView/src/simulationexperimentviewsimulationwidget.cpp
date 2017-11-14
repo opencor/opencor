@@ -1718,11 +1718,11 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                            +SedmlProperty.arg(SEDMLSupport::Title,
                                                                               stringValue(graphPanelProperties[5])),
                                                             SEDMLSupport::GridLinesProperties,
-                                                            SedmlProperty.arg(SEDMLSupport::Style,
+                                                            SedmlProperty.arg(SEDMLSupport::GridLinesStyle,
                                                                               SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
-                                                           +SedmlProperty.arg(SEDMLSupport::Width,
+                                                           +SedmlProperty.arg(SEDMLSupport::GridLinesWidth,
                                                                               stringValue(gridLinesProperties[1]))
-                                                           +SedmlProperty.arg(SEDMLSupport::Color,
+                                                           +SedmlProperty.arg(SEDMLSupport::GridLinesColor,
                                                                               stringValue(gridLinesProperties[2]))).toStdString());
 
         // Keep track of the graph panel's graphs, if any
@@ -2503,11 +2503,11 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
                             QString gridLinesPropertyNodeValue = QString::fromStdString(gridLinesPropertyNode.getChild(0).getCharacters());
 
-                            if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Style)) {
+                            if (!gridLinesPropertyNodeName.compare(SEDMLSupport::GridLinesStyle)) {
                                 gridLinesProperties[0]->setValue(gridLinesPropertyNodeValue);
-                            } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Width)) {
+                            } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::GridLinesWidth)) {
                                 gridLinesProperties[1]->setValue(gridLinesPropertyNodeValue);
-                            } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Color)) {
+                            } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::GridLinesColor)) {
                                 gridLinesProperties[2]->setValue(gridLinesPropertyNodeValue);
                             }
                         }

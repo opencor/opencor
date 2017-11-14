@@ -863,10 +863,10 @@ bool SedmlFile::isSupported()
                             QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
                             QString gridLinesPropertyNodeValue = QString::fromStdString(gridLinesPropertyNode.getChild(0).getCharacters());
 
-                            if (   !gridLinesPropertyNodeName.compare(Style)
-                                && !validListPropertyValue(gridLinesPropertyNode, gridLinesPropertyNodeValue, LineStyle, lineStyles())) {
+                            if (   !gridLinesPropertyNodeName.compare(GridLinesStyle)
+                                && !validListPropertyValue(gridLinesPropertyNode, gridLinesPropertyNodeValue, GridLinesStyle, lineStyles())) {
                                 return false;
-                            } else if (!gridLinesPropertyNodeName.compare(Width)) {
+                            } else if (!gridLinesPropertyNodeName.compare(GridLinesWidth)) {
                                 if (!IntegerGt0RegEx.match(gridLinesPropertyNodeValue).hasMatch()) {
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                               gridLinesPropertyNode.getLine(),
@@ -875,8 +875,8 @@ bool SedmlFile::isSupported()
 
                                     return false;
                                 }
-                            } else if (   !gridLinesPropertyNodeName.compare(Color)
-                                       && !validColorPropertyValue(gridLinesPropertyNode, gridLinesPropertyNodeValue, LineColor)) {
+                            } else if (   !gridLinesPropertyNodeName.compare(GridLinesColor)
+                                       && !validColorPropertyValue(gridLinesPropertyNode, gridLinesPropertyNodeValue, GridLinesColor)) {
                                 return false;
                             }
                         }
