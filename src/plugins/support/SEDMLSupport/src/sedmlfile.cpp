@@ -839,6 +839,17 @@ bool SedmlFile::isSupported()
                     if (   !plot2dPropertyNodeName.compare(BackgroundColor)
                         && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, BackgroundColor)) {
                         return false;
+                    } else if (!plot2dPropertyNodeName.compare(FontSize)) {
+                        static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
+
+                        if (!IntegerGt0RegEx.match(plot2dPropertyNodeValue).hasMatch()) {
+                            mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                      plot2dPropertyNode.getLine(),
+                                                      plot2dPropertyNode.getColumn(),
+                                                      tr("the '%1' property value must be an integer greater than zero").arg(plot2dPropertyNodeName));
+
+                            return false;
+                        }
                     } else if (   !plot2dPropertyNodeName.compare(ForegroundColor)
                                && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, ForegroundColor)) {
                         return false;

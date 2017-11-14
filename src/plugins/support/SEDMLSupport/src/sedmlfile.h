@@ -72,6 +72,7 @@ static const auto NlaSolver           = QStringLiteral("nlaSolver");
 static const auto NlaSolverName       = QStringLiteral("name");
 static const auto Plot2dProperties    = QStringLiteral("plot2dProperties");
 static const auto BackgroundColor     = QStringLiteral("backgroundColor");
+static const auto FontSize            = QStringLiteral("fontSize");
 static const auto ForegroundColor     = QStringLiteral("foregroundColor");
 static const auto CurveProperties     = QStringLiteral("curveProperties");
 static const auto LineProperties      = QStringLiteral("lineProperties");

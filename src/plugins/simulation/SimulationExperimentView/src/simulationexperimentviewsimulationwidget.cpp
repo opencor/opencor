@@ -1708,6 +1708,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                             SEDMLSupport::OpencorNamespace,
                                                             SedmlProperty.arg(SEDMLSupport::BackgroundColor,
                                                                               stringValue(graphPanelProperties[0]))
+                                                           +SedmlProperty.arg(SEDMLSupport::FontSize,
+                                                                              stringValue(graphPanelProperties[1]))
                                                            +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
                                                                               stringValue(graphPanelProperties[2]))).toStdString());
 
@@ -2473,6 +2475,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                     if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::BackgroundColor))
                         graphPanelProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
+                    else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::FontSize))
+                        graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
                     else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::ForegroundColor))
                         graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
                 }
