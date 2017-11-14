@@ -368,7 +368,15 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
         }
     }
 
-    if (messageBox.exec() == -1)
+    int res = messageBox.exec();
+
+    QCoreApplication::processEvents();
+    // Note: this ensures that the GUI is fully ready for whatever comes next
+    //       (e.g. reloading a file), which could otherwise result in some GUI
+    //       glitches (e.g. a quick black flash on macOS upon reloading a file
+    //       that has been modified outside of OpenCOR)...
+
+    if (res == -1)
         return QMessageBox::Cancel;
 
     return messageBox.standardButton(messageBox.clickedButton());
