@@ -339,11 +339,26 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize(Open
     // Remove track of the link betwen our graph panel and our graph panel and
     // graphs property editors
 
-    mGraphPanels.remove(mGraphPanelPropertyEditors.value(pGraphPanel));
-    mGraphPanels.remove(mGraphsPropertyEditors.value(pGraphPanel));
+    Core::PropertyEditorWidget *graphPanelPropertyEditor = mGraphPanelPropertyEditors.value(pGraphPanel);
+    Core::PropertyEditorWidget *graphsPropertyEditor = mGraphsPropertyEditors.value(pGraphPanel);
+
+    if (   (graphPanelPropertyEditor == mGraphPanelPropertyEditor)
+        && (graphsPropertyEditor == mGraphsPropertyEditor)) {
+        mGraphPanelPropertyEditor = 0;
+        mGraphsPropertyEditor = 0;
+    }
+
+    mGraphPanels.remove(graphPanelPropertyEditor);
+    mGraphPanels.remove(graphsPropertyEditor);
 
     mGraphPanelPropertyEditors.remove(pGraphPanel);
     mGraphsPropertyEditors.remove(pGraphPanel);
+
+    removeWidget(graphPanelPropertyEditor);
+    removeWidget(graphsPropertyEditor);
+
+    delete graphPanelPropertyEditor;
+    delete graphsPropertyEditor;
 }
 
 //==============================================================================
