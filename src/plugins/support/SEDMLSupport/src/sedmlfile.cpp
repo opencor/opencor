@@ -820,6 +820,8 @@ bool SedmlFile::isSupported()
             return false;
         }
 
+        static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
+
         annotation = output->getAnnotation();
 
         if (annotation) {
@@ -843,8 +845,6 @@ bool SedmlFile::isSupported()
                         && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, BackgroundColor)) {
                         return false;
                     } else if (!plot2dPropertyNodeName.compare(FontSize)) {
-                        static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
-
                         if (!IntegerGt0RegEx.match(plot2dPropertyNodeValue).hasMatch()) {
                             mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                       plot2dPropertyNode.getLine(),
@@ -924,9 +924,9 @@ bool SedmlFile::isSupported()
                                     && !validListPropertyValue(linePropertyNode, linePropertyNodeValue, LineStyle, lineStyles())) {
                                     return false;
                                 } else if (!linePropertyNodeName.compare(LineWidth)) {
-                                    static const QRegularExpression DoubleGt0RegEx = QRegularExpression("^[+]?(([1-9]\\d*)?(\\.\\d*)?|[0]?\\.\\d+)([eE][+-]?\\d+)?$");
+                                    static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
 
-                                    if (!DoubleGt0RegEx.match(linePropertyNodeValue).hasMatch()) {
+                                    if (!IntegerGt0RegEx.match(linePropertyNodeValue).hasMatch()) {
                                         mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                                   linePropertyNode.getLine(),
                                                                   linePropertyNode.getColumn(),
@@ -949,8 +949,6 @@ bool SedmlFile::isSupported()
                                     && !validListPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, SymbolStyle, symbolStyles())) {
                                     return false;
                                 } else if (!symbolPropertyNodeName.compare(SymbolSize)) {
-                                    static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
-
                                     if (!IntegerGt0RegEx.match(symbolPropertyNodeValue).hasMatch()) {
                                         mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                                   symbolPropertyNode.getLine(),
