@@ -291,17 +291,13 @@ bool GraphPanelsWidget::removeCurrentGraphPanel()
 
 void GraphPanelsWidget::removeAllGraphPanels()
 {
-    // Make sure that we don't have only one graph panel left
+    // Remove all the graph panels, after having created an 'empty' one (since
+    // we want at least one graph panel at any given point in time)
 
-    if (mGraphPanels.count() == 1)
-        return;
-
-    // Remove all the graph panels but one
-    // Note: the one we keep is the very first one since it may be the user's
-    //       most important graph panel...
+    addGraphPanel();
 
     while (mGraphPanels.count() > 1)
-        removeGraphPanel(mGraphPanels.last());
+        removeGraphPanel(mGraphPanels.first());
 }
 
 //==============================================================================

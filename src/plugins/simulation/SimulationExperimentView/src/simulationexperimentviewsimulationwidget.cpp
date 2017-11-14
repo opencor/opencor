@@ -2435,8 +2435,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
 
-    while (graphPanelsWidget->graphPanels().count() != 1)
-        graphPanelsWidget->removeCurrentGraphPanel();
+    graphPanelsWidget->removeAllGraphPanels();
 
     // Add some graph panels, so that their number corresponds to the number of
     // 2D outputs mentioned in the SED-ML file, and select the first one
