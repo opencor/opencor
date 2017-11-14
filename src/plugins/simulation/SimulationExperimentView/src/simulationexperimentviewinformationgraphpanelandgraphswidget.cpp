@@ -765,6 +765,16 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphPanel
 
 //==============================================================================
 
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::reinitialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel)
+{
+    // Reinitialise ourselves
+
+    finalize(pGraphPanel);
+    initialize(pGraphPanel);
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphPanelContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);

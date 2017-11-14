@@ -106,6 +106,8 @@ public:
 
     void setGraphPanelSectionExpanded(const int &pSection, const bool &pExpanded);
 
+    void reinitialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
+
 private:
     Mode mMode;
 

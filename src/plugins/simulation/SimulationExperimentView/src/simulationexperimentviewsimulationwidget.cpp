@@ -2454,11 +2454,13 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
         libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
         GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
+        SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
+
+        graphPanelAndGraphsWidget->reinitialize(graphPanel);
 
         annotation = sedmlPlot2d->getAnnotation();
 
         if (annotation) {
-            SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
             Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelProperties(graphPanel);
 
             for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
