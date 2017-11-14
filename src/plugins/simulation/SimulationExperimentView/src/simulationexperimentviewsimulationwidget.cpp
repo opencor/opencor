@@ -1702,8 +1702,11 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
 
+        Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
+
         sedmlPlot2d->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                               "    %3"
+                                              "    <%4>%5</%4>"
                                               "</%1>").arg( SEDMLSupport::Plot2dProperties,
                                                             SEDMLSupport::OpencorNamespace,
                                                             SedmlProperty.arg(SEDMLSupport::BackgroundColor,
@@ -1713,7 +1716,14 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                            +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
                                                                               stringValue(graphPanelProperties[2]))
                                                            +SedmlProperty.arg(SEDMLSupport::Title,
-                                                                              stringValue(graphPanelProperties[5]))).toStdString());
+                                                                              stringValue(graphPanelProperties[5])),
+                                                            SEDMLSupport::GridLinesProperties,
+                                                            SedmlProperty.arg(SEDMLSupport::Style,
+                                                                              SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
+                                                           +SedmlProperty.arg(SEDMLSupport::Width,
+                                                                              stringValue(gridLinesProperties[1]))
+                                                           +SedmlProperty.arg(SEDMLSupport::Color,
+                                                                              stringValue(gridLinesProperties[2]))).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
@@ -2476,14 +2486,32 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                     QString sedmlPlot2dPropertyNodeName = QString::fromStdString(sedmlPlot2dPropertyNode.getName());
                     QString sedmlPlot2dPropertyNodeValue = QString::fromStdString(sedmlPlot2dPropertyNode.getChild(0).getCharacters());
 
-                    if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::BackgroundColor))
+                    if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::BackgroundColor)) {
                         graphPanelProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
-                    else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::FontSize))
+                    } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::FontSize)) {
                         graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
-                    else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::ForegroundColor))
+                    } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::ForegroundColor)) {
                         graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
-                    else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Title))
+                    } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Title)) {
                         graphPanelProperties[5]->setValue(sedmlPlot2dPropertyNodeValue);
+                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::GridLinesProperties)) {
+                        Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
+
+                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            const libsbml::XMLNode &gridLinesPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                            QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
+                            QString gridLinesPropertyNodeValue = QString::fromStdString(gridLinesPropertyNode.getChild(0).getCharacters());
+
+                            if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Style)) {
+                                gridLinesProperties[0]->setValue(gridLinesPropertyNodeValue);
+                            } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Width)) {
+                                gridLinesProperties[1]->setValue(gridLinesPropertyNodeValue);
+                            } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Color)) {
+                                gridLinesProperties[2]->setValue(gridLinesPropertyNodeValue);
+                            }
+                        }
+                    }
                 }
             }
         }

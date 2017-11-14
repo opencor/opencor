@@ -856,6 +856,30 @@ bool SedmlFile::isSupported()
                     } else if (   !plot2dPropertyNodeName.compare(ForegroundColor)
                                && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, ForegroundColor)) {
                         return false;
+                    } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
+                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(GridLinesProperties)) {
+                        for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            const libsbml::XMLNode &gridLinesPropertyNode = plot2dPropertyNode.getChild(k);
+                            QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
+                            QString gridLinesPropertyNodeValue = QString::fromStdString(gridLinesPropertyNode.getChild(0).getCharacters());
+
+                            if (   !gridLinesPropertyNodeName.compare(Style)
+                                && !validListPropertyValue(gridLinesPropertyNode, gridLinesPropertyNodeValue, LineStyle, lineStyles())) {
+                                return false;
+                            } else if (!gridLinesPropertyNodeName.compare(Width)) {
+                                if (!IntegerGt0RegEx.match(gridLinesPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                              gridLinesPropertyNode.getLine(),
+                                                              gridLinesPropertyNode.getColumn(),
+                                                              tr("the '%1' property value must be a number greater than zero").arg(gridLinesPropertyNodeName));
+
+                                    return false;
+                                }
+                            } else if (   !gridLinesPropertyNodeName.compare(Color)
+                                       && !validColorPropertyValue(gridLinesPropertyNode, gridLinesPropertyNodeValue, LineColor)) {
+                                return false;
+                            }
+                        }
                     }
                 }
             }
