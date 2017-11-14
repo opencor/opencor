@@ -1711,7 +1711,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                            +SedmlProperty.arg(SEDMLSupport::FontSize,
                                                                               stringValue(graphPanelProperties[1]))
                                                            +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
-                                                                              stringValue(graphPanelProperties[2]))).toStdString());
+                                                                              stringValue(graphPanelProperties[2]))
+                                                           +SedmlProperty.arg(SEDMLSupport::Title,
+                                                                              stringValue(graphPanelProperties[5]))).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
@@ -2479,6 +2481,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                         graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
                     else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::ForegroundColor))
                         graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
+                    else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Title))
+                        graphPanelProperties[5]->setValue(sedmlPlot2dPropertyNodeValue);
                 }
             }
         }

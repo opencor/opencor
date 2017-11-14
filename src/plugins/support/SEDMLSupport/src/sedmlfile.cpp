@@ -832,6 +832,10 @@ bool SedmlFile::isSupported()
                 }
 
                 for (uint j = 0, jMax = plot2dPropertiesNode.getNumChildren(); j < jMax; ++j) {
+                    // Note: we don't need to check for the title since it is
+                    //       inherently a string and can therefore have any
+                    //       value...
+
                     const libsbml::XMLNode &plot2dPropertyNode = plot2dPropertiesNode.getChild(j);
                     QString plot2dPropertyNodeName = QString::fromStdString(plot2dPropertyNode.getName());
                     QString plot2dPropertyNodeValue = QString::fromStdString(plot2dPropertyNode.getChild(0).getCharacters());
