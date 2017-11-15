@@ -38,7 +38,8 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>GraphPanel widget:</strong> axis labels are now rendered fine when exporting a graph panel to various formats (see issue <a href=\"https://github.com/opencor/opencor/issues/1448\">#1448</a>). Can now interact with a graph panel after it has been exported to a given format (see issue <a href=\"https://github.com/opencor/opencor/issues/1450\">#1450</a>)." },
-                       { "change": "<strong>SimulationExperiment view:</strong> it is now possible to customise a graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/1426\">#1426</a>)." },
+                       { "change": "<strong>SED-ML support:</strong> now track the relative height of a graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/1461\">#1461</a>)." },
+                       { "change": "<strong>SimulationExperiment view:</strong> it is now possible to customise a graph panel and have it serialised to / retrieved from a SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1426\">#1426</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1453\">#1453</a>). Upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2m (see issue <a href=\"https://github.com/opencor/opencor/issues/1458\">#1458</a>)." }
                      ]
                    },
