@@ -477,7 +477,7 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
     mEmptyListValue(UnknownValue),
     mExtraInfo(QString()),
     mParentProperty(0),
-    mProperties(QList<Property *>())
+    mProperties(Properties())
 {
     // Note: mName, mValue and mUnit get owned by our property editor widget, so
     //       no need to delete them afterwards...
@@ -546,7 +546,7 @@ void Property::setParentProperty(Property *pProperty)
 
 //==============================================================================
 
-QList<Property *> Property::properties() const
+Properties Property::properties() const
 {
     // Return our properties
 
