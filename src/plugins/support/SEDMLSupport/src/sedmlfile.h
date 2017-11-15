@@ -62,35 +62,34 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-static const auto OpencorNamespace           = QStringLiteral("http://www.opencor.ws/");
-static const auto VariableDegree             = QStringLiteral("variableDegree");
-static const auto SolverProperties           = QStringLiteral("solverProperties");
-static const auto SolverProperty             = QStringLiteral("solverProperty");
-static const auto Id                         = QStringLiteral("id");
-static const auto Value                      = QStringLiteral("value");
-static const auto NlaSolver                  = QStringLiteral("nlaSolver");
-static const auto Name                       = QStringLiteral("name");
-static const auto Plot2dProperties           = QStringLiteral("plot2dProperties");
-static const auto GridLinesProperties        = QStringLiteral("gridLinesProperties");
-static const auto PointCoordinatesProperties = QStringLiteral("pointCoordinatesProperties");
-static const auto XAxisProperties            = QStringLiteral("xAxisProperties");
-static const auto YAxisProperties            = QStringLiteral("yAxisProperties");
-static const auto ZoomRegionProperties       = QStringLiteral("zoomRegionProperties");
-static const auto CurveProperties            = QStringLiteral("curveProperties");
-static const auto LineProperties             = QStringLiteral("lineProperties");
-static const auto SymbolProperties           = QStringLiteral("symbolProperties");
-static const auto BackgroundColor            = QStringLiteral("backgroundColor");
-static const auto Color                      = QStringLiteral("color");
-static const auto FillColor                  = QStringLiteral("fillColor");
-static const auto Filled                     = QStringLiteral("filled");
-static const auto FontColor                  = QStringLiteral("fontColor");
-static const auto FontSize                   = QStringLiteral("fontSize");
-static const auto ForegroundColor            = QStringLiteral("foregroundColor");
-static const auto LogarithmicScale           = QStringLiteral("logarithmicScale");
-static const auto Size                       = QStringLiteral("size");
-static const auto Style                      = QStringLiteral("style");
-static const auto Title                      = QStringLiteral("title");
-static const auto Width                      = QStringLiteral("width");
+static const auto OpencorNamespace = QStringLiteral("http://www.opencor.ws/");
+static const auto VariableDegree   = QStringLiteral("variableDegree");
+static const auto SolverProperties = QStringLiteral("solverProperties");
+static const auto SolverProperty   = QStringLiteral("solverProperty");
+static const auto Id               = QStringLiteral("id");
+static const auto Value            = QStringLiteral("value");
+static const auto NlaSolver        = QStringLiteral("nlaSolver");
+static const auto Name             = QStringLiteral("name");
+static const auto Properties       = QStringLiteral("properties");
+static const auto GridLines        = QStringLiteral("gridLines");
+static const auto PointCoordinates = QStringLiteral("pointCoordinates");
+static const auto XAxis            = QStringLiteral("xAxis");
+static const auto YAxis            = QStringLiteral("yAxis");
+static const auto ZoomRegion       = QStringLiteral("zoomRegion");
+static const auto Line             = QStringLiteral("line");
+static const auto Symbol           = QStringLiteral("symbol");
+static const auto BackgroundColor  = QStringLiteral("backgroundColor");
+static const auto Color            = QStringLiteral("color");
+static const auto FillColor        = QStringLiteral("fillColor");
+static const auto Filled           = QStringLiteral("filled");
+static const auto FontColor        = QStringLiteral("fontColor");
+static const auto FontSize         = QStringLiteral("fontSize");
+static const auto ForegroundColor  = QStringLiteral("foregroundColor");
+static const auto LogarithmicScale = QStringLiteral("logarithmicScale");
+static const auto Size             = QStringLiteral("size");
+static const auto Style            = QStringLiteral("style");
+static const auto Title            = QStringLiteral("title");
+static const auto Width            = QStringLiteral("width");
 
 //==============================================================================
 

@@ -831,7 +831,7 @@ bool SedmlFile::isSupported()
                 const libsbml::XMLNode &plot2dPropertiesNode = annotation->getChild(i);
 
                 if (   QString::fromStdString(plot2dPropertiesNode.getURI()).compare(OpencorNamespace)
-                    || QString::fromStdString(plot2dPropertiesNode.getName()).compare(Plot2dProperties)) {
+                    || QString::fromStdString(plot2dPropertiesNode.getName()).compare(Properties)) {
                     continue;
                 }
 
@@ -859,7 +859,7 @@ bool SedmlFile::isSupported()
                                && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, ForegroundColor)) {
                         return false;
                     } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
-                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(GridLinesProperties)) {
+                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(GridLines)) {
                         for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
                             const libsbml::XMLNode &gridLinesPropertyNode = plot2dPropertyNode.getChild(k);
                             QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
@@ -883,7 +883,7 @@ bool SedmlFile::isSupported()
                             }
                         }
                     } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
-                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(PointCoordinatesProperties)) {
+                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(PointCoordinates)) {
                         for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
                             const libsbml::XMLNode &pointCoordinatesPropertyNode = plot2dPropertyNode.getChild(k);
                             QString pointCoordinatesPropertyNodeName = QString::fromStdString(pointCoordinatesPropertyNode.getName());
@@ -910,7 +910,7 @@ bool SedmlFile::isSupported()
                             }
                         }
                     } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
-                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(XAxisProperties)) {
+                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(XAxis)) {
                         for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
                             // Note: we don't need to check for the title since
                             //       it is a string and that it can therefore
@@ -932,7 +932,7 @@ bool SedmlFile::isSupported()
                             }
                         }
                     } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
-                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(YAxisProperties)) {
+                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(YAxis)) {
                         for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
                             // Note: we don't need to check for the title since
                             //       it is a string and that it can therefore
@@ -954,7 +954,7 @@ bool SedmlFile::isSupported()
                             }
                         }
                     } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
-                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(ZoomRegionProperties)) {
+                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(ZoomRegion)) {
                         for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
                             const libsbml::XMLNode &zoomRegionPropertyNode = plot2dPropertyNode.getChild(k);
                             QString zoomRegionPropertyNodeName = QString::fromStdString(zoomRegionPropertyNode.getName());
@@ -1037,15 +1037,15 @@ bool SedmlFile::isSupported()
                     const libsbml::XMLNode &curvePropertiesNode = annotation->getChild(i);
 
                     if (   QString::fromStdString(curvePropertiesNode.getURI()).compare(OpencorNamespace)
-                        || QString::fromStdString(curvePropertiesNode.getName()).compare(CurveProperties)) {
+                        || QString::fromStdString(curvePropertiesNode.getName()).compare(Properties)) {
                         continue;
                     }
 
                     for (uint j = 0, jMax = curvePropertiesNode.getNumChildren(); j < jMax; ++j) {
                         const libsbml::XMLNode &lineOrSymbolPropertiesNode = curvePropertiesNode.getChild(j);
                         QString lineOrSymbolPropertiesNodeName = QString::fromStdString(lineOrSymbolPropertiesNode.getName());
-                        bool isLinePropertiesNode = !lineOrSymbolPropertiesNodeName.compare(LineProperties);
-                        bool isSymbolPropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SymbolProperties);
+                        bool isLinePropertiesNode = !lineOrSymbolPropertiesNodeName.compare(Line);
+                        bool isSymbolPropertiesNode = !lineOrSymbolPropertiesNodeName.compare(Symbol);
 
                         if (!isLinePropertiesNode && !isSymbolPropertiesNode)
                             continue;
