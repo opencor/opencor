@@ -1516,9 +1516,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     }
 
     if (!voiSolverProperties.isEmpty()) {
-        sedmlAlgorithm->appendAnnotation(QString("<%1 xmlns=\"%2\">%3</%1>").arg(SEDMLSupport::SolverProperties,
-                                                                                 SEDMLSupport::OpencorNamespace,
-                                                                                 voiSolverProperties).toStdString());
+        sedmlAlgorithm->appendAnnotation(QString("<%1 xmlns=\"%2\">"
+                                                 "    %3"
+                                                 "</%1>").arg(SEDMLSupport::SolverProperties,
+                                                              SEDMLSupport::OpencorNamespace,
+                                                              voiSolverProperties).toStdString());
     }
 
     // Check whether the simulation required an NLA solver and, if so, let our
@@ -1536,11 +1538,13 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
                                                                             solverProperties.value(solverProperty).toString());
         }
 
-        pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" %3=\"%4\">%5</%1>").arg(SEDMLSupport::NlaSolver,
-                                                                                             SEDMLSupport::OpencorNamespace,
-                                                                                             SEDMLSupport::NlaSolverName,
-                                                                                             mSimulation->data()->nlaSolverName(),
-                                                                                             nlaSolverProperties).toStdString());
+        pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" %3=\"%4\">"
+                                                   "    %5"
+                                                   "</%1>").arg(SEDMLSupport::NlaSolver,
+                                                                SEDMLSupport::OpencorNamespace,
+                                                                SEDMLSupport::NlaSolverName,
+                                                                mSimulation->data()->nlaSolverName(),
+                                                                nlaSolverProperties).toStdString());
     }
 
     // Create and customise a task for our given SED-ML simulation
@@ -1584,9 +1588,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlVariableTarget(libsedml::
     pSedmlVariable->setTarget(Target.arg(pComponent, variable).toStdString());
 
     if (variableDegree) {
-        pSedmlVariable->appendAnnotation(QString("<%1 xmlns=\"%2\">%3</%1>").arg(SEDMLSupport::VariableDegree,
-                                                                                 SEDMLSupport::OpencorNamespace,
-                                                                                 QString::number(variableDegree)).toStdString());
+        pSedmlVariable->appendAnnotation(QString("<%1 xmlns=\"%2\">"
+                                                 "    %3"
+                                                 "</%1>").arg(SEDMLSupport::VariableDegree,
+                                                              SEDMLSupport::OpencorNamespace,
+                                                              QString::number(variableDegree)).toStdString());
     }
 }
 
@@ -1706,7 +1712,6 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         sedmlPlot2d->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                               "    %3"
-                                              "    <%4>%5</%4>"
                                               "</%1>").arg( SEDMLSupport::Plot2dProperties,
                                                             SEDMLSupport::OpencorNamespace,
                                                             SedmlProperty.arg(SEDMLSupport::BackgroundColor,
@@ -1716,14 +1721,14 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                            +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
                                                                               stringValue(graphPanelProperties[2]))
                                                            +SedmlProperty.arg(SEDMLSupport::Title,
-                                                                              stringValue(graphPanelProperties[5])),
-                                                            SEDMLSupport::GridLinesProperties,
-                                                            SedmlProperty.arg(SEDMLSupport::GridLinesStyle,
-                                                                              SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
-                                                           +SedmlProperty.arg(SEDMLSupport::GridLinesWidth,
-                                                                              stringValue(gridLinesProperties[1]))
-                                                           +SedmlProperty.arg(SEDMLSupport::GridLinesColor,
-                                                                              stringValue(gridLinesProperties[2]))).toStdString());
+                                                                              stringValue(graphPanelProperties[5]))
+                                                           +SedmlProperty.arg( SEDMLSupport::GridLinesProperties,
+                                                                               SedmlProperty.arg(SEDMLSupport::GridLinesStyle,
+                                                                                                 SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
+                                                                              +SedmlProperty.arg(SEDMLSupport::GridLinesWidth,
+                                                                                                 stringValue(gridLinesProperties[1]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::GridLinesColor,
+                                                                                                 stringValue(gridLinesProperties[2])))).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
@@ -1803,28 +1808,27 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
             Core::Properties symbolProperties = property->properties()[4]->properties();
 
             sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%2\">"
-                                                 "    <%3>%4</%3>"
-                                                 "    <%5>%6</%5>"
+                                                 "    %3"
                                                  "</%1>").arg( SEDMLSupport::CurveProperties,
                                                                SEDMLSupport::OpencorNamespace,
-                                                               SEDMLSupport::LineProperties,
-                                                               SedmlProperty.arg(SEDMLSupport::LineStyle,
-                                                                                 SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
-                                                              +SedmlProperty.arg(SEDMLSupport::LineWidth,
-                                                                                 stringValue(lineProperties[1]))
-                                                              +SedmlProperty.arg(SEDMLSupport::LineColor,
-                                                                                 stringValue(lineProperties[2])),
-                                                               SEDMLSupport::SymbolProperties,
-                                                               SedmlProperty.arg(SEDMLSupport::SymbolStyle,
-                                                                                 SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
-                                                              +SedmlProperty.arg(SEDMLSupport::SymbolSize,
-                                                                                 stringValue(symbolProperties[1]))
-                                                              +SedmlProperty.arg(SEDMLSupport::SymbolColor,
-                                                                                 stringValue(symbolProperties[2]))
-                                                              +SedmlProperty.arg(SEDMLSupport::SymbolFilled,
-                                                                                 stringValue(symbolProperties[3]))
-                                                              +SedmlProperty.arg(SEDMLSupport::SymbolFillColor,
-                                                                                 stringValue(symbolProperties[4]))).toStdString());
+                                                               SedmlProperty.arg( SEDMLSupport::LineProperties,
+                                                                                  SedmlProperty.arg(SEDMLSupport::LineStyle,
+                                                                                                    SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
+                                                                                 +SedmlProperty.arg(SEDMLSupport::LineWidth,
+                                                                                                    stringValue(lineProperties[1]))
+                                                                                 +SedmlProperty.arg(SEDMLSupport::LineColor,
+                                                                                                    stringValue(lineProperties[2])))
+                                                              +SedmlProperty.arg( SEDMLSupport::SymbolProperties,
+                                                                                  SedmlProperty.arg(SEDMLSupport::SymbolStyle,
+                                                                                                    SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
+                                                                                 +SedmlProperty.arg(SEDMLSupport::SymbolSize,
+                                                                                                    stringValue(symbolProperties[1]))
+                                                                                 +SedmlProperty.arg(SEDMLSupport::SymbolColor,
+                                                                                                    stringValue(symbolProperties[2]))
+                                                                                 +SedmlProperty.arg(SEDMLSupport::SymbolFilled,
+                                                                                                    stringValue(symbolProperties[3]))
+                                                                                 +SedmlProperty.arg(SEDMLSupport::SymbolFillColor,
+                                                                                                    stringValue(symbolProperties[4])))).toStdString());
         }
     }
 
