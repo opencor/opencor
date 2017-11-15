@@ -1712,6 +1712,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
         Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
         Core::Properties xAxisProperties = graphPanelProperties[6]->properties();
         Core::Properties yAxisProperties = graphPanelProperties[7]->properties();
+        Core::Properties zoomRegionProperties = graphPanelProperties[8]->properties();
 
         sedmlPlot2d->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                               "    %3"
@@ -1750,7 +1751,20 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                                                SedmlProperty.arg(SEDMLSupport::YAxisLogarithmicScale,
                                                                                                  stringValue(yAxisProperties[0]))
                                                                               +SedmlProperty.arg(SEDMLSupport::YAxisTitle,
-                                                                                                 stringValue(yAxisProperties[1])))).toStdString());
+                                                                                                 stringValue(yAxisProperties[1])))
+                                                           +SedmlProperty.arg( SEDMLSupport::ZoomRegionProperties,
+                                                                               SedmlProperty.arg(SEDMLSupport::ZoomRegionStyle,
+                                                                                                 SEDMLSupport::lineStyleValue(zoomRegionProperties[0]->listValueIndex()))
+                                                                              +SedmlProperty.arg(SEDMLSupport::ZoomRegionWidth,
+                                                                                                 stringValue(zoomRegionProperties[1]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::ZoomRegionColor,
+                                                                                                 stringValue(zoomRegionProperties[2]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::ZoomRegionFontColor,
+                                                                                                 stringValue(zoomRegionProperties[3]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::ZoomRegionFilled,
+                                                                                                 stringValue(zoomRegionProperties[4]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::ZoomRegionFillColor,
+                                                                                                 stringValue(zoomRegionProperties[5])))).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
@@ -2586,6 +2600,29 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                 yAxisProperties[0]->setBooleanValue(!yAxisPropertyNodeValue.compare(True));
                             } else if (!yAxisPropertyNodeName.compare(SEDMLSupport::YAxisTitle)) {
                                 yAxisProperties[1]->setValue(yAxisPropertyNodeValue);
+                            }
+                        }
+                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::ZoomRegionProperties)) {
+                        Core::Properties zoomRegionProperties = graphPanelProperties[8]->properties();
+
+                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            const libsbml::XMLNode &zoomRegionPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                            QString zoomRegionPropertyNodeName = QString::fromStdString(zoomRegionPropertyNode.getName());
+                            QString zoomRegionPropertyNodeValue = QString::fromStdString(zoomRegionPropertyNode.getChild(0).getCharacters());
+
+                            if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::ZoomRegionStyle)) {
+                                zoomRegionProperties[0]->setValue(zoomRegionPropertyNodeValue);
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::ZoomRegionWidth)) {
+                                zoomRegionProperties[1]->setValue(zoomRegionPropertyNodeValue);
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::ZoomRegionColor)) {
+                                zoomRegionProperties[2]->setValue(zoomRegionPropertyNodeValue);
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::ZoomRegionFontColor)) {
+                                zoomRegionProperties[3]->setValue(zoomRegionPropertyNodeValue);
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::ZoomRegionFilled)) {
+                                zoomRegionProperties[4]->setBooleanValue(!zoomRegionPropertyNodeValue.compare(True));
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::ZoomRegionFillColor)) {
+                                zoomRegionProperties[5]->setValue(zoomRegionPropertyNodeValue);
                             }
                         }
                     }

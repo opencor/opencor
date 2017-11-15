@@ -953,6 +953,45 @@ bool SedmlFile::isSupported()
                                 return false;
                             }
                         }
+                    } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
+                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(ZoomRegionProperties)) {
+                        for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            const libsbml::XMLNode &zoomRegionPropertyNode = plot2dPropertyNode.getChild(k);
+                            QString zoomRegionPropertyNodeName = QString::fromStdString(zoomRegionPropertyNode.getName());
+                            QString zoomRegionPropertyNodeValue = QString::fromStdString(zoomRegionPropertyNode.getChild(0).getCharacters());
+
+                            if (   !zoomRegionPropertyNodeName.compare(ZoomRegionStyle)
+                                && !validListPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, ZoomRegionStyle, lineStyles())) {
+                                return false;
+                            } else if (!zoomRegionPropertyNodeName.compare(ZoomRegionWidth)) {
+                                if (!IntegerGt0RegEx.match(zoomRegionPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                              zoomRegionPropertyNode.getLine(),
+                                                              zoomRegionPropertyNode.getColumn(),
+                                                              tr("the '%1' property value must be a number greater than zero").arg(zoomRegionPropertyNodeName));
+
+                                    return false;
+                                }
+                            } else if (   !zoomRegionPropertyNodeName.compare(ZoomRegionColor)
+                                       && !validColorPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, ZoomRegionColor)) {
+                                return false;
+                            } else if (   !zoomRegionPropertyNodeName.compare(ZoomRegionFontColor)
+                                       && !validColorPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, ZoomRegionFontColor)) {
+                                return false;
+                            } else if (   !zoomRegionPropertyNodeName.compare(ZoomRegionFilled)
+                                       &&  zoomRegionPropertyNodeValue.compare(True)
+                                       && zoomRegionPropertyNodeValue.compare(False)) {
+                                       mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                                 zoomRegionPropertyNode.getLine(),
+                                                                 zoomRegionPropertyNode.getColumn(),
+                                                                 tr("the '%1' property must have a value of 'true' or 'false'").arg(ZoomRegionFilled));
+
+                                return false;
+                            } else if (   !zoomRegionPropertyNodeName.compare(ZoomRegionFillColor)
+                                       && !validColorPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, ZoomRegionFillColor)) {
+                                return false;
+                            }
+                        }
                     }
                 }
             }
