@@ -1727,43 +1727,43 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                            +SedmlProperty.arg(SEDMLSupport::Title,
                                                                               stringValue(graphPanelProperties[5]))
                                                            +SedmlProperty.arg( SEDMLSupport::GridLinesProperties,
-                                                                               SedmlProperty.arg(SEDMLSupport::GridLinesStyle,
+                                                                               SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                  SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
-                                                                              +SedmlProperty.arg(SEDMLSupport::GridLinesWidth,
+                                                                              +SedmlProperty.arg(SEDMLSupport::Width,
                                                                                                  stringValue(gridLinesProperties[1]))
-                                                                              +SedmlProperty.arg(SEDMLSupport::GridLinesColor,
+                                                                              +SedmlProperty.arg(SEDMLSupport::Color,
                                                                                                  stringValue(gridLinesProperties[2])))
                                                            +SedmlProperty.arg( SEDMLSupport::PointCoordinatesProperties,
-                                                                               SedmlProperty.arg(SEDMLSupport::PointCoordinatesStyle,
+                                                                               SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                  SEDMLSupport::lineStyleValue(pointCoordinatesProperties[0]->listValueIndex()))
-                                                                              +SedmlProperty.arg(SEDMLSupport::PointCoordinatesWidth,
+                                                                              +SedmlProperty.arg(SEDMLSupport::Width,
                                                                                                  stringValue(pointCoordinatesProperties[1]))
-                                                                              +SedmlProperty.arg(SEDMLSupport::PointCoordinatesColor,
+                                                                              +SedmlProperty.arg(SEDMLSupport::Color,
                                                                                                  stringValue(pointCoordinatesProperties[2]))
-                                                                              +SedmlProperty.arg(SEDMLSupport::PointCoordinatesFontColor,
+                                                                              +SedmlProperty.arg(SEDMLSupport::FontColor,
                                                                                                  stringValue(pointCoordinatesProperties[3])))
                                                            +SedmlProperty.arg( SEDMLSupport::XAxisProperties,
-                                                                               SedmlProperty.arg(SEDMLSupport::XAxisLogarithmicScale,
+                                                                               SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
                                                                                                  stringValue(xAxisProperties[0]))
-                                                                              +SedmlProperty.arg(SEDMLSupport::XAxisTitle,
+                                                                              +SedmlProperty.arg(SEDMLSupport::Title,
                                                                                                  stringValue(xAxisProperties[1])))
                                                            +SedmlProperty.arg( SEDMLSupport::YAxisProperties,
-                                                                               SedmlProperty.arg(SEDMLSupport::YAxisLogarithmicScale,
+                                                                               SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
                                                                                                  stringValue(yAxisProperties[0]))
-                                                                              +SedmlProperty.arg(SEDMLSupport::YAxisTitle,
+                                                                              +SedmlProperty.arg(SEDMLSupport::Title,
                                                                                                  stringValue(yAxisProperties[1])))
                                                            +SedmlProperty.arg( SEDMLSupport::ZoomRegionProperties,
-                                                                               SedmlProperty.arg(SEDMLSupport::ZoomRegionStyle,
+                                                                               SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                  SEDMLSupport::lineStyleValue(zoomRegionProperties[0]->listValueIndex()))
-                                                                              +SedmlProperty.arg(SEDMLSupport::ZoomRegionWidth,
+                                                                              +SedmlProperty.arg(SEDMLSupport::Width,
                                                                                                  stringValue(zoomRegionProperties[1]))
-                                                                              +SedmlProperty.arg(SEDMLSupport::ZoomRegionColor,
+                                                                              +SedmlProperty.arg(SEDMLSupport::Color,
                                                                                                  stringValue(zoomRegionProperties[2]))
-                                                                              +SedmlProperty.arg(SEDMLSupport::ZoomRegionFontColor,
+                                                                              +SedmlProperty.arg(SEDMLSupport::FontColor,
                                                                                                  stringValue(zoomRegionProperties[3]))
-                                                                              +SedmlProperty.arg(SEDMLSupport::ZoomRegionFilled,
+                                                                              +SedmlProperty.arg(SEDMLSupport::Filled,
                                                                                                  stringValue(zoomRegionProperties[4]))
-                                                                              +SedmlProperty.arg(SEDMLSupport::ZoomRegionFillColor,
+                                                                              +SedmlProperty.arg(SEDMLSupport::FillColor,
                                                                                                  stringValue(zoomRegionProperties[5])))).toStdString());
 
         // Keep track of the graph panel's graphs, if any
@@ -1848,22 +1848,22 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                  "</%1>").arg( SEDMLSupport::CurveProperties,
                                                                SEDMLSupport::OpencorNamespace,
                                                                SedmlProperty.arg( SEDMLSupport::LineProperties,
-                                                                                  SedmlProperty.arg(SEDMLSupport::LineStyle,
+                                                                                  SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                     SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
-                                                                                 +SedmlProperty.arg(SEDMLSupport::LineWidth,
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Width,
                                                                                                     stringValue(lineProperties[1]))
-                                                                                 +SedmlProperty.arg(SEDMLSupport::LineColor,
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Color,
                                                                                                     stringValue(lineProperties[2])))
                                                               +SedmlProperty.arg( SEDMLSupport::SymbolProperties,
-                                                                                  SedmlProperty.arg(SEDMLSupport::SymbolStyle,
+                                                                                  SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                     SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
-                                                                                 +SedmlProperty.arg(SEDMLSupport::SymbolSize,
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Size,
                                                                                                     stringValue(symbolProperties[1]))
-                                                                                 +SedmlProperty.arg(SEDMLSupport::SymbolColor,
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Color,
                                                                                                     stringValue(symbolProperties[2]))
-                                                                                 +SedmlProperty.arg(SEDMLSupport::SymbolFilled,
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Filled,
                                                                                                     stringValue(symbolProperties[3]))
-                                                                                 +SedmlProperty.arg(SEDMLSupport::SymbolFillColor,
+                                                                                 +SedmlProperty.arg(SEDMLSupport::FillColor,
                                                                                                     stringValue(symbolProperties[4])))).toStdString());
         }
     }
@@ -2545,11 +2545,11 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
                             QString gridLinesPropertyNodeValue = QString::fromStdString(gridLinesPropertyNode.getChild(0).getCharacters());
 
-                            if (!gridLinesPropertyNodeName.compare(SEDMLSupport::GridLinesStyle)) {
+                            if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Style)) {
                                 gridLinesProperties[0]->setValue(gridLinesPropertyNodeValue);
-                            } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::GridLinesWidth)) {
+                            } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Width)) {
                                 gridLinesProperties[1]->setValue(gridLinesPropertyNodeValue);
-                            } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::GridLinesColor)) {
+                            } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Color)) {
                                 gridLinesProperties[2]->setValue(gridLinesPropertyNodeValue);
                             }
                         }
@@ -2562,13 +2562,13 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             QString pointCoordinatesPropertyNodeName = QString::fromStdString(pointCoordinatesPropertyNode.getName());
                             QString pointCoordinatesPropertyNodeValue = QString::fromStdString(pointCoordinatesPropertyNode.getChild(0).getCharacters());
 
-                            if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::PointCoordinatesStyle)) {
+                            if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::Style)) {
                                 pointCoordinatesProperties[0]->setValue(pointCoordinatesPropertyNodeValue);
-                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::PointCoordinatesWidth)) {
+                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::Width)) {
                                 pointCoordinatesProperties[1]->setValue(pointCoordinatesPropertyNodeValue);
-                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::PointCoordinatesColor)) {
+                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::Color)) {
                                 pointCoordinatesProperties[2]->setValue(pointCoordinatesPropertyNodeValue);
-                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::PointCoordinatesFontColor)) {
+                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::FontColor)) {
                                 pointCoordinatesProperties[3]->setValue(pointCoordinatesPropertyNodeValue);
                             }
                         }
@@ -2581,9 +2581,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
                             QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
 
-                            if (!xAxisPropertyNodeName.compare(SEDMLSupport::XAxisLogarithmicScale)) {
+                            if (!xAxisPropertyNodeName.compare(SEDMLSupport::LogarithmicScale)) {
                                 xAxisProperties[0]->setBooleanValue(!xAxisPropertyNodeValue.compare(True));
-                            } else if (!xAxisPropertyNodeName.compare(SEDMLSupport::XAxisTitle)) {
+                            } else if (!xAxisPropertyNodeName.compare(SEDMLSupport::Title)) {
                                 xAxisProperties[1]->setValue(xAxisPropertyNodeValue);
                             }
                         }
@@ -2596,9 +2596,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
                             QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
 
-                            if (!yAxisPropertyNodeName.compare(SEDMLSupport::YAxisLogarithmicScale)) {
+                            if (!yAxisPropertyNodeName.compare(SEDMLSupport::LogarithmicScale)) {
                                 yAxisProperties[0]->setBooleanValue(!yAxisPropertyNodeValue.compare(True));
-                            } else if (!yAxisPropertyNodeName.compare(SEDMLSupport::YAxisTitle)) {
+                            } else if (!yAxisPropertyNodeName.compare(SEDMLSupport::Title)) {
                                 yAxisProperties[1]->setValue(yAxisPropertyNodeValue);
                             }
                         }
@@ -2611,17 +2611,17 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             QString zoomRegionPropertyNodeName = QString::fromStdString(zoomRegionPropertyNode.getName());
                             QString zoomRegionPropertyNodeValue = QString::fromStdString(zoomRegionPropertyNode.getChild(0).getCharacters());
 
-                            if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::ZoomRegionStyle)) {
+                            if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Style)) {
                                 zoomRegionProperties[0]->setValue(zoomRegionPropertyNodeValue);
-                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::ZoomRegionWidth)) {
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Width)) {
                                 zoomRegionProperties[1]->setValue(zoomRegionPropertyNodeValue);
-                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::ZoomRegionColor)) {
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Color)) {
                                 zoomRegionProperties[2]->setValue(zoomRegionPropertyNodeValue);
-                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::ZoomRegionFontColor)) {
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::FontColor)) {
                                 zoomRegionProperties[3]->setValue(zoomRegionPropertyNodeValue);
-                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::ZoomRegionFilled)) {
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Filled)) {
                                 zoomRegionProperties[4]->setBooleanValue(!zoomRegionPropertyNodeValue.compare(True));
-                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::ZoomRegionFillColor)) {
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::FillColor)) {
                                 zoomRegionProperties[5]->setValue(zoomRegionPropertyNodeValue);
                             }
                         }
@@ -2683,11 +2683,11 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                 QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
                                 QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
 
-                                if (!linePropertyNodeName.compare(SEDMLSupport::LineStyle)) {
+                                if (!linePropertyNodeName.compare(SEDMLSupport::Style)) {
                                     lineStyle = Qt::PenStyle(SEDMLSupport::lineStyleValueIndex(linePropertyNodeValue));
-                                } else if (!linePropertyNodeName.compare(SEDMLSupport::LineWidth)) {
+                                } else if (!linePropertyNodeName.compare(SEDMLSupport::Width)) {
                                     lineWidth = linePropertyNodeValue.toDouble();
-                                } else if (!linePropertyNodeName.compare(SEDMLSupport::LineColor)) {
+                                } else if (!linePropertyNodeName.compare(SEDMLSupport::Color)) {
                                     lineColor.setNamedColor(linePropertyNodeValue);
                                 }
                             }
@@ -2697,17 +2697,17 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                 QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
                                 QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
-                                if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolStyle)) {
+                                if (!symbolPropertyNodeName.compare(SEDMLSupport::Style)) {
                                     int symbolStyleValue = SEDMLSupport::symbolStyleValueIndex(symbolPropertyNodeValue);
 
                                     symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
-                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolSize)) {
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Size)) {
                                     symbolSize = symbolPropertyNodeValue.toInt();
-                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolColor)) {
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Color)) {
                                     symbolColor.setNamedColor(symbolPropertyNodeValue);
-                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolFilled)) {
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Filled)) {
                                     symbolFilled = !symbolPropertyNodeValue.compare(True);
-                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolFillColor)) {
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::FillColor)) {
                                     symbolFillColor.setNamedColor(symbolPropertyNodeValue);
                                 }
                             }
