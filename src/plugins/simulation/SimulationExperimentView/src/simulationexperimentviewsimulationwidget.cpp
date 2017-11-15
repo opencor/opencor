@@ -1709,6 +1709,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
         sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
 
         Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
+        Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
 
         sedmlPlot2d->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                               "    %3"
@@ -1728,7 +1729,16 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                                               +SedmlProperty.arg(SEDMLSupport::GridLinesWidth,
                                                                                                  stringValue(gridLinesProperties[1]))
                                                                               +SedmlProperty.arg(SEDMLSupport::GridLinesColor,
-                                                                                                 stringValue(gridLinesProperties[2])))).toStdString());
+                                                                                                 stringValue(gridLinesProperties[2])))
+                                                           +SedmlProperty.arg( SEDMLSupport::PointCoordinatesProperties,
+                                                                               SedmlProperty.arg(SEDMLSupport::PointCoordinatesStyle,
+                                                                                                 SEDMLSupport::lineStyleValue(pointCoordinatesProperties[0]->listValueIndex()))
+                                                                              +SedmlProperty.arg(SEDMLSupport::PointCoordinatesWidth,
+                                                                                                 stringValue(pointCoordinatesProperties[1]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::PointCoordinatesColor,
+                                                                                                 stringValue(pointCoordinatesProperties[2]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::PointCoordinatesFontColor,
+                                                                                                 stringValue(pointCoordinatesProperties[3])))).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
@@ -2513,6 +2523,25 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                 gridLinesProperties[1]->setValue(gridLinesPropertyNodeValue);
                             } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::GridLinesColor)) {
                                 gridLinesProperties[2]->setValue(gridLinesPropertyNodeValue);
+                            }
+                        }
+                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::PointCoordinatesProperties)) {
+                        Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
+
+                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            const libsbml::XMLNode &pointCoordinatesPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                            QString pointCoordinatesPropertyNodeName = QString::fromStdString(pointCoordinatesPropertyNode.getName());
+                            QString pointCoordinatesPropertyNodeValue = QString::fromStdString(pointCoordinatesPropertyNode.getChild(0).getCharacters());
+
+                            if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::PointCoordinatesStyle)) {
+                                pointCoordinatesProperties[0]->setValue(pointCoordinatesPropertyNodeValue);
+                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::PointCoordinatesWidth)) {
+                                pointCoordinatesProperties[1]->setValue(pointCoordinatesPropertyNodeValue);
+                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::PointCoordinatesColor)) {
+                                pointCoordinatesProperties[2]->setValue(pointCoordinatesPropertyNodeValue);
+                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::PointCoordinatesFontColor)) {
+                                pointCoordinatesProperties[3]->setValue(pointCoordinatesPropertyNodeValue);
                             }
                         }
                     }

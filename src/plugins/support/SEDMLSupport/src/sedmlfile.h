@@ -62,34 +62,39 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-static const auto OpencorNamespace    = QStringLiteral("http://www.opencor.ws/");
-static const auto VariableDegree      = QStringLiteral("variableDegree");
-static const auto SolverProperties    = QStringLiteral("solverProperties");
-static const auto SolverProperty      = QStringLiteral("solverProperty");
-static const auto SolverPropertyId    = QStringLiteral("id");
-static const auto SolverPropertyValue = QStringLiteral("value");
-static const auto NlaSolver           = QStringLiteral("nlaSolver");
-static const auto NlaSolverName       = QStringLiteral("name");
-static const auto Plot2dProperties    = QStringLiteral("plot2dProperties");
-static const auto BackgroundColor     = QStringLiteral("backgroundColor");
-static const auto FontSize            = QStringLiteral("fontSize");
-static const auto ForegroundColor     = QStringLiteral("foregroundColor");
-static const auto Title               = QStringLiteral("title");
-static const auto GridLinesProperties = QStringLiteral("gridLinesProperties");
-static const auto GridLinesStyle      = QStringLiteral("gridLinesStyle");
-static const auto GridLinesWidth      = QStringLiteral("gridLinesWidth");
-static const auto GridLinesColor      = QStringLiteral("gridLinesColor");
-static const auto CurveProperties     = QStringLiteral("curveProperties");
-static const auto LineProperties      = QStringLiteral("lineProperties");
-static const auto LineStyle           = QStringLiteral("lineStyle");
-static const auto LineWidth           = QStringLiteral("lineWidth");
-static const auto LineColor           = QStringLiteral("lineColor");
-static const auto SymbolProperties    = QStringLiteral("symbolProperties");
-static const auto SymbolStyle         = QStringLiteral("symbolStyle");
-static const auto SymbolSize          = QStringLiteral("symbolSize");
-static const auto SymbolColor         = QStringLiteral("symbolColor");
-static const auto SymbolFilled        = QStringLiteral("symbolFilled");
-static const auto SymbolFillColor     = QStringLiteral("symbolFillColor");
+static const auto OpencorNamespace           = QStringLiteral("http://www.opencor.ws/");
+static const auto VariableDegree             = QStringLiteral("variableDegree");
+static const auto SolverProperties           = QStringLiteral("solverProperties");
+static const auto SolverProperty             = QStringLiteral("solverProperty");
+static const auto SolverPropertyId           = QStringLiteral("id");
+static const auto SolverPropertyValue        = QStringLiteral("value");
+static const auto NlaSolver                  = QStringLiteral("nlaSolver");
+static const auto NlaSolverName              = QStringLiteral("name");
+static const auto Plot2dProperties           = QStringLiteral("plot2dProperties");
+static const auto BackgroundColor            = QStringLiteral("backgroundColor");
+static const auto FontSize                   = QStringLiteral("fontSize");
+static const auto ForegroundColor            = QStringLiteral("foregroundColor");
+static const auto Title                      = QStringLiteral("title");
+static const auto GridLinesProperties        = QStringLiteral("gridLinesProperties");
+static const auto GridLinesStyle             = QStringLiteral("gridLinesStyle");
+static const auto GridLinesWidth             = QStringLiteral("gridLinesWidth");
+static const auto GridLinesColor             = QStringLiteral("gridLinesColor");
+static const auto PointCoordinatesProperties = QStringLiteral("pointCoordinatesProperties");
+static const auto PointCoordinatesStyle      = QStringLiteral("pointCoordinatesStyle");
+static const auto PointCoordinatesWidth      = QStringLiteral("pointCoordinatesWidth");
+static const auto PointCoordinatesColor      = QStringLiteral("pointCoordinatesColor");
+static const auto PointCoordinatesFontColor  = QStringLiteral("pointCoordinatesFontColor");
+static const auto CurveProperties            = QStringLiteral("curveProperties");
+static const auto LineProperties             = QStringLiteral("lineProperties");
+static const auto LineStyle                  = QStringLiteral("lineStyle");
+static const auto LineWidth                  = QStringLiteral("lineWidth");
+static const auto LineColor                  = QStringLiteral("lineColor");
+static const auto SymbolProperties           = QStringLiteral("symbolProperties");
+static const auto SymbolStyle                = QStringLiteral("symbolStyle");
+static const auto SymbolSize                 = QStringLiteral("symbolSize");
+static const auto SymbolColor                = QStringLiteral("symbolColor");
+static const auto SymbolFilled               = QStringLiteral("symbolFilled");
+static const auto SymbolFillColor            = QStringLiteral("symbolFillColor");
 
 //==============================================================================
 

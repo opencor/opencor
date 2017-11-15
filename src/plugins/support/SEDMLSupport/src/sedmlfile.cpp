@@ -880,6 +880,33 @@ bool SedmlFile::isSupported()
                                 return false;
                             }
                         }
+                    } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
+                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(PointCoordinatesProperties)) {
+                        for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            const libsbml::XMLNode &pointCoordinatesPropertyNode = plot2dPropertyNode.getChild(k);
+                            QString pointCoordinatesPropertyNodeName = QString::fromStdString(pointCoordinatesPropertyNode.getName());
+                            QString pointCoordinatesPropertyNodeValue = QString::fromStdString(pointCoordinatesPropertyNode.getChild(0).getCharacters());
+
+                            if (   !pointCoordinatesPropertyNodeName.compare(PointCoordinatesStyle)
+                                && !validListPropertyValue(pointCoordinatesPropertyNode, pointCoordinatesPropertyNodeValue, PointCoordinatesStyle, lineStyles())) {
+                                return false;
+                            } else if (!pointCoordinatesPropertyNodeName.compare(PointCoordinatesWidth)) {
+                                if (!IntegerGt0RegEx.match(pointCoordinatesPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                              pointCoordinatesPropertyNode.getLine(),
+                                                              pointCoordinatesPropertyNode.getColumn(),
+                                                              tr("the '%1' property value must be a number greater than zero").arg(pointCoordinatesPropertyNodeName));
+
+                                    return false;
+                                }
+                            } else if (   !pointCoordinatesPropertyNodeName.compare(PointCoordinatesColor)
+                                       && !validColorPropertyValue(pointCoordinatesPropertyNode, pointCoordinatesPropertyNodeValue, PointCoordinatesColor)) {
+                                return false;
+                            } else if (   !pointCoordinatesPropertyNodeName.compare(PointCoordinatesFontColor)
+                                       && !validColorPropertyValue(pointCoordinatesPropertyNode, pointCoordinatesPropertyNodeValue, PointCoordinatesFontColor)) {
+                                return false;
+                            }
+                        }
                     }
                 }
             }
