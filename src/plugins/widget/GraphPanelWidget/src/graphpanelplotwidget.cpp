@@ -657,7 +657,7 @@ void GraphPanelScaleWidget::updateLayout()
 
 //==============================================================================
 
-static const double DblMinAxis = 1000*DBL_MIN;
+static const double DblMinAxis = 1000.0*DBL_MIN;
 // Note: normally, we would use DBL_MIN, but this would cause problems with
 //       QwtPlot (e.g. to create ticks), so instead we use a value that results
 //       in a range that we know works...
