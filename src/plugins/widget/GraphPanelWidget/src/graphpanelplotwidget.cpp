@@ -685,6 +685,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     Core::CommonWidget(this),
     mBackgroundColor(QColor()),
     mForegroundColor(QColor()),
+    mLegend(false),
     mPointCoordinatesStyle(Qt::DashLine),
     mPointCoordinatesWidth(1),
     mPointCoordinatesColor(QColor()),
@@ -1258,6 +1259,28 @@ void GraphPanelPlotWidget::setGridLinesColor(const QColor &pGridLinesColor)
         mGrid->setMajorPen(newPen);
 
         replot();
+    }
+}
+
+//==============================================================================
+
+bool GraphPanelPlotWidget::legend() const
+{
+    // Return whether we show our legend
+
+    return mLegend;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setLegend(const bool &pLegend)
+{
+    // Show/hide our legend
+
+    if (pLegend != mLegend) {
+        mLegend = pLegend;
+
+//---ISSUE1171--- TO BE DONE...
     }
 }
 

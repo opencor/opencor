@@ -127,38 +127,71 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
 {
     // Retranslate the contents of the given graph panel property editor
 
-    pGraphPanelPropertyEditor->properties()[0]->setName(tr("Background colour"));
-    pGraphPanelPropertyEditor->properties()[1]->setName(tr("Font size"));
-    pGraphPanelPropertyEditor->properties()[2]->setName(tr("Foreground colour"));
+    Core::Properties graphPanelProperties = pGraphPanelPropertyEditor->properties();
 
-    pGraphPanelPropertyEditor->properties()[3]->setName(tr("Grid lines"));
-    pGraphPanelPropertyEditor->properties()[3]->properties()[0]->setName(tr("Style"));
-    pGraphPanelPropertyEditor->properties()[3]->properties()[1]->setName(tr("Width"));
-    pGraphPanelPropertyEditor->properties()[3]->properties()[2]->setName(tr("Colour"));
+    graphPanelProperties[0]->setName(tr("Background colour"));
+    graphPanelProperties[1]->setName(tr("Font size"));
+    graphPanelProperties[2]->setName(tr("Foreground colour"));
 
-    pGraphPanelPropertyEditor->properties()[4]->setName(tr("Point coordinates"));
-    pGraphPanelPropertyEditor->properties()[4]->properties()[0]->setName(tr("Style"));
-    pGraphPanelPropertyEditor->properties()[4]->properties()[1]->setName(tr("Width"));
-    pGraphPanelPropertyEditor->properties()[4]->properties()[2]->setName(tr("Colour"));
-    pGraphPanelPropertyEditor->properties()[4]->properties()[3]->setName(tr("Font colour"));
+    // Grid lines
 
-    pGraphPanelPropertyEditor->properties()[5]->setName(tr("Title"));
+    Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
 
-    pGraphPanelPropertyEditor->properties()[6]->setName(tr("X axis"));
-    pGraphPanelPropertyEditor->properties()[6]->properties()[0]->setName(tr("Logarithmic scale"));
-    pGraphPanelPropertyEditor->properties()[6]->properties()[1]->setName(tr("Title"));
+    graphPanelProperties[3]->setName(tr("Grid lines"));
 
-    pGraphPanelPropertyEditor->properties()[7]->setName(tr("Y axis"));
-    pGraphPanelPropertyEditor->properties()[7]->properties()[0]->setName(tr("Logarithmic scale"));
-    pGraphPanelPropertyEditor->properties()[7]->properties()[1]->setName(tr("Title"));
+    gridLinesProperties[0]->setName(tr("Style"));
+    gridLinesProperties[1]->setName(tr("Width"));
+    gridLinesProperties[2]->setName(tr("Colour"));
 
-    pGraphPanelPropertyEditor->properties()[8]->setName(tr("Zoom region"));
-    pGraphPanelPropertyEditor->properties()[8]->properties()[0]->setName(tr("Style"));
-    pGraphPanelPropertyEditor->properties()[8]->properties()[1]->setName(tr("Width"));
-    pGraphPanelPropertyEditor->properties()[8]->properties()[2]->setName(tr("Colour"));
-    pGraphPanelPropertyEditor->properties()[8]->properties()[3]->setName(tr("Font colour"));
-    pGraphPanelPropertyEditor->properties()[8]->properties()[4]->setName(tr("Filled"));
-    pGraphPanelPropertyEditor->properties()[8]->properties()[5]->setName(tr("Fill colour"));
+    // Legend
+
+    graphPanelProperties[4]->setName(tr("Legend"));
+
+    // Point coordinates
+
+    Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
+
+    graphPanelProperties[5]->setName(tr("Point coordinates"));
+
+    pointCoordinatesProperties[0]->setName(tr("Style"));
+    pointCoordinatesProperties[1]->setName(tr("Width"));
+    pointCoordinatesProperties[2]->setName(tr("Colour"));
+    pointCoordinatesProperties[3]->setName(tr("Font colour"));
+
+    // Title
+
+    graphPanelProperties[6]->setName(tr("Title"));
+
+    // X axis
+
+    Core::Properties xAxisProperties = graphPanelProperties[7]->properties();
+
+    graphPanelProperties[7]->setName(tr("X axis"));
+
+    xAxisProperties[0]->setName(tr("Logarithmic scale"));
+    xAxisProperties[1]->setName(tr("Title"));
+
+    // Y axis
+
+    Core::Properties yAxisProperties = graphPanelProperties[8]->properties();
+
+    graphPanelProperties[8]->setName(tr("Y axis"));
+
+    yAxisProperties[0]->setName(tr("Logarithmic scale"));
+    yAxisProperties[1]->setName(tr("Title"));
+
+    // Zoom region
+
+    Core::Properties zoomRegionProperties = graphPanelProperties[9]->properties();
+
+    graphPanelProperties[9]->setName(tr("Zoom region"));
+
+    zoomRegionProperties[0]->setName(tr("Style"));
+    zoomRegionProperties[1]->setName(tr("Width"));
+    zoomRegionProperties[2]->setName(tr("Colour"));
+    zoomRegionProperties[3]->setName(tr("Font colour"));
+    zoomRegionProperties[4]->setName(tr("Filled"));
+    zoomRegionProperties[5]->setName(tr("Fill colour"));
 }
 
 //==============================================================================
@@ -865,6 +898,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->gridLinesWidth(), gridLinesProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->gridLinesColor(), gridLinesProperty);
 
+    // Legend
+
+    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->legend());
+
     // Point coordinates
 
     Core::Property *pointCoordinatesProperty = mGraphPanelPropertyEditor->addSectionProperty();
@@ -1094,13 +1131,14 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     static const QIcon UnlockedIcon = QIcon(":/oxygen/status/object-unlocked.png");
 
     GraphPanelWidget::GraphPanelPlotGraph *graph = mGraphs.value(pProperty);
-    QString propertyFileName = pProperty->properties()[0]->value();
+    Core::Properties properties = pProperty->properties();
+    QString propertyFileName = properties[0]->value();
     QString fileName = mSimulationWidget->fileName();
 
     if (!propertyFileName.compare(tr("Current"))) {
-        pProperty->properties()[0]->setIcon(UnlockedIcon);
+        properties[0]->setIcon(UnlockedIcon);
     } else {
-        pProperty->properties()[0]->setIcon(LockedIcon);
+        properties[0]->setIcon(LockedIcon);
 
         fileName = propertyFileName.split(PropertySeparator).last();
     }
@@ -1116,17 +1154,17 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterX());
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY());
 
-    graphOk = checkParameter(runtime, graph, pProperty->properties()[1], true) && graphOk;
-    graphOk = checkParameter(runtime, graph, pProperty->properties()[2], false) && graphOk;
+    graphOk = checkParameter(runtime, graph, properties[1], true) && graphOk;
+    graphOk = checkParameter(runtime, graph, properties[2], false) && graphOk;
 
     // Update our section's name, if possible
     // Note: indeed, when populating ourselves, updateGraphInfo() gets called
     //       (through graphsPropertyChanged()), yet we don't want to (and can't)
     //       do what follows if not all the properties are available...
 
-    pProperty->setName( pProperty->properties()[1]->value()
+    pProperty->setName( properties[1]->value()
                        +PropertySeparator
-                       +pProperty->properties()[2]->value());
+                       +properties[2]->value());
 
     // Update the status (i.e. icon) of our (section) property
 
@@ -1143,12 +1181,11 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
 
     QPen oldLinePen = graph->pen();
     QPen linePen = oldLinePen;
-    Core::Property *lineProperty = pProperty->properties()[3];
-    Core::Property *lineStyleProperty = lineProperty->properties()[0];
+    Core::Properties lineProperties = properties[3]->properties();
 
-    linePen.setStyle(Qt::PenStyle(lineStyleProperty->listValues().indexOf(lineStyleProperty->listValue())));
-    linePen.setWidth(lineProperty->properties()[1]->integerValue());
-    linePen.setColor(lineProperty->properties()[2]->colorValue());
+    linePen.setStyle(Qt::PenStyle(lineProperties[0]->listValues().indexOf(lineProperties[0]->listValue())));
+    linePen.setWidth(lineProperties[1]->integerValue());
+    linePen.setColor(lineProperties[2]->colorValue());
 
     graph->setPen(linePen);
 
@@ -1156,14 +1193,13 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
 
     const QwtSymbol *oldGraphSymbol = graph->symbol();
     bool graphSymbolUpdated = !oldGraphSymbol;
-    Core::Property *symbolProperty = pProperty->properties()[4];
-    Core::Property *symbolStyleProperty = symbolProperty->properties()[0];
-    int symbolStyleValue = symbolStyleProperty->listValues().indexOf(symbolStyleProperty->listValue());
+    Core::Properties symbolProperties = properties[4]->properties();
+    int symbolStyleValue = symbolProperties[0]->listValues().indexOf(symbolProperties[0]->listValue());
     QwtSymbol::Style symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
-    int symbolSize = symbolProperty->properties()[1]->integerValue();
-    QPen symbolColor = QPen(symbolProperty->properties()[2]->colorValue());
-    bool symbolFill = symbolProperty->properties()[3]->booleanValue();
-    QBrush symbolFillColor = symbolFill?QBrush(symbolProperty->properties()[4]->colorValue()):QBrush();
+    int symbolSize = symbolProperties[1]->integerValue();
+    QPen symbolColor = QPen(symbolProperties[2]->colorValue());
+    bool symbolFill = symbolProperties[3]->booleanValue();
+    QBrush symbolFillColor = symbolFill?QBrush(symbolProperties[4]->colorValue()):QBrush();
 
     if (oldGraphSymbol) {
         graphSymbolUpdated =    (oldGraphSymbol->style() != symbolStyle)
@@ -1215,54 +1251,63 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
     Core::PropertyEditorWidget *propertyEditor = pProperty->owner();
     GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = mGraphPanels.value(propertyEditor)->plot();
+    Core::Properties properties = propertyEditor->properties();
 
     graphPanelPlot->setUpdatesEnabled(false);
 
-    graphPanelPlot->setBackgroundColor(propertyEditor->properties()[0]->colorValue());
-    graphPanelPlot->setFontSize(propertyEditor->properties()[1]->integerValue());
-    graphPanelPlot->setForegroundColor(propertyEditor->properties()[2]->colorValue());
+    graphPanelPlot->setBackgroundColor(properties[0]->colorValue());
+    graphPanelPlot->setFontSize(properties[1]->integerValue());
+    graphPanelPlot->setForegroundColor(properties[2]->colorValue());
 
     // Grid lines
 
-    Core::Property *gridLinesStyleProperty = propertyEditor->properties()[3]->properties()[0];
+    Core::Properties gridLinesProperties = properties[3]->properties();
 
-    graphPanelPlot->setGridLinesStyle(Qt::PenStyle(gridLinesStyleProperty->listValues().indexOf(gridLinesStyleProperty->listValue())));
-    graphPanelPlot->setGridLinesWidth(propertyEditor->properties()[3]->properties()[1]->integerValue());
-    graphPanelPlot->setGridLinesColor(propertyEditor->properties()[3]->properties()[2]->colorValue());
+    graphPanelPlot->setGridLinesStyle(Qt::PenStyle(gridLinesProperties[0]->listValues().indexOf(gridLinesProperties[0]->listValue())));
+    graphPanelPlot->setGridLinesWidth(gridLinesProperties[1]->integerValue());
+    graphPanelPlot->setGridLinesColor(gridLinesProperties[2]->colorValue());
+
+    // Legend
+
+    graphPanelPlot->setLegend(properties[4]->booleanValue());
 
     // Point coordinates
 
-    Core::Property *pointCoordinatesStyleProperty = propertyEditor->properties()[4]->properties()[0];
+    Core::Properties pointCoordinatesProperties = properties[5]->properties();
 
-    graphPanelPlot->setPointCoordinatesStyle(Qt::PenStyle(pointCoordinatesStyleProperty->listValues().indexOf(pointCoordinatesStyleProperty->listValue())));
-    graphPanelPlot->setPointCoordinatesWidth(propertyEditor->properties()[4]->properties()[1]->integerValue());
-    graphPanelPlot->setPointCoordinatesColor(propertyEditor->properties()[4]->properties()[2]->colorValue());
-    graphPanelPlot->setPointCoordinatesFontColor(propertyEditor->properties()[4]->properties()[3]->colorValue());
+    graphPanelPlot->setPointCoordinatesStyle(Qt::PenStyle(pointCoordinatesProperties[0]->listValues().indexOf(pointCoordinatesProperties[0]->listValue())));
+    graphPanelPlot->setPointCoordinatesWidth(pointCoordinatesProperties[1]->integerValue());
+    graphPanelPlot->setPointCoordinatesColor(pointCoordinatesProperties[2]->colorValue());
+    graphPanelPlot->setPointCoordinatesFontColor(pointCoordinatesProperties[3]->colorValue());
 
     // Title
 
-    graphPanelPlot->setTitle(propertyEditor->properties()[5]->value());
+    graphPanelPlot->setTitle(properties[6]->value());
 
     // X axis
 
-    graphPanelPlot->setLogAxisX(propertyEditor->properties()[6]->properties()[0]->booleanValue());
-    graphPanelPlot->setTitleAxisX(propertyEditor->properties()[6]->properties()[1]->value());
+    Core::Properties xAxisProperties = properties[7]->properties();
+
+    graphPanelPlot->setLogAxisX(xAxisProperties[0]->booleanValue());
+    graphPanelPlot->setTitleAxisX(xAxisProperties[1]->value());
 
     // Y axis
 
-    graphPanelPlot->setLogAxisY(propertyEditor->properties()[7]->properties()[0]->booleanValue());
-    graphPanelPlot->setTitleAxisY(propertyEditor->properties()[7]->properties()[1]->value());
+    Core::Properties yAxisProperties = properties[8]->properties();
+
+    graphPanelPlot->setLogAxisY(yAxisProperties[0]->booleanValue());
+    graphPanelPlot->setTitleAxisY(yAxisProperties[1]->value());
 
     // Zoom region
 
-    Core::Property *zoomRegionStyleProperty = propertyEditor->properties()[8]->properties()[0];
+    Core::Properties zoomRegionProperties = properties[9]->properties();
 
-    graphPanelPlot->setZoomRegionStyle(Qt::PenStyle(zoomRegionStyleProperty->listValues().indexOf(zoomRegionStyleProperty->listValue())));
-    graphPanelPlot->setZoomRegionWidth(propertyEditor->properties()[8]->properties()[1]->integerValue());
-    graphPanelPlot->setZoomRegionColor(propertyEditor->properties()[8]->properties()[2]->colorValue());
-    graphPanelPlot->setZoomRegionFontColor(propertyEditor->properties()[8]->properties()[3]->colorValue());
-    graphPanelPlot->setZoomRegionFilled(propertyEditor->properties()[8]->properties()[4]->booleanValue());
-    graphPanelPlot->setZoomRegionFillColor(propertyEditor->properties()[8]->properties()[5]->colorValue());
+    graphPanelPlot->setZoomRegionStyle(Qt::PenStyle(zoomRegionProperties[0]->listValues().indexOf(zoomRegionProperties[0]->listValue())));
+    graphPanelPlot->setZoomRegionWidth(zoomRegionProperties[1]->integerValue());
+    graphPanelPlot->setZoomRegionColor(zoomRegionProperties[2]->colorValue());
+    graphPanelPlot->setZoomRegionFontColor(zoomRegionProperties[3]->colorValue());
+    graphPanelPlot->setZoomRegionFilled(zoomRegionProperties[4]->booleanValue());
+    graphPanelPlot->setZoomRegionFillColor(zoomRegionProperties[5]->colorValue());
 
     graphPanelPlot->setUpdatesEnabled(true);
 
@@ -1318,7 +1363,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
     // Use the given section property or retrieve the ones for our current
     // graphs property editor
 
-    QList<Core::Property *> graphProperties = QList<Core::Property *>();
+    Core::Properties graphProperties = Core::Properties();
 
     if (pSectionProperty) {
         graphProperties << pSectionProperty;
@@ -1354,52 +1399,60 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
     foreach (Core::Property *graphProperty, graphProperties) {
         // Set the label of our graph properties
 
-        graphProperty->properties()[0]->setName(tr("Model"));
-        graphProperty->properties()[1]->setName(tr("X"));
-        graphProperty->properties()[2]->setName(tr("Y"));
+        Core::Properties graphProperties = graphProperty->properties();
+
+        graphProperties[0]->setName(tr("Model"));
+        graphProperties[1]->setName(tr("X"));
+        graphProperties[2]->setName(tr("Y"));
 
         // Set the label of our graph line properties
 
-        graphProperty->properties()[3]->setName(tr("Line"));
-        graphProperty->properties()[3]->properties()[0]->setName(tr("Style"));
-        graphProperty->properties()[3]->properties()[0]->setListValues(QStringList() << tr("None")
-                                                                                     << tr("Solid")
-                                                                                     << tr("Dash")
-                                                                                     << tr("Dot")
-                                                                                     << tr("DashDot")
-                                                                                     << tr("DashDotDot"),
-                                                                       false);
-        graphProperty->properties()[3]->properties()[1]->setName(tr("Width"));
-        graphProperty->properties()[3]->properties()[2]->setName(tr("Colour"));
+        Core::Properties lineProperties = graphProperties[3]->properties();
+
+        graphProperties[3]->setName(tr("Line"));
+
+        lineProperties[0]->setName(tr("Style"));
+        lineProperties[0]->setListValues(QStringList() << tr("None")
+                                                       << tr("Solid")
+                                                       << tr("Dash")
+                                                       << tr("Dot")
+                                                       << tr("DashDot")
+                                                       << tr("DashDotDot"),
+                                         false);
+        lineProperties[1]->setName(tr("Width"));
+        lineProperties[2]->setName(tr("Colour"));
 
         // Set the label of our graph symbol properties
 
-        graphProperty->properties()[4]->setName(tr("Symbol"));
-        graphProperty->properties()[4]->properties()[0]->setName(tr("Style"));
-        graphProperty->properties()[4]->properties()[0]->setListValues(QStringList() << tr("None")
-                                                                                     << tr("Circle")
-                                                                                     << tr("Square")
-                                                                                     << tr("Diamond")
-                                                                                     << tr("Triangle")
-                                                                                     << tr("Down Triangle")
-                                                                                     << tr("Cross")
-                                                                                     << tr("X Cross")
-                                                                                     << tr("Horizontal Line")
-                                                                                     << tr("Vertical Line")
-                                                                                     << tr("Star"),
-                                                                       false);
-        graphProperty->properties()[4]->properties()[1]->setName(tr("Size"));
-        graphProperty->properties()[4]->properties()[2]->setName(tr("Colour"));
-        graphProperty->properties()[4]->properties()[3]->setName(tr("Filled"));
-        graphProperty->properties()[4]->properties()[4]->setName(tr("Fill colour"));
+        Core::Properties symbolProperties = graphProperties[4]->properties();
+
+        graphProperties[4]->setName(tr("Symbol"));
+
+        symbolProperties[0]->setName(tr("Style"));
+        symbolProperties[0]->setListValues(QStringList() << tr("None")
+                                                         << tr("Circle")
+                                                         << tr("Square")
+                                                         << tr("Diamond")
+                                                         << tr("Triangle")
+                                                         << tr("Down Triangle")
+                                                         << tr("Cross")
+                                                         << tr("X Cross")
+                                                         << tr("Horizontal Line")
+                                                         << tr("Vertical Line")
+                                                         << tr("Star"),
+                                           false);
+        symbolProperties[1]->setName(tr("Size"));
+        symbolProperties[2]->setName(tr("Colour"));
+        symbolProperties[3]->setName(tr("Filled"));
+        symbolProperties[4]->setName(tr("Fill colour"));
 
         // Keep track of the current model value, so that we can safely update
         // its list values and then select the correct model value back
 
-        QString oldModelValue = graphProperty->properties()[0]->value();
+        QString oldModelValue = graphProperties[0]->value();
         QString newModelValue = oldModelValue;
 
-        graphProperty->properties()[0]->setListValues(modelListValues, false);
+        graphProperties[0]->setListValues(modelListValues, false);
         // Note: we don't want setListValues() to emit a signal since one will
         //       be emitted as a result of our call to setValue() below...
 
@@ -1408,7 +1461,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
             // we come here, so update our graph info using the current value of
             // our model property
 
-            newModelValue = graphProperty->properties()[0]->value();
+            newModelValue = graphProperties[0]->value();
         } else if (!modelListValues.contains(oldModelValue)) {
             // Our old model value is not in our new model list values anymore,
             // which means that either the value of the model property was
@@ -1430,7 +1483,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
         // Set the value of our model property to newModelValue (which will
         // result in updateGraphInfo() being called, so we are all fine)
 
-        graphProperty->properties()[0]->setValue(newModelValue, true);
+        graphProperties[0]->setValue(newModelValue, true);
         // Note: we must force the setting of the value since it may very well
         //       be that it's the same as before, yet we want the signal
         //       associated with setValue() to be emitted (so that

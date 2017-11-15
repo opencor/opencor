@@ -258,6 +258,9 @@ public:
     QColor gridLinesColor() const;
     void setGridLinesColor(const QColor &pGridLinesColor);
 
+    bool legend() const;
+    void setLegend(const bool &pLegend);
+
     Qt::PenStyle pointCoordinatesStyle() const;
     void setPointCoordinatesStyle(const Qt::PenStyle &pPointCoordinatesStyle);
 
@@ -360,6 +363,8 @@ private:
 
     QColor mBackgroundColor;
     QColor mForegroundColor;
+
+    bool mLegend;
 
     Qt::PenStyle mPointCoordinatesStyle;
     int mPointCoordinatesWidth;

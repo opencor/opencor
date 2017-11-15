@@ -846,27 +846,34 @@ bool SedmlFile::isSupported()
                     if (   !plot2dPropertyNodeName.compare(BackgroundColor)
                         && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, BackgroundColor)) {
                         return false;
-                    } else if (!plot2dPropertyNodeName.compare(FontSize)) {
-                        if (!IntegerGt0RegEx.match(plot2dPropertyNodeValue).hasMatch()) {
-                            mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                                      plot2dPropertyNode.getLine(),
-                                                      plot2dPropertyNode.getColumn(),
-                                                      tr("the '%1' property value must be an integer greater than zero").arg(plot2dPropertyNodeName));
+                    } else if (   !plot2dPropertyNodeName.compare(FontSize)
+                               && !IntegerGt0RegEx.match(plot2dPropertyNodeValue).hasMatch()) {
+                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                  plot2dPropertyNode.getLine(),
+                                                  plot2dPropertyNode.getColumn(),
+                                                  tr("the '%1' property value must be an integer greater than zero").arg(plot2dPropertyNodeName));
 
-                            return false;
-                        }
+                        return false;
                     } else if (   !plot2dPropertyNodeName.compare(ForegroundColor)
                                && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, ForegroundColor)) {
                         return false;
-                    } else if (!plot2dPropertyNodeName.compare(Height)) {
-                        if (!IntegerGt0RegEx.match(plot2dPropertyNodeValue).hasMatch()) {
-                            mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                                      plot2dPropertyNode.getLine(),
-                                                      plot2dPropertyNode.getColumn(),
-                                                      tr("the '%1' property value must be an integer greater than zero").arg(plot2dPropertyNodeName));
+                    } else if (   !plot2dPropertyNodeName.compare(Height)
+                               && !IntegerGt0RegEx.match(plot2dPropertyNodeValue).hasMatch()) {
+                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                  plot2dPropertyNode.getLine(),
+                                                  plot2dPropertyNode.getColumn(),
+                                                  tr("the '%1' property value must be an integer greater than zero").arg(plot2dPropertyNodeName));
 
-                            return false;
-                        }
+                        return false;
+                    } else if (   !plot2dPropertyNodeName.compare(Legend)
+                               &&  plot2dPropertyNodeValue.compare(True)
+                               &&  plot2dPropertyNodeValue.compare(False)) {
+                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                  plot2dPropertyNode.getLine(),
+                                                  plot2dPropertyNode.getColumn(),
+                                                  tr("the '%1' property must have a value of 'true' or 'false'").arg(Legend));
+
+                        return false;
                     } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
                                && !QString::fromStdString(plot2dPropertyNode.getName()).compare(GridLines)) {
                         for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
@@ -877,15 +884,14 @@ bool SedmlFile::isSupported()
                             if (   !gridLinesPropertyNodeName.compare(Style)
                                 && !validListPropertyValue(gridLinesPropertyNode, gridLinesPropertyNodeValue, Style, lineStyles())) {
                                 return false;
-                            } else if (!gridLinesPropertyNodeName.compare(Width)) {
-                                if (!IntegerGt0RegEx.match(gridLinesPropertyNodeValue).hasMatch()) {
-                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                                              gridLinesPropertyNode.getLine(),
-                                                              gridLinesPropertyNode.getColumn(),
-                                                              tr("the '%1' property value must be a number greater than zero").arg(gridLinesPropertyNodeName));
+                            } else if (   !gridLinesPropertyNodeName.compare(Width)
+                                       && !IntegerGt0RegEx.match(gridLinesPropertyNodeValue).hasMatch()) {
+                                mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                          gridLinesPropertyNode.getLine(),
+                                                          gridLinesPropertyNode.getColumn(),
+                                                          tr("the '%1' property value must be a number greater than zero").arg(gridLinesPropertyNodeName));
 
-                                    return false;
-                                }
+                                return false;
                             } else if (   !gridLinesPropertyNodeName.compare(Color)
                                        && !validColorPropertyValue(gridLinesPropertyNode, gridLinesPropertyNodeValue, Color)) {
                                 return false;
@@ -901,15 +907,14 @@ bool SedmlFile::isSupported()
                             if (   !pointCoordinatesPropertyNodeName.compare(Style)
                                 && !validListPropertyValue(pointCoordinatesPropertyNode, pointCoordinatesPropertyNodeValue, Style, lineStyles())) {
                                 return false;
-                            } else if (!pointCoordinatesPropertyNodeName.compare(Width)) {
-                                if (!IntegerGt0RegEx.match(pointCoordinatesPropertyNodeValue).hasMatch()) {
-                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                                              pointCoordinatesPropertyNode.getLine(),
-                                                              pointCoordinatesPropertyNode.getColumn(),
-                                                              tr("the '%1' property value must be a number greater than zero").arg(pointCoordinatesPropertyNodeName));
+                            } else if (   !pointCoordinatesPropertyNodeName.compare(Width)
+                                       && !IntegerGt0RegEx.match(pointCoordinatesPropertyNodeValue).hasMatch()) {
+                                mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                          pointCoordinatesPropertyNode.getLine(),
+                                                          pointCoordinatesPropertyNode.getColumn(),
+                                                          tr("the '%1' property value must be a number greater than zero").arg(pointCoordinatesPropertyNodeName));
 
-                                    return false;
-                                }
+                                return false;
                             } else if (   !pointCoordinatesPropertyNodeName.compare(Color)
                                        && !validColorPropertyValue(pointCoordinatesPropertyNode, pointCoordinatesPropertyNodeValue, Color)) {
                                 return false;
@@ -931,7 +936,7 @@ bool SedmlFile::isSupported()
 
                             if (   !xAxisPropertyNodeName.compare(LogarithmicScale)
                                 &&  xAxisPropertyNodeValue.compare(True)
-                                && xAxisPropertyNodeValue.compare(False)) {
+                                &&  xAxisPropertyNodeValue.compare(False)) {
                                 mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                           xAxisPropertyNode.getLine(),
                                                           xAxisPropertyNode.getColumn(),
@@ -953,7 +958,7 @@ bool SedmlFile::isSupported()
 
                             if (   !yAxisPropertyNodeName.compare(LogarithmicScale)
                                 &&  yAxisPropertyNodeValue.compare(True)
-                                && yAxisPropertyNodeValue.compare(False)) {
+                                &&  yAxisPropertyNodeValue.compare(False)) {
                                 mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                           yAxisPropertyNode.getLine(),
                                                           yAxisPropertyNode.getColumn(),
@@ -972,15 +977,14 @@ bool SedmlFile::isSupported()
                             if (   !zoomRegionPropertyNodeName.compare(Style)
                                 && !validListPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, Style, lineStyles())) {
                                 return false;
-                            } else if (!zoomRegionPropertyNodeName.compare(Width)) {
-                                if (!IntegerGt0RegEx.match(zoomRegionPropertyNodeValue).hasMatch()) {
-                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                                              zoomRegionPropertyNode.getLine(),
-                                                              zoomRegionPropertyNode.getColumn(),
-                                                              tr("the '%1' property value must be a number greater than zero").arg(zoomRegionPropertyNodeName));
+                            } else if (   !zoomRegionPropertyNodeName.compare(Width)
+                                       && !IntegerGt0RegEx.match(zoomRegionPropertyNodeValue).hasMatch()) {
+                                mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                          zoomRegionPropertyNode.getLine(),
+                                                          zoomRegionPropertyNode.getColumn(),
+                                                          tr("the '%1' property value must be a number greater than zero").arg(zoomRegionPropertyNodeName));
 
-                                    return false;
-                                }
+                                return false;
                             } else if (   !zoomRegionPropertyNodeName.compare(Color)
                                        && !validColorPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, Color)) {
                                 return false;
@@ -989,7 +993,7 @@ bool SedmlFile::isSupported()
                                 return false;
                             } else if (   !zoomRegionPropertyNodeName.compare(Filled)
                                        &&  zoomRegionPropertyNodeValue.compare(True)
-                                       && zoomRegionPropertyNodeValue.compare(False)) {
+                                       &&  zoomRegionPropertyNodeValue.compare(False)) {
                                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                                  zoomRegionPropertyNode.getLine(),
                                                                  zoomRegionPropertyNode.getColumn(),
@@ -1068,17 +1072,14 @@ bool SedmlFile::isSupported()
                                 if (   !linePropertyNodeName.compare(Style)
                                     && !validListPropertyValue(linePropertyNode, linePropertyNodeValue, Style, lineStyles())) {
                                     return false;
-                                } else if (!linePropertyNodeName.compare(Width)) {
-                                    static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
+                                } else if (   !linePropertyNodeName.compare(Width)
+                                           && !IntegerGt0RegEx.match(linePropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                              linePropertyNode.getLine(),
+                                                              linePropertyNode.getColumn(),
+                                                              tr("the '%1' property value must be a number greater than zero").arg(linePropertyNodeName));
 
-                                    if (!IntegerGt0RegEx.match(linePropertyNodeValue).hasMatch()) {
-                                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                                                  linePropertyNode.getLine(),
-                                                                  linePropertyNode.getColumn(),
-                                                                  tr("the '%1' property value must be a number greater than zero").arg(linePropertyNodeName));
-
-                                        return false;
-                                    }
+                                    return false;
                                 } else if (   !linePropertyNodeName.compare(Color)
                                            && !validColorPropertyValue(linePropertyNode, linePropertyNodeValue, Color)) {
                                     return false;
@@ -1093,21 +1094,20 @@ bool SedmlFile::isSupported()
                                 if (   !symbolPropertyNodeName.compare(Style)
                                     && !validListPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, Style, symbolStyles())) {
                                     return false;
-                                } else if (!symbolPropertyNodeName.compare(Size)) {
-                                    if (!IntegerGt0RegEx.match(symbolPropertyNodeValue).hasMatch()) {
-                                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                                                  symbolPropertyNode.getLine(),
-                                                                  symbolPropertyNode.getColumn(),
-                                                                  tr("the '%1' property value must be an integer greater than zero").arg(symbolPropertyNodeName));
+                                } else if (   !symbolPropertyNodeName.compare(Size)
+                                           && !IntegerGt0RegEx.match(symbolPropertyNodeValue).hasMatch()) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                              symbolPropertyNode.getLine(),
+                                                              symbolPropertyNode.getColumn(),
+                                                              tr("the '%1' property value must be an integer greater than zero").arg(symbolPropertyNodeName));
 
-                                        return false;
-                                    }
+                                    return false;
                                 } else if (   !symbolPropertyNodeName.compare(Color)
                                            && !validColorPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, Color)) {
                                     return false;
                                 } else if (   !symbolPropertyNodeName.compare(Filled)
                                            &&  symbolPropertyNodeValue.compare(True)
-                                           && symbolPropertyNodeValue.compare(False)) {
+                                           &&  symbolPropertyNodeValue.compare(False)) {
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                               symbolPropertyNode.getLine(),
                                                               symbolPropertyNode.getColumn(),
