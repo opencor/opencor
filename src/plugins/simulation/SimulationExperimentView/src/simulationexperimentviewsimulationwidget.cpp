@@ -2511,7 +2511,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
         // Customise our graph panel
 
-        static const QString True = "true";
+        static const QString TrueValue = "true";
 
         libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
         GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
@@ -2595,7 +2595,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
 
                             if (!xAxisPropertyNodeName.compare(SEDMLSupport::LogarithmicScale)) {
-                                xAxisProperties[0]->setBooleanValue(!xAxisPropertyNodeValue.compare(True));
+                                xAxisProperties[0]->setBooleanValue(!xAxisPropertyNodeValue.compare(TrueValue));
                             } else if (!xAxisPropertyNodeName.compare(SEDMLSupport::Title)) {
                                 xAxisProperties[1]->setValue(xAxisPropertyNodeValue);
                             }
@@ -2610,7 +2610,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
 
                             if (!yAxisPropertyNodeName.compare(SEDMLSupport::LogarithmicScale)) {
-                                yAxisProperties[0]->setBooleanValue(!yAxisPropertyNodeValue.compare(True));
+                                yAxisProperties[0]->setBooleanValue(!yAxisPropertyNodeValue.compare(TrueValue));
                             } else if (!yAxisPropertyNodeName.compare(SEDMLSupport::Title)) {
                                 yAxisProperties[1]->setValue(yAxisPropertyNodeValue);
                             }
@@ -2633,7 +2633,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::FontColor)) {
                                 zoomRegionProperties[3]->setValue(zoomRegionPropertyNodeValue);
                             } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Filled)) {
-                                zoomRegionProperties[4]->setBooleanValue(!zoomRegionPropertyNodeValue.compare(True));
+                                zoomRegionProperties[4]->setBooleanValue(!zoomRegionPropertyNodeValue.compare(TrueValue));
                             } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::FillColor)) {
                                 zoomRegionProperties[5]->setValue(zoomRegionPropertyNodeValue);
                             }
@@ -2719,7 +2719,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                 } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Color)) {
                                     symbolColor.setNamedColor(symbolPropertyNodeValue);
                                 } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Filled)) {
-                                    symbolFilled = !symbolPropertyNodeValue.compare(True);
+                                    symbolFilled = !symbolPropertyNodeValue.compare(TrueValue);
                                 } else if (!symbolPropertyNodeName.compare(SEDMLSupport::FillColor)) {
                                     symbolFillColor.setNamedColor(symbolPropertyNodeValue);
                                 }

@@ -821,8 +821,8 @@ bool SedmlFile::isSupported()
         }
 
         static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
-        static const QString True = "true";
-        static const QString False = "false";
+        static const QString TrueValue = "true";
+        static const QString FalseValue = "false";
 
         annotation = output->getAnnotation();
 
@@ -866,8 +866,8 @@ bool SedmlFile::isSupported()
 
                         return false;
                     } else if (   !plot2dPropertyNodeName.compare(Legend)
-                               &&  plot2dPropertyNodeValue.compare(True)
-                               &&  plot2dPropertyNodeValue.compare(False)) {
+                               &&  plot2dPropertyNodeValue.compare(TrueValue)
+                               &&  plot2dPropertyNodeValue.compare(FalseValue)) {
                         mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                   plot2dPropertyNode.getLine(),
                                                   plot2dPropertyNode.getColumn(),
@@ -935,8 +935,8 @@ bool SedmlFile::isSupported()
                             QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
 
                             if (   !xAxisPropertyNodeName.compare(LogarithmicScale)
-                                &&  xAxisPropertyNodeValue.compare(True)
-                                &&  xAxisPropertyNodeValue.compare(False)) {
+                                &&  xAxisPropertyNodeValue.compare(TrueValue)
+                                &&  xAxisPropertyNodeValue.compare(FalseValue)) {
                                 mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                           xAxisPropertyNode.getLine(),
                                                           xAxisPropertyNode.getColumn(),
@@ -957,8 +957,8 @@ bool SedmlFile::isSupported()
                             QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
 
                             if (   !yAxisPropertyNodeName.compare(LogarithmicScale)
-                                &&  yAxisPropertyNodeValue.compare(True)
-                                &&  yAxisPropertyNodeValue.compare(False)) {
+                                &&  yAxisPropertyNodeValue.compare(TrueValue)
+                                &&  yAxisPropertyNodeValue.compare(FalseValue)) {
                                 mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                           yAxisPropertyNode.getLine(),
                                                           yAxisPropertyNode.getColumn(),
@@ -992,8 +992,8 @@ bool SedmlFile::isSupported()
                                        && !validColorPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, FontColor)) {
                                 return false;
                             } else if (   !zoomRegionPropertyNodeName.compare(Filled)
-                                       &&  zoomRegionPropertyNodeValue.compare(True)
-                                       &&  zoomRegionPropertyNodeValue.compare(False)) {
+                                       &&  zoomRegionPropertyNodeValue.compare(TrueValue)
+                                       &&  zoomRegionPropertyNodeValue.compare(FalseValue)) {
                                        mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                                  zoomRegionPropertyNode.getLine(),
                                                                  zoomRegionPropertyNode.getColumn(),
@@ -1106,8 +1106,8 @@ bool SedmlFile::isSupported()
                                            && !validColorPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, Color)) {
                                     return false;
                                 } else if (   !symbolPropertyNodeName.compare(Filled)
-                                           &&  symbolPropertyNodeValue.compare(True)
-                                           &&  symbolPropertyNodeValue.compare(False)) {
+                                           &&  symbolPropertyNodeValue.compare(TrueValue)
+                                           &&  symbolPropertyNodeValue.compare(FalseValue)) {
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                               symbolPropertyNode.getLine(),
                                                               symbolPropertyNode.getColumn(),
