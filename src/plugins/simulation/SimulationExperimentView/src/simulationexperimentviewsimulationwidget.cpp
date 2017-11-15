@@ -1710,6 +1710,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
         Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
+        Core::Properties xAxisProperties = graphPanelProperties[6]->properties();
+        Core::Properties yAxisProperties = graphPanelProperties[7]->properties();
 
         sedmlPlot2d->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                               "    %3"
@@ -1738,7 +1740,17 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                                               +SedmlProperty.arg(SEDMLSupport::PointCoordinatesColor,
                                                                                                  stringValue(pointCoordinatesProperties[2]))
                                                                               +SedmlProperty.arg(SEDMLSupport::PointCoordinatesFontColor,
-                                                                                                 stringValue(pointCoordinatesProperties[3])))).toStdString());
+                                                                                                 stringValue(pointCoordinatesProperties[3])))
+                                                           +SedmlProperty.arg( SEDMLSupport::XAxisProperties,
+                                                                               SedmlProperty.arg(SEDMLSupport::XAxisLogarithmicScale,
+                                                                                                 stringValue(xAxisProperties[0]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::XAxisTitle,
+                                                                                                 stringValue(xAxisProperties[1])))
+                                                           +SedmlProperty.arg( SEDMLSupport::YAxisProperties,
+                                                                               SedmlProperty.arg(SEDMLSupport::YAxisLogarithmicScale,
+                                                                                                 stringValue(yAxisProperties[0]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::YAxisTitle,
+                                                                                                 stringValue(yAxisProperties[1])))).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
@@ -2476,6 +2488,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
         // Customise our graph panel
 
+        static const QString True = "true";
+
         libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
         GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
         SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
@@ -2542,6 +2556,36 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                 pointCoordinatesProperties[2]->setValue(pointCoordinatesPropertyNodeValue);
                             } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::PointCoordinatesFontColor)) {
                                 pointCoordinatesProperties[3]->setValue(pointCoordinatesPropertyNodeValue);
+                            }
+                        }
+                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::XAxisProperties)) {
+                        Core::Properties xAxisProperties = graphPanelProperties[6]->properties();
+
+                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            const libsbml::XMLNode &xAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                            QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
+                            QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
+
+                            if (!xAxisPropertyNodeName.compare(SEDMLSupport::XAxisLogarithmicScale)) {
+                                xAxisProperties[0]->setBooleanValue(!xAxisPropertyNodeValue.compare(True));
+                            } else if (!xAxisPropertyNodeName.compare(SEDMLSupport::XAxisTitle)) {
+                                xAxisProperties[1]->setValue(xAxisPropertyNodeValue);
+                            }
+                        }
+                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::YAxisProperties)) {
+                        Core::Properties yAxisProperties = graphPanelProperties[7]->properties();
+
+                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            const libsbml::XMLNode &yAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                            QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
+                            QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
+
+                            if (!yAxisPropertyNodeName.compare(SEDMLSupport::YAxisLogarithmicScale)) {
+                                yAxisProperties[0]->setBooleanValue(!yAxisPropertyNodeValue.compare(True));
+                            } else if (!yAxisPropertyNodeName.compare(SEDMLSupport::YAxisTitle)) {
+                                yAxisProperties[1]->setValue(yAxisPropertyNodeValue);
                             }
                         }
                     }
@@ -2625,7 +2669,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                 } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolColor)) {
                                     symbolColor.setNamedColor(symbolPropertyNodeValue);
                                 } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolFilled)) {
-                                    symbolFilled = !symbolPropertyNodeValue.compare("true");
+                                    symbolFilled = !symbolPropertyNodeValue.compare(True);
                                 } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolFillColor)) {
                                     symbolFillColor.setNamedColor(symbolPropertyNodeValue);
                                 }

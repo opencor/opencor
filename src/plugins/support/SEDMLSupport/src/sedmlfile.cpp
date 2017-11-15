@@ -821,6 +821,8 @@ bool SedmlFile::isSupported()
         }
 
         static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
+        static const QString True = "true";
+        static const QString False = "false";
 
         annotation = output->getAnnotation();
 
@@ -904,6 +906,50 @@ bool SedmlFile::isSupported()
                                 return false;
                             } else if (   !pointCoordinatesPropertyNodeName.compare(PointCoordinatesFontColor)
                                        && !validColorPropertyValue(pointCoordinatesPropertyNode, pointCoordinatesPropertyNodeValue, PointCoordinatesFontColor)) {
+                                return false;
+                            }
+                        }
+                    } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
+                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(XAxisProperties)) {
+                        for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            // Note: we don't need to check for the title since
+                            //       it is a string and that it can therefore
+                            //       have any value...
+
+                            const libsbml::XMLNode &xAxisPropertyNode = plot2dPropertyNode.getChild(k);
+                            QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
+                            QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
+
+                            if (   !xAxisPropertyNodeName.compare(XAxisLogarithmicScale)
+                                &&  xAxisPropertyNodeValue.compare(True)
+                                && xAxisPropertyNodeValue.compare(False)) {
+                                mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                          xAxisPropertyNode.getLine(),
+                                                          xAxisPropertyNode.getColumn(),
+                                                          tr("the '%1' property must have a value of 'true' or 'false'").arg(XAxisLogarithmicScale));
+
+                                return false;
+                            }
+                        }
+                    } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
+                               && !QString::fromStdString(plot2dPropertyNode.getName()).compare(YAxisProperties)) {
+                        for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            // Note: we don't need to check for the title since
+                            //       it is a string and that it can therefore
+                            //       have any value...
+
+                            const libsbml::XMLNode &yAxisPropertyNode = plot2dPropertyNode.getChild(k);
+                            QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
+                            QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
+
+                            if (   !yAxisPropertyNodeName.compare(YAxisLogarithmicScale)
+                                &&  yAxisPropertyNodeValue.compare(True)
+                                && yAxisPropertyNodeValue.compare(False)) {
+                                mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                          yAxisPropertyNode.getLine(),
+                                                          yAxisPropertyNode.getColumn(),
+                                                          tr("the '%1' property must have a value of 'true' or 'false'").arg(YAxisLogarithmicScale));
+
                                 return false;
                             }
                         }
@@ -1012,8 +1058,8 @@ bool SedmlFile::isSupported()
                                            && !validColorPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, SymbolColor)) {
                                     return false;
                                 } else if (   !symbolPropertyNodeName.compare(SymbolFilled)
-                                           &&  symbolPropertyNodeValue.compare("true")
-                                           && symbolPropertyNodeValue.compare("false")) {
+                                           &&  symbolPropertyNodeValue.compare(True)
+                                           && symbolPropertyNodeValue.compare(False)) {
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                                               symbolPropertyNode.getLine(),
                                                               symbolPropertyNode.getColumn(),
