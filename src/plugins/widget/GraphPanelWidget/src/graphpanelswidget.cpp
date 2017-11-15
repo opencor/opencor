@@ -316,6 +316,16 @@ void GraphPanelsWidget::setActiveGraphPanel(GraphPanelWidget *pGraphPanel)
 
 //==============================================================================
 
+QIntList GraphPanelsWidget::sizes() const
+{
+    // Return either our internal or default sizes, depending on our current
+    // state
+
+    return mUseInternalSizes?mInternalSizes:QSplitter::sizes();
+}
+
+//==============================================================================
+
 void GraphPanelsWidget::stopUsingInternalSizes()
 {
     // Stop using our internal sizes

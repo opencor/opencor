@@ -107,6 +107,11 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "Generation of error messages." }
                              ]
                            },
+                           { "type": "subCategory", "name": "SED-ML support",
+                             "entries": [
+                               { "type": "Added", "description": "Customisation of graph panels." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "ZIP support",
                              "entries": [
                                { "type": "Improved", "description": "decompression." }
