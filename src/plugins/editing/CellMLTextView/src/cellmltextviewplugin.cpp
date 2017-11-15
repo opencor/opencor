@@ -265,7 +265,7 @@ void CellMLTextViewPlugin::initializePlugin()
     // Hide our CellML Text view widget since it may not initially be shown in
     // our central widget
 
-    mViewWidget->setVisible(false);
+    mViewWidget->hide();
 }
 
 //==============================================================================

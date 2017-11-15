@@ -62,13 +62,12 @@ signals:
 
 //==============================================================================
 
-class CollapsibleHeaderWidget : public QWidget
+class CORE_EXPORT CollapsibleHeaderWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit CollapsibleHeaderWidget(const QColor &pSeparatorColor,
-                                     const bool &pCollapsible,
+    explicit CollapsibleHeaderWidget(const bool &pCollapsible,
                                      QWidget *pParent);
 
     void setFirstHeader(const bool &pFirstHeader);
@@ -82,6 +81,9 @@ public:
     QString title() const;
     void setTitle(const QString &pTitle);
 
+    QMenu * menu() const;
+    void setMenu(QMenu *pMenu);
+
 private:
     bool mCollapsed;
 
@@ -92,6 +94,9 @@ private:
 
     QToolButton *mButton;
     CollapsibleHeaderTitleWidget *mTitle;
+    QToolButton *mMenu;
+
+    QMenu *mMenuMenu;
 
     void updateBottomSeparatorVisibleStatus();
 
@@ -100,6 +105,7 @@ signals:
 
 private slots:
     void toggleCollapsedState();
+    void showMenu();
 };
 
 //==============================================================================
@@ -109,7 +115,6 @@ class CORE_EXPORT CollapsibleWidget : public Widget
     Q_OBJECT
 
 public:
-    explicit CollapsibleWidget(const QColor &pSeparatorColor, QWidget *pParent);
     explicit CollapsibleWidget(QWidget *pParent);
 
     int count() const;
@@ -120,12 +125,11 @@ public:
     QString headerTitle(const int &pIndex) const;
     void setHeaderTitle(const int &pIndex, const QString &pTitle);
 
-    void addWidget(QWidget *pWidget, const bool &pCollapsible = true);
+    CollapsibleHeaderWidget * addWidget(QWidget *pWidget,
+                                        const bool &pCollapsible = true);
 
 private:
     QVBoxLayout *mLayout;
-
-    QColor mSeparatorColor;
 
     QList<CollapsibleHeaderWidget *> mHeaders;
 

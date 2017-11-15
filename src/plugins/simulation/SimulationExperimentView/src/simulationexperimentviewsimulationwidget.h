@@ -244,7 +244,7 @@ private:
 
     CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable);
 
-    bool doFurtherInitialize();
+    bool furtherInitialize();
     void initializeGui(const bool &pValidSimulationEnvironment);
     void initializeSimulation();
 
@@ -263,6 +263,9 @@ private:
 signals:
     void splitterMoved(const QIntList &pSizes);
 
+    void graphPanelSettingsRequested();
+    void graphsSettingsRequested();
+
 private slots:
     void runPauseResumeSimulation();
     void stopSimulation();
@@ -275,8 +278,6 @@ private slots:
     void clearSimulationData();
     void sedmlExportSedmlFile();
     void sedmlExportCombineArchive();
-
-    void furtherInitialize();
 
     void emitSplitterMoved();
 
@@ -314,8 +315,6 @@ private slots:
 
     void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
     void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
-
-    void graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
 
     void openCellmlFile();
 

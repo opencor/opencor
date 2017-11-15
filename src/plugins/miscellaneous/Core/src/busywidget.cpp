@@ -73,7 +73,7 @@ BusyWidget::BusyWidget(QWidget *pParent, const double &pProgress) :
 
     // Make ourselves visible and start our timer, if needed
 
-    setVisible(true);
+    show();
 
     if (pProgress == -1.0)
         mTimer->start();

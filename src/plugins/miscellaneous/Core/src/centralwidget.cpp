@@ -205,7 +205,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mNoViewMsg = new UserMessageWidget(":/oxygen/actions/help-about.png", this);
 
-    mNoViewMsg->setVisible(false);
+    mNoViewMsg->hide();
 
     // Create and set up our central widget
 
@@ -1751,10 +1751,14 @@ void CentralWidget::updateGui()
     if (mContents->currentWidget() != newView) {
         bool statusBarVisible = mainWindow()->statusBar()->isVisible();
 
-        mainWindow()->statusBar()->setVisible(false);
-            mContents->removeWidget(mContents->currentWidget());
-            mContents->addWidget(newView);
-        mainWindow()->statusBar()->setVisible(statusBarVisible);
+        if (statusBarVisible)
+            mainWindow()->statusBar()->hide();
+
+        mContents->removeWidget(mContents->currentWidget());
+        mContents->addWidget(newView);
+
+        if (statusBarVisible)
+            mainWindow()->statusBar()->show();
     }
 
     // Give the focus to the new view after first checking that it has a focused

@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Graph panels widget
 //==============================================================================
 
-#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "graphpanelswidget.h"
 #include "i18ninterface.h"
@@ -47,7 +46,9 @@ namespace GraphPanelWidget {
 GraphPanelsWidget::GraphPanelsWidget(QWidget *pParent) :
     Core::SplitterWidget(pParent),
     mGraphPanels(GraphPanelWidgets()),
-    mActiveGraphPanel(0)
+    mActiveGraphPanel(0),
+    mInternalSizes(QIntList()),
+    mUseInternalSizes(true)
 {
     // Set our orientation
 
@@ -62,6 +63,12 @@ GraphPanelsWidget::GraphPanelsWidget(QWidget *pParent) :
             this, SLOT(synchronizeXAxis()));
     connect(mSynchronizeYAxisAction, SIGNAL(triggered(bool)),
             this, SLOT(synchronizeYAxis()));
+
+    // Check whether one of our splitters has move and, therefore, whether our
+    // sizes have changed
+
+    connect(this, SIGNAL(splitterMoved(int, int)),
+            this, SLOT(stopUsingInternalSizes()));
 }
 
 //==============================================================================
@@ -113,15 +120,6 @@ GraphPanelWidget * GraphPanelsWidget::activeGraphPanel() const
 
 GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
 {
-    // Keep track of the graph panels' original size
-
-    QIntList origSizes = sizes();
-
-    // Retrieve the active graph panel's plot, if any, which will be used to
-    // synchronise axes, if needed
-
-    GraphPanelPlotWidget *activeGraphPanelPlot = mActiveGraphPanel?mActiveGraphPanel->plot():0;
-
     // Create a new graph panel, add it to ourselves and keep track of it
 
     GraphPanelWidget *res = new GraphPanelWidget(mGraphPanels,
@@ -131,15 +129,38 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
 
     mGraphPanels << res;
 
-    // Resize the graph panels, thus making sure that their size is what it
-    // should be
+    // Resize the graph panels, if needed, making sure that their size is what
+    // it should be
+    // Note: we use our internal sizes for as long as possible (i.e. as long as
+    //       none of our splitters has moved; although, we can reuse our
+    //       internal sizes if we have only one graph panel left). Indeed, if we
+    //       were to open a CellML file and create two graph panels, then their
+    //       height would be based on actual heights since everything would be
+    //       visible. On the other hand, if we were to open a SED-ML file with
+    //       three graph panels and that we were to rely on their actual height
+    //       to resize them, then their new height would be based on 'hidden'
+    //       heights since nothing would be visible. Now, the problem is that
+    //       those 'hidden' heights tend to be much smaller than actual heights.
+    //       The end result is that the two sets of graph panels may end up
+    //       being quite different, something that we can prevent by using our
+    //       internal heights...
 
-    double scalingFactor = double(mGraphPanels.count()-1)/mGraphPanels.count();
+    if (mUseInternalSizes) {
+        mInternalSizes << 1;
 
-    for (int i = 0, iMax = origSizes.count(); i < iMax; ++i)
-        origSizes[i] *= scalingFactor;
+        setSizes(mInternalSizes);
+    } else {
+        QIntList oldSizes = sizes();
+        QIntList newSizes = QIntList();
+        int oldTotalSize = height()-(mGraphPanels.count()-2)*handleWidth();
+        int newTotalSize = oldTotalSize-handleWidth();
+        double scalingFactor = double(mGraphPanels.count()-1)/mGraphPanels.count()*newTotalSize/oldTotalSize;
 
-    setSizes(origSizes << height()/mGraphPanels.count());
+        for (int i = 0, iMax = oldSizes.count()-1; i < iMax; ++i)
+            newSizes << round(scalingFactor*oldSizes[i]);
+
+        setSizes(newSizes << newTotalSize-std::accumulate(newSizes.begin(), newSizes.end(), 0));
+    }
 
     // Keep track of whenever a graph panel gets activated
 
@@ -174,6 +195,8 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
     // Note: at startup, activeGraphPanelPlot is (obviously) null, hence we use
     //       our newly created graph panel's plot instead...
 
+    GraphPanelPlotWidget *activeGraphPanelPlot = mActiveGraphPanel?mActiveGraphPanel->plot():0;
+
     if (!activeGraphPanelPlot)
         activeGraphPanelPlot = mActiveGraphPanel->plot();
 
@@ -203,15 +226,22 @@ bool GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
     // Note: we let people know before we actually delete the graph panel,
     //       because some people interested in that signal might have used the
     //       pointer to keep track of some information, as is done in
-    //       SimulationExperimentViewInformationGraphsWidget for example...
+    //       SimulationExperimentViewInformationGraphPanelAndGraphsWidget for
+    //       example...
 
     emit graphPanelRemoved(pGraphPanel);
 
-    // Remove all tracks
+    // Update some trackers
     // Note: mActiveGraphPanel will automatically get updated when another graph
     //       panel gets selected...
 
     mGraphPanels.removeOne(pGraphPanel);
+
+    if (mUseInternalSizes)
+        mInternalSizes.removeLast();
+
+    if (mGraphPanels.count() == 1)
+        mUseInternalSizes = true;
 
     // Now, we can delete our graph panel
 
@@ -234,16 +264,13 @@ bool GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
         mGraphPanels[mGraphPanels.count()-1]->setActive(true);
     }
 
-    // Ask our first graph panel's plot, if any, to align itself against its
-    // neighbours
+    // Ask our active graph panel's plot to align itself against its neighbours,
+    // if any
 
-    if (!mGraphPanels.isEmpty()) {
+    if (!mGraphPanels.isEmpty())
         mActiveGraphPanel->plot()->forceAlignWithNeighbors();
 
-        return true;
-    } else {
-        return false;
-    }
+    return true;
 }
 
 //==============================================================================
@@ -264,17 +291,13 @@ bool GraphPanelsWidget::removeCurrentGraphPanel()
 
 void GraphPanelsWidget::removeAllGraphPanels()
 {
-    // Make sure that we don't have only one graph panel left
+    // Remove all the graph panels, after having created an 'empty' one (since
+    // we want at least one graph panel at any given point in time)
 
-    if (mGraphPanels.count() == 1)
-        return;
-
-    // Remove all the graph panels but one
-    // Note: the one we keep is the very first one since it may be the user's
-    //       most important graph panel...
+    addGraphPanel();
 
     while (mGraphPanels.count() > 1)
-        removeGraphPanel(mGraphPanels.last());
+        removeGraphPanel(mGraphPanels.first());
 }
 
 //==============================================================================
@@ -289,6 +312,15 @@ void GraphPanelsWidget::setActiveGraphPanel(GraphPanelWidget *pGraphPanel)
     // Make the given graph panel the active one
 
     pGraphPanel->setActive(true, true);
+}
+
+//==============================================================================
+
+void GraphPanelsWidget::stopUsingInternalSizes()
+{
+    // Stop using our internal sizes
+
+    mUseInternalSizes = false;
 }
 
 //==============================================================================

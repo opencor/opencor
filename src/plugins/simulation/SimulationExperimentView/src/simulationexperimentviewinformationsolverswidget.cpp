@@ -161,7 +161,7 @@ void SimulationExperimentViewInformationSolversWidget::retranslateUi()
     // Note: this is effectively to have the description of our solvers'
     //       properties properly updated...
 
-    foreach (Core::Property *property, properties()) {
+    foreach (Core::Property *property, allProperties()) {
         if (mDescriptions.contains(property)) {
             // The property has a description associated with it, so retrieve
             // the version, if any, which corresponds to our current locale

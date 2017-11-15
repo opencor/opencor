@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "collapsiblewidget.h"
-#include "simulationexperimentviewinformationgraphswidget.h"
+#include "i18ninterface.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
 #include "simulationexperimentviewinformationsimulationwidget.h"
 #include "simulationexperimentviewinformationsolverswidget.h"
@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QMenu>
 #include <QSettings>
 #include <QVBoxLayout>
 
@@ -77,11 +78,11 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
 
     mSolversWidget->setObjectName("Solvers");
 
-    // Create our graphs widget
+    // Create our graph panel and graphs widget
 
-    mGraphsWidget = new SimulationExperimentViewInformationGraphsWidget(pViewWidget, pSimulationWidget, mCollapsibleWidget);
+    mGraphPanelAndGraphsWidget = new SimulationExperimentViewInformationGraphPanelAndGraphsWidget(pViewWidget, pSimulationWidget, mCollapsibleWidget);
 
-    mGraphsWidget->setObjectName("Graphs");
+    mGraphPanelAndGraphsWidget->setObjectName("GraphPanelAndGraphs");
 
     // Create our parameters widget
 
@@ -89,13 +90,52 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
 
     mParametersWidget->setObjectName("Parameters");
 
-    // Add our simulation, solvers, graphs and parameters widgets to our
-    // collapsible widget
+    // Add our different widgets to our collapsible widget
 
-    mCollapsibleWidget->addWidget(mSimulationWidget);
-    mCollapsibleWidget->addWidget(mSolversWidget);
-    mCollapsibleWidget->addWidget(mGraphsWidget);
-    mCollapsibleWidget->addWidget(mParametersWidget, false);
+                                                      mCollapsibleWidget->addWidget(mSimulationWidget);
+                                                      mCollapsibleWidget->addWidget(mSolversWidget);
+    Core::CollapsibleHeaderWidget *graphPanelHeader = mCollapsibleWidget->addWidget(mGraphPanelAndGraphsWidget);
+                                                      mCollapsibleWidget->addWidget(mParametersWidget, false);
+
+    // Give more importance to our parameters widget than to our graph panel /
+    // graphs widget
+    // Note: indeed, our simulation and solvers widgets have a fixed size while
+    //       both our parameters and graph panel / graphs widgets can take as
+    //       much space as they want. Yet, we want our parameters widget to take
+    //       more space since it's more 'important'...
+
+    QVBoxLayout *collapsibleWidgetLayout = static_cast<QVBoxLayout *>(mCollapsibleWidget->layout());
+
+    collapsibleWidgetLayout->setStretchFactor(mGraphPanelAndGraphsWidget, 1);
+    collapsibleWidgetLayout->setStretchFactor(mParametersWidget, 2);
+
+    // Create and set a menu for our graph panel header
+
+    QMenu *menu = new QMenu(this);
+
+    mGraphPanelAction = Core::newAction(true, graphPanelHeader);
+    mGraphsAction = Core::newAction(true, graphPanelHeader);
+
+    mGraphsAction->setChecked(true);
+
+    QActionGroup *settingsActionGroup = new QActionGroup(this);
+
+    settingsActionGroup->addAction(mGraphPanelAction);
+    settingsActionGroup->addAction(mGraphsAction);
+
+    menu->addActions(settingsActionGroup->actions());
+
+    graphPanelHeader->setMenu(menu);
+
+    connect(mGraphPanelAction, SIGNAL(triggered(bool)),
+            this, SLOT(grapPanelPropertyEditor()));
+    connect(mGraphsAction, SIGNAL(triggered(bool)),
+            this, SLOT(graphsPropertyEditor()));
+
+    // A connection to know when our graph panel / graphs panel changes modes
+
+    connect(mGraphPanelAndGraphsWidget, SIGNAL(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)),
+            this, SLOT(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)));
 
     // Add our collapsible widget to our layout
 
@@ -110,14 +150,23 @@ void SimulationExperimentViewInformationWidget::retranslateUi()
 
     mCollapsibleWidget->setHeaderTitle(0, tr("Simulation"));
     mCollapsibleWidget->setHeaderTitle(1, tr("Solvers"));
-    mCollapsibleWidget->setHeaderTitle(2, tr("Graphs"));
+    mCollapsibleWidget->setHeaderTitle(2, (mGraphPanelAndGraphsWidget->mode() == SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel)?
+                                              tr("Graph Panel"):
+                                              tr("Graphs"));
     mCollapsibleWidget->setHeaderTitle(3, tr("Parameters"));
+
+    // Retranslate our graph panel actions
+
+    I18nInterface::retranslateAction(mGraphPanelAction, tr("Graph Panel"),
+                                     tr("Graph panel settings"));
+    I18nInterface::retranslateAction(mGraphsAction, tr("Graphs"),
+                                     tr("Graphs settings"));
 
     // Retranslate our simulation, solvers, graphs and parameters widgets
 
     mSimulationWidget->retranslateUi();
     mSolversWidget->retranslateUi();
-    mGraphsWidget->retranslateUi();
+    mGraphPanelAndGraphsWidget->retranslateUi();
     mParametersWidget->retranslateUi();
 }
 
@@ -150,11 +199,11 @@ SimulationExperimentViewInformationSolversWidget * SimulationExperimentViewInfor
 
 //==============================================================================
 
-SimulationExperimentViewInformationGraphsWidget * SimulationExperimentViewInformationWidget::graphsWidget() const
+SimulationExperimentViewInformationGraphPanelAndGraphsWidget * SimulationExperimentViewInformationWidget::graphPanelAndGraphsWidget() const
 {
-    // Return our graphs widget
+    // Return our graph panel and graphs widget
 
-    return mGraphsWidget;
+    return mGraphPanelAndGraphsWidget;
 }
 
 //==============================================================================
@@ -179,8 +228,40 @@ void SimulationExperimentViewInformationWidget::finishEditing(const bool &pPause
         mSolversWidget->finishEditing();
     }
 
-    mGraphsWidget->finishEditing();
+    mGraphPanelAndGraphsWidget->finishEditing();
     mParametersWidget->finishEditing();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationWidget::grapPanelPropertyEditor()
+{
+    // Switch to Graph Panel mode
+
+    mGraphPanelAndGraphsWidget->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationWidget::graphsPropertyEditor()
+{
+    // Switch to Graphs mode
+
+    mGraphPanelAndGraphsWidget->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationWidget::graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode)
+{
+    // Our graph panel / graphs mode has changed, so update our corresponding
+    // actions and update the title of our collapsible widget's third header's
+    // title by retranslating ourselves
+
+    mGraphPanelAction->setChecked(pMode == SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel);
+    mGraphsAction->setChecked(pMode == SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
+
+    retranslateUi();
 }
 
 //==============================================================================

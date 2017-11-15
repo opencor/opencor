@@ -2,7 +2,79 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphsWidget</name>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget</name>
+    <message>
+        <source>Background colour</source>
+        <translation>Couleur d&apos;arrière-plan</translation>
+    </message>
+    <message>
+        <source>Font size</source>
+        <translation>Taille de la police</translation>
+    </message>
+    <message>
+        <source>Foreground colour</source>
+        <translation>Couleur de premier plan</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>Lignes de quadrillage</translation>
+    </message>
+    <message>
+        <source>Style</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Width</source>
+        <translation>Largeur</translation>
+    </message>
+    <message>
+        <source>Colour</source>
+        <translation>Couleur</translation>
+    </message>
+    <message>
+        <source>Point coordinates</source>
+        <translation>Coordonnées de point</translation>
+    </message>
+    <message>
+        <source>Font colour</source>
+        <translation>Couleur de la police</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>Titre</translation>
+    </message>
+    <message>
+        <source>X axis</source>
+        <translation>Axe des X</translation>
+    </message>
+    <message>
+        <source>Logarithmic scale</source>
+        <translation>Échelle logarithmique</translation>
+    </message>
+    <message>
+        <source>Y axis</source>
+        <translation>Axe des Y</translation>
+    </message>
+    <message>
+        <source>Zoom region</source>
+        <translation>Région de zoom</translation>
+    </message>
+    <message>
+        <source>Filled</source>
+        <translation>Rempli</translation>
+    </message>
+    <message>
+        <source>Fill colour</source>
+        <translation>Couleur de remplissage</translation>
+    </message>
+    <message>
+        <source>Select Colour...</source>
+        <translation>Sélectionner Couleur...</translation>
+    </message>
+    <message>
+        <source>Select a colour</source>
+        <translation>Sélectionner une couleur</translation>
+    </message>
     <message>
         <source>Add Graph</source>
         <translation>Ajouter Courbe</translation>
@@ -44,18 +116,6 @@
         <translation>Déselectionner toutes les courbes</translation>
     </message>
     <message>
-        <source>Select Colour...</source>
-        <translation>Sélectionner Couleur...</translation>
-    </message>
-    <message>
-        <source>Select a colour</source>
-        <translation>Sélectionner une couleur</translation>
-    </message>
-    <message>
-        <source>Select Colour</source>
-        <translation>Sélectionner Couleur</translation>
-    </message>
-    <message>
         <source>Current</source>
         <translation>Actuel</translation>
     </message>
@@ -84,10 +144,6 @@
         <translation>Ligne</translation>
     </message>
     <message>
-        <source>Style</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>None</source>
         <translation>Aucun</translation>
     </message>
@@ -110,14 +166,6 @@
     <message>
         <source>DashDotDot</source>
         <translation>TiretPointPoint</translation>
-    </message>
-    <message>
-        <source>Width</source>
-        <translation>Largeur</translation>
-    </message>
-    <message>
-        <source>Colour</source>
-        <translation>Couleur</translation>
     </message>
     <message>
         <source>Symbol</source>
@@ -166,14 +214,6 @@
     <message>
         <source>Size</source>
         <translation>Taille</translation>
-    </message>
-    <message>
-        <source>Filled</source>
-        <translation>Rempli</translation>
-    </message>
-    <message>
-        <source>Fill colour</source>
-        <translation>Couleur de remplissage</translation>
     </message>
 </context>
 <context>
@@ -260,12 +300,24 @@
         <translation>Solveurs</translation>
     </message>
     <message>
+        <source>Graph Panel</source>
+        <translation>Panneau Graphique</translation>
+    </message>
+    <message>
         <source>Graphs</source>
-        <translation>Courbes</translation>
+        <translation>Graphes</translation>
     </message>
     <message>
         <source>Parameters</source>
         <translation>Paramètres</translation>
+    </message>
+    <message>
+        <source>Graph panel settings</source>
+        <translation>Propriétés du panneau graphique</translation>
+    </message>
+    <message>
+        <source>Graphs settings</source>
+        <translation>Propriétés des graphes</translation>
     </message>
 </context>
 <context>

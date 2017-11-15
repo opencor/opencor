@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "filemanager.h"
 #include "simulation.h"
 #include "simulationexperimentviewcontentswidget.h"
-#include "simulationexperimentviewinformationgraphswidget.h"
+#include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
 #include "simulationexperimentviewinformationsimulationwidget.h"
 #include "simulationexperimentviewinformationsolverswidget.h"
@@ -61,10 +61,13 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     mSimulationWidgetSizes(QIntList()),
     mContentsWidgetSizes(QIntList()),
     mCollapsibleWidgetCollapsed(QBoolList()),
-    mSimulationWidgetColumnWidths(QIntList()),
-    mSolversWidgetColumnWidths(QIntList()),
-    mGraphsWidgetColumnWidths(QIntList()),
-    mParametersWidgetColumnWidths(QIntList()),
+    mGraphPanelGraphsMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs),
+    mSimulationColumnWidths(QIntList()),
+    mSolversColumnWidths(QIntList()),
+    mGraphPanelColumnWidths(QIntList()),
+    mGraphsColumnWidths(QIntList()),
+    mParametersColumnWidths(QIntList()),
+    mGraphPanelSectionsExpanded(QMap<int, bool>()),
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SimulationExperimentViewSimulationWidget *>()),
     mFileNames(QStringList()),
@@ -75,12 +78,14 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
 
 //==============================================================================
 
-static const auto SettingsSizes = QStringLiteral("Sizes");
-static const auto SettingsContentsSizes = QStringLiteral("ContentsSizes");
-static const auto SettingsCollapsed = QStringLiteral("Collapsed");
+static const auto SettingsSizes                  = QStringLiteral("Sizes");
+static const auto SettingsContentsSizes          = QStringLiteral("ContentsSizes");
+static const auto SettingsCollapsed              = QStringLiteral("Collapsed");
+static const auto SettingsGraphPanelGraphsMode   = QStringLiteral("GraphPanelGraphsMode");
 static const auto SettingsSimulationColumnWidths = QStringLiteral("SimulationColumnWidths");
-static const auto SettingsSolversColumnWidths = QStringLiteral("SolversColumnWidths");
-static const auto SettingsGraphsColumnWidths = QStringLiteral("GraphsColumnWidths");
+static const auto SettingsSolversColumnWidths    = QStringLiteral("SolversColumnWidths");
+static const auto SettingsGraphPanelColumnWidths = QStringLiteral("GraphPanelColumnWidths");
+static const auto SettingsGraphsColumnWidths     = QStringLiteral("GraphsColumnWidths");
 static const auto SettingsParametersColumnWidths = QStringLiteral("ParametersColumnWidths");
 
 //==============================================================================
@@ -89,26 +94,32 @@ void SimulationExperimentViewWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve the sizes of our simulation widget and of its contents widget
 
-    QVariantList defaultContentsSizes = QVariantList() << 0.25*qApp->desktop()->screenGeometry().width()
-                                                       << 0.75*qApp->desktop()->screenGeometry().width();
+    static const QVariantList defaultContentsSizes = QVariantList() << 0.25*qApp->desktop()->screenGeometry().width()
+                                                                    << 0.75*qApp->desktop()->screenGeometry().width();
 
     mSimulationWidgetSizes = qVariantListToIntList(pSettings->value(SettingsSizes).toList());
     mContentsWidgetSizes = qVariantListToIntList(pSettings->value(SettingsContentsSizes, defaultContentsSizes).toList());
 
     // Retrieve the collapsed states of our collapsible widget
 
-    QVariantList defaultCollapsed = QVariantList() << false << false << false;
+    static const QVariantList defaultCollapsed = QVariantList() << false << false << false;
 
     mCollapsibleWidgetCollapsed = qVariantListToBoolList(pSettings->value(SettingsCollapsed, defaultCollapsed).toList());
 
+    // Retrieve our graph panel /graphs mode
+
+    mGraphPanelGraphsMode = SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode(pSettings->value(SettingsGraphPanelGraphsMode, SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel).toInt());
+
     // Retrieve the columns' width of our various property editors
 
-    QVariantList defaultColumnWidths = QVariantList() << 100 << 100 << 100;
+    static const QVariantList defaultThreeColumnWidths = QVariantList() << 100 << 100 << 100;
+    static const QVariantList defaultTwoColumnWidths = QVariantList() << 100 << 100;
 
-    mSimulationWidgetColumnWidths = qVariantListToIntList(pSettings->value(SettingsSimulationColumnWidths, defaultColumnWidths).toList());
-    mSolversWidgetColumnWidths = qVariantListToIntList(pSettings->value(SettingsSolversColumnWidths, defaultColumnWidths).toList());
-    mGraphsWidgetColumnWidths = qVariantListToIntList(pSettings->value(SettingsGraphsColumnWidths, defaultColumnWidths).toList());
-    mParametersWidgetColumnWidths = qVariantListToIntList(pSettings->value(SettingsParametersColumnWidths, defaultColumnWidths).toList());
+    mSimulationColumnWidths = qVariantListToIntList(pSettings->value(SettingsSimulationColumnWidths, defaultThreeColumnWidths).toList());
+    mSolversColumnWidths = qVariantListToIntList(pSettings->value(SettingsSolversColumnWidths, defaultThreeColumnWidths).toList());
+    mGraphPanelColumnWidths = qVariantListToIntList(pSettings->value(SettingsGraphPanelColumnWidths, defaultTwoColumnWidths).toList());
+    mGraphsColumnWidths = qVariantListToIntList(pSettings->value(SettingsGraphsColumnWidths, defaultTwoColumnWidths).toList());
+    mParametersColumnWidths = qVariantListToIntList(pSettings->value(SettingsParametersColumnWidths, defaultThreeColumnWidths).toList());
 }
 
 //==============================================================================
@@ -125,12 +136,17 @@ void SimulationExperimentViewWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsCollapsed, qBoolListToVariantList(mCollapsibleWidgetCollapsed));
 
+    // Keep track of our graph panel /graphs mode
+
+    pSettings->setValue(SettingsGraphPanelGraphsMode, mGraphPanelGraphsMode);
+
     // Keep track of the columns' width of our various property editors
 
-    pSettings->setValue(SettingsSimulationColumnWidths, qIntListToVariantList(mSimulationWidgetColumnWidths));
-    pSettings->setValue(SettingsSolversColumnWidths, qIntListToVariantList(mSolversWidgetColumnWidths));
-    pSettings->setValue(SettingsGraphsColumnWidths, qIntListToVariantList(mGraphsWidgetColumnWidths));
-    pSettings->setValue(SettingsParametersColumnWidths, qIntListToVariantList(mParametersWidgetColumnWidths));
+    pSettings->setValue(SettingsSimulationColumnWidths, qIntListToVariantList(mSimulationColumnWidths));
+    pSettings->setValue(SettingsSolversColumnWidths, qIntListToVariantList(mSolversColumnWidths));
+    pSettings->setValue(SettingsGraphPanelColumnWidths, qIntListToVariantList(mGraphPanelColumnWidths));
+    pSettings->setValue(SettingsGraphsColumnWidths, qIntListToVariantList(mGraphsColumnWidths));
+    pSettings->setValue(SettingsParametersColumnWidths, qIntListToVariantList(mParametersColumnWidths));
 }
 
 //==============================================================================
@@ -147,30 +163,6 @@ void SimulationExperimentViewWidget::retranslateUi()
 
 void SimulationExperimentViewWidget::initialize(const QString &pFileName)
 {
-    // Stop tracking changes in our 'old' simulation widget's property editors'
-    // columns' width
-    // Note: if we didn't do this then to set our 'new' simulation widget's
-    //       property editors' columns' width would result in the sectionResized
-    //       event being handled, which in turn would mess up our units column's
-    //       width. Indeed, when our 'new' simulation widget's property editors'
-    //       columns' width, QTreeView tries to optimise the columns' width. So,
-    //       if we were to keep tracking those changes, we would end up with an
-    //       width that is too big for our units column, resulting in a
-    //       horizontal scrollbar being shown, which we don't want...
-
-    SimulationExperimentViewSimulationWidget *oldSimulationWidget = mSimulationWidget;
-
-    if (oldSimulationWidget) {
-        disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-                   this, SLOT(simulationWidgetHeaderSectionResized(const int &, const int &, const int &)));
-        disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-                   this, SLOT(solversWidgetHeaderSectionResized(const int &, const int &, const int &)));
-        disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->graphsWidget(), SIGNAL(headerSectionResized(int, int, int)),
-                   this, SLOT(graphsWidgetHeaderSectionResized(const int &, const int &, const int &)));
-        disconnect(oldSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-                   this, SLOT(parametersWidgetHeaderSectionResized(const int &, const int &, const int &)));
-    }
-
     // Retrieve the simulation widget associated with the given file, if any
 
     mSimulationWidget = mSimulationWidgets.value(pFileName);
@@ -188,17 +180,46 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
 
         mSimulationWidget->initialize();
 
-        // Keep track of various things related our simulation widget and its
+        // Keep track of various things related to our simulation widget and its
         // children
 
         connect(mSimulationWidget, SIGNAL(splitterMoved(const QIntList &)),
                 this, SLOT(simulationWidgetSplitterMoved(const QIntList &)));
 
-        connect(mSimulationWidget->contentsWidget(), SIGNAL(splitterMoved(const QIntList &)),
+        SimulationExperimentViewContentsWidget *contentsWidget = mSimulationWidget->contentsWidget();
+
+        connect(contentsWidget, SIGNAL(splitterMoved(const QIntList &)),
                 this, SLOT(contentsWidgetSplitterMoved(const QIntList &)));
 
-        connect(mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget(), SIGNAL(collapsed(const int &, const bool &)),
+        SimulationExperimentViewInformationWidget *informationWidget = contentsWidget->informationWidget();
+
+        connect(informationWidget->collapsibleWidget(), SIGNAL(collapsed(const int &, const bool &)),
                 this, SLOT(collapsibleWidgetCollapsed(const int &, const bool &)));
+
+        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)),
+                this, SLOT(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)));
+
+        connect(informationWidget->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
+                this, SLOT(simulationHeaderSectionResized(const int &, const int &, const int &)));
+        connect(informationWidget->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
+                this, SLOT(solversHeaderSectionResized(const int &, const int &, const int &)));
+        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelHeaderSectionResized(int, int, int)),
+                this, SLOT(graphPanelHeaderSectionResized(const int &, const int &, const int &)));
+        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphsHeaderSectionResized(int, int, int)),
+                this, SLOT(graphsHeaderSectionResized(const int &, const int &, const int &)));
+        connect(informationWidget->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
+                this, SLOT(parametersHeaderSectionResized(const int &, const int &, const int &)));
+
+        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelSectionExpanded(const int &, const bool &)),
+                this, SLOT(graphPanelSectionExpanded(const int &, const bool &)));
+
+        // Check when some graph plot settings or graphs settings have been
+        // requested
+
+        connect(mSimulationWidget, SIGNAL(graphPanelSettingsRequested()),
+                this, SLOT(graphPanelSettingsRequested()));
+        connect(mSimulationWidget, SIGNAL(graphsSettingsRequested()),
+                this, SLOT(graphsSettingsRequested()));
     } else {
         // We already have a simulation widget, so just make sure that its GUI
         // is up to date
@@ -206,26 +227,9 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
         mSimulationWidget->updateGui();
     }
 
-    // Update our new simualtion widget and its children, if needed
-
-    mSimulationWidget->setSizes(mSimulationWidgetSizes);
-    mSimulationWidget->contentsWidget()->setSizes(mContentsWidgetSizes);
-
     // Update some of our simulation's contents' information GUI
 
     updateContentsInformationGui(mSimulationWidget);
-
-    // Keep track of changes in our 'new' simulation widget's property editors'
-    // columns' width
-
-    connect(mSimulationWidget->contentsWidget()->informationWidget()->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-            this, SLOT(simulationWidgetHeaderSectionResized(const int &, const int &, const int &)));
-    connect(mSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-            this, SLOT(solversWidgetHeaderSectionResized(const int &, const int &, const int &)));
-    connect(mSimulationWidget->contentsWidget()->informationWidget()->graphsWidget(), SIGNAL(headerSectionResized(int, int, int)),
-            this, SLOT(graphsWidgetHeaderSectionResized(const int &, const int &, const int &)));
-    connect(mSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-            this, SLOT(parametersWidgetHeaderSectionResized(const int &, const int &, const int &)));
 
     // Set our focus proxy to our 'new' simulation widget and make sure that the
     // latter immediately gets the focus
@@ -303,7 +307,7 @@ void SimulationExperimentViewWidget::fileOpened(const QString &pFileName)
 
     // Make sure that the GUI of our simulation widgets is up to date
 
-    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets)
         simulationWidget->updateGui(true);
 }
 
@@ -354,7 +358,7 @@ void SimulationExperimentViewWidget::fileReloaded(const QString &pFileName)
 
         // Make sure that the GUI of our simulation widgets is up to date
 
-        foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+        foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets)
             simulationWidget->updateGui(true);
     }
 }
@@ -383,7 +387,7 @@ void SimulationExperimentViewWidget::fileRenamed(const QString &pOldFileName,
 
     // Let our simulation widgets know that a file has been renamed
 
-    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets)
         simulationWidget->fileRenamed(pOldFileName, pNewFileName);
 }
 
@@ -397,7 +401,7 @@ void SimulationExperimentViewWidget::fileClosed(const QString &pFileName)
 
     // Make sure that the GUI of our simulation widgets is up to date
 
-    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets.values())
+    foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets)
         simulationWidget->updateGui(true);
 }
 
@@ -584,80 +588,146 @@ void SimulationExperimentViewWidget::collapsibleWidgetCollapsed(const int &pInde
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::simulationWidgetHeaderSectionResized(const int &pIndex,
-                                                                          const int &pOldSize,
-                                                                          const int &pNewSize)
+void SimulationExperimentViewWidget::graphPanelSettingsRequested()
 {
-    Q_UNUSED(pOldSize);
+    // Make sure that our graph panel settings are active and visible
 
-    // Keep track of the new column width
-
-    if (qobject_cast<QHeaderView *>(sender())->isVisible())
-        mSimulationWidgetColumnWidths[pIndex] = pNewSize;
+    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel);
+    mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(2, false);
 }
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::solversWidgetHeaderSectionResized(const int &pIndex,
-                                                                       const int &pOldSize,
-                                                                       const int &pNewSize)
+void SimulationExperimentViewWidget::graphsSettingsRequested()
 {
-    Q_UNUSED(pOldSize);
+    // Make sure that our graphs settings are active and visible
 
-    // Keep track of the new column width
-
-    if (qobject_cast<QHeaderView *>(sender())->isVisible())
-        mSolversWidgetColumnWidths[pIndex] = pNewSize;
+    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
+    mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(2, false);
 }
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::graphsWidgetHeaderSectionResized(const int &pIndex,
-                                                                      const int &pOldSize,
-                                                                      const int &pNewSize)
+void SimulationExperimentViewWidget::graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode)
 {
-    Q_UNUSED(pOldSize);
+    // Keep track of the new graph panel / graphs mode
 
-    // Keep track of the new column width
-
-    if (qobject_cast<SimulationExperimentViewInformationGraphsWidget *>(sender())->isVisible())
-        mGraphsWidgetColumnWidths[pIndex] = pNewSize;
+    mGraphPanelGraphsMode = pMode;
 }
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::parametersWidgetHeaderSectionResized(const int &pIndex,
-                                                                          const int &pOldSize,
-                                                                          const int &pNewSize)
+void SimulationExperimentViewWidget::simulationHeaderSectionResized(const int &pIndex,
+                                                                    const int &pOldSize,
+                                                                    const int &pNewSize)
 {
     Q_UNUSED(pOldSize);
 
     // Keep track of the new column width
 
-    if (qobject_cast<QHeaderView *>(sender())->isVisible())
-        mParametersWidgetColumnWidths[pIndex] = pNewSize;
+    mSimulationColumnWidths[pIndex] = pNewSize;
+}
+
+//==============================================================================
+
+void SimulationExperimentViewWidget::solversHeaderSectionResized(const int &pIndex,
+                                                                 const int &pOldSize,
+                                                                 const int &pNewSize)
+{
+    Q_UNUSED(pOldSize);
+
+    // Keep track of the new column width
+
+    mSolversColumnWidths[pIndex] = pNewSize;
+}
+
+//==============================================================================
+
+void SimulationExperimentViewWidget::graphPanelHeaderSectionResized(const int &pIndex,
+                                                                    const int &pOldSize,
+                                                                    const int &pNewSize)
+{
+    Q_UNUSED(pOldSize);
+
+    // Keep track of the new column width
+
+    mGraphPanelColumnWidths[pIndex] = pNewSize;
+}
+
+//==============================================================================
+
+void SimulationExperimentViewWidget::graphsHeaderSectionResized(const int &pIndex,
+                                                                const int &pOldSize,
+                                                                const int &pNewSize)
+{
+    Q_UNUSED(pOldSize);
+
+    // Keep track of the new column width
+
+    mGraphsColumnWidths[pIndex] = pNewSize;
+}
+
+//==============================================================================
+
+void SimulationExperimentViewWidget::parametersHeaderSectionResized(const int &pIndex,
+                                                                    const int &pOldSize,
+                                                                    const int &pNewSize)
+{
+    Q_UNUSED(pOldSize);
+
+    // Keep track of the new column width
+
+    mParametersColumnWidths[pIndex] = pNewSize;
+}
+
+//==============================================================================
+
+void SimulationExperimentViewWidget::graphPanelSectionExpanded(const int &pSection,
+                                                               const bool &pExpanded)
+{
+    // Keep track of the section's expanded state
+
+    mGraphPanelSectionsExpanded.insert(pSection, pExpanded);
 }
 
 //==============================================================================
 
 void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget)
 {
-    // Update some of our simulation's contents' information GUI
+    // Update our simualtion widget's GUI and that of its children
+    // Note: for column widths, we set the last column width to zero to avoid
+    //       potential issues, should the vertical scrollbar be visible...
+
+    pSimulationWidget->setSizes(mSimulationWidgetSizes);
+
+    SimulationExperimentViewContentsWidget *contentsWidget = pSimulationWidget->contentsWidget();
+
+    contentsWidget->setSizes(mContentsWidgetSizes);
+
+    SimulationExperimentViewInformationWidget *informationWidget = contentsWidget->informationWidget();
 
     for (int i = 0, iMax = mCollapsibleWidgetCollapsed.count(); i < iMax; ++i)
-        pSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
+        informationWidget->collapsibleWidget()->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
 
-    for (int i = 0, iMax = mSimulationWidgetColumnWidths.count(); i < iMax; ++i)
-        pSimulationWidget->contentsWidget()->informationWidget()->simulationWidget()->setColumnWidth(i, mSimulationWidgetColumnWidths[i]);
+    informationWidget->graphPanelAndGraphsWidget()->setMode(mGraphPanelGraphsMode);
 
-    for (int i = 0, iMax = mSolversWidgetColumnWidths.count(); i < iMax; ++i)
-        pSimulationWidget->contentsWidget()->informationWidget()->solversWidget()->setColumnWidth(i, mSolversWidgetColumnWidths[i]);
+    for (int i = 0, iMax = mSimulationColumnWidths.count(); i < iMax; ++i)
+        informationWidget->simulationWidget()->setColumnWidth(i, (i == iMax-1)?0:mSimulationColumnWidths[i]);
 
-    for (int i = 0, iMax = mGraphsWidgetColumnWidths.count(); i < iMax; ++i)
-        pSimulationWidget->contentsWidget()->informationWidget()->graphsWidget()->setColumnWidth(i, mGraphsWidgetColumnWidths[i]);
+    for (int i = 0, iMax = mSolversColumnWidths.count(); i < iMax; ++i)
+        informationWidget->solversWidget()->setColumnWidth(i, (i == iMax-1)?0:mSolversColumnWidths[i]);
 
-    for (int i = 0, iMax = mParametersWidgetColumnWidths.count(); i < iMax; ++i)
-        pSimulationWidget->contentsWidget()->informationWidget()->parametersWidget()->setColumnWidth(i, mParametersWidgetColumnWidths[i]);
+    for (int i = 0, iMax = mGraphPanelColumnWidths.count(); i < iMax; ++i)
+        informationWidget->graphPanelAndGraphsWidget()->setGraphPanelColumnWidth(i, (i == iMax-1)?0:mGraphPanelColumnWidths[i]);
+
+    for (int i = 0, iMax = mGraphsColumnWidths.count(); i < iMax; ++i)
+        informationWidget->graphPanelAndGraphsWidget()->setGraphsColumnWidth(i, (i == iMax-1)?0:mGraphsColumnWidths[i]);
+
+    for (int i = 0, iMax = mParametersColumnWidths.count(); i < iMax; ++i)
+        informationWidget->parametersWidget()->setColumnWidth(i, (i == iMax-1)?0:mParametersColumnWidths[i]);
+
+    foreach (const int &section, mGraphPanelSectionsExpanded.keys())
+        informationWidget->graphPanelAndGraphsWidget()->setGraphPanelSectionExpanded(section, mGraphPanelSectionsExpanded.value(section));
 }
 
 //==============================================================================

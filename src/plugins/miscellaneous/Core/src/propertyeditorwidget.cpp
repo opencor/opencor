@@ -32,9 +32,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QAbstractItemDelegate>
 #include <QAbstractItemView>
+#include <QColorDialog>
 #include <QHeaderView>
 #include <QEvent>
 #include <QKeyEvent>
+#include <QMainWindow>
 #include <QModelIndex>
 #include <QPainter>
 #include <QRegularExpressionValidator>
@@ -283,7 +285,7 @@ BooleanEditorWidget::BooleanEditorWidget(QWidget *pParent) :
 ColorEditorWidget::ColorEditorWidget(QWidget *pParent) :
     TextEditorWidget(pParent)
 {
-    // Set a validator that accepts any colour
+    // Set a validator that accepts any colour of the form #aarrggbb or #rrggbb
 
     static const QRegularExpression ColorRegEx = QRegularExpression("^#([[:xdigit:]]{6}|[[:xdigit:]]{8})$");
 
@@ -490,6 +492,15 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
 
 //==============================================================================
 
+PropertyEditorWidget * Property::owner() const
+{
+    // Return our owner
+
+    return mOwner;
+}
+
+//==============================================================================
+
 Property::Type Property::type() const
 {
     // Return our type
@@ -677,6 +688,24 @@ void Property::setEditable(const bool &pEditable)
 
 //==============================================================================
 
+QIcon Property::icon() const
+{
+    // Return our icon
+
+    return mName->icon();
+}
+
+//==============================================================================
+
+void Property::setIcon(const QIcon &pIcon)
+{
+    // Set our icon
+
+    mName->setIcon(pIcon);
+}
+
+//==============================================================================
+
 QString Property::name() const
 {
     // Return our name
@@ -696,24 +725,6 @@ void Property::setName(const QString &pName, const bool &pUpdateToolTip)
         if (pUpdateToolTip)
             updateToolTip();
     }
-}
-
-//==============================================================================
-
-QIcon Property::icon() const
-{
-    // Return our icon
-
-    return mName->icon();
-}
-
-//==============================================================================
-
-void Property::setIcon(const QIcon &pIcon)
-{
-    // Set our icon
-
-    mName->setIcon(pIcon);
 }
 
 //==============================================================================
@@ -739,13 +750,11 @@ void Property::setValue(const QString &pValue, const bool &pForce,
 
         if (mType == Color) {
             QPixmap colorPixmap = QPixmap(48, 48);
-            QPainter colorPixmapPainter(&colorPixmap);
             QColor color;
 
             color.setNamedColor(pValue);
 
-            colorPixmapPainter.fillRect(0, 0, colorPixmap.width()-1, colorPixmap.height()-1, Qt::white);
-            colorPixmapPainter.fillRect(0, 0, colorPixmap.width()-1, colorPixmap.height()-1, color);
+            colorPixmap.fill(color);
 
             mValue->setIcon(colorPixmap);
         }
@@ -966,6 +975,58 @@ void Property::setColorValue(const QColor &pColorValue)
 
 //==============================================================================
 
+void Property::setColorValue(const QPoint &pPoint)
+{
+    // Make sure that we are of colour type and that the given point is either
+    // null or over our colour value icon
+
+    if (mType == Color) {
+        if (!pPoint.isNull()) {
+            // The given point is not null, so determine the position and size
+            // of our colour value icon
+            // Note: this very much relies on an empirical approach...
+
+            QRect iconRect = mOwner->visualRect(mValue->index());
+
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+            iconRect.translate(3, 1);
+#elif defined(Q_OS_MAC)
+            iconRect.translate(5, 1);
+#else
+            #error Unsupported platform
+#endif
+
+            iconRect.setSize(QSize(16, 16));
+
+            // Check whether the given point is over our colour value icon
+
+            if (!iconRect.contains(pPoint))
+                return;
+        }
+
+        // Select a colour and assign it to ourselves
+
+        QColorDialog colorDialog(colorValue(), mainWindow());
+
+        colorDialog.setOption(QColorDialog::ShowAlphaChannel);
+        colorDialog.setWindowTitle(tr("Select Colour"));
+
+        if (colorDialog.exec())
+            setColorValue(colorDialog.currentColor());
+
+        // Make sure that the widget that owns this property gets the focus back
+        // straightaway
+        // Note: indeed, if we come here as a result of a double click (see
+        //       PropertyEditorWidget::mouseDoubleClickEvent()), then the first
+        //       time round, we will have to click anywhere in OpenCOR for
+        //       OpenCOR to get the focus back...
+
+        QCoreApplication::processEvents();
+    }
+}
+
+//==============================================================================
+
 QString Property::unit() const
 {
     // Return our unit
@@ -1103,6 +1164,7 @@ PropertyEditorWidget::PropertyEditorWidget(const bool &pShowUnits,
     mShowUnits(pShowUnits),
     mAutoUpdateHeight(pAutoUpdateHeight),
     mProperties(Properties()),
+    mAllProperties(Properties()),
     mProperty(0),
     mPropertyEditor(0),
     mRightClicking(false),
@@ -1248,7 +1310,7 @@ int PropertyEditorWidget::childrenRowHeight(const QStandardItem *pItem) const
 
 QSize PropertyEditorWidget::sizeHint() const
 {
-    // Return either our default/ideal size, depending on the case
+    // Return our default/ideal size, depending on the case
 
     if (mAutoUpdateHeight) {
         // We automatically resize our height, so determine our ideal size which
@@ -1293,10 +1355,11 @@ void PropertyEditorWidget::clear()
 
     // Delete some internal objects
 
-    foreach (Property *property, mProperties)
+    foreach (Property *property, mAllProperties)
         delete property;
 
     mProperties.clear();
+    mAllProperties.clear();
 }
 
 //==============================================================================
@@ -1331,6 +1394,10 @@ Property * PropertyEditorWidget::addProperty(const Property::Type &pType,
         // We want to add a root property
 
         res->addTo(mModel->invisibleRootItem());
+
+        // Keep track of our root property
+
+        mProperties << res;
     }
 
     // Span ourselves if we are of section type
@@ -1357,7 +1424,7 @@ Property * PropertyEditorWidget::addProperty(const Property::Type &pType,
 
     // Keep track of our property and return it
 
-    mProperties << res;
+    mAllProperties << res;
 
     return res;
 }
@@ -1639,6 +1706,23 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
+void PropertyEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
+{
+    // Default handling of the event
+
+    TreeViewWidget::mouseDoubleClickEvent(pEvent);
+
+    // We want to select a colour when double clicking on the icon of a colour
+    // value, so do just that
+
+    Property *crtProperty = property(indexAt(pEvent->pos()));
+
+    if (crtProperty && (crtProperty->type() == Property::Color))
+        crtProperty->setColorValue(pEvent->pos());
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
@@ -1680,14 +1764,16 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     // there is a 'new' property and it is different from our 'old' property,
     // otherwise cancel any editing if we are right-clicking
 
-    Property *newProperty = property(indexAt(pEvent->pos()));
-
     mRightClicking = pEvent->button() == Qt::RightButton;
 
-    if (mRightClicking)
+    if (mRightClicking) {
         finishEditing(false);
-    else if (newProperty && (newProperty != oldProperty))
-        editProperty(newProperty);
+    } else {
+        Property *crtProperty = property(indexAt(pEvent->pos()));
+
+        if (crtProperty && (crtProperty != oldProperty))
+            editProperty(crtProperty);
+    }
 }
 
 //==============================================================================
@@ -1949,12 +2035,13 @@ bool PropertyEditorWidget::removeProperty(Property *pProperty)
     // Remove the given property and any of its children, but first make sure
     // that we know about the given property
 
-    if (!mProperties.contains(pProperty))
+    if (!mAllProperties.contains(pProperty))
         return false;
 
-    // Stop tracking the property
+    // Stop tracking the property, if it is a root one
 
-    mProperties.removeOne(pProperty);
+    if (!pProperty->parent())
+        mProperties.removeOne(pProperty);
 
     // Remove the property from our model
     // Note: the below will remove the given property and any of its children
@@ -1981,7 +2068,7 @@ void PropertyEditorWidget::deleteProperty(Property *pProperty)
     foreach (Property *property, pProperty->properties())
         deleteProperty(property);
 
-    mProperties.removeOne(pProperty);
+    mAllProperties.removeOne(pProperty);
 
     delete pProperty;
 }
@@ -1993,6 +2080,15 @@ Properties PropertyEditorWidget::properties() const
     // Return our properties
 
     return mProperties;
+}
+
+//==============================================================================
+
+Properties PropertyEditorWidget::allProperties() const
+{
+    // Return all of our properties
+
+    return mAllProperties;
 }
 
 //==============================================================================
@@ -2074,7 +2170,7 @@ Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
 
     // Return our information about the property at the given index
 
-    foreach (Property *property, mProperties) {
+    foreach (Property *property, mAllProperties) {
         if (property->hasIndex(pIndex))
             return property;
     }

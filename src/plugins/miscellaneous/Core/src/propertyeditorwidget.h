@@ -205,18 +205,20 @@ class CORE_EXPORT Property : public QObject
 
 public:
     enum Type {
-        Section    = QStandardItem::UserType,
-        String     = QStandardItem::UserType+1,
-        Integer    = QStandardItem::UserType+2,
-        IntegerGt0 = QStandardItem::UserType+3,
-        Double     = QStandardItem::UserType+4,
-        DoubleGt0  = QStandardItem::UserType+5,
-        List       = QStandardItem::UserType+6,
-        Boolean    = QStandardItem::UserType+7,
-        Color      = QStandardItem::UserType+8
+        Section,
+        String,
+        Integer,
+        IntegerGt0,
+        Double,
+        DoubleGt0,
+        List,
+        Boolean,
+        Color
     };
 
     explicit Property(const Type &pType, PropertyEditorWidget *pParent);
+
+    PropertyEditorWidget * owner() const;
 
     Type type() const;
 
@@ -247,11 +249,11 @@ public:
     bool isEditable() const;
     void setEditable(const bool &pEditable);
 
-    QString name() const;
-    void setName(const QString &pName, const bool &pUpdateToolTip = true);
-
     QIcon icon() const;
     void setIcon(const QIcon &pIcon);
+
+    QString name() const;
+    void setName(const QString &pName, const bool &pUpdateToolTip = true);
 
     QString value() const;
     void setValue(const QString &pValue, const bool &pForce = false,
@@ -283,6 +285,7 @@ public:
 
     QColor colorValue() const;
     void setColorValue(const QColor &pColorValue);
+    void setColorValue(const QPoint &pPoint = QPoint());
 
     QString unit() const;
     void setUnit(const QString &pUnit, const bool &pUpdateToolTip = true);
@@ -384,6 +387,7 @@ public:
     bool removeProperty(Property *pProperty);
 
     Properties properties() const;
+    Properties allProperties() const;
 
     Property * property(const QModelIndex &pIndex) const;
     Property * currentProperty() const;
@@ -396,6 +400,7 @@ public:
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
+    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual void mouseReleaseEvent(QMouseEvent *pEvent);
@@ -410,6 +415,7 @@ private:
     QStandardItemModel *mModel;
 
     Properties mProperties;
+    Properties mAllProperties;
 
     Property *mProperty;
     QWidget *mPropertyEditor;

@@ -50,7 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "qwt_plot_layout.h"
     #include "qwt_plot_renderer.h"
     #include "qwt_scale_engine.h"
-    #include "qwt_scale_widget.h"
+    #include "qwt_text_label.h"
 #include "qwtend.h"
 
 //==============================================================================
@@ -61,7 +61,7 @@ namespace GraphPanelWidget {
 //==============================================================================
 
 GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const Qt::PenStyle &pLineStyle,
-                                                             const double &pLineWidth,
+                                                             const int &pLineWidth,
                                                              const QColor &pLineColor,
                                                              const QwtSymbol::Style &pSymbolStyle,
                                                              const int &pSymbolSize,
@@ -90,7 +90,7 @@ Qt::PenStyle GraphPanelPlotGraphProperties::lineStyle() const
 
 //==============================================================================
 
-double GraphPanelPlotGraphProperties::lineWidth() const
+int GraphPanelPlotGraphProperties::lineWidth() const
 {
     // Return our line width
 
@@ -388,16 +388,13 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
     switch (mOwner->action()) {
     case GraphPanelPlotWidget::ShowCoordinates: {
-        // Draw the two dashed lines that show the coordinates, using a dark
-        // cyan pen
+        // Draw the lines that show the coordinates
 
         QPen pen = painter.pen();
-        QColor penColor = Qt::darkCyan;
 
-        penColor.setAlphaF(0.69);
-
-        pen.setColor(penColor);
-        pen.setStyle(Qt::DashLine);
+        pen.setColor(mOwner->pointCoordinatesColor());
+        pen.setStyle(mOwner->pointCoordinatesStyle());
+        pen.setWidth(mOwner->pointCoordinatesWidth());
 
         painter.setPen(pen);
 
@@ -410,33 +407,51 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
         // Draw the coordinates of our point
 
-        drawCoordinates(&painter, point, penColor, Qt::white, BottomRight);
+        drawCoordinates(&painter, point, mOwner->pointCoordinatesColor(),
+                        mOwner->pointCoordinatesFontColor(),
+                        (mOwner->pointCoordinatesStyle() == Qt::NoPen)?
+                            0:
+                            mOwner->pointCoordinatesWidth(),
+                        BottomRight);
 
         break;
     }
     case GraphPanelPlotWidget::ZoomRegion: {
-        // Draw the region to be zoomed
-
-        QColor penColor = Qt::darkRed;
-        QColor brushColor = Qt::yellow;
-
-        penColor.setAlphaF(0.69);
-        brushColor.setAlphaF(0.19);
-
-        painter.setPen(penColor);
+        // Draw the region to be zoomed in
 
         QRect zoomRegionRect = zoomRegion();
         // Note: see drawCoordinates() as why we use QRect rather than QRectF...
 
-        painter.fillRect(zoomRegionRect, brushColor);
+        if (mOwner->zoomRegionFilled())
+            painter.fillRect(zoomRegionRect, mOwner->zoomRegionFillColor());
+
+        QPen pen = painter.pen();
+
+        pen.setJoinStyle(Qt::RoundJoin);
+        pen.setColor(mOwner->zoomRegionColor());
+        pen.setStyle(mOwner->zoomRegionStyle());
+        pen.setWidth(mOwner->zoomRegionWidth());
+
+        painter.setPen(pen);
+
         painter.drawRect(zoomRegionRect);
 
         // Draw the two sets of coordinates
 
         drawCoordinates(&painter, zoomRegionRect.topLeft(),
-                        penColor, Qt::white, BottomRight, false);
+                        mOwner->zoomRegionColor(),
+                        mOwner->zoomRegionFontColor(),
+                        (mOwner->zoomRegionStyle() == Qt::NoPen)?
+                            0:
+                            mOwner->zoomRegionWidth(),
+                        BottomRight, false);
         drawCoordinates(&painter, zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height()),
-                        penColor, Qt::white, TopLeft, false);
+                        mOwner->zoomRegionColor(),
+                        mOwner->zoomRegionFontColor(),
+                        (mOwner->zoomRegionStyle() == Qt::NoPen)?
+                            0:
+                            mOwner->zoomRegionWidth(),
+                        TopLeft, false);
 
         break;
     }
@@ -511,54 +526,69 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
                                                   const QPoint &pPoint,
                                                   const QColor &pBackgroundColor,
                                                   const QColor &pForegroundColor,
-                                                  const Location &pLocation,
-                                                  const bool &pCanMoveLocation)
+                                                  const int &pLineWidth,
+                                                  const Position &pPosition,
+                                                  const bool &pCanMovePosition)
 {
     // Retrieve the size of coordinates as they will appear on the screen,
     // which means using the same font as the one used for the axes
-    // Note: normally, pPoint would be a QPointF, but we want the coordinates to
-    //       be drawn relative to something (see paintEvent()) and the only way
-    //       to guarantee that everything will be painted as expected is to use
-    //       QPoint. Indeed, if we were to use QPointF, then QPainter would have
-    //       to do some rouding and though everything should be fine (since we
-    //       always add/subtract a rounded number), it happens that it's not
-    //       always the case. Indeed, we should always have a gap of one pixel
-    //       between the coordinates and pPoint, but it could happen that we
-    //       have either no gap or one of two pixels...
+    // Note #1: normally, pPoint would be a QPointF, but we want the coordinates
+    //          to be drawn relative to something (see paintEvent()) and the
+    //          only way to guarantee that everything will be painted as
+    //          expected is to use QPoint. Indeed, if we were to use QPointF,
+    //          then QPainter would have to do some rounding and though
+    //          everything should be fine (since we always add/subtract a
+    //          rounded number), it happens that it's not always the case.
+    //          Indeed, we should always have a gap of one pixel between the
+    //          coordinates and pPoint, but it could happen that we have either
+    //          no gap, or one or two pixels...
+    // Note #2: we set the painter's pen's style to a solid line otherwise
+    //          coordinatesRect will be empty if there is no style for showing
+    //          the coordinates of a point or zooming in a region...
 
     pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
 
     QPointF point = mOwner->canvasPoint(pPoint);
     QString coordinates = QString("X: %1\nY: %2").arg(QLocale().toString(point.x(), 'g', 15),
                                                       QLocale().toString(point.y(), 'g', 15));
+    QPen pen = pPainter->pen();
+
+    pen.setStyle(Qt::SolidLine);
+
+    pPainter->setPen(pen);
+
     QRect coordinatesRect = pPainter->boundingRect(qApp->desktop()->availableGeometry(), 0, coordinates);
 
     // Determine where the coordinates and its background should be drawn
 
-    switch (pLocation) {
+    int shift = (pLineWidth >> 1)+pLineWidth%2;
+    int plusShift = shift+1;
+    int minusShift = shift+!(pLineWidth%2);
+
+    switch (pPosition) {
     case TopLeft:
-        coordinatesRect.moveTo(pPoint.x()-coordinatesRect.width()-1,
-                               pPoint.y()-coordinatesRect.height()-1);
+        coordinatesRect.moveTo(pPoint.x()-coordinatesRect.width()-minusShift,
+                               pPoint.y()-coordinatesRect.height()-minusShift);
 
         break;
     case TopRight:
-        coordinatesRect.moveTo(pPoint.x()+2,
-                               pPoint.y()-coordinatesRect.height()-1);
+        coordinatesRect.moveTo(pPoint.x()+plusShift,
+                               pPoint.y()-coordinatesRect.height()-minusShift);
 
         break;
     case BottomLeft:
-        coordinatesRect.moveTo(pPoint.x()-coordinatesRect.width()-1,
-                               pPoint.y()+2);
+        coordinatesRect.moveTo(pPoint.x()-coordinatesRect.width()-minusShift,
+                               pPoint.y()+plusShift);
 
         break;
     case BottomRight:
-        coordinatesRect.moveTo(pPoint.x()+2,
-                               pPoint.y()+2);
+        coordinatesRect.moveTo(pPoint.x()+plusShift,
+                               pPoint.y()+plusShift);
 
         break;
     }
 
-    if (pCanMoveLocation) {
+    if (pCanMovePosition) {
         QwtScaleMap canvasMapX = mOwner->canvasMap(QwtPlot::xBottom);
         QwtScaleMap canvasMapY = mOwner->canvasMap(QwtPlot::yLeft);
 
@@ -568,14 +598,14 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
                                          canvasMapY.transform(mOwner->minY()));
 
         if (coordinatesRect.top() < topLeftPoint.y())
-            coordinatesRect.moveTop(pPoint.y()+2);
+            coordinatesRect.moveTop(pPoint.y()+plusShift);
         else if (coordinatesRect.top()+coordinatesRect.height()-1 > bottomRightPoint.y())
-            coordinatesRect.moveTop(pPoint.y()-coordinatesRect.height()-1);
+            coordinatesRect.moveTop(pPoint.y()-coordinatesRect.height()-minusShift);
 
         if (coordinatesRect.left() < topLeftPoint.x())
-            coordinatesRect.moveLeft(pPoint.x()+2);
+            coordinatesRect.moveLeft(pPoint.x()+plusShift);
         else if (coordinatesRect.left()+coordinatesRect.width()-1 > bottomRightPoint.x())
-            coordinatesRect.moveLeft(pPoint.x()-coordinatesRect.width()-1);
+            coordinatesRect.moveLeft(pPoint.x()-coordinatesRect.width()-minusShift);
 
         // Note: the -1 for the else-if tests is because fillRect() below works
         //       on (0, 0; width-1, height-1)...
@@ -587,8 +617,6 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
     pPainter->fillRect(coordinatesRect, pBackgroundColor);
 
     // Draw the text for the coordinates, using a white pen
-
-    QPen pen = pPainter->pen();
 
     pen.setColor(pForegroundColor);
 
@@ -620,7 +648,16 @@ QwtText GraphPanelPlotScaleDraw::label(double pValue) const
 
 //==============================================================================
 
-static const double DblMinAxis = 1000*DBL_MIN;
+void GraphPanelScaleWidget::updateLayout()
+{
+    // Our layout has changed, so update our internals
+
+    layoutScale();
+}
+
+//==============================================================================
+
+static const double DblMinAxis = 1000.0*DBL_MIN;
 // Note: normally, we would use DBL_MIN, but this would cause problems with
 //       QwtPlot (e.g. to create ticks), so instead we use a value that results
 //       in a range that we know works...
@@ -646,6 +683,20 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
                                            QWidget *pParent) :
     QwtPlot(pParent),
     Core::CommonWidget(this),
+    mBackgroundColor(QColor()),
+    mForegroundColor(QColor()),
+    mPointCoordinatesStyle(Qt::DashLine),
+    mPointCoordinatesWidth(1),
+    mPointCoordinatesColor(QColor()),
+    mPointCoordinatesFontColor(Qt::white),
+    mZoomRegionStyle(Qt::SolidLine),
+    mZoomRegionWidth(1),
+    mZoomRegionColor(QColor()),
+    mZoomRegionFontColor(Qt::white),
+    mZoomRegionFilled(true),
+    mZoomRegionFillColor(QColor()),
+    mLogAxisX(false),
+    mLogAxisY(false),
     mGraphs(GraphPanelPlotGraphs()),
     mAction(None),
     mOriginPoint(QPoint()),
@@ -700,7 +751,28 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     // Customise ourselves a bit
 
-    setCanvasBackground(Qt::white);
+    setAutoFillBackground(true);
+
+    setBackgroundColor(Qt::white);
+    setFontSize(10, true);
+    setForegroundColor(Qt::black);
+
+    QColor pointCoordinatesColor = Qt::darkCyan;
+
+    pointCoordinatesColor.setAlphaF(0.69);
+
+    setPointCoordinatesColor(pointCoordinatesColor);
+
+    QColor zoomRegionColor = Qt::darkRed;
+    QColor zoomRegionFillColor = Qt::yellow;
+
+    zoomRegionColor.setAlphaF(0.69);
+    zoomRegionFillColor.setAlphaF(0.19);
+
+    setZoomRegionColor(zoomRegionColor);
+    setZoomRegionFillColor(zoomRegionFillColor);
+
+    // Add some axes to ourselves
 
     mAxisX = new GraphPanelPlotScaleDraw();
     mAxisY = new GraphPanelPlotScaleDraw();
@@ -710,11 +782,11 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     // Attach a grid to ourselves
 
-    QwtPlotGrid *grid = new QwtPlotGrid();
+    mGrid = new QwtPlotGrid();
 
-    grid->setMajorPen(Qt::gray, 0, Qt::DotLine);
+    mGrid->setMajorPen(Qt::gray, 1, Qt::DotLine);
 
-    grid->attach(this);
+    mGrid->attach(this);
 
     // Create our overlay widget
 
@@ -727,8 +799,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mExportToAction = Core::newAction(this);
     mCopyToClipboardAction = Core::newAction(this);
     mCustomAxesAction = Core::newAction(this);
-    mLogarithmicXAxisAction = Core::newAction(true, this);
-    mLogarithmicYAxisAction = Core::newAction(true, this);
+    mGraphPanelSettingsAction = Core::newAction(this);
+    mGraphsSettingsAction = Core::newAction(this);
     mZoomInAction = Core::newAction(this);
     mZoomOutAction = Core::newAction(this);
     mResetZoomAction = Core::newAction(this);
@@ -739,10 +811,10 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
             this, SLOT(copyToClipboard()));
     connect(mCustomAxesAction, SIGNAL(triggered(bool)),
             this, SLOT(customAxes()));
-    connect(mLogarithmicXAxisAction, SIGNAL(triggered(bool)),
-            this, SLOT(toggleLogAxisX()));
-    connect(mLogarithmicYAxisAction, SIGNAL(triggered(bool)),
-            this, SLOT(toggleLogAxisY()));
+    connect(mGraphPanelSettingsAction, SIGNAL(triggered(bool)),
+            this, SIGNAL(graphPanelSettingsRequested()));
+    connect(mGraphsSettingsAction, SIGNAL(triggered(bool)),
+            this, SIGNAL(graphsSettingsRequested()));
     connect(mZoomInAction, SIGNAL(triggered(bool)),
             this, SLOT(zoomIn()));
     connect(mZoomOutAction, SIGNAL(triggered(bool)),
@@ -761,8 +833,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     }
 
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mLogarithmicXAxisAction);
-    mContextMenu->addAction(mLogarithmicYAxisAction);
+    mContextMenu->addAction(mGraphPanelSettingsAction);
+    mContextMenu->addAction(mGraphsSettingsAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCustomAxesAction);
     mContextMenu->addSeparator();
@@ -807,10 +879,10 @@ void GraphPanelPlotWidget::retranslateUi()
                                      tr("Copy the contents of the graph panel to the clipboard"));
     I18nInterface::retranslateAction(mCustomAxesAction, tr("Custom Axes..."),
                                      tr("Specify custom axes for the graph panel"));
-    I18nInterface::retranslateAction(mLogarithmicXAxisAction, tr("Logarithmic X Axis"),
-                                     tr("Enable/disable logarithmic scaling on the X axis"));
-    I18nInterface::retranslateAction(mLogarithmicYAxisAction, tr("Logarithmic Y Axis"),
-                                     tr("Enable/disable logarithmic scaling on the Y axis"));
+    I18nInterface::retranslateAction(mGraphPanelSettingsAction, tr("Graph Panel Settings..."),
+                                     tr("Customise the graph panel"));
+    I18nInterface::retranslateAction(mGraphsSettingsAction, tr("Graphs Settings..."),
+                                     tr("Customise the graphs"));
     I18nInterface::retranslateAction(mZoomInAction, tr("Zoom In"),
                                      tr("Zoom in the graph panel"));
     I18nInterface::retranslateAction(mZoomOutAction, tr("Zoom Out"),
@@ -963,11 +1035,332 @@ void GraphPanelPlotWidget::resetAction()
 
 //==============================================================================
 
+QColor GraphPanelPlotWidget::backgroundColor() const
+{
+    // Return our background colour
+
+    return mBackgroundColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setBackgroundColor(const QColor &pBackgroundColor)
+{
+    // Set our background colour
+    // Note: setCanvasBackground() doesn't handle semi-transparent colours and,
+    //       even if it did, it might take into account the grey background that
+    //       is used by the rest of our object while we want a semi-transparent
+    //       colour to rely on a white background, which we do here by computing
+    //       an opaque colour from an opaque white colour and the given
+    //       (potentially semi-transparent) colour...
+
+    if (pBackgroundColor != mBackgroundColor) {
+        mBackgroundColor = pBackgroundColor;
+
+        // Set our canvas background colour
+
+        static const QColor White = Qt::white;
+
+        QBrush brush = canvasBackground();
+        double ratio = pBackgroundColor.alpha()/256.0;
+        QColor color;
+
+        color.setRedF((1.0-ratio)*White.redF()+ratio*pBackgroundColor.redF());
+        color.setGreenF((1.0-ratio)*White.greenF()+ratio*pBackgroundColor.greenF());
+        color.setBlueF((1.0-ratio)*White.blueF()+ratio*pBackgroundColor.blueF());
+
+        brush.setColor(color);
+
+        setCanvasBackground(brush);
+
+        // Set the colour of the background surrounding our canvas, which we
+        // make slightly darker than that of our canvas background colour, based
+        // on the typical colour used for a widget's background
+
+        QPalette pal = palette();
+        QColor backgroundColor = Core::windowColor();
+
+        backgroundColor.setRedF(backgroundColor.redF()*color.redF());
+        backgroundColor.setGreenF(backgroundColor.greenF()*color.greenF());
+        backgroundColor.setBlueF(backgroundColor.blueF()*color.blueF());
+
+        pal.setColor(QPalette::Window, backgroundColor);
+
+        setPalette(pal);
+
+        replot();
+    }
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::fontSize() const
+{
+    // Return our font size
+
+    return font().pointSize();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setFontSize(const int &pFontSize,
+                                       const bool &pForceSetting)
+{
+    // Set our font size
+
+    if (pForceSetting || (pFontSize != fontSize())) {
+        QFont newFont = font();
+
+        newFont.setPointSize(pFontSize);
+
+        setFont(newFont);
+
+        // Title
+
+        setTitle(title().text());
+
+        // X axis
+
+        newFont = axisFont(QwtPlot::xBottom);
+
+        newFont.setPointSize(pFontSize);
+
+        setAxisFont(QwtPlot::xBottom, newFont);
+        setTitleAxisX(titleAxisX());
+
+        // Y axis
+
+        newFont = axisFont(QwtPlot::yLeft);
+
+        newFont.setPointSize(pFontSize);
+
+        setAxisFont(QwtPlot::yLeft, newFont);
+        setTitleAxisY(titleAxisY());
+    }
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::foregroundColor() const
+{
+    // Return our foreground colour
+
+    return mForegroundColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setForegroundColor(const QColor &pForegroundColor)
+{
+    // Set our foreground colour
+
+    if (pForegroundColor != mForegroundColor) {
+        mForegroundColor = pForegroundColor;
+
+        // Title
+
+        setTitle(title().text());
+
+        // X axis
+
+        QPalette newPalette = axisWidget(QwtPlot::xBottom)->palette();
+
+        newPalette.setColor(QPalette::Text, mForegroundColor);
+        newPalette.setColor(QPalette::WindowText, mForegroundColor);
+
+        axisWidget(QwtPlot::xBottom)->setPalette(newPalette);
+        setTitleAxisX(titleAxisX());
+
+        // Y axis
+
+        newPalette = axisWidget(QwtPlot::yLeft)->palette();
+
+        newPalette.setColor(QPalette::Text, mForegroundColor);
+        newPalette.setColor(QPalette::WindowText, mForegroundColor);
+
+        axisWidget(QwtPlot::yLeft)->setPalette(newPalette);
+        setTitleAxisY(titleAxisY());
+    }
+}
+
+//==============================================================================
+
+Qt::PenStyle GraphPanelPlotWidget::gridLinesStyle() const
+{
+    // Return our grid lines style
+
+    return mGrid->majorPen().style();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setGridLinesStyle(const Qt::PenStyle &pGridLinesStyle)
+{
+    // Set our grid lines style
+
+    if (pGridLinesStyle != gridLinesStyle()) {
+        QPen newPen = mGrid->majorPen();
+
+        newPen.setStyle(pGridLinesStyle);
+
+        mGrid->setMajorPen(newPen);
+
+        replot();
+    }
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::gridLinesWidth() const
+{
+    // Return our grid lines width
+
+    return mGrid->majorPen().width();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setGridLinesWidth(const int &pGridLinesWidth)
+{
+    // Set our grid lines width
+
+    if (pGridLinesWidth != gridLinesWidth()) {
+        QPen newPen = mGrid->majorPen();
+
+        newPen.setWidth(pGridLinesWidth);
+
+        mGrid->setMajorPen(newPen);
+
+        replot();
+    }
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::gridLinesColor() const
+{
+    // Return our grid lines colour
+
+    return mGrid->majorPen().color();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setGridLinesColor(const QColor &pGridLinesColor)
+{
+    // Set our grid lines colour
+
+    if (pGridLinesColor != gridLinesColor()) {
+        QPen newPen = mGrid->majorPen();
+
+        newPen.setColor(pGridLinesColor);
+
+        mGrid->setMajorPen(newPen);
+
+        replot();
+    }
+}
+
+//==============================================================================
+
+Qt::PenStyle GraphPanelPlotWidget::pointCoordinatesStyle() const
+{
+    // Return our point coordinates style
+
+    return mPointCoordinatesStyle;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setPointCoordinatesStyle(const Qt::PenStyle &pPointCoordinatesStyle)
+{
+    // Set our point coordinates style
+
+    if (pPointCoordinatesStyle != mPointCoordinatesStyle)
+        mPointCoordinatesStyle = pPointCoordinatesStyle;
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::pointCoordinatesWidth() const
+{
+    // Return our point coordinates width
+
+    return mPointCoordinatesWidth;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setPointCoordinatesWidth(const int &pPointCoordinatesWidth)
+{
+    // Set our point coordinates width
+
+    if (pPointCoordinatesWidth != mPointCoordinatesWidth)
+        mPointCoordinatesWidth = pPointCoordinatesWidth;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::pointCoordinatesColor() const
+{
+    // Return our point coordinates colour
+
+    return mPointCoordinatesColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setPointCoordinatesColor(const QColor &pPointCoordinatesColor)
+{
+    // Set our point coordinates colour
+
+    if (pPointCoordinatesColor != mPointCoordinatesColor)
+        mPointCoordinatesColor = pPointCoordinatesColor;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::pointCoordinatesFontColor() const
+{
+    // Return our point coordinates font colour
+
+    return mPointCoordinatesFontColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setPointCoordinatesFontColor(const QColor &pPointCoordinatesFontColor)
+{
+    // Set our point coordinates font colour
+
+    if (pPointCoordinatesFontColor != mPointCoordinatesFontColor)
+        mPointCoordinatesFontColor = pPointCoordinatesFontColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setTitle(const QString &pTitle)
+{
+    // Set our title
+
+    QwtText title = QwtText(pTitle);
+    QFont newFont = title.font();
+
+    newFont.setPointSize(2*fontSize());
+
+    title.setColor(mForegroundColor);
+    title.setFont(newFont);
+
+    QwtPlot::setTitle(title);
+}
+
+//==============================================================================
+
 bool GraphPanelPlotWidget::logAxisX() const
 {
     // Return whether our X axis uses a logarithmic scale
 
-    return mLogarithmicXAxisAction->isChecked();
+    return mLogAxisX;
 }
 
 //==============================================================================
@@ -976,10 +1369,36 @@ void GraphPanelPlotWidget::setLogAxisX(const bool &pLogAxisX)
 {
     // Specify whether our X axis should use a logarithmic scale
 
-    if (   ( pLogAxisX && !mLogarithmicXAxisAction->isChecked())
-        || (!pLogAxisX &&  mLogarithmicXAxisAction->isChecked())) {
-        mLogarithmicXAxisAction->trigger();
+    if (pLogAxisX != mLogAxisX) {
+        mLogAxisX = pLogAxisX;
+
+        setAxisScaleEngine(QwtPlot::xBottom,
+                           pLogAxisX?
+                               static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
+                               static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
+
+        resetAxes();
+
+        replot();
     }
+}
+
+//==============================================================================
+
+QString GraphPanelPlotWidget::titleAxisX() const
+{
+    // Return the title for our X axis
+
+    return axisTitle(QwtPlot::xBottom).text();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setTitleAxisX(const QString &pTitleAxisX)
+{
+    // Set the title for our X axis
+
+    setTitleAxis(QwtPlot::xBottom, pTitleAxisX);
 }
 
 //==============================================================================
@@ -988,7 +1407,7 @@ bool GraphPanelPlotWidget::logAxisY() const
 {
     // Return whether our Y axis uses a logarithmic scale
 
-    return mLogarithmicYAxisAction->isChecked();
+    return mLogAxisY;
 }
 
 //==============================================================================
@@ -997,10 +1416,150 @@ void GraphPanelPlotWidget::setLogAxisY(const bool &pLogAxisY)
 {
     // Specify whether our Y axis should use a logarithmic scale
 
-    if (   ( pLogAxisY && !mLogarithmicYAxisAction->isChecked())
-        || (!pLogAxisY &&  mLogarithmicYAxisAction->isChecked())) {
-        mLogarithmicYAxisAction->trigger();
+    if (pLogAxisY != mLogAxisY) {
+        mLogAxisY = pLogAxisY;
+
+        setAxisScaleEngine(QwtPlot::yLeft,
+                           pLogAxisY?
+                               static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
+                               static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
+
+        resetAxes();
+
+        replot();
     }
+}
+
+//==============================================================================
+
+QString GraphPanelPlotWidget::titleAxisY() const
+{
+    // Return the title for our Y axis
+
+    return axisTitle(QwtPlot::yLeft).text();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setTitleAxisY(const QString &pTitleAxisY)
+{
+    // Set the title for our Y axis
+
+    setTitleAxis(QwtPlot::yLeft, pTitleAxisY);
+}
+
+//==============================================================================
+
+Qt::PenStyle GraphPanelPlotWidget::zoomRegionStyle() const
+{
+    // Return our zoom region style
+
+    return mZoomRegionStyle;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setZoomRegionStyle(const Qt::PenStyle &pZoomRegionStyle)
+{
+    // Set our zoom region style
+
+    if (pZoomRegionStyle != mZoomRegionStyle)
+        mZoomRegionStyle = pZoomRegionStyle;
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::zoomRegionWidth() const
+{
+    // Return our zoom region width
+
+    return mZoomRegionWidth;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setZoomRegionWidth(const int &pZoomRegionWidth)
+{
+    // Set our zoom region width
+
+    if (pZoomRegionWidth != mZoomRegionWidth)
+        mZoomRegionWidth = pZoomRegionWidth;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::zoomRegionColor() const
+{
+    // Return our zoom region colour
+
+    return mZoomRegionColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setZoomRegionColor(const QColor &pZoomRegionColor)
+{
+    // Set our zoom region colour
+
+    if (pZoomRegionColor != mZoomRegionColor)
+        mZoomRegionColor = pZoomRegionColor;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::zoomRegionFontColor() const
+{
+    // Return our zoom region font colour
+
+    return mZoomRegionFontColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setZoomRegionFontColor(const QColor &pZoomRegionFontColor)
+{
+    // Set our zoom region font colour
+
+    if (pZoomRegionFontColor != mZoomRegionFontColor)
+        mZoomRegionFontColor = pZoomRegionFontColor;
+}
+
+//==============================================================================
+
+bool GraphPanelPlotWidget::zoomRegionFilled() const
+{
+    // Return our zoom region filled status
+
+    return mZoomRegionFilled;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setZoomRegionFilled(const bool &pZoomRegionFilled)
+{
+    // Set our zoom region filled status
+
+    if (pZoomRegionFilled != mZoomRegionFilled)
+        mZoomRegionFilled = pZoomRegionFilled;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::zoomRegionFillColor() const
+{
+    // Return our zoom region fill colour
+
+    return mZoomRegionFillColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setZoomRegionFillColor(const QColor &pZoomRegionFillColor)
+{
+    // Set our zoom region fill colour
+
+    if (pZoomRegionFillColor != mZoomRegionFillColor)
+        mZoomRegionFillColor = pZoomRegionFillColor;
 }
 
 //==============================================================================
@@ -1300,9 +1859,7 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                     neighbor->setAxes(neighbor->minX(), neighbor->maxX(), pMinY, pMaxY, false, false, false);
             }
 
-            alignWithNeighbors(pCanReplot,
-                                  mSynchronizeXAxisAction->isChecked()
-                               || mSynchronizeYAxisAction->isChecked());
+            alignWithNeighbors(pCanReplot, true);
         }
 
         if (pEmitSignal)
@@ -1413,6 +1970,26 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
 
     if (scaledAxisX || scaledAxisY)
         setAxes(newMinX, newMaxX, newMinY, newMaxY);
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setTitleAxis(const int &pAxisId,
+                                        const QString &pTitleAxis)
+{
+    // Set the title for our axis
+
+    QwtText axisTitle = QwtText(pTitleAxis);
+    QFont axisTitleFont = axisTitle.font();
+
+    axisTitleFont.setPointSizeF(1.25*fontSize());
+
+    axisTitle.setColor(mForegroundColor);
+    axisTitle.setFont(axisTitleFont);
+
+    setAxisTitle(pAxisId, axisTitle);
+
+    forceAlignWithNeighbors();
 }
 
 //==============================================================================
@@ -1788,11 +2365,13 @@ void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
 void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
                                               const bool &pForceAlignment)
 {
-    // Align ourselves with our neighbours
+    // Align ourselves with our neighbours by taking into account the size it
+    // takes to draw the Y axis and, if any, its corresponding title (including
+    // the gap between the Y axis and its corresponding title)
 
     GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
-    double oldMaxExtent = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
-    double newMaxExtent = 0;
+    double oldMinExtent = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
+    double newMinExtent = 0;
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
         QwtScaleWidget *scaleWidget = plot->axisWidget(QwtPlot::yLeft);
@@ -1804,18 +2383,27 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
         // Note: this ensures that our major ticks (which are used to compute
         //       the extent) are up to date...
 
-        double extent = scaleDraw->extent(scaleWidget->font());
+        double minExtent =  scaleDraw->extent(scaleWidget->font())
+                           +(plot->titleAxisY().isEmpty()?
+                                 0:
+                                 scaleWidget->spacing()+scaleWidget->title().textSize().height());
 
-        if (extent > newMaxExtent)
-            newMaxExtent = extent;
+        if (minExtent > newMinExtent)
+            newMinExtent = minExtent;
     }
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-        plot->axisWidget(QwtPlot::yLeft)->scaleDraw()->setMinimumExtent(newMaxExtent);
+        GraphPanelScaleWidget *scaleWidget = static_cast<GraphPanelScaleWidget *>(plot->axisWidget(QwtPlot::yLeft));
+
+        scaleWidget->scaleDraw()->setMinimumExtent( newMinExtent
+                                                   -(plot->titleAxisY().isEmpty()?
+                                                         0:
+                                                         scaleWidget->spacing()+scaleWidget->title().textSize().height()));
 
         if (pCanReplot) {
-            if (pForceAlignment || (newMaxExtent != oldMaxExtent)) {
-                plot->updateLayout();
+            if (pForceAlignment || (newMinExtent != oldMinExtent)) {
+                scaleWidget->updateLayout();
+
                 plot->replot();
             } else if (plot == this) {
                 replot();
@@ -1933,38 +2521,6 @@ void GraphPanelPlotWidget::customAxes()
             setAxes(newMinX, newMaxX, newMinY, newMaxY);
         }
     }
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::toggleLogAxisX()
-{
-    // Enable/disable logarithmic scaling on the X axis
-
-    setAxisScaleEngine(QwtPlot::xBottom,
-                       mLogarithmicXAxisAction->isChecked()?
-                           static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
-                           static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
-
-    resetAxes();
-
-    replot();
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::toggleLogAxisY()
-{
-    // Enable/disable logarithmic scaling on the Y axis
-
-    setAxisScaleEngine(QwtPlot::yLeft,
-                       mLogarithmicYAxisAction->isChecked()?
-                           static_cast<QwtScaleEngine *>(new QwtLogScaleEngine()):
-                           static_cast<QwtScaleEngine *>(new QwtLinearScaleEngine()));
-
-    resetAxes();
-
-    replot();
 }
 
 //==============================================================================

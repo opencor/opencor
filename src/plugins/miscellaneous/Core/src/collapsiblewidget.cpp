@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QMenu>
 #include <QSettings>
 #include <QToolButton>
 #include <QVariant>
@@ -58,8 +59,7 @@ void CollapsibleHeaderTitleWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
-                                                 const bool &pCollapsible,
+CollapsibleHeaderWidget::CollapsibleHeaderWidget(const bool &pCollapsible,
                                                  QWidget *pParent) :
     QWidget(pParent),
     mCollapsed(false),
@@ -97,35 +97,43 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
     static const QIcon NoIcon   = QIcon();
     static const QIcon DownIcon = QIcon(":/oxygen/actions/arrow-down.png");
 
+    static const QString IconStyleSheet = "QToolButton {"
+                                          "    border: none;"
+                                          "}"
+                                          ""
+                                          "QToolButton:pressed {"
+                                          "    margin: 0px;"
+                                          "}";
+
     mButton = new QToolButton(subWidget);
     mTitle = new CollapsibleHeaderTitleWidget(subWidget);
+    mMenu = new QToolButton(subWidget);
 
     int iconSize = 0.4*mTitle->height();
 
     mButton->setIcon(pCollapsible?DownIcon:NoIcon);
     mButton->setIconSize(QSize(iconSize, iconSize));
-    mButton->setStyleSheet("QToolButton {"
-                           "    border: none;"
-                           "}"
-                           ""
-                           "QToolButton:pressed {"
-                           "    margin: 0px;"
-                           "}");
+    mButton->setStyleSheet(IconStyleSheet);
 
     mTitle->setAlignment(Qt::AlignCenter);
+
+    mMenu->setIcon(NoIcon);
+    mMenu->setIconSize(QSize(iconSize, iconSize));
+    mMenu->setStyleSheet(IconStyleSheet);
 
     // Add our button and title to our sub-layout
 
     subLayout->addWidget(mButton);
     subLayout->addWidget(mTitle);
+    subLayout->addWidget(mMenu);
 
     // Add a top separator, our sub-widget and a bottom separator to our main
     // layout
     // Note: we keep track of our top and bottom separators since we may need
     //       to hide them in some cases/circumstances...
 
-    mTopSeparator = newLineWidget(pSeparatorColor, this);
-    mBottomSeparator = newLineWidget(pSeparatorColor, this);
+    mTopSeparator = newLineWidget(borderColor(), this);
+    mBottomSeparator = newLineWidget(borderColor(), this);
 
     layout->addWidget(mTopSeparator);
     layout->addWidget(subWidget);
@@ -212,6 +220,39 @@ void CollapsibleHeaderWidget::setTitle(const QString &pTitle)
 
 //==============================================================================
 
+QMenu * CollapsibleHeaderWidget::menu() const
+{
+    // Return our menu
+
+    return mMenuMenu;
+}
+
+//==============================================================================
+
+void CollapsibleHeaderWidget::setMenu(QMenu *pMenu)
+{
+    // Set our menu
+
+    if (pMenu != mMenuMenu) {
+        static const QIcon NoIcon   = QIcon();
+        static const QIcon MenuIcon = QIcon(":/menu.png");
+
+        mMenu->setIcon(pMenu?MenuIcon:NoIcon);
+
+        mMenuMenu = pMenu;
+
+        if (pMenu) {
+            connect(mMenu, SIGNAL(clicked(bool)),
+                    this, SLOT(showMenu()));
+        } else {
+            disconnect(mMenu, SIGNAL(clicked(bool)),
+                       this, SLOT(showMenu()));
+        }
+    }
+}
+
+//==============================================================================
+
 void CollapsibleHeaderWidget::updateBottomSeparatorVisibleStatus()
 {
     // Show/hide our bottom separator depending on whether we are collapsed or
@@ -246,10 +287,17 @@ void CollapsibleHeaderWidget::toggleCollapsedState()
 
 //==============================================================================
 
-CollapsibleWidget::CollapsibleWidget(const QColor &pSeparatorColor,
-                                     QWidget *pParent) :
+void CollapsibleHeaderWidget::showMenu()
+{
+    // Show our menu
+
+    mMenuMenu->exec(QCursor::pos());
+}
+
+//==============================================================================
+
+CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
     Widget(QSize(), pParent),
-    mSeparatorColor(pSeparatorColor),
     mHeaders(QList<CollapsibleHeaderWidget *>())
 {
     // Create a vertical layout that will contain our headers and widgets
@@ -260,13 +308,6 @@ CollapsibleWidget::CollapsibleWidget(const QColor &pSeparatorColor,
     mLayout->setSpacing(0);
 
     setLayout(mLayout);
-}
-
-//==============================================================================
-
-CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
-    CollapsibleWidget(borderColor(), pParent)
-{
 }
 
 //==============================================================================
@@ -318,16 +359,17 @@ void CollapsibleWidget::setHeaderTitle(const int &pIndex, const QString &pTitle)
 
 //==============================================================================
 
-void CollapsibleWidget::addWidget(QWidget *pWidget, const bool &pCollapsible)
+CollapsibleHeaderWidget * CollapsibleWidget::addWidget(QWidget *pWidget,
+                                                       const bool &pCollapsible)
 {
     // Make sure that there is a widget to add
 
     if (!pWidget)
-        return;
+        return 0;
 
     // We want to add a widget, so we first need to add a header to our layout
 
-    CollapsibleHeaderWidget *header = new CollapsibleHeaderWidget(mSeparatorColor, pCollapsible, this);
+    CollapsibleHeaderWidget *header = new CollapsibleHeaderWidget(pCollapsible, this);
 
     // Let our header know whether it is the first header
 
@@ -363,6 +405,8 @@ void CollapsibleWidget::addWidget(QWidget *pWidget, const bool &pCollapsible)
         connect(header, SIGNAL(widgetVisible(const bool &)),
                 this, SLOT(emitCollapsed()));
     }
+
+    return header;
 }
 
 //==============================================================================
