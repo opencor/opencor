@@ -1503,9 +1503,9 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
 
         if (kisaoId.isEmpty()) {
             voiSolverProperties += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
-                                                                            SEDMLSupport::SolverPropertyId,
+                                                                            SEDMLSupport::Id,
                                                                             solverProperty,
-                                                                            SEDMLSupport::SolverPropertyValue,
+                                                                            SEDMLSupport::Value,
                                                                             value);
         } else {
             libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
@@ -1532,9 +1532,9 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
 
         foreach (const QString &solverProperty, mSimulation->data()->nlaSolverProperties().keys()) {
             nlaSolverProperties += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
-                                                                            SEDMLSupport::SolverPropertyId,
+                                                                            SEDMLSupport::Id,
                                                                             solverProperty,
-                                                                            SEDMLSupport::SolverPropertyValue,
+                                                                            SEDMLSupport::Value,
                                                                             solverProperties.value(solverProperty).toString());
         }
 
@@ -1542,7 +1542,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
                                                    "    %5"
                                                    "</%1>").arg(SEDMLSupport::NlaSolver,
                                                                 SEDMLSupport::OpencorNamespace,
-                                                                SEDMLSupport::NlaSolverName,
+                                                                SEDMLSupport::Name,
                                                                 mSimulation->data()->nlaSolverName(),
                                                                 nlaSolverProperties).toStdString());
     }
@@ -2417,8 +2417,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                     continue;
                 }
 
-                QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyId.toStdString())));
-                QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyValue.toStdString())));
+                QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Id.toStdString())));
+                QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
                 bool propertySet = false;
 
                 foreach (Core::Property *solverProperty, solverProperties) {
@@ -2457,7 +2457,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
             }
 
             mustHaveNlaSolver = true;
-            nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
+            nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::Name.toStdString())));
 
             foreach (SolverInterface *solverInterface, solverInterfaces) {
                 if (!nlaSolverName.compare(solverInterface->solverName())) {

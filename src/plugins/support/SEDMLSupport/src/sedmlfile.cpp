@@ -477,8 +477,8 @@ bool SedmlFile::isSupported()
                         continue;
                     }
 
-                    int idIndex = solverPropertyNode.getAttrIndex(SolverPropertyId.toStdString());
-                    int valueIndex = solverPropertyNode.getAttrIndex(SolverPropertyValue.toStdString());
+                    int idIndex = solverPropertyNode.getAttrIndex(Id.toStdString());
+                    int valueIndex = solverPropertyNode.getAttrIndex(Value.toStdString());
 
                     if (   (idIndex == -1) || (valueIndex == -1)
                         || solverPropertyNode.getAttrValue(idIndex).empty()
@@ -516,7 +516,7 @@ bool SedmlFile::isSupported()
                     continue;
                 }
 
-                int nameIndex = nlaSolverNode.getAttrIndex(NlaSolverName.toStdString());
+                int nameIndex = nlaSolverNode.getAttrIndex(Name.toStdString());
 
                 if ((nameIndex != -1) && !nlaSolverNode.getAttrValue(nameIndex).empty()) {
                     if (hasNlaSolver) {
