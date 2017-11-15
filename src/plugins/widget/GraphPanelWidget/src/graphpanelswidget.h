@@ -58,6 +58,8 @@ public:
 
     void setActiveGraphPanel(GraphPanelWidget *pGraphPanel);
 
+    QIntList sizes() const;
+
 private:
     GraphPanelWidgets mGraphPanels;
 

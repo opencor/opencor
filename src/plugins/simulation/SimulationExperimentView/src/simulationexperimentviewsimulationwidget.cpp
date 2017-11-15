@@ -1696,11 +1696,13 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
     } GraphsData;
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
+    GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
+    QIntList graphPanelsWidgetSizes = graphPanelsWidget->sizes();
     QMap<Core::Properties, GraphsData> graphsData = QMap<Core::Properties, GraphsData>();
     int graphPlotCounter = 0;
 
     foreach (GraphPanelWidget::GraphPanelWidget *graphPanel,
-             mContentsWidget->graphPanelsWidget()->graphPanels()) {
+             graphPanelsWidget->graphPanels()) {
         // Create and customise the look and feel of our 2D plot
 
         Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelProperties(graphPanel);
@@ -1724,6 +1726,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                                               stringValue(graphPanelProperties[1]))
                                                            +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
                                                                               stringValue(graphPanelProperties[2]))
+                                                           +SedmlProperty.arg(SEDMLSupport::Height,
+                                                                              QString::number(graphPanelsWidgetSizes[graphPlotCounter-1]))
                                                            +SedmlProperty.arg(SEDMLSupport::Title,
                                                                               stringValue(graphPanelProperties[5]))
                                                            +SedmlProperty.arg( SEDMLSupport::GridLines,
@@ -2499,6 +2503,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
     // Customise our graph panel and graphs
 
+    QIntList graphPanelsWidgetSizes = QIntList();
+
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
         // Customise our graph panel
 
@@ -2534,6 +2540,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                         graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
                     } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::ForegroundColor)) {
                         graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
+                    } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Height)) {
+                        graphPanelsWidgetSizes << sedmlPlot2dPropertyNodeValue.toInt();
                     } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Title)) {
                         graphPanelProperties[5]->setValue(sedmlPlot2dPropertyNodeValue);
                     } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
@@ -2720,6 +2728,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                  GraphPanelWidget::GraphPanelPlotGraphProperties( lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
         }
     }
+
+    graphPanelsWidget->setSizes(graphPanelsWidgetSizes);
 
     return true;
 }

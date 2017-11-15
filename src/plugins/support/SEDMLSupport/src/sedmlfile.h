@@ -85,6 +85,7 @@ static const auto Filled           = QStringLiteral("filled");
 static const auto FontColor        = QStringLiteral("fontColor");
 static const auto FontSize         = QStringLiteral("fontSize");
 static const auto ForegroundColor  = QStringLiteral("foregroundColor");
+static const auto Height           = QStringLiteral("height");
 static const auto LogarithmicScale = QStringLiteral("logarithmicScale");
 static const auto Size             = QStringLiteral("size");
 static const auto Style            = QStringLiteral("style");

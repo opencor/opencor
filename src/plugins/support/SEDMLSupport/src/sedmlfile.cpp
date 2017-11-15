@@ -858,6 +858,15 @@ bool SedmlFile::isSupported()
                     } else if (   !plot2dPropertyNodeName.compare(ForegroundColor)
                                && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, ForegroundColor)) {
                         return false;
+                    } else if (!plot2dPropertyNodeName.compare(Height)) {
+                        if (!IntegerGt0RegEx.match(plot2dPropertyNodeValue).hasMatch()) {
+                            mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                      plot2dPropertyNode.getLine(),
+                                                      plot2dPropertyNode.getColumn(),
+                                                      tr("the '%1' property value must be an integer greater than zero").arg(plot2dPropertyNodeName));
+
+                            return false;
+                        }
                     } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
                                && !QString::fromStdString(plot2dPropertyNode.getName()).compare(GridLines)) {
                         for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
