@@ -168,6 +168,8 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
 {
     // Customise ourselves a bit
 
+    setLegendAttribute(QwtPlotCurve::LegendShowLine);
+    setLegendAttribute(QwtPlotCurve::LegendShowSymbol);
     setPen(QPen(Qt::darkBlue, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     setRenderHint(QwtPlotItem::RenderAntialiased);
 }
