@@ -2546,7 +2546,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                     } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Height)) {
                         graphPanelsWidgetSizes << sedmlPlot2dPropertyNodeValue.toInt();
                     } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Legend)) {
-//---ISSUE1171--- SHOW/HIDE THE LEGEND...
+                        graphPanelProperties[4]->setBooleanValue(!sedmlPlot2dPropertyNodeValue.compare(TrueValue));
                     } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Title)) {
                         graphPanelProperties[6]->setValue(sedmlPlot2dPropertyNodeValue);
                     } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
