@@ -1279,15 +1279,8 @@ void GraphPanelPlotWidget::setLegend(const bool &pLegend)
 {
     // Show/hide our legend
 
-    QwtAbstractLegend *legend = QwtPlot::legend();
-
-    if (pLegend && !legend) {
-        insertLegend(new QwtLegend(this));
-    } else if (!pLegend && legend) {
-        delete legend;
-
-        insertLegend(0);
-    }
+    if (pLegend != legend())
+        insertLegend(pLegend?new QwtLegend(this):0);
 }
 
 //==============================================================================
