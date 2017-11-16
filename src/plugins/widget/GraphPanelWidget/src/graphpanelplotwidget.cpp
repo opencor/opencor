@@ -1282,7 +1282,7 @@ void GraphPanelPlotWidget::setLegend(const bool &pLegend)
     if (pLegend && !legend) {
         insertLegend(new QwtLegend(this));
     } else if (!pLegend && legend) {
-        delete QwtPlot::legend();
+        delete legend;
 
         insertLegend(0);
     }
