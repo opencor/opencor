@@ -1372,15 +1372,19 @@ void GraphPanelPlotWidget::setTitle(const QString &pTitle)
 {
     // Set our title
 
-    QwtText title = QwtText(pTitle);
-    QFont newFont = title.font();
+    if (pTitle.isEmpty()) {
+        QwtPlot::setTitle(QString());
+    } else {
+        QwtText title = QwtText(pTitle);
+        QFont newFont = title.font();
 
-    newFont.setPointSize(2*fontSize());
+        newFont.setPointSize(2*fontSize());
 
-    title.setColor(mForegroundColor);
-    title.setFont(newFont);
+        title.setColor(mForegroundColor);
+        title.setFont(newFont);
 
-    QwtPlot::setTitle(title);
+        QwtPlot::setTitle(title);
+    }
 }
 
 //==============================================================================
@@ -2008,15 +2012,19 @@ void GraphPanelPlotWidget::setTitleAxis(const int &pAxisId,
 {
     // Set the title for our axis
 
-    QwtText axisTitle = QwtText(pTitleAxis);
-    QFont axisTitleFont = axisTitle.font();
+    if (pTitleAxis.isEmpty()) {
+        setAxisTitle(pAxisId, QString());
+    } else {
+        QwtText axisTitle = QwtText(pTitleAxis);
+        QFont axisTitleFont = axisTitle.font();
 
-    axisTitleFont.setPointSizeF(1.25*fontSize());
+        axisTitleFont.setPointSizeF(1.25*fontSize());
 
-    axisTitle.setColor(mForegroundColor);
-    axisTitle.setFont(axisTitleFont);
+        axisTitle.setColor(mForegroundColor);
+        axisTitle.setFont(axisTitleFont);
 
-    setAxisTitle(pAxisId, axisTitle);
+        setAxisTitle(pAxisId, axisTitle);
+    }
 
     forceAlignWithNeighbors();
 }
