@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "qwtbegin.h"
+    #include "qwt_legend.h"
     #include "qwt_painter.h"
     #include "qwt_plot_canvas.h"
     #include "qwt_plot_directpainter.h"
@@ -685,7 +686,6 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     Core::CommonWidget(this),
     mBackgroundColor(QColor()),
     mForegroundColor(QColor()),
-    mLegend(false),
     mPointCoordinatesStyle(Qt::DashLine),
     mPointCoordinatesWidth(1),
     mPointCoordinatesColor(QColor()),
@@ -1268,7 +1268,7 @@ bool GraphPanelPlotWidget::legend() const
 {
     // Return whether we show our legend
 
-    return mLegend;
+    return QwtPlot::legend();
 }
 
 //==============================================================================
@@ -1277,10 +1277,14 @@ void GraphPanelPlotWidget::setLegend(const bool &pLegend)
 {
     // Show/hide our legend
 
-    if (pLegend != mLegend) {
-        mLegend = pLegend;
+    QwtAbstractLegend *legend = QwtPlot::legend();
 
-//---ISSUE1171--- TO BE DONE...
+    if (pLegend && !legend) {
+        insertLegend(new QwtLegend(this));
+    } else if (!pLegend && legend) {
+        delete QwtPlot::legend();
+
+        insertLegend(0);
     }
 }
 

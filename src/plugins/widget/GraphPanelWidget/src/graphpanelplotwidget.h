@@ -364,8 +364,6 @@ private:
     QColor mBackgroundColor;
     QColor mForegroundColor;
 
-    bool mLegend;
-
     Qt::PenStyle mPointCoordinatesStyle;
     int mPointCoordinatesWidth;
     QColor mPointCoordinatesColor;
