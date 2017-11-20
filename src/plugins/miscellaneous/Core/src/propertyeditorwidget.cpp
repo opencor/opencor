@@ -743,9 +743,9 @@ void Property::setValue(const QString &pValue, const bool &pForce,
 {
     // Set our value (and value icon, if we are a colour property)
 
-    if (pValue.compare(mValue->text()) || pForce) {
-        QString oldValue = mValue->text();
+    QString oldValue = value();
 
+    if (pValue.compare(oldValue) || pForce) {
         mValue->setText(pValue);
 
         if (mType == Color) {
@@ -766,6 +766,58 @@ void Property::setValue(const QString &pValue, const bool &pForce,
         if (pEmitSignal)
             emit valueChanged(oldValue, pValue);
     }
+}
+
+//==============================================================================
+
+QVariant Property::valueAsVariant() const
+{
+    // Return our property value as a variant
+
+    switch (mType) {
+    case Section:
+    case String:
+    case List:
+    case Color:
+        return value();
+    case Integer:
+    case IntegerGt0:
+        return integerValue();
+    case Double:
+    case DoubleGt0:
+        return doubleValue();
+    case Boolean:
+        return booleanValue();
+    }
+
+    return QVariant();
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
+}
+
+//==============================================================================
+
+QString Property::valueAsString() const
+{
+    // Return our property value as a string
+
+    switch (mType) {
+    case Section:
+    case String:
+    case Integer:
+    case IntegerGt0:
+    case Double:
+    case DoubleGt0:
+    case List:
+    case Color:
+        return value();
+    case Boolean:
+        return QVariant(booleanValue()).toString();
+    }
+
+    return QString();
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
 }
 
 //==============================================================================

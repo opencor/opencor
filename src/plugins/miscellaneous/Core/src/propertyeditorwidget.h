@@ -263,6 +263,9 @@ public:
     void setValue(const QString &pValue, const bool &pForce = false,
                   const bool &pEmitSignal = true);
 
+    QVariant valueAsVariant() const;
+    QString valueAsString() const;
+
     int integerValue() const;
     void setIntegerValue(const int &pIntegerValue,
                          const bool &pEmitSignal = true);

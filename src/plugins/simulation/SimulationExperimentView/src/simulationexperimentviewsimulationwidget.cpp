@@ -1259,60 +1259,6 @@ SimulationSupport::Simulation * SimulationExperimentViewSimulationWidget::simula
 
 //==============================================================================
 
-QVariant SimulationExperimentViewSimulationWidget::value(Core::Property *pProperty) const
-{
-    switch (pProperty->type()) {
-    case Core::Property::Section:
-        return QVariant();
-    case Core::Property::String:
-    case Core::Property::Color:
-        return pProperty->value();
-    case Core::Property::Integer:
-    case Core::Property::IntegerGt0:
-        return pProperty->integerValue();
-    case Core::Property::Double:
-    case Core::Property::DoubleGt0:
-        return pProperty->doubleValue();
-    case Core::Property::List:
-        return pProperty->listValue();
-    case Core::Property::Boolean:
-        return pProperty->booleanValue();
-    }
-
-    return QVariant();
-    // Note: we can't reach this point, but without it we may be told that not
-    //       all control paths return a value...
-}
-
-//==============================================================================
-
-QString SimulationExperimentViewSimulationWidget::stringValue(Core::Property *pProperty) const
-{
-    switch (pProperty->type()) {
-    case Core::Property::Section:
-        return QString();
-    case Core::Property::String:
-    case Core::Property::Color:
-        return pProperty->value();
-    case Core::Property::Integer:
-    case Core::Property::IntegerGt0:
-        return QString::number(pProperty->integerValue());
-    case Core::Property::Double:
-    case Core::Property::DoubleGt0:
-        return QString::number(pProperty->doubleValue(), 'g', 15);
-    case Core::Property::List:
-        return pProperty->listValue();
-    case Core::Property::Boolean:
-        return QVariant(pProperty->booleanValue()).toString();
-    }
-
-    return QString();
-    // Note: we can't reach this point, but without it we may be told that not
-    //       all control paths return a value...
-}
-
-//==============================================================================
-
 void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
 {
     // Run/resume our simulation or pause it
@@ -1721,56 +1667,56 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                               "</%1>").arg( SEDMLSupport::Properties,
                                                             SEDMLSupport::OpencorNamespace,
                                                             SedmlProperty.arg(SEDMLSupport::BackgroundColor,
-                                                                              stringValue(graphPanelProperties[0]))
+                                                                              graphPanelProperties[0]->valueAsString())
                                                            +SedmlProperty.arg(SEDMLSupport::FontSize,
-                                                                              stringValue(graphPanelProperties[1]))
+                                                                              graphPanelProperties[1]->valueAsString())
                                                            +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
-                                                                              stringValue(graphPanelProperties[2]))
+                                                                              graphPanelProperties[2]->valueAsString())
                                                            +SedmlProperty.arg(SEDMLSupport::Height,
                                                                               QString::number(graphPanelsWidgetSizes[graphPlotCounter-1]))
                                                            +SedmlProperty.arg(SEDMLSupport::Legend,
-                                                                              stringValue(graphPanelProperties[4]))
+                                                                              graphPanelProperties[4]->valueAsString())
                                                            +SedmlProperty.arg(SEDMLSupport::Title,
-                                                                              stringValue(graphPanelProperties[6]))
+                                                                              graphPanelProperties[6]->valueAsString())
                                                            +SedmlProperty.arg( SEDMLSupport::GridLines,
                                                                                SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                  SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
                                                                               +SedmlProperty.arg(SEDMLSupport::Width,
-                                                                                                 stringValue(gridLinesProperties[1]))
+                                                                                                 gridLinesProperties[1]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                 stringValue(gridLinesProperties[2])))
+                                                                                                 gridLinesProperties[2]->valueAsString()))
                                                            +SedmlProperty.arg( SEDMLSupport::PointCoordinates,
                                                                                SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                  SEDMLSupport::lineStyleValue(pointCoordinatesProperties[0]->listValueIndex()))
                                                                               +SedmlProperty.arg(SEDMLSupport::Width,
-                                                                                                 stringValue(pointCoordinatesProperties[1]))
+                                                                                                 pointCoordinatesProperties[1]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                 stringValue(pointCoordinatesProperties[2]))
+                                                                                                 pointCoordinatesProperties[2]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::FontColor,
-                                                                                                 stringValue(pointCoordinatesProperties[3])))
+                                                                                                 pointCoordinatesProperties[3]->valueAsString()))
                                                            +SedmlProperty.arg( SEDMLSupport::XAxis,
                                                                                SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
-                                                                                                 stringValue(xAxisProperties[0]))
+                                                                                                 xAxisProperties[0]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::Title,
-                                                                                                 stringValue(xAxisProperties[1])))
+                                                                                                 xAxisProperties[1]->valueAsString()))
                                                            +SedmlProperty.arg( SEDMLSupport::YAxis,
                                                                                SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
-                                                                                                 stringValue(yAxisProperties[0]))
+                                                                                                 yAxisProperties[0]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::Title,
-                                                                                                 stringValue(yAxisProperties[1])))
+                                                                                                 yAxisProperties[1]->valueAsString()))
                                                            +SedmlProperty.arg( SEDMLSupport::ZoomRegion,
                                                                                SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                  SEDMLSupport::lineStyleValue(zoomRegionProperties[0]->listValueIndex()))
                                                                               +SedmlProperty.arg(SEDMLSupport::Width,
-                                                                                                 stringValue(zoomRegionProperties[1]))
+                                                                                                 zoomRegionProperties[1]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                 stringValue(zoomRegionProperties[2]))
+                                                                                                 zoomRegionProperties[2]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::FontColor,
-                                                                                                 stringValue(zoomRegionProperties[3]))
+                                                                                                 zoomRegionProperties[3]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::Filled,
-                                                                                                 stringValue(zoomRegionProperties[4]))
+                                                                                                 zoomRegionProperties[4]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::FillColor,
-                                                                                                 stringValue(zoomRegionProperties[5])))).toStdString());
+                                                                                                 zoomRegionProperties[5]->valueAsString()))).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
@@ -1858,20 +1804,20 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                                                   SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                     SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
                                                                                  +SedmlProperty.arg(SEDMLSupport::Width,
-                                                                                                    stringValue(lineProperties[1]))
+                                                                                                    lineProperties[1]->valueAsString())
                                                                                  +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                    stringValue(lineProperties[2])))
+                                                                                                    lineProperties[2]->valueAsString()))
                                                               +SedmlProperty.arg( SEDMLSupport::Symbol,
                                                                                   SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                     SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
                                                                                  +SedmlProperty.arg(SEDMLSupport::Size,
-                                                                                                    stringValue(symbolProperties[1]))
+                                                                                                    symbolProperties[1]->valueAsString())
                                                                                  +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                    stringValue(symbolProperties[2]))
+                                                                                                    symbolProperties[2]->valueAsString())
                                                                                  +SedmlProperty.arg(SEDMLSupport::Filled,
-                                                                                                    stringValue(symbolProperties[3]))
+                                                                                                    symbolProperties[3]->valueAsString())
                                                                                  +SedmlProperty.arg(SEDMLSupport::FillColor,
-                                                                                                    stringValue(symbolProperties[4])))).toStdString());
+                                                                                                    symbolProperties[4]->valueAsString()))).toStdString());
         }
     }
 
@@ -2143,7 +2089,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
         if (!pProperty || !needOdeSolverGuiUpdate) {
             foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName())) {
                 if (!pProperty || (pProperty == property)) {
-                    mSimulation->data()->addOdeSolverProperty(property->id(), value(property));
+                    mSimulation->data()->addOdeSolverProperty(property->id(), property->valueAsVariant());
 
                     needOdeSolverGuiUpdate = true;
 
@@ -2175,7 +2121,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
         if (!pProperty || !needDaeSolverGuiUpdate) {
             foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(mSimulation->data()->daeSolverName())) {
                 if (!pProperty || (pProperty == property)) {
-                    mSimulation->data()->addDaeSolverProperty(property->id(), value(property));
+                    mSimulation->data()->addDaeSolverProperty(property->id(), property->valueAsVariant());
 
                     needDaeSolverGuiUpdate = true;
 
@@ -2207,7 +2153,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
         if (!pProperty || !needNlaSolverGuiUpdate) {
             foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName())) {
                 if (!pProperty || (pProperty == property)) {
-                    mSimulation->data()->addNlaSolverProperty(property->id(), value(property));
+                    mSimulation->data()->addNlaSolverProperty(property->id(), property->valueAsVariant());
 
                     needNlaSolverGuiUpdate = true;
 
