@@ -2680,6 +2680,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
     graphPanelsWidget->setSizes(graphPanelsWidgetSizes);
 
+    // Select our first graph panel, now that we are fully initialised
 
     graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
