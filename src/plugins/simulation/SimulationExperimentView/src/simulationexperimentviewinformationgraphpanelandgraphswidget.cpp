@@ -420,17 +420,21 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
     mGraphProperties.insert(pGraph, graphProperty);
 
     // Create some graph properties
-    // Note: to add properties will result in the propertyChanged() signal being
-    //       emitted, but we don't want to handle that signal (at least, not
-    //       when creating a graph since not everyting may be set yet, so this
-    //       might cause more problems than anything), so we must disconnect
-    //       ourselves from it before adding the properties (and then reconnect
-    //       ourselves to it once we are done)...
+    // Note #1: to add properties will result in the propertyChanged() signal
+    //          being emitted, but we don't want to handle that signal (at
+    //          least, not when creating a graph since not everyting may be set
+    //          yet, so this might cause more problems than anything), so we
+    //          must disconnect ourselves from it before adding the properties
+    //          (and then reconnect ourselves to it once we are done)...
+    // Note #2: our graph properties have or can have an icon, but not our title
+    //          property, so give it a blank icon so that it is properly aligned
+    //          with our other properties...
 
     disconnect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(graphsPropertyChanged(Core::Property *)));
 
     graphsPropertyEditor->addListProperty(graphProperty);
+    graphsPropertyEditor->addStringProperty(pGraph->title().text(), graphProperty);
     graphsPropertyEditor->addStringProperty(pGraph->parameterX()?
                                                 static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())->fullyFormattedName():
                                                 Core::UnknownValue,
@@ -439,6 +443,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
                                                 static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())->fullyFormattedName():
                                                 Core::UnknownValue,
                                             graphProperty);
+
+    static const QIcon BlankIcon = QIcon(":/SimulationExperimentView/blank.png");
+
+    graphProperty->properties()[1]->setIcon(BlankIcon);
 
     // Create some line properties for our graph
 
@@ -1143,6 +1151,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
         fileName = propertyFileName.split(PropertySeparator).last();
     }
 
+    // Update the graph's title
+
+    graph->setTitle(properties[1]->value());
+
     // Check that the parameters represented by the value of the X and Y
     // properties exist for the current/selected model
     // Note: we absolutely want to check the parameter (so that an icon can be
@@ -1154,17 +1166,17 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterX());
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY());
 
-    graphOk = checkParameter(runtime, graph, properties[1], true) && graphOk;
-    graphOk = checkParameter(runtime, graph, properties[2], false) && graphOk;
+    graphOk = checkParameter(runtime, graph, properties[2], true) && graphOk;
+    graphOk = checkParameter(runtime, graph, properties[3], false) && graphOk;
 
     // Update our section's name, if possible
     // Note: indeed, when populating ourselves, updateGraphInfo() gets called
     //       (through graphsPropertyChanged()), yet we don't want to (and can't)
     //       do what follows if not all the properties are available...
 
-    pProperty->setName( properties[1]->value()
+    pProperty->setName( properties[2]->value()
                        +PropertySeparator
-                       +properties[2]->value());
+                       +properties[3]->value());
 
     // Update the status (i.e. icon) of our (section) property
 
@@ -1181,7 +1193,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
 
     QPen oldLinePen = graph->pen();
     QPen linePen = oldLinePen;
-    Core::Properties lineProperties = properties[3]->properties();
+    Core::Properties lineProperties = properties[4]->properties();
 
     linePen.setStyle(Qt::PenStyle(lineProperties[0]->listValues().indexOf(lineProperties[0]->listValue())));
     linePen.setWidth(lineProperties[1]->integerValue());
@@ -1193,7 +1205,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
 
     const QwtSymbol *oldGraphSymbol = graph->symbol();
     bool graphSymbolUpdated = !oldGraphSymbol;
-    Core::Properties symbolProperties = properties[4]->properties();
+    Core::Properties symbolProperties = properties[5]->properties();
     int symbolStyleValue = symbolProperties[0]->listValues().indexOf(symbolProperties[0]->listValue());
     QwtSymbol::Style symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
     int symbolSize = symbolProperties[1]->integerValue();
@@ -1402,14 +1414,15 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
         Core::Properties graphProperties = graphProperty->properties();
 
         graphProperties[0]->setName(tr("Model"));
-        graphProperties[1]->setName(tr("X"));
-        graphProperties[2]->setName(tr("Y"));
+        graphProperties[1]->setName(tr("Title"));
+        graphProperties[2]->setName(tr("X"));
+        graphProperties[3]->setName(tr("Y"));
 
         // Set the label of our graph line properties
 
-        Core::Properties lineProperties = graphProperties[3]->properties();
+        Core::Properties lineProperties = graphProperties[4]->properties();
 
-        graphProperties[3]->setName(tr("Line"));
+        graphProperties[4]->setName(tr("Line"));
 
         lineProperties[0]->setName(tr("Style"));
         lineProperties[0]->setListValues(QStringList() << tr("None")
@@ -1424,9 +1437,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
 
         // Set the label of our graph symbol properties
 
-        Core::Properties symbolProperties = graphProperties[4]->properties();
+        Core::Properties symbolProperties = graphProperties[5]->properties();
 
-        graphProperties[4]->setName(tr("Symbol"));
+        graphProperties[5]->setName(tr("Symbol"));
 
         symbolProperties[0]->setName(tr("Style"));
         symbolProperties[0]->setListValues(QStringList() << tr("None")
