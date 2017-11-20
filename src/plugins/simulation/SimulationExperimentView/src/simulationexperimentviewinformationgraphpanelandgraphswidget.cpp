@@ -422,7 +422,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
     // Create some graph properties
     // Note: to add properties will result in the propertyChanged() signal being
     //       emitted, but we don't want to handle that signal (at least, not
-    //       when creating a graph since not everyting may be set yet so this
+    //       when creating a graph since not everyting may be set yet, so this
     //       might cause more problems than anything), so we must disconnect
     //       ourselves from it before adding the properties (and then reconnect
     //       ourselves to it once we are done)...
