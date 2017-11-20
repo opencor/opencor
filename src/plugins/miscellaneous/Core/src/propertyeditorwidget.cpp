@@ -1133,7 +1133,7 @@ void Property::updateToolTip()
     if (mType != Section) {
         toolTip += tr(": ");
 
-        if (mValue->text().isEmpty())
+        if (mValue->text().isEmpty() && (mType != String))
             toolTip += UnknownValue;
         else
             toolTip += mValue->text();
