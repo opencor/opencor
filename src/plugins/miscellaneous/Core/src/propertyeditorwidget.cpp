@@ -826,7 +826,7 @@ int Property::integerValue() const
 {
     // Return our value as an integer, if it is of that type
 
-    return mValue->text().toInt();
+    return value().toInt();
 }
 
 //==============================================================================
@@ -848,7 +848,7 @@ double Property::doubleValue() const
 {
     // Return our value as a double, if it is of that type
 
-    return mValue->text().toDouble();
+    return value().toDouble();
 }
 
 //==============================================================================
@@ -910,7 +910,7 @@ QString Property::listValue() const
 {
     // Return our list value
 
-    return mValue->text();
+    return value();
 }
 
 //==============================================================================
@@ -973,7 +973,7 @@ void Property::setEmptyListValue(const QString &pEmptyListValue)
         // Keep our current value, if our list is not empty, otherwise update it
         // with our new empty list value
 
-        setValue(mListValues.isEmpty()?mEmptyListValue:mValue->text());
+        setValue(mListValues.isEmpty()?mEmptyListValue:value());
     }
 }
 
@@ -983,7 +983,7 @@ bool Property::booleanValue() const
 {
     // Return our value as a boolean, if it is of that type
 
-    return !mValue->text().compare(TrueValue);
+    return !value().compare(TrueValue);
 }
 
 //==============================================================================
@@ -1004,7 +1004,7 @@ QColor Property::colorValue() const
 
     QColor res;
 
-    res.setNamedColor(mValue->text());
+    res.setNamedColor(value());
 
     return res;
 }
@@ -1185,10 +1185,10 @@ void Property::updateToolTip()
     if (mType != Section) {
         toolTip += tr(": ");
 
-        if (mValue->text().isEmpty() && (mType != String))
+        if (value().isEmpty() && (mType != String))
             toolTip += UnknownValue;
         else
-            toolTip += mValue->text();
+            toolTip += value();
 
         if (mUnit && !mUnit->text().isEmpty())
             toolTip += " "+mUnit->text();
