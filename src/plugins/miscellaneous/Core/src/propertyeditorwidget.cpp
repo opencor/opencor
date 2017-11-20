@@ -1966,28 +1966,14 @@ void PropertyEditorWidget::editorClosed()
     // Note #1: we don't need to do this for a list property or a boolean
     //          property since such a property will have already been updated
     //          (see listPropertyChanged() and booleanPropertyChanged())...
-    // Note #2: we should always set (and force) the value of the property, even
-    //          if we are not dealing with an 'empty' integer or double property
-    //          since only the text of the property item will have been updated
+    // Note #2: we should always set (and force) the value of the property since
+    //          only the text of the property item will have been updated
     //          (through QTreeView) while Property::setValue() will do a few
     //          more things (e.g. update the tool tip)...
 
     if (   (mProperty->type() != Property::List)
         && (mProperty->type() != Property::Boolean)) {
-        // Not a list or boolean item, so set its value
-
-        QString value = mProperty->value();
-
-        if (    value.isEmpty()
-            && (   (mProperty->type() == Property::Integer)
-                || (mProperty->type() == Property::Double))) {
-            // We are dealing with an 'empty' integer or double property, so set
-            // its value to zero
-
-            value = "0";
-        }
-
-        mProperty->setValue(value, true);
+        mProperty->setValue(mProperty->value(), true);
     }
 
     // Reset our focus proxy and make sure that we get the focus (see
@@ -2029,15 +2015,20 @@ void PropertyEditorWidget::editProperty(Property *pProperty,
         bool canCommitData = pCommitData;
 
         if (canCommitData) {
-            // Make sure that the value of a strictly positive double property
-            // is valid
-            // Note: indeed, we allow "0.3", but the user might enter "0." and
-            //       then decide to move to the next property, in which case we
-            //       should ignore the 'new' value...
+            // Make sure that the value of some of our properties is valid
+            // Note: indeed, in the case of a DoubleGt0 property, we allow
+            //       "0.3", but the user might enter "0." and then decide to
+            //       move onto the next property, in which case we should ignore
+            //       the 'new' value...
 
-            if (   (mProperty->type() == Property::DoubleGt0)
-                || (mProperty->type() == Property::Color)) {
-                DoubleGt0EditorWidget *propertyEditor = static_cast<DoubleGt0EditorWidget *>(mPropertyEditor);
+            Property::Type propertyType = mProperty->type();
+
+            if (   (propertyType == Property::Integer)
+                || (propertyType == Property::IntegerGt0)
+                || (propertyType == Property::Double)
+                || (propertyType == Property::DoubleGt0)
+                || (propertyType == Property::Color)) {
+                TextEditorWidget *propertyEditor = static_cast<TextEditorWidget *>(mPropertyEditor);
                 QString propertyValue = propertyEditor->text();
                 int dummy;
 
