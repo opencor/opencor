@@ -651,7 +651,7 @@ QwtText GraphPanelPlotScaleDraw::label(double pValue) const
 
 //==============================================================================
 
-void GraphPanelScaleWidget::updateLayout()
+void GraphPanelPlotScaleWidget::updateLayout()
 {
     // Our layout has changed, so update our internals
 
@@ -2423,7 +2423,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
     }
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-        GraphPanelScaleWidget *scaleWidget = static_cast<GraphPanelScaleWidget *>(plot->axisWidget(QwtPlot::yLeft));
+        GraphPanelPlotScaleWidget *scaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::yLeft));
 
         scaleWidget->scaleDraw()->setMinimumExtent( newMinExtent
                                                    -(plot->titleAxisY().isEmpty()?

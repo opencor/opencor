@@ -189,7 +189,7 @@ protected:
 
 //==============================================================================
 
-class GraphPanelScaleWidget : public QwtScaleWidget
+class GraphPanelPlotScaleWidget : public QwtScaleWidget
 {
 public:
     void updateLayout();
