@@ -2441,14 +2441,12 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     graphPanelsWidget->removeAllGraphPanels();
 
     // Add some graph panels, so that their number corresponds to the number of
-    // 2D outputs mentioned in the SED-ML file, and select the first one
+    // 2D outputs mentioned in the SED-ML file
 
     int newNbOfGraphPanels = sedmlDocument->getNumOutputs();
 
     while (graphPanelsWidget->graphPanels().count() != newNbOfGraphPanels)
         graphPanelsWidget->addGraphPanel(false);
-
-    graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
     // Customise our graph panel and graphs
 
@@ -2681,6 +2679,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     }
 
     graphPanelsWidget->setSizes(graphPanelsWidgetSizes);
+
+
+    graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
     return true;
 }
