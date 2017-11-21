@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "qwtbegin.h"
+    #include "qwt_legend.h"
     #include "qwt_plot.h"
     #include "qwt_plot_curve.h"
     #include "qwt_scale_draw.h"
@@ -198,6 +199,20 @@ class GraphPanelPlotScaleWidget : public QwtScaleWidget
 {
 public:
     void updateLayout();
+};
+
+//==============================================================================
+
+class GraphPanelPlotLegendWidget : public QwtLegend
+{
+    Q_OBJECT
+
+public:
+    explicit GraphPanelPlotLegendWidget(QWidget *pParent);
+
+protected:
+    virtual void updateWidget(QWidget *pWidget,
+                              const QwtLegendData &pLegendData);
 };
 
 //==============================================================================

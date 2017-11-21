@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "graphpanelplotlegendwidget.h"
 #include "graphpanelplotwidget.h"
 #include "graphpanelwidgetcustomaxesdialog.h"
 #include "i18ninterface.h"
@@ -44,7 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "qwtbegin.h"
-    #include "qwt_legend.h"
     #include "qwt_painter.h"
     #include "qwt_plot_canvas.h"
     #include "qwt_plot_directpainter.h"
@@ -668,6 +666,28 @@ void GraphPanelPlotScaleWidget::updateLayout()
     // Our layout has changed, so update our internals
 
     layoutScale();
+}
+
+//==============================================================================
+
+GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(QWidget *pParent) :
+    QwtLegend(pParent)
+{
+}
+
+//==============================================================================
+
+void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
+                                              const QwtLegendData &pLegendData)
+{
+    // Default handling
+
+    QwtLegend::updateWidget(pWidget, pLegendData);
+
+    // Make sure that updates are enabled
+    // Note: indeed, we want
+
+    pWidget->setUpdatesEnabled(true);
 }
 
 //==============================================================================
