@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "qwtbegin.h"
+    #include "qwt_legend_label.h"
     #include "qwt_painter.h"
     #include "qwt_plot_canvas.h"
     #include "qwt_plot_directpainter.h"
@@ -670,9 +671,38 @@ void GraphPanelPlotScaleWidget::updateLayout()
 
 //==============================================================================
 
-GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(QWidget *pParent) :
-    QwtLegend(pParent)
+GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pParent) :
+    QwtLegend(pParent),
+    mOwner(pParent),
+    mFontSize(pParent->fontSize()),
+    mForegroundColor(pParent->foregroundColor())
 {
+}
+
+//==============================================================================
+
+void GraphPanelPlotLegendWidget::setFontSize(const int &pFontSize)
+{
+    // Set our font size
+
+    if (pFontSize != mFontSize) {
+        mFontSize = pFontSize;
+
+        mOwner->updateLegend();
+    }
+}
+
+//==============================================================================
+
+void GraphPanelPlotLegendWidget::setForegroundColor(const QColor &pForegroundColor)
+{
+    // Set our foreground color
+
+    if (pForegroundColor != mForegroundColor) {
+        mForegroundColor = pForegroundColor;
+
+        mOwner->updateLegend();
+    }
 }
 
 //==============================================================================
@@ -683,6 +713,21 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
     // Default handling
 
     QwtLegend::updateWidget(pWidget, pLegendData);
+
+    // Update our font size and foreground colour
+
+    QwtLegendLabel *legendLabel = dynamic_cast<QwtLegendLabel *>(pWidget);
+    QFont newFont = legendLabel->font();
+
+    newFont.setPointSize(mFontSize);
+
+    legendLabel->setFont(newFont);
+
+    QPalette newPalette = legendLabel->palette();
+
+    newPalette.setColor(QPalette::Text, mForegroundColor);
+
+    legendLabel->setPalette(newPalette);
 
     // Make sure that updates are enabled
     // Note: indeed, when setting its data, QwtLegendLabel (which used by
@@ -1156,6 +1201,13 @@ void GraphPanelPlotWidget::setFontSize(const int &pFontSize,
 
         setFont(newFont);
 
+        // Legend
+
+        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(QwtPlot::legend());
+
+        if (legend)
+            legend->setFontSize(pFontSize);
+
         // Title
 
         setTitle(title().text());
@@ -1197,6 +1249,13 @@ void GraphPanelPlotWidget::setForegroundColor(const QColor &pForegroundColor)
 
     if (pForegroundColor != mForegroundColor) {
         mForegroundColor = pForegroundColor;
+
+        // Legend
+
+        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(QwtPlot::legend());
+
+        if (legend)
+            legend->setForegroundColor(pForegroundColor);
 
         // Title
 

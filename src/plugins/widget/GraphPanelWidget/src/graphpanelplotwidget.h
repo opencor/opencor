@@ -208,11 +208,20 @@ class GraphPanelPlotLegendWidget : public QwtLegend
     Q_OBJECT
 
 public:
-    explicit GraphPanelPlotLegendWidget(QWidget *pParent);
+    explicit GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pParent);
+
+    void setFontSize(const int &pFontSize);
+    void setForegroundColor(const QColor &pForegroundColor);
 
 protected:
     virtual void updateWidget(QWidget *pWidget,
                               const QwtLegendData &pLegendData);
+
+private:
+    GraphPanelPlotWidget *mOwner;
+
+    int mFontSize;
+    QColor mForegroundColor;
 };
 
 //==============================================================================
