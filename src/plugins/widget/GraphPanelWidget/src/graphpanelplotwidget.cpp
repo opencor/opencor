@@ -1263,7 +1263,7 @@ void GraphPanelPlotWidget::setForegroundColor(const QColor &pForegroundColor)
 
         // X axis
 
-        QwtScaleWidget axis = axisWidget(QwtPlot::xBottom);
+        QwtScaleWidget *axis = axisWidget(QwtPlot::xBottom);
         QPalette newPalette = axis->palette();
 
         newPalette.setColor(QPalette::Text, pForegroundColor);
