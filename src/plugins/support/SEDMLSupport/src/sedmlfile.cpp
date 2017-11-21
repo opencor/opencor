@@ -1047,6 +1047,9 @@ bool SedmlFile::isSupported()
 
             if (annotation) {
                 for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+                    // Note: we don't need to check for the title since it is a
+                    //       string and that it can therefore have any value...
+
                     const libsbml::XMLNode &curvePropertiesNode = annotation->getChild(i);
 
                     if (   QString::fromStdString(curvePropertiesNode.getURI()).compare(OpencorNamespace)

@@ -434,7 +434,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
                this, SLOT(graphsPropertyChanged(Core::Property *)));
 
     graphsPropertyEditor->addListProperty(graphProperty);
-    graphsPropertyEditor->addStringProperty(pGraph->title().text(), graphProperty);
+    graphsPropertyEditor->addStringProperty(pGraphProperties.title(), graphProperty);
     graphsPropertyEditor->addStringProperty(pGraph->parameterX()?
                                                 static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())->fullyFormattedName():
                                                 Core::UnknownValue,

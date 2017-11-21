@@ -1762,8 +1762,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
             libsedml::SedVariable *sedmlVariableX = sedmlDataGeneratorX->createVariable();
             libsedml::SedVariable *sedmlVariableY = sedmlDataGeneratorY->createVariable();
             Core::Properties properties = property->properties();
-            QStringList propertyX = properties[1]->value().split('.');
-            QStringList propertyY = properties[2]->value().split('.');
+            QStringList propertyX = properties[2]->value().split('.');
+            QStringList propertyY = properties[3]->value().split('.');
 
             sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(data.graphPlotCounter),
                                                                 QString::number(graphCounter)).toStdString());
@@ -1793,14 +1793,16 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
             // Customise our curve using an annotation
 
-            Core::Properties lineProperties = properties[3]->properties();
-            Core::Properties symbolProperties = properties[4]->properties();
+            Core::Properties lineProperties = properties[4]->properties();
+            Core::Properties symbolProperties = properties[5]->properties();
 
             sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                                  "    %3"
                                                  "</%1>").arg( SEDMLSupport::Properties,
                                                                SEDMLSupport::OpencorNamespace,
-                                                               SedmlProperty.arg( SEDMLSupport::Line,
+                                                               SedmlProperty.arg(SEDMLSupport::Title,
+                                                                                 properties[1]->valueAsString())
+                                                              +SedmlProperty.arg( SEDMLSupport::Line,
                                                                                   SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                     SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
                                                                                  +SedmlProperty.arg(SEDMLSupport::Width,
@@ -2594,6 +2596,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 return false;
             }
 
+            QString title = QString();
             Qt::PenStyle lineStyle = Qt::SolidLine;
             double lineWidth = 1.0;
             QColor lineColor = Qt::darkBlue;
@@ -2612,12 +2615,15 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                     if (   !QString::fromStdString(curvePropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                         && !QString::fromStdString(curvePropertiesNode.getName()).compare(SEDMLSupport::Properties)) {
                         for (uint j = 0, jMax = curvePropertiesNode.getNumChildren(); j < jMax; ++j) {
-                            const libsbml::XMLNode &lineOrSymbolPropertiesNode = curvePropertiesNode.getChild(j);
-                            QString lineOrSymbolPropertiesNodeName = QString::fromStdString(lineOrSymbolPropertiesNode.getName());
+                            const libsbml::XMLNode &curvePropertyNode = curvePropertiesNode.getChild(j);
+                            QString curvePropertyNodeName = QString::fromStdString(curvePropertyNode.getName());
+                            QString curvePropertyNodeValue = QString::fromStdString(curvePropertyNode.getChild(0).getCharacters());
 
-                            if (!lineOrSymbolPropertiesNodeName.compare(SEDMLSupport::Line)) {
-                                for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
-                                    const libsbml::XMLNode &linePropertyNode = lineOrSymbolPropertiesNode.getChild(k);
+                            if (!curvePropertyNodeName.compare(SEDMLSupport::Title)) {
+                                title = curvePropertyNodeValue;
+                            } else if (!curvePropertyNodeName.compare(SEDMLSupport::Line)) {
+                                for (uint k = 0, kMax = curvePropertyNode.getNumChildren(); k < kMax; ++k) {
+                                    const libsbml::XMLNode &linePropertyNode = curvePropertyNode.getChild(k);
                                     QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
                                     QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
 
@@ -2629,9 +2635,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                         lineColor.setNamedColor(linePropertyNodeValue);
                                     }
                                 }
-                            } else if (!lineOrSymbolPropertiesNodeName.compare(SEDMLSupport::Symbol)) {
-                                for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
-                                    const libsbml::XMLNode &symbolPropertyNode = lineOrSymbolPropertiesNode.getChild(k);
+                            } else if (!curvePropertyNodeName.compare(SEDMLSupport::Symbol)) {
+                                for (uint k = 0, kMax = curvePropertyNode.getNumChildren(); k < kMax; ++k) {
+                                    const libsbml::XMLNode &symbolPropertyNode = curvePropertyNode.getChild(k);
                                     QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
                                     QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
@@ -2656,7 +2662,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
             }
 
             graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter),
-                                 GraphPanelWidget::GraphPanelPlotGraphProperties( lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
+                                 GraphPanelWidget::GraphPanelPlotGraphProperties(title, lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
         }
     }
 

@@ -64,7 +64,8 @@ static const double DefaultMaxAxis    = 1000.0;
 class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraphProperties
 {
 public:
-    explicit GraphPanelPlotGraphProperties(const Qt::PenStyle &pLineStyle = Qt::SolidLine,
+    explicit GraphPanelPlotGraphProperties(const QString &pTitle = QString(),
+                                           const Qt::PenStyle &pLineStyle = Qt::SolidLine,
                                            const int &pLineWidth = 1,
                                            const QColor &pLineColor = Qt::darkBlue,
                                            const QwtSymbol::Style &pSymbolStyle = QwtSymbol::NoSymbol,
@@ -72,6 +73,8 @@ public:
                                            const QColor &pSymbolColor = Qt::darkBlue,
                                            const bool &pSymbolFilled = true,
                                            const QColor &pSymbolFillColor = Qt::white);
+
+    QString title() const;
 
     Qt::PenStyle lineStyle() const;
     int lineWidth() const;
@@ -84,6 +87,8 @@ public:
     QColor symbolFillColor() const;
 
 private:
+    QString mTitle;
+
     Qt::PenStyle mLineStyle;
     int mLineWidth;
     QColor mLineColor;
