@@ -685,7 +685,13 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
     QwtLegend::updateWidget(pWidget, pLegendData);
 
     // Make sure that updates are enabled
-    // Note: indeed, we want
+    // Note: indeed, when setting its data, QwtLegendLabel (which used by
+    //       QwtLegend) disables itself from updating, and then reenables itself
+    //       if it was originally enabled. Now, the problem is that if one of
+    //       our ancestors decides to temporarily disable updates (e.g. our
+    //       simulation experiment view) then QwtLegendLabel won't reenable
+    //       itself, which means that the legend may not actually be visible in
+    //       some cases (e.g. when opening a SED-ML file)...
 
     pWidget->setUpdatesEnabled(true);
 }
