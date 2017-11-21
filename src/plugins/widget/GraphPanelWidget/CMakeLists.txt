@@ -7,12 +7,14 @@ ADD_PLUGIN(GraphPanelWidget
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
+        src/graphpanelplotlegendwidget.cpp
         src/graphpanelplotwidget.cpp
         src/graphpanelswidget.cpp
         src/graphpanelwidget.cpp
         src/graphpanelwidgetcustomaxesdialog.cpp
         src/graphpanelwidgetplugin.cpp
     HEADERS_MOC
+        src/graphpanelplotlegendwidget.h
         src/graphpanelplotwidget.h
         src/graphpanelswidget.h
         src/graphpanelwidget.h

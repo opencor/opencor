@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreguiutils.h"
+#include "graphpanelplotlegendwidget.h"
 #include "graphpanelplotwidget.h"
 #include "graphpanelwidgetcustomaxesdialog.h"
 #include "i18ninterface.h"
@@ -1291,7 +1292,7 @@ void GraphPanelPlotWidget::setLegend(const bool &pLegend)
     // Show/hide our legend
 
     if (pLegend != legend())
-        insertLegend(pLegend?new QwtLegend(this):0);
+        insertLegend(pLegend?new GraphPanelPlotLegendWidget(this):0);
 }
 
 //==============================================================================
