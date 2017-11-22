@@ -717,10 +717,8 @@ QSize GraphPanelPlotLegendWidget::sizeHint() const
     foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors()) {
         QwtLegend *legend = static_cast<QwtLegend *>(ownerNeighbor->QwtPlot::legend());
 
-        res.setWidth(qMax(res.width(),
-                          legend?
-                              legend->QwtLegend::sizeHint().width():
-                              0));
+        if (legend)
+            res.setWidth(qMax(res.width(), legend->QwtLegend::sizeHint().width()));
     }
 
     return res;
