@@ -1398,7 +1398,7 @@ void GraphPanelPlotWidget::setGridLinesColor(const QColor &pGridLinesColor)
 
 bool GraphPanelPlotWidget::legend() const
 {
-    // Return whether we show our legend
+    // Return whether we have a legend
 
     return QwtPlot::legend();
 }
