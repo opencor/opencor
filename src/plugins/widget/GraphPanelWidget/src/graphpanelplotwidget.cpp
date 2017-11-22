@@ -735,7 +735,7 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
 
     // Update our font size and foreground colour
 
-    QwtLegendLabel *legendLabel = dynamic_cast<QwtLegendLabel *>(pWidget);
+    QwtLegendLabel *legendLabel = static_cast<QwtLegendLabel *>(pWidget);
     QFont newFont = legendLabel->font();
 
     newFont.setPointSize(mFontSize);
@@ -860,7 +860,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     // We don't want a frame around ourselves
 
-    qobject_cast<QwtPlotCanvas *>(canvas())->setFrameShape(QFrame::NoFrame);
+    static_cast<QwtPlotCanvas *>(canvas())->setFrameShape(QFrame::NoFrame);
 
     // Customise ourselves a bit
 
