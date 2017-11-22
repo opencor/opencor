@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 // Tab bar widget
+//------------------------------------------------------------------------------
+// Qt upgrade: make sure that our Tab bar widget still behaves as expected...
 //==============================================================================
 
 #include "tabbarwidget.h"
