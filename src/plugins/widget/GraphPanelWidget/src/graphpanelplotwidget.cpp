@@ -2519,6 +2519,12 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
 
     mGraphs << pGraph;
 
+    // Update our layout, if we have a legend (so that it gets updated
+    // straightaway)
+
+    if (legend())
+        updateLayout();
+
     return true;
 }
 
