@@ -213,6 +213,8 @@ public:
     void setFontSize(const int &pFontSize);
     void setForegroundColor(const QColor &pForegroundColor);
 
+    virtual QSize sizeHint() const;
+
 protected:
     virtual void updateWidget(QWidget *pWidget,
                               const QwtLegendData &pLegendData);
@@ -289,6 +291,8 @@ public:
 
     bool legend() const;
     void setLegend(const bool &pLegend);
+
+    void setLegendWidth(const int &pLegendWidth);
 
     Qt::PenStyle pointCoordinatesStyle() const;
     void setPointCoordinatesStyle(const Qt::PenStyle &pPointCoordinatesStyle);

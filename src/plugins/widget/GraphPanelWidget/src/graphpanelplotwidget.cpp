@@ -707,6 +707,27 @@ void GraphPanelPlotLegendWidget::setForegroundColor(const QColor &pForegroundCol
 
 //==============================================================================
 
+QSize GraphPanelPlotLegendWidget::sizeHint() const
+{
+    // Determine and return our size hint, based on the 'raw' size hint of our
+    // owner's neigbours' legend, if any
+
+    QSize res = QwtLegend::sizeHint();
+
+    foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors()) {
+        QwtLegend *legend = static_cast<QwtLegend *>(ownerNeighbor->QwtPlot::legend());
+
+        res.setWidth(qMax(res.width(),
+                          legend?
+                              legend->QwtLegend::sizeHint().width():
+                              0));
+    }
+
+    return res;
+}
+
+//==============================================================================
+
 void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
                                               const QwtLegendData &pLegendData)
 {
@@ -728,6 +749,14 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
     newPalette.setColor(QPalette::Text, mForegroundColor);
 
     legendLabel->setPalette(newPalette);
+
+    // Make sure that the width of our owner's neighbours' legend is the same as
+    // ours
+
+    int legendWidth = sizeHint().width();
+
+    foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors())
+        ownerNeighbor->setLegendWidth(legendWidth);
 
     // Make sure that updates are enabled
     // Note: indeed, when setting its data, QwtLegendLabel (which used by
@@ -1382,6 +1411,18 @@ void GraphPanelPlotWidget::setLegend(const bool &pLegend)
 
     if (pLegend != legend())
         insertLegend(pLegend?new GraphPanelPlotLegendWidget(this):0);
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setLegendWidth(const int &pLegendWidth)
+{
+    // Set our legend's width, if any
+
+    QwtAbstractLegend *legend = QwtPlot::legend();
+
+    if (legend)
+        legend->setMinimumWidth(pLegendWidth);
 }
 
 //==============================================================================
