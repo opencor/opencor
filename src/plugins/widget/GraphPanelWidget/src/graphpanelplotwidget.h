@@ -203,6 +203,30 @@ public:
 
 //==============================================================================
 
+class GraphPanelPlotDummyLegendWidget : public QwtAbstractLegend
+{
+    Q_OBJECT
+
+public:
+    explicit GraphPanelPlotDummyLegendWidget(GraphPanelPlotWidget *pParent);
+
+    virtual QSize sizeHint() const;
+
+    virtual void renderLegend(QPainter *pPainter, const QRectF &pRect,
+                              bool pFillBackground) const;
+
+    virtual bool isEmpty() const;
+
+private:
+    GraphPanelPlotWidget *mOwner;
+
+public slots:
+    virtual void updateLegend(const QVariant &pItemInfo,
+                              const QList<QwtLegendData> &pData);
+};
+
+//==============================================================================
+
 class GraphPanelPlotLegendWidget : public QwtLegend
 {
     Q_OBJECT
