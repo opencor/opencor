@@ -218,7 +218,7 @@ void GraphPanelPlotGraph::setSelected(const bool &pSelected)
 
     GraphPanelPlotWidget *graphPlot = static_cast<GraphPanelPlotWidget *>(plot());
 
-    static_cast<GraphPanelPlotLegendWidget *>(graphPlot->QwtPlot::legend())->setChecked(graphPlot->graphIndex(this), pSelected);
+    static_cast<GraphPanelPlotLegendWidget *>(graphPlot->legend())->setChecked(graphPlot->graphIndex(this), pSelected);
 }
 
 //==============================================================================
@@ -839,7 +839,7 @@ QSize GraphPanelPlotLegendWidget::sizeHint() const
     QSize res = mActive?QwtLegend::sizeHint():QSize(0, 0);
 
     foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors()) {
-        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(ownerNeighbor->QwtPlot::legend());
+        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(ownerNeighbor->legend());
 
         if (legend->isActive())
             res.setWidth(qMax(res.width(), legend->QwtLegend::sizeHint().width()));
@@ -1562,7 +1562,7 @@ void GraphPanelPlotWidget::setGridLinesColor(const QColor &pGridLinesColor)
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::legend() const
+bool GraphPanelPlotWidget::isLegendActive() const
 {
     // Return whether we have an active legend
 
@@ -1571,13 +1571,13 @@ bool GraphPanelPlotWidget::legend() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLegend(const bool &pLegend)
+void GraphPanelPlotWidget::setLegendActive(const bool &pLegendActive)
 {
     // Show/hide our legend
 
-    if (pLegend != legend()) {
-        mLegend->setActive(pLegend);
-        mLegendAction->setChecked(pLegend);
+    if (pLegendActive != isLegendActive()) {
+        mLegend->setActive(pLegendActive);
+        mLegendAction->setChecked(pLegendActive);
     }
 }
 
@@ -2636,7 +2636,7 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
     // Note: indeed, no point in updating it if it's not active since nothing
     //       is shown in that case...
 
-    if (legend())
+    if (isLegendActive())
         updateLayout();
 
     return true;

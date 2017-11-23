@@ -952,7 +952,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     // Legend
 
-    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->legend());
+    mGraphPanelPropertyEditor->addBooleanProperty(graphPanelPlot->isLegendActive());
 
     // Point coordinates
 
@@ -1325,7 +1325,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
     // Legend
 
-    graphPanelPlot->setLegend(properties[4]->booleanValue());
+    graphPanelPlot->setLegendActive(properties[4]->booleanValue());
 
     // Point coordinates
 

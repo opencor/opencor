@@ -315,8 +315,8 @@ public:
     QColor gridLinesColor() const;
     void setGridLinesColor(const QColor &pGridLinesColor);
 
-    bool legend() const;
-    void setLegend(const bool &pLegend);
+    bool isLegendActive() const;
+    void setLegendActive(const bool &pLegendActive);
 
     void setLegendWidth(const int &pLegendWidth);
 
