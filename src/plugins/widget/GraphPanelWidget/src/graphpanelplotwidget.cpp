@@ -1018,9 +1018,9 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     mExportToAction = Core::newAction(this);
     mCopyToClipboardAction = Core::newAction(this);
-    mCustomAxesAction = Core::newAction(this);
     mGraphPanelSettingsAction = Core::newAction(this);
     mGraphsSettingsAction = Core::newAction(this);
+    mCustomAxesAction = Core::newAction(this);
     mZoomInAction = Core::newAction(this);
     mZoomOutAction = Core::newAction(this);
     mResetZoomAction = Core::newAction(this);
@@ -1029,12 +1029,12 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
             this, SLOT(exportTo()));
     connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
             this, SLOT(copyToClipboard()));
-    connect(mCustomAxesAction, SIGNAL(triggered(bool)),
-            this, SLOT(customAxes()));
     connect(mGraphPanelSettingsAction, SIGNAL(triggered(bool)),
             this, SIGNAL(graphPanelSettingsRequested()));
     connect(mGraphsSettingsAction, SIGNAL(triggered(bool)),
             this, SIGNAL(graphsSettingsRequested()));
+    connect(mCustomAxesAction, SIGNAL(triggered(bool)),
+            this, SLOT(customAxes()));
     connect(mZoomInAction, SIGNAL(triggered(bool)),
             this, SLOT(zoomIn()));
     connect(mZoomOutAction, SIGNAL(triggered(bool)),
@@ -1097,12 +1097,12 @@ void GraphPanelPlotWidget::retranslateUi()
                                      tr("Export the contents of the graph panel to a PDF, PNG, SVG, etc. file"));
     I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"),
                                      tr("Copy the contents of the graph panel to the clipboard"));
-    I18nInterface::retranslateAction(mCustomAxesAction, tr("Custom Axes..."),
-                                     tr("Specify custom axes for the graph panel"));
     I18nInterface::retranslateAction(mGraphPanelSettingsAction, tr("Graph Panel Settings..."),
                                      tr("Customise the graph panel"));
     I18nInterface::retranslateAction(mGraphsSettingsAction, tr("Graphs Settings..."),
                                      tr("Customise the graphs"));
+    I18nInterface::retranslateAction(mCustomAxesAction, tr("Custom Axes..."),
+                                     tr("Specify custom axes for the graph panel"));
     I18nInterface::retranslateAction(mZoomInAction, tr("Zoom In"),
                                      tr("Zoom in the graph panel"));
     I18nInterface::retranslateAction(mZoomOutAction, tr("Zoom Out"),
