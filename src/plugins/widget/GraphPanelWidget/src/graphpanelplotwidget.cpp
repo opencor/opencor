@@ -672,76 +672,48 @@ void GraphPanelPlotScaleWidget::updateLayout()
 
 //==============================================================================
 
-GraphPanelPlotDummyLegendWidget::GraphPanelPlotDummyLegendWidget(GraphPanelPlotWidget *pParent) :
-    QwtAbstractLegend(pParent),
-    mOwner(pParent)
-{
-}
-
-//==============================================================================
-
-QSize GraphPanelPlotDummyLegendWidget::sizeHint() const
-{
-    // Determine and return our size hint, based on the 'raw' size hint of our
-    // owner's neigbours' legend, if any
-
-    QSize res = QwtAbstractLegend::sizeHint();
-
-    foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors()) {
-        QwtLegend *legend = qobject_cast<QwtLegend *>(ownerNeighbor->QwtPlot::legend());
-
-        if (legend)
-            res.setWidth(qMax(res.width(), legend->QwtLegend::sizeHint().width()));
-    }
-
-    return res;
-}
-
-//==============================================================================
-
-void GraphPanelPlotDummyLegendWidget::renderLegend(QPainter *pPainter,
-                                                   const QRectF &pRect,
-                                                   bool pFillBackground) const
-{
-    // Do nothing (since we are a dummy legend!)
-
-    Q_UNUSED(pPainter);
-    Q_UNUSED(pRect);
-    Q_UNUSED(pFillBackground);
-}
-
-//==============================================================================
-
-bool GraphPanelPlotDummyLegendWidget::isEmpty() const
-{
-    // Return whether we are empty, which is based on whether we have a valid
-    // size hint
-
-    return sizeHint() == QSize();
-}
-
-//==============================================================================
-
-void GraphPanelPlotDummyLegendWidget::updateLegend(const QVariant &pItemInfo,
-                                                   const QList<QwtLegendData> &pData)
-{
-    // Do nothing (since we are a dummy legend!)
-
-    Q_UNUSED(pItemInfo);
-    Q_UNUSED(pData);
-}
-
-//==============================================================================
-
 GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pParent) :
     QwtLegend(pParent),
     mOwner(pParent),
+    mActive(false),
     mFontSize(pParent->fontSize()),
     mForegroundColor(pParent->foregroundColor())
 {
     // Have our legend items use as much horizontal space as possible
 
     static_cast<QwtDynGridLayout *>(contentsWidget()->layout())->setExpandingDirections(Qt::Horizontal);
+}
+
+//==============================================================================
+
+bool GraphPanelPlotLegendWidget::isActive() const
+{
+    // Return our active state
+
+    return mActive;
+}
+
+//==============================================================================
+
+void GraphPanelPlotLegendWidget::setActive(const bool &pActive)
+{
+    // Set our active state
+
+    if (pActive != mActive) {
+        mActive = pActive;
+
+        mOwner->updateLegend();
+    }
+}
+
+//==============================================================================
+
+bool GraphPanelPlotLegendWidget::isEmpty() const
+{
+    // Return whether we are empty, based on whether we are active and if we are
+    // not then based on whether we have a zero size hint
+
+    return mActive?QwtLegend::isEmpty():sizeHint() == QSize(0, 0);
 }
 
 //==============================================================================
@@ -774,15 +746,15 @@ void GraphPanelPlotLegendWidget::setForegroundColor(const QColor &pForegroundCol
 
 QSize GraphPanelPlotLegendWidget::sizeHint() const
 {
-    // Determine and return our size hint, based on the 'raw' size hint of our
-    // owner's neigbours' legend, if any
+    // Determine and return our size hint, based on our active state and on the
+    // 'raw' size hint of our owner's neigbours' legend, if any
 
-    QSize res = QwtLegend::sizeHint();
+    QSize res = mActive?QwtLegend::sizeHint():QSize(0, 0);
 
     foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors()) {
-        QwtLegend *legend = qobject_cast<QwtLegend *>(ownerNeighbor->QwtPlot::legend());
+        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(ownerNeighbor->QwtPlot::legend());
 
-        if (legend)
+        if (legend->isActive())
             res.setWidth(qMax(res.width(), legend->QwtLegend::sizeHint().width()));
     }
 
@@ -798,9 +770,14 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
 
     QwtLegend::updateWidget(pWidget, pLegendData);
 
-    // Update our font size and foreground colour
+    // Update our visible state
 
     QwtLegendLabel *legendLabel = static_cast<QwtLegendLabel *>(pWidget);
+
+    legendLabel->setVisible(mActive);
+
+    // Update our font size and foreground colour
+
     QFont newFont = legendLabel->font();
 
     newFont.setPointSize(mFontSize);
@@ -879,6 +856,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mAction(None),
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
+    mLegend(new GraphPanelPlotLegendWidget(this)),
     mCanDirectPaint(true),
     mCanReplot(true),
     mCanZoomInX(true),
@@ -969,6 +947,10 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     // Create our overlay widget
 
     mOverlayWidget = new GraphPanelPlotOverlayWidget(this);
+
+    // Add our (empty) legend
+
+    insertLegend(mLegend);
 
     // Create our context menu
 
@@ -1295,10 +1277,7 @@ void GraphPanelPlotWidget::setFontSize(const int &pFontSize,
 
         // Legend
 
-        GraphPanelPlotLegendWidget *legend = qobject_cast<GraphPanelPlotLegendWidget *>(QwtPlot::legend());
-
-        if (legend)
-            legend->setFontSize(pFontSize);
+        mLegend->setFontSize(pFontSize);
 
         // Title
 
@@ -1344,10 +1323,7 @@ void GraphPanelPlotWidget::setForegroundColor(const QColor &pForegroundColor)
 
         // Legend
 
-        GraphPanelPlotLegendWidget *legend = qobject_cast<GraphPanelPlotLegendWidget *>(QwtPlot::legend());
-
-        if (legend)
-            legend->setForegroundColor(pForegroundColor);
+        mLegend->setForegroundColor(pForegroundColor);
 
         // Title
 
@@ -1461,9 +1437,9 @@ void GraphPanelPlotWidget::setGridLinesColor(const QColor &pGridLinesColor)
 
 bool GraphPanelPlotWidget::legend() const
 {
-    // Return whether we have a (valid) legend
+    // Return whether we have an active legend
 
-    return qobject_cast<const GraphPanelPlotLegendWidget *>(QwtPlot::legend());
+    return mLegend->isActive();
 }
 
 //==============================================================================
@@ -1472,24 +1448,17 @@ void GraphPanelPlotWidget::setLegend(const bool &pLegend)
 {
     // Show/hide our legend
 
-    if (pLegend != legend()) {
-        if (pLegend)
-            insertLegend(new GraphPanelPlotLegendWidget(this));
-        else
-            insertLegend(new GraphPanelPlotDummyLegendWidget(this));
-    }
+    if (pLegend != legend())
+        mLegend->setActive(pLegend);
 }
 
 //==============================================================================
 
 void GraphPanelPlotWidget::setLegendWidth(const int &pLegendWidth)
 {
-    // Set our legend's width, if any
+    // Set our legend's width
 
-    QwtAbstractLegend *legend = QwtPlot::legend();
-
-    if (legend)
-        legend->setMinimumWidth(pLegendWidth);
+    mLegend->setMinimumWidth(pLegendWidth);
 }
 
 //==============================================================================

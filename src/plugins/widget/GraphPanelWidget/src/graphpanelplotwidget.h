@@ -203,36 +203,17 @@ public:
 
 //==============================================================================
 
-class GraphPanelPlotDummyLegendWidget : public QwtAbstractLegend
-{
-    Q_OBJECT
-
-public:
-    explicit GraphPanelPlotDummyLegendWidget(GraphPanelPlotWidget *pParent);
-
-    virtual QSize sizeHint() const;
-
-    virtual void renderLegend(QPainter *pPainter, const QRectF &pRect,
-                              bool pFillBackground) const;
-
-    virtual bool isEmpty() const;
-
-private:
-    GraphPanelPlotWidget *mOwner;
-
-public slots:
-    virtual void updateLegend(const QVariant &pItemInfo,
-                              const QList<QwtLegendData> &pData);
-};
-
-//==============================================================================
-
 class GraphPanelPlotLegendWidget : public QwtLegend
 {
     Q_OBJECT
 
 public:
     explicit GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pParent);
+
+    bool isActive() const;
+    void setActive(const bool &pActive);
+
+    virtual bool isEmpty() const;
 
     void setFontSize(const int &pFontSize);
     void setForegroundColor(const QColor &pForegroundColor);
@@ -245,6 +226,8 @@ protected:
 
 private:
     GraphPanelPlotWidget *mOwner;
+
+    bool mActive;
 
     int mFontSize;
     QColor mForegroundColor;
@@ -444,6 +427,8 @@ private:
     QPoint mPoint;
 
     GraphPanelPlotOverlayWidget *mOverlayWidget;
+
+    GraphPanelPlotLegendWidget *mLegend;
 
     bool mCanDirectPaint;
     bool mCanReplot;
