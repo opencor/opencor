@@ -739,7 +739,7 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
     mFontSize(pParent->fontSize()),
     mForegroundColor(pParent->foregroundColor())
 {
-    // Have our layout items use as much horizontal space as possible
+    // Have our legend items use as much horizontal space as possible
 
     static_cast<QwtDynGridLayout *>(contentsWidget()->layout())->setExpandingDirections(Qt::Horizontal);
 }
