@@ -419,9 +419,6 @@ private:
     bool mZoomRegionFilled;
     QColor mZoomRegionFillColor;
 
-    bool mLogAxisX;
-    bool mLogAxisY;
-
     GraphPanelPlotGraphs mGraphs;
 
     Action mAction;
@@ -452,6 +449,9 @@ private:
     QAction *mSynchronizeYAxisAction;
     QAction *mGraphPanelSettingsAction;
     QAction *mGraphsSettingsAction;
+    QAction *mLegendAction;
+    QAction *mLogarithmicXAxisAction;
+    QAction *mLogarithmicYAxisAction;
     QAction *mCustomAxesAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
@@ -500,6 +500,11 @@ signals:
 
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
+
+    void legendToggled();
+
+    void logarithmicXAxisToggled();
+    void logarithmicYAxisToggled();
 
 private slots:
     void cannotUpdateActions();

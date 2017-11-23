@@ -910,8 +910,6 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mZoomRegionFontColor(Qt::white),
     mZoomRegionFilled(true),
     mZoomRegionFillColor(QColor()),
-    mLogAxisX(false),
-    mLogAxisY(false),
     mGraphs(GraphPanelPlotGraphs()),
     mAction(None),
     mOriginPoint(QPoint()),
@@ -1020,6 +1018,9 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mCopyToClipboardAction = Core::newAction(this);
     mGraphPanelSettingsAction = Core::newAction(this);
     mGraphsSettingsAction = Core::newAction(this);
+    mLegendAction = Core::newAction(true, this);
+    mLogarithmicXAxisAction = Core::newAction(true, this);
+    mLogarithmicYAxisAction = Core::newAction(true, this);
     mCustomAxesAction = Core::newAction(this);
     mZoomInAction = Core::newAction(this);
     mZoomOutAction = Core::newAction(this);
@@ -1033,6 +1034,12 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
             this, SIGNAL(graphPanelSettingsRequested()));
     connect(mGraphsSettingsAction, SIGNAL(triggered(bool)),
             this, SIGNAL(graphsSettingsRequested()));
+    connect(mLegendAction, SIGNAL(triggered(bool)),
+            this, SIGNAL(legendToggled()));
+    connect(mLogarithmicXAxisAction, SIGNAL(triggered(bool)),
+            this, SIGNAL(logarithmicXAxisToggled()));
+    connect(mLogarithmicYAxisAction, SIGNAL(triggered(bool)),
+            this, SIGNAL(logarithmicYAxisToggled()));
     connect(mCustomAxesAction, SIGNAL(triggered(bool)),
             this, SLOT(customAxes()));
     connect(mZoomInAction, SIGNAL(triggered(bool)),
@@ -1055,6 +1062,11 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mContextMenu->addSeparator();
     mContextMenu->addAction(mGraphPanelSettingsAction);
     mContextMenu->addAction(mGraphsSettingsAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mLegendAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mLogarithmicXAxisAction);
+    mContextMenu->addAction(mLogarithmicYAxisAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCustomAxesAction);
     mContextMenu->addSeparator();
@@ -1101,6 +1113,12 @@ void GraphPanelPlotWidget::retranslateUi()
                                      tr("Customise the graph panel"));
     I18nInterface::retranslateAction(mGraphsSettingsAction, tr("Graphs Settings..."),
                                      tr("Customise the graphs"));
+    I18nInterface::retranslateAction(mLegendAction, tr("Legend"),
+                                     tr("Show/hide the legend"));
+    I18nInterface::retranslateAction(mLogarithmicXAxisAction, tr("Logarithmic X Axis"),
+                                     tr("Enable/disable logarithmic scaling on the X axis"));
+    I18nInterface::retranslateAction(mLogarithmicYAxisAction, tr("Logarithmic Y Axis"),
+                                     tr("Enable/disable logarithmic scaling on the Y axis"));
     I18nInterface::retranslateAction(mCustomAxesAction, tr("Custom Axes..."),
                                      tr("Specify custom axes for the graph panel"));
     I18nInterface::retranslateAction(mZoomInAction, tr("Zoom In"),
@@ -1508,8 +1526,10 @@ void GraphPanelPlotWidget::setLegend(const bool &pLegend)
 {
     // Show/hide our legend
 
-    if (pLegend != legend())
+    if (pLegend != legend()) {
         mLegend->setActive(pLegend);
+        mLegendAction->setChecked(pLegend);
+    }
 }
 
 //==============================================================================
@@ -1624,7 +1644,7 @@ bool GraphPanelPlotWidget::logAxisX() const
 {
     // Return whether our X axis uses a logarithmic scale
 
-    return mLogAxisX;
+    return mLogarithmicXAxisAction->isChecked();
 }
 
 //==============================================================================
@@ -1633,8 +1653,8 @@ void GraphPanelPlotWidget::setLogAxisX(const bool &pLogAxisX)
 {
     // Specify whether our X axis should use a logarithmic scale
 
-    if (pLogAxisX != mLogAxisX) {
-        mLogAxisX = pLogAxisX;
+    if (pLogAxisX != logAxisX()) {
+        mLogarithmicXAxisAction->setChecked(pLogAxisX);
 
         setAxisScaleEngine(QwtPlot::xBottom,
                            pLogAxisX?
@@ -1671,7 +1691,7 @@ bool GraphPanelPlotWidget::logAxisY() const
 {
     // Return whether our Y axis uses a logarithmic scale
 
-    return mLogAxisY;
+    return mLogarithmicYAxisAction->isChecked();
 }
 
 //==============================================================================
@@ -1680,8 +1700,8 @@ void GraphPanelPlotWidget::setLogAxisY(const bool &pLogAxisY)
 {
     // Specify whether our Y axis should use a logarithmic scale
 
-    if (pLogAxisY != mLogAxisY) {
-        mLogAxisY = pLogAxisY;
+    if (pLogAxisY != logAxisY()) {
+        mLogarithmicYAxisAction->setChecked(pLogAxisY);
 
         setAxisScaleEngine(QwtPlot::yLeft,
                            pLogAxisY?
