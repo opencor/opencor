@@ -263,6 +263,11 @@ signals:
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 
+    void legendToggled();
+
+    void logarithmicXAxisToggled();
+    void logarithmicYAxisToggled();
+
 private slots:
     void runPauseResumeSimulation();
     void stopSimulation();

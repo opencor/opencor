@@ -910,6 +910,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mZoomRegionFontColor(Qt::white),
     mZoomRegionFilled(true),
     mZoomRegionFillColor(QColor()),
+    mLogAxisX(false),
+    mLogAxisY(false),
     mGraphs(GraphPanelPlotGraphs()),
     mAction(None),
     mOriginPoint(QPoint()),
@@ -1644,7 +1646,7 @@ bool GraphPanelPlotWidget::logAxisX() const
 {
     // Return whether our X axis uses a logarithmic scale
 
-    return mLogarithmicXAxisAction->isChecked();
+    return mLogAxisX;
 }
 
 //==============================================================================
@@ -1653,7 +1655,8 @@ void GraphPanelPlotWidget::setLogAxisX(const bool &pLogAxisX)
 {
     // Specify whether our X axis should use a logarithmic scale
 
-    if (pLogAxisX != logAxisX()) {
+    if (pLogAxisX != mLogAxisX) {
+        mLogAxisX = pLogAxisX;
         mLogarithmicXAxisAction->setChecked(pLogAxisX);
 
         setAxisScaleEngine(QwtPlot::xBottom,
@@ -1691,7 +1694,7 @@ bool GraphPanelPlotWidget::logAxisY() const
 {
     // Return whether our Y axis uses a logarithmic scale
 
-    return mLogarithmicYAxisAction->isChecked();
+    return mLogAxisY;
 }
 
 //==============================================================================
@@ -1700,7 +1703,8 @@ void GraphPanelPlotWidget::setLogAxisY(const bool &pLogAxisY)
 {
     // Specify whether our Y axis should use a logarithmic scale
 
-    if (pLogAxisY != logAxisY()) {
+    if (pLogAxisY != mLogAxisY) {
+        mLogAxisY = pLogAxisY;
         mLogarithmicYAxisAction->setChecked(pLogAxisY);
 
         setAxisScaleEngine(QwtPlot::yLeft,

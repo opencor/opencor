@@ -220,6 +220,18 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
                 this, SLOT(graphPanelSettingsRequested()));
         connect(mSimulationWidget, SIGNAL(graphsSettingsRequested()),
                 this, SLOT(graphsSettingsRequested()));
+
+        // Check when the legend has toggled
+
+        connect(mSimulationWidget, SIGNAL(legendToggled()),
+                this, SLOT(legendToggled()));
+
+        // Check when the X/Y logarithmic axis has toggled
+
+        connect(mSimulationWidget, SIGNAL(logarithmicXAxisToggled()),
+                this, SLOT(logarithmicXAxisToggled()));
+        connect(mSimulationWidget, SIGNAL(logarithmicYAxisToggled()),
+                this, SLOT(logarithmicYAxisToggled()));
     } else {
         // We already have a simulation widget, so just make sure that its GUI
         // is up to date
@@ -604,6 +616,33 @@ void SimulationExperimentViewWidget::graphsSettingsRequested()
 
     mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
     mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(2, false);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewWidget::legendToggled()
+{
+    // Toggle the legend property
+
+    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->toggleLegend();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewWidget::logarithmicXAxisToggled()
+{
+    // Toggle the logarithmic X axis property
+
+    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->toggleLogarithmicXAxis();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewWidget::logarithmicYAxisToggled()
+{
+    // Toggle the logarithmic Y axis property
+
+    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->toggleLogarithmicYAxis();
 }
 
 //==============================================================================

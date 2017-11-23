@@ -2992,6 +2992,18 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
             this, SIGNAL(graphPanelSettingsRequested()));
     connect(plot, SIGNAL(graphsSettingsRequested()),
             this, SIGNAL(graphsSettingsRequested()));
+
+    // Let people know when we the legend has toggled
+
+    connect(plot, SIGNAL(legendToggled()),
+            this, SIGNAL(legendToggled()));
+
+    // Let people know when we the X/Y logarithmic axis has toggled
+
+    connect(plot, SIGNAL(logarithmicXAxisToggled()),
+            this, SIGNAL(logarithmicXAxisToggled()));
+    connect(plot, SIGNAL(logarithmicYAxisToggled()),
+            this, SIGNAL(logarithmicYAxisToggled()));
 }
 
 //==============================================================================

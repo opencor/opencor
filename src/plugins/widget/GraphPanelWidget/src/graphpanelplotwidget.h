@@ -419,6 +419,9 @@ private:
     bool mZoomRegionFilled;
     QColor mZoomRegionFillColor;
 
+    bool mLogAxisX;
+    bool mLogAxisY;
+
     GraphPanelPlotGraphs mGraphs;
 
     Action mAction;

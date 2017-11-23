@@ -761,6 +761,39 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(const
 
 //==============================================================================
 
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLegend()
+{
+    // Toggle our legend property
+
+    Core::Property *legendProperty = mGraphPanelPropertyEditor->properties()[4];
+
+    legendProperty->setBooleanValue(!legendProperty->booleanValue());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarithmicXAxis()
+{
+    // Toggle our logarithmic X axis property
+
+    Core::Property *logarithmicXAxisProperty = mGraphPanelPropertyEditor->properties()[7]->properties()[0];
+
+    logarithmicXAxisProperty->setBooleanValue(!logarithmicXAxisProperty->booleanValue());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarithmicYAxis()
+{
+    // Toggle our logarithmic Y axis property
+
+    Core::Property *logarithmicYAxisProperty = mGraphPanelPropertyEditor->properties()[8]->properties()[0];
+
+    logarithmicYAxisProperty->setBooleanValue(!logarithmicYAxisProperty->booleanValue());
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphPanelColumnWidth(const int &pIndex,
                                                                                             const int &pColumnWidth)
 {
