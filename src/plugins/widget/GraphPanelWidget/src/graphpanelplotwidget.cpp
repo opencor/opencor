@@ -744,6 +744,65 @@ void GraphPanelPlotLegendWidget::setForegroundColor(const QColor &pForegroundCol
 
 //==============================================================================
 
+void GraphPanelPlotLegendWidget::renderLegend(QPainter *pPainter,
+                                              const QRectF &pRect,
+                                              bool pFillBackground) const
+{
+    // Render our legend
+    // Note: this is based on QwtLegend::renderLegend() and it fixes a problem
+    //       with the layout when it has its expanding directions set to
+    //       horizontal...
+
+    if (!mActive)
+        return;
+
+    if (pFillBackground) {
+        if (autoFillBackground() || testAttribute(Qt::WA_StyledBackground))
+            QwtPainter::drawBackgound(pPainter, pRect, this);
+    }
+
+    int top;
+    int left;
+    int bottom;
+    int right;
+
+    getContentsMargins(&left, &top, &right, &bottom);
+
+    QRect layoutRect = QRect();
+
+    layoutRect.setTop(qCeil(pRect.top())+top);
+    layoutRect.setLeft(qCeil(pRect.left())+left);
+    layoutRect.setBottom(qFloor(pRect.bottom())-bottom);
+    layoutRect.setRight(qFloor(pRect.right())-right);
+
+    QwtDynGridLayout *legendLayout = static_cast<QwtDynGridLayout *>(contentsWidget()->layout());
+    QList<QRect> itemRects = legendLayout->layoutItems(layoutRect, legendLayout->columnsForWidth(layoutRect.width()));
+
+    if (legendLayout->expandingDirections() & Qt::Horizontal) {
+        for (int i = 0, iMax = itemRects.size(); i < iMax; ++i)
+            itemRects[i].adjust(layoutRect.left(), 0, layoutRect.left(), 0);
+    }
+
+    int index = -1;
+
+    for (int i = 0, iMax = legendLayout->count(); i < iMax; ++i) {
+        QWidget *widget = legendLayout->itemAt(i)->widget();
+
+        if (widget) {
+            ++index;
+
+            pPainter->save();
+            pPainter->setClipRect(itemRects[index], Qt::IntersectClip);
+
+            renderItem(pPainter, widget, itemRects[index], pFillBackground);
+
+            pPainter->restore();
+        }
+    }
+}
+
+//==============================================================================
+
 QSize GraphPanelPlotLegendWidget::sizeHint() const
 {
     // Determine and return our size hint, based on our active state and on the

@@ -218,6 +218,9 @@ public:
     void setFontSize(const int &pFontSize);
     void setForegroundColor(const QColor &pForegroundColor);
 
+    void renderLegend(QPainter *pPainter, const QRectF &pRect,
+                      bool pFillBackground) const;
+
     virtual QSize sizeHint() const;
 
 protected:
