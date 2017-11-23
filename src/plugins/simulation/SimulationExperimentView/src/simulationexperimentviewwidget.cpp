@@ -213,6 +213,11 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
         connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelSectionExpanded(const int &, const bool &)),
                 this, SLOT(graphPanelSectionExpanded(const int &, const bool &)));
 
+        // Check when a graph has been toggled
+
+        connect(mSimulationWidget, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+                this, SLOT(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+
         // Check when some graph plot settings or graphs settings have been
         // requested
 
@@ -221,12 +226,12 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
         connect(mSimulationWidget, SIGNAL(graphsSettingsRequested()),
                 this, SLOT(graphsSettingsRequested()));
 
-        // Check when the legend has toggled
+        // Check when the legend has been toggled
 
         connect(mSimulationWidget, SIGNAL(legendToggled()),
                 this, SLOT(legendToggled()));
 
-        // Check when the X/Y logarithmic axis has toggled
+        // Check when the X/Y logarithmic axis has been toggled
 
         connect(mSimulationWidget, SIGNAL(logarithmicXAxisToggled()),
                 this, SLOT(logarithmicXAxisToggled()));
@@ -596,6 +601,15 @@ void SimulationExperimentViewWidget::collapsibleWidgetCollapsed(const int &pInde
     // expanded, so keep track of that fact
 
     mCollapsibleWidgetCollapsed[pIndex] = pCollapsed;
+}
+
+//==============================================================================
+
+void SimulationExperimentViewWidget::graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+{
+    // Toggle the given graph
+
+    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->toggleGraph(pGraph);
 }
 
 //==============================================================================

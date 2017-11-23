@@ -101,6 +101,8 @@ public:
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode mode() const;
     void setMode(const Mode &pMode);
 
+    void toggleGraph(GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+
     void toggleLegend();
 
     void toggleLogarithmicXAxis();

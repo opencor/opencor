@@ -215,6 +215,8 @@ public:
 
     virtual bool isEmpty() const;
 
+    void setChecked(const int &pIndex, const bool &pChecked);
+
     void setFontSize(const int &pFontSize);
     void setForegroundColor(const QColor &pForegroundColor);
 
@@ -234,7 +236,17 @@ private:
 
     int mFontSize;
     QColor mForegroundColor;
+
+signals:
+    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+
+private slots:
+    void checked(const QVariant &pItemInfo);
 };
+
+//==============================================================================
+
+class GraphPanelWidget;
 
 //==============================================================================
 
@@ -259,15 +271,19 @@ public:
     explicit GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbors,
                                   QAction *pSynchronizeXAxisAction,
                                   QAction *pSynchronizeYAxisAction,
-                                  QWidget *pParent);
+                                  GraphPanelWidget *pParent);
     ~GraphPanelPlotWidget();
 
     virtual void retranslateUi();
+
+    void setActive(const bool &pActive);
 
     GraphPanelPlotGraphs graphs() const;
 
     bool addGraph(GraphPanelPlotGraph *pGraph);
     bool removeGraph(GraphPanelPlotGraph *pGraph);
+
+    int graphIndex(GraphPanelPlotGraph *pGraph) const;
 
     bool hasData() const;
 
@@ -402,6 +418,8 @@ private:
         BigScalingOut
     };
 
+    GraphPanelWidget *mOwner;
+
     QwtPlotDirectPainter *mDirectPainter;
 
     QColor mBackgroundColor;
@@ -500,6 +518,8 @@ private:
 signals:
     void axesChanged(const double &pMinX, const double &pMaxX,
                      const double &pMinY, const double &pMaxY);
+
+    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
 
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();

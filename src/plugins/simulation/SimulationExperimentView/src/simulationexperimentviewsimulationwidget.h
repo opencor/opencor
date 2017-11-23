@@ -260,6 +260,8 @@ private:
 signals:
     void splitterMoved(const QIntList &pSizes);
 
+    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 

@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "coreguiutils.h"
 #include "graphpanelplotwidget.h"
+#include "graphpanelwidget.h"
 #include "graphpanelwidgetcustomaxesdialog.h"
 #include "i18ninterface.h"
 
@@ -212,6 +213,12 @@ void GraphPanelPlotGraph::setSelected(const bool &pSelected)
     // Set our selected state
 
     mSelected = pSelected;
+
+    // Un/check our corresponding legend item
+
+    GraphPanelPlotWidget *graphPlot = static_cast<GraphPanelPlotWidget *>(plot());
+
+    static_cast<GraphPanelPlotLegendWidget *>(graphPlot->QwtPlot::legend())->setChecked(graphPlot->graphIndex(this), pSelected);
 }
 
 //==============================================================================
@@ -682,6 +689,15 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
     // Have our legend items use as much horizontal space as possible
 
     static_cast<QwtDynGridLayout *>(contentsWidget()->layout())->setExpandingDirections(Qt::Horizontal);
+
+    // Make our legend items checkable
+
+    setDefaultItemMode(QwtLegendData::Checkable);
+
+    // Check when someone clicks on a legend item
+
+    connect(this, SIGNAL(checked(const QVariant &, bool, int)),
+            this, SLOT(checked(const QVariant &)));
 }
 
 //==============================================================================
@@ -714,6 +730,17 @@ bool GraphPanelPlotLegendWidget::isEmpty() const
     // not then based on whether we have a zero size hint
 
     return mActive?QwtLegend::isEmpty():sizeHint() == QSize(0, 0);
+}
+
+//==============================================================================
+
+void GraphPanelPlotLegendWidget::setChecked(const int &pIndex,
+                                            const bool &pChecked)
+{
+    // Un/check the graph which index is given
+    // Note: the +1 is because the first child is our layout...
+
+    static_cast<QwtLegendLabel *>(contentsWidget()->children()[pIndex+1])->setChecked(pChecked);
 }
 
 //==============================================================================
@@ -872,6 +899,21 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
 
 //==============================================================================
 
+void GraphPanelPlotLegendWidget::checked(const QVariant &pItemInfo)
+{
+    // Make sure that the corresponding graph panel is selected
+    // Note: this makes it much easier to handle the graphToggled() signal
+    //       afterwards...
+
+    mOwner->setActive(true);
+
+    // Let people know that the given graph has been toggled
+
+    emit graphToggled(static_cast<GraphPanelPlotGraph *>(mOwner->infoToItem(pItemInfo)));
+}
+
+//==============================================================================
+
 static const double DblMinAxis = 1000.0*DBL_MIN;
 // Note: normally, we would use DBL_MIN, but this would cause problems with
 //       QwtPlot (e.g. to create ticks), so instead we use a value that results
@@ -895,9 +937,10 @@ static const double MinAxisRange    = DblMinAxis;
 GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbors,
                                            QAction *pSynchronizeXAxisAction,
                                            QAction *pSynchronizeYAxisAction,
-                                           QWidget *pParent) :
+                                           GraphPanelWidget *pParent) :
     QwtPlot(pParent),
     Core::CommonWidget(this),
+    mOwner(pParent),
     mBackgroundColor(QColor()),
     mForegroundColor(QColor()),
     mPointCoordinatesStyle(Qt::DashLine),
@@ -1008,9 +1051,13 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     mOverlayWidget = new GraphPanelPlotOverlayWidget(this);
 
-    // Add our (empty) legend
+    // Add our (empty) legend and let people know whenever one of its
+    // corresponding graphs has been toggled
 
     insertLegend(mLegend);
+
+    connect(mLegend, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+            this, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
 
     // Create our context menu
 
@@ -1925,6 +1972,15 @@ bool GraphPanelPlotWidget::canZoomOutY() const
 
 //==============================================================================
 
+void GraphPanelPlotWidget::setActive(const bool &pActive)
+{
+    // In/activate ourselves by asking our owner to in/activate itself
+
+    mOwner->setActive(pActive);
+}
+
+//==============================================================================
+
 GraphPanelPlotGraphs GraphPanelPlotWidget::graphs() const
 {
     // Return all our graphs
@@ -2572,8 +2628,13 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
 
     mGraphs << pGraph;
 
-    // Update our layout, if we have a legend (so that it gets updated
-    // straightaway)
+    // Initialise the checked state of the corresponding legend item
+
+    mLegend->setChecked(mGraphs.count()-1, true);
+
+    // Update our layout, but only if our legend is active
+    // Note: indeed, no point in updating it if it's not active since nothing
+    //       is shown in that case...
 
     if (legend())
         updateLayout();
@@ -2599,6 +2660,15 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
     delete pGraph;
 
     return true;
+}
+
+//==============================================================================
+
+int GraphPanelPlotWidget::graphIndex(GraphPanelPlotGraph *pGraph) const
+{
+    // Return the index of the given graph
+
+    return mGraphs.indexOf(pGraph);
 }
 
 //==============================================================================

@@ -761,6 +761,17 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(const
 
 //==============================================================================
 
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleGraph(GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+{
+    // Toggle our graph property
+
+    Core::Property *graphProperty = mGraphProperties.value(pGraph);
+
+    graphProperty->setChecked(!graphProperty->isChecked());
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLegend()
 {
     // Toggle our legend property
