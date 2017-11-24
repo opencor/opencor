@@ -519,10 +519,10 @@ signals:
     void axesChanged(const double &pMinX, const double &pMaxX,
                      const double &pMinY, const double &pMaxY);
 
-    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
-
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
+
+    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
 
     void legendToggled();
 

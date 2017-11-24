@@ -135,10 +135,10 @@ private slots:
 
     void collapsibleWidgetCollapsed(const int &pIndex, const bool &pCollapsed);
 
-    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
-
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
+
+    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
 
     void legendToggled();
 

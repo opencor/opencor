@@ -2985,11 +2985,6 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
     connect(plot, SIGNAL(axesChanged(const double &, const double &, const double &, const double &)),
             this, SLOT(plotAxesChanged()));
 
-    // Let people know when we a graph has been toggled
-
-    connect(plot, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            this, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
-
     // Let people know when some graph panel settings or graphs settings have
     // been requested
 
@@ -2997,6 +2992,11 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
             this, SIGNAL(graphPanelSettingsRequested()));
     connect(plot, SIGNAL(graphsSettingsRequested()),
             this, SIGNAL(graphsSettingsRequested()));
+
+    // Let people know when we a graph has been toggled
+
+    connect(plot, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+            this, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
 
     // Let people know when we the legend has been toggled
 
