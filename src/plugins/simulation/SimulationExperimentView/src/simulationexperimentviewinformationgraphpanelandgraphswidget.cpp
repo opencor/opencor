@@ -553,9 +553,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeCurrent
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeAllGraphs()
 {
     // Ask the graph panel associated with our current graphs property editor to
-    // remove all the graphs
+    // remove all its graphs
 
-    mGraphPanels.value(mGraphsPropertyEditor)->removeGraphs(mGraphs.values());
+    mGraphPanels.value(mGraphsPropertyEditor)->removeAllGraphs();
 }
 
 //==============================================================================

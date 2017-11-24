@@ -190,7 +190,7 @@ void GraphPanelWidget::addGraph(GraphPanelPlotGraph *pGraph,
 
 void GraphPanelWidget::removeGraphs(const GraphPanelPlotGraphs &pGraphs)
 {
-    // Remove the graphs from our plot
+    // Remove the given graphs from our plot
 
     GraphPanelPlotGraphs graphs = GraphPanelPlotGraphs();
 
