@@ -2184,7 +2184,7 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
     }
 
     // Update our actions and align ourselves with our neighbours (which will
-    // result in ourselves, and maybe its neighbours, bein replotted, if
+    // result in ourselves, and maybe our neighbours, being replotted, if
     // allowed), in case the axes' values have changed
 
     if (xAxisValuesChanged || yAxisValuesChanged) {
