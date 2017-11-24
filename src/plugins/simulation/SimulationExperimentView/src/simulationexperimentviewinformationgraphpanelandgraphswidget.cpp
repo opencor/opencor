@@ -576,14 +576,20 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
     disconnect(mGraphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(graphsPropertyChanged(Core::Property *)));
 
-    foreach (Core::Property *property, mGraphProperties)
+    GraphPanelWidget::GraphPanelPlotGraphs graphs = GraphPanelWidget::GraphPanelPlotGraphs();
+
+    foreach (Core::Property *property, mGraphsPropertyEditor->properties()) {
         property->setChecked(pSelect);
 
-    foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, mGraphs)
-        graph->setSelected(pSelect);
+        GraphPanelWidget::GraphPanelPlotGraph *graph = mGraphs.value(property);
 
-    if (mGraphs.count())
-        emit graphsUpdated(mGraphs.values());
+        graphs << graph;
+
+        graph->setSelected(pSelect);
+    }
+
+    if (!graphs.isEmpty())
+        emit graphsUpdated(graphs);
 
     connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphsPropertyChanged(Core::Property *)));
@@ -901,7 +907,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphsCon
     bool canSelectAllGraphs = false;
     bool canUnselectAllGraphs = false;
 
-    foreach (Core::Property *property, mGraphProperties) {
+    foreach (Core::Property *property, mGraphsPropertyEditor->properties()) {
         bool graphSelected = property->isChecked();
 
         canSelectAllGraphs = canSelectAllGraphs || !graphSelected;
