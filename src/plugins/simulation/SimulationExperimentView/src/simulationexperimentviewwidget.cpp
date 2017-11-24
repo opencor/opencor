@@ -213,11 +213,6 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
         connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelSectionExpanded(const int &, const bool &)),
                 this, SLOT(graphPanelSectionExpanded(const int &, const bool &)));
 
-        // Check when a graph has been toggled
-
-        connect(mSimulationWidget, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-                this, SLOT(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
-
         // Check when some graph plot settings or graphs settings have been
         // requested
 
@@ -225,6 +220,11 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
                 this, SLOT(graphPanelSettingsRequested()));
         connect(mSimulationWidget, SIGNAL(graphsSettingsRequested()),
                 this, SLOT(graphsSettingsRequested()));
+
+        // Check when a graph has been toggled
+
+        connect(mSimulationWidget, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+                this, SLOT(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
 
         // Check when the legend has been toggled
 
@@ -605,15 +605,6 @@ void SimulationExperimentViewWidget::collapsibleWidgetCollapsed(const int &pInde
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
-{
-    // Toggle the given graph
-
-    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->toggleGraph(pGraph);
-}
-
-//==============================================================================
-
 void SimulationExperimentViewWidget::graphPanelSettingsRequested()
 {
     // Make sure that our graph panel settings are active and visible
@@ -630,6 +621,15 @@ void SimulationExperimentViewWidget::graphsSettingsRequested()
 
     mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
     mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(2, false);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewWidget::graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+{
+    // Toggle the given graph
+
+    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->toggleGraph(pGraph);
 }
 
 //==============================================================================
