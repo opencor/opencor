@@ -726,10 +726,9 @@ void GraphPanelPlotLegendWidget::setActive(const bool &pActive)
 
 bool GraphPanelPlotLegendWidget::isEmpty() const
 {
-    // Return whether we are empty, based on whether we are active and if we are
-    // not then based on whether we have a zero size hint
+    // Return whether we are empty, based on whether we are active
 
-    return mActive?QwtLegend::isEmpty():sizeHint() == QSize(0, 0);
+    return sizeHint() == QSize(0, 0);
 }
 
 //==============================================================================
@@ -836,7 +835,11 @@ QSize GraphPanelPlotLegendWidget::sizeHint() const
     // Determine and return our size hint, based on our active state and on the
     // 'raw' size hint of our owner's neigbours' legend, if any
 
-    QSize res = mActive?QwtLegend::sizeHint():QSize(0, 0);
+    QSize res = mActive?
+                    QwtLegend::isEmpty()?
+                        QSize(0, 0):
+                        QwtLegend::sizeHint():
+                    QSize(0, 0);
 
     foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors()) {
         GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(ownerNeighbor->legend());
@@ -2632,12 +2635,10 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
 
     mLegend->setChecked(mGraphs.count()-1, true);
 
-    // Update our layout, but only if our legend is active
-    // Note: indeed, no point in updating it if it's not active since nothing
-    //       is shown in that case...
+    // To add a graph may result in the legend getting shown, so we need to make
+    // sure that our neighbours are aware of it
 
-    if (isLegendActive())
-        updateLayout();
+    forceAlignWithNeighbors();
 
     return true;
 }
@@ -2658,6 +2659,11 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
     mGraphs.removeOne(pGraph);
 
     delete pGraph;
+
+    // To remove a graph may result in the legend getting hidden, so we need to
+    // make sure that our neighbours are aware of it
+
+    forceAlignWithNeighbors();
 
     return true;
 }
