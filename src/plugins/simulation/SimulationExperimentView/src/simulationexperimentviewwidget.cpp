@@ -108,7 +108,7 @@ void SimulationExperimentViewWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve our graph panel /graphs mode
 
-    mGraphPanelGraphsMode = SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode(pSettings->value(SettingsGraphPanelGraphsMode, SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel).toInt());
+    mGraphPanelGraphsMode = SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode(pSettings->value(SettingsGraphPanelGraphsMode, SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs).toInt());
 
     // Retrieve the columns' width of our various property editors
 
