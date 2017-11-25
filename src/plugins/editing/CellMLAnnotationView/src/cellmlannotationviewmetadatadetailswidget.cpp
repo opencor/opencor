@@ -70,7 +70,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     mBorderedCategoryMessage = new Core::BorderedWidget(mCategoryMessage,
                                                         false, true, false, false);
 
-    mBorderedCategoryMessage->setVisible(false);
+    mBorderedCategoryMessage->hide();
 
     // Create and hide our unsupported metadata message widget
 
@@ -78,7 +78,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     mBorderedUnsupportedMetadataMessage = new Core::BorderedWidget(mUnsupportedMetadataMessage,
                                                                    false, true, true, false);
 
-    mBorderedUnsupportedMetadataMessage->setVisible(false);
+    mBorderedUnsupportedMetadataMessage->hide();
 
     // Create our splitter widget
 

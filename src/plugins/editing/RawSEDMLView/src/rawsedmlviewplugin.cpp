@@ -213,7 +213,7 @@ void RawSEDMLViewPlugin::initializePlugin()
     // Hide our Raw SED-ML view widget since it may not initially be shown in
     // our central widget
 
-    mViewWidget->setVisible(false);
+    mViewWidget->hide();
 }
 
 //==============================================================================

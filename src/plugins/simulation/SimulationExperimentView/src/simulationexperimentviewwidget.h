@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "combinearchive.h"
 #include "corecliutils.h"
 #include "sedmlfile.h"
+#include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -108,10 +109,15 @@ private:
 
     QBoolList mCollapsibleWidgetCollapsed;
 
-    QIntList mSimulationWidgetColumnWidths;
-    QIntList mSolversWidgetColumnWidths;
-    QIntList mGraphsWidgetColumnWidths;
-    QIntList mParametersWidgetColumnWidths;
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode mGraphPanelGraphsMode;
+
+    QIntList mSimulationColumnWidths;
+    QIntList mSolversColumnWidths;
+    QIntList mGraphPanelColumnWidths;
+    QIntList mGraphsColumnWidths;
+    QIntList mParametersColumnWidths;
+
+    QMap<int, bool> mGraphPanelSectionsExpanded;
 
     SimulationExperimentViewSimulationWidget *mSimulationWidget;
     QMap<QString, SimulationExperimentViewSimulationWidget *> mSimulationWidgets;
@@ -129,18 +135,23 @@ private slots:
 
     void collapsibleWidgetCollapsed(const int &pIndex, const bool &pCollapsed);
 
-    void simulationWidgetHeaderSectionResized(const int &pIndex,
-                                              const int &pOldSize,
-                                              const int &pNewSize);
-    void solversWidgetHeaderSectionResized(const int &pIndex,
-                                           const int &pOldSize,
-                                           const int &pNewSize);
-    void graphsWidgetHeaderSectionResized(const int &pIndex,
-                                          const int &pOldSize,
-                                          const int &pNewSize);
-    void parametersWidgetHeaderSectionResized(const int &pIndex,
-                                              const int &pOldSize,
-                                              const int &pNewSize);
+    void graphPanelSettingsRequested();
+    void graphsSettingsRequested();
+
+    void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
+
+    void simulationHeaderSectionResized(const int &pIndex, const int &pOldSize,
+                                        const int &pNewSize);
+    void solversHeaderSectionResized(const int &pIndex, const int &pOldSize,
+                                     const int &pNewSize);
+    void graphPanelHeaderSectionResized(const int &pIndex, const int &pOldSize,
+                                        const int &pNewSize);
+    void graphsHeaderSectionResized(const int &pIndex, const int &pOldSize,
+                                    const int &pNewSize);
+    void parametersHeaderSectionResized(const int &pIndex, const int &pOldSize,
+                                        const int &pNewSize);
+
+    void graphPanelSectionExpanded(const int &pSection, const bool &pExpanded);
 
     void callCheckSimulationResults();
 };

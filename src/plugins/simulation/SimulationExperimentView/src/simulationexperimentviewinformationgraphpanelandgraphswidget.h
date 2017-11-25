@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Simulation Experiment view information graphs widget
+// Simulation Experiment view information graph panel and graphs widget
 //==============================================================================
 
 #pragma once
@@ -68,15 +68,20 @@ class SimulationExperimentViewWidget;
 
 //==============================================================================
 
-class SimulationExperimentViewInformationGraphsWidget : public QStackedWidget,
-                                                        public Core::CommonWidget
+class SimulationExperimentViewInformationGraphPanelAndGraphsWidget : public QStackedWidget,
+                                                                     public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit SimulationExperimentViewInformationGraphsWidget(SimulationExperimentViewWidget *pViewWidget,
-                                                             SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                             QWidget *pParent);
+    enum Mode {
+        GraphPanel,
+        Graphs
+    };
+
+    explicit SimulationExperimentViewInformationGraphPanelAndGraphsWidget(SimulationExperimentViewWidget *pViewWidget,
+                                                                          SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                                                          QWidget *pParent);
 
     virtual void retranslateUi();
 
@@ -89,34 +94,48 @@ public:
 
     void finishEditing();
 
+    Core::Properties graphPanelProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel) const;
     Core::Properties graphProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                                      const QString &pFileName = QString()) const;
 
-    int headerCount() const;
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode mode() const;
+    void setMode(const Mode &pMode);
 
-    int columnWidth(const int &pIndex) const;
-    void setColumnWidth(const int &pIndex, const int &pColumnWidth);
+    void setGraphPanelColumnWidth(const int &pIndex, const int &pColumnWidth);
+    void setGraphsColumnWidth(const int &pIndex, const int &pColumnWidth);
+
+    void setGraphPanelSectionExpanded(const int &pSection, const bool &pExpanded);
+
+    void reinitialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
 private:
+    Mode mMode;
+
     SimulationExperimentViewWidget *mViewWidget;
     SimulationExperimentViewSimulationWidget *mSimulationWidget;
 
     QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *> mGraphPanels;
-    QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
-    Core::PropertyEditorWidget *mPropertyEditor;
+    QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphPanelPropertyEditors;
+    QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphsPropertyEditors;
+    Core::PropertyEditorWidget *mGraphPanelPropertyEditor;
+    Core::PropertyEditorWidget *mGraphsPropertyEditor;
 
     QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *> mGraphs;
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *> mGraphProperties;
 
-    QMenu *mContextMenu;
-    QMenu *mParametersContextMenu;
+    QMenu *mGraphPanelContextMenu;
+
+    QAction *mSelectGraphPanelColorAction;
+
+    QMenu *mGraphContextMenu;
+    QMenu *mGraphParametersContextMenu;
 
     QAction *mAddGraphAction;
     QAction *mRemoveCurrentGraphAction;
     QAction *mRemoveAllGraphsAction;
     QAction *mSelectAllGraphsAction;
     QAction *mUnselectAllGraphsAction;
-    QAction *mSelectColorAction;
+    QAction *mSelectGraphColorAction;
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
@@ -124,9 +143,11 @@ private:
 
     bool mCanEmitGraphsUpdatedSignal;
 
-    int mHorizontalScrollBarValue;
+    void retranslateGraphPanelPropertyEditor(Core::PropertyEditorWidget *pGraphPanelPropertyEditor);
 
-    void populateParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
+    void populateGraphPanelPropertyEditor();
+
+    void populateGraphParametersContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
 
     bool checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
                         GraphPanelWidget::GraphPanelPlotGraph *pGraph,
@@ -144,13 +165,17 @@ private:
     bool rootProperty(Core::Property *pProperty) const;
 
 signals:
-    void headerSectionResized(const int &pIndex, const int &pOldSize,
-                              const int &pNewSize);
+    void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
+
+    void graphPanelHeaderSectionResized(const int &pIndex, const int &pOldSize,
+                                        const int &pNewSize);
+    void graphsHeaderSectionResized(const int &pIndex, const int &pOldSize,
+                                    const int &pNewSize);
+
+    void graphPanelSectionExpanded(const int &pSection, const bool &pExpanded);
 
     void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
     void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
-
-    void graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
 
 public slots:
     void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
@@ -164,21 +189,23 @@ public slots:
                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
 private slots:
+    void selectGraphPanelColor();
+
     void addGraph();
     void removeCurrentGraph();
     void removeAllGraphs();
     void selectAllGraphs();
     void unselectAllGraphs();
-    void selectColor();
+    void selectGraphColor();
 
-    void propertyEditorContextMenu(const QPoint &pPosition) const;
+    void showGraphPanelContextMenu(const QPoint &pPosition) const;
+    void showGraphsContextMenu(const QPoint &pPosition) const;
 
-    void propertyEditorHorizontalScrollBarValueChanged(const int &pValue);
+    void graphPanelSectionExpanded(const QModelIndex &pIndex);
+    void graphPanelSectionCollapsed(const QModelIndex &pIndex);
 
-    void propertyEditorSectionResized(const int &pIndex, const int &pOldSize,
-                                      const int &pNewSize);
-
-    void graphChanged(Core::Property *pProperty);
+    void graphPanelPropertyChanged(Core::Property *pProperty);
+    void graphsPropertyChanged(Core::Property *pProperty);
 
     void updateParameterValue();
 };

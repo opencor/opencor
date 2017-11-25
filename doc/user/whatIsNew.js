@@ -76,7 +76,9 @@ var jsonData = { "versions": [
                              "entries": [
                                { "type": "Added", "description": "Support for log scales." },
                                { "type": "Added", "description": "Ability to customise a graph." },
+                               { "type": "Added", "description": "Ability to customise a graph panel." },
                                { "type": "Added", "description": "Export a graph panel to various formats (e.g. PDF, PNG, SVG)." },
+                               { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "Improved", "description": "Running of long simulations." },
                                { "type": "Improved", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
                                { "type": "Fixed", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
@@ -103,6 +105,11 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "CellML support",
                              "entries": [
                                { "type": "Improved", "description": "Generation of error messages." }
+                             ]
+                           },
+                           { "type": "subCategory", "name": "SED-ML support",
+                             "entries": [
+                               { "type": "Added", "description": "Customisation of graph panels." }
                              ]
                            },
                            { "type": "subCategory", "name": "ZIP support",

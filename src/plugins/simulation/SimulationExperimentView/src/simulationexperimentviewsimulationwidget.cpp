@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sedmlsupportplugin.h"
 #include "simulation.h"
 #include "simulationexperimentviewcontentswidget.h"
-#include "simulationexperimentviewinformationgraphswidget.h"
+#include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
 #include "simulationexperimentviewinformationparameterswidget.h"
 #include "simulationexperimentviewinformationsimulationwidget.h"
 #include "simulationexperimentviewinformationsolverswidget.h"
@@ -339,12 +339,12 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Keep track of the addition and removal of a graph panel
 
-    SimulationExperimentViewInformationGraphsWidget *graphsWidget = informationWidget->graphsWidget();
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = informationWidget->graphPanelAndGraphsWidget();
 
     connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
-            graphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)));
+            graphPanelAndGraphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)));
     connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
-            graphsWidget, SLOT(finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
+            graphPanelAndGraphsWidget, SLOT(finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
 
     connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
             this, SLOT(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)));
@@ -354,7 +354,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     // Keep track of whether a graph panel has been activated
 
     connect(graphPanelsWidget, SIGNAL(graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
-            graphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
+            graphPanelAndGraphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
 
     // Keep track of a graph being required
 
@@ -364,9 +364,9 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     // Keep track of the addition and removal of a graph
 
     connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)),
-            graphsWidget, SLOT(addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
+            graphPanelAndGraphsWidget, SLOT(addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
     connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
-            graphsWidget, SLOT(removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
+            graphPanelAndGraphsWidget, SLOT(removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
 
     connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)),
             this, SLOT(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
@@ -390,13 +390,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     //       plotting viewpoint. So, instead, the updating is done through our
     //       graphs property editor...
 
-    connect(graphsWidget, SIGNAL(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+    connect(graphPanelAndGraphsWidget, SIGNAL(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
             this, SLOT(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
-    connect(graphsWidget, SIGNAL(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
+    connect(graphPanelAndGraphsWidget, SIGNAL(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
             this, SLOT(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
-
-    connect(graphsWidget, SIGNAL(graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            this, SLOT(graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
 
     // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
@@ -690,6 +687,8 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloadingView)
 {
+    setUpdatesEnabled(false);
+
     // Stop keeping track of certain things (so that updatePlot() doesn't get
     // called unnecessarily)
     // Note: see the corresponding code towards the end of this method...
@@ -895,7 +894,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             //       repopulating the property editor, scrollbars will be shown
             //       even though they are not needed)...
 
-            mContentsWidget->setVisible(true);
+            mContentsWidget->show();
 
             // Check whether we have at least one ODE or DAE solver and, if
             // needed, at least one NLA solver
@@ -959,21 +958,22 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
         //          our simulation's starting point and simulation's NLA
         //          solver's properties), which is needed since we want to be
         //          able to reset our simulation below...
-        // Note #2: to initialise our graphs widget will result in some graphs
-        //          being shown/hidden and, therefore, in graphUpdated() being
-        //          called. Yet, we don't want graphUpdated() to update our
-        //          plots. Indeed, if it did, then all of our plots' axes'
-        //          values would be reset while we want to keep the ones we just
-        //          retrieved (thus making it possible for the user to have
-        //          different views for different files). So, for this to work
-        //          we use mCanUpdatePlotsForUpdatedGraphs, and then 'manually'
-        //          replot our plots, once we know which graphs are to be
-        //          shown/hidden. We could do the initialisation before the
-        //          setting of the plots' axes' values, but then we could see
-        //          the graphs being plotted twice. Once after the plots' axes'
-        //          values have been reset following the call to graphUpdated()
-        //          and another after we update our plots' axes' values. This is
-        //          clearly not neat, hence the current solution...
+        // Note #2: to initialise our graph panel and graphs widget will result
+        //          in some graphs being shown/hidden and, therefore, in
+        //          graphUpdated() being called. Yet, we don't want
+        //          graphUpdated() to update our plots. Indeed, if it did, then
+        //          all of our plots' axes' values would be reset while we want
+        //          to keep the ones we just retrieved (thus making it possible
+        //          for the user to have different views for different files).
+        //          So, for this to work we use mCanUpdatePlotsForUpdatedGraphs,
+        //          and then 'manually' replot our plots, once we know which
+        //          graphs are to be shown/hidden. We could do the
+        //          initialisation before the setting of the plots' axes'
+        //          values, but then we could see the graphs being plotted
+        //          twice. Once after the plots' axes' values have been reset
+        //          following the call to graphUpdated() and another after we
+        //          update our plots' axes' values. This is clearly not neat,
+        //          hence the current solution...
         // Note #3: to initialise our parameters widget now would result in some
         //          default (in the computer science sense, i.e. wrong) values
         //          being visible for a split second before they get properly
@@ -985,7 +985,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
         solversWidget->initialize(mSimulation);
 
         mCanUpdatePlotsForUpdatedGraphs = false;
-            informationWidget->graphsWidget()->initialize(mSimulation);
+            informationWidget->graphPanelAndGraphsWidget()->initialize(mSimulation);
         mCanUpdatePlotsForUpdatedGraphs = true;
 
         mContentsWidget->graphPanelsWidget()->initialize();
@@ -1008,18 +1008,22 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
     // Further initialise ourselves, if we have a valid environment and we are
     // not dealing with a CellML file
-    // Note: to further initialise ourselves involves, among other things,
-    //       removing/adding graph panels. However, to do those things directly
-    //       will result in the GUI flashing because of various events still
-    //       having to be handled (e.g. see the above call to
-    //       mContentsWidget->graphPanelsWidget()->initialize()). So, instead,
-    //       we do the further initialisation through a single shot, ensuring
-    //       that all the other events have been properly handled...
 
     if (    validSimulationEnvironment
         && (mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile)) {
-        QTimer::singleShot(0, this, SLOT(furtherInitialize()));
+        // Further initialise ourselves, update our GUI (by reinitialising it)
+        // and initialise our simulation, if we still have a valid simulation
+        // environment
+
+        bool validSimulationEnvironment = furtherInitialize();
+
+        initializeGui(validSimulationEnvironment);
+
+        if (validSimulationEnvironment)
+            initializeSimulation();
     }
+
+    setUpdatesEnabled(true);
 }
 
 //==============================================================================
@@ -1031,7 +1035,7 @@ void SimulationExperimentViewSimulationWidget::finalize()
 
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
-    informationWidget->graphsWidget()->finalize();
+    informationWidget->graphPanelAndGraphsWidget()->finalize();
     informationWidget->parametersWidget()->finalize();
 }
 
@@ -1242,9 +1246,9 @@ void SimulationExperimentViewSimulationWidget::setFileName(const QString &pFileN
 void SimulationExperimentViewSimulationWidget::fileRenamed(const QString &pOldFileName,
                                                            const QString &pNewFileName)
 {
-    // Let our graphs widget know that a file has been renamed
+    // Let our graph panel and graphs widget know that a file has been renamed
 
-    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
+    mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->fileRenamed(pOldFileName, pNewFileName);
 
     // Make sure that our GUI is up to date
 
@@ -1511,9 +1515,9 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
 
         if (kisaoId.isEmpty()) {
             voiSolverProperties += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
-                                                                            SEDMLSupport::SolverPropertyId,
+                                                                            SEDMLSupport::Id,
                                                                             solverProperty,
-                                                                            SEDMLSupport::SolverPropertyValue,
+                                                                            SEDMLSupport::Value,
                                                                             value);
         } else {
             libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
@@ -1524,9 +1528,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     }
 
     if (!voiSolverProperties.isEmpty()) {
-        sedmlAlgorithm->appendAnnotation(QString("<%1 xmlns=\"%2\">%3</%1>").arg(SEDMLSupport::SolverProperties,
-                                                                                 SEDMLSupport::OpencorNamespace,
-                                                                                 voiSolverProperties).toStdString());
+        sedmlAlgorithm->appendAnnotation(QString("<%1 xmlns=\"%2\">"
+                                                 "    %3"
+                                                 "</%1>").arg(SEDMLSupport::SolverProperties,
+                                                              SEDMLSupport::OpencorNamespace,
+                                                              voiSolverProperties).toStdString());
     }
 
     // Check whether the simulation required an NLA solver and, if so, let our
@@ -1538,17 +1544,19 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
 
         foreach (const QString &solverProperty, mSimulation->data()->nlaSolverProperties().keys()) {
             nlaSolverProperties += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
-                                                                            SEDMLSupport::SolverPropertyId,
+                                                                            SEDMLSupport::Id,
                                                                             solverProperty,
-                                                                            SEDMLSupport::SolverPropertyValue,
+                                                                            SEDMLSupport::Value,
                                                                             solverProperties.value(solverProperty).toString());
         }
 
-        pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" %3=\"%4\">%5</%1>").arg(SEDMLSupport::NlaSolver,
-                                                                                             SEDMLSupport::OpencorNamespace,
-                                                                                             SEDMLSupport::NlaSolverName,
-                                                                                             mSimulation->data()->nlaSolverName(),
-                                                                                             nlaSolverProperties).toStdString());
+        pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" %3=\"%4\">"
+                                                   "    %5"
+                                                   "</%1>").arg(SEDMLSupport::NlaSolver,
+                                                                SEDMLSupport::OpencorNamespace,
+                                                                SEDMLSupport::Name,
+                                                                mSimulation->data()->nlaSolverName(),
+                                                                nlaSolverProperties).toStdString());
     }
 
     // Create and customise a task for our given SED-ML simulation
@@ -1592,9 +1600,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlVariableTarget(libsedml::
     pSedmlVariable->setTarget(Target.arg(pComponent, variable).toStdString());
 
     if (variableDegree) {
-        pSedmlVariable->appendAnnotation(QString("<%1 xmlns=\"%2\">%3</%1>").arg(SEDMLSupport::VariableDegree,
-                                                                                 SEDMLSupport::OpencorNamespace,
-                                                                                 QString::number(variableDegree)).toStdString());
+        pSedmlVariable->appendAnnotation(QString("<%1 xmlns=\"%2\">"
+                                                 "    %3"
+                                                 "</%1>").arg(SEDMLSupport::VariableDegree,
+                                                              SEDMLSupport::OpencorNamespace,
+                                                              QString::number(variableDegree)).toStdString());
     }
 }
 
@@ -1685,122 +1695,192 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                            sedmlOneStep, simulationNumber);
     }
 
-    // Retrieve all the graphs that are to be plotted, if any
+    // Create a 2D plot output for each graph panel that we have, and retrieve
+    // all the graphs, if any, that are to be plotted on them
 
-    QList<Core::Properties> graphsList = QList<Core::Properties>();
-    QList<Core::Properties> logarithmicXAxis = QList<Core::Properties>();
-    QList<Core::Properties> logarithmicYAxis = QList<Core::Properties>();
-    SimulationExperimentViewInformationGraphsWidget *graphsWidget = mContentsWidget->informationWidget()->graphsWidget();
+    static const QString SedmlProperty = QString("<%1>%2</%1>");
+
+    typedef struct {
+        libsedml::SedPlot2D *sedmlPlot2d;
+        int graphPlotCounter;
+        bool logAxisX;
+        bool logAxisY;
+    } GraphsData;
+
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
+    GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
+    QIntList graphPanelsWidgetSizes = graphPanelsWidget->sizes();
+    QMap<Core::Properties, GraphsData> graphsData = QMap<Core::Properties, GraphsData>();
+    int graphPlotCounter = 0;
 
     foreach (GraphPanelWidget::GraphPanelWidget *graphPanel,
-             mContentsWidget->graphPanelsWidget()->graphPanels()) {
-        Core::Properties graphs = graphsWidget->graphProperties(graphPanel, mFileName);
+             graphPanelsWidget->graphPanels()) {
+        // Create and customise the look and feel of our 2D plot
 
-        if (!graphs.isEmpty())
-            graphsList << graphs;
+        Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelProperties(graphPanel);
+        libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
 
-        if (graphPanel->plot()->logAxisX())
-            logarithmicXAxis << graphs;
+        sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
 
-        if (graphPanel->plot()->logAxisY())
-            logarithmicYAxis << graphs;
+        Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
+        Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
+        Core::Properties xAxisProperties = graphPanelProperties[6]->properties();
+        Core::Properties yAxisProperties = graphPanelProperties[7]->properties();
+        Core::Properties zoomRegionProperties = graphPanelProperties[8]->properties();
+
+        sedmlPlot2d->appendAnnotation(QString("<%1 xmlns=\"%2\">"
+                                              "    %3"
+                                              "</%1>").arg( SEDMLSupport::Properties,
+                                                            SEDMLSupport::OpencorNamespace,
+                                                            SedmlProperty.arg(SEDMLSupport::BackgroundColor,
+                                                                              stringValue(graphPanelProperties[0]))
+                                                           +SedmlProperty.arg(SEDMLSupport::FontSize,
+                                                                              stringValue(graphPanelProperties[1]))
+                                                           +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
+                                                                              stringValue(graphPanelProperties[2]))
+                                                           +SedmlProperty.arg(SEDMLSupport::Height,
+                                                                              QString::number(graphPanelsWidgetSizes[graphPlotCounter-1]))
+                                                           +SedmlProperty.arg(SEDMLSupport::Title,
+                                                                              stringValue(graphPanelProperties[5]))
+                                                           +SedmlProperty.arg( SEDMLSupport::GridLines,
+                                                                               SedmlProperty.arg(SEDMLSupport::Style,
+                                                                                                 SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
+                                                                              +SedmlProperty.arg(SEDMLSupport::Width,
+                                                                                                 stringValue(gridLinesProperties[1]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::Color,
+                                                                                                 stringValue(gridLinesProperties[2])))
+                                                           +SedmlProperty.arg( SEDMLSupport::PointCoordinates,
+                                                                               SedmlProperty.arg(SEDMLSupport::Style,
+                                                                                                 SEDMLSupport::lineStyleValue(pointCoordinatesProperties[0]->listValueIndex()))
+                                                                              +SedmlProperty.arg(SEDMLSupport::Width,
+                                                                                                 stringValue(pointCoordinatesProperties[1]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::Color,
+                                                                                                 stringValue(pointCoordinatesProperties[2]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::FontColor,
+                                                                                                 stringValue(pointCoordinatesProperties[3])))
+                                                           +SedmlProperty.arg( SEDMLSupport::XAxis,
+                                                                               SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
+                                                                                                 stringValue(xAxisProperties[0]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::Title,
+                                                                                                 stringValue(xAxisProperties[1])))
+                                                           +SedmlProperty.arg( SEDMLSupport::YAxis,
+                                                                               SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
+                                                                                                 stringValue(yAxisProperties[0]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::Title,
+                                                                                                 stringValue(yAxisProperties[1])))
+                                                           +SedmlProperty.arg( SEDMLSupport::ZoomRegion,
+                                                                               SedmlProperty.arg(SEDMLSupport::Style,
+                                                                                                 SEDMLSupport::lineStyleValue(zoomRegionProperties[0]->listValueIndex()))
+                                                                              +SedmlProperty.arg(SEDMLSupport::Width,
+                                                                                                 stringValue(zoomRegionProperties[1]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::Color,
+                                                                                                 stringValue(zoomRegionProperties[2]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::FontColor,
+                                                                                                 stringValue(zoomRegionProperties[3]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::Filled,
+                                                                                                 stringValue(zoomRegionProperties[4]))
+                                                                              +SedmlProperty.arg(SEDMLSupport::FillColor,
+                                                                                                 stringValue(zoomRegionProperties[5])))).toStdString());
+
+        // Keep track of the graph panel's graphs, if any
+
+        Core::Properties graphProperties = graphPanelAndGraphsWidget->graphProperties(graphPanel, mFileName);
+
+        if (!graphProperties.isEmpty()) {
+            GraphsData data;
+
+            data.sedmlPlot2d = sedmlPlot2d;
+            data.graphPlotCounter = graphPlotCounter;
+            data.logAxisX = graphPanel->plot()->logAxisX();
+            data.logAxisY = graphPanel->plot()->logAxisY();
+
+            graphsData.insert(graphProperties, data);
+        }
     }
 
     // Create and customise 2D plot outputs and data generators for all the
     // graphs that are to be plotted, if any
 
-    if (!graphsList.isEmpty()) {
-        int graphPlotCounter = 0;
+    foreach (const Core::Properties &graphsProperties, graphsData.keys()) {
+        // Create some graphs
 
-        foreach (Core::Properties graphs, graphsList) {
-            ++graphPlotCounter;
+        GraphsData data = graphsData.value(graphsProperties);
+        int graphCounter = 0;
 
-            int graphCounter = 0;
-            libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
+        foreach (Core::Property *property, graphsProperties) {
+            ++graphCounter;
 
-            sedmlPlot2d->setId(QString("plot%1").arg(graphPlotCounter).toStdString());
+            // Create two data generators for the X and Y parameters of our
+            // current graph
 
-            bool logX = logarithmicXAxis.contains(graphs);
-            bool logY = logarithmicYAxis.contains(graphs);
+            libsedml::SedDataGenerator *sedmlDataGeneratorX = sedmlDocument->createDataGenerator();
+            libsedml::SedDataGenerator *sedmlDataGeneratorY = sedmlDocument->createDataGenerator();
+            std::string sedmlDataGeneratorIdX = QString("xDataGenerator%1_%2").arg(QString::number(data.graphPlotCounter),
+                                                                                   QString::number(graphCounter)).toStdString();
+            std::string sedmlDataGeneratorIdY = QString("yDataGenerator%1_%2").arg(QString::number(data.graphPlotCounter),
+                                                                                   QString::number(graphCounter)).toStdString();
 
-            foreach (Core::Property *property, graphs) {
-                ++graphCounter;
+            sedmlDataGeneratorX->setId(sedmlDataGeneratorIdX);
+            sedmlDataGeneratorY->setId(sedmlDataGeneratorIdY);
 
-                // Create two data generators for the X and Y parameters of
-                // our current graph
+            libsedml::SedVariable *sedmlVariableX = sedmlDataGeneratorX->createVariable();
+            libsedml::SedVariable *sedmlVariableY = sedmlDataGeneratorY->createVariable();
+            QStringList propertyX = property->properties()[1]->value().split('.');
+            QStringList propertyY = property->properties()[2]->value().split('.');
 
-                libsedml::SedDataGenerator *sedmlDataGeneratorX = sedmlDocument->createDataGenerator();
-                libsedml::SedDataGenerator *sedmlDataGeneratorY = sedmlDocument->createDataGenerator();
-                std::string sedmlDataGeneratorIdX = QString("xDataGenerator%1_%2").arg(QString::number(graphPlotCounter),
-                                                                                       QString::number(graphCounter)).toStdString();
-                std::string sedmlDataGeneratorIdY = QString("yDataGenerator%1_%2").arg(QString::number(graphPlotCounter),
-                                                                                       QString::number(graphCounter)).toStdString();
+            sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(data.graphPlotCounter),
+                                                                QString::number(graphCounter)).toStdString());
+            sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
+            addSedmlVariableTarget(sedmlVariableX, propertyX[propertyX.count()-2], propertyX.last());
 
-                sedmlDataGeneratorX->setId(sedmlDataGeneratorIdX);
-                sedmlDataGeneratorY->setId(sedmlDataGeneratorIdY);
+            sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(data.graphPlotCounter),
+                                                                QString::number(graphCounter)).toStdString());
+            sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
+            addSedmlVariableTarget(sedmlVariableY, propertyY[propertyY.count()-2], propertyY.last());
 
-                libsedml::SedVariable *sedmlVariableX = sedmlDataGeneratorX->createVariable();
-                libsedml::SedVariable *sedmlVariableY = sedmlDataGeneratorY->createVariable();
-                QStringList propertyX = property->properties()[1]->value().split('.');
-                QStringList propertyY = property->properties()[2]->value().split('.');
+            sedmlDataGeneratorX->setMath(SBML_parseFormula(sedmlVariableX->getId().c_str()));
+            sedmlDataGeneratorY->setMath(SBML_parseFormula(sedmlVariableY->getId().c_str()));
 
-                sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(graphPlotCounter),
-                                                                    QString::number(graphCounter)).toStdString());
-                sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
-                addSedmlVariableTarget(sedmlVariableX, propertyX[propertyX.count()-2], propertyX.last());
+            // Create a curve for our current graph
 
-                sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(graphPlotCounter),
-                                                                    QString::number(graphCounter)).toStdString());
-                sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
-                addSedmlVariableTarget(sedmlVariableY, propertyY[propertyY.count()-2], propertyY.last());
+            libsedml::SedCurve *sedmlCurve = data.sedmlPlot2d->createCurve();
 
-                sedmlDataGeneratorX->setMath(SBML_parseFormula(sedmlVariableX->getId().c_str()));
-                sedmlDataGeneratorY->setMath(SBML_parseFormula(sedmlVariableY->getId().c_str()));
+            sedmlCurve->setId(QString("curve%1_%2").arg(QString::number(data.graphPlotCounter),
+                                                        QString::number(graphCounter)).toStdString());
 
-                // Create a curve for our current graph
+            sedmlCurve->setXDataReference(sedmlDataGeneratorIdX);
+            sedmlCurve->setLogX(data.logAxisX);
 
-                libsedml::SedCurve *sedmlCurve = sedmlPlot2d->createCurve();
+            sedmlCurve->setYDataReference(sedmlDataGeneratorIdY);
+            sedmlCurve->setLogY(data.logAxisY);
 
-                sedmlCurve->setId(QString("curve%1_%2").arg(QString::number(graphPlotCounter),
-                                                            QString::number(graphCounter)).toStdString());
+            // Customise our curve using an annotation
 
-                sedmlCurve->setXDataReference(sedmlDataGeneratorIdX);
-                sedmlCurve->setLogX(logX);
+            Core::Properties lineProperties = property->properties()[3]->properties();
+            Core::Properties symbolProperties = property->properties()[4]->properties();
 
-                sedmlCurve->setYDataReference(sedmlDataGeneratorIdY);
-                sedmlCurve->setLogY(logY);
-
-                // Customise our curve using an annotation
-
-                static const QString CurveProperty = QString("<%1>%2</%1>");
-
-                Core::Properties lineProperties = property->properties()[3]->properties();
-                Core::Properties symbolProperties = property->properties()[4]->properties();
-
-                sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%2\">"
-                                                     "    <%3>%5</%3>"
-                                                     "    <%4>%6</%4>"
-                                                     "</%1>").arg( SEDMLSupport::CurveProperties,
-                                                                   SEDMLSupport::OpencorNamespace,
-                                                                   SEDMLSupport::LineProperties,
-                                                                   SEDMLSupport::SymbolProperties,
-                                                                   CurveProperty.arg(SEDMLSupport::LineStyle,
-                                                                                     SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
-                                                                  +CurveProperty.arg(SEDMLSupport::LineWidth,
-                                                                                     stringValue(lineProperties[1]))
-                                                                  +CurveProperty.arg(SEDMLSupport::LineColor,
-                                                                                     stringValue(lineProperties[2])),
-                                                                   CurveProperty.arg(SEDMLSupport::SymbolStyle,
-                                                                                     SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
-                                                                  +CurveProperty.arg(SEDMLSupport::SymbolSize,
-                                                                                     stringValue(symbolProperties[1]))
-                                                                  +CurveProperty.arg(SEDMLSupport::SymbolColor,
-                                                                                     stringValue(symbolProperties[2]))
-                                                                  +CurveProperty.arg(SEDMLSupport::SymbolFilled,
-                                                                                     stringValue(symbolProperties[3]))
-                                                                  +CurveProperty.arg(SEDMLSupport::SymbolFillColor,
-                                                                                     stringValue(symbolProperties[4]))).toStdString());
-            }
+            sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%2\">"
+                                                 "    %3"
+                                                 "</%1>").arg( SEDMLSupport::Properties,
+                                                               SEDMLSupport::OpencorNamespace,
+                                                               SedmlProperty.arg( SEDMLSupport::Line,
+                                                                                  SedmlProperty.arg(SEDMLSupport::Style,
+                                                                                                    SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Width,
+                                                                                                    stringValue(lineProperties[1]))
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Color,
+                                                                                                    stringValue(lineProperties[2])))
+                                                              +SedmlProperty.arg( SEDMLSupport::Symbol,
+                                                                                  SedmlProperty.arg(SEDMLSupport::Style,
+                                                                                                    SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Size,
+                                                                                                    stringValue(symbolProperties[1]))
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Color,
+                                                                                                    stringValue(symbolProperties[2]))
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Filled,
+                                                                                                    stringValue(symbolProperties[3]))
+                                                                                 +SedmlProperty.arg(SEDMLSupport::FillColor,
+                                                                                                    stringValue(symbolProperties[4])))).toStdString());
         }
     }
 
@@ -2213,7 +2293,7 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
 
 //==============================================================================
 
-bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
+bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 {
     // Customise our simulation widget
 
@@ -2353,8 +2433,8 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                     continue;
                 }
 
-                QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyId.toStdString())));
-                QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::SolverPropertyValue.toStdString())));
+                QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Id.toStdString())));
+                QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
                 bool propertySet = false;
 
                 foreach (Core::Property *solverProperty, solverProperties) {
@@ -2393,7 +2473,7 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
             }
 
             mustHaveNlaSolver = true;
-            nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::NlaSolverName.toStdString())));
+            nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::Name.toStdString())));
 
             foreach (SolverInterface *solverInterface, solverInterfaces) {
                 if (!nlaSolverName.compare(solverInterface->solverName())) {
@@ -2417,42 +2497,165 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
         }
     }
 
-    // Add/remove some graph panels, so that their number corresponds to the
-    // number of 2D outputs mentioned in the SED-ML file, this after having made
-    // sure that the current graph panels are all of the same size and that the
-    // first one is selected
+    // Start afresh by removing all the graph panels, but the last one
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
-    int oldNbOfGraphPanels = graphPanelsWidget->graphPanels().count();
+
+    graphPanelsWidget->removeAllGraphPanels();
+
+    // Add some graph panels, so that their number corresponds to the number of
+    // 2D outputs mentioned in the SED-ML file, and select the first one
+
     int newNbOfGraphPanels = sedmlDocument->getNumOutputs();
 
-    graphPanelsWidget->setSizes(QIntList());
-
-    if (newNbOfGraphPanels > oldNbOfGraphPanels) {
-        for (uint i = 0, iMax = newNbOfGraphPanels-oldNbOfGraphPanels; i < iMax; ++i)
-            graphPanelsWidget->addGraphPanel(false);
-    } else if (newNbOfGraphPanels < oldNbOfGraphPanels) {
-        for (uint i = 0, iMax = oldNbOfGraphPanels-newNbOfGraphPanels; i < iMax; ++i)
-            graphPanelsWidget->removeCurrentGraphPanel();
-    }
+    while (graphPanelsWidget->graphPanels().count() != newNbOfGraphPanels)
+        graphPanelsWidget->addGraphPanel(false);
 
     graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
-    // Customise our graphs widget
+    // Customise our graph panel and graphs
+
+    QIntList graphPanelsWidgetSizes = QIntList();
 
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
+        // Customise our graph panel
+
+        static const QString True = "true";
+
         libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
         GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
+        SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
+
+        graphPanelAndGraphsWidget->reinitialize(graphPanel);
+
+        annotation = sedmlPlot2d->getAnnotation();
+
+        if (annotation) {
+            Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelProperties(graphPanel);
+
+            for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+                const libsbml::XMLNode &sedmlPlot2dPropertiesNode = annotation->getChild(i);
+
+                if (   QString::fromStdString(sedmlPlot2dPropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                    || QString::fromStdString(sedmlPlot2dPropertiesNode.getName()).compare(SEDMLSupport::Properties)) {
+                    continue;
+                }
+
+                for (uint j = 0, jMax = sedmlPlot2dPropertiesNode.getNumChildren(); j < jMax; ++j) {
+                    const libsbml::XMLNode &sedmlPlot2dPropertyNode = sedmlPlot2dPropertiesNode.getChild(j);
+                    QString sedmlPlot2dPropertyNodeName = QString::fromStdString(sedmlPlot2dPropertyNode.getName());
+                    QString sedmlPlot2dPropertyNodeValue = QString::fromStdString(sedmlPlot2dPropertyNode.getChild(0).getCharacters());
+
+                    if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::BackgroundColor)) {
+                        graphPanelProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
+                    } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::FontSize)) {
+                        graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
+                    } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::ForegroundColor)) {
+                        graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
+                    } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Height)) {
+                        graphPanelsWidgetSizes << sedmlPlot2dPropertyNodeValue.toInt();
+                    } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Title)) {
+                        graphPanelProperties[5]->setValue(sedmlPlot2dPropertyNodeValue);
+                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::GridLines)) {
+                        Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
+
+                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            const libsbml::XMLNode &gridLinesPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                            QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
+                            QString gridLinesPropertyNodeValue = QString::fromStdString(gridLinesPropertyNode.getChild(0).getCharacters());
+
+                            if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Style)) {
+                                gridLinesProperties[0]->setValue(gridLinesPropertyNodeValue);
+                            } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Width)) {
+                                gridLinesProperties[1]->setValue(gridLinesPropertyNodeValue);
+                            } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Color)) {
+                                gridLinesProperties[2]->setValue(gridLinesPropertyNodeValue);
+                            }
+                        }
+                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::PointCoordinates)) {
+                        Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
+
+                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            const libsbml::XMLNode &pointCoordinatesPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                            QString pointCoordinatesPropertyNodeName = QString::fromStdString(pointCoordinatesPropertyNode.getName());
+                            QString pointCoordinatesPropertyNodeValue = QString::fromStdString(pointCoordinatesPropertyNode.getChild(0).getCharacters());
+
+                            if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::Style)) {
+                                pointCoordinatesProperties[0]->setValue(pointCoordinatesPropertyNodeValue);
+                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::Width)) {
+                                pointCoordinatesProperties[1]->setValue(pointCoordinatesPropertyNodeValue);
+                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::Color)) {
+                                pointCoordinatesProperties[2]->setValue(pointCoordinatesPropertyNodeValue);
+                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::FontColor)) {
+                                pointCoordinatesProperties[3]->setValue(pointCoordinatesPropertyNodeValue);
+                            }
+                        }
+                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::XAxis)) {
+                        Core::Properties xAxisProperties = graphPanelProperties[6]->properties();
+
+                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            const libsbml::XMLNode &xAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                            QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
+                            QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
+
+                            if (!xAxisPropertyNodeName.compare(SEDMLSupport::LogarithmicScale)) {
+                                xAxisProperties[0]->setBooleanValue(!xAxisPropertyNodeValue.compare(True));
+                            } else if (!xAxisPropertyNodeName.compare(SEDMLSupport::Title)) {
+                                xAxisProperties[1]->setValue(xAxisPropertyNodeValue);
+                            }
+                        }
+                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::YAxis)) {
+                        Core::Properties yAxisProperties = graphPanelProperties[7]->properties();
+
+                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            const libsbml::XMLNode &yAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                            QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
+                            QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
+
+                            if (!yAxisPropertyNodeName.compare(SEDMLSupport::LogarithmicScale)) {
+                                yAxisProperties[0]->setBooleanValue(!yAxisPropertyNodeValue.compare(True));
+                            } else if (!yAxisPropertyNodeName.compare(SEDMLSupport::Title)) {
+                                yAxisProperties[1]->setValue(yAxisPropertyNodeValue);
+                            }
+                        }
+                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::ZoomRegion)) {
+                        Core::Properties zoomRegionProperties = graphPanelProperties[8]->properties();
+
+                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                            const libsbml::XMLNode &zoomRegionPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                            QString zoomRegionPropertyNodeName = QString::fromStdString(zoomRegionPropertyNode.getName());
+                            QString zoomRegionPropertyNodeValue = QString::fromStdString(zoomRegionPropertyNode.getChild(0).getCharacters());
+
+                            if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Style)) {
+                                zoomRegionProperties[0]->setValue(zoomRegionPropertyNodeValue);
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Width)) {
+                                zoomRegionProperties[1]->setValue(zoomRegionPropertyNodeValue);
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Color)) {
+                                zoomRegionProperties[2]->setValue(zoomRegionPropertyNodeValue);
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::FontColor)) {
+                                zoomRegionProperties[3]->setValue(zoomRegionPropertyNodeValue);
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Filled)) {
+                                zoomRegionProperties[4]->setBooleanValue(!zoomRegionPropertyNodeValue.compare(True));
+                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::FillColor)) {
+                                zoomRegionProperties[5]->setValue(zoomRegionPropertyNodeValue);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Customise our graphs
 
         graphPanel->removeAllGraphs();
 
         for (uint j = 0, jMax = sedmlPlot2d->getNumCurves(); j < jMax; ++j) {
             libsedml::SedCurve *sedmlCurve = sedmlPlot2d->getCurve(j);
-
-            if (!j) {
-                graphPanel->plot()->setLogAxisX(sedmlCurve->getLogX());
-                graphPanel->plot()->setLogAxisY(sedmlCurve->getLogY());
-            }
 
             CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getXDataReference())->getVariable(0));
             CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getYDataReference())->getVariable(0));
@@ -2480,7 +2683,7 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                     const libsbml::XMLNode &curvePropertiesNode = annotation->getChild(i);
 
                     if (   QString::fromStdString(curvePropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                        || QString::fromStdString(curvePropertiesNode.getName()).compare(SEDMLSupport::CurveProperties)) {
+                        || QString::fromStdString(curvePropertiesNode.getName()).compare(SEDMLSupport::Properties)) {
                         continue;
                     }
 
@@ -2488,8 +2691,8 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                         const libsbml::XMLNode &lineOrSymbolPropertiesNode = curvePropertiesNode.getChild(j);
                         QString lineOrSymbolPropertiesNodeName = QString::fromStdString(lineOrSymbolPropertiesNode.getName());
 
-                        bool isLinePropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SEDMLSupport::LineProperties);
-                        bool isSymbolPropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SEDMLSupport::SymbolProperties);
+                        bool isLinePropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SEDMLSupport::Line);
+                        bool isSymbolPropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SEDMLSupport::Symbol);
 
                         if (!isLinePropertiesNode && !isSymbolPropertiesNode)
                             continue;
@@ -2500,11 +2703,11 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                                 QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
                                 QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
 
-                                if (!linePropertyNodeName.compare(SEDMLSupport::LineStyle)) {
+                                if (!linePropertyNodeName.compare(SEDMLSupport::Style)) {
                                     lineStyle = Qt::PenStyle(SEDMLSupport::lineStyleValueIndex(linePropertyNodeValue));
-                                } else if (!linePropertyNodeName.compare(SEDMLSupport::LineWidth)) {
+                                } else if (!linePropertyNodeName.compare(SEDMLSupport::Width)) {
                                     lineWidth = linePropertyNodeValue.toDouble();
-                                } else if (!linePropertyNodeName.compare(SEDMLSupport::LineColor)) {
+                                } else if (!linePropertyNodeName.compare(SEDMLSupport::Color)) {
                                     lineColor.setNamedColor(linePropertyNodeValue);
                                 }
                             }
@@ -2514,17 +2717,17 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                                 QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
                                 QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
-                                if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolStyle)) {
+                                if (!symbolPropertyNodeName.compare(SEDMLSupport::Style)) {
                                     int symbolStyleValue = SEDMLSupport::symbolStyleValueIndex(symbolPropertyNodeValue);
 
                                     symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
-                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolSize)) {
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Size)) {
                                     symbolSize = symbolPropertyNodeValue.toInt();
-                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolColor)) {
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Color)) {
                                     symbolColor.setNamedColor(symbolPropertyNodeValue);
-                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolFilled)) {
-                                    symbolFilled = !symbolPropertyNodeValue.compare("true");
-                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::SymbolFillColor)) {
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Filled)) {
+                                    symbolFilled = !symbolPropertyNodeValue.compare(True);
+                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::FillColor)) {
                                     symbolFillColor.setNamedColor(symbolPropertyNodeValue);
                                 }
                             }
@@ -2537,6 +2740,8 @@ bool SimulationExperimentViewSimulationWidget::doFurtherInitialize()
                                  GraphPanelWidget::GraphPanelPlotGraphProperties( lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
         }
     }
+
+    graphPanelsWidget->setSizes(graphPanelsWidgetSizes);
 
     return true;
 }
@@ -2556,22 +2761,6 @@ void SimulationExperimentViewSimulationWidget::initializeGui(const bool &pValidS
 
     mBottomSeparator->setVisible(pValidSimulationEnvironment);
     mProgressBarWidget->setVisible(pValidSimulationEnvironment);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::furtherInitialize()
-{
-    // Further initialise ourselves, update our GUI (by reinitialising it) and
-    // initialise our simulation, if we still have a valid simulation
-    // environment
-
-    bool validSimulationEnvironment = doFurtherInitialize();
-
-    initializeGui(validSimulationEnvironment);
-
-    if (validSimulationEnvironment)
-        initializeSimulation();
 }
 
 //==============================================================================
@@ -2866,19 +3055,23 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
 
     connect(plot, SIGNAL(axesChanged(const double &, const double &, const double &, const double &)),
             this, SLOT(plotAxesChanged()));
+
+    // Let people know when some graph panel settings or graphs settings have
+    // been requested
+
+    connect(plot, SIGNAL(graphPanelSettingsRequested()),
+            this, SIGNAL(graphPanelSettingsRequested()));
+    connect(plot, SIGNAL(graphsSettingsRequested()),
+            this, SIGNAL(graphsSettingsRequested()));
 }
 
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
-    // A graph panel has been removed, so stop tracking its plot and the fact
-    // that we wanted to know if its axes had been changed
+    // A graph panel has been removed, so stop tracking it
 
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
-
-    disconnect(plot, SIGNAL(axesChanged(const double &, const double &, const double &, const double &)),
-               this, SLOT(plotAxesChanged()));
 
     mPlots.removeOne(plot);
     mUpdatablePlotViewports.remove(plot);
@@ -2998,18 +3191,6 @@ void SimulationExperimentViewSimulationWidget::graphUpdated(OpenCOR::GraphPanelW
     // plots are up to date
 
     graphsUpdated(GraphPanelWidget::GraphPanelPlotGraphs() << pGraph);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::graphVisualUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
-{
-    // The visual aspect of the given graph has changed, so replot it
-
-    pGraph->plot()->replot();
-
-    QCoreApplication::processEvents();
-    // Note: this ensures that our plot is updated at once...
 }
 
 //==============================================================================
@@ -3210,9 +3391,9 @@ void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisib
     if (pCheckVisibility && !isVisible())
         return;
 
-    // Make sure that our graphs widget's GUI is up to date
+    // Make sure that our graph panel and graphs widget's GUI is up to date
 
-    mContentsWidget->informationWidget()->graphsWidget()->updateGui();
+    mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->updateGui();
 
     // Make sure that our plots are up to date
     // Note: indeed, say that we start a simulation with some graphs and switch

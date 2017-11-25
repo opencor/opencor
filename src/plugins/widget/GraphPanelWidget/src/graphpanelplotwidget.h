@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "qwt_plot.h"
     #include "qwt_plot_curve.h"
     #include "qwt_scale_draw.h"
+    #include "qwt_scale_widget.h"
     #include "qwt_symbol.h"
     #include "qwt_text.h"
 #include "qwtend.h"
@@ -45,6 +46,7 @@ class QMenu;
 //==============================================================================
 
 class QwtPlotDirectPainter;
+class QwtPlotGrid;
 
 //==============================================================================
 
@@ -63,7 +65,7 @@ class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraphProperties
 {
 public:
     explicit GraphPanelPlotGraphProperties(const Qt::PenStyle &pLineStyle = Qt::SolidLine,
-                                           const double &pLineWidth = 1.0,
+                                           const int &pLineWidth = 1,
                                            const QColor &pLineColor = Qt::darkBlue,
                                            const QwtSymbol::Style &pSymbolStyle = QwtSymbol::NoSymbol,
                                            const int &pSymbolSize = 8,
@@ -72,7 +74,7 @@ public:
                                            const QColor &pSymbolFillColor = Qt::white);
 
     Qt::PenStyle lineStyle() const;
-    double lineWidth() const;
+    int lineWidth() const;
     QColor lineColor() const;
 
     QwtSymbol::Style symbolStyle() const;
@@ -83,7 +85,7 @@ public:
 
 private:
     Qt::PenStyle mLineStyle;
-    double mLineWidth;
+    int mLineWidth;
     QColor mLineColor;
 
     QwtSymbol::Style mSymbolStyle;
@@ -153,7 +155,7 @@ protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
-    enum Location {
+    enum Position {
         TopLeft,
         TopRight,
         BottomLeft,
@@ -169,9 +171,9 @@ private:
 
     void drawCoordinates(QPainter *pPainter, const QPoint &pPoint,
                          const QColor &pBackgroundColor,
-                         const QColor &pForegroundColor,
-                         const Location &pLocation,
-                         const bool &pCanMoveLocation = true);
+                         const QColor &pForegroundColor, const int &pLineWidth,
+                         const Position &pPosition,
+                         const bool &pCanMovePosition = true);
 };
 
 //==============================================================================
@@ -187,6 +189,14 @@ protected:
 
 //==============================================================================
 
+class GraphPanelScaleWidget : public QwtScaleWidget
+{
+public:
+    void updateLayout();
+};
+
+//==============================================================================
+
 typedef QList<GraphPanelPlotWidget *> GraphPanelPlotWidgets;
 
 //==============================================================================
@@ -196,9 +206,15 @@ class GRAPHPANELWIDGET_EXPORT GraphPanelPlotWidget : public QwtPlot,
 {
     Q_OBJECT
 
-    friend class GraphPanelPlotOverlayWidget;
-
 public:
+    enum Action {
+        None,
+        Pan,
+        ShowCoordinates,
+        Zoom,
+        ZoomRegion
+    };
+
     explicit GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbors,
                                   QAction *pSynchronizeXAxisAction,
                                   QAction *pSynchronizeYAxisAction,
@@ -224,11 +240,67 @@ public:
     double minY() const;
     double maxY() const;
 
+    QColor backgroundColor() const;
+    void setBackgroundColor(const QColor &pBackgroundColor);
+
+    int fontSize() const;
+    void setFontSize(const int &pFontSize, const bool &pForceSetting = false);
+
+    QColor foregroundColor() const;
+    void setForegroundColor(const QColor &pForegroundColor);
+
+    Qt::PenStyle gridLinesStyle() const;
+    void setGridLinesStyle(const Qt::PenStyle &pGridLinesStyle);
+
+    int gridLinesWidth() const;
+    void setGridLinesWidth(const int &pGridLinesWidth);
+
+    QColor gridLinesColor() const;
+    void setGridLinesColor(const QColor &pGridLinesColor);
+
+    Qt::PenStyle pointCoordinatesStyle() const;
+    void setPointCoordinatesStyle(const Qt::PenStyle &pPointCoordinatesStyle);
+
+    int pointCoordinatesWidth() const;
+    void setPointCoordinatesWidth(const int &pPointCoordinatesWidth);
+
+    QColor pointCoordinatesColor() const;
+    void setPointCoordinatesColor(const QColor &pPointCoordinatesColor);
+
+    QColor pointCoordinatesFontColor() const;
+    void setPointCoordinatesFontColor(const QColor &pPointCoordinatesFontColor);
+
+    void setTitle(const QString &pTitle);
+
     bool logAxisX() const;
     void setLogAxisX(const bool &pLogAxisX);
 
+    QString titleAxisX() const;
+    void setTitleAxisX(const QString &pTitleAxisX);
+
     bool logAxisY() const;
     void setLogAxisY(const bool &pLogAxisY);
+
+    QString titleAxisY() const;
+    void setTitleAxisY(const QString &pTitleAxisY);
+
+    Qt::PenStyle zoomRegionStyle() const;
+    void setZoomRegionStyle(const Qt::PenStyle &pZoomRegionStyle);
+
+    int zoomRegionWidth() const;
+    void setZoomRegionWidth(const int &pZoomRegionWidth);
+
+    QColor zoomRegionColor() const;
+    void setZoomRegionColor(const QColor &pZoomRegionColor);
+
+    QColor zoomRegionFontColor() const;
+    void setZoomRegionFontColor(const QColor &pZoomRegionFontColor);
+
+    bool zoomRegionFilled() const;
+    void setZoomRegionFilled(const bool &pZoomRegionFilled);
+
+    QColor zoomRegionFillColor() const;
+    void setZoomRegionFillColor(const QColor &pZoomRegionFillColor);
 
     void setDefaultAxesValues(const double &pDefaultMinX,
                               const double &pDefaultMaxX,
@@ -257,6 +329,15 @@ public:
                             const bool &pForceAlignment = false);
     void forceAlignWithNeighbors();
 
+    Action action() const;
+
+    bool canZoomInX() const;
+    bool canZoomOutX() const;
+    bool canZoomInY() const;
+    bool canZoomOutY() const;
+
+    QPointF canvasPoint(const QPoint &pPoint) const;
+
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
@@ -267,14 +348,6 @@ protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
-    enum Action {
-        None,
-        Pan,
-        ShowCoordinates,
-        Zoom,
-        ZoomRegion
-    };
-
     enum Scaling {
         BigScalingIn,
         ScalingIn,
@@ -284,6 +357,24 @@ private:
     };
 
     QwtPlotDirectPainter *mDirectPainter;
+
+    QColor mBackgroundColor;
+    QColor mForegroundColor;
+
+    Qt::PenStyle mPointCoordinatesStyle;
+    int mPointCoordinatesWidth;
+    QColor mPointCoordinatesColor;
+    QColor mPointCoordinatesFontColor;
+
+    Qt::PenStyle mZoomRegionStyle;
+    int mZoomRegionWidth;
+    QColor mZoomRegionColor;
+    QColor mZoomRegionFontColor;
+    bool mZoomRegionFilled;
+    QColor mZoomRegionFillColor;
+
+    bool mLogAxisX;
+    bool mLogAxisY;
 
     GraphPanelPlotGraphs mGraphs;
 
@@ -311,8 +402,8 @@ private:
     QAction *mCopyToClipboardAction;
     QAction *mSynchronizeXAxisAction;
     QAction *mSynchronizeYAxisAction;
-    QAction *mLogarithmicXAxisAction;
-    QAction *mLogarithmicYAxisAction;
+    QAction *mGraphPanelSettingsAction;
+    QAction *mGraphsSettingsAction;
     QAction *mCustomAxesAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
@@ -320,6 +411,8 @@ private:
 
     GraphPanelPlotScaleDraw *mAxisX;
     GraphPanelPlotScaleDraw *mAxisY;
+
+    QwtPlotGrid *mGrid;
 
     double mDefaultMinX;
     double mDefaultMaxX;
@@ -337,14 +430,7 @@ private:
 
     void updateActions();
 
-    Action action() const;
-
     void resetAction();
-
-    bool canZoomInX() const;
-    bool canZoomOutX() const;
-    bool canZoomInY() const;
-    bool canZoomOutY() const;
 
     QRectF realDataRect() const;
 
@@ -358,11 +444,14 @@ private:
     void scaleAxes(const QPoint &pPoint, const Scaling &pScalingX,
                    const Scaling &pScalingY);
 
-    QPointF canvasPoint(const QPoint &pPoint) const;
+    void setTitleAxis(const int &pAxisId, const QString &pTitleAxis);
 
 signals:
     void axesChanged(const double &pMinX, const double &pMaxX,
                      const double &pMinY, const double &pMaxY);
+
+    void graphPanelSettingsRequested();
+    void graphsSettingsRequested();
 
 private slots:
     void cannotUpdateActions();
@@ -370,8 +459,6 @@ private slots:
     void exportTo();
     void copyToClipboard();
     void customAxes();
-    void toggleLogAxisX();
-    void toggleLogAxisY();
     void zoomIn();
     void zoomOut();
     void resetZoom();

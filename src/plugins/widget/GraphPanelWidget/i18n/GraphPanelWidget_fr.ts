@@ -51,20 +51,20 @@
         <translation>Spécifier des axes personnalisés pour le panneau graphique</translation>
     </message>
     <message>
-        <source>Logarithmic X Axis</source>
-        <translation>Logarithmique Axe des X</translation>
+        <source>Graph Panel Settings...</source>
+        <translation>Paramètres Panneau Graphique...</translation>
     </message>
     <message>
-        <source>Enable/disable logarithmic scaling on the X axis</source>
-        <translation>Activer/désactiver l&apos;échelle logarithmique sur l&apos;axe des X</translation>
+        <source>Customise the graph panel</source>
+        <translation>Paramètrer le panneau graphique</translation>
     </message>
     <message>
-        <source>Logarithmic Y Axis</source>
-        <translation>Logarithmique Axe des Y</translation>
+        <source>Graphs Settings...</source>
+        <translation>Paramètres Graphes...</translation>
     </message>
     <message>
-        <source>Enable/disable logarithmic scaling on the Y axis</source>
-        <translation>Activer/désactiver l&apos;échelle logarithmique sur l&apos;axe des Y</translation>
+        <source>Customise the graphs</source>
+        <translation>Paramètrer les graphes</translation>
     </message>
     <message>
         <source>Zoom In</source>

@@ -185,7 +185,7 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(const
 {
     // Update our data
 
-    foreach (Core::Property *property, properties()) {
+    foreach (Core::Property *property, allProperties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter) {
@@ -303,7 +303,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
 
                 if (parentSectionProperty) {
                     // We have a parent section, so go through its children and
-                    // keep track of its propeties that are a section
+                    // retrieve the one for our current component
 
                     foreach (QObject *object, parentSectionProperty->children()) {
                         Core::Property *property = qobject_cast<Core::Property *>(object);
@@ -317,8 +317,8 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
                         }
                     }
                 } else {
-                    // We don't have a section, so go through our properties and
-                    // keep tack of those that are a section
+                    // We don't have a parent section, so go through our
+                    // properties and retrieve the one for our current component
 
                     foreach (Core::Property *property, properties()) {
                         if (    (property->type() == Core::Property::Section)
@@ -525,7 +525,7 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
 {
     // Update the extra info of all our properties
 
-    foreach (Core::Property *property, properties()) {
+    foreach (Core::Property *property, allProperties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter) {

@@ -217,7 +217,7 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
     // Hide our Simulation Experiment view widget since it may not initially be
     // shown in  our central widget
 
-    mViewWidget->setVisible(false);
+    mViewWidget->hide();
 
     // Save the view widget for our Python wrapper
 
