@@ -2746,10 +2746,20 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
     // the gap between the Y axis and its corresponding title)
 
     GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
+    int oldMinBorderDistStartX = 0;
+    int oldMinBorderDistEndX = 0;
+    int newMinBorderDistStartX = 0;
+    int newMinBorderDistEndX = 0;
     double oldMinExtentY = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
     double newMinExtentY = 0;
 
+    axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
+
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+        QwtScaleWidget *xScaleWidget = plot->axisWidget(QwtPlot::xBottom);
+
+        xScaleWidget->setMinBorderDist(0, 0);
+
         QwtScaleWidget *yScaleWidget = plot->axisWidget(QwtPlot::yLeft);
         QwtScaleDraw *yScaleDraw = yScaleWidget->scaleDraw();
 
@@ -2758,6 +2768,14 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
         plot->updateAxes();
         // Note: this ensures that our major ticks (which are used to compute
         //       the extent) are up to date...
+
+        int minBorderDistStartX;
+        int minBorderDistEndX;
+
+        xScaleWidget->getBorderDistHint(minBorderDistStartX, minBorderDistEndX);
+
+        newMinBorderDistStartX = qMax(newMinBorderDistStartX, minBorderDistStartX);
+        newMinBorderDistEndX = qMax(newMinBorderDistEndX, minBorderDistEndX);
 
         double minExtentY =  yScaleDraw->extent(yScaleWidget->font())
                             +(plot->titleAxisY().isEmpty()?
@@ -2768,6 +2786,10 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
     }
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+        GraphPanelPlotScaleWidget *xScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::xBottom));
+
+        xScaleWidget->setMinBorderDist(newMinBorderDistStartX, newMinBorderDistEndX);
+
         GraphPanelPlotScaleWidget *yScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::yLeft));
 
         yScaleWidget->scaleDraw()->setMinimumExtent( newMinExtentY
@@ -2776,8 +2798,18 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
                                                           yScaleWidget->spacing()+yScaleWidget->title().textSize().height()));
 
         if (pCanReplot) {
-            if (pForceAlignment || (newMinExtentY != oldMinExtentY)) {
-                yScaleWidget->updateLayout();
+            if (    pForceAlignment
+                || (newMinBorderDistStartX != oldMinBorderDistStartX)
+                || (newMinBorderDistEndX != oldMinBorderDistEndX)
+                || (newMinExtentY != oldMinExtentY)) {
+                if (    pForceAlignment
+                    || (newMinBorderDistStartX != oldMinBorderDistStartX)
+                    || (newMinBorderDistEndX != oldMinBorderDistEndX)) {
+                    xScaleWidget->updateLayout();
+                }
+
+                if (pForceAlignment || (newMinExtentY != oldMinExtentY))
+                    yScaleWidget->updateLayout();
 
                 plot->replot();
             } else if (plot == this) {
