@@ -2746,39 +2746,38 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
     // the gap between the Y axis and its corresponding title)
 
     GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
-    double oldMinExtent = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
-    double newMinExtent = 0;
+    double oldMinExtentY = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
+    double newMinExtentY = 0;
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-        QwtScaleWidget *scaleWidget = plot->axisWidget(QwtPlot::yLeft);
-        QwtScaleDraw *scaleDraw = scaleWidget->scaleDraw();
+        QwtScaleWidget *yScaleWidget = plot->axisWidget(QwtPlot::yLeft);
+        QwtScaleDraw *yScaleDraw = yScaleWidget->scaleDraw();
 
-        scaleDraw->setMinimumExtent(0.0);
+        yScaleDraw->setMinimumExtent(0.0);
 
         plot->updateAxes();
         // Note: this ensures that our major ticks (which are used to compute
         //       the extent) are up to date...
 
-        double minExtent =  scaleDraw->extent(scaleWidget->font())
-                           +(plot->titleAxisY().isEmpty()?
-                                 0:
-                                 scaleWidget->spacing()+scaleWidget->title().textSize().height());
+        double minExtentY =  yScaleDraw->extent(yScaleWidget->font())
+                            +(plot->titleAxisY().isEmpty()?
+                                  0:
+                                  yScaleWidget->spacing()+yScaleWidget->title().textSize().height());
 
-        if (minExtent > newMinExtent)
-            newMinExtent = minExtent;
+        newMinExtentY = qMax(newMinExtentY, minExtentY);
     }
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-        GraphPanelPlotScaleWidget *scaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::yLeft));
+        GraphPanelPlotScaleWidget *yScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::yLeft));
 
-        scaleWidget->scaleDraw()->setMinimumExtent( newMinExtent
-                                                   -(plot->titleAxisY().isEmpty()?
-                                                         0:
-                                                         scaleWidget->spacing()+scaleWidget->title().textSize().height()));
+        yScaleWidget->scaleDraw()->setMinimumExtent( newMinExtentY
+                                                    -(plot->titleAxisY().isEmpty()?
+                                                          0:
+                                                          yScaleWidget->spacing()+yScaleWidget->title().textSize().height()));
 
         if (pCanReplot) {
-            if (pForceAlignment || (newMinExtent != oldMinExtent)) {
-                scaleWidget->updateLayout();
+            if (pForceAlignment || (newMinExtentY != oldMinExtentY)) {
+                yScaleWidget->updateLayout();
 
                 plot->replot();
             } else if (plot == this) {
