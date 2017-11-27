@@ -666,14 +666,15 @@ QString urlArguments(const QUrl &pUrl)
 {
     // Return the arguments (path) of the given URL
     // Note #1: we would normally retrieve the path using pUrl.path(), but this
-    //          doesn't work when there are spaces, so instead we adjust the URL
-    //          by removing its scheme and authority, and return it as a
-    //          string...
+    //          doesn't work when there are spaces, so instead we convert the
+    //          URL to a string and remove its scheme and authority (since
+    //          QUrl::adjusted() doesn't work the same as before; see
+    //          https://bugreports.qt.io/browse/QTBUG-64793)...
     // Note #2: we use "|" to separate arguments, but they get converted to
     //          "%7C" and there doesn't seem to be a way to convert them back,
     //          so we do it ourselves...
 
-    return pUrl.adjusted(QUrl::RemoveScheme|QUrl::RemoveAuthority).toString().remove(0, 1).replace("%7C", "|");
+    return pUrl.toString().remove(QString("%1://%2/").arg(pUrl.scheme(), pUrl.authority())).replace("%7C", "|");
 }
 
 //==============================================================================
