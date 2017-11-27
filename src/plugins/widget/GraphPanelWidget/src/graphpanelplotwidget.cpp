@@ -1461,25 +1461,25 @@ void GraphPanelPlotWidget::setForegroundColor(const QColor &pForegroundColor)
 
         // X axis
 
-        QwtScaleWidget *axis = axisWidget(QwtPlot::xBottom);
-        QPalette newPalette = axis->palette();
+        QwtScaleWidget *scaleWidget = axisWidget(QwtPlot::xBottom);
+        QPalette newPalette = scaleWidget->palette();
 
         newPalette.setColor(QPalette::Text, pForegroundColor);
         newPalette.setColor(QPalette::WindowText, pForegroundColor);
 
-        axis->setPalette(newPalette);
+        scaleWidget->setPalette(newPalette);
 
         setTitleAxisX(titleAxisX());
 
         // Y axis
 
-        axis = axisWidget(QwtPlot::yLeft);
-        newPalette = axis->palette();
+        scaleWidget = axisWidget(QwtPlot::yLeft);
+        newPalette = scaleWidget->palette();
 
         newPalette.setColor(QPalette::Text, pForegroundColor);
         newPalette.setColor(QPalette::WindowText, pForegroundColor);
 
-        axis->setPalette(newPalette);
+        scaleWidget->setPalette(newPalette);
 
         setTitleAxisY(titleAxisY());
     }
