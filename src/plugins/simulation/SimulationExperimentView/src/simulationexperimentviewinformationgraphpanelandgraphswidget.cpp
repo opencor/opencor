@@ -1315,6 +1315,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = mGraphPanels.value(propertyEditor)->plot();
     Core::Properties properties = propertyEditor->properties();
 
+    QCoreApplication::processEvents();
+    // Note: this ensures that our GUI is all fine before we start disabling
+    //       updates...
+
     graphPanelPlot->setUpdatesEnabled(false);
 
     graphPanelPlot->setBackgroundColor(properties[0]->colorValue());

@@ -698,10 +698,16 @@ void FileManager::checkFiles()
     if (!Core::opencorActive() || !mCheckFilesEnabled)
         return;
 
-    // Check our various files, as well as their locked status, but only if they
-    // are not being ignored
+    // Check our various files, after making sure that they are still being
+    // managed
+    // Note: indeed, some files may get added/removed while we are checking
+    //       them, and to check a file that has been removed will crash
+    //       OpenCOR...
 
     foreach (File *file, mFiles) {
+        if (!mFiles.values().contains(file))
+            continue;
+
         QString fileName = file->fileName();
         File::Status fileStatus = file->check();
 
