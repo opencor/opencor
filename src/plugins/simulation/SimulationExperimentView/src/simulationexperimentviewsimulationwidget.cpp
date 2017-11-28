@@ -680,6 +680,11 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloadingView)
 {
+    QCoreApplication::processEvents();
+    // Note: this ensures that our GUI is all fine before we start disabling
+    //       updates (e.g. when reloading a SED-ML file that references a remote
+    //       CellML file)...
+
     setUpdatesEnabled(false);
 
     // Stop keeping track of certain things (so that updatePlot() doesn't get
