@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "qwtbegin.h"
+    #include "qwt_legend.h"
     #include "qwt_plot.h"
     #include "qwt_plot_curve.h"
     #include "qwt_scale_draw.h"
@@ -64,7 +65,8 @@ static const double DefaultMaxAxis    = 1000.0;
 class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraphProperties
 {
 public:
-    explicit GraphPanelPlotGraphProperties(const Qt::PenStyle &pLineStyle = Qt::SolidLine,
+    explicit GraphPanelPlotGraphProperties(const QString &pTitle = QString(),
+                                           const Qt::PenStyle &pLineStyle = Qt::SolidLine,
                                            const int &pLineWidth = 1,
                                            const QColor &pLineColor = Qt::darkBlue,
                                            const QwtSymbol::Style &pSymbolStyle = QwtSymbol::NoSymbol,
@@ -72,6 +74,8 @@ public:
                                            const QColor &pSymbolColor = Qt::darkBlue,
                                            const bool &pSymbolFilled = true,
                                            const QColor &pSymbolFillColor = Qt::white);
+
+    QString title() const;
 
     Qt::PenStyle lineStyle() const;
     int lineWidth() const;
@@ -84,6 +88,8 @@ public:
     QColor symbolFillColor() const;
 
 private:
+    QString mTitle;
+
     Qt::PenStyle mLineStyle;
     int mLineWidth;
     QColor mLineColor;
@@ -189,11 +195,58 @@ protected:
 
 //==============================================================================
 
-class GraphPanelScaleWidget : public QwtScaleWidget
+class GraphPanelPlotScaleWidget : public QwtScaleWidget
 {
 public:
     void updateLayout();
 };
+
+//==============================================================================
+
+class GraphPanelPlotLegendWidget : public QwtLegend
+{
+    Q_OBJECT
+
+public:
+    explicit GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pParent);
+
+    bool isActive() const;
+    void setActive(const bool &pActive);
+
+    virtual bool isEmpty() const;
+
+    void setChecked(const int &pIndex, const bool &pChecked);
+
+    void setFontSize(const int &pFontSize);
+    void setForegroundColor(const QColor &pForegroundColor);
+
+    void renderLegend(QPainter *pPainter, const QRectF &pRect,
+                      bool pFillBackground) const;
+
+    virtual QSize sizeHint() const;
+
+protected:
+    virtual void updateWidget(QWidget *pWidget,
+                              const QwtLegendData &pLegendData);
+
+private:
+    GraphPanelPlotWidget *mOwner;
+
+    bool mActive;
+
+    int mFontSize;
+    QColor mForegroundColor;
+
+signals:
+    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+
+private slots:
+    void checked(const QVariant &pItemInfo);
+};
+
+//==============================================================================
+
+class GraphPanelWidget;
 
 //==============================================================================
 
@@ -218,15 +271,19 @@ public:
     explicit GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbors,
                                   QAction *pSynchronizeXAxisAction,
                                   QAction *pSynchronizeYAxisAction,
-                                  QWidget *pParent);
+                                  GraphPanelWidget *pParent);
     ~GraphPanelPlotWidget();
 
     virtual void retranslateUi();
+
+    void setActive(const bool &pActive);
 
     GraphPanelPlotGraphs graphs() const;
 
     bool addGraph(GraphPanelPlotGraph *pGraph);
     bool removeGraph(GraphPanelPlotGraph *pGraph);
+
+    int graphIndex(GraphPanelPlotGraph *pGraph) const;
 
     bool hasData() const;
 
@@ -257,6 +314,11 @@ public:
 
     QColor gridLinesColor() const;
     void setGridLinesColor(const QColor &pGridLinesColor);
+
+    bool isLegendActive() const;
+    void setLegendActive(const bool &pLegendActive);
+
+    void setLegendWidth(const int &pLegendWidth);
 
     Qt::PenStyle pointCoordinatesStyle() const;
     void setPointCoordinatesStyle(const Qt::PenStyle &pPointCoordinatesStyle);
@@ -317,8 +379,7 @@ public:
                  const bool &pForceXAxisSetting = false,
                  const bool &pForceYAxisSetting = false);
 
-    bool drawGraphFrom(GraphPanelPlotGraph *pGraph,
-                       const qulonglong &pFrom);
+    bool drawGraphFrom(GraphPanelPlotGraph *pGraph, const qulonglong &pFrom);
 
     GraphPanelPlotWidgets neighbors() const;
 
@@ -356,6 +417,8 @@ private:
         BigScalingOut
     };
 
+    GraphPanelWidget *mOwner;
+
     QwtPlotDirectPainter *mDirectPainter;
 
     QColor mBackgroundColor;
@@ -385,6 +448,8 @@ private:
 
     GraphPanelPlotOverlayWidget *mOverlayWidget;
 
+    GraphPanelPlotLegendWidget *mLegend;
+
     bool mCanDirectPaint;
     bool mCanReplot;
 
@@ -404,6 +469,9 @@ private:
     QAction *mSynchronizeYAxisAction;
     QAction *mGraphPanelSettingsAction;
     QAction *mGraphsSettingsAction;
+    QAction *mLegendAction;
+    QAction *mLogarithmicXAxisAction;
+    QAction *mLogarithmicYAxisAction;
     QAction *mCustomAxesAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
@@ -452,6 +520,13 @@ signals:
 
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
+
+    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+
+    void legendToggled();
+
+    void logarithmicXAxisToggled();
+    void logarithmicYAxisToggled();
 
 private slots:
     void cannotUpdateActions();

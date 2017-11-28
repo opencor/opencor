@@ -293,15 +293,12 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
                 foreach (const QItemSelectionRange &itemSelectionRange, selection) {
                     QModelIndex parent = itemSelectionRange.parent();
 
-                    if (itemSelectionRange.left())
-                        continue;
-
-                    if (itemSelectionRange.right() != (model()->columnCount(parent)-1))
-                        continue;
-
-                    model()->removeRows(itemSelectionRange.top(),
-                                        itemSelectionRange.bottom()-itemSelectionRange.top()+1,
-                                        parent);
+                    if (   !itemSelectionRange.left()
+                        && (itemSelectionRange.right() == (model()->columnCount(parent)-1))) {
+                        model()->removeRows(itemSelectionRange.top(),
+                                            itemSelectionRange.bottom()-itemSelectionRange.top()+1,
+                                            parent);
+                    }
                 }
             } else {
                 // We can't remove the rows so reset the items (i.e. the view

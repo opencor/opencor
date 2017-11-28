@@ -236,9 +236,6 @@ private:
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                          const qulonglong &pSize);
 
-    QVariant value(Core::Property *pProperty) const;
-    QString stringValue(Core::Property *pProperty) const;
-
     void updateSimulationProperties(Core::Property *pProperty = 0);
     void updateSolversProperties(Core::Property *pProperty = 0);
 
@@ -265,6 +262,13 @@ signals:
 
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
+
+    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+
+    void legendToggled();
+
+    void logarithmicXAxisToggled();
+    void logarithmicYAxisToggled();
 
 private slots:
     void runPauseResumeSimulation();

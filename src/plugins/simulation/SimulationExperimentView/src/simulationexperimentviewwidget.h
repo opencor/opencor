@@ -138,6 +138,13 @@ private slots:
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 
+    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+
+    void legendToggled();
+
+    void logarithmicXAxisToggled();
+    void logarithmicYAxisToggled();
+
     void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
 
     void simulationHeaderSectionResized(const int &pIndex, const int &pOldSize,
