@@ -43,8 +43,8 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>APIs:</strong> have HAVE_IEEEFP_H properly set in the libSBML, libNuML and libSEDML packages under Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/1432\">#1432</a>). Upgraded the libSEDML package to version 0.4.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1433\">#1433</a>)." },
-                       { "change": "<strong>GraphPanel widget:</strong> can now export a graph panel to various formats (e.g. PDF, PNG, SVG) (see issue <a href=\"https://github.com/opencor/opencor/issues/1123\">#1123</a>). Greatly improved our support for log scales (see issue <a href=\"https://github.com/opencor/opencor/issues/1412\">#1412</a>)." },
-                       { "change": "<strong>SimulationExperiment view:</strong> added support for the alpha channel in the colours used to customise a graph. Made sure that the GUI is properly initialised when (re)loading a SED-ML file." }
+                       { "change": "<strong>Graph panel widget:</strong> can now export a graph panel to various formats (e.g. PDF, PNG, SVG) (see issue <a href=\"https://github.com/opencor/opencor/issues/1123\">#1123</a>). Greatly improved our support for log scales (see issue <a href=\"https://github.com/opencor/opencor/issues/1412\">#1412</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> added support for the alpha channel in the colours used to customise a graph. Made sure that the GUI is properly initialised when (re)loading a SED-ML file." }
                      ]
                    },
                    { "major": 0, "minor": 0, "patch": 0, "day": 25, "month": 9, "year": 2017, "type": 2,
@@ -68,7 +68,7 @@ var jsonData = { "versions": [
                      "changes": [
                        { "change": "<strong>ZIP support:</strong> use 755 for directories and 644 for files, if no file permissions are set (see issue <a href=\"https://github.com/opencor/opencor/issues/1417\">#1417</a>)." },
                        { "change": "<strong>Text-based editors:</strong> added line numbers (see issue <a href=\"https://github.com/opencor/opencor/issues/1413\">#1413</a>)." },
-                       { "change": "<strong>SimulationExperiment view:</strong> added the ability to customise a graph (see issue <a href=\"https://github.com/opencor/opencor/issues/591\">#591</a>)." }
+                       { "change": "<strong>Simulation Experiment view:</strong> added the ability to customise a graph (see issue <a href=\"https://github.com/opencor/opencor/issues/591\">#591</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 0, "patch": 0, "day": 13, "month": 9, "year": 2017, "type": 2,
@@ -91,7 +91,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>General:</strong> use <a href=\"https://www.docker.com/\">Docker</a> with <a href=\"https://en.wikipedia.org/wiki/Ubuntu_(operating_system)\">Ubuntu</a> 16.04 LTS on <a href=\"https://travis-ci.org/\">Travis CI</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/1395\">#1395</a>)." },
-                       { "change": "<strong>GraphPanel widget:</strong> fixed and improved the synchronisation of axes. Added support for log scales (see issue <a href=\"https://github.com/opencor/opencor/issues/1299\">#1299</a>)." },
+                       { "change": "<strong>Graph panel widget:</strong> fixed and improved the synchronisation of axes. Added support for log scales (see issue <a href=\"https://github.com/opencor/opencor/issues/1299\">#1299</a>)." },
                        { "change": "<strong>Solvers:</strong> reference <a href=\"https://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a>/<a href=\"https://computation.llnl.gov/projects/sundials/idas\">IDAS</a> rather than <a href=\"https://computation.llnl.gov/projects/sundials/cvode\">CVODE</a>/<a href=\"https://computation.llnl.gov/projects/sundials/ida\">IDA</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/1405\">#1405</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://khan.github.io/KaTeX/\">KaTeX</a> to version 0.8.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1401\">#1401</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 5.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1407\">#1407</a>)." }
                      ]
@@ -168,7 +168,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>General:</strong> our API and third-party libraries are now taking advantage of our new packaging mechanism (see issue <a href=\"https://github.com/opencor/opencor/issues/1306\">#1306</a>). OpenGL now works in an Ubuntu virtual machine (see issue <a href=\"https://github.com/opencor/opencor/issues/1307\">#1307</a>). Added OpenSSL as a third-party plugin (see issues <a href=\"https://github.com/opencor/opencor/issues/1101\">#1101</a> and <a href=\"https://github.com/opencor/opencor/issues/1314\">#1314</a>). Can now open remote binary files (see issue <a href=\"https://github.com/opencor/opencor/issues/1319\">#1319</a>)." },
-                       { "change": "<strong>GraphPanel widget:</strong> improved the plotting of small values (see issue <a href=\"https://github.com/opencor/opencor/issues/1322\">#1322</a>)." },
+                       { "change": "<strong>Graph panel widget:</strong> improved the plotting of small values (see issue <a href=\"https://github.com/opencor/opencor/issues/1322\">#1322</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2l (see issue <a href=\"https://github.com/opencor/opencor/issues/1318\">#1318</a>)." }
                      ]
                    },
