@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>Graph panel widget:</strong> now prevent the plot canvas can from becoming black in some cases (see issue <a href=\"https://github.com/opencor/opencor/issues/1475\">#1475</a>)." },
                        { "change": "<strong>Simulation Experiment view:</strong> can now distinguish between the background colour of the plot area and that of the surrounding area (see issue <a href=\"https://github.com/opencor/opencor/issues/1473\">#1473</a>)." }
                      ]
                    },

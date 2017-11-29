@@ -80,6 +80,7 @@ var jsonData = { "versions": [
                                { "type": "Added", "description": "Ability to show the legend of a graph panel." },
                                { "type": "Added", "description": "Export a graph panel to various formats (e.g. PDF, PNG, SVG)." },
                                { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
+                               { "type": "Improved", "description": "Plotting of simulations." },
                                { "type": "Improved", "description": "Running of long simulations." },
                                { "type": "Improved", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
                                { "type": "Fixed", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
