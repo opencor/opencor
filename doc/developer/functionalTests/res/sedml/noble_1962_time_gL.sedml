@@ -107,7 +107,6 @@
                 <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#ffffff</backgroundColor>
                     <fontSize>10</fontSize>
-                    <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
                     <legend>false</legend>
                     <title/>
@@ -122,6 +121,10 @@
                         <color>#b0008080</color>
                         <fontColor>#ffffff</fontColor>
                     </pointCoordinates>
+                    <surroundingArea>
+                        <backgroundColor>#ececec</backgroundColor>
+                        <foregroundColor>#000000</foregroundColor>
+                    </surroundingArea>
                     <xAxis>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
@@ -167,7 +170,6 @@
                 <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#ffffff</backgroundColor>
                     <fontSize>10</fontSize>
-                    <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
                     <legend>false</legend>
                     <title/>
@@ -182,6 +184,10 @@
                         <color>#b0008080</color>
                         <fontColor>#ffffff</fontColor>
                     </pointCoordinates>
+                    <surroundingArea>
+                        <backgroundColor>#ececec</backgroundColor>
+                        <foregroundColor>#000000</foregroundColor>
+                    </surroundingArea>
                     <xAxis>
                         <logarithmicScale>true</logarithmicScale>
                         <title/>
@@ -227,7 +233,6 @@
                 <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#ffffff</backgroundColor>
                     <fontSize>10</fontSize>
-                    <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
                     <legend>false</legend>
                     <title/>
@@ -242,6 +247,10 @@
                         <color>#b0008080</color>
                         <fontColor>#ffffff</fontColor>
                     </pointCoordinates>
+                    <surroundingArea>
+                        <backgroundColor>#ececec</backgroundColor>
+                        <foregroundColor>#000000</foregroundColor>
+                    </surroundingArea>
                     <xAxis>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
@@ -287,7 +296,6 @@
                 <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#ffffff</backgroundColor>
                     <fontSize>10</fontSize>
-                    <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
                     <legend>false</legend>
                     <title/>
@@ -302,6 +310,10 @@
                         <color>#b0008080</color>
                         <fontColor>#ffffff</fontColor>
                     </pointCoordinates>
+                    <surroundingArea>
+                        <backgroundColor>#ececec</backgroundColor>
+                        <foregroundColor>#000000</foregroundColor>
+                    </surroundingArea>
                     <xAxis>
                         <logarithmicScale>true</logarithmicScale>
                         <title/>
