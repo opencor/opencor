@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Simulation Experiment view:</strong> can now distinguish between the background colour for the plot area and the surrounding area (see issue <a href=\"https://github.com/opencor/opencor/issues/1473\">#1473</a>)." }
+                       { "change": "<strong>Simulation Experiment view:</strong> can now distinguish between the background colour of the plot area and that of the surrounding area (see issue <a href=\"https://github.com/opencor/opencor/issues/1473\">#1473</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
