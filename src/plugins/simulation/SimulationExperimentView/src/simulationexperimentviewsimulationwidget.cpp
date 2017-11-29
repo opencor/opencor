@@ -2520,10 +2520,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
                         } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Height)) {
                             graphPanelsWidgetSizes << sedmlPlot2dPropertyNodeValue.toInt();
-                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Legend)) {
-                            graphPanelProperties[3]->setBooleanValue(!sedmlPlot2dPropertyNodeValue.compare(TrueValue));
-                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Title)) {
-                            graphPanelProperties[6]->setValue(sedmlPlot2dPropertyNodeValue);
+
+                        // Grid lines
+
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::GridLines)) {
                             Core::Properties gridLinesProperties = graphPanelProperties[2]->properties();
@@ -2541,6 +2540,14 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     gridLinesProperties[2]->setValue(gridLinesPropertyNodeValue);
                                 }
                             }
+
+                        // Legend
+
+                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Legend)) {
+                            graphPanelProperties[3]->setBooleanValue(!sedmlPlot2dPropertyNodeValue.compare(TrueValue));
+
+                        // Point coordinates
+
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::PointCoordinates)) {
                             Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
@@ -2560,6 +2567,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     pointCoordinatesProperties[3]->setValue(pointCoordinatesPropertyNodeValue);
                                 }
                             }
+
+                        // Surrounding area
+
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::SurroundingArea)) {
                             Core::Properties surroundingAreaProperties = graphPanelProperties[5]->properties();
@@ -2575,6 +2585,14 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     surroundingAreaProperties[1]->setValue(surroundingAreaPropertyNodeValue);
                                 }
                             }
+
+                        // Title
+
+                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Title)) {
+                            graphPanelProperties[6]->setValue(sedmlPlot2dPropertyNodeValue);
+
+                        // X axis
+
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::XAxis)) {
                             Core::Properties xAxisProperties = graphPanelProperties[7]->properties();
@@ -2590,6 +2608,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     xAxisProperties[1]->setValue(xAxisPropertyNodeValue);
                                 }
                             }
+
+                        // Y axis
+
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::YAxis)) {
                             Core::Properties yAxisProperties = graphPanelProperties[8]->properties();
@@ -2605,6 +2626,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     yAxisProperties[1]->setValue(yAxisPropertyNodeValue);
                                 }
                             }
+
+                        // Zoom region
+
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::ZoomRegion)) {
                             Core::Properties zoomRegionProperties = graphPanelProperties[9]->properties();
