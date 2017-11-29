@@ -1364,14 +1364,6 @@ void GraphPanelPlotWidget::setBackgroundColor(const QColor &pBackgroundColor)
 
         setCanvasBackground(brush);
 
-QColor backgroundColor = Core::windowColor();
-
-backgroundColor.setRedF(backgroundColor.redF()*color.redF());
-backgroundColor.setGreenF(backgroundColor.greenF()*color.greenF());
-backgroundColor.setBlueF(backgroundColor.blueF()*color.blueF());
-
-qDebug() << pBackgroundColor.name(QColor::HexArgb) << backgroundColor.name(QColor::HexRgb);
-
         replot();
     }
 }
