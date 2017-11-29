@@ -1661,67 +1661,104 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
 
-        Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
-        Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
+        QString properties =  SedmlProperty.arg(SEDMLSupport::BackgroundColor,
+                                                graphPanelProperties[0]->valueAsString())
+                             +SedmlProperty.arg(SEDMLSupport::FontSize,
+                                                graphPanelProperties[1]->valueAsString())
+                             +SedmlProperty.arg(SEDMLSupport::Height,
+                                                QString::number(graphPanelsWidgetSizes[graphPlotCounter-1]));
+
+        // Grid lines
+
+        Core::Properties gridLinesProperties = graphPanelProperties[2]->properties();
+
+        properties += SedmlProperty.arg( SEDMLSupport::GridLines,
+                                         SedmlProperty.arg(SEDMLSupport::Style,
+                                                           SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
+                                        +SedmlProperty.arg(SEDMLSupport::Width,
+                                                           gridLinesProperties[1]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::Color,
+                                                           gridLinesProperties[2]->valueAsString()));
+
+        // Legend
+
+        properties += SedmlProperty.arg(SEDMLSupport::Legend,
+                                        graphPanelProperties[3]->valueAsString());
+
+        // Point coordinates
+
+        Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
+
+        properties += SedmlProperty.arg( SEDMLSupport::PointCoordinates,
+                                         SedmlProperty.arg(SEDMLSupport::Style,
+                                                           SEDMLSupport::lineStyleValue(pointCoordinatesProperties[0]->listValueIndex()))
+                                        +SedmlProperty.arg(SEDMLSupport::Width,
+                                                           pointCoordinatesProperties[1]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::Color,
+                                                           pointCoordinatesProperties[2]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::FontColor,
+                                                           pointCoordinatesProperties[3]->valueAsString()));
+
+        // Surrounding area
+
+        Core::Properties surroundingAreaProperties = graphPanelProperties[5]->properties();
+
+        properties += SedmlProperty.arg( SEDMLSupport::SurroundingArea,
+                                         SedmlProperty.arg(SEDMLSupport::BackgroundColor,
+                                                           surroundingAreaProperties[0]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
+                                                           surroundingAreaProperties[1]->valueAsString()));
+
+        // Title
+
+        properties += SedmlProperty.arg(SEDMLSupport::Title,
+                                        graphPanelProperties[6]->valueAsString());
+
+        // X axis
+
         Core::Properties xAxisProperties = graphPanelProperties[7]->properties();
+
+        properties += SedmlProperty.arg( SEDMLSupport::XAxis,
+                                         SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
+                                                           xAxisProperties[0]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::Title,
+                                                           xAxisProperties[1]->valueAsString()));
+
+        // Y axis
+
         Core::Properties yAxisProperties = graphPanelProperties[8]->properties();
+
+        properties += SedmlProperty.arg( SEDMLSupport::YAxis,
+                                         SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
+                                                           yAxisProperties[0]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::Title,
+                                                           yAxisProperties[1]->valueAsString()));
+
+        // Zoom region
+
         Core::Properties zoomRegionProperties = graphPanelProperties[9]->properties();
+
+        properties += SedmlProperty.arg( SEDMLSupport::ZoomRegion,
+                                         SedmlProperty.arg(SEDMLSupport::Style,
+                                                           SEDMLSupport::lineStyleValue(zoomRegionProperties[0]->listValueIndex()))
+                                        +SedmlProperty.arg(SEDMLSupport::Width,
+                                                           zoomRegionProperties[1]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::Color,
+                                                           zoomRegionProperties[2]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::FontColor,
+                                                           zoomRegionProperties[3]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::Filled,
+                                                           zoomRegionProperties[4]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::FillColor,
+                                                           zoomRegionProperties[5]->valueAsString()));;
+
+        // Add our properties as an annotation
 
         sedmlPlot2d->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                               "    %3"
-                                              "</%1>").arg( SEDMLSupport::Properties,
-                                                            SEDMLSupport::OpencorNamespace,
-                                                            SedmlProperty.arg(SEDMLSupport::BackgroundColor,
-                                                                              graphPanelProperties[0]->valueAsString())
-                                                           +SedmlProperty.arg(SEDMLSupport::FontSize,
-                                                                              graphPanelProperties[1]->valueAsString())
-                                                           +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
-                                                                              graphPanelProperties[2]->valueAsString())
-                                                           +SedmlProperty.arg(SEDMLSupport::Height,
-                                                                              QString::number(graphPanelsWidgetSizes[graphPlotCounter-1]))
-                                                           +SedmlProperty.arg(SEDMLSupport::Legend,
-                                                                              graphPanelProperties[4]->valueAsString())
-                                                           +SedmlProperty.arg(SEDMLSupport::Title,
-                                                                              graphPanelProperties[6]->valueAsString())
-                                                           +SedmlProperty.arg( SEDMLSupport::GridLines,
-                                                                               SedmlProperty.arg(SEDMLSupport::Style,
-                                                                                                 SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
-                                                                              +SedmlProperty.arg(SEDMLSupport::Width,
-                                                                                                 gridLinesProperties[1]->valueAsString())
-                                                                              +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                 gridLinesProperties[2]->valueAsString()))
-                                                           +SedmlProperty.arg( SEDMLSupport::PointCoordinates,
-                                                                               SedmlProperty.arg(SEDMLSupport::Style,
-                                                                                                 SEDMLSupport::lineStyleValue(pointCoordinatesProperties[0]->listValueIndex()))
-                                                                              +SedmlProperty.arg(SEDMLSupport::Width,
-                                                                                                 pointCoordinatesProperties[1]->valueAsString())
-                                                                              +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                 pointCoordinatesProperties[2]->valueAsString())
-                                                                              +SedmlProperty.arg(SEDMLSupport::FontColor,
-                                                                                                 pointCoordinatesProperties[3]->valueAsString()))
-                                                           +SedmlProperty.arg( SEDMLSupport::XAxis,
-                                                                               SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
-                                                                                                 xAxisProperties[0]->valueAsString())
-                                                                              +SedmlProperty.arg(SEDMLSupport::Title,
-                                                                                                 xAxisProperties[1]->valueAsString()))
-                                                           +SedmlProperty.arg( SEDMLSupport::YAxis,
-                                                                               SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
-                                                                                                 yAxisProperties[0]->valueAsString())
-                                                                              +SedmlProperty.arg(SEDMLSupport::Title,
-                                                                                                 yAxisProperties[1]->valueAsString()))
-                                                           +SedmlProperty.arg( SEDMLSupport::ZoomRegion,
-                                                                               SedmlProperty.arg(SEDMLSupport::Style,
-                                                                                                 SEDMLSupport::lineStyleValue(zoomRegionProperties[0]->listValueIndex()))
-                                                                              +SedmlProperty.arg(SEDMLSupport::Width,
-                                                                                                 zoomRegionProperties[1]->valueAsString())
-                                                                              +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                 zoomRegionProperties[2]->valueAsString())
-                                                                              +SedmlProperty.arg(SEDMLSupport::FontColor,
-                                                                                                 zoomRegionProperties[3]->valueAsString())
-                                                                              +SedmlProperty.arg(SEDMLSupport::Filled,
-                                                                                                 zoomRegionProperties[4]->valueAsString())
-                                                                              +SedmlProperty.arg(SEDMLSupport::FillColor,
-                                                                                                 zoomRegionProperties[5]->valueAsString()))).toStdString());
+                                              "</%1>").arg(SEDMLSupport::Properties,
+                                                           SEDMLSupport::OpencorNamespace,
+                                                           properties).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
@@ -2481,17 +2518,14 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             graphPanelProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
                         } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::FontSize)) {
                             graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
-                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::ForegroundColor)) {
-                            graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
                         } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Height)) {
                             graphPanelsWidgetSizes << sedmlPlot2dPropertyNodeValue.toInt();
-                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Legend)) {
-                            graphPanelProperties[4]->setBooleanValue(!sedmlPlot2dPropertyNodeValue.compare(TrueValue));
-                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Title)) {
-                            graphPanelProperties[6]->setValue(sedmlPlot2dPropertyNodeValue);
+
+                        // Grid lines
+
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::GridLines)) {
-                            Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
+                            Core::Properties gridLinesProperties = graphPanelProperties[2]->properties();
 
                             for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
                                 const libsbml::XMLNode &gridLinesPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
@@ -2506,9 +2540,17 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     gridLinesProperties[2]->setValue(gridLinesPropertyNodeValue);
                                 }
                             }
+
+                        // Legend
+
+                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Legend)) {
+                            graphPanelProperties[3]->setBooleanValue(!sedmlPlot2dPropertyNodeValue.compare(TrueValue));
+
+                        // Point coordinates
+
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::PointCoordinates)) {
-                            Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
+                            Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
 
                             for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
                                 const libsbml::XMLNode &pointCoordinatesPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
@@ -2525,6 +2567,32 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     pointCoordinatesProperties[3]->setValue(pointCoordinatesPropertyNodeValue);
                                 }
                             }
+
+                        // Surrounding area
+
+                        } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                                   && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::SurroundingArea)) {
+                            Core::Properties surroundingAreaProperties = graphPanelProperties[5]->properties();
+
+                            for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &surroundingAreaPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                                QString surroundingAreaPropertyNodeName = QString::fromStdString(surroundingAreaPropertyNode.getName());
+                                QString surroundingAreaPropertyNodeValue = QString::fromStdString(surroundingAreaPropertyNode.getChild(0).getCharacters());
+
+                                if (!surroundingAreaPropertyNodeName.compare(SEDMLSupport::BackgroundColor)) {
+                                    surroundingAreaProperties[0]->setValue(surroundingAreaPropertyNodeValue);
+                                } else if (!surroundingAreaPropertyNodeName.compare(SEDMLSupport::ForegroundColor)) {
+                                    surroundingAreaProperties[1]->setValue(surroundingAreaPropertyNodeValue);
+                                }
+                            }
+
+                        // Title
+
+                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Title)) {
+                            graphPanelProperties[6]->setValue(sedmlPlot2dPropertyNodeValue);
+
+                        // X axis
+
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::XAxis)) {
                             Core::Properties xAxisProperties = graphPanelProperties[7]->properties();
@@ -2540,6 +2608,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     xAxisProperties[1]->setValue(xAxisPropertyNodeValue);
                                 }
                             }
+
+                        // Y axis
+
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::YAxis)) {
                             Core::Properties yAxisProperties = graphPanelProperties[8]->properties();
@@ -2555,6 +2626,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     yAxisProperties[1]->setValue(yAxisPropertyNodeValue);
                                 }
                             }
+
+                        // Zoom region
+
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::ZoomRegion)) {
                             Core::Properties zoomRegionProperties = graphPanelProperties[9]->properties();

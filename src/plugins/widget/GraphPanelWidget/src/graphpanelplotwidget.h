@@ -303,9 +303,6 @@ public:
     int fontSize() const;
     void setFontSize(const int &pFontSize, const bool &pForceSetting = false);
 
-    QColor foregroundColor() const;
-    void setForegroundColor(const QColor &pForegroundColor);
-
     Qt::PenStyle gridLinesStyle() const;
     void setGridLinesStyle(const Qt::PenStyle &pGridLinesStyle);
 
@@ -331,6 +328,12 @@ public:
 
     QColor pointCoordinatesFontColor() const;
     void setPointCoordinatesFontColor(const QColor &pPointCoordinatesFontColor);
+
+    QColor surroundingAreaBackgroundColor() const;
+    void setSurroundingAreaBackgroundColor(const QColor &pSurroundingAreaBackgroundColor);
+
+    QColor surroundingAreaForegroundColor() const;
+    void setSurroundingAreaForegroundColor(const QColor &pSurroundingAreaForegroundColor);
 
     void setTitle(const QString &pTitle);
 
@@ -422,12 +425,14 @@ private:
     QwtPlotDirectPainter *mDirectPainter;
 
     QColor mBackgroundColor;
-    QColor mForegroundColor;
 
     Qt::PenStyle mPointCoordinatesStyle;
     int mPointCoordinatesWidth;
     QColor mPointCoordinatesColor;
     QColor mPointCoordinatesFontColor;
+
+    QColor mSurroundingAreaBackgroundColor;
+    QColor mSurroundingAreaForegroundColor;
 
     Qt::PenStyle mZoomRegionStyle;
     int mZoomRegionWidth;
