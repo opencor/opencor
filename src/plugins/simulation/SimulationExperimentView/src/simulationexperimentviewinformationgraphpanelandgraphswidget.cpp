@@ -131,13 +131,12 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
 
     graphPanelProperties[0]->setName(tr("Background colour"));
     graphPanelProperties[1]->setName(tr("Font size"));
-    graphPanelProperties[2]->setName(tr("Foreground colour"));
 
     // Grid lines
 
-    Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
+    Core::Properties gridLinesProperties = graphPanelProperties[2]->properties();
 
-    graphPanelProperties[3]->setName(tr("Grid lines"));
+    graphPanelProperties[2]->setName(tr("Grid lines"));
 
     gridLinesProperties[0]->setName(tr("Style"));
     gridLinesProperties[1]->setName(tr("Width"));
@@ -145,18 +144,27 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
 
     // Legend
 
-    graphPanelProperties[4]->setName(tr("Legend"));
+    graphPanelProperties[3]->setName(tr("Legend"));
 
     // Point coordinates
 
-    Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
+    Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
 
-    graphPanelProperties[5]->setName(tr("Point coordinates"));
+    graphPanelProperties[4]->setName(tr("Point coordinates"));
 
     pointCoordinatesProperties[0]->setName(tr("Style"));
     pointCoordinatesProperties[1]->setName(tr("Width"));
     pointCoordinatesProperties[2]->setName(tr("Colour"));
     pointCoordinatesProperties[3]->setName(tr("Font colour"));
+
+    // Surrounding area
+
+    Core::Properties surroundingAreaProperties = graphPanelProperties[5]->properties();
+
+    graphPanelProperties[5]->setName(tr("Surrounding area"));
+
+    surroundingAreaProperties[0]->setName(tr("Background colour"));
+    surroundingAreaProperties[1]->setName(tr("Foreground colour"));
 
     // Title
 
@@ -942,7 +950,6 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->backgroundColor());
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->fontSize());
-    mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->foregroundColor());
 
     // Grid lines
 
@@ -972,6 +979,13 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->pointCoordinatesWidth(), pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->pointCoordinatesColor(), pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->pointCoordinatesFontColor(), pointCoordinatesProperty);
+
+    // Surrounding area
+
+    Core::Property *surroundingAreaProperty = mGraphPanelPropertyEditor->addSectionProperty();
+
+    mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->surroundingAreaBackgroundColor(), surroundingAreaProperty);
+    mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->surroundingAreaForegroundColor(), surroundingAreaProperty);
 
     // Title
 
@@ -1323,11 +1337,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
     graphPanelPlot->setBackgroundColor(properties[0]->colorValue());
     graphPanelPlot->setFontSize(properties[1]->integerValue());
-    graphPanelPlot->setForegroundColor(properties[2]->colorValue());
 
     // Grid lines
 
-    Core::Properties gridLinesProperties = properties[3]->properties();
+    Core::Properties gridLinesProperties = properties[2]->properties();
 
     graphPanelPlot->setGridLinesStyle(Qt::PenStyle(gridLinesProperties[0]->listValues().indexOf(gridLinesProperties[0]->listValue())));
     graphPanelPlot->setGridLinesWidth(gridLinesProperties[1]->integerValue());
@@ -1335,16 +1348,23 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
     // Legend
 
-    graphPanelPlot->setLegendActive(properties[4]->booleanValue());
+    graphPanelPlot->setLegendActive(properties[3]->booleanValue());
 
     // Point coordinates
 
-    Core::Properties pointCoordinatesProperties = properties[5]->properties();
+    Core::Properties pointCoordinatesProperties = properties[4]->properties();
 
     graphPanelPlot->setPointCoordinatesStyle(Qt::PenStyle(pointCoordinatesProperties[0]->listValues().indexOf(pointCoordinatesProperties[0]->listValue())));
     graphPanelPlot->setPointCoordinatesWidth(pointCoordinatesProperties[1]->integerValue());
     graphPanelPlot->setPointCoordinatesColor(pointCoordinatesProperties[2]->colorValue());
     graphPanelPlot->setPointCoordinatesFontColor(pointCoordinatesProperties[3]->colorValue());
+
+    // Surrounding area
+
+    Core::Properties surroundingAreaProperties = properties[5]->properties();
+
+    graphPanelPlot->setSurroundingAreaBackgroundColor(surroundingAreaProperties[0]->colorValue());
+    graphPanelPlot->setSurroundingAreaForegroundColor(surroundingAreaProperties[1]->colorValue());
 
     // Title
 

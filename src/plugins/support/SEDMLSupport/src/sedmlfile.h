@@ -73,6 +73,7 @@ static const auto Name             = QStringLiteral("name");
 static const auto Properties       = QStringLiteral("properties");
 static const auto GridLines        = QStringLiteral("gridLines");
 static const auto PointCoordinates = QStringLiteral("pointCoordinates");
+static const auto SurroundingArea  = QStringLiteral("surroundingArea");
 static const auto XAxis            = QStringLiteral("xAxis");
 static const auto YAxis            = QStringLiteral("yAxis");
 static const auto ZoomRegion       = QStringLiteral("zoomRegion");

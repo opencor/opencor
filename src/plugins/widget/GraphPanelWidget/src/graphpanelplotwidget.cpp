@@ -684,7 +684,7 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
     mOwner(pParent),
     mActive(false),
     mFontSize(pParent->fontSize()),
-    mForegroundColor(pParent->foregroundColor())
+    mForegroundColor(pParent->surroundingAreaForegroundColor())
 {
     // Have our legend items use as much horizontal space as possible
 
@@ -945,11 +945,12 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     Core::CommonWidget(this),
     mOwner(pParent),
     mBackgroundColor(QColor()),
-    mForegroundColor(QColor()),
     mPointCoordinatesStyle(Qt::DashLine),
     mPointCoordinatesWidth(1),
     mPointCoordinatesColor(QColor()),
     mPointCoordinatesFontColor(Qt::white),
+    mSurroundingAreaBackgroundColor(QColor()),
+    mSurroundingAreaForegroundColor(QColor()),
     mZoomRegionStyle(Qt::SolidLine),
     mZoomRegionWidth(1),
     mZoomRegionColor(QColor()),
@@ -1017,13 +1018,15 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     setBackgroundColor(Qt::white);
     setFontSize(10, true);
-    setForegroundColor(Qt::black);
 
     QColor pointCoordinatesColor = Qt::darkCyan;
 
     pointCoordinatesColor.setAlphaF(0.69);
 
     setPointCoordinatesColor(pointCoordinatesColor);
+
+    setSurroundingAreaBackgroundColor(Core::windowColor());
+    setSurroundingAreaForegroundColor(Qt::black);
 
     QColor zoomRegionColor = Qt::darkRed;
     QColor zoomRegionFillColor = Qt::yellow;
@@ -1347,8 +1350,6 @@ void GraphPanelPlotWidget::setBackgroundColor(const QColor &pBackgroundColor)
     if (pBackgroundColor != mBackgroundColor) {
         mBackgroundColor = pBackgroundColor;
 
-        // Set our canvas background colour
-
         static const QColor White = Qt::white;
 
         QBrush brush = canvasBackground();
@@ -1363,20 +1364,13 @@ void GraphPanelPlotWidget::setBackgroundColor(const QColor &pBackgroundColor)
 
         setCanvasBackground(brush);
 
-        // Set the colour of the background surrounding our canvas, which we
-        // make slightly darker than that of our canvas background colour, based
-        // on the typical colour used for a widget's background
+QColor backgroundColor = Core::windowColor();
 
-        QPalette pal = palette();
-        QColor backgroundColor = Core::windowColor();
+backgroundColor.setRedF(backgroundColor.redF()*color.redF());
+backgroundColor.setGreenF(backgroundColor.greenF()*color.greenF());
+backgroundColor.setBlueF(backgroundColor.blueF()*color.blueF());
 
-        backgroundColor.setRedF(backgroundColor.redF()*color.redF());
-        backgroundColor.setGreenF(backgroundColor.greenF()*color.greenF());
-        backgroundColor.setBlueF(backgroundColor.blueF()*color.blueF());
-
-        pal.setColor(QPalette::Window, backgroundColor);
-
-        setPalette(pal);
+qDebug() << pBackgroundColor.name(QColor::HexArgb) << backgroundColor.name(QColor::HexRgb);
 
         replot();
     }
@@ -1429,58 +1423,6 @@ void GraphPanelPlotWidget::setFontSize(const int &pFontSize,
         newFont.setPointSize(pFontSize);
 
         setAxisFont(QwtPlot::yLeft, newFont);
-        setTitleAxisY(titleAxisY());
-    }
-}
-
-//==============================================================================
-
-QColor GraphPanelPlotWidget::foregroundColor() const
-{
-    // Return our foreground colour
-
-    return mForegroundColor;
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::setForegroundColor(const QColor &pForegroundColor)
-{
-    // Set our foreground colour
-
-    if (pForegroundColor != mForegroundColor) {
-        mForegroundColor = pForegroundColor;
-
-        // Legend
-
-        mLegend->setForegroundColor(pForegroundColor);
-
-        // Title
-
-        setTitle(title().text());
-
-        // X axis
-
-        QwtScaleWidget *scaleWidget = axisWidget(QwtPlot::xBottom);
-        QPalette newPalette = scaleWidget->palette();
-
-        newPalette.setColor(QPalette::Text, pForegroundColor);
-        newPalette.setColor(QPalette::WindowText, pForegroundColor);
-
-        scaleWidget->setPalette(newPalette);
-
-        setTitleAxisX(titleAxisX());
-
-        // Y axis
-
-        scaleWidget = axisWidget(QwtPlot::yLeft);
-        newPalette = scaleWidget->palette();
-
-        newPalette.setColor(QPalette::Text, pForegroundColor);
-        newPalette.setColor(QPalette::WindowText, pForegroundColor);
-
-        scaleWidget->setPalette(newPalette);
-
         setTitleAxisY(titleAxisY());
     }
 }
@@ -1671,6 +1613,86 @@ void GraphPanelPlotWidget::setPointCoordinatesFontColor(const QColor &pPointCoor
 
 //==============================================================================
 
+QColor GraphPanelPlotWidget::surroundingAreaBackgroundColor() const
+{
+    // Return our surrounding area background colour
+
+    return mSurroundingAreaBackgroundColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setSurroundingAreaBackgroundColor(const QColor &pSurroundingAreaBackgroundColor)
+{
+    // Set our surrounding area background colour
+
+    if (pSurroundingAreaBackgroundColor != mSurroundingAreaBackgroundColor) {
+        mSurroundingAreaBackgroundColor = pSurroundingAreaBackgroundColor;
+
+        QPalette pal = palette();
+
+        pal.setColor(QPalette::Window, pSurroundingAreaBackgroundColor);
+
+        setPalette(pal);
+
+        replot();
+    }
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotWidget::surroundingAreaForegroundColor() const
+{
+    // Return our surrounding area foreground colour
+
+    return mSurroundingAreaForegroundColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setSurroundingAreaForegroundColor(const QColor &pSurroundingAreaForegroundColor)
+{
+    // Set our surrounding area foreground colour
+
+    if (pSurroundingAreaForegroundColor != mSurroundingAreaForegroundColor) {
+        mSurroundingAreaForegroundColor = pSurroundingAreaForegroundColor;
+
+        // Legend
+
+        mLegend->setForegroundColor(pSurroundingAreaForegroundColor);
+
+        // Title
+
+        setTitle(title().text());
+
+        // X axis
+
+        QwtScaleWidget *scaleWidget = axisWidget(QwtPlot::xBottom);
+        QPalette newPalette = scaleWidget->palette();
+
+        newPalette.setColor(QPalette::Text, pSurroundingAreaForegroundColor);
+        newPalette.setColor(QPalette::WindowText, pSurroundingAreaForegroundColor);
+
+        scaleWidget->setPalette(newPalette);
+
+        setTitleAxisX(titleAxisX());
+
+        // Y axis
+
+        scaleWidget = axisWidget(QwtPlot::yLeft);
+        newPalette = scaleWidget->palette();
+
+        newPalette.setColor(QPalette::Text, pSurroundingAreaForegroundColor);
+        newPalette.setColor(QPalette::WindowText, pSurroundingAreaForegroundColor);
+
+        scaleWidget->setPalette(newPalette);
+
+        setTitleAxisY(titleAxisY());
+    }
+}
+
+//==============================================================================
+
 void GraphPanelPlotWidget::setTitle(const QString &pTitle)
 {
     // Set our title
@@ -1683,7 +1705,7 @@ void GraphPanelPlotWidget::setTitle(const QString &pTitle)
 
         newFont.setPointSize(2*fontSize());
 
-        title.setColor(mForegroundColor);
+        title.setColor(mSurroundingAreaForegroundColor);
         title.setFont(newFont);
 
         QwtPlot::setTitle(title);
@@ -2336,7 +2358,7 @@ void GraphPanelPlotWidget::setTitleAxis(const int &pAxisId,
 
         axisTitleFont.setPointSizeF(1.25*fontSize());
 
-        axisTitle.setColor(mForegroundColor);
+        axisTitle.setColor(mSurroundingAreaForegroundColor);
         axisTitle.setFont(axisTitleFont);
 
         setAxisTitle(pAxisId, axisTitle);

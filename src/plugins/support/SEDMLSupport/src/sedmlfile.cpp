@@ -913,6 +913,21 @@ bool SedmlFile::isSupported()
                                 }
                             }
                         } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
+                                   && !QString::fromStdString(plot2dPropertyNode.getName()).compare(SurroundingArea)) {
+                            for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &surroundingAreaPropertyNode = plot2dPropertyNode.getChild(k);
+                                QString surroundingAreaPropertyNodeName = QString::fromStdString(surroundingAreaPropertyNode.getName());
+                                QString surroundingAreaPropertyNodeValue = QString::fromStdString(surroundingAreaPropertyNode.getChild(0).getCharacters());
+
+                                if (   !surroundingAreaPropertyNodeName.compare(BackgroundColor)
+                                    && !validColorPropertyValue(surroundingAreaPropertyNode, surroundingAreaPropertyNodeValue, BackgroundColor)) {
+                                    return false;
+                                } else if (   !surroundingAreaPropertyNodeName.compare(ForegroundColor)
+                                           && !validColorPropertyValue(surroundingAreaPropertyNode, surroundingAreaPropertyNodeValue, ForegroundColor)) {
+                                    return false;
+                                }
+                            }
+                        } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
                                    && !QString::fromStdString(plot2dPropertyNode.getName()).compare(XAxis)) {
                             for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
                                 // Note: we don't need to check for the title since
