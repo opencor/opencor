@@ -12,10 +12,6 @@
         <translation>Taille de la police</translation>
     </message>
     <message>
-        <source>Foreground colour</source>
-        <translation>Couleur de premier plan</translation>
-    </message>
-    <message>
         <source>Grid lines</source>
         <translation>Lignes de quadrillage</translation>
     </message>
@@ -42,6 +38,14 @@
     <message>
         <source>Font colour</source>
         <translation>Couleur de la police</translation>
+    </message>
+    <message>
+        <source>Surrounding area</source>
+        <translation>Alentours</translation>
+    </message>
+    <message>
+        <source>Foreground colour</source>
+        <translation>Couleur de premier plan</translation>
     </message>
     <message>
         <source>Title</source>

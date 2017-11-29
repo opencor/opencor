@@ -1008,10 +1008,6 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     if (QwtPainter::isX11GraphicsSystem())
         canvas()->setAttribute(Qt::WA_PaintOnScreen, true);
 
-    // We don't want a frame around ourselves
-
-    static_cast<QwtPlotCanvas *>(canvas())->setFrameShape(QFrame::NoFrame);
-
     // Customise ourselves a bit
 
     setAutoFillBackground(true);
@@ -1036,6 +1032,15 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     setZoomRegionColor(zoomRegionColor);
     setZoomRegionFillColor(zoomRegionFillColor);
+
+    // Customise our canvas a bit
+    // Note: to use immediate paint prevents our canvas from becoming black in
+    //       some cases (e.g. when running a long simulation)...
+
+    QwtPlotCanvas *plotCanvas = static_cast<QwtPlotCanvas *>(canvas());
+
+    plotCanvas->setFrameShape(QFrame::NoFrame);
+    plotCanvas->setPaintAttribute(QwtPlotCanvas::ImmediatePaint);
 
     // Add some axes to ourselves
 
