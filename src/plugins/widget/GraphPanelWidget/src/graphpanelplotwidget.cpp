@@ -961,6 +961,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     Core::CommonWidget(this),
     mOwner(pParent),
     mBackgroundColor(QColor()),
+    mForegroundColor(QColor()),
     mPointCoordinatesStyle(Qt::DashLine),
     mPointCoordinatesWidth(1),
     mPointCoordinatesColor(QColor()),
@@ -1029,6 +1030,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     setAutoFillBackground(true);
     setBackgroundColor(Qt::white);
     setFontSize(10, true);
+    setForegroundColor(Qt::black);
 
     QColor pointCoordinatesColor = Qt::darkCyan;
 
@@ -1445,6 +1447,32 @@ void GraphPanelPlotWidget::setFontSize(const int &pFontSize,
 
 //==============================================================================
 
+QColor GraphPanelPlotWidget::foregroundColor() const
+{
+    // Return our foreground colour
+
+    return mForegroundColor;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::setForegroundColor(const QColor &pForegroundColor)
+{
+    // Set our foreground colour
+
+    if (pForegroundColor != mForegroundColor) {
+        mForegroundColor = pForegroundColor;
+
+        // Legend
+
+        mLegend->setForegroundColor(pForegroundColor);
+
+        replot();
+    }
+}
+
+//==============================================================================
+
 Qt::PenStyle GraphPanelPlotWidget::gridLinesStyle() const
 {
     // Return our grid lines style
@@ -1674,10 +1702,6 @@ void GraphPanelPlotWidget::setSurroundingAreaForegroundColor(const QColor &pSurr
 
     if (pSurroundingAreaForegroundColor != mSurroundingAreaForegroundColor) {
         mSurroundingAreaForegroundColor = pSurroundingAreaForegroundColor;
-
-        // Legend
-
-        mLegend->setForegroundColor(pSurroundingAreaForegroundColor);
 
         // Title
 

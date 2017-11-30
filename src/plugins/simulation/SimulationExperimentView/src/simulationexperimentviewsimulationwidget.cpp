@@ -1665,12 +1665,14 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
                                                 graphPanelProperties[0]->valueAsString())
                              +SedmlProperty.arg(SEDMLSupport::FontSize,
                                                 graphPanelProperties[1]->valueAsString())
+                             +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
+                                                graphPanelProperties[2]->valueAsString())
                              +SedmlProperty.arg(SEDMLSupport::Height,
                                                 QString::number(graphPanelsWidgetSizes[graphPlotCounter-1]));
 
         // Grid lines
 
-        Core::Properties gridLinesProperties = graphPanelProperties[2]->properties();
+        Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
 
         properties += SedmlProperty.arg( SEDMLSupport::GridLines,
                                          SedmlProperty.arg(SEDMLSupport::Style,
@@ -1683,11 +1685,11 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
         // Legend
 
         properties += SedmlProperty.arg(SEDMLSupport::Legend,
-                                        graphPanelProperties[3]->valueAsString());
+                                        graphPanelProperties[4]->valueAsString());
 
         // Point coordinates
 
-        Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
+        Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
 
         properties += SedmlProperty.arg( SEDMLSupport::PointCoordinates,
                                          SedmlProperty.arg(SEDMLSupport::Style,
@@ -1701,7 +1703,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         // Surrounding area
 
-        Core::Properties surroundingAreaProperties = graphPanelProperties[5]->properties();
+        Core::Properties surroundingAreaProperties = graphPanelProperties[6]->properties();
 
         properties += SedmlProperty.arg( SEDMLSupport::SurroundingArea,
                                          SedmlProperty.arg(SEDMLSupport::BackgroundColor,
@@ -1712,11 +1714,11 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
         // Title
 
         properties += SedmlProperty.arg(SEDMLSupport::Title,
-                                        graphPanelProperties[6]->valueAsString());
+                                        graphPanelProperties[7]->valueAsString());
 
         // X axis
 
-        Core::Properties xAxisProperties = graphPanelProperties[7]->properties();
+        Core::Properties xAxisProperties = graphPanelProperties[8]->properties();
 
         properties += SedmlProperty.arg( SEDMLSupport::XAxis,
                                          SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
@@ -1726,7 +1728,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         // Y axis
 
-        Core::Properties yAxisProperties = graphPanelProperties[8]->properties();
+        Core::Properties yAxisProperties = graphPanelProperties[9]->properties();
 
         properties += SedmlProperty.arg( SEDMLSupport::YAxis,
                                          SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
@@ -1736,7 +1738,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         // Zoom region
 
-        Core::Properties zoomRegionProperties = graphPanelProperties[9]->properties();
+        Core::Properties zoomRegionProperties = graphPanelProperties[10]->properties();
 
         properties += SedmlProperty.arg( SEDMLSupport::ZoomRegion,
                                          SedmlProperty.arg(SEDMLSupport::Style,
@@ -2518,6 +2520,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             graphPanelProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
                         } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::FontSize)) {
                             graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
+                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::ForegroundColor)) {
+                            graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
                         } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Height)) {
                             graphPanelsWidgetSizes << sedmlPlot2dPropertyNodeValue.toInt();
 
@@ -2525,7 +2529,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::GridLines)) {
-                            Core::Properties gridLinesProperties = graphPanelProperties[2]->properties();
+                            Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
 
                             for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
                                 const libsbml::XMLNode &gridLinesPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
@@ -2544,13 +2548,13 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                         // Legend
 
                         } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Legend)) {
-                            graphPanelProperties[3]->setBooleanValue(!sedmlPlot2dPropertyNodeValue.compare(TrueValue));
+                            graphPanelProperties[4]->setBooleanValue(!sedmlPlot2dPropertyNodeValue.compare(TrueValue));
 
                         // Point coordinates
 
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::PointCoordinates)) {
-                            Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
+                            Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
 
                             for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
                                 const libsbml::XMLNode &pointCoordinatesPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
@@ -2572,7 +2576,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::SurroundingArea)) {
-                            Core::Properties surroundingAreaProperties = graphPanelProperties[5]->properties();
+                            Core::Properties surroundingAreaProperties = graphPanelProperties[6]->properties();
 
                             for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
                                 const libsbml::XMLNode &surroundingAreaPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
@@ -2589,13 +2593,13 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                         // Title
 
                         } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Title)) {
-                            graphPanelProperties[6]->setValue(sedmlPlot2dPropertyNodeValue);
+                            graphPanelProperties[7]->setValue(sedmlPlot2dPropertyNodeValue);
 
                         // X axis
 
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::XAxis)) {
-                            Core::Properties xAxisProperties = graphPanelProperties[7]->properties();
+                            Core::Properties xAxisProperties = graphPanelProperties[8]->properties();
 
                             for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
                                 const libsbml::XMLNode &xAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
@@ -2613,7 +2617,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::YAxis)) {
-                            Core::Properties yAxisProperties = graphPanelProperties[8]->properties();
+                            Core::Properties yAxisProperties = graphPanelProperties[9]->properties();
 
                             for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
                                 const libsbml::XMLNode &yAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
@@ -2631,7 +2635,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                         } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                                    && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::ZoomRegion)) {
-                            Core::Properties zoomRegionProperties = graphPanelProperties[9]->properties();
+                            Core::Properties zoomRegionProperties = graphPanelProperties[10]->properties();
 
                             for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
                                 const libsbml::XMLNode &zoomRegionPropertyNode = sedmlPlot2dPropertyNode.getChild(k);

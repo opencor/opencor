@@ -305,6 +305,9 @@ public:
     int fontSize() const;
     void setFontSize(const int &pFontSize, const bool &pForceSetting = false);
 
+    QColor foregroundColor() const;
+    void setForegroundColor(const QColor &pForegroundColor);
+
     Qt::PenStyle gridLinesStyle() const;
     void setGridLinesStyle(const Qt::PenStyle &pGridLinesStyle);
 
@@ -427,6 +430,7 @@ private:
     QwtPlotDirectPainter *mDirectPainter;
 
     QColor mBackgroundColor;
+    QColor mForegroundColor;
 
     Qt::PenStyle mPointCoordinatesStyle;
     int mPointCoordinatesWidth;
