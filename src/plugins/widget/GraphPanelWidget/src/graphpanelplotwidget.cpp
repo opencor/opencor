@@ -690,7 +690,7 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
 
     static_cast<QwtDynGridLayout *>(contentsWidget()->layout())->setExpandingDirections(Qt::Horizontal);
 
-    // Make our legend items checkable
+    // Customise ourselves a bit
 
     setDefaultItemMode(QwtLegendData::Checkable);
 
@@ -1009,8 +1009,6 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
         canvas()->setAttribute(Qt::WA_PaintOnScreen, true);
 
     // Customise ourselves a bit
-
-    setAutoFillBackground(true);
 
     setBackgroundColor(Qt::white);
     setFontSize(10, true);
