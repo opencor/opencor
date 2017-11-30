@@ -218,6 +218,7 @@ public:
     void setChecked(const int &pIndex, const bool &pChecked);
 
     void setFontSize(const int &pFontSize);
+    void setBackgroundColor(const QColor &pBackgroundColor);
     void setForegroundColor(const QColor &pForegroundColor);
 
     void renderLegend(QPainter *pPainter, const QRectF &pRect,
@@ -235,6 +236,7 @@ private:
     bool mActive;
 
     int mFontSize;
+    QColor mBackgroundColor;
     QColor mForegroundColor;
 
 signals:
@@ -302,6 +304,9 @@ public:
 
     int fontSize() const;
     void setFontSize(const int &pFontSize, const bool &pForceSetting = false);
+
+    QColor foregroundColor() const;
+    void setForegroundColor(const QColor &pForegroundColor);
 
     Qt::PenStyle gridLinesStyle() const;
     void setGridLinesStyle(const Qt::PenStyle &pGridLinesStyle);
@@ -425,6 +430,7 @@ private:
     QwtPlotDirectPainter *mDirectPainter;
 
     QColor mBackgroundColor;
+    QColor mForegroundColor;
 
     Qt::PenStyle mPointCoordinatesStyle;
     int mPointCoordinatesWidth;

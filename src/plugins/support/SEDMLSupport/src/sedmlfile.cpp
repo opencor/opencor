@@ -843,6 +843,9 @@ bool SedmlFile::isSupported()
                                                       tr("the '%1' property value must be an integer greater than zero").arg(plot2dPropertyNodeName));
 
                             return false;
+                        } else if (   !plot2dPropertyNodeName.compare(ForegroundColor)
+                                   && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, ForegroundColor)) {
+                            return false;
                         } else if (   !plot2dPropertyNodeName.compare(Height)
                                    && !IntegerGt0RegEx.match(plot2dPropertyNodeValue).hasMatch()) {
                             mIssues << SedmlFileIssue(SedmlFileIssue::Error,

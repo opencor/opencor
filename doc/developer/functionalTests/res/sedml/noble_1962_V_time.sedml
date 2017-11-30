@@ -107,6 +107,7 @@
                 <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#ffffff</backgroundColor>
                     <fontSize>10</fontSize>
+                    <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
                     <legend>false</legend>
                     <title/>
@@ -170,6 +171,7 @@
                 <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#ffffff</backgroundColor>
                     <fontSize>10</fontSize>
+                    <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
                     <legend>false</legend>
                     <title/>
@@ -233,6 +235,7 @@
                 <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#ffffff</backgroundColor>
                     <fontSize>10</fontSize>
+                    <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
                     <legend>false</legend>
                     <title/>
@@ -296,6 +299,7 @@
                 <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#ffffff</backgroundColor>
                     <fontSize>10</fontSize>
+                    <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
                     <legend>false</legend>
                     <title/>
