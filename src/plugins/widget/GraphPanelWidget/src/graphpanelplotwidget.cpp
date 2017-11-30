@@ -1624,11 +1624,13 @@ void GraphPanelPlotWidget::setSurroundingAreaBackgroundColor(const QColor &pSurr
     if (pSurroundingAreaBackgroundColor != mSurroundingAreaBackgroundColor) {
         mSurroundingAreaBackgroundColor = pSurroundingAreaBackgroundColor;
 
-        QPalette pal = palette();
+        // Plot area
 
-        pal.setColor(QPalette::Window, pSurroundingAreaBackgroundColor);
+        QPalette newPalette = palette();
 
-        setPalette(pal);
+        newPalette.setColor(QPalette::Window, pSurroundingAreaBackgroundColor);
+
+        setPalette(newPalette);
 
         replot();
     }
