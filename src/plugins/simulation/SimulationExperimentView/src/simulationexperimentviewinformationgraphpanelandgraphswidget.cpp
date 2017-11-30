@@ -790,7 +790,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLegend(
 {
     // Toggle our legend property
 
-    Core::Property *legendProperty = mGraphPanelPropertyEditor->properties()[4];
+    Core::Property *legendProperty = mGraphPanelPropertyEditor->properties()[3];
 
     legendProperty->setBooleanValue(!legendProperty->booleanValue());
 }
