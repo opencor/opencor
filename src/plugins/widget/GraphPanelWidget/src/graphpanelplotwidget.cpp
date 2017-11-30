@@ -684,6 +684,7 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
     mOwner(pParent),
     mActive(false),
     mFontSize(pParent->fontSize()),
+    mBackgroundColor(pParent->backgroundColor()),
     mForegroundColor(pParent->surroundingAreaForegroundColor())
 {
     // Have our legend items use as much horizontal space as possible
@@ -750,6 +751,19 @@ void GraphPanelPlotLegendWidget::setFontSize(const int &pFontSize)
 
     if (pFontSize != mFontSize) {
         mFontSize = pFontSize;
+
+        mOwner->updateLegend();
+    }
+}
+
+//==============================================================================
+
+void GraphPanelPlotLegendWidget::setBackgroundColor(const QColor &pBackgroundColor)
+{
+    // Set our background color
+
+    if (pBackgroundColor != mBackgroundColor) {
+        mBackgroundColor = pBackgroundColor;
 
         mOwner->updateLegend();
     }
@@ -864,9 +878,10 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
 
     QwtLegendLabel *legendLabel = static_cast<QwtLegendLabel *>(pWidget);
 
+    legendLabel->setAutoFillBackground(true);
     legendLabel->setVisible(mActive);
 
-    // Update our font size and foreground colour
+    // Update our font size, as well as background and foreground colours
 
     QFont newFont = legendLabel->font();
 
@@ -876,6 +891,7 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
 
     QPalette newPalette = legendLabel->palette();
 
+    newPalette.setColor(QPalette::Window, mBackgroundColor);
     newPalette.setColor(QPalette::Text, mForegroundColor);
 
     legendLabel->setPalette(newPalette);
@@ -1010,6 +1026,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     // Customise ourselves a bit
 
+    setAutoFillBackground(true);
     setBackgroundColor(Qt::white);
     setFontSize(10, true);
 
@@ -1366,6 +1383,10 @@ void GraphPanelPlotWidget::setBackgroundColor(const QColor &pBackgroundColor)
         brush.setColor(color);
 
         setCanvasBackground(brush);
+
+        // Legend
+
+        mLegend->setBackgroundColor(color);
 
         replot();
     }

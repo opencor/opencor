@@ -218,6 +218,7 @@ public:
     void setChecked(const int &pIndex, const bool &pChecked);
 
     void setFontSize(const int &pFontSize);
+    void setBackgroundColor(const QColor &pBackgroundColor);
     void setForegroundColor(const QColor &pForegroundColor);
 
     void renderLegend(QPainter *pPainter, const QRectF &pRect,
@@ -235,6 +236,7 @@ private:
     bool mActive;
 
     int mFontSize;
+    QColor mBackgroundColor;
     QColor mForegroundColor;
 
 signals:
