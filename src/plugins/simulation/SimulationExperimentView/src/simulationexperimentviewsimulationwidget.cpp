@@ -617,9 +617,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
                                             &&  mSimulation->results()->size()
                                             && !simulationModeEnabled);
     mCellmlOpenAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile);
-    mSedmlExportAction->setEnabled(    (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)
-                                   &&  mSimulation->results()->size()
-                                   && !simulationModeEnabled);
+    mSedmlExportAction->setEnabled(mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile);
 
     // Give the focus to our focus proxy, in case we leave our simulation mode
     // (so that the user can modify simulation data, etc.)
