@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> addressed a problem with quickly changing files potentially resulting in the wrong view being shown (see issue <a href=\"https://github.com/opencor/opencor/issues/1481\">#1481</a>)." },
                        { "change": "<strong>Graph panel widget:</strong> have the legend buttons use the same background as the plot area (see issue <a href=\"https://github.com/opencor/opencor/issues/1477\">#1477</a>). Got the legend context menu to work again (see issue <a href=\"https://github.com/opencor/opencor/issues/1478\">#1478</a>)." }
                      ]
                    },

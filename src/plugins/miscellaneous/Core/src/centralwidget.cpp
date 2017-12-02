@@ -1578,9 +1578,22 @@ QString CentralWidget::viewKey(const int &pMode, const int &pView,
 
 void CentralWidget::updateGui()
 {
+    TabBarWidget *tabBarWidget = qobject_cast<TabBarWidget *>(sender());
+
     if (mState != Idling) {
         // We are doing something, so too risky to update the GUI during that
-        // time (e.g. things may not be fully initialised)
+        // time (e.g. things may not be fully initialised), so revert to our old
+        // tab index, if possible
+
+        if (tabBarWidget) {
+            disconnect(tabBarWidget, SIGNAL(currentChanged(int)),
+                       this, SLOT(updateGui()));
+
+            tabBarWidget->setCurrentIndex(tabBarWidget->oldIndex());
+
+            connect(tabBarWidget, SIGNAL(currentChanged(int)),
+                    this, SLOT(updateGui()));
+        }
 
         return;
     }
@@ -1588,6 +1601,11 @@ void CentralWidget::updateGui()
     // Update our state to reflect the fact that we are updating the GUI
 
     mState = UpdatingGui;
+
+    // Keep track of our future old tab index, if possible
+
+    if (tabBarWidget)
+        tabBarWidget->setOldIndex(tabBarWidget->currentIndex());
 
     // Determine whether we are here as a result of changing files, modes or
     // views

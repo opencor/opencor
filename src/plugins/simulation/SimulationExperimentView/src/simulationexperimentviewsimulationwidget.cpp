@@ -1005,11 +1005,17 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     // Further initialise ourselves, if we have a valid environment and we are
     // not dealing with a CellML file
 
+    bool needProcessingEvents = false;
+
     if (    validSimulationEnvironment
         && (mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile)) {
         // Further initialise ourselves, update our GUI (by reinitialising it)
         // and initialise our simulation, if we still have a valid simulation
         // environment
+
+        needProcessingEvents = true;
+
+        Core::centralWidget()->showBusyWidget();
 
         bool validSimulationEnvironment = furtherInitialize();
 
@@ -1017,9 +1023,14 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
         if (validSimulationEnvironment)
             initializeSimulation();
+
+        Core::centralWidget()->hideBusyWidget();
     }
 
     setUpdatesEnabled(true);
+
+    if (needProcessingEvents)
+        QCoreApplication::processEvents();
 }
 
 //==============================================================================
