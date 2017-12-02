@@ -249,7 +249,8 @@ void TabBarStyle::tabLayout(const QStyleOptionTab *pOption,
 //==============================================================================
 
 TabBarWidget::TabBarWidget(QWidget *pParent) :
-    QTabBar(pParent)
+    QTabBar(pParent),
+    mOldIndex(-1)
 {
     // Customise our style, but only if we are on macOS
     // Note: indeed, between Qt 5.6.x LTS and Qt 5.9.x LTS, the styling of a
@@ -260,6 +261,24 @@ TabBarWidget::TabBarWidget(QWidget *pParent) :
 #ifdef Q_OS_MAC
     setStyle(new TabBarStyle());
 #endif
+}
+
+//==============================================================================
+
+int TabBarWidget::oldIndex() const
+{
+    // Return our old index
+
+    return mOldIndex;
+}
+
+//==============================================================================
+
+void TabBarWidget::setOldIndex(const int &pOldIndex)
+{
+    // Set our old index
+
+    mOldIndex = pOldIndex;
 }
 
 //==============================================================================

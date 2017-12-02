@@ -66,10 +66,16 @@ class CORE_EXPORT TabBarWidget : public QTabBar
 public:
     explicit TabBarWidget(QWidget *pParent);
 
+    int oldIndex() const;
+    void setOldIndex(const int &pOldIndex);
+
 protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
 
     virtual QSize tabSizeHint(int pIndex) const;
+
+private:
+    int mOldIndex;
 };
 
 //==============================================================================
