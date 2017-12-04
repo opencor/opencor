@@ -111,6 +111,28 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mNeedUpdatePlots(false),
     mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong>())
 {
+    // Ask our simulation manager to manage our file and then retrieve the
+    // corresponding simulation from it
+
+    SimulationSupport::SimulationManager *simulationManager = SimulationSupport::SimulationManager::instance();
+
+    simulationManager->manage(pFileName);
+
+    mSimulation = simulationManager->simulation(pFileName);
+
+    connect(mSimulation, SIGNAL(running(const bool &)),
+            this, SLOT(simulationRunning(const bool &)));
+    connect(mSimulation, SIGNAL(paused()),
+            this, SLOT(simulationPaused()));
+    connect(mSimulation, SIGNAL(stopped(const qint64 &)),
+            this, SLOT(simulationStopped(const qint64 &)));
+
+    connect(mSimulation, SIGNAL(error(const QString &)),
+            this, SLOT(simulationError(const QString &)));
+
+    connect(mSimulation->data(), SIGNAL(modified(const bool &)),
+            this, SLOT(simulationDataModified(const bool &)));
+
     // Create a tool bar
 
     mToolBarWidget = new Core::ToolBarWidget(this);
@@ -168,6 +190,12 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
             this, SLOT(sedmlExportSedmlFile()));
     connect(mSedmlExportCombineArchiveAction, SIGNAL(triggered(bool)),
             this, SLOT(sedmlExportCombineArchive()));
+
+    // Enable/disable our development mode action depending on whether our file
+    // is readable/writable and of CellML type
+
+    mDevelopmentModeAction->setEnabled(   Core::FileManager::instance()->isReadableAndWritable(pFileName)
+                                       && (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile));
 
     // Create a wheel (and a label to show its value) to specify the delay (in
     // milliseconds) between the output of two data points
@@ -442,34 +470,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     // Make our contents widget our focus proxy
 
     setFocusProxy(mContentsWidget);
-
-    // Ask our simulation manager to manage our file and then retrieve the
-    // corresponding simulation from it
-
-    SimulationSupport::SimulationManager *simulationManager = SimulationSupport::SimulationManager::instance();
-
-    simulationManager->manage(pFileName);
-
-    mSimulation = simulationManager->simulation(pFileName);
-
-    connect(mSimulation, SIGNAL(running(const bool &)),
-            this, SLOT(simulationRunning(const bool &)));
-    connect(mSimulation, SIGNAL(paused()),
-            this, SLOT(simulationPaused()));
-    connect(mSimulation, SIGNAL(stopped(const qint64 &)),
-            this, SLOT(simulationStopped(const qint64 &)));
-
-    connect(mSimulation, SIGNAL(error(const QString &)),
-            this, SLOT(simulationError(const QString &)));
-
-    connect(mSimulation->data(), SIGNAL(modified(const bool &)),
-            this, SLOT(simulationDataModified(const bool &)));
-
-    // Enable/disable our development mode action depending on whether our file
-    // is readable/writable and of CellML type
-
-    mDevelopmentModeAction->setEnabled(   Core::FileManager::instance()->isReadableAndWritable(pFileName)
-                                       && (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile));
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
