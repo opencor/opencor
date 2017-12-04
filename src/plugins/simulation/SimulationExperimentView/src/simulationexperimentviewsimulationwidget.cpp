@@ -137,7 +137,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     mToolBarWidget = new Core::ToolBarWidget(this);
 
-    // Create and handle various actions
+    // Create, customise and handle various actions
 
     mRunPauseResumeSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-start.png"),
                                                       Qt::Key_F9, mToolBarWidget);
@@ -159,10 +159,17 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                                         mToolBarWidget);
     mSedmlExportAction = Core::newAction(QIcon(":/SEDMLSupport/logo.png"),
                                          mToolBarWidget);
-    mSedmlExportSedmlFileAction = Core::newAction(mToolBarWidget);
-    mSedmlExportCombineArchiveAction = Core::newAction(mToolBarWidget);
+    mSedmlExportSedmlFileAction = (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)?
+                                      Core::newAction(mToolBarWidget):
+                                      0;
+    mSedmlExportCombineArchiveAction = (mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive)?
+                                           Core::newAction(mToolBarWidget):
+                                           0;
     mSimulationDataExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
                                                   mToolBarWidget);
+
+    mCellmlOpenAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile);
+    mSedmlExportAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive);
 
     connect(mRunPauseResumeSimulationAction, SIGNAL(triggered(bool)),
             this, SLOT(runPauseResumeSimulation()));
@@ -185,11 +192,19 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(mCellmlOpenAction, SIGNAL(triggered(bool)),
             this, SLOT(openCellmlFile()));
     connect(mSedmlExportAction, SIGNAL(triggered(bool)),
-            this, SLOT(sedmlExportSedmlFile()));
-    connect(mSedmlExportSedmlFileAction, SIGNAL(triggered(bool)),
-            this, SLOT(sedmlExportSedmlFile()));
-    connect(mSedmlExportCombineArchiveAction, SIGNAL(triggered(bool)),
-            this, SLOT(sedmlExportCombineArchive()));
+            this, mSedmlExportSedmlFileAction?
+                      SLOT(sedmlExportSedmlFile()):
+                      SLOT(sedmlExportCombineArchive()));
+
+    if (mSedmlExportSedmlFileAction) {
+        connect(mSedmlExportSedmlFileAction, SIGNAL(triggered(bool)),
+                this, SLOT(sedmlExportSedmlFile()));
+    }
+
+    if (mSedmlExportCombineArchiveAction) {
+        connect(mSedmlExportCombineArchiveAction, SIGNAL(triggered(bool)),
+                this, SLOT(sedmlExportCombineArchive()));
+    }
 
     // Enable/disable our development mode action depending on whether our file
     // is readable/writable and of CellML type
@@ -272,8 +287,11 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     sedmlExportToolButton->setMenu(sedmlExportDropDownMenu);
     sedmlExportToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
-    sedmlExportDropDownMenu->addAction(mSedmlExportSedmlFileAction);
-    sedmlExportDropDownMenu->addAction(mSedmlExportCombineArchiveAction);
+    if (mSedmlExportSedmlFileAction)
+        sedmlExportDropDownMenu->addAction(mSedmlExportSedmlFileAction);
+
+    if (mSedmlExportCombineArchiveAction)
+        sedmlExportDropDownMenu->addAction(mSedmlExportCombineArchiveAction);
 
     QToolButton *simulationDataExportToolButton = new QToolButton(mToolBarWidget);
 
@@ -514,10 +532,17 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
                                      tr("Open the referenced CellML file"));
     I18nInterface::retranslateAction(mSedmlExportAction, tr("SED-ML Export"),
                                      tr("Export the simulation to SED-ML"));
-    I18nInterface::retranslateAction(mSedmlExportSedmlFileAction, tr("SED-ML File..."),
-                                     tr("Export the simulation to SED-ML using a SED-ML file"));
-    I18nInterface::retranslateAction(mSedmlExportCombineArchiveAction, tr("COMBINE Archive..."),
-                                     tr("Export the simulation to SED-ML using a COMBINE archive"));
+
+    if (mSedmlExportSedmlFileAction) {
+        I18nInterface::retranslateAction(mSedmlExportSedmlFileAction, tr("SED-ML File..."),
+                                         tr("Export the simulation to SED-ML using a SED-ML file"));
+    }
+
+    if (mSedmlExportCombineArchiveAction) {
+        I18nInterface::retranslateAction(mSedmlExportCombineArchiveAction, tr("COMBINE Archive..."),
+                                         tr("Export the simulation to SED-ML using a COMBINE archive"));
+    }
+
     I18nInterface::retranslateAction(mSimulationDataExportAction, tr("Simulation Data Export"),
                                      tr("Export the simulation data"));
 
@@ -616,8 +641,6 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
     mSimulationDataExportAction->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
                                             &&  mSimulation->results()->size()
                                             && !simulationModeEnabled);
-    mCellmlOpenAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile);
-    mSedmlExportAction->setEnabled(mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile);
 
     // Give the focus to our focus proxy, in case we leave our simulation mode
     // (so that the user can modify simulation data, etc.)
