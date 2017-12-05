@@ -1792,9 +1792,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         // Keep track of the graph panel's graphs, if any
 
-        Core::Properties graphProperties = graphPanelAndGraphsWidget->graphProperties(graphPanel, mFileName);
+        Core::Properties graphsProperties = graphPanelAndGraphsWidget->graphsProperties(graphPanel, mFileName);
 
-        if (!graphProperties.isEmpty()) {
+        if (!graphsProperties.isEmpty()) {
             GraphsData data;
 
             data.sedmlPlot2d = sedmlPlot2d;
@@ -1802,7 +1802,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
             data.logAxisX = graphPanel->plot()->logAxisX();
             data.logAxisY = graphPanel->plot()->logAxisY();
 
-            graphsData.insert(graphProperties, data);
+            graphsData.insert(graphsProperties, data);
         }
     }
 
@@ -2308,6 +2308,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
+    SimulationExperimentViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = informationWidget->graphPanelAndGraphsWidget();
 
     libsedml::SedDocument *sedmlDocument = mSimulation->sedmlFile()->sedmlDocument();
     libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
@@ -2332,8 +2334,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     //  - Specifying the NLA solver, if any
 
     SimulationExperimentViewInformationSolversWidgetData *solverData = (mSimulation->cellmlFile()->runtime()->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?
-                                                                           informationWidget->solversWidget()->odeSolverData():
-                                                                           informationWidget->solversWidget()->daeSolverData();
+                                                                           solversWidget->odeSolverData():
+                                                                           solversWidget->daeSolverData();
     const libsedml::SedAlgorithm *sedmlAlgorithm = sedmlUniformTimeCourse->getAlgorithm();
     SolverInterface *usedSolverInterface = 0;
     SolverInterfaces solverInterfaces = Core::solverInterfaces();
@@ -2479,7 +2481,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                 foreach (SolverInterface *solverInterface, solverInterfaces) {
                     if (!nlaSolverName.compare(solverInterface->solverName())) {
-                        informationWidget->solversWidget()->nlaSolverData()->solversListProperty()->setValue(nlaSolverName);
+                        solversWidget->nlaSolverData()->solversListProperty()->setValue(nlaSolverName);
 
                         hasNlaSolver = true;
 
@@ -2525,7 +2527,6 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
         libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
         GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
-        SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
 
         graphPanelAndGraphsWidget->reinitialize(graphPanel);
 

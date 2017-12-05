@@ -712,11 +712,11 @@ static const auto PropertySeparator = QStringLiteral(" | ");
 
 //==============================================================================
 
-Core::Properties SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                                                               const QString &pFileName) const
+Core::Properties SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                                                                const QString &pFileName) const
 {
     // Retrieve and return all the graph properties associated with the given
-    // graph and file name, if any
+    // graph panel and file name, if any
 
     Core::Properties res = Core::Properties();
     Core::PropertyEditorWidget *graphsPropertyEditor = mGraphsPropertyEditors.value(pGraphPanel);
