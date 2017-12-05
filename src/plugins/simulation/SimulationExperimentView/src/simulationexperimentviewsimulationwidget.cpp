@@ -106,6 +106,14 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mErrorType(General),
     mPlots(GraphPanelWidget::GraphPanelPlotWidgets()),
     mUpdatablePlotViewports(QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool>()),
+    mSimulationProperties(QStringList()),
+    mSolversProperties(QStringList()),
+    mGraphPanelProperties(QMap<Core::PropertyEditorWidget *, QStringList>()),
+    mGraphsProperties(QMap<Core::PropertyEditorWidget *, QStringList>()),
+    mSimulationPropertiesModified(false),
+    mSolversPropertiesModified(false),
+    mGraphPanelPropertiesModified(QMap<Core::PropertyEditorWidget *, bool>()),
+    mGraphsPropertiesModified(QMap<Core::PropertyEditorWidget *, bool>()),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false),
     mNeedUpdatePlots(false),
@@ -1684,7 +1692,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
              graphPanelsWidget->graphPanels()) {
         // Create and customise the look and feel of our 2D plot
 
-        Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelProperties(graphPanel);
+        Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel)->properties();
         libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
 
         sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
@@ -2533,7 +2541,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         annotation = sedmlPlot2d->getAnnotation();
 
         if (annotation) {
-            Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelProperties(graphPanel);
+            Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel)->properties();
 
             for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
                 const libsbml::XMLNode &sedmlPlot2dPropertiesNode = annotation->getChild(i);
@@ -2783,6 +2791,48 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     // Select our first graph panel, now that we are fully initialised
 
     graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
+
+    // Keep track of our simulation, solver, graph panel and graph properties,
+    // and check for changes whenever a property gets changed
+    // Note: we pass Qt::UniqueConnection in our calls to connect() so that we
+    //       don't end up with several identical connections (something that
+    //       might happen if we reload our SED-ML file / COMBINE archive for
+    //       example)...
+
+    mSimulationProperties = allPropertyValues(simulationWidget);
+    mSolversProperties = allPropertyValues(solversWidget);
+
+    mSimulationPropertiesModified = false;
+    mSolversPropertiesModified = false;
+
+    connect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(checkSimulationProperties()),
+            Qt::UniqueConnection);
+    connect(solversWidget, SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(checkSolversProperties()),
+            Qt::UniqueConnection);
+
+    mGraphPanelProperties.clear();
+    mGraphsProperties.clear();
+
+    mGraphPanelPropertiesModified.clear();
+    mGraphsPropertiesModified.clear();
+
+    for (int i = 0; i < newNbOfGraphPanels; ++i) {
+        GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
+        Core::PropertyEditorWidget *graphPanelPropertyEditor = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel);
+        Core::PropertyEditorWidget *graphsPropertyEditor = graphPanelAndGraphsWidget->graphsPropertyEditor(graphPanel);
+
+        mGraphPanelProperties.insert(graphPanelPropertyEditor, allPropertyValues(graphPanelPropertyEditor));
+        mGraphsProperties.insert(graphsPropertyEditor, allPropertyValues(graphsPropertyEditor));
+
+        connect(graphPanelPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+                this, SLOT(checkGraphPanelProperties()),
+                Qt::UniqueConnection);
+        connect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+                this, SLOT(checkGraphsProperties()),
+                Qt::UniqueConnection);
+    }
 
     return true;
 }
@@ -3713,6 +3763,98 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(const dou
     // There has been some progress with our export, so update our busy widget
 
     Core::centralWidget()->setBusyWidgetProgress(pProgress);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::checkSimulationProperties()
+{
+    // Check whether any of our simulation properties has changed
+
+    mSimulationPropertiesModified = allPropertyValues(mContentsWidget->informationWidget()->simulationWidget()) != mSimulationProperties;
+
+    // Update our file's modified status
+
+    updateFileModifiedStatus();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::checkSolversProperties()
+{
+    // Check whether any of our simulation properties has changed
+
+    mSolversPropertiesModified = allPropertyValues(mContentsWidget->informationWidget()->solversWidget()) != mSolversProperties;
+
+    // Update our file's modified status
+
+    updateFileModifiedStatus();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::checkGraphPanelProperties()
+{
+    // Check whether any of our graph panel properties has changed
+
+    Core::PropertyEditorWidget *propertyEditor = qobject_cast<Core::PropertyEditorWidget *>(sender());
+
+    mGraphPanelPropertiesModified.insert(propertyEditor, allPropertyValues(propertyEditor) != mGraphPanelProperties.value(propertyEditor));
+
+    // Update our file's modified status
+
+    updateFileModifiedStatus();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::checkGraphsProperties()
+{
+    // Check whether any of our graphs properties has changed
+
+    Core::PropertyEditorWidget *propertyEditor = qobject_cast<Core::PropertyEditorWidget *>(sender());
+
+    mGraphsPropertiesModified.insert(propertyEditor, allPropertyValues(propertyEditor) != mGraphsProperties.value(propertyEditor));
+
+    // Update our file's modified status
+
+    updateFileModifiedStatus();
+}
+
+//==============================================================================
+
+QStringList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::PropertyEditorWidget *pPropertyEditor) const
+{
+    // Return all the property values of the given property editor
+
+    QStringList res = QStringList();
+
+    foreach (Core::Property *property, pPropertyEditor->allProperties())
+        res << property->value();
+
+    return res;
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
+{
+    // Update the modified status of the current file, based on whether its
+    // simulation, solvers, graph panel or graphs properties have changed
+
+    bool graphPanelPropertiesModified = false;
+    bool graphsPropertiesModified = false;
+
+    foreach (const bool &someGraphPanelPropertiesModified, mGraphPanelPropertiesModified.values())
+        graphPanelPropertiesModified = graphPanelPropertiesModified || someGraphPanelPropertiesModified;
+
+    foreach (const bool &someGraphsPropertiesModified, mGraphsPropertiesModified.values())
+        graphsPropertiesModified = graphsPropertiesModified || someGraphsPropertiesModified;
+
+    Core::FileManager::instance()->setModified(mFileName,    mSimulationPropertiesModified
+                                                          || mSolversPropertiesModified
+                                                          || graphPanelPropertiesModified
+                                                          || graphsPropertiesModified);
 }
 
 //==============================================================================

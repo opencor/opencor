@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
+#include "propertyeditorwidget.h"
 #include "widget.h"
 
 //==============================================================================
@@ -67,7 +68,6 @@ namespace CellMLSupport {
 //==============================================================================
 
 namespace Core {
-    class Property;
     class ProgressBarWidget;
     class SplitterWidget;
     class ToolBarWidget;
@@ -204,6 +204,16 @@ private:
     GraphPanelWidget::GraphPanelPlotWidgets mPlots;
     QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool> mUpdatablePlotViewports;
 
+    QStringList mSimulationProperties;
+    QStringList mSolversProperties;
+    QMap<Core::PropertyEditorWidget *, QStringList> mGraphPanelProperties;
+    QMap<Core::PropertyEditorWidget *, QStringList> mGraphsProperties;
+
+    bool mSimulationPropertiesModified;
+    bool mSolversPropertiesModified;
+    QMap<Core::PropertyEditorWidget *, bool>  mGraphPanelPropertiesModified;
+    QMap<Core::PropertyEditorWidget *, bool>  mGraphsPropertiesModified;
+
     bool mCanUpdatePlotsForUpdatedGraphs;
 
     bool mNeedReloadView;
@@ -256,6 +266,10 @@ private:
     bool createSedmlFile(const QString &pFileName, const QString &pModelSource);
 
     void checkSimulationDataModified(const bool &pIsModified);
+
+    QStringList allPropertyValues(Core::PropertyEditorWidget *pPropertyEditor) const;
+
+    void updateFileModifiedStatus();
 
 signals:
     void splitterMoved(const QIntList &pSizes);
@@ -326,6 +340,11 @@ private slots:
 
     void dataStoreExportDone(const QString &pErrorMessage);
     void dataStoreExportProgress(const double &pProgress);
+
+    void checkSimulationProperties();
+    void checkSolversProperties();
+    void checkGraphPanelProperties();
+    void checkGraphsProperties();
 };
 
 //==============================================================================
