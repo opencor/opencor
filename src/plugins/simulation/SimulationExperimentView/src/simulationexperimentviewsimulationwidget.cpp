@@ -1042,7 +1042,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
         // and initialise our simulation, if we still have a valid simulation
         // environment
 
-        Core::centralWidget()->showBusyWidget();
+        if (!pReloadingView)
+            Core::centralWidget()->showBusyWidget();
 
         bool validSimulationEnvironment = furtherInitialize();
 
@@ -1054,7 +1055,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
     setUpdatesEnabled(true);
 
-    if (    validSimulationEnvironment
+    if (   !pReloadingView && validSimulationEnvironment
         && (mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile)) {
         Core::centralWidget()->hideBusyWidget();
     }
