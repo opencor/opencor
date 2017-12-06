@@ -326,6 +326,27 @@ QIntList GraphPanelsWidget::sizes() const
 
 //==============================================================================
 
+void GraphPanelsWidget::setSizes(const QIntList &pSizes)
+{
+    // Set our sizes as internal and/or default sizes, depending on whether the
+    // given sizes consist of ones
+
+    foreach (const int &size, pSizes) {
+        if (size != 1) {
+            mUseInternalSizes = false;
+
+            break;
+        }
+    }
+
+    if (mUseInternalSizes)
+        mInternalSizes = pSizes;
+
+    QSplitter::setSizes(pSizes);
+}
+
+//==============================================================================
+
 void GraphPanelsWidget::stopUsingInternalSizes()
 {
     // Stop using our internal sizes
