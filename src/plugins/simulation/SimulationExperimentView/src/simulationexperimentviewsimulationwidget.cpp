@@ -1420,10 +1420,6 @@ void SimulationExperimentViewSimulationWidget::addGraphPanel()
     // Ask our graph panels widget to add a new graph panel
 
     mContentsWidget->graphPanelsWidget()->addGraphPanel();
-
-    // Check our graph panels
-
-    checkGraphPanels();
 }
 
 //==============================================================================
@@ -1446,10 +1442,6 @@ void SimulationExperimentViewSimulationWidget::removeCurrentGraphPanel()
         QCoreApplication::processEvents();
         // Note: this ensures that our remaining graph panels get realigned at
         //       once...
-
-        // Check our graph panels
-
-        checkGraphPanels();
     }
 }
 
@@ -1460,10 +1452,6 @@ void SimulationExperimentViewSimulationWidget::removeAllGraphPanels()
     // Ask our graph panels widget to remove the current graph panel
 
     mContentsWidget->graphPanelsWidget()->removeAllGraphPanels();
-
-    // Check our graph panels
-
-    checkGraphPanels();
 }
 
 //==============================================================================
@@ -3185,6 +3173,10 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
             this, SIGNAL(logarithmicXAxisToggled()));
     connect(plot, SIGNAL(logarithmicYAxisToggled()),
             this, SIGNAL(logarithmicYAxisToggled()));
+
+    // Check our graph panels
+
+    checkGraphPanels();
 }
 
 //==============================================================================
@@ -3197,6 +3189,10 @@ void SimulationExperimentViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphP
 
     mPlots.removeOne(plot);
     mUpdatablePlotViewports.remove(plot);
+
+    // Check our graph panels
+
+    checkGraphPanels();
 }
 
 //==============================================================================
@@ -3236,6 +3232,10 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
 
     if (!mPlots.contains(plot))
         mPlots << plot;
+
+    // Check our graph panels
+
+    checkGraphPanels();
 }
 
 //==============================================================================
@@ -3260,6 +3260,10 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanel
 
     if (plot->graphs().isEmpty())
         mPlots.removeOne(plot);
+
+    // Check our graph panels
+
+    checkGraphPanels();
 }
 
 //==============================================================================
@@ -3825,10 +3829,12 @@ void SimulationExperimentViewSimulationWidget::checkSolversProperties()
 
 void SimulationExperimentViewSimulationWidget::checkGraphPanels()
 {
-    // Make sure that we are dealing with a non-CellML file
+    // Make sure that we are dealing with a non-CellML file and that
+    // mGraphPanelsWidgetSizes has been initialised
 
-    if (   (mSimulation->fileType() != SimulationSupport::Simulation::SedmlFile)
-        && (mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive)) {
+    if (   (   (mSimulation->fileType() != SimulationSupport::Simulation::SedmlFile)
+            && (mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive))
+        || (mGraphPanelsWidgetSizes == QIntList())) {
         return;
     }
 
