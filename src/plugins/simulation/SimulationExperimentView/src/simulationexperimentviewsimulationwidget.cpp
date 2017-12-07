@@ -2834,10 +2834,10 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         mGraphsProperties.insert(graphsPropertyEditor, allPropertyValues(graphsPropertyEditor));
 
         connect(graphPanelPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(checkGraphPanelProperties()),
+                this, SLOT(checkGraphPanels()),
                 Qt::UniqueConnection);
         connect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(checkGraphsProperties()),
+                this, SLOT(checkGraphPanels()),
                 Qt::UniqueConnection);
     }
 
@@ -3832,36 +3832,6 @@ void SimulationExperimentViewSimulationWidget::checkSolversProperties()
     // Check whether any of our simulation properties has changed
 
     mSolversPropertiesModified = allPropertyValues(mContentsWidget->informationWidget()->solversWidget()) != mSolversProperties;
-
-    // Update our file's modified status
-
-    updateFileModifiedStatus();
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::checkGraphPanelProperties()
-{
-    // Check whether any of our graph panel properties has changed
-
-    Core::PropertyEditorWidget *propertyEditor = qobject_cast<Core::PropertyEditorWidget *>(sender());
-
-    mGraphPanelPropertiesModified.insert(propertyEditor, allPropertyValues(propertyEditor) != mGraphPanelProperties.value(propertyEditor));
-
-    // Update our file's modified status
-
-    updateFileModifiedStatus();
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::checkGraphsProperties()
-{
-    // Check whether any of our graphs properties has changed
-
-    Core::PropertyEditorWidget *propertyEditor = qobject_cast<Core::PropertyEditorWidget *>(sender());
-
-    mGraphsPropertiesModified.insert(propertyEditor, allPropertyValues(propertyEditor) != mGraphsProperties.value(propertyEditor));
 
     // Update our file's modified status
 
