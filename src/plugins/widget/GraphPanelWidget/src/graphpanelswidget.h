@@ -79,8 +79,6 @@ signals:
                          const bool &pActive);
     void graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
-    void removeGraphPanelsEnabled(const bool &pEnabled);
-
     void graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
