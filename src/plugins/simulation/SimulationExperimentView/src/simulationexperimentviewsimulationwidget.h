@@ -349,7 +349,7 @@ private slots:
 
     void checkSimulationProperties();
     void checkSolversProperties();
-    void checkGraphPanels();
+    void checkGraphPanelsAndGraphs();
 };
 
 //==============================================================================

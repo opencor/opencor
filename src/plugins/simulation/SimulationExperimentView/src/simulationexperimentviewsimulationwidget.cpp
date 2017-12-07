@@ -409,7 +409,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     // Keep track of whether a graph panel has been resized
 
     connect(graphPanelsWidget, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(checkGraphPanels()));
+            this, SLOT(checkGraphPanelsAndGraphs()));
 
     // Keep track of a graph being required
 
@@ -2829,10 +2829,10 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         mGraphsProperties.insert(graphsPropertyEditor, allPropertyValues(graphsPropertyEditor));
 
         connect(graphPanelPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(checkGraphPanels()),
+                this, SLOT(checkGraphPanelsAndGraphs()),
                 Qt::UniqueConnection);
         connect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(checkGraphPanels()),
+                this, SLOT(checkGraphPanelsAndGraphs()),
                 Qt::UniqueConnection);
     }
 
@@ -3174,9 +3174,9 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
     connect(plot, SIGNAL(logarithmicYAxisToggled()),
             this, SIGNAL(logarithmicYAxisToggled()));
 
-    // Check our graph panels
+    // Check our graph panels and their graphs
 
-    checkGraphPanels();
+    checkGraphPanelsAndGraphs();
 }
 
 //==============================================================================
@@ -3190,9 +3190,9 @@ void SimulationExperimentViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphP
     mPlots.removeOne(plot);
     mUpdatablePlotViewports.remove(plot);
 
-    // Check our graph panels
+    // Check our graph panels and their graphs
 
-    checkGraphPanels();
+    checkGraphPanelsAndGraphs();
 }
 
 //==============================================================================
@@ -3233,9 +3233,9 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
     if (!mPlots.contains(plot))
         mPlots << plot;
 
-    // Check our graph panels
+    // Check our graph panels and their graphs
 
-    checkGraphPanels();
+    checkGraphPanelsAndGraphs();
 }
 
 //==============================================================================
@@ -3261,9 +3261,9 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanel
     if (plot->graphs().isEmpty())
         mPlots.removeOne(plot);
 
-    // Check our graph panels
+    // Check our graph panels and their graphs
 
-    checkGraphPanels();
+    checkGraphPanelsAndGraphs();
 }
 
 //==============================================================================
@@ -3790,8 +3790,8 @@ void SimulationExperimentViewSimulationWidget::showEvent(QShowEvent *pEvent)
     Q_UNUSED(pEvent);
 
     // We are now visible, so we can initialise mGraphPanelsWidgetSizes, if
-    // needed, as well as check our graph panels (which will, in turn initialise
-    // mGraphPanelPropertiesModified and mGraphsPropertiesModified
+    // needed, as well as mGraphPanelPropertiesModified and
+    // mGraphsPropertiesModified by calling checkGraphPanelsAndGraphs()
     // Note: we initialise mGraphPanelsWidgetSizes here since when we set our
     //       graph panels widget's sizes in furtherInitialize(), we don't end up
     //       with the final sizes since nothing is visible yet...
@@ -3799,7 +3799,7 @@ void SimulationExperimentViewSimulationWidget::showEvent(QShowEvent *pEvent)
     if (mGraphPanelsWidgetSizes == QIntList()) {
         mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
 
-        checkGraphPanels();
+        checkGraphPanelsAndGraphs();
     }
 }
 
@@ -3831,7 +3831,7 @@ void SimulationExperimentViewSimulationWidget::checkSolversProperties()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::checkGraphPanels()
+void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
 {
     // Make sure that we are dealing with a non-CellML file and that
     // mGraphPanelsWidgetSizes has been initialised
