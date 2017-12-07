@@ -38,7 +38,8 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>General:</strong> addressed a problem with quickly changing files potentially resulting in the wrong view being shown (see issue <a href=\"https://github.com/opencor/opencor/issues/1481\">#1481</a>)." },
-                       { "change": "<strong>Graph panel widget:</strong> have the legend buttons use the same background as the plot area (see issue <a href=\"https://github.com/opencor/opencor/issues/1477\">#1477</a>). Got the legend context menu to work again (see issue <a href=\"https://github.com/opencor/opencor/issues/1478\">#1478</a>)." }
+                       { "change": "<strong>Graph panel widget:</strong> have the legend buttons use the same background as the plot area (see issue <a href=\"https://github.com/opencor/opencor/issues/1477\">#1477</a>). Got the legend context menu to work again (see issue <a href=\"https://github.com/opencor/opencor/issues/1478\">#1478</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2n (see issue <a href=\"https://github.com/opencor/opencor/issues/1483\">#1483</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
