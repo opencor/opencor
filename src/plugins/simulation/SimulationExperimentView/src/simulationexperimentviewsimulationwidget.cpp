@@ -3790,13 +3790,17 @@ void SimulationExperimentViewSimulationWidget::showEvent(QShowEvent *pEvent)
     Q_UNUSED(pEvent);
 
     // We are now visible, so we can initialise mGraphPanelsWidgetSizes, if
-    // needed
+    // needed, as well as check our graph panels (which will, in turn initialise
+    // mGraphPanelPropertiesModified and mGraphsPropertiesModified
     // Note: we initialise mGraphPanelsWidgetSizes here since when we set our
     //       graph panels widget's sizes in furtherInitialize(), we don't end up
     //       with the final sizes since nothing is visible yet...
 
-    if (mGraphPanelsWidgetSizes == QIntList())
+    if (mGraphPanelsWidgetSizes == QIntList()) {
         mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
+
+        checkGraphPanels();
+    }
 }
 
 //==============================================================================
