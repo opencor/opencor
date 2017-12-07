@@ -386,6 +386,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Keep track of the addition and removal of a graph panel
 
+    GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = informationWidget->graphPanelAndGraphsWidget();
 
     connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
@@ -1412,6 +1413,10 @@ void SimulationExperimentViewSimulationWidget::addGraphPanel()
     // Ask our graph panels widget to add a new graph panel
 
     mContentsWidget->graphPanelsWidget()->addGraphPanel();
+
+    // Check our graph panels
+
+    checkGraphPanels();
 }
 
 //==============================================================================
@@ -1434,6 +1439,10 @@ void SimulationExperimentViewSimulationWidget::removeCurrentGraphPanel()
         QCoreApplication::processEvents();
         // Note: this ensures that our remaining graph panels get realigned at
         //       once...
+
+        // Check our graph panels
+
+        checkGraphPanels();
     }
 }
 
@@ -1444,6 +1453,10 @@ void SimulationExperimentViewSimulationWidget::removeAllGraphPanels()
     // Ask our graph panels widget to remove the current graph panel
 
     mContentsWidget->graphPanelsWidget()->removeAllGraphPanels();
+
+    // Check our graph panels
+
+    checkGraphPanels();
 }
 
 //==============================================================================
@@ -3761,6 +3774,46 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(const dou
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::checkGraphPanels()
+{
+    // Make sure that we are dealing with a non-CellML file
+
+    if (   (mSimulation->fileType() != SimulationSupport::Simulation::SedmlFile)
+        && (mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive)) {
+        return;
+    }
+
+    // Check whether any of our simulation properties has changed
+
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
+
+    mGraphPanelPropertiesModified.clear();
+    mGraphsPropertiesModified.clear();
+
+    foreach (GraphPanelWidget::GraphPanelWidget *graphPanel,
+             mContentsWidget->graphPanelsWidget()->graphPanels()) {
+        Core::PropertyEditorWidget *propertyEditor = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel);
+
+        mGraphPanelPropertiesModified.insert(propertyEditor,
+                                             mGraphPanelProperties.contains(propertyEditor)?
+                                                 allPropertyValues(propertyEditor) != mGraphPanelProperties.value(propertyEditor):
+                                                 true);
+
+        propertyEditor = graphPanelAndGraphsWidget->graphsPropertyEditor(graphPanel);
+
+        mGraphsPropertiesModified.insert(propertyEditor,
+                                         mGraphsProperties.contains(propertyEditor)?
+                                             allPropertyValues(propertyEditor) != mGraphsProperties.value(propertyEditor):
+                                             true);
+    }
+
+    // Update our file's modified status
+
+    updateFileModifiedStatus();
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::checkSimulationProperties()
 {
     // Check whether any of our simulation properties has changed
@@ -3834,16 +3887,21 @@ QStringList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::Pr
 void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
 {
     // Update the modified status of the current file, based on whether its
-    // simulation, solvers, graph panel or graphs properties have changed
+    // simulation, solvers, graph panel or graphs properties have changed, and
+    // keeping in mind that we may have added/removed graph panels
 
-    bool graphPanelPropertiesModified = false;
-    bool graphsPropertiesModified = false;
+    bool graphPanelPropertiesModified = mGraphPanelProperties.keys() != mGraphPanelPropertiesModified.keys();
+    bool graphsPropertiesModified = mGraphsProperties.keys() != mGraphsPropertiesModified.keys();
 
-    foreach (const bool &someGraphPanelPropertiesModified, mGraphPanelPropertiesModified.values())
-        graphPanelPropertiesModified = graphPanelPropertiesModified || someGraphPanelPropertiesModified;
+    if (!graphPanelPropertiesModified) {
+        foreach (const bool &someGraphPanelPropertiesModified, mGraphPanelPropertiesModified.values())
+            graphPanelPropertiesModified = graphPanelPropertiesModified || someGraphPanelPropertiesModified;
+    }
 
-    foreach (const bool &someGraphsPropertiesModified, mGraphsPropertiesModified.values())
-        graphsPropertiesModified = graphsPropertiesModified || someGraphsPropertiesModified;
+    if (!graphsPropertiesModified) {
+        foreach (const bool &someGraphsPropertiesModified, mGraphsPropertiesModified.values())
+            graphsPropertiesModified = graphsPropertiesModified || someGraphsPropertiesModified;
+    }
 
     Core::FileManager::instance()->setModified(mFileName,    mSimulationPropertiesModified
                                                           || mSolversPropertiesModified
