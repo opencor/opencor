@@ -3797,6 +3797,32 @@ void SimulationExperimentViewSimulationWidget::showEvent(QShowEvent *pEvent)
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::checkSimulationProperties()
+{
+    // Check whether any of our simulation properties has changed
+
+    mSimulationPropertiesModified = allPropertyValues(mContentsWidget->informationWidget()->simulationWidget()) != mSimulationProperties;
+
+    // Update our file's modified status
+
+    updateFileModifiedStatus();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::checkSolversProperties()
+{
+    // Check whether any of our simulation properties has changed
+
+    mSolversPropertiesModified = allPropertyValues(mContentsWidget->informationWidget()->solversWidget()) != mSolversProperties;
+
+    // Update our file's modified status
+
+    updateFileModifiedStatus();
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::checkGraphPanels()
 {
     // Make sure that we are dealing with a non-CellML file
@@ -3834,32 +3860,6 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanels()
                                              allPropertyValues(propertyEditor) != mGraphsProperties.value(propertyEditor):
                                              true);
     }
-
-    // Update our file's modified status
-
-    updateFileModifiedStatus();
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::checkSimulationProperties()
-{
-    // Check whether any of our simulation properties has changed
-
-    mSimulationPropertiesModified = allPropertyValues(mContentsWidget->informationWidget()->simulationWidget()) != mSimulationProperties;
-
-    // Update our file's modified status
-
-    updateFileModifiedStatus();
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::checkSolversProperties()
-{
-    // Check whether any of our simulation properties has changed
-
-    mSolversPropertiesModified = allPropertyValues(mContentsWidget->informationWidget()->solversWidget()) != mSolversProperties;
 
     // Update our file's modified status
 

@@ -347,10 +347,9 @@ private slots:
     void dataStoreExportDone(const QString &pErrorMessage);
     void dataStoreExportProgress(const double &pProgress);
 
-    void checkGraphPanels();
-
     void checkSimulationProperties();
     void checkSolversProperties();
+    void checkGraphPanels();
 };
 
 //==============================================================================
