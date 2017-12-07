@@ -140,6 +140,9 @@ public:
 
     void resetSimulationProgress();
 
+protected:
+    virtual void showEvent(QShowEvent *pEvent);
+
 private:
     enum ErrorType {
         General,
@@ -213,6 +216,9 @@ private:
     bool mSolversPropertiesModified;
     QMap<Core::PropertyEditorWidget *, bool>  mGraphPanelPropertiesModified;
     QMap<Core::PropertyEditorWidget *, bool>  mGraphsPropertiesModified;
+
+    QIntList mGraphPanelsWidgetSizes;
+    bool mGraphPanelsWidgetSizesModified;
 
     bool mCanUpdatePlotsForUpdatedGraphs;
 
@@ -341,9 +347,10 @@ private slots:
     void dataStoreExportDone(const QString &pErrorMessage);
     void dataStoreExportProgress(const double &pProgress);
 
+    void checkGraphPanels();
+
     void checkSimulationProperties();
     void checkSolversProperties();
-    void checkGraphPanels();
 };
 
 //==============================================================================

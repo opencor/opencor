@@ -114,6 +114,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mSolversPropertiesModified(false),
     mGraphPanelPropertiesModified(QMap<Core::PropertyEditorWidget *, bool>()),
     mGraphsPropertiesModified(QMap<Core::PropertyEditorWidget *, bool>()),
+    mGraphPanelsWidgetSizes(QIntList()),
+    mGraphPanelsWidgetSizesModified(false),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false),
     mNeedUpdatePlots(false),
@@ -403,6 +405,11 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     connect(graphPanelsWidget, SIGNAL(graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
             graphPanelAndGraphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
+
+    // Keep track of whether a graph panel has been resized
+
+    connect(graphPanelsWidget, SIGNAL(splitterMoved(int, int)),
+            this, SLOT(checkGraphPanels()));
 
     // Keep track of a graph being required
 
@@ -3774,6 +3781,22 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(const dou
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::showEvent(QShowEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    // We are now visible, so we can initialise mGraphPanelsWidgetSizes, if
+    // needed
+    // Note: we initialise mGraphPanelsWidgetSizes here since when we set our
+    //       graph panels widget's sizes in furtherInitialize(), we don't end up
+    //       with the final sizes since nothing is visible yet...
+
+    if (mGraphPanelsWidgetSizes == QIntList())
+        mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::checkGraphPanels()
 {
     // Make sure that we are dealing with a non-CellML file
@@ -3783,6 +3806,12 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanels()
         return;
     }
 
+    // Check whether any of our graph panels' height has changed
+
+    GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
+
+    mGraphPanelsWidgetSizesModified = graphPanelsWidget->sizes() != mGraphPanelsWidgetSizes;
+
     // Check whether any of our simulation properties has changed
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
@@ -3790,8 +3819,7 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanels()
     mGraphPanelPropertiesModified.clear();
     mGraphsPropertiesModified.clear();
 
-    foreach (GraphPanelWidget::GraphPanelWidget *graphPanel,
-             mContentsWidget->graphPanelsWidget()->graphPanels()) {
+    foreach (GraphPanelWidget::GraphPanelWidget *graphPanel, graphPanelsWidget->graphPanels()) {
         Core::PropertyEditorWidget *propertyEditor = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel);
 
         mGraphPanelPropertiesModified.insert(propertyEditor,
@@ -3876,7 +3904,8 @@ void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
     Core::FileManager::instance()->setModified(mFileName,    mSimulationPropertiesModified
                                                           || mSolversPropertiesModified
                                                           || graphPanelPropertiesModified
-                                                          || graphsPropertiesModified);
+                                                          || graphsPropertiesModified
+                                                          || mGraphPanelsWidgetSizesModified);
 }
 
 //==============================================================================
