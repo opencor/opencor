@@ -271,8 +271,6 @@ private:
                                 const QString &pVariable);
     bool createSedmlFile(const QString &pFileName, const QString &pModelSource);
 
-    void checkSimulationDataModified(const bool &pIsModified);
-
     QStringList allPropertyValues(Core::PropertyEditorWidget *pPropertyEditor) const;
 
     void updateFileModifiedStatus();

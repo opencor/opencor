@@ -1417,7 +1417,7 @@ void SimulationExperimentViewSimulationWidget::developmentMode()
     // Make sure that our reset button is properly enabled/disabled
     // Note: this is needed if the development mode has just been disabled...
 
-    checkSimulationDataModified(mSimulation->data()->isModified());
+    simulationDataModified(mSimulation->data()->isModified());
 }
 
 //==============================================================================
@@ -3087,23 +3087,14 @@ void SimulationExperimentViewSimulationWidget::simulationError(const QString &pM
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::checkSimulationDataModified(const bool &pIsModified)
+void SimulationExperimentViewSimulationWidget::simulationDataModified(const bool &pIsModified)
 {
-    // We are dealing with the current simulation
+    // Update our modified state
 
     if (mDevelopmentModeAction->isChecked())
         Core::FileManager::instance()->setModified(mFileName, pIsModified);
     else
         mResetModelParametersAction->setEnabled(pIsModified);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::simulationDataModified(const bool &pIsModified)
-{
-    // Update our modified state
-
-    checkSimulationDataModified(pIsModified);
 }
 
 //==============================================================================
@@ -3570,7 +3561,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
     SimulationSupport::Simulation *simulation = pSimulationWidget->simulation();
 
     if (simulation == mSimulation)
-        checkSimulationDataModified(simulation->data()->isModified());
+        simulationDataModified(simulation->data()->isModified());
 
     // Update all the graphs of all our plots, but only if we are visible
     // Note: needProcessingEvents is used to ensure that our plots are all
@@ -3805,7 +3796,7 @@ void SimulationExperimentViewSimulationWidget::paintEvent(QPaintEvent *pEvent)
     //       graph panels widget's sizes in furtherInitialize(), we don't end up
     //       with the final sizes since nothing is visible yet...
 
-    if (mGraphPanelsWidgetSizes == QIntList()) {
+    if (mGraphPanelsWidgetSizes.isEmpty()) {
         mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
 
         checkGraphPanelsAndGraphs();
@@ -3847,7 +3838,7 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
 
     if (   (   (mSimulation->fileType() != SimulationSupport::Simulation::SedmlFile)
             && (mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive))
-        || (mGraphPanelsWidgetSizes == QIntList())) {
+        || mGraphPanelsWidgetSizes.isEmpty()) {
         return;
     }
 
