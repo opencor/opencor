@@ -308,6 +308,17 @@ QStringList RawSEDMLViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
+QString RawSEDMLViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName)
+
+    // Return the MIME type for the given SED-ML file
+
+    return SEDMLSupport::SedmlMimeType;
+}
+
+//==============================================================================
+
 QString RawSEDMLViewPlugin::viewDefaultFileExtension() const
 {
     // Return the default file extension we support

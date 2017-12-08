@@ -212,7 +212,7 @@ QColor CORE_EXPORT lockedColor(const QColor &pColor);
 
 QStringList CORE_EXPORT filters(const FileTypeInterfaces &pFileTypeInterfaces);
 QStringList CORE_EXPORT filters(const FileTypeInterfaces &pFileTypeInterfaces,
-                                const QStringList &pMimeTypes);
+                                const QString &pMimeType);
 
 bool CORE_EXPORT opencorActive();
 

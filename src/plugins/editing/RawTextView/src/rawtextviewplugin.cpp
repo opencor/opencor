@@ -283,6 +283,17 @@ QStringList RawTextViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
+QString RawTextViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName)
+
+    // Return the MIME type for the given file
+
+    return QString();
+}
+
+//==============================================================================
+
 QString RawTextViewPlugin::viewDefaultFileExtension() const
 {
     // Return the default file extension we support

@@ -254,6 +254,17 @@ QStringList SampleViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
+QString SampleViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName)
+
+    // Return the MIME type for the given file
+
+    return QString();
+}
+
+//==============================================================================
+
 QString SampleViewPlugin::viewDefaultFileExtension() const
 {
     // Return the default file extension we support

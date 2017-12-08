@@ -274,6 +274,23 @@ QStringList SimulationExperimentViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
+QString SimulationExperimentViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    // Return the MIME type for the given CellML file
+    // Note: we should never return an empty string...
+
+    if (CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        return CellMLSupport::CellmlMimeType;
+    else if (SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName))
+        return SEDMLSupport::SedmlMimeType;
+    else if (COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName))
+        return COMBINESupport::CombineMimeType;
+    else
+        return QString();
+}
+
+//==============================================================================
+
 QString SimulationExperimentViewPlugin::viewDefaultFileExtension() const
 {
     // Return the default file extension we support
