@@ -1754,6 +1754,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     QIntList graphPanelsWidgetSizes = graphPanelsWidget->sizes();
+    QList<Core::Properties> graphsPropertiesList = QList<Core::Properties>();
     QMap<Core::Properties, GraphsData> graphsData = QMap<Core::Properties, GraphsData>();
     int graphPlotCounter = 0;
 
@@ -1879,6 +1880,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
             data.logAxisX = graphPanel->plot()->logAxisX();
             data.logAxisY = graphPanel->plot()->logAxisY();
 
+            graphsPropertiesList << graphsProperties;
+
             graphsData.insert(graphsProperties, data);
         }
     }
@@ -1886,7 +1889,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
     // Create and customise 2D plot outputs and data generators for all the
     // graphs that are to be plotted, if any
 
-    foreach (const Core::Properties &graphsProperties, graphsData.keys()) {
+    foreach (const Core::Properties &graphsProperties, graphsPropertiesList) {
         // Create some graphs
 
         GraphsData data = graphsData.value(graphsProperties);
