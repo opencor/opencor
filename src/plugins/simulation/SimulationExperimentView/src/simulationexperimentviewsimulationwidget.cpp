@@ -1066,10 +1066,10 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
 void SimulationExperimentViewSimulationWidget::finalize()
 {
-    // Reset mGraphPanelsWidgetSizes, so that it can be properly initialised if
-    // we are reloading a file
+    // Reinitialise our trackers, so that it doesn't look for a split second
+    // that we are modified when reloading ourselves
 
-    mGraphPanelsWidgetSizes = QIntList();
+    initialiseTrackers();
 
     // Finalize/backup a few things in our GUI's solvers, graphs, parameters and
     // graph panels widgets
@@ -1191,7 +1191,9 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
         }
     }
     case SimulationSupport::Simulation::SedmlFile:
-        return false;
+        sedmlExportSedmlFile(pFileName);
+
+        return true;
     case SimulationSupport::Simulation::CombineArchive:
         return false;
     }
@@ -1459,6 +1461,63 @@ void SimulationExperimentViewSimulationWidget::removeAllGraphPanels()
     // Ask our graph panels widget to remove the current graph panel
 
     mContentsWidget->graphPanelsWidget()->removeAllGraphPanels();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::initialiseTrackers()
+{
+    // Keep track of our simulation, solver, graph panel and graph properties,
+    // and check for changes whenever a property gets changed
+    // Note: we pass Qt::UniqueConnection in our calls to connect() so that we
+    //       don't end up with several identical connections (something that
+    //       might happen if we reload our SED-ML file / COMBINE archive for
+    //       example)...
+
+    SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+    SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
+    SimulationExperimentViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
+
+    mSimulationProperties = allPropertyValues(simulationWidget);
+    mSolversProperties = allPropertyValues(solversWidget);
+
+    mSimulationPropertiesModified = false;
+    mSolversPropertiesModified = false;
+
+    connect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(checkSimulationProperties()),
+            Qt::UniqueConnection);
+    connect(solversWidget, SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(checkSolversProperties()),
+            Qt::UniqueConnection);
+
+    mGraphPanelProperties.clear();
+    mGraphsProperties.clear();
+
+    mGraphPanelPropertiesModified.clear();
+    mGraphsPropertiesModified.clear();
+
+    GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = informationWidget->graphPanelAndGraphsWidget();
+
+    for (int i = 0, iMax = graphPanelsWidget->graphPanels().count(); i < iMax; ++i) {
+        GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
+        Core::PropertyEditorWidget *graphPanelPropertyEditor = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel);
+        Core::PropertyEditorWidget *graphsPropertyEditor = graphPanelAndGraphsWidget->graphsPropertyEditor(graphPanel);
+
+        mGraphPanelProperties.insert(graphPanelPropertyEditor, allPropertyValues(graphPanelPropertyEditor));
+        mGraphsProperties.insert(graphsPropertyEditor, allPropertyValues(graphsPropertyEditor));
+
+        connect(graphPanelPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+                this, SLOT(checkGraphPanelsAndGraphs()),
+                Qt::UniqueConnection);
+        connect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+                this, SLOT(checkGraphPanelsAndGraphs()),
+                Qt::UniqueConnection);
+    }
+
+    mGraphPanelsWidgetSizes = QIntList();
+    mGraphPanelsWidgetSizesModified = false;
 }
 
 //==============================================================================
@@ -1919,33 +1978,56 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
+void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QString &pFileName)
 {
-    // Export ourselves to SED-ML using a SED-ML file, but first get a file name
+    // Note: if there is no given file name, then it means that we want to
+    //       export the simulation to a SED-ML file and that mFileName refers to
+    //       a local or remote CellML file. On the other hand, if a file name is
+    //       given, then it means that we are dealing with a SED-ML file and
+    //       that we want to update it or save it under a new file name, meaning
+    //       that mFileName refers to a local SED-ML file (never a remote SED-ML
+    //       file since we cannot save those)...
 
+    // Export ourselves to SED-ML using a SED-ML file, but first get a file
+    // name, if needed
+
+    bool isCellmlFile = pFileName.isEmpty();
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    bool remoteFile = fileManagerInstance->isRemote(mFileName);
-    QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
-    QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
-    QString sedmlFileName = cellmlFileName;
-    FileTypeInterface *sedmlFileTypeInterface = SEDMLSupport::fileTypeInterface();
-    QStringList sedmlFilters = sedmlFileTypeInterface?
-                                   Core::filters(FileTypeInterfaces() << sedmlFileTypeInterface):
-                                   QStringList();
-    QString firstSedmlFilter = sedmlFilters.first();
+    bool remoteFile = isCellmlFile?
+                          fileManagerInstance->isRemote(mFileName):
+                          false;
+    QString cellmlFileName = isCellmlFile?
+                                 remoteFile?
+                                     fileManagerInstance->url(mFileName):
+                                     mFileName:
+                                 mSimulation->cellmlFile()->fileName();
+    QString sedmlFileName = pFileName;
 
-    if (!cellmlFileCompleteSuffix.isEmpty()) {
-        sedmlFileName.replace(QRegularExpression(QRegularExpression::escape(cellmlFileCompleteSuffix)+"$"),
-                              SEDMLSupport::SedmlFileExtension);
-    } else {
-        sedmlFileName += "."+SEDMLSupport::SedmlFileExtension;
+    if (isCellmlFile) {
+        sedmlFileName = cellmlFileName;
+
+        QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
+
+        if (!cellmlFileCompleteSuffix.isEmpty()) {
+            sedmlFileName.replace(QRegularExpression(QRegularExpression::escape(cellmlFileCompleteSuffix)+"$"),
+                                  SEDMLSupport::SedmlFileExtension);
+        } else {
+            sedmlFileName += "."+SEDMLSupport::SedmlFileExtension;
+        }
+
+        FileTypeInterface *sedmlFileTypeInterface = SEDMLSupport::fileTypeInterface();
+        QStringList sedmlFilters = sedmlFileTypeInterface?
+                                       Core::filters(FileTypeInterfaces() << sedmlFileTypeInterface):
+                                       QStringList();
+        QString firstSedmlFilter = sedmlFilters.first();
+
+        sedmlFileName = Core::getSaveFileName(tr("Export To SED-ML File"),
+                                              sedmlFileName,
+                                              sedmlFilters, &firstSedmlFilter);
     }
 
-    sedmlFileName = Core::getSaveFileName(tr("Export To SED-ML File"),
-                                          sedmlFileName,
-                                          sedmlFilters, &firstSedmlFilter);
-
-    // Create a SED-ML file using the SED-ML file name that has been provided
+    // Create a SED-ML file using the SED-ML file name that has been provided,
+    // if any
 
     if (!sedmlFileName.isEmpty()) {
         QString modelSource = cellmlFileName;
@@ -1971,6 +2053,11 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
                                     tr("The simulation could not be exported to <strong>%1</strong>.").arg(sedmlFileName));
         }
     }
+
+    // Reinitialise our trackers, if we are not dealing with a CellML file
+
+    if (!isCellmlFile)
+        initialiseTrackers();
 }
 
 //==============================================================================
@@ -2801,47 +2888,10 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
     graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
-    // Keep track of our simulation, solver, graph panel and graph properties,
-    // and check for changes whenever a property gets changed
-    // Note: we pass Qt::UniqueConnection in our calls to connect() so that we
-    //       don't end up with several identical connections (something that
-    //       might happen if we reload our SED-ML file / COMBINE archive for
-    //       example)...
+    // Initialise our trackers, so we know if a SED-ML file or COMBINE archive
+    // has been modified
 
-    mSimulationProperties = allPropertyValues(simulationWidget);
-    mSolversProperties = allPropertyValues(solversWidget);
-
-    mSimulationPropertiesModified = false;
-    mSolversPropertiesModified = false;
-
-    connect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(checkSimulationProperties()),
-            Qt::UniqueConnection);
-    connect(solversWidget, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(checkSolversProperties()),
-            Qt::UniqueConnection);
-
-    mGraphPanelProperties.clear();
-    mGraphsProperties.clear();
-
-    mGraphPanelPropertiesModified.clear();
-    mGraphsPropertiesModified.clear();
-
-    for (int i = 0; i < newNbOfGraphPanels; ++i) {
-        GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
-        Core::PropertyEditorWidget *graphPanelPropertyEditor = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel);
-        Core::PropertyEditorWidget *graphsPropertyEditor = graphPanelAndGraphsWidget->graphsPropertyEditor(graphPanel);
-
-        mGraphPanelProperties.insert(graphPanelPropertyEditor, allPropertyValues(graphPanelPropertyEditor));
-        mGraphsProperties.insert(graphsPropertyEditor, allPropertyValues(graphsPropertyEditor));
-
-        connect(graphPanelPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(checkGraphPanelsAndGraphs()),
-                Qt::UniqueConnection);
-        connect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(checkGraphPanelsAndGraphs()),
-                Qt::UniqueConnection);
-    }
+    initialiseTrackers();
 
     return true;
 }

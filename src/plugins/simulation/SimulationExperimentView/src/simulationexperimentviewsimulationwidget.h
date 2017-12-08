@@ -261,6 +261,8 @@ private:
     void initializeGui(const bool &pValidSimulationEnvironment);
     void initializeSimulation();
 
+    void initialiseTrackers();
+
     void addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
                             libsedml::SedModel *pSedmlModel,
                             libsedml::SedRepeatedTask *pSedmlRepeatedTask,
@@ -298,7 +300,7 @@ private slots:
     void removeAllGraphPanels();
     void resetModelParameters();
     void clearSimulationData();
-    void sedmlExportSedmlFile();
+    void sedmlExportSedmlFile(const QString &pFileName = QString());
     void sedmlExportCombineArchive();
 
     void emitSplitterMoved();
