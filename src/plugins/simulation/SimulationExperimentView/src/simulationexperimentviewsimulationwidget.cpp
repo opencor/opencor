@@ -1997,14 +1997,13 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
 
     bool isCellmlFile = pFileName.isEmpty();
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    bool remoteFile = isCellmlFile?
-                          fileManagerInstance->isRemote(mFileName):
-                          false;
-    QString cellmlFileName = isCellmlFile?
-                                 remoteFile?
-                                     fileManagerInstance->url(mFileName):
-                                     mFileName:
-                                 mSimulation->cellmlFile()->fileName();
+    QString localCellmlFileName = isCellmlFile?
+                                      mFileName:
+                                      mSimulation->cellmlFile()->fileName();
+    bool remoteCellmlFile = fileManagerInstance->isRemote(localCellmlFileName);
+    QString cellmlFileName = remoteCellmlFile?
+                                 fileManagerInstance->url(localCellmlFileName):
+                                 localCellmlFileName;
     QString sedmlFileName = pFileName;
 
     if (isCellmlFile) {
@@ -2036,7 +2035,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
     if (!sedmlFileName.isEmpty()) {
         QString modelSource = cellmlFileName;
 
-        if (   !remoteFile
+        if (   !remoteCellmlFile
 #ifdef Q_OS_WIN
             && !modelSource.left(3).compare(sedmlFileName.left(3))
 #endif
