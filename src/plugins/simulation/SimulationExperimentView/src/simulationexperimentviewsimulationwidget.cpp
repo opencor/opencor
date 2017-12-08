@@ -1190,6 +1190,10 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
     case SimulationSupport::Simulation::CombineArchive:
         return false;
     }
+
+    return false;
+    // Note: we can't reach this point, but without it we may be told that not
+    //       all control paths return a value...
 }
 
 //==============================================================================
