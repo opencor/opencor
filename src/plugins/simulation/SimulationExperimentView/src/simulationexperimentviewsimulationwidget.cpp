@@ -3948,6 +3948,11 @@ QStringList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::Pr
 
 void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
 {
+    // Make sure that we are not dealing with a remote file
+
+    if (Core::FileManager::instance()->isRemote(mFileName))
+        return;
+
     // Update the modified status of the current file, based on whether its
     // simulation, solvers, graph panel or graphs properties have changed, and
     // keeping in mind that we may have added/removed graph panels
