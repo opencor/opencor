@@ -324,6 +324,11 @@ QIntList GraphPanelsWidget::sizes() const
 
 void GraphPanelsWidget::setSizes(const QIntList &pSizes)
 {
+    // Make sure that we have the correct number of sizes
+
+    if (pSizes.count() != count())
+        return;
+
     // Set our sizes as internal and/or default sizes, depending on whether the
     // given sizes consist of ones
 
