@@ -1066,6 +1066,11 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
 void SimulationExperimentViewSimulationWidget::finalize()
 {
+    // Reset mGraphPanelsWidgetSizes, so that it can be properly initialised if
+    // we are reloading a file
+
+    mGraphPanelsWidgetSizes = QIntList();
+
     // Finalize/backup a few things in our GUI's solvers, graphs, parameters and
     // graph panels widgets
 
