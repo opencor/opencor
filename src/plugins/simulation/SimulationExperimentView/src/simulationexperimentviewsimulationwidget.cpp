@@ -1225,9 +1225,10 @@ void SimulationExperimentViewSimulationWidget::filePermissionsChanged()
 
 void SimulationExperimentViewSimulationWidget::fileModified()
 {
-    // Update our reset action
+    // Update our reset action, but only if we are dealing with a CellML file
 
-    mResetModelParametersAction->setEnabled(Core::FileManager::instance()->isModified(mFileName));
+    if (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)
+        mResetModelParametersAction->setEnabled(Core::FileManager::instance()->isModified(mFileName));
 }
 
 //==============================================================================
