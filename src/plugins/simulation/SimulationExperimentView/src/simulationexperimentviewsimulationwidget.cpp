@@ -1139,15 +1139,16 @@ QIcon SimulationExperimentViewSimulationWidget::fileTabIcon() const
 
 bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
 {
-    // In case of a CellML file that is in development mode, retrieve all the
-    // state and constant parameters which value has changed and update our
-    // CellML object with their 'new' values, unless they are imported, in which
-    // case we let the user know that their 'new' values cannot be saved
+    // Save to the given file, depending on the type of our simulation
 
-    QString importedParameters = QString();
+    switch (mSimulation->fileType()) {
+    case SimulationSupport::Simulation::CellmlFile: {
+        // We are dealing with a CellML file, so retrieve all the state and
+        // constant parameters which value has changed and update our CellML
+        // object with their 'new' values, unless they are imported, in which
+        // case we let the user know that their 'new' values cannot be saved
 
-    if (   (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)
-        && mDevelopmentModeAction->isChecked()) {
+        QString importedParameters = QString();
         ObjRef<iface::cellml_api::CellMLComponentSet> components = mSimulation->cellmlFile()->model()->localComponents();
         QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
 
@@ -1167,31 +1168,28 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
                     importedParameters += "\n - "+QString::fromStdWString(component->name())+" | "+QString::fromStdWString(variable->name());
             }
         }
-    }
 
-    // Now, we can effectively save our given file and let the user know if some
-    // parameter values couldn't be saved
+        // Now, we can effectively save the CellML file to the given file and
+        // let the user know if some parameter values couldn't be saved
 
-    bool res = (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)?
-                   mSimulation->cellmlFile()->save(pFileName):
-                   (mSimulation->fileType() == SimulationSupport::Simulation::SedmlFile)?
-                       mSimulation->sedmlFile()->save(pFileName):
-                       mSimulation->combineArchive()->save(pFileName);
+        if (mSimulation->cellmlFile()->save(pFileName)) {
+            mFileName = mSimulation->cellmlFile()->fileName();
 
-    if (res) {
-        mFileName = (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)?
-                        mSimulation->cellmlFile()->fileName():
-                        (mSimulation->fileType() == SimulationSupport::Simulation::SedmlFile)?
-                            mSimulation->sedmlFile()->fileName():
-                            mSimulation->combineArchive()->fileName();
+            if (!importedParameters.isEmpty()) {
+                Core::informationMessageBox(tr("Save File"),
+                                            tr("The following parameters are imported and cannot therefore be saved:")+importedParameters);
+            }
 
-        if (!importedParameters.isEmpty()) {
-            Core::informationMessageBox(tr("Save File"),
-                                        tr("The following parameters are imported and cannot therefore be saved:")+importedParameters);
+            return true;
+        } else {
+            return false;
         }
     }
-
-    return res;
+    case SimulationSupport::Simulation::SedmlFile:
+        return false;
+    case SimulationSupport::Simulation::CombineArchive:
+        return false;
+    }
 }
 
 //==============================================================================
