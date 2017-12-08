@@ -141,7 +141,7 @@ public:
     void resetSimulationProgress();
 
 protected:
-    virtual void showEvent(QShowEvent *pEvent);
+    virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
     enum ErrorType {

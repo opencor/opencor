@@ -3787,11 +3787,13 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(const dou
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::showEvent(QShowEvent *pEvent)
+void SimulationExperimentViewSimulationWidget::paintEvent(QPaintEvent *pEvent)
 {
-    Q_UNUSED(pEvent);
+    // Default handling of the event
 
-    // We are now visible, so we can initialise mGraphPanelsWidgetSizes, if
+    QWidget::paintEvent(pEvent);
+
+    // We have been rendered, so we can initialise mGraphPanelsWidgetSizes, if
     // needed, as well as mGraphPanelPropertiesModified and
     // mGraphsPropertiesModified by calling checkGraphPanelsAndGraphs()
     // Note: we initialise mGraphPanelsWidgetSizes here since when we set our
