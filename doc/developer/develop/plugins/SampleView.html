@@ -414,10 +414,8 @@ ViewInterface::Mode SampleViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList SampleViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList SampleViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support, i.e. any in our case
 
     return QStringList();
@@ -479,7 +477,7 @@ QIcon SampleViewPlugin::fileTabIcon(const QString &pFileName) const
 //==============================================================================</pre>
 
         <p>
-            Our plugin provides a view, so OpenCOR needs to know about its name (see <code>viewName()</code>; lines 292-297), its type (see <code>viewMode()</code>; lines 239-244), the MIME types it supports (see <code>viewMimeTypes()</code>; lines 248-255), the default file extension it supports (see <code>viewDefaultFileExtension()</code>; lines 259-264) and whether it needs a special tab icon (see <code>fileTabIcon()</code>; lines 301-308). OpenCOR also needs to know the widget that is used for the view and this for a given file (see <code>viewWidget()</code>; lines 268-277). Note that our plugin uses only one view widget (and updates its contents based on the file that is currently active), but it might perfectly use one per file. Finally, our plugin needs to handle the case where a view widget is to be removed (see <code>removeViewWidget()</code>; lines 281-288), which happens whenever a file gets closed.
+            Our plugin provides a view, so OpenCOR needs to know about its name (see <code>viewName()</code>; lines 290-295), its type (see <code>viewMode()</code>; lines 239-244), the MIME types it supports (see <code>viewMimeTypes()</code>; lines 248-253), the default file extension it supports (see <code>viewDefaultFileExtension()</code>; lines 257-262) and whether it needs a special tab icon (see <code>fileTabIcon()</code>; lines 299-306). OpenCOR also needs to know the widget that is used for the view and this for a given file (see <code>viewWidget()</code>; lines 266-275). Note that our plugin uses only one view widget (and updates its contents based on the file that is currently active), but it might perfectly use one per file. Finally, our plugin needs to handle the case where a view widget is to be removed (see <code>removeViewWidget()</code>; lines 279-286), which happens whenever a file gets closed.
         </p>
 
         <span class="anchor" id="Plugin specific"></span>

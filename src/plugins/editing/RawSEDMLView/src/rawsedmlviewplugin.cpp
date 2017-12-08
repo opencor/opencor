@@ -299,10 +299,8 @@ ViewInterface::Mode RawSEDMLViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList RawSEDMLViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList RawSEDMLViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support
 
     return QStringList() << SEDMLSupport::SedmlMimeType;

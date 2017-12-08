@@ -274,10 +274,8 @@ ViewInterface::Mode RawTextViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList RawTextViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList RawTextViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support, i.e. any in our case
 
     return QStringList();

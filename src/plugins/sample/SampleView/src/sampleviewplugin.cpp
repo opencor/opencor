@@ -245,10 +245,8 @@ ViewInterface::Mode SampleViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList SampleViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList SampleViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support, i.e. any in our case
 
     return QStringList();
