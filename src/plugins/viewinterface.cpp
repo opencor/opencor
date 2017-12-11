@@ -75,8 +75,8 @@ QString ViewInterface::modeAsString(const Mode &pMode)
     }
 
     return "???";
-    // Note: we can't reach this point, but without it we may be told that not
-    //       all control paths return a value...
+    // Note: we can't reach this point, but without it we may, at compilation
+    //       time, be told that not all control paths return a value...
 }
 
 //==============================================================================
