@@ -234,6 +234,8 @@ public:
     explicit Simulation(const QString &pFileName);
     ~Simulation();
 
+    QString fileName() const;
+
     void reload();
     void rename(const QString &pFileName);
 

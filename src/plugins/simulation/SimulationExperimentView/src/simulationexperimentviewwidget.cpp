@@ -396,8 +396,6 @@ void SimulationExperimentViewWidget::fileRenamed(const QString &pOldFileName,
     SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pOldFileName);
 
     if (simulationWidget) {
-        simulationWidget->setFileName(pNewFileName);
-
         mSimulationWidgets.insert(pNewFileName, simulationWidget);
         mSimulationWidgets.remove(pOldFileName);
     }

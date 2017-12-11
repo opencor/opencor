@@ -922,6 +922,15 @@ void Simulation::retrieveFileDetails()
 
 //==============================================================================
 
+QString Simulation::fileName() const
+{
+    // Return our file name
+
+    return mFileName;
+}
+
+//==============================================================================
+
 void Simulation::reload()
 {
     // Make sure that we are not in development mode
