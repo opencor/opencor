@@ -2585,7 +2585,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         }
     }
 
-    // Start afresh by removing all the graph panels, but the last one
+    // Start afresh by removing all the graph panels
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
 
