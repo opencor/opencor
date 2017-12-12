@@ -101,8 +101,11 @@ void SimulationExperimentViewPlugin::fileModified(const QString &pFileName)
 //==============================================================================
 
 void SimulationExperimentViewPlugin::fileReloaded(const QString &pFileName,
-                                                  const bool &pFileChanged)
+                                                  const bool &pFileChanged,
+                                                  const bool &pFileJustSaved)
 {
+    Q_UNUSED(pFileJustSaved);
+
     // The given file has been reloaded, so let our view widget know about it
 
     if (pFileChanged)
