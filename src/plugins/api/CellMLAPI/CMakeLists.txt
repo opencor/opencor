@@ -243,7 +243,7 @@ ELSE()
 
     IF(WIN32)
         SET(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} /wd4005 /wd4244 /wd4267 /wd4311 /wd4312")
-        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4477 /wd4530 /wd4577")
+        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4267 /wd4477 /wd4530 /wd4577")
     ELSEIF(NOT APPLE)
         SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wno-reorder -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable")
     ENDIF()
