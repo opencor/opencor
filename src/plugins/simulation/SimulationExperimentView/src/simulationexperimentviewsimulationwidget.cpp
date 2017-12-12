@@ -1391,12 +1391,6 @@ void SimulationExperimentViewSimulationWidget::developmentMode()
     if (!mDevelopmentModeAction->isChecked())
         Core::FileManager::instance()->setModified(mSimulation->fileName(), false);
 
-    // Let our simulation know that we are now in development mode
-    // Note: this will ensure that our simulation doesn't get reloaded if we
-    //       were to save our CellML file...
-
-    mSimulation->setDevelopmentMode(mDevelopmentModeAction->isChecked());
-
     // Make sure that our reset button is properly enabled/disabled
     // Note: this is needed if the development mode has just been disabled...
 

@@ -30,9 +30,12 @@ OPTION(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL pa
 OPTION(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
 OPTION(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
-#---OPENCOR--- ENABLE WHEN WE ACTUALLY MAKE USE OF Zinc...
-#OPTION(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
+
+IF(ENABLE_TEST_PLUGINS)
+    OPTION(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
+    #---OPENCOR--- Zinc IS CURRENTLY ONLY USED BY OUR TEST PLUGINS...
+ENDIF()
 
 # Make sure that we are using the compiler we support
 
@@ -813,8 +816,7 @@ ENDIF()
 
 IF(ENABLE_TEST_PLUGINS)
     SET(TEST_PLUGINS
-#---OPENCOR--- ENABLE WHEN WE ACTUALLY MAKE USE OF Zinc...
-#        test/ZincWindow
+        test/ZincWindow
     )
 ELSE()
     SET(TEST_PLUGINS)
@@ -880,8 +882,6 @@ SET(PLUGINS
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
-#---OPENCOR--- ENABLE WHEN WE ACTUALLY MAKE USE OF Zinc...
-#    thirdParty/Zinc
     thirdParty/zlib
 
     tools/CellMLTools
@@ -890,9 +890,15 @@ SET(PLUGINS
     widget/GraphPanelWidget
     widget/MathMLViewerWidget
     widget/WebViewerWidget
-#---OPENCOR--- ENABLE WHEN WE ACTUALLY MAKE USE OF Zinc...
-#    widget/ZincWidget
 )
+
+IF(ENABLE_TEST_PLUGINS)
+    LIST(APPEND PLUGINS
+        thirdParty/Zinc
+
+        widget/ZincWidget
+    )
+ENDIF()
 
 IF(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
     # We want to build our copy of the QtWebKit package, so don't build any
