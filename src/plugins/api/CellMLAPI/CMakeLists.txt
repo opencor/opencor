@@ -160,83 +160,83 @@ IF(USE_PREBUILT_CELLMLAPI_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} b56132b99c3e34ef55b29050e7b120477b540fb7
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 036c8fa4f2e1a2c954986866879d4d79516a9068
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 9a4cc1858159c1d94a2f4903b475c94c01b7a4e4
-                                              7b51afcf1f41860fbe1f49f00f7697e8a5cd99b5
-                                              6b6a0f6738552376919ea8361763e95e2d111a69
-                                              df00a32ebba74e9fc1ea7514a1b673e38707fbe8
-                                              1168550b38cbb21c7be6212b5816950facb5c509
-                                              9aab67a6ced0154f8138ebb8603a590d7a948b06
-                                              3c12d9755c92033ca0a8be07c456e4bc955945d5
-                                              6a8dc7bbdb3ead4c79bfebdabd068dd0338b3a90
-                                              248b0de4ea72f4039486a89c83df94a2077d2756
-                                              37a9094bc9c115ec4c1caf969ecf1c3b0d38b341
-                                              01d643c393032c5531c3fd028cf811bd0b9cf2f3
-                                              608777bce46fc7b618d3b6b2210a5408f703787e
-                                              7329d5ba7457c67a065852e546285722ebd24a98
-                                              44fa4da29fe7b860889a46ae7e9fef22fb99763a
-                                              2321414a5d222afe1f9ae748b9f95a913730cff6
-                                              11cc047c0bd5ba1787df8790cfc8ae5e2b486b9c
-                                              c7240bc6f89e57e489e16c757d209a8e7ce51758
-                                              7915bd55347d91c9d5636ec67a7e27cbe2de2df6)
+                                  SHA1_VALUES 4db6996a4451d1e6f33d0936e7a8f2c8ce0c226f
+                                              989d9f0521f45e32ac394bedb26a30611dadbe7a
+                                              3d0ad5a0d3750f034aec31fd79dec9d54dab1f1c
+                                              7d22f75f0dc1688fbbe3855faa70458151f86c83
+                                              b9db37975c7d4ab13102b76d75fea5134d012cc4
+                                              5aa7e17afe43c5057d600c2e3bfb7dd39b6136b6
+                                              5ab85fb05cc552047053cb21597a85b26102cf3a
+                                              d9e8a46b594a35c8444702b7fa91d045c1298fba
+                                              50733dc364ae9328163673f27a2d1a478976e5c7
+                                              af5e5b2af39baf1bc22b063c21b0aefab3b35ce7
+                                              09844649086304c2baf4d81074eb4bd692e84836
+                                              10610205814740d1cbeb1b97ae69d07ff919664e
+                                              a04a78e53821f98658193739bd69b24d2e659909
+                                              03881e17dc36a4469350d2cc2632eecd461106df
+                                              1cc906956732a21fa65ac54069495220766330c3
+                                              8fd5b592d8a4eb4a6070861dcad80b31e7c738c8
+                                              afc3196b3d4f6093fd2f7fa4117377f25bd24558
+                                              59725a3835fa48fec41e64ba750a991abeca6f02)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 361d744df1e868798b24d48ae62a68273ad97709
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} bbeab36f10ff7c95e5ddaa8239f66ba893a9798b
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES f40a1a1d3d79c56d413076135f3000e9ba3b23ae
-                                              1432e5d117bdab34546f8dba1e88a0e089e5b189
-                                              599c2734f0dca7395226d683a0cb4cda1a0904c6
-                                              a16f3bce6ef9193c57b191de615e47212195ed21
-                                              7589962c91d79833ca33dec1d43755a8b2e4ba09
-                                              d55020892796585c515a9667f8570f236732da60
-                                              2203e75c4c5c997f1049cfbe6d53ce10085fd6f7
-                                              3bd91da76a9563fcaa700d14aa499c75e030c94b
-                                              c6103bafccc26169dc5f81ce1df0c16f0e77b54e
-                                              2627604addc53caada2fcd544c34d20e9d058ffb
-                                              34b1868b55a8707f81b0c6386288d4402e3eb4b7
-                                              bc0cfccac187f4fecdf0698b8aa42cde7421f877
-                                              34ce015e75e002b4261e8fbdaa5d7a012094a751
-                                              1b024b6cf3b65b86db816b9b19bf365210272f2a
-                                              681d7aeda73057972712cf02b1cb6ff58e5c0e6f
-                                              b14de8c59650c5f311799cef9fa573ab143bf830
-                                              90b1c56d36c9b50767e033c25f886e273a7e3034
-                                              278b0aa29730c97ee27cdc9d64dd8339e6f3c23e)
+                                  SHA1_VALUES 764f7c4c609edde15d003fbaa0fe558808e9598a
+                                              e89a375c2b733dda530d518159de0f4613e2571c
+                                              b7bb749b6131336edde0ab6f2046aae46ebcd108
+                                              b75971b436563f54c7e6cdeb363549cf204fad3d
+                                              80ca0fb789b168644173819752c48bf44bfaf0d4
+                                              67970ff88619cdb5f34c86734e4049ff7cf91524
+                                              cdff4999cbe7eb9f5a6c46bc508df4d3f59752f5
+                                              c0fd4c03d35642dfbed3e00877788d442710db5b
+                                              46f7b9190cc5484bfed9abe9c0b14c7abd3fd64f
+                                              585b050c72c3a6adba15973001059cb0a8bff71b
+                                              2346c3ffe9deafddea53e82fda34d26956bf821b
+                                              1515276b59ded83b3889c2110178ea9bb2605d6a
+                                              551095e12ebf10d26563f9770173e8ced450269d
+                                              809a4de9397b96cc38d7ec95ac599e5ea82f63cd
+                                              9a1435eb8cc323a0d73496469fc373c61aa0874d
+                                              5514f543c45e03dbc2418974a493eaaff5cc8560
+                                              ddeab87421ebd810576bec2c4f1d55f866af23e0
+                                              3777514941def210af9a50138a3615dede71fdf0)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 5046db57bc3bf1af2daff77631311c04767fc020
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 21cd963f01ae3e44ce89b380afe1f55e85feb263
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 37380a773115647a87a2c3bb8aa7fc8f02182c22
-                                          37e9264ab6e88d392d4f5c30d80e58ed2f293cdb
-                                          c0b4920778643032150db5a54aff07f688058b90
-                                          b33810f5e4f7354189218ab810bf4e33cf0a7553
-                                          3cb6f6fbd91480553a5519157e47d7f2c831fa38
-                                          820081bd8c190c0c40a6bfccf974278d4f9368b2
-                                          baaa71a1a63cda4395d67068fe4605d1a320e2cf
-                                          2467dd28a8e263e7ef898ad29725f70311e06649
-                                          c5c3c5a6f5add63976c681fcd8ef4faea6c49bed)
+                              SHA1_VALUES 68b7129fab37f6fe6593563ab9165864665173e7
+                                          611978ebe2a599a5b2c4c91830155bdb532c1c7a
+                                          35848e330b50fbb8649d4be92f59dd14b8d153e4
+                                          214c2438603f1ffb1548e577d369784b4f20472e
+                                          357df21d83aa4f6d06de0aaec7044d8e22e48928
+                                          1333bde2bac7fefb431002c6ac7de6d644c84b1d
+                                          3ec0308673a528e536cd28fa21ecac8f6486d40d
+                                          96a683a58f2ae7cd62df1d953220fc2ac06039f6
+                                          d8e0879cf3d30692fc4c89059a1e4cc685097487)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 7797e06864ae9947f3f158fc97a1b991d8d3de18
+                              ${RELATIVE_PROJECT_SOURCE_DIR} cfe1eaf66f3c22a3a095e8a90c7c8bf98db86dc1
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES bce3acf0b225fee83f08e90cf8b02d1c28560ba1
-                                          b127afa93192f19bbd47b56f2ae0c76b2b6b3e8b
-                                          5522283cde7d9380ba55a1d19e3f45674c617e74
-                                          b67d722db9c78edaf8a99495c8ec1844560375fb
-                                          4397f044a53dfdd9f291f83f39f0b1caa2d5e378
-                                          2f5c19c6d5e8b72991dfd9860e1c0a540eed2e9e
-                                          726e543d44d860898ea07629f5c5953cc63073b9
-                                          10df4355abcde1085390f034eefe3df7bad448f7
-                                          0529f4f0c73e88d0e43964b465d9737e15cc0b0b)
+                              SHA1_VALUES 43889db939b2d6827da653213cd6f66aee712d54
+                                          31890f300a1df480900760b30f0e5b24cf0fc67a
+                                          dae15535a1b35add6bc3ef0a8b6876e1843cf2cc
+                                          08b5b25b9d058023dc120f46eea72ef7805a33fd
+                                          e615434aad59a9e90be8c4f45206a2c157cfab9e
+                                          f383687f9b159f2796e89241646ec7bad161bee0
+                                          0a46ae93be3c0d0790e3cc48e4f41b73cec26987
+                                          288100ad0af7dd51600a98edc2c250708f10057c
+                                          c7aad25e0d35c3291981b9e60b792b08c577e251)
     ENDIF()
 ELSE()
     # Set some compilation flags and/or ignore some warnings
