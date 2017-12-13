@@ -135,16 +135,11 @@ void RawTextViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void RawTextViewPlugin::fileReloaded(const QString &pFileName,
-                                     const bool &pFileChanged,
-                                     const bool &pFileJustSaved)
+void RawTextViewPlugin::fileReloaded(const QString &pFileName)
 {
-    Q_UNUSED(pFileJustSaved);
-
     // The given file has been reloaded, so let our view widget know about it
 
-    if (pFileChanged)
-        mViewWidget->fileReloaded(pFileName);
+    mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================

@@ -89,20 +89,12 @@ void SimulationSupportPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void SimulationSupportPlugin::fileReloaded(const QString &pFileName,
-                                           const bool &pFileChanged,
-                                           const bool &pFileJustSaved)
+void SimulationSupportPlugin::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so let our simulation manager know
-    // about it, but only if it hasn't just been saved
-    // Note: indeed, to save a CellML file, SED-ML file or COMBINE archive will
-    //       result in their corresponding simulation to be reloaded, something
-    //       that we don't want since this will reset everything (see
-    //       Simulation::reload()) and this is not what we want when saving such
-    //       a/n file/archive...
+    // about it
 
-    if (pFileChanged && !pFileJustSaved)
-        SimulationManager::instance()->reload(pFileName);
+    SimulationManager::instance()->reload(pFileName);
 }
 
 //==============================================================================

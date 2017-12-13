@@ -104,15 +104,11 @@ void SampleViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void SampleViewPlugin::fileReloaded(const QString &pFileName,
-                                    const bool &pFileChanged,
-                                    const bool &pFileJustSaved)
+void SampleViewPlugin::fileReloaded(const QString &pFileName)
 {
-    Q_UNUSED(pFileJustSaved);
-
     // The given file has been reloaded, so update our view widget, if needed
 
-    if (pFileChanged && !pFileName.compare(mFileName))
+    if (!pFileName.compare(mFileName))
         mViewWidget->update(pFileName);
 }
 

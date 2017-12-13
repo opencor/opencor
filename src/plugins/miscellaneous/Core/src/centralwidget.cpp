@@ -367,8 +367,8 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     connect(fileManagerInstance, SIGNAL(fileModified(const QString &)),
             this, SLOT(updateModifiedSettings()));
-    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &, const bool &)),
-            this, SLOT(fileReloaded(const QString &, const bool &)));
+    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &)),
+            this, SLOT(fileReloaded(const QString &)));
     connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(fileRenamed(const QString &, const QString &)));
 
@@ -975,13 +975,13 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                     if (res) {
                         writeFileContentsToFile(fileName, fileContents);
 
-                        fileManagerInstance->reload(fileName, true);
+                        fileManagerInstance->reload(fileName);
                     } else {
                         warningMessageBox(tr("Reload Remote File"),
                                           tr("<strong>%1</strong> could not be reloaded (%2).").arg(url, formatMessage(errorMessage)));
                     }
                 } else {
-                    fileManagerInstance->reload(fileName, true);
+                    fileManagerInstance->reload(fileName);
 
                     fileManagerInstance->setModified(fileName, false);
                 }
@@ -2027,9 +2027,7 @@ void CentralWidget::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void CentralWidget::fileReloaded(const QString &pFileName,
-                                 const bool &pFileChanged,
-                                 const bool &pFileJustSaved)
+void CentralWidget::fileReloaded(const QString &pFileName)
 {
     // Let all our plugins, but the current one (if requested), know about the
     // file having been reloaded
@@ -2041,23 +2039,15 @@ void CentralWidget::fileReloaded(const QString &pFileName,
 
     Plugin *fileViewPlugin = viewPlugin(pFileName);
 
-    foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
-        if (   !pFileJustSaved
-            ||  (pFileJustSaved && (plugin != fileViewPlugin))) {
-            qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName, pFileChanged, pFileJustSaved);
-        }
-    }
+    foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
+        qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName);
 
     // Now, because of the way some of our views may reload a file (see, for
-    // example, CoreEditingPlugin::fileReloaded()), we need to tell them to
+    // example, EditingViewPlugin::fileReloaded()), we need to tell them to
     // update their GUI
 
-    foreach (Plugin *plugin, mLoadedGuiPlugins) {
-        if (   !pFileJustSaved
-            ||  (pFileJustSaved && (plugin != fileViewPlugin))) {
-            qobject_cast<GuiInterface *>(plugin->instance())->updateGui(fileViewPlugin, pFileName);
-        }
-    }
+    foreach (Plugin *plugin, mLoadedGuiPlugins)
+        qobject_cast<GuiInterface *>(plugin->instance())->updateGui(fileViewPlugin, pFileName);
 
     // Similarly, we need to update our GUI
 
@@ -2129,8 +2119,9 @@ void CentralWidget::fileSaved(const QString &pFileName)
 {
     // A file has been saved, so we want all the plugins, but the current one,
     // to reload it
+Q_UNUSED(pFileName);
 
-    fileReloaded(pFileName, true, true);
+//---ISSUE1491---    fileReloaded(pFileName, true, true);
 }
 
 //==============================================================================
