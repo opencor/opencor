@@ -188,6 +188,9 @@ private:
     QString viewKey(const int &pMode, const int &pView,
                     const QString &pFileName);
 
+    void fileReloadedOrSaved(const QString &pFileName,
+                             const bool &pFileReloaded);
+
 signals:
     void guiUpdated(Plugin *pViewPlugin, const QString &pFileName);
 

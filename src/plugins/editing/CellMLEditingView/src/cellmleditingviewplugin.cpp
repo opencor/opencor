@@ -112,6 +112,14 @@ void CellMLEditingViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
+void CellMLEditingViewPlugin::fileSaved(const QString &pFileName)
+{
+//---ISSUE1491---
+Q_UNUSED(pFileName);
+}
+
+//==============================================================================
+
 void CellMLEditingViewPlugin::fileReloaded(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

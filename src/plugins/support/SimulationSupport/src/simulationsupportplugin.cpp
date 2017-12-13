@@ -89,6 +89,14 @@ void SimulationSupportPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
+void SimulationSupportPlugin::fileSaved(const QString &pFileName)
+{
+//---ISSUE1491---
+Q_UNUSED(pFileName);
+}
+
+//==============================================================================
+
 void SimulationSupportPlugin::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so let our simulation manager know

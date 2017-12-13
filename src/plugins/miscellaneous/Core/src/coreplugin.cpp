@@ -167,6 +167,14 @@ void CorePlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
+void CorePlugin::fileSaved(const QString &pFileName)
+{
+//---ISSUE1491---
+Q_UNUSED(pFileName);
+}
+
+//==============================================================================
+
 void CorePlugin::fileReloaded(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

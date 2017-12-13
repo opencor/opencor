@@ -108,6 +108,14 @@ void EditingViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
+void EditingViewPlugin::fileSaved(const QString &pFileName)
+{
+//---ISSUE1491---
+Q_UNUSED(pFileName);
+}
+
+//==============================================================================
+
 void EditingViewPlugin::fileReloaded(const QString &pFileName)
 {
     // A file has been reloaded, so update our internals, if needed

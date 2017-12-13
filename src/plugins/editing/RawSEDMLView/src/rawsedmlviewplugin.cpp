@@ -137,6 +137,14 @@ void RawSEDMLViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
+void RawSEDMLViewPlugin::fileSaved(const QString &pFileName)
+{
+//---ISSUE1491---
+Q_UNUSED(pFileName);
+}
+
+//==============================================================================
+
 void RawSEDMLViewPlugin::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so let our view widget know about it

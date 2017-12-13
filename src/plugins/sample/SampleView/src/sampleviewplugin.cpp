@@ -104,6 +104,14 @@ void SampleViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
+void SampleViewPlugin::fileSaved(const QString &pFileName)
+{
+//---ISSUE1491---
+Q_UNUSED(pFileName);
+}
+
+//==============================================================================
+
 void SampleViewPlugin::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so update our view widget, if needed

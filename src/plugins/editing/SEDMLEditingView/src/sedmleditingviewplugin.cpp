@@ -112,6 +112,14 @@ void SEDMLEditingViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
+void SEDMLEditingViewPlugin::fileSaved(const QString &pFileName)
+{
+//---ISSUE1491---
+Q_UNUSED(pFileName);
+}
+
+//==============================================================================
+
 void SEDMLEditingViewPlugin::fileReloaded(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

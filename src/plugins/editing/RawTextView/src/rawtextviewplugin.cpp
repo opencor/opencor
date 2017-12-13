@@ -135,6 +135,14 @@ void RawTextViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
+void RawTextViewPlugin::fileSaved(const QString &pFileName)
+{
+//---ISSUE1491---
+Q_UNUSED(pFileName);
+}
+
+//==============================================================================
+
 void RawTextViewPlugin::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so let our view widget know about it
