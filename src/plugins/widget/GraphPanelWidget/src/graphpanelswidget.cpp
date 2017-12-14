@@ -185,10 +185,6 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
 
     emit graphPanelAdded(res, pActive);
 
-    // Let people know whether graph panels can be removed
-
-    emit removeGraphPanelsEnabled(mGraphPanels.count() > 1);
-
     // Synchronise the axes of our graph panels, if needed, and ensure that they
     // are all aligned with one another by forcing the setting of the axes of
     // our active graph panel
@@ -247,10 +243,6 @@ bool GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
 
     delete pGraphPanel;
 
-    // Let people know whether graph panels can be removed
-
-    emit removeGraphPanelsEnabled(mGraphPanels.count() > 1);
-
     // Activate the next graph panel or the last one available, if any
 
     if (index < mGraphPanels.count()) {
@@ -277,14 +269,18 @@ bool GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
 
 bool GraphPanelsWidget::removeCurrentGraphPanel()
 {
-    // Make sure that we don't have only one graph panel left
-
-    if (mGraphPanels.count() == 1)
-        return false;
-
     // Remove the current graph panel
 
-    return removeGraphPanel(mActiveGraphPanel);
+    if (mGraphPanels.count() == 1) {
+        // There is only one graph panel, so add one and then remove our 'first'
+        // graph panel
+
+        addGraphPanel();
+
+        return removeGraphPanel(mGraphPanels.first());
+    } else {
+        return removeGraphPanel(mActiveGraphPanel);
+    }
 }
 
 //==============================================================================

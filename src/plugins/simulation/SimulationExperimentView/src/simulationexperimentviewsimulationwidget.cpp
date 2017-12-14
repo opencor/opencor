@@ -329,15 +329,9 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(informationWidget->solversWidget(), SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(solversPropertyChanged(Core::Property *)));
 
-    // Keep track of whether we can remove graph panels
-
-    GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
-
-    connect(graphPanelsWidget, SIGNAL(removeGraphPanelsEnabled(const bool &)),
-            mRemoveGraphPanelAction, SLOT(setEnabled(bool)));
-
     // Keep track of the addition and removal of a graph panel
 
+    GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = informationWidget->graphPanelAndGraphsWidget();
 
     connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
