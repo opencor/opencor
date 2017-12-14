@@ -414,8 +414,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     // Note: the reason for checking whether our busy widget is visible is that
     //       we come here every time the user modifies the term to look up. So,
     //       we don't want to call updateItemsGui() for no reasons. Indeed, if
-    //       we were then our busy widget would get 'reset' every time, which
-    //       doesn't look nice...
+    //       we were to do that then our busy widget would get 'reset' every
+    //       time, which doesn't look nice...
 
     if (   (pResetItemsGui && !mAnnotationWidget->isBusyWidgetVisible())
         || termIsDirect) {

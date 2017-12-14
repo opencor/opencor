@@ -791,8 +791,8 @@ QVariant Property::valueAsVariant() const
     }
 
     return QVariant();
-    // Note: we can't reach this point, but without it we may be told that not
-    //       all control paths return a value...
+    // Note: we can't reach this point, but without it we may, at compilation
+    //       time, be told that not all control paths return a value...
 }
 
 //==============================================================================
@@ -816,8 +816,8 @@ QString Property::valueAsString() const
     }
 
     return QString();
-    // Note: we can't reach this point, but without it we may be told that not
-    //       all control paths return a value...
+    // Note: we can't reach this point, but without it we may, at compilation
+    //       time, be told that not all control paths return a value...
 }
 
 //==============================================================================

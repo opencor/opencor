@@ -147,7 +147,7 @@ QString File::sha1(const QString &pFileName)
     // Compute the SHA-1 value for the given file, if it still exists and can be
     // opened
 
-    QString fileContents;
+    QByteArray fileContents;
 
     if (readFileContentsFromFile(pFileName, fileContents))
         return Core::sha1(fileContents);

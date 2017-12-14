@@ -36,6 +36,22 @@
         <task id="task1" modelReference="model" simulationReference="simulation1"/>
     </listOfTasks>
     <listOfDataGenerators>
+        <dataGenerator id="xDataGenerator1_1">
+            <listOfVariables>
+                <variable id="xVariable1_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
+            </listOfVariables>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <ci> xVariable1_1 </ci>
+            </math>
+        </dataGenerator>
+        <dataGenerator id="yDataGenerator1_1">
+            <listOfVariables>
+                <variable id="yVariable1_1" target="/cellml:model/cellml:component[@name='membrane']/cellml:variable[@name='V']" taskReference="repeatedTask"/>
+            </listOfVariables>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <ci> yVariable1_1 </ci>
+            </math>
+        </dataGenerator>
         <dataGenerator id="xDataGenerator2_1">
             <listOfVariables>
                 <variable id="xVariable2_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
@@ -82,22 +98,6 @@
             </listOfVariables>
             <math xmlns="http://www.w3.org/1998/Math/MathML">
                 <ci> yVariable2_3 </ci>
-            </math>
-        </dataGenerator>
-        <dataGenerator id="xDataGenerator1_1">
-            <listOfVariables>
-                <variable id="xVariable1_1" target="/cellml:model/cellml:component[@name='environment']/cellml:variable[@name='time']" taskReference="repeatedTask"/>
-            </listOfVariables>
-            <math xmlns="http://www.w3.org/1998/Math/MathML">
-                <ci> xVariable1_1 </ci>
-            </math>
-        </dataGenerator>
-        <dataGenerator id="yDataGenerator1_1">
-            <listOfVariables>
-                <variable id="yVariable1_1" target="/cellml:model/cellml:component[@name='membrane']/cellml:variable[@name='V']" taskReference="repeatedTask"/>
-            </listOfVariables>
-            <math xmlns="http://www.w3.org/1998/Math/MathML">
-                <ci> yVariable1_1 </ci>
             </math>
         </dataGenerator>
         <dataGenerator id="xDataGenerator3_1">
@@ -157,13 +157,12 @@
                     <fontSize>15</fontSize>
                     <foregroundColor>#000080</foregroundColor>
                     <height>5</height>
-                    <legend>true</legend>
-                    <title>Membrane potential</title>
                     <gridLines>
                         <style>dot</style>
                         <width>1</width>
                         <color>#80000080</color>
                     </gridLines>
+                    <legend>true</legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
@@ -174,6 +173,7 @@
                         <backgroundColor>#dbdbe4</backgroundColor>
                         <foregroundColor>#000080</foregroundColor>
                     </surroundingArea>
+                    <title>Membrane potential</title>
                     <xAxis>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
@@ -221,13 +221,12 @@
                     <fontSize>10</fontSize>
                     <foregroundColor>#108001</foregroundColor>
                     <height>4</height>
-                    <legend>true</legend>
-                    <title>Currents</title>
                     <gridLines>
                         <style>dot</style>
                         <width>1</width>
                         <color>#80108001</color>
                     </gridLines>
+                    <legend>true</legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
@@ -238,6 +237,7 @@
                         <backgroundColor>#dde4dc</backgroundColor>
                         <foregroundColor>#108001</foregroundColor>
                     </surroundingArea>
+                    <title>Currents</title>
                     <xAxis>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
@@ -323,13 +323,12 @@
                     <fontSize>10</fontSize>
                     <foregroundColor>#800002</foregroundColor>
                     <height>3</height>
-                    <legend>true</legend>
-                    <title>Gating variables</title>
                     <gridLines>
                         <style>dot</style>
                         <width>1</width>
                         <color>#80800002</color>
                     </gridLines>
+                    <legend>true</legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
@@ -340,6 +339,7 @@
                         <backgroundColor>#e4dbdb</backgroundColor>
                         <foregroundColor>#800002</foregroundColor>
                     </surroundingArea>
+                    <title>Gating variables</title>
                     <xAxis>
                         <logarithmicScale>false</logarithmicScale>
                         <title>ms</title>

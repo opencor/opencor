@@ -397,13 +397,14 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
         Margin = 5
     };
 
-    painter.translate(0.5*width(), 0.5*height());
+    painter.translate(width() >> 1, height() >> 1);
 
     QPainterPath painterPath;
-    int backgroundSize = 2*(mRadius+mLength+Margin);
-    double backgroundCornerRadius = mBackgroundRoundness*(backgroundSize >> 1);
+    int halfBackgroundSize = mRadius+mLength+Margin;
+    int backgroundSize = halfBackgroundSize << 1;
+    double backgroundCornerRadius = mBackgroundRoundness*halfBackgroundSize;
 
-    painterPath.addRoundedRect(QRectF(-0.5*backgroundSize, -0.5*backgroundSize,
+    painterPath.addRoundedRect(QRectF(-halfBackgroundSize, -halfBackgroundSize,
                                       backgroundSize, backgroundSize),
                                backgroundCornerRadius, backgroundCornerRadius);
 

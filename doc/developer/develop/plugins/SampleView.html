@@ -296,7 +296,7 @@ void SampleViewPlugin::fileClosed(const QString &pFileName)
             Next, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:142">//==============================================================================
+        <pre class="prettyprint linenums:145">//==============================================================================
 // I18n interface
 //==============================================================================
 
@@ -318,7 +318,7 @@ void SampleViewPlugin::retranslateUi()
             After the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a> interface, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:154">//==============================================================================
+        <pre class="prettyprint linenums:157">//==============================================================================
 // Plugin interface
 //==============================================================================
 
@@ -402,14 +402,14 @@ void SampleViewPlugin::handleUrl(const QUrl &pUrl)
 //==============================================================================</pre>
 
         <p>
-            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 180-190), which is where we initialise <code>mViewWidget</code>, our view. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleUrl()</code>) are left empty.
+            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 183-193), which is where we initialise <code>mViewWidget</code>, our view. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleUrl()</code>) are left empty.
         </p>
 
         <p>
             Finally, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/viewinterface.inl">View</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:235">//==============================================================================
+        <pre class="prettyprint linenums:238">//==============================================================================
 // View interface
 //==============================================================================
 
@@ -422,13 +422,22 @@ ViewInterface::Mode SampleViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList SampleViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList SampleViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support, i.e. any in our case
 
     return QStringList();
+}
+
+//==============================================================================
+
+QString SampleViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName)
+
+    // Return the MIME type for the given file
+
+    return QString();
 }
 
 //==============================================================================
@@ -487,7 +496,7 @@ QIcon SampleViewPlugin::fileTabIcon(const QString &pFileName) const
 //==============================================================================</pre>
 
         <p>
-            Our plugin provides a view, so OpenCOR needs to know about its name (see <code>viewName()</code>; lines 292-297), its type (see <code>viewMode()</code>; lines 239-244), the MIME types it supports (see <code>viewMimeTypes()</code>; lines 248-255), the default file extension it supports (see <code>viewDefaultFileExtension()</code>; lines 259-264) and whether it needs a special tab icon (see <code>fileTabIcon()</code>; lines 301-308). OpenCOR also needs to know the widget that is used for the view and this for a given file (see <code>viewWidget()</code>; lines 268-277). Note that our plugin uses only one view widget (and updates its contents based on the file that is currently active), but it might perfectly use one per file. Finally, our plugin needs to handle the case where a view widget is to be removed (see <code>removeViewWidget()</code>; lines 281-288), which happens whenever a file gets closed.
+            Our plugin provides a view, so OpenCOR needs to know about its name (see <code>viewName()</code>; lines 304-309), its type (see <code>viewMode()</code>; lines 242-247), the MIME types it supports (see <code>viewMimeTypes()</code>; lines 251-256), the MIME type supported by a given file (see <code>viewMimeType()</code>; lines 260-267), the default file extension it supports (see <code>viewDefaultFileExtension()</code>; lines 271-276) and whether it needs a special tab icon (see <code>fileTabIcon()</code>; lines 313-320). OpenCOR also needs to know the widget that is used for the view and this for a given file (see <code>viewWidget()</code>; lines 280-289). Note that our plugin uses only one view widget (and updates its contents based on the file that is currently active), but it might perfectly use one per file. Finally, our plugin needs to handle the case where a view widget is to be removed (see <code>removeViewWidget()</code>; lines 293-300), which happens whenever a file gets closed.
         </p>
 
         <span class="anchor" id="Plugin specific"></span>

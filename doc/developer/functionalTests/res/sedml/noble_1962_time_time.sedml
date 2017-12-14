@@ -109,13 +109,12 @@
                     <fontSize>10</fontSize>
                     <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
-                    <legend>false</legend>
-                    <title/>
                     <gridLines>
                         <style>dot</style>
                         <width>1</width>
                         <color>#a0a0a4</color>
                     </gridLines>
+                    <legend>false</legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
@@ -126,6 +125,7 @@
                         <backgroundColor>#ececec</backgroundColor>
                         <foregroundColor>#000000</foregroundColor>
                     </surroundingArea>
+                    <title/>
                     <xAxis>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
@@ -173,13 +173,12 @@
                     <fontSize>10</fontSize>
                     <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
-                    <legend>false</legend>
-                    <title/>
                     <gridLines>
                         <style>dot</style>
                         <width>1</width>
                         <color>#a0a0a4</color>
                     </gridLines>
+                    <legend>false</legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
@@ -190,6 +189,7 @@
                         <backgroundColor>#ececec</backgroundColor>
                         <foregroundColor>#000000</foregroundColor>
                     </surroundingArea>
+                    <title/>
                     <xAxis>
                         <logarithmicScale>true</logarithmicScale>
                         <title/>
@@ -237,13 +237,12 @@
                     <fontSize>10</fontSize>
                     <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
-                    <legend>false</legend>
-                    <title/>
                     <gridLines>
                         <style>dot</style>
                         <width>1</width>
                         <color>#a0a0a4</color>
                     </gridLines>
+                    <legend>false</legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
@@ -254,6 +253,7 @@
                         <backgroundColor>#ececec</backgroundColor>
                         <foregroundColor>#000000</foregroundColor>
                     </surroundingArea>
+                    <title/>
                     <xAxis>
                         <logarithmicScale>false</logarithmicScale>
                         <title/>
@@ -301,13 +301,12 @@
                     <fontSize>10</fontSize>
                     <foregroundColor>#000000</foregroundColor>
                     <height>1</height>
-                    <legend>false</legend>
-                    <title/>
                     <gridLines>
                         <style>dot</style>
                         <width>1</width>
                         <color>#a0a0a4</color>
                     </gridLines>
+                    <legend>false</legend>
                     <pointCoordinates>
                         <style>dash</style>
                         <width>1</width>
@@ -318,6 +317,7 @@
                         <backgroundColor>#ececec</backgroundColor>
                         <foregroundColor>#000000</foregroundColor>
                     </surroundingArea>
+                    <title/>
                     <xAxis>
                         <logarithmicScale>true</logarithmicScale>
                         <title/>

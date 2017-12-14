@@ -152,14 +152,14 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
     } else {
         QIntList oldSizes = sizes();
         QIntList newSizes = QIntList();
-        int oldTotalSize = height()-(mGraphPanels.count()-2)*handleWidth();
-        int newTotalSize = oldTotalSize-handleWidth();
-        double scalingFactor = double(mGraphPanels.count()-1)/mGraphPanels.count()*newTotalSize/oldTotalSize;
+        int oldTotalHeight = height()-(mGraphPanels.count()-2)*handleWidth();
+        int newTotalHeight = oldTotalHeight-handleWidth();
+        double scalingFactor = double(mGraphPanels.count()-1)/mGraphPanels.count()*newTotalHeight/oldTotalHeight;
 
         for (int i = 0, iMax = oldSizes.count()-1; i < iMax; ++i)
             newSizes << round(scalingFactor*oldSizes[i]);
 
-        setSizes(newSizes << newTotalSize-std::accumulate(newSizes.begin(), newSizes.end(), 0));
+        setSizes(newSizes << newTotalHeight-std::accumulate(newSizes.begin(), newSizes.end(), 0));
     }
 
     // Keep track of whenever a graph panel gets activated
@@ -184,10 +184,6 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
     // Let people know that we have added a graph panel
 
     emit graphPanelAdded(res, pActive);
-
-    // Let people know whether graph panels can be removed
-
-    emit removeGraphPanelsEnabled(mGraphPanels.count() > 1);
 
     // Synchronise the axes of our graph panels, if needed, and ensure that they
     // are all aligned with one another by forcing the setting of the axes of
@@ -247,10 +243,6 @@ bool GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
 
     delete pGraphPanel;
 
-    // Let people know whether graph panels can be removed
-
-    emit removeGraphPanelsEnabled(mGraphPanels.count() > 1);
-
     // Activate the next graph panel or the last one available, if any
 
     if (index < mGraphPanels.count()) {
@@ -277,14 +269,18 @@ bool GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
 
 bool GraphPanelsWidget::removeCurrentGraphPanel()
 {
-    // Make sure that we don't have only one graph panel left
-
-    if (mGraphPanels.count() == 1)
-        return false;
-
     // Remove the current graph panel
 
-    return removeGraphPanel(mActiveGraphPanel);
+    if (mGraphPanels.count() == 1) {
+        // There is only one graph panel, so add one and then remove our 'first'
+        // graph panel
+
+        addGraphPanel();
+
+        return removeGraphPanel(mGraphPanels.first());
+    } else {
+        return removeGraphPanel(mActiveGraphPanel);
+    }
 }
 
 //==============================================================================
@@ -322,6 +318,32 @@ QIntList GraphPanelsWidget::sizes() const
     // state
 
     return mUseInternalSizes?mInternalSizes:QSplitter::sizes();
+}
+
+//==============================================================================
+
+void GraphPanelsWidget::setSizes(const QIntList &pSizes)
+{
+    // Make sure that we have the correct number of sizes
+
+    if (pSizes.count() != count())
+        return;
+
+    // Set our sizes as internal and/or default sizes, depending on whether the
+    // given sizes consist of ones
+
+    foreach (const int &size, pSizes) {
+        if (size != 1) {
+            mUseInternalSizes = false;
+
+            break;
+        }
+    }
+
+    if (mUseInternalSizes)
+        mInternalSizes = pSizes;
+
+    QSplitter::setSizes(pSizes);
 }
 
 //==============================================================================

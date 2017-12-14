@@ -31,7 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     //       interface...
 
     virtual Mode viewMode() const PURE;
-    virtual QStringList viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const PURE;
+    virtual QStringList viewMimeTypes() const PURE;
+    virtual QString viewMimeType(const QString &pFileName) const PURE;
     virtual QString viewDefaultFileExtension() const PURE;
 
     virtual QWidget * viewWidget(const QString &pFileName) PURE;
