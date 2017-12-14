@@ -326,8 +326,8 @@ QString CellmlFileRdfTriple::modelQualifierAsString(const ModelQualifier &pModel
     }
 
     return "model:unknown";
-    // Note: we can't reach this point, but without it we may be told that not
-    //       all control paths return a value...
+    // Note: we can't reach this point, but without it we may, at compilation
+    //       time, be told that not all control paths return a value...
 }
 
 //==============================================================================
@@ -386,8 +386,8 @@ QString CellmlFileRdfTriple::bioQualifierAsString(const BioQualifier &pBioQualif
     }
 
     return "bio:unknown";
-    // Note: we can't reach this point, but without it we may be told that not
-    //       all control paths return a value...
+    // Note: we can't reach this point, but without it we may, at compilation
+    //       time, be told that not all control paths return a value...
 }
 
 //==============================================================================
