@@ -1352,7 +1352,7 @@ void SimulationExperimentViewSimulationWidget::developmentMode()
     // Make sure that our reset button is properly enabled/disabled
     // Note: this is needed if the development mode has just been disabled...
 
-    checkSimulationDataModified(mSimulation->data()->isModified());
+    simulationDataModified(mSimulation->data()->isModified());
 }
 
 //==============================================================================
@@ -2986,23 +2986,14 @@ void SimulationExperimentViewSimulationWidget::simulationError(const QString &pM
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::checkSimulationDataModified(const bool &pIsModified)
+void SimulationExperimentViewSimulationWidget::simulationDataModified(const bool &pIsModified)
 {
-    // We are dealing with the current simulation
+    // Update our modified state
 
     if (mDevelopmentModeAction->isChecked())
         Core::FileManager::instance()->setModified(mSimulation->fileName(), pIsModified);
     else
         mResetModelParametersAction->setEnabled(pIsModified);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::simulationDataModified(const bool &pIsModified)
-{
-    // Update our modified state
-
-    checkSimulationDataModified(pIsModified);
 }
 
 //==============================================================================
@@ -3453,7 +3444,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
     SimulationSupport::Simulation *simulation = pSimulationWidget->simulation();
 
     if (simulation == mSimulation)
-        checkSimulationDataModified(simulation->data()->isModified());
+        simulationDataModified(simulation->data()->isModified());
 
     // Update all the graphs of all our plots, but only if we are visible
     // Note: needProcessingEvents is used to ensure that our plots are all
