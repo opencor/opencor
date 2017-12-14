@@ -959,11 +959,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
             //       their GUI...
 
             if (doReloadFile) {
-                // Actually redownload the file, if it is a remote one, making
-                // sure that our busy widget is show during that process (since
-                // it may take some time)
-                // Note: our busy widget will get hidden in updateGui() (which
-                //       will be called from fileReloaded())...
+                // Actually redownload the file, if it is a remote one
 
                 if (fileManagerInstance->isRemote(fileName)) {
                     QString url = fileManagerInstance->url(fileName);
