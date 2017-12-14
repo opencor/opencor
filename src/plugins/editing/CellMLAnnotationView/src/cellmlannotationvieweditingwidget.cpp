@@ -276,7 +276,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebV
         shortDescription = tr("Taxon");
         longDescription = tr("The biological entity represented by the model element is taxonomically restricted, where the restriction is the subject of the referenced resource (\"Biological Entity B\"). This relation may be used to ascribe a species restriction to a biochemical reaction.");
     } else {
-        qualifierSvg = QString();
+        qualifierSvg = QByteArray();
 
         shortDescription = tr("Unknown");
         longDescription = tr("Unknown");

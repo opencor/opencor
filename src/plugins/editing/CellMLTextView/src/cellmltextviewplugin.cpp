@@ -442,7 +442,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
 
     Core::checkFileNameOrUrl(pArguments[0], isLocalFile, fileNameOrUrl);
 
-    QString fileContents;
+    QByteArray fileContents;
 
     if (isLocalFile) {
         if (!QFile::exists(fileNameOrUrl))

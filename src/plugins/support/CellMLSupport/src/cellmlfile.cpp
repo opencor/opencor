@@ -1118,9 +1118,9 @@ bool CellmlFile::exportTo(const QString &pFileName,
         // Note: you would normally expect CeLEDSExporter to check this, but all
         //       it does in case of an invalid XML file is crash...
 
-        QString userDefinedFormatFileContents;
+        QByteArray fileContents;
 
-        if (!Core::readFileContentsFromFile(pUserDefinedFormatFileName, userDefinedFormatFileContents)) {
+        if (!Core::readFileContentsFromFile(pUserDefinedFormatFileName, fileContents)) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the user-defined format file could not be read"));
 
@@ -1129,7 +1129,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         QDomDocument domDocument;
 
-        if (!domDocument.setContent(userDefinedFormatFileContents)) {
+        if (!domDocument.setContent(fileContents)) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the user-defined format file is not a valid XML file"));
 
@@ -1144,7 +1144,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
         // Do the actual export
 
         ObjRef<iface::cellml_services::CeLEDSExporterBootstrap> celedsExporterBootstrap = CreateCeLEDSExporterBootstrap();
-        ObjRef<iface::cellml_services::CodeExporter> codeExporter = celedsExporterBootstrap->createExporterFromText(QString(userDefinedFormatFileContents).toStdWString());
+        ObjRef<iface::cellml_services::CodeExporter> codeExporter = celedsExporterBootstrap->createExporterFromText(QString(fileContents).toStdWString());
 
         if (celedsExporterBootstrap->loadError().length()) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
