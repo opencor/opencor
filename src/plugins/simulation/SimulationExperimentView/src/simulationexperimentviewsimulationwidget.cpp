@@ -738,11 +738,12 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     // Output some information about our CellML file
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    QString fileName = fileManagerInstance->isNew(mSimulation->fileName())?
-                           tr("File")+" #"+QString::number(fileManagerInstance->newIndex(mSimulation->fileName())):
-                           fileManagerInstance->isRemote(mSimulation->fileName())?
-                               fileManagerInstance->url(mSimulation->fileName()):
-                               mSimulation->fileName();
+    QString simulationFileName = mSimulation->fileName();
+    QString fileName = fileManagerInstance->isNew(simulationFileName)?
+                           tr("File")+" #"+QString::number(fileManagerInstance->newIndex(simulationFileName)):
+                           fileManagerInstance->isRemote(simulationFileName)?
+                               fileManagerInstance->url(simulationFileName):
+                               simulationFileName;
     QString information =  "<strong>"+fileName+"</strong>"+OutputBrLn;
     SEDMLSupport::SedmlFileIssues sedmlFileIssues = mSimulation->sedmlFile()?
                                                         mSimulation->sedmlFile()->issues():
@@ -1636,7 +1637,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
     SEDMLSupport::SedmlFile sedmlFile(pFileName, true);
     libsedml::SedDocument *sedmlDocument = sedmlFile.sedmlDocument();
     XMLNamespaces *namespaces = sedmlDocument->getNamespaces();
-    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(mSimulation->fileName());
+    QString simulationFileName = mSimulation->fileName();
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(simulationFileName);
 
     namespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
                         CellMLSupport::Cellml_1_1_Namespace.toStdString():
@@ -1844,7 +1846,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         // Keep track of the graph panel's graphs, if any
 
-        Core::Properties graphsProperties = graphPanelAndGraphsWidget->graphsProperties(graphPanel, mSimulation->fileName());
+        Core::Properties graphsProperties = graphPanelAndGraphsWidget->graphsProperties(graphPanel, simulationFileName);
 
         if (!graphsProperties.isEmpty()) {
             GraphsData data;
@@ -2046,9 +2048,9 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
     // name
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    QString fileName = mSimulation->fileName();
-    bool remoteFile = fileManagerInstance->isRemote(fileName);
-    QString cellmlFileName = remoteFile?fileManagerInstance->url(fileName):fileName;
+    QString simulationFileName = mSimulation->fileName();
+    bool remoteFile = fileManagerInstance->isRemote(simulationFileName);
+    QString cellmlFileName = remoteFile?fileManagerInstance->url(simulationFileName):simulationFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString combineArchiveName = cellmlFileName;
     FileTypeInterface *combineFileTypeInterface = COMBINESupport::fileTypeInterface();
@@ -2081,7 +2083,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
         CellMLSupport::CellmlFile *cellmlFile = mSimulation->cellmlFile();
         QString commonPath = remoteFile?
                                  QString(cellmlFileName).remove(FileNameRegEx)+"/":
-                                 QFileInfo(fileName).canonicalPath()+QDir::separator();
+                                 QFileInfo(simulationFileName).canonicalPath()+QDir::separator();
         QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
 
         foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
@@ -2118,7 +2120,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
 
         QString modelSource = remoteFile?
                                   QString(cellmlFileName).remove(commonPath):
-                                  QString(fileName).remove(Core::nativeCanonicalDirName(commonPath)+QDir::separator());
+                                  QString(simulationFileName).remove(Core::nativeCanonicalDirName(commonPath)+QDir::separator());
 
         // Create a copy of the SED-ML file that will be the master file in our
         // COMBINE archive
@@ -2140,7 +2142,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
 
         if (combineArchive.addFile(sedmlFileName, sedmlFileLocation,
                                    COMBINESupport::CombineArchiveFile::Sedml, true)) {
-            if (combineArchive.addFile(fileName, modelSource,
+            if (combineArchive.addFile(simulationFileName, modelSource,
                                        (cellmlFile->version() == CellMLSupport::CellmlFile::Cellml_1_1)?
                                            COMBINESupport::CombineArchiveFile::Cellml_1_1:
                                            COMBINESupport::CombineArchiveFile::Cellml_1_0)) {
@@ -2169,7 +2171,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
                     }
                 }
             } else {
-                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(fileName)+").");
+                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(simulationFileName)+").");
             }
         } else {
             errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("the master SED-ML file could not be added")+").");
@@ -2928,14 +2930,15 @@ void SimulationExperimentViewSimulationWidget::simulationDataExport()
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
     DataStore::DataStore *dataStore = mSimulation->results()->dataStore();
-    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(mSimulation->fileName(), dataStore);
+    QString simulationFileName = mSimulation->fileName();
+    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(simulationFileName, dataStore);
 
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
 
         Core::centralWidget()->showProgressBusyWidget();
 
-        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(mSimulation->fileName(), dataStore, dataStoreData);
+        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(simulationFileName, dataStore, dataStoreData);
 
         connect(dataStoreExporter, SIGNAL(done(const QString &)),
                 this, SLOT(dataStoreExportDone(const QString &)));
@@ -3725,7 +3728,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
     // Update our progress bar or our tab icon, if needed
 
     if (simulation == mSimulation) {
-        double simulationProgress = mViewWidget->simulationResultsSize(mSimulation->fileName())/simulation->size();
+        QString simulationFileName = mSimulation->fileName();
+        double simulationProgress = mViewWidget->simulationResultsSize(simulationFileName)/simulation->size();
 
         if (pClearGraphs || visible) {
             mProgressBarWidget->setValue(simulationProgress);
@@ -3747,7 +3751,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 // model
 
                 emit mViewWidget->updateFileTabIcon(mPlugin->viewName(),
-                                                    mSimulation->fileName(),
+                                                    simulationFileName,
                                                     fileTabIcon());
             }
         }
@@ -3927,7 +3931,9 @@ void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
 {
     // Make sure that we are not dealing with a remote file
 
-    if (Core::FileManager::instance()->isRemote(mSimulation->fileName()))
+    QString simulationFileName = mSimulation->fileName();
+
+    if (Core::FileManager::instance()->isRemote(simulationFileName))
         return;
 
     // Update the modified status of the current file, based on whether its
@@ -3947,7 +3953,7 @@ void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
             graphsPropertiesModified = graphsPropertiesModified || someGraphsPropertiesModified;
     }
 
-    Core::FileManager::instance()->setModified(mSimulation->fileName(),
+    Core::FileManager::instance()->setModified(simulationFileName,
                                                   mSimulationPropertiesModified
                                                || mSolversPropertiesModified
                                                || graphPanelPropertiesModified
