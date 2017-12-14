@@ -1864,8 +1864,8 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     QString simulationFileName = mSimulation->fileName();
-    bool remoteFile = fileManagerInstance->isRemote(simulationFileName);
-    QString cellmlFileName = remoteFile?fileManagerInstance->url(simulationFileName):simulationFileName;
+    bool remoteCellmlFile = fileManagerInstance->isRemote(simulationFileName);
+    QString cellmlFileName = remoteCellmlFile?fileManagerInstance->url(simulationFileName):simulationFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString sedmlFileName = cellmlFileName;
     FileTypeInterface *sedmlFileTypeInterface = SEDMLSupport::fileTypeInterface();
@@ -1890,7 +1890,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
     if (!sedmlFileName.isEmpty()) {
         QString modelSource = cellmlFileName;
 
-        if (   !remoteFile
+        if (   !remoteCellmlFile
 #ifdef Q_OS_WIN
             && !modelSource.left(3).compare(sedmlFileName.left(3))
 #endif
@@ -2460,7 +2460,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         }
     }
 
-    // Start afresh by removing all the graph panels, but the last one
+    // Start afresh by removing all the graph panels
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
 
