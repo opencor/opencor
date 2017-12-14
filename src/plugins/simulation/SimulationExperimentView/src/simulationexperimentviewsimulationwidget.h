@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
-#include "propertyeditorwidget.h"
 #include "widget.h"
 
 //==============================================================================
@@ -69,6 +68,8 @@ namespace CellMLSupport {
 
 namespace Core {
     class ProgressBarWidget;
+    class Property;
+    class PropertyEditorWidget;
     class SplitterWidget;
     class ToolBarWidget;
     class UserMessageWidget;
