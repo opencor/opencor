@@ -114,7 +114,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     mToolBarWidget = new Core::ToolBarWidget(this);
 
-    // Create and handle various actions
+    // Create, customise and handle various actions
 
     mRunPauseResumeSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-start.png"),
                                                       Qt::Key_F9, mToolBarWidget);
@@ -1744,9 +1744,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         // Keep track of the graph panel's graphs, if any
 
-        Core::Properties graphProperties = graphPanelAndGraphsWidget->graphProperties(graphPanel, simulationFileName);
+        Core::Properties graphsProperties = graphPanelAndGraphsWidget->graphProperties(graphPanel, simulationFileName);
 
-        if (!graphProperties.isEmpty()) {
+        if (!graphsProperties.isEmpty()) {
             GraphsData data;
 
             data.sedmlPlot2d = sedmlPlot2d;
@@ -1754,7 +1754,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
             data.logAxisX = graphPanel->plot()->logAxisX();
             data.logAxisY = graphPanel->plot()->logAxisY();
 
-            graphsData.insert(graphProperties, data);
+            graphsData.insert(graphsProperties, data);
         }
     }
 
