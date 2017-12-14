@@ -277,13 +277,22 @@ ViewInterface::Mode RawTextViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList RawTextViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList RawTextViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support, i.e. any in our case
 
     return QStringList();
+}
+
+//==============================================================================
+
+QString RawTextViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName)
+
+    // Return the MIME type for the given file
+
+    return QString();
 }
 
 //==============================================================================

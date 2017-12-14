@@ -54,11 +54,6 @@ public:
         AnalysisMode
     };
 
-    enum MimeTypeMode {
-        OpenMimeTypeMode,
-        SaveMimeTypeMode
-    };
-
 #define INTERFACE_DEFINITION
     #include "viewinterface.inl"
 #undef INTERFACE_DEFINITION

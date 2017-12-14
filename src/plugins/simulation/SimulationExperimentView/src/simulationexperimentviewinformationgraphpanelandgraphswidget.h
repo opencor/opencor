@@ -94,9 +94,11 @@ public:
 
     void finishEditing();
 
-    Core::Properties graphPanelProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel) const;
-    Core::Properties graphProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                     const QString &pFileName = QString()) const;
+    Core::PropertyEditorWidget * graphPanelPropertyEditor(GraphPanelWidget::GraphPanelWidget *pGraphPanel) const;
+    Core::PropertyEditorWidget * graphsPropertyEditor(GraphPanelWidget::GraphPanelWidget *pGraphPanel) const;
+
+    Core::Properties graphsProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                      const QString &pFileName) const;
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode mode() const;
     void setMode(const Mode &pMode);

@@ -785,7 +785,7 @@ QColor lockedColor(const QColor &pColor)
 //==============================================================================
 
 QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
-                    const bool &pCheckMimeTypes, const QStringList &pMimeTypes)
+                    const bool &pCheckMimeTypes, const QString &pMimeType)
 {
     // Convert and return as a list of strings the filters corresponding to the
     // given file type interfaces, using the given MIME types, if any
@@ -793,7 +793,7 @@ QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
     QStringList res = QStringList();
 
     foreach (FileTypeInterface *fileTypeInterface, pFileTypeInterfaces) {
-        if (!pCheckMimeTypes || pMimeTypes.contains(fileTypeInterface->mimeType()))
+        if (!pCheckMimeTypes || !pMimeType.compare(fileTypeInterface->mimeType()))
             res << fileTypeInterface->fileTypeDescription()+" (*."+fileTypeInterface->fileExtension()+")";
     }
 
@@ -807,18 +807,18 @@ QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces)
     // Convert and return as a list of strings the filters corresponding to the
     // given file type interfaces
 
-    return filters(pFileTypeInterfaces, false, QStringList());
+    return filters(pFileTypeInterfaces, false, QString());
 }
 
 //==============================================================================
 
 QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
-                    const QStringList &pMimeTypes)
+                    const QString &pMimeType)
 {
     // Convert and return as a list of strings the filters corresponding to the
     // given file type interfaces, using the given MIME types
 
-    return filters(pFileTypeInterfaces, true, pMimeTypes);
+    return filters(pFileTypeInterfaces, true, pMimeType);
 }
 
 //==============================================================================

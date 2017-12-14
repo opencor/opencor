@@ -900,13 +900,13 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
     // Temporarily save the contents of the head version of the given file
 
     QString oldFileName = Core::temporaryFileName();
-    QString oldFileContents = mWorkspace->headFileContents(QDir(mWorkspace->path()).relativeFilePath(pFileName));
+    QByteArray oldFileContents = mWorkspace->headFileContents(QDir(mWorkspace->path()).relativeFilePath(pFileName));
 
     Core::writeFileContentsToFile(oldFileName, oldFileContents);
 
     // Retrieve the contents of the working version of the given file
 
-    QString newFileContents;
+    QByteArray newFileContents;
 
     Core::readFileContentsFromFile(pFileName, newFileContents);
 

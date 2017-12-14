@@ -86,8 +86,8 @@ private:
     CellmlAnnotationViewCellmlListWidget *mCellmlList;
     CellmlAnnotationViewMetadataDetailsWidget *mMetadataDetails;
 
-    QString mModelQualifierSvg;
-    QString mBiologyQualifierSvg;
+    QByteArray mModelQualifierSvg;
+    QByteArray mBiologyQualifierSvg;
 
     QString mQualifierInformationTemplate;
 

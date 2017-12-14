@@ -959,15 +959,11 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
             //       their GUI...
 
             if (doReloadFile) {
-                // Actually redownload the file, if it is a remote one, making
-                // sure that our busy widget is show during that process (since
-                // it may take some time)
-                // Note: our busy widget will get hidden in updateGui() (which
-                //       will be called from fileReloaded())...
+                // Actually redownload the file, if it is a remote one
 
                 if (fileManagerInstance->isRemote(fileName)) {
                     QString url = fileManagerInstance->url(fileName);
-                    QString fileContents;
+                    QByteArray fileContents;
                     QString errorMessage;
 
                     bool res = readFileContentsFromUrlWithBusyWidget(url, fileContents, &errorMessage);
@@ -1081,10 +1077,10 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
     if (fileIsNew || pNeedNewFileName) {
         // Either we are dealing with a new file or we want to save the file
-        // under a new name, so we ask the user for a file name based on the
-        // MIME types supported by our current view
+        // under a new name, so we ask the user for a file name based on its
+        // MIME type
 
-        QStringList supportedFilters = filters(fileTypeInterfaces(), viewInterface->viewMimeTypes(ViewInterface::SaveMimeTypeMode));
+        QStringList supportedFilters = filters(fileTypeInterfaces(), viewInterface->viewMimeType(oldFileName));
         QString firstSupportedFilter = supportedFilters.isEmpty()?QString():supportedFilters.first();
 
         newFileName = getSaveFileName(pNeedNewFileName?
@@ -1105,8 +1101,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         }
     }
 
-    // Try to save the file in case it has been modified or it needs a new file
-    // name (either as a result of a save as or because the file was new)
+    // Try to save the file
 
     bool fileIsModified = fileManagerInstance->isModified(oldFileName);
 

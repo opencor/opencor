@@ -262,7 +262,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         // text version of the given CellML file
 
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-        QString fileContents;
+        QByteArray fileContents;
 
         Core::readFileContentsFromFile(pFileName, fileContents);
 
