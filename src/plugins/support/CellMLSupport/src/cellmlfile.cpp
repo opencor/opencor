@@ -74,15 +74,9 @@ namespace CellMLSupport {
 
 CellmlFile::CellmlFile(const QString &pFileName) :
     StandardSupport::StandardFile(pFileName),
-    mModel(0),
-    mRdfApiRepresentation(0),
-    mRdfDataSource(0),
-    mRdfTriples(CellmlFileRdfTriples(this))
+    mRdfTriples(CellmlFileRdfTriples(this)),
+    mRuntime(new CellmlFileRuntime(this))
 {
-    // Instantiate our runtime object
-
-    mRuntime = new CellmlFileRuntime(this);
-
     // Reset ourselves
 
     reset();
