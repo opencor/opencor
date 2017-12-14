@@ -39,13 +39,6 @@ StandardFile::StandardFile(const QString &pFileName) :
 
 //==============================================================================
 
-void StandardFile::reset()
-{
-    // Nothing to do by default...
-}
-
-//==============================================================================
-
 bool StandardFile::reload()
 {
     // We want to reload the file, so we must first reset everything
