@@ -67,8 +67,8 @@ namespace CellMLSupport {
 //==============================================================================
 
 namespace Core {
-    class Property;
     class ProgressBarWidget;
+    class Property;
     class SplitterWidget;
     class ToolBarWidget;
     class UserMessageWidget;
