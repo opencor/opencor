@@ -145,10 +145,9 @@ bool SedmlFile::load()
 
     // Create a new SED-ML document, if needed, or try to load our file
 
-    if (mNew)
-        mSedmlDocument = new libsedml::SedDocument();
-    else
-        mSedmlDocument = libsedml::readSedML(mFileName.toUtf8().constData());
+    mSedmlDocument = mNew?
+                         new libsedml::SedDocument():
+                         libsedml::readSedML(mFileName.toUtf8().constData());
 
     return    !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR)
            && !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_FATAL);
