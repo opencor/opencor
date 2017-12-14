@@ -1213,7 +1213,7 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
 
             // Retrieve the contents of our model source
 
-            QString fileContents;
+            QByteArray fileContents;
             QString errorMessage;
 
             if (Core::readFileContentsFromUrlWithBusyWidget(modelSource, fileContents, &errorMessage)) {

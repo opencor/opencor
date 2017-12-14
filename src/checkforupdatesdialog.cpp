@@ -61,8 +61,8 @@ void CheckForUpdatesEngine::check()
     // Retrieve some information about the different versions of OpenCOR that
     // are available
 
-    QByteArray fileVersionsContents = QByteArray();
-    QString errorMessage = QString();
+    QByteArray fileVersionsContents;
+    QString errorMessage;
 
     mNewerVersions.clear();
 
