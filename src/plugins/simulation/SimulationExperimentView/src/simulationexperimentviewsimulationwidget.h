@@ -126,9 +126,6 @@ public:
     void fileModified();
     void fileReloaded();
 
-    QString fileName() const;
-    void setFileName(const QString &pFileName);
-
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
     SimulationSupport::Simulation * simulation() const;
@@ -150,8 +147,6 @@ private:
     SimulationExperimentViewPlugin *mPlugin;
 
     SimulationExperimentViewWidget *mViewWidget;
-
-    QString mFileName;
 
     QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
 

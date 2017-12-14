@@ -1207,7 +1207,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     GraphPanelWidget::GraphPanelPlotGraph *graph = mGraphs.value(pProperty);
     Core::Properties properties = pProperty->properties();
     QString propertyFileName = properties[0]->value();
-    QString fileName = mSimulationWidget->fileName();
+    QString fileName = mSimulationWidget->simulation()->fileName();
 
     if (!propertyFileName.compare(tr("Current"))) {
         properties[0]->setIcon(UnlockedIcon);
