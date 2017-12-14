@@ -712,29 +712,26 @@ static const auto PropertySeparator = QStringLiteral(" | ");
 
 //==============================================================================
 
-Core::Properties SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                                                               const QString &pFileName) const
+Core::Properties SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                                                                const QString &pFileName) const
 {
     // Retrieve and return all the graph properties associated with the given
-    // graph and file name, if any
+    // graph panel and file name, if any
 
     Core::Properties res = Core::Properties();
-    Core::PropertyEditorWidget *graphsPropertyEditor = mGraphsPropertyEditors.value(pGraphPanel);
 
-    if (graphsPropertyEditor) {
-        foreach (Core::Property *property, graphsPropertyEditor->properties()) {
-            // The property should be returned if it is checked (i.e. a selected
-            // graph) and have its first sub-property (i.e. to which model the
-            // graph applies) has either a value of "Current" or that of the
-            // given file name
+    foreach (Core::Property *property, mGraphsPropertyEditors.value(pGraphPanel)->properties()) {
+        // The property should be returned if it is checked (i.e. a selected
+        // graph) and have its first sub-property (i.e. to which model the graph
+        // applies) has either a value of "Current" or that of the given file
+        // name
 
-            if (property->isChecked()) {
-                QString modelPropertyValue = property->properties().first()->value();
+        if (property->isChecked()) {
+            QString modelPropertyValue = property->properties().first()->value();
 
-                if (   !modelPropertyValue.compare(tr("Current"))
-                    || !modelPropertyValue.split(PropertySeparator).last().compare(pFileName)) {
-                    res << property;
-                }
+            if (   !modelPropertyValue.compare(tr("Current"))
+                || !modelPropertyValue.split(PropertySeparator).last().compare(pFileName)) {
+                res << property;
             }
         }
     }

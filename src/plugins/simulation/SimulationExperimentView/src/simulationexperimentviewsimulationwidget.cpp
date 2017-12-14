@@ -1746,7 +1746,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         // Keep track of the graph panel's graphs, if any
 
-        Core::Properties graphsProperties = graphPanelAndGraphsWidget->graphProperties(graphPanel, simulationFileName);
+        Core::Properties graphsProperties = graphPanelAndGraphsWidget->graphsProperties(graphPanel, simulationFileName);
 
         if (!graphsProperties.isEmpty()) {
             GraphsData data;
