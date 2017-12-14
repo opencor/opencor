@@ -152,14 +152,14 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
     } else {
         QIntList oldSizes = sizes();
         QIntList newSizes = QIntList();
-        int oldTotalSize = height()-(mGraphPanels.count()-2)*handleWidth();
-        int newTotalSize = oldTotalSize-handleWidth();
-        double scalingFactor = double(mGraphPanels.count()-1)/mGraphPanels.count()*newTotalSize/oldTotalSize;
+        int oldTotalHeight = height()-(mGraphPanels.count()-2)*handleWidth();
+        int newTotalHeight = oldTotalHeight-handleWidth();
+        double scalingFactor = double(mGraphPanels.count()-1)/mGraphPanels.count()*newTotalHeight/oldTotalHeight;
 
         for (int i = 0, iMax = oldSizes.count()-1; i < iMax; ++i)
             newSizes << round(scalingFactor*oldSizes[i]);
 
-        setSizes(newSizes << newTotalSize-std::accumulate(newSizes.begin(), newSizes.end(), 0));
+        setSizes(newSizes << newTotalHeight-std::accumulate(newSizes.begin(), newSizes.end(), 0));
     }
 
     // Keep track of whenever a graph panel gets activated
