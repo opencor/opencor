@@ -1638,7 +1638,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
              graphPanelsWidget->graphPanels()) {
         // Create and customise the look and feel of our 2D plot
 
-        Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelProperties(graphPanel);
+        Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel)->properties();
         libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
 
         sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
@@ -2491,7 +2491,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         annotation = sedmlPlot2d->getAnnotation();
 
         if (annotation) {
-            Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelProperties(graphPanel);
+            Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel)->properties();
 
             for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
                 const libsbml::XMLNode &sedmlPlot2dPropertiesNode = annotation->getChild(i);

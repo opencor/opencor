@@ -699,11 +699,22 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finishEditing
 
 //==============================================================================
 
-Core::Properties SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelProperties(GraphPanelWidget::GraphPanelWidget *pGraphPanel) const
+Core::PropertyEditorWidget * SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPropertyEditor(GraphPanelWidget::GraphPanelWidget *pGraphPanel) const
 {
-    // Retrieve and return all the graph panel properties
+    // Retrieve and return the graph panel property editor associated with the
+    // given graph panel
 
-    return mGraphPanelPropertyEditors.value(pGraphPanel)->properties();
+    return mGraphPanelPropertyEditors.value(pGraphPanel);
+}
+
+//==============================================================================
+
+Core::PropertyEditorWidget * SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyEditor(GraphPanelWidget::GraphPanelWidget *pGraphPanel) const
+{
+    // Retrieve and return the graphs property editor associated with the given
+    // graph panel
+
+    return mGraphsPropertyEditors.value(pGraphPanel);
 }
 
 //==============================================================================
