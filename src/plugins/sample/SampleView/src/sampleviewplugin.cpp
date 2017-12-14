@@ -248,13 +248,22 @@ ViewInterface::Mode SampleViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList SampleViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList SampleViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support, i.e. any in our case
 
     return QStringList();
+}
+
+//==============================================================================
+
+QString SampleViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName)
+
+    // Return the MIME type for the given file
+
+    return QString();
 }
 
 //==============================================================================

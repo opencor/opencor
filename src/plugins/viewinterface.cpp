@@ -33,7 +33,7 @@ extern "C" Q_DECL_EXPORT int viewInterfaceVersion()
 {
     // Version of the view interface
 
-    return 1;
+    return 2;
 }
 
 //==============================================================================

@@ -343,13 +343,22 @@ ViewInterface::Mode CellMLTextViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList CellMLTextViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList CellMLTextViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support
 
     return QStringList() << CellMLSupport::CellmlMimeType;
+}
+
+//==============================================================================
+
+QString CellMLTextViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName)
+
+    // Return the MIME type for the given CellML file
+
+    return CellMLSupport::CellmlMimeType;
 }
 
 //==============================================================================
