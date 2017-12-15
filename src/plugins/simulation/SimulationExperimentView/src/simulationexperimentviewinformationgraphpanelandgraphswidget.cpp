@@ -1306,7 +1306,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     } else if ((oldLinePen != linePen) || graphSymbolUpdated) {
         graph->plot()->replot();
 
-        QCoreApplication::processEvents();
+        processEvents();
         // Note: this ensures that our plot is updated at once...
     }
 }
@@ -1339,7 +1339,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = mGraphPanels.value(propertyEditor)->plot();
     Core::Properties properties = propertyEditor->properties();
 
-    QCoreApplication::processEvents();
+    processEvents();
     // Note: this ensures that our GUI is all fine before we start disabling
     //       updates...
 

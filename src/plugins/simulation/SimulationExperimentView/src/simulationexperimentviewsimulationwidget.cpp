@@ -674,7 +674,7 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloadingView)
 {
-    QCoreApplication::processEvents();
+    processEvents();
     // Note: this ensures that our GUI is all fine before we start disabling
     //       updates (e.g. when reloading a SED-ML file that references a remote
     //       CellML file)...
@@ -1027,7 +1027,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     setUpdatesEnabled(true);
 
     if (needProcessingEvents)
-        QCoreApplication::processEvents();
+        processEvents();
 }
 
 //==============================================================================
@@ -1376,7 +1376,7 @@ void SimulationExperimentViewSimulationWidget::removeCurrentGraphPanel()
     // Ask our graph panels widget to remove the current graph panel
 
     if (mContentsWidget->graphPanelsWidget()->removeCurrentGraphPanel()) {
-        QCoreApplication::processEvents();
+        processEvents();
         // Note: this ensures that our remaining graph panels get realigned at
         //       once...
     }
@@ -3018,7 +3018,7 @@ void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::P
     }
 
     if (needProcessingEvents)
-        QCoreApplication::processEvents();
+        processEvents();
 }
 
 //==============================================================================
@@ -3117,7 +3117,7 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
     updateGraphData(pGraph, mSimulation->results()->size());
 
     if (updatePlot(plot) || plot->drawGraphFrom(pGraph, 0)) {
-        QCoreApplication::processEvents();
+        processEvents();
         // Note: this ensures that our plot is updated at once...
     }
 
@@ -3144,7 +3144,7 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanel
 
     updatePlot(plot, true, true);
 
-    QCoreApplication::processEvents();
+    processEvents();
     // Note: this ensures that our plot is updated at once...
 
     if (plot->graphs().isEmpty())
@@ -3189,7 +3189,7 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const OpenCOR::Grap
             //       graphs has been updated...
         }
 
-        QCoreApplication::processEvents();
+        processEvents();
         // Note: this ensures that our plots are all updated at once...
     }
 }
@@ -3420,7 +3420,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisib
         foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots)
             updatePlot(plot, true, true);
 
-        QCoreApplication::processEvents();
+        processEvents();
         // Note: this ensures that our plots are all updated at once...
     }
 
@@ -3578,7 +3578,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
     // Process events, if needed
 
     if (needProcessingEvents)
-        QCoreApplication::processEvents();
+        processEvents();
 
     // Update our progress bar or our tab icon, if needed
 

@@ -194,6 +194,17 @@ void CommonWidget::setBusyWidgetProgress(const double &pProgress)
 
 //==============================================================================
 
+void CommonWidget::processEvents()
+{
+    // Process events, but only if we or our central widget is not showing our
+    // or its busy widget
+
+    if (!mBusyWidget && !centralWidget()->isBusyWidgetVisible())
+        QCoreApplication::processEvents();
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 

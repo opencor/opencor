@@ -74,6 +74,8 @@ public:
 
     void setBusyWidgetProgress(const double &pProgress);
 
+    void processEvents();
+
 protected:
     QSize defaultSize(const double &pRatio) const;
 
