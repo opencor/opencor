@@ -2731,6 +2731,14 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         }
     }
 
+    // Set our graph panels sizes and if none were provided then use some
+    // default sizes
+
+    if(graphPanelsWidgetSizes.isEmpty()) {
+        for (int i = 0, iMax = graphPanelsWidget->count(); i < iMax; ++i)
+            graphPanelsWidgetSizes << 1;
+    }
+
     graphPanelsWidget->setSizes(graphPanelsWidgetSizes);
 
     // Select our first graph panel, now that we are fully initialised
