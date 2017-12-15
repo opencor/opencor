@@ -1756,8 +1756,8 @@ void CentralWidget::updateGui()
 
     // Replace the current view with the new one, if needed
     // Note: to do this as smoothly as possible, we temporarily hide the status
-    //       bar. Indeed, not do this will result in some awful flickering when
-    //       switching from one file to another with the mouse over a
+    //       bar. Indeed, not to do this will result in some awful flickering
+    //       when switching from one file to another with the mouse over a
     //       button-like widget and the status bar visible (see issues #405 and
     //       #1027)...
 
