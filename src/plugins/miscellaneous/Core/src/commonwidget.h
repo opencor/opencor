@@ -68,7 +68,7 @@ public:
     void showBusyWidget();
     void showProgressBusyWidget();
 
-    void hideBusyWidget();
+    void hideBusyWidget(const bool &pForceHiding = false);
 
     void resizeBusyWidget();
 
@@ -83,6 +83,8 @@ private:
     QWidget *mParent;
 
     BusyWidget *mBusyWidget;
+
+    int mCounter;
 
     void doShowBusyWidget(const double &pProgress = -1.0);
 };

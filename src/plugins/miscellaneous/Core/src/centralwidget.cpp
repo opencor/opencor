@@ -854,6 +854,16 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
         QByteArray fileContents;
         QString errorMessage;
 
+qDebug(">>> CentralWidget::openRemoteFile()... [%s]", qPrintable(fileNameOrUrl));
+        showBusyWidget();
+        // Note: our call to readFileContentsFromUrlWithBusyWidget() will also
+        //       show a busy widget, but it will also hide it while we want to
+        //       keep it visible in case we are loading a SED-ML file / COMBINE
+        //       archive. Indeed, such files may require further initialisation
+        //       (in the case of the Simulation Experiment view, for example).
+        //       So, we rely on nested calls to our busy widget to have it
+        //       remain visible until it gets hidden in updateGui()...
+
         if (readFileContentsFromUrlWithBusyWidget(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
@@ -965,6 +975,18 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                     QString url = fileManagerInstance->url(fileName);
                     QByteArray fileContents;
                     QString errorMessage;
+
+qDebug(">>> CentralWidget::reloadFile()... [%s]", qPrintable(fileName));
+                    showBusyWidget();
+                    // Note: our call to readFileContentsFromUrlWithBusyWidget()
+                    //       will also show a busy widget, but it will also hide
+                    //       it while we want to keep it visible in case we are
+                    //       reloading a SED-ML file / COMBINE archive. Indeed,
+                    //       such files may require further initialisation (in
+                    //       the case of the Simulation Experiment view, for
+                    //       example). So, we rely on nested calls to our busy
+                    //       widget to have it remain visible until it gets
+                    //       hidden in updateGui()...
 
                     bool res = readFileContentsFromUrlWithBusyWidget(url, fileContents, &errorMessage);
 
@@ -1794,6 +1816,14 @@ void CentralWidget::updateGui()
     // Update our modified settings
 
     updateModifiedSettings();
+
+    // Force the hiding of our busy widget (useful in some cases, e.g. when we
+    // open/reload a remote file)
+    // Note: we need to force the hiding in case we are starting OpenCOR with a
+    //       remote SED-ML file / COMBINE archive, which result in more calls to
+    //       showBusyWidget() than to hideBusyWidget()...
+
+    hideBusyWidget(true);
 
     // Let people know whether there is at least one view, as well as whether we
     // can save as and there is/are at least one/two file/s

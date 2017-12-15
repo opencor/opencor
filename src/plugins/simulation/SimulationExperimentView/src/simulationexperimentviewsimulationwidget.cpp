@@ -674,6 +674,18 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloadingView)
 {
+    // In the case of a SED-ML file and of a COMBINE archive, we will need
+    // to further initialise ourselves, to customise graph panels, etc. (see
+    // SimulationExperimentViewSimulationWidget::furtherInitialize()), so we
+    // ask our central widget to show its busy widget (which will get hidden
+    // in CentralWidget::updateGui())
+
+    bool isSedmlFile = mSimulation->fileType() == SimulationSupport::Simulation::SedmlFile;
+    bool isCombineArchive = mSimulation->fileType() == SimulationSupport::Simulation::CombineArchive;
+
+    if (isSedmlFile || isCombineArchive)
+        Core::centralWidget()->showBusyWidget();
+
     processEvents();
     // Note: this ensures that our GUI is all fine before we start disabling
     //       updates (e.g. when reloading a SED-ML file that references a remote
@@ -1002,18 +1014,10 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     // Further initialise ourselves, if we have a valid environment and we are
     // not dealing with a CellML file
 
-    bool needProcessingEvents = false;
-
-    if (    validSimulationEnvironment
-        && (   (mSimulation->fileType() == SimulationSupport::Simulation::SedmlFile)
-            || (mSimulation->fileType() == SimulationSupport::Simulation::CombineArchive))) {
+    if (validSimulationEnvironment && (isSedmlFile || isCombineArchive)) {
         // Further initialise ourselves, update our GUI (by reinitialising it)
         // and initialise our simulation, if we still have a valid simulation
         // environment
-
-        needProcessingEvents = true;
-
-        Core::centralWidget()->showBusyWidget();
 
         bool validSimulationEnvironment = furtherInitialize();
 
@@ -1021,14 +1025,9 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
         if (validSimulationEnvironment)
             initializeSimulation();
-
-        Core::centralWidget()->hideBusyWidget();
     }
 
     setUpdatesEnabled(true);
-
-    if (needProcessingEvents)
-        processEvents();
 }
 
 //==============================================================================
