@@ -1005,7 +1005,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     bool needProcessingEvents = false;
 
     if (    validSimulationEnvironment
-        && (mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile)) {
+        && (   (mSimulation->fileType() == SimulationSupport::Simulation::SedmlFile)
+            || (mSimulation->fileType() == SimulationSupport::Simulation::CombineArchive))) {
         // Further initialise ourselves, update our GUI (by reinitialising it)
         // and initialise our simulation, if we still have a valid simulation
         // environment
