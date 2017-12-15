@@ -854,7 +854,6 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
         QByteArray fileContents;
         QString errorMessage;
 
-qDebug(">>> CentralWidget::openRemoteFile()... [%s]", qPrintable(fileNameOrUrl));
         showBusyWidget();
         // Note: our call to readFileContentsFromUrlWithBusyWidget() will also
         //       show a busy widget, but it will also hide it while we want to
@@ -976,7 +975,6 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                     QByteArray fileContents;
                     QString errorMessage;
 
-qDebug(">>> CentralWidget::reloadFile()... [%s]", qPrintable(fileName));
                     showBusyWidget();
                     // Note: our call to readFileContentsFromUrlWithBusyWidget()
                     //       will also show a busy widget, but it will also hide
