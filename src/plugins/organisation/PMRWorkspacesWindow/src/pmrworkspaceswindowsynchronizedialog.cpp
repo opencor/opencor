@@ -199,7 +199,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     webViewerWidget->setLayout(webViewerLayout);
 
-    Core::ToolBarWidget *webViewerToolBarWidget = new Core::ToolBarWidget(webViewerWidget);
+    Core::ToolBarWidget *webViewerToolBarWidget = new Core::ToolBarWidget();
     QLabel *webViewerLabel = new QLabel(tr("Changes:"), webViewerWidget);
     QWidget *webViewerSpacer = new QWidget(webViewerToolBarWidget);
     QAction *webViewerNormalSizeAction = Core::newAction(QIcon(":/oxygen/actions/zoom-original.png"), webViewerToolBarWidget);

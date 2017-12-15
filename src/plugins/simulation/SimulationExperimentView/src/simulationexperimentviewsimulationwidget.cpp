@@ -134,7 +134,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Create a tool bar
 
-    mToolBarWidget = new Core::ToolBarWidget(this);
+    mToolBarWidget = new Core::ToolBarWidget();
 
     // Create, customise and handle various actions
 
@@ -674,7 +674,19 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloadingView)
 {
-    QCoreApplication::processEvents();
+    // In the case of a SED-ML file and of a COMBINE archive, we will need
+    // to further initialise ourselves, to customise graph panels, etc. (see
+    // SimulationExperimentViewSimulationWidget::furtherInitialize()), so we
+    // ask our central widget to show its busy widget (which will get hidden
+    // in CentralWidget::updateGui())
+
+    bool isSedmlFile = mSimulation->fileType() == SimulationSupport::Simulation::SedmlFile;
+    bool isCombineArchive = mSimulation->fileType() == SimulationSupport::Simulation::CombineArchive;
+
+    if (isSedmlFile || isCombineArchive)
+        Core::centralWidget()->showBusyWidget();
+
+    processEvents();
     // Note: this ensures that our GUI is all fine before we start disabling
     //       updates (e.g. when reloading a SED-ML file that references a remote
     //       CellML file)...
@@ -1002,17 +1014,10 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     // Further initialise ourselves, if we have a valid environment and we are
     // not dealing with a CellML file
 
-    bool needProcessingEvents = false;
-
-    if (    validSimulationEnvironment
-        && (mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile)) {
+    if (validSimulationEnvironment && (isSedmlFile || isCombineArchive)) {
         // Further initialise ourselves, update our GUI (by reinitialising it)
         // and initialise our simulation, if we still have a valid simulation
         // environment
-
-        needProcessingEvents = true;
-
-        Core::centralWidget()->showBusyWidget();
 
         bool validSimulationEnvironment = furtherInitialize();
 
@@ -1020,14 +1025,9 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
         if (validSimulationEnvironment)
             initializeSimulation();
-
-        Core::centralWidget()->hideBusyWidget();
     }
 
     setUpdatesEnabled(true);
-
-    if (needProcessingEvents)
-        QCoreApplication::processEvents();
 }
 
 //==============================================================================
@@ -1376,7 +1376,7 @@ void SimulationExperimentViewSimulationWidget::removeCurrentGraphPanel()
     // Ask our graph panels widget to remove the current graph panel
 
     if (mContentsWidget->graphPanelsWidget()->removeCurrentGraphPanel()) {
-        QCoreApplication::processEvents();
+        processEvents();
         // Note: this ensures that our remaining graph panels get realigned at
         //       once...
     }
@@ -2731,6 +2731,14 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         }
     }
 
+    // Set our graph panels sizes and if none were provided then use some
+    // default sizes
+
+    if(graphPanelsWidgetSizes.isEmpty()) {
+        for (int i = 0, iMax = graphPanelsWidget->count(); i < iMax; ++i)
+            graphPanelsWidgetSizes << 1;
+    }
+
     graphPanelsWidget->setSizes(graphPanelsWidgetSizes);
 
     // Select our first graph panel, now that we are fully initialised
@@ -3010,7 +3018,7 @@ void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::P
     }
 
     if (needProcessingEvents)
-        QCoreApplication::processEvents();
+        processEvents();
 }
 
 //==============================================================================
@@ -3109,7 +3117,7 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
     updateGraphData(pGraph, mSimulation->results()->size());
 
     if (updatePlot(plot) || plot->drawGraphFrom(pGraph, 0)) {
-        QCoreApplication::processEvents();
+        processEvents();
         // Note: this ensures that our plot is updated at once...
     }
 
@@ -3136,7 +3144,7 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanel
 
     updatePlot(plot, true, true);
 
-    QCoreApplication::processEvents();
+    processEvents();
     // Note: this ensures that our plot is updated at once...
 
     if (plot->graphs().isEmpty())
@@ -3181,7 +3189,7 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const OpenCOR::Grap
             //       graphs has been updated...
         }
 
-        QCoreApplication::processEvents();
+        processEvents();
         // Note: this ensures that our plots are all updated at once...
     }
 }
@@ -3412,7 +3420,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisib
         foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots)
             updatePlot(plot, true, true);
 
-        QCoreApplication::processEvents();
+        processEvents();
         // Note: this ensures that our plots are all updated at once...
     }
 
@@ -3570,7 +3578,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
     // Process events, if needed
 
     if (needProcessingEvents)
-        QCoreApplication::processEvents();
+        processEvents();
 
     // Update our progress bar or our tab icon, if needed
 
