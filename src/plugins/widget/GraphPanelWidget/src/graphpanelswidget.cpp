@@ -202,6 +202,14 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
                                   activeGraphPanelPlot->maxY(),
                                   true, true, true, true, true);
 
+    // Make sure that our graph panel is visible
+    // Note: indeed, for some reasons, this may not always be the case when
+    //       reloading a SED-ML file. For example, if we were to reload
+    //       noble_1962_local.sedml, then the second graph panel wouldn't be
+    //       visible...!?
+
+    res->setVisible(true);
+
     // Return our newly created graph panel
 
     return res;
@@ -275,9 +283,15 @@ bool GraphPanelsWidget::removeCurrentGraphPanel()
         // There is only one graph panel, so add one and then remove our 'first'
         // graph panel
 
+        setUpdatesEnabled(false);
+
         addGraphPanel();
 
-        return removeGraphPanel(mGraphPanels.first());
+        bool res = removeGraphPanel(mGraphPanels.first());
+
+        setUpdatesEnabled(true);
+
+        return res;
     } else {
         return removeGraphPanel(mActiveGraphPanel);
     }
@@ -290,10 +304,14 @@ void GraphPanelsWidget::removeAllGraphPanels()
     // Remove all the graph panels, after having created an 'empty' one (since
     // we want at least one graph panel at any given point in time)
 
+    setUpdatesEnabled(false);
+
     addGraphPanel();
 
     while (mGraphPanels.count() > 1)
         removeGraphPanel(mGraphPanels.first());
+
+    setUpdatesEnabled(true);
 }
 
 //==============================================================================

@@ -64,7 +64,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     // Note: the spacer is a little trick to improve the rendering of our tool
     //       bar widget...
 
-    Core::ToolBarWidget *topToolBarWidget = new Core::ToolBarWidget(this);
+    Core::ToolBarWidget *topToolBarWidget = new Core::ToolBarWidget();
     QWidget *spacer = new QWidget(topToolBarWidget);
 
     spacer->setMinimumSize(0, 0);
@@ -91,7 +91,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     // Create a tool bar widget with different buttons
 
-    Core::ToolBarWidget *bottomToolBarWidget = new Core::ToolBarWidget(this);
+    Core::ToolBarWidget *bottomToolBarWidget = new Core::ToolBarWidget();
 
     bottomToolBarWidget->addAction(mGui->actionClear);
     bottomToolBarWidget->addSeparator();
