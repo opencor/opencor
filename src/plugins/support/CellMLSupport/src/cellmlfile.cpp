@@ -400,9 +400,12 @@ void CellmlFile::clearCmetaIdsFromCellmlElement(const QDomElement &pElement,
     // used
 
     static const QString CmetaId = "cmeta:id";
+    static const QString XmlnsCmeta = "xmlns:cmeta";
 
-    if (!pUsedCmetaIds.contains(pElement.attribute(CmetaId)))
+    if (!pUsedCmetaIds.contains(pElement.attribute(CmetaId))) {
         pElement.attributes().removeNamedItem(CmetaId);
+        pElement.attributes().removeNamedItem(XmlnsCmeta);
+    }
 
     // Do the same for all the child elements of the given CellML element
 
