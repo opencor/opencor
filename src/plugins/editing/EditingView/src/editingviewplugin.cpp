@@ -182,6 +182,9 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                     this, SLOT(updateSelectAllAction()),
                     Qt::UniqueConnection);
         }
+    } else {
+        mEditor = 0;
+        mFileName = QString();
     }
 
     // Show/enable or hide/disable various actions, depending on whether the
@@ -430,8 +433,10 @@ void EditingViewPlugin::updateGui(const QString &pFileName)
 
         // Make our editor widget read-only or writable
 
-        mEditor->setReadOnly(   !Core::FileManager::instance()->isReadableAndWritable(pFileName)
-                             || !mEditingViewInterface->isEditorWidgetUseable(pFileName));
+        if (mEditor) {
+            mEditor->setReadOnly(   !Core::FileManager::instance()->isReadableAndWritable(pFileName)
+                                 || !mEditingViewInterface->isEditorWidgetUseable(pFileName));
+        }
     }
 }
 
@@ -456,14 +461,12 @@ void EditingViewPlugin::updateUndoAndRedoActions()
 
     if (mEditingViewInterface) {
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-        bool editorAndFileReadableAndWritable =    mEditor
-                                                && fileManagerInstance->isReadableAndWritable(mFileName);
+        bool editorAndFileReadableAndWritable = mEditor && fileManagerInstance->isReadableAndWritable(mFileName);
 
         mEditUndoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isUndoAvailable());
         mEditRedoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isRedoAvailable());
 
-        fileManagerInstance->setModified(mFileName,
-                                         mEditingViewInterface->isEditorWidgetContentsModified(mFileName));
+        fileManagerInstance->setModified(mFileName, mEditingViewInterface->isEditorWidgetContentsModified(mFileName));
     }
 }
 
@@ -474,13 +477,13 @@ void EditingViewPlugin::updateEditingActions()
     // Update our editing actions
 
     if (mEditingViewInterface) {
-        bool editorAndHasSelectedText = mEditor->hasSelectedText();
+        bool hasSelectedText = mEditor && mEditor->hasSelectedText();
         bool fileReadableOrWritable = Core::FileManager::instance()->isReadableAndWritable(mFileName);
 
-        mEditCutAction->setEnabled(editorAndHasSelectedText && fileReadableOrWritable);
-        mEditCopyAction->setEnabled(editorAndHasSelectedText);
+        mEditCutAction->setEnabled(hasSelectedText && fileReadableOrWritable);
+        mEditCopyAction->setEnabled(hasSelectedText);
         clipboardDataChanged();
-        mEditDeleteAction->setEnabled(editorAndHasSelectedText && fileReadableOrWritable);
+        mEditDeleteAction->setEnabled(hasSelectedText && fileReadableOrWritable);
     }
 }
 
@@ -491,10 +494,10 @@ void EditingViewPlugin::updateFindPreviousNextActions()
     // Update our find previous and next actions
 
     if (mEditingViewInterface) {
-        bool canFindReplace = mEditor->isFindPreviousNextAvailable();
+        bool findPreviousNextAvailable = mEditor && mEditor->isFindPreviousNextAvailable();
 
-        mEditFindPreviousAction->setEnabled(canFindReplace);
-        mEditFindNextAction->setEnabled(canFindReplace);
+        mEditFindPreviousAction->setEnabled(findPreviousNextAvailable);
+        mEditFindNextAction->setEnabled(findPreviousNextAvailable);
     }
 }
 
@@ -505,7 +508,7 @@ void EditingViewPlugin::updateSelectAllAction()
     // Update our select all action
 
     if (mEditingViewInterface)
-        mEditSelectAllAction->setEnabled(mEditor->isSelectAllAvailable());
+        mEditSelectAllAction->setEnabled(mEditor && mEditor->isSelectAllAvailable());
 }
 
 //==============================================================================
