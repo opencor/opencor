@@ -137,8 +137,9 @@ void RawTextViewPlugin::fileModified(const QString &pFileName)
 
 void RawTextViewPlugin::fileSaved(const QString &pFileName)
 {
-//---ISSUE1491---
-Q_UNUSED(pFileName);
+    // The given file has been saved, so let our view widget know about it
+
+    mViewWidget->fileSaved(pFileName);
 }
 
 //==============================================================================
