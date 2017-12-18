@@ -1828,6 +1828,18 @@ void CentralWidget::updateGui()
             mainWindow()->statusBar()->show();
     }
 
+    // Update our modified settings
+
+    updateModifiedSettings();
+
+    // Force the hiding of our busy widget (useful in some cases, e.g. when we
+    // open/reload a remote file)
+    // Note: we need to force the hiding in case we are starting OpenCOR with a
+    //       remote SED-ML file / COMBINE archive, which result in more calls to
+    //       showBusyWidget() than to hideBusyWidget()...
+
+    hideBusyWidget(true);
+
     // Give the focus to the new view after first checking that it has a focused
     // widget
 
@@ -1844,18 +1856,6 @@ void CentralWidget::updateGui()
 
         newView->setFocus();
     }
-
-    // Update our modified settings
-
-    updateModifiedSettings();
-
-    // Force the hiding of our busy widget (useful in some cases, e.g. when we
-    // open/reload a remote file)
-    // Note: we need to force the hiding in case we are starting OpenCOR with a
-    //       remote SED-ML file / COMBINE archive, which result in more calls to
-    //       showBusyWidget() than to hideBusyWidget()...
-
-    hideBusyWidget(true);
 
     // Let people know whether there is at least one view, as well as whether we
     // can save as and there is/are at least one/two file/s
