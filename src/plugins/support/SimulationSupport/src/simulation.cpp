@@ -41,7 +41,6 @@ namespace SimulationSupport {
 
 SimulationData::SimulationData(Simulation *pSimulation) :
     mSimulation(pSimulation),
-    mRuntime(pSimulation->runtime()),
     mDelay(0),
     mStartingPoint(0.0),
     mEndingPoint(1000.0),
@@ -71,10 +70,7 @@ SimulationData::~SimulationData()
 
 void SimulationData::reload()
 {
-    // Reload ourselves by updating our runtime, and deleting and recreating our
-    // arrays
-
-    mRuntime = mSimulation->runtime();
+    // Reload ourselves by deleting and recreating our arrays
 
     deleteArrays();
     createArrays();
@@ -242,19 +238,17 @@ QString SimulationData::odeSolverName() const
 {
     // Return our ODE solver name
 
-    return (mRuntime && mRuntime->needOdeSolver())?mOdeSolverName:QString();
+    return (   mSimulation->runtime()
+            && mSimulation->runtime()->needOdeSolver())?mOdeSolverName:QString();
 }
 
 //==============================================================================
 
 void SimulationData::setOdeSolverName(const QString &pOdeSolverName)
 {
-    if (!mRuntime)
-        return;
-
     // Set our ODE solver name and reset its properties
 
-    if (mRuntime->needOdeSolver()) {
+    if (mSimulation->runtime() && mSimulation->runtime()->needOdeSolver()) {
         mOdeSolverName = pOdeSolverName;
 
         mOdeSolverProperties.clear();
@@ -267,7 +261,8 @@ Solver::Solver::Properties SimulationData::odeSolverProperties() const
 {
     // Return our ODE solver's properties
 
-    return (mRuntime && mRuntime->needOdeSolver())?mOdeSolverProperties:Solver::Solver::Properties();
+    return (   mSimulation->runtime()
+            && mSimulation->runtime()->needOdeSolver())?mOdeSolverProperties:Solver::Solver::Properties();
 }
 
 //==============================================================================
@@ -275,12 +270,9 @@ Solver::Solver::Properties SimulationData::odeSolverProperties() const
 void SimulationData::addOdeSolverProperty(const QString &pName,
                                           const QVariant &pValue)
 {
-    if (!mRuntime)
-        return;
-
     // Add an ODE solver property
 
-    if (mRuntime->needOdeSolver())
+    if (mSimulation->runtime() && mSimulation->runtime()->needOdeSolver())
         mOdeSolverProperties.insert(pName, pValue);
 }
 
@@ -299,19 +291,17 @@ QString SimulationData::daeSolverName() const
 {
     // Return our DAE solver name
 
-    return (mRuntime && mRuntime->needDaeSolver())?mDaeSolverName:QString();
+    return (   mSimulation->runtime()
+            && mSimulation->runtime()->needDaeSolver())?mDaeSolverName:QString();
 }
 
 //==============================================================================
 
 void SimulationData::setDaeSolverName(const QString &pDaeSolverName)
 {
-    if (!mRuntime)
-        return;
-
     // Set our DAE solver name and reset its properties
 
-    if (mRuntime->needDaeSolver()) {
+    if (mSimulation->runtime() && mSimulation->runtime()->needDaeSolver()) {
         mDaeSolverName = pDaeSolverName;
 
         mDaeSolverProperties.clear();
@@ -324,7 +314,8 @@ Solver::Solver::Properties SimulationData::daeSolverProperties() const
 {
     // Return our DAE solver's properties
 
-    return (mRuntime && mRuntime->needDaeSolver())?mDaeSolverProperties:Solver::Solver::Properties();
+    return (   mSimulation->runtime()
+            && mSimulation->runtime()->needDaeSolver())?mDaeSolverProperties:Solver::Solver::Properties();
 }
 
 //==============================================================================
@@ -332,12 +323,9 @@ Solver::Solver::Properties SimulationData::daeSolverProperties() const
 void SimulationData::addDaeSolverProperty(const QString &pName,
                                           const QVariant &pValue)
 {
-    if (!mRuntime)
-        return;
-
     // Add an DAE solver property
 
-    if (mRuntime->needDaeSolver())
+    if (mSimulation->runtime() && mSimulation->runtime()->needDaeSolver())
         mDaeSolverProperties.insert(pName, pValue);
 }
 
@@ -356,7 +344,8 @@ QString SimulationData::nlaSolverName() const
 {
     // Return our NLA solver name
 
-    return (mRuntime && mRuntime->needNlaSolver())?mNlaSolverName:QString();
+    return (   mSimulation->runtime()
+            && mSimulation->runtime()->needNlaSolver())?mNlaSolverName:QString();
 }
 
 //==============================================================================
@@ -364,12 +353,9 @@ QString SimulationData::nlaSolverName() const
 void SimulationData::setNlaSolverName(const QString &pNlaSolverName,
                                       const bool &pReset)
 {
-    if (!mRuntime)
-        return;
-
     // Set our NLA solver name and reset its properties
 
-    if (mRuntime->needNlaSolver()) {
+    if (mSimulation->runtime() && mSimulation->runtime()->needNlaSolver()) {
         mNlaSolverName = pNlaSolverName;
 
         mNlaSolverProperties.clear();
@@ -390,7 +376,8 @@ Solver::Solver::Properties SimulationData::nlaSolverProperties() const
 {
     // Return our NLA solver's properties
 
-    return (mRuntime && mRuntime->needNlaSolver())?mNlaSolverProperties:Solver::Solver::Properties();
+    return (   mSimulation->runtime()
+            && mSimulation->runtime()->needNlaSolver())?mNlaSolverProperties:Solver::Solver::Properties();
 }
 
 //==============================================================================
@@ -399,12 +386,9 @@ void SimulationData::addNlaSolverProperty(const QString &pName,
                                           const QVariant &pValue,
                                           const bool &pReset)
 {
-    if (!mRuntime)
-        return;
-
     // Add an NLA solver property
 
-    if (mRuntime->needNlaSolver()) {
+    if (mSimulation->runtime() && mSimulation->runtime()->needNlaSolver()) {
         mNlaSolverProperties.insert(pName, pValue);
 
         // Reset our parameter values, if required
@@ -421,9 +405,6 @@ void SimulationData::addNlaSolverProperty(const QString &pName,
 
 void SimulationData::reset(const bool &pInitialize)
 {
-    if (!mRuntime)
-        return;
-
     // Reset our parameter values which means both initialising our 'constants'
     // and computing our 'computed constants' and 'variables'
     // Note #1: we must check whether our runtime needs NLA solver and, if so,
@@ -432,15 +413,20 @@ void SimulationData::reset(const bool &pInitialize)
     // Note #2: recomputeComputedConstantsAndVariables() will let people know
     //          that our data has changed...
 
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+
+    if (!runtime)
+        return;
+
     Solver::NlaSolver *nlaSolver = 0;
 
-    if (mRuntime->needNlaSolver()) {
+    if (runtime->needNlaSolver()) {
         // Set our NLA solver
         // Note: we unset it at the end of this method...
 
         nlaSolver = static_cast<Solver::NlaSolver *>(nlaSolverInterface()->solverInstance());
 
-        Solver::setNlaSolver(mRuntime->address(), nlaSolver);
+        Solver::setNlaSolver(runtime->address(), nlaSolver);
 
         // Keep track of any error that might be reported by our NLA solver
 
@@ -455,13 +441,13 @@ void SimulationData::reset(const bool &pInitialize)
     // Reset our parameter values
 
     if (pInitialize) {
-        memset(mConstants, 0, mRuntime->constantsCount()*Solver::SizeOfDouble);
-        memset(mRates, 0, mRuntime->ratesCount()*Solver::SizeOfDouble);
-        memset(mStates, 0, mRuntime->statesCount()*Solver::SizeOfDouble);
-        memset(mAlgebraic, 0, mRuntime->algebraicCount()*Solver::SizeOfDouble);
-        memset(mCondVar, 0, mRuntime->condVarCount()*Solver::SizeOfDouble);
+        memset(mConstants, 0, runtime->constantsCount()*Solver::SizeOfDouble);
+        memset(mRates, 0, runtime->ratesCount()*Solver::SizeOfDouble);
+        memset(mStates, 0, runtime->statesCount()*Solver::SizeOfDouble);
+        memset(mAlgebraic, 0, runtime->algebraicCount()*Solver::SizeOfDouble);
+        memset(mCondVar, 0, runtime->condVarCount()*Solver::SizeOfDouble);
 
-        mRuntime->initializeConstants()(mConstants, mRates, mStates);
+        runtime->initializeConstants()(mConstants, mRates, mStates);
     }
 
     recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
@@ -471,14 +457,14 @@ void SimulationData::reset(const bool &pInitialize)
     if (nlaSolver) {
         delete nlaSolver;
 
-        Solver::unsetNlaSolver(mRuntime->address());
+        Solver::unsetNlaSolver(runtime->address());
     }
 
     // Keep track of our various initial values
 
     if (pInitialize) {
-        memcpy(mInitialConstants, mConstants, mRuntime->constantsCount()*Solver::SizeOfDouble);
-        memcpy(mInitialStates, mStates, mRuntime->statesCount()*Solver::SizeOfDouble);
+        memcpy(mInitialConstants, mConstants, runtime->constantsCount()*Solver::SizeOfDouble);
+        memcpy(mInitialStates, mStates, runtime->statesCount()*Solver::SizeOfDouble);
     }
 
     // Let people know whether our data is 'cleaned', i.e. not modified
@@ -493,23 +479,19 @@ void SimulationData::reset(const bool &pInitialize)
 void SimulationData::recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
                                                             const bool &pInitialize)
 {
-    if (!mRuntime)
-        return;
-
     // Make sure that our runtime is valid
 
-    if (mRuntime->isValid()) {
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+
+    if (runtime && runtime->isValid()) {
         // Recompute our 'computed constants'
 
-        mRuntime->computeComputedConstants()(mConstants, mRates,
-                                             pInitialize?mStates:mDummyStates);
+        runtime->computeComputedConstants()(mConstants, mRates, pInitialize?mStates:mDummyStates);
 
         // Recompute some 'constant' algebraic variables
 
-        if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode) {
-            mRuntime->computeOdeRates()(pCurrentPoint, mConstants, mRates,
-                                        mStates, mAlgebraic);
-        }
+        if (runtime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
+            runtime->computeOdeRates()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
 
         // Recompute our 'variables'
 
@@ -525,37 +507,38 @@ void SimulationData::recomputeComputedConstantsAndVariables(const double &pCurre
 
 void SimulationData::recomputeVariables(const double &pCurrentPoint)
 {
-    if (!mRuntime)
-        return;
-
     // Recompute our 'variables'
 
-    if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode) {
-        mRuntime->computeOdeVariables()(pCurrentPoint, mConstants, mRates,
-                                        mStates, mAlgebraic);
-    } else {
-        mRuntime->computeDaeVariables()(pCurrentPoint, mConstants, mRates,
-                                        mStates, mAlgebraic, mCondVar);
-    }
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+
+    if (!runtime)
+        return;
+
+    if (runtime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
+        runtime->computeOdeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
+    else
+        runtime->computeDaeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
 }
 
 //==============================================================================
 
 bool SimulationData::isModified() const
 {
-    if (!mRuntime)
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+
+    if (!runtime)
         return false;
 
     // Check whether any of our constants or states has been modified
     // Note: we start with our states since they are more likely to be modified
     //       than our constants...
 
-    for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i) {
+    for (int i = 0, iMax = runtime->statesCount(); i < iMax; ++i) {
         if (!qIsFinite(mStates[i]) || (mStates[i] != mInitialStates[i]))
             return true;
     }
 
-    for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i) {
+    for (int i = 0, iMax = runtime->constantsCount(); i < iMax; ++i) {
         if (!qIsFinite(mConstants[i]) || (mConstants[i] != mInitialConstants[i]))
             return true;
     }
@@ -578,20 +561,22 @@ void SimulationData::createArrays()
 {
     // Create our various arrays, if possible
 
-    if (mRuntime) {
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+
+    if (runtime) {
         // Create our various arrays to compute our model
 
-        mConstants = new double[mRuntime->constantsCount()];
-        mRates = new double[mRuntime->ratesCount()];
-        mStates = new double[mRuntime->statesCount()];
-        mDummyStates = new double[mRuntime->statesCount()];
-        mAlgebraic = new double[mRuntime->algebraicCount()];
-        mCondVar = new double[mRuntime->condVarCount()];
+        mConstants = new double[runtime->constantsCount()];
+        mRates = new double[runtime->ratesCount()];
+        mStates = new double[runtime->statesCount()];
+        mDummyStates = new double[runtime->statesCount()];
+        mAlgebraic = new double[runtime->algebraicCount()];
+        mCondVar = new double[runtime->condVarCount()];
 
         // Create our various arrays to keep track of our various initial values
 
-        mInitialConstants = new double[mRuntime->constantsCount()];
-        mInitialStates = new double[mRuntime->statesCount()];
+        mInitialConstants = new double[runtime->constantsCount()];
+        mInitialStates = new double[runtime->statesCount()];
     } else {
         mConstants = mRates = mStates = mDummyStates = mAlgebraic = mCondVar = 0;
         mInitialConstants = mInitialStates = 0;
@@ -619,7 +604,6 @@ void SimulationData::deleteArrays()
 
 SimulationResults::SimulationResults(Simulation *pSimulation) :
     mSimulation(pSimulation),
-    mRuntime(pSimulation->runtime()),
     mDataStore(0),
     mPoints(0),
     mConstants(DataStore::DataStoreVariables()),
@@ -665,7 +649,9 @@ bool SimulationResults::createDataStore()
 
     // Make sure that we have a runtime
 
-    if (!mRuntime)
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+
+    if (!runtime)
         return true;
 
     // Retrieve the size of our data and make sure that it is valid
@@ -679,14 +665,13 @@ bool SimulationResults::createDataStore()
     // well as with constant, rate, state and algebraic variables
 
     try {
-        mDataStore = new DataStore::DataStore(mRuntime->cellmlFile()->xmlBase(),
-                                              simulationSize);
+        mDataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase(), simulationSize);
 
         mPoints = mDataStore->addVoi();
-        mConstants = mDataStore->addVariables(mRuntime->constantsCount(), mSimulation->data()->constants());
-        mRates = mDataStore->addVariables(mRuntime->ratesCount(), mSimulation->data()->rates());
-        mStates = mDataStore->addVariables(mRuntime->statesCount(), mSimulation->data()->states());
-        mAlgebraic = mDataStore->addVariables(mRuntime->algebraicCount(), mSimulation->data()->algebraic());
+        mConstants = mDataStore->addVariables(runtime->constantsCount(), mSimulation->data()->constants());
+        mRates = mDataStore->addVariables(runtime->ratesCount(), mSimulation->data()->rates());
+        mStates = mDataStore->addVariables(runtime->statesCount(), mSimulation->data()->states());
+        mAlgebraic = mDataStore->addVariables(runtime->algebraicCount(), mSimulation->data()->algebraic());
     } catch (...) {
         deleteDataStore();
 
@@ -696,17 +681,17 @@ bool SimulationResults::createDataStore()
     // Customise our variable of integration, as well as our constant, rate,
     // state and algebraic variables
 
-    for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
-        CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
+    for (int i = 0, iMax = runtime->parameters().count(); i < iMax; ++i) {
+        CellMLSupport::CellmlFileRuntimeParameter *parameter = runtime->parameters()[i];
         DataStore::DataStoreVariable *variable = 0;
 
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Voi:
             mPoints->setIcon(parameter->icon());
-            mPoints->setUri(uri(mRuntime->variableOfIntegration()->componentHierarchy(),
-                                mRuntime->variableOfIntegration()->name()));
-            mPoints->setLabel(mRuntime->variableOfIntegration()->name());
-            mPoints->setUnit(mRuntime->variableOfIntegration()->unit());
+            mPoints->setUri(uri(runtime->variableOfIntegration()->componentHierarchy(),
+                                runtime->variableOfIntegration()->name()));
+            mPoints->setLabel(runtime->variableOfIntegration()->name());
+            mPoints->setUnit(runtime->variableOfIntegration()->unit());
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::Constant:
@@ -734,10 +719,9 @@ bool SimulationResults::createDataStore()
 
         if (variable) {
             variable->setIcon(parameter->icon());
-            variable->setUri(uri(parameter->componentHierarchy(),
-                                 parameter->formattedName()));
+            variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
             variable->setLabel(parameter->formattedName());
-            variable->setUnit(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()));
+            variable->setUnit(parameter->formattedUnit(runtime->variableOfIntegration()->unit()));
         }
     }
 
@@ -759,9 +743,7 @@ void SimulationResults::deleteDataStore()
 
 void SimulationResults::reload()
 {
-    // Reload ourselves by updating our runtime and deleting our data store
-
-    mRuntime = mSimulation->runtime();
+    // Reload ourselves by deleting our data store
 
     deleteDataStore();
 }

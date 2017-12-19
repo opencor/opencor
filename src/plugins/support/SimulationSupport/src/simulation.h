@@ -132,8 +132,6 @@ public:
 private:
     Simulation *mSimulation;
 
-    CellMLSupport::CellmlFileRuntime *mRuntime;
-
     int mDelay;
 
     double mStartingPoint;
@@ -200,8 +198,6 @@ public:
 
 private:
     Simulation *mSimulation;
-
-    CellMLSupport::CellmlFileRuntime *mRuntime;
 
     DataStore::DataStore *mDataStore;
 
