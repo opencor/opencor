@@ -232,6 +232,7 @@ public:
 
     QString fileName() const;
 
+    void save();
     void reload();
     void rename(const QString &pFileName);
 

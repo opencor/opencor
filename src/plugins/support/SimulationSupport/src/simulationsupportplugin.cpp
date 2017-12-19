@@ -91,8 +91,10 @@ void SimulationSupportPlugin::fileModified(const QString &pFileName)
 
 void SimulationSupportPlugin::fileSaved(const QString &pFileName)
 {
-//---ISSUE1491---
-Q_UNUSED(pFileName);
+    // The given file has been saved, so let our simulation manager know about
+    // it
+
+    SimulationManager::instance()->save(pFileName);
 }
 
 //==============================================================================

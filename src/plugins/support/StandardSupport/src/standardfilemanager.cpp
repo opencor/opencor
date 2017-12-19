@@ -134,10 +134,9 @@ void StandardFileManager::unmanage(const QString &pFileName)
 
 void StandardFileManager::save(const QString &pFileName)
 {
-    // The file has been (modified and) saved, so we need to reload it
-Q_UNUSED(pFileName);
+    // The file is to be saved, so we need to reload it
 
-//---ISSUE1491---    reload(pFileName);
+    reload(pFileName);
 }
 
 //==============================================================================
