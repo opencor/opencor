@@ -222,7 +222,7 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
 void RawCellmlViewWidget::fileSaved(const QString &pFileName)
 {
     // The given file has been saved, so consider it reloaded, but only if it
-    // has a corresponing widget and that it is invisible
+    // has a corresponding widget that is invisible
 
     QWidget *crtWidget = widget(pFileName);
 
