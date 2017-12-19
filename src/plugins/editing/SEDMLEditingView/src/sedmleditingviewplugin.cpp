@@ -114,8 +114,9 @@ void SEDMLEditingViewPlugin::fileModified(const QString &pFileName)
 
 void SEDMLEditingViewPlugin::fileSaved(const QString &pFileName)
 {
-//---ISSUE1491---
-Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================
