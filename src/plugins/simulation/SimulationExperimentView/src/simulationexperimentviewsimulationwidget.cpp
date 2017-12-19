@@ -221,12 +221,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mDevelopmentModeAction->setEnabled(   Core::FileManager::instance()->isReadableAndWritable(pFileName)
                                        && (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile));
 
-    // Enable/disable our development mode action depending on whether our file
-    // is readable/writable and of CellML type
-
-    mDevelopmentModeAction->setEnabled(   Core::FileManager::instance()->isReadableAndWritable(pFileName)
-                                       && (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile));
-
     // Create a wheel (and a label to show its value) to specify the delay (in
     // milliseconds) between the output of two data points
 
