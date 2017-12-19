@@ -1682,15 +1682,28 @@ void CentralWidget::updateGui()
 
         if (   changedModes
             || ((fileModeTabIndex != -1) && (changedFiles || directCall))) {
-            if (changedModes)
+            if (changedModes) {
                 fileModeTabIndex = mModeTabs->currentIndex();
-            else
+            } else {
+                disconnect(mModeTabs, SIGNAL(currentChanged(int)),
+                           this, SLOT(updateGui()));
+
                 mModeTabs->setCurrentIndex(fileModeTabIndex);
+
+                connect(mModeTabs, SIGNAL(currentChanged(int)),
+                        this, SLOT(updateGui()));
+            }
 
             CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
             QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
 
+            disconnect(mode->viewTabs(), SIGNAL(currentChanged(int)),
+                       this, SLOT(updateGui()));
+
             mode->viewTabs()->setCurrentIndex(modeViewTabIndexes.value(fileModeTabIndex));
+
+            connect(mode->viewTabs(), SIGNAL(currentChanged(int)),
+                    this, SLOT(updateGui()));
         } else if (!changedViews) {
             // We are opening a file, so determine the default views that we
             // should try and if there are none, then try the Raw Text view
