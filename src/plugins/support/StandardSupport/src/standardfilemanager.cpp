@@ -132,6 +132,16 @@ void StandardFileManager::unmanage(const QString &pFileName)
 
 //==============================================================================
 
+void StandardFileManager::save(const QString &pFileName)
+{
+    // The file has been (modified and) saved, so we need to reload it
+Q_UNUSED(pFileName);
+
+//---ISSUE1491---    reload(pFileName);
+}
+
+//==============================================================================
+
 void StandardFileManager::reload(const QString &pFileName)
 {
     // The file is to be reloaded (either because it has been changed or because
@@ -185,16 +195,6 @@ void StandardFileManager::rename(const QString &pOldFileName,
     // We also need to ensure that our file object has its file name updated
 
     static_cast<StandardFile *>(crtFile)->setFileName(newNativeFileName);
-}
-
-//==============================================================================
-
-void StandardFileManager::save(const QString &pFileName)
-{
-    // The file has been (modified and) saved, so we need to reload it
-Q_UNUSED(pFileName);
-
-//---ISSUE1491---    reload(pFileName);
 }
 
 //==============================================================================
