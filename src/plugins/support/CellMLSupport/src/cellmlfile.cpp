@@ -525,29 +525,12 @@ bool CellmlFile::save(const QString &pFileName)
 
     clearCmetaIdsFromCellmlElement(domElement, usedCmetaIds);
 
-    // Determine the file name to use for the CellML file
-
-    QString fileName = pFileName.isEmpty()?mFileName:pFileName;
-
     // Write out the contents of our DOM document to our CellML file
 
-    if (!Core::writeFileContentsToFile(fileName, Core::serialiseDomDocument(domDocument)))
-        return false;
-
-    // Our CellML file being saved, it cannot be modified (should it have been
-    // before)
-    // Note: we must do this before updating mFileName (should it be given a new
-    //       value) since we use it to update our modified status...
-
-    setModified(false);
-
-    // Make sure that mFileName is up to date
-
-    mFileName = fileName;
-
-    // Everything went fine
-
-    return true;
+    return Core::writeFileContentsToFile(pFileName.isEmpty()?mFileName:pFileName,
+                                         Core::serialiseDomDocument(domDocument))?
+               StandardFile::save(pFileName):
+               false;
 }
 
 //==============================================================================
@@ -724,24 +707,6 @@ bool CellmlFile::isValid(const bool &pWithBusyWidget)
     // Return whether we are valid
 
     return doIsValid(QString(), &mModel, mIssues, pWithBusyWidget);
-}
-
-//==============================================================================
-
-bool CellmlFile::isModified() const
-{
-    // Return whether we have been modified
-
-    return Core::FileManager::instance()->isModified(mFileName);
-}
-
-//==============================================================================
-
-void CellmlFile::setModified(const bool &pModified) const
-{
-    // Set our modified status
-
-    Core::FileManager::instance()->setModified(mFileName, pModified);
 }
 
 //==============================================================================

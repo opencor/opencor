@@ -172,12 +172,14 @@ bool SedmlFile::save(const QString &pFileName)
 
     domDocument.setContent(QString(libsedml::writeSedMLToString(mSedmlDocument)));
 
-    bool res = Core::writeFileContentsToFile(pFileName, Core::serialiseDomDocument(domDocument));
-
-    if (res)
+    if (Core::writeFileContentsToFile(pFileName.isEmpty()?mFileName:pFileName,
+                                      Core::serialiseDomDocument(domDocument))) {
         mNew = false;
 
-    return res;
+        return StandardFile::save(pFileName);
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================

@@ -83,9 +83,6 @@ public:
                  const bool &pWithBusyWidget = false);
     bool isValid(const bool &pWithBusyWidget = false);
 
-    bool isModified() const;
-    void setModified(const bool &pModified) const;
-
     CellmlFileIssues issues() const;
 
     CellmlFileRuntime * runtime(const bool &pWithBusyWidget = false);
