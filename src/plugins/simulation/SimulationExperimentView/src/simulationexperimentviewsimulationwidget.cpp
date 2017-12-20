@@ -1982,7 +1982,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
     // Export ourselves to SED-ML using a SED-ML file, but first get a file
     // name, if needed
 
-    bool isCellmlFile = pFileName.isEmpty();
+    bool isCellmlFile = mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile;
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     QString localCellmlFileName = isCellmlFile?
                                       mSimulation->fileName():
