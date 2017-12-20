@@ -202,10 +202,10 @@ void CommonWidget::setBusyWidgetProgress(const double &pProgress)
 
 void CommonWidget::processEvents()
 {
-    // Process events, but only if we or our central widget is not showing our
-    // or its busy widget
+    // Process events, but only if our parent is visible, and we or our central
+    // widget is not showing our or its busy widget
 
-    if (!mBusyWidget && !centralWidget()->isBusyWidgetVisible())
+    if (mParent->isVisible() && !mBusyWidget && !centralWidget()->isBusyWidgetVisible())
         QCoreApplication::processEvents();
 }
 

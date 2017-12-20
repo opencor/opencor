@@ -37,9 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     virtual void fileOpened(const QString &pFileName) PURE;
     virtual void filePermissionsChanged(const QString &pFileName) PURE;
     virtual void fileModified(const QString &pFileName) PURE;
-    virtual void fileReloaded(const QString &pFileName,
-                              const bool &pFileChanged,
-                              const bool &pFileJustSaved) PURE;
+    virtual void fileSaved(const QString &pFileName) PURE;
+    virtual void fileReloaded(const QString &pFileName) PURE;
     virtual void fileRenamed(const QString &pOldFileName,
                              const QString &pNewFileName) PURE;
     virtual void fileClosed(const QString &pFileName) PURE;

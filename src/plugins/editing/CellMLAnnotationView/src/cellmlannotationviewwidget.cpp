@@ -191,6 +191,19 @@ void CellmlAnnotationViewWidget::filePermissionsChanged(const QString &pFileName
 
 //==============================================================================
 
+void CellmlAnnotationViewWidget::fileSaved(const QString &pFileName)
+{
+    // The given file has been saved, so consider it reloaded, but only if it
+    // has a corresponding widget that is invisible
+
+    QWidget *crtWidget = widget(pFileName);
+
+    if (crtWidget && !crtWidget->isVisible())
+        fileReloaded(pFileName);
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so reload it, should it be managed

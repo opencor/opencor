@@ -132,8 +132,6 @@ public:
 private:
     Simulation *mSimulation;
 
-    CellMLSupport::CellmlFileRuntime *mRuntime;
-
     int mDelay;
 
     double mStartingPoint;
@@ -201,8 +199,6 @@ public:
 private:
     Simulation *mSimulation;
 
-    CellMLSupport::CellmlFileRuntime *mRuntime;
-
     DataStore::DataStore *mDataStore;
 
     DataStore::DataStoreVariable *mPoints;
@@ -236,6 +232,7 @@ public:
 
     QString fileName() const;
 
+    void save();
     void reload();
     void rename(const QString &pFileName);
 

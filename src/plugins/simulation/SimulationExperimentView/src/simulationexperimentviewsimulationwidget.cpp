@@ -718,7 +718,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     bool isSedmlFile = mSimulation->fileType() == SimulationSupport::Simulation::SedmlFile;
     bool isCombineArchive = mSimulation->fileType() == SimulationSupport::Simulation::CombineArchive;
 
-    if (isSedmlFile || isCombineArchive)
+    if (isVisible() && (isSedmlFile || isCombineArchive))
         Core::centralWidget()->showBusyWidget();
 
     processEvents();
@@ -1178,10 +1178,10 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
             }
         }
 
-        // Now, we can effectively save the CellML file to the given file and
-        // let the user know if some parameter values couldn't be saved
+        // Now, we can effectively save (update) the CellML file to the given
+        // file and let the user know if some parameter values couldn't be saved
 
-        if (mSimulation->cellmlFile()->save(pFileName)) {
+        if (mSimulation->cellmlFile()->update(pFileName)) {
             if (!importedParameters.isEmpty()) {
                 Core::informationMessageBox(tr("Save File"),
                                             tr("The following parameters are imported and cannot therefore be saved:")+importedParameters);

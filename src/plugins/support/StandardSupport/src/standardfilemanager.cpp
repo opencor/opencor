@@ -46,8 +46,8 @@ StandardFileManager::StandardFileManager() :
     connect(fileManagerInstance, SIGNAL(fileUnmanaged(const QString &)),
             this, SLOT(unmanage(const QString &)));
 
-    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &, const bool &)),
-            this, SLOT(reload(const QString &, const bool &)));
+    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &)),
+            this, SLOT(reload(const QString &)));
     connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(rename(const QString &, const QString &)));
 
@@ -132,11 +132,17 @@ void StandardFileManager::unmanage(const QString &pFileName)
 
 //==============================================================================
 
-void StandardFileManager::reload(const QString &pFileName,
-                                 const bool &pFileChanged)
+void StandardFileManager::save(const QString &pFileName)
 {
-    Q_UNUSED(pFileChanged);
+    // The file is to be saved, so we need to reload it
 
+    reload(pFileName);
+}
+
+//==============================================================================
+
+void StandardFileManager::reload(const QString &pFileName)
+{
     // The file is to be reloaded (either because it has been changed or because
     // one or several of its dependencies has changed), so reload it
     // Note: to reload a file here ensures that our different standard-based
@@ -188,15 +194,6 @@ void StandardFileManager::rename(const QString &pOldFileName,
     // We also need to ensure that our file object has its file name updated
 
     static_cast<StandardFile *>(crtFile)->setFileName(newNativeFileName);
-}
-
-//==============================================================================
-
-void StandardFileManager::save(const QString &pFileName)
-{
-    // The file has been (modified and) saved, so we need to reload it
-
-    reload(pFileName, true);
 }
 
 //==============================================================================
