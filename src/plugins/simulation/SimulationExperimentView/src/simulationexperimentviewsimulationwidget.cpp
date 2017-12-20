@@ -1635,10 +1635,19 @@ void SimulationExperimentViewSimulationWidget::addSedmlVariableTarget(libsedml::
 bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pFileName,
                                                                const QString &pModelSource)
 {
+    // Retrieve our SED-ML file or create a temporary one, if needed, and make
+    // sure that it will act as if it was 'new'
+    // Note: this is important if we are updating a SED-ML file...
+
+    SEDMLSupport::SedmlFile *sedmlFile = mSimulation->sedmlFile()?
+                                             mSimulation->sedmlFile():
+                                             new SEDMLSupport::SedmlFile(pFileName, true);
+
+    sedmlFile->forceNew();
+
     // Create a SED-ML document and add the CellML namespace to it
 
-    SEDMLSupport::SedmlFile sedmlFile(pFileName, true);
-    libsedml::SedDocument *sedmlDocument = sedmlFile.sedmlDocument();
+    libsedml::SedDocument *sedmlDocument = sedmlFile->sedmlDocument();
     XMLNamespaces *namespaces = sedmlDocument->getNamespaces();
     QString simulationFileName = mSimulation->fileName();
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(simulationFileName);
@@ -1954,9 +1963,16 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
         }
     }
 
-    // Our SED-ML document is ready, so save it
+    // Our SED-ML document is ready, so save (update) it
+    // Note: we update it because we don't want the SED-ML file to be
+    //       potentially reloaded...
 
-    return sedmlFile.save(pFileName);
+    bool res = sedmlFile->update(pFileName);
+
+    if (!mSimulation->sedmlFile())
+        delete sedmlFile;
+
+    return res;
 }
 
 //==============================================================================

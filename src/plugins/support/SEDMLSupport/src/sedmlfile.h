@@ -119,6 +119,10 @@ public:
     virtual bool load();
     virtual bool save(const QString &pFileName = QString());
 
+    bool update(const QString &pFileName = QString());
+
+    void forceNew();
+
     bool isValid(const QString &pFileContents, SedmlFileIssues &pIssues);
     bool isValid();
     bool isSupported();
@@ -138,6 +142,8 @@ private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
     SedmlFileIssues mIssues;
+
+    bool mUpdated;
 
     virtual void reset();
 

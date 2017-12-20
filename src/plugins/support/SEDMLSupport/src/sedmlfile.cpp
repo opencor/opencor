@@ -63,7 +63,8 @@ SedmlFile::SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
     mOwnerFileName(pOwnerFileName),
     mSedmlDocument(0),
     mNew(pNew),
-    mCellmlFile(0)
+    mCellmlFile(0),
+    mUpdated(false)
 {
     // Reset ourselves
 
@@ -90,6 +91,14 @@ SedmlFile::~SedmlFile()
 
 void SedmlFile::reset()
 {
+    // Don't reset ourselves if we were updated
+
+    if (mUpdated) {
+        mUpdated = false;
+
+        return;
+    }
+
     // Ask our file manager to unmanage our corresponding CellML file, if we
     // have previously retrieved it, and if it is a remote one (indeed, it will
     // have been managed by cellmlFile() below, so that CellML 1.1 files can be
@@ -180,6 +189,34 @@ bool SedmlFile::save(const QString &pFileName)
     } else {
         return false;
     }
+}
+
+//==============================================================================
+
+bool SedmlFile::update(const QString &pFileName)
+{
+    // Our SED-ML file has been updated (e.g. through the Simulation Experiment
+    // view) and we want to update ourselves accordingly, so save ourselves and
+    // keep track of the fact that we were 'simply' updated
+
+    mUpdated = save(pFileName);
+
+    return mUpdated;
+}
+
+//==============================================================================
+
+void SedmlFile::forceNew()
+{
+    // Force our SED-ML file to act as if it was 'new'
+
+    mNew = true;
+
+    delete mSedmlDocument;
+
+    mSedmlDocument = 0;
+
+    mLoadingNeeded = true;
 }
 
 //==============================================================================
