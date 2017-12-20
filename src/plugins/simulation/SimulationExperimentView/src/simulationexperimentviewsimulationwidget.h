@@ -83,6 +83,12 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
+namespace SEDMLSupport {
+    class SedmlFile;
+}   // namespace SEDMLSupport
+
+//==============================================================================
+
 namespace SimulationSupport {
     class Simulation;
 }   // namespace SimulationSupport
@@ -267,7 +273,8 @@ private:
     void addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
                                 const QString &pComponent,
                                 const QString &pVariable);
-    bool createSedmlFile(const QString &pFileName, const QString &pModelSource);
+    bool createSedmlFile(SEDMLSupport::SedmlFile *pSedmlFile,
+                         const QString &pFileName, const QString &pModelSource);
 
     QStringList allPropertyValues(Core::PropertyEditorWidget *pPropertyEditor) const;
 

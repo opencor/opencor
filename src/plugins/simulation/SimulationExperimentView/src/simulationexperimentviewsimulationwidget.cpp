@@ -1632,22 +1632,18 @@ void SimulationExperimentViewSimulationWidget::addSedmlVariableTarget(libsedml::
 
 //==============================================================================
 
-bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pFileName,
+bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::SedmlFile *pSedmlFile,
+                                                               const QString &pFileName,
                                                                const QString &pModelSource)
 {
-    // Retrieve our SED-ML file or create a temporary one, if needed, and make
-    // sure that it will act as if it was 'new'
+    // Make sure that the given SED-ML file will act as if it was 'new'
     // Note: this is important if we are updating a SED-ML file...
 
-    SEDMLSupport::SedmlFile *sedmlFile = mSimulation->sedmlFile()?
-                                             mSimulation->sedmlFile():
-                                             new SEDMLSupport::SedmlFile(pFileName, true);
-
-    sedmlFile->forceNew();
+    pSedmlFile->forceNew();
 
     // Create a SED-ML document and add the CellML namespace to it
 
-    libsedml::SedDocument *sedmlDocument = sedmlFile->sedmlDocument();
+    libsedml::SedDocument *sedmlDocument = pSedmlFile->sedmlDocument();
     XMLNamespaces *namespaces = sedmlDocument->getNamespaces();
     QString simulationFileName = mSimulation->fileName();
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(simulationFileName);
@@ -1967,12 +1963,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
     // Note: we update it because we don't want the SED-ML file to be
     //       potentially reloaded...
 
-    bool res = sedmlFile->update(pFileName);
-
-    if (!mSimulation->sedmlFile())
-        delete sedmlFile;
-
-    return res;
+    return pSedmlFile->update(pFileName);
 }
 
 //==============================================================================
@@ -2047,10 +2038,19 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
             modelSource = sedmlFileDir.relativeFilePath(modelSource);
         }
 
-        if (!createSedmlFile(sedmlFileName, modelSource)) {
+        // Retrieve our SED-ML file or create a temporary one, if needed
+
+        SEDMLSupport::SedmlFile *sedmlFile = isCellmlFile?
+                                                 new SEDMLSupport::SedmlFile(sedmlFileName, true):
+                                                 mSimulation->sedmlFile();
+
+        if (!createSedmlFile(sedmlFile, sedmlFileName, modelSource)) {
             Core::warningMessageBox(tr("Export To SED-ML File"),
                                     tr("The simulation could not be exported to <strong>%1</strong>.").arg(sedmlFileName));
         }
+
+        if (isCellmlFile)
+            delete sedmlFile;
     }
 
     // Reinitialise our trackers, if we are not dealing with a CellML file
@@ -2147,8 +2147,9 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
         QString errorMessage = QString();
         QString temporaryCombineArchiveName = Core::temporaryFileName();
         QString sedmlFileName = Core::temporaryFileName();
+        SEDMLSupport::SedmlFile sedmlFile(sedmlFileName, true);
 
-        createSedmlFile(sedmlFileName, modelSource);
+        createSedmlFile(&sedmlFile, sedmlFileName, modelSource);
 
         // Create our COMBINE archive after having added all our files to it
 
