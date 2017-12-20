@@ -75,7 +75,8 @@ namespace CellMLSupport {
 CellmlFile::CellmlFile(const QString &pFileName) :
     StandardSupport::StandardFile(pFileName),
     mRdfTriples(CellmlFileRdfTriples(this)),
-    mRuntime(new CellmlFileRuntime(this))
+    mRuntime(new CellmlFileRuntime(this)),
+    mUpdated(false)
 {
     // Reset ourselves
 
@@ -99,6 +100,14 @@ CellmlFile::~CellmlFile()
 
 void CellmlFile::reset()
 {
+    // Don't reset ourselves if we were updated
+
+    if (mUpdated) {
+        mUpdated = false;
+
+        return;
+    }
+
     // Reset all of our properties
 
     mModel = 0;
@@ -531,6 +540,19 @@ bool CellmlFile::save(const QString &pFileName)
                                          Core::serialiseDomDocument(domDocument))?
                StandardFile::save(pFileName):
                false;
+}
+
+//==============================================================================
+
+bool CellmlFile::update(const QString &pFileName)
+{
+    // Our model parameters were modified (e.g. through the Simulation
+    // Experiment view) and we want to update ourselves accordingly, so save
+    // ourselves and keep track of the fact that we were 'simply' updated
+
+    mUpdated = save(pFileName);
+
+    return mUpdated;
 }
 
 //==============================================================================
