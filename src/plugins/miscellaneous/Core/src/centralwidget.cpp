@@ -1830,12 +1830,8 @@ void CentralWidget::updateGui()
         if (statusBarVisible)
             mainWindow()->statusBar()->hide();
 
-        mContents->setUpdatesEnabled(false);
-
         mContents->removeWidget(mContents->currentWidget());
         mContents->addWidget(newView);
-
-        mContents->setUpdatesEnabled(true);
 
         if (statusBarVisible)
             mainWindow()->statusBar()->show();
