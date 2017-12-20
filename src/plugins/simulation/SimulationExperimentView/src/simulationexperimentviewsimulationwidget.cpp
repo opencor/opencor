@@ -1984,9 +1984,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
 
     bool isCellmlFile = mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile;
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    QString localCellmlFileName = isCellmlFile?
-                                      mSimulation->fileName():
-                                      mSimulation->cellmlFile()->fileName();
+    QString localCellmlFileName = mSimulation->cellmlFile()->fileName();
     bool remoteCellmlFile = fileManagerInstance->isRemote(localCellmlFileName);
     QString cellmlFileName = remoteCellmlFile?
                                  fileManagerInstance->url(localCellmlFileName):
