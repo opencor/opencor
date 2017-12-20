@@ -358,20 +358,13 @@ void SimulationExperimentViewWidget::fileModified(const QString &pFileName)
 
 void SimulationExperimentViewWidget::fileSaved(const QString &pFileName)
 {
-    // The given file has been saved, so either update our internals (if the
-    // file has a corresponding widget that is visible, meaning that we
-    // triggered the saving of the file) or reload the file (if it has a
-    // corresponding widget that is invisible)
+    // The given file has been saved, so consider it reloaded, but only if it
+    // has a corresponding widget that is invisible
 
     QWidget *crtWidget = widget(pFileName);
 
-    if (crtWidget) {
-        if (crtWidget->isVisible()) {
-//---ISSUE1491--- TO BE DONE...
-        } else {
-            fileReloaded(pFileName);
-        }
-    }
+    if (crtWidget && !crtWidget->isVisible())
+        fileReloaded(pFileName);
 }
 
 //==============================================================================
