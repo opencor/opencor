@@ -132,8 +132,7 @@ public:
     QStringList dependencies(const QString &pFileName) const;
     void setDependencies(const QString &pFileName, const QStringList &pDependencies);
 
-    void reload(const QString &pFileName,
-                const bool &pForceFileChanged = false);
+    void reload(const QString &pFileName);
 
     Status create(const QString &pUrl = QString(),
                   const QByteArray &pContents = QByteArray());
@@ -175,7 +174,7 @@ signals:
     void filePermissionsChanged(const QString &pFileName);
     void fileModified(const QString &pFileName);
 
-    void fileReloaded(const QString &pFileName, const bool &pFileChanged);
+    void fileReloaded(const QString &pFileName);
 
     void fileCreated(const QString &pFileName, const QString &pUrl);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);

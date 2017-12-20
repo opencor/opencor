@@ -683,7 +683,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     bool isSedmlFile = mSimulation->fileType() == SimulationSupport::Simulation::SedmlFile;
     bool isCombineArchive = mSimulation->fileType() == SimulationSupport::Simulation::CombineArchive;
 
-    if (isSedmlFile || isCombineArchive)
+    if (isVisible() && (isSedmlFile || isCombineArchive))
         Core::centralWidget()->showBusyWidget();
 
     processEvents();
@@ -1141,7 +1141,7 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
     // parameter values couldn't be saved
 
     bool res = (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)?
-                   mSimulation->cellmlFile()->save(pFileName):
+                   mSimulation->cellmlFile()->update(pFileName):
                    (mSimulation->fileType() == SimulationSupport::Simulation::SedmlFile)?
                        mSimulation->sedmlFile()->save(pFileName):
                        mSimulation->combineArchive()->save(pFileName);

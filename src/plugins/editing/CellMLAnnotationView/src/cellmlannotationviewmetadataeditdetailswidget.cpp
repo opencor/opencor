@@ -627,7 +627,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
     if (showBusyWidget)
         mOutput->showBusyWidget();
     else
-        mOutput->hideBusyWidget();
+        mOutput->hideBusyWidget(true);
 }
 
 //==============================================================================

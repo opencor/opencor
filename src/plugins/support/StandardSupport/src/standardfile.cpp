@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "filemanager.h"
 #include "standardfile.h"
 
 //==============================================================================
@@ -52,6 +53,24 @@ bool StandardFile::reload()
 
 //==============================================================================
 
+bool StandardFile::save(const QString &pFileName)
+{
+    // Our file being saved, it cannot be modified (should it have been before)
+    // Note: we must do this before updating mFileName (should it be given a new
+    //       value) since we use it to update our modified status...
+
+    setModified(false);
+
+    // Make sure that mFileName is up to date
+
+    if (!pFileName.isEmpty())
+        mFileName = pFileName;
+
+    return true;
+}
+
+//==============================================================================
+
 QString StandardFile::fileName() const
 {
     // Return the standard file's file name
@@ -66,6 +85,24 @@ void StandardFile::setFileName(const QString &pFileName)
     // Set the standard file's file name
 
     mFileName = pFileName;
+}
+
+//==============================================================================
+
+bool StandardFile::isModified() const
+{
+    // Return whether we have been modified
+
+    return Core::FileManager::instance()->isModified(mFileName);
+}
+
+//==============================================================================
+
+void StandardFile::setModified(const bool &pModified) const
+{
+    // Set our modified status
+
+    Core::FileManager::instance()->setModified(mFileName, pModified);
 }
 
 //==============================================================================
