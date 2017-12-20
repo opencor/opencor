@@ -2067,17 +2067,19 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     QString simulationFileName = mSimulation->fileName();
     bool remoteFile = fileManagerInstance->isRemote(simulationFileName);
-    QString cellmlFileName = remoteFile?fileManagerInstance->url(simulationFileName):simulationFileName;
-    QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
-    QString combineArchiveName = cellmlFileName;
+    QString realSimulationFileName = remoteFile?fileManagerInstance->url(simulationFileName):simulationFileName;
+    QString realSimulationFileCompleteSuffix = QFileInfo(realSimulationFileName).completeSuffix();
+    CellMLSupport::CellmlFile *cellmlFile = mSimulation->cellmlFile();
+    QString cellmlFileName = cellmlFile->fileName();
+    QString combineArchiveName = realSimulationFileName;
     FileTypeInterface *combineFileTypeInterface = COMBINESupport::fileTypeInterface();
     QStringList combineFilters = combineFileTypeInterface?
                                      Core::filters(FileTypeInterfaces() << combineFileTypeInterface):
                                      QStringList();
     QString firstCombineFilter = combineFilters.first();
 
-    if (!cellmlFileCompleteSuffix.isEmpty()) {
-        combineArchiveName.replace(QRegularExpression(QRegularExpression::escape(cellmlFileCompleteSuffix)+"$"),
+    if (!realSimulationFileCompleteSuffix.isEmpty()) {
+        combineArchiveName.replace(QRegularExpression(QRegularExpression::escape(realSimulationFileCompleteSuffix)+"$"),
                                    COMBINESupport::CombineFileExtension);
     } else {
         combineArchiveName += "."+COMBINESupport::CombineFileExtension;
@@ -2097,10 +2099,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
 
         static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
 
-        CellMLSupport::CellmlFile *cellmlFile = mSimulation->cellmlFile();
-        QString commonPath = remoteFile?
-                                 QString(cellmlFileName).remove(FileNameRegEx)+"/":
-                                 QFileInfo(simulationFileName).canonicalPath()+QDir::separator();
+        QString commonPath = QString(cellmlFileName).remove(FileNameRegEx)+"/";
         QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
 
         foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
@@ -2135,9 +2134,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
 
         // Determine the location of our main CellML file
 
-        QString modelSource = remoteFile?
-                                  QString(cellmlFileName).remove(commonPath):
-                                  QString(simulationFileName).remove(Core::nativeCanonicalDirName(commonPath)+QDir::separator());
+        QString modelSource = QString(cellmlFileName).remove(commonPath);
 
         // Create a copy of the SED-ML file that will be the master file in our
         // COMBINE archive
@@ -2160,7 +2157,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
 
         if (combineArchive.addFile(sedmlFileName, sedmlFileLocation,
                                    COMBINESupport::CombineArchiveFile::Sedml, true)) {
-            if (combineArchive.addFile(simulationFileName, modelSource,
+            if (combineArchive.addFile(cellmlFileName, modelSource,
                                        (cellmlFile->version() == CellMLSupport::CellmlFile::Cellml_1_1)?
                                            COMBINESupport::CombineArchiveFile::Cellml_1_1:
                                            COMBINESupport::CombineArchiveFile::Cellml_1_0)) {
@@ -2189,7 +2186,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
                     }
                 }
             } else {
-                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(simulationFileName)+").");
+                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(cellmlFileName)+").");
             }
         } else {
             errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("the master SED-ML file could not be added")+").");
