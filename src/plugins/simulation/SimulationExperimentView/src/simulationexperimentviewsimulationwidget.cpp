@@ -2091,12 +2091,11 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     QString localSimulationFileName = mSimulation->fileName();
-    bool remoteSimulationFile = fileManagerInstance->isRemote(localSimulationFileName);
-    QString simulationFileName = remoteSimulationFile?
-                                     fileManagerInstance->url(localSimulationFileName):
-                                     localSimulationFileName;
     FileTypeInterface *combineFileTypeInterface = COMBINESupport::fileTypeInterface();
-    QString combineArchiveName = fileName(pFileName, simulationFileName,
+    QString combineArchiveName = fileName(pFileName,
+                                          fileManagerInstance->isRemote(localSimulationFileName)?
+                                              fileManagerInstance->url(localSimulationFileName):
+                                              localSimulationFileName,
                                           COMBINESupport::CombineFileExtension,
                                           tr("Export To COMBINE Archive"),
                                           combineFileTypeInterface?
@@ -2114,14 +2113,18 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
         static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
 
         CellMLSupport::CellmlFile *cellmlFile = mSimulation->cellmlFile();
-        QString cellmlFileName = cellmlFile->fileName();
+        QString localCellmlFileName = cellmlFile->fileName();
+        bool remoteCellmlFile = fileManagerInstance->isRemote(localCellmlFileName);
+        QString cellmlFileName = remoteCellmlFile?
+                                     fileManagerInstance->url(localCellmlFileName):
+                                     localCellmlFileName;
         QString commonPath = QString(cellmlFileName).remove(FileNameRegEx)+"/";
         QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
 
         foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
             // Check for the common path
 
-            QString importedFilePath = remoteSimulationFile?
+            QString importedFilePath = remoteCellmlFile?
                                            QString(importedFileName).remove(FileNameRegEx)+"/":
                                            QFileInfo(importedFileName).canonicalPath()+QDir::separator();
 
@@ -2138,7 +2141,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
             // Get a copy of the imported CellML file, if it is a remote one,
             // and keep track of it
 
-            if (remoteSimulationFile) {
+            if (remoteCellmlFile) {
                 QString localImportedFileName = Core::temporaryFileName();
 
                 Core::writeFileContentsToFile(localImportedFileName,
@@ -2173,19 +2176,20 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
 
         if (combineArchive.addFile(sedmlFileName, sedmlFileLocation,
                                    COMBINESupport::CombineArchiveFile::Sedml, true)) {
-            if (combineArchive.addFile(cellmlFileName, modelSource,
+            if (combineArchive.addFile(localCellmlFileName, modelSource,
                                        (cellmlFile->version() == CellMLSupport::CellmlFile::Cellml_1_1)?
                                            COMBINESupport::CombineArchiveFile::Cellml_1_1:
                                            COMBINESupport::CombineArchiveFile::Cellml_1_0)) {
                 foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
-                    QString realImportedFileName = remoteSimulationFile?
+                    QString realImportedFileName = remoteCellmlFile?
                                                        remoteImportedFileNames.value(importedFileName):
                                                        importedFileName;
+                    QString relativeImportedFileName = QString(importedFileName).remove(commonPath);
 
                     if (!combineArchive.addFile(realImportedFileName,
-                                                QString(importedFileName).remove(commonPath),
+                                                relativeImportedFileName,
                                                 COMBINESupport::CombineArchiveFile::Cellml)) {
-                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(realImportedFileName)+").");
+                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(relativeImportedFileName)+").");
 
                         break;
                     }
@@ -2202,7 +2206,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
                     }
                 }
             } else {
-                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(cellmlFileName)+").");
+                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(modelSource)+").");
             }
         } else {
             errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("the master SED-ML file could not be added")+").");
