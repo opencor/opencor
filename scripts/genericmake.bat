@@ -50,11 +50,11 @@ SET ExitCode=!ERRORLEVEL!
 
 IF !ExitCode! EQU 0 (
     IF DEFINED NinjaFound (
-        ninja
+        ninja %2 %3 %4 %5 %6 %7 %8 %9
 
         SET ExitCode=!ERRORLEVEL!
     ) ELSE (
-        jom
+        jom %2 %3 %4 %5 %6 %7 %8 %9
 
         SET ExitCode=!ERRORLEVEL!
     )
