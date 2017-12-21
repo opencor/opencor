@@ -1995,11 +1995,11 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
 
         QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
 
-        if (!cellmlFileCompleteSuffix.isEmpty()) {
+        if (cellmlFileCompleteSuffix.isEmpty()) {
+            sedmlFileName += "."+SEDMLSupport::SedmlFileExtension;
+        } else {
             sedmlFileName.replace(QRegularExpression(QRegularExpression::escape(cellmlFileCompleteSuffix)+"$"),
                                   SEDMLSupport::SedmlFileExtension);
-        } else {
-            sedmlFileName += "."+SEDMLSupport::SedmlFileExtension;
         }
 
         FileTypeInterface *sedmlFileTypeInterface = SEDMLSupport::fileTypeInterface();
