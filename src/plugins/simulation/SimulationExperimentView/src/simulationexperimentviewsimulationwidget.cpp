@@ -1197,7 +1197,9 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
 
         return true;
     case SimulationSupport::Simulation::CombineArchive:
-        return false;
+        sedmlExportCombineArchive(pFileName);
+
+        return true;
     }
 
     return false;
@@ -1497,6 +1499,33 @@ void SimulationExperimentViewSimulationWidget::initialiseTrackers()
 
     mGraphPanelsWidgetSizes = QIntList();
     mGraphPanelsWidgetSizesModified = false;
+}
+
+//==============================================================================
+
+QString SimulationExperimentViewSimulationWidget::fileName(const QString &pFileName,
+                                                           const QString &pBaseFileName,
+                                                           const QString &pFileExtension,
+                                                           const QString &pCaption,
+                                                           const QStringList &pFileFilters)
+{
+    // Return the given file name, if it is not empty, or ask the user to
+    // provide one using the additional information that is given
+
+    if (!pFileName.isEmpty())
+        return pFileName;
+
+    QString fileName = pBaseFileName;
+    QString baseFileCompleteSuffix = QFileInfo(pBaseFileName).completeSuffix();
+
+    if (baseFileCompleteSuffix.isEmpty())
+        fileName += "."+pFileExtension;
+    else
+        fileName.replace(QRegularExpression(QRegularExpression::escape(baseFileCompleteSuffix)+"$"), pFileExtension);
+
+    QString firstFileFilter = pFileFilters.first();
+
+    return Core::getSaveFileName(pCaption, fileName, pFileFilters, &firstFileFilter);
 }
 
 //==============================================================================
@@ -1983,8 +2012,8 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
     //       that mSimulation refers to a local SED-ML file (never a remote
     //       SED-ML file since we don't save those)...
 
-    // Export ourselves to SED-ML using a SED-ML file, but first get a file
-    // name, if needed
+    // Export ourselves to SED-ML using a SED-ML file, but first try to get a
+    // file name, if needed
 
     bool isCellmlFile = mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile;
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
@@ -1993,30 +2022,13 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
     QString cellmlFileName = remoteCellmlFile?
                                  fileManagerInstance->url(localCellmlFileName):
                                  localCellmlFileName;
-    QString sedmlFileName = pFileName;
-
-    if (sedmlFileName.isEmpty()) {
-        sedmlFileName = cellmlFileName;
-
-        QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
-
-        if (cellmlFileCompleteSuffix.isEmpty()) {
-            sedmlFileName += "."+SEDMLSupport::SedmlFileExtension;
-        } else {
-            sedmlFileName.replace(QRegularExpression(QRegularExpression::escape(cellmlFileCompleteSuffix)+"$"),
-                                  SEDMLSupport::SedmlFileExtension);
-        }
-
-        FileTypeInterface *sedmlFileTypeInterface = SEDMLSupport::fileTypeInterface();
-        QStringList sedmlFilters = sedmlFileTypeInterface?
-                                       Core::filters(FileTypeInterfaces() << sedmlFileTypeInterface):
-                                       QStringList();
-        QString firstSedmlFilter = sedmlFilters.first();
-
-        sedmlFileName = Core::getSaveFileName(tr("Export To SED-ML File"),
-                                              sedmlFileName,
-                                              sedmlFilters, &firstSedmlFilter);
-    }
+    FileTypeInterface *sedmlFileTypeInterface = SEDMLSupport::fileTypeInterface();
+    QString sedmlFileName = fileName(pFileName, cellmlFileName,
+                                     SEDMLSupport::SedmlFileExtension,
+                                     tr("Export To SED-ML File"),
+                                     sedmlFileTypeInterface?
+                                         Core::filters(FileTypeInterfaces() << sedmlFileTypeInterface):
+                                         QStringList());
 
     // Create a SED-ML file using the SED-ML file name that has been provided,
     // if any
@@ -2063,38 +2075,36 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
+void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const QString &pFileName)
 {
-    // Export ourselves to SED-ML using a COMBINE archive, but first get a file
-    // name
+    // Note: if there is no given file name, then it means that we want to
+    //       export the simulation to a COMBINE archive and that mSimulation
+    //       refers to a local or remote CellML or SED-ML file. On the other
+    //       hand, if a file name is given, then it means that we are dealing
+    //       with a COMBINE archive and that we want to update it or save it
+    //       under a new file name, meaning that mSimulation refers to a local
+    //       COMBINE archive (never a remote COMBINE archive since we don't save
+    //       those)...
+
+    // Export ourselves to SED-ML using a COMBINE archive, but first try to get
+    // a file name, if needed
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    QString simulationFileName = mSimulation->fileName();
-    bool remoteFile = fileManagerInstance->isRemote(simulationFileName);
-    QString realSimulationFileName = remoteFile?fileManagerInstance->url(simulationFileName):simulationFileName;
-    QString realSimulationFileCompleteSuffix = QFileInfo(realSimulationFileName).completeSuffix();
-    CellMLSupport::CellmlFile *cellmlFile = mSimulation->cellmlFile();
-    QString cellmlFileName = cellmlFile->fileName();
-    QString combineArchiveName = realSimulationFileName;
+    QString localSimulationFileName = mSimulation->fileName();
+    bool remoteSimulationFile = fileManagerInstance->isRemote(localSimulationFileName);
+    QString simulationFileName = remoteSimulationFile?
+                                     fileManagerInstance->url(localSimulationFileName):
+                                     localSimulationFileName;
     FileTypeInterface *combineFileTypeInterface = COMBINESupport::fileTypeInterface();
-    QStringList combineFilters = combineFileTypeInterface?
-                                     Core::filters(FileTypeInterfaces() << combineFileTypeInterface):
-                                     QStringList();
-    QString firstCombineFilter = combineFilters.first();
+    QString combineArchiveName = fileName(pFileName, simulationFileName,
+                                          COMBINESupport::CombineFileExtension,
+                                          tr("Export To COMBINE Archive"),
+                                          combineFileTypeInterface?
+                                              Core::filters(FileTypeInterfaces() << combineFileTypeInterface):
+                                              QStringList());
 
-    if (!realSimulationFileCompleteSuffix.isEmpty()) {
-        combineArchiveName.replace(QRegularExpression(QRegularExpression::escape(realSimulationFileCompleteSuffix)+"$"),
-                                   COMBINESupport::CombineFileExtension);
-    } else {
-        combineArchiveName += "."+COMBINESupport::CombineFileExtension;
-    }
-
-    combineArchiveName = Core::getSaveFileName(tr("Export To COMBINE Archive"),
-                                               combineArchiveName,
-                                               combineFilters, &firstCombineFilter);
-
-    // Effectively export ourselves to a COMBINE archive, if a COMBINE archive
-    // name has been provided
+    // Create a COMBINE archive using the COMBINE archive name that has been
+    // provided, if any
 
     if (!combineArchiveName.isEmpty()) {
         // Determine the path that is common to our main and, if any, imported
@@ -2103,13 +2113,15 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
 
         static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
 
+        CellMLSupport::CellmlFile *cellmlFile = mSimulation->cellmlFile();
+        QString cellmlFileName = cellmlFile->fileName();
         QString commonPath = QString(cellmlFileName).remove(FileNameRegEx)+"/";
         QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
 
         foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
             // Check for the common path
 
-            QString importedFilePath = remoteFile?
+            QString importedFilePath = remoteSimulationFile?
                                            QString(importedFileName).remove(FileNameRegEx)+"/":
                                            QFileInfo(importedFileName).canonicalPath()+QDir::separator();
 
@@ -2126,7 +2138,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
             // Get a copy of the imported CellML file, if it is a remote one,
             // and keep track of it
 
-            if (remoteFile) {
+            if (remoteSimulationFile) {
                 QString localImportedFileName = Core::temporaryFileName();
 
                 Core::writeFileContentsToFile(localImportedFileName,
@@ -2166,7 +2178,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
                                            COMBINESupport::CombineArchiveFile::Cellml_1_1:
                                            COMBINESupport::CombineArchiveFile::Cellml_1_0)) {
                 foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
-                    QString realImportedFileName = remoteFile?
+                    QString realImportedFileName = remoteSimulationFile?
                                                        remoteImportedFileNames.value(importedFileName):
                                                        importedFileName;
 

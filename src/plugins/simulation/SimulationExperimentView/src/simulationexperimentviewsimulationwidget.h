@@ -265,6 +265,10 @@ private:
 
     void initialiseTrackers();
 
+    QString fileName(const QString &pFileName, const QString &pBaseFileName,
+                     const QString &pFileExtension, const QString &pCaption,
+                     const QStringList &pFileFilters);
+
     void addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
                             libsedml::SedModel *pSedmlModel,
                             libsedml::SedRepeatedTask *pSedmlRepeatedTask,
@@ -304,7 +308,7 @@ private slots:
     void resetModelParameters();
     void clearSimulationData();
     void sedmlExportSedmlFile(const QString &pFileName = QString());
-    void sedmlExportCombineArchive();
+    void sedmlExportCombineArchive(const QString &pFileName = QString());
 
     void emitSplitterMoved();
 
