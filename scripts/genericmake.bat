@@ -9,6 +9,8 @@ IF "!CMakeBuildType!" == "Release" (
     SET EnableTests=ON
 )
 
+SHIFT
+
 FOR %%X IN (ninja.exe) DO (
     SET NinjaFound=%%~$PATH:X
 )
@@ -50,11 +52,11 @@ SET ExitCode=!ERRORLEVEL!
 
 IF !ExitCode! EQU 0 (
     IF DEFINED NinjaFound (
-        ninja
+        ninja %*
 
         SET ExitCode=!ERRORLEVEL!
     ) ELSE (
-        jom
+        jom %*
 
         SET ExitCode=!ERRORLEVEL!
     )
