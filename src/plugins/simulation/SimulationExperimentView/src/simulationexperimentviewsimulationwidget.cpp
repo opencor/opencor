@@ -1990,7 +1990,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
                                  localCellmlFileName;
     QString sedmlFileName = pFileName;
 
-    if (isCellmlFile) {
+    if (sedmlFileName.isEmpty()) {
         sedmlFileName = cellmlFileName;
 
         QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
