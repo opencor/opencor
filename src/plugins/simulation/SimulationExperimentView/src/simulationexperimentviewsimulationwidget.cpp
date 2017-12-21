@@ -1646,7 +1646,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     libsedml::SedDocument *sedmlDocument = pSedmlFile->sedmlDocument();
     XMLNamespaces *namespaces = sedmlDocument->getNamespaces();
     QString simulationFileName = mSimulation->fileName();
-    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(simulationFileName);
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(mSimulation->cellmlFile()->fileName());
 
     namespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
                         CellMLSupport::Cellml_1_1_Namespace.toStdString():
@@ -1854,7 +1854,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         // Keep track of the graph panel's graphs, if any
 
-        Core::Properties graphsProperties = graphPanelAndGraphsWidget->graphsProperties(graphPanel, simulationFileName);
+        Core::Properties graphsProperties = graphPanelAndGraphsWidget->graphsProperties(graphPanel, mSimulation->fileName());
 
         if (!graphsProperties.isEmpty()) {
             GraphsData data;
