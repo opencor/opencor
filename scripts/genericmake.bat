@@ -49,12 +49,16 @@ cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=!CMakeBuildType! -DENABLE_TESTS=!
 SET ExitCode=!ERRORLEVEL!
 
 IF !ExitCode! EQU 0 (
+    FOR /F "TOKENS=1,* DELIMS= " %%X IN ("%*") DO (
+        SET Args=%%Y
+    )
+
     IF DEFINED NinjaFound (
-        ninja
+        ninja !Args!
 
         SET ExitCode=!ERRORLEVEL!
     ) ELSE (
-        jom
+        jom !Args!
 
         SET ExitCode=!ERRORLEVEL!
     )
