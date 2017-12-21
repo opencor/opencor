@@ -1971,13 +1971,12 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QString &pFileName)
 {
     // Note: if there is no given file name, then it means that we want to
-    //       export the simulation to a SED-ML file and that
-    //       mSimulation->fileName() refers to a local or remote CellML file.
-    //       On the other hand, if a file name is given, then it means that we
-    //       are dealing with a SED-ML file and that we want to update it or
-    //       save it under a new file name, meaning that mSimulation->fileName()
-    //       refers to a local SED-ML file (never a remote SED-ML file since we
-    //       cannot save those)...
+    //       export the simulation to a SED-ML file and that mSimulation refers
+    //       to a local or remote CellML file. On the other hand, if a file name
+    //       is given, then it means that we are dealing with a SED-ML file and
+    //       that we want to update it or save it under a new file name, meaning
+    //       that mSimulation refers to a local SED-ML file (never a remote
+    //       SED-ML file since we don't save those)...
 
     // Export ourselves to SED-ML using a SED-ML file, but first get a file
     // name, if needed
