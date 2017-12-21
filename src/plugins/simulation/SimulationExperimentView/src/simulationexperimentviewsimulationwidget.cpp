@@ -1642,11 +1642,16 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     pSedmlFile->forceNew();
 
     // Create a SED-ML document and add the CellML namespace to it
+    // Note: we retrieve the version of the CellML file using its model rather
+    //       than its file name since we may be creating a SED-ML file from
+    //       another SED-ML file (as opposed to from a CellML file), hence its
+    //       corresponding CellML file won't be managed by our CellML file
+    //       manager, which means that its version would be considered to be
+    //       unknown, which clearly shouldn't be the case...
 
     libsedml::SedDocument *sedmlDocument = pSedmlFile->sedmlDocument();
     XMLNamespaces *namespaces = sedmlDocument->getNamespaces();
-    QString simulationFileName = mSimulation->fileName();
-    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(mSimulation->cellmlFile()->fileName());
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(mSimulation->cellmlFile()->model());
 
     namespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
                         CellMLSupport::Cellml_1_1_Namespace.toStdString():
