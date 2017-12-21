@@ -69,6 +69,7 @@ namespace CellMLSupport {
 namespace Core {
     class ProgressBarWidget;
     class Property;
+    class PropertyEditorWidget;
     class SplitterWidget;
     class ToolBarWidget;
     class UserMessageWidget;
@@ -79,6 +80,12 @@ namespace Core {
 namespace GraphPanelWidget {
     class GraphPanelWidget;
 }   // namespace GraphPanelWidget
+
+//==============================================================================
+
+namespace SEDMLSupport {
+    class SedmlFile;
+}   // namespace SEDMLSupport
 
 //==============================================================================
 
@@ -136,6 +143,9 @@ public:
                                  const bool &pClearGraphs);
 
     void resetSimulationProgress();
+
+protected:
+    virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
     enum ErrorType {
@@ -199,6 +209,19 @@ private:
     GraphPanelWidget::GraphPanelPlotWidgets mPlots;
     QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool> mUpdatablePlotViewports;
 
+    QStringList mSimulationProperties;
+    QStringList mSolversProperties;
+    QMap<Core::PropertyEditorWidget *, QStringList> mGraphPanelProperties;
+    QMap<Core::PropertyEditorWidget *, QStringList> mGraphsProperties;
+
+    bool mSimulationPropertiesModified;
+    bool mSolversPropertiesModified;
+    QMap<Core::PropertyEditorWidget *, bool>  mGraphPanelPropertiesModified;
+    QMap<Core::PropertyEditorWidget *, bool>  mGraphsPropertiesModified;
+
+    QIntList mGraphPanelsWidgetSizes;
+    bool mGraphPanelsWidgetSizesModified;
+
     bool mCanUpdatePlotsForUpdatedGraphs;
 
     bool mNeedReloadView;
@@ -240,6 +263,12 @@ private:
     void initializeGui(const bool &pValidSimulationEnvironment);
     void initializeSimulation();
 
+    void initialiseTrackers();
+
+    QString fileName(const QString &pFileName, const QString &pBaseFileName,
+                     const QString &pFileExtension, const QString &pCaption,
+                     const QStringList &pFileFilters);
+
     void addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
                             libsedml::SedModel *pSedmlModel,
                             libsedml::SedRepeatedTask *pSedmlRepeatedTask,
@@ -248,7 +277,12 @@ private:
     void addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
                                 const QString &pComponent,
                                 const QString &pVariable);
-    bool createSedmlFile(const QString &pFileName, const QString &pModelSource);
+    bool createSedmlFile(SEDMLSupport::SedmlFile *pSedmlFile,
+                         const QString &pFileName, const QString &pModelSource);
+
+    QStringList allPropertyValues(Core::PropertyEditorWidget *pPropertyEditor) const;
+
+    void updateFileModifiedStatus();
 
 signals:
     void splitterMoved(const QIntList &pSizes);
@@ -273,8 +307,8 @@ private slots:
     void removeAllGraphPanels();
     void resetModelParameters();
     void clearSimulationData();
-    void sedmlExportSedmlFile();
-    void sedmlExportCombineArchive();
+    void sedmlExportSedmlFile(const QString &pFileName = QString());
+    void sedmlExportCombineArchive(const QString &pFileName = QString());
 
     void emitSplitterMoved();
 
@@ -319,6 +353,10 @@ private slots:
 
     void dataStoreExportDone(const QString &pErrorMessage);
     void dataStoreExportProgress(const double &pProgress);
+
+    void checkSimulationProperties();
+    void checkSolversProperties();
+    void checkGraphPanelsAndGraphs();
 };
 
 //==============================================================================

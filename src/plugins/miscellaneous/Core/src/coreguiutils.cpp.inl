@@ -351,14 +351,14 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
     uint mask = QMessageBox::FirstButton;
 
     while (mask <= QMessageBox::LastButton) {
-        uint sb = pButtons & mask;
+        uint standardButton = pButtons & mask;
 
         mask <<= 1;
 
-        if (!sb)
+        if (!standardButton)
             continue;
 
-        QPushButton *button = messageBox.addButton((QMessageBox::StandardButton)sb);
+        QPushButton *button = messageBox.addButton((QMessageBox::StandardButton) standardButton);
 
         if (messageBox.defaultButton())
             continue;
@@ -366,7 +366,7 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
         if (   (   (pDefaultButton == QMessageBox::NoButton)
                 && (buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole))
             || (   (pDefaultButton != QMessageBox::NoButton) &&
-                   (sb == uint(pDefaultButton)))) {
+                   (standardButton == uint(pDefaultButton)))) {
             messageBox.setDefaultButton(button);
         }
     }
