@@ -59,27 +59,27 @@ IF(USE_PREBUILT_LLVMCLANG_PACKAGE)
     IF(WIN32)
         IF(RELEASE_MODE)
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} baa036ed0c3ff1dd970e9648df23ce7b68e532a8
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} a03b7b3d2005de679886140cc47ccbff72fe482b
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 8116e75049c9685a12016e77f80cbfc580cacaa4
-                                              c0aa937cd09a44d4335af27332aba8c6f5738b5a)
+                                  SHA1_VALUES 6887e485cf138fac31c8c0b87fd8fa7b852936dc
+                                              abccfd5b796f5b0b009fe386f99da416a2ca37be)
         ELSE()
             RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 99e666392f255fd123b0d089d725a0ac7639208b
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} af03dc733e85583873a0728fd53cecdc8710bb77
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 8456c2269958daf9ca6836f894e37fb026507cce
-                                              ca50fff585ed9053f59fde8e706ae512f9f60534)
+                                  SHA1_VALUES c2cfd5eb26f189dcca1a8077632175a2bdd1d6fd
+                                              233bcea460d32371a5a6d1e256a2204028da9075)
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 262e27880a2d4882ce5a853427b08866461ce098
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 4c07a12b5ef40807a992c4a61a5dfe4a7bba9c76
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES cee73fa8c20257022161e904452361238f221fb4)
+                              SHA1_VALUES 5f0e1c41453c3c230a51e015ba3a8c920cdac5a5)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 951da1b8a8299dae853af1e9d4082a3d3dc6c155
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 7971d58b7aee84cf2ebb88bae6aff125b4df5da4
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 568edcce171da8015e2cfec8f1425f99b9950642)
+                              SHA1_VALUES b69401ec231859a29d062e95adfc76383c0be317)
     ENDIF()
 ELSE()
     # Allow for big objects and ignore some warnings
