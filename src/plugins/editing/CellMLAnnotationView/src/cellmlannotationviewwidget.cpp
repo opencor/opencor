@@ -243,11 +243,11 @@ QWidget * CellmlAnnotationViewWidget::widget(const QString &pFileName)
 bool CellmlAnnotationViewWidget::saveFile(const QString &pOldFileName,
                                           const QString &pNewFileName)
 {
-    // Ask our CellML annotation view widget to save the given file
+    // Save (update) the CellML file to the given file
 
     CellmlAnnotationViewEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
 
-    return editingWidget?editingWidget->cellmlFile()->save(pNewFileName):false;
+    return editingWidget?editingWidget->cellmlFile()->update(pNewFileName):false;
 }
 
 //==============================================================================
