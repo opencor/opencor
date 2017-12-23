@@ -517,6 +517,9 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
 
     // Get a copy of the given file, after creating the sub-folder(s) in which
     // it is, if necessary
+    // Note: to ensure that a COMBINE archive can be updated, we need to check
+    //       that the given file and its destination are not the same and that
+    //       its destination doesn't exist...
 
 #if defined(Q_OS_WIN)
     static const QRegularExpression FileNameRegEx = QRegularExpression("\\\\[^\\\\]*$");
@@ -534,8 +537,12 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
     if (!QDir(destDirName).exists() && !dir.mkpath(destDirName))
         return false;
 
-    if (!QFile::copy(pFileName, destFileName))
-        return false;
+    if (destFileName.compare(pFileName)) {
+        QFile::remove(destFileName);
+
+        if (!QFile::copy(pFileName, destFileName))
+            return false;
+    }
 
     return true;
 }
