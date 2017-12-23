@@ -303,6 +303,8 @@ bool CombineArchive::save(const QString &pFileName)
         }
     }
 
+    mNew = false;
+
     return StandardFile::save(pFileName);
 }
 
