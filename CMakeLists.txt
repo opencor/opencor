@@ -31,7 +31,6 @@ OPTION(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScinti
 OPTION(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
 OPTION(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
-SET(USE_PREBUILT_LLVMCLANG_PACKAGE OFF)
 
 IF(ENABLE_TEST_PLUGINS)
     OPTION(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
@@ -907,9 +906,6 @@ IF(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
 
     SET(PLUGINS)
 ENDIF()
-SET(PLUGINS
-    thirdParty/LLVMClang
-)
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
