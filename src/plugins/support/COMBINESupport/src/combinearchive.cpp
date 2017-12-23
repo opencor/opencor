@@ -125,7 +125,8 @@ CombineArchive::CombineArchive(const QString &pFileName, const bool &pNew) :
     StandardSupport::StandardFile(pFileName),
     mDirName(Core::temporaryDirName()),
     mNew(pNew),
-    mSedmlFile(0)
+    mSedmlFile(0),
+    mUpdated(false)
 {
     // Reset ourselves
 
@@ -149,6 +150,14 @@ CombineArchive::~CombineArchive()
 
 void CombineArchive::reset()
 {
+    // Don't reset ourselves if we were updated
+
+    if (mUpdated) {
+        mUpdated = false;
+
+        return;
+    }
+
     // Reset all of our properties
 
     mLoadingNeeded = true;
@@ -305,6 +314,32 @@ bool CombineArchive::save(const QString &pFileName)
     mNew = false;
 
     return StandardFile::save(pFileName);
+}
+
+//==============================================================================
+
+bool CombineArchive::update(const QString &pFileName)
+{
+    // Our COMBINE archive has been updated (e.g. through the Simulation
+    // Experiment view) and we want to update ourselves accordingly, so save
+    // ourselves and keep track of the fact that we were 'simply' updated
+
+    mUpdated = save(pFileName);
+
+    return mUpdated;
+}
+
+//==============================================================================
+
+void CombineArchive::forceNew()
+{
+    // Force our COMBINE archive to act as if it was 'new'
+
+    mNew = true;
+
+    mLoadingNeeded = true;
+
+    mFiles.clear();
 }
 
 //==============================================================================
