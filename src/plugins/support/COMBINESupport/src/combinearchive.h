@@ -98,6 +98,10 @@ public:
     virtual bool load();
     virtual bool save(const QString &pFileName = QString());
 
+    bool update(const QString &pFileName = QString());
+
+    void forceNew();
+
     bool isValid();
     bool isSupported();
 
@@ -123,6 +127,8 @@ private:
 
     CombineArchiveFiles mFiles;
     CombineArchiveIssues mIssues;
+
+    bool mUpdated;
 
     virtual void reset();
 };

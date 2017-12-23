@@ -124,7 +124,7 @@ void SedmlFile::reset()
 
     mCellmlFile = 0;
 
-    mIssues = SedmlFileIssues();
+    mIssues.clear();
 }
 
 //==============================================================================

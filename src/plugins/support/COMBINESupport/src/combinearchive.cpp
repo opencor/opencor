@@ -125,7 +125,8 @@ CombineArchive::CombineArchive(const QString &pFileName, const bool &pNew) :
     StandardSupport::StandardFile(pFileName),
     mDirName(Core::temporaryDirName()),
     mNew(pNew),
-    mSedmlFile(0)
+    mSedmlFile(0),
+    mUpdated(false)
 {
     // Reset ourselves
 
@@ -149,12 +150,19 @@ CombineArchive::~CombineArchive()
 
 void CombineArchive::reset()
 {
+    // Don't reset ourselves if we were updated
+
+    if (mUpdated) {
+        mUpdated = false;
+
+        return;
+    }
+
     // Reset all of our properties
 
     mLoadingNeeded = true;
 
     mFiles.clear();
-
     mIssues.clear();
 
     delete mSedmlFile;
@@ -303,7 +311,35 @@ bool CombineArchive::save(const QString &pFileName)
         }
     }
 
+    mNew = false;
+
     return StandardFile::save(pFileName);
+}
+
+//==============================================================================
+
+bool CombineArchive::update(const QString &pFileName)
+{
+    // Our COMBINE archive has been updated (e.g. through the Simulation
+    // Experiment view) and we want to update ourselves accordingly, so save
+    // ourselves and keep track of the fact that we were 'simply' updated
+
+    mUpdated = save(pFileName);
+
+    return mUpdated;
+}
+
+//==============================================================================
+
+void CombineArchive::forceNew()
+{
+    // Force our COMBINE archive to act as if it was 'new'
+
+    mNew = true;
+
+    mLoadingNeeded = true;
+
+    mFiles.clear();
 }
 
 //==============================================================================
@@ -481,6 +517,9 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
 
     // Get a copy of the given file, after creating the sub-folder(s) in which
     // it is, if necessary
+    // Note: to ensure that a COMBINE archive can be updated, we need to check
+    //       that the given file and its destination are not the same and that
+    //       its destination doesn't exist...
 
 #if defined(Q_OS_WIN)
     static const QRegularExpression FileNameRegEx = QRegularExpression("\\\\[^\\\\]*$");
@@ -498,8 +537,12 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
     if (!QDir(destDirName).exists() && !dir.mkpath(destDirName))
         return false;
 
-    if (!QFile::copy(pFileName, destFileName))
-        return false;
+    if (destFileName.compare(pFileName)) {
+        QFile::remove(destFileName);
+
+        if (!QFile::copy(pFileName, destFileName))
+            return false;
+    }
 
     return true;
 }

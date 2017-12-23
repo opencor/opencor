@@ -22,21 +22,68 @@
             Every new release of OpenCOR (be it a snapshot or an official release) should pass the following functional tests.
         </p>
 
-        <p>
-            To be completed...
-        </p>
-
         <p class="note">
             please <a href="../../user/contactUs.html">let us know</a> if you think a particular functional test is missing from the list above.
         </p>
 
         <div class="section">
-            CellML files
+            Save / reload a file
         </div>
 
         <p>
-            Various CellML files are available for functional testing. They can be found under <a href="https://github.com/opencor/opencor/tree/master/doc/developer/functionalTests/res/cellml"><code>[OpenCOR]/doc/developer/functionalTests/res/cellml</code></a>:
+            Check that a given view looks right for a given file when:
         </p>
+
+        <ul>
+            <li>
+                The view <strong><em>is</em></strong> the active one in OpenCOR and:
+                <ul>
+                    <li>The file is edited and saved <strong><em>outside</em></strong> of OpenCOR.</li>
+                    <li>The file is edited and saved <strong><em>in</em></strong> OpenCOR (if applicable).</li>
+                </ul>
+            </li>
+            <li>
+                The view <strong><em>is not</em></strong> the active one in OpenCOR and:
+                <ul>
+                    <li>The file is edited and saved <strong><em>outside</em></strong> of OpenCOR.</li>
+                    <li>The file is edited and saved <strong><em>in</em></strong> OpenCOR (if applicable).</li>
+                </ul>
+            </li>
+        </ul>
+
+        <div class="section">
+            Edit / save a SED-ML file / COMBINE archive
+        </div>
+
+        <p>
+            Using the <a href="../../user/plugins/simulation/SimulationExperimentView.html">Simulation Experiment view</a>, check that we can:
+        </p>
+
+        <ul>
+            <li>
+                SED-ML file:
+                <ul>
+                    <li>"Save" / "Save as..." a (local) SED-ML file that references a <strong><em>local</em></strong> CellML file.</li>
+                    <li>"Save" / "Save as..." a (local) SED-ML file that references a <strong><em>remote</em></strong> CellML file.</li>
+                    <li>Export a <strong><em>local</em></strong> SED-ML file to a COMBINE archive.</li>
+                    <li>Export a <strong><em>remote</em></strong> SED-ML file to a COMBINE archive.</li>
+                </ul>
+            </li>
+            <li>
+                COMBINE archive:
+                <ul>
+                    <li> "Save" / "Save as..." a (local) COMBINE archive.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <p>
+            All of this for both a CellML 1.0 file and a set of CellML 1.1 files.
+        </p>
+
+        <div class="section">
+            CellML files
+        </div>
 
         <ul>
             <li>
@@ -71,10 +118,6 @@
             SED-ML files
         </div>
 
-        <p>
-            Various SED-ML files are available for functional testing. They can be found under <a href="https://github.com/opencor/opencor/tree/master/doc/developer/functionalTests/res/sedml"><code>[OpenCOR]/doc/developer/functionalTests/res/sedml</code></a>:
-        </p>
-
         <ul>
             <li><a href="https://raw.githubusercontent.com/opencor/opencor/master/doc/developer/functionalTests/res/sedml/noble_1962_local.sedml"><code>[OpenCOR]/doc/developer/functionalTests/res/sedml/noble_1962_local.sedml</code></a></li>
             <li><a href="https://raw.githubusercontent.com/opencor/opencor/master/doc/developer/functionalTests/res/sedml/noble_1962_remote.sedml"><code>[OpenCOR]/doc/developer/functionalTests/res/sedml/noble_1962_remote.sedml</code></a></li>
@@ -92,10 +135,6 @@
         <div class="section">
             COMBINE archives
         </div>
-
-        <p>
-            Various COMBINE files are available for functional testing. They can be found under <a href="https://github.com/opencor/opencor/tree/master/doc/developer/functionalTests/res/combine"><code>[OpenCOR]/doc/developer/functionalTests/res/combine</code></a>:
-        </p>
 
         <ul>
             <li>
