@@ -154,7 +154,6 @@ void CombineArchive::reset()
     mLoadingNeeded = true;
 
     mFiles.clear();
-
     mIssues.clear();
 
     delete mSedmlFile;
