@@ -2015,7 +2015,6 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
     // Export ourselves to SED-ML using a SED-ML file, but first try to get a
     // file name, if needed
 
-    bool isCellmlFile = mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile;
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     QString localCellmlFileName = mSimulation->cellmlFile()->fileName();
     bool remoteCellmlFile = fileManagerInstance->isRemote(localCellmlFileName);
@@ -2054,6 +2053,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
 
         // Retrieve our SED-ML file or create a temporary one, if needed
 
+        bool isCellmlFile = mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile;
         SEDMLSupport::SedmlFile *sedmlFile = isCellmlFile?
                                                  new SEDMLSupport::SedmlFile(sedmlFileName, true):
                                                  mSimulation->sedmlFile();
@@ -2065,12 +2065,12 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
 
         if (isCellmlFile)
             delete sedmlFile;
+
+        // Reinitialise our trackers, if we are not dealing with a CellML file
+
+        if (!isCellmlFile)
+            initialiseTrackers();
     }
-
-    // Reinitialise our trackers, if we are not dealing with a CellML file
-
-    if (!isCellmlFile)
-        initialiseTrackers();
 }
 
 //==============================================================================
