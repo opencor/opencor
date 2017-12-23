@@ -208,7 +208,7 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
     //       noble_1962_local.sedml, then the second graph panel wouldn't be
     //       visible...!?
 
-    res->setVisible(true);
+    res->show();
 
     // Return our newly created graph panel
 
