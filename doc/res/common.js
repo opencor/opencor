@@ -24,8 +24,8 @@ if (   document.location.protocol !== "file:"
     // Support the tracking of emails, downloads and external links in Google
     // Analytics
 
-    $(document).ready(function($) {
-        $("a").on("click", function() {
+    $(document).ready(function() {
+        $("a").click(function() {
             var element = $(this);
             var href = (typeof element.attr("href") !== "undefined")?element.attr("href"):"";
             var track = true;
@@ -262,11 +262,10 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
                 if (liId.length)
                     subMenuSelected = subMenuCounter;
             } else {
-                if (menuItemLink.length) {
+                if (menuItemLink.length)
                     tableRowClasses += " clickableMenuItem";
-                } else {
+                else
                     tableRowClasses += " nonClickableMenuItem";
-                }
             }
 
             var subMenuButton = "";
@@ -349,9 +348,8 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     // Hide our contents menu if the ESC key is pressed
 
     $(document).keyup(function(event) {
-        if (event.keyCode === 27) {
+        if (event.keyCode === 27)
             $("ul.contentsMenu > li > ul").css("visibility", "hidden");
-        }
     });
 
     // Show/hide a given sub-menu
