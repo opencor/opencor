@@ -360,6 +360,7 @@ function versions(downloads) {
 
                         var fileName = "OpenCOR-"+versionVersion+"-"+platformName.replace(" ", "")+((typeof fileBitness !== "undefined")?fileBitness:"")+fileExtension;
                         var fullFileName = versionFolder+"/"+fileName;
+                        var fileType;
 
                         if (   (fileExtension === ".exe")
                             || (fileExtension === ".dmg"))
@@ -462,9 +463,8 @@ function versions(downloads) {
         // anywhere on the document
 
         $(document).keyup(function(event) {
-            if (event.keyCode === 27) {
+            if (event.keyCode === 27)
                 $("ul.downloadsMenu").css("visibility", "hidden");
-            }
         });
 
         $(document).click(function() {
