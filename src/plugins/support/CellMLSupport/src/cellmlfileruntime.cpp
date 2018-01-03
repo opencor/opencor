@@ -1068,6 +1068,7 @@ void CellmlFileRuntime::update()
         modelCode += '\n';
         modelCode += functionCode("int computeDaeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
                                   cleanCode(mDaeCodeInformation->rootInformationString()));
+        modelCode += '\n';
         modelCode += functionCode("int computeDaeStateInformation(double *SI)",
                                   cleanCode(mDaeCodeInformation->stateInformationString()));
         modelCode += '\n';
