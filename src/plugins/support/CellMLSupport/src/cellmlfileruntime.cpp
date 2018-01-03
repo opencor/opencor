@@ -652,44 +652,34 @@ void CellmlFileRuntime::retrieveDaeCodeInformation(iface::cellml_api::Model *pMo
 
 //==============================================================================
 
-QString CellmlFileRuntime::functionCode(const QString &pFunctionSignature,
-                                        const QString &pFunctionBody,
-                                        const bool &pHasDefines)
+QString CellmlFileRuntime::methodCode(const QString &pCodeSignature,
+                                      const QString &pCodeBody)
 {
-    QString res = pFunctionSignature+"\n"
+    // Generate and return the code for the given method
+
+    QString res = "void "+pCodeSignature+"\n"
                   "{\n";
 
-    if (pFunctionBody.isEmpty()) {
-        res += "    return 0;\n";
-    } else {
-        res += "    int ret = 0;\n"
-               "    int *pret = &ret;\n"
-               "\n";
+    if (!pCodeBody.isEmpty()) {
+        res += pCodeBody;
 
-        if (pHasDefines) {
-            res += "#define VOI 0.0\n"
-                   "#define ALGEBRAIC 0\n"
-                   "\n";
-        }
-
-        res += pFunctionBody;
-
-        if (!pFunctionBody.endsWith('\n'))
+        if (!pCodeBody.endsWith('\n'))
             res += '\n';
-
-        if (pHasDefines) {
-            res += "\n"
-                   "#undef ALGEBRAIC\n"
-                   "#undef VOI\n";
-        }
-
-        res += "\n"
-               "    return ret;\n";
     }
 
-    res += "}\n";
+    res += "}\n\n";
 
     return res;
+}
+
+//==============================================================================
+
+QString CellmlFileRuntime::methodCode(const QString &pCodeSignature,
+                                      const std::wstring &pCodeBody)
+{
+    // Generate and return the code for the given method
+
+    return methodCode(pCodeSignature, cleanCode(pCodeBody));
 }
 
 //==============================================================================
@@ -1044,36 +1034,29 @@ void CellmlFileRuntime::update()
             compCompConsts += (compCompConsts.isEmpty()?QString():"\n")+initConst;
     }
 
-    modelCode += functionCode("int initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
-                              initConsts, true);
-    modelCode += '\n';
-    modelCode += functionCode("int computeComputedConstants(double *CONSTANTS, double *RATES, double *STATES)",
-                              compCompConsts, true);
-    modelCode += '\n';
+    modelCode += methodCode("initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
+                            initConsts);
+    modelCode += methodCode("computeComputedConstants(double *CONSTANTS, double *RATES, double *STATES)",
+                            compCompConsts);
 
     // Retrieve the body of the remaining functions
 
     if (mModelType == CellmlFileRuntime::Ode) {
-        modelCode += functionCode("int computeOdeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
-                                  cleanCode(mOdeCodeInformation->ratesString()));
-        modelCode += '\n';
-        modelCode += functionCode("int computeOdeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
-                                  cleanCode(genericCodeInformation->variablesString()));
+        modelCode += methodCode("computeOdeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
+                                mOdeCodeInformation->ratesString());
+        modelCode += methodCode("computeOdeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
+                                genericCodeInformation->variablesString());
     } else {
-        modelCode += functionCode("int computeDaeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
-                                  cleanCode(mDaeCodeInformation->essentialVariablesString()));
-        modelCode += '\n';
-        modelCode += functionCode("int computeDaeResiduals(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)",
-                                  cleanCode(mDaeCodeInformation->ratesString()));
-        modelCode += '\n';
-        modelCode += functionCode("int computeDaeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
-                                  cleanCode(mDaeCodeInformation->rootInformationString()));
-        modelCode += '\n';
-        modelCode += functionCode("int computeDaeStateInformation(double *SI)",
-                                  cleanCode(mDaeCodeInformation->stateInformationString()));
-        modelCode += '\n';
-        modelCode += functionCode("int computeDaeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)",
-                                  cleanCode(genericCodeInformation->variablesString()));
+        modelCode += methodCode("computeDaeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
+                                mDaeCodeInformation->essentialVariablesString());
+        modelCode += methodCode("computeDaeResiduals(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)",
+                                mDaeCodeInformation->ratesString());
+        modelCode += methodCode("computeDaeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
+                                mDaeCodeInformation->rootInformationString());
+        modelCode += methodCode("computeDaeStateInformation(double *SI)",
+                                mDaeCodeInformation->stateInformationString());
+        modelCode += methodCode("computeDaeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)",
+                                genericCodeInformation->variablesString());
     }
 
     // Check whether the model code contains a definite integral, otherwise

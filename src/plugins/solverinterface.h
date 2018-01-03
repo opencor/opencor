@@ -95,7 +95,7 @@ protected:
 class OdeSolver : public VoiSolver
 {
 public:
-    typedef int (*ComputeRatesFunction)(double pVoi, double *pConstants, double *pRates, double *pStates, double *pAlgebraic);
+    typedef void (*ComputeRatesFunction)(double pVoi, double *pConstants, double *pRates, double *pStates, double *pAlgebraic);
 
     explicit OdeSolver();
 
@@ -113,10 +113,10 @@ protected:
 class DaeSolver : public VoiSolver
 {
 public:
-    typedef int (*ComputeEssentialVariablesFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar);
-    typedef int (*ComputeResidualsFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar, double *pResId);
-    typedef int (*ComputeRootInformationFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar);
-    typedef int (*ComputeStateInformationFunction)(double *pStateInfo);
+    typedef void (*ComputeEssentialVariablesFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar);
+    typedef void (*ComputeResidualsFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar, double *pResId);
+    typedef void (*ComputeRootInformationFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar);
+    typedef void (*ComputeStateInformationFunction)(double *pStateInfo);
 
     explicit DaeSolver();
     ~DaeSolver();
