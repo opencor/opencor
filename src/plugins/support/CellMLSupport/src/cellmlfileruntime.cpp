@@ -726,7 +726,7 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
     QString res = QString();
 
     foreach (const QString &code, QString::fromStdWString(pCode).split("\r\n")) {
-        if (!CommentRegEx.match(code).hasMatch())
+        if (!CommentRegEx.match(code.trimmed()).hasMatch())
             res += (res.isEmpty()?QString():"\n")+code;
     }
 
@@ -979,7 +979,7 @@ void CellmlFileRuntime::update()
     // Generate the model code
 
     QString modelCode = QString();
-    QString functionsString = QString::fromStdWString(genericCodeInformation->functionsString());
+    QString functionsString = cleanCode(genericCodeInformation->functionsString());
 
     if (!functionsString.isEmpty()) {
         // We will need to solve at least one NLA system
