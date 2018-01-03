@@ -31,8 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 void doNonLinearSolve(char *pRuntime,
                       void (*pFunction)(double *, double *, void *),
-                      double *pParameters, int *pRes, int pSize,
-                      void *pUserData)
+                      double *pParameters, int pSize, void *pUserData)
 {
     // Retrieve the NLA solver which we should use
 
@@ -46,15 +45,11 @@ void doNonLinearSolve(char *pRuntime,
         // Now, we can solve our NLA system
 
         nlaSolver->solve();
-
-        *pRes = 1;
     } else {
         // We couldn't retrieve an NLA solver...
         // Note: this should never happen, but we never know...
 
         qWarning("WARNING | %s:%d: no NLA solver could be found.", __FILE__, __LINE__);
-
-        *pRes = 0;
     }
 }
 

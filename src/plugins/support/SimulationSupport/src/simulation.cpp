@@ -486,7 +486,7 @@ void SimulationData::recomputeComputedConstantsAndVariables(const double &pCurre
     if (runtime && runtime->isValid()) {
         // Recompute our 'computed constants'
 
-        runtime->computeComputedConstants()(mConstants, mRates, pInitialize?mStates:mDummyStates);
+        runtime->computeComputedConstants()(pCurrentPoint, mConstants, mRates, pInitialize?mStates:mDummyStates, mAlgebraic);
 
         // Recompute some 'constant' algebraic variables
 

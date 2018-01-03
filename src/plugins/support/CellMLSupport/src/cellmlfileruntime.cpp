@@ -730,6 +730,24 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
             res += (res.isEmpty()?QString():"\n")+code;
     }
 
+    // Further clean up the given code by removing any reference to a 'return'
+    // value)
+
+    res.remove(", int* pret");
+    res.remove(", pret");
+
+    res.remove("#define pret rfi->aPRET\n");
+    res.remove("#undef pret\n");
+    res.remove("  rfi.aPRET = pret;\n");
+
+    // Also rename do_nonlinearsolve() to doNonLinearSolve() since CellML's CIS
+    // service already defines do_nonlinearsolve() and, yet, we want to use our
+    // own non-linear solve routine defined in our Solver interface, and add a
+    // new parameter to all our calls to doNonLinearSolve() so that
+    // doNonLinearSolve() can retrieve the correct instance of our NLA solver
+
+    res.replace("do_nonlinearsolve(", QString("doNonLinearSolve(\"%1\", ").arg(address()));
+
     return res;
 }
 
@@ -994,21 +1012,12 @@ void CellmlFileRuntime::update()
                       "    double *aRATES;\n"
                       "    double *aSTATES;\n"
                       "    double *aALGEBRAIC;\n"
-                      "\n"
-                      "    int *aPRET;\n"
                       "};\n"
                       "\n"
-                      "extern void doNonLinearSolve(char *, void (*)(double *, double *, void*), double *, int *, int, void *);\n"
+                      "extern void doNonLinearSolve(char *, void (*)(double *, double *, void*), double *, int, void *);\n"
                       "\n"
-                     +functionsString.replace("do_nonlinearsolve(", QString("doNonLinearSolve(\"%1\", ").arg(address()))
+                     +functionsString
                      +"\n";
-
-        // Note: we rename do_nonlinearsolve() to doNonLinearSolve() because
-        //       CellML's CIS service already defines do_nonlinearsolve(), yet
-        //       we want to use our own non-linear solve routine defined in our
-        //       Solver interface. Also, we add a new parameter to all our calls
-        //       to doNonLinearSolve() so that doNonLinearSolve() can retrieve
-        //       the correct instance of our NLA solver...
     }
 
     // Retrieve the body of the function that initialises constants and extract
@@ -1036,7 +1045,7 @@ void CellmlFileRuntime::update()
 
     modelCode += methodCode("initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
                             initConsts);
-    modelCode += methodCode("computeComputedConstants(double *CONSTANTS, double *RATES, double *STATES)",
+    modelCode += methodCode("computeComputedConstants(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
                             compCompConsts);
 
     // Retrieve the body of the remaining functions

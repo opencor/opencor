@@ -132,7 +132,7 @@ public:
 
     typedef void (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
 
-    typedef void (*ComputeComputedConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
+    typedef void (*ComputeComputedConstantsFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
 
     typedef void (*ComputeOdeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
     typedef void (*ComputeOdeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
