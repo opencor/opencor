@@ -376,9 +376,9 @@ void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                 mStatesVector, mRatesVector);
 
         IDARootInit(mSolver, pCondVarCount, rootFindingFunction);
-        //---GRY--- NEED TO CHECK THAT THINGS WORK AS EXPECTED BY TRYING IT OUT
-        //          ON A MODEL THAT NEEDS ROOT FINDING (E.G. THE SAUCERMAN
-        //          MODEL)...
+        //---OPENCOR--- NEED TO CHECK THAT THINGS WORK AS EXPECTED BY TRYING IT
+        //              OUT ON A MODEL THAT NEEDS ROOT FINDING (E.G. THE
+        //              SAUCERMAN MODEL)...
 
         // Set some user data
 
