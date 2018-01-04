@@ -496,7 +496,6 @@ void CellmlFileRuntime::resetFunctions()
     // Reset the functions
 
     mInitializeConstants = 0;
-
     mComputeComputedConstants = 0;
 
     mComputeOdeRates = 0;
@@ -1100,7 +1099,6 @@ void CellmlFileRuntime::update()
         // Retrieve the ODE/DAE functions
 
         mInitializeConstants = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
-
         mComputeComputedConstants = (ComputeComputedConstantsFunction) (intptr_t) mCompilerEngine->getFunction("computeComputedConstants");
 
         if (mModelType == CellmlFileRuntime::Ode) {

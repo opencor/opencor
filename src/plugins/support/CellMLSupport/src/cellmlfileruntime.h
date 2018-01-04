@@ -131,7 +131,6 @@ public:
     };
 
     typedef void (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
-
     typedef void (*ComputeComputedConstantsFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
 
     typedef void (*ComputeOdeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
@@ -165,7 +164,6 @@ public:
     int condVarCount() const;
 
     InitializeConstantsFunction initializeConstants() const;
-
     ComputeComputedConstantsFunction computeComputedConstants() const;
 
     ComputeOdeRatesFunction computeOdeRates() const;
@@ -207,7 +205,6 @@ private:
     CellmlFileRuntimeParameters mParameters;
 
     InitializeConstantsFunction mInitializeConstants;
-
     ComputeComputedConstantsFunction mComputeComputedConstants;
 
     ComputeOdeRatesFunction mComputeOdeRates;
