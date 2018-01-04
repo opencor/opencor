@@ -132,15 +132,14 @@ public:
 
     typedef void (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
     typedef void (*ComputeComputedConstantsFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
+    typedef void (*ComputeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR);
 
     typedef void (*ComputeOdeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
-    typedef void (*ComputeOdeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
 
     typedef void (*ComputeDaeEssentialVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR);
     typedef void (*ComputeDaeResidualsFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid);
     typedef void (*ComputeDaeRootInformationFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR);
     typedef void (*ComputeDaeStateInformationFunction)(double *SI);
-    typedef void (*ComputeDaeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR);
 
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
     ~CellmlFileRuntime();
@@ -165,15 +164,14 @@ public:
 
     InitializeConstantsFunction initializeConstants() const;
     ComputeComputedConstantsFunction computeComputedConstants() const;
+    ComputeVariablesFunction computeVariables() const;
 
     ComputeOdeRatesFunction computeOdeRates() const;
-    ComputeOdeVariablesFunction computeOdeVariables() const;
 
     ComputeDaeEssentialVariablesFunction computeDaeEssentialVariables() const;
     ComputeDaeResidualsFunction computeDaeResiduals() const;
     ComputeDaeRootInformationFunction computeDaeRootInformation() const;
     ComputeDaeStateInformationFunction computeDaeStateInformation() const;
-    ComputeDaeVariablesFunction computeDaeVariables() const;
 
     CellmlFileIssues issues() const;
 
@@ -206,15 +204,14 @@ private:
 
     InitializeConstantsFunction mInitializeConstants;
     ComputeComputedConstantsFunction mComputeComputedConstants;
+    ComputeVariablesFunction mComputeVariables;
 
     ComputeOdeRatesFunction mComputeOdeRates;
-    ComputeOdeVariablesFunction mComputeOdeVariables;
 
     ComputeDaeEssentialVariablesFunction mComputeDaeEssentialVariables;
     ComputeDaeResidualsFunction mComputeDaeResiduals;
     ComputeDaeRootInformationFunction mComputeDaeRootInformation;
     ComputeDaeStateInformationFunction mComputeDaeStateInformation;
-    ComputeDaeVariablesFunction mComputeDaeVariables;
 
     void resetOdeCodeInformation();
     void resetDaeCodeInformation();

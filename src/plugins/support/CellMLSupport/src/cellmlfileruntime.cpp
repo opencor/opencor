@@ -388,20 +388,20 @@ CellmlFileRuntime::ComputeComputedConstantsFunction CellmlFileRuntime::computeCo
 
 //==============================================================================
 
+CellmlFileRuntime::ComputeVariablesFunction CellmlFileRuntime::computeVariables() const
+{
+    // Return the computeVariables function
+
+    return mComputeVariables;
+}
+
+//==============================================================================
+
 CellmlFileRuntime::ComputeOdeRatesFunction CellmlFileRuntime::computeOdeRates() const
 {
     // Return the computeOdeRates function
 
     return mComputeOdeRates;
-}
-
-//==============================================================================
-
-CellmlFileRuntime::ComputeOdeVariablesFunction CellmlFileRuntime::computeOdeVariables() const
-{
-    // Return the computeOdeVariables function
-
-    return mComputeOdeVariables;
 }
 
 //==============================================================================
@@ -438,15 +438,6 @@ CellmlFileRuntime::ComputeDaeStateInformationFunction CellmlFileRuntime::compute
     // Return the computeDaeStateInformation function
 
     return mComputeDaeStateInformation;
-}
-
-//==============================================================================
-
-CellmlFileRuntime::ComputeDaeVariablesFunction CellmlFileRuntime::computeDaeVariables() const
-{
-    // Return the computeDaeVariables function
-
-    return mComputeDaeVariables;
 }
 
 //==============================================================================
@@ -497,15 +488,14 @@ void CellmlFileRuntime::resetFunctions()
 
     mInitializeConstants = 0;
     mComputeComputedConstants = 0;
+    mComputeVariables = 0;
 
     mComputeOdeRates = 0;
-    mComputeOdeVariables = 0;
 
     mComputeDaeEssentialVariables = 0;
     mComputeDaeResiduals = 0;
     mComputeDaeRootInformation = 0;
     mComputeDaeStateInformation = 0;
-    mComputeDaeVariables = 0;
 }
 
 //==============================================================================
@@ -1052,14 +1042,14 @@ void CellmlFileRuntime::update()
                             initConsts);
     modelCode += methodCode("computeComputedConstants(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
                             compCompConsts);
+    modelCode += methodCode("computeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)",
+                            genericCodeInformation->variablesString());
 
     // Retrieve the body of the remaining functions
 
     if (mModelType == CellmlFileRuntime::Ode) {
         modelCode += methodCode("computeOdeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
                                 mOdeCodeInformation->ratesString());
-        modelCode += methodCode("computeOdeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
-                                genericCodeInformation->variablesString());
     } else {
         modelCode += methodCode("computeDaeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
                                 mDaeCodeInformation->essentialVariablesString());
@@ -1069,8 +1059,6 @@ void CellmlFileRuntime::update()
                                 mDaeCodeInformation->rootInformationString());
         modelCode += methodCode("computeDaeStateInformation(double *SI)",
                                 mDaeCodeInformation->stateInformationString());
-        modelCode += methodCode("computeDaeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)",
-                                genericCodeInformation->variablesString());
     }
 
     // Check whether the model code contains a definite integral, otherwise
@@ -1100,34 +1088,32 @@ void CellmlFileRuntime::update()
 
         mInitializeConstants = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
         mComputeComputedConstants = (ComputeComputedConstantsFunction) (intptr_t) mCompilerEngine->getFunction("computeComputedConstants");
+        mComputeVariables = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
 
         if (mModelType == CellmlFileRuntime::Ode) {
             mComputeOdeRates = (ComputeOdeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeOdeRates");
-            mComputeOdeVariables = (ComputeOdeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeOdeVariables");
         } else {
             mComputeDaeEssentialVariables = (ComputeDaeEssentialVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeEssentialVariables");
             mComputeDaeResiduals = (ComputeDaeResidualsFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeResiduals");
             mComputeDaeRootInformation = (ComputeDaeRootInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeRootInformation");
             mComputeDaeStateInformation = (ComputeDaeStateInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeStateInformation");
-            mComputeDaeVariables = (ComputeDaeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeVariables");
         }
 
         // Make sure that we managed to retrieve all the ODE/DAE functions
 
         bool functionsOk =    mInitializeConstants
-                           && mComputeComputedConstants;
+                           && mComputeComputedConstants
+                           && mComputeVariables;
 
         if (mModelType == CellmlFileRuntime::Ode) {
             functionsOk =    functionsOk
-                          && mComputeOdeRates
-                          && mComputeOdeVariables;
+                          && mComputeOdeRates;
         } else {
             functionsOk =    functionsOk
                           && mComputeDaeEssentialVariables
                           && mComputeDaeResiduals
                           && mComputeDaeRootInformation
-                          && mComputeDaeStateInformation
-                          && mComputeDaeVariables;
+                          && mComputeDaeStateInformation;
         }
 
         if (!functionsOk) {

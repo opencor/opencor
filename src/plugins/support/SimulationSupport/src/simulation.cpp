@@ -514,10 +514,7 @@ void SimulationData::recomputeVariables(const double &pCurrentPoint)
     if (!runtime)
         return;
 
-    if (runtime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
-        runtime->computeOdeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
-    else
-        runtime->computeDaeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
+    runtime->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
 }
 
 //==============================================================================
