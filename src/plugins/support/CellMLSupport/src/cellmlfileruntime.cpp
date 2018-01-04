@@ -786,9 +786,15 @@ void CellmlFileRuntime::update()
     if (!mOdeCodeInformation)
         return;
 
+//---OPENCOR--- UNTIL WE CAN USE libCellML (RATHER THAN THE CellML API), WE
+//              CONSIDER ALL MODELS TO BE ODE MODELS. DAE MODELS WILL THEREFORE
+//              BE CONSIDERED AS ODE MODELS THAT HAVE ONE OR SEVERAL NLA SYSTEMS
+//              TO BE SOLVED...
+/*
     ObjRef<iface::mathml_dom::MathMLNodeList> flaggedEquations = mOdeCodeInformation->flaggedEquations();
 
     mModelType = flaggedEquations->length()?CellmlFileRuntime::Dae:CellmlFileRuntime::Ode;
+*/
 
     // If the model is of DAE type, then we don't want the ODE-specific code
     // information, but the DAE-specific code one
