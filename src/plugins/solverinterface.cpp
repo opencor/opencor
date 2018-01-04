@@ -177,15 +177,15 @@ void DaeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                            const int &pCondVarCount, double *pConstants,
                            double *pRates, double *pStates, double *pAlgebraic,
                            double *pCondVar,
+                           ComputeRatesFunction pComputeRates,
                            ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                           ComputeResidualsFunction pComputeResiduals,
                            ComputeRootInformationFunction pComputeRootInformation,
                            ComputeStateInformationFunction pComputeStateInformation)
 {
     Q_UNUSED(pVoiStart);
     Q_UNUSED(pVoiEnd);
+    Q_UNUSED(pComputeRates);
     Q_UNUSED(pComputeEssentialVariables);
-    Q_UNUSED(pComputeResiduals);
     Q_UNUSED(pComputeRootInformation);
     Q_UNUSED(pComputeStateInformation);
 

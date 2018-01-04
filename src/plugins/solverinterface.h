@@ -113,8 +113,8 @@ protected:
 class DaeSolver : public VoiSolver
 {
 public:
+    typedef void (*ComputeRatesFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar, double *pResId);
     typedef void (*ComputeEssentialVariablesFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar);
-    typedef void (*ComputeResidualsFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar, double *pResId);
     typedef void (*ComputeRootInformationFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar);
     typedef void (*ComputeStateInformationFunction)(double *pStateInfo);
 
@@ -126,8 +126,8 @@ public:
                             const int &pCondVarCount, double *pConstants,
                             double *pRates, double *pStates, double *pAlgebraic,
                             double *pCondVar,
+                            ComputeRatesFunction pComputeRates,
                             ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                            ComputeResidualsFunction pComputeResiduals,
                             ComputeRootInformationFunction pComputeRootInformation,
                             ComputeStateInformationFunction pComputeStateInformation);
 

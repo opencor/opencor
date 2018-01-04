@@ -406,38 +406,38 @@ CellmlFileRuntime::ComputeOdeRatesFunction CellmlFileRuntime::computeOdeRates() 
 
 //==============================================================================
 
-CellmlFileRuntime::ComputeDaeEssentialVariablesFunction CellmlFileRuntime::computeDaeEssentialVariables() const
+CellmlFileRuntime::ComputeDaeRatesFunction CellmlFileRuntime::computeDaeRates() const
 {
-    // Return the computeDaeEssentialVariables function
+    // Return the computeDaeRates function
 
-    return mComputeDaeEssentialVariables;
+    return mComputeDaeRates;
 }
 
 //==============================================================================
 
-CellmlFileRuntime::ComputeDaeResidualsFunction CellmlFileRuntime::computeDaeResiduals() const
+CellmlFileRuntime::ComputeEssentialVariablesFunction CellmlFileRuntime::computeEssentialVariables() const
 {
-    // Return the computeDaeResiduals function
+    // Return the computeEssentialVariables function
 
-    return mComputeDaeResiduals;
+    return mComputeEssentialVariables;
 }
 
 //==============================================================================
 
-CellmlFileRuntime::ComputeDaeRootInformationFunction CellmlFileRuntime::computeDaeRootInformation() const
+CellmlFileRuntime::ComputeRootInformationFunction CellmlFileRuntime::computeRootInformation() const
 {
-    // Return the computeDaeRootInformation function
+    // Return the computeRootInformation function
 
-    return mComputeDaeRootInformation;
+    return mComputeRootInformation;
 }
 
 //==============================================================================
 
-CellmlFileRuntime::ComputeDaeStateInformationFunction CellmlFileRuntime::computeDaeStateInformation() const
+CellmlFileRuntime::ComputeStateInformationFunction CellmlFileRuntime::computeStateInformation() const
 {
-    // Return the computeDaeStateInformation function
+    // Return the computeStateInformation function
 
-    return mComputeDaeStateInformation;
+    return mComputeStateInformation;
 }
 
 //==============================================================================
@@ -491,11 +491,11 @@ void CellmlFileRuntime::resetFunctions()
     mComputeVariables = 0;
 
     mComputeOdeRates = 0;
+    mComputeDaeRates = 0;
 
-    mComputeDaeEssentialVariables = 0;
-    mComputeDaeResiduals = 0;
-    mComputeDaeRootInformation = 0;
-    mComputeDaeStateInformation = 0;
+    mComputeEssentialVariables = 0;
+    mComputeRootInformation = 0;
+    mComputeStateInformation = 0;
 }
 
 //==============================================================================
@@ -1051,13 +1051,13 @@ void CellmlFileRuntime::update()
         modelCode += methodCode("computeOdeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
                                 mOdeCodeInformation->ratesString());
     } else {
-        modelCode += methodCode("computeDaeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
-                                mDaeCodeInformation->essentialVariablesString());
-        modelCode += methodCode("computeDaeResiduals(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)",
+        modelCode += methodCode("computeDaeRates(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)",
                                 mDaeCodeInformation->ratesString());
-        modelCode += methodCode("computeDaeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
+        modelCode += methodCode("computeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
+                                mDaeCodeInformation->essentialVariablesString());
+        modelCode += methodCode("computeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
                                 mDaeCodeInformation->rootInformationString());
-        modelCode += methodCode("computeDaeStateInformation(double *SI)",
+        modelCode += methodCode("computeStateInformation(double *SI)",
                                 mDaeCodeInformation->stateInformationString());
     }
 
@@ -1093,10 +1093,10 @@ void CellmlFileRuntime::update()
         if (mModelType == CellmlFileRuntime::Ode) {
             mComputeOdeRates = (ComputeOdeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeOdeRates");
         } else {
-            mComputeDaeEssentialVariables = (ComputeDaeEssentialVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeEssentialVariables");
-            mComputeDaeResiduals = (ComputeDaeResidualsFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeResiduals");
-            mComputeDaeRootInformation = (ComputeDaeRootInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeRootInformation");
-            mComputeDaeStateInformation = (ComputeDaeStateInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeStateInformation");
+            mComputeDaeRates = (ComputeDaeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeRates");
+            mComputeEssentialVariables = (ComputeEssentialVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeEssentialVariables");
+            mComputeRootInformation = (ComputeRootInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeRootInformation");
+            mComputeStateInformation = (ComputeStateInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeStateInformation");
         }
 
         // Make sure that we managed to retrieve all the ODE/DAE functions
@@ -1110,10 +1110,10 @@ void CellmlFileRuntime::update()
                           && mComputeOdeRates;
         } else {
             functionsOk =    functionsOk
-                          && mComputeDaeEssentialVariables
-                          && mComputeDaeResiduals
-                          && mComputeDaeRootInformation
-                          && mComputeDaeStateInformation;
+                          && mComputeDaeRates
+                          && mComputeEssentialVariables
+                          && mComputeRootInformation
+                          && mComputeStateInformation;
         }
 
         if (!functionsOk) {
