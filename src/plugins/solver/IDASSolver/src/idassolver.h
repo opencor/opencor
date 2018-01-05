@@ -62,7 +62,7 @@ static const auto TfqmrLinearSolver    = QStringLiteral("TFQMR");
 // Default IDAS parameter values
 // Note #1: a maximum step of 0 means that there is no maximum step as such and
 //          that IDAS can use whatever step it sees fit...
-// Note #2: IDAS' default maximum number of steps is 500 which ought to be big
+// Note #2: IDAS' default maximum number of steps is 500, which ought to be big
 //          enough in most cases...
 
 static const double MaximumStepDefaultValue = 0.0;
