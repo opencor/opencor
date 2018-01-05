@@ -148,7 +148,7 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
     if (mProperties.contains(MaximumNumberOfIterationsId)) {
         maximumNumberOfIterations = mProperties.value(MaximumNumberOfIterationsId).toInt();
     } else {
-        emit error(tr("the 'maximum number of iterations' property value could not be retrieved"));
+        emit error(tr("the \"Maximum number of iterations\" property value could not be retrieved"));
 
         return;
     }

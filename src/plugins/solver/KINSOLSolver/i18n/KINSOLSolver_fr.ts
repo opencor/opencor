@@ -4,8 +4,8 @@
 <context>
     <name>OpenCOR::KINSOLSolver::KinsolSolver</name>
     <message>
-        <source>the &apos;maximum number of iterations&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;nombre maximum d&apos;itérations&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &quot;Maximum number of iterations&quot; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &quot;Nombre maximum d&apos;itérations&quot; n&apos;a pas pu être retrouvée</translation>
     </message>
 </context>
 </TS>
