@@ -74,6 +74,8 @@ QString KINSOLSolverPlugin::id(const QString &pKisaoId) const
 
     if (!pKisaoId.compare("KISAO:0000282"))
         return solverName();
+    else if (!pKisaoId.compare("KISAO:0000486"))
+        return MaximumNumberOfIterationsId;
 
     return QString();
 }
@@ -86,6 +88,8 @@ QString KINSOLSolverPlugin::kisaoId(const QString &pId) const
 
     if (!pId.compare(solverName()))
         return "KISAO:0000282";
+    else if (!pId.compare(MaximumNumberOfIterationsId))
+        return "KISAO:0000486";
 
     return QString();
 }
@@ -112,9 +116,14 @@ QString KINSOLSolverPlugin::solverName() const
 
 Solver::Properties KINSOLSolverPlugin::solverProperties() const
 {
-    // Return the properties supported by the solver, i.e. none in our case
+    // Return the properties supported by the solver
 
-    return Solver::Properties();
+    Descriptions MaximumNumberOfIterationsDescriptions;
+
+    MaximumNumberOfIterationsDescriptions.insert("en", QString::fromUtf8("Maximum number of iterations"));
+    MaximumNumberOfIterationsDescriptions.insert("fr", QString::fromUtf8("Nombre maximum d'itérations"));
+
+    return Solver::Properties() << Solver::Property(Solver::Property::Integer, MaximumNumberOfIterationsId, MaximumNumberOfIterationsDescriptions, QStringList(), MaximumNumberOfIterationsDefaultValue, false);
 }
 
 //==============================================================================

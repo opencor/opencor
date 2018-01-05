@@ -40,6 +40,20 @@ namespace KINSOLSolver {
 
 //==============================================================================
 
+static const auto MaximumNumberOfIterationsId = QStringLiteral("MaximumNumberOfIterations");
+
+//==============================================================================
+
+// Default KINSOL parameter values
+// Note: KINSOL's default maximum number of iterations is 200, which ought to be
+//       big enough in most cases...
+
+enum {
+    MaximumNumberOfIterationsDefaultValue = 200
+};
+
+//==============================================================================
+
 class KinsolSolverUserData
 {
 public:

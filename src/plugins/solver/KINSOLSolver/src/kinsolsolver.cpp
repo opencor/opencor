@@ -141,6 +141,18 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
     if (mSolver)
         reset();
 
+    // Retrieve some of the KINSOL properties
+
+    int maximumNumberOfIterations = MaximumNumberOfIterationsDefaultValue;
+
+    if (mProperties.contains(MaximumNumberOfIterationsId)) {
+        maximumNumberOfIterations = mProperties.value(MaximumNumberOfIterationsId).toInt();
+    } else {
+        emit error(tr("the 'maximum number of iterations' property value could not be retrieved"));
+
+        return;
+    }
+
     // Initialise the NLA solver itself
 
     OpenCOR::Solver::NlaSolver::initialize(pComputeSystem, pParameters, pSize);
@@ -169,6 +181,10 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
     mUserData = new KinsolSolverUserData(pComputeSystem, pUserData);
 
     KINSetUserData(mSolver, mUserData);
+
+    // Set the maximum number of steps
+
+    KINSetNumMaxIters(mSolver, maximumNumberOfIterations);
 
     // Set the linear solver
 
