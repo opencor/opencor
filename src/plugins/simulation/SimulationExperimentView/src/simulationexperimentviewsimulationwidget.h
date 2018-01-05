@@ -255,7 +255,11 @@ private:
                          const qulonglong &pSize);
 
     void updateSimulationProperties(Core::Property *pProperty = 0);
-    void updateSolversProperties(Core::Property *pProperty = 0);
+    void updateSolversProperties(Core::Property *pProperty,
+                                 const bool &pResetNlaSolver);
+    void updateSolversProperties(Core::Property *pProperty);
+    void updateSolversProperties(const bool &pResetNlaSolver);
+    void updateSolversProperties();
 
     CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable);
 

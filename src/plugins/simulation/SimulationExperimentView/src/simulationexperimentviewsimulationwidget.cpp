@@ -1322,7 +1322,7 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
 
         if (!mSimulation->isPaused()) {
             updateSimulationProperties();
-            updateSolversProperties();
+            updateSolversProperties(false);
         }
 
         // Run or resume our simulation
@@ -2269,7 +2269,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationProperties(Core::
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Property *pProperty)
+void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Property *pProperty,
+                                                                       const bool &pResetNlaSolver)
 {
     // Update all of our solver(s) properties (and solvers widget) or a
     // particular solver property (and the corresponding GUI for that solver)
@@ -2346,7 +2347,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
 
     if (solversWidget->nlaSolverData()) {
         if (!pProperty || (pProperty == solversWidget->nlaSolverData()->solversListProperty())) {
-            mSimulation->data()->setNlaSolverName(solversWidget->nlaSolverData()->solversListProperty()->value());
+            mSimulation->data()->setNlaSolverName(solversWidget->nlaSolverData()->solversListProperty()->value(), pResetNlaSolver);
 
             needNlaSolverGuiUpdate = true;
         }
@@ -2371,6 +2372,34 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
         if (pProperty)
             return;
     }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Property *pProperty)
+{
+    // Update a particular solver property (and the corresponding GUI for that
+    // solver)
+
+    updateSolversProperties(pProperty, true);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateSolversProperties(const bool &pResetNlaSolver)
+{
+    // Update all of our solver(s) properties (and solvers widget)
+
+    updateSolversProperties(0, pResetNlaSolver);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateSolversProperties()
+{
+    // Update all of our solver(s) properties (and solvers widget)
+
+    updateSolversProperties(0, true);
 }
 
 //==============================================================================
