@@ -141,7 +141,7 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
     if (mSolver)
         reset();
 
-    // Initialise the ODE solver itself
+    // Initialise the NLA solver itself
 
     OpenCOR::Solver::NlaSolver::initialize(pComputeSystem, pParameters, pSize);
 
