@@ -44,6 +44,18 @@ PLUGININFO_FUNC KINSOLSolverPluginInfo()
 }
 
 //==============================================================================
+// I18n interface
+//==============================================================================
+
+void KINSOLSolverPlugin::retranslateUi()
+{
+    // We don't handle this interface...
+    // Note: even though we don't handle this interface, we still want to
+    //       support it since some other aspects of our plugin are
+    //       multilingual...
+}
+
+//==============================================================================
 // Solver interface
 //==============================================================================
 

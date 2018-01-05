@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "i18ninterface.h"
 #include "plugininfo.h"
 #include "solverinterface.h"
 
@@ -39,15 +40,18 @@ PLUGININFO_FUNC KINSOLSolverPluginInfo();
 
 //==============================================================================
 
-class KINSOLSolverPlugin : public QObject, public SolverInterface
+class KINSOLSolverPlugin : public QObject, public I18nInterface,
+                           public SolverInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.KINSOLSolverPlugin" FILE "kinsolsolverplugin.json")
 
+    Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::SolverInterface)
 
 public:
+#include "i18ninterface.inl"
 #include "solverinterface.inl"
 };
 

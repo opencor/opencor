@@ -4,6 +4,7 @@ PROJECT(KINSOLSolverPlugin)
 
 ADD_PLUGIN(KINSOLSolver
     SOURCES
+        ../../i18ninterface.cpp
         ../../plugininfo.cpp
         ../../solverinterface.cpp
 
@@ -12,9 +13,10 @@ ADD_PLUGIN(KINSOLSolver
     HEADERS_MOC
         ../../solverinterface.h
 
+        src/kinsolsolver.h
         src/kinsolsolverplugin.h
     PLUGINS
         SUNDIALS
     QT_MODULES
-        Core
+        Widgets
 )
