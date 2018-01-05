@@ -46,13 +46,6 @@ int systemFunction(N_Vector pY, N_Vector pF, void *pUserData)
                               N_VGetArrayPointer_Serial(pF),
                               userData->userData());
 
-    // Make sure that all our values are finite
-
-    for (int i = 0, iMax = userData->size(); i < iMax; ++i) {
-        if (!qIsFinite(NV_Ith_S(pF, i)))
-            return 1;
-    }
-
     return 0;
 }
 
