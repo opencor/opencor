@@ -450,8 +450,8 @@ void doNothing(const int &pMax)
 void checkFileNameOrUrl(const QString &pInFileNameOrUrl, bool &pOutIsLocalFile,
                         QString &pOutFileNameOrUrl)
 {
-    // Determine whether pInFileNameOrUrl refers to a local file or a remote
-    // one, and set pOutIsLocalFile and pOutFileNameOrUrl accordingly
+    // Determine whether pInFileNameOrUrl refers to a local or a remote file,
+    // and set pOutIsLocalFile and pOutFileNameOrUrl accordingly
     // Note #1: to use QUrl::isLocalFile() is not enough. Indeed, say that
     //          pInFileNameOrUrl is equal to
     //              /home/me/mymodel.cellml
@@ -465,15 +465,17 @@ void checkFileNameOrUrl(const QString &pInFileNameOrUrl, bool &pOutIsLocalFile,
     //          is a URL, but effectively a local file, hence pOutIsLocalFile is
     //          to be true and pOutFileNameOrUrl is to be set to
     //              /home/me/mymodel.cellml
+    //          However, to use fileNameOrUrl.toLocalFile() to retrieve that
+    //          file won't work with a path that contains spaces, hence we
+    //          return pInFileNameOrUrl after having removed "file://" from
+    //          it...
 
     QUrl fileNameOrUrl = pInFileNameOrUrl;
 
     pOutIsLocalFile =    !fileNameOrUrl.scheme().compare("file")
                       ||  fileNameOrUrl.host().isEmpty();
     pOutFileNameOrUrl = pOutIsLocalFile?
-                            !fileNameOrUrl.scheme().compare("file")?
-                                nativeCanonicalFileName(fileNameOrUrl.toLocalFile()):
-                                nativeCanonicalFileName(pInFileNameOrUrl):
+                            nativeCanonicalFileName(QString(pInFileNameOrUrl).remove("file://")):
                             fileNameOrUrl.url();
 }
 

@@ -3819,7 +3819,7 @@ void SimulationExperimentViewSimulationWidget::openCellmlFile()
 
     QDesktopServices::openUrl(QString("opencor://openFile/%1").arg(fileManagerInstance->isRemote(cellmlFileName)?
                                                                        fileManagerInstance->url(cellmlFileName):
-                                                                       cellmlFileName));
+                                                                       QUrl::fromLocalFile(cellmlFileName).toEncoded()));
 
     // Ask OpenCOR to switch to the requested CellML editing view
 
