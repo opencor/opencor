@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 extern "C" void doNonLinearSolve(char *pRuntime,
                                  void (*pFunction)(double *, double *, void *),
-                                 double *pParameters, int *pRes, int pSize,
+                                 double *pParameters, int pSize,
                                  void *pUserData);
 
 //==============================================================================
@@ -95,7 +95,7 @@ protected:
 class OdeSolver : public VoiSolver
 {
 public:
-    typedef int (*ComputeRatesFunction)(double pVoi, double *pConstants, double *pRates, double *pStates, double *pAlgebraic);
+    typedef void (*ComputeRatesFunction)(double pVoi, double *pConstants, double *pRates, double *pStates, double *pAlgebraic);
 
     explicit OdeSolver();
 
@@ -113,10 +113,10 @@ protected:
 class DaeSolver : public VoiSolver
 {
 public:
-    typedef int (*ComputeEssentialVariablesFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar);
-    typedef int (*ComputeResidualsFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar, double *pResId);
-    typedef int (*ComputeRootInformationFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar);
-    typedef int (*ComputeStateInformationFunction)(double *pStateInfo);
+    typedef void (*ComputeRatesFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar, double *pResId);
+    typedef void (*ComputeEssentialVariablesFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar);
+    typedef void (*ComputeRootInformationFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar);
+    typedef void (*ComputeStateInformationFunction)(double *pStateInfo);
 
     explicit DaeSolver();
     ~DaeSolver();
@@ -126,8 +126,8 @@ public:
                             const int &pCondVarCount, double *pConstants,
                             double *pRates, double *pStates, double *pAlgebraic,
                             double *pCondVar,
+                            ComputeRatesFunction pComputeRates,
                             ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                            ComputeResidualsFunction pComputeResiduals,
                             ComputeRootInformationFunction pComputeRootInformation,
                             ComputeStateInformationFunction pComputeStateInformation);
 

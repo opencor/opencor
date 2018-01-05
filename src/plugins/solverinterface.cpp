@@ -31,8 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 void doNonLinearSolve(char *pRuntime,
                       void (*pFunction)(double *, double *, void *),
-                      double *pParameters, int *pRes, int pSize,
-                      void *pUserData)
+                      double *pParameters, int pSize, void *pUserData)
 {
     // Retrieve the NLA solver which we should use
 
@@ -46,15 +45,11 @@ void doNonLinearSolve(char *pRuntime,
         // Now, we can solve our NLA system
 
         nlaSolver->solve();
-
-        *pRes = 1;
     } else {
         // We couldn't retrieve an NLA solver...
         // Note: this should never happen, but we never know...
 
         qWarning("WARNING | %s:%d: no NLA solver could be found.", __FILE__, __LINE__);
-
-        *pRes = 0;
     }
 }
 
@@ -182,15 +177,15 @@ void DaeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                            const int &pCondVarCount, double *pConstants,
                            double *pRates, double *pStates, double *pAlgebraic,
                            double *pCondVar,
+                           ComputeRatesFunction pComputeRates,
                            ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                           ComputeResidualsFunction pComputeResiduals,
                            ComputeRootInformationFunction pComputeRootInformation,
                            ComputeStateInformationFunction pComputeStateInformation)
 {
     Q_UNUSED(pVoiStart);
     Q_UNUSED(pVoiEnd);
+    Q_UNUSED(pComputeRates);
     Q_UNUSED(pComputeEssentialVariables);
-    Q_UNUSED(pComputeResiduals);
     Q_UNUSED(pComputeRootInformation);
     Q_UNUSED(pComputeStateInformation);
 

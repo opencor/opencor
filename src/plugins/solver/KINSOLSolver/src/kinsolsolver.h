@@ -43,17 +43,15 @@ namespace KINSOLSolver {
 class KinsolSolverUserData
 {
 public:
-    explicit KinsolSolverUserData(void *pUserData,
-                                  Solver::NlaSolver::ComputeSystemFunction pComputeSystem);
-
-    void * userData() const;
+    explicit KinsolSolverUserData(Solver::NlaSolver::ComputeSystemFunction pComputeSystem,
+                                  void *pUserData);
 
     Solver::NlaSolver::ComputeSystemFunction computeSystem() const;
+    void * userData() const;
 
 private:
-    void *mUserData;
-
     Solver::NlaSolver::ComputeSystemFunction mComputeSystem;
+    void *mUserData;
 };
 
 //==============================================================================

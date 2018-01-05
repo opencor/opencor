@@ -388,6 +388,15 @@ CellmlFileRuntime::ComputeComputedConstantsFunction CellmlFileRuntime::computeCo
 
 //==============================================================================
 
+CellmlFileRuntime::ComputeVariablesFunction CellmlFileRuntime::computeVariables() const
+{
+    // Return the computeVariables function
+
+    return mComputeVariables;
+}
+
+//==============================================================================
+
 CellmlFileRuntime::ComputeOdeRatesFunction CellmlFileRuntime::computeOdeRates() const
 {
     // Return the computeOdeRates function
@@ -397,56 +406,38 @@ CellmlFileRuntime::ComputeOdeRatesFunction CellmlFileRuntime::computeOdeRates() 
 
 //==============================================================================
 
-CellmlFileRuntime::ComputeOdeVariablesFunction CellmlFileRuntime::computeOdeVariables() const
+CellmlFileRuntime::ComputeDaeRatesFunction CellmlFileRuntime::computeDaeRates() const
 {
-    // Return the computeOdeVariables function
+    // Return the computeDaeRates function
 
-    return mComputeOdeVariables;
+    return mComputeDaeRates;
 }
 
 //==============================================================================
 
-CellmlFileRuntime::ComputeDaeEssentialVariablesFunction CellmlFileRuntime::computeDaeEssentialVariables() const
+CellmlFileRuntime::ComputeEssentialVariablesFunction CellmlFileRuntime::computeEssentialVariables() const
 {
-    // Return the computeDaeEssentialVariables function
+    // Return the computeEssentialVariables function
 
-    return mComputeDaeEssentialVariables;
+    return mComputeEssentialVariables;
 }
 
 //==============================================================================
 
-CellmlFileRuntime::ComputeDaeResidualsFunction CellmlFileRuntime::computeDaeResiduals() const
+CellmlFileRuntime::ComputeRootInformationFunction CellmlFileRuntime::computeRootInformation() const
 {
-    // Return the computeDaeResiduals function
+    // Return the computeRootInformation function
 
-    return mComputeDaeResiduals;
+    return mComputeRootInformation;
 }
 
 //==============================================================================
 
-CellmlFileRuntime::ComputeDaeRootInformationFunction CellmlFileRuntime::computeDaeRootInformation() const
+CellmlFileRuntime::ComputeStateInformationFunction CellmlFileRuntime::computeStateInformation() const
 {
-    // Return the computeDaeRootInformation function
+    // Return the computeStateInformation function
 
-    return mComputeDaeRootInformation;
-}
-
-//==============================================================================
-
-CellmlFileRuntime::ComputeDaeStateInformationFunction CellmlFileRuntime::computeDaeStateInformation() const
-{
-    // Return the computeDaeStateInformation function
-
-    return mComputeDaeStateInformation;
-}
-
-//==============================================================================
-
-CellmlFileRuntime::ComputeDaeVariablesFunction CellmlFileRuntime::computeDaeVariables() const
-{
-    // Return the computeDaeVariables function
-
-    return mComputeDaeVariables;
+    return mComputeStateInformation;
 }
 
 //==============================================================================
@@ -496,17 +487,15 @@ void CellmlFileRuntime::resetFunctions()
     // Reset the functions
 
     mInitializeConstants = 0;
-
     mComputeComputedConstants = 0;
+    mComputeVariables = 0;
 
     mComputeOdeRates = 0;
-    mComputeOdeVariables = 0;
+    mComputeDaeRates = 0;
 
-    mComputeDaeEssentialVariables = 0;
-    mComputeDaeResiduals = 0;
-    mComputeDaeRootInformation = 0;
-    mComputeDaeStateInformation = 0;
-    mComputeDaeVariables = 0;
+    mComputeEssentialVariables = 0;
+    mComputeRootInformation = 0;
+    mComputeStateInformation = 0;
 }
 
 //==============================================================================
@@ -652,44 +641,34 @@ void CellmlFileRuntime::retrieveDaeCodeInformation(iface::cellml_api::Model *pMo
 
 //==============================================================================
 
-QString CellmlFileRuntime::functionCode(const QString &pFunctionSignature,
-                                        const QString &pFunctionBody,
-                                        const bool &pHasDefines)
+QString CellmlFileRuntime::methodCode(const QString &pCodeSignature,
+                                      const QString &pCodeBody)
 {
-    QString res = pFunctionSignature+"\n"
+    // Generate and return the code for the given method
+
+    QString res = "void "+pCodeSignature+"\n"
                   "{\n";
 
-    if (pFunctionBody.isEmpty()) {
-        res += "    return 0;\n";
-    } else {
-        res += "    int ret = 0;\n"
-               "    int *pret = &ret;\n"
-               "\n";
+    if (!pCodeBody.isEmpty()) {
+        res += pCodeBody;
 
-        if (pHasDefines) {
-            res += "#define VOI 0.0\n"
-                   "#define ALGEBRAIC 0\n"
-                   "\n";
-        }
-
-        res += pFunctionBody;
-
-        if (!pFunctionBody.endsWith('\n'))
+        if (!pCodeBody.endsWith('\n'))
             res += '\n';
-
-        if (pHasDefines) {
-            res += "\n"
-                   "#undef ALGEBRAIC\n"
-                   "#undef VOI\n";
-        }
-
-        res += "\n"
-               "    return ret;\n";
     }
 
-    res += "}\n";
+    res += "}\n\n";
 
     return res;
+}
+
+//==============================================================================
+
+QString CellmlFileRuntime::methodCode(const QString &pCodeSignature,
+                                      const std::wstring &pCodeBody)
+{
+    // Generate and return the code for the given method
+
+    return methodCode(pCodeSignature, cleanCode(pCodeBody));
 }
 
 //==============================================================================
@@ -736,9 +715,27 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
     QString res = QString();
 
     foreach (const QString &code, QString::fromStdWString(pCode).split("\r\n")) {
-        if (!CommentRegEx.match(code).hasMatch())
+        if (!CommentRegEx.match(code.trimmed()).hasMatch())
             res += (res.isEmpty()?QString():"\n")+code;
     }
+
+    // Further clean up the given code by removing any reference to a 'return'
+    // value)
+
+    res.remove(", int* pret");
+    res.remove(", pret");
+
+    res.remove("#define pret rfi->aPRET\n");
+    res.remove("#undef pret\n");
+    res.remove("  rfi.aPRET = pret;\n");
+
+    // Also rename do_nonlinearsolve() to doNonLinearSolve() since CellML's CIS
+    // service already defines do_nonlinearsolve() and, yet, we want to use our
+    // own non-linear solve routine defined in our Solver interface, and add a
+    // new parameter to all our calls to doNonLinearSolve() so that
+    // doNonLinearSolve() can retrieve the correct instance of our NLA solver
+
+    res.replace("do_nonlinearsolve(", QString("doNonLinearSolve(\"%1\", ").arg(address()));
 
     return res;
 }
@@ -778,9 +775,15 @@ void CellmlFileRuntime::update()
     if (!mOdeCodeInformation)
         return;
 
+//---OPENCOR--- UNTIL WE CAN USE libCellML (RATHER THAN THE CellML API), WE
+//              CONSIDER ALL MODELS TO BE ODE MODELS. DAE MODELS WILL THEREFORE
+//              BE CONSIDERED AS ODE MODELS THAT HAVE ONE OR SEVERAL NLA SYSTEMS
+//              TO BE SOLVED...
+/*
     ObjRef<iface::mathml_dom::MathMLNodeList> flaggedEquations = mOdeCodeInformation->flaggedEquations();
 
     mModelType = flaggedEquations->length()?CellmlFileRuntime::Dae:CellmlFileRuntime::Ode;
+*/
 
     // If the model is of DAE type, then we don't want the ODE-specific code
     // information, but the DAE-specific code one
@@ -989,7 +992,7 @@ void CellmlFileRuntime::update()
     // Generate the model code
 
     QString modelCode = QString();
-    QString functionsString = QString::fromStdWString(genericCodeInformation->functionsString());
+    QString functionsString = cleanCode(genericCodeInformation->functionsString());
 
     if (!functionsString.isEmpty()) {
         // We will need to solve at least one NLA system
@@ -1004,21 +1007,12 @@ void CellmlFileRuntime::update()
                       "    double *aRATES;\n"
                       "    double *aSTATES;\n"
                       "    double *aALGEBRAIC;\n"
-                      "\n"
-                      "    int *aPRET;\n"
                       "};\n"
                       "\n"
-                      "extern void doNonLinearSolve(char *, void (*)(double *, double *, void*), double *, int *, int, void *);\n"
+                      "extern void doNonLinearSolve(char *, void (*)(double *, double *, void*), double *, int, void *);\n"
                       "\n"
-                     +functionsString.replace("do_nonlinearsolve(", QString("doNonLinearSolve(\"%1\", ").arg(address()))
+                     +functionsString
                      +"\n";
-
-        // Note: we rename do_nonlinearsolve() to doNonLinearSolve() because
-        //       CellML's CIS service already defines do_nonlinearsolve(), yet
-        //       we want to use our own non-linear solve routine defined in our
-        //       Solver interface. Also, we add a new parameter to all our calls
-        //       to doNonLinearSolve() so that doNonLinearSolve() can retrieve
-        //       the correct instance of our NLA solver...
     }
 
     // Retrieve the body of the function that initialises constants and extract
@@ -1044,35 +1038,27 @@ void CellmlFileRuntime::update()
             compCompConsts += (compCompConsts.isEmpty()?QString():"\n")+initConst;
     }
 
-    modelCode += functionCode("int initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
-                              initConsts, true);
-    modelCode += '\n';
-    modelCode += functionCode("int computeComputedConstants(double *CONSTANTS, double *RATES, double *STATES)",
-                              compCompConsts, true);
-    modelCode += '\n';
+    modelCode += methodCode("initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
+                            initConsts);
+    modelCode += methodCode("computeComputedConstants(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
+                            compCompConsts);
+    modelCode += methodCode("computeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)",
+                            genericCodeInformation->variablesString());
 
     // Retrieve the body of the remaining functions
 
     if (mModelType == CellmlFileRuntime::Ode) {
-        modelCode += functionCode("int computeOdeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
-                                  cleanCode(mOdeCodeInformation->ratesString()));
-        modelCode += '\n';
-        modelCode += functionCode("int computeOdeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
-                                  cleanCode(genericCodeInformation->variablesString()));
+        modelCode += methodCode("computeOdeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
+                                mOdeCodeInformation->ratesString());
     } else {
-        modelCode += functionCode("int computeDaeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
-                                  cleanCode(mDaeCodeInformation->essentialVariablesString()));
-        modelCode += '\n';
-        modelCode += functionCode("int computeDaeResiduals(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)",
-                                  cleanCode(mDaeCodeInformation->ratesString()));
-        modelCode += '\n';
-        modelCode += functionCode("int computeDaeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
-                                  cleanCode(mDaeCodeInformation->rootInformationString()));
-        modelCode += functionCode("int computeDaeStateInformation(double *SI)",
-                                  cleanCode(mDaeCodeInformation->stateInformationString()));
-        modelCode += '\n';
-        modelCode += functionCode("int computeDaeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)",
-                                  cleanCode(genericCodeInformation->variablesString()));
+        modelCode += methodCode("computeDaeRates(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid)",
+                                mDaeCodeInformation->ratesString());
+        modelCode += methodCode("computeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
+                                mDaeCodeInformation->essentialVariablesString());
+        modelCode += methodCode("computeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR)",
+                                mDaeCodeInformation->rootInformationString());
+        modelCode += methodCode("computeStateInformation(double *SI)",
+                                mDaeCodeInformation->stateInformationString());
     }
 
     // Check whether the model code contains a definite integral, otherwise
@@ -1101,36 +1087,33 @@ void CellmlFileRuntime::update()
         // Retrieve the ODE/DAE functions
 
         mInitializeConstants = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
-
         mComputeComputedConstants = (ComputeComputedConstantsFunction) (intptr_t) mCompilerEngine->getFunction("computeComputedConstants");
+        mComputeVariables = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
 
         if (mModelType == CellmlFileRuntime::Ode) {
             mComputeOdeRates = (ComputeOdeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeOdeRates");
-            mComputeOdeVariables = (ComputeOdeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeOdeVariables");
         } else {
-            mComputeDaeEssentialVariables = (ComputeDaeEssentialVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeEssentialVariables");
-            mComputeDaeResiduals = (ComputeDaeResidualsFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeResiduals");
-            mComputeDaeRootInformation = (ComputeDaeRootInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeRootInformation");
-            mComputeDaeStateInformation = (ComputeDaeStateInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeStateInformation");
-            mComputeDaeVariables = (ComputeDaeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeVariables");
+            mComputeDaeRates = (ComputeDaeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeRates");
+            mComputeEssentialVariables = (ComputeEssentialVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeEssentialVariables");
+            mComputeRootInformation = (ComputeRootInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeRootInformation");
+            mComputeStateInformation = (ComputeStateInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeStateInformation");
         }
 
         // Make sure that we managed to retrieve all the ODE/DAE functions
 
         bool functionsOk =    mInitializeConstants
-                           && mComputeComputedConstants;
+                           && mComputeComputedConstants
+                           && mComputeVariables;
 
         if (mModelType == CellmlFileRuntime::Ode) {
             functionsOk =    functionsOk
-                          && mComputeOdeRates
-                          && mComputeOdeVariables;
+                          && mComputeOdeRates;
         } else {
             functionsOk =    functionsOk
-                          && mComputeDaeEssentialVariables
-                          && mComputeDaeResiduals
-                          && mComputeDaeRootInformation
-                          && mComputeDaeStateInformation
-                          && mComputeDaeVariables;
+                          && mComputeDaeRates
+                          && mComputeEssentialVariables
+                          && mComputeRootInformation
+                          && mComputeStateInformation;
         }
 
         if (!functionsOk) {

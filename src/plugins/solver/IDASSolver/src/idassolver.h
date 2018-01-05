@@ -91,8 +91,8 @@ public:
     explicit IdasSolverUserData(double *pConstants, double *pOldRates,
                                 double *pOldStates, double *pAlgebraic,
                                 double *pCondVar,
+                                Solver::DaeSolver::ComputeRatesFunction pComputeRates,
                                 Solver::DaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                                Solver::DaeSolver::ComputeResidualsFunction pComputeResiduals,
                                 Solver::DaeSolver::ComputeRootInformationFunction pComputeRootInformation);
 
     double * constants() const;
@@ -101,8 +101,8 @@ public:
     double * algebraic() const;
     double * condVar() const;
 
+    Solver::DaeSolver::ComputeRatesFunction computeRates() const;
     Solver::DaeSolver::ComputeEssentialVariablesFunction computeEssentialVariables() const;
-    Solver::DaeSolver::ComputeResidualsFunction computeResiduals() const;
     Solver::DaeSolver::ComputeRootInformationFunction computeRootInformation() const;
 
 private:
@@ -112,8 +112,8 @@ private:
     double *mAlgebraic;
     double *mCondVar;
 
+    Solver::DaeSolver::ComputeRatesFunction mComputeRates;
     Solver::DaeSolver::ComputeEssentialVariablesFunction mComputeEssentialVariables;
-    Solver::DaeSolver::ComputeResidualsFunction mComputeResiduals;
     Solver::DaeSolver::ComputeRootInformationFunction mComputeRootInformation;
 };
 
@@ -132,8 +132,8 @@ public:
                             const int &pCondVarCount, double *pConstants,
                             double *pRates, double *pStates, double *pAlgebraic,
                             double *pCondVar,
+                            ComputeRatesFunction pComputeRates,
                             ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                            ComputeResidualsFunction pComputeResiduals,
                             ComputeRootInformationFunction pComputeRootInformation,
                             ComputeStateInformationFunction pComputeStateInformation);
 

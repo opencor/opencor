@@ -276,10 +276,10 @@ void SimulationWorker::started()
                               mSimulation->data()->states(),
                               mSimulation->data()->algebraic(),
                               mSimulation->data()->condVar(),
-                              mRuntime->computeDaeEssentialVariables(),
-                              mRuntime->computeDaeResiduals(),
-                              mRuntime->computeDaeRootInformation(),
-                              mRuntime->computeDaeStateInformation());
+                              mRuntime->computeDaeRates(),
+                              mRuntime->computeEssentialVariables(),
+                              mRuntime->computeRootInformation(),
+                              mRuntime->computeStateInformation());
     }
 
     // Initialise our NLA solver
@@ -399,10 +399,10 @@ void SimulationWorker::started()
                                           mSimulation->data()->states(),
                                           mSimulation->data()->algebraic(),
                                           mSimulation->data()->condVar(),
-                                          mRuntime->computeDaeEssentialVariables(),
-                                          mRuntime->computeDaeResiduals(),
-                                          mRuntime->computeDaeRootInformation(),
-                                          mRuntime->computeDaeStateInformation());
+                                          mRuntime->computeDaeRates(),
+                                          mRuntime->computeEssentialVariables(),
+                                          mRuntime->computeRootInformation(),
+                                          mRuntime->computeStateInformation());
                 }
 
                 mReset = false;

@@ -66,20 +66,11 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
 
 //==============================================================================
 
-KinsolSolverUserData::KinsolSolverUserData(void *pUserData,
-                                           Solver::NlaSolver::ComputeSystemFunction pComputeSystem) :
-    mUserData(pUserData),
-    mComputeSystem(pComputeSystem)
+KinsolSolverUserData::KinsolSolverUserData(Solver::NlaSolver::ComputeSystemFunction pComputeSystem,
+                                           void *pUserData) :
+    mComputeSystem(pComputeSystem),
+    mUserData(pUserData)
 {
-}
-
-//==============================================================================
-
-void * KinsolSolverUserData::userData() const
-{
-    // Return our user data
-
-    return mUserData;
 }
 
 //==============================================================================
@@ -89,6 +80,15 @@ Solver::NlaSolver::ComputeSystemFunction KinsolSolverUserData::computeSystem() c
     // Return our compute system function
 
     return mComputeSystem;
+}
+
+//==============================================================================
+
+void * KinsolSolverUserData::userData() const
+{
+    // Return our user data
+
+    return mUserData;
 }
 
 //==============================================================================
@@ -166,7 +166,7 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
 
     // Set some user data
 
-    mUserData = new KinsolSolverUserData(pUserData, pComputeSystem);
+    mUserData = new KinsolSolverUserData(pComputeSystem, pUserData);
 
     KINSetUserData(mSolver, mUserData);
 

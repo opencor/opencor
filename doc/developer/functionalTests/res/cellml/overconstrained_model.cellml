@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<model name="overconstrained_ode_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
+<model name="overconstrained_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
     <component name="main">
         <units name="per_second">
             <unit exponent="-1" units="second"/>

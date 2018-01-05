@@ -429,14 +429,17 @@ void SimulationExperimentViewInformationSolversWidget::updateSolverGui(Simulatio
     if (!pSolverData)
         return;
 
-    // Update our solver properties visibility
+    // Make sure that we have a solver
 
     QString solverName = pSolverData->solversListProperty()->value();
     SolverInterface *solverInterface = pSolverData->solversInterfaces().value(solverName);
-    Core::Properties solverProperties = pSolverData->solversProperties().value(solverName);
+
+    if (!solverInterface)
+        return;
 
     // Retrieve our solver properties values
 
+    Core::Properties solverProperties = pSolverData->solversProperties().value(solverName);
     QMap<QString, QString> solverPropertiesValues = QMap<QString, QString>();
 
     foreach (Core::Property *solverProperty, solverProperties)

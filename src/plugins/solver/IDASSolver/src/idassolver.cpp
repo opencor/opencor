@@ -64,10 +64,10 @@ int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
                                           userData->algebraic(),
                                           userData->condVar());
 
-    userData->computeResiduals()(pVoi, userData->constants(), rates,
-                                 userData->oldRates(), states,
-                                 userData->oldStates(), userData->algebraic(),
-                                 userData->condVar(), residuals);
+    userData->computeRates()(pVoi, userData->constants(), rates,
+                             userData->oldRates(), states,
+                             userData->oldStates(), userData->algebraic(),
+                             userData->condVar(), residuals);
 
     return 0;
 }
@@ -111,16 +111,16 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
 IdasSolverUserData::IdasSolverUserData(double *pConstants, double *pOldRates,
                                        double *pOldStates, double *pAlgebraic,
                                        double *pCondVar,
+                                       Solver::DaeSolver::ComputeRatesFunction pComputeRates,
                                        Solver::DaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                                       Solver::DaeSolver::ComputeResidualsFunction pComputeResiduals,
                                        Solver::DaeSolver::ComputeRootInformationFunction pComputeRootInformation) :
     mConstants(pConstants),
     mOldRates(pOldRates),
     mOldStates(pOldStates),
     mAlgebraic(pAlgebraic),
     mCondVar(pCondVar),
+    mComputeRates(pComputeRates),
     mComputeEssentialVariables(pComputeEssentialVariables),
-    mComputeResiduals(pComputeResiduals),
     mComputeRootInformation(pComputeRootInformation)
 {
 }
@@ -172,20 +172,20 @@ double * IdasSolverUserData::condVar() const
 
 //==============================================================================
 
+Solver::DaeSolver::ComputeRatesFunction IdasSolverUserData::computeRates() const
+{
+    // Return our compute rates function
+
+    return mComputeRates;
+}
+
+//==============================================================================
+
 Solver::DaeSolver::ComputeEssentialVariablesFunction IdasSolverUserData::computeEssentialVariables() const
 {
     // Return our compute essential variables function
 
     return mComputeEssentialVariables;
-}
-
-//==============================================================================
-
-Solver::DaeSolver::ComputeResidualsFunction IdasSolverUserData::computeResiduals() const
-{
-    // Return our compute residuals function
-
-    return mComputeResiduals;
 }
 
 //==============================================================================
@@ -237,9 +237,8 @@ void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                            const int &pRatesStatesCount,
                            const int &pCondVarCount, double *pConstants,
                            double *pRates, double *pStates, double *pAlgebraic,
-                           double *pCondVar,
+                           double *pCondVar, ComputeRatesFunction pComputeRates,
                            ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                           ComputeResidualsFunction pComputeResiduals,
                            ComputeRootInformationFunction pComputeRootInformation,
                            ComputeStateInformationFunction pComputeStateInformation)
 {
@@ -352,8 +351,8 @@ void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                                                pRatesStatesCount, pCondVarCount,
                                                pConstants, pRates, pStates,
                                                pAlgebraic, pCondVar,
+                                               pComputeRates,
                                                pComputeEssentialVariables,
-                                               pComputeResiduals,
                                                pComputeRootInformation,
                                                pComputeStateInformation);
 
@@ -376,16 +375,15 @@ void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                 mStatesVector, mRatesVector);
 
         IDARootInit(mSolver, pCondVarCount, rootFindingFunction);
-        //---GRY--- NEED TO CHECK THAT THINGS WORK AS EXPECTED BY TRYING IT OUT
-        //          ON A MODEL THAT NEEDS ROOT FINDING (E.G. THE SAUCERMAN
-        //          MODEL)...
+        //---OPENCOR--- NEED TO CHECK THAT THINGS WORK AS EXPECTED BY TRYING IT
+        //              OUT ON A MODEL THAT NEEDS ROOT FINDING (E.G. THE
+        //              SAUCERMAN MODEL)...
 
         // Set some user data
 
         mUserData = new IdasSolverUserData(pConstants, mOldRates, mOldStates,
-                                           pAlgebraic, pCondVar,
+                                           pAlgebraic, pCondVar, pComputeRates,
                                            pComputeEssentialVariables,
-                                           pComputeResiduals,
                                            pComputeRootInformation);
 
         IDASetUserData(mSolver, mUserData);

@@ -103,6 +103,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
     mErrorType(General),
+    mValidSimulationEnvironment(false),
     mPlots(GraphPanelWidget::GraphPanelPlotWidgets()),
     mUpdatablePlotViewports(QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool>()),
     mSimulationProperties(QStringList()),
@@ -904,7 +905,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     // don't have any blocking SED-ML or COMBINE issues
 
     SimulationExperimentViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
-    bool validSimulationEnvironment = false;
+
+    mValidSimulationEnvironment = false;
 
     if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
         // Enable/disable our run/pause action depending on whether we have a
@@ -967,7 +969,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                         simulationError(tr("the model needs both a DAE and an NLA solver, but no DAE solver is available"),
                                         InvalidSimulationEnvironment);
                 } else {
-                    validSimulationEnvironment = true;
+                    mValidSimulationEnvironment = true;
                 }
             } else if (   runtime->needOdeSolver()
                        && solversWidget->odeSolvers().isEmpty()) {
@@ -978,7 +980,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                 simulationError(tr("the model needs a DAE solver, but none is available"),
                                 InvalidSimulationEnvironment);
             } else {
-                validSimulationEnvironment = true;
+                mValidSimulationEnvironment = true;
             }
         }
     }
@@ -986,12 +988,12 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     // Initialise our GUI based on whether we have a valid simulation
     // environment
 
-    initializeGui(validSimulationEnvironment);
+    initializeGui(mValidSimulationEnvironment);
 
     // Some additional initialisations in case we have a valid simulation
     // environment
 
-    if (validSimulationEnvironment) {
+    if (mValidSimulationEnvironment) {
         // Initialise our GUI's simulation, solvers, graphs and graph panels
         // widgets, but not parameters widget
         // Note #1: this will also initialise some of our simulation data (i.e.
@@ -1049,16 +1051,16 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     // Further initialise ourselves, if we have a valid environment and we are
     // not dealing with a CellML file
 
-    if (validSimulationEnvironment && (isSedmlFile || isCombineArchive)) {
+    if (mValidSimulationEnvironment && (isSedmlFile || isCombineArchive)) {
         // Further initialise ourselves, update our GUI (by reinitialising it)
         // and initialise our simulation, if we still have a valid simulation
         // environment
 
-        bool validSimulationEnvironment = furtherInitialize();
+        mValidSimulationEnvironment = furtherInitialize();
 
-        initializeGui(validSimulationEnvironment);
+        initializeGui(mValidSimulationEnvironment);
 
-        if (validSimulationEnvironment)
+        if (mValidSimulationEnvironment)
             initializeSimulation();
     }
 
@@ -1322,7 +1324,7 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
 
         if (!mSimulation->isPaused()) {
             updateSimulationProperties();
-            updateSolversProperties();
+            updateSolversProperties(false);
         }
 
         // Run or resume our simulation
@@ -2269,7 +2271,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationProperties(Core::
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Property *pProperty)
+void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Property *pProperty,
+                                                                       const bool &pResetNlaSolver)
 {
     // Update all of our solver(s) properties (and solvers widget) or a
     // particular solver property (and the corresponding GUI for that solver)
@@ -2346,7 +2349,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
 
     if (solversWidget->nlaSolverData()) {
         if (!pProperty || (pProperty == solversWidget->nlaSolverData()->solversListProperty())) {
-            mSimulation->data()->setNlaSolverName(solversWidget->nlaSolverData()->solversListProperty()->value());
+            mSimulation->data()->setNlaSolverName(solversWidget->nlaSolverData()->solversListProperty()->value(), pResetNlaSolver);
 
             needNlaSolverGuiUpdate = true;
         }
@@ -2371,6 +2374,34 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
         if (pProperty)
             return;
     }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Property *pProperty)
+{
+    // Update a particular solver property (and the corresponding GUI for that
+    // solver)
+
+    updateSolversProperties(pProperty, true);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateSolversProperties(const bool &pResetNlaSolver)
+{
+    // Update all of our solver(s) properties (and solvers widget)
+
+    updateSolversProperties(0, pResetNlaSolver);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateSolversProperties()
+{
+    // Update all of our solver(s) properties (and solvers widget)
+
+    updateSolversProperties(0, true);
 }
 
 //==============================================================================
@@ -3819,7 +3850,7 @@ void SimulationExperimentViewSimulationWidget::openCellmlFile()
 
     QDesktopServices::openUrl(QString("opencor://openFile/%1").arg(fileManagerInstance->isRemote(cellmlFileName)?
                                                                        fileManagerInstance->url(cellmlFileName):
-                                                                       cellmlFileName));
+                                                                       QUrl::fromLocalFile(cellmlFileName).toEncoded()));
 
     // Ask OpenCOR to switch to the requested CellML editing view
 
@@ -4004,11 +4035,12 @@ void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
     }
 
     Core::FileManager::instance()->setModified(simulationFileName,
-                                                  mSimulationPropertiesModified
-                                               || mSolversPropertiesModified
-                                               || graphPanelPropertiesModified
-                                               || graphsPropertiesModified
-                                               || mGraphPanelsWidgetSizesModified);
+                                                  mValidSimulationEnvironment
+                                               && (   mSimulationPropertiesModified
+                                                   || mSolversPropertiesModified
+                                                   || graphPanelPropertiesModified
+                                                   || graphsPropertiesModified
+                                                   || mGraphPanelsWidgetSizesModified));
 }
 
 //==============================================================================
