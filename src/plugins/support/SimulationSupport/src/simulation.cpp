@@ -540,21 +540,28 @@ void SimulationData::checkForModifications()
 
 void SimulationData::createArrays()
 {
-    // Create our various arrays to compute our model
+    // Create our various arrays, if possible
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
-    mConstants = new double[runtime->constantsCount()];
-    mRates = new double[runtime->ratesCount()];
-    mStates = new double[runtime->statesCount()];
-    mDummyStates = new double[runtime->statesCount()];
-    mAlgebraic = new double[runtime->algebraicCount()];
-    mCondVar = new double[runtime->condVarCount()];
+    if (runtime) {
+        // Create our various arrays to compute our model
 
-    // Create our various arrays to keep track of our various initial values
+        mConstants = new double[runtime->constantsCount()];
+        mRates = new double[runtime->ratesCount()];
+        mStates = new double[runtime->statesCount()];
+        mDummyStates = new double[runtime->statesCount()];
+        mAlgebraic = new double[runtime->algebraicCount()];
+        mCondVar = new double[runtime->condVarCount()];
 
-    mInitialConstants = new double[runtime->constantsCount()];
-    mInitialStates = new double[runtime->statesCount()];
+        // Create our various arrays to keep track of our various initial values
+
+        mInitialConstants = new double[runtime->constantsCount()];
+        mInitialStates = new double[runtime->statesCount()];
+    } else {
+        mConstants = mRates = mStates = mDummyStates = mAlgebraic = mCondVar = 0;
+        mInitialConstants = mInitialStates = 0;
+    }
 }
 
 //==============================================================================

@@ -206,6 +206,8 @@ private:
 
     ErrorType mErrorType;
 
+    bool mValidSimulationEnvironment;
+
     GraphPanelWidget::GraphPanelPlotWidgets mPlots;
     QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool> mUpdatablePlotViewports;
 
