@@ -10,6 +10,7 @@ var jsonData = { "versions": [
                            { "type": "Improved", "description": "Plugins dialog." },
                            { "type": "Improved", "description": "Plugin framework." },
                            { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
+                           { "type": "Improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Differential_algebraic_equation\">DAE</a> models." },
                            { "type": "Improved", "description": "Keyboard navigation in tree views." }
                          ]
                        },
