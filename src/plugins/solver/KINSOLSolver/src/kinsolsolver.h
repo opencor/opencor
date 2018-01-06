@@ -72,6 +72,8 @@ private:
 
 class KinsolSolver : public Solver::NlaSolver
 {
+    Q_OBJECT
+
 public:
     explicit KinsolSolver();
     ~KinsolSolver();
