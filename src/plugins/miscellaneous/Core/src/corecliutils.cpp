@@ -467,15 +467,19 @@ void checkFileNameOrUrl(const QString &pInFileNameOrUrl, bool &pOutIsLocalFile,
     //              /home/me/mymodel.cellml
     //          However, to use fileNameOrUrl.toLocalFile() to retrieve that
     //          file won't work with a path that contains spaces, hence we
-    //          return pInFileNameOrUrl after having removed "file://" from
-    //          it...
+    //          return pInFileNameOrUrl after having removed "file:///" or
+    //          "file://" from it on Windows and Linux/macOS, respectively...
 
     QUrl fileNameOrUrl = pInFileNameOrUrl;
 
     pOutIsLocalFile =    !fileNameOrUrl.scheme().compare("file")
                       ||  fileNameOrUrl.host().isEmpty();
     pOutFileNameOrUrl = pOutIsLocalFile?
+#ifdef Q_OS_WIN
+                            nativeCanonicalFileName(QString(pInFileNameOrUrl).remove("file:///")):
+#else
                             nativeCanonicalFileName(QString(pInFileNameOrUrl).remove("file://")):
+#endif
                             fileNameOrUrl.url();
 }
 
