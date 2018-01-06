@@ -61,10 +61,12 @@ public:
                                   void *pUserData);
 
     Solver::NlaSolver::ComputeSystemFunction computeSystem() const;
+
     void * userData() const;
 
 private:
     Solver::NlaSolver::ComputeSystemFunction mComputeSystem;
+
     void *mUserData;
 };
 
@@ -85,10 +87,13 @@ public:
 
 private:
     void *mSolver;
+
     N_Vector mParametersVector;
     N_Vector mOnesVector;
+
     SUNMatrix mMatrix;
     SUNLinearSolver mLinearSolver;
+
     KinsolSolverUserData *mUserData;
 
     void reset();

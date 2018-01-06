@@ -141,10 +141,13 @@ public:
 
 private:
     void *mSolver;
+
     N_Vector mRatesVector;
     N_Vector mStatesVector;
+
     SUNMatrix mMatrix;
     SUNLinearSolver mLinearSolver;
+
     IdasSolverUserData *mUserData;
 
     bool mInterpolateSolution;

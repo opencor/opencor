@@ -144,9 +144,12 @@ public:
 
 private:
     void *mSolver;
+
     N_Vector mStatesVector;
+
     SUNMatrix mMatrix;
     SUNLinearSolver mLinearSolver;
+
     CvodesSolverUserData *mUserData;
 
     bool mInterpolateSolution;
