@@ -72,7 +72,7 @@ private:
 
 //==============================================================================
 
-class KinsolSolver : public Solver::NlaSolver
+class KinsolSolver : public OpenCOR::Solver::NlaSolver
 {
     Q_OBJECT
 
