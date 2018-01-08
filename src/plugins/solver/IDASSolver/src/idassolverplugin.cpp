@@ -47,7 +47,6 @@ PLUGININFO_FUNC IDASSolverPluginInfo()
 // I18n interface
 //==============================================================================
 
-
 void IDASSolverPlugin::retranslateUi()
 {
     // We don't handle this interface...
