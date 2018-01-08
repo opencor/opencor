@@ -246,15 +246,15 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
 
         KINDlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
     } else if (!linearSolver.compare(GmresLinearSolver)) {
-        mLinearSolver = SUNSPGMR(mParametersVector, PREC_BOTH, 0);
+        mLinearSolver = SUNSPGMR(mParametersVector, PREC_NONE, 0);
 
         KINSpilsSetLinearSolver(mSolver, mLinearSolver);
     } else if (!linearSolver.compare(BiCgStabLinearSolver)) {
-        mLinearSolver = SUNSPBCGS(mParametersVector, PREC_BOTH, 0);
+        mLinearSolver = SUNSPBCGS(mParametersVector, PREC_NONE, 0);
 
         KINSpilsSetLinearSolver(mSolver, mLinearSolver);
     } else {
-        mLinearSolver = SUNSPTFQMR(mParametersVector, PREC_BOTH, 0);
+        mLinearSolver = SUNSPTFQMR(mParametersVector, PREC_NONE, 0);
 
         KINSpilsSetLinearSolver(mSolver, mLinearSolver);
     }
