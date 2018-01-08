@@ -100,6 +100,11 @@ var jsonData = { "versions": [
                              "entries": [
                                { "type": "Added", "description": "Support for sensitivity analysis." }
                              ]
+                           },
+                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/kinsol\">KINSOL</a> solver",
+                             "entries": [
+                               { "type": "Added", "description": "Parametrisation of the solver." }
+                             ]
                            }
                          ]
                        },
