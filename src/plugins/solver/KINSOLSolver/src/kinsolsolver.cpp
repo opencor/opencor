@@ -139,7 +139,8 @@ void KinsolSolver::reset()
 //==============================================================================
 
 void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
-                              double *pParameters, int pSize, void *pUserData)
+                              double *pParameters, const int &pSize,
+                              void *pUserData)
 {
     // Reset things, if the solver has already been initialised
 

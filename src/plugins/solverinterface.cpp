@@ -223,7 +223,8 @@ NlaSolver::NlaSolver() :
 //==============================================================================
 
 void NlaSolver::initialize(ComputeSystemFunction pComputeSystem,
-                           double *pParameters, int pSize, void *pUserData)
+                           double *pParameters, const int &pSize,
+                           void *pUserData)
 {
     // Initialise ourselves
 
