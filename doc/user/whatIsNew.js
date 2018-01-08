@@ -93,12 +93,12 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> solver (formerly known as the <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> solver)",
                              "entries": [
-                               { "type": "Improved", "description": "Ready for sensitivity analysis." }
+                               { "type": "Added", "description": "Support for sensitivity analysis." }
                              ]
                            },
                            { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/idas\">IDAS</a> solver (formerly known as the <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> solver)",
                              "entries": [
-                               { "type": "Improved", "description": "Ready for sensitivity analysis." }
+                               { "type": "Added", "description": "Support for sensitivity analysis." }
                              ]
                            }
                          ]
