@@ -358,9 +358,7 @@ void SimulationExperimentViewInformationSolversWidget::initialize(SimulationSupp
 
         foreach (Core::Property *property, mNlaSolverData->solversProperties().value(pSimulation->data()->nlaSolverName())) {
             pSimulation->data()->addNlaSolverProperty(property->id(),
-                                                      (property->type() == Core::Property::Integer)?
-                                                          property->integerValue():
-                                                          property->doubleValue(),
+                                                      property->valueAsVariant(),
                                                       false);
         }
     }

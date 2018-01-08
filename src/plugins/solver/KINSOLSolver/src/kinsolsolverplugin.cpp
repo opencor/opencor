@@ -76,6 +76,12 @@ QString KINSOLSolverPlugin::id(const QString &pKisaoId) const
         return solverName();
     else if (!pKisaoId.compare("KISAO:0000486"))
         return MaximumNumberOfIterationsId;
+    else if (!pKisaoId.compare("KISAO:0000477"))
+        return LinearSolverId;
+    else if (!pKisaoId.compare("KISAO:0000479"))
+        return UpperHalfBandwidthId;
+    else if (!pKisaoId.compare("KISAO:0000480"))
+        return LowerHalfBandwidthId;
 
     return QString();
 }
@@ -90,6 +96,12 @@ QString KINSOLSolverPlugin::kisaoId(const QString &pId) const
         return "KISAO:0000282";
     else if (!pId.compare(MaximumNumberOfIterationsId))
         return "KISAO:0000486";
+    else if (!pId.compare(LinearSolverId))
+        return "KISAO:0000477";
+    else if (!pId.compare(UpperHalfBandwidthId))
+        return "KISAO:0000479";
+    else if (!pId.compare(LowerHalfBandwidthId))
+        return "KISAO:0000480";
 
     return QString();
 }
@@ -119,22 +131,58 @@ Solver::Properties KINSOLSolverPlugin::solverProperties() const
     // Return the properties supported by the solver
 
     Descriptions MaximumNumberOfIterationsDescriptions;
+    Descriptions LinearSolverDescriptions;
+    Descriptions UpperHalfBandwidthDescriptions;
+    Descriptions LowerHalfBandwidthDescriptions;
 
     MaximumNumberOfIterationsDescriptions.insert("en", QString::fromUtf8("Maximum number of iterations"));
     MaximumNumberOfIterationsDescriptions.insert("fr", QString::fromUtf8("Nombre maximum d'itérations"));
 
-    return Solver::Properties() << Solver::Property(Solver::Property::Integer, MaximumNumberOfIterationsId, MaximumNumberOfIterationsDescriptions, QStringList(), MaximumNumberOfIterationsDefaultValue, false);
+    LinearSolverDescriptions.insert("en", QString::fromUtf8("Linear solver"));
+    LinearSolverDescriptions.insert("fr", QString::fromUtf8("Solveur linéaire"));
+
+    UpperHalfBandwidthDescriptions.insert("en", QString::fromUtf8("Upper half-bandwidth"));
+    UpperHalfBandwidthDescriptions.insert("fr", QString::fromUtf8("Demi largeur de bande supérieure"));
+
+    LowerHalfBandwidthDescriptions.insert("en", QString::fromUtf8("Lower half-bandwidth"));
+    LowerHalfBandwidthDescriptions.insert("fr", QString::fromUtf8("Demi largeur de bande inférieure"));
+
+    QStringList LinearSolverListValues = QStringList() << DenseLinearSolver
+                                                       << BandedLinearSolver
+                                                       << GmresLinearSolver
+                                                       << BiCgStabLinearSolver
+                                                       << TfqmrLinearSolver;
+
+    return Solver::Properties() << Solver::Property(Solver::Property::Integer, MaximumNumberOfIterationsId, MaximumNumberOfIterationsDescriptions, QStringList(), MaximumNumberOfIterationsDefaultValue, false)
+                                << Solver::Property(Solver::Property::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
+                                << Solver::Property(Solver::Property::Integer, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
+                                << Solver::Property(Solver::Property::Integer, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, QStringList(), LowerHalfBandwidthDefaultValue, false);
 }
 
 //==============================================================================
 
 QMap<QString, bool> KINSOLSolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
 {
-    Q_UNUSED(pSolverPropertiesValues);
+    // Return the visibility of our properties based on the given properties
+    // values
 
-    // We don't handle this interface...
+    QMap<QString, bool> res = QMap<QString, bool>();
 
-    return QMap<QString, bool>();
+    QString linearSolver = pSolverPropertiesValues.value(LinearSolverId);
+
+    if (!linearSolver.compare(BandedLinearSolver)) {
+        // Banded linear solver
+
+        res.insert(UpperHalfBandwidthId, true);
+        res.insert(LowerHalfBandwidthId, true);
+    } else {
+        // Dense/GMRES/Bi-CGStab/TFQMR linear solver
+
+        res.insert(UpperHalfBandwidthId, false);
+        res.insert(LowerHalfBandwidthId, false);
+    }
+
+    return res;
 }
 
 //==============================================================================

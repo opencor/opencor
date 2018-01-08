@@ -41,6 +41,17 @@ namespace KINSOLSolver {
 //==============================================================================
 
 static const auto MaximumNumberOfIterationsId = QStringLiteral("MaximumNumberOfIterations");
+static const auto LinearSolverId              = QStringLiteral("LinearSolver");
+static const auto UpperHalfBandwidthId        = QStringLiteral("UpperHalfBandwidth");
+static const auto LowerHalfBandwidthId        = QStringLiteral("LowerHalfBandwidth");
+
+//==============================================================================
+
+static const auto DenseLinearSolver    = QStringLiteral("Dense");
+static const auto BandedLinearSolver   = QStringLiteral("Banded");
+static const auto GmresLinearSolver    = QStringLiteral("GMRES");
+static const auto BiCgStabLinearSolver = QStringLiteral("BiCGStab");
+static const auto TfqmrLinearSolver    = QStringLiteral("TFQMR");
 
 //==============================================================================
 
@@ -50,6 +61,13 @@ static const auto MaximumNumberOfIterationsId = QStringLiteral("MaximumNumberOfI
 
 enum {
     MaximumNumberOfIterationsDefaultValue = 200
+};
+
+static const auto LinearSolverDefaultValue = DenseLinearSolver;
+
+enum {
+    UpperHalfBandwidthDefaultValue = 0,
+    LowerHalfBandwidthDefaultValue = 0
 };
 
 //==============================================================================
