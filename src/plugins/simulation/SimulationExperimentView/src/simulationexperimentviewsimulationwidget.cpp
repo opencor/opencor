@@ -2636,12 +2636,17 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
             if (   !QString::fromStdString(nlaSolverNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                 && !QString::fromStdString(nlaSolverNode.getName()).compare(SEDMLSupport::NlaSolver)) {
+                SimulationExperimentViewInformationSolversWidgetData *solverData = solversWidget->nlaSolverData();
+                Core::Properties solverProperties = Core::Properties();
+
                 mustHaveNlaSolver = true;
                 nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::Name.toStdString())));
 
                 foreach (SolverInterface *solverInterface, solverInterfaces) {
                     if (!nlaSolverName.compare(solverInterface->solverName())) {
-                        solversWidget->nlaSolverData()->solversListProperty()->setValue(nlaSolverName);
+                        solverProperties = solverData->solversProperties().value(solverInterface->solverName());
+
+                        solverData->solversListProperty()->setValue(nlaSolverName);
 
                         hasNlaSolver = true;
 
@@ -2649,8 +2654,37 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                     }
                 }
 
-                if (hasNlaSolver)
+                if (hasNlaSolver) {
+                    for (uint j = 0, jMax = nlaSolverNode.getNumChildren(); j < jMax; ++j) {
+                        const libsbml::XMLNode &solverPropertyNode = nlaSolverNode.getChild(j);
+
+                        if (   !QString::fromStdString(solverPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                            && !QString::fromStdString(solverPropertyNode.getName()).compare(SEDMLSupport::SolverProperty)) {
+                            QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Id.toStdString())));
+                            QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
+                            bool propertySet = false;
+
+                            foreach (Core::Property *solverProperty, solverProperties) {
+                                if (!solverProperty->id().compare(id)) {
+                                    solverProperty->setValue(value);
+
+                                    propertySet = true;
+
+                                    break;
+                                }
+                            }
+
+                            if (!propertySet) {
+                                simulationError(tr("the requested property (%1) could not be set").arg(id),
+                                                InvalidSimulationEnvironment);
+
+                                return false;
+                            }
+                        }
+                    }
+
                     break;
+                }
             }
         }
 
