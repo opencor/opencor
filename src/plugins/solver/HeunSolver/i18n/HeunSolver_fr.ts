@@ -4,12 +4,12 @@
 <context>
     <name>OpenCOR::HeunSolver::HeunSolver</name>
     <message>
-        <source>the &apos;step&apos; property value cannot be equal to zero</source>
-        <translation>la valeur de la propriété &apos;pas&apos; ne peut pas être égale à zéro</translation>
+        <source>the &quot;Step&quot; property value cannot be equal to zero</source>
+        <translation>la valeur de la propriété &quot;Pas&quot; ne peut pas être égale à zéro</translation>
     </message>
     <message>
-        <source>the &apos;step&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;pas&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &quot;Step&quot; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &quot;Pas&quot; n&apos;a pas pu être retrouvée</translation>
     </message>
 </context>
 </TS>

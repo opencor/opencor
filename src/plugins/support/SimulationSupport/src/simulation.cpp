@@ -248,7 +248,8 @@ void SimulationData::setOdeSolverName(const QString &pOdeSolverName)
 {
     // Set our ODE solver name and reset its properties
 
-    if (mSimulation->runtime() && mSimulation->runtime()->needOdeSolver()) {
+    if (   pOdeSolverName.compare(mOdeSolverName)
+        && mSimulation->runtime() && mSimulation->runtime()->needOdeSolver()) {
         mOdeSolverName = pOdeSolverName;
 
         mOdeSolverProperties.clear();
@@ -301,7 +302,8 @@ void SimulationData::setDaeSolverName(const QString &pDaeSolverName)
 {
     // Set our DAE solver name and reset its properties
 
-    if (mSimulation->runtime() && mSimulation->runtime()->needDaeSolver()) {
+    if (   pDaeSolverName.compare(mDaeSolverName)
+        && mSimulation->runtime() && mSimulation->runtime()->needDaeSolver()) {
         mDaeSolverName = pDaeSolverName;
 
         mDaeSolverProperties.clear();
@@ -355,7 +357,8 @@ void SimulationData::setNlaSolverName(const QString &pNlaSolverName,
 {
     // Set our NLA solver name and reset its properties
 
-    if (mSimulation->runtime() && mSimulation->runtime()->needNlaSolver()) {
+    if (   pNlaSolverName.compare(mNlaSolverName)
+        && mSimulation->runtime() && mSimulation->runtime()->needNlaSolver()) {
         mNlaSolverName = pNlaSolverName;
 
         mNlaSolverProperties.clear();

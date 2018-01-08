@@ -27,7 +27,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kinsol/kinsol.h"
 #include "kinsol/kinsol_direct.h"
+#include "kinsol/kinsol_spils.h"
+#include "sunlinsol/sunlinsol_band.h"
 #include "sunlinsol/sunlinsol_dense.h"
+#include "sunlinsol/sunlinsol_spbcgs.h"
+#include "sunlinsol/sunlinsol_spgmr.h"
+#include "sunlinsol/sunlinsol_sptfqmr.h"
 
 //==============================================================================
 
@@ -134,14 +139,70 @@ void KinsolSolver::reset()
 //==============================================================================
 
 void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
-                              double *pParameters, int pSize, void *pUserData)
+                              double *pParameters, const int &pSize,
+                              void *pUserData)
 {
     // Reset things, if the solver has already been initialised
 
     if (mSolver)
         reset();
 
-    // Initialise the ODE solver itself
+    // Retrieve some of the KINSOL properties
+
+    int maximumNumberOfIterations = MaximumNumberOfIterationsDefaultValue;
+    QString linearSolver = LinearSolverDefaultValue;
+    int upperHalfBandwidth = UpperHalfBandwidthDefaultValue;
+    int lowerHalfBandwidth = LowerHalfBandwidthDefaultValue;
+
+    if (mProperties.contains(MaximumNumberOfIterationsId)) {
+        maximumNumberOfIterations = mProperties.value(MaximumNumberOfIterationsId).toInt();
+    } else {
+        emit error(tr("the \"Maximum number of iterations\" property value could not be retrieved"));
+
+        return;
+    }
+
+    if (mProperties.contains(LinearSolverId)) {
+        linearSolver = mProperties.value(LinearSolverId).toString();
+
+        if (!linearSolver.compare(BandedLinearSolver)) {
+            if (mProperties.contains(UpperHalfBandwidthId)) {
+                upperHalfBandwidth = mProperties.value(UpperHalfBandwidthId).toInt();
+
+                if (   (upperHalfBandwidth < 0)
+                    || (upperHalfBandwidth >= pSize)) {
+                    emit error(tr("the \"Upper half-bandwidth\" property must have a value between 0 and %1").arg(pSize-1));
+
+                    return;
+                }
+            } else {
+                emit error(tr("the \"Upper half-bandwidth\" property value could not be retrieved"));
+
+                return;
+            }
+
+            if (mProperties.contains(LowerHalfBandwidthId)) {
+                lowerHalfBandwidth = mProperties.value(LowerHalfBandwidthId).toInt();
+
+                if (   (lowerHalfBandwidth < 0)
+                    || (lowerHalfBandwidth >= pSize)) {
+                    emit error(tr("the \"Lower half-bandwidth\" property must have a value between 0 and %1").arg(pSize-1));
+
+                    return;
+                }
+            } else {
+                emit error(tr("the \"Lower half-bandwidth\" property value could not be retrieved"));
+
+                return;
+            }
+        }
+    } else {
+        emit error(tr("the \"Linear solver\" property value could not be retrieved"));
+
+        return;
+    }
+
+    // Initialise the NLA solver itself
 
     OpenCOR::Solver::NlaSolver::initialize(pComputeSystem, pParameters, pSize);
 
@@ -172,10 +233,35 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
 
     // Set the linear solver
 
-    mMatrix = SUNDenseMatrix(pSize, pSize);
-    mLinearSolver = SUNDenseLinearSolver(mParametersVector, mMatrix);
+    if (!linearSolver.compare(DenseLinearSolver)) {
+        mMatrix = SUNDenseMatrix(pSize, pSize);
+        mLinearSolver = SUNDenseLinearSolver(mParametersVector, mMatrix);
 
-    KINDlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
+        KINDlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
+    } else if (!linearSolver.compare(BandedLinearSolver)) {
+        mMatrix = SUNBandMatrix(pSize,
+                                upperHalfBandwidth, lowerHalfBandwidth,
+                                upperHalfBandwidth+lowerHalfBandwidth);
+        mLinearSolver = SUNBandLinearSolver(mParametersVector, mMatrix);
+
+        KINDlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
+    } else if (!linearSolver.compare(GmresLinearSolver)) {
+        mLinearSolver = SUNSPGMR(mParametersVector, PREC_NONE, 0);
+
+        KINSpilsSetLinearSolver(mSolver, mLinearSolver);
+    } else if (!linearSolver.compare(BiCgStabLinearSolver)) {
+        mLinearSolver = SUNSPBCGS(mParametersVector, PREC_NONE, 0);
+
+        KINSpilsSetLinearSolver(mSolver, mLinearSolver);
+    } else {
+        mLinearSolver = SUNSPTFQMR(mParametersVector, PREC_NONE, 0);
+
+        KINSpilsSetLinearSolver(mSolver, mLinearSolver);
+    }
+
+    // Set the maximum number of iterations
+
+    KINSetNumMaxIters(mSolver, maximumNumberOfIterations);
 }
 
 //==============================================================================

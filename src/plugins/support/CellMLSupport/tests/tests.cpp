@@ -125,7 +125,7 @@ void Tests::runtimeTests()
     // Finally, test a CellML file that has, according to the CellML API at
     // least, several variables of integration
 
-    doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/calcium transient.cellml"),
+    doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/calcium_transient.cellml"),
                   "1.1", QStringList(), false);
 
     // Clean up after ourselves

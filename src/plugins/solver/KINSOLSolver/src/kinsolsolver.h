@@ -40,6 +40,38 @@ namespace KINSOLSolver {
 
 //==============================================================================
 
+static const auto MaximumNumberOfIterationsId = QStringLiteral("MaximumNumberOfIterations");
+static const auto LinearSolverId              = QStringLiteral("LinearSolver");
+static const auto UpperHalfBandwidthId        = QStringLiteral("UpperHalfBandwidth");
+static const auto LowerHalfBandwidthId        = QStringLiteral("LowerHalfBandwidth");
+
+//==============================================================================
+
+static const auto DenseLinearSolver    = QStringLiteral("Dense");
+static const auto BandedLinearSolver   = QStringLiteral("Banded");
+static const auto GmresLinearSolver    = QStringLiteral("GMRES");
+static const auto BiCgStabLinearSolver = QStringLiteral("BiCGStab");
+static const auto TfqmrLinearSolver    = QStringLiteral("TFQMR");
+
+//==============================================================================
+
+// Default KINSOL parameter values
+// Note: KINSOL's default maximum number of iterations is 200, which ought to be
+//       big enough in most cases...
+
+enum {
+    MaximumNumberOfIterationsDefaultValue = 200
+};
+
+static const auto LinearSolverDefaultValue = DenseLinearSolver;
+
+enum {
+    UpperHalfBandwidthDefaultValue = 0,
+    LowerHalfBandwidthDefaultValue = 0
+};
+
+//==============================================================================
+
 class KinsolSolverUserData
 {
 public:
@@ -47,32 +79,40 @@ public:
                                   void *pUserData);
 
     Solver::NlaSolver::ComputeSystemFunction computeSystem() const;
+
     void * userData() const;
 
 private:
     Solver::NlaSolver::ComputeSystemFunction mComputeSystem;
+
     void *mUserData;
 };
 
 //==============================================================================
 
-class KinsolSolver : public Solver::NlaSolver
+class KinsolSolver : public OpenCOR::Solver::NlaSolver
 {
+    Q_OBJECT
+
 public:
     explicit KinsolSolver();
     ~KinsolSolver();
 
     virtual void initialize(ComputeSystemFunction pComputeSystem,
-                            double *pParameters, int pSize, void *pUserData);
+                            double *pParameters, const int &pSize,
+                            void *pUserData);
 
     virtual void solve() const;
 
 private:
     void *mSolver;
+
     N_Vector mParametersVector;
     N_Vector mOnesVector;
+
     SUNMatrix mMatrix;
     SUNLinearSolver mLinearSolver;
+
     KinsolSolverUserData *mUserData;
 
     void reset();

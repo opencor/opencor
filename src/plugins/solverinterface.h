@@ -149,7 +149,7 @@ public:
     explicit NlaSolver();
 
     virtual void initialize(ComputeSystemFunction pComputeSystem,
-                            double *pParameters, int pSize,
+                            double *pParameters, const int &pSize,
                             void *pUserData = 0);
 
     virtual void solve() const = 0;

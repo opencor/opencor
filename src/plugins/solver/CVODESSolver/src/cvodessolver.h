@@ -81,8 +81,8 @@ static const auto BandedPreconditioner = QStringLiteral("Banded");
 // Default CVODES parameter values
 // Note #1: a maximum step of 0 means that there is no maximum step as such and
 //          that CVODES can use whatever step it sees fit...
-// Note #2: CVODES' default maximum number of steps is 500 which ought to be big
-//          enough in most cases...
+// Note #2: CVODES' default maximum number of steps is 500, which ought to be
+//          big enough in most cases...
 
 static const double MaximumStepDefaultValue = 0.0;
 
@@ -144,9 +144,12 @@ public:
 
 private:
     void *mSolver;
+
     N_Vector mStatesVector;
+
     SUNMatrix mMatrix;
     SUNLinearSolver mLinearSolver;
+
     CvodesSolverUserData *mUserData;
 
     bool mInterpolateSolution;
