@@ -59,7 +59,6 @@ void IDASSolverPlugin::retranslateUi()
 // Solver interface
 //==============================================================================
 
-
 Solver::Solver * IDASSolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
