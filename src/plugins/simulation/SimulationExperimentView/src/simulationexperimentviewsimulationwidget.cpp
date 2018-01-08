@@ -1595,8 +1595,9 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
 
     if (runtime->needNlaSolver()) {
         QString nlaSolverProperties = QString();
+        Solver::Solver::Properties solverProperties = mSimulation->data()->nlaSolverProperties();
 
-        foreach (const QString &solverProperty, mSimulation->data()->nlaSolverProperties().keys()) {
+        foreach (const QString &solverProperty, solverProperties.keys()) {
             nlaSolverProperties += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
                                                                             SEDMLSupport::Id,
                                                                             solverProperty,
