@@ -154,7 +154,7 @@ public:
 
     virtual void solve() const = 0;
 
-private:
+protected:
     ComputeSystemFunction mComputeSystem;
 
     double *mParameters;
