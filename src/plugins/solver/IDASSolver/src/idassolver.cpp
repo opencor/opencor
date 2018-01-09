@@ -242,8 +242,10 @@ void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                            ComputeRootInformationFunction pComputeRootInformation,
                            ComputeStateInformationFunction pComputeStateInformation)
 {
+    // Check whether we need to initialise or reinitialise ourselves
+
     if (!mSolver) {
-        // Retrieve some of the IDAS properties
+        // Retrieve our properties
 
         double maximumStep = MaximumStepDefaultValue;
         int maximumNumberOfSteps = MaximumNumberOfStepsDefaultValue;
@@ -345,7 +347,7 @@ void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
             return;
         }
 
-        // Initialise the DAE solver itself
+        // Initialise our DAE solver
 
         OpenCOR::Solver::DaeSolver::initialize(pVoiStart, pVoiEnd,
                                                pRatesStatesCount, pCondVarCount,
@@ -356,12 +358,12 @@ void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                                                pComputeRootInformation,
                                                pComputeStateInformation);
 
-        // Create the states vector
+        // Create our states vector
 
         mRatesVector = N_VMake_Serial(pRatesStatesCount, pRates);
         mStatesVector = N_VMake_Serial(pRatesStatesCount, pStates);
 
-        // Create the IDAS solver
+        // Create our IDAS solver
 
         mSolver = IDACreate();
 
@@ -369,7 +371,7 @@ void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         IDASetErrHandlerFn(mSolver, errorHandler, this);
 
-        // Initialise the IDAS solver
+        // Initialise our IDAS solver
 
         IDAInit(mSolver, residualFunction, pVoiStart,
                 mStatesVector, mRatesVector);
@@ -379,7 +381,7 @@ void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
         //              OUT ON A MODEL THAT NEEDS ROOT FINDING (E.G. THE
         //              SAUCERMAN MODEL)...
 
-        // Set some user data
+        // Set our user data
 
         mUserData = new IdasSolverUserData(pConstants, mOldRates, mOldStates,
                                            pAlgebraic, pCondVar, pComputeRates,
@@ -388,7 +390,15 @@ void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         IDASetUserData(mSolver, mUserData);
 
-        // Set the linear solver
+        // Set our maximum step
+
+        IDASetMaxStep(mSolver, maximumStep);
+
+        // Set our maximum number of steps
+
+        IDASetMaxNumSteps(mSolver, maximumNumberOfSteps);
+
+        // Set our linear solver
 
         if (!linearSolver.compare(DenseLinearSolver)) {
             mMatrix = SUNDenseMatrix(pRatesStatesCount, pRatesStatesCount);
@@ -416,24 +426,16 @@ void IdasSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
             IDASpilsSetLinearSolver(mSolver, mLinearSolver);
         }
 
-        // Set the maximum step
-
-        IDASetMaxStep(mSolver, maximumStep);
-
-        // Set the maximum number of steps
-
-        IDASetMaxNumSteps(mSolver, maximumNumberOfSteps);
-
-        // Set the relative and absolute tolerances
+        // Set our relative and absolute tolerances
 
         IDASStolerances(mSolver, relativeTolerance, absoluteTolerance);
     } else {
-        // Reinitialise the IDAS object
+        // Reinitialise our IDAS object
 
         IDAReInit(mSolver, pVoiStart, mStatesVector, mRatesVector);
     }
 
-    // Compute the model's (new) initial conditions
+    // Compute our model's (new) initial conditions
 
     double *id = new double[pRatesStatesCount];
 
