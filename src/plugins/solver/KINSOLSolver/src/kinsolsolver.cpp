@@ -98,33 +98,24 @@ void * KinsolSolverUserData::userData() const
 
 //==============================================================================
 
-KinsolSolver::KinsolSolver() :
-    mSolver(0),
-    mParametersVector(0),
-    mOnesVector(0),
-    mMatrix(0),
-    mLinearSolver(0),
-    mUserData(0)
+KinsolSolverData::KinsolSolverData(void *pSolver, N_Vector pParametersVector,
+                                   N_Vector pOnesVector, SUNMatrix pMatrix,
+                                   SUNLinearSolver pLinearSolver,
+                                   KinsolSolverUserData *pUserData) :
+    mSolver(pSolver),
+    mParametersVector(pParametersVector),
+    mOnesVector(pOnesVector),
+    mMatrix(pMatrix),
+    mLinearSolver(pLinearSolver),
+    mUserData(pUserData)
 {
 }
 
 //==============================================================================
 
-KinsolSolver::~KinsolSolver()
+KinsolSolverData::~KinsolSolverData()
 {
     // Delete some internal objects
-
-    reset();
-}
-
-//==============================================================================
-
-void KinsolSolver::reset()
-{
-    // Make sure that the solver has been initialised
-
-    if (!mSolver)
-        return;
 
     N_VDestroy_Serial(mParametersVector);
     N_VDestroy_Serial(mOnesVector);
@@ -138,129 +129,185 @@ void KinsolSolver::reset()
 
 //==============================================================================
 
+void * KinsolSolverData::solver() const
+{
+    // Return our solver
+
+    return mSolver;
+}
+
+//==============================================================================
+
+N_Vector KinsolSolverData::parametersVector() const
+{
+    // Return our parameters vector
+
+    return mParametersVector;
+}
+
+//==============================================================================
+
+N_Vector KinsolSolverData::onesVector() const
+{
+    // Return our ones vector
+
+    return mOnesVector;
+}
+
+//==============================================================================
+
+KinsolSolver::KinsolSolver() :
+    mData(QMap<ComputeSystemFunction, KinsolSolverData *>())
+{
+}
+
+//==============================================================================
+
+KinsolSolver::~KinsolSolver()
+{
+    // Delete some internal objects
+
+    foreach (KinsolSolverData *data, mData.values())
+        delete data;
+}
+
+//==============================================================================
+
 void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
                          double *pParameters, const int &pSize, void *pUserData)
 {
-    // Reset things, if the solver has already been initialised
+    // Check whether we need to initialise or update ourselves
 
-    if (mSolver)
-        reset();
+    KinsolSolverData *data = mData.value(pComputeSystem);
 
-    // Retrieve some of the KINSOL properties
+    if (!data) {
+        // Retrieve our properties
 
-    int maximumNumberOfIterations = MaximumNumberOfIterationsDefaultValue;
-    QString linearSolver = LinearSolverDefaultValue;
-    int upperHalfBandwidth = UpperHalfBandwidthDefaultValue;
-    int lowerHalfBandwidth = LowerHalfBandwidthDefaultValue;
+        int maximumNumberOfIterationsValue = MaximumNumberOfIterationsDefaultValue;
+        QString linearSolverValue = LinearSolverDefaultValue;
+        int upperHalfBandwidthValue = UpperHalfBandwidthDefaultValue;
+        int lowerHalfBandwidthValue = LowerHalfBandwidthDefaultValue;
 
-    if (mProperties.contains(MaximumNumberOfIterationsId)) {
-        maximumNumberOfIterations = mProperties.value(MaximumNumberOfIterationsId).toInt();
-    } else {
-        emit error(tr("the \"Maximum number of iterations\" property value could not be retrieved"));
+        if (mProperties.contains(MaximumNumberOfIterationsId)) {
+            maximumNumberOfIterationsValue = mProperties.value(MaximumNumberOfIterationsId).toInt();
+        } else {
+            emit error(tr("the \"Maximum number of iterations\" property value could not be retrieved"));
 
-        return;
-    }
-
-    if (mProperties.contains(LinearSolverId)) {
-        linearSolver = mProperties.value(LinearSolverId).toString();
-
-        if (!linearSolver.compare(BandedLinearSolver)) {
-            if (mProperties.contains(UpperHalfBandwidthId)) {
-                upperHalfBandwidth = mProperties.value(UpperHalfBandwidthId).toInt();
-
-                if (   (upperHalfBandwidth < 0)
-                    || (upperHalfBandwidth >= pSize)) {
-                    emit error(tr("the \"Upper half-bandwidth\" property must have a value between 0 and %1").arg(pSize-1));
-
-                    return;
-                }
-            } else {
-                emit error(tr("the \"Upper half-bandwidth\" property value could not be retrieved"));
-
-                return;
-            }
-
-            if (mProperties.contains(LowerHalfBandwidthId)) {
-                lowerHalfBandwidth = mProperties.value(LowerHalfBandwidthId).toInt();
-
-                if (   (lowerHalfBandwidth < 0)
-                    || (lowerHalfBandwidth >= pSize)) {
-                    emit error(tr("the \"Lower half-bandwidth\" property must have a value between 0 and %1").arg(pSize-1));
-
-                    return;
-                }
-            } else {
-                emit error(tr("the \"Lower half-bandwidth\" property value could not be retrieved"));
-
-                return;
-            }
+            return;
         }
-    } else {
-        emit error(tr("the \"Linear solver\" property value could not be retrieved"));
 
-        return;
+        if (mProperties.contains(LinearSolverId)) {
+            linearSolverValue = mProperties.value(LinearSolverId).toString();
+
+            if (!linearSolverValue.compare(BandedLinearSolver)) {
+                if (mProperties.contains(UpperHalfBandwidthId)) {
+                    upperHalfBandwidthValue = mProperties.value(UpperHalfBandwidthId).toInt();
+
+                    if (   (upperHalfBandwidthValue < 0)
+                        || (upperHalfBandwidthValue >= pSize)) {
+                        emit error(tr("the \"Upper half-bandwidth\" property must have a value between 0 and %1").arg(pSize-1));
+
+                        return;
+                    }
+                } else {
+                    emit error(tr("the \"Upper half-bandwidth\" property value could not be retrieved"));
+
+                    return;
+                }
+
+                if (mProperties.contains(LowerHalfBandwidthId)) {
+                    lowerHalfBandwidthValue = mProperties.value(LowerHalfBandwidthId).toInt();
+
+                    if (   (lowerHalfBandwidthValue < 0)
+                        || (lowerHalfBandwidthValue >= pSize)) {
+                        emit error(tr("the \"Lower half-bandwidth\" property must have a value between 0 and %1").arg(pSize-1));
+
+                        return;
+                    }
+                } else {
+                    emit error(tr("the \"Lower half-bandwidth\" property value could not be retrieved"));
+
+                    return;
+                }
+            }
+        } else {
+            emit error(tr("the \"Linear solver\" property value could not be retrieved"));
+
+            return;
+        }
+
+        // Create some vectors
+
+        N_Vector parametersVector = N_VMake_Serial(pSize, pParameters);
+        N_Vector onesVector = N_VNew_Serial(pSize);
+
+        N_VConst(1.0, onesVector);
+
+        // Create our KINSOL solver
+
+        void *solver = KINCreate();
+
+        // Use our own error handler
+
+        KINSetErrHandlerFn(solver, errorHandler, this);
+
+        // Initialise our KINSOL solver
+
+        KINInit(solver, systemFunction, parametersVector);
+
+        // Set our user data
+
+        KinsolSolverUserData *userData = new KinsolSolverUserData(pComputeSystem, pUserData);
+
+        KINSetUserData(solver, userData);
+
+        // Set our maximum number of iterations
+
+        KINSetNumMaxIters(solver, maximumNumberOfIterationsValue);
+
+        // Set our linear solver
+
+        SUNMatrix matrix = SUNMatrix();
+        SUNLinearSolver linearSolver;
+
+        if (!linearSolverValue.compare(DenseLinearSolver)) {
+            matrix = SUNDenseMatrix(pSize, pSize);
+            linearSolver = SUNDenseLinearSolver(parametersVector, matrix);
+
+            KINDlsSetLinearSolver(solver, linearSolver, matrix);
+        } else if (!linearSolverValue.compare(BandedLinearSolver)) {
+            matrix = SUNBandMatrix(pSize,
+                                   upperHalfBandwidthValue, lowerHalfBandwidthValue,
+                                   upperHalfBandwidthValue+lowerHalfBandwidthValue);
+            linearSolver = SUNBandLinearSolver(parametersVector, matrix);
+
+            KINDlsSetLinearSolver(solver, linearSolver, matrix);
+        } else if (!linearSolverValue.compare(GmresLinearSolver)) {
+            linearSolver = SUNSPGMR(parametersVector, PREC_NONE, 0);
+
+            KINSpilsSetLinearSolver(solver, linearSolver);
+        } else if (!linearSolverValue.compare(BiCgStabLinearSolver)) {
+            linearSolver = SUNSPBCGS(parametersVector, PREC_NONE, 0);
+
+            KINSpilsSetLinearSolver(solver, linearSolver);
+        } else {
+            linearSolver = SUNSPTFQMR(parametersVector, PREC_NONE, 0);
+
+            KINSpilsSetLinearSolver(solver, linearSolver);
+        }
+
+        // Keep track of our data
+
+        data = new KinsolSolverData(solver, parametersVector, onesVector,
+                                    matrix, linearSolver, userData);
+
+        mData.insert(pComputeSystem, data);
     }
 
-    // Create some vectors
+    // Solve our linear system
 
-    mParametersVector = N_VMake_Serial(pSize, pParameters);
-    mOnesVector = N_VNew_Serial(pSize);
-
-    N_VConst(1.0, mOnesVector);
-
-    // Create the KINSOL solver
-
-    mSolver = KINCreate();
-
-    // Use our own error handler
-
-    KINSetErrHandlerFn(mSolver, errorHandler, this);
-
-    // Initialise the KINSOL solver
-
-    KINInit(mSolver, systemFunction, mParametersVector);
-
-    // Set some user data
-
-    mUserData = new KinsolSolverUserData(pComputeSystem, pUserData);
-
-    KINSetUserData(mSolver, mUserData);
-
-    // Set the linear solver
-
-    if (!linearSolver.compare(DenseLinearSolver)) {
-        mMatrix = SUNDenseMatrix(pSize, pSize);
-        mLinearSolver = SUNDenseLinearSolver(mParametersVector, mMatrix);
-
-        KINDlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
-    } else if (!linearSolver.compare(BandedLinearSolver)) {
-        mMatrix = SUNBandMatrix(pSize,
-                                upperHalfBandwidth, lowerHalfBandwidth,
-                                upperHalfBandwidth+lowerHalfBandwidth);
-        mLinearSolver = SUNBandLinearSolver(mParametersVector, mMatrix);
-
-        KINDlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
-    } else if (!linearSolver.compare(GmresLinearSolver)) {
-        mLinearSolver = SUNSPGMR(mParametersVector, PREC_NONE, 0);
-
-        KINSpilsSetLinearSolver(mSolver, mLinearSolver);
-    } else if (!linearSolver.compare(BiCgStabLinearSolver)) {
-        mLinearSolver = SUNSPBCGS(mParametersVector, PREC_NONE, 0);
-
-        KINSpilsSetLinearSolver(mSolver, mLinearSolver);
-    } else {
-        mLinearSolver = SUNSPTFQMR(mParametersVector, PREC_NONE, 0);
-
-        KINSpilsSetLinearSolver(mSolver, mLinearSolver);
-    }
-
-    // Set the maximum number of iterations
-
-    KINSetNumMaxIters(mSolver, maximumNumberOfIterations);
-
-    // Solve the linear system
-
-    KINSol(mSolver, mParametersVector, KIN_LINESEARCH, mOnesVector, mOnesVector);
+    KINSol(data->solver(), data->parametersVector(), KIN_LINESEARCH,
+           data->onesVector(), data->onesVector());
 }
 
 //==============================================================================
