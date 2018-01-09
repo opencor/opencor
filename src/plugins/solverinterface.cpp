@@ -33,24 +33,16 @@ void doNonLinearSolve(char *pRuntime,
                       void (*pFunction)(double *, double *, void *),
                       double *pParameters, int pSize, void *pUserData)
 {
-    // Retrieve the NLA solver which we should use
+    // Retrieve the NLA solver which we should use and solve our NLA system
+    // Note: we shouldn't always have an NLA solver, but better be safe than
+    //       sorry...
 
     OpenCOR::Solver::NlaSolver *nlaSolver = OpenCOR::Solver::nlaSolver(pRuntime);
 
-    if (nlaSolver) {
-        // We have found our NLA solver, so initialise it
-
-        nlaSolver->initialize(pFunction, pParameters, pSize, pUserData);
-
-        // Now, we can solve our NLA system
-
-        nlaSolver->solve();
-    } else {
-        // We couldn't retrieve an NLA solver...
-        // Note: this should never happen, but we never know...
-
+    if (nlaSolver)
+        nlaSolver->solve(pFunction, pParameters, pSize, pUserData);
+    else
         qWarning("WARNING | %s:%d: no NLA solver could be found.", __FILE__, __LINE__);
-    }
 }
 
 //==============================================================================
@@ -208,31 +200,6 @@ void DaeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
     memcpy(mOldRates, pRates, pRatesStatesCount*SizeOfDouble);
     memcpy(mOldStates, pStates, pRatesStatesCount*SizeOfDouble);
-}
-
-//==============================================================================
-
-NlaSolver::NlaSolver() :
-    mComputeSystem(0),
-    mParameters(0),
-    mSize(0),
-    mUserData(0)
-{
-}
-
-//==============================================================================
-
-void NlaSolver::initialize(ComputeSystemFunction pComputeSystem,
-                           double *pParameters, const int &pSize,
-                           void *pUserData)
-{
-    // Initialise ourselves
-
-    mComputeSystem = pComputeSystem;
-
-    mParameters = pParameters;
-    mSize = pSize;
-    mUserData = pUserData;
 }
 
 //==============================================================================

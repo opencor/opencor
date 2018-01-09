@@ -138,9 +138,8 @@ void KinsolSolver::reset()
 
 //==============================================================================
 
-void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
-                              double *pParameters, const int &pSize,
-                              void *pUserData)
+void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
+                         double *pParameters, const int &pSize, void *pUserData)
 {
     // Reset things, if the solver has already been initialised
 
@@ -202,10 +201,6 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
         return;
     }
 
-    // Initialise the NLA solver itself
-
-    OpenCOR::Solver::NlaSolver::initialize(pComputeSystem, pParameters, pSize);
-
     // Create some vectors
 
     mParametersVector = N_VMake_Serial(pSize, pParameters);
@@ -262,12 +257,7 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
     // Set the maximum number of iterations
 
     KINSetNumMaxIters(mSolver, maximumNumberOfIterations);
-}
 
-//==============================================================================
-
-void KinsolSolver::solve() const
-{
     // Solve the linear system
 
     KINSol(mSolver, mParametersVector, KIN_LINESEARCH, mOnesVector, mOnesVector);

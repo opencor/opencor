@@ -98,11 +98,8 @@ public:
     explicit KinsolSolver();
     ~KinsolSolver();
 
-    virtual void initialize(ComputeSystemFunction pComputeSystem,
-                            double *pParameters, const int &pSize,
-                            void *pUserData);
-
-    virtual void solve() const;
+    virtual void solve(ComputeSystemFunction pComputeSystem,
+                       double *pParameters, const int &pSize, void *pUserData);
 
 private:
     void *mSolver;
