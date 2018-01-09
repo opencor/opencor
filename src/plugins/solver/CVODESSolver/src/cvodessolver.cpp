@@ -65,11 +65,10 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     Q_UNUSED(pModule);
     Q_UNUSED(pFunction);
 
-    if (pErrorCode != CV_WARNING) {
-        // CVODES generated an error, so forward it to the CvodesSolver object
+    // Forward errors to our CvodesSolver object
 
+    if (pErrorCode != CV_WARNING)
         static_cast<CvodesSolver *>(pUserData)->emitError(pErrorMessage);
-    }
 }
 
 //==============================================================================

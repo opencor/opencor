@@ -99,11 +99,10 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     Q_UNUSED(pModule);
     Q_UNUSED(pFunction);
 
-    if (pErrorCode != IDA_WARNING) {
-        // IDAS generated an error, so forward it to the IdasSolver object
+    // Forward errors to our IdasSolver object
 
+    if (pErrorCode != IDA_WARNING)
         static_cast<IdasSolver *>(pUserData)->emitError(pErrorMessage);
-    }
 }
 
 //==============================================================================
