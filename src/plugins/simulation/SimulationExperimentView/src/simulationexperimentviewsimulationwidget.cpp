@@ -1071,10 +1071,12 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
 void SimulationExperimentViewSimulationWidget::finalize()
 {
-    // Reinitialise our trackers, so that it doesn't look for a split second
-    // that we are modified when reloading ourselves
+    // Reinitialise our trackers, if we are not dealing with a CellML file, so
+    // that it doesn't look for a split second that we are modified when
+    // reloading ourselves
 
-    initialiseTrackers();
+    if (mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile)
+        initialiseTrackers();
 
     // Finalize/backup a few things in our GUI's solvers, graphs, parameters and
     // graph panels widgets
