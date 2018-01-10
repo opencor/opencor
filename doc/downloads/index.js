@@ -39,6 +39,7 @@ var jsonData = { "versions": [
                      "changes": [
                        { "change": "<strong>General:</strong> improved our support for <a href=\"https://en.wikipedia.org/wiki/Differential_algebraic_equation\">DAE</a> models (see issues <a href=\"https://github.com/opencor/opencor/issues/188\">#188</a> and <a href=\"https://github.com/opencor/opencor/issues/536\">#536</a>)." },
                        { "change": "<strong>Solvers:</strong> can now parameterise the <a href=\"https://computation.llnl.gov/projects/sundials/kinsol\">KINSOL</a> solver (see issue <a href=\"https://github.com/opencor/opencor/issues/1510\">#1510</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> don’t incorrectly mark a CellML file as modified (see issue <a href=\"https://github.com/opencor/opencor/issues/1513\">#1513</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1507\">#1507</a>)." }
                      ]
                    },
