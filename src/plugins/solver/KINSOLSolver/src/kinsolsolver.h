@@ -104,6 +104,9 @@ public:
     N_Vector parametersVector() const;
     N_Vector onesVector() const;
 
+    KinsolSolverUserData * userData() const;
+    void setUserData(KinsolSolverUserData *pUserData);
+
 private:
     void *mSolver;
 

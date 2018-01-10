@@ -155,6 +155,26 @@ N_Vector KinsolSolverData::onesVector() const
 
 //==============================================================================
 
+KinsolSolverUserData * KinsolSolverData::userData() const
+{
+    // Return our user data
+
+    return mUserData;
+}
+
+//==============================================================================
+
+void KinsolSolverData::setUserData(KinsolSolverUserData *pUserData)
+{
+    // Set our user data, after having delete our 'old' ones
+
+    delete mUserData;
+
+    mUserData = pUserData;
+}
+
+//==============================================================================
+
 KinsolSolver::KinsolSolver() :
     mData(QMap<ComputeSystemFunction, KinsolSolverData *>())
 {
@@ -301,6 +321,12 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
                                     matrix, linearSolver, userData);
 
         mData.insert(pComputeSystem, data);
+    } else {
+        // We are already initiliased, so simply update our user data
+
+        data->setUserData(new KinsolSolverUserData(pComputeSystem, pUserData));
+
+        KINSetUserData(data->solver(), data->userData());
     }
 
     // Solve our linear system
