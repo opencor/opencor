@@ -102,20 +102,13 @@ void Solver::emitError(const QString &pErrorMessage)
 
 //==============================================================================
 
-VoiSolver::VoiSolver() :
+OdeSolver::OdeSolver() :
     Solver(),
     mRatesStatesCount(0),
     mConstants(0),
     mStates(0),
     mRates(0),
-    mAlgebraic(0)
-{
-}
-
-//==============================================================================
-
-OdeSolver::OdeSolver() :
-    VoiSolver(),
+    mAlgebraic(0),
     mComputeRates(0)
 {
 }
@@ -139,67 +132,6 @@ void OdeSolver::initialize(const double &pVoiStart,
     mAlgebraic = pAlgebraic;
 
     mComputeRates = pComputeRates;
-}
-
-//==============================================================================
-
-DaeSolver::DaeSolver() :
-    VoiSolver(),
-    mCondVarCount(0),
-    mOldRates(0),
-    mOldStates(0),
-    mCondVar(0)
-{
-}
-
-//==============================================================================
-
-DaeSolver::~DaeSolver()
-{
-    // Delete some internal objects
-
-    delete[] mOldRates;
-    delete[] mOldStates;
-}
-
-//==============================================================================
-
-void DaeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
-                           const int &pRatesStatesCount,
-                           const int &pCondVarCount, double *pConstants,
-                           double *pRates, double *pStates, double *pAlgebraic,
-                           double *pCondVar,
-                           ComputeRatesFunction pComputeRates,
-                           ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                           ComputeRootInformationFunction pComputeRootInformation,
-                           ComputeStateInformationFunction pComputeStateInformation)
-{
-    Q_UNUSED(pVoiStart);
-    Q_UNUSED(pVoiEnd);
-    Q_UNUSED(pComputeRates);
-    Q_UNUSED(pComputeEssentialVariables);
-    Q_UNUSED(pComputeRootInformation);
-    Q_UNUSED(pComputeStateInformation);
-
-    // Initialise the DAE solver
-
-    mRatesStatesCount = pRatesStatesCount;
-    mCondVarCount = pCondVarCount;
-
-    mConstants = pConstants;
-    mRates = pRates;
-    mStates = pStates;
-    mAlgebraic = pAlgebraic;
-    mCondVar = pCondVar;
-
-    delete[] mOldRates;
-    delete[] mOldStates;
-
-    mOldRates = new double[pRatesStatesCount];
-    mOldStates = new double[pRatesStatesCount];
-
-    memcpy(mOldRates, pRates, pRatesStatesCount*SizeOfDouble);
-    memcpy(mOldStates, pStates, pRatesStatesCount*SizeOfDouble);
 }
 
 //==============================================================================

@@ -1558,7 +1558,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     Solver::Solver::Properties solverProperties = runtime->needOdeSolver()?
                                                       mSimulation->data()->odeSolverProperties():
                                                       mSimulation->data()->daeSolverProperties();
-    QString voiSolverProperties = QString();
+    QString odeSolverProperties = QString();
 
     sedmlAlgorithm->setKisaoID(solverInterface->kisaoId(solverName).toStdString());
 
@@ -1570,7 +1570,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
                             solverPropertyValue.toString();
 
         if (kisaoId.isEmpty()) {
-            voiSolverProperties += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
+            odeSolverProperties += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
                                                                             SEDMLSupport::Id,
                                                                             solverProperty,
                                                                             SEDMLSupport::Value,
@@ -1583,12 +1583,12 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
         }
     }
 
-    if (!voiSolverProperties.isEmpty()) {
+    if (!odeSolverProperties.isEmpty()) {
         sedmlAlgorithm->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                                  "    %3"
                                                  "</%1>").arg(SEDMLSupport::SolverProperties,
                                                               SEDMLSupport::OpencorNamespace,
-                                                              voiSolverProperties).toStdString());
+                                                              odeSolverProperties).toStdString());
     }
 
     // Check whether the simulation required an NLA solver and, if so, let our
