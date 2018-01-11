@@ -1603,20 +1603,20 @@ void CentralWidget::fileReloadedOrSaved(const QString &pFileName,
 
 void CentralWidget::updateGui()
 {
-    TabBarWidget *tabBarWidget = qobject_cast<TabBarWidget *>(sender());
+    TabBarWidget *tabBar = qobject_cast<TabBarWidget *>(sender());
 
     if (mState != Idling) {
         // We are doing something, so too risky to update the GUI during that
         // time (e.g. things may not be fully initialised), so revert to our old
         // tab index, if possible
 
-        if (tabBarWidget) {
-            disconnect(tabBarWidget, SIGNAL(currentChanged(int)),
+        if (tabBar) {
+            disconnect(tabBar, SIGNAL(currentChanged(int)),
                        this, SLOT(updateGui()));
 
-            tabBarWidget->setCurrentIndex(tabBarWidget->oldIndex());
+            tabBar->setCurrentIndex(tabBar->oldIndex());
 
-            connect(tabBarWidget, SIGNAL(currentChanged(int)),
+            connect(tabBar, SIGNAL(currentChanged(int)),
                     this, SLOT(updateGui()));
         }
 
@@ -1629,8 +1629,8 @@ void CentralWidget::updateGui()
 
     // Keep track of our future old tab index, if possible
 
-    if (tabBarWidget)
-        tabBarWidget->setOldIndex(tabBarWidget->currentIndex());
+    if (tabBar)
+        tabBar->setOldIndex(tabBar->currentIndex());
 
     // Determine whether we are here as a result of changing files, modes or
     // views
