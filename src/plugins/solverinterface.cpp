@@ -55,7 +55,7 @@ extern "C" Q_DECL_EXPORT int solverInterfaceVersion()
 {
     // Version of the solver interface
 
-    return 1;
+    return 2;
 }
 
 //==============================================================================
@@ -115,12 +115,12 @@ OdeSolver::OdeSolver() :
 
 //==============================================================================
 
-void OdeSolver::initialize(const double &pVoiStart,
-                           const int &pRatesStatesCount, double *pConstants,
-                           double *pRates, double *pStates, double *pAlgebraic,
+void OdeSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
+                           double *pConstants, double *pRates, double *pStates,
+                           double *pAlgebraic,
                            ComputeRatesFunction pComputeRates)
 {
-    Q_UNUSED(pVoiStart);
+    Q_UNUSED(pVoi);
 
     // Initialise the ODE solver
 
@@ -132,6 +132,15 @@ void OdeSolver::initialize(const double &pVoiStart,
     mAlgebraic = pAlgebraic;
 
     mComputeRates = pComputeRates;
+}
+
+//==============================================================================
+
+void OdeSolver::reinitialize(const double &pVoi)
+{
+    Q_UNUSED(pVoi);
+
+    // Nothing to do by default...
 }
 
 //==============================================================================
