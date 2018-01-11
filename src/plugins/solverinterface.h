@@ -146,20 +146,9 @@ class NlaSolver : public Solver
 public:
     typedef void (*ComputeSystemFunction)(double *, double *, void *);
 
-    explicit NlaSolver();
-
-    virtual void initialize(ComputeSystemFunction pComputeSystem,
-                            double *pParameters, const int &pSize,
-                            void *pUserData = 0);
-
-    virtual void solve() const = 0;
-
-private:
-    ComputeSystemFunction mComputeSystem;
-
-    double *mParameters;
-    int mSize;
-    void *mUserData;
+    virtual void solve(ComputeSystemFunction pComputeSystem,
+                       double *pParameters, const int &pSize,
+                       void *pUserData = 0) = 0;
 };
 
 //==============================================================================

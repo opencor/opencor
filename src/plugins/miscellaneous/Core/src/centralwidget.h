@@ -191,6 +191,8 @@ private:
     void fileReloadedOrSaved(const QString &pFileName,
                              const bool &pFileReloaded);
 
+    void setTabBarCurrentIndex(TabBarWidget *pTabBar, const int &pIndex);
+
 signals:
     void guiUpdated(Plugin *pViewPlugin, const QString &pFileName);
 

@@ -2361,7 +2361,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
         if (!pProperty || !needNlaSolverGuiUpdate) {
             foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName())) {
                 if (!pProperty || (pProperty == property)) {
-                    mSimulation->data()->addNlaSolverProperty(property->id(), property->valueAsVariant());
+                    mSimulation->data()->addNlaSolverProperty(property->id(), property->valueAsVariant(), pResetNlaSolver);
 
                     needNlaSolverGuiUpdate = true;
 

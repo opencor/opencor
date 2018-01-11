@@ -65,11 +65,10 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     Q_UNUSED(pModule);
     Q_UNUSED(pFunction);
 
-    if (pErrorCode != CV_WARNING) {
-        // CVODES generated an error, so forward it to the CvodesSolver object
+    // Forward errors to our CvodesSolver object
 
+    if (pErrorCode != CV_WARNING)
         static_cast<CvodesSolver *>(pUserData)->emitError(pErrorMessage);
-    }
 }
 
 //==============================================================================
@@ -149,8 +148,10 @@ void CvodesSolver::initialize(const double &pVoiStart,
                               double *pAlgebraic,
                               ComputeRatesFunction pComputeRates)
 {
+    // Check whether we need to initialise or reinitialise ourselves
+
     if (!mSolver) {
-        // Retrieve some of the CVODES properties
+        // Retrieve our properties
 
         double maximumStep = MaximumStepDefaultValue;
         int maximumNumberOfSteps = MaximumNumberOfStepsDefaultValue;
@@ -307,17 +308,17 @@ void CvodesSolver::initialize(const double &pVoiStart,
             return;
         }
 
-        // Initialise the ODE solver itself
+        // Initialise our ODE solver
 
         OpenCOR::Solver::OdeSolver::initialize(pVoiStart, pRatesStatesCount,
                                                pConstants, pRates, pStates,
                                                pAlgebraic, pComputeRates);
 
-        // Create the states vector
+        // Create our states vector
 
         mStatesVector = N_VMake_Serial(pRatesStatesCount, pStates);
 
-        // Create the CVODES solver
+        // Create our CVODES solver
 
         bool newtonIteration = !iterationType.compare(NewtonIteration);
 
@@ -328,26 +329,26 @@ void CvodesSolver::initialize(const double &pVoiStart,
 
         CVodeSetErrHandlerFn(mSolver, errorHandler, this);
 
-        // Initialise the CVODES solver
+        // Initialise our CVODES solver
 
         CVodeInit(mSolver, rhsFunction, pVoiStart, mStatesVector);
 
-        // Set some user data
+        // Set our user data
 
         mUserData = new CvodesSolverUserData(pConstants, pAlgebraic,
                                              pComputeRates);
 
         CVodeSetUserData(mSolver, mUserData);
 
-        // Set the maximum step
+        // Set our maximum step
 
         CVodeSetMaxStep(mSolver, maximumStep);
 
-        // Set the maximum number of steps
+        // Set our maximum number of steps
 
         CVodeSetMaxNumSteps(mSolver, maximumNumberOfSteps);
 
-        // Set the linear solver, if needed
+        // Set our linear solver, if needed
 
         if (newtonIteration) {
             if (!linearSolver.compare(DenseLinearSolver)) {
@@ -401,11 +402,11 @@ void CvodesSolver::initialize(const double &pVoiStart,
             }
         }
 
-        // Set the relative and absolute tolerances
+        // Set our relative and absolute tolerances
 
         CVodeSStolerances(mSolver, relativeTolerance, absoluteTolerance);
     } else {
-        // Reinitialise the CVODES object
+        // Reinitialise our CVODES object
 
         CVodeReInit(mSolver, pVoiStart, mStatesVector);
     }

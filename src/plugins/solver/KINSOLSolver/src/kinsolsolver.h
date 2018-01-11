@@ -90,19 +90,22 @@ private:
 
 //==============================================================================
 
-class KinsolSolver : public OpenCOR::Solver::NlaSolver
+class KinsolSolverData
 {
-    Q_OBJECT
-
 public:
-    explicit KinsolSolver();
-    ~KinsolSolver();
+    explicit KinsolSolverData(void *pSolver, N_Vector pParametersVector,
+                              N_Vector pOnesVector, SUNMatrix pMatrix,
+                              SUNLinearSolver pLinearSolver,
+                              KinsolSolverUserData *pUserData);
+    ~KinsolSolverData();
 
-    virtual void initialize(ComputeSystemFunction pComputeSystem,
-                            double *pParameters, const int &pSize,
-                            void *pUserData);
+    void * solver() const;
 
-    virtual void solve() const;
+    N_Vector parametersVector() const;
+    N_Vector onesVector() const;
+
+    KinsolSolverUserData * userData() const;
+    void setUserData(KinsolSolverUserData *pUserData);
 
 private:
     void *mSolver;
@@ -114,8 +117,23 @@ private:
     SUNLinearSolver mLinearSolver;
 
     KinsolSolverUserData *mUserData;
+};
 
-    void reset();
+//==============================================================================
+
+class KinsolSolver : public OpenCOR::Solver::NlaSolver
+{
+    Q_OBJECT
+
+public:
+    explicit KinsolSolver();
+    ~KinsolSolver();
+
+    virtual void solve(ComputeSystemFunction pComputeSystem,
+                       double *pParameters, const int &pSize, void *pUserData);
+
+private:
+    QMap<void *, KinsolSolverData *> mData;
 };
 
 //==============================================================================
