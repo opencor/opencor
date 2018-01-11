@@ -19,7 +19,7 @@
             headerAndContentsMenu("What Is New?", "..");
 
             var versions = jsonData.versions;
-            var typeWidths = { "Added": 37, "Improved": 51, "Fixed": 31 };
+            var typeWidths = { "added": 37, "improved": 51, "fixed": 31 };
 
             for (var versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
                 var version = versions[versionIndex];
@@ -73,13 +73,15 @@
                                 for (var subEntryIndex = 0; subEntryIndex < subEntries.length; ++subEntryIndex) {
                                     var subEntry = subEntries[subEntryIndex];
 
-                                    document.write("                    <li><img src=\"res/pics/"+subEntry.type.toLowerCase()+".png\" class=\"vcenter\" width="+typeWidths[subEntry.type]+" height=15> "+subEntry.description+"</li>\n");
+                                    document.write("                    <li><img src=\"res/pics/"+subEntry.type+".png\" class=\"vcenter\" width="+typeWidths[subEntry.type]+" height=15> "+subEntry.description+"</li>\n");
                                 }
 
                                 document.write("                </ul>\n");
                                 document.write("            </li>\n");
+                            } else if (entry.type === "comment") {
+                                document.write("            <li>"+entry.description+"</li>\n");
                             } else {
-                                document.write("            <li><img src=\"res/pics/"+entry.type.toLowerCase()+".png\" class=\"vcenter\" width="+typeWidths[entry.type]+" height=15> "+entry.description+"</li>\n");
+                                document.write("            <li><img src=\"res/pics/"+entry.type+".png\" class=\"vcenter\" width="+typeWidths[entry.type]+" height=15> "+entry.description+"</li>\n");
                             }
                         }
 
