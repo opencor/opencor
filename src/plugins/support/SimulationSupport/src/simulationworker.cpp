@@ -359,12 +359,7 @@ void SimulationWorker::started()
             // Reinitialise our solver, if (really) needed
 
             if (mReset && !mStopped) {
-                odeSolver->initialize(mCurrentPoint, mRuntime->statesCount(),
-                                      mSimulation->data()->constants(),
-                                      mSimulation->data()->rates(),
-                                      mSimulation->data()->states(),
-                                      mSimulation->data()->algebraic(),
-                                      mRuntime->computeRates());
+                odeSolver->reinitialize(mCurrentPoint);
 
                 mReset = false;
             }
