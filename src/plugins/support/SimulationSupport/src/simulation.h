@@ -79,7 +79,6 @@ public:
     double * rates() const;
     double * states() const;
     double * algebraic() const;
-    double * condVar() const;
 
     int delay() const;
     void setDelay(const int &pDelay);
@@ -101,14 +100,6 @@ public:
 
     Solver::Solver::Properties odeSolverProperties() const;
     void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
-
-    SolverInterface * daeSolverInterface() const;
-
-    QString daeSolverName() const;
-    void setDaeSolverName(const QString &pDaeSolverName);
-
-    Solver::Solver::Properties daeSolverProperties() const;
-    void addDaeSolverProperty(const QString &pName, const QVariant &pValue);
 
     SolverInterface * nlaSolverInterface() const;
 
@@ -152,7 +143,6 @@ private:
     double *mStates;
     double *mDummyStates;
     double *mAlgebraic;
-    double *mCondVar;
 
     double *mInitialConstants;
     double *mInitialStates;

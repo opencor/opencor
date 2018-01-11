@@ -19,8 +19,47 @@
         </script>
 
         <p>
-            The KINSOLSolver plugin uses <a href="http://computation.llnl.gov/projects/sundials/kinsol">KINSOL</a> to solve non-linear systems. It does not require any kind of customisation.
+            The KINSOLSolver plugin uses <a href="http://computation.llnl.gov/projects/sundials/kinsol">KINSOL</a> to solve systems of NLA equations and it can be customised through the following properties:
         </p>
+
+        <ul>
+            <li>
+                <strong>Maximum number of iterations:</strong> the maximum number of iterations used by the solver to solve the system (default: <code>200</code>).
+            </li>
+        </ul>
+
+        <ul>
+            <li>
+                <strong>Linear solver:</strong> the linear solver used by the solver (default: <code>Dense</code>).
+
+                <p class="nomargins note note1">
+                    <code>Dense</code>, <code>Banded</code>, <code>GMRES</code>, <code>BiCGStab</code> or <code>TFQMR</code> can be used.
+                </p>
+                <p class="nomargins note note2">
+                    <code>Banded</code> requires specifying both an upper and a lower half-bandwidth value.
+                </p>
+            </li>
+        </ul>
+
+        <ul>
+            <li>
+                <strong>Upper half-bandwidth:</strong> the upper half-bandwidth value used by the <code>Banded</code> linear solver (default: <code>0</code>).
+
+                <p class="nomargins note">
+                    the upper half-bandwidth value must be between <code>0</code> and <code>n-1</code> with <code>n</code> the number of NLA equations in the system.
+                </p>
+            </li>
+        </ul>
+
+        <ul>
+            <li>
+                <strong>Lower half-bandwidth:</strong> the lower half-bandwidth value used by the <code>Banded</code> linear solver (default: <code>0</code>).
+
+                <p class="nomargins note">
+                    the lower half-bandwidth value must be between <code>0</code> and <code>n-1</code> with <code>n</code> the number of NLA equations in the system.
+                </p>
+            </li>
+        </ul>
 
         <script type="text/javascript">
             copyright("../../..");

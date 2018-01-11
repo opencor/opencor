@@ -202,18 +202,11 @@ void SimulationWorker::started()
 
     emit running(false);
 
-    // Set up our ODE/DAE solver
+    // Set up our ODE solver
 
-    Solver::VoiSolver *voiSolver = 0;
-    Solver::OdeSolver *odeSolver = 0;
-    Solver::DaeSolver *daeSolver = 0;
+    Solver::OdeSolver *odeSolver = static_cast<Solver::OdeSolver *>(mSimulation->data()->odeSolverInterface()->solverInstance());
 
-    if (mRuntime->needOdeSolver())
-        voiSolver = odeSolver = static_cast<Solver::OdeSolver *>(mSimulation->data()->odeSolverInterface()->solverInstance());
-    else
-        voiSolver = daeSolver = static_cast<Solver::DaeSolver *>(mSimulation->data()->daeSolverInterface()->solverInstance());
-
-    // Set our NLA solver, if needed
+    // Set up our NLA solver, if needed
     // Note: we unset it at the end of this method...
 
     Solver::NlaSolver *nlaSolver = 0;
@@ -229,13 +222,8 @@ void SimulationWorker::started()
     mStopped = false;
     mError = false;
 
-    if (odeSolver) {
-        connect(odeSolver, SIGNAL(error(const QString &)),
-                this, SLOT(emitError(const QString &)));
-    } else {
-        connect(daeSolver, SIGNAL(error(const QString &)),
-                this, SLOT(emitError(const QString &)));
-    }
+    connect(odeSolver, SIGNAL(error(const QString &)),
+            this, SLOT(emitError(const QString &)));
 
     if (nlaSolver) {
         connect(nlaSolver, SIGNAL(error(const QString &)),
@@ -253,36 +241,18 @@ void SimulationWorker::started()
 
     mCurrentPoint = startingPoint;
 
-    // Initialise our ODE/DAE solver
+    // Initialise our ODE solver
 
-    if (odeSolver) {
-        odeSolver->setProperties(mSimulation->data()->odeSolverProperties());
+    odeSolver->setProperties(mSimulation->data()->odeSolverProperties());
 
-        odeSolver->initialize(mCurrentPoint,
-                              mRuntime->statesCount(),
-                              mSimulation->data()->constants(),
-                              mSimulation->data()->rates(),
-                              mSimulation->data()->states(),
-                              mSimulation->data()->algebraic(),
-                              mRuntime->computeOdeRates());
-    } else {
-        daeSolver->setProperties(mSimulation->data()->daeSolverProperties());
+    odeSolver->initialize(mCurrentPoint, mRuntime->statesCount(),
+                          mSimulation->data()->constants(),
+                          mSimulation->data()->rates(),
+                          mSimulation->data()->states(),
+                          mSimulation->data()->algebraic(),
+                          mRuntime->computeRates());
 
-        daeSolver->initialize(mCurrentPoint, endingPoint,
-                              mRuntime->statesCount(),
-                              mRuntime->condVarCount(),
-                              mSimulation->data()->constants(),
-                              mSimulation->data()->rates(),
-                              mSimulation->data()->states(),
-                              mSimulation->data()->algebraic(),
-                              mSimulation->data()->condVar(),
-                              mRuntime->computeDaeRates(),
-                              mRuntime->computeEssentialVariables(),
-                              mRuntime->computeRootInformation(),
-                              mRuntime->computeStateInformation());
-    }
-
-    // Initialise our NLA solver
+    // Initialise our NLA solver, if any
 
     if (nlaSolver)
         nlaSolver->setProperties(mSimulation->data()->nlaSolverProperties());
@@ -318,25 +288,18 @@ void SimulationWorker::started()
         QMutex pausedMutex;
 
         forever {
-            // Reinitialise our solver, if have an NLA solver
+            // Reinitialise our solver, if we have an NLA solver
             // Note: indeed, with a solver such as CVODE, to solve an NLA system
             //       requires updating its internals...
 
-            if (nlaSolver) {
-                odeSolver->initialize(mCurrentPoint,
-                                      mRuntime->statesCount(),
-                                      mSimulation->data()->constants(),
-                                      mSimulation->data()->rates(),
-                                      mSimulation->data()->states(),
-                                      mSimulation->data()->algebraic(),
-                                      mRuntime->computeOdeRates());
-            }
+            if (nlaSolver)
+                odeSolver->reinitialize(mCurrentPoint);
 
             // Determine our next point and compute our model up to it
 
             ++pointCounter;
 
-            voiSolver->solve(mCurrentPoint,
+            odeSolver->solve(mCurrentPoint,
                              increasingPoints?
                                  qMin(endingPoint, startingPoint+pointCounter*pointInterval):
                                  qMax(endingPoint, startingPoint+pointCounter*pointInterval));
@@ -396,28 +359,12 @@ void SimulationWorker::started()
             // Reinitialise our solver, if (really) needed
 
             if (mReset && !mStopped) {
-                if (odeSolver) {
-                    odeSolver->initialize(mCurrentPoint,
-                                          mRuntime->statesCount(),
-                                          mSimulation->data()->constants(),
-                                          mSimulation->data()->rates(),
-                                          mSimulation->data()->states(),
-                                          mSimulation->data()->algebraic(),
-                                          mRuntime->computeOdeRates());
-                } else {
-                    daeSolver->initialize(mCurrentPoint, endingPoint,
-                                          mRuntime->statesCount(),
-                                          mRuntime->condVarCount(),
-                                          mSimulation->data()->constants(),
-                                          mSimulation->data()->rates(),
-                                          mSimulation->data()->states(),
-                                          mSimulation->data()->algebraic(),
-                                          mSimulation->data()->condVar(),
-                                          mRuntime->computeDaeRates(),
-                                          mRuntime->computeEssentialVariables(),
-                                          mRuntime->computeRootInformation(),
-                                          mRuntime->computeStateInformation());
-                }
+                odeSolver->initialize(mCurrentPoint, mRuntime->statesCount(),
+                                      mSimulation->data()->constants(),
+                                      mSimulation->data()->rates(),
+                                      mSimulation->data()->states(),
+                                      mSimulation->data()->algebraic(),
+                                      mRuntime->computeRates());
 
                 mReset = false;
             }
@@ -437,7 +384,7 @@ void SimulationWorker::started()
 
     // Delete our solver(s)
 
-    delete voiSolver;
+    delete odeSolver;
 
     if (nlaSolver) {
         delete nlaSolver;

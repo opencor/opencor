@@ -94,16 +94,11 @@ SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInform
     // Add properties for our different solvers
 
     mOdeSolverData = addSolverProperties(Solver::Ode);
-    mDaeSolverData = addSolverProperties(Solver::Dae);
     mNlaSolverData = addSolverProperties(Solver::Nla);
 
     // Show/hide the relevant properties
 
-    if (mOdeSolverData)
-        doSolverChanged(mOdeSolverData, mOdeSolverData->solversListProperty()->value());
-
-    if (mDaeSolverData)
-        doSolverChanged(mDaeSolverData, mDaeSolverData->solversListProperty()->value());
+    doSolverChanged(mOdeSolverData, mOdeSolverData->solversListProperty()->value());
 
     if (mNlaSolverData)
         doSolverChanged(mNlaSolverData, mNlaSolverData->solversListProperty()->value());
@@ -125,7 +120,6 @@ SimulationExperimentViewInformationSolversWidget::~SimulationExperimentViewInfor
     // Delete some internal objects
 
     delete mOdeSolverData;
-    delete mDaeSolverData;
     delete mNlaSolverData;
 }
 
@@ -135,19 +129,10 @@ void SimulationExperimentViewInformationSolversWidget::retranslateUi()
 {
     // Update our property names
 
-    if (mOdeSolverData) {
-        mOdeSolverData->solversProperty()->setName(tr("ODE solver"));
-        mOdeSolverData->solversListProperty()->setName(tr("Name"));
+    mOdeSolverData->solversProperty()->setName(tr("ODE solver"));
+    mOdeSolverData->solversListProperty()->setName(tr("Name"));
 
-        mOdeSolverData->solversListProperty()->setEmptyListValue(tr("None available"));
-    }
-
-    if (mDaeSolverData) {
-        mDaeSolverData->solversProperty()->setName(tr("DAE solver"));
-        mDaeSolverData->solversListProperty()->setName(tr("Name"));
-
-        mDaeSolverData->solversListProperty()->setEmptyListValue(tr("None available"));
-    }
+    mOdeSolverData->solversListProperty()->setEmptyListValue(tr("None available"));
 
     if (mNlaSolverData) {
         mNlaSolverData->solversProperty()->setName(tr("NLA solver"));
@@ -330,13 +315,9 @@ void SimulationExperimentViewInformationSolversWidget::initialize(SimulationSupp
     // Make sure that the CellML file runtime is valid
 
     if (pSimulation->runtime()->isValid()) {
-        // Show/hide the ODE/DAE/NLA solver information
+        // Show/hide the ODE/NLA solver information
 
-        if (mOdeSolverData)
-            mOdeSolverData->solversProperty()->setVisible(pSimulation->runtime()->needOdeSolver());
-
-        if (mDaeSolverData)
-            mDaeSolverData->solversProperty()->setVisible(pSimulation->runtime()->needDaeSolver());
+        mOdeSolverData->solversProperty()->setVisible(true);
 
         if (mNlaSolverData)
             mNlaSolverData->solversProperty()->setVisible(pSimulation->runtime()->needNlaSolver());
@@ -347,7 +328,6 @@ void SimulationExperimentViewInformationSolversWidget::initialize(SimulationSupp
     QString voiUnit = pSimulation->runtime()->variableOfIntegration()->unit();
 
     setPropertiesUnit(mOdeSolverData, voiUnit);
-    setPropertiesUnit(mDaeSolverData, voiUnit);
     setPropertiesUnit(mNlaSolverData, voiUnit);
 
     // Initialise our simulation's NLA solver's properties, so that we can then
@@ -370,16 +350,7 @@ QStringList SimulationExperimentViewInformationSolversWidget::odeSolvers() const
 {
     // Return the available ODE solvers, if any
 
-    return mOdeSolverData?mOdeSolverData->solversListProperty()->listValues():QStringList();
-}
-
-//==============================================================================
-
-QStringList SimulationExperimentViewInformationSolversWidget::daeSolvers() const
-{
-    // Return the available DAE solvers, if any
-
-    return mDaeSolverData?mDaeSolverData->solversListProperty()->listValues():QStringList();
+    return mOdeSolverData->solversListProperty()->listValues();
 }
 
 //==============================================================================
@@ -398,15 +369,6 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
     // Return our ODE solver data
 
     return mOdeSolverData;
-}
-
-//==============================================================================
-
-SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewInformationSolversWidget::daeSolverData() const
-{
-    // Return our DAE solver data
-
-    return mDaeSolverData;
 }
 
 //==============================================================================
@@ -462,11 +424,8 @@ void SimulationExperimentViewInformationSolversWidget::updateGui(SimulationExper
 {
     // Update our solver(s) properties visibility
 
-    if (mOdeSolverData && (!pSolverData || (pSolverData == mOdeSolverData)))
+    if (!pSolverData || (pSolverData == mOdeSolverData))
         updateSolverGui(mOdeSolverData);
-
-    if (mDaeSolverData && (!pSolverData || (pSolverData == mDaeSolverData)))
-        updateSolverGui(mDaeSolverData);
 
     if (mNlaSolverData && (!pSolverData || (pSolverData == mNlaSolverData)))
         updateSolverGui(mNlaSolverData);
@@ -499,19 +458,17 @@ void SimulationExperimentViewInformationSolversWidget::doSolverChanged(Simulatio
 
 void SimulationExperimentViewInformationSolversWidget::solverChanged(Core::Property *pProperty)
 {
-    // Try, for the ODE/DAE/NLA solvers list property, to handle the change in
-    // the list property
-    // Note: the ODE/DAE/NLA solvers list property is our first property, hence
-    //       we make sure that its row number is equal to zero (in case there is
+    // Try, for the ODE/NLA solvers list property, to handle the change in the
+    // list property
+    // Note: the ODE/NLA solvers list property is our first property, hence we
+    //       make sure that its row number is equal to zero (in case there is
     //       one or several other list properties, as is the case for the CVODE
-    //       and IDA solvers)...
+    //       solver)...
 
     if (!pProperty->row()) {
-        doSolverChanged((mOdeSolverData && (pProperty == mOdeSolverData->solversListProperty()))?
+        doSolverChanged((pProperty == mOdeSolverData->solversListProperty())?
                             mOdeSolverData:
-                            (mDaeSolverData && (pProperty == mDaeSolverData->solversListProperty()))?
-                                mDaeSolverData:
-                                mNlaSolverData,
+                            mNlaSolverData,
                         pProperty->value());
     }
 }

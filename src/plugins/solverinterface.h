@@ -74,10 +74,18 @@ signals:
 
 //==============================================================================
 
-class VoiSolver : public Solver
+class OdeSolver : public Solver
 {
 public:
-    explicit VoiSolver();
+    typedef void (*ComputeRatesFunction)(double pVoi, double *pConstants, double *pRates, double *pStates, double *pAlgebraic);
+
+    explicit OdeSolver();
+
+    virtual void initialize(const double &pVoi, const int &pRatesStatesCount,
+                            double *pConstants, double *pRates, double *pStates,
+                            double *pAlgebraic,
+                            ComputeRatesFunction pComputeRates);
+    virtual void reinitialize(const double &pVoi);
 
     virtual void solve(double &pVoi, const double &pVoiEnd) const = 0;
 
@@ -88,55 +96,8 @@ protected:
     double *mStates;
     double *mRates;
     double *mAlgebraic;
-};
 
-//==============================================================================
-
-class OdeSolver : public VoiSolver
-{
-public:
-    typedef void (*ComputeRatesFunction)(double pVoi, double *pConstants, double *pRates, double *pStates, double *pAlgebraic);
-
-    explicit OdeSolver();
-
-    virtual void initialize(const double &pVoiStart,
-                            const int &pRatesStatesCount, double *pConstants,
-                            double *pRates, double *pStates, double *pAlgebraic,
-                            ComputeRatesFunction pComputeRates);
-
-protected:
     ComputeRatesFunction mComputeRates;
-};
-
-//==============================================================================
-
-class DaeSolver : public VoiSolver
-{
-public:
-    typedef void (*ComputeRatesFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar, double *pResId);
-    typedef void (*ComputeEssentialVariablesFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar);
-    typedef void (*ComputeRootInformationFunction)(double pVoi, double *pConstants, double *pRates, double *pOldRates, double *pStates, double *pOldStates, double *pAlgebraic, double *pCondVar);
-    typedef void (*ComputeStateInformationFunction)(double *pStateInfo);
-
-    explicit DaeSolver();
-    ~DaeSolver();
-
-    virtual void initialize(const double &pVoiStart, const double &pVoiEnd,
-                            const int &pRatesStatesCount,
-                            const int &pCondVarCount, double *pConstants,
-                            double *pRates, double *pStates, double *pAlgebraic,
-                            double *pCondVar,
-                            ComputeRatesFunction pComputeRates,
-                            ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                            ComputeRootInformationFunction pComputeRootInformation,
-                            ComputeStateInformationFunction pComputeStateInformation);
-
-protected:
-    int mCondVarCount;
-
-    double *mOldRates;
-    double *mOldStates;
-    double *mCondVar;
 };
 
 //==============================================================================
@@ -161,7 +122,6 @@ void unsetNlaSolver(const QString &pRuntimeAddress);
 //==============================================================================
 
 enum Type {
-    Dae,
     Nla,
     Ode
 };

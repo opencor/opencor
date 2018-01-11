@@ -142,274 +142,274 @@ CvodesSolver::~CvodesSolver()
 
 //==============================================================================
 
-void CvodesSolver::initialize(const double &pVoiStart,
-                              const int &pRatesStatesCount, double *pConstants,
-                              double *pRates, double *pStates,
-                              double *pAlgebraic,
+void CvodesSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
+                              double *pConstants, double *pRates,
+                              double *pStates, double *pAlgebraic,
                               ComputeRatesFunction pComputeRates)
 {
-    // Check whether we need to initialise or reinitialise ourselves
+    // Retrieve our properties
 
-    if (!mSolver) {
-        // Retrieve our properties
+    double maximumStep = MaximumStepDefaultValue;
+    int maximumNumberOfSteps = MaximumNumberOfStepsDefaultValue;
+    QString integrationMethod = IntegrationMethodDefaultValue;
+    QString iterationType = IterationTypeDefaultValue;
+    QString linearSolver = LinearSolverDefaultValue;
+    QString preconditioner = PreconditionerDefaultValue;
+    int upperHalfBandwidth = UpperHalfBandwidthDefaultValue;
+    int lowerHalfBandwidth = LowerHalfBandwidthDefaultValue;
+    double relativeTolerance = RelativeToleranceDefaultValue;
+    double absoluteTolerance = AbsoluteToleranceDefaultValue;
 
-        double maximumStep = MaximumStepDefaultValue;
-        int maximumNumberOfSteps = MaximumNumberOfStepsDefaultValue;
-        QString integrationMethod = IntegrationMethodDefaultValue;
-        QString iterationType = IterationTypeDefaultValue;
-        QString linearSolver = LinearSolverDefaultValue;
-        QString preconditioner = PreconditionerDefaultValue;
-        int upperHalfBandwidth = UpperHalfBandwidthDefaultValue;
-        int lowerHalfBandwidth = LowerHalfBandwidthDefaultValue;
-        double relativeTolerance = RelativeToleranceDefaultValue;
-        double absoluteTolerance = AbsoluteToleranceDefaultValue;
+    if (mProperties.contains(MaximumStepId)) {
+        maximumStep = mProperties.value(MaximumStepId).toDouble();
+    } else {
+        emit error(tr("the \"Maximum step\" property value could not be retrieved"));
 
-        if (mProperties.contains(MaximumStepId)) {
-            maximumStep = mProperties.value(MaximumStepId).toDouble();
-        } else {
-            emit error(tr("the \"Maximum step\" property value could not be retrieved"));
+        return;
+    }
 
-            return;
-        }
+    if (mProperties.contains(MaximumNumberOfStepsId)) {
+        maximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsId).toInt();
+    } else {
+        emit error(tr("the \"Maximum number of steps\" property value could not be retrieved"));
 
-        if (mProperties.contains(MaximumNumberOfStepsId)) {
-            maximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsId).toInt();
-        } else {
-            emit error(tr("the \"Maximum number of steps\" property value could not be retrieved"));
+        return;
+    }
 
-            return;
-        }
+    if (mProperties.contains(IntegrationMethodId)) {
+        integrationMethod = mProperties.value(IntegrationMethodId).toString();
+    } else {
+        emit error(tr("the \"Integration method\" property value could not be retrieved"));
 
-        if (mProperties.contains(IntegrationMethodId)) {
-            integrationMethod = mProperties.value(IntegrationMethodId).toString();
-        } else {
-            emit error(tr("the \"Integration method\" property value could not be retrieved"));
+        return;
+    }
 
-            return;
-        }
+    if (mProperties.contains(IterationTypeId)) {
+        iterationType = mProperties.value(IterationTypeId).toString();
 
-        if (mProperties.contains(IterationTypeId)) {
-            iterationType = mProperties.value(IterationTypeId).toString();
+        if (!iterationType.compare(NewtonIteration)) {
+            // We are dealing with a Newton iteration, so retrieve and check its
+            // linear solver
 
-            if (!iterationType.compare(NewtonIteration)) {
-                // We are dealing with a Newton iteration, so retrieve and check
-                // its linear solver
+            if (mProperties.contains(LinearSolverId)) {
+                linearSolver = mProperties.value(LinearSolverId).toString();
 
-                if (mProperties.contains(LinearSolverId)) {
-                    linearSolver = mProperties.value(LinearSolverId).toString();
+                bool needUpperAndLowerHalfBandwidths = false;
 
-                    bool needUpperAndLowerHalfBandwidths = false;
+                if (   !linearSolver.compare(DenseLinearSolver)
+                    || !linearSolver.compare(DiagonalLinearSolver)) {
+                    // We are dealing with a dense/diagonal linear solver, so
+                    // nothing more to do
+                } else if (!linearSolver.compare(BandedLinearSolver)) {
+                    // We are dealing with a banded linear solver, so we need
+                    // both an upper and a lower half bandwidth
 
-                    if (   !linearSolver.compare(DenseLinearSolver)
-                        || !linearSolver.compare(DiagonalLinearSolver)) {
-                        // We are dealing with a dense/diagonal linear solver,
-                        // so nothing more to do
-                    } else if (!linearSolver.compare(BandedLinearSolver)) {
-                        // We are dealing with a banded linear solver, so we
+                    needUpperAndLowerHalfBandwidths = true;
+                } else {
+                    // We are dealing with a GMRES/Bi-CGStab/TFQMR linear
+                    // solver, so retrieve and check its preconditioner
+
+                    if (mProperties.contains(PreconditionerId)) {
+                        preconditioner = mProperties.value(PreconditionerId).toString();
+                    } else {
+                        emit error(tr("the \"Preconditioner\" property value could not be retrieved"));
+
+                        return;
+                    }
+
+                    if (!preconditioner.compare(BandedPreconditioner)) {
+                        // We are dealing with a banded preconditioner, so we
                         // need both an upper and a lower half bandwidth
 
                         needUpperAndLowerHalfBandwidths = true;
-                    } else {
-                        // We are dealing with a GMRES/Bi-CGStab/TFQMR linear
-                        // solver, so retrieve and check its preconditioner
-
-                        if (mProperties.contains(PreconditionerId)) {
-                            preconditioner = mProperties.value(PreconditionerId).toString();
-                        } else {
-                            emit error(tr("the \"Preconditioner\" property value could not be retrieved"));
-
-                            return;
-                        }
-
-                        if (!preconditioner.compare(BandedPreconditioner)) {
-                            // We are dealing with a banded preconditioner, so
-                            // we need both an upper and a lower half bandwidth
-
-                            needUpperAndLowerHalfBandwidths = true;
-                        }
                     }
-
-                    if (needUpperAndLowerHalfBandwidths) {
-                        if (mProperties.contains(UpperHalfBandwidthId)) {
-                            upperHalfBandwidth = mProperties.value(UpperHalfBandwidthId).toInt();
-
-                            if (   (upperHalfBandwidth < 0)
-                                || (upperHalfBandwidth >= pRatesStatesCount)) {
-                                emit error(tr("the \"Upper half-bandwidth\" property must have a value between 0 and %1").arg(pRatesStatesCount-1));
-
-                                return;
-                            }
-                        } else {
-                            emit error(tr("the \"Upper half-bandwidth\" property value could not be retrieved"));
-
-                            return;
-                        }
-
-                        if (mProperties.contains(LowerHalfBandwidthId)) {
-                            lowerHalfBandwidth = mProperties.value(LowerHalfBandwidthId).toInt();
-
-                            if (   (lowerHalfBandwidth < 0)
-                                || (lowerHalfBandwidth >= pRatesStatesCount)) {
-                                emit error(tr("the \"Lower half-bandwidth\" property must have a value between 0 and %1").arg(pRatesStatesCount-1));
-
-                                return;
-                            }
-                        } else {
-                            emit error(tr("the \"Lower half-bandwidth\" property value could not be retrieved"));
-
-                            return;
-                        }
-                    }
-                } else {
-                    emit error(tr("the \"Linear solver\" property value could not be retrieved"));
-
-                    return;
                 }
-            }
-        } else {
-            emit error(tr("the \"Iteration type\" property value could not be retrieved"));
 
-            return;
-        }
+                if (needUpperAndLowerHalfBandwidths) {
+                    if (mProperties.contains(UpperHalfBandwidthId)) {
+                        upperHalfBandwidth = mProperties.value(UpperHalfBandwidthId).toInt();
 
-        if (mProperties.contains(RelativeToleranceId)) {
-            relativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
+                        if (   (upperHalfBandwidth < 0)
+                            || (upperHalfBandwidth >= pRatesStatesCount)) {
+                            emit error(tr("the \"Upper half-bandwidth\" property must have a value between 0 and %1").arg(pRatesStatesCount-1));
 
-            if (relativeTolerance < 0) {
-                emit error(tr("the \"Relative tolerance\" property must have a value greater than or equal to 0"));
+                            return;
+                        }
+                    } else {
+                        emit error(tr("the \"Upper half-bandwidth\" property value could not be retrieved"));
 
-                return;
-            }
-        } else {
-            emit error(tr("the \"Relative tolerance\" property value could not be retrieved"));
+                        return;
+                    }
 
-            return;
-        }
+                    if (mProperties.contains(LowerHalfBandwidthId)) {
+                        lowerHalfBandwidth = mProperties.value(LowerHalfBandwidthId).toInt();
 
-        if (mProperties.contains(AbsoluteToleranceId)) {
-            absoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
+                        if (   (lowerHalfBandwidth < 0)
+                            || (lowerHalfBandwidth >= pRatesStatesCount)) {
+                            emit error(tr("the \"Lower half-bandwidth\" property must have a value between 0 and %1").arg(pRatesStatesCount-1));
 
-            if (absoluteTolerance < 0) {
-                emit error(tr("the \"Absolute tolerance\" property must have a value greater than or equal to 0"));
+                            return;
+                        }
+                    } else {
+                        emit error(tr("the \"Lower half-bandwidth\" property value could not be retrieved"));
 
-                return;
-            }
-        } else {
-            emit error(tr("the \"Absolute tolerance\" property value could not be retrieved"));
-
-            return;
-        }
-
-        if (mProperties.contains(InterpolateSolutionId)) {
-            mInterpolateSolution = mProperties.value(InterpolateSolutionId).toBool();
-        } else {
-            emit error(tr("the \"Interpolate solution\" property value could not be retrieved"));
-
-            return;
-        }
-
-        // Initialise our ODE solver
-
-        OpenCOR::Solver::OdeSolver::initialize(pVoiStart, pRatesStatesCount,
-                                               pConstants, pRates, pStates,
-                                               pAlgebraic, pComputeRates);
-
-        // Create our states vector
-
-        mStatesVector = N_VMake_Serial(pRatesStatesCount, pStates);
-
-        // Create our CVODES solver
-
-        bool newtonIteration = !iterationType.compare(NewtonIteration);
-
-        mSolver = CVodeCreate(!integrationMethod.compare(BdfMethod)?CV_BDF:CV_ADAMS,
-                              newtonIteration?CV_NEWTON:CV_FUNCTIONAL);
-
-        // Use our own error handler
-
-        CVodeSetErrHandlerFn(mSolver, errorHandler, this);
-
-        // Initialise our CVODES solver
-
-        CVodeInit(mSolver, rhsFunction, pVoiStart, mStatesVector);
-
-        // Set our user data
-
-        mUserData = new CvodesSolverUserData(pConstants, pAlgebraic,
-                                             pComputeRates);
-
-        CVodeSetUserData(mSolver, mUserData);
-
-        // Set our maximum step
-
-        CVodeSetMaxStep(mSolver, maximumStep);
-
-        // Set our maximum number of steps
-
-        CVodeSetMaxNumSteps(mSolver, maximumNumberOfSteps);
-
-        // Set our linear solver, if needed
-
-        if (newtonIteration) {
-            if (!linearSolver.compare(DenseLinearSolver)) {
-                mMatrix = SUNDenseMatrix(pRatesStatesCount, pRatesStatesCount);
-                mLinearSolver = SUNDenseLinearSolver(mStatesVector, mMatrix);
-
-                CVDlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
-            } else if (!linearSolver.compare(BandedLinearSolver)) {
-                mMatrix = SUNBandMatrix(pRatesStatesCount,
-                                        upperHalfBandwidth, lowerHalfBandwidth,
-                                        upperHalfBandwidth+lowerHalfBandwidth);
-                mLinearSolver = SUNBandLinearSolver(mStatesVector, mMatrix);
-
-                CVDlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
-            } else if (!linearSolver.compare(DiagonalLinearSolver)) {
-                CVDiag(mSolver);
+                        return;
+                    }
+                }
             } else {
-                // We are dealing with a GMRES/Bi-CGStab/TFQMR linear solver
+                emit error(tr("the \"Linear solver\" property value could not be retrieved"));
 
-                if (!preconditioner.compare(BandedPreconditioner)) {
-                    if (!linearSolver.compare(GmresLinearSolver)) {
-                        mLinearSolver = SUNSPGMR(mStatesVector, PREC_LEFT, 0);
+                return;
+            }
+        }
+    } else {
+        emit error(tr("the \"Iteration type\" property value could not be retrieved"));
 
-                        CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                    } else if (!linearSolver.compare(BiCgStabLinearSolver)) {
-                        mLinearSolver = SUNSPBCGS(mStatesVector, PREC_LEFT, 0);
+        return;
+    }
 
-                        CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                    } else {
-                        mLinearSolver = SUNSPTFQMR(mStatesVector, PREC_LEFT, 0);
+    if (mProperties.contains(RelativeToleranceId)) {
+        relativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
 
-                        CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                    }
+        if (relativeTolerance < 0) {
+            emit error(tr("the \"Relative tolerance\" property must have a value greater than or equal to 0"));
 
-                    CVBandPrecInit(mSolver, pRatesStatesCount, upperHalfBandwidth, lowerHalfBandwidth);
+            return;
+        }
+    } else {
+        emit error(tr("the \"Relative tolerance\" property value could not be retrieved"));
+
+        return;
+    }
+
+    if (mProperties.contains(AbsoluteToleranceId)) {
+        absoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
+
+        if (absoluteTolerance < 0) {
+            emit error(tr("the \"Absolute tolerance\" property must have a value greater than or equal to 0"));
+
+            return;
+        }
+    } else {
+        emit error(tr("the \"Absolute tolerance\" property value could not be retrieved"));
+
+        return;
+    }
+
+    if (mProperties.contains(InterpolateSolutionId)) {
+        mInterpolateSolution = mProperties.value(InterpolateSolutionId).toBool();
+    } else {
+        emit error(tr("the \"Interpolate solution\" property value could not be retrieved"));
+
+        return;
+    }
+
+    // Initialise our ODE solver
+
+    OpenCOR::Solver::OdeSolver::initialize(pVoi, pRatesStatesCount, pConstants,
+                                           pRates, pStates, pAlgebraic,
+                                           pComputeRates);
+
+    // Create our states vector
+
+    mStatesVector = N_VMake_Serial(pRatesStatesCount, pStates);
+
+    // Create our CVODES solver
+
+    bool newtonIteration = !iterationType.compare(NewtonIteration);
+
+    mSolver = CVodeCreate(!integrationMethod.compare(BdfMethod)?CV_BDF:CV_ADAMS,
+                          newtonIteration?CV_NEWTON:CV_FUNCTIONAL);
+
+    // Use our own error handler
+
+    CVodeSetErrHandlerFn(mSolver, errorHandler, this);
+
+    // Initialise our CVODES solver
+
+    CVodeInit(mSolver, rhsFunction, pVoi, mStatesVector);
+
+    // Set our user data
+
+    mUserData = new CvodesSolverUserData(pConstants, pAlgebraic,
+                                         pComputeRates);
+
+    CVodeSetUserData(mSolver, mUserData);
+
+    // Set our maximum step
+
+    CVodeSetMaxStep(mSolver, maximumStep);
+
+    // Set our maximum number of steps
+
+    CVodeSetMaxNumSteps(mSolver, maximumNumberOfSteps);
+
+    // Set our linear solver, if needed
+
+    if (newtonIteration) {
+        if (!linearSolver.compare(DenseLinearSolver)) {
+            mMatrix = SUNDenseMatrix(pRatesStatesCount, pRatesStatesCount);
+            mLinearSolver = SUNDenseLinearSolver(mStatesVector, mMatrix);
+
+            CVDlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
+        } else if (!linearSolver.compare(BandedLinearSolver)) {
+            mMatrix = SUNBandMatrix(pRatesStatesCount,
+                                    upperHalfBandwidth, lowerHalfBandwidth,
+                                    upperHalfBandwidth+lowerHalfBandwidth);
+            mLinearSolver = SUNBandLinearSolver(mStatesVector, mMatrix);
+
+            CVDlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
+        } else if (!linearSolver.compare(DiagonalLinearSolver)) {
+            CVDiag(mSolver);
+        } else {
+            // We are dealing with a GMRES/Bi-CGStab/TFQMR linear solver
+
+            if (!preconditioner.compare(BandedPreconditioner)) {
+                if (!linearSolver.compare(GmresLinearSolver)) {
+                    mLinearSolver = SUNSPGMR(mStatesVector, PREC_LEFT, 0);
+
+                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
+                } else if (!linearSolver.compare(BiCgStabLinearSolver)) {
+                    mLinearSolver = SUNSPBCGS(mStatesVector, PREC_LEFT, 0);
+
+                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
                 } else {
-                    if (!linearSolver.compare(GmresLinearSolver)) {
-                        mLinearSolver = SUNSPGMR(mStatesVector, PREC_NONE, 0);
+                    mLinearSolver = SUNSPTFQMR(mStatesVector, PREC_LEFT, 0);
 
-                        CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                    } else if (!linearSolver.compare(BiCgStabLinearSolver)) {
-                        mLinearSolver = SUNSPBCGS(mStatesVector, PREC_NONE, 0);
+                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
+                }
 
-                        CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                    } else {
-                        mLinearSolver = SUNSPTFQMR(mStatesVector, PREC_NONE, 0);
+                CVBandPrecInit(mSolver, pRatesStatesCount, upperHalfBandwidth, lowerHalfBandwidth);
+            } else {
+                if (!linearSolver.compare(GmresLinearSolver)) {
+                    mLinearSolver = SUNSPGMR(mStatesVector, PREC_NONE, 0);
 
-                        CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                    }
+                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
+                } else if (!linearSolver.compare(BiCgStabLinearSolver)) {
+                    mLinearSolver = SUNSPBCGS(mStatesVector, PREC_NONE, 0);
+
+                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
+                } else {
+                    mLinearSolver = SUNSPTFQMR(mStatesVector, PREC_NONE, 0);
+
+                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
                 }
             }
         }
-
-        // Set our relative and absolute tolerances
-
-        CVodeSStolerances(mSolver, relativeTolerance, absoluteTolerance);
-    } else {
-        // Reinitialise our CVODES object
-
-        CVodeReInit(mSolver, pVoiStart, mStatesVector);
     }
+
+    // Set our relative and absolute tolerances
+
+    CVodeSStolerances(mSolver, relativeTolerance, absoluteTolerance);
+}
+
+//==============================================================================
+
+void CvodesSolver::reinitialize(const double &pVoi)
+{
+    // Reinitialise our CVODES object
+
+    CVodeReInit(mSolver, pVoi, mStatesVector);
 }
 
 //==============================================================================
