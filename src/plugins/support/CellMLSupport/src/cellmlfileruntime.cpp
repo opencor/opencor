@@ -287,15 +287,6 @@ bool CellmlFileRuntime::isValid() const
 
 //==============================================================================
 
-CellmlFileRuntime::ModelType CellmlFileRuntime::modelType() const
-{
-    // Return the type of model the runtime is for
-
-    return mModelType;
-}
-
-//==============================================================================
-
 bool CellmlFileRuntime::needNlaSolver() const
 {
     // Return whether the model needs an NLA solver
@@ -423,7 +414,6 @@ void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
 {
     // Reset all of the runtime's properties
 
-    mModelType = CellmlFileRuntime::Ode;
     mAtLeastOneNlaSystem = false;
 
     resetCodeInformation();
@@ -502,7 +492,7 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
 
 void CellmlFileRuntime::retrieveCodeInformation(iface::cellml_api::Model *pModel)
 {
-    // Get a code generator bootstrap and create an ODE code generator
+    // Get a code generator bootstrap and create a code generator
 
     ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
     ObjRef<iface::cellml_services::CodeGenerator> codeGenerator = codeGeneratorBootstrap->createCodeGenerator();
@@ -521,7 +511,7 @@ void CellmlFileRuntime::retrieveCodeInformation(iface::cellml_api::Model *pModel
         unknownProblemDuringModelCodeGenerationIssue();
     }
 
-    // Check the outcome of the ODE code generation
+    // Check the outcome of the code generation
 
     if (mIssues.count())
         resetCodeInformation();
@@ -636,45 +626,22 @@ void CellmlFileRuntime::update()
 
     reset(true, true);
 
-    // Check that the model is either a 'simple' ODE model or a DAE model
-    // Note #1: we don't check whether a model is valid, since all we want is to
-    //          update its runtime (which has nothing to do with editing or even
-    //          validating a model), so if it can be done then great otherwise
-    //          tough luck (so to speak)...
-    // Note #2: in order to do so, we need to get a 'normal' code generator (as
-    //          opposed to an IDA, i.e. DAE, code generator) since if the model
-    //          is correctly constrained, then we can check whether some of its
-    //          equations were flagged as needing a Newton-Raphson evaluation,
-    //          in which case we would be dealing with a DAE model...
-    // Note #3: ideally, there would be a more convenient way to determine the
-    //          type of a model, but there isn't...
+    // Retrieve the ML model associated with the CellML file
 
     iface::cellml_api::Model *model = mCellmlFile->model();
 
     if (!model)
         return;
 
-    // Retrieve the model's type
-    // Note: this can be done by checking whether some equations were flagged
-    //       as needing a Newton-Raphson evaluation...
+    // Retrieve the code information for the model
 
     retrieveCodeInformation(model);
 
     if (!mCodeInformation)
         return;
 
-//---OPENCOR--- UNTIL WE CAN USE libCellML (RATHER THAN THE CellML API), WE
-//              CONSIDER ALL MODELS TO BE ODE MODELS. DAE MODELS WILL THEREFORE
-//              BE CONSIDERED AS ODE MODELS THAT HAVE ONE OR SEVERAL NLA SYSTEMS
-//              TO BE SOLVED...
-/*
-    ObjRef<iface::mathml_dom::MathMLNodeList> flaggedEquations = mCodeInformation->flaggedEquations();
-
-    mModelType = flaggedEquations->length()?CellmlFileRuntime::Dae:CellmlFileRuntime::Ode;
-*/
-
-    // Retrieve the number of constants, states/rates, algebraic and conditional
-    // variables in the model
+    // Retrieve the number of constants, states/rates, algebraic variables in
+    // the model
     // Note: this is to avoid having to go through the code information an
     //       unnecessary number of times when we want to retrieve either of
     //       those numbers (e.g. see
@@ -922,7 +889,7 @@ void CellmlFileRuntime::update()
                                    mCompilerEngine->error());
     }
 
-    // Keep track of the ODE/DAE functions, but only if no issues were reported
+    // Keep track of the ODE functions, but only if no issues were reported
 
     if (mIssues.count()) {
         reset(true, false);
@@ -934,14 +901,14 @@ void CellmlFileRuntime::update()
                                                  (void *) (intptr_t) doNonLinearSolve);
         }
 
-        // Retrieve the ODE/DAE functions
+        // Retrieve the ODE functions
 
         mInitializeConstants = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
         mComputeComputedConstants = (ComputeComputedConstantsFunction) (intptr_t) mCompilerEngine->getFunction("computeComputedConstants");
         mComputeVariables = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
         mComputeRates = (ComputeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeRates");
 
-        // Make sure that we managed to retrieve all the ODE/DAE functions
+        // Make sure that we managed to retrieve all the ODE functions
 
         if (   !mInitializeConstants || !mComputeComputedConstants
             || !mComputeVariables || !mComputeRates) {

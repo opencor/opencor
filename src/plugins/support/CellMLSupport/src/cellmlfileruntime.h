@@ -125,11 +125,6 @@ class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
     Q_OBJECT
 
 public:
-    enum ModelType {
-        Ode,
-        Dae
-    };
-
     typedef void (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
     typedef void (*ComputeComputedConstantsFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
     typedef void (*ComputeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
@@ -143,8 +138,6 @@ public:
     QString address() const;
 
     bool isValid() const;
-
-    ModelType modelType() const;
 
     bool needNlaSolver() const;
 
@@ -169,7 +162,6 @@ public:
 private:
     CellmlFile *mCellmlFile;
 
-    ModelType mModelType;
     bool mAtLeastOneNlaSystem;
 
     ObjRef<iface::cellml_services::CodeInformation> mCodeInformation;

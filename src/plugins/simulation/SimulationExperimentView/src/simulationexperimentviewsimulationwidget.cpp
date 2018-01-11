@@ -852,14 +852,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             // A variable of integration could be retrieved for our CellML file,
             // so we can also output the model type
 
-            QString additionalInformation = QString();
-
-            if (runtime->needNlaSolver())
-                additionalInformation = "+"+tr("NLA system(s)");
-
-            information += "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn;
-            information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((runtime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
-                                                                                                                                       additionalInformation);
+            information +=  "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn
+                           +QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1</span>."+OutputBrLn).arg(runtime->needNlaSolver()?tr("DAE"):tr("ODE"));
         } else {
             // We couldn't retrieve a variable of integration, which means that
             // we either don't have a runtime or we have one, but it's not valid

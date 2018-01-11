@@ -518,10 +518,6 @@
         <translation>Modèle d&apos;exécution :</translation>
     </message>
     <message>
-        <source>NLA system(s)</source>
-        <translation>Système(s) ANL</translation>
-    </message>
-    <message>
         <source>valid</source>
         <translation>valide</translation>
     </message>
@@ -530,12 +526,12 @@
         <translation>Type de modèle :</translation>
     </message>
     <message>
-        <source>ODE</source>
-        <translation>EDO</translation>
-    </message>
-    <message>
         <source>DAE</source>
         <translation>EAD</translation>
+    </message>
+    <message>
+        <source>ODE</source>
+        <translation>EDO</translation>
     </message>
     <message>
         <source>invalid</source>

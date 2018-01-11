@@ -129,12 +129,10 @@ void SimulationExperimentViewInformationSolversWidget::retranslateUi()
 {
     // Update our property names
 
-    if (mOdeSolverData) {
-        mOdeSolverData->solversProperty()->setName(tr("ODE solver"));
-        mOdeSolverData->solversListProperty()->setName(tr("Name"));
+    mOdeSolverData->solversProperty()->setName(tr("ODE solver"));
+    mOdeSolverData->solversListProperty()->setName(tr("Name"));
 
-        mOdeSolverData->solversListProperty()->setEmptyListValue(tr("None available"));
-    }
+    mOdeSolverData->solversListProperty()->setEmptyListValue(tr("None available"));
 
     if (mNlaSolverData) {
         mNlaSolverData->solversProperty()->setName(tr("NLA solver"));
@@ -352,7 +350,7 @@ QStringList SimulationExperimentViewInformationSolversWidget::odeSolvers() const
 {
     // Return the available ODE solvers, if any
 
-    return mOdeSolverData?mOdeSolverData->solversListProperty()->listValues():QStringList();
+    return mOdeSolverData->solversListProperty()->listValues();
 }
 
 //==============================================================================
@@ -426,7 +424,7 @@ void SimulationExperimentViewInformationSolversWidget::updateGui(SimulationExper
 {
     // Update our solver(s) properties visibility
 
-    if (mOdeSolverData && (!pSolverData || (pSolverData == mOdeSolverData)))
+    if (!pSolverData || (pSolverData == mOdeSolverData))
         updateSolverGui(mOdeSolverData);
 
     if (mNlaSolverData && (!pSolverData || (pSolverData == mNlaSolverData)))
@@ -468,7 +466,7 @@ void SimulationExperimentViewInformationSolversWidget::solverChanged(Core::Prope
     //       solver)...
 
     if (!pProperty->row()) {
-        doSolverChanged((mOdeSolverData && (pProperty == mOdeSolverData->solversListProperty()))?
+        doSolverChanged((pProperty == mOdeSolverData->solversListProperty())?
                             mOdeSolverData:
                             mNlaSolverData,
                         pProperty->value());
