@@ -176,7 +176,7 @@ void KinsolSolverData::setUserData(KinsolSolverUserData *pUserData)
 //==============================================================================
 
 KinsolSolver::KinsolSolver() :
-    mData(QMap<ComputeSystemFunction, KinsolSolverData *>())
+    mData(QMap<void *, KinsolSolverData *>())
 {
 }
 

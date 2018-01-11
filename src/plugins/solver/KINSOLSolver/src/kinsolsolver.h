@@ -133,7 +133,7 @@ public:
                        double *pParameters, const int &pSize, void *pUserData);
 
 private:
-    QMap<ComputeSystemFunction, KinsolSolverData *> mData;
+    QMap<void *, KinsolSolverData *> mData;
 };
 
 //==============================================================================
