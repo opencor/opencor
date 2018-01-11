@@ -1262,9 +1262,9 @@ bool CentralWidget::canCloseFile(const int &pIndex)
 
 bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
 {
-    if (mState == UpdatingGui)
-        // We are updating the GUI, so we can't close the file for now
+    // Make sure that we are not updating the GUI
 
+    if (mState == UpdatingGui)
         return false;
 
     // Close the file at the given tab index or the current tab index, if no tab
