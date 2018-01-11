@@ -288,12 +288,16 @@ void SimulationWorker::started()
         QMutex pausedMutex;
 
         forever {
-            // Reinitialise our solver, if we have an NLA solver
+            // Reinitialise our solver, if we have an NLA solver or if the model
+            // got reset and we are not
             // Note: indeed, with a solver such as CVODE, to solve an NLA system
             //       requires updating its internals...
 
-            if (nlaSolver)
+            if (nlaSolver || mReset) {
                 odeSolver->reinitialize(mCurrentPoint);
+
+                mReset = false;
+            }
 
             // Determine our next point and compute our model up to it
 
@@ -354,14 +358,6 @@ void SimulationWorker::started()
                 // (Re)start our timer
 
                 timer.start();
-            }
-
-            // Reinitialise our solver, if (really) needed
-
-            if (mReset && !mStopped) {
-                odeSolver->reinitialize(mCurrentPoint);
-
-                mReset = false;
             }
         }
 
