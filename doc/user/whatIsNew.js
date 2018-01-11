@@ -96,16 +96,12 @@ var jsonData = { "versions": [
                                { "type": "added", "description": "Support for sensitivity analysis." }
                              ]
                            },
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/idas\">IDAS</a> solver (formerly known as the <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> solver)",
-                             "entries": [
-                               { "type": "added", "description": "Support for sensitivity analysis." }
-                             ]
-                           },
                            { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/kinsol\">KINSOL</a> solver",
                              "entries": [
                                { "type": "added", "description": "Parametrisation of the solver." }
                              ]
-                           }
+                           },
+                           { "type": "comment", "description": "The <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> solver was removed." }
                          ]
                        },
                        { "name": "Support",

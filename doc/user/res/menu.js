@@ -36,7 +36,6 @@ function headerAndContentsMenu(pageName, relativePath) {
                                 { "level": 2, "label": "ForwardEulerSolver", "link": "user/plugins/solver/ForwardEulerSolver.html", "subMenuItem": true },
                                 { "level": 2, "label": "FourthOrderRungeKuttaSolver", "link": "user/plugins/solver/FourthOrderRungeKuttaSolver.html", "subMenuItem": true },
                                 { "level": 2, "label": "HeunSolver", "link": "user/plugins/solver/HeunSolver.html", "subMenuItem": true },
-                                { "level": 2, "label": "IDASSolver", "link": "user/plugins/solver/IDASSolver.html", "subMenuItem": true },
                                 { "level": 2, "label": "KINSOLSolver", "link": "user/plugins/solver/KINSOLSolver.html", "subMenuItem": true },
                                 { "level": 2, "label": "SecondOrderRungeKuttaSolver", "link": "user/plugins/solver/SecondOrderRungeKuttaSolver.html", "subMenuItem": true },
                                 { "level": 1, "label": "Tools", "subMenuHeader": true },
