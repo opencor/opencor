@@ -245,13 +245,12 @@ void SimulationWorker::started()
 
     odeSolver->setProperties(mSimulation->data()->odeSolverProperties());
 
-    odeSolver->initialize(mCurrentPoint,
-                          mRuntime->statesCount(),
+    odeSolver->initialize(mCurrentPoint, mRuntime->statesCount(),
                           mSimulation->data()->constants(),
                           mSimulation->data()->rates(),
                           mSimulation->data()->states(),
                           mSimulation->data()->algebraic(),
-                          mRuntime->computeOdeRates());
+                          mRuntime->computeRates());
 
     // Initialise our NLA solver, if any
 
@@ -294,13 +293,12 @@ void SimulationWorker::started()
             //       requires updating its internals...
 
             if (nlaSolver) {
-                odeSolver->initialize(mCurrentPoint,
-                                      mRuntime->statesCount(),
+                odeSolver->initialize(mCurrentPoint, mRuntime->statesCount(),
                                       mSimulation->data()->constants(),
                                       mSimulation->data()->rates(),
                                       mSimulation->data()->states(),
                                       mSimulation->data()->algebraic(),
-                                      mRuntime->computeOdeRates());
+                                      mRuntime->computeRates());
             }
 
             // Determine our next point and compute our model up to it
@@ -367,13 +365,12 @@ void SimulationWorker::started()
             // Reinitialise our solver, if (really) needed
 
             if (mReset && !mStopped) {
-                odeSolver->initialize(mCurrentPoint,
-                                      mRuntime->statesCount(),
+                odeSolver->initialize(mCurrentPoint, mRuntime->statesCount(),
                                       mSimulation->data()->constants(),
                                       mSimulation->data()->rates(),
                                       mSimulation->data()->states(),
                                       mSimulation->data()->algebraic(),
-                                      mRuntime->computeOdeRates());
+                                      mRuntime->computeRates());
 
                 mReset = false;
             }

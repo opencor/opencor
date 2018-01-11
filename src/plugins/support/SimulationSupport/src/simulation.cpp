@@ -123,15 +123,6 @@ double * SimulationData::algebraic() const
 
 //==============================================================================
 
-double * SimulationData::condVar() const
-{
-    // Return our condVar array
-
-    return mCondVar;
-}
-
-//==============================================================================
-
 int SimulationData::delay() const
 {
     // Return our delay
@@ -387,7 +378,6 @@ void SimulationData::reset(const bool &pInitialize)
         memset(mRates, 0, runtime->ratesCount()*Solver::SizeOfDouble);
         memset(mStates, 0, runtime->statesCount()*Solver::SizeOfDouble);
         memset(mAlgebraic, 0, runtime->algebraicCount()*Solver::SizeOfDouble);
-        memset(mCondVar, 0, runtime->condVarCount()*Solver::SizeOfDouble);
 
         runtime->initializeConstants()(mConstants, mRates, mStates);
     }
@@ -421,20 +411,14 @@ void SimulationData::reset(const bool &pInitialize)
 void SimulationData::recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
                                                             const bool &pInitialize)
 {
-    // Recompute our 'computed constants'
+    // Recompute our 'computed constants', some 'constant' algebraic variables
+    // and our 'variables'
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
     runtime->computeComputedConstants()(pCurrentPoint, mConstants, mRates, pInitialize?mStates:mDummyStates, mAlgebraic);
-
-    // Recompute some 'constant' algebraic variables
-
-    if (runtime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
-        runtime->computeOdeRates()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
-
-    // Recompute our 'variables'
-
-    runtime->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
+    runtime->computeRates()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
+    runtime->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
 
     // Let people know that our data has been updated
 
@@ -447,7 +431,7 @@ void SimulationData::recomputeVariables(const double &pCurrentPoint)
 {
     // Recompute our 'variables'
 
-    mSimulation->runtime()->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
+    mSimulation->runtime()->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
 }
 
 //==============================================================================
@@ -498,14 +482,13 @@ void SimulationData::createArrays()
         mStates = new double[runtime->statesCount()];
         mDummyStates = new double[runtime->statesCount()];
         mAlgebraic = new double[runtime->algebraicCount()];
-        mCondVar = new double[runtime->condVarCount()];
 
         // Create our various arrays to keep track of our various initial values
 
         mInitialConstants = new double[runtime->constantsCount()];
         mInitialStates = new double[runtime->statesCount()];
     } else {
-        mConstants = mRates = mStates = mDummyStates = mAlgebraic = mCondVar = 0;
+        mConstants = mRates = mStates = mDummyStates = mAlgebraic = 0;
         mInitialConstants = mInitialStates = 0;
     }
 }
@@ -521,7 +504,6 @@ void SimulationData::deleteArrays()
     delete[] mStates;
     delete[] mDummyStates;
     delete[] mAlgebraic;
-    delete[] mCondVar;
 
     delete[] mInitialConstants;
     delete[] mInitialStates;
