@@ -441,7 +441,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         // The previously selected file doesn't exist anymore, so select the
         // first file (otherwise the last file will be selected)
 
-        mFileTabs->setCurrentIndex(0);
+        setTabBarCurrentIndex(mFileTabs, 0);
     }
 
     // Retrieve the seleted modes and views, in case there are no files
@@ -450,7 +450,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         ViewInterface::Mode fileMode = ViewInterface::modeFromString(pSettings->value(SettingsFileMode.arg(QString())).toString());
 
         if (fileMode != ViewInterface::UnknownMode)
-            mModeTabs->setCurrentIndex(mModeModeTabIndexes.value(fileMode));
+            setTabBarCurrentIndex(mModeTabs, mModeModeTabIndexes.value(fileMode));
 
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
             fileMode = mModeTabIndexModes.value(i);
@@ -461,7 +461,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
             for (int j = 0, jMax = viewPlugins.count(); j < jMax; ++j) {
                 if (!viewPluginName.compare(viewPlugins[j]->name())) {
-                    mode->viewTabs()->setCurrentIndex(j);
+                    setTabBarCurrentIndex(mode->viewTabs(), j);
 
                     break;
                 }
@@ -746,7 +746,7 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
 
     for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
         if (!mFileNames[i].compare(nativeFileName)) {
-            mFileTabs->setCurrentIndex(i);
+            setTabBarCurrentIndex(mFileTabs, i);
 
             return;
         }
@@ -782,7 +782,7 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
 
     updateFileTab(fileTabIndex);
 
-    mFileTabs->setCurrentIndex(fileTabIndex);
+    setTabBarCurrentIndex(mFileTabs, fileTabIndex);
 
     // Everything went fine, so let our plugins know that our file has been
     // opened
@@ -1209,9 +1209,9 @@ void CentralWidget::previousFile()
     // Select the previous file
 
     if (mFileTabs->count()) {
-        mFileTabs->setCurrentIndex(mFileTabs->currentIndex()?
-                                       mFileTabs->currentIndex()-1:
-                                       mFileTabs->count()-1);
+        setTabBarCurrentIndex(mFileTabs, mFileTabs->currentIndex()?
+                                             mFileTabs->currentIndex()-1:
+                                             mFileTabs->count()-1);
     }
 }
 
@@ -1222,9 +1222,9 @@ void CentralWidget::nextFile()
     // Select the next file
 
     if (mFileTabs->count()) {
-        mFileTabs->setCurrentIndex((mFileTabs->currentIndex() == mFileTabs->count()-1)?
-                                       0:
-                                       mFileTabs->currentIndex()+1);
+        setTabBarCurrentIndex(mFileTabs, (mFileTabs->currentIndex() == mFileTabs->count()-1)?
+                                             0:
+                                             mFileTabs->currentIndex()+1);
     }
 }
 
@@ -1390,7 +1390,7 @@ bool CentralWidget::selectMode(const QString &pModeName)
     ViewInterface::Mode mode = ViewInterface::modeFromString(pModeName);
 
     if (mode != ViewInterface::UnknownMode) {
-        mModeTabs->setCurrentIndex(mModeModeTabIndexes.value(mode));
+        setTabBarCurrentIndex(mModeTabs, mModeModeTabIndexes.value(mode));
 
         return true;
     } else {
@@ -1413,7 +1413,7 @@ bool CentralWidget::selectView(const QString &pViewName)
 
             for (int j = 0, iMax = viewPlugins.count(); j < iMax; ++j) {
                 if (!viewPlugins[j]->name().compare(pViewName)) {
-                    mode->viewTabs()->setCurrentIndex(j);
+                    setTabBarCurrentIndex(mode->viewTabs(), j);
 
                     return true;
                 }
@@ -1601,6 +1601,28 @@ void CentralWidget::fileReloadedOrSaved(const QString &pFileName,
 
 //==============================================================================
 
+void CentralWidget::setTabBarCurrentIndex(TabBarWidget *pTabBar,
+                                          const int &pIndex)
+{
+    // Update the current index of the given tab bar widget, after having
+    // temporarily disabled its handling of the currentChanged() signal, if
+    // needed
+
+    if (mState == UpdatingGui) {
+        disconnect(pTabBar, SIGNAL(currentChanged(int)),
+                   this, SLOT(updateGui()));
+    }
+
+    pTabBar->setCurrentIndex(pIndex);
+
+    if (mState == UpdatingGui) {
+        connect(pTabBar, SIGNAL(currentChanged(int)),
+                this, SLOT(updateGui()));
+    }
+}
+
+//==============================================================================
+
 void CentralWidget::updateGui()
 {
     TabBarWidget *tabBar = qobject_cast<TabBarWidget *>(sender());
@@ -1610,15 +1632,8 @@ void CentralWidget::updateGui()
         // time (e.g. things may not be fully initialised), so revert to our old
         // tab index, if possible
 
-        if (tabBar) {
-            disconnect(tabBar, SIGNAL(currentChanged(int)),
-                       this, SLOT(updateGui()));
-
-            tabBar->setCurrentIndex(tabBar->oldIndex());
-
-            connect(tabBar, SIGNAL(currentChanged(int)),
-                    this, SLOT(updateGui()));
-        }
+        if (tabBar)
+            setTabBarCurrentIndex(tabBar, tabBar->oldIndex());
 
         return;
     }
@@ -1662,28 +1677,15 @@ void CentralWidget::updateGui()
 
         if (   changedModes
             || ((fileModeTabIndex != -1) && (changedFiles || directCall))) {
-            if (changedModes) {
+            if (changedModes)
                 fileModeTabIndex = mModeTabs->currentIndex();
-            } else {
-                disconnect(mModeTabs, SIGNAL(currentChanged(int)),
-                           this, SLOT(updateGui()));
-
-                mModeTabs->setCurrentIndex(fileModeTabIndex);
-
-                connect(mModeTabs, SIGNAL(currentChanged(int)),
-                        this, SLOT(updateGui()));
-            }
+            else
+                setTabBarCurrentIndex(mModeTabs, fileModeTabIndex);
 
             CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
             QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
 
-            disconnect(mode->viewTabs(), SIGNAL(currentChanged(int)),
-                       this, SLOT(updateGui()));
-
-            mode->viewTabs()->setCurrentIndex(modeViewTabIndexes.value(fileModeTabIndex));
-
-            connect(mode->viewTabs(), SIGNAL(currentChanged(int)),
-                    this, SLOT(updateGui()));
+            setTabBarCurrentIndex(mode->viewTabs(), modeViewTabIndexes.value(fileModeTabIndex));
         } else if (!changedViews) {
             // We are opening a file, so determine the default views that we
             // should try and if there are none, then try the Raw Text view
