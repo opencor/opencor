@@ -943,41 +943,21 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
             if (runtime->needNlaSolver()) {
                 if (solversWidget->nlaSolvers().isEmpty()) {
-                    if (runtime->needOdeSolver()) {
-                        if (solversWidget->odeSolvers().isEmpty()) {
-                            simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
-                                            InvalidSimulationEnvironment);
-                        } else {
-                            simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
-                                            InvalidSimulationEnvironment);
-                        }
+                    if (solversWidget->odeSolvers().isEmpty()) {
+                        simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
+                                        InvalidSimulationEnvironment);
                     } else {
-                        if (solversWidget->daeSolvers().isEmpty()) {
-                            simulationError(tr("the model needs both a DAE and an NLA solver, but none are available"),
-                                            InvalidSimulationEnvironment);
-                        } else {
-                            simulationError(tr("the model needs both a DAE and an NLA solver, but no NLA solver is available"),
-                                            InvalidSimulationEnvironment);
-                        }
+                        simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
+                                        InvalidSimulationEnvironment);
                     }
-                } else if (   runtime->needOdeSolver()
-                           && solversWidget->odeSolvers().isEmpty()) {
+                } else if (solversWidget->odeSolvers().isEmpty()) {
                     simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
                                     InvalidSimulationEnvironment);
-                } else if (   runtime->needDaeSolver()
-                           && solversWidget->daeSolvers().isEmpty()) {
-                        simulationError(tr("the model needs both a DAE and an NLA solver, but no DAE solver is available"),
-                                        InvalidSimulationEnvironment);
                 } else {
                     mValidSimulationEnvironment = true;
                 }
-            } else if (   runtime->needOdeSolver()
-                       && solversWidget->odeSolvers().isEmpty()) {
+            } else if (solversWidget->odeSolvers().isEmpty()) {
                 simulationError(tr("the model needs an ODE solver, but none is available"),
-                                InvalidSimulationEnvironment);
-            } else if (   runtime->needDaeSolver()
-                       && solversWidget->daeSolvers().isEmpty()) {
-                simulationError(tr("the model needs a DAE solver, but none is available"),
                                 InvalidSimulationEnvironment);
             } else {
                 mValidSimulationEnvironment = true;
@@ -1541,40 +1521,33 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
                                                                   libsedml::SedSimulation *pSedmlSimulation,
                                                                   const int &pOrder)
 {
-    // Create, customise and add an algorithm (i.e. an ODE or DAE solver) to our
-    // given SED-ML simulation
+    // Create, customise and add an algorithm (i.e. an ODE solver) to our given
+    // SED-ML simulation
     // Note: the algorithm parameters require the use of KiSAO ids, so if none
     //       exists for an algorithm parameter then we set the algorithm
     //       parameter using an annotation...
 
     libsedml::SedAlgorithm *sedmlAlgorithm = pSedmlSimulation->createAlgorithm();
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-    SolverInterface *solverInterface = runtime->needOdeSolver()?
-                                           mSimulation->data()->odeSolverInterface():
-                                           mSimulation->data()->daeSolverInterface();
-    QString solverName = runtime->needOdeSolver()?
-                             mSimulation->data()->odeSolverName():
-                             mSimulation->data()->daeSolverName();
-    Solver::Solver::Properties solverProperties = runtime->needOdeSolver()?
-                                                      mSimulation->data()->odeSolverProperties():
-                                                      mSimulation->data()->daeSolverProperties();
-    QString odeSolverProperties = QString();
+    SolverInterface *odeSolverInterface = mSimulation->data()->odeSolverInterface();
+    Solver::Solver::Properties odeSolverProperties = mSimulation->data()->odeSolverProperties();
+    QString annotation = QString();
 
-    sedmlAlgorithm->setKisaoID(solverInterface->kisaoId(solverName).toStdString());
+    sedmlAlgorithm->setKisaoID(odeSolverInterface->kisaoId(mSimulation->data()->odeSolverName()).toStdString());
 
-    foreach (const QString &solverProperty, solverProperties.keys()) {
-        QString kisaoId = solverInterface->kisaoId(solverProperty);
-        QVariant solverPropertyValue = solverProperties.value(solverProperty);
-        QString value = (solverPropertyValue.type() == QVariant::Double)?
-                            QString::number(solverPropertyValue.toDouble(), 'g', 15):
-                            solverPropertyValue.toString();
+    foreach (const QString &odeSolverProperty, odeSolverProperties.keys()) {
+        QString kisaoId = odeSolverInterface->kisaoId(odeSolverProperty);
+        QVariant odeSolverPropertyValue = odeSolverProperties.value(odeSolverProperty);
+        QString value = (odeSolverPropertyValue.type() == QVariant::Double)?
+                            QString::number(odeSolverPropertyValue.toDouble(), 'g', 15):
+                            odeSolverPropertyValue.toString();
 
         if (kisaoId.isEmpty()) {
-            odeSolverProperties += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
-                                                                            SEDMLSupport::Id,
-                                                                            solverProperty,
-                                                                            SEDMLSupport::Value,
-                                                                            value);
+            annotation += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
+                                                                   SEDMLSupport::Id,
+                                                                   odeSolverProperty,
+                                                                   SEDMLSupport::Value,
+                                                                   value);
         } else {
             libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
 
@@ -1583,12 +1556,12 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
         }
     }
 
-    if (!odeSolverProperties.isEmpty()) {
+    if (!annotation.isEmpty()) {
         sedmlAlgorithm->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                                  "    %3"
                                                  "</%1>").arg(SEDMLSupport::SolverProperties,
                                                               SEDMLSupport::OpencorNamespace,
-                                                              odeSolverProperties).toStdString());
+                                                              annotation).toStdString());
     }
 
     // Check whether the simulation required an NLA solver and, if so, let our
@@ -1596,15 +1569,15 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     // have more than one SED-ML algorithm per SED-ML simulation)
 
     if (runtime->needNlaSolver()) {
-        QString nlaSolverProperties = QString();
-        Solver::Solver::Properties solverProperties = mSimulation->data()->nlaSolverProperties();
+        QString annotation = QString();
+        Solver::Solver::Properties nlaSolverProperties = mSimulation->data()->nlaSolverProperties();
 
-        foreach (const QString &solverProperty, solverProperties.keys()) {
-            nlaSolverProperties += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
-                                                                            SEDMLSupport::Id,
-                                                                            solverProperty,
-                                                                            SEDMLSupport::Value,
-                                                                            solverProperties.value(solverProperty).toString());
+        foreach (const QString &nlaSolverProperty, nlaSolverProperties.keys()) {
+            annotation += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
+                                                                   SEDMLSupport::Id,
+                                                                   nlaSolverProperty,
+                                                                   SEDMLSupport::Value,
+                                                                   nlaSolverProperties.value(nlaSolverProperty).toString());
         }
 
         pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" %3=\"%4\">"
@@ -1613,7 +1586,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
                                                                 SEDMLSupport::OpencorNamespace,
                                                                 SEDMLSupport::Name,
                                                                 mSimulation->data()->nlaSolverName(),
-                                                                nlaSolverProperties).toStdString());
+                                                                annotation).toStdString());
     }
 
     // Create and customise a task for our given SED-ML simulation
@@ -1791,7 +1764,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
 
-        QString properties =  SedmlProperty.arg(SEDMLSupport::BackgroundColor,
+        QString annotation =  SedmlProperty.arg(SEDMLSupport::BackgroundColor,
                                                 graphPanelProperties[0]->valueAsString())
                              +SedmlProperty.arg(SEDMLSupport::FontSize,
                                                 graphPanelProperties[1]->valueAsString())
@@ -1804,7 +1777,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
 
-        properties += SedmlProperty.arg( SEDMLSupport::GridLines,
+        annotation += SedmlProperty.arg( SEDMLSupport::GridLines,
                                          SedmlProperty.arg(SEDMLSupport::Style,
                                                            SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
                                         +SedmlProperty.arg(SEDMLSupport::Width,
@@ -1814,14 +1787,14 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         // Legend
 
-        properties += SedmlProperty.arg(SEDMLSupport::Legend,
+        annotation += SedmlProperty.arg(SEDMLSupport::Legend,
                                         graphPanelProperties[4]->valueAsString());
 
         // Point coordinates
 
         Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
 
-        properties += SedmlProperty.arg( SEDMLSupport::PointCoordinates,
+        annotation += SedmlProperty.arg( SEDMLSupport::PointCoordinates,
                                          SedmlProperty.arg(SEDMLSupport::Style,
                                                            SEDMLSupport::lineStyleValue(pointCoordinatesProperties[0]->listValueIndex()))
                                         +SedmlProperty.arg(SEDMLSupport::Width,
@@ -1835,7 +1808,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         Core::Properties surroundingAreaProperties = graphPanelProperties[6]->properties();
 
-        properties += SedmlProperty.arg( SEDMLSupport::SurroundingArea,
+        annotation += SedmlProperty.arg( SEDMLSupport::SurroundingArea,
                                          SedmlProperty.arg(SEDMLSupport::BackgroundColor,
                                                            surroundingAreaProperties[0]->valueAsString())
                                         +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
@@ -1843,14 +1816,14 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         // Title
 
-        properties += SedmlProperty.arg(SEDMLSupport::Title,
+        annotation += SedmlProperty.arg(SEDMLSupport::Title,
                                         graphPanelProperties[7]->valueAsString());
 
         // X axis
 
         Core::Properties xAxisProperties = graphPanelProperties[8]->properties();
 
-        properties += SedmlProperty.arg( SEDMLSupport::XAxis,
+        annotation += SedmlProperty.arg( SEDMLSupport::XAxis,
                                          SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
                                                            xAxisProperties[0]->valueAsString())
                                         +SedmlProperty.arg(SEDMLSupport::Title,
@@ -1860,7 +1833,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         Core::Properties yAxisProperties = graphPanelProperties[9]->properties();
 
-        properties += SedmlProperty.arg( SEDMLSupport::YAxis,
+        annotation += SedmlProperty.arg( SEDMLSupport::YAxis,
                                          SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
                                                            yAxisProperties[0]->valueAsString())
                                         +SedmlProperty.arg(SEDMLSupport::Title,
@@ -1870,7 +1843,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         Core::Properties zoomRegionProperties = graphPanelProperties[10]->properties();
 
-        properties += SedmlProperty.arg( SEDMLSupport::ZoomRegion,
+        annotation += SedmlProperty.arg( SEDMLSupport::ZoomRegion,
                                          SedmlProperty.arg(SEDMLSupport::Style,
                                                            SEDMLSupport::lineStyleValue(zoomRegionProperties[0]->listValueIndex()))
                                         +SedmlProperty.arg(SEDMLSupport::Width,
@@ -1890,7 +1863,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                               "    %3"
                                               "</%1>").arg(SEDMLSupport::Properties,
                                                            SEDMLSupport::OpencorNamespace,
-                                                           properties).toStdString());
+                                                           annotation).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
@@ -2315,38 +2288,6 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
             return;
     }
 
-    // DAE solver properties
-
-    bool needDaeSolverGuiUpdate = false;
-
-    if (solversWidget->daeSolverData()) {
-        if (!pProperty || (pProperty == solversWidget->daeSolverData()->solversListProperty())) {
-            mSimulation->data()->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value());
-
-            needDaeSolverGuiUpdate = true;
-        }
-
-        if (!pProperty || !needDaeSolverGuiUpdate) {
-            foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(mSimulation->data()->daeSolverName())) {
-                if (!pProperty || (pProperty == property)) {
-                    mSimulation->data()->addDaeSolverProperty(property->id(), property->valueAsVariant());
-
-                    needDaeSolverGuiUpdate = true;
-
-                    if (pProperty)
-                        break;
-                }
-            }
-        }
-    }
-
-    if (needDaeSolverGuiUpdate) {
-        mContentsWidget->informationWidget()->solversWidget()->updateGui(solversWidget->daeSolverData());
-
-        if (pProperty)
-            return;
-    }
-
     // NLA solver properties
 
     bool needNlaSolverGuiUpdate = false;
@@ -2489,33 +2430,31 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     simulationWidget->pointIntervalProperty()->setDoubleValue(pointInterval);
 
     // Customise our solvers widget by:
-    //  - Specifying the ODE/DAE solver to use
+    //  - Specifying the ODE solver to use
     //  - Customising the solver's properties for which we have a KiSAO id
     //  - Customising the solver's properties for which we don't have a KiSAO id
     //    (this shouldn't happen, but better be safe than sorry)
     //  - Specifying the NLA solver, if any
 
-    SimulationExperimentViewInformationSolversWidgetData *solverData = (mSimulation->cellmlFile()->runtime()->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?
-                                                                           solversWidget->odeSolverData():
-                                                                           solversWidget->daeSolverData();
+    SimulationExperimentViewInformationSolversWidgetData *odeSolverData = solversWidget->odeSolverData();
     const libsedml::SedAlgorithm *sedmlAlgorithm = sedmlUniformTimeCourse->getAlgorithm();
-    SolverInterface *usedSolverInterface = 0;
+    SolverInterface *odeSolverInterface = 0;
     SolverInterfaces solverInterfaces = Core::solverInterfaces();
     Core::Properties solverProperties = Core::Properties();
     QString kisaoId = QString::fromStdString(sedmlAlgorithm->getKisaoID());
 
     foreach (SolverInterface *solverInterface, solverInterfaces) {
         if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
-            usedSolverInterface = solverInterface;
-            solverProperties = solverData->solversProperties().value(solverInterface->solverName());
+            odeSolverInterface = solverInterface;
+            solverProperties = odeSolverData->solversProperties().value(solverInterface->solverName());
 
-            solverData->solversListProperty()->setValue(solverInterface->solverName());
+            odeSolverData->solversListProperty()->setValue(solverInterface->solverName());
 
             break;
         }
     }
 
-    if (!usedSolverInterface) {
+    if (!odeSolverInterface) {
         simulationError(tr("the requested solver (%1) could not be found").arg(kisaoId),
                         InvalidSimulationEnvironment);
 
@@ -2525,7 +2464,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     for (int i = 0, iMax = sedmlAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
         const libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->getAlgorithmParameter(i);
         QString kisaoId = QString::fromStdString(sedmlAlgorithmParameter->getKisaoID());
-        QString id = usedSolverInterface->id(kisaoId);
+        QString id = odeSolverInterface->id(kisaoId);
         bool propertySet = false;
 
         foreach (Core::Property *solverProperty, solverProperties) {
@@ -2638,7 +2577,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
             if (   !QString::fromStdString(nlaSolverNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
                 && !QString::fromStdString(nlaSolverNode.getName()).compare(SEDMLSupport::NlaSolver)) {
-                SimulationExperimentViewInformationSolversWidgetData *solverData = solversWidget->nlaSolverData();
+                SimulationExperimentViewInformationSolversWidgetData *nlaSolverData = solversWidget->nlaSolverData();
                 Core::Properties solverProperties = Core::Properties();
 
                 mustHaveNlaSolver = true;
@@ -2646,9 +2585,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                 foreach (SolverInterface *solverInterface, solverInterfaces) {
                     if (!nlaSolverName.compare(solverInterface->solverName())) {
-                        solverProperties = solverData->solversProperties().value(solverInterface->solverName());
+                        solverProperties = nlaSolverData->solversProperties().value(solverInterface->solverName());
 
-                        solverData->solversListProperty()->setValue(nlaSolverName);
+                        nlaSolverData->solversListProperty()->setValue(nlaSolverName);
 
                         hasNlaSolver = true;
 
@@ -3129,12 +3068,7 @@ void SimulationExperimentViewSimulationWidget::simulationStopped(const qint64 &p
     // Output the given elapsed time, if valid
 
     if (pElapsedTime != -1) {
-        QString solversInformation = QString();
-
-        if (!mSimulation->data()->odeSolverName().isEmpty())
-            solversInformation += mSimulation->data()->odeSolverName();
-        else
-            solversInformation += mSimulation->data()->daeSolverName();
+        QString solversInformation = mSimulation->data()->odeSolverName();
 
         if (!mSimulation->data()->nlaSolverName().isEmpty())
             solversInformation += "+"+mSimulation->data()->nlaSolverName();

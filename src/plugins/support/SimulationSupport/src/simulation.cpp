@@ -238,8 +238,7 @@ QString SimulationData::odeSolverName() const
 {
     // Return our ODE solver name
 
-    return (   mSimulation->runtime()
-            && mSimulation->runtime()->needOdeSolver())?mOdeSolverName:QString();
+    return mSimulation->runtime()?mOdeSolverName:QString();
 }
 
 //==============================================================================
@@ -248,8 +247,7 @@ void SimulationData::setOdeSolverName(const QString &pOdeSolverName)
 {
     // Set our ODE solver name and reset its properties
 
-    if (   pOdeSolverName.compare(mOdeSolverName)
-        && mSimulation->runtime() && mSimulation->runtime()->needOdeSolver()) {
+    if (pOdeSolverName.compare(mOdeSolverName) && mSimulation->runtime()) {
         mOdeSolverName = pOdeSolverName;
 
         mOdeSolverProperties.clear();
@@ -262,8 +260,7 @@ Solver::Solver::Properties SimulationData::odeSolverProperties() const
 {
     // Return our ODE solver's properties
 
-    return (   mSimulation->runtime()
-            && mSimulation->runtime()->needOdeSolver())?mOdeSolverProperties:Solver::Solver::Properties();
+    return mSimulation->runtime()?mOdeSolverProperties:Solver::Solver::Properties();
 }
 
 //==============================================================================
@@ -273,62 +270,8 @@ void SimulationData::addOdeSolverProperty(const QString &pName,
 {
     // Add an ODE solver property
 
-    if (mSimulation->runtime() && mSimulation->runtime()->needOdeSolver())
+    if (mSimulation->runtime())
         mOdeSolverProperties.insert(pName, pValue);
-}
-
-//==============================================================================
-
-SolverInterface * SimulationData::daeSolverInterface() const
-{
-    // Return our DAE solver interface, if any
-
-    return solverInterface(daeSolverName());
-}
-
-//==============================================================================
-
-QString SimulationData::daeSolverName() const
-{
-    // Return our DAE solver name
-
-    return (   mSimulation->runtime()
-            && mSimulation->runtime()->needDaeSolver())?mDaeSolverName:QString();
-}
-
-//==============================================================================
-
-void SimulationData::setDaeSolverName(const QString &pDaeSolverName)
-{
-    // Set our DAE solver name and reset its properties
-
-    if (   pDaeSolverName.compare(mDaeSolverName)
-        && mSimulation->runtime() && mSimulation->runtime()->needDaeSolver()) {
-        mDaeSolverName = pDaeSolverName;
-
-        mDaeSolverProperties.clear();
-    }
-}
-
-//==============================================================================
-
-Solver::Solver::Properties SimulationData::daeSolverProperties() const
-{
-    // Return our DAE solver's properties
-
-    return (   mSimulation->runtime()
-            && mSimulation->runtime()->needDaeSolver())?mDaeSolverProperties:Solver::Solver::Properties();
-}
-
-//==============================================================================
-
-void SimulationData::addDaeSolverProperty(const QString &pName,
-                                          const QVariant &pValue)
-{
-    // Add an DAE solver property
-
-    if (mSimulation->runtime() && mSimulation->runtime()->needDaeSolver())
-        mDaeSolverProperties.insert(pName, pValue);
 }
 
 //==============================================================================

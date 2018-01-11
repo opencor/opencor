@@ -102,14 +102,6 @@ public:
     Solver::Solver::Properties odeSolverProperties() const;
     void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
 
-    SolverInterface * daeSolverInterface() const;
-
-    QString daeSolverName() const;
-    void setDaeSolverName(const QString &pDaeSolverName);
-
-    Solver::Solver::Properties daeSolverProperties() const;
-    void addDaeSolverProperty(const QString &pName, const QVariant &pValue);
-
     SolverInterface * nlaSolverInterface() const;
 
     QString nlaSolverName() const;

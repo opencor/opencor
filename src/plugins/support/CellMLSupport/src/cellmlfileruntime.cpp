@@ -298,24 +298,6 @@ CellmlFileRuntime::ModelType CellmlFileRuntime::modelType() const
 
 //==============================================================================
 
-bool CellmlFileRuntime::needOdeSolver() const
-{
-    // Return whether the model needs an ODE solver
-
-    return mModelType == CellmlFileRuntime::Ode;
-}
-
-//==============================================================================
-
-bool CellmlFileRuntime::needDaeSolver() const
-{
-    // Return whether the model needs a DAE solver
-
-    return mModelType == CellmlFileRuntime::Dae;
-}
-
-//==============================================================================
-
 bool CellmlFileRuntime::needNlaSolver() const
 {
     // Return whether the model needs an NLA solver
