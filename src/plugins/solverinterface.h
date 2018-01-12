@@ -134,7 +134,9 @@ public:
     enum Type {
         Boolean,
         Integer,
+        IntegerGt0,
         Double,
+        DoubleGt0,
         List
     };
 

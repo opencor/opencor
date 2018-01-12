@@ -226,9 +226,19 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
                                                   solversProperty);
 
                     break;
+                case Solver::Property::IntegerGt0:
+                    property = addIntegerGt0Property(solverInterfaceProperty.defaultValue().toInt(),
+                                                     solversProperty);
+
+                    break;
                 case Solver::Property::Double:
                     property = addDoubleProperty(solverInterfaceProperty.defaultValue().toDouble(),
                                                  solversProperty);
+
+                    break;
+                case Solver::Property::DoubleGt0:
+                    property = addDoubleGt0Property(solverInterfaceProperty.defaultValue().toDouble(),
+                                                    solversProperty);
 
                     break;
                 case Solver::Property::List:
