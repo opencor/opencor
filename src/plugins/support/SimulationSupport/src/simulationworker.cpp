@@ -397,11 +397,14 @@ void SimulationWorker::started()
 
 void SimulationWorker::emitError(const QString &pMessage)
 {
-    // A solver error occurred, so keep track of it and let people know about it
+    // A solver error occurred, so keep track of it and let people know about
+    // it, but only if another error hasn't already been received
 
-    mError = true;
+    if (!mError) {
+        mError = true;
 
-    emit error(pMessage);
+        emit error(pMessage);
+    }
 }
 
 //==============================================================================
