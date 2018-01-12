@@ -153,10 +153,10 @@ Solver::Properties KINSOLSolverPlugin::solverProperties() const
                                                        << BiCgStabLinearSolver
                                                        << TfqmrLinearSolver;
 
-    return Solver::Properties() << Solver::Property(Solver::Property::Integer, MaximumNumberOfIterationsId, MaximumNumberOfIterationsDescriptions, QStringList(), MaximumNumberOfIterationsDefaultValue, false)
+    return Solver::Properties() << Solver::Property(Solver::Property::IntegerGt0, MaximumNumberOfIterationsId, MaximumNumberOfIterationsDescriptions, QStringList(), MaximumNumberOfIterationsDefaultValue, false)
                                 << Solver::Property(Solver::Property::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
-                                << Solver::Property(Solver::Property::Integer, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
-                                << Solver::Property(Solver::Property::Integer, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, QStringList(), LowerHalfBandwidthDefaultValue, false);
+                                << Solver::Property(Solver::Property::IntegerGe0, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
+                                << Solver::Property(Solver::Property::IntegerGe0, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, QStringList(), LowerHalfBandwidthDefaultValue, false);
 }
 
 //==============================================================================

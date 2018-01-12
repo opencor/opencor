@@ -235,8 +235,6 @@ void SimulationWorker::started()
     double startingPoint = mSimulation->data()->startingPoint();
     double endingPoint = mSimulation->data()->endingPoint();
     double pointInterval = mSimulation->data()->pointInterval();
-
-    bool increasingPoints = endingPoint > startingPoint;
     quint64 pointCounter = 0;
 
     mCurrentPoint = startingPoint;
@@ -259,15 +257,14 @@ void SimulationWorker::started()
 
     // Now, we are ready to compute our model, but only if no error has occurred
     // so far
+    // Note: we use -1 as a way to indicate that something went wrong...
 
-    qint64 elapsedTime;
+    qint64 elapsedTime = 0;
 
     if (!mError) {
         // Start our timer
 
         QElapsedTimer timer;
-
-        elapsedTime = 0;
 
         timer.start();
 
@@ -288,25 +285,13 @@ void SimulationWorker::started()
         QMutex pausedMutex;
 
         forever {
-            // Reinitialise our solver, if we have an NLA solver or if the model
-            // got reset and we are not
-            // Note: indeed, with a solver such as CVODE, to solve an NLA system
-            //       requires updating its internals...
-
-            if (nlaSolver || mReset) {
-                odeSolver->reinitialize(mCurrentPoint);
-
-                mReset = false;
-            }
-
             // Determine our next point and compute our model up to it
 
             ++pointCounter;
 
             odeSolver->solve(mCurrentPoint,
-                             increasingPoints?
-                                 qMin(endingPoint, startingPoint+pointCounter*pointInterval):
-                                 qMax(endingPoint, startingPoint+pointCounter*pointInterval));
+                             qMin(endingPoint,
+                                  startingPoint+pointCounter*pointInterval));
 
             // Make sure that no error occurred
 
@@ -320,57 +305,67 @@ void SimulationWorker::started()
 
             mSimulation->results()->addPoint(mCurrentPoint);
 
-            // Check whether we are done or whether we have been asked to stop
+            // Some post-processing, if needed
 
-            if ((mCurrentPoint == endingPoint) || mStopped)
+            if ((mCurrentPoint == endingPoint) || mStopped) {
+                // We have reached our ending point or we have been asked to
+                // stop, so leave our main work loop
+
                 break;
+            } else {
+                // Delay things a bit, if needed
 
-            // Delay things a bit, if (really) needed
+                if (mSimulation->delay())
+                    Core::doNothing(100*mSimulation->delay());
 
-            if (mSimulation->delay() && !mStopped)
-                Core::doNothing(100*mSimulation->delay());
+                // Pause ourselves, if needed
 
-            // Pause ourselves, if (really) needed
+                if (mPaused) {
+                    // We should be paused, so stop our timer
 
-            if (mPaused && !mStopped) {
-                // We should be paused, so stop our timer
+                    elapsedTime += timer.elapsed();
 
-                elapsedTime += timer.elapsed();
+                    // Let people know that we are paused
 
-                // Let people know that we are paused
+                    emit paused();
 
-                emit paused();
+                    // Actually pause ourselves
 
-                // Actually pause ourselves
+                    pausedMutex.lock();
+                        mPausedCondition.wait(&pausedMutex);
+                    pausedMutex.unlock();
 
-                pausedMutex.lock();
-                    mPausedCondition.wait(&pausedMutex);
-                pausedMutex.unlock();
+                    // We are not paused anymore
 
-                // We are not paused anymore
+                    mPaused = false;
 
-                mPaused = false;
+                    // Let people know that we are running again
 
-                // Let people know that we are running again
+                    emit running(true);
 
-                emit running(true);
+                    // (Re)start our timer
 
-                // (Re)start our timer
+                    timer.start();
 
-                timer.start();
+                }
+
+                // Reinitialise our solver, if we have an NLA solver or if the
+                // model got reset
+                // Note: indeed, with a solver such as CVODE, to solve an NLA
+                //       system requires updating its internals...
+
+                if (nlaSolver || mReset) {
+                    odeSolver->reinitialize(mCurrentPoint);
+
+                    mReset = false;
+                }
             }
         }
 
         // Retrieve the total elapsed time, should no error have occurred
 
-        if (mError)
-            elapsedTime = -1;
-            // Note: we use -1 as a way to indicate that something went wrong...
-        else
+        if (!mError)
             elapsedTime += timer.elapsed();
-    } else {
-        elapsedTime = -1;
-        // Note: we use -1 as a way to indicate that something went wrong...
     }
 
     // Delete our solver(s)
@@ -392,18 +387,21 @@ void SimulationWorker::started()
 
     // Let people know that we are done and give them the elapsed time
 
-    emit finished(elapsedTime);
+    emit finished(mError?-1:elapsedTime);
 }
 
 //==============================================================================
 
 void SimulationWorker::emitError(const QString &pMessage)
 {
-    // A solver error occurred, so keep track of it and let people know about it
+    // A solver error occurred, so keep track of it and let people know about
+    // it, but only if another error hasn't already been received
 
-    mError = true;
+    if (!mError) {
+        mError = true;
 
-    emit error(pMessage);
+        emit error(pMessage);
+    }
 }
 
 //==============================================================================

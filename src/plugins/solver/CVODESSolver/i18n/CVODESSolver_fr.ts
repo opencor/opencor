@@ -44,16 +44,8 @@
         <translation>la valeur de la propriété &quot;Type d&apos;itération&quot; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
-        <source>the &quot;Relative tolerance&quot; property must have a value greater than or equal to 0</source>
-        <translation>la propriété &quot;Tolérance relative&quot; doit avoir une valeur plus grande que ou égale à 0</translation>
-    </message>
-    <message>
         <source>the &quot;Relative tolerance&quot; property value could not be retrieved</source>
         <translation>la valeur de la propriété &quot;Tolérance relative&quot; n&apos;a pas pu être retrouvée</translation>
-    </message>
-    <message>
-        <source>the &quot;Absolute tolerance&quot; property must have a value greater than or equal to 0</source>
-        <translation>la propriété &quot;Tolérance absolue&quot; doit avoir une valeur plus grande que ou égale à 0</translation>
     </message>
     <message>
         <source>the &quot;Absolute tolerance&quot; property value could not be retrieved</source>

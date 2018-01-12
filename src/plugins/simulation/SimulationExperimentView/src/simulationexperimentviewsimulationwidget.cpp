@@ -2470,7 +2470,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 #ifdef QT_DEBUG
                     // We should never come here...
 
-                    qFatal("FATAL ERROR | %s:%d: the solver property cannot be of section type.", __FILE__, __LINE__);
+                    qFatal("FATAL ERROR | %s:%d: a solver property cannot be of section type.", __FILE__, __LINE__);
 #endif
 
                     break;
@@ -2479,11 +2479,13 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                     break;
                 case Core::Property::Integer:
+                case Core::Property::IntegerGe0:
                 case Core::Property::IntegerGt0:
                     solverProperty->setIntegerValue(solverPropertyValue.toInt());
 
                     break;
                 case Core::Property::Double:
+                case Core::Property::DoubleGe0:
                 case Core::Property::DoubleGt0:
                     solverProperty->setDoubleValue(solverPropertyValue.toDouble());
 
@@ -2500,7 +2502,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 #ifdef QT_DEBUG
                     // We should never come here...
 
-                    qFatal("FATAL ERROR | %s:%d: the solver property cannot be of colour type.", __FILE__, __LINE__);
+                    qFatal("FATAL ERROR | %s:%d: a solver property cannot be of colour type.", __FILE__, __LINE__);
 #endif
 
                     break;

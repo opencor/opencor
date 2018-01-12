@@ -58,12 +58,6 @@ void SecondOrderRungeKuttaSolver::initialize(const double &pVoi,
 
     if (mProperties.contains(StepId)) {
         mStep = mProperties.value(StepId).toDouble();
-
-        if (!mStep) {
-            emit error(tr("the \"Step\" property value cannot be equal to zero"));
-
-            return;
-        }
     } else {
         emit error(tr("the \"Step\" property value could not be retrieved"));
 

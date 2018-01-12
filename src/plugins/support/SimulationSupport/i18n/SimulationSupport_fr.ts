@@ -8,16 +8,8 @@
         <translation>les points de départ et d&apos;arrivée ne peuvent pas avoir la même valeur</translation>
     </message>
     <message>
-        <source>the point interval cannot be equal to zero</source>
-        <translation>l&apos;interval de point ne peut pas être égal à zéro</translation>
-    </message>
-    <message>
-        <source>the ending point is greater than the starting point, so the point interval should be greater than zero</source>
-        <translation>le point d&apos;arrivée est plus grand que le point de départ, donc l&apos;interval de point devrait être plus grand que zéro</translation>
-    </message>
-    <message>
-        <source>the ending point is smaller than the starting point, so the point interval should be smaller than zero</source>
-        <translation>le point d&apos;arrivée est plus petit que le point de départ, donc l&apos;interval de point devrait être plus petit que zéro</translation>
+        <source>the starting point cannot be greater than the ending point</source>
+        <translation>le point de départ ne peut pas être plus grand que le point d&apos;arrivée</translation>
     </message>
     <message>
         <source>the simulation worker could not be created</source>

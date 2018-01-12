@@ -229,8 +229,7 @@ void CvodesSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
                     if (mProperties.contains(UpperHalfBandwidthId)) {
                         upperHalfBandwidth = mProperties.value(UpperHalfBandwidthId).toInt();
 
-                        if (   (upperHalfBandwidth < 0)
-                            || (upperHalfBandwidth >= pRatesStatesCount)) {
+                        if (upperHalfBandwidth >= pRatesStatesCount) {
                             emit error(tr("the \"Upper half-bandwidth\" property must have a value between 0 and %1").arg(pRatesStatesCount-1));
 
                             return;
@@ -244,8 +243,7 @@ void CvodesSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
                     if (mProperties.contains(LowerHalfBandwidthId)) {
                         lowerHalfBandwidth = mProperties.value(LowerHalfBandwidthId).toInt();
 
-                        if (   (lowerHalfBandwidth < 0)
-                            || (lowerHalfBandwidth >= pRatesStatesCount)) {
+                        if (lowerHalfBandwidth >= pRatesStatesCount) {
                             emit error(tr("the \"Lower half-bandwidth\" property must have a value between 0 and %1").arg(pRatesStatesCount-1));
 
                             return;
@@ -270,12 +268,6 @@ void CvodesSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
 
     if (mProperties.contains(RelativeToleranceId)) {
         relativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
-
-        if (relativeTolerance < 0) {
-            emit error(tr("the \"Relative tolerance\" property must have a value greater than or equal to 0"));
-
-            return;
-        }
     } else {
         emit error(tr("the \"Relative tolerance\" property value could not be retrieved"));
 
@@ -284,12 +276,6 @@ void CvodesSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
 
     if (mProperties.contains(AbsoluteToleranceId)) {
         absoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
-
-        if (absoluteTolerance < 0) {
-            emit error(tr("the \"Absolute tolerance\" property must have a value greater than or equal to 0"));
-
-            return;
-        }
     } else {
         emit error(tr("the \"Absolute tolerance\" property value could not be retrieved"));
 
