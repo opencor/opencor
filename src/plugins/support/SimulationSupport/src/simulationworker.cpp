@@ -259,15 +259,14 @@ void SimulationWorker::started()
 
     // Now, we are ready to compute our model, but only if no error has occurred
     // so far
+    // Note: we use -1 as a way to indicate that something went wrong...
 
-    qint64 elapsedTime;
+    qint64 elapsedTime = 0;
 
     if (!mError) {
         // Start our timer
 
         QElapsedTimer timer;
-
-        elapsedTime = 0;
 
         timer.start();
 
@@ -368,14 +367,8 @@ void SimulationWorker::started()
 
         // Retrieve the total elapsed time, should no error have occurred
 
-        if (mError)
-            elapsedTime = -1;
-            // Note: we use -1 as a way to indicate that something went wrong...
-        else
+        if (!mError)
             elapsedTime += timer.elapsed();
-    } else {
-        elapsedTime = -1;
-        // Note: we use -1 as a way to indicate that something went wrong...
     }
 
     // Delete our solver(s)
@@ -397,7 +390,7 @@ void SimulationWorker::started()
 
     // Let people know that we are done and give them the elapsed time
 
-    emit finished(elapsedTime);
+    emit finished(mError?-1:elapsedTime);
 }
 
 //==============================================================================
