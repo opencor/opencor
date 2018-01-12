@@ -46,10 +46,19 @@ int systemFunction(N_Vector pY, N_Vector pF, void *pUserData)
     // Compute the system function
 
     KinsolSolverUserData *userData = static_cast<KinsolSolverUserData *>(pUserData);
+    double *f = N_VGetArrayPointer_Serial(pF);
 
-    userData->computeSystem()(N_VGetArrayPointer_Serial(pY),
-                              N_VGetArrayPointer_Serial(pF),
-                              userData->userData());
+    userData->computeSystem()(N_VGetArrayPointer_Serial(pY), f, userData->userData());
+
+    // Make sure that our solution is finite
+    // Note: this is to prevent KINSOL from looping indefinitely when an ODE
+    //       solver is badly set up (e.g. Forward Euler with an integration step
+    //       that is too big)...
+
+    for (int i = 0, iMax = NV_LENGTH_S(pF); i < iMax; ++i) {
+        if (!qIsFinite(f[i]))
+            return 1;
+    }
 
     return 0;
 }
