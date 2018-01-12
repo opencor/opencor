@@ -107,6 +107,18 @@ IntegerEditorWidget::IntegerEditorWidget(QWidget *pParent) :
 
 //==============================================================================
 
+IntegerGe0EditorWidget::IntegerGe0EditorWidget(QWidget *pParent) :
+    TextEditorWidget(pParent)
+{
+    // Set a validator that accepts zero or any strictly positive integer
+
+    static const QRegularExpression IntegerGe0RegEx = QRegularExpression("^[+]?\\d+$");
+
+    setValidator(new QRegularExpressionValidator(IntegerGe0RegEx, this));
+}
+
+//==============================================================================
+
 IntegerGt0EditorWidget::IntegerGt0EditorWidget(QWidget *pParent) :
     TextEditorWidget(pParent)
 {
@@ -127,6 +139,18 @@ DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
     static const QRegularExpression DoubleRegEx = QRegularExpression("^[+-]?(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d+)?$");
 
     setValidator(new QRegularExpressionValidator(DoubleRegEx, this));
+}
+
+//==============================================================================
+
+DoubleGe0EditorWidget::DoubleGe0EditorWidget(QWidget *pParent) :
+    TextEditorWidget(pParent)
+{
+    // Set a validator that accepts zero or any strictly positive double
+
+    static const QRegularExpression DoubleGe0RegEx = QRegularExpression("^[+]?(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d+)?$");
+
+    setValidator(new QRegularExpressionValidator(DoubleGe0RegEx, this));
 }
 
 //==============================================================================
@@ -326,12 +350,20 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
         editor = new IntegerEditorWidget(pParent);
 
         break;
+    case Property::IntegerGe0:
+        editor = new IntegerGe0EditorWidget(pParent);
+
+        break;
     case Property::IntegerGt0:
         editor = new IntegerGt0EditorWidget(pParent);
 
         break;
     case Property::Double:
         editor = new DoubleEditorWidget(pParent);
+
+        break;
+    case Property::DoubleGe0:
+        editor = new DoubleGe0EditorWidget(pParent);
 
         break;
     case Property::DoubleGt0:
@@ -781,9 +813,11 @@ QVariant Property::valueAsVariant() const
     case Color:
         return value();
     case Integer:
+    case IntegerGe0:
     case IntegerGt0:
         return integerValue();
     case Double:
+    case DoubleGe0:
     case DoubleGt0:
         return doubleValue();
     case Boolean:
@@ -805,8 +839,10 @@ QString Property::valueAsString() const
     case Section:
     case String:
     case Integer:
+    case IntegerGe0:
     case IntegerGt0:
     case Double:
+    case DoubleGe0:
     case DoubleGt0:
     case List:
     case Color:
@@ -838,6 +874,8 @@ void Property::setIntegerValue(const int &pIntegerValue,
 
     if (mType == Integer)
         setValue(QString::number(pIntegerValue), false, pEmitSignal);
+    else if (mType == IntegerGe0)
+        setValue(QString::number((pIntegerValue >= 0)?pIntegerValue:1), false, pEmitSignal);
     else if (mType == IntegerGt0)
         setValue(QString::number((pIntegerValue > 0)?pIntegerValue:1), false, pEmitSignal);
 }
@@ -862,6 +900,8 @@ void Property::setDoubleValue(const double &pDoubleValue,
 
     if (mType == Double)
         setValue(QString::number(pDoubleValue, 'g', 15), false, pEmitSignal);
+    else if (mType == DoubleGe0)
+        setValue(QString::number((pDoubleValue >= 0.0)?pDoubleValue:1.0, 'g', 15), false, pEmitSignal);
     else if (mType == DoubleGt0)
         setValue(QString::number((pDoubleValue > 0.0)?pDoubleValue:1.0, 'g', 15), false, pEmitSignal);
 }
@@ -1552,6 +1592,31 @@ Property * PropertyEditorWidget::addIntegerProperty(Property *pParent)
 
 //==============================================================================
 
+Property * PropertyEditorWidget::addIntegerGe0Property(const int &pValue,
+                                                       Property *pParent)
+{
+    // Add a zero or strictly positive integer property and return its
+    // information
+
+    Property *res = addProperty(Property::IntegerGe0, pParent);
+
+    res->setIntegerValue(pValue);
+
+    return res;
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addIntegerGe0Property(Property *pParent)
+{
+    // Add a zero or strictly positive integer property and return its
+    // information
+
+    return addIntegerGe0Property(1, pParent);
+}
+
+//==============================================================================
+
 Property * PropertyEditorWidget::addIntegerGt0Property(const int &pValue,
                                                        Property *pParent)
 {
@@ -1594,6 +1659,31 @@ Property * PropertyEditorWidget::addDoubleProperty(Property *pParent)
     // Add a double property and return its information
 
     return addDoubleProperty(0.0, pParent);
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addDoubleGe0Property(const double &pValue,
+                                                      Property *pParent)
+{
+    // Add a zero or strictly positive double property and return its
+    // information
+
+    Property *res = addProperty(Property::DoubleGe0, pParent);
+
+    res->setDoubleValue(pValue);
+
+    return res;
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addDoubleGe0Property(Property *pParent)
+{
+    // Add a zero or strictly positive double property and return its
+    // information
+
+    return addDoubleGe0Property(1.0, pParent);
 }
 
 //==============================================================================
@@ -2024,8 +2114,10 @@ void PropertyEditorWidget::editProperty(Property *pProperty,
             Property::Type propertyType = mProperty->type();
 
             if (   (propertyType == Property::Integer)
+                || (propertyType == Property::IntegerGe0)
                 || (propertyType == Property::IntegerGt0)
                 || (propertyType == Property::Double)
+                || (propertyType == Property::DoubleGe0)
                 || (propertyType == Property::DoubleGt0)
                 || (propertyType == Property::Color)) {
                 TextEditorWidget *propertyEditor = static_cast<TextEditorWidget *>(mPropertyEditor);
