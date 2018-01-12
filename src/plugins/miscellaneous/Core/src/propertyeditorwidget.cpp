@@ -160,7 +160,7 @@ DoubleGt0EditorWidget::DoubleGt0EditorWidget(QWidget *pParent) :
 {
     // Set a validator that accepts any strictly positive double
 
-    static const QRegularExpression DoubleGt0RegEx = QRegularExpression("^[+]?(([1-9]\\d*)?(\\.\\d*)?|[0]?\\.\\d+)([eE][+-]?\\d+)?$");
+    static const QRegularExpression DoubleGt0RegEx = QRegularExpression("^[+]?([1-9]\\d*(\\.\\d*)?|[0]?\\.\\d+)([eE][+-]?\\d+)?$");
 
     setValidator(new QRegularExpressionValidator(DoubleGt0RegEx, this));
 }
