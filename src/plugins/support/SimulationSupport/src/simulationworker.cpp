@@ -288,17 +288,6 @@ void SimulationWorker::started()
         QMutex pausedMutex;
 
         forever {
-            // Reinitialise our solver, if we have an NLA solver or if the model
-            // got reset and we are not
-            // Note: indeed, with a solver such as CVODE, to solve an NLA system
-            //       requires updating its internals...
-
-            if (nlaSolver || mReset) {
-                odeSolver->reinitialize(mCurrentPoint);
-
-                mReset = false;
-            }
-
             // Determine our next point and compute our model up to it
 
             ++pointCounter;
@@ -320,44 +309,60 @@ void SimulationWorker::started()
 
             mSimulation->results()->addPoint(mCurrentPoint);
 
-            // Check whether we are done or whether we have been asked to stop
+            // Some post-processing, if needed
 
-            if ((mCurrentPoint == endingPoint) || mStopped)
+            if ((mCurrentPoint == endingPoint) || mStopped) {
+                // We have reached our ending point or we have been asked to
+                // stop, so leave our main work loop
+
                 break;
+            } else {
+                // Delay things a bit, if needed
 
-            // Delay things a bit, if (really) needed
+                if (mSimulation->delay())
+                    Core::doNothing(100*mSimulation->delay());
 
-            if (mSimulation->delay() && !mStopped)
-                Core::doNothing(100*mSimulation->delay());
+                // Pause ourselves, if needed
 
-            // Pause ourselves, if (really) needed
+                if (mPaused) {
+                    // We should be paused, so stop our timer
 
-            if (mPaused && !mStopped) {
-                // We should be paused, so stop our timer
+                    elapsedTime += timer.elapsed();
 
-                elapsedTime += timer.elapsed();
+                    // Let people know that we are paused
 
-                // Let people know that we are paused
+                    emit paused();
 
-                emit paused();
+                    // Actually pause ourselves
 
-                // Actually pause ourselves
+                    pausedMutex.lock();
+                        mPausedCondition.wait(&pausedMutex);
+                    pausedMutex.unlock();
 
-                pausedMutex.lock();
-                    mPausedCondition.wait(&pausedMutex);
-                pausedMutex.unlock();
+                    // We are not paused anymore
 
-                // We are not paused anymore
+                    mPaused = false;
 
-                mPaused = false;
+                    // Let people know that we are running again
 
-                // Let people know that we are running again
+                    emit running(true);
 
-                emit running(true);
+                    // (Re)start our timer
 
-                // (Re)start our timer
+                    timer.start();
 
-                timer.start();
+                }
+
+                // Reinitialise our solver, if we have an NLA solver or if the
+                // model got reset
+                // Note: indeed, with a solver such as CVODE, to solve an NLA
+                //       system requires updating its internals...
+
+                if (nlaSolver || mReset) {
+                    odeSolver->reinitialize(mCurrentPoint);
+
+                    mReset = false;
+                }
             }
         }
 
