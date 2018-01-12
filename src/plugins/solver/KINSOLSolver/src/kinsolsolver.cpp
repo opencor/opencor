@@ -222,8 +222,7 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
                 if (mProperties.contains(UpperHalfBandwidthId)) {
                     upperHalfBandwidthValue = mProperties.value(UpperHalfBandwidthId).toInt();
 
-                    if (   (upperHalfBandwidthValue < 0)
-                        || (upperHalfBandwidthValue >= pSize)) {
+                    if (upperHalfBandwidthValue >= pSize) {
                         emit error(tr("the \"Upper half-bandwidth\" property must have a value between 0 and %1").arg(pSize-1));
 
                         return;
@@ -237,8 +236,7 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
                 if (mProperties.contains(LowerHalfBandwidthId)) {
                     lowerHalfBandwidthValue = mProperties.value(LowerHalfBandwidthId).toInt();
 
-                    if (   (lowerHalfBandwidthValue < 0)
-                        || (lowerHalfBandwidthValue >= pSize)) {
+                    if (lowerHalfBandwidthValue >= pSize) {
                         emit error(tr("the \"Lower half-bandwidth\" property must have a value between 0 and %1").arg(pSize-1));
 
                         return;
