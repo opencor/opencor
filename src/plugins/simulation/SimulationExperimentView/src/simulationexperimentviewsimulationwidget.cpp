@@ -2470,7 +2470,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 #ifdef QT_DEBUG
                     // We should never come here...
 
-                    qFatal("FATAL ERROR | %s:%d: the solver property cannot be of section type.", __FILE__, __LINE__);
+                    qFatal("FATAL ERROR | %s:%d: a solver property cannot be of section type.", __FILE__, __LINE__);
 #endif
 
                     break;
@@ -2502,7 +2502,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 #ifdef QT_DEBUG
                     // We should never come here...
 
-                    qFatal("FATAL ERROR | %s:%d: the solver property cannot be of colour type.", __FILE__, __LINE__);
+                    qFatal("FATAL ERROR | %s:%d: a solver property cannot be of colour type.", __FILE__, __LINE__);
 #endif
 
                     break;

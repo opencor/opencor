@@ -878,7 +878,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
             // Make sure that the file has indeed been created
 
             if (createStatus != FileManager::Created)
-                qFatal("FATAL ERROR | %s:%d: the remote file was not created.", __FILE__, __LINE__);
+                qFatal("FATAL ERROR | %s:%d: '%s' did not get created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl));
 #endif
         } else {
             // We were not able to retrieve the contents of the remote file, so
