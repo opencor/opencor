@@ -445,12 +445,12 @@ bool SimulationData::isModified() const
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
     for (int i = 0, iMax = runtime->statesCount(); i < iMax; ++i) {
-        if (!qIsFinite(mStates[i]) || (mStates[i] != mInitialStates[i]))
+        if (mStates[i] != mInitialStates[i])
             return true;
     }
 
     for (int i = 0, iMax = runtime->constantsCount(); i < iMax; ++i) {
-        if (!qIsFinite(mConstants[i]) || (mConstants[i] != mInitialConstants[i]))
+        if (mConstants[i] != mInitialConstants[i])
             return true;
     }
 
