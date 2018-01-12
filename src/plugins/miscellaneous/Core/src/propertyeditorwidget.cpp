@@ -1616,7 +1616,7 @@ Property * PropertyEditorWidget::addDoubleGt0Property(Property *pParent)
 {
     // Add a strictly positive double property and return its information
 
-    return addDoubleProperty(1.0, pParent);
+    return addDoubleGt0Property(1.0, pParent);
 }
 
 //==============================================================================
