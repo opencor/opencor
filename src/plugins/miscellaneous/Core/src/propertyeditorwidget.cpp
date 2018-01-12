@@ -100,7 +100,7 @@ IntegerEditorWidget::IntegerEditorWidget(QWidget *pParent) :
 {
     // Set a validator that accepts any integer
 
-    static const QRegularExpression IntegerRegEx = QRegularExpression("^[+-]?\\d*$");
+    static const QRegularExpression IntegerRegEx = QRegularExpression("^[+-]?\\d+$");
 
     setValidator(new QRegularExpressionValidator(IntegerRegEx, this));
 }
