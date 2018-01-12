@@ -235,8 +235,6 @@ void SimulationWorker::started()
     double startingPoint = mSimulation->data()->startingPoint();
     double endingPoint = mSimulation->data()->endingPoint();
     double pointInterval = mSimulation->data()->pointInterval();
-
-    bool increasingPoints = endingPoint > startingPoint;
     quint64 pointCounter = 0;
 
     mCurrentPoint = startingPoint;
@@ -292,9 +290,8 @@ void SimulationWorker::started()
             ++pointCounter;
 
             odeSolver->solve(mCurrentPoint,
-                             increasingPoints?
-                                 qMin(endingPoint, startingPoint+pointCounter*pointInterval):
-                                 qMax(endingPoint, startingPoint+pointCounter*pointInterval));
+                             qMin(endingPoint,
+                                  startingPoint+pointCounter*pointInterval));
 
             // Make sure that no error occurred
 
