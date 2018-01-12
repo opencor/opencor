@@ -110,7 +110,7 @@ IntegerEditorWidget::IntegerEditorWidget(QWidget *pParent) :
 IntegerGt0EditorWidget::IntegerGt0EditorWidget(QWidget *pParent) :
     TextEditorWidget(pParent)
 {
-    // Set a validator that accepts any strictly positif integer
+    // Set a validator that accepts any strictly positive integer
 
     static const QRegularExpression IntegerGt0RegEx = QRegularExpression("^[+]?[1-9]\\d*$");
 
@@ -134,7 +134,7 @@ DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
 DoubleGt0EditorWidget::DoubleGt0EditorWidget(QWidget *pParent) :
     TextEditorWidget(pParent)
 {
-    // Set a validator that accepts any strictly positif double
+    // Set a validator that accepts any strictly positive double
 
     static const QRegularExpression DoubleGt0RegEx = QRegularExpression("^[+]?(([1-9]\\d*)?(\\.\\d*)?|[0]?\\.\\d+)([eE][+-]?\\d+)?$");
 
@@ -1555,7 +1555,7 @@ Property * PropertyEditorWidget::addIntegerProperty(Property *pParent)
 Property * PropertyEditorWidget::addIntegerGt0Property(const int &pValue,
                                                        Property *pParent)
 {
-    // Add a strictly positif integer property and return its information
+    // Add a strictly positive integer property and return its information
 
     Property *res = addProperty(Property::IntegerGt0, pParent);
 
@@ -1568,7 +1568,7 @@ Property * PropertyEditorWidget::addIntegerGt0Property(const int &pValue,
 
 Property * PropertyEditorWidget::addIntegerGt0Property(Property *pParent)
 {
-    // Add a strictly positif integer property and return its information
+    // Add a strictly positive integer property and return its information
 
     return addIntegerGt0Property(1, pParent);
 }
@@ -1601,7 +1601,7 @@ Property * PropertyEditorWidget::addDoubleProperty(Property *pParent)
 Property * PropertyEditorWidget::addDoubleGt0Property(const double &pValue,
                                                       Property *pParent)
 {
-    // Add a strictly positif double property and return its information
+    // Add a strictly positive double property and return its information
 
     Property *res = addProperty(Property::DoubleGt0, pParent);
 
@@ -1614,7 +1614,7 @@ Property * PropertyEditorWidget::addDoubleGt0Property(const double &pValue,
 
 Property * PropertyEditorWidget::addDoubleGt0Property(Property *pParent)
 {
-    // Add a strictly positif double property and return its information
+    // Add a strictly positive double property and return its information
 
     return addDoubleProperty(1.0, pParent);
 }
