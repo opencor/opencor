@@ -191,6 +191,7 @@ public:
 private:
     Simulation *mSimulation;
 
+    QList<DataStore::DataStore *> mDataStores;
     DataStore::DataStore *mDataStore;
 
     DataStore::DataStoreVariable *mPoints;
@@ -200,8 +201,7 @@ private:
     DataStore::DataStoreVariables mStates;
     DataStore::DataStoreVariables mAlgebraic;
 
-    bool createDataStore();
-    void deleteDataStore();
+    void deleteDataStores();
 
     QString uri(const QStringList &pComponentHierarchy, const QString &pName);
 };

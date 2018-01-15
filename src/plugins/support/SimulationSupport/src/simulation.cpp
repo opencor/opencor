@@ -513,6 +513,7 @@ void SimulationData::deleteArrays()
 
 SimulationResults::SimulationResults(Simulation *pSimulation) :
     mSimulation(pSimulation),
+    mDataStores(QList<DataStore::DataStore *>()),
     mDataStore(0),
     mPoints(0),
     mConstants(DataStore::DataStoreVariables()),
@@ -528,7 +529,7 @@ SimulationResults::~SimulationResults()
 {
     // Delete some internal objects
 
-    deleteDataStore();
+    deleteDataStores();
 }
 
 //==============================================================================
@@ -545,14 +546,43 @@ QString SimulationResults::uri(const QStringList &pComponentHierarchy,
 
 //==============================================================================
 
-bool SimulationResults::createDataStore()
+void SimulationResults::deleteDataStores()
 {
+    // Delete our data stores
+
+    foreach (DataStore::DataStore *dataStore, mDataStores)
+        delete dataStore;
+
+    mDataStore = 0;
+
+    mDataStores.clear();
+}
+
+//==============================================================================
+
+void SimulationResults::reload()
+{
+    // Reload ourselves by deleting our data store
+
+    deleteDataStores();
+}
+
+//==============================================================================
+
+void SimulationResults::reset()
+{
+    // Reset our data store by deleting it
+
+    deleteDataStores();
+}
+
+//==============================================================================
+
+bool SimulationResults::addRun()
+{
+    // Add a new run by creating a new data store
     // Note: the boolean value we return is true if we have had no problem
     //       creating our data store or if the simulation size is zero...
-
-    // Delete the previous data store, if any
-
-    deleteDataStore();
 
     // Retrieve the size of our data and make sure that it is valid
 
@@ -566,6 +596,8 @@ bool SimulationResults::createDataStore()
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
+    mDataStore = 0;
+
     try {
         mDataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase(), simulationSize);
 
@@ -575,10 +607,14 @@ bool SimulationResults::createDataStore()
         mStates = mDataStore->addVariables(runtime->statesCount(), mSimulation->data()->states());
         mAlgebraic = mDataStore->addVariables(runtime->algebraicCount(), mSimulation->data()->algebraic());
     } catch (...) {
-        deleteDataStore();
+        delete mDataStore;
+
+        mDataStore = 0;
 
         return false;
     }
+
+    mDataStores << mDataStore;
 
     // Customise our variable of integration, as well as our constant, rate,
     // state and algebraic variables
@@ -628,44 +664,6 @@ bool SimulationResults::createDataStore()
     }
 
     return true;
-}
-
-//==============================================================================
-
-void SimulationResults::deleteDataStore()
-{
-    // Delete our data store
-
-    delete mDataStore;
-
-    mDataStore = 0;
-}
-
-//==============================================================================
-
-void SimulationResults::reload()
-{
-    // Reload ourselves by deleting our data store
-
-    deleteDataStore();
-}
-
-//==============================================================================
-
-void SimulationResults::reset()
-{
-    // Reset our data store by deleting it
-
-    deleteDataStore();
-}
-
-//==============================================================================
-
-bool SimulationResults::addRun()
-{
-    // Add a new run by creating a new data store
-
-    return createDataStore();
 }
 
 //==============================================================================
