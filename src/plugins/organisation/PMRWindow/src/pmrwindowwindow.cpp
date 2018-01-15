@@ -231,7 +231,7 @@ void PmrWindowWindow::update(const QString &pPmrUrl)
 
         mPmrInstanceLabel->setText(mPmrWebService->siteName());
 
-        retrieveExposures(isVisible());
+        retrieveExposures(isVisible(), true);
     }
 }
 
@@ -356,7 +356,8 @@ void PmrWindowWindow::itemDoubleClicked()
 
 //==============================================================================
 
-void PmrWindowWindow::retrieveExposures(const bool &pVisible)
+void PmrWindowWindow::retrieveExposures(const bool &pVisible,
+                                        const bool &pForceRetrieval)
 {
     // Retrieve the list of exposures, if we are becoming visible and the list
     // of exposures has never been requested before (through a single shot, this
@@ -365,7 +366,7 @@ void PmrWindowWindow::retrieveExposures(const bool &pVisible)
 
     static bool firstTime = true;
 
-    if (pVisible && firstTime) {
+    if (pVisible && (firstTime || pForceRetrieval)) {
         firstTime = false;
 
         QTimer::singleShot(0, this, SLOT(on_actionReload_triggered()));
