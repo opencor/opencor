@@ -652,17 +652,20 @@ void SimulationResults::reload()
 
 //==============================================================================
 
-bool SimulationResults::reset(const bool &pCreateDataStore)
+void SimulationResults::reset()
 {
-    // Reset our data store
+    // Reset our data store by deleting it
 
-    if (pCreateDataStore) {
-        return createDataStore();
-    } else {
-        deleteDataStore();
+    deleteDataStore();
+}
 
-        return true;
-    }
+//==============================================================================
+
+bool SimulationResults::addRun()
+{
+    // Add a new run by creating a new data store
+
+    return createDataStore();
 }
 
 //==============================================================================

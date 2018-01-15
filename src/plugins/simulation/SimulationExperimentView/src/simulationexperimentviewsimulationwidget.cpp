@@ -1312,7 +1312,7 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
             // Try to allocate all the memory we need for the simulation by
             // resetting its settings
 
-            bool runSimulation = mSimulation->results()->reset();
+            bool runSimulation = mSimulation->results()->addRun();
 
             // Run our simulation (after having cleared our plots), in case we
             // were able to allocate all the memory we need
@@ -1357,7 +1357,7 @@ void SimulationExperimentViewSimulationWidget::clearSimulationData()
 {
     // Clear our simulation data
 
-    mSimulation->results()->reset(false);
+    mSimulation->results()->reset();
 
     // Update our simulation mode and check for results
 
@@ -2956,7 +2956,7 @@ void SimulationExperimentViewSimulationWidget::initializeSimulation()
     // case of its data)
 
     mSimulation->data()->reset();
-    mSimulation->results()->reset(false);
+    mSimulation->results()->reset();
 
     // Retrieve our simulation and solvers properties since they may have an
     // effect on our parameter values (as well as result in some solver

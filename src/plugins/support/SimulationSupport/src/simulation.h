@@ -171,7 +171,9 @@ public:
 
     void reload();
 
-    bool reset(const bool &pCreateDataStore = true);
+    void reset();
+
+    bool addRun();
 
     void addPoint(const double &pPoint);
 
