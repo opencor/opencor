@@ -322,7 +322,7 @@ private slots:
 
     void updateDelayValue(const double &pDelayValue);
 
-    void simulationRunning();
+    void simulationRunning(const bool &pIsResuming);
     void simulationPaused();
     void simulationStopped(const qint64 &pElapsedTime);
 
@@ -337,7 +337,8 @@ private slots:
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
 
-    void graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
+    void graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                         const bool &pActive);
     void graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
