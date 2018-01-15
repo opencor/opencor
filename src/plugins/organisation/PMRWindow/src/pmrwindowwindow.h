@@ -103,7 +103,8 @@ private slots:
     void showWarning(const QString &pMessage);
     void showError(const QString &pMessage);
 
-    void retrieveExposures(const bool &pVisible);
+    void retrieveExposures(const bool &pVisible,
+                           const bool &pForceRetrieval = false);
 
     void initializeWidget(const PMRSupport::PmrExposures &pExposures);
 
