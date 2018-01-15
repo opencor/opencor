@@ -131,7 +131,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mSimulation = simulationManager->simulation(pFileName);
 
     connect(mSimulation, SIGNAL(running(const bool &)),
-            this, SLOT(simulationRunning(const bool &)));
+            this, SLOT(simulationRunning()));
     connect(mSimulation, SIGNAL(paused()),
             this, SLOT(simulationPaused()));
     connect(mSimulation, SIGNAL(stopped(const qint64 &)),
@@ -397,7 +397,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
             graphPanelAndGraphsWidget, SLOT(finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
 
     connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
-            this, SLOT(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)));
+            this, SLOT(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
     connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
             this, SLOT(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
 
@@ -3031,10 +3031,8 @@ void SimulationExperimentViewSimulationWidget::updateDelayValue(const double &pD
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationRunning(const bool &pIsResuming)
+void SimulationExperimentViewSimulationWidget::simulationRunning()
 {
-    Q_UNUSED(pIsResuming);
-
     // Our simulation is running, so update our simulation mode and check for
     // results
 
@@ -3210,11 +3208,8 @@ void SimulationExperimentViewSimulationWidget::solversPropertyChanged(Core::Prop
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                               const bool &pActive)
+void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
-    Q_UNUSED(pActive);
-
     // Keep track of the fact that we want to know if a graph panel's plot's
     // axes have been changed
     // Note: we don't need to keep track of the graph panel's plot (in mPlots)
