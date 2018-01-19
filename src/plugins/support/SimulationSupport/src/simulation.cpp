@@ -664,16 +664,17 @@ bool SimulationResults::addRun()
 
 void SimulationResults::addPoint(const double &pPoint)
 {
-    // Add the data to our data store
+    // Add the data to our curret data store, if any
 
-    dataStore()->addValues(pPoint);
+    if (!mDataStores.isEmpty())
+        mDataStores.last()->addValues(pPoint);
 }
 
 //==============================================================================
 
 qulonglong SimulationResults::size() const
 {
-    // Return the size of our current data store
+    // Return the size of our current data store, if any
 
     return mDataStores.isEmpty()?0:mDataStores.last()->size();
 }
@@ -682,7 +683,7 @@ qulonglong SimulationResults::size() const
 
 DataStore::DataStore * SimulationResults::dataStore() const
 {
-    // Return our current data store
+    // Return our current data store, if any
 
     return mDataStores.isEmpty()?0:mDataStores.last();
 }
