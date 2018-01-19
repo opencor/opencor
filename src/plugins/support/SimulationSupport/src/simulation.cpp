@@ -513,7 +513,7 @@ void SimulationData::deleteArrays()
 
 SimulationResults::SimulationResults(Simulation *pSimulation) :
     mSimulation(pSimulation),
-    mDataStores(QList<DataStore::DataStore *>()),
+    mDataStores(DataStore::DataStores()),
     mPoints(0),
     mConstants(DataStore::DataStoreVariables()),
     mRates(DataStore::DataStoreVariables()),

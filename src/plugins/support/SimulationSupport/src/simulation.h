@@ -179,7 +179,7 @@ public:
 
     qulonglong size() const;
 
-    QList<DataStore::DataStore *> dataStores() const;
+    DataStore::DataStores dataStores() const;
     DataStore::DataStore * dataStore() const;
 
     double * points() const;
@@ -192,7 +192,7 @@ public:
 private:
     Simulation *mSimulation;
 
-    QList<DataStore::DataStore *> mDataStores;
+    DataStore::DataStores mDataStores;
 
     DataStore::DataStoreVariable *mPoints;
 
