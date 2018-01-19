@@ -605,8 +605,6 @@ bool SimulationResults::addRun()
     } catch (...) {
         delete dataStore;
 
-        dataStore = 0;
-
         return false;
     }
 
