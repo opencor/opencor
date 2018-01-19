@@ -675,9 +675,7 @@ qulonglong SimulationResults::size() const
 {
     // Return the size of our current data store
 
-    DataStore::DataStore * currentDataStore = dataStore();
-
-    return currentDataStore?currentDataStore->size():0;
+    return mDataStores.isEmpty()?0:mDataStores.last()->size();
 }
 
 //==============================================================================
