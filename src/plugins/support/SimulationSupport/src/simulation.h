@@ -179,6 +179,7 @@ public:
 
     qulonglong size() const;
 
+    QList<DataStore::DataStore *> dataStores() const;
     DataStore::DataStore * dataStore() const;
 
     double * points() const;

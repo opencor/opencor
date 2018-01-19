@@ -681,6 +681,15 @@ qulonglong SimulationResults::size() const
 
 //==============================================================================
 
+QList<DataStore::DataStore *> SimulationResults::dataStores() const
+{
+    // Return our data stores
+
+    return mDataStores;
+}
+
+//==============================================================================
+
 DataStore::DataStore * SimulationResults::dataStore() const
 {
     // Return our current data store, if any
