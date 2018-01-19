@@ -192,7 +192,6 @@ private:
     Simulation *mSimulation;
 
     QList<DataStore::DataStore *> mDataStores;
-    DataStore::DataStore *mDataStore;
 
     DataStore::DataStoreVariable *mPoints;
 
