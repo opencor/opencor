@@ -35,10 +35,8 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-CsvDataStoreExporter::CsvDataStoreExporter(const QString &pFileName,
-                                           DataStore::DataStore *pDataStore,
-                                           DataStore::DataStoreData *pDataStoreData) :
-    DataStore::DataStoreExporter(pFileName, pDataStore, pDataStoreData)
+CsvDataStoreExporter::CsvDataStoreExporter(DataStore::DataStoreData *pDataStoreData) :
+    DataStore::DataStoreExporter(pDataStoreData)
 {
 }
 
@@ -48,7 +46,8 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 {
     // Determine what should be exported
 
-    DataStore::DataStoreVariable *voi = mDataStoreData->selectedVariables().contains(mDataStore->voi())?mDataStore->voi():0;
+    DataStore::DataStore *dataStore = mDataStoreData->dataStores().last();
+    DataStore::DataStoreVariable *voi = mDataStoreData->selectedVariables().contains(dataStore->voi())?dataStore->voi():0;
     DataStore::DataStoreVariables selectedVariables = mDataStoreData->selectedVariables();
 
     selectedVariables.removeOne(voi);
@@ -93,7 +92,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
         // header
 
         if (res) {
-            for (qulonglong i = 0, iMax = mDataStore->size(); i < iMax; ++i) {
+            for (qulonglong i = 0, iMax = dataStore->size(); i < iMax; ++i) {
                 QString rowData = QString();
 
                 if (voi)

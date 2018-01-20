@@ -67,8 +67,8 @@ class DATASTORE_EXPORT DataStoreDialog : public Core::Dialog
     Q_OBJECT
 
 public:
-    explicit DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
-                             QWidget *pParent);
+    explicit DataStoreDialog(const DataStores &pDataStores,
+                             const bool &pIncludeVoi, QWidget *pParent);
     ~DataStoreDialog();
 
     void addWidget(QWidget *pWidget);

@@ -44,10 +44,8 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-BiosignalmlDataStoreExporter::BiosignalmlDataStoreExporter(const QString &pFileName,
-                                                           DataStore::DataStore *pDataStore,
-                                                           DataStore::DataStoreData *pDataStoreData) :
-    DataStore::DataStoreExporter(pFileName, pDataStore, pDataStoreData)
+BiosignalmlDataStoreExporter::BiosignalmlDataStoreExporter(DataStore::DataStoreData *pDataStoreData) :
+    DataStore::DataStoreExporter(pDataStoreData)
 {
 }
 
@@ -58,7 +56,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
     // Export the given data store to a BioSignalML file
 
     BiosignalmlDataStoreData *dataStoreData = static_cast<BiosignalmlDataStoreData *>(mDataStoreData);
-    QString fileName = dataStoreData->fileName();
+    DataStore::DataStore *dataStore = dataStoreData->dataStores().last();
     bsml::HDF5::Recording *recording = 0;
 
     try {
@@ -67,11 +65,11 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
         //       visible to a user, we still need to export it since it's needed
         //       by BioSignalML...
 
-        DataStore::DataStoreVariable *voi = mDataStore->voi();
-        std::string recordingUri = QUrl::fromLocalFile(fileName).toEncoded().toStdString();
-        std::string baseUnits = mDataStore->uri().toStdString()+"/units#";
+        DataStore::DataStoreVariable *voi = dataStore->voi();
+        std::string recordingUri = QUrl::fromLocalFile(dataStoreData->fileName()).toEncoded().toStdString();
+        std::string baseUnits = dataStore->uri().toStdString()+"/units#";
 
-        recording = new bsml::HDF5::Recording(recordingUri, fileName.toStdString(), true);
+        recording = new bsml::HDF5::Recording(recordingUri, dataStoreData->fileName().toStdString(), true);
 
         recording->add_prefix(rdf::Namespace("units", baseUnits));
 
@@ -96,7 +94,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
         DataStore::DataStoreVariables selectedVariables = mDataStoreData->selectedVariables();
 
-        selectedVariables.removeOne(mDataStore->voi());
+        selectedVariables.removeOne(dataStore->voi());
 
         // Retrieve some information about the different variables that are to
         // be exported
@@ -125,7 +123,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
         double *dataPointer = data;
         int rowCount = 0;
 
-        for (qulonglong i = 0, iMax = mDataStore->size(); i < iMax; ++i) {
+        for (qulonglong i = 0, iMax = dataStore->size(); i < iMax; ++i) {
             foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables)
                 *dataPointer++ = selectedVariable->value(i);
 
@@ -149,7 +147,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
         pErrorMessage = tr("The data could not be exported to BioSignalML (%1).").arg(e.what());
 
-        QFile::remove(fileName);
+        QFile::remove(dataStoreData->fileName());
     }
 
     // Close and delete our recording, if any

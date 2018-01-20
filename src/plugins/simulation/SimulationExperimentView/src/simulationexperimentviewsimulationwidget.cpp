@@ -2983,16 +2983,15 @@ void SimulationExperimentViewSimulationWidget::simulationDataExport()
     // results
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
-    DataStore::DataStore *dataStore = mSimulation->results()->dataStore();
-    QString simulationFileName = mSimulation->fileName();
-    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(simulationFileName, dataStore);
+    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(mSimulation->fileName(),
+                                                                          mSimulation->results()->dataStores());
 
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
 
         Core::centralWidget()->showProgressBusyWidget();
 
-        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(simulationFileName, dataStore, dataStoreData);
+        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(dataStoreData);
 
         connect(dataStoreExporter, SIGNAL(done(const QString &)),
                 this, SLOT(dataStoreExportDone(const QString &)));

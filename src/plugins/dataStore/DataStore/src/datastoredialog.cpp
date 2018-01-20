@@ -69,8 +69,8 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
-                                 QWidget *pParent) :
+DataStoreDialog::DataStoreDialog(const DataStores &pDataStores,
+                                 const bool &pIncludeVoi, QWidget *pParent) :
     Core::Dialog(pParent),
     mGui(new Ui::DataStoreDialog),
     mData(QMap<QStandardItem *, DataStoreVariable*>()),
@@ -107,11 +107,12 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
     mGui->treeView->setModel(mModel);
     mGui->treeView->setItemDelegate(new DataItemDelegate(this));
 
+    DataStore *dataStore = pDataStores.last();
     QString dataHierarchy = QString();
     QStandardItem *hierarchyItem = 0;
 
     foreach (DataStoreVariable *variable,
-             pIncludeVoi?pDataStore->voiAndVariables():pDataStore->variables()) {
+             pIncludeVoi?dataStore->voiAndVariables():dataStore->variables()) {
         if (variable->isVisible()) {
             // Check whether the variable is in the same hierarchy as the
             // previous one

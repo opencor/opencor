@@ -42,7 +42,7 @@ extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion()
 {
     // Version of the data store interface
 
-    return 1;
+    return 2;
 }
 
 //==============================================================================
@@ -238,9 +238,11 @@ double * DataStoreVariable::values() const
 //==============================================================================
 
 DataStoreData::DataStoreData(const QString &pFileName,
-                             const DataStoreVariables &pSelectedVariables) :
+                             const DataStoreVariables &pSelectedVariables,
+                             const OpenCOR::DataStore::DataStores &pDataStores) :
     mFileName(pFileName),
-    mSelectedVariables(pSelectedVariables)
+    mSelectedVariables(pSelectedVariables),
+    mDataStores(pDataStores)
 {
 }
 
@@ -260,6 +262,15 @@ DataStoreVariables DataStoreData::selectedVariables() const
     // Return our selected variables
 
     return mSelectedVariables;
+}
+
+//==============================================================================
+
+DataStores DataStoreData::dataStores() const
+{
+    // Return our data stores
+
+    return mDataStores;
 }
 
 //==============================================================================
@@ -408,11 +419,7 @@ void DataStore::addValues(const double &pVoiValue)
 
 //==============================================================================
 
-DataStoreExporter::DataStoreExporter(const QString &pFileName,
-                                     DataStore *pDataStore,
-                                     DataStoreData *pDataStoreData) :
-    mFileName(pFileName),
-    mDataStore(pDataStore),
+DataStoreExporter::DataStoreExporter(DataStoreData *pDataStoreData) :
     mDataStoreData(pDataStoreData)
 {
     // Create our thread

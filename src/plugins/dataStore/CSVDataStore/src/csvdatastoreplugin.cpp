@@ -77,11 +77,11 @@ QString CSVDataStorePlugin::dataStoreName() const
 //==============================================================================
 
 DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
-                                                       DataStore::DataStore *pDataStore) const
+                                                       const DataStore::DataStores &pDataStores) const
 {
     // Ask which data should be exported
 
-    DataStore::DataStoreDialog dataStoreDialog(pDataStore, true, Core::mainWindow());
+    DataStore::DataStoreDialog dataStoreDialog(pDataStores, true, Core::mainWindow());
     QSettings settings;
 
     settings.beginGroup(SettingsPlugins);
@@ -98,8 +98,11 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
                                                  QStringList() << csvFilter,
                                                  &csvFilter);
 
-        if (!fileName.isEmpty())
-            return new DataStore::DataStoreData(fileName, dataStoreDialog.selectedData());
+        if (!fileName.isEmpty()) {
+            return new DataStore::DataStoreData(fileName,
+                                                dataStoreDialog.selectedData(),
+                                                pDataStores);
+        }
     }
 
     return 0;
@@ -107,13 +110,11 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
 
 //==============================================================================
 
-DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance(const QString &pFileName,
-                                                                             DataStore::DataStore *pDataStore,
-                                                                             DataStore::DataStoreData *pDataStoreData) const
+DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance(DataStore::DataStoreData *pDataStoreData) const
 {
     // Return an instance of our CSV data store exporter
 
-    return new CsvDataStoreExporter(pFileName, pDataStore, pDataStoreData);
+    return new CsvDataStoreExporter(pDataStoreData);
 }
 
 //==============================================================================

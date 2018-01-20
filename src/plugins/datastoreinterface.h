@@ -94,18 +94,29 @@ typedef QList<DataStoreVariable *> DataStoreVariables;
 
 //==============================================================================
 
+class DataStore;
+
+//==============================================================================
+
+typedef QList<DataStore *> DataStores;
+
+//==============================================================================
+
 class DataStoreData
 {
 public:
     explicit DataStoreData(const QString &pFileName,
-                           const DataStoreVariables &pSelectedVariables);
+                           const DataStoreVariables &pSelectedVariables,
+                           const DataStores &pDataStores);
 
     QString fileName() const;
     DataStoreVariables selectedVariables() const;
+    DataStores dataStores() const;
 
 private:
     QString mFileName;
     DataStoreVariables mSelectedVariables;
+    DataStores mDataStores;
 };
 
 //==============================================================================
@@ -143,17 +154,12 @@ private:
 
 //==============================================================================
 
-typedef QList<DataStore *> DataStores;
-
-//==============================================================================
-
 class DataStoreExporter : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit DataStoreExporter(const QString &pFileName, DataStore *pDataStore,
-                               DataStoreData *pDataStoreData);
+    explicit DataStoreExporter(DataStoreData *pDataStoreData);
     ~DataStoreExporter();
 
     void start();
@@ -164,8 +170,6 @@ private:
     QThread *mThread;
 
 protected:
-    QString mFileName;
-    DataStore *mDataStore;
     DataStoreData *mDataStoreData;
 
 signals:

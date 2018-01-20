@@ -44,7 +44,7 @@ class BiosignalmlDataStoreDialog : public DataStore::DataStoreDialog
     Q_OBJECT
 
 public:
-    explicit BiosignalmlDataStoreDialog(DataStore::DataStore *pDataStore,
+    explicit BiosignalmlDataStoreDialog(const DataStore::DataStores &pDataStores,
                                         QWidget *pParent);
 
     QString name() const;
