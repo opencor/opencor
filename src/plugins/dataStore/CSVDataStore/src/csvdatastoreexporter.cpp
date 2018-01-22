@@ -158,13 +158,16 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                 if (voi)
                     rowData += QString::number(voiValue);
 
+                bool firstRowData = true;
                 bool updateDataStoresIndex[nbOfRuns];
 
                 foreach (const DataStore::DataStoreVariables &selectedVariableDataStores, selectedVariablesDataStores) {
                     int j = 0;
 
                     foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariableDataStores) {
-                        if (!rowData.isEmpty())
+                        if (firstRowData)
+                            firstRowData = false;
+                        else
                             rowData += ',';
 
                         if (dataStores[j]->voi()->values()[dataStoresIndex[j]] == voiValue) {
