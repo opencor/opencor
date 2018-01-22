@@ -109,7 +109,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
             //          Indeed, this is much faster than preventing ourselves
             //          from adding duplicates in the first place...
 
-            qulonglong dataStoresIndex[nbOfRuns];
+            QList<qulonglong> dataStoresIndex = QList<qulonglong>();
             QDoubleList voiValues = QDoubleList();
             QStringList selectedVariablesUri = QStringList();
             QList<DataStore::DataStoreVariables> selectedVariablesDataStores = QList<DataStore::DataStoreVariables>();
@@ -123,7 +123,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
             for (int i = 0; i < nbOfRuns; ++i) {
                 // Original index
 
-                dataStoresIndex[i] = 0;
+                dataStoresIndex << 0;
 
                 // VOI values
 
@@ -159,7 +159,10 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                     rowData += QString::number(voiValue);
 
                 bool firstRowData = true;
-                bool updateDataStoresIndex[nbOfRuns];
+                QBoolList updateDataStoresIndex = QBoolList();
+
+                for (int j = 0; j < nbOfRuns; ++j)
+                    updateDataStoresIndex << false;
 
                 foreach (const DataStore::DataStoreVariables &selectedVariableDataStores, selectedVariablesDataStores) {
                     int j = 0;
@@ -174,8 +177,6 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                             rowData += QString::number(selectedVariable->value(dataStoresIndex[j]));
 
                             updateDataStoresIndex[j] = true;
-                        } else {
-                            updateDataStoresIndex[j] = false;
                         }
 
                         ++j;
