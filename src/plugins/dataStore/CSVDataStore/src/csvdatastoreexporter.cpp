@@ -165,7 +165,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                     int j = 0;
 
                     foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariableDataStores) {
-                        if (firstRowData)
+                        if (firstRowData && rowData.isEmpty())
                             firstRowData = false;
                         else
                             rowData += ',';
