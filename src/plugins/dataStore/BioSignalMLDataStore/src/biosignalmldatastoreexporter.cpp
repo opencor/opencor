@@ -131,7 +131,9 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
             if (rowCount >= BufferRows) {
                 signalArray->extend(data, selectedVariables.count()*BufferRows);
+
                 dataPointer = data;
+
                 rowCount = 0;
             }
 

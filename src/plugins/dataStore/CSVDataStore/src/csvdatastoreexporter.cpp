@@ -81,7 +81,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                 header += ',';
 
             header += Header.arg(selectedVariable->uri().replace("/prime", "'").replace('/', " | "),
-                               selectedVariable->unit());
+                                 selectedVariable->unit());
         }
 
         header += '\n';
