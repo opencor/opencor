@@ -57,6 +57,7 @@ namespace Core {
 
 typedef QList<bool> QBoolList;
 typedef QList<int> QIntList;
+typedef QList<double> QDoubleList;
 
 //==============================================================================
 
