@@ -73,7 +73,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
         if (voi) {
             header += Header.arg(voi->uri().replace("/prime", "'").replace('/', " | "),
-                               voi->unit());
+                                 voi->unit());
         }
 
         foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables) {
