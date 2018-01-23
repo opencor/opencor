@@ -280,7 +280,7 @@ DataStore::DataStore(const QString &pUri,
     mlUri(pUri),
     mCapacity(pCapacity),
     mSize(0),
-    mVoi(0),
+    mVoi(new DataStoreVariable(pCapacity)),
     mVariables(DataStoreVariables())
 {
 }
@@ -339,19 +339,6 @@ DataStoreVariables DataStore::voiAndVariables()
 DataStoreVariable * DataStore::voi() const
 {
     // Return our variable of integration
-
-    return mVoi;
-}
-
-//==============================================================================
-
-DataStoreVariable * DataStore::addVoi()
-{
-    // Add a (new) variable of integration to our data store
-
-    delete mVoi;
-
-    mVoi = new DataStoreVariable(mCapacity);
 
     return mVoi;
 }

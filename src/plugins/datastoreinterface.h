@@ -134,7 +134,6 @@ public:
     DataStoreVariables voiAndVariables();
 
     DataStoreVariable * voi() const;
-    DataStoreVariable * addVoi();
 
     DataStoreVariables variables();
     DataStoreVariable * addVariable(double *pValue = 0);

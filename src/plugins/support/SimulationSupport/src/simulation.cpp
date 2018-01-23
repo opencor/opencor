@@ -597,7 +597,8 @@ bool SimulationResults::addRun()
     try {
         dataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase(), simulationSize);
 
-        mPoints = dataStore->addVoi();
+        mPoints = dataStore->voi();
+
         mConstants = dataStore->addVariables(runtime->constantsCount(), mSimulation->data()->constants());
         mRates = dataStore->addVariables(runtime->ratesCount(), mSimulation->data()->rates());
         mStates = dataStore->addVariables(runtime->statesCount(), mSimulation->data()->states());
