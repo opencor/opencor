@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> upgraded to Qt 5.9.4 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1526\">#1526</a>)." },
                        { "change": "<strong>PMR window:</strong> properly refresh the list of public exposures when changing the PMR instance (see issue <a href=\"https://github.com/opencor/opencor/issues/1521\">#1521</a>)." }
                      ]
                    },
