@@ -512,12 +512,11 @@ void SimulationData::deleteArrays()
 //==============================================================================
 
 SimulationResults::SimulationResults(Simulation *pSimulation) :
-    mSimulation(pSimulation),
-    mDataStore(0)
+    mSimulation(pSimulation)
 {
-    // Create our data store by resetting ourselves
+    // Create our data store
 
-    reset();
+    createDataStore();
 }
 
 //==============================================================================
