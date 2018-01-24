@@ -369,8 +369,7 @@ DataStoreVariable * DataStore::addVariable(double *pValue)
 
 //==============================================================================
 
-DataStoreVariables DataStore::addVariables(const int &pCount,
-                                           double *pValues)
+DataStoreVariables DataStore::addVariables(const int &pCount, double *pValues)
 {
     // Add some variables to our data store
 
