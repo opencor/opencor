@@ -2984,7 +2984,7 @@ void SimulationExperimentViewSimulationWidget::simulationDataExport()
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
     DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(mSimulation->fileName(),
-                                                                          mSimulation->results()->dataStores());
+                                                                          mSimulation->results()->dataStore());
 
     if (dataStoreData) {
         // We have got the data we need, so do the actual export

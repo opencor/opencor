@@ -513,13 +513,11 @@ void SimulationData::deleteArrays()
 
 SimulationResults::SimulationResults(Simulation *pSimulation) :
     mSimulation(pSimulation),
-    mDataStores(DataStore::DataStores()),
-    mPoints(0),
-    mConstants(DataStore::DataStoreVariables()),
-    mRates(DataStore::DataStoreVariables()),
-    mStates(DataStore::DataStoreVariables()),
-    mAlgebraic(DataStore::DataStoreVariables())
+    mDataStore(0)
 {
+    // Create our data store by resetting ourselves
+
+    reset();
 }
 
 //==============================================================================
@@ -528,7 +526,7 @@ SimulationResults::~SimulationResults()
 {
     // Delete some internal objects
 
-    deleteDataStores();
+    deleteDataStore();
 }
 
 //==============================================================================
@@ -545,32 +543,51 @@ QString SimulationResults::uri(const QStringList &pComponentHierarchy,
 
 //==============================================================================
 
-void SimulationResults::deleteDataStores()
+void SimulationResults::deleteDataStore()
 {
-    // Delete our data stores
+    // Delete our data store
 
-    foreach (DataStore::DataStore *dataStore, mDataStores)
-        delete dataStore;
+    delete mDataStore;
 
-    mDataStores.clear();
+    mDataStore = 0;
+}
+
+//==============================================================================
+
+void SimulationResults::createDataStore()
+{
+    // Create our data store
+
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+    SimulationData *data = mSimulation->data();
+
+    mDataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase());
+
+    mPoints = mDataStore->voi();
+
+    mConstants = mDataStore->addVariables(runtime->constantsCount(), data->constants());
+    mRates = mDataStore->addVariables(runtime->ratesCount(), data->rates());
+    mStates = mDataStore->addVariables(runtime->statesCount(), data->states());
+    mAlgebraic = mDataStore->addVariables(runtime->algebraicCount(), data->algebraic());
 }
 
 //==============================================================================
 
 void SimulationResults::reload()
 {
-    // Reload ourselves by deleting our data store
+    // Reload ourselves by resetting ourselves
 
-    deleteDataStores();
+    reset();
 }
 
 //==============================================================================
 
 void SimulationResults::reset()
 {
-    // Reset our data store by deleting it
+    // Reset our data store by deleting it and then recreating it
 
-    deleteDataStores();
+    deleteDataStore();
+    createDataStore();
 }
 
 //==============================================================================
@@ -583,7 +600,7 @@ bool SimulationResults::addRun()
 
     // Retrieve the size of our data and make sure that it is valid
 
-    qulonglong simulationSize = qulonglong(mSimulation->size());
+    qulonglong simulationSize = mSimulation->size();
 
     if (!simulationSize)
         return true;
@@ -592,10 +609,10 @@ bool SimulationResults::addRun()
     // well as with constant, rate, state and algebraic variables
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-    DataStore::DataStore *dataStore = 0;
 
+/*---ISSUE1523---
     try {
-        dataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase()/*---ISSUE1523---, simulationSize*/);
+        mDataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase(), simulationSize);
 
         mPoints = dataStore->voi();
 
@@ -604,12 +621,11 @@ bool SimulationResults::addRun()
         mStates = dataStore->addVariables(runtime->statesCount(), mSimulation->data()->states());
         mAlgebraic = dataStore->addVariables(runtime->algebraicCount(), mSimulation->data()->algebraic());
     } catch (...) {
-        delete dataStore;
+        delete mDataStore;
 
         return false;
     }
-
-    mDataStores << dataStore;
+*/
 
     // Customise our variable of integration, as well as our constant, rate,
     // state and algebraic variables
@@ -665,37 +681,27 @@ bool SimulationResults::addRun()
 
 void SimulationResults::addPoint(const double &pPoint)
 {
-    // Add the data to our curret data store, if any
+    // Add the data to our data store
 
-    if (!mDataStores.isEmpty())
-        mDataStores.last()->addValues(pPoint);
+    mDataStore->addValues(pPoint);
 }
 
 //==============================================================================
 
 qulonglong SimulationResults::size() const
 {
-    // Return the size of our current data store, if any
+    // Return the size of our data store
 
-    return mDataStores.isEmpty()?0:mDataStores.last()->size();
-}
-
-//==============================================================================
-
-QList<DataStore::DataStore *> SimulationResults::dataStores() const
-{
-    // Return our data stores
-
-    return mDataStores;
+    return mDataStore->size();
 }
 
 //==============================================================================
 
 DataStore::DataStore * SimulationResults::dataStore() const
 {
-    // Return our current data store, if any
+    // Return our data store
 
-    return mDataStores.isEmpty()?0:mDataStores.last();
+    return mDataStore;
 }
 
 //==============================================================================

@@ -77,11 +77,11 @@ QString CSVDataStorePlugin::dataStoreName() const
 //==============================================================================
 
 DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
-                                                       const DataStore::DataStores &pDataStores) const
+                                                       DataStore::DataStore *pDataStore) const
 {
     // Ask which data should be exported
 
-    DataStore::DataStoreDialog dataStoreDialog(pDataStores, true, Core::mainWindow());
+    DataStore::DataStoreDialog dataStoreDialog(pDataStore, true, Core::mainWindow());
     QSettings settings;
 
     settings.beginGroup(SettingsPlugins);

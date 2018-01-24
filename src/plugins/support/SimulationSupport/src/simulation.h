@@ -179,7 +179,6 @@ public:
 
     qulonglong size() const;
 
-    DataStore::DataStores dataStores() const;
     DataStore::DataStore * dataStore() const;
 
     double * points() const;
@@ -192,7 +191,7 @@ public:
 private:
     Simulation *mSimulation;
 
-    DataStore::DataStores mDataStores;
+    DataStore::DataStore *mDataStore;
 
     DataStore::DataStoreVariable *mPoints;
 
@@ -201,7 +200,8 @@ private:
     DataStore::DataStoreVariables mStates;
     DataStore::DataStoreVariables mAlgebraic;
 
-    void deleteDataStores();
+    void createDataStore();
+    void deleteDataStore();
 
     QString uri(const QStringList &pComponentHierarchy, const QString &pName);
 };

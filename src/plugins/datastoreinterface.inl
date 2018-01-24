@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     virtual QString dataStoreName() const PURE;
 
     virtual DataStore::DataStoreData * getData(const QString &pFileName,
-                                               const DataStore::DataStores &pDataStores) const PURE;
+                                               DataStore::DataStore *pDataStore) const PURE;
 
     virtual DataStore::DataStoreExporter * dataStoreExporterInstance(DataStore::DataStoreData *pDataStoreData) const PURE;
 
