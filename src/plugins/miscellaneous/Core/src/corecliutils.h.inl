@@ -87,19 +87,6 @@ QString CORE_EXPORT urlArguments(const QUrl &pUrl);
 QString CORE_EXPORT stringToPercentEncoding(const QString &pString);
 QString CORE_EXPORT stringFromPercentEncoding(const QString &pString);
 
-template <typename T> void resetList(QList<T> &pList)
-{
-    // Reset the contents of the given list
-    // Note: to have the implementation in corecliutils.cpp.inl results in the
-    //       linker telling us that resetList() cannot be resolved (why?!), so
-    //       have it here instead...
-
-    foreach (const T &item, pList)
-        delete item;
-
-    pList.clear();
-}
-
 //==============================================================================
 // End of file
 //==============================================================================

@@ -278,11 +278,8 @@ DataStore::~DataStore()
 
     delete mVoi;
 
-#ifdef OpenCOR_MAIN
-    resetList(mVariables);
-#else
-    Core::resetList(mVariables);
-#endif
+    foreach (DataStoreVariable *variable, mVariables)
+        delete variable;
 }
 
 //==============================================================================
