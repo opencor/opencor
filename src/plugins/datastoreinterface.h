@@ -43,17 +43,22 @@ namespace DataStore {
 class DataStoreVariableRun
 {
 public:
-    explicit DataStoreVariableRun(const qulonglong &pCapacity);
+    explicit DataStoreVariableRun(const qulonglong &pCapacity, double *pValue);
     ~DataStoreVariableRun();
 
     qulonglong size() const;
 
+    void addValue();
+    void addValue(const double &pValue);
+
+    double value(const qulonglong &pPosition) const;
+    double * values() const;
+
 private:
-/*---ISSUE1523---
     qulonglong mCapacity;
-*/
     qulonglong mSize;
 
+    double *mValue;
     double *mValues;
 };
 

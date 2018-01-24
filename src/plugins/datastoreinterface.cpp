@@ -51,11 +51,11 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreVariableRun::DataStoreVariableRun(const qulonglong &pCapacity) :
-/*---ISSUE1523---
+DataStoreVariableRun::DataStoreVariableRun(const qulonglong &pCapacity,
+                                           double *pValue) :
     mCapacity(pCapacity),
-*/
-    mSize(0)
+    mSize(0),
+    mValue(pValue)
 {
     // Create our array of values
 
@@ -82,6 +82,53 @@ qulonglong DataStoreVariableRun::size() const
 
 //==============================================================================
 
+void DataStoreVariableRun::addValue()
+{
+    // Set the value of the variable at the given position
+
+    Q_ASSERT(mSize < mCapacity);
+    Q_ASSERT(mValue);
+
+    mValues[mSize] = *mValue;
+
+    ++mSize;
+}
+
+//==============================================================================
+
+void DataStoreVariableRun::addValue(const double &pValue)
+{
+    // Set the value of the variable at the given position using the given value
+
+    Q_ASSERT(mSize < mCapacity);
+
+    mValues[mSize] = pValue;
+
+    ++mSize;
+}
+
+//==============================================================================
+
+double DataStoreVariableRun::value(const qulonglong &pPosition) const
+{
+    // Return the value at the given position
+
+    Q_ASSERT(pPosition < mSize);
+
+    return mValues[pPosition];
+}
+
+//==============================================================================
+
+double * DataStoreVariableRun::values() const
+{
+    // Return our values
+
+    return mValues;
+}
+
+//==============================================================================
+
 DataStoreVariable::DataStoreVariable(double *pValue) :
 #ifndef CLI_VERSION
     mIcon(QIcon()),
@@ -92,9 +139,6 @@ DataStoreVariable::DataStoreVariable(double *pValue) :
     mValue(pValue),
     mRuns(DataStoreVariableRuns())
 {
-Q_UNUSED(mValue);
-//---ISSUE1523--- THE ABOVE IS NEEDED TO PREVENT A WARNING SINCE WE COMMENTED
-//                OUT SOME CODE THAT USES mValue...
 }
 
 //==============================================================================
@@ -148,7 +192,7 @@ void DataStoreVariable::addRun(const qulonglong &pCapacity)
 {
     // Add a run of the given capacity
 
-    mRuns << new DataStoreVariableRun(pCapacity);
+    mRuns << new DataStoreVariableRun(pCapacity, mValue);
 }
 
 //==============================================================================
@@ -257,59 +301,45 @@ qulonglong DataStoreVariable::size(const int &pRun) const
 
 void DataStoreVariable::addValue()
 {
-    // Set the value of the variable at the given position
+    // Add a value to our current (i.e. last) run
 
-/*---ISSUE1523---
-    Q_ASSERT(mSize < mCapacity);
-    Q_ASSERT(mValue);
+    Q_ASSERT(!mRuns.isEmpty());
 
-    mValues[mSize] = *mValue;
-
-    ++mSize;
-*/
+    mRuns.last()->addValue();
 }
 
 //==============================================================================
 
 void DataStoreVariable::addValue(const double &pValue)
 {
-    // Set the value of the variable at the given position using the given value
+    // Add the given value to our current (i.e. last) run
 
-Q_UNUSED(pValue);
-/*---ISSUE1523---
-    Q_ASSERT(mSize < mCapacity);
+    Q_ASSERT(!mRuns.isEmpty());
 
-    mValues[mSize] = pValue;
-
-    ++mSize;
-*/
+    mRuns.last()->addValue(pValue);
 }
 
 //==============================================================================
 
 double DataStoreVariable::value(const qulonglong &pPosition) const
 {
-    // Return our value at the given position
+    // Return the value at the given position for our current (i.e. last) run
 
-Q_UNUSED(pPosition);
-return 0.0;
-/*---ISSUE1523---
-    Q_ASSERT(pPosition < mSize);
+    Q_ASSERT(!mRuns.isEmpty());
 
-    return mValues[pPosition];
-*/
+    return mRuns.last()->value(pPosition);
 }
 
 //==============================================================================
 
 double * DataStoreVariable::values() const
 {
-    // Return our values
+    // Return the values for our current (i.e. last) run, if any
 
-return 0;
-/*---ISSUE1523---
-    return mValues;
-*/
+    if (mRuns.isEmpty())
+        return 0;
+    else
+        return mRuns.last()->values();
 }
 
 //==============================================================================
