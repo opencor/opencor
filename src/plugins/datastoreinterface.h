@@ -118,6 +118,8 @@ public:
 
     QString uri() const;
 
+    bool addRun(const qulonglong &pCapacity);
+
     qulonglong size() const;
 
     DataStoreVariables voiAndVariables();

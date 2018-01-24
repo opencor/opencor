@@ -296,6 +296,17 @@ QString DataStore::uri() const
 
 //==============================================================================
 
+bool DataStore::addRun(const qulonglong &pCapacity)
+{
+Q_UNUSED(pCapacity);
+//---ISSUE1523--- TO BE DONE...
+    // Add a run to our variable of integration and all our variables
+
+    return true;
+}
+
+//==============================================================================
+
 qulonglong DataStore::size() const
 {
     // Return our size, i.e. the size of our variable of integration for example

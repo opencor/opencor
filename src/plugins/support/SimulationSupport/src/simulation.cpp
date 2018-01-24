@@ -568,63 +568,6 @@ void SimulationResults::createDataStore()
     mRates = mDataStore->addVariables(data->rates(), runtime->ratesCount());
     mStates = mDataStore->addVariables(data->states(), runtime->statesCount());
     mAlgebraic = mDataStore->addVariables(data->algebraic(), runtime->algebraicCount());
-}
-
-//==============================================================================
-
-void SimulationResults::reload()
-{
-    // Reload ourselves by resetting ourselves
-
-    reset();
-}
-
-//==============================================================================
-
-void SimulationResults::reset()
-{
-    // Reset our data store by deleting it and then recreating it
-
-    deleteDataStore();
-    createDataStore();
-}
-
-//==============================================================================
-
-bool SimulationResults::addRun()
-{
-    // Add a new run by creating a new data store
-    // Note: the boolean value we return is true if we have had no problem
-    //       creating our data store or if the simulation size is zero...
-
-    // Retrieve the size of our data and make sure that it is valid
-
-    qulonglong simulationSize = mSimulation->size();
-
-    if (!simulationSize)
-        return true;
-
-    // Create our data store and populate it with a variable of integration, as
-    // well as with constant, rate, state and algebraic variables
-
-    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-
-/*---ISSUE1523---
-    try {
-        mDataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase(), simulationSize);
-
-        mPoints = dataStore->voi();
-
-        mConstants = dataStore->addVariables(runtime->constantsCount(), mSimulation->data()->constants());
-        mRates = dataStore->addVariables(runtime->ratesCount(), mSimulation->data()->rates());
-        mStates = dataStore->addVariables(runtime->statesCount(), mSimulation->data()->states());
-        mAlgebraic = dataStore->addVariables(runtime->algebraicCount(), mSimulation->data()->algebraic());
-    } catch (...) {
-        delete mDataStore;
-
-        return false;
-    }
-*/
 
     // Customise our variable of integration, as well as our constant, rate,
     // state and algebraic variables
@@ -672,8 +615,41 @@ bool SimulationResults::addRun()
             variable->setUnit(parameter->formattedUnit(runtime->variableOfIntegration()->unit()));
         }
     }
+}
 
-    return true;
+//==============================================================================
+
+void SimulationResults::reload()
+{
+    // Reload ourselves by resetting ourselves
+
+    reset();
+}
+
+//==============================================================================
+
+void SimulationResults::reset()
+{
+    // Reset our data store by deleting it and then recreating it
+
+    deleteDataStore();
+    createDataStore();
+}
+
+//==============================================================================
+
+bool SimulationResults::addRun()
+{
+    // Ask our data store to add a run to itself
+    // Note: we consider things to be fine if our data store have had no problem
+    //       adding a run to itself or if the simulation size is zero...
+
+    qulonglong simulationSize = mSimulation->size();
+
+    if (simulationSize)
+        return mDataStore->addRun(simulationSize);
+    else
+        return true;
 }
 
 //==============================================================================
