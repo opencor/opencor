@@ -46,11 +46,13 @@ public:
     explicit DataStoreVariableRun(const qulonglong &pCapacity);
     ~DataStoreVariableRun();
 
+    qulonglong size() const;
+
 private:
 /*---ISSUE1523---
     qulonglong mCapacity;
-    qulonglong mSize;
 */
+    qulonglong mSize;
 
     double *mValues;
 };
@@ -91,7 +93,7 @@ public:
     QString unit() const;
     void setUnit(const QString &pUnit);
 
-    qulonglong size() const;
+    qulonglong size(const int &pRun) const;
 
     void addValue();
     void addValue(const double &pValue);
@@ -144,7 +146,7 @@ public:
 
     bool addRun(const qulonglong &pCapacity);
 
-    qulonglong size() const;
+    qulonglong size(const int &pRun = -1) const;
 
     DataStoreVariables voiAndVariables();
 

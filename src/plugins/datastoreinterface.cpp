@@ -51,12 +51,11 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreVariableRun::DataStoreVariableRun(const qulonglong &pCapacity)
-/*---ISSUE1523---
 DataStoreVariableRun::DataStoreVariableRun(const qulonglong &pCapacity) :
+/*---ISSUE1523---
     mCapacity(pCapacity),
-    mSize(0)
 */
+    mSize(0)
 {
     // Create our array of values
 
@@ -70,6 +69,15 @@ DataStoreVariableRun::~DataStoreVariableRun()
     // Delete some internal objects
 
     delete[] mValues;
+}
+
+//==============================================================================
+
+qulonglong DataStoreVariableRun::size() const
+{
+    // Return our size
+
+    return mSize;
 }
 
 //==============================================================================
@@ -234,11 +242,15 @@ void DataStoreVariable::setUnit(const QString &pUnit)
 
 //==============================================================================
 
-qulonglong DataStoreVariable::size() const
+qulonglong DataStoreVariable::size(const int &pRun) const
 {
-    // Return our size
+    // Return our size for the given run, i.e. the size of our variable of
+    // integration, for example
 
-    return 0/*---ISSUE1523---mSize*/;
+    if (pRun == -1)
+        return mRuns.count()?mRuns.last()->size():0;
+    else
+        return (pRun < mRuns.count())?mRuns[pRun]->size():0;
 }
 
 //==============================================================================
@@ -387,11 +399,12 @@ bool DataStore::addRun(const qulonglong &pCapacity)
 
 //==============================================================================
 
-qulonglong DataStore::size() const
+qulonglong DataStore::size(const int &pRun) const
 {
-    // Return our size, i.e. the size of our variable of integration for example
+    // Return our size, i.e. the size of our variable of integration, for
+    // example
 
-    return mVoi->size();
+    return mVoi->size(pRun);
 }
 
 //==============================================================================
