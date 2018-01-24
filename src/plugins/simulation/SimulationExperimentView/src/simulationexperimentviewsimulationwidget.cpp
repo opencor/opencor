@@ -1309,10 +1309,10 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
         if (mSimulation->isPaused()) {
             mSimulation->resume();
         } else {
-            // Try to allocate all the memory we need for the simulation by
-            // resetting its settings
+            // Try to allocate all the memory we need by adding a run to our
+            // simulation
 
-            bool runSimulation = mSimulation->results()->addRun();
+            bool runSimulation = mSimulation->addRun();
 
             // Run our simulation (after having cleared our plots), in case we
             // were able to allocate all the memory we need

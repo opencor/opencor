@@ -921,6 +921,15 @@ SimulationResults * Simulation::results() const
 
 //==============================================================================
 
+bool Simulation::addRun()
+{
+    // Ask our results to add a run
+
+    return mResults?mResults->addRun():false;
+}
+
+//==============================================================================
+
 bool Simulation::isRunning() const
 {
     // Return whether we are running

@@ -239,6 +239,8 @@ public:
     SimulationData * data() const;
     SimulationResults * results() const;
 
+    bool addRun();
+
     bool isRunning() const;
     bool isPaused() const;
 
