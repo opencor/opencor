@@ -94,11 +94,11 @@ template <typename T> void resetList(QList<T> &pList)
     //       linker telling us that resetList() cannot be resolved (why?!), so
     //       have it here instead...
 
-    foreach (T item, pList)
+    foreach (const T &item, pList)
         delete item;
 
     pList.clear();
-};
+}
 
 //==============================================================================
 // End of file
