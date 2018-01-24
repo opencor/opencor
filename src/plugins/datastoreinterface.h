@@ -148,11 +148,10 @@ public:
 
     qulonglong size(const int &pRun = -1) const;
 
+    DataStoreVariable * voi() const;
+    DataStoreVariables variables();
     DataStoreVariables voiAndVariables();
 
-    DataStoreVariable * voi() const;
-
-    DataStoreVariables variables();
     DataStoreVariable * addVariable(double *pValue = 0);
     DataStoreVariables addVariables(double *pValues, const int &pCount);
 

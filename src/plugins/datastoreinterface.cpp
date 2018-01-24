@@ -409,22 +409,6 @@ qulonglong DataStore::size(const int &pRun) const
 
 //==============================================================================
 
-DataStoreVariables DataStore::voiAndVariables()
-{
-    // Return our variable of integration, if any, and all our variables, after
-    // making sure that they are sorted
-
-    DataStoreVariables res = DataStoreVariables();
-
-    res << mVoi << mVariables;
-
-    std::sort(res.begin(), res.end(), DataStoreVariable::compare);
-
-    return res;
-}
-
-//==============================================================================
-
 DataStoreVariable * DataStore::voi() const
 {
     // Return our variable of integration
@@ -441,6 +425,22 @@ DataStoreVariables DataStore::variables()
     std::sort(mVariables.begin(), mVariables.end(), DataStoreVariable::compare);
 
     return mVariables;
+}
+
+//==============================================================================
+
+DataStoreVariables DataStore::voiAndVariables()
+{
+    // Return our variable of integration, if any, and all our variables, after
+    // making sure that they are sorted
+
+    DataStoreVariables res = DataStoreVariables();
+
+    res << mVoi << mVariables;
+
+    std::sort(res.begin(), res.end(), DataStoreVariable::compare);
+
+    return res;
 }
 
 //==============================================================================
