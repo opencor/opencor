@@ -595,7 +595,7 @@ bool SimulationResults::addRun()
     DataStore::DataStore *dataStore = 0;
 
     try {
-        dataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase(), simulationSize);
+        dataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase()/*---ISSUE1523---, simulationSize*/);
 
         mPoints = dataStore->voi();
 
