@@ -126,7 +126,7 @@ public:
 
     DataStoreVariables variables();
     DataStoreVariable * addVariable(double *pValue = 0);
-    DataStoreVariables addVariables(const int &pCount, double *pValues);
+    DataStoreVariables addVariables(double *pValues, const int &pCount);
 
     void addValues(const double &pVoiValue);
 

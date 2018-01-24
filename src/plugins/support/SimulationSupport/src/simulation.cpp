@@ -564,10 +564,10 @@ void SimulationResults::createDataStore()
 
     mPoints = mDataStore->voi();
 
-    mConstants = mDataStore->addVariables(runtime->constantsCount(), data->constants());
-    mRates = mDataStore->addVariables(runtime->ratesCount(), data->rates());
-    mStates = mDataStore->addVariables(runtime->statesCount(), data->states());
-    mAlgebraic = mDataStore->addVariables(runtime->algebraicCount(), data->algebraic());
+    mConstants = mDataStore->addVariables(data->constants(), runtime->constantsCount());
+    mRates = mDataStore->addVariables(data->rates(), runtime->ratesCount());
+    mStates = mDataStore->addVariables(data->states(), runtime->statesCount());
+    mAlgebraic = mDataStore->addVariables(data->algebraic(), runtime->algebraicCount());
 }
 
 //==============================================================================
