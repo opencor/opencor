@@ -51,6 +51,29 @@ namespace DataStore {
 
 //==============================================================================
 
+DataStoreVariableRun::DataStoreVariableRun(const qulonglong &pCapacity)
+/*---ISSUE1523---
+DataStoreVariableRun::DataStoreVariableRun(const qulonglong &pCapacity) :
+    mCapacity(pCapacity),
+    mSize(0)
+*/
+{
+    // Create our array of values
+
+    mValues = new double[pCapacity];
+}
+
+//==============================================================================
+
+DataStoreVariableRun::~DataStoreVariableRun()
+{
+    // Delete some internal objects
+
+    delete[] mValues;
+}
+
+//==============================================================================
+
 DataStoreVariable::DataStoreVariable(double *pValue) :
 #ifndef CLI_VERSION
     mIcon(QIcon()),
@@ -58,13 +81,12 @@ DataStoreVariable::DataStoreVariable(double *pValue) :
     mUri(QString()),
     mName(QString()),
     mUnit(QString()),
-    mCapacity(0/*---ISSUE1523---pCapacity*/),
-    mSize(0),
-    mValue(pValue)
+    mValue(pValue),
+    mRuns(DataStoreVariableRuns())
 {
-    // Create our array of values
-
-    mValues = new double[0/*---ISSUE1523---pCapacity*/];
+Q_UNUSED(mValue);
+//---ISSUE1523--- THE ABOVE IS NEEDED TO PREVENT A WARNING SINCE WE COMMENTED
+//                OUT SOME CODE THAT USES mValue...
 }
 
 //==============================================================================
@@ -73,7 +95,8 @@ DataStoreVariable::~DataStoreVariable()
 {
     // Delete some internal objects
 
-    delete[] mValues;
+    foreach (DataStoreVariableRun *run, mRuns)
+        delete run;
 }
 
 //==============================================================================
@@ -100,6 +123,37 @@ bool DataStoreVariable::isVisible() const
     //       this...
 
     return !mUri.isEmpty();
+}
+
+//==============================================================================
+
+int DataStoreVariable::runsCount() const
+{
+    // Return our number of runs
+
+    return mRuns.count();
+}
+
+//==============================================================================
+
+void DataStoreVariable::addRun(const qulonglong &pCapacity)
+{
+    // Add a run of the given capacity
+
+    mRuns << new DataStoreVariableRun(pCapacity);
+}
+
+//==============================================================================
+
+void DataStoreVariable::keepRuns(const int &pRunsCount)
+{
+    // Keep the given number of runs
+
+    while (mRuns.count() > pRunsCount) {
+        delete mRuns.last();
+
+        mRuns.removeLast();
+    }
 }
 
 //==============================================================================
@@ -184,7 +238,7 @@ qulonglong DataStoreVariable::size() const
 {
     // Return our size
 
-    return mSize;
+    return 0/*---ISSUE1523---mSize*/;
 }
 
 //==============================================================================
@@ -193,12 +247,14 @@ void DataStoreVariable::addValue()
 {
     // Set the value of the variable at the given position
 
+/*---ISSUE1523---
     Q_ASSERT(mSize < mCapacity);
     Q_ASSERT(mValue);
 
     mValues[mSize] = *mValue;
 
     ++mSize;
+*/
 }
 
 //==============================================================================
@@ -207,11 +263,14 @@ void DataStoreVariable::addValue(const double &pValue)
 {
     // Set the value of the variable at the given position using the given value
 
+Q_UNUSED(pValue);
+/*---ISSUE1523---
     Q_ASSERT(mSize < mCapacity);
 
     mValues[mSize] = pValue;
 
     ++mSize;
+*/
 }
 
 //==============================================================================
@@ -220,9 +279,13 @@ double DataStoreVariable::value(const qulonglong &pPosition) const
 {
     // Return our value at the given position
 
+Q_UNUSED(pPosition);
+return 0.0;
+/*---ISSUE1523---
     Q_ASSERT(pPosition < mSize);
 
     return mValues[pPosition];
+*/
 }
 
 //==============================================================================
@@ -231,7 +294,10 @@ double * DataStoreVariable::values() const
 {
     // Return our values
 
+return 0;
+/*---ISSUE1523---
     return mValues;
+*/
 }
 
 //==============================================================================
@@ -295,9 +361,26 @@ QString DataStore::uri() const
 
 bool DataStore::addRun(const qulonglong &pCapacity)
 {
-Q_UNUSED(pCapacity);
-//---ISSUE1523--- TO BE DONE...
-    // Add a run to our variable of integration and all our variables
+    // Try to add a run to our variable of integration and all our variables
+
+    int oldRunsCount = mVoi->runsCount();
+
+    try {
+        mVoi->addRun(pCapacity);
+
+        foreach (DataStoreVariable *variable, mVariables)
+            variable->addRun(pCapacity);
+    } catch (...) {
+        // We couldn't add a run to our variable of integration and all our
+        // variables, so only keep the number of runs we used to have
+
+        mVoi->keepRuns(oldRunsCount);
+
+        foreach (DataStoreVariable *variable, mVariables)
+            variable->keepRuns(oldRunsCount);
+
+        return false;
+    }
 
     return true;
 }

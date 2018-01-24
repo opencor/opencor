@@ -40,6 +40,27 @@ namespace DataStore {
 
 //==============================================================================
 
+class DataStoreVariableRun
+{
+public:
+    explicit DataStoreVariableRun(const qulonglong &pCapacity);
+    ~DataStoreVariableRun();
+
+private:
+/*---ISSUE1523---
+    qulonglong mCapacity;
+    qulonglong mSize;
+*/
+
+    double *mValues;
+};
+
+//==============================================================================
+
+typedef QList<DataStoreVariableRun *> DataStoreVariableRuns;
+
+//==============================================================================
+
 class DataStoreVariable
 {
 public:
@@ -50,6 +71,11 @@ public:
                         DataStoreVariable *pVariable2);
 
     bool isVisible() const;
+
+    int runsCount() const;
+
+    void addRun(const qulonglong &pCapacity);
+    void keepRuns(const int &pRunsCount);
 
 #ifndef CLI_VERSION
     QIcon icon() const;
@@ -81,11 +107,9 @@ private:
     QString mName;
     QString mUnit;
 
-    qulonglong mCapacity;
-    qulonglong mSize;
-
     double *mValue;
-    double *mValues;
+
+    DataStoreVariableRuns mRuns;
 };
 
 //==============================================================================
