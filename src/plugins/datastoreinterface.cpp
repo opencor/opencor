@@ -237,11 +237,9 @@ double * DataStoreVariable::values() const
 //==============================================================================
 
 DataStoreData::DataStoreData(const QString &pFileName,
-                             const DataStoreVariables &pSelectedVariables,
-                             const OpenCOR::DataStore::DataStores &pDataStores) :
+                             const DataStoreVariables &pSelectedVariables) :
     mFileName(pFileName),
-    mSelectedVariables(pSelectedVariables),
-    mDataStores(pDataStores)
+    mSelectedVariables(pSelectedVariables)
 {
 }
 
@@ -261,15 +259,6 @@ DataStoreVariables DataStoreData::selectedVariables() const
     // Return our selected variables
 
     return mSelectedVariables;
-}
-
-//==============================================================================
-
-DataStores DataStoreData::dataStores() const
-{
-    // Return our data stores
-
-    return mDataStores;
 }
 
 //==============================================================================

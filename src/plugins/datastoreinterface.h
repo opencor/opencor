@@ -106,17 +106,14 @@ class DataStoreData
 {
 public:
     explicit DataStoreData(const QString &pFileName,
-                           const DataStoreVariables &pSelectedVariables,
-                           const DataStores &pDataStores);
+                           const DataStoreVariables &pSelectedVariables);
 
     QString fileName() const;
     DataStoreVariables selectedVariables() const;
-    DataStores dataStores() const;
 
 private:
     QString mFileName;
     DataStoreVariables mSelectedVariables;
-    DataStores mDataStores;
 };
 
 //==============================================================================

@@ -45,6 +45,8 @@ CsvDataStoreExporter::CsvDataStoreExporter(DataStore::DataStoreData *pDataStoreD
 
 void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 {
+Q_UNUSED(pErrorMessage);
+/*---ISSUE1523--- TO BE UPDATED...
     // Determine what should be exported
 
     DataStore::DataStores dataStores = mDataStoreData->dataStores();
@@ -225,6 +227,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
     } else {
         pErrorMessage = tr("The CSV file could not be created.");
     }
+*/
 }
 
 //==============================================================================

@@ -53,6 +53,8 @@ BiosignalmlDataStoreExporter::BiosignalmlDataStoreExporter(DataStore::DataStoreD
 
 void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 {
+Q_UNUSED(pErrorMessage);
+/*---ISSUE1523--- TO BE UPDATED...
     // Export the given data store to a BioSignalML file
 
     BiosignalmlDataStoreData *dataStoreData = static_cast<BiosignalmlDataStoreData *>(mDataStoreData);
@@ -159,6 +161,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
         delete recording;
     }
+*/
 }
 
 //==============================================================================
