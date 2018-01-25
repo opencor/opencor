@@ -296,13 +296,6 @@ signals:
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 
-    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
-
-    void legendToggled();
-
-    void logarithmicXAxisToggled();
-    void logarithmicYAxisToggled();
-
 private slots:
     void runPauseResumeSimulation();
     void stopSimulation();

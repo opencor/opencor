@@ -220,23 +220,6 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
                 this, SLOT(graphPanelSettingsRequested()));
         connect(mSimulationWidget, SIGNAL(graphsSettingsRequested()),
                 this, SLOT(graphsSettingsRequested()));
-
-        // Check when a graph has been toggled
-
-        connect(mSimulationWidget, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-                this, SLOT(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
-
-        // Check when the legend has been toggled
-
-        connect(mSimulationWidget, SIGNAL(legendToggled()),
-                this, SLOT(legendToggled()));
-
-        // Check when the X/Y logarithmic axis has been toggled
-
-        connect(mSimulationWidget, SIGNAL(logarithmicXAxisToggled()),
-                this, SLOT(logarithmicXAxisToggled()));
-        connect(mSimulationWidget, SIGNAL(logarithmicYAxisToggled()),
-                this, SLOT(logarithmicYAxisToggled()));
     } else {
         // We already have a simulation widget, so just make sure that its GUI
         // is up to date
@@ -632,42 +615,6 @@ void SimulationExperimentViewWidget::graphsSettingsRequested()
 
     mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
     mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(2, false);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewWidget::graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
-{
-    // Toggle the given graph
-
-    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->toggleGraph(pGraph);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewWidget::legendToggled()
-{
-    // Toggle the legend property
-
-    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->toggleLegend();
-}
-
-//==============================================================================
-
-void SimulationExperimentViewWidget::logarithmicXAxisToggled()
-{
-    // Toggle the logarithmic X axis property
-
-    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->toggleLogarithmicXAxis();
-}
-
-//==============================================================================
-
-void SimulationExperimentViewWidget::logarithmicYAxisToggled()
-{
-    // Toggle the logarithmic Y axis property
-
-    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->toggleLogarithmicYAxis();
 }
 
 //==============================================================================

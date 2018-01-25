@@ -3237,20 +3237,22 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
 
     // Let people know when we a graph has been toggled
 
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = contentsWidget()->informationWidget()->graphPanelAndGraphsWidget();
+
     connect(plot, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            this, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+            graphPanelAndGraphsWidget, SLOT(toggleGraph(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
 
     // Let people know when we the legend has been toggled
 
     connect(plot, SIGNAL(legendToggled()),
-            this, SIGNAL(legendToggled()));
+            graphPanelAndGraphsWidget, SLOT(toggleLegend()));
 
     // Let people know when we the X/Y logarithmic axis has been toggled
 
     connect(plot, SIGNAL(logarithmicXAxisToggled()),
-            this, SIGNAL(logarithmicXAxisToggled()));
+            graphPanelAndGraphsWidget, SLOT(toggleLogarithmicXAxis()));
     connect(plot, SIGNAL(logarithmicYAxisToggled()),
-            this, SIGNAL(logarithmicYAxisToggled()));
+            graphPanelAndGraphsWidget, SLOT(toggleLogarithmicYAxis()));
 
     // Check our graph panels and their graphs
 
