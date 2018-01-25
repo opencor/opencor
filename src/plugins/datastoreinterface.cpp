@@ -382,7 +382,7 @@ DataStoreVariables DataStoreData::variables() const
 //==============================================================================
 
 DataStore::DataStore(const QString &pUri) :
-    mlUri(pUri),
+    mUri(pUri),
     mVoi(new DataStoreVariable()),
     mVariables(DataStoreVariables())
 {
@@ -406,7 +406,7 @@ QString DataStore::uri() const
 {
     // Return our URI
 
-    return mlUri;
+    return mUri;
 }
 
 //==============================================================================

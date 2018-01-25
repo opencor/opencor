@@ -169,7 +169,7 @@ public:
     void addValues(const double &pVoiValue);
 
 private:
-    QString mlUri;
+    QString mUri;
 
     DataStoreVariable *mVoi;
     DataStoreVariables mVariables;
