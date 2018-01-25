@@ -51,10 +51,10 @@ Q_UNUSED(pErrorMessage);
 
     DataStore::DataStores dataStores = mDataStoreData->dataStores();
     int nbOfRuns = dataStores.count();
-    DataStore::DataStoreVariables selectedVariables = mDataStoreData->selectedVariables();
-    DataStore::DataStoreVariable *voi = selectedVariables.contains(dataStores.last()->voi())?dataStores.last()->voi():0;
+    DataStore::DataStoreVariables variables = mDataStoreData->variables();
+    DataStore::DataStoreVariable *voi = variables.contains(dataStores.last()->voi())?dataStores.last()->voi():0;
 
-    selectedVariables.removeOne(voi);
+    variables.removeOne(voi);
 
     // Do the export itself
     // Note: we would normally rely on a string to which we would append our
@@ -81,13 +81,13 @@ Q_UNUSED(pErrorMessage);
                                  voi->unit(), QString());
         }
 
-        foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables) {
+        foreach (DataStore::DataStoreVariable *variable, variables) {
             for (int i = 0; i < nbOfRuns; ++i) {
                 if (!header.isEmpty())
                     header += ',';
 
-                header += Header.arg(selectedVariable->uri().replace("/prime", "'").replace('/', " | "),
-                                     selectedVariable->unit(),
+                header += Header.arg(variable->uri().replace("/prime", "'").replace('/', " | "),
+                                     variable->unit(),
                                      (nbOfRuns == 1)?
                                          QString():
                                          RunNb.arg(i+1));
@@ -102,7 +102,7 @@ Q_UNUSED(pErrorMessage);
         // to output our header
 
         if (res) {
-            // Retrieve our different VOI values and sets of selected variables
+            // Retrieve our different VOI values and sets of variables
             // Note #1: this is needed when we have two runs with different
             //          starting/ending points and/or point intervals...
             // Note #2: after our for loop, our list may contain duplicates and
@@ -113,13 +113,13 @@ Q_UNUSED(pErrorMessage);
 
             QList<qulonglong> dataStoresIndex = QList<qulonglong>();
             QDoubleList voiValues = QDoubleList();
-            QStringList selectedVariablesUri = QStringList();
-            QList<DataStore::DataStoreVariables> selectedVariablesDataStores = QList<DataStore::DataStoreVariables>();
+            QStringList variablesUri = QStringList();
+            QList<DataStore::DataStoreVariables> variablesDataStores = QList<DataStore::DataStoreVariables>();
 
-            foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables) {
-                selectedVariablesUri << selectedVariable->uri();
+            foreach (DataStore::DataStoreVariable *variable, variables) {
+                variablesUri << variable->uri();
 
-                selectedVariablesDataStores << DataStore::DataStoreVariables();
+                variablesDataStores << DataStore::DataStoreVariables();
             }
 
             for (int i = 0; i < nbOfRuns; ++i) {
@@ -134,13 +134,13 @@ Q_UNUSED(pErrorMessage);
                 for (qulonglong j = 0, jMax = dataStore->size(); j < jMax; ++j)
                     voiValues << dataStore->voi()->value(j);
 
-                // Selected variables
+                // Variables
 
                 int j = 0;
 
                 foreach (DataStore::DataStoreVariable *variable, dataStore->variables()) {
-                    if (selectedVariablesUri.contains(variable->uri())) {
-                        selectedVariablesDataStores[j] << variable;
+                    if (variablesUri.contains(variable->uri())) {
+                        variablesDataStores[j] << variable;
 
                         ++j;
                     }
@@ -166,17 +166,17 @@ Q_UNUSED(pErrorMessage);
                 for (int j = 0; j < nbOfRuns; ++j)
                     updateDataStoresIndex << false;
 
-                foreach (const DataStore::DataStoreVariables &selectedVariableDataStores, selectedVariablesDataStores) {
+                foreach (const DataStore::DataStoreVariables &variableDataStores, variablesDataStores) {
                     int j = 0;
 
-                    foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariableDataStores) {
+                    foreach (DataStore::DataStoreVariable *variable, variableDataStores) {
                         if (firstRowData && rowData.isEmpty())
                             firstRowData = false;
                         else
                             rowData += ',';
 
                         if (dataStores[j]->voi()->values()[dataStoresIndex[j]] == voiValue) {
-                            rowData += QString::number(selectedVariable->value(dataStoresIndex[j]));
+                            rowData += QString::number(variable->value(dataStoresIndex[j]));
 
                             updateDataStoresIndex[j] = true;
                         }
