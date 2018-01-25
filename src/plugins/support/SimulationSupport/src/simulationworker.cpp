@@ -235,7 +235,7 @@ void SimulationWorker::started()
     double startingPoint = mSimulation->data()->startingPoint();
     double endingPoint = mSimulation->data()->endingPoint();
     double pointInterval = mSimulation->data()->pointInterval();
-    quint64 pointCounter = 0;
+    qulonglong pointCounter = 0;
 
     mCurrentPoint = startingPoint;
 
