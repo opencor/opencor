@@ -1697,7 +1697,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     double startingPoint = mSimulation->data()->startingPoint();
     double endingPoint = mSimulation->data()->endingPoint();
     double pointInterval = mSimulation->data()->pointInterval();
-    int nbOfPoints = ceil((endingPoint-startingPoint)/pointInterval);
+    qulonglong nbOfPoints = ceil((endingPoint-startingPoint)/pointInterval);
     bool needOneStepTask = (endingPoint-startingPoint)/nbOfPoints != pointInterval;
 
     libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = sedmlDocument->createUniformTimeCourse();
