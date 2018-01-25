@@ -86,8 +86,7 @@ void DataStoreVariableRun::addValue()
 {
     // Set the value of the variable at the given position
 
-    Q_ASSERT(mSize < mCapacity);
-    Q_ASSERT(mValue);
+    Q_ASSERT((mSize < mCapacity) && mValue);
 
     mValues[mSize] = *mValue;
 
