@@ -53,12 +53,10 @@ BiosignalmlDataStoreExporter::BiosignalmlDataStoreExporter(DataStore::DataStoreD
 
 void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 {
-Q_UNUSED(pErrorMessage);
-/*---ISSUE1523--- TO BE UPDATED...
     // Export the given data store to a BioSignalML file
 
     BiosignalmlDataStoreData *dataStoreData = static_cast<BiosignalmlDataStoreData *>(mDataStoreData);
-    DataStore::DataStore *dataStore = dataStoreData->dataStores().last();
+    DataStore::DataStore *dataStore = dataStoreData->dataStore();
     bsml::HDF5::Recording *recording = 0;
 
     try {
@@ -161,7 +159,6 @@ Q_UNUSED(pErrorMessage);
 
         delete recording;
     }
-*/
 }
 
 //==============================================================================
