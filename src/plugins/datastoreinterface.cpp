@@ -320,25 +320,36 @@ void DataStoreVariable::addValue(const double &pValue)
 
 //==============================================================================
 
-double DataStoreVariable::value(const qulonglong &pPosition) const
+double DataStoreVariable::value(const qulonglong &pPosition,
+                                const int &pRun) const
 {
-    // Return the value at the given position for our current (i.e. last) run
+    // Return the value at the given position and this for the given run
 
     Q_ASSERT(!mRuns.isEmpty());
 
-    return mRuns.last()->value(pPosition);
+    if (pRun == -1) {
+        return mRuns.last()->value(pPosition);
+    } else {
+        Q_ASSERT((pRun >= 0) && (pRun < mRuns.count()));
+
+        return mRuns[pRun]->value(pPosition);
+    }
 }
 
 //==============================================================================
 
-double * DataStoreVariable::values() const
+double * DataStoreVariable::values(const int &pRun) const
 {
-    // Return the values for our current (i.e. last) run, if any
+    // Return the values for the given run, if any
 
-    if (mRuns.isEmpty())
+    if (mRuns.isEmpty()) {
         return 0;
-    else
-        return mRuns.last()->values();
+    } else {
+        if (pRun == -1)
+            return mRuns.last()->values();
+        else
+            return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->values():0;
+    }
 }
 
 //==============================================================================
@@ -406,6 +417,16 @@ QString DataStore::uri() const
     // Return our URI
 
     return mUri;
+}
+
+//==============================================================================
+
+int DataStore::runsCount() const
+{
+    // Return our number of runs, i.e. the number of runs for our variable of
+    // integration, for example
+
+    return mVoi->runsCount();
 }
 
 //==============================================================================

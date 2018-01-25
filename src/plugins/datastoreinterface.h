@@ -103,8 +103,8 @@ public:
     void addValue();
     void addValue(const double &pValue);
 
-    double value(const qulonglong &pPosition) const;
-    double * values() const;
+    double value(const qulonglong &pPosition, const int &pRun = -1) const;
+    double * values(const int &pRun = -1) const;
 
 private:
 #ifndef CLI_VERSION
@@ -154,6 +154,8 @@ public:
     ~DataStore();
 
     QString uri() const;
+
+    int runsCount() const;
 
     bool addRun(const qulonglong &pCapacity);
 

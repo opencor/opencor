@@ -45,17 +45,6 @@ CsvDataStoreExporter::CsvDataStoreExporter(DataStore::DataStoreData *pDataStoreD
 
 void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 {
-Q_UNUSED(pErrorMessage);
-/*---ISSUE1523--- TO BE UPDATED...
-    // Determine what should be exported
-
-    DataStore::DataStores dataStores = mDataStoreData->dataStores();
-    int nbOfRuns = dataStores.count();
-    DataStore::DataStoreVariables variables = mDataStoreData->variables();
-    DataStore::DataStoreVariable *voi = variables.contains(dataStores.last()->voi())?dataStores.last()->voi():0;
-
-    variables.removeOne(voi);
-
     // Do the export itself
     // Note: we would normally rely on a string to which we would append our
     //       header and then data, and then use that string as a parameter to
@@ -69,6 +58,15 @@ Q_UNUSED(pErrorMessage);
     QFile file(Core::temporaryFileName());
 
     if (file.open(QIODevice::WriteOnly)) {
+        // Determine whether we need to export the variable of integration and,
+        // if so, remove it from our variables since it gets exported separately
+
+        DataStore::DataStore *dataStore = mDataStoreData->dataStore();
+        DataStore::DataStoreVariables variables = mDataStoreData->variables();
+        DataStore::DataStoreVariable *voi = variables.contains(dataStore->voi())?dataStore->voi():0;
+
+        variables.removeOne(voi);
+
         // Output our header
 
         static const QString Header = "%1 (%2)%3";
@@ -80,6 +78,8 @@ Q_UNUSED(pErrorMessage);
             header += Header.arg(voi->uri().replace("/prime", "'").replace('/', " | "),
                                  voi->unit(), QString());
         }
+
+        int nbOfRuns = dataStore->runsCount();
 
         foreach (DataStore::DataStoreVariable *variable, variables) {
             for (int i = 0; i < nbOfRuns; ++i) {
@@ -111,28 +111,26 @@ Q_UNUSED(pErrorMessage);
             //          Indeed, this is much faster than preventing ourselves
             //          from adding duplicates in the first place...
 
-            QList<qulonglong> dataStoresIndex = QList<qulonglong>();
+            QList<qulonglong> runsIndex = QList<qulonglong>();
             QDoubleList voiValues = QDoubleList();
             QStringList variablesUri = QStringList();
-            QList<DataStore::DataStoreVariables> variablesDataStores = QList<DataStore::DataStoreVariables>();
+            QList<DataStore::DataStoreVariables> variablesRuns = QList<DataStore::DataStoreVariables>();
 
             foreach (DataStore::DataStoreVariable *variable, variables) {
                 variablesUri << variable->uri();
 
-                variablesDataStores << DataStore::DataStoreVariables();
+                variablesRuns << DataStore::DataStoreVariables();
             }
 
             for (int i = 0; i < nbOfRuns; ++i) {
                 // Original index
 
-                dataStoresIndex << 0;
+                runsIndex << 0;
 
                 // VOI values
 
-                DataStore::DataStore *dataStore = dataStores[i];
-
-                for (qulonglong j = 0, jMax = dataStore->size(); j < jMax; ++j)
-                    voiValues << dataStore->voi()->value(j);
+                for (qulonglong j = 0, jMax = dataStore->size(i); j < jMax; ++j)
+                    voiValues << dataStore->voi()->value(j, i);
 
                 // Variables
 
@@ -140,7 +138,7 @@ Q_UNUSED(pErrorMessage);
 
                 foreach (DataStore::DataStoreVariable *variable, dataStore->variables()) {
                     if (variablesUri.contains(variable->uri())) {
-                        variablesDataStores[j] << variable;
+                        variablesRuns[j] << variable;
 
                         ++j;
                     }
@@ -161,24 +159,24 @@ Q_UNUSED(pErrorMessage);
                     rowData += QString::number(voiValue);
 
                 bool firstRowData = true;
-                QBoolList updateDataStoresIndex = QBoolList();
+                QBoolList updateRunsIndex = QBoolList();
 
                 for (int j = 0; j < nbOfRuns; ++j)
-                    updateDataStoresIndex << false;
+                    updateRunsIndex << false;
 
-                foreach (const DataStore::DataStoreVariables &variableDataStores, variablesDataStores) {
+                foreach (const DataStore::DataStoreVariables &variableRuns, variablesRuns) {
                     int j = 0;
 
-                    foreach (DataStore::DataStoreVariable *variable, variableDataStores) {
+                    foreach (DataStore::DataStoreVariable *variableRun, variableRuns) {
                         if (firstRowData && rowData.isEmpty())
                             firstRowData = false;
                         else
                             rowData += ',';
 
-                        if (dataStores[j]->voi()->values()[dataStoresIndex[j]] == voiValue) {
-                            rowData += QString::number(variable->value(dataStoresIndex[j]));
+                        if (dataStore->voi()->values(j)[runsIndex[j]] == voiValue) {
+                            rowData += QString::number(variableRun->value(runsIndex[j]));
 
-                            updateDataStoresIndex[j] = true;
+                            updateRunsIndex[j] = true;
                         }
 
                         ++j;
@@ -186,8 +184,8 @@ Q_UNUSED(pErrorMessage);
                 }
 
                 for (int j = 0; j < nbOfRuns; ++j) {
-                    if (updateDataStoresIndex[j])
-                        ++dataStoresIndex[j];
+                    if (updateRunsIndex[j])
+                        ++runsIndex[j];
                 }
 
                 rowData += "\n";
@@ -227,7 +225,6 @@ Q_UNUSED(pErrorMessage);
     } else {
         pErrorMessage = tr("The CSV file could not be created.");
     }
-*/
 }
 
 //==============================================================================
