@@ -98,7 +98,7 @@ public:
     QString unit() const;
     void setUnit(const QString &pUnit);
 
-    qulonglong size(const int &pRun) const;
+    qulonglong size(const int &pRun = -1) const;
 
     void addValue();
     void addValue(const double &pValue);

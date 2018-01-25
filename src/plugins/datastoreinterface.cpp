@@ -288,13 +288,12 @@ void DataStoreVariable::setUnit(const QString &pUnit)
 
 qulonglong DataStoreVariable::size(const int &pRun) const
 {
-    // Return our size for the given run, i.e. the size of our variable of
-    // integration, for example
+    // Return our size for the given run
 
     if (pRun == -1)
         return mRuns.count()?mRuns.last()->size():0;
     else
-        return (pRun < mRuns.count())?mRuns[pRun]->size():0;
+        return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->size():0;
 }
 
 //==============================================================================
