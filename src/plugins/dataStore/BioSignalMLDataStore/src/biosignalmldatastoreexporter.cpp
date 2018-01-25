@@ -77,72 +77,76 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
         recording->set_investigator(rdf::Literal(dataStoreData->author().toStdString()));
         recording->set_description(dataStoreData->description().toStdString());
         recording->set_comment(dataStoreData->comment().toStdString());
-        recording->set_duration(xsd::Duration(voi->value(voi->size()-1)-voi->value(0),
-                                              voi->unit().toStdString()));
 
-        // Create and populate a clock
+        int nbOfRuns = dataStore->runsCount();
 
-        bsml::HDF5::Clock::Ptr clock = recording->new_clock(recordingUri+"/clock/"+voi->uri().toStdString(),
-                                                            rdf::URI(baseUnits+voi->unit().toStdString()),
-                                                            voi->values(),
-                                                            voi->size());
+        for (int i = 0; i < nbOfRuns; ++i) {
+            // Create and populate a clock
 
-        clock->set_label(voi->label().toStdString());
+            std::string runNb = (nbOfRuns == 1)?"":"/"+QString::number(i+1).toStdString();
+            bsml::HDF5::Clock::Ptr clock = recording->new_clock(recordingUri+"/clock/"+voi->uri().toStdString()+runNb,
+                                                                rdf::URI(baseUnits+voi->unit().toStdString()),
+                                                                voi->values(i),
+                                                                voi->size(i));
 
-        // Determine what should be exported (minus the variable of integration
-        // which should always be exported in the case of a BioSignalML file)
+            clock->set_label(voi->label().toStdString());
 
-        DataStore::DataStoreVariables variables = mDataStoreData->variables();
+            // Determine what should be exported (minus the variable of
+            // integration, which should always be exported in the case of a
+            // BioSignalML file)
 
-        variables.removeOne(dataStore->voi());
+            DataStore::DataStoreVariables variables = mDataStoreData->variables();
 
-        // Retrieve some information about the different variables that are to
-        // be exported
+            variables.removeOne(dataStore->voi());
 
-        std::vector<std::string> uris;
-        std::vector<rdf::URI> units;
+            // Retrieve some information about the different variables that are
+            // to be exported
 
-        foreach (DataStore::DataStoreVariable *variable, variables) {
-            uris.push_back(recordingUri+"/signal/"+variable->uri().toStdString());
-            units.push_back(rdf::URI(baseUnits+variable->unit().toStdString()));
-        }
+            std::vector<std::string> uris;
+            std::vector<rdf::URI> units;
 
-        // Create and populate a signal array
-
-        enum {
-            BufferRows = 50000
-        };
-
-        bsml::HDF5::SignalArray::Ptr signalArray = recording->new_signalarray(uris, units, clock);
-        int i = -1;
-
-        foreach (DataStore::DataStoreVariable *variable, variables)
-            (*signalArray)[++i]->set_label(variable->label().toStdString());
-
-        double *data = new double[variables.count()*BufferRows];
-        double *dataPointer = data;
-        int rowCount = 0;
-
-        for (qulonglong i = 0, iMax = dataStore->size(); i < iMax; ++i) {
-            foreach (DataStore::DataStoreVariable *variable, variables)
-                *dataPointer++ = variable->value(i);
-
-            ++rowCount;
-
-            if (rowCount >= BufferRows) {
-                signalArray->extend(data, variables.count()*BufferRows);
-
-                dataPointer = data;
-
-                rowCount = 0;
+            foreach (DataStore::DataStoreVariable *variable, variables) {
+                uris.push_back(recordingUri+"/signal/"+variable->uri().toStdString()+runNb);
+                units.push_back(rdf::URI(baseUnits+variable->unit().toStdString()));
             }
 
-            emit progress(double(i)/(iMax-1));
+            // Create and populate a signal array
+
+            enum {
+                BufferRows = 50000
+            };
+
+            bsml::HDF5::SignalArray::Ptr signalArray = recording->new_signalarray(uris, units, clock);
+            int j = -1;
+
+            foreach (DataStore::DataStoreVariable *variable, variables)
+                (*signalArray)[++j]->set_label(variable->label().toStdString());
+
+            double *data = new double[variables.count()*BufferRows];
+            double *dataPointer = data;
+            int rowCount = 0;
+
+            for (qulonglong j = 0, jMax = dataStore->size(i); j < jMax; ++j) {
+                foreach (DataStore::DataStoreVariable *variable, variables)
+                    *dataPointer++ = variable->value(j, i);
+
+                ++rowCount;
+
+                if (rowCount >= BufferRows) {
+                    signalArray->extend(data, variables.count()*BufferRows);
+
+                    dataPointer = data;
+
+                    rowCount = 0;
+                }
+
+                emit progress(double(j)/(jMax-1));
+            }
+
+            signalArray->extend(data, variables.count()*rowCount);
+
+            delete[] data;
         }
-
-        signalArray->extend(data, variables.count()*rowCount);
-
-        delete[] data;
     } catch (bsml::data::Exception e) {
         // Something went wrong, so retrieve the error message and delete our
         // BioSignalML file
