@@ -344,9 +344,10 @@ double * DataStoreVariable::values() const
 
 //==============================================================================
 
-DataStoreData::DataStoreData(const QString &pFileName,
+DataStoreData::DataStoreData(const QString &pFileName, DataStore *pDataStore,
                              const DataStoreVariables &pSelectedVariables) :
     mFileName(pFileName),
+    mDataStore(pDataStore),
     mSelectedVariables(pSelectedVariables)
 {
 }
@@ -358,6 +359,15 @@ QString DataStoreData::fileName() const
     // Return our file name
 
     return mFileName;
+}
+
+//==============================================================================
+
+DataStore * DataStoreData::dataStore() const
+{
+    // Return our data store
+
+    return mDataStore;
 }
 
 //==============================================================================

@@ -99,7 +99,7 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
                                                  &csvFilter);
 
         if (!fileName.isEmpty())
-            return new DataStore::DataStoreData(fileName, dataStoreDialog.selectedData());
+            return new DataStore::DataStoreData(fileName, pDataStore, dataStoreDialog.selectedData());
     }
 
     return 0;

@@ -125,17 +125,23 @@ typedef QList<DataStoreVariable *> DataStoreVariables;
 
 //==============================================================================
 
+class DataStore;
+
+//==============================================================================
+
 class DataStoreData
 {
 public:
-    explicit DataStoreData(const QString &pFileName,
+    explicit DataStoreData(const QString &pFileName, DataStore *pDataStore,
                            const DataStoreVariables &pSelectedVariables);
 
     QString fileName() const;
+    DataStore * dataStore() const;
     DataStoreVariables selectedVariables() const;
 
 private:
     QString mFileName;
+    DataStore *mDataStore;
     DataStoreVariables mSelectedVariables;
 };
 
