@@ -54,11 +54,14 @@ public:
     QString fileName() const;
     void setFileName(const QString &pFileName);
 
+    bool isNew() const;
+
     bool isModified() const;
     void setModified(const bool &pModified) const;
 
 protected:
     QString mFileName;
+    bool mNew;
 
     virtual void reset() = 0;
 };
