@@ -93,7 +93,7 @@ bool StandardFileManager::isFile(const QString &pFileName)
 
 //==============================================================================
 
-QObject * StandardFileManager::file(const QString &pFileName)
+StandardFile * StandardFileManager::file(const QString &pFileName)
 {
     // Return the File object, if any, associated with the given file
 
@@ -149,14 +149,14 @@ void StandardFileManager::reload(const QString &pFileName)
     //       views won't each do it, thus saving time and ensuring that a
     //       standard-based view doesn't forget to do it...
 
-    QObject *crtFile = file(pFileName);
+    StandardFile *crtFile = file(pFileName);
 
     if (crtFile) {
         // The file is managed, but should it still be (i.e. can it still be
         // considered as being a file)?
 
         if (isFile(pFileName))
-            static_cast<StandardFile *>(crtFile)->reload();
+            crtFile->reload();
         else
             unmanage(pFileName);
     } else {
@@ -169,7 +169,7 @@ void StandardFileManager::reload(const QString &pFileName)
         crtFile = file(pFileName);
 
         if (crtFile)
-            static_cast<StandardFile *>(crtFile)->load();
+            crtFile->load();
     }
 }
 
@@ -181,7 +181,7 @@ void StandardFileManager::rename(const QString &pOldFileName,
     // The file has been renamed, so we need to update our files mapping, if
     // needed
 
-    QObject *crtFile = file(pOldFileName);
+    StandardFile *crtFile = file(pOldFileName);
 
     if (!crtFile)
         return;
@@ -193,7 +193,7 @@ void StandardFileManager::rename(const QString &pOldFileName,
 
     // We also need to ensure that our file object has its file name updated
 
-    static_cast<StandardFile *>(crtFile)->setFileName(newNativeFileName);
+    crtFile->setFileName(newNativeFileName);
 }
 
 //==============================================================================
