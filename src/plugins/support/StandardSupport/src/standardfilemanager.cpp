@@ -117,7 +117,7 @@ void StandardFileManager::manage(const QString &pFileName)
 {
     QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
 
-    if (doIsFile(nativeFileName)) {
+    if (!file(nativeFileName) && doIsFile(nativeFileName)) {
         // We are dealing with a file, which is not already managed, so we can
         // add it to our list of managed files
 
