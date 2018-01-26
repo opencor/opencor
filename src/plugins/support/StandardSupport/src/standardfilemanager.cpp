@@ -147,7 +147,10 @@ void StandardFileManager::save(const QString &pFileName)
 {
     // The file is to be saved, so we need to reload it
 
-    reload(pFileName, false);
+    StandardFile *crtFile = file(pFileName);
+
+    if (crtFile)
+        reload(pFileName, crtFile->isNew());
 }
 
 //==============================================================================
