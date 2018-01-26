@@ -40,10 +40,6 @@ namespace StandardSupport {
 
 //==============================================================================
 
-typedef QMap<QString, StandardFile *> Files;
-
-//==============================================================================
-
 class STANDARDSUPPORT_EXPORT StandardFileManager : public QObject
 {
     Q_OBJECT
@@ -54,7 +50,7 @@ public:
     StandardFile * file(const QString &pFileName);
 
 protected:
-    Files mFiles;
+    QMap<QString, StandardFile *> mFiles;
 
     explicit StandardFileManager();
     ~StandardFileManager();

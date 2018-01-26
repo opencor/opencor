@@ -34,7 +34,7 @@ namespace StandardSupport {
 //==============================================================================
 
 StandardFileManager::StandardFileManager() :
-    mFiles(Files())
+    mFiles(QMap<QString, StandardFile *>())
 {
     // Create some connections to keep track of some events related to our
     // 'global' file manager
@@ -129,7 +129,7 @@ void StandardFileManager::manage(const QString &pFileName)
 
 void StandardFileManager::unmanage(const QString &pFileName)
 {
-    QObject *crtFile = file(pFileName);
+    StandardFile *crtFile = file(pFileName);
 
     if (crtFile) {
         // We are dealing with a file, so we can remove it from our list of
