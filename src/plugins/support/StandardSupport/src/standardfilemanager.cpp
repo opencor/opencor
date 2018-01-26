@@ -63,7 +63,8 @@ StandardFileManager::~StandardFileManager()
 
 //==============================================================================
 
-bool StandardFileManager::doIsFile(const QString &pFileName, const bool &pForce)
+bool StandardFileManager::doIsFile(const QString &pFileName,
+                                   const bool &pForceChecking)
 {
     // If the given file is already managed, then we consider that it's of the
     // right type (e.g. CellML file), even though it may not be of the right
@@ -73,7 +74,7 @@ bool StandardFileManager::doIsFile(const QString &pFileName, const bool &pForce)
 
     QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
 
-    if (!pForce && file(nativeFileName))
+    if (!pForceChecking && file(nativeFileName))
         return true;
 
     // The given file is not managed, so consider it of the right type if it is
@@ -151,7 +152,8 @@ void StandardFileManager::save(const QString &pFileName)
 
 //==============================================================================
 
-void StandardFileManager::reload(const QString &pFileName, const bool &pForce)
+void StandardFileManager::reload(const QString &pFileName,
+                                 const bool &pForceChecking)
 {
     // The file is to be reloaded (either because it has been changed or because
     // one or several of its dependencies has changed), so reload it
@@ -165,7 +167,7 @@ void StandardFileManager::reload(const QString &pFileName, const bool &pForce)
         // The file is managed, but should it still be (i.e. can it still be
         // considered as being a file)?
 
-        if (doIsFile(pFileName, pForce))
+        if (doIsFile(pFileName, pForceChecking))
             crtFile->reload();
         else
             unmanage(pFileName);
