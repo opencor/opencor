@@ -318,7 +318,7 @@ ColorEditorWidget::ColorEditorWidget(QWidget *pParent) :
 
 //==============================================================================
 
-PropertyItemDelegate::PropertyItemDelegate(OpenCOR::Core::PropertyEditorWidget *pParent) :
+PropertyItemDelegate::PropertyItemDelegate(PropertyEditorWidget *pParent) :
     StyledItemDelegate(pParent),
     mPropertyEditorWidget(pParent)
 {

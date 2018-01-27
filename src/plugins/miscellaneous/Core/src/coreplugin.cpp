@@ -263,21 +263,21 @@ Gui::MenuActions CorePlugin::guiMenuActions() const
                               << Gui::MenuAction(Gui::MenuAction::File, mFileOpenRemoteAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileOpenReloadSeparator)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileReloadAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
+                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileDuplicateAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
+                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileLockedAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
+                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAsAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAllAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
+                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFilePreviousAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileNextAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()))
+                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileCloseAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileCloseAllAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, Core::newSeparator(Core::mainWindow()));
+                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()));
 }
 
 //==============================================================================
@@ -582,7 +582,7 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     static InterfacesData data(fileTypeInterfaces, solverInterfaces,
                                dataStoreInterfaces);
 
-    Core::globalInstance(InterfacesDataSignature, &data);
+    globalInstance(InterfacesDataSignature, &data);
 
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
@@ -616,7 +616,7 @@ void CorePlugin::loadSettings(QSettings *pSettings)
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
 
-    if (!Core::mainWindow())
+    if (!mainWindow())
         return;
 
     // Retrieve the recent files
@@ -644,7 +644,7 @@ void CorePlugin::saveSettings(QSettings *pSettings) const
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
 
-    if (!Core::mainWindow())
+    if (!mainWindow())
         return;
 
     // Keep track of the recent files
@@ -739,7 +739,7 @@ void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
     mFileReopenMostRecentFileAction->setEnabled(hasRecentFileNamesOrUrls);
     mFileClearReopenSubMenuAction->setEnabled(hasRecentFileNamesOrUrls);
 
-    Core::showEnableAction(mFileReopenSubMenuSeparator2, hasRecentFileNamesOrUrls);
+    showEnableAction(mFileReopenSubMenuSeparator2, hasRecentFileNamesOrUrls);
 }
 
 //==============================================================================
