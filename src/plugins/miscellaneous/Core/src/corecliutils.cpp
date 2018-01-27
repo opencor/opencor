@@ -157,11 +157,11 @@ void DummyMessageHandler::handleMessage(QtMsgType pType,
 
 //==============================================================================
 
-qulonglong totalMemory()
+quint64 totalMemory()
 {
     // Retrieve and return in bytes the total amount of physical memory
 
-    qulonglong res = 0;
+    quint64 res = 0;
 
 #if defined(Q_OS_WIN)
     MEMORYSTATUSEX memoryStatus;
@@ -170,9 +170,9 @@ qulonglong totalMemory()
 
     GlobalMemoryStatusEx(&memoryStatus);
 
-    res = qulonglong(memoryStatus.ullTotalPhys);
+    res = quint64(memoryStatus.ullTotalPhys);
 #elif defined(Q_OS_LINUX)
-    res = qulonglong(sysconf(_SC_PHYS_PAGES))*qulonglong(sysconf(_SC_PAGESIZE));
+    res = quint64(sysconf(_SC_PHYS_PAGES))*quint64(sysconf(_SC_PAGESIZE));
 #elif defined(Q_OS_MAC)
     int mib[2];
 
@@ -191,11 +191,11 @@ qulonglong totalMemory()
 
 //==============================================================================
 
-qulonglong freeMemory()
+quint64 freeMemory()
 {
     // Retrieve and return in bytes the available amount of physical memory
 
-    qulonglong res = 0;
+    quint64 res = 0;
 
 #if defined(Q_OS_WIN)
     MEMORYSTATUSEX memoryStatus;
@@ -204,9 +204,9 @@ qulonglong freeMemory()
 
     GlobalMemoryStatusEx(&memoryStatus);
 
-    res = qulonglong(memoryStatus.ullAvailPhys);
+    res = quint64(memoryStatus.ullAvailPhys);
 #elif defined(Q_OS_LINUX)
-    res = qulonglong(sysconf(_SC_AVPHYS_PAGES))*qulonglong(sysconf(_SC_PAGESIZE));
+    res = quint64(sysconf(_SC_AVPHYS_PAGES))*quint64(sysconf(_SC_PAGESIZE));
 #elif defined(Q_OS_MAC)
     vm_statistics_data_t vmStats;
     mach_msg_type_number_t infoCount = HOST_VM_INFO_COUNT;
@@ -214,7 +214,7 @@ qulonglong freeMemory()
     host_statistics(mach_host_self(), HOST_VM_INFO,
                     host_info_t(&vmStats), &infoCount);
 
-    res = (qulonglong(vmStats.free_count)+qulonglong(vmStats.inactive_count))*qulonglong(vm_page_size);
+    res = (quint64(vmStats.free_count)+quint64(vmStats.inactive_count))*quint64(vm_page_size);
 #else
     #error Unsupported platform
 #endif
@@ -244,8 +244,8 @@ QString digitGroupNumber(const QString &pNumber)
 
 QString sizeAsString(const double &pSize, const int &pPrecision)
 {
-    // Note: pSize is a double rather than a qulonglong, in case we need to
-    //       convert an insane size...
+    // Note: pSize is a double rather than a quint64, in case we need to convert
+    //       an insane size...
 
     QString units[9] = { QObject::tr("B"), QObject::tr("KB"), QObject::tr("MB"),
                          QObject::tr("GB"), QObject::tr("TB"), QObject::tr("PB"),
@@ -365,7 +365,7 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
         // There is no 'global' instance associated with the given object, so
         // use the object's default 'global' instance we were given, if any
 
-        res = qulonglong(pDefaultGlobalInstance);
+        res = quint64(pDefaultGlobalInstance);
 
         qApp->setProperty(objectName, res);
     }
@@ -771,7 +771,7 @@ void cleanDomElement(QDomElement &pDomElement,
     // before removing them from the element and adding a new attribute that
     // will later on be used for string replacement
 
-    static qulonglong attributeNumber = 0;
+    static quint64 attributeNumber = 0;
     static const int ULLONG_WIDTH = ceil(log(ULLONG_MAX));
 
     if (pDomElement.hasAttributes()) {

@@ -43,20 +43,20 @@ namespace DataStore {
 class DataStoreVariableRun
 {
 public:
-    explicit DataStoreVariableRun(const qulonglong &pCapacity, double *pValue);
+    explicit DataStoreVariableRun(const quint64 &pCapacity, double *pValue);
     ~DataStoreVariableRun();
 
-    qulonglong size() const;
+    quint64 size() const;
 
     void addValue();
     void addValue(const double &pValue);
 
-    double value(const qulonglong &pPosition) const;
+    double value(const quint64 &pPosition) const;
     double * values() const;
 
 private:
-    qulonglong mCapacity;
-    qulonglong mSize;
+    quint64 mCapacity;
+    quint64 mSize;
 
     double *mValue;
     double *mValues;
@@ -81,7 +81,7 @@ public:
 
     int runsCount() const;
 
-    void addRun(const qulonglong &pCapacity);
+    void addRun(const quint64 &pCapacity);
     void keepRuns(const int &pRunsCount);
 
 #ifndef CLI_VERSION
@@ -98,12 +98,12 @@ public:
     QString unit() const;
     void setUnit(const QString &pUnit);
 
-    qulonglong size(const int &pRun = -1) const;
+    quint64 size(const int &pRun = -1) const;
 
     void addValue();
     void addValue(const double &pValue);
 
-    double value(const qulonglong &pPosition, const int &pRun = -1) const;
+    double value(const quint64 &pPosition, const int &pRun = -1) const;
     double * values(const int &pRun = -1) const;
 
 private:
@@ -157,9 +157,9 @@ public:
 
     int runsCount() const;
 
-    bool addRun(const qulonglong &pCapacity);
+    bool addRun(const quint64 &pCapacity);
 
-    qulonglong size(const int &pRun = -1) const;
+    quint64 size(const int &pRun = -1) const;
 
     DataStoreVariable * voi() const;
     DataStoreVariables variables();

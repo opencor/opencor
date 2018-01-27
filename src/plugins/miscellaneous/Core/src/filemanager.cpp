@@ -93,7 +93,7 @@ void FileManager::startStopTimer()
     //          disable our handling of it...
 
     if (   !mTimer->isActive()
-        &&  Core::opencorActive() && !mFiles.isEmpty()) {
+        &&  opencorActive() && !mFiles.isEmpty()) {
         disconnect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
                    this, SLOT(focusWindowChanged()));
 
@@ -104,7 +104,7 @@ void FileManager::startStopTimer()
 
         mTimer->start(1000);
     } else if (   mTimer->isActive()
-               && (!Core::opencorActive() || mFiles.isEmpty())) {
+               && (!opencorActive() || mFiles.isEmpty())) {
         mTimer->stop();
     }
 }
@@ -689,7 +689,7 @@ void FileManager::checkFiles()
     //       means that we can't enable/disable our timer in those acses, hence
     //       our checking that OpenCOR is really active indeed...
 
-    if (!Core::opencorActive() || !mCheckFilesEnabled)
+    if (!opencorActive() || !mCheckFilesEnabled)
         return;
 
     // Check our various files, after making sure that they are still being

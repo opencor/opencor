@@ -71,7 +71,7 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SimulationExperimentViewSimulationWidget *>()),
     mFileNames(QStringList()),
-    mSimulationResultsSizes(QMap<QString, qulonglong>()),
+    mSimulationResultsSizes(QMap<QString, quint64>()),
     mSimulationCheckResults(QStringList())
 {
 }
@@ -491,7 +491,7 @@ QWidget * SimulationExperimentViewWidget::widget(const QString &pFileName)
 
 //==============================================================================
 
-qulonglong SimulationExperimentViewWidget::simulationResultsSize(const QString &pFileName) const
+quint64 SimulationExperimentViewWidget::simulationResultsSize(const QString &pFileName) const
 {
     // Return the results size for the given file name
 
@@ -517,7 +517,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     //       given simulation widget...
 
     SimulationSupport::Simulation *simulation = simulationWidget->simulation();
-    qulonglong simulationResultsSize = simulation->results()->size();
+    quint64 simulationResultsSize = simulation->results()->size();
 
     if (   pClearGraphs
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {

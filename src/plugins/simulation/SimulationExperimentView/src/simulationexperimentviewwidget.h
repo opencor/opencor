@@ -94,7 +94,7 @@ public:
 
     virtual QWidget * widget(const QString &pFileName);
 
-    qulonglong simulationResultsSize(const QString &pFileName) const;
+    quint64 simulationResultsSize(const QString &pFileName) const;
 
     void checkSimulationResults(const QString &pFileName,
                                 const bool &pClearGraphs = false);
@@ -125,7 +125,7 @@ private:
 
     QStringList mFileNames;
 
-    QMap<QString, qulonglong> mSimulationResultsSizes;
+    QMap<QString, quint64> mSimulationResultsSizes;
     QStringList mSimulationCheckResults;
 
     void updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget);

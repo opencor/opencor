@@ -156,7 +156,7 @@ QString getOpenFileName(const QString &pCaption, const QStringList &pFilters,
         dialog.selectNameFilter(*pSelectedFilter);
 
     if (dialog.exec() == QDialog::Accepted) {
-        QString res = Core::nativeCanonicalFileName(dialog.selectedFiles().first());
+        QString res = nativeCanonicalFileName(dialog.selectedFiles().first());
 
         if (!res.isEmpty()) {
             // We have retrieved an open file name, so keep track of the folder
@@ -195,7 +195,7 @@ QStringList getOpenFileNames(const QString &pCaption,
         dialog.selectNameFilter(*pSelectedFilter);
 
     if (dialog.exec() == QDialog::Accepted) {
-        QStringList res = Core::nativeCanonicalFileNames(dialog.selectedFiles());
+        QStringList res = nativeCanonicalFileNames(dialog.selectedFiles());
 
         if (!res.isEmpty()) {
             // We have retrieved at least one open file name, so keep track of
@@ -250,7 +250,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
         if (pSelectedFilter)
             *pSelectedFilter = dialog.selectedNameFilter();
 
-        QString res = Core::nativeCanonicalFileName(dialog.selectedFiles().first());
+        QString res = nativeCanonicalFileName(dialog.selectedFiles().first());
 
         // Make sure that we have got a save file name
 
@@ -267,7 +267,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 
             // Check whether the save file already exists and is opened
 
-            if (Core::FileManager::instance()->file(res)) {
+            if (FileManager::instance()->file(res)) {
                 warningMessageBox(pCaption,
                                   QObject::tr("<strong>%1</strong> already exists and is opened.").arg(res));
 
@@ -320,7 +320,7 @@ QString getDirectory(const QString &pCaption, const QString &pDirName,
         if (dialog.exec() != QDialog::Accepted)
             break;
 
-        QString res = Core::nativeCanonicalDirName(dialog.selectedFiles().first());
+        QString res = nativeCanonicalDirName(dialog.selectedFiles().first());
 
         if (!res.isEmpty()) {
             // We have retrieved a file name, so update our active directory

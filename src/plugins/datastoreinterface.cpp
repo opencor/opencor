@@ -51,7 +51,7 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreVariableRun::DataStoreVariableRun(const qulonglong &pCapacity,
+DataStoreVariableRun::DataStoreVariableRun(const quint64 &pCapacity,
                                            double *pValue) :
     mCapacity(pCapacity),
     mSize(0),
@@ -73,7 +73,7 @@ DataStoreVariableRun::~DataStoreVariableRun()
 
 //==============================================================================
 
-qulonglong DataStoreVariableRun::size() const
+quint64 DataStoreVariableRun::size() const
 {
     // Return our size
 
@@ -108,7 +108,7 @@ void DataStoreVariableRun::addValue(const double &pValue)
 
 //==============================================================================
 
-double DataStoreVariableRun::value(const qulonglong &pPosition) const
+double DataStoreVariableRun::value(const quint64 &pPosition) const
 {
     // Return the value at the given position
 
@@ -187,7 +187,7 @@ int DataStoreVariable::runsCount() const
 
 //==============================================================================
 
-void DataStoreVariable::addRun(const qulonglong &pCapacity)
+void DataStoreVariable::addRun(const quint64 &pCapacity)
 {
     // Add a run of the given capacity
 
@@ -285,7 +285,7 @@ void DataStoreVariable::setUnit(const QString &pUnit)
 
 //==============================================================================
 
-qulonglong DataStoreVariable::size(const int &pRun) const
+quint64 DataStoreVariable::size(const int &pRun) const
 {
     // Return our size for the given run
 
@@ -319,8 +319,7 @@ void DataStoreVariable::addValue(const double &pValue)
 
 //==============================================================================
 
-double DataStoreVariable::value(const qulonglong &pPosition,
-                                const int &pRun) const
+double DataStoreVariable::value(const quint64 &pPosition, const int &pRun) const
 {
     // Return the value at the given position and this for the given run
 
@@ -430,7 +429,7 @@ int DataStore::runsCount() const
 
 //==============================================================================
 
-bool DataStore::addRun(const qulonglong &pCapacity)
+bool DataStore::addRun(const quint64 &pCapacity)
 {
     // Try to add a run to our variable of integration and all our variables
 
@@ -458,7 +457,7 @@ bool DataStore::addRun(const qulonglong &pCapacity)
 
 //==============================================================================
 
-qulonglong DataStore::size(const int &pRun) const
+quint64 DataStore::size(const int &pRun) const
 {
     // Return our size, i.e. the size of our variable of integration, for
     // example

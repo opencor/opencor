@@ -119,7 +119,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false),
     mNeedUpdatePlots(false),
-    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong>())
+    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>())
 {
     // Ask our simulation manager to manage our file and then retrieve the
     // corresponding simulation from it
@@ -381,10 +381,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
-    connect(informationWidget->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(simulationPropertyChanged(Core::Property *)));
-    connect(informationWidget->solversWidget(), SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(solversPropertyChanged(Core::Property *)));
+    connect(informationWidget->simulationWidget(), SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+            this, SLOT(simulationPropertyChanged(OpenCOR::Core::Property *)));
+    connect(informationWidget->solversWidget(), SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+            this, SLOT(solversPropertyChanged(OpenCOR::Core::Property *)));
 
     // Keep track of the addition and removal of a graph panel
 
@@ -413,8 +413,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Keep track of a graph being required
 
-    connect(informationWidget->parametersWidget(), SIGNAL(graphRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),
-            this, SLOT(addGraph(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
+    connect(informationWidget->parametersWidget(), SIGNAL(graphRequired(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *, OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *)),
+            this, SLOT(addGraph(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *, OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *)));
 
     // Keep track of the addition and removal of a graph
 
@@ -736,8 +736,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
 
-    disconnect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
-               this, SLOT(simulationPropertyChanged(Core::Property *)));
+    disconnect(simulationWidget, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+               this, SLOT(simulationPropertyChanged(OpenCOR::Core::Property *)));
 
     // Reset our progress
 
@@ -1019,8 +1019,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     // Resume the tracking of certain things
     // Note: see the corresponding code at the beginning of this method...
 
-    connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(simulationPropertyChanged(Core::Property *)));
+    connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+            this, SLOT(simulationPropertyChanged(OpenCOR::Core::Property *)));
 
     // Further initialise ourselves, if we have a valid environment and we are
     // not dealing with a CellML file
@@ -1444,10 +1444,10 @@ void SimulationExperimentViewSimulationWidget::initialiseTrackers()
     mSimulationPropertiesModified = false;
     mSolversPropertiesModified = false;
 
-    connect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
+    connect(simulationWidget, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
             this, SLOT(checkSimulationProperties()),
             Qt::UniqueConnection);
-    connect(solversWidget, SIGNAL(propertyChanged(Core::Property *)),
+    connect(solversWidget, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
             this, SLOT(checkSolversProperties()),
             Qt::UniqueConnection);
 
@@ -1468,10 +1468,10 @@ void SimulationExperimentViewSimulationWidget::initialiseTrackers()
         mGraphPanelProperties.insert(graphPanelPropertyEditor, allPropertyValues(graphPanelPropertyEditor));
         mGraphsProperties.insert(graphsPropertyEditor, allPropertyValues(graphsPropertyEditor));
 
-        connect(graphPanelPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+        connect(graphPanelPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
                 this, SLOT(checkGraphPanelsAndGraphs()),
                 Qt::UniqueConnection);
-        connect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+        connect(graphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
                 this, SLOT(checkGraphPanelsAndGraphs()),
                 Qt::UniqueConnection);
     }
@@ -1697,7 +1697,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     double startingPoint = mSimulation->data()->startingPoint();
     double endingPoint = mSimulation->data()->endingPoint();
     double pointInterval = mSimulation->data()->pointInterval();
-    qulonglong nbOfPoints = ceil((endingPoint-startingPoint)/pointInterval);
+    quint64 nbOfPoints = ceil((endingPoint-startingPoint)/pointInterval);
     bool needOneStepTask = (endingPoint-startingPoint)/nbOfPoints != pointInterval;
 
     libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = sedmlDocument->createUniformTimeCourse();
@@ -3179,7 +3179,7 @@ void SimulationExperimentViewSimulationWidget::simulationDataModified(const bool
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::Property *pProperty)
+void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(OpenCOR::Core::Property *pProperty)
 {
     // Update our simulation properties, as well as our plots
 
@@ -3200,7 +3200,7 @@ void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::P
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::solversPropertyChanged(Core::Property *pProperty)
+void SimulationExperimentViewSimulationWidget::solversPropertyChanged(OpenCOR::Core::Property *pProperty)
 {
     // Update our solvers properties
 
@@ -3277,8 +3277,8 @@ void SimulationExperimentViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphP
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                                                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
+void SimulationExperimentViewSimulationWidget::addGraph(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                                        OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
     // Ask the current graph panel to add a new graph for the given parameters
 
@@ -3575,7 +3575,7 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                               const qulonglong &pSize)
+                                                               const quint64 &pSize)
 {
     // Update our graph's data
 
@@ -3627,7 +3627,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisib
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                                       const qulonglong &pSimulationResultsSize,
+                                                                       const quint64 &pSimulationResultsSize,
                                                                        const bool &pClearGraphs)
 {
     // Update the modified state of our simulation's corresponding file, if
@@ -3681,7 +3681,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 //       not visible means that when we come back to this file,
                 //       part of the graphs will be missing...
 
-                qulonglong oldDataSize = graph->dataSize();
+                quint64 oldDataSize = graph->dataSize();
 
                 if (visible)
                     mOldDataSizes.insert(graph, oldDataSize);
@@ -3692,7 +3692,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 // first segment or if we were invisible at some point during
                 // the simulation
 
-                qulonglong realOldDataSize = mOldDataSizes.value(graph);
+                quint64 realOldDataSize = mOldDataSizes.value(graph);
 
                 needFullUpdatePlot =    needFullUpdatePlot || !realOldDataSize
                                      || (oldDataSize != realOldDataSize);
@@ -3714,7 +3714,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                         double minY = plotMinY;
                         double maxY = plotMaxY;
 
-                        for (qulonglong i = oldDataSize?oldDataSize-1:0;
+                        for (quint64 i = oldDataSize?oldDataSize-1:0;
                              i < pSimulationResultsSize; ++i) {
                             double valX = graph->data()->sample(i).x();
                             double valY = graph->data()->sample(i).y();

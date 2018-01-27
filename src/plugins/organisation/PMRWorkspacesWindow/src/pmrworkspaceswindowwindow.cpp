@@ -173,8 +173,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(authenticationCancelled()),
             this, SLOT(updateGui()));
 
-    connect(mPmrWebService, SIGNAL(workspaces(const PMRSupport::PmrWorkspaces &)),
-            mPmrWorkspacesWindowWidget, SLOT(initialize(const PMRSupport::PmrWorkspaces &)));
+    connect(mPmrWebService, SIGNAL(workspaces(const OpenCOR::PMRSupport::PmrWorkspaces &)),
+            mPmrWorkspacesWindowWidget, SLOT(initialize(const OpenCOR::PMRSupport::PmrWorkspaces &)));
 
     // Connections to process requests from our PMR workspaces widget
 

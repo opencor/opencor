@@ -213,8 +213,8 @@ private slots:
     void graphPanelSectionExpanded(const QModelIndex &pIndex);
     void graphPanelSectionCollapsed(const QModelIndex &pIndex);
 
-    void graphPanelPropertyChanged(Core::Property *pProperty);
-    void graphsPropertyChanged(Core::Property *pProperty);
+    void graphPanelPropertyChanged(OpenCOR::Core::Property *pProperty);
+    void graphsPropertyChanged(OpenCOR::Core::Property *pProperty);
 
     void updateParameterValue();
 };

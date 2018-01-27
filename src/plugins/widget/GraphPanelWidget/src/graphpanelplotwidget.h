@@ -387,7 +387,7 @@ public:
                  const bool &pForceXAxisSetting = false,
                  const bool &pForceYAxisSetting = false);
 
-    bool drawGraphFrom(GraphPanelPlotGraph *pGraph, const qulonglong &pFrom);
+    bool drawGraphFrom(GraphPanelPlotGraph *pGraph, const quint64 &pFrom);
 
     GraphPanelPlotWidgets neighbors() const;
 

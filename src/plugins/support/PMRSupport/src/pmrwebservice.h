@@ -107,13 +107,13 @@ signals:
 
     void authenticationCancelled();
 
-    void workspaces(const PMRSupport::PmrWorkspaces &pWorkspaces);
+    void workspaces(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces);
 
     void workspaceCreated(const QString &pUrl);
-    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
 
-    void exposures(const PMRSupport::PmrExposures &pExposures);
+    void exposures(const OpenCOR::PMRSupport::PmrExposures &pExposures);
     void exposureFiles(const QString &pUrl, const QStringList &pExposureFiles);
 
 public slots:
@@ -133,8 +133,8 @@ private slots:
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
 
     void workspaceErrored();
-    void workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceCloneFinished(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronizeFinished(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
 
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
 

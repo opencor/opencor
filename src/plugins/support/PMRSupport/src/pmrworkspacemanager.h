@@ -65,9 +65,9 @@ private:
     QMap<QString, PmrWorkspace *> mUrlWorkspaces;
 
 signals:
-    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================

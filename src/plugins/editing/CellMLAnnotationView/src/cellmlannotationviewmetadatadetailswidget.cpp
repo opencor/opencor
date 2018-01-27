@@ -155,7 +155,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     // and to have our metadata edit details widget update itself with regards
     // to possible terms (i.e. enable/disable add buttons)
 
-    connect(mMetadataViewDetails->normalView(), SIGNAL(rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *)),
+    connect(mMetadataViewDetails->normalView(), SIGNAL(rdfTripleRemoved(OpenCOR::CellMLSupport::CellmlFileRdfTriple *)),
             this, SLOT(updateMetadataEditDetails()));
 
     // A connection to handle the clicking of the link in the unsupported

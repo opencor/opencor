@@ -111,7 +111,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
             //          Indeed, this is much faster than preventing ourselves
             //          from adding duplicates in the first place...
 
-            QList<qulonglong> runsIndex = QList<qulonglong>();
+            QList<quint64> runsIndex = QList<quint64>();
             QDoubleList voiValues = QDoubleList();
             QStringList variablesUri = QStringList();
             QList<DataStore::DataStoreVariables> variablesRuns = QList<DataStore::DataStoreVariables>();
@@ -129,7 +129,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
                 // VOI values
 
-                for (qulonglong j = 0, jMax = dataStore->size(i); j < jMax; ++j)
+                for (quint64 j = 0, jMax = dataStore->size(i); j < jMax; ++j)
                     voiValues << dataStore->voi()->value(j, i);
 
                 // Variables
@@ -151,7 +151,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
             // Now, we can output our data
 
-            for (qulonglong i = 0, iMax = voiValues.count(); i < iMax; ++i) {
+            for (quint64 i = 0, iMax = voiValues.count(); i < iMax; ++i) {
                 QString rowData = QString();
                 double voiValue = voiValues[i];
 

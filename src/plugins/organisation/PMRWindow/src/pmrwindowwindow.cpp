@@ -151,8 +151,8 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(error(const QString &)),
             this, SLOT(showError(const QString &)));
 
-    connect(mPmrWebService, SIGNAL(exposures(const PMRSupport::PmrExposures &)),
-            this, SLOT(initializeWidget(const PMRSupport::PmrExposures &)));
+    connect(mPmrWebService, SIGNAL(exposures(const OpenCOR::PMRSupport::PmrExposures &)),
+            this, SLOT(initializeWidget(const OpenCOR::PMRSupport::PmrExposures &)));
 
     connect(mPmrWebService, SIGNAL(exposureFiles(const QString &, const QStringList &)),
             mPmrWindowWidget, SLOT(addAndShowExposureFiles(const QString &, const QStringList &)));
@@ -337,7 +337,7 @@ void PmrWindowWindow::on_actionReload_triggered()
 
 //==============================================================================
 
-void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposures)
+void PmrWindowWindow::initializeWidget(const OpenCOR::PMRSupport::PmrExposures &pExposures)
 {
     // Ask our PMR widget to initialise itself
 

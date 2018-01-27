@@ -282,7 +282,7 @@ signals:
     void openFilesRequested(const QStringList &pFileNames);
 
 public slots:
-    void initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
+    void initialize(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces,
                     const QString &pErrorMessage = QString(),
                     const bool &pAuthenticated = true);
 
@@ -294,11 +294,11 @@ private slots:
 
     void resizeTreeViewToContents();
 
-    void refreshWorkspaces(const PMRSupport::PmrWorkspaces &pWorkspaces = PMRSupport::PmrWorkspaces());
+    void refreshWorkspaces(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces = OpenCOR::PMRSupport::PmrWorkspaces());
 
-    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
 
     void viewWorkspaceInPmr();
     void viewWorkspaceOncomputer();
