@@ -72,9 +72,7 @@ bool StandardFileManager::doIsFile(const QString &pFileName,
     // good to keep considering the file as of the right type, so that the user
     // can continue editing it without any problem, for example
 
-    QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
-
-    if (!pForceChecking && file(nativeFileName))
+    if (!pForceChecking && file(pFileName))
         return true;
 
     // The given file is not managed, so consider it of the right type if it is
@@ -82,11 +80,11 @@ bool StandardFileManager::doIsFile(const QString &pFileName,
 
     QByteArray fileContents;
 
-    if (Core::readFileContentsFromFile(nativeFileName, fileContents)) {
+    if (Core::readFileContentsFromFile(pFileName, fileContents)) {
         if (fileContents.trimmed().isEmpty())
             return true;
 
-        return canLoad(nativeFileName);
+        return canLoad(pFileName);
     } else {
         return false;
     }
@@ -115,14 +113,11 @@ StandardFile * StandardFileManager::file(const QString &pFileName)
 
 void StandardFileManager::manage(const QString &pFileName)
 {
-    QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
+    // Create the given file and add it to our list of managed files, if we are
+    // dealing with a file that is not already managed,
 
-    if (!file(nativeFileName) && doIsFile(nativeFileName)) {
-        // We are dealing with a file, which is not already managed, so we can
-        // add it to our list of managed files
-
-        mFiles.insert(nativeFileName, create(nativeFileName));
-    }
+    if (!file(pFileName) && doIsFile(pFileName))
+        mFiles.insert(Core::nativeCanonicalFileName(pFileName), create(pFileName));
 }
 
 //==============================================================================
@@ -201,14 +196,12 @@ void StandardFileManager::rename(const QString &pOldFileName,
     if (!crtFile)
         return;
 
-    QString newNativeFileName = Core::nativeCanonicalFileName(pNewFileName);
-
-    mFiles.insert(newNativeFileName, crtFile);
+    mFiles.insert(Core::nativeCanonicalFileName(pNewFileName), crtFile);
     mFiles.remove(Core::nativeCanonicalFileName(pOldFileName));
 
     // We also need to ensure that our file object has its file name updated
 
-    crtFile->setFileName(newNativeFileName);
+    crtFile->setFileName(pNewFileName);
 }
 
 //==============================================================================
