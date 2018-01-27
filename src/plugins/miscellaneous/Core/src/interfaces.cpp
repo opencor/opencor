@@ -73,7 +73,7 @@ FileTypeInterfaces fileTypeInterfaces()
 {
     // Return our file type interfaces
 
-    return static_cast<InterfacesData *>(Core::globalInstance(InterfacesDataSignature))->fileTypeInterfaces();
+    return static_cast<InterfacesData *>(globalInstance(InterfacesDataSignature))->fileTypeInterfaces();
 }
 
 //==============================================================================
@@ -82,7 +82,7 @@ SolverInterfaces solverInterfaces()
 {
     // Return our solver interfaces
 
-    return static_cast<InterfacesData *>(Core::globalInstance(InterfacesDataSignature))->solverInterfaces();
+    return static_cast<InterfacesData *>(globalInstance(InterfacesDataSignature))->solverInterfaces();
 }
 
 //==============================================================================
@@ -91,7 +91,7 @@ DataStoreInterfaces dataStoreInterfaces()
 {
     // Return our data store interfaces
 
-    return static_cast<InterfacesData *>(Core::globalInstance(InterfacesDataSignature))->dataStoreInterfaces();
+    return static_cast<InterfacesData *>(globalInstance(InterfacesDataSignature))->dataStoreInterfaces();
 }
 
 //==============================================================================

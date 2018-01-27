@@ -43,7 +43,7 @@ namespace DataStore {
 class DataStoreVariable
 {
 public:
-    explicit DataStoreVariable(const qulonglong &pCapacity, double *pValue = 0);
+    explicit DataStoreVariable(const quint64 &pCapacity, double *pValue = 0);
     ~DataStoreVariable();
 
     static bool compare(DataStoreVariable *pVariable1,
@@ -65,12 +65,12 @@ public:
     QString unit() const;
     void setUnit(const QString &pUnit);
 
-    qulonglong size() const;
+    quint64 size() const;
 
     void addValue();
     void addValue(const double &pValue);
 
-    double value(const qulonglong &pPosition) const;
+    double value(const quint64 &pPosition) const;
     double * values() const;
 
 private:
@@ -81,8 +81,8 @@ private:
     QString mName;
     QString mUnit;
 
-    const qulonglong mCapacity;
-    qulonglong mSize;
+    const quint64 mCapacity;
+    quint64 mSize;
 
     double *mValue;
     double *mValues;
@@ -113,12 +113,12 @@ private:
 class DataStore
 {
 public:
-    explicit DataStore(const QString &pUri, const qulonglong &pCapacity);
+    explicit DataStore(const QString &pUri, const quint64 &pCapacity);
     ~DataStore();
 
     QString uri() const;
 
-    qulonglong size() const;
+    quint64 size() const;
 
     DataStoreVariables voiAndVariables();
 
@@ -134,8 +134,8 @@ public:
 private:
     QString mlUri;
 
-    const qulonglong mCapacity;
-    qulonglong mSize;
+    const quint64 mCapacity;
+    quint64 mSize;
 
     DataStoreVariable *mVoi;
     DataStoreVariables mVariables;

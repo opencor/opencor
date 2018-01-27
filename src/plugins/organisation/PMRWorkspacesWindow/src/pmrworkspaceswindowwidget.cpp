@@ -378,12 +378,12 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     PMRSupport::PmrWorkspaceManager *workspaceManager = PMRSupport::PmrWorkspaceManager::instance();
 
-    connect(workspaceManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceCloned(PMRSupport::PmrWorkspace *)));
-    connect(workspaceManager, SIGNAL(workspaceUncloned(PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceUncloned(PMRSupport::PmrWorkspace *)));
-    connect(workspaceManager, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceSynchronized(PMRSupport::PmrWorkspace *)));
+    connect(workspaceManager, SIGNAL(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)));
+    connect(workspaceManager, SIGNAL(workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *)));
+    connect(workspaceManager, SIGNAL(workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *)));
 
     // Create and start a timer for refreshing our workspaces
 
@@ -678,7 +678,7 @@ void PmrWorkspacesWindowWidget::updateGui(const bool &pForceUserMessageVisibilit
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
+void PmrWorkspacesWindowWidget::initialize(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces,
                                            const QString &pErrorMessage,
                                            const bool &pAuthenticated)
 {
@@ -1260,7 +1260,7 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::refreshWorkspaces(const PMRSupport::PmrWorkspaces &pWorkspaces)
+void PmrWorkspacesWindowWidget::refreshWorkspaces(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces)
 {
     // Refresh our workspaces
 
@@ -1276,7 +1276,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces(const PMRSupport::PmrWorkspace
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
 {
     // The given workspace has been cloned, so update ourselves accordingly
 
@@ -1313,7 +1313,7 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
 {
     // The given workspace has been uncloned, so update ourselves accordingly
 
@@ -1325,7 +1325,7 @@ void PmrWorkspacesWindowWidget::workspaceUncloned(PMRSupport::PmrWorkspace *pWor
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
 {
     // The workspace has been synchronised, so refresh it
 

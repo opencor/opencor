@@ -164,9 +164,9 @@ signals:
     void information(const QString &pMessage) const;
     void warning(const QString &pMessage) const;
 
-    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
 
 public slots:
     void refreshStatus();

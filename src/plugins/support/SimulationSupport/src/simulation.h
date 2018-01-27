@@ -175,7 +175,7 @@ public:
 
     void addPoint(const double &pPoint);
 
-    qulonglong size() const;
+    quint64 size() const;
 
     DataStore::DataStore * dataStore() const;
 

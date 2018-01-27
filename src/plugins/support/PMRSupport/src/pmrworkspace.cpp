@@ -85,7 +85,7 @@ PmrWorkspace::PmrWorkspace(const bool &pOwned, const QString &pName,
     // Note: ideally, we would do this within the clone() method, but we can't
     //       since it's executed in a different thread...
 
-    connect(this, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
+    connect(this, SIGNAL(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)),
             this, SLOT(refreshStatus()));
 
     // Forward our signals to the 'global' instance of our workspace manager
@@ -93,12 +93,12 @@ PmrWorkspace::PmrWorkspace(const bool &pOwned, const QString &pName,
 
     PmrWorkspaceManager *workspaceManager = PmrWorkspaceManager::instance();
 
-    connect(this, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
-            workspaceManager, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)));
-    connect(this, SIGNAL(workspaceUncloned(PMRSupport::PmrWorkspace *)),
-            workspaceManager, SIGNAL(workspaceUncloned(PMRSupport::PmrWorkspace *)));
-    connect(this, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
-            workspaceManager, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)));
+    connect(this, SIGNAL(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)),
+            workspaceManager, SIGNAL(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)));
+    connect(this, SIGNAL(workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *)),
+            workspaceManager, SIGNAL(workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *)));
+    connect(this, SIGNAL(workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *)),
+            workspaceManager, SIGNAL(workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *)));
 
     // Forward our signals to our parent PMR web service
 

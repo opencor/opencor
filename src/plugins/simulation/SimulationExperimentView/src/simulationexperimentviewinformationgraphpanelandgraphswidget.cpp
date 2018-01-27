@@ -332,10 +332,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
 
         // Keep track of when the user changes a property value
 
-        connect(mGraphPanelPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(graphPanelPropertyChanged(Core::Property *)));
-        connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(graphsPropertyChanged(Core::Property *)));
+        connect(mGraphPanelPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+                this, SLOT(graphPanelPropertyChanged(OpenCOR::Core::Property *)));
+        connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+                this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
 
         // Add our new graphs property editor to ourselves
 
@@ -439,8 +439,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
     //          property, so give it a blank icon so that it is properly aligned
     //          with our other properties...
 
-    disconnect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-               this, SLOT(graphsPropertyChanged(Core::Property *)));
+    disconnect(graphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+               this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
 
     graphsPropertyEditor->addListProperty(graphProperty);
     graphsPropertyEditor->addStringProperty(pGraphProperties.title(), graphProperty);
@@ -485,8 +485,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
     graphsPropertyEditor->addBooleanProperty(pGraphProperties.symbolFilled(), symbolProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.symbolFillColor(), symbolProperty);
 
-    connect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(graphsPropertyChanged(Core::Property *)));
+    connect(graphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+            this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
 
     // Update the information about our new graph
 
@@ -582,8 +582,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
     //       properties as well as the selected state of our graphs, and then
     //       let people know that all the graphs have been updated...
 
-    disconnect(mGraphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-               this, SLOT(graphsPropertyChanged(Core::Property *)));
+    disconnect(mGraphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+               this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
 
     GraphPanelWidget::GraphPanelPlotGraphs graphs = GraphPanelWidget::GraphPanelPlotGraphs();
 
@@ -600,8 +600,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
     if (!graphs.isEmpty())
         emit graphsUpdated(graphs);
 
-    connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(graphsPropertyChanged(Core::Property *)));
+    connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+            this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
 }
 
 //==============================================================================
@@ -1331,7 +1331,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelSec
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPropertyChanged(Core::Property *pProperty)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPropertyChanged(OpenCOR::Core::Property *pProperty)
 {
     // Update our graph panel settings
 
@@ -1413,7 +1413,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged(Core::Property *pProperty)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged(OpenCOR::Core::Property *pProperty)
 {
     // Our graph has changed, which means that either it has been un/selected or
     // that the value of one of its properties has changed

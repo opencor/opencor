@@ -68,7 +68,7 @@ bool StandardFile::save(const QString &pFileName)
     // Make sure that mFileName is up to date
 
     if (!pFileName.isEmpty())
-        mFileName = pFileName;
+        setFileName(pFileName);
 
     return true;
 }
@@ -88,7 +88,7 @@ void StandardFile::setFileName(const QString &pFileName)
 {
     // Set the standard file's file name
 
-    mFileName = pFileName;
+    mFileName = Core::nativeCanonicalFileName(pFileName);
 }
 
 //==============================================================================
