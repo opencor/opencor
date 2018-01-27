@@ -98,12 +98,12 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 
     // Some connections to keep track of what our details widget wants
 
-    connect(mMetadataDetails, SIGNAL(qualifierDetailsRequested(WebViewerWidget::WebViewerWidget *, const QString &)),
-            this, SLOT(updateWebViewerWithQualifierDetails(WebViewerWidget::WebViewerWidget *, const QString &)));
-    connect(mMetadataDetails, SIGNAL(resourceDetailsRequested(WebViewerWidget::WebViewerWidget *, const QString &)),
-            this, SLOT(updateWebViewerWithResourceDetails(WebViewerWidget::WebViewerWidget *, const QString &)));
-    connect(mMetadataDetails, SIGNAL(idDetailsRequested(WebViewerWidget::WebViewerWidget *, const QString &, const QString &)),
-            this, SLOT(updateWebViewerWithIdDetails(WebViewerWidget::WebViewerWidget *, const QString &, const QString &)));
+    connect(mMetadataDetails, SIGNAL(qualifierDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &)),
+            this, SLOT(updateWebViewerWithQualifierDetails(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &)));
+    connect(mMetadataDetails, SIGNAL(resourceDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &)),
+            this, SLOT(updateWebViewerWithResourceDetails(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &)));
+    connect(mMetadataDetails, SIGNAL(idDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &, const QString &)),
+            this, SLOT(updateWebViewerWithIdDetails(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &, const QString &)));
 
     // Make our CellML list widget our focus proxy
 
@@ -165,7 +165,7 @@ CellmlAnnotationViewMetadataDetailsWidget * CellmlAnnotationViewEditingWidget::m
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                             const QString &pQualifier)
 {
     // The user requested a qualifier to be looked up, so generate a web page
@@ -255,7 +255,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebV
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                            const QString &pResource)
 {
     // The user requested a resource to be looked up, so retrieve it using
@@ -266,7 +266,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(WebVi
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                      const QString &pResource,
                                                                      const QString &pId)
 {

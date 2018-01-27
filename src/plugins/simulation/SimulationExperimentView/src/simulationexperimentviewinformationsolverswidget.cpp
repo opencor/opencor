@@ -109,8 +109,8 @@ SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInform
 
     // Keep track of changes to list properties
 
-    connect(this, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(solverChanged(Core::Property *)));
+    connect(this, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+            this, SLOT(solverChanged(OpenCOR::Core::Property *)));
 }
 
 //==============================================================================
@@ -476,7 +476,7 @@ void SimulationExperimentViewInformationSolversWidget::doSolverChanged(Simulatio
 
 //==============================================================================
 
-void SimulationExperimentViewInformationSolversWidget::solverChanged(Core::Property *pProperty)
+void SimulationExperimentViewInformationSolversWidget::solverChanged(OpenCOR::Core::Property *pProperty)
 {
     // Try, for the ODE/NLA solvers list property, to handle the change in the
     // list property

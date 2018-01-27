@@ -110,11 +110,11 @@ signals:
     void splitterMoved(const QIntList &pSizes);
 
 
-    void qualifierDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
+    void qualifierDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
                                    const QString &pQualifier);
-    void resourceDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
+    void resourceDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
                                   const QString &pResource);
-    void idDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
+    void idDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
                             const QString &pResource, const QString &pId);
 
 public slots:

@@ -334,15 +334,15 @@ private slots:
 
     void simulationDataModified(const bool &pIsModified);
 
-    void simulationPropertyChanged(Core::Property *pProperty);
-    void solversPropertyChanged(Core::Property *pProperty);
+    void simulationPropertyChanged(OpenCOR::Core::Property *pProperty);
+    void solversPropertyChanged(OpenCOR::Core::Property *pProperty);
 
     void graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                          const bool &pActive);
     void graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
-    void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                  CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+    void addGraph(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                  OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
     void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                     OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,

@@ -1190,7 +1190,7 @@ void CellmlTextViewWidget::updateViewer()
 
 //==============================================================================
 
-void CellmlTextViewWidget::selectFirstItemInEditorList(EditorWidget::EditorListWidget *pEditorList)
+void CellmlTextViewWidget::selectFirstItemInEditorList(OpenCOR::EditorWidget::EditorListWidget *pEditorList)
 {
     // Select the first item in the given editor list
 

@@ -469,7 +469,7 @@ private:
     void deleteProperty(Property *pProperty);
 
 signals:
-    void propertyChanged(Core::Property *pProperty);
+    void propertyChanged(OpenCOR::Core::Property *pProperty);
 
 private slots:
     void updateHeight();

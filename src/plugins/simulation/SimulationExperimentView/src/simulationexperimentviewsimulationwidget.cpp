@@ -381,10 +381,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
-    connect(informationWidget->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(simulationPropertyChanged(Core::Property *)));
-    connect(informationWidget->solversWidget(), SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(solversPropertyChanged(Core::Property *)));
+    connect(informationWidget->simulationWidget(), SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+            this, SLOT(simulationPropertyChanged(OpenCOR::Core::Property *)));
+    connect(informationWidget->solversWidget(), SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+            this, SLOT(solversPropertyChanged(OpenCOR::Core::Property *)));
 
     // Keep track of the addition and removal of a graph panel
 
@@ -413,8 +413,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Keep track of a graph being required
 
-    connect(informationWidget->parametersWidget(), SIGNAL(graphRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),
-            this, SLOT(addGraph(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
+    connect(informationWidget->parametersWidget(), SIGNAL(graphRequired(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *, OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *)),
+            this, SLOT(addGraph(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *, OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *)));
 
     // Keep track of the addition and removal of a graph
 
@@ -736,8 +736,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
 
-    disconnect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
-               this, SLOT(simulationPropertyChanged(Core::Property *)));
+    disconnect(simulationWidget, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+               this, SLOT(simulationPropertyChanged(OpenCOR::Core::Property *)));
 
     // Reset our progress
 
@@ -1019,8 +1019,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     // Resume the tracking of certain things
     // Note: see the corresponding code at the beginning of this method...
 
-    connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(simulationPropertyChanged(Core::Property *)));
+    connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+            this, SLOT(simulationPropertyChanged(OpenCOR::Core::Property *)));
 
     // Further initialise ourselves, if we have a valid environment and we are
     // not dealing with a CellML file
@@ -1444,10 +1444,10 @@ void SimulationExperimentViewSimulationWidget::initialiseTrackers()
     mSimulationPropertiesModified = false;
     mSolversPropertiesModified = false;
 
-    connect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
+    connect(simulationWidget, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
             this, SLOT(checkSimulationProperties()),
             Qt::UniqueConnection);
-    connect(solversWidget, SIGNAL(propertyChanged(Core::Property *)),
+    connect(solversWidget, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
             this, SLOT(checkSolversProperties()),
             Qt::UniqueConnection);
 
@@ -1468,10 +1468,10 @@ void SimulationExperimentViewSimulationWidget::initialiseTrackers()
         mGraphPanelProperties.insert(graphPanelPropertyEditor, allPropertyValues(graphPanelPropertyEditor));
         mGraphsProperties.insert(graphsPropertyEditor, allPropertyValues(graphsPropertyEditor));
 
-        connect(graphPanelPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+        connect(graphPanelPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
                 this, SLOT(checkGraphPanelsAndGraphs()),
                 Qt::UniqueConnection);
-        connect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+        connect(graphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
                 this, SLOT(checkGraphPanelsAndGraphs()),
                 Qt::UniqueConnection);
     }
@@ -3180,7 +3180,7 @@ void SimulationExperimentViewSimulationWidget::simulationDataModified(const bool
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::Property *pProperty)
+void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(OpenCOR::Core::Property *pProperty)
 {
     // Update our simulation properties, as well as our plots
 
@@ -3201,7 +3201,7 @@ void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::P
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::solversPropertyChanged(Core::Property *pProperty)
+void SimulationExperimentViewSimulationWidget::solversPropertyChanged(OpenCOR::Core::Property *pProperty)
 {
     // Update our solvers properties
 
@@ -3276,8 +3276,8 @@ void SimulationExperimentViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphP
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                                                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
+void SimulationExperimentViewSimulationWidget::addGraph(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                                        OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
     // Ask the current graph panel to add a new graph for the given parameters
 

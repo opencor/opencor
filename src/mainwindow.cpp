@@ -573,8 +573,8 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         // Also keep track of GUI updates in our central widget
 
-        connect(static_cast<Core::CentralWidget *>(centralWidget()), SIGNAL(guiUpdated(Plugin *, const QString &)),
-                this, SLOT(updateGui(Plugin *, const QString &)));
+        connect(static_cast<Core::CentralWidget *>(centralWidget()), SIGNAL(guiUpdated(OpenCOR::Plugin *, const QString &)),
+                this, SLOT(updateGui(OpenCOR::Plugin *, const QString &)));
     }
 
     // Add the plugin's window, in case we are dealing with a window plugin
@@ -1251,7 +1251,8 @@ void MainWindow::showEnableActions(const QList<QAction *> &pActions)
 
 //==============================================================================
 
-void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+void MainWindow::updateGui(OpenCOR::Plugin *pViewPlugin,
+                           const QString &pFileName)
 {
     // We come here as a result of our central widget having updated its GUI,
     // meaning that a new view or file has been selected, so we may need to

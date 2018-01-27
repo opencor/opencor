@@ -52,8 +52,8 @@ SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInf
 
     // Keep track of when the user changes a property value
 
-    connect(this, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(propertyChanged(Core::Property *)));
+    connect(this, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+            this, SLOT(propertyChanged(OpenCOR::Core::Property *)));
 }
 
 //==============================================================================
@@ -214,7 +214,7 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(const
 
 //==============================================================================
 
-void SimulationExperimentViewInformationParametersWidget::propertyChanged(Core::Property *pProperty)
+void SimulationExperimentViewInformationParametersWidget::propertyChanged(OpenCOR::Core::Property *pProperty)
 {
     // Update our simulation data
 
