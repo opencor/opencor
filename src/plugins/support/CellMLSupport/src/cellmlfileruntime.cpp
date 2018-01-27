@@ -273,7 +273,7 @@ QString CellmlFileRuntime::address() const
 {
     // Return our address as a string
 
-    return QString::number(qulonglong(this));
+    return QString::number(quint64(this));
 }
 
 //==============================================================================

@@ -139,7 +139,7 @@ public:
 
     void updateGui(const bool &pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                 const qulonglong &pSimulationResultsSize,
+                                 const quint64 &pSimulationResultsSize,
                                  const bool &pClearGraphs);
 
     void resetSimulationProgress();
@@ -230,7 +230,7 @@ private:
 
     bool mNeedUpdatePlots;
 
-    QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong> mOldDataSizes;
+    QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
 
     void reloadView();
 
@@ -254,7 +254,7 @@ private:
                   CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                         const qulonglong &pSize);
+                         const quint64 &pSize);
 
     void updateSimulationProperties(Core::Property *pProperty = 0);
     void updateSolversProperties(Core::Property *pProperty,

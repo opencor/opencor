@@ -161,7 +161,7 @@ void setNlaSolver(const QString &pRuntimeAddress, NlaSolver *pGlobalNlaSolver)
     // Keep track of the runtime's NLA solver
 
     qApp->setProperty(pRuntimeAddress.toUtf8().constData(),
-                      qulonglong(pGlobalNlaSolver));
+                      quint64(pGlobalNlaSolver));
 }
 
 //==============================================================================

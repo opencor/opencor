@@ -124,7 +124,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
         double *dataPointer = data;
         int rowCount = 0;
 
-        for (qulonglong i = 0, iMax = mDataStore->size(); i < iMax; ++i) {
+        for (quint64 i = 0, iMax = mDataStore->size(); i < iMax; ++i) {
             foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables)
                 *dataPointer++ = selectedVariable->value(i);
 

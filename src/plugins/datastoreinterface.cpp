@@ -51,8 +51,7 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreVariable::DataStoreVariable(const qulonglong &pCapacity,
-                                     double *pValue) :
+DataStoreVariable::DataStoreVariable(const quint64 &pCapacity, double *pValue) :
 #ifndef CLI_VERSION
     mIcon(QIcon()),
 #endif
@@ -181,7 +180,7 @@ void DataStoreVariable::setUnit(const QString &pUnit)
 
 //==============================================================================
 
-qulonglong DataStoreVariable::size() const
+quint64 DataStoreVariable::size() const
 {
     // Return our size
 
@@ -217,7 +216,7 @@ void DataStoreVariable::addValue(const double &pValue)
 
 //==============================================================================
 
-double DataStoreVariable::value(const qulonglong &pPosition) const
+double DataStoreVariable::value(const quint64 &pPosition) const
 {
     // Return our value at the given position
 
@@ -264,8 +263,7 @@ DataStoreVariables DataStoreData::selectedVariables() const
 
 //==============================================================================
 
-DataStore::DataStore(const QString &pUri,
-                     const qulonglong &pCapacity) :
+DataStore::DataStore(const QString &pUri, const quint64 &pCapacity) :
     mlUri(pUri),
     mCapacity(pCapacity),
     mSize(0),
@@ -300,7 +298,7 @@ QString DataStore::uri() const
 
 //==============================================================================
 
-qulonglong DataStore::size() const
+quint64 DataStore::size() const
 {
     // Return our size
 

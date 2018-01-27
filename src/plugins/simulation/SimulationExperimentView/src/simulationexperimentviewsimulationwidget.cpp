@@ -119,7 +119,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false),
     mNeedUpdatePlots(false),
-    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong>())
+    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>())
 {
     // Ask our simulation manager to manage our file and then retrieve the
     // corresponding simulation from it
@@ -1697,7 +1697,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     double startingPoint = mSimulation->data()->startingPoint();
     double endingPoint = mSimulation->data()->endingPoint();
     double pointInterval = mSimulation->data()->pointInterval();
-    qulonglong nbOfPoints = ceil((endingPoint-startingPoint)/pointInterval);
+    quint64 nbOfPoints = ceil((endingPoint-startingPoint)/pointInterval);
     bool needOneStepTask = (endingPoint-startingPoint)/nbOfPoints != pointInterval;
 
     libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = sedmlDocument->createUniformTimeCourse();
@@ -3574,7 +3574,7 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                               const qulonglong &pSize)
+                                                               const quint64 &pSize)
 {
     // Update our graph's data
 
@@ -3626,7 +3626,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisib
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                                       const qulonglong &pSimulationResultsSize,
+                                                                       const quint64 &pSimulationResultsSize,
                                                                        const bool &pClearGraphs)
 {
     // Update the modified state of our simulation's corresponding file, if
@@ -3680,7 +3680,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 //       not visible means that when we come back to this file,
                 //       part of the graphs will be missing...
 
-                qulonglong oldDataSize = graph->dataSize();
+                quint64 oldDataSize = graph->dataSize();
 
                 if (visible)
                     mOldDataSizes.insert(graph, oldDataSize);
@@ -3691,7 +3691,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 // first segment or if we were invisible at some point during
                 // the simulation
 
-                qulonglong realOldDataSize = mOldDataSizes.value(graph);
+                quint64 realOldDataSize = mOldDataSizes.value(graph);
 
                 needFullUpdatePlot =    needFullUpdatePlot || !realOldDataSize
                                      || (oldDataSize != realOldDataSize);
@@ -3713,7 +3713,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                         double minY = plotMinY;
                         double maxY = plotMaxY;
 
-                        for (qulonglong i = oldDataSize?oldDataSize-1:0;
+                        for (quint64 i = oldDataSize?oldDataSize-1:0;
                              i < pSimulationResultsSize; ++i) {
                             double valX = graph->data()->sample(i).x();
                             double valY = graph->data()->sample(i).y();

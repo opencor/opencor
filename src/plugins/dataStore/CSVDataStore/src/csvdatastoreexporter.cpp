@@ -93,7 +93,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
         // header
 
         if (res) {
-            for (qulonglong i = 0, iMax = mDataStore->size(); i < iMax; ++i) {
+            for (quint64 i = 0, iMax = mDataStore->size(); i < iMax; ++i) {
                 QString rowData = QString();
 
                 if (voi)

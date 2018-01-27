@@ -428,7 +428,7 @@ bool SedmlFile::isSupported()
     double initialTime = uniformTimeCourse->getInitialTime();
     double outputStartTime = uniformTimeCourse->getOutputStartTime();
     double outputEndTime = uniformTimeCourse->getOutputEndTime();
-    qulonglong nbOfPoints = uniformTimeCourse->getNumberOfPoints();
+    quint64 nbOfPoints = uniformTimeCourse->getNumberOfPoints();
 
     if (initialTime != outputStartTime) {
         mIssues << SedmlFileIssue(SedmlFileIssue::Information,
