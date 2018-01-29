@@ -53,10 +53,21 @@ BiosignalmlDataStoreExporter::BiosignalmlDataStoreExporter(DataStore::DataStoreD
 
 void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 {
-    // Export the given data store to a BioSignalML file
+    // Determine the number of steps to export everything
 
     BiosignalmlDataStoreData *dataStoreData = static_cast<BiosignalmlDataStoreData *>(mDataStoreData);
     DataStore::DataStore *dataStore = dataStoreData->dataStore();
+    int nbOfRuns = dataStore->runsCount();
+    int nbOfSteps = 0;
+
+    for (int i = 0; i < nbOfRuns; ++i)
+        nbOfSteps += dataStore->size(i);
+
+    double oneOverNbOfSteps = 1.0/nbOfSteps;
+    int stepNb = 0;
+
+    // Export the given data store to a BioSignalML file
+
     bsml::HDF5::Recording *recording = 0;
 
     try {
@@ -77,8 +88,6 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
         recording->set_investigator(rdf::Literal(dataStoreData->author().toStdString()));
         recording->set_description(dataStoreData->description().toStdString());
         recording->set_comment(dataStoreData->comment().toStdString());
-
-        int nbOfRuns = dataStore->runsCount();
 
         for (int i = 0; i < nbOfRuns; ++i) {
             // Create and populate a clock
@@ -140,7 +149,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
                     rowCount = 0;
                 }
 
-                emit progress(double(j)/(jMax-1));
+                emit progress(++stepNb*oneOverNbOfSteps);
             }
 
             signalArray->extend(data, variables.count()*rowCount);
