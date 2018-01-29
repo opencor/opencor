@@ -67,6 +67,62 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
         variables.removeOne(voi);
 
+        // Retrieve the different values for our variable of integration and
+        // sets of variables
+        // Note #1: this is needed when we have two runs with different
+        //          starting/ending points and/or point intervals...
+        // Note #2: after our for loop, our list may contain duplicates and may
+        //          not be sorted. When it comes to removing duplicates, we do
+        //          this by converting our list to a set and back. Indeed, this
+        //          is much faster than preventing ourselves from adding
+        //          duplicates in the first place...
+
+        QStringList variablesUri = QStringList();
+        QList<DataStore::DataStoreVariables> variablesRuns = QList<DataStore::DataStoreVariables>();
+
+        foreach (DataStore::DataStoreVariable *variable, variables) {
+            variablesUri << variable->uri();
+
+            variablesRuns << DataStore::DataStoreVariables();
+        }
+
+        int nbOfRuns = dataStore->runsCount();
+        QList<quint64> runsIndex = QList<quint64>();
+        QDoubleList voiValues = QDoubleList();
+
+        for (int i = 0; i < nbOfRuns; ++i) {
+            // Original index for the current run
+
+            runsIndex << 0;
+
+            // VOI values
+
+            for (quint64 j = 0, jMax = dataStore->size(i); j < jMax; ++j)
+                voiValues << dataStore->voi()->value(j, i);
+
+            // Variables
+
+            int j = 0;
+
+            foreach (DataStore::DataStoreVariable *variable, dataStore->variables()) {
+                if (variablesUri.contains(variable->uri())) {
+                    variablesRuns[j] << variable;
+
+                    ++j;
+                }
+            }
+        }
+
+        voiValues = voiValues.toSet().toList();
+
+        std::sort(voiValues.begin(), voiValues.end());
+
+        // Determine the number of steps to export everything, i.e. one for our
+        // header and then some for our number of VOI values
+
+        double oneOverNbOfSteps = 1.0/(1+voiValues.count());
+        int stepNb = 0;
+
         // Output our header
 
         static const QString Header = "%1 (%2)%3";
@@ -78,8 +134,6 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
             header += Header.arg(voi->uri().replace("/prime", "'").replace('/', " | "),
                                  voi->unit(), QString());
         }
-
-        int nbOfRuns = dataStore->runsCount();
 
         foreach (DataStore::DataStoreVariable *variable, variables) {
             for (int i = 0; i < nbOfRuns; ++i) {
@@ -102,54 +156,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
         // to output our header
 
         if (res) {
-            // Retrieve our different VOI values and sets of variables
-            // Note #1: this is needed when we have two runs with different
-            //          starting/ending points and/or point intervals...
-            // Note #2: after our for loop, our list may contain duplicates and
-            //          may not be sorted. When it comes to removing duplicates,
-            //          we do this by converting our list to a set and back.
-            //          Indeed, this is much faster than preventing ourselves
-            //          from adding duplicates in the first place...
-
-            QList<quint64> runsIndex = QList<quint64>();
-            QDoubleList voiValues = QDoubleList();
-            QStringList variablesUri = QStringList();
-            QList<DataStore::DataStoreVariables> variablesRuns = QList<DataStore::DataStoreVariables>();
-
-            foreach (DataStore::DataStoreVariable *variable, variables) {
-                variablesUri << variable->uri();
-
-                variablesRuns << DataStore::DataStoreVariables();
-            }
-
-            for (int i = 0; i < nbOfRuns; ++i) {
-                // Original index
-
-                runsIndex << 0;
-
-                // VOI values
-
-                for (quint64 j = 0, jMax = dataStore->size(i); j < jMax; ++j)
-                    voiValues << dataStore->voi()->value(j, i);
-
-                // Variables
-
-                int j = 0;
-
-                foreach (DataStore::DataStoreVariable *variable, dataStore->variables()) {
-                    if (variablesUri.contains(variable->uri())) {
-                        variablesRuns[j] << variable;
-
-                        ++j;
-                    }
-                }
-            }
-
-            voiValues = voiValues.toSet().toList();
-
-            std::sort(voiValues.begin(), voiValues.end());
-
-            // Now, we can output our data
+            emit progress(++stepNb*oneOverNbOfSteps);
 
             for (quint64 i = 0, iMax = voiValues.count(); i < iMax; ++i) {
                 QString rowData = QString();
@@ -195,7 +202,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                 if (!res)
                     break;
 
-                emit progress(double(i)/(iMax-1));
+                emit progress(++stepNb*oneOverNbOfSteps);
             }
         }
 
