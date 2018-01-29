@@ -241,7 +241,7 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
     mStatesRatesCount(0),
     mAlgebraicCount(0),
     mCompilerEngine(0),
-    mVariableOfIntegration(0),
+    mVoi(0),
     mParameters(CellmlFileRuntimeParameters())
 {
     // Reset (initialise, here) our properties
@@ -430,13 +430,13 @@ void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
     if (pResetIssues)
         mIssues.clear();
 
-    if (!mParameters.contains(mVariableOfIntegration))
-        delete mVariableOfIntegration;
+    if (!mParameters.contains(mVoi))
+        delete mVoi;
 
     foreach (CellmlFileRuntimeParameter *parameter, mParameters)
         delete parameter;
 
-    mVariableOfIntegration = 0;
+    mVoi = 0;
 
     mParameters.clear();
 }
@@ -789,8 +789,8 @@ void CellmlFileRuntime::update()
                                                                                    computationTarget->assignedIndex());
 
             if (parameterType == CellmlFileRuntimeParameter::Voi) {
-                if (!mVariableOfIntegration) {
-                    mVariableOfIntegration = parameter;
+                if (!mVoi) {
+                    mVoi = parameter;
 
                     voiName = parameter->name();
                     voiComponentHierarchy = parameter->componentHierarchy();
@@ -922,11 +922,11 @@ void CellmlFileRuntime::update()
 
 //==============================================================================
 
-CellmlFileRuntimeParameter *CellmlFileRuntime::variableOfIntegration() const
+CellmlFileRuntimeParameter *CellmlFileRuntime::voi() const
 {
     // Return our variable of integration, if any
 
-    return mVariableOfIntegration;
+    return mVoi;
 }
 
 //==============================================================================

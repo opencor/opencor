@@ -130,7 +130,7 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
 
     CellMLSupport::CellmlFileRuntime *runtime = pSimulation->runtime();
 
-    mVoiAccessible = runtime->parameters().contains(runtime->variableOfIntegration());
+    mVoiAccessible = runtime->parameters().contains(runtime->voi());
 
     // Retranslate our core self, if needed
     // Note: part of reloading ourselves consists of finalising ourselves, which
@@ -375,7 +375,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
         property->setIcon(parameter->icon());
 
         property->setName(parameter->formattedName(), false);
-        property->setUnit(parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()), false);
+        property->setUnit(parameter->formattedUnit(pRuntime->voi()->unit()), false);
 
         // Keep track of the link between our property value and parameter
 
@@ -414,7 +414,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
         connect(voiAction, SIGNAL(triggered(bool)),
                 this, SLOT(emitGraphRequired()));
 
-        mParameterActions.insert(voiAction, pRuntime->variableOfIntegration());
+        mParameterActions.insert(voiAction, pRuntime->voi());
     }
 
     // Populate our context menu with the parameters

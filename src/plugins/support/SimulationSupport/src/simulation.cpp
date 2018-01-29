@@ -579,10 +579,10 @@ void SimulationResults::createDataStore()
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Voi:
             mPoints->setIcon(parameter->icon());
-            mPoints->setUri(uri(runtime->variableOfIntegration()->componentHierarchy(),
-                                runtime->variableOfIntegration()->name()));
-            mPoints->setLabel(runtime->variableOfIntegration()->name());
-            mPoints->setUnit(runtime->variableOfIntegration()->unit());
+            mPoints->setUri(uri(runtime->voi()->componentHierarchy(),
+                                runtime->voi()->name()));
+            mPoints->setLabel(runtime->voi()->name());
+            mPoints->setUnit(runtime->voi()->unit());
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::Constant:
@@ -612,7 +612,7 @@ void SimulationResults::createDataStore()
             variable->setIcon(parameter->icon());
             variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
             variable->setLabel(parameter->formattedName());
-            variable->setUnit(parameter->formattedUnit(runtime->variableOfIntegration()->unit()));
+            variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
         }
     }
 }

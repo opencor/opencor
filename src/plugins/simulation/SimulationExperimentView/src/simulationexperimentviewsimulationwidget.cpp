@@ -843,12 +843,12 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
     bool validRuntime = runtime && runtime->isValid();
 
-    CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validRuntime?runtime->variableOfIntegration():0;
+    CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?runtime->voi():0;
 
     if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
         information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
-        if (variableOfIntegration) {
+        if (voi) {
             // A variable of integration could be retrieved for our CellML file,
             // so we can also output the model type
 
@@ -906,7 +906,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
         // Enable/disable our run/pause action depending on whether we have a
         // variable of integration
 
-        mRunPauseResumeSimulationAction->setEnabled(variableOfIntegration);
+        mRunPauseResumeSimulationAction->setEnabled(voi);
 
         // Update our simulation mode or clear our simulation data (should there
         // be some) in case we are reloading ourselves
@@ -921,7 +921,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
         // Initialise our contents widget and make sure that we have the
         // required type(s) of solvers
 
-        if (variableOfIntegration) {
+        if (voi) {
             // Show our contents widget in case it got previously hidden
             // Note: indeed, if it was to remain hidden then some
             //       initialisations wouldn't work (e.g. the solvers widget has

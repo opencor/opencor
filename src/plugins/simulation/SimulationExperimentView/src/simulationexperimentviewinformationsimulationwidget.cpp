@@ -63,7 +63,7 @@ void SimulationExperimentViewInformationSimulationWidget::initialize(SimulationS
 {
     // Iniialise the unit of our different properties
 
-    QString unit = pSimulation->runtime()->variableOfIntegration()->unit();
+    QString unit = pSimulation->runtime()->voi()->unit();
 
     mStartingPointProperty->setUnit(unit);
     mEndingPointProperty->setUnit(unit);

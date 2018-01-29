@@ -345,7 +345,7 @@ void SimulationExperimentViewInformationSolversWidget::initialize(SimulationSupp
 
     // Set the unit of our different properties, if needed
 
-    QString voiUnit = pSimulation->runtime()->variableOfIntegration()->unit();
+    QString voiUnit = pSimulation->runtime()->voi()->unit();
 
     setPropertiesUnit(mOdeSolverData, voiUnit);
     setPropertiesUnit(mNlaSolverData, voiUnit);
