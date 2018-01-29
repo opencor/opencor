@@ -167,17 +167,9 @@ QColor GraphPanelPlotGraphProperties::symbolFillColor() const
 
 //==============================================================================
 
-static const QRectF NoBoundingLogRect = QRectF(0.0, 0.0, -1.0, -1.0);
-
-//==============================================================================
-
-GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
+GraphPanelPlotGraphRun::GraphPanelPlotGraphRun(GraphPanelPlotGraph *pOwner) :
     QwtPlotCurve(),
-    mSelected(true),
-    mFileName(QString()),
-    mParameterX(pParameterX),
-    mParameterY(pParameterY),
-    mBoundingLogRect(NoBoundingLogRect)
+    mOwner(pOwner)
 {
     // Customise ourselves a bit
 
@@ -189,12 +181,129 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
 
 //==============================================================================
 
+GraphPanelPlotGraph * GraphPanelPlotGraphRun::owner() const
+{
+    // Return our owner
+
+    return mOwner;
+}
+
+//==============================================================================
+
+static const QRectF NoBoundingLogRect = QRectF(0.0, 0.0, -1.0, -1.0);
+
+//==============================================================================
+
+GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
+    mSelected(true),
+    mFileName(QString()),
+    mParameterX(pParameterX),
+    mParameterY(pParameterY),
+    mBoundingLogRect(NoBoundingLogRect),
+    mPlot(0),
+    mRuns(GraphPanelPlotGraphRuns())
+{
+//---ISSUE1523--- THIS IS ONLY TEMPORARY, SO THAT THE REST OF OUR CODE WORKS AS
+//                IS, BUT CLEARLY THAT CODE OUGHT TO BE MODIFIED TO ADD RUNS
+//                WHENEVER NEEDED
+addRun();
+}
+
+//==============================================================================
+
+GraphPanelPlotGraph::~GraphPanelPlotGraph()
+{
+    // Delete some internal objects
+
+    removeAllRuns();
+}
+
+//==============================================================================
+
 bool GraphPanelPlotGraph::isValid() const
 {
     // Return whether we are valid
 
     return   !mFileName.isEmpty()
            && mParameterX && mParameterY;
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraph::attach(GraphPanelPlotWidget *pPlot)
+{
+    // Attach our different runs to the given plot and keep track of the given
+    // plot
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    foreach (GraphPanelPlotGraphRun *run, mRuns)
+        run->attach(pPlot);
+
+    mPlot = pPlot;
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraph::detach()
+{
+    // Detach our different runs from their plot and reset our plot
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    foreach (GraphPanelPlotGraphRun *run, mRuns)
+        run->detach();
+
+    mPlot = 0;
+}
+
+//==============================================================================
+
+GraphPanelPlotWidget * GraphPanelPlotGraph::plot() const
+{
+    // Return our plot
+
+    return mPlot;
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraph::addRun()
+{
+    // Add a run, after having customised it, if possible
+
+    GraphPanelPlotGraphRun *firstRun = mRuns.isEmpty()?0:mRuns.first();
+    GraphPanelPlotGraphRun *run = new GraphPanelPlotGraphRun(this);
+
+    if (firstRun) {
+        run->setPen(firstRun->pen());
+        run->setTitle(firstRun->title());
+    }
+
+    mRuns << run;
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraph::removeAllRuns()
+{
+    // Delete all our runs
+
+    foreach (GraphPanelPlotGraphRun *run, mRuns)
+        delete run;
+
+    mRuns.clear();
+}
+
+//==============================================================================
+
+GraphPanelPlotGraphRun * GraphPanelPlotGraph::lastRun() const
+{
+    // Return our last run
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    return mRuns.last();
 }
 
 //==============================================================================
@@ -216,9 +325,7 @@ void GraphPanelPlotGraph::setSelected(const bool &pSelected)
 
     // Un/check our corresponding legend item
 
-    GraphPanelPlotWidget *graphPlot = static_cast<GraphPanelPlotWidget *>(plot());
-
-    static_cast<GraphPanelPlotLegendWidget *>(graphPlot->legend())->setChecked(graphPlot->graphIndex(this), pSelected);
+    static_cast<GraphPanelPlotLegendWidget *>(mPlot->legend())->setChecked(mPlot->graphIndex(this), pSelected);
 }
 
 //==============================================================================
@@ -277,16 +384,152 @@ void GraphPanelPlotGraph::setParameterY(void *pParameterY)
 
 //==============================================================================
 
+const QPen & GraphPanelPlotGraph::pen() const
+{
+    // Return the pen of our current (i.e. last) run
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    return mRuns.last()->pen();
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraph::setPen(const QPen &pPen)
+{
+    // Set the pen of our different runs
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    foreach (GraphPanelPlotGraphRun *run, mRuns)
+        run->setPen(pPen);
+}
+
+//==============================================================================
+
+const QwtSymbol * GraphPanelPlotGraph::symbol() const
+{
+    // Return the symbol of our current (i.e. last) run
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    return mRuns.last()->symbol();
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraph::setSymbol(QwtSymbol *pSymbol)
+{
+    // Set the symbol of our different runs
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    foreach (GraphPanelPlotGraphRun *run, mRuns)
+        run->setSymbol(pSymbol);
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraph::setTitle(const QString &pTitle)
+{
+    // Set the title of our different runs
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    foreach (GraphPanelPlotGraphRun *run, mRuns)
+        run->setTitle(pTitle);
+}
+
+//==============================================================================
+
+bool GraphPanelPlotGraph::isVisible() const
+{
+    // Return whether our current (i.e. last) run is visible
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    return mRuns.last()->isVisible();
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraph::setVisible(const bool &pVisible)
+{
+    // Set the visibility of our different runs
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    foreach (GraphPanelPlotGraphRun *run, mRuns)
+        run->setVisible(pVisible);
+}
+
+//==============================================================================
+
+bool GraphPanelPlotGraph::hasData() const
+{
+    // Return whether we have some data for any of our runs
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    foreach (GraphPanelPlotGraphRun *run, mRuns) {
+        if (run->dataSize())
+            return true;
+    }
+
+    return false;
+}
+
+//==============================================================================
+
+quint64 GraphPanelPlotGraph::dataSize() const
+{
+    // Return the size of our data, i.e. raw samples, for our current (i.e.
+    // last) run
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    return mRuns.last()->dataSize();
+}
+
+//==============================================================================
+
+QwtSeriesData<QPointF> * GraphPanelPlotGraph::data() const
+{
+    // Return the data, i.e. raw samples, of our current (i.e. last) run
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    return mRuns.last()->data();
+}
+
+//==============================================================================
+
 void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY,
                                   const int &pSize)
 {
-    // Set our data, i.e. raw samples
+    // Set our data, i.e. raw samples, to our current (i.e. last) run
 
-    setRawSamples(pDataX, pDataY, pSize);
+    Q_ASSERT(!mRuns.isEmpty());
+
+    mRuns.last()->setRawSamples(pDataX, pDataY, pSize);
 
     // Reset our cache version of our log data rectangle
 
     mBoundingLogRect = NoBoundingLogRect;
+}
+
+//==============================================================================
+
+QRectF GraphPanelPlotGraph::boundingRect() const
+{
+    // Return our bounding rectangle
+
+    QRectF res = QRectF();
+
+    foreach (GraphPanelPlotGraphRun *run, mRuns)
+        res |= run->boundingRect();
+
+    return res;
 }
 
 //==============================================================================
@@ -296,8 +539,7 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
     // Return the cached version of our bounding log rectangle, if we have one,
     // or compute it and return it
 
-    if (mBoundingLogRect == NoBoundingLogRect) {
-        const QwtSeriesData<QPointF> *crtData = data();
+    if ((mBoundingLogRect == NoBoundingLogRect) && !mRuns.isEmpty()) {
         bool needInitMinX = true;
         bool needInitMaxX = true;
         bool needInitMinY = true;
@@ -307,42 +549,46 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
         double minY = 1.0;
         double maxY = 1.0;
 
-        for (size_t i = 0, iMax = crtData->size(); i < iMax; ++i) {
-            QPointF sample = crtData->sample(i);
+        foreach (GraphPanelPlotGraphRun *run, mRuns) {
+            const QwtSeriesData<QPointF> *data = run->data();
 
-            if (sample.x() > 0.0) {
-                if (needInitMinX) {
-                    minX = sample.x();
+            for (size_t i = 0, iMax = data->size(); i < iMax; ++i) {
+                QPointF sample = data->sample(i);
 
-                    needInitMinX = false;
-                } else if (sample.x() < minX) {
-                    minX = sample.x();
+                if (sample.x() > 0.0) {
+                    if (needInitMinX) {
+                        minX = sample.x();
+
+                        needInitMinX = false;
+                    } else if (sample.x() < minX) {
+                        minX = sample.x();
+                    }
+
+                    if (needInitMaxX) {
+                        maxX = sample.x();
+
+                        needInitMaxX = false;
+                    } else if (sample.x() > maxX) {
+                        maxX = sample.x();
+                    }
                 }
 
-                if (needInitMaxX) {
-                    maxX = sample.x();
+                if (sample.y() > 0.0) {
+                    if (needInitMinY) {
+                        minY = sample.y();
 
-                    needInitMaxX = false;
-                } else if (sample.x() > maxX) {
-                    maxX = sample.x();
-                }
-            }
+                        needInitMinY = false;
+                    } else if (sample.y() < minY) {
+                        minY = sample.y();
+                    }
 
-            if (sample.y() > 0.0) {
-                if (needInitMinY) {
-                    minY = sample.y();
+                    if (needInitMaxY) {
+                        maxY = sample.y();
 
-                    needInitMinY = false;
-                } else if (sample.y() < minY) {
-                    minY = sample.y();
-                }
-
-                if (needInitMaxY) {
-                    maxY = sample.y();
-
-                    needInitMaxY = false;
-                } else if (sample.y() > maxY) {
-                    maxY = sample.y();
+                        needInitMaxY = false;
+                    } else if (sample.y() > maxY) {
+                        maxY = sample.y();
+                    }
                 }
             }
         }
@@ -928,7 +1174,7 @@ void GraphPanelPlotLegendWidget::checked(const QVariant &pItemInfo)
 
     // Let people know that the given graph has been toggled
 
-    emit graphToggled(static_cast<GraphPanelPlotGraph *>(mOwner->infoToItem(pItemInfo)));
+    emit graphToggled(static_cast<GraphPanelPlotGraph *>(static_cast<GraphPanelPlotGraphRun *>(mOwner->infoToItem(pItemInfo))->owner()));
 }
 
 //==============================================================================
@@ -2080,7 +2326,7 @@ bool GraphPanelPlotWidget::hasData() const
     // and selected, has some data
 
     foreach (GraphPanelPlotGraph *graph, mGraphs) {
-        if (graph->isValid() && graph->isSelected() && graph->dataSize())
+        if (graph->isValid() && graph->isSelected() && graph->hasData())
             return true;
     }
 
@@ -2099,7 +2345,7 @@ bool GraphPanelPlotWidget::dataRect(QRectF &pDataRect) const
     pDataRect = QRectF();
 
     foreach (GraphPanelPlotGraph *graph, mGraphs) {
-        if (graph->isValid() && graph->isSelected() && graph->dataSize()) {
+        if (graph->isValid() && graph->isSelected() && graph->hasData()) {
             pDataRect |= graph->boundingRect();
 
             res = true;
@@ -2121,7 +2367,7 @@ bool GraphPanelPlotWidget::dataLogRect(QRectF &pDataLogRect) const
     pDataLogRect = QRectF();
 
     foreach (GraphPanelPlotGraph *graph, mGraphs) {
-        if (graph->isValid() && graph->isSelected() && graph->dataSize()) {
+        if (graph->isValid() && graph->isSelected() && graph->hasData()) {
             QRectF boundingLogRect = graph->boundingLogRect();
 
             if (boundingLogRect != NoBoundingLogRect) {
@@ -2752,7 +2998,7 @@ bool GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
     // (due to the axes having been changed), in which case we replot ourselves
 
     if (mCanDirectPaint) {
-        mDirectPainter->drawSeries(pGraph, pFrom, -1);
+        mDirectPainter->drawSeries(pGraph->lastRun(), pFrom, -1);
 
         return false;
     } else {
