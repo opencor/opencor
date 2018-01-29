@@ -160,7 +160,8 @@ public:
     void setPen(const QPen &pPen);
 
     const QwtSymbol * symbol() const;
-    void setSymbol(QwtSymbol *pSymbol);
+    void setSymbol(const QwtSymbol::Style &pStyle, const QBrush &pBrush,
+                   const QPen &pPen, const int &pSize);
 
     void setTitle(const QString &pTitle);
 

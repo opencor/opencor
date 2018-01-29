@@ -268,7 +268,12 @@ void GraphPanelPlotGraph::addRun()
     GraphPanelPlotGraphRun *run = new GraphPanelPlotGraphRun(this);
 
     if (firstRun) {
+        const QwtSymbol *symbol = firstRun->symbol();
+        int symbolSize = symbol->size().width();
+
         run->setPen(firstRun->pen());
+        run->setSymbol(new QwtSymbol(symbol->style(), symbol->brush(),
+                                     symbol->pen(), QSize(symbolSize, symbolSize)));
         run->setTitle(firstRun->title());
     }
 
@@ -414,14 +419,16 @@ const QwtSymbol * GraphPanelPlotGraph::symbol() const
 
 //==============================================================================
 
-void GraphPanelPlotGraph::setSymbol(QwtSymbol *pSymbol)
+void GraphPanelPlotGraph::setSymbol(const QwtSymbol::Style &pStyle,
+                                    const QBrush &pBrush, const QPen &pPen,
+                                    const int &pSize)
 {
     // Set the symbol of our different runs
 
     Q_ASSERT(!mRuns.isEmpty());
 
     foreach (GraphPanelPlotGraphRun *run, mRuns)
-        run->setSymbol(pSymbol);
+        run->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, QSize(pSize, pSize)));
 }
 
 //==============================================================================

@@ -1294,8 +1294,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
                              || (oldGraphSymbol->brush() != symbolFillColor);
     }
 
-    graph->setSymbol(new QwtSymbol(symbolStyle, symbolFillColor, symbolColor,
-                                   QSize(symbolSize, symbolSize)));
+    graph->setSymbol(symbolStyle, symbolFillColor, symbolColor, symbolSize);
 
     // Let people know if the X and/or Y parameters of our graph have changed or
     // replot it if its settings have changed
