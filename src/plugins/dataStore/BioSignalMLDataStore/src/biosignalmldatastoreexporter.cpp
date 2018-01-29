@@ -72,9 +72,8 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
     try {
         // Create and populate a recording
-        // Note: although a variable of integration may not officially be
-        //       visible to a user, we still need to export it since it's needed
-        //       by BioSignalML...
+        // Note: although a VOI may not officially be visible to a user, we
+        //       still need to export it since it's needed by BioSignalML...
 
         DataStore::DataStoreVariable *voi = dataStore->voi();
         std::string recordingUri = QUrl::fromLocalFile(dataStoreData->fileName()).toEncoded().toStdString();
@@ -100,9 +99,8 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
             clock->set_label(voi->label().toStdString());
 
-            // Determine what should be exported (minus the variable of
-            // integration, which should always be exported in the case of a
-            // BioSignalML file)
+            // Determine what should be exported (minus the VOI, which should
+            // always be exported in the case of a BioSignalML file)
 
             DataStore::DataStoreVariables variables = mDataStoreData->variables();
 

@@ -100,13 +100,13 @@ void Tests::runtimeTests()
     // Now, we do the same for some proper CellML 1.1 models:
     //  - Hodgking-Huxley model, which is somewhat 'complex' in terms of
     //    imports, etc.;
-    //  - An 'old' version of a bond graph model implementation where the
-    //    variable of integration is not visible in the main CellML file (so the
-    //    idea is to ensure that the model is still considered valid even though
-    //    the variable of integration is not directly visible);
+    //  - An 'old' version of a bond graph model implementation where the VOI
+    //    is not visible in the main CellML file (so the idea is to ensure that
+    //    the model is still considered valid even though the VOI is not
+    //    directly visible);
     //  - A 'new' version of a bond graph model implementation where the
-    //    variable of integration is now visible in the main CellML file (as
-    //    well as some other model parameters); and
+    //    VOI is now visible in the main CellML file (as well as some other
+    //    model parameters); and
     //  - A model (Noble 1962) that imports its units (and no components) from a
     //    child model; and
     //  - A somewhat comprehensive model (Faville 2008).
@@ -123,7 +123,7 @@ void Tests::runtimeTests()
                   "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/faville_model_2008.out")));
 
     // Finally, test a CellML file that has, according to the CellML API at
-    // least, several variables of integration
+    // least, several VOIs
 
     doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/calcium_transient.cellml"),
                   "1.1", QStringList(), false);

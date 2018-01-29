@@ -421,8 +421,8 @@ QString DataStore::uri() const
 
 int DataStore::runsCount() const
 {
-    // Return our number of runs, i.e. the number of runs for our variable of
-    // integration, for example
+    // Return our number of runs, i.e. the number of runs for our VOI, for
+    // example
 
     return mVoi->runsCount();
 }
@@ -431,7 +431,7 @@ int DataStore::runsCount() const
 
 bool DataStore::addRun(const quint64 &pCapacity)
 {
-    // Try to add a run to our variable of integration and all our variables
+    // Try to add a run to our VOI and all our variables
 
     int oldRunsCount = mVoi->runsCount();
 
@@ -441,8 +441,8 @@ bool DataStore::addRun(const quint64 &pCapacity)
         foreach (DataStoreVariable *variable, mVariables)
             variable->addRun(pCapacity);
     } catch (...) {
-        // We couldn't add a run to our variable of integration and all our
-        // variables, so only keep the number of runs we used to have
+        // We couldn't add a run to our VOI and all our variables, so only keep
+        // the number of runs we used to have
 
         mVoi->keepRuns(oldRunsCount);
 
@@ -459,8 +459,7 @@ bool DataStore::addRun(const quint64 &pCapacity)
 
 quint64 DataStore::size(const int &pRun) const
 {
-    // Return our size, i.e. the size of our variable of integration, for
-    // example
+    // Return our size, i.e. the size of our VOI, for example
 
     return mVoi->size(pRun);
 }
@@ -469,7 +468,7 @@ quint64 DataStore::size(const int &pRun) const
 
 DataStoreVariable * DataStore::voi() const
 {
-    // Return our variable of integration
+    // Return our VOI
 
     return mVoi;
 }
@@ -489,8 +488,8 @@ DataStoreVariables DataStore::variables()
 
 DataStoreVariables DataStore::voiAndVariables()
 {
-    // Return our variable of integration, if any, and all our variables, after
-    // making sure that they are sorted
+    // Return our VOI, if any, and all our variables, after making sure that
+    // they are sorted
 
     DataStoreVariables res = DataStoreVariables();
 
@@ -543,7 +542,7 @@ DataStoreVariables DataStore::addVariables(double *pValues, const int &pCount)
 void DataStore::addValues(const double &pVoiValue)
 {
     // Set the value at the mSize position of all our variables including our
-    // variable of integration, which value is directly given to us
+    // VOI, which value is directly given to us
 
     if (mVoi)
         mVoi->addValue(pVoiValue);

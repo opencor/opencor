@@ -569,8 +569,8 @@ void SimulationResults::createDataStore()
     mStates = mDataStore->addVariables(data->states(), runtime->statesCount());
     mAlgebraic = mDataStore->addVariables(data->algebraic(), runtime->algebraicCount());
 
-    // Customise our variable of integration, as well as our constant, rate,
-    // state and algebraic variables
+    // Customise our VOI, as well as our constant, rate, state and algebraic
+    // variables
 
     for (int i = 0, iMax = runtime->parameters().count(); i < iMax; ++i) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = runtime->parameters()[i];

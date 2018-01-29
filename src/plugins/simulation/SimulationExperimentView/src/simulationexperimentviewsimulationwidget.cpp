@@ -849,18 +849,18 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
         information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
         if (voi) {
-            // A variable of integration could be retrieved for our CellML file,
-            // so we can also output the model type
+            // A VOI could be retrieved for our CellML file, so we can also
+            // output the model type
 
             information +=  "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn
                            +QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1</span>."+OutputBrLn).arg(runtime->needNlaSolver()?tr("DAE"):tr("ODE"));
         } else {
-            // We couldn't retrieve a variable of integration, which means that
-            // we either don't have a runtime or we have one, but it's not valid
-            // or it's valid but we really don't have a variable of integration
-            // Note: in the case of a valid runtime and no variable of
-            //       integration, we really shouldn't consider the runtime to be
-            //       valid, hence we handle this case here...
+            // We couldn't retrieve a VOI, which means that we either don't have
+            // a runtime or we have one, but it's not valid or it's valid but we
+            // really don't have a VOI
+            // Note: in the case of a valid runtime and no VOI, we really
+            //       shouldn't consider the runtime to be valid, hence we handle
+            //       this case here...
 
             mErrorType = InvalidCellmlFile;
 
@@ -869,8 +869,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             information += "<span"+OutputBad+">"+(runtime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
 
             if (validRuntime) {
-                // We have a valid runtime, but no variable of integration,
-                // which means that the model doesn't contain any ODE or DAE
+                // We have a valid runtime, but no VOI, which means that the
+                // model doesn't contain any ODE or DAE
 
                 information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
             } else {
@@ -904,7 +904,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
     if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
         // Enable/disable our run/pause action depending on whether we have a
-        // variable of integration
+        // VOI
 
         mRunPauseResumeSimulationAction->setEnabled(voi);
 
@@ -3437,9 +3437,9 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     }
 
     // Check all the graphs associated with the given plot and see whether any
-    // of them uses the variable of integration as parameter X and/or Y, and if
-    // so then asks the plot to use the starting/ending points as the
-    // minimum/maximum values for the X and/or Y axes
+    // of them uses the VOI as parameter X and/or Y, and if so then asks the
+    // plot to use the starting/ending points as the minimum/maximum values for
+    // the X and/or Y axes
 
     bool hasData = pPlot->hasData();
 

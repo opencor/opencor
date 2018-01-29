@@ -58,8 +58,8 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
     QFile file(Core::temporaryFileName());
 
     if (file.open(QIODevice::WriteOnly)) {
-        // Determine whether we need to export the variable of integration and,
-        // if so, remove it from our variables since it gets exported separately
+        // Determine whether we need to export the VOI and, if so, remove it
+        // from our variables since it gets exported separately
 
         DataStore::DataStore *dataStore = mDataStoreData->dataStore();
         DataStore::DataStoreVariables variables = mDataStoreData->variables();
@@ -67,8 +67,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
         variables.removeOne(voi);
 
-        // Retrieve the different values for our variable of integration and
-        // sets of variables
+        // Retrieve the different values for our VOI and sets of variables
         // Note #1: this is needed when we have two runs with different
         //          starting/ending points and/or point intervals...
         // Note #2: after our for loop, our list may contain duplicates and may

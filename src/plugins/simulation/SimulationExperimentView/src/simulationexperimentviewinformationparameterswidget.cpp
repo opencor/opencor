@@ -125,8 +125,8 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
         mNeedClearing = false;
     }
 
-    // Check whether our model's variable of integration is among our model's
-    // parameters (i.e. it is defined in the main CellML file)
+    // Check whether our model's VOI is among our model's parameters (i.e. it is
+    // defined in the main CellML file)
 
     CellMLSupport::CellmlFileRuntime *runtime = pSimulation->runtime();
 
@@ -406,9 +406,8 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 
     retranslateContextMenu();
 
-    // Create a connection to handle the graph requirement against our variable
-    // of integration, and keep track of the parameter associated with our first
-    // main menu item
+    // Create a connection to handle the graph requirement against our VOI, and
+    // keep track of the parameter associated with our first main menu item
 
     if (mVoiAccessible) {
         connect(voiAction, SIGNAL(triggered(bool)),
