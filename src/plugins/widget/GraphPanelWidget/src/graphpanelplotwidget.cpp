@@ -203,10 +203,11 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
     mPlot(0),
     mRuns(GraphPanelPlotGraphRuns())
 {
-//---ISSUE1523--- THIS IS ONLY TEMPORARY, SO THAT THE REST OF OUR CODE WORKS AS
-//                IS, BUT CLEARLY THAT CODE OUGHT TO BE MODIFIED TO ADD RUNS
-//                WHENEVER NEEDED
-addRun();
+    // Start with a run
+    // Note: indeed, we need at least one run so we can be properly attached,
+    //       among other things (see GraphPanelPlotWidget::addGraph())...
+
+    addRun();
 }
 
 //==============================================================================
@@ -279,6 +280,8 @@ void GraphPanelPlotGraph::addRun()
         run->setPen(firstRun->pen());
         run->setTitle(firstRun->title());
     }
+
+    run->attach(mPlot);
 
     mRuns << run;
 }

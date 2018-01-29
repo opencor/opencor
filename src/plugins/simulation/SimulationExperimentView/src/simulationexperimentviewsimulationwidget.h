@@ -140,7 +140,7 @@ public:
     void updateGui(const bool &pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                  const quint64 &pSimulationResultsSize,
-                                 const bool &pClearGraphs);
+                                 const bool &pClearGraphs, const bool &pAddRun);
 
     void resetSimulationProgress();
 

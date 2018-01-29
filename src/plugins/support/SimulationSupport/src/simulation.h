@@ -173,6 +173,8 @@ public:
 
     void reset();
 
+    int runsCount() const;
+
     bool addRun();
 
     void addPoint(const double &pPoint);
@@ -238,6 +240,8 @@ public:
 
     SimulationData * data() const;
     SimulationResults * results() const;
+
+    int runsCount() const;
 
     bool addRun();
 

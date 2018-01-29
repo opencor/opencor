@@ -1314,11 +1314,15 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
 
             bool runSimulation = mSimulation->addRun();
 
-            // Run our simulation (after having cleared our plots), in case we
-            // were able to allocate all the memory we need
+            // Run our simulation (after having added a run to our graphs), in
+            // case we were able to allocate all the memory we need
+            // Note: a graph will, by default, have a run (otherwise it can't
+            //       be created since setting it up requires access to an
+            //       QwtPlotCurve object), so only add a run from the second run
+            //       onwards...
 
             if (runSimulation) {
-                mViewWidget->checkSimulationResults(mSimulation->fileName(), true);
+                mViewWidget->checkSimulationResults(mSimulation->fileName(), false, mSimulation->runsCount() > 1);
 
                 mSimulation->run();
             } else {
@@ -3628,7 +3632,8 @@ void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisib
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                        const quint64 &pSimulationResultsSize,
-                                                                       const bool &pClearGraphs)
+                                                                       const bool &pClearGraphs,
+                                                                       const bool &pAddRun)
 {
     // Update the modified state of our simulation's corresponding file, if
     // needed
@@ -3658,7 +3663,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         // if needed (i.e. a graph segment doesn't fit within our plot's current
         // viewport anymore)
 
-        if (pClearGraphs)
+        if (pClearGraphs || pAddRun)
             mUpdatablePlotViewports.insert(plot, true);
 
         // Now we are ready to actually update all the graphs of all our plots
@@ -3672,8 +3677,13 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
         foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, plot->graphs()) {
             if (!graph->fileName().compare(pSimulationWidget->simulation()->fileName())) {
-                if (pClearGraphs)
+                if (pClearGraphs || pAddRun)
                     mOldDataSizes.remove(graph);
+
+                // Add a run to our graph, if needed
+
+                if (pAddRun)
+                    graph->addRun();
 
                 // Update our graph's data and keep track of our new old data
                 // size, if we are visible
@@ -3781,7 +3791,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         QString simulationFileName = mSimulation->fileName();
         double simulationProgress = mViewWidget->simulationResultsSize(simulationFileName)/simulation->size();
 
-        if (pClearGraphs || visible) {
+        if (pClearGraphs || pAddRun || visible) {
             mProgressBarWidget->setValue(simulationProgress);
         } else {
             // We are not visible, so create an icon that shows our simulation's

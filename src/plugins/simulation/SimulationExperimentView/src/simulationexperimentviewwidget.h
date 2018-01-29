@@ -97,7 +97,8 @@ public:
     quint64 simulationResultsSize(const QString &pFileName) const;
 
     void checkSimulationResults(const QString &pFileName,
-                                const bool &pClearGraphs = false);
+                                const bool &pClearGraphs = false,
+                                const bool &pAddRun = false);
 
 private:
     SimulationExperimentViewPlugin *mPlugin;

@@ -638,6 +638,15 @@ void SimulationResults::reset()
 
 //==============================================================================
 
+int SimulationResults::runsCount() const
+{
+    // Return the number of runs held by our data store
+
+    return mDataStore->runsCount();
+}
+
+//==============================================================================
+
 bool SimulationResults::addRun()
 {
     // Ask our data store to add a run to itself
@@ -898,6 +907,15 @@ SimulationResults * Simulation::results() const
     // Return our results
 
     return mResults;
+}
+
+//==============================================================================
+
+int Simulation::runsCount() const
+{
+    // Return the number of runs held by our results
+
+    return mResults?mResults->runsCount():0;
 }
 
 //==============================================================================

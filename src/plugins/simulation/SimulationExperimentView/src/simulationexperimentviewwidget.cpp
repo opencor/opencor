@@ -501,7 +501,8 @@ quint64 SimulationExperimentViewWidget::simulationResultsSize(const QString &pFi
 //==============================================================================
 
 void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFileName,
-                                                            const bool &pClearGraphs)
+                                                            const bool &pClearGraphs,
+                                                            const bool &pAddRun)
 {
     // Make sure that we can still check results (i.e. we are not closing down
     // with some simulations still running)
@@ -519,12 +520,12 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     SimulationSupport::Simulation *simulation = simulationWidget->simulation();
     quint64 simulationResultsSize = simulation->results()->size();
 
-    if (   pClearGraphs
+    if (   pClearGraphs || pAddRun
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
         mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
 
         foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets)
-            currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize, pClearGraphs);
+            currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize, pClearGraphs, pAddRun);
     }
 
     // Ask to recheck our simulation widget's results, but only if its
