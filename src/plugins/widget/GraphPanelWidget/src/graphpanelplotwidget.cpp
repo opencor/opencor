@@ -212,15 +212,6 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
 
 //==============================================================================
 
-GraphPanelPlotGraph::~GraphPanelPlotGraph()
-{
-    // Delete some internal objects
-
-    removeAllRuns();
-}
-
-//==============================================================================
-
 bool GraphPanelPlotGraph::isValid() const
 {
     // Return whether we are valid

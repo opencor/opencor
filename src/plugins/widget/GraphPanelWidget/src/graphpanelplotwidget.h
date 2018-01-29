@@ -132,7 +132,6 @@ class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraph
 {
 public:
     explicit GraphPanelPlotGraph(void *pParameterX = 0, void *pParameterY = 0);
-    ~GraphPanelPlotGraph();
 
     bool isValid() const;
 
