@@ -110,6 +110,13 @@ class SimulationExperimentViewSimulationWidget : public Core::Widget
     Q_OBJECT
 
 public:
+    enum Task {
+        None,
+        ResetRuns,
+        AddRun,
+        FakeAddRun
+    };
+
     explicit SimulationExperimentViewSimulationWidget(SimulationExperimentViewPlugin *pPlugin,
                                                       SimulationExperimentViewWidget *pViewWidget,
                                                       const QString &pFileName,
@@ -140,7 +147,7 @@ public:
     void updateGui(const bool &pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                  const quint64 &pSimulationResultsSize,
-                                 const bool &pClearGraphs, const bool &pAddRun);
+                                 const Task &pTask = None);
 
     void resetSimulationProgress();
 

@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "sedmlfile.h"
 #include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
+#include "simulationexperimentviewsimulationwidget.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -97,8 +98,7 @@ public:
     quint64 simulationResultsSize(const QString &pFileName) const;
 
     void checkSimulationResults(const QString &pFileName,
-                                const bool &pClearGraphs = false,
-                                const bool &pAddRun = false);
+                                const SimulationExperimentViewSimulationWidget::Task &pTask = SimulationExperimentViewSimulationWidget::None);
 
 private:
     SimulationExperimentViewPlugin *mPlugin;

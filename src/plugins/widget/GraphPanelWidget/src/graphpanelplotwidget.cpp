@@ -279,14 +279,16 @@ void GraphPanelPlotGraph::addRun()
 
 //==============================================================================
 
-void GraphPanelPlotGraph::removeAllRuns()
+void GraphPanelPlotGraph::resetRuns()
 {
-    // Delete all our runs
+    // Delete all our runs and create a new one
 
     foreach (GraphPanelPlotGraphRun *run, mRuns)
         delete run;
 
     mRuns.clear();
+
+    addRun();
 }
 
 //==============================================================================

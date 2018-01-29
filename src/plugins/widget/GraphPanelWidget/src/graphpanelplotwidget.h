@@ -141,7 +141,7 @@ public:
     GraphPanelPlotWidget * plot() const;
 
     void addRun();
-    void removeAllRuns();
+    void resetRuns();
     GraphPanelPlotGraphRun * lastRun() const;
 
     bool isSelected() const;

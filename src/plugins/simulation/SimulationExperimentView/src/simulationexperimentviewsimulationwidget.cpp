@@ -1322,7 +1322,10 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
             //       onwards...
 
             if (runSimulation) {
-                mViewWidget->checkSimulationResults(mSimulation->fileName(), false, mSimulation->runsCount() > 1);
+                mViewWidget->checkSimulationResults(mSimulation->fileName(),
+                                                    (mSimulation->runsCount() > 1)?
+                                                        AddRun:
+                                                        FakeAddRun);
 
                 mSimulation->run();
             } else {
@@ -1367,7 +1370,7 @@ void SimulationExperimentViewSimulationWidget::clearSimulationData()
 
     updateSimulationMode();
 
-    mViewWidget->checkSimulationResults(mSimulation->fileName(), true);
+    mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
 }
 
 //==============================================================================
@@ -3632,8 +3635,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisib
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                        const quint64 &pSimulationResultsSize,
-                                                                       const bool &pClearGraphs,
-                                                                       const bool &pAddRun)
+                                                                       const Task &pTask)
 {
     // Update the modified state of our simulation's corresponding file, if
     // needed
@@ -3658,12 +3660,12 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
     bool needProcessingEvents = false;
 
     foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots) {
-        // If our graphs are to be cleared (i.e. our plot's viewport are going
-        // to be reset), then we want to be able to update our plot's viewport
-        // if needed (i.e. a graph segment doesn't fit within our plot's current
-        // viewport anymore)
+        // If our runs are to be reset (i.e. our plot's viewport are going to be
+        // reset) or a run to be added (be it really or faked), then we want to
+        // be able to update our plot's viewport if needed (i.e. a graph segment
+        // doesn't fit within our plot's current viewport anymore)
 
-        if (pClearGraphs || pAddRun)
+        if (pTask != None)
             mUpdatablePlotViewports.insert(plot, true);
 
         // Now we are ready to actually update all the graphs of all our plots
@@ -3677,12 +3679,14 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
         foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, plot->graphs()) {
             if (!graph->fileName().compare(pSimulationWidget->simulation()->fileName())) {
-                if (pClearGraphs || pAddRun)
+                if (pTask != None)
                     mOldDataSizes.remove(graph);
 
-                // Add a run to our graph, if needed
+                // Reset our runs or a add new one, if needed
 
-                if (pAddRun)
+                if (pTask == ResetRuns)
+                    graph->resetRuns();
+                else if (pTask == AddRun)
                     graph->addRun();
 
                 // Update our graph's data and keep track of our new old data
@@ -3791,7 +3795,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         QString simulationFileName = mSimulation->fileName();
         double simulationProgress = mViewWidget->simulationResultsSize(simulationFileName)/simulation->size();
 
-        if (pClearGraphs || pAddRun || visible) {
+        if ((pTask != None) || visible) {
             mProgressBarWidget->setValue(simulationProgress);
         } else {
             // We are not visible, so create an icon that shows our simulation's
