@@ -542,17 +542,6 @@ QString SimulationResults::uri(const QStringList &pComponentHierarchy,
 
 //==============================================================================
 
-void SimulationResults::deleteDataStore()
-{
-    // Delete our data store
-
-    delete mDataStore;
-
-    mDataStore = 0;
-}
-
-//==============================================================================
-
 void SimulationResults::createDataStore()
 {
     // Create our data store
@@ -615,6 +604,17 @@ void SimulationResults::createDataStore()
             variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
         }
     }
+}
+
+//==============================================================================
+
+void SimulationResults::deleteDataStore()
+{
+    // Delete our data store
+
+    delete mDataStore;
+
+    mDataStore = 0;
 }
 
 //==============================================================================
