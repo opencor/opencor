@@ -553,10 +553,8 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
         double maxY = 1.0;
 
         foreach (GraphPanelPlotGraphRun *run, mRuns) {
-            const QwtSeriesData<QPointF> *data = run->data();
-
-            for (size_t i = 0, iMax = data->size(); i < iMax; ++i) {
-                QPointF sample = data->sample(i);
+            for (size_t i = 0, iMax = run->dataSize(); i < iMax; ++i) {
+                QPointF sample = run->data()->sample(i);
 
                 if (sample.x() > 0.0) {
                     if (needInitMinX) {
