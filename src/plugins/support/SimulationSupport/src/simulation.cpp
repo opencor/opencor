@@ -814,7 +814,18 @@ void Simulation::save()
 {
     // Retrieve our file details
 
+    bool needReloading = !mRuntime;
+
     retrieveFileDetails();
+
+    // Ask our data and results to update themselves, if needed
+    // Note: this is, for example, needed when we open an invalid file, fix it
+    //       and then save it...
+
+    if (needReloading) {
+        mData->reload();
+        mResults->reload();
+    }
 }
 
 //==============================================================================
