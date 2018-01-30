@@ -688,7 +688,7 @@ quint64 SimulationResults::size() const
 {
     // Return the size of our data store
 
-    return mDataStore->size();
+    return mDataStore?mDataStore->size():0;
 }
 
 //==============================================================================
