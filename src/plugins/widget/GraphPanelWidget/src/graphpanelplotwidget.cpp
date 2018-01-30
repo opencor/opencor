@@ -286,14 +286,20 @@ void GraphPanelPlotGraph::addRun()
 
 void GraphPanelPlotGraph::resetRuns()
 {
-    // Delete all our runs and create a new one
-
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
-        delete run;
-
-    mRuns.clear();
+    // Add what will become our new default run
+    // Note: to do it, rather than after having deleted all our runs, ensures
+    //       that our new default run (and subsequent runs) gets properly
+    //       customised...
 
     addRun();
+
+    // Delete all our runs, but the one we just created
+
+    while (mRuns.count() != 1) {
+        delete mRuns.first();
+
+        mRuns.removeFirst();
+    }
 }
 
 //==============================================================================
