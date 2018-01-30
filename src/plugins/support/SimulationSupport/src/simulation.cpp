@@ -512,7 +512,13 @@ void SimulationData::deleteArrays()
 //==============================================================================
 
 SimulationResults::SimulationResults(Simulation *pSimulation) :
-    mSimulation(pSimulation)
+    mSimulation(pSimulation),
+    mDataStore(0),
+    mPoints(0),
+    mConstants(DataStore::DataStoreVariables()),
+    mRates(DataStore::DataStoreVariables()),
+    mStates(DataStore::DataStoreVariables()),
+    mAlgebraic(DataStore::DataStoreVariables())
 {
     // Create our data store
 
@@ -544,9 +550,15 @@ QString SimulationResults::uri(const QStringList &pComponentHierarchy,
 
 void SimulationResults::createDataStore()
 {
-    // Create our data store
+    // Make sure that we have a runtime
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+
+    if (!runtime)
+        return;
+
+    // Create our data store
+
     SimulationData *data = mSimulation->data();
 
     mDataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase());
