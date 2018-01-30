@@ -529,8 +529,10 @@ QRectF GraphPanelPlotGraph::boundingRect() const
 
     QRectF res = QRectF();
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
-        res |= run->boundingRect();
+    foreach (GraphPanelPlotGraphRun *run, mRuns) {
+        if (run->dataSize())
+            res |= run->boundingRect();
+    }
 
     return res;
 }
