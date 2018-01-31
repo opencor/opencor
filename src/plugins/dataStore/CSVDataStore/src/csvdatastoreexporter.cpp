@@ -179,8 +179,8 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                         else
                             rowData += ',';
 
-                        if (dataStore->voi()->values(j)[runsIndex[j]] == voiValue) {
                             rowData += QString::number(variableRun->value(runsIndex[j]));
+                        if (dataStore->voi()->value(runsIndex[j], j) == voiValue) {
 
                             updateRunsIndex[j] = true;
                         }
