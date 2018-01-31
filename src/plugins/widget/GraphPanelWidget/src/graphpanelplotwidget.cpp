@@ -263,6 +263,15 @@ GraphPanelPlotWidget * GraphPanelPlotGraph::plot() const
 
 //==============================================================================
 
+int GraphPanelPlotGraph::runsCount() const
+{
+    // Return our number of runs
+
+    return mRuns.count();
+}
+
+//==============================================================================
+
 void GraphPanelPlotGraph::addRun()
 {
     // Add a run, after having customised it, if possible
@@ -1158,13 +1167,33 @@ QSize GraphPanelPlotLegendWidget::sizeHint() const
 void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
                                               const QwtLegendData &pLegendData)
 {
+    // Ignore (i.e. minimise and hide) the given widget if it doesn't correspond
+    // to the legend of a first run
+    // Note: we start at 1 because the first child is our layout...
+
+    QwtLegendLabel *legendLabel = static_cast<QwtLegendLabel *>(pWidget);
+    bool mainLegendLabel = false;
+
+    for (int i = 1, iMax = 1+mOwner->graphs().count(); i < iMax; ++i) {
+        if (legendLabel == static_cast<QwtLegendLabel *>(contentsWidget()->children()[i])) {
+            mainLegendLabel = true;
+
+            break;
+        }
+    }
+
+    if (!mainLegendLabel) {
+        legendLabel->resize(0, 0);
+        legendLabel->setVisible(false);
+
+        return;
+    }
+
     // Default handling
 
     QwtLegend::updateWidget(pWidget, pLegendData);
 
     // Update our visible state
-
-    QwtLegendLabel *legendLabel = static_cast<QwtLegendLabel *>(pWidget);
 
     legendLabel->setAutoFillBackground(true);
     legendLabel->setVisible(mActive);

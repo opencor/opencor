@@ -140,6 +140,8 @@ public:
 
     GraphPanelPlotWidget * plot() const;
 
+    int runsCount() const;
+
     void addRun();
     void resetRuns();
     GraphPanelPlotGraphRun * lastRun() const;
