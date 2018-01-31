@@ -1035,7 +1035,8 @@ void GraphPanelPlotLegendWidget::setChecked(const int &pIndex,
                                             const bool &pChecked)
 {
     // Un/check the graph which index is given
-    // Note: the +1 is because the first child is our layout...
+    // Note: the +1 is because the first child of our contents widget is our
+    //       layout...
 
     static_cast<QwtLegendLabel *>(contentsWidget()->children()[pIndex+1])->setChecked(pChecked);
 }
@@ -1169,7 +1170,8 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
 {
     // Ignore (i.e. minimise and hide) the given widget if it doesn't correspond
     // to the legend of a first run
-    // Note: we start at 1 because the first child is our layout...
+    // Note: we start at 1 because the first child of our contents widget is our
+    //       layout...
 
     QwtLegendLabel *legendLabel = static_cast<QwtLegendLabel *>(pWidget);
     bool mainLegendLabel = false;
