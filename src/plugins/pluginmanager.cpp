@@ -195,11 +195,8 @@ PluginManager::~PluginManager()
 {
     // Delete some internal objects
 
-#ifdef OpenCOR_MAIN
-    resetList(mPlugins);
-#else
-    Core::resetList(mPlugins);
-#endif
+    foreach (Plugin *plugin, mPlugins)
+        delete plugin;
 }
 
 //==============================================================================

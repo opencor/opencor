@@ -241,7 +241,7 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
     mStatesRatesCount(0),
     mAlgebraicCount(0),
     mCompilerEngine(0),
-    mVariableOfIntegration(0),
+    mVoi(0),
     mParameters(CellmlFileRuntimeParameters())
 {
     // Reset (initialise, here) our properties
@@ -430,13 +430,13 @@ void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
     if (pResetIssues)
         mIssues.clear();
 
-    if (!mParameters.contains(mVariableOfIntegration))
-        delete mVariableOfIntegration;
+    if (!mParameters.contains(mVoi))
+        delete mVoi;
 
     foreach (CellmlFileRuntimeParameter *parameter, mParameters)
         delete parameter;
 
-    mVariableOfIntegration = 0;
+    mVoi = 0;
 
     mParameters.clear();
 }
@@ -789,23 +789,22 @@ void CellmlFileRuntime::update()
                                                                                    computationTarget->assignedIndex());
 
             if (parameterType == CellmlFileRuntimeParameter::Voi) {
-                if (!mVariableOfIntegration) {
-                    mVariableOfIntegration = parameter;
+                if (!mVoi) {
+                    mVoi = parameter;
 
                     voiName = parameter->name();
                     voiComponentHierarchy = parameter->componentHierarchy();
             } else if (   parameter->name().compare(voiName)
                            || (parameter->componentHierarchy() != voiComponentHierarchy)) {
                     // The CellML API wrongly validated a model that has more
-                    // more than one variable of integration (at least,
-                    // according to the CellML API), but this is clearly wrong
-                    // (not to mention that it crashes OpenCOR), so let the user
-                    // know about it
+                    // more than one VOI (at least, according to the CellML
+                    // API), but this is clearly wrong (not to mention that it
+                    // crashes OpenCOR), so let the user know about it
                     // Note: we check the name and component hierarchy of the
-                    //       parameter against those of our current variable of
-                    //       integration since the CellML API may generate
-                    //       different targets that refer to the same CellML
-                    //       variable (!?), as is for example the case with
+                    //       parameter against those of our current VOI since
+                    //       the CellML API may generate different targets that
+                    //       refer to the same CellML variable (!?), as is for
+                    //       example the case with
                     //       [CellMLSupport]/tests/data/bond_graph_model_old.cellml...
 
                     mIssues << CellmlFileIssue(CellmlFileIssue::Error,
@@ -922,11 +921,11 @@ void CellmlFileRuntime::update()
 
 //==============================================================================
 
-CellmlFileRuntimeParameter *CellmlFileRuntime::variableOfIntegration() const
+CellmlFileRuntimeParameter *CellmlFileRuntime::voi() const
 {
-    // Return our variable of integration, if any
+    // Return our VOI, if any
 
-    return mVariableOfIntegration;
+    return mVoi;
 }
 
 //==============================================================================

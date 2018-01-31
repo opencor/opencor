@@ -157,7 +157,7 @@ public:
 
     void update();
 
-    CellmlFileRuntimeParameter * variableOfIntegration() const;
+    CellmlFileRuntimeParameter * voi() const;
 
 private:
     CellmlFile *mCellmlFile;
@@ -174,7 +174,7 @@ private:
 
     CellmlFileIssues mIssues;
 
-    CellmlFileRuntimeParameter *mVariableOfIntegration;
+    CellmlFileRuntimeParameter *mVoi;
     CellmlFileRuntimeParameters mParameters;
 
     InitializeConstantsFunction mInitializeConstants;

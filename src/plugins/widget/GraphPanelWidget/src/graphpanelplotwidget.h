@@ -103,12 +103,48 @@ private:
 
 //==============================================================================
 
-class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraph : public QwtPlotCurve
+class GraphPanelPlotGraph;
+
+//==============================================================================
+
+class GraphPanelPlotGraphRun : public QwtPlotCurve
+{
+public:
+    explicit GraphPanelPlotGraphRun(GraphPanelPlotGraph *pOwner);
+
+    GraphPanelPlotGraph * owner() const;
+
+private:
+    GraphPanelPlotGraph *mOwner;
+};
+
+//==============================================================================
+
+typedef QList<GraphPanelPlotGraphRun *> GraphPanelPlotGraphRuns;
+
+//==============================================================================
+
+class GraphPanelPlotWidget;
+
+//==============================================================================
+
+class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraph
 {
 public:
     explicit GraphPanelPlotGraph(void *pParameterX = 0, void *pParameterY = 0);
 
     bool isValid() const;
+
+    void attach(GraphPanelPlotWidget *pPlot);
+    void detach();
+
+    GraphPanelPlotWidget * plot() const;
+
+    int runsCount() const;
+
+    void addRun();
+    void resetRuns();
+    GraphPanelPlotGraphRun * lastRun() const;
 
     bool isSelected() const;
     void setSelected(const bool &pSelected);
@@ -122,8 +158,25 @@ public:
     void * parameterY() const;
     void setParameterY(void *pParameterY);
 
+    const QPen & pen() const;
+    void setPen(const QPen &pPen);
+
+    const QwtSymbol * symbol() const;
+    void setSymbol(const QwtSymbol::Style &pStyle, const QBrush &pBrush,
+                   const QPen &pPen, const int &pSize);
+
+    void setTitle(const QString &pTitle);
+
+    bool isVisible() const;
+    void setVisible(const bool &pVisible);
+
+    bool hasData() const;
+    quint64 dataSize() const;
+
+    QwtSeriesData<QPointF> *data() const;
     void setData(double *pDataX, double *pDataY, const int &pSize);
 
+    QRectF boundingRect();
     QRectF boundingLogRect();
 
 private:
@@ -134,16 +187,20 @@ private:
     void *mParameterX;
     void *mParameterY;
 
+    QRectF mBoundingRect;
+    QMap<GraphPanelPlotGraphRun *, QRectF> mBoundingRects;
+
     QRectF mBoundingLogRect;
+    QMap<GraphPanelPlotGraphRun *, QRectF> mBoundingLogRects;
+
+    GraphPanelPlotWidget *mPlot;
+
+    GraphPanelPlotGraphRuns mRuns;
 };
 
 //==============================================================================
 
 typedef QList<GraphPanelPlotGraph *> GraphPanelPlotGraphs;
-
-//==============================================================================
-
-class GraphPanelPlotWidget;
 
 //==============================================================================
 

@@ -110,6 +110,13 @@ class SimulationExperimentViewSimulationWidget : public Core::Widget
     Q_OBJECT
 
 public:
+    enum Task {
+        None,
+        ResetRuns,
+        AddRun,
+        FakeAddRun
+    };
+
     explicit SimulationExperimentViewSimulationWidget(SimulationExperimentViewPlugin *pPlugin,
                                                       SimulationExperimentViewWidget *pViewWidget,
                                                       const QString &pFileName,
@@ -140,7 +147,7 @@ public:
     void updateGui(const bool &pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                  const quint64 &pSimulationResultsSize,
-                                 const bool &pClearGraphs);
+                                 const Task &pTask = None);
 
     void resetSimulationProgress();
 
@@ -295,13 +302,6 @@ signals:
 
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
-
-    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
-
-    void legendToggled();
-
-    void logarithmicXAxisToggled();
-    void logarithmicYAxisToggled();
 
 private slots:
     void runPauseResumeSimulation();

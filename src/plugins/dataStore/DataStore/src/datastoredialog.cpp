@@ -95,12 +95,12 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
             this, SLOT(reject()));
 
     // Populate our tree view with the data store's variables and, or not, the
-    // variable of integration
+    // VOI
     // Note: indeed, in some cases (e.g. CSV export), we want to list all the
-    //       variables including the variable of integration while in some other
-    //       cases (e.g. BioSignalML export), we don't want to list the variable
-    //       of integration (since, to respect the BioSignalML format, the
-    //       variable of integration must absolutely be exported)...
+    //       variables including the VOI while in some other cases (e.g.
+    //       BioSignalML export), we don't want to list the VOI (since, to
+    //       respect the BioSignalML format, the VOI must absolutely be
+    //       exported)...
 
     mModel = new QStandardItemModel(this);
 

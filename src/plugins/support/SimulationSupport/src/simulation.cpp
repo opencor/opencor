@@ -520,6 +520,9 @@ SimulationResults::SimulationResults(Simulation *pSimulation) :
     mStates(DataStore::DataStoreVariables()),
     mAlgebraic(DataStore::DataStoreVariables())
 {
+    // Create our data store
+
+    createDataStore();
 }
 
 //==============================================================================
@@ -545,43 +548,30 @@ QString SimulationResults::uri(const QStringList &pComponentHierarchy,
 
 //==============================================================================
 
-bool SimulationResults::createDataStore()
+void SimulationResults::createDataStore()
 {
-    // Note: the boolean value we return is true if we have had no problem
-    //       creating our data store or if the simulation size is zero...
-
-    // Delete the previous data store, if any
-
-    deleteDataStore();
-
-    // Retrieve the size of our data and make sure that it is valid
-
-    quint64 simulationSize = mSimulation->size();
-
-    if (!simulationSize)
-        return true;
-
-    // Create our data store and populate it with a variable of integration, as
-    // well as with constant, rate, state and algebraic variables
+    // Make sure that we have a runtime
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
-    try {
-        mDataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase(), simulationSize);
+    if (!runtime)
+        return;
 
-        mPoints = mDataStore->addVoi();
-        mConstants = mDataStore->addVariables(runtime->constantsCount(), mSimulation->data()->constants());
-        mRates = mDataStore->addVariables(runtime->ratesCount(), mSimulation->data()->rates());
-        mStates = mDataStore->addVariables(runtime->statesCount(), mSimulation->data()->states());
-        mAlgebraic = mDataStore->addVariables(runtime->algebraicCount(), mSimulation->data()->algebraic());
-    } catch (...) {
-        deleteDataStore();
+    // Create our data store
 
-        return false;
-    }
+    SimulationData *data = mSimulation->data();
 
-    // Customise our variable of integration, as well as our constant, rate,
-    // state and algebraic variables
+    mDataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase());
+
+    mPoints = mDataStore->voi();
+
+    mConstants = mDataStore->addVariables(data->constants(), runtime->constantsCount());
+    mRates = mDataStore->addVariables(data->rates(), runtime->ratesCount());
+    mStates = mDataStore->addVariables(data->states(), runtime->statesCount());
+    mAlgebraic = mDataStore->addVariables(data->algebraic(), runtime->algebraicCount());
+
+    // Customise our VOI, as well as our constant, rate, state and algebraic
+    // variables
 
     for (int i = 0, iMax = runtime->parameters().count(); i < iMax; ++i) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = runtime->parameters()[i];
@@ -590,10 +580,10 @@ bool SimulationResults::createDataStore()
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Voi:
             mPoints->setIcon(parameter->icon());
-            mPoints->setUri(uri(runtime->variableOfIntegration()->componentHierarchy(),
-                                runtime->variableOfIntegration()->name()));
-            mPoints->setLabel(runtime->variableOfIntegration()->name());
-            mPoints->setUnit(runtime->variableOfIntegration()->unit());
+            mPoints->setUri(uri(runtime->voi()->componentHierarchy(),
+                                runtime->voi()->name()));
+            mPoints->setLabel(runtime->voi()->name());
+            mPoints->setUnit(runtime->voi()->unit());
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::Constant:
@@ -623,11 +613,9 @@ bool SimulationResults::createDataStore()
             variable->setIcon(parameter->icon());
             variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
             variable->setLabel(parameter->formattedName());
-            variable->setUnit(parameter->formattedUnit(runtime->variableOfIntegration()->unit()));
+            variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
         }
     }
-
-    return true;
 }
 
 //==============================================================================
@@ -645,24 +633,44 @@ void SimulationResults::deleteDataStore()
 
 void SimulationResults::reload()
 {
-    // Reload ourselves by deleting our data store
+    // Reload ourselves by resetting ourselves
 
-    deleteDataStore();
+    reset();
 }
 
 //==============================================================================
 
-bool SimulationResults::reset(const bool &pCreateDataStore)
+void SimulationResults::reset()
 {
-    // Reset our data store
+    // Reset our data store by deleting it and then recreating it
 
-    if (pCreateDataStore) {
-        return createDataStore();
-    } else {
-        deleteDataStore();
+    deleteDataStore();
+    createDataStore();
+}
 
+//==============================================================================
+
+int SimulationResults::runsCount() const
+{
+    // Return the number of runs held by our data store
+
+    return mDataStore->runsCount();
+}
+
+//==============================================================================
+
+bool SimulationResults::addRun()
+{
+    // Ask our data store to add a run to itself
+    // Note: we consider things to be fine if our data store have had no problem
+    //       adding a run to itself or if the simulation size is zero...
+
+    quint64 simulationSize = mSimulation->size();
+
+    if (simulationSize)
+        return mDataStore->addRun(simulationSize);
+    else
         return true;
-    }
 }
 
 //==============================================================================
@@ -678,7 +686,7 @@ void SimulationResults::addPoint(const double &pPoint)
 
 quint64 SimulationResults::size() const
 {
-    // Return our size
+    // Return the size of our data store
 
     return mDataStore?mDataStore->size():0;
 }
@@ -823,8 +831,9 @@ void Simulation::save()
     retrieveFileDetails();
 
     // Ask our data and results to update themselves, if needed
-    // Note: this is, for example, needed when we open an invalid file, fix it
-    //       and then save it...
+    // Note: this is, for example, needed when we open an invalid file (in which
+    //       case mRuntime is null), fix it (resulting in a valid mRuntime
+    //       value) and then save it...
 
     if (needReloading) {
         mData->reload();
@@ -922,6 +931,24 @@ SimulationResults * Simulation::results() const
     // Return our results
 
     return mResults;
+}
+
+//==============================================================================
+
+int Simulation::runsCount() const
+{
+    // Return the number of runs held by our results
+
+    return mResults?mResults->runsCount():0;
+}
+
+//==============================================================================
+
+bool Simulation::addRun()
+{
+    // Ask our results to add a run
+
+    return mResults?mResults->addRun():false;
 }
 
 //==============================================================================

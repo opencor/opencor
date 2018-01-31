@@ -171,7 +171,11 @@ public:
 
     void reload();
 
-    bool reset(const bool &pCreateDataStore = true);
+    void reset();
+
+    int runsCount() const;
+
+    bool addRun();
 
     void addPoint(const double &pPoint);
 
@@ -198,7 +202,7 @@ private:
     DataStore::DataStoreVariables mStates;
     DataStore::DataStoreVariables mAlgebraic;
 
-    bool createDataStore();
+    void createDataStore();
     void deleteDataStore();
 
     QString uri(const QStringList &pComponentHierarchy, const QString &pName);
@@ -236,6 +240,10 @@ public:
 
     SimulationData * data() const;
     SimulationResults * results() const;
+
+    int runsCount() const;
+
+    bool addRun();
 
     bool isRunning() const;
     bool isPaused() const;

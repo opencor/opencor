@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QDir>
+#include <QSet>
 
 //==============================================================================
 
@@ -35,10 +36,8 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-CsvDataStoreExporter::CsvDataStoreExporter(const QString &pFileName,
-                                           DataStore::DataStore *pDataStore,
-                                           DataStore::DataStoreData *pDataStoreData) :
-    DataStore::DataStoreExporter(pFileName, pDataStore, pDataStoreData)
+CsvDataStoreExporter::CsvDataStoreExporter(DataStore::DataStoreData *pDataStoreData) :
+    DataStore::DataStoreExporter(pDataStoreData)
 {
 }
 
@@ -46,13 +45,6 @@ CsvDataStoreExporter::CsvDataStoreExporter(const QString &pFileName,
 
 void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 {
-    // Determine what should be exported
-
-    DataStore::DataStoreVariable *voi = mDataStoreData->selectedVariables().contains(mDataStore->voi())?mDataStore->voi():0;
-    DataStore::DataStoreVariables selectedVariables = mDataStoreData->selectedVariables();
-
-    selectedVariables.removeOne(voi);
-
     // Do the export itself
     // Note: we would normally rely on a string to which we would append our
     //       header and then data, and then use that string as a parameter to
@@ -66,44 +58,140 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
     QFile file(Core::temporaryFileName());
 
     if (file.open(QIODevice::WriteOnly)) {
+        // Determine whether we need to export the VOI and, if so, remove it
+        // from our variables since it gets exported separately
+
+        DataStore::DataStore *dataStore = mDataStoreData->dataStore();
+        DataStore::DataStoreVariables variables = mDataStoreData->variables();
+        DataStore::DataStoreVariable *voi = variables.contains(dataStore->voi())?dataStore->voi():0;
+
+        variables.removeOne(voi);
+
+        // Retrieve the different values for our VOI and sets of variables
+        // Note #1: this is needed when we have two runs with different
+        //          starting/ending points and/or point intervals...
+        // Note #2: after our for loop, our list may contain duplicates and may
+        //          not be sorted. When it comes to removing duplicates, we do
+        //          this by converting our list to a set and back. Indeed, this
+        //          is much faster than preventing ourselves from adding
+        //          duplicates in the first place...
+
+        QStringList variablesUri = QStringList();
+        QList<DataStore::DataStoreVariables> variablesRuns = QList<DataStore::DataStoreVariables>();
+
+        foreach (DataStore::DataStoreVariable *variable, variables) {
+            variablesUri << variable->uri();
+
+            variablesRuns << DataStore::DataStoreVariables();
+        }
+
+        int nbOfRuns = dataStore->runsCount();
+        QList<quint64> runsIndex = QList<quint64>();
+        QDoubleList voiValues = QDoubleList();
+
+        for (int i = 0; i < nbOfRuns; ++i) {
+            // Original index for the current run
+
+            runsIndex << 0;
+
+            // VOI values
+
+            for (quint64 j = 0, jMax = dataStore->size(i); j < jMax; ++j)
+                voiValues << dataStore->voi()->value(j, i);
+
+            // Variables
+
+            int j = 0;
+
+            foreach (DataStore::DataStoreVariable *variable, dataStore->variables()) {
+                if (variablesUri.contains(variable->uri())) {
+                    variablesRuns[j] << variable;
+
+                    ++j;
+                }
+            }
+        }
+
+        voiValues = voiValues.toSet().toList();
+
+        std::sort(voiValues.begin(), voiValues.end());
+
+        // Determine the number of steps to export everything, i.e. one for our
+        // header and then some for our number of VOI values
+
+        double oneOverNbOfSteps = 1.0/(1+voiValues.count());
+        int stepNb = 0;
+
         // Output our header
 
-        static const QString Header = "%1 (%2)";
+        static const QString Header = "%1 (%2)%3";
+        static const QString RunNb = " | Run #%1";
 
         QString header = QString();
 
         if (voi) {
             header += Header.arg(voi->uri().replace("/prime", "'").replace('/', " | "),
-                                 voi->unit());
+                                 voi->unit(), QString());
         }
 
-        foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables) {
-            if (!header.isEmpty())
-                header += ',';
+        foreach (DataStore::DataStoreVariable *variable, variables) {
+            for (int i = 0; i < nbOfRuns; ++i) {
+                if (!header.isEmpty())
+                    header += ',';
 
-            header += Header.arg(selectedVariable->uri().replace("/prime", "'").replace('/', " | "),
-                                 selectedVariable->unit());
+                header += Header.arg(variable->uri().replace("/prime", "'").replace('/', " | "),
+                                     variable->unit(),
+                                     (nbOfRuns == 1)?
+                                         QString():
+                                         RunNb.arg(i+1));
+            }
         }
 
         header += '\n';
 
         bool res = file.write(header.toUtf8()) != -1;
 
-        // Output our data, one row at a time, if we were able to output our
-        // header
+        // Output our different sets of data, one row at a time, if we were able
+        // to output our header
 
         if (res) {
-            for (quint64 i = 0, iMax = mDataStore->size(); i < iMax; ++i) {
+            emit progress(++stepNb*oneOverNbOfSteps);
+
+            for (quint64 i = 0, iMax = voiValues.count(); i < iMax; ++i) {
                 QString rowData = QString();
+                double voiValue = voiValues[i];
 
                 if (voi)
-                    rowData += QString::number(voi->value(i));
+                    rowData += QString::number(voiValue);
 
-                foreach (DataStore::DataStoreVariable *selectedVariable, selectedVariables) {
-                    if (!rowData.isEmpty())
-                        rowData += ',';
+                bool firstRowData = true;
+                QBoolList updateRunsIndex = QBoolList();
 
-                    rowData += QString::number(selectedVariable->value(i));
+                for (int j = 0; j < nbOfRuns; ++j)
+                    updateRunsIndex << false;
+
+                foreach (const DataStore::DataStoreVariables &variableRuns, variablesRuns) {
+                    int j = 0;
+
+                    foreach (DataStore::DataStoreVariable *variableRun, variableRuns) {
+                        if (firstRowData && rowData.isEmpty())
+                            firstRowData = false;
+                        else
+                            rowData += ',';
+
+                        if (dataStore->voi()->value(runsIndex[j], j) == voiValue) {
+                            rowData += QString::number(variableRun->value(runsIndex[j], j));
+
+                            updateRunsIndex[j] = true;
+                        }
+
+                        ++j;
+                    }
+                }
+
+                for (int j = 0; j < nbOfRuns; ++j) {
+                    if (updateRunsIndex[j])
+                        ++runsIndex[j];
                 }
 
                 rowData += "\n";
@@ -113,7 +201,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                 if (!res)
                     break;
 
-                emit progress(double(i)/(iMax-1));
+                emit progress(++stepNb*oneOverNbOfSteps);
             }
         }
 

@@ -520,6 +520,50 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeGraphs(
 
 //==============================================================================
 
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleGraph(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+{
+    // Toggle our graph property
+
+    Core::Property *graphProperty = mGraphProperties.value(pGraph);
+
+    graphProperty->setChecked(!graphProperty->isChecked());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLegend()
+{
+    // Toggle our legend property
+
+    Core::Property *legendProperty = mGraphPanelPropertyEditor->properties()[4];
+
+    legendProperty->setBooleanValue(!legendProperty->booleanValue());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarithmicXAxis()
+{
+    // Toggle our logarithmic X axis property
+
+    Core::Property *logarithmicXAxisProperty = mGraphPanelPropertyEditor->properties()[8]->properties()[0];
+
+    logarithmicXAxisProperty->setBooleanValue(!logarithmicXAxisProperty->booleanValue());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarithmicYAxis()
+{
+    // Toggle our logarithmic Y axis property
+
+    Core::Property *logarithmicYAxisProperty = mGraphPanelPropertyEditor->properties()[9]->properties()[0];
+
+    logarithmicYAxisProperty->setBooleanValue(!logarithmicYAxisProperty->booleanValue());
+}
+
+//==============================================================================
+
 bool SimulationExperimentViewInformationGraphPanelAndGraphsWidget::rootProperty(Core::Property *pProperty) const
 {
     // Return whether the given property is a root property
@@ -780,50 +824,6 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(const
 
         emit graphPanelGraphsModeChanged(pMode);
     }
-}
-
-//==============================================================================
-
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleGraph(GraphPanelWidget::GraphPanelPlotGraph *pGraph)
-{
-    // Toggle our graph property
-
-    Core::Property *graphProperty = mGraphProperties.value(pGraph);
-
-    graphProperty->setChecked(!graphProperty->isChecked());
-}
-
-//==============================================================================
-
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLegend()
-{
-    // Toggle our legend property
-
-    Core::Property *legendProperty = mGraphPanelPropertyEditor->properties()[4];
-
-    legendProperty->setBooleanValue(!legendProperty->booleanValue());
-}
-
-//==============================================================================
-
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarithmicXAxis()
-{
-    // Toggle our logarithmic X axis property
-
-    Core::Property *logarithmicXAxisProperty = mGraphPanelPropertyEditor->properties()[8]->properties()[0];
-
-    logarithmicXAxisProperty->setBooleanValue(!logarithmicXAxisProperty->booleanValue());
-}
-
-//==============================================================================
-
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarithmicYAxis()
-{
-    // Toggle our logarithmic Y axis property
-
-    Core::Property *logarithmicYAxisProperty = mGraphPanelPropertyEditor->properties()[9]->properties()[0];
-
-    logarithmicYAxisProperty->setBooleanValue(!logarithmicYAxisProperty->booleanValue());
 }
 
 //==============================================================================
@@ -1294,8 +1294,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
                              || (oldGraphSymbol->brush() != symbolFillColor);
     }
 
-    graph->setSymbol(new QwtSymbol(symbolStyle, symbolFillColor, symbolColor,
-                                   QSize(symbolSize, symbolSize)));
+    graph->setSymbol(symbolStyle, symbolFillColor, symbolColor, symbolSize);
 
     // Let people know if the X and/or Y parameters of our graph have changed or
     // replot it if its settings have changed

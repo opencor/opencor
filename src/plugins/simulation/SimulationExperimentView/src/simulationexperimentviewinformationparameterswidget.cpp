@@ -125,12 +125,12 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
         mNeedClearing = false;
     }
 
-    // Check whether our model's variable of integration is among our model's
-    // parameters (i.e. it is defined in the main CellML file)
+    // Check whether our model's VOI is among our model's parameters (i.e. it is
+    // defined in the main CellML file)
 
     CellMLSupport::CellmlFileRuntime *runtime = pSimulation->runtime();
 
-    mVoiAccessible = runtime->parameters().contains(runtime->variableOfIntegration());
+    mVoiAccessible = runtime->parameters().contains(runtime->voi());
 
     // Retranslate our core self, if needed
     // Note: part of reloading ourselves consists of finalising ourselves, which
@@ -375,7 +375,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
         property->setIcon(parameter->icon());
 
         property->setName(parameter->formattedName(), false);
-        property->setUnit(parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()), false);
+        property->setUnit(parameter->formattedUnit(pRuntime->voi()->unit()), false);
 
         // Keep track of the link between our property value and parameter
 
@@ -406,15 +406,14 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 
     retranslateContextMenu();
 
-    // Create a connection to handle the graph requirement against our variable
-    // of integration, and keep track of the parameter associated with our first
-    // main menu item
+    // Create a connection to handle the graph requirement against our VOI, and
+    // keep track of the parameter associated with our first main menu item
 
     if (mVoiAccessible) {
         connect(voiAction, SIGNAL(triggered(bool)),
                 this, SLOT(emitGraphRequired()));
 
-        mParameterActions.insert(voiAction, pRuntime->variableOfIntegration());
+        mParameterActions.insert(voiAction, pRuntime->voi());
     }
 
     // Populate our context menu with the parameters

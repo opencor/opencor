@@ -843,24 +843,24 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
     bool validRuntime = runtime && runtime->isValid();
 
-    CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validRuntime?runtime->variableOfIntegration():0;
+    CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?runtime->voi():0;
 
     if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
         information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
-        if (variableOfIntegration) {
-            // A variable of integration could be retrieved for our CellML file,
-            // so we can also output the model type
+        if (voi) {
+            // A VOI could be retrieved for our CellML file, so we can also
+            // output the model type
 
             information +=  "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn
                            +QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1</span>."+OutputBrLn).arg(runtime->needNlaSolver()?tr("DAE"):tr("ODE"));
         } else {
-            // We couldn't retrieve a variable of integration, which means that
-            // we either don't have a runtime or we have one, but it's not valid
-            // or it's valid but we really don't have a variable of integration
-            // Note: in the case of a valid runtime and no variable of
-            //       integration, we really shouldn't consider the runtime to be
-            //       valid, hence we handle this case here...
+            // We couldn't retrieve a VOI, which means that we either don't have
+            // a runtime or we have one, but it's not valid or it's valid but we
+            // really don't have a VOI
+            // Note: in the case of a valid runtime and no VOI, we really
+            //       shouldn't consider the runtime to be valid, hence we handle
+            //       this case here...
 
             mErrorType = InvalidCellmlFile;
 
@@ -869,8 +869,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             information += "<span"+OutputBad+">"+(runtime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
 
             if (validRuntime) {
-                // We have a valid runtime, but no variable of integration,
-                // which means that the model doesn't contain any ODE or DAE
+                // We have a valid runtime, but no VOI, which means that the
+                // model doesn't contain any ODE or DAE
 
                 information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
             } else {
@@ -904,9 +904,9 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
     if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
         // Enable/disable our run/pause action depending on whether we have a
-        // variable of integration
+        // VOI
 
-        mRunPauseResumeSimulationAction->setEnabled(variableOfIntegration);
+        mRunPauseResumeSimulationAction->setEnabled(voi);
 
         // Update our simulation mode or clear our simulation data (should there
         // be some) in case we are reloading ourselves
@@ -921,7 +921,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
         // Initialise our contents widget and make sure that we have the
         // required type(s) of solvers
 
-        if (variableOfIntegration) {
+        if (voi) {
             // Show our contents widget in case it got previously hidden
             // Note: indeed, if it was to remain hidden then some
             //       initialisations wouldn't work (e.g. the solvers widget has
@@ -1309,16 +1309,23 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
         if (mSimulation->isPaused()) {
             mSimulation->resume();
         } else {
-            // Try to allocate all the memory we need for the simulation by
-            // resetting its settings
+            // Try to allocate all the memory we need by adding a run to our
+            // simulation
 
-            bool runSimulation = mSimulation->results()->reset();
+            bool runSimulation = mSimulation->addRun();
 
-            // Run our simulation (after having cleared our plots), in case we
-            // were able to allocate all the memory we need
+            // Run our simulation (after having added a run to our graphs), in
+            // case we were able to allocate all the memory we need
+            // Note: a graph will, by default, have a run (otherwise it can't
+            //       be created since setting it up requires access to an
+            //       QwtPlotCurve object), so only add a run from the second run
+            //       onwards...
 
             if (runSimulation) {
-                mViewWidget->checkSimulationResults(mSimulation->fileName(), true);
+                mViewWidget->checkSimulationResults(mSimulation->fileName(),
+                                                    (mSimulation->runsCount() > 1)?
+                                                        AddRun:
+                                                        FakeAddRun);
 
                 mSimulation->run();
             } else {
@@ -1357,13 +1364,13 @@ void SimulationExperimentViewSimulationWidget::clearSimulationData()
 {
     // Clear our simulation data
 
-    mSimulation->results()->reset(false);
+    mSimulation->results()->reset();
 
     // Update our simulation mode and check for results
 
     updateSimulationMode();
 
-    mViewWidget->checkSimulationResults(mSimulation->fileName(), true);
+    mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
 }
 
 //==============================================================================
@@ -2956,7 +2963,7 @@ void SimulationExperimentViewSimulationWidget::initializeSimulation()
     // case of its data)
 
     mSimulation->data()->reset();
-    mSimulation->results()->reset(false);
+    mSimulation->results()->reset();
 
     // Retrieve our simulation and solvers properties since they may have an
     // effect on our parameter values (as well as result in some solver
@@ -2983,16 +2990,15 @@ void SimulationExperimentViewSimulationWidget::simulationDataExport()
     // results
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
-    DataStore::DataStore *dataStore = mSimulation->results()->dataStore();
-    QString simulationFileName = mSimulation->fileName();
-    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(simulationFileName, dataStore);
+    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(mSimulation->fileName(),
+                                                                          mSimulation->results()->dataStore());
 
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
 
         Core::centralWidget()->showProgressBusyWidget();
 
-        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(simulationFileName, dataStore, dataStoreData);
+        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(dataStoreData);
 
         connect(dataStoreExporter, SIGNAL(done(const QString &)),
                 this, SLOT(dataStoreExportDone(const QString &)));
@@ -3238,20 +3244,22 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
 
     // Let people know when we a graph has been toggled
 
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = contentsWidget()->informationWidget()->graphPanelAndGraphsWidget();
+
     connect(plot, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            this, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+            graphPanelAndGraphsWidget, SLOT(toggleGraph(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
 
     // Let people know when we the legend has been toggled
 
     connect(plot, SIGNAL(legendToggled()),
-            this, SIGNAL(legendToggled()));
+            graphPanelAndGraphsWidget, SLOT(toggleLegend()));
 
     // Let people know when we the X/Y logarithmic axis has been toggled
 
     connect(plot, SIGNAL(logarithmicXAxisToggled()),
-            this, SIGNAL(logarithmicXAxisToggled()));
+            graphPanelAndGraphsWidget, SLOT(toggleLogarithmicXAxis()));
     connect(plot, SIGNAL(logarithmicYAxisToggled()),
-            this, SIGNAL(logarithmicYAxisToggled()));
+            graphPanelAndGraphsWidget, SLOT(toggleLogarithmicYAxis()));
 
     // Check our graph panels and their graphs
 
@@ -3293,9 +3301,9 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
     Q_UNUSED(pGraphProperties);
 
     // A new graph has been added, so keep track of it and update its plot
-    // Note: updating the plot will, if needed, update the plot's axes and, as
-    //       a result, replot the graphs including our new one. On the other
-    //       hand, if the plot's axes don't get updated, we need to draw our new
+    // Note: updating the plot will, if needed, update the plot's axes and, as a
+    //       result, replot the graphs including our new one. On the other hand,
+    //       if the plot's axes don't get updated, we need to draw our new
     //       graph...
 
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
@@ -3436,9 +3444,9 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     }
 
     // Check all the graphs associated with the given plot and see whether any
-    // of them uses the variable of integration as parameter X and/or Y, and if
-    // so then asks the plot to use the starting/ending points as the
-    // minimum/maximum values for the X and/or Y axes
+    // of them uses the VOI as parameter X and/or Y, and if so then asks the
+    // plot to use the starting/ending points as the minimum/maximum values for
+    // the X and/or Y axes
 
     bool hasData = pPlot->hasData();
 
@@ -3627,7 +3635,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisib
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                        const quint64 &pSimulationResultsSize,
-                                                                       const bool &pClearGraphs)
+                                                                       const Task &pTask)
 {
     // Update the modified state of our simulation's corresponding file, if
     // needed
@@ -3652,12 +3660,12 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
     bool needProcessingEvents = false;
 
     foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots) {
-        // If our graphs are to be cleared (i.e. our plot's viewport are going
-        // to be reset), then we want to be able to update our plot's viewport
-        // if needed (i.e. a graph segment doesn't fit within our plot's current
-        // viewport anymore)
+        // If our runs are to be reset (i.e. our plot's viewport are going to be
+        // reset) or a run to be added (be it really or faked), then we want to
+        // be able to update our plot's viewport if needed (i.e. a graph segment
+        // doesn't fit within our plot's current viewport anymore)
 
-        if (pClearGraphs)
+        if (pTask != None)
             mUpdatablePlotViewports.insert(plot, true);
 
         // Now we are ready to actually update all the graphs of all our plots
@@ -3671,8 +3679,15 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
         foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, plot->graphs()) {
             if (!graph->fileName().compare(pSimulationWidget->simulation()->fileName())) {
-                if (pClearGraphs)
+                if (pTask != None)
                     mOldDataSizes.remove(graph);
+
+                // Reset our runs or a add new one, if needed
+
+                if (pTask == ResetRuns)
+                    graph->resetRuns();
+                else if (pTask == AddRun)
+                    graph->addRun();
 
                 // Update our graph's data and keep track of our new old data
                 // size, if we are visible
@@ -3780,7 +3795,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         QString simulationFileName = mSimulation->fileName();
         double simulationProgress = mViewWidget->simulationResultsSize(simulationFileName)/simulation->size();
 
-        if (pClearGraphs || visible) {
+        if ((pTask != None) || visible) {
             mProgressBarWidget->setValue(simulationProgress);
         } else {
             // We are not visible, so create an icon that shows our simulation's
