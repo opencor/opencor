@@ -986,7 +986,10 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
 {
     // Have our legend items use as much horizontal space as possible
 
-    static_cast<QwtDynGridLayout *>(contentsWidget()->layout())->setExpandingDirections(Qt::Horizontal);
+    QwtDynGridLayout *contentsWidgetLayout = static_cast<QwtDynGridLayout *>(contentsWidget()->layout());
+
+    contentsWidgetLayout->setExpandingDirections(Qt::Horizontal);
+    contentsWidgetLayout->setSpacing(0);
 
     // Customise ourselves a bit
 
