@@ -1186,7 +1186,7 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
 
     if (!mainLegendLabel) {
         legendLabel->resize(0, 0);
-        legendLabel->setVisible(false);
+        legendLabel->hide();
 
         return;
     }
