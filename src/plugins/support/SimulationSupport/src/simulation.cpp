@@ -831,8 +831,9 @@ void Simulation::save()
     retrieveFileDetails();
 
     // Ask our data and results to update themselves, if needed
-    // Note: this is, for example, needed when we open an invalid file, fix it
-    //       and then save it...
+    // Note: this is, for example, needed when we open an invalid file (in which
+    //       case mRuntime is null), fix it (resulting in a valid mRuntime
+    //       value) and then save it...
 
     if (needReloading) {
         mData->reload();
