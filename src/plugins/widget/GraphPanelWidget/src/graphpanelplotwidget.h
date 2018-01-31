@@ -174,7 +174,7 @@ public:
     QwtSeriesData<QPointF> *data() const;
     void setData(double *pDataX, double *pDataY, const int &pSize);
 
-    QRectF boundingRect() const;
+    QRectF boundingRect();
     QRectF boundingLogRect();
 
 private:
@@ -185,7 +185,11 @@ private:
     void *mParameterX;
     void *mParameterY;
 
+    QRectF mBoundingRect;
+    QMap<GraphPanelPlotGraphRun *, QRectF> mBoundingRects;
+
     QRectF mBoundingLogRect;
+    QMap<GraphPanelPlotGraphRun *, QRectF> mBoundingLogRects;
 
     GraphPanelPlotWidget *mPlot;
 

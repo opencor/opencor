@@ -190,7 +190,7 @@ GraphPanelPlotGraph * GraphPanelPlotGraphRun::owner() const
 
 //==============================================================================
 
-static const QRectF NoBoundingLogRect = QRectF(0.0, 0.0, -1.0, -1.0);
+static const QRectF InvalidRect = QRectF(0.0, 0.0, -1.0, -1.0);
 
 //==============================================================================
 
@@ -199,7 +199,10 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
     mFileName(QString()),
     mParameterX(pParameterX),
     mParameterY(pParameterY),
-    mBoundingLogRect(NoBoundingLogRect),
+    mBoundingRect(InvalidRect),
+    mBoundingRects(QMap<GraphPanelPlotGraphRun *, QRectF>()),
+    mBoundingLogRect(InvalidRect),
+    mBoundingLogRects(QMap<GraphPanelPlotGraphRun *, QRectF>()),
     mPlot(0),
     mRuns(GraphPanelPlotGraphRuns())
 {
@@ -522,25 +525,41 @@ void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY,
 
     mRuns.last()->setRawSamples(pDataX, pDataY, pSize);
 
-    // Reset our cache version of our log data rectangle
+    // Reset the cached version of our bounding rectangles
 
-    mBoundingLogRect = NoBoundingLogRect;
+    mBoundingRect = InvalidRect;
+    mBoundingLogRect = InvalidRect;
+
+    mBoundingRects.remove(mRuns.last());
+    mBoundingLogRects.remove(mRuns.last());
 }
 
 //==============================================================================
 
-QRectF GraphPanelPlotGraph::boundingRect() const
+QRectF GraphPanelPlotGraph::boundingRect()
 {
-    // Return our bounding rectangle
+    // Return the cached version of our bounding rectangle, if we have one, or
+    // compute it and return it
 
-    QRectF res = QRectF();
+    if ((mBoundingRect == InvalidRect) && !mRuns.isEmpty()) {
+        mBoundingRect = QRectF();
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns) {
-        if (run->dataSize())
-            res |= run->boundingRect();
+        foreach (GraphPanelPlotGraphRun *run, mRuns) {
+            if (run->dataSize()) {
+                QRectF boundingRect = mBoundingRects.value(run, InvalidRect);
+
+                if (boundingRect == InvalidRect) {
+                    boundingRect = run->boundingRect();
+
+                    mBoundingRects.insert(run, boundingRect);
+                }
+
+                mBoundingRect |= boundingRect;
+            }
+        }
     }
 
-    return res;
+    return mBoundingRect;
 }
 
 //==============================================================================
@@ -550,60 +569,74 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
     // Return the cached version of our bounding log rectangle, if we have one,
     // or compute it and return it
 
-    if ((mBoundingLogRect == NoBoundingLogRect) && !mRuns.isEmpty()) {
-        bool needInitMinX = true;
-        bool needInitMaxX = true;
-        bool needInitMinY = true;
-        bool needInitMaxY = true;
-        double minX = 1.0;
-        double maxX = 1.0;
-        double minY = 1.0;
-        double maxY = 1.0;
+    if ((mBoundingLogRect == InvalidRect) && !mRuns.isEmpty()) {
+        mBoundingLogRect = QRectF();
 
         foreach (GraphPanelPlotGraphRun *run, mRuns) {
-            for (size_t i = 0, iMax = run->dataSize(); i < iMax; ++i) {
-                QPointF sample = run->data()->sample(i);
+            if (run->dataSize()) {
+                QRectF boundingLogRect = mBoundingLogRects.value(run, InvalidRect);
 
-                if (sample.x() > 0.0) {
-                    if (needInitMinX) {
-                        minX = sample.x();
+                if (boundingLogRect == InvalidRect) {
+                    bool needInitMinX = true;
+                    bool needInitMaxX = true;
+                    bool needInitMinY = true;
+                    bool needInitMaxY = true;
+                    double minX = 1.0;
+                    double maxX = 1.0;
+                    double minY = 1.0;
+                    double maxY = 1.0;
 
-                        needInitMinX = false;
-                    } else if (sample.x() < minX) {
-                        minX = sample.x();
+                    for (size_t i = 0, iMax = run->dataSize(); i < iMax; ++i) {
+                        QPointF sample = run->data()->sample(i);
+
+                        if (sample.x() > 0.0) {
+                            if (needInitMinX) {
+                                minX = sample.x();
+
+                                needInitMinX = false;
+                            } else if (sample.x() < minX) {
+                                minX = sample.x();
+                            }
+
+                            if (needInitMaxX) {
+                                maxX = sample.x();
+
+                                needInitMaxX = false;
+                            } else if (sample.x() > maxX) {
+                                maxX = sample.x();
+                            }
+                        }
+
+                        if (sample.y() > 0.0) {
+                            if (needInitMinY) {
+                                minY = sample.y();
+
+                                needInitMinY = false;
+                            } else if (sample.y() < minY) {
+                                minY = sample.y();
+                            }
+
+                            if (needInitMaxY) {
+                                maxY = sample.y();
+
+                                needInitMaxY = false;
+                            } else if (sample.y() > maxY) {
+                                maxY = sample.y();
+                            }
+                        }
                     }
 
-                    if (needInitMaxX) {
-                        maxX = sample.x();
+                    if (!needInitMinX && !needInitMaxX && !needInitMinY && !needInitMaxY) {
+                        boundingLogRect = QRectF(minX, minY, maxX-minX, maxY-minY);
 
-                        needInitMaxX = false;
-                    } else if (sample.x() > maxX) {
-                        maxX = sample.x();
+                        mBoundingLogRects.insert(run, boundingLogRect);
                     }
                 }
 
-                if (sample.y() > 0.0) {
-                    if (needInitMinY) {
-                        minY = sample.y();
-
-                        needInitMinY = false;
-                    } else if (sample.y() < minY) {
-                        minY = sample.y();
-                    }
-
-                    if (needInitMaxY) {
-                        maxY = sample.y();
-
-                        needInitMaxY = false;
-                    } else if (sample.y() > maxY) {
-                        maxY = sample.y();
-                    }
-                }
+                if (boundingLogRect != InvalidRect)
+                    mBoundingLogRect |= boundingLogRect;
             }
         }
-
-        if (!needInitMinX && !needInitMaxX && !needInitMinY && !needInitMaxY)
-            mBoundingLogRect = QRectF(minX, minY, maxX-minX, maxY-minY);
     }
 
     return mBoundingLogRect;
@@ -1048,6 +1081,7 @@ void GraphPanelPlotLegendWidget::renderLegend(QPainter *pPainter,
     //       with the layout when it has its expanding directions set to
     //       horizontal. More information on this issue can be found at
     //       http://www.qtcentre.org/threads/68983-Problem-with-QwtDynGridLayout-layoutItems()...
+qDebug("[%p] %s", this, isVisible()?"YES":"NO");
 
     if (!mActive)
         return;
@@ -2377,13 +2411,9 @@ bool GraphPanelPlotWidget::dataLogRect(QRectF &pDataLogRect) const
 
     foreach (GraphPanelPlotGraph *graph, mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->hasData()) {
-            QRectF boundingLogRect = graph->boundingLogRect();
+            pDataLogRect |= graph->boundingLogRect();
 
-            if (boundingLogRect != NoBoundingLogRect) {
-                pDataLogRect |= boundingLogRect;
-
-                res = true;
-            }
+            res = true;
         }
     }
 
