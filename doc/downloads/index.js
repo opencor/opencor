@@ -37,10 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> upgraded to Qt 5.9.4 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1526\">#1526</a>). A new file (with no specific type) is not wrongly considered to be a COMBINE archive anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1530\">#1530</a>)." },
-                       { "change": "<strong>PMR window:</strong> properly refresh the list of public exposures when changing the PMR instance (see issue <a href=\"https://github.com/opencor/opencor/issues/1521\">#1521</a>)." },
-                       { "change": "<strong>Simulation support:</strong> addressed a problem with fixing and then saving a previously invalid simulation (see issue <a href=\"https://github.com/opencor/opencor/issues/1533\">#1533</a>)." },
-                       { "change": "<strong>Simulation Experiment view:</strong> added support for multiple runs (see issue <a href=\"https://github.com/opencor/opencor/issues/1523\">#1523</a>)." }
+                       { "change": "<strong>Simulation Experiment view:</strong> prevent the clearing of simulation data from taking too long when we have several graph panels (see issue <a href=\"https://github.com/opencor/opencor/issues/1538\">#1538</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
