@@ -143,7 +143,7 @@ public:
     int runsCount() const;
 
     void addRun();
-    void resetRuns();
+    void removeRuns();
     GraphPanelPlotGraphRun * lastRun() const;
 
     bool isSelected() const;
@@ -195,6 +195,7 @@ private:
 
     GraphPanelPlotWidget *mPlot;
 
+    GraphPanelPlotGraphRun *mDummyRun;
     GraphPanelPlotGraphRuns mRuns;
 };
 

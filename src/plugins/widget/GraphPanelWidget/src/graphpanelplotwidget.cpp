@@ -204,11 +204,13 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
     mBoundingLogRect(InvalidRect),
     mBoundingLogRects(QMap<GraphPanelPlotGraphRun *, QRectF>()),
     mPlot(0),
+    mDummyRun(0),
     mRuns(GraphPanelPlotGraphRuns())
 {
-    // Start with a run
-    // Note: indeed, we need at least one run so we can be properly attached,
-    //       among other things (see GraphPanelPlotWidget::addGraph())...
+    // Create both our dummy and first runs
+    // Note: a dummy run (i.e. a run that is never used, shown, etc.) is needed
+    //       to ensure that our legend labels don't disappear (see
+    //       https://github.com/opencor/opencor/issues/1537)...
 
     addRun();
 }
@@ -230,7 +232,9 @@ void GraphPanelPlotGraph::attach(GraphPanelPlotWidget *pPlot)
     // Attach our different runs to the given plot and keep track of the given
     // plot
 
-    Q_ASSERT(!mRuns.isEmpty());
+    Q_ASSERT(mDummyRun);
+
+    mDummyRun->attach(pPlot);
 
     foreach (GraphPanelPlotGraphRun *run, mRuns)
         run->attach(pPlot);
@@ -244,7 +248,9 @@ void GraphPanelPlotGraph::detach()
 {
     // Detach our different runs from their plot and reset our plot
 
-    Q_ASSERT(!mRuns.isEmpty());
+    Q_ASSERT(mDummyRun);
+
+    mDummyRun->detach();
 
     foreach (GraphPanelPlotGraphRun *run, mRuns)
         run->detach();
@@ -274,55 +280,51 @@ int GraphPanelPlotGraph::runsCount() const
 
 void GraphPanelPlotGraph::addRun()
 {
-    // Add a run, after having customised it, if possible
+    // Add a run, after having customised it using our dummy run, if available
 
-    GraphPanelPlotGraphRun *firstRun = mRuns.isEmpty()?0:mRuns.first();
     GraphPanelPlotGraphRun *run = new GraphPanelPlotGraphRun(this);
 
-    if (firstRun) {
-        const QwtSymbol *symbol = firstRun->symbol();
+    if (mDummyRun) {
+        const QwtSymbol *symbol = mDummyRun->symbol();
         int symbolSize = symbol->size().width();
 
-        run->setPen(firstRun->pen());
+        run->setPen(mDummyRun->pen());
         run->setSymbol(new QwtSymbol(symbol->style(), symbol->brush(),
                                      symbol->pen(), QSize(symbolSize, symbolSize)));
-        run->setTitle(firstRun->title());
+        run->setTitle(mDummyRun->title());
+        run->setVisible(mDummyRun->isVisible());
     }
 
     run->attach(mPlot);
 
-    mRuns << run;
+    // If our dummy run already exists, then track the run we just created
+    // otherwise make it our dummy run
+
+    if (mDummyRun)
+        mRuns << run;
+    else
+        mDummyRun = run;
 }
 
 //==============================================================================
 
-void GraphPanelPlotGraph::resetRuns()
+void GraphPanelPlotGraph::removeRuns()
 {
-    // Add what will become our new default run
-    // Note: to do it, rather than after having deleted all our runs, ensures
-    //       that our new default run (and subsequent runs) gets properly
-    //       customised...
+    // Delete all our runs
 
-    addRun();
+    foreach (GraphPanelPlotGraphRun *run, mRuns)
+        delete run;
 
-    // Delete all our runs, but the one we just created
-
-    while (mRuns.count() != 1) {
-        delete mRuns.first();
-
-        mRuns.removeFirst();
-    }
+    mRuns.clear();
 }
 
 //==============================================================================
 
 GraphPanelPlotGraphRun * GraphPanelPlotGraph::lastRun() const
 {
-    // Return our last run
+    // Return our last run, if any
 
-    Q_ASSERT(!mRuns.isEmpty());
-
-    return mRuns.last();
+    return mRuns.isEmpty()?0:mRuns.last();
 }
 
 //==============================================================================
@@ -407,9 +409,9 @@ const QPen & GraphPanelPlotGraph::pen() const
 {
     // Return the pen of our current (i.e. last) run
 
-    Q_ASSERT(!mRuns.isEmpty());
+    Q_ASSERT(mDummyRun);
 
-    return mRuns.last()->pen();
+    return mDummyRun->pen();
 }
 
 //==============================================================================
@@ -418,7 +420,9 @@ void GraphPanelPlotGraph::setPen(const QPen &pPen)
 {
     // Set the pen of our different runs
 
-    Q_ASSERT(!mRuns.isEmpty());
+    Q_ASSERT(mDummyRun);
+
+    mDummyRun->setPen(pPen);
 
     foreach (GraphPanelPlotGraphRun *run, mRuns)
         run->setPen(pPen);
@@ -430,9 +434,9 @@ const QwtSymbol * GraphPanelPlotGraph::symbol() const
 {
     // Return the symbol of our current (i.e. last) run
 
-    Q_ASSERT(!mRuns.isEmpty());
+    Q_ASSERT(mDummyRun);
 
-    return mRuns.last()->symbol();
+    return mDummyRun->symbol();
 }
 
 //==============================================================================
@@ -443,7 +447,9 @@ void GraphPanelPlotGraph::setSymbol(const QwtSymbol::Style &pStyle,
 {
     // Set the symbol of our different runs
 
-    Q_ASSERT(!mRuns.isEmpty());
+    Q_ASSERT(mDummyRun);
+
+    mDummyRun->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, QSize(pSize, pSize)));
 
     foreach (GraphPanelPlotGraphRun *run, mRuns)
         run->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, QSize(pSize, pSize)));
@@ -455,7 +461,9 @@ void GraphPanelPlotGraph::setTitle(const QString &pTitle)
 {
     // Set the title of our different runs
 
-    Q_ASSERT(!mRuns.isEmpty());
+    Q_ASSERT(mDummyRun);
+
+    mDummyRun->setTitle(pTitle);
 
     foreach (GraphPanelPlotGraphRun *run, mRuns)
         run->setTitle(pTitle);
@@ -467,9 +475,9 @@ bool GraphPanelPlotGraph::isVisible() const
 {
     // Return whether our current (i.e. last) run is visible
 
-    Q_ASSERT(!mRuns.isEmpty());
+    Q_ASSERT(mDummyRun);
 
-    return mRuns.last()->isVisible();
+    return mDummyRun->isVisible();
 }
 
 //==============================================================================
@@ -478,7 +486,9 @@ void GraphPanelPlotGraph::setVisible(const bool &pVisible)
 {
     // Set the visibility of our different runs
 
-    Q_ASSERT(!mRuns.isEmpty());
+    Q_ASSERT(mDummyRun);
+
+    mDummyRun->setVisible(pVisible);
 
     foreach (GraphPanelPlotGraphRun *run, mRuns)
         run->setVisible(pVisible);
@@ -489,8 +499,6 @@ void GraphPanelPlotGraph::setVisible(const bool &pVisible)
 bool GraphPanelPlotGraph::hasData() const
 {
     // Return whether we have some data for any of our runs
-
-    Q_ASSERT(!mRuns.isEmpty());
 
     foreach (GraphPanelPlotGraphRun *run, mRuns) {
         if (run->dataSize())
@@ -505,22 +513,18 @@ bool GraphPanelPlotGraph::hasData() const
 quint64 GraphPanelPlotGraph::dataSize() const
 {
     // Return the size of our data, i.e. raw samples, for our current (i.e.
-    // last) run
+    // last) run, if any
 
-    Q_ASSERT(!mRuns.isEmpty());
-
-    return mRuns.last()->dataSize();
+    return mRuns.isEmpty()?0:mRuns.last()->dataSize();
 }
 
 //==============================================================================
 
 QwtSeriesData<QPointF> * GraphPanelPlotGraph::data() const
 {
-    // Return the data, i.e. raw samples, of our current (i.e. last) run
+    // Return the data, i.e. raw samples, of our current (i.e. last) run, if any
 
-    Q_ASSERT(!mRuns.isEmpty());
-
-    return mRuns.last()->data();
+    return mRuns.isEmpty()?0:mRuns.last()->data();
 }
 
 //==============================================================================
@@ -528,9 +532,10 @@ QwtSeriesData<QPointF> * GraphPanelPlotGraph::data() const
 void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY,
                                   const int &pSize)
 {
-    // Set our data, i.e. raw samples, to our current (i.e. last) run
+    // Set our data, i.e. raw samples, to our current (i.e. last) run, if any
 
-    Q_ASSERT(!mRuns.isEmpty());
+    if (mRuns.isEmpty())
+        return;
 
     mRuns.last()->setRawSamples(pDataX, pDataY, pSize);
 
@@ -1172,7 +1177,7 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
                                               const QwtLegendData &pLegendData)
 {
     // Ignore (i.e. minimise and hide) the given widget if it doesn't correspond
-    // to the legend of a first run
+    // to the legend of our dummy run
     // Note: we start at 1 because the first child of our contents widget is our
     //       layout...
 
