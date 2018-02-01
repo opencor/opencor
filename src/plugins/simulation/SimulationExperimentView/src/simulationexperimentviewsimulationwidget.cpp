@@ -1363,6 +1363,11 @@ void SimulationExperimentViewSimulationWidget::resetModelParameters()
 void SimulationExperimentViewSimulationWidget::clearSimulationData()
 {
     // Clear our simulation data
+    // Note: we temporarily disable updates to prevent the GUI from taking too
+    //       long to update itself (something that might happen when we have
+    //       several graph panels since they will try to realign themselves)...
+
+    setUpdatesEnabled(false);
 
     mSimulation->results()->reset();
 
@@ -1371,6 +1376,8 @@ void SimulationExperimentViewSimulationWidget::clearSimulationData()
     updateSimulationMode();
 
     mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
+
+    setUpdatesEnabled(true);
 }
 
 //==============================================================================
