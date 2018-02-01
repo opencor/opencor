@@ -1316,16 +1316,9 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
 
             // Run our simulation (after having added a run to our graphs), in
             // case we were able to allocate all the memory we need
-            // Note: a graph will, by default, have a run (otherwise it can't
-            //       be created since setting it up requires access to an
-            //       QwtPlotCurve object), so only add a run from the second run
-            //       onwards...
 
             if (runSimulation) {
-                mViewWidget->checkSimulationResults(mSimulation->fileName(),
-                                                    (mSimulation->runsCount() > 1)?
-                                                        AddRun:
-                                                        FakeAddRun);
+                mViewWidget->checkSimulationResults(mSimulation->fileName(), AddRun);
 
                 mSimulation->run();
             } else {
@@ -3692,7 +3685,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 // Reset our runs or a add new one, if needed
 
                 if (pTask == ResetRuns)
-                    graph->resetRuns();
+                    graph->removeRuns();
                 else if (pTask == AddRun)
                     graph->addRun();
 

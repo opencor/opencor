@@ -113,8 +113,7 @@ public:
     enum Task {
         None,
         ResetRuns,
-        AddRun,
-        FakeAddRun
+        AddRun
     };
 
     explicit SimulationExperimentViewSimulationWidget(SimulationExperimentViewPlugin *pPlugin,
