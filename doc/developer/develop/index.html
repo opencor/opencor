@@ -40,7 +40,7 @@
         </p>
 
         <ul>
-            <li><strong>Version:</strong> they are used to request a <span class="label feature">Feature</span> or an <span class="label improvement">Improvement</span> for a future version of OpenCOR, or to report a <span class="label bug">Bug</span> with the current official version of OpenCOR.</li>
+            <li><strong>Version:</strong> they are used to request a <span class="label feature">Feature</span> for or an <span class="label improvement">Improvement</span> to a future version of OpenCOR, or to report a <span class="label bug">Bug</span> with the current official version of OpenCOR.</li>
             <li><strong>Development:</strong> they are used to specify a <span class="label task">Task</span> that needs to be carried out (in preparation for the next version of OpenCOR) or to report a <span class="label regression">Regression</span> issue with the current development version of OpenCOR.</li>
             <li><strong>Platform:</strong> they are used to specify the platform(s) (<span class="label windows">Windows</span>, <span class="label linux">Linux</span> and/or <span class="label macos">macOS</span>) affected by a <span class="label bug">Bug</span>, <span class="label task">Task</span> or <span class="label regression">Regression</span> issue.</li>
         </ul>
@@ -54,7 +54,11 @@
         </p>
 
         <p>
-            However, it is not recommended to work directly on the <a href="https://github.com/opencor/opencor/tree/master">master branch</a>. Instead, anyone wanting to contribute to OpenCOR should first fork its <a href="https://github.com/opencor/opencor">Git repository</a>. Then, a new branch called <code>issueXXX</code> should be created. It will contain the work associated with issue <code>XXX</code>. The work completed, a pull request should be made. This pull request will trigger OpenCOR to be built and tested on <a href="https://travis-ci.org/opencor/opencor">Travis CI</a>. Assuming it all goes fine, it will then be up to the <a href="../../user/team.html">project manager</a> to merge the work.
+            However, it is not recommended to work directly on the <a href="https://github.com/opencor/opencor/tree/master">master branch</a>. Instead, anyone wanting to contribute to OpenCOR should first fork its <a href="https://github.com/opencor/opencor">Git repository</a>. Then, a new branch called <code>issueXXX</code> should be created for issue <code>#XXX</code>. It will contain the work associated with issue <code>XXX</code>. The work completed, a pull request should be made. This pull request will trigger OpenCOR to be built and tested on <a href="https://travis-ci.org/opencor/opencor">Travis CI</a>. Assuming it all goes fine, it will then be up to the <a href="../../user/team.html">project manager</a> to merge the work.
+        </p>
+
+        <p>
+            Upon merging a pull request, OpenCOR will also be built and tested through <a href="http://autotest.bioeng.auckland.ac.nz/jenkins/view/OpenCOR/">Jenkins</a> at the <a href="https://www.auckland.ac.nz/en/abi.html">Auckland Bioengineering Institute</a>, and this on <a href="http://autotest.bioeng.auckland.ac.nz/jenkins/job/OpenCOR_Windows/">Windows</a>, <a href="http://autotest.bioeng.auckland.ac.nz/jenkins/job/OpenCOR_Linux/">Linux</a> and <a href="http://autotest.bioeng.auckland.ac.nz/jenkins/job/OpenCOR_macOS/">macOS</a>.
         </p>
 
         <div class="section">
