@@ -16,25 +16,6 @@ function fileSize(size) {
     }
 }
 
-function hasVersions() {
-    return jsonData.versions.length;
-}
-
-function hasSnapshots() {
-    var versions = jsonData.versions;
-
-    if (versions.length) {
-        for (var versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
-            if (versions[versionIndex].type === 2)
-                return true;
-        }
-
-        return false;
-    } else {
-        return false;
-    }
-}
-
 function versions(downloads) {
     // Make sure that the jsonData variable is available
 
@@ -236,7 +217,7 @@ function versions(downloads) {
             document.write("                    "+versionTitle+"\n");
 
             if (downloads)
-                document.write("                    <span class=\"whatIsNew\"><a href=\"../user/whatIsNew.html#"+versionAnchor+"\">What is new?</a></span>\n");
+                document.write("                    <span class=\"whatIsNew\"><a href=\"../whatIsNew.html#"+versionAnchor+"\">What is new?</a></span>\n");
 
             document.write("                </td>\n");
             document.write("                <td class=\"date\">\n");
