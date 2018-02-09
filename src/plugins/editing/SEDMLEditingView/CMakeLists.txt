@@ -1,4 +1,4 @@
-PROJECT(SEDMLEditingViewPlugin)
+project(SEDMLEditingViewPlugin)
 
 # Add the plugin
 

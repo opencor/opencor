@@ -1,4 +1,4 @@
-PROJECT(CVODESSolverPlugin)
+project(CVODESSolverPlugin)
 
 # Add the plugin
 

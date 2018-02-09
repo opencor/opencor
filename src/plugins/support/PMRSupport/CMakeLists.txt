@@ -1,4 +1,4 @@
-PROJECT(PMRSupportPlugin)
+project(PMRSupportPlugin)
 
 # Add the plugin
 

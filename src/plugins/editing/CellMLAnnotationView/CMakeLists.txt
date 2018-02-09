@@ -1,4 +1,4 @@
-PROJECT(CellMLAnnotationViewPlugin)
+project(CellMLAnnotationViewPlugin)
 
 # Add the plugin
 

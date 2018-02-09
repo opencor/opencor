@@ -1,4 +1,4 @@
-PROJECT(ForwardEulerSolverPlugin)
+project(ForwardEulerSolverPlugin)
 
 # Add the plugin
 

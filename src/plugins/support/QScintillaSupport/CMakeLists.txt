@@ -1,4 +1,4 @@
-PROJECT(QScintillaSupportPlugin)
+project(QScintillaSupportPlugin)
 
 # Add the plugin
 

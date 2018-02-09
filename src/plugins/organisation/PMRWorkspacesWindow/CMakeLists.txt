@@ -1,4 +1,4 @@
-PROJECT(PMRWorkspacesWindowPlugin)
+project(PMRWorkspacesWindowPlugin)
 
 # Add the plugin
 

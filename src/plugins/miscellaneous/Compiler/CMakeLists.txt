@@ -1,4 +1,4 @@
-PROJECT(CompilerPlugin)
+project(CompilerPlugin)
 
 # Add the plugin
 

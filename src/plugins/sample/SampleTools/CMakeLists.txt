@@ -1,4 +1,4 @@
-PROJECT(SampleToolsPlugin)
+project(SampleToolsPlugin)
 
 # Add the plugin
 

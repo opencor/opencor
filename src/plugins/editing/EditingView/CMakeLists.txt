@@ -1,4 +1,4 @@
-PROJECT(EditingViewPlugin)
+project(EditingViewPlugin)
 
 # Add the plugin
 

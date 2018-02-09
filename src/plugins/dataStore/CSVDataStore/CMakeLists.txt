@@ -1,4 +1,4 @@
-PROJECT(CSVDataStorePlugin)
+project(CSVDataStorePlugin)
 
 # Add the plugin
 

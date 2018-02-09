@@ -1,4 +1,4 @@
-PROJECT(SampleViewPlugin)
+project(SampleViewPlugin)
 
 # Add the plugin
 

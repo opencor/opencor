@@ -1,4 +1,4 @@
-PROJECT(WebViewerWidgetPlugin)
+project(WebViewerWidgetPlugin)
 
 # Add the plugin
 

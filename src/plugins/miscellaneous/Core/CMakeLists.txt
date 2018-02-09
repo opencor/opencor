@@ -1,4 +1,4 @@
-PROJECT(CorePlugin)
+project(CorePlugin)
 
 # Add the plugin
 

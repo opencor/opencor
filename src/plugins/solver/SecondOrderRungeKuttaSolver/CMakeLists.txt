@@ -1,4 +1,4 @@
-PROJECT(SecondOrderRungeKuttaSolverPlugin)
+project(SecondOrderRungeKuttaSolverPlugin)
 
 # Add the plugin
 

@@ -1,4 +1,4 @@
-PROJECT(SimulationExperimentViewPlugin)
+project(SimulationExperimentViewPlugin)
 
 # Add the plugin
 

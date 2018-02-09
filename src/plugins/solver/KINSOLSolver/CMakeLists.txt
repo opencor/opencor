@@ -1,4 +1,4 @@
-PROJECT(KINSOLSolverPlugin)
+project(KINSOLSolverPlugin)
 
 # Add the plugin
 

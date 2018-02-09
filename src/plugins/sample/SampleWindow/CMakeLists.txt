@@ -1,4 +1,4 @@
-PROJECT(SampleWindowPlugin)
+project(SampleWindowPlugin)
 
 # Add the plugin
 

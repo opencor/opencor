@@ -1,4 +1,4 @@
-PROJECT(HeunSolverPlugin)
+project(HeunSolverPlugin)
 
 # Add the plugin
 

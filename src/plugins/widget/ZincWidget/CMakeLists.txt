@@ -1,4 +1,4 @@
-PROJECT(ZincWidgetPlugin)
+project(ZincWidgetPlugin)
 
 # Add the plugin
 

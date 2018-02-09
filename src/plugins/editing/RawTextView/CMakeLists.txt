@@ -1,4 +1,4 @@
-PROJECT(RawTextViewPlugin)
+project(RawTextViewPlugin)
 
 # Add the plugin
 

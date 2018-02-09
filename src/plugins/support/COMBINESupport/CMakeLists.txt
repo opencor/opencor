@@ -1,4 +1,4 @@
-PROJECT(COMBINESupportPlugin)
+project(COMBINESupportPlugin)
 
 # Add the plugin
 

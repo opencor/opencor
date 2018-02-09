@@ -1,4 +1,4 @@
-PROJECT(EditorWidgetPlugin)
+project(EditorWidgetPlugin)
 
 # Add the plugin
 

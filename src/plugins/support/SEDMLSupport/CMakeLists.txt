@@ -1,4 +1,4 @@
-PROJECT(SEDMLSupportPlugin)
+project(SEDMLSupportPlugin)
 
 # Add the plugin
 

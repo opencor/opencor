@@ -1,4 +1,4 @@
-PROJECT(RawSEDMLViewPlugin)
+project(RawSEDMLViewPlugin)
 
 # Add the plugin
 

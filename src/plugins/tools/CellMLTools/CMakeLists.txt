@@ -1,4 +1,4 @@
-PROJECT(CellMLToolsPlugin)
+project(CellMLToolsPlugin)
 
 # Add the plugin
 

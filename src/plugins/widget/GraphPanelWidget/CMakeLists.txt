@@ -1,4 +1,4 @@
-PROJECT(GraphPanelWidgetPlugin)
+project(GraphPanelWidgetPlugin)
 
 # Add the plugin
 

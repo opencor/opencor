@@ -1,4 +1,4 @@
-PROJECT(ZIPSupportPlugin)
+project(ZIPSupportPlugin)
 
 # Add the plugin
 

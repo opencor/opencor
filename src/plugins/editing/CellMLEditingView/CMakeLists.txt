@@ -1,4 +1,4 @@
-PROJECT(CellMLEditingViewPlugin)
+project(CellMLEditingViewPlugin)
 
 # Add the plugin
 

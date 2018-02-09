@@ -1,4 +1,4 @@
-PROJECT(RawCellMLViewPlugin)
+project(RawCellMLViewPlugin)
 
 # Add the plugin
 

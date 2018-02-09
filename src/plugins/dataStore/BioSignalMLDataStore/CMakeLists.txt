@@ -1,4 +1,4 @@
-PROJECT(BioSignalMLDataStorePlugin)
+project(BioSignalMLDataStorePlugin)
 
 # Add the plugin
 

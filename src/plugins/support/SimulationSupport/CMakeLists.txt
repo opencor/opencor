@@ -1,4 +1,4 @@
-PROJECT(SimulationSupportPlugin)
+project(SimulationSupportPlugin)
 
 # Add the plugin
 

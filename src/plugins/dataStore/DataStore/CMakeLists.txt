@@ -1,4 +1,4 @@
-PROJECT(DataStorePlugin)
+project(DataStorePlugin)
 
 # Add the plugin
 

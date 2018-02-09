@@ -1,4 +1,4 @@
-PROJECT(PMRWindowPlugin)
+project(PMRWindowPlugin)
 
 # Add the plugin
 

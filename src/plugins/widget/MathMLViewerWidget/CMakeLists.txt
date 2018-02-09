@@ -1,4 +1,4 @@
-PROJECT(MathMLViewerWidgetPlugin)
+project(MathMLViewerWidgetPlugin)
 
 # Add the plugin
 

@@ -1,4 +1,4 @@
-PROJECT(ZincWindowPlugin)
+project(ZincWindowPlugin)
 
 # Add the plugin
 

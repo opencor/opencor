@@ -1,4 +1,4 @@
-PROJECT(WebBrowserWindowPlugin)
+project(WebBrowserWindowPlugin)
 
 # Add the plugin
 

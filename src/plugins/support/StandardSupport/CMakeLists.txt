@@ -1,4 +1,4 @@
-PROJECT(StandardSupportPlugin)
+project(StandardSupportPlugin)
 
 # Add the plugin
 

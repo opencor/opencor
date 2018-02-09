@@ -1,4 +1,4 @@
-PROJECT(FileBrowserWindowPlugin)
+project(FileBrowserWindowPlugin)
 
 # Add the plugin
 
