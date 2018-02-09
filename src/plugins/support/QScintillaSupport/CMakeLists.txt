@@ -2,7 +2,7 @@ project(QScintillaSupportPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(QScintillaSupport
+add_plugin(QScintillaSupport
     SOURCES
         ../../plugininfo.cpp
 

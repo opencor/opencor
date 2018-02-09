@@ -2,7 +2,7 @@ project(ZincWidgetPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(ZincWidget
+add_plugin(ZincWidget
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

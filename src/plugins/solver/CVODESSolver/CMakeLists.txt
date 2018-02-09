@@ -2,7 +2,7 @@ project(CVODESSolverPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(CVODESSolver
+add_plugin(CVODESSolver
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

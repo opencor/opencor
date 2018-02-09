@@ -2,7 +2,7 @@ project(SampleWindowPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(SampleWindow
+add_plugin(SampleWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

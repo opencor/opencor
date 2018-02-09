@@ -2,7 +2,7 @@ project(WebBrowserWindowPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(WebBrowserWindow
+add_plugin(WebBrowserWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

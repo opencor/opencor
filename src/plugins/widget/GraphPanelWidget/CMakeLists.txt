@@ -2,7 +2,7 @@ project(GraphPanelWidgetPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(GraphPanelWidget
+add_plugin(GraphPanelWidget
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

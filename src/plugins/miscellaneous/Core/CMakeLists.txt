@@ -2,7 +2,7 @@ project(CorePlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(Core
+add_plugin(Core
     SOURCES
         ../../cliinterface.cpp
         ../../datastoreinterface.cpp

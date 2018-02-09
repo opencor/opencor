@@ -2,7 +2,7 @@ project(ForwardEulerSolverPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(ForwardEulerSolver
+add_plugin(ForwardEulerSolver
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

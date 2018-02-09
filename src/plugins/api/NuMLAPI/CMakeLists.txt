@@ -186,7 +186,7 @@ set(NUMLAPI_LIBRARY ${EXTERNAL_BINARIES_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
 #       can't be done here since the name of our package is different from that
 #       of our plugin...
 
-ADD_PLUGIN(NuMLAPI
+add_plugin(NuMLAPI
     SOURCES
         ../../plugininfo.cpp
 

@@ -2,7 +2,7 @@ project(COMBINESupportPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(COMBINESupport
+add_plugin(COMBINESupport
     SOURCES
         ../../filetypeinterface.cpp
         ../../i18ninterface.cpp

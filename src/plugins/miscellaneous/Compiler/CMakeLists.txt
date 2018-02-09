@@ -2,7 +2,7 @@ project(CompilerPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(Compiler
+add_plugin(Compiler
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

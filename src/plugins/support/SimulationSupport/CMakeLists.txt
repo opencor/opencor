@@ -2,7 +2,7 @@ project(SimulationSupportPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(SimulationSupport
+add_plugin(SimulationSupport
     SOURCES
         ../../datastoreinterface.cpp
         ../../filehandlinginterface.cpp

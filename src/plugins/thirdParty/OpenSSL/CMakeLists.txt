@@ -235,7 +235,7 @@ set(OPENSSL_LIBRARIES
 
 set(OPENSSL_PLUGIN ${PACKAGE_NAME} PARENT_SCOPE)
 
-ADD_PLUGIN(${PACKAGE_NAME}
+add_plugin(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp
 

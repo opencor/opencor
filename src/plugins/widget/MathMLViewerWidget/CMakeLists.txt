@@ -2,7 +2,7 @@ project(MathMLViewerWidgetPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(MathMLViewerWidget
+add_plugin(MathMLViewerWidget
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

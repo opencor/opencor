@@ -2,7 +2,7 @@ project(CellMLEditingViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(CellMLEditingView
+add_plugin(CellMLEditingView
     SOURCES
         ../../filehandlinginterface.cpp
         ../../guiinterface.cpp

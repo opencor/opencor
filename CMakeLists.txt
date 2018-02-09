@@ -687,7 +687,7 @@ include_directories(
 # Update the translation (.ts) files and generate the language (.qm) files
 # that will later on be embedded in the OpenCOR executable as resources
 
-UPDATE_LANGUAGE_FILES(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
+update_language_files(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
 
 # Third-party library that must be directly embedded in the GUI version of
 # OpenCOR
@@ -743,7 +743,7 @@ if(ENABLE_TESTS)
     KEEP_TRACK_OF_file(${TESTS_LIST_FILENAME})
 
     # Destination tests directory
-    # Note: DEST_TESTS_DIR isn't only used here, but also in our ADD_PLUGIN()
+    # Note: DEST_TESTS_DIR isn't only used here, but also in our add_plugin()
     #       macro...
 
     if(APPLE)
@@ -791,7 +791,7 @@ if(ENABLE_TESTS)
     # Clean up our test program, if we are on macOS
 
     if(APPLE)
-        MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
+        macos_clean_up_file_with_qt_dependencies(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
     endif()
 endif()
 
@@ -1015,7 +1015,7 @@ if(APPLE)
 
     # Clean up the OpenCOR executable
 
-    MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
+    macos_clean_up_file_with_qt_dependencies(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
 
     # Qt libraries required by OpenCOR
     # Note: the Qt Brew formula that we use on Travis CI somehow results in some
@@ -1026,20 +1026,20 @@ if(APPLE)
 
     if(NOT ENABLE_TRAVIS_CI)
         foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
-            MACOS_DEPLOY_QT_LIBRARY(${QT_LIBRARY})
+            macos_deploy_qt_library(${QT_LIBRARY})
         endforeach()
     endif()
 
     # Qt plugins required by OpenCOR
 
-    MACOS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
-    MACOS_DEPLOY_QT_PLUGIN(platforms qcocoa)
-    MACOS_DEPLOY_QT_PLUGIN(printsupport cocoaprintersupport)
-    MACOS_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
+    macos_deploy_qt_plugin(imageformats qjpeg)
+    macos_deploy_qt_plugin(platforms qcocoa)
+    macos_deploy_qt_plugin(printsupport cocoaprintersupport)
+    macos_deploy_qt_plugin(sqldrivers qsqlite)
 else()
     # Copy the GUI version of the OpenCOR executable to the build/bin folder
 
-    COPY_FILE_TO_BUILD_DIR(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
+    copy_file_to_build_dir(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
                            ${CMAKE_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
     if(WIN32)
@@ -1055,9 +1055,9 @@ else()
 
         add_custom_target(${WINDOWS_CLI_COPY} ALL)
 
-        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_COPY} ${PROJECT_BUILD_DIR} .
+        copy_file_to_build_dir(${WINDOWS_CLI_COPY} ${PROJECT_BUILD_DIR} .
                                ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${CMAKE_PROJECT_NAME}.com)
-        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_COPY} ${PROJECT_BUILD_DIR} bin
+        copy_file_to_build_dir(${WINDOWS_CLI_COPY} ${PROJECT_BUILD_DIR} bin
                                ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${CMAKE_PROJECT_NAME}.com)
 
         add_dependencies(${WINDOWS_CLI_COPY} ${WINDOWS_CLI_PROJECT_NAME})
@@ -1116,8 +1116,8 @@ else()
             get_filename_component(DIRNAME ${ADDITIONAL_FILE} DIRECTORY)
             get_filename_component(FILENAME ${ADDITIONAL_FILE} NAME)
 
-            COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} . ${FILENAME})
-            COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} bin ${FILENAME})
+            copy_file_to_build_dir(DIRECT ${DIRNAME} . ${FILENAME})
+            copy_file_to_build_dir(DIRECT ${DIRNAME} bin ${FILENAME})
         endforeach()
 
         # Finally, add Qt's version of the Mesa library so that we can run
@@ -1127,8 +1127,8 @@ else()
         set(ORIG_MESA_FILENAME opengl32sw.dll)
         set(DEST_MESA_FILENAME opengl32.dll)
 
-        COPY_FILE_TO_BUILD_DIR(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
-        COPY_FILE_TO_BUILD_DIR(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
+        copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
+        copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
     else()
         # Add our copy of the Mesa library so that we can run OpenCOR on
         # machines that don't have 'proper' OpenGL support (e.g. on a Linux
@@ -1196,21 +1196,21 @@ if(WIN32)
     # Qt libraries required by OpenCOR
 
     foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
-        WINDOWS_DEPLOY_QT_LIBRARY(Qt5${QT_LIBRARY})
+        windows_deploy_qt_library(Qt5${QT_LIBRARY})
     endforeach()
 
     if(USE_PREBUILT_QTWEBKIT_PACKAGE)
         foreach(QT_LIBRARY icudt icuin icuuc)
-            WINDOWS_DEPLOY_QT_LIBRARY(${QT_LIBRARY}${ICU_VERSION})
+            windows_deploy_qt_library(${QT_LIBRARY}${ICU_VERSION})
         endforeach()
     endif()
 
     # Qt plugins required by OpenCOR
 
-    WINDOWS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
-    WINDOWS_DEPLOY_QT_PLUGIN(platforms qwindows)
-    WINDOWS_DEPLOY_QT_PLUGIN(printsupport windowsprintersupport)
-    WINDOWS_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
+    windows_deploy_qt_plugin(imageformats qjpeg)
+    windows_deploy_qt_plugin(platforms qwindows)
+    windows_deploy_qt_plugin(printsupport windowsprintersupport)
+    windows_deploy_qt_plugin(sqldrivers qsqlite)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
@@ -1328,7 +1328,7 @@ else()
             set(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
         endif()
 
-        LINUX_DEPLOY_QT_LIBRARY(${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+        linux_deploy_qt_library(${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
     endforeach()
 
     if(NOT ENABLE_TRAVIS_CI)
@@ -1337,16 +1337,16 @@ else()
         #       libraries...
 
         foreach(QT_FILE icudata icui18n icuuc)
-            LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56)
+            linux_deploy_qt_library(${QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56)
         endforeach()
     endif()
 
     # Qt plugins required by OpenCOR
 
-    LINUX_DEPLOY_QT_PLUGIN(imageformats qjpeg)
-    LINUX_DEPLOY_QT_PLUGIN(platforms qxcb)
-    LINUX_DEPLOY_QT_PLUGIN(printsupport cupsprintersupport)
-    LINUX_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
+    linux_deploy_qt_plugin(imageformats qjpeg)
+    linux_deploy_qt_plugin(platforms qxcb)
+    linux_deploy_qt_plugin(printsupport cupsprintersupport)
+    linux_deploy_qt_plugin(sqldrivers qsqlite)
 
     if(NOT ENABLE_TRAVIS_CI)
         # We are building OpenCOR locally, so we can deploy the
@@ -1354,7 +1354,7 @@ else()
         # Note: indeed, on Travis CI, the PPA we use doesn't have those
         #       plugins...
 
-        LINUX_DEPLOY_QT_PLUGIN(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
+        linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
     endif()
 
     # Shell script to run OpenCOR

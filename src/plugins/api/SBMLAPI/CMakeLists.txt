@@ -210,7 +210,7 @@ set(SBMLAPI_LIBRARY ${EXTERNAL_BINARIES_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
 #       can't be done here since the name of our package is different from that
 #       of our plugin...
 
-ADD_PLUGIN(SBMLAPI
+add_plugin(SBMLAPI
     SOURCES
         ../../plugininfo.cpp
 

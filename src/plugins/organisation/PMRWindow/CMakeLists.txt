@@ -2,7 +2,7 @@ project(PMRWindowPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(PMRWindow
+add_plugin(PMRWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

@@ -2,7 +2,7 @@ project(EditorWidgetPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(EditorWidget
+add_plugin(EditorWidget
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

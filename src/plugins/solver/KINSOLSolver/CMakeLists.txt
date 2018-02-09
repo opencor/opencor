@@ -2,7 +2,7 @@ project(KINSOLSolverPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(KINSOLSolver
+add_plugin(KINSOLSolver
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

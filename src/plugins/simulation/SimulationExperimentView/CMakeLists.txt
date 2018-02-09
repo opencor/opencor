@@ -2,7 +2,7 @@ project(SimulationExperimentViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(SimulationExperimentView
+add_plugin(SimulationExperimentView
     SOURCES
         ../../datastoreinterface.cpp
         ../../filehandlinginterface.cpp

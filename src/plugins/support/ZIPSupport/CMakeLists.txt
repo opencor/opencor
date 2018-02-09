@@ -2,7 +2,7 @@ project(ZIPSupportPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(ZIPSupport
+add_plugin(ZIPSupport
     SOURCES
         ../../plugininfo.cpp
 

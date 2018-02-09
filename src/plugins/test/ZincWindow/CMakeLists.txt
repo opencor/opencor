@@ -2,7 +2,7 @@ project(ZincWindowPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(ZincWindow
+add_plugin(ZincWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

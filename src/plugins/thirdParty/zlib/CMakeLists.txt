@@ -159,7 +159,7 @@ set(ZLIB_LIBRARY ${EXTERNAL_BINARIES_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
 
 # Add the plugin
 
-ADD_PLUGIN(${PACKAGE_NAME}
+add_plugin(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp
 

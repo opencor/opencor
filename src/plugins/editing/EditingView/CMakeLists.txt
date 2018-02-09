@@ -2,7 +2,7 @@ project(EditingViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(EditingView
+add_plugin(EditingView
     SOURCES
         ../../filehandlinginterface.cpp
         ../../guiinterface.cpp

@@ -198,7 +198,7 @@ set(QWT_LIBRARIES
 
 # Add the plugin
 
-ADD_PLUGIN(${PACKAGE_NAME}
+add_plugin(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp
 

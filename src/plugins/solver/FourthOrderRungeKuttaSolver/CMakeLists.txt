@@ -2,7 +2,7 @@ project(FourthOrderRungeKuttaSolverPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(FourthOrderRungeKuttaSolver
+add_plugin(FourthOrderRungeKuttaSolver
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

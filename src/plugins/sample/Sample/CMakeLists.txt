@@ -2,7 +2,7 @@ project(SamplePlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(Sample
+add_plugin(Sample
     SOURCES
         ../../plugininfo.cpp
 

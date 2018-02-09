@@ -2,7 +2,7 @@ project(StandardSupportPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(StandardSupport
+add_plugin(StandardSupport
     SOURCES
         ../../plugininfo.cpp
 

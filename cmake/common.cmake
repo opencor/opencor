@@ -93,7 +93,7 @@ macro(ADD_PLUGIN PLUGIN_NAME)
         # Update the translation (.ts) files and generate the language (.qm)
         # files, which will later on be embedded in the plugin
 
-        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME} ${ARG_SOURCES} ${ARG_HEADERS_MOC} ${ARG_UIS})
+        update_language_files(${PLUGIN_NAME} ${ARG_SOURCES} ${ARG_HEADERS_MOC} ${ARG_UIS})
     endif()
 
     if(EXISTS ${UI_QRC_FILENAME})
@@ -206,10 +206,10 @@ macro(ADD_PLUGIN PLUGIN_NAME)
             #       so that we can test things from within Qt Creator...
 
             if(WIN32)
-                COPY_FILE_TO_BUILD_DIR(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} . ${ARG_EXTERNAL_BINARY})
+                copy_file_to_build_dir(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} . ${ARG_EXTERNAL_BINARY})
             endif()
 
-            COPY_FILE_TO_BUILD_DIR(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
+            copy_file_to_build_dir(${COPY_TARGET} ${ARG_EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
 
             # Strip the external library of all its local symbols, if possible
 
@@ -252,7 +252,7 @@ macro(ADD_PLUGIN PLUGIN_NAME)
                                        COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 endif()
 
-                MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
+                macos_clean_up_file_with_qt_dependencies(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR} ${ARG_EXTERNAL_BINARY})
             endif()
 
             # Package the external library, if needed
@@ -325,7 +325,7 @@ macro(ADD_PLUGIN PLUGIN_NAME)
     # Clean up our plugin, if we are on macOS
 
     if(APPLE)
-        MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
+        macos_clean_up_file_with_qt_dependencies(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
     endif()
 
     # Package the plugin, but only if we are not on macOS since it will have
@@ -466,7 +466,7 @@ macro(ADD_PLUGIN PLUGIN_NAME)
                 # Clean up our plugin's tests, if we are on macOS
 
                 if(APPLE)
-                    MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
+                    macos_clean_up_file_with_qt_dependencies(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
                 endif()
             else()
                 message(AUTHOR_WARNING "The '${ARG_TEST}' test for the '${PLUGIN_NAME}' plugin does not exist...")
@@ -548,8 +548,8 @@ macro(WINDOWS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
         set(LIBRARY_FILENAME ${LIBRARY_DEBUG_FILENAME})
     endif()
 
-    COPY_FILE_TO_BUILD_DIR(DIRECT ${REAL_QT_BINARY_DIR} . ${LIBRARY_FILENAME})
-    COPY_FILE_TO_BUILD_DIR(DIRECT ${REAL_QT_BINARY_DIR} bin ${LIBRARY_FILENAME})
+    copy_file_to_build_dir(DIRECT ${REAL_QT_BINARY_DIR} . ${LIBRARY_FILENAME})
+    copy_file_to_build_dir(DIRECT ${REAL_QT_BINARY_DIR} bin ${LIBRARY_FILENAME})
 
     # Deploy the Qt library
 
@@ -574,7 +574,7 @@ macro(WINDOWS_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
             set(PLUGIN_FILENAME ${PLUGIN_DEBUG_FILENAME})
         endif()
 
-        COPY_FILE_TO_BUILD_DIR(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
+        copy_file_to_build_dir(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
         # Deploy the Qt plugin
 
@@ -604,11 +604,11 @@ macro(LINUX_DEPLOY_QT_LIBRARY DIRNAME FILENAME)
     # Note: this is particularly useful when the Linux machine has different
     #       versions of Qt...
 
-    COPY_FILE_TO_BUILD_DIR(DIRECT ${DIRNAME} lib ${FILENAME})
+    copy_file_to_build_dir(DIRECT ${DIRNAME} lib ${FILENAME})
 
     # Make sure that the RUNPATH value is converted to an RPATH value
 
-    RUNPATH2RPATH(lib/${FILENAME})
+    runpath2rpath(lib/${FILENAME})
 
     # Strip the Qt library of all its local symbols
 
@@ -632,11 +632,11 @@ macro(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
         set(PLUGIN_DEST_DIRNAME plugins/${PLUGIN_CATEGORY})
         set(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-        COPY_FILE_TO_BUILD_DIR(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
+        copy_file_to_build_dir(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
         # Make sure that the RUNPATH value is converted to an RPATH value
 
-        RUNPATH2RPATH(${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+        runpath2rpath(${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
 
         # Strip the Qt plugin of all its local symbols
 
@@ -718,7 +718,7 @@ macro(MACOS_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
 
     # Clean up the Qt file
 
-    MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(DIRECT ${DEST_DIRNAME} ${FILENAME})
+    macos_clean_up_file_with_qt_dependencies(DIRECT ${DEST_DIRNAME} ${FILENAME})
 endmacro()
 
 #===============================================================================
@@ -958,7 +958,7 @@ endmacro()
 macro(CHECK_FILE DIRNAME FILENAME SHA1_VALUE)
     # Convenience macro
 
-    CHECK_FILES(${DIRNAME} ${FILENAME} ${SHA1_VALUE})
+    check_files(${DIRNAME} ${FILENAME} ${SHA1_VALUE})
 
     set(CHECK_FILE_OK ${CHECK_FILES_OK})
 endmacro()
@@ -1003,7 +1003,7 @@ macro(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
 
     # Make sure that we have the expected package's files
 
-    CHECK_FILES(${REAL_DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
+    check_files(${REAL_DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
 
     if(NOT CHECK_FILES_OK)
         # Something went wrong with the package's files, so retrieve the package
@@ -1065,7 +1065,7 @@ macro(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
         list(GET STATUS 0 STATUS_CODE)
 
         if(${STATUS_CODE} EQUAL 0)
-            CHECK_FILES(${REAL_DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
+            check_files(${REAL_DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
 
             if(NOT CHECK_FILES_OK)
                 message(FATAL_ERROR "The files in the '${PACKAGE_NAME}' package do not have the expected SHA-1 values...")

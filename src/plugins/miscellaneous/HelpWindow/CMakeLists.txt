@@ -11,7 +11,7 @@ KEEP_TRACK_OF_file(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qhc)
 
 # Add the plugin
 
-ADD_PLUGIN(HelpWindow
+add_plugin(HelpWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

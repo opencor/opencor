@@ -2,7 +2,7 @@ project(DataStorePlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(DataStore
+add_plugin(DataStore
     SOURCES
         ../../datastoreinterface.cpp
         ../../i18ninterface.cpp

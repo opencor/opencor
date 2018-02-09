@@ -2,7 +2,7 @@ project(RawCellMLViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(RawCellMLView
+add_plugin(RawCellMLView
     SOURCES
         ../../filehandlinginterface.cpp
         ../../i18ninterface.cpp
