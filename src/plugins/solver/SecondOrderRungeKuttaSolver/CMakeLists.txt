@@ -1,8 +1,8 @@
-PROJECT(SecondOrderRungeKuttaSolverPlugin)
+project(SecondOrderRungeKuttaSolverPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(SecondOrderRungeKuttaSolver
+add_plugin(SecondOrderRungeKuttaSolver
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

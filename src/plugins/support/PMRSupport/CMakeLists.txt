@@ -1,8 +1,8 @@
-PROJECT(PMRSupportPlugin)
+project(PMRSupportPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(PMRSupport
+add_plugin(PMRSupport
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
