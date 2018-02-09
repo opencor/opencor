@@ -1,8 +1,8 @@
-PROJECT(SEDMLSupportPlugin)
+project(SEDMLSupportPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(SEDMLSupport
+add_plugin(SEDMLSupport
     SOURCES
         ../../filetypeinterface.cpp
         ../../guiinterface.cpp

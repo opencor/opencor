@@ -1,8 +1,8 @@
-PROJECT(RawSEDMLViewPlugin)
+project(RawSEDMLViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(RawSEDMLView
+add_plugin(RawSEDMLView
     SOURCES
         ../../filehandlinginterface.cpp
         ../../i18ninterface.cpp

@@ -1,8 +1,8 @@
-PROJECT(PMRWorkspacesWindowPlugin)
+project(PMRWorkspacesWindowPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(PMRWorkspacesWindow
+add_plugin(PMRWorkspacesWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

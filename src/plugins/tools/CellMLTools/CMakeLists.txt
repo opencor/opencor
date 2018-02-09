@@ -1,8 +1,8 @@
-PROJECT(CellMLToolsPlugin)
+project(CellMLToolsPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(CellMLTools
+add_plugin(CellMLTools
     SOURCES
         ../../cliinterface.cpp
         ../../guiinterface.cpp
