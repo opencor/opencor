@@ -73,7 +73,7 @@ if(USE_PREBUILT_QWT_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} e3a45a41d562b88652048323d8c019213dc71b8a
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES b5bda4086109a1ae681a81f33c45738029116af5
@@ -81,7 +81,7 @@ if(USE_PREBUILT_QWT_PACKAGE)
                                               4c712b690f0cce2a87624b3abcb4557fed58493f
                                               d603b5b1c7f4f342388369904129e874db0d7f4b)
         else()
-            RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} e2730a8271713f73451478284f6f7d564dbff0a3
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES ff70d89f051b4e30df4ed26d38a55fc5cd6adc10
@@ -90,13 +90,13 @@ if(USE_PREBUILT_QWT_PACKAGE)
                                               c405859c00ad588bd6bf65bb3c270c6ea484f07d)
         endif()
     elseif(APPLE)
-        RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 8e4facd5340065c885fa6634eb83684aab1acead
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 2f2341decf3a24faedb6f4e83165226266eba5f9
                                           d5787ce81a8958a4a7453cc9a95cf77222d08a49)
     else()
-        RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} c5c7e6ac1cad4d419345b3f38fbd553fa84f6194
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES c08325652c065ae05d451c7e45e63befd0c39199

@@ -140,7 +140,7 @@ set(QT_BINARY_DIR ${QT_DIR}/bin)
 set(QT_LIBRARY_DIR ${QT_DIR}/lib)
 set(QT_PLUGINS_DIR ${QT_DIR}/plugins)
 
-GET_TARget_property(QMAKE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
+get_target_property(QMAKE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
 
 set(QMAKE_COMMAND ${QMAKE} -Wnone)
 
@@ -532,8 +532,8 @@ set(BUILD_DIRECTORY_FILENAME ${PROJECT_BUILD_DIR}/builddirectory.txt)
 file(WRITE ${SOURCE_DIRECTORY_FILENAME} "${CMAKE_SOURCE_DIR}")
 file(WRITE ${BUILD_DIRECTORY_FILENAME} "${PROJECT_BUILD_DIR}")
 
-KEEP_TRACK_OF_file(${SOURCE_DIRECTORY_FILENAME})
-KEEP_TRACK_OF_file(${BUILD_DIRECTORY_FILENAME})
+keep_track_of_file(${SOURCE_DIRECTORY_FILENAME})
+keep_track_of_file(${BUILD_DIRECTORY_FILENAME})
 
 # Version/snapshot of OpenCOR
 
@@ -555,7 +555,7 @@ set(VERSION_DATE_FILENAME ${PROJECT_BUILD_DIR}/versiondate.txt)
 
 file(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
 
-KEEP_TRACK_OF_file(${VERSION_DATE_FILENAME})
+keep_track_of_file(${VERSION_DATE_FILENAME})
 
 # Configure our help file
 
@@ -740,7 +740,7 @@ if(ENABLE_TESTS)
 
     file(WRITE ${TESTS_LIST_FILENAME})
 
-    KEEP_TRACK_OF_file(${TESTS_LIST_FILENAME})
+    keep_track_of_file(${TESTS_LIST_FILENAME})
 
     # Destination tests directory
     # Note: DEST_TESTS_DIR isn't only used here, but also in our add_plugin()
@@ -761,7 +761,7 @@ if(ENABLE_TESTS)
     configure_file(${CMAKE_SOURCE_DIR}/src/tests/res/tests.qrc.in
                    ${TESTS_QRC_FILENAME})
 
-    QT5_ADD_RESOURCES(RUNTESTS_SOURCES_RCS ${TESTS_QRC_FILENAME})
+    qt5_add_resources(RUNTESTS_SOURCES_RCS ${TESTS_QRC_FILENAME})
 
     add_executable(${RUNTESTS_NAME}
         src/tests/src/main.cpp
@@ -775,7 +775,7 @@ if(ENABLE_TESTS)
         LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
 
-    TARGET_link_libraries(${RUNTESTS_NAME}
+    target_link_libraries(${RUNTESTS_NAME}
         Qt5::Core
         Qt5::Network
     )
@@ -926,9 +926,9 @@ endforeach()
 
 # Build the GUI version of OpenCOR
 
-QT5_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
-QT5_WRAP_UI(SOURCES_UIS ${UIS})
-QT5_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
+qt5_wrap_cpp(SOURCES_MOC ${HEADERS_MOC})
+qt5_wrap_ui(SOURCES_UIS ${UIS})
+qt5_add_resources(SOURCES_RCS ${RESOURCES})
 
 if(APPLE)
     list(APPEND SOURCES
@@ -951,13 +951,13 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
 )
 
 if(WIN32)
-    TARGET_link_libraries(${CMAKE_PROJECT_NAME}
+    target_link_libraries(${CMAKE_PROJECT_NAME}
         ${Qt5Core_QTMAIN_LIBRARIES}
     )
 endif()
 
 foreach(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
-    TARGET_link_libraries(${CMAKE_PROJECT_NAME}
+    target_link_libraries(${CMAKE_PROJECT_NAME}
         Qt5::${REQUIRED_QT_MODULE}
     )
 endforeach()
@@ -968,8 +968,8 @@ endforeach()
 #       command), so now we use '_' instead of '.'...
 
 if(WIN32)
-    QT5_WRAP_CPP(WINDOWS_CLI_SOURCES_MOC ${WINDOWS_CLI_HEADERS_MOC})
-    QT5_ADD_RESOURCES(WINDOWS_CLI_SOURCES_RCS ${WINDOWS_CLI_RESOURCES})
+    qt5_wrap_cpp(WINDOWS_CLI_SOURCES_MOC ${WINDOWS_CLI_HEADERS_MOC})
+    qt5_add_resources(WINDOWS_CLI_SOURCES_RCS ${WINDOWS_CLI_RESOURCES})
 
     set(WINDOWS_CLI_PROJECT_NAME ${CMAKE_PROJECT_NAME}_com)
 
@@ -986,7 +986,7 @@ if(WIN32)
         LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
 
-    TARGET_link_libraries(${WINDOWS_CLI_PROJECT_NAME}
+    target_link_libraries(${WINDOWS_CLI_PROJECT_NAME}
         Qt5::Core
         Qt5::Network
     )

@@ -6,8 +6,8 @@ execute_process(COMMAND ${QT_BINARY_DIR}/qcollectiongenerator ${PROJECT_BUILD_DI
                                                            -o ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qhc
                 OUTPUT_QUIET)
 
-KEEP_TRACK_OF_file(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qch)
-KEEP_TRACK_OF_file(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qhc)
+keep_track_of_file(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qch)
+keep_track_of_file(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qhc)
 
 # Add the plugin
 
